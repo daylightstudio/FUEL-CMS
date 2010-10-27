@@ -1,0 +1,271 @@
+<?php
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL Configuration
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/general/configuration
+ */
+
+
+/*
+|--------------------------------------------------------------------------
+| General Settings
+|--------------------------------------------------------------------------
+*/
+
+// the name of the site to be displayed at the top. Also used to generate your session key
+$config['site_name'] = 'MyWebsite';
+
+// path to the fuel admin from the web base directory
+$config['fuel_path'] = FUEL_FOLDER.'/';
+
+// options are cms, views, auto... cms pulls views and variables from the database,
+// views mode pulls views from the views folder and variables from the _variables folder
+$config['fuel_mode'] = 'views';
+
+// used for system emails. Can be overwritten by MY_fuel.php
+$config['domain'] = $_SERVER['SERVER_NAME'];
+
+// used for system emails
+$config['from_email'] = 'admin@'.$config['domain'];
+
+// allow for login link to allow forgotten passwords
+$config['allow_forgotten_password'] = TRUE;
+
+// archiving
+$config['max_number_archived'] = 5;
+
+// warn if a form field has changed before leaving page
+$config['warn_if_modified'] = TRUE;
+
+// max number of recent pages to display
+$config['max_recent_pages'] = 5;
+
+// provide a cookie path... different from the CI config if you need it (default is same as CI config)
+$config['fuel_cookie_path'] = '/';
+
+// external css file for additional styles possibly needed for 3rd party integration and customizing.
+// must exist in the assets/css file and not the fuel/assets/css folder
+$config['xtra_css'] = '';
+
+// keyboard shortcuts
+$config['keyboard_shortcuts'] = array(
+	'toggle_view' => 'Ctrl+Shift+m', 
+	'save' => 'Ctrl+Shift+s', 
+	'view' => 'Ctrl+Shift+p');
+
+// dashboard modules to include
+$config['dashboards'] = array('fuel', 'backup');
+
+// dashboard rss
+$config['dashboard_rss'] = 'http://www.thedaylightstudio.com/the-whiteboard/categories/fuel-cms/feed/rss';
+
+
+/*
+|--------------------------------------------------------------------------
+| Asset settings 
+|--------------------------------------------------------------------------
+*/
+
+// paths specific to FUEL... relative to the WEB_ROOT
+$config['fuel_assets_path'] = 'fuel/modules/{module}/assets/';
+
+// excludes certain folders from being viewed
+$config['assets_excluded_dirs'] = array('js', 'css', 'cache', 'swf', 'captchas');
+
+// allow subfolders to be created in the assets folder if they don't exist'
+$config['assets_allow_subfolder_creation'] = TRUE;
+
+// specifies what filetype extensions can be included in the folders
+$config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 'pdf' => 'pdf', 'media' => 'jpg|jpeg|jpe|png|gif|mov|mp3|aiff|pdf');
+
+// max upload files size for assets
+$config['assets_upload_max_size']	= '1000';
+
+// max width for asset images beign uploaded
+$config['assets_upload_max_width']  = '1024';
+
+// max height for asset images beign uploaded
+$config['assets_upload_max_height']  = '768';
+
+// javascript files (mostly jquery plugins) to be included other then the controller js files
+$config['fuel_javascript'] = array(
+	'jquery/plugins/date',
+	'jquery/plugins/jquery.datePicker',
+	'jquery/plugins/jquery.fillin',
+	'jquery/plugins/jquery.markitup.pack',
+	'jquery/plugins/jquery.markitup.set',
+	'jquery/plugins/jquery.easing',
+	'jquery/plugins/jquery.bgiframe',
+	'jquery/plugins/jquery.tooltip',
+	'jquery/plugins/jquery.scrollTo-min',
+	'jquery/plugins/jqModal',
+	'jquery/plugins/jquery.checksave',
+	'jquery/plugins/jquery.form',
+	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.cookie',
+	'jquery/plugins/jquery.hotkeys',
+	'jquery/plugins/jquery.cookie',
+	'jquery/plugins/jquery.fillin',
+	'jquery/plugins/jquery.selso',
+	'jquery/plugins/jquery-ui-1.8.4.custom.min',
+	'jquery/plugins/jquery.disable.text.select.pack',
+	'jquery/plugins/jquery.supercomboselect',
+	'jquery/plugins/jquery.MultiFile.pack'
+);
+
+// css other then the fuel.css file which automatically gets loaded
+$config['fuel_css'] = array();
+
+// allow for asset optimization. Requires that all module folders have a writable assets/cache folder
+// values can be TRUE, FALSE, inline, gzip, whitespace, or combine. See the config/asset.php file for more info
+$config['fuel_assets_output'] = FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| Security settings 
+|--------------------------------------------------------------------------
+*/
+
+// restrict fuel to only certain ip addresses (array only value so can include multiple)
+$config['restrict_to_remote_ip'] = array();
+
+// default password to alert against
+$config['default_pwd'] = 'admin';
+
+// default password to alert against
+$config['admin_enabled'] = TRUE;
+
+// the number of times someone can attempt to login before they are locked out for 1 minute
+$config['num_logins_before_lock'] = 3;
+
+// the number of seconds to lock out a person upon reaching the max number failed login attempts
+$config['seconds_to_unlock'] = 60;
+
+// If you set a dev password, the site will require a password to view
+$config['dev_password'] = '';
+
+// will auto search view files. 
+// If the URI is about/history and the about/history view does not exist but about does, it will render the about page
+$config['auto_search_views'] = FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| Module settings
+|--------------------------------------------------------------------------
+*/
+
+// specifies which modules are allowed to be used in the FUEL admin
+$config['modules_allowed'] = array('blog', 'tools');
+
+// site... Dashboard will always be there
+$config['nav']['site'] = array(
+	'dashboard' => lang('nav_dashboard'),
+	'pages' => lang('nav_pages'),
+	'blocks' => lang('nav_blocks'),
+	'navigation' => lang('nav_navigation'),
+	'assets' => lang('nav_assets'),
+	'sitevariables' => lang('nav_sitevariables')
+	);
+
+// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
+$config['nav']['shop'] = array();
+
+// blog placeholder if it exists
+$config['nav']['blog'] = array();
+
+// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
+$config['nav']['modules'] = 'AUTO';
+
+// tools
+$config['nav']['tools'] = array();
+
+// manage
+$config['nav']['manage'] = array(
+	'users' => lang('nav_users'), 
+	'permissions' => lang('nav_permissions'),
+	'manage/cache' => lang('nav_manage/cache'), 
+	'manage/activity' => lang('nav_manage/activity')
+	);
+
+/*
+|--------------------------------------------------------------------------
+| Fuel Router settings
+|--------------------------------------------------------------------------
+*/
+
+// the default view for home
+$config['default_home_view'] = 'home';
+
+// turn on cache. Can be TRUE/FALSE or cms
+$config['use_page_cache'] = 'cms';
+
+// how long to cache the page. A value of 0 means forever until the page or other modules have been updated
+$config['page_cache_ttl'] = 0;
+
+// the name of the group the cache is associated with (so you can just remove the group)
+$config['page_cache_group'] = 'pages';
+
+// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db
+$config['max_page_params'] = 0;
+
+
+/*
+|--------------------------------------------------------------------------
+| DB Table settings
+|--------------------------------------------------------------------------
+*/
+
+// the FUEL specific database tables
+$config['tables'] = array(
+	'archives' => 'fuel_archives',
+	'logs' => 'fuel_logs',
+	'navigation' => 'fuel_navigation',
+	'navigation_groups' => 'fuel_navigation_groups',
+	'pagevars' => 'fuel_page_variables',
+	'pages' => 'fuel_pages',
+	'blocks' => 'fuel_blocks',
+	'permissions' => 'fuel_permissions',
+	'user_to_permissions' => 'fuel_user_to_permissions',
+	'users' => 'fuel_users'
+);
+
+/*
+|--------------------------------------------------------------------------
+| Page settings
+|--------------------------------------------------------------------------
+*/
+
+// the group to associate with the auto-created navigation item
+$config['auto_page_navigation_group_id'] = 1;
+
+// automatically removes the following path from the location
+$config['page_uri_prefix'] = '';
+
+
+@include(APPPATH.'config/MY_fuel.php');
+
+/* End of file fuel.php */
+/* Location: ./application/modules/fuel/config/fuel.php */

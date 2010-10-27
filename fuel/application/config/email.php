@@ -1,0 +1,2 @@
+<?php 
+$config['wordwrap'] = TRUE;

@@ -1,0 +1,6 @@
+.ico_tools_tester { background-image: url(../images/ico_bug.png); }
+div#tester_results a.back { float: right; margin: 5px 10px 0 0; display: block; }
+div#tester_results table { border-collapse: collapse;  }
+div#tester_results table td { border: 1px solid #eee; }
+div#tester_results table.test_results td { padding: 2px 10px; }
+div#tester_results table.test_results td.item { vertical-align: top; font-weight: bold; white-space: nowrap; }

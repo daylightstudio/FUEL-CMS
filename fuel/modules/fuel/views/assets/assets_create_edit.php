@@ -1,0 +1,26 @@
+<div id="main_top_panel">
+	<h2 class="ico ico_<?=strtolower($this->module_name)?>"><a href="<?=fuel_url($this->module)?>"><?=$this->module_name?></a> &gt; <?=ucfirst($action)?> asset</h2>
+</div>
+<div class="clear"></div>
+
+<div id="action">
+
+	<?=$actions?>
+
+</div>
+
+<div id="notification" class="notification">
+	<?=$notifications?>
+</div>
+<div id="main_content">
+
+<div id="main_content_inner">
+
+
+	<p class="instructions"><?=$this->instructions?></p>
+
+	<form method="post" action="<?=fuel_url($this->module.'/'.$action.'/'.$id)?>" enctype="multipart/form-data" id="form">
+	<?=$form?>
+	</form>
+	
+</div>

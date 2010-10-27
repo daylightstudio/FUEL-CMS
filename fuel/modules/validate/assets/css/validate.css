@@ -1,0 +1,19 @@
+.ico_tools_validate { background-image: url(../images/ico_html_valid.png); }
+.ico_validate_links { background-image: url(../images/ico_world_link.png); }
+.ico_validate_size { background-image: url(../images/ico_picture_link.png); }
+.ico_refresh { background-image: url(../images/ico_arrow_refresh.png); }
+
+div#validation_status { margin-bottom: 10px; height: 32px; line-height: 32px; }
+div#validation_status h2 { margin-bottom: 0px; padding: 0; }
+div#validation_results ul { margin-left: 20px; }
+div.validation { position: relative; }
+div.summary { padding: 5px 20px 5px 20px; background-color: #f6f6f6; cursor: pointer; border-bottom: 1px solid #ddd;}
+div.edit { position: absolute; right: 35px; top: 5px; }
+div.result { display: none; }
+div.result iframe { width: 100%; height: 400px; }
+a.results_refresh { float: right; margin: 3px 10px 0 0; display: block; background: transparent url(../images/ico_arrow_refresh.png) no-repeat; width: 16px; height: 16px; }
+
+div.links div.result iframe { height: 200px; }
+#validation_status .loader { position: absolute; left: 190px; top: 47px; }
+
+textarea#pages_input { border: 1px solid #ccc; width: 656px; height: 80px; margin-bottom: 20px; }

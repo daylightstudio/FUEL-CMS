@@ -1,0 +1,117 @@
+@import url(markitup.css);
+@import url(datepicker.css);
+@import url(jquery.supercomboselect.css);
+@import url(jqmodal.css);
+@import url(jquery.tooltip.css);
+
+/* generic styles */
+.__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; }
+.__fuel__ h2 { font-size: 14px; margin-bottom: 10px; }
+.__fuel__ a { color: #0e3e7e; text-decoration: none; font-weight: normal; }
+.__fuel__ a:hover { text-decoration: underline; }
+.__fuel__ input { color: #000; }
+.__fuel__ label { text-transform: none !important; font-weight: normal !important; }
+/*.__fuel__ a:visited { color: #4679bd; }*/
+.__fuel__ h2.module_name { display: none; }
+div#__FUEL__add_edit_modal h2.module_name { display: block; }
+.__fuel__ div.buttonbar { float: right; }
+.__fuel__ div.buttonbar ul { float: right; color: #000; }
+.__fuel__ div.buttonbar li { line-height: 27px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left;list-style: none; margin: 0; }
+.__fuel__ div.buttonbar li:hover { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -27px; }
+.__fuel__ div.buttonbar li.active { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -54px; }
+.__fuel__ div.buttonbar li.active a { color: #000; }
+.__fuel__ div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 15px 0 28px; }
+.__fuel__ div.buttonbar li.spacer { margin-left: 10px;}
+.__fuel__ div.buttonbar li.start { border-left: 1px solid #ccc; }
+.__fuel__ div.buttonbar li.end { border-right: 1px solid #ccc; }
+.__fuel__ div.buttonbar li.round { -moz-border-radius: 0 0 0 7px; -webkit-border-bottom-left-radius: 7px; border-left: 1px solid #fff;}
+.__fuel__ div.buttonbar label { padding-left: 10px; }
+.__fuel__ div.buttonbar select { margin: 0 10px; }
+.__fuel__ div.buttonbar li.right { float: right; }
+
+.__fuel__ div.buttonbar a.fuel_admin { font-weight: bold; color: #000; }
+.__fuel__ div.buttonbar_notop li { border-top: none !important; }
+
+/* icos */
+.__fuel__ .ico { display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 27px; background-image: url(../images/ico_cog.png); width: auto !important; height: auto !important; }
+.__fuel__ .ico_fuel { background-image: url(../images/ico_fuel.png); }
+.__fuel__ .ico_publish { background-image: url(../images/ico_page_green.png); }
+.__fuel__ .ico_unpublish { background-image: url(../images/ico_page_red.png); }
+.__fuel__ .ico_save { background-image: url(../images/ico_disk.png); }
+.__fuel__ .ico_edit { background-image: url(../images/ico_pencil.png); }
+.__fuel__ .ico_delete { background-image: url(../images/ico_page_delete.png); }
+.__fuel__ .ico_cancel {  background-image: url(../images/ico_cancel.png); }
+.__fuel__ .ico_warn {  background-image: url(../images/ico_error.png); }
+.__fuel__ .ico_success {  background-image: url(../images/ico_accept.png); }
+.__fuel__ .ico_error {  background-image: url(../images/ico_cancel.png); }
+.__fuel__ .ico_cache {  background-image: url(../images/ico_page_lightning.png); }
+.__fuel__ .ico_back {  background-image: url(../images/ico_application_side_list.png); }
+.__fuel__ .ico_yes {  background-image: url(../images/ico_accept.png); }
+.__fuel__ .ico_no {  background-image: url(../images/ico_cancel.png); }
+
+.__fuel__ div.save_cancel { width: 200px !important; height: 35px !important; }
+.__fuel__ div.save_cancel li { margin: 5px 3px !important; }
+.__fuel__ .delete { color: #c30; font-weight: bold; }
+.__fuel__ a.delete { display: block !important; float: left !important; margin: 10px 0 0 30px !important; border: 1px solid #ccc !important; padding: 5px !important; }
+.__fuel__ a.btn_field { display: inline-block; margin-bottom: 5px; background-image: url(../images/btn.png) !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
+.__fuel__ a.btn_field:hover { background-position: 0 -27px !important; }
+.__fuel__ .MultiFile-remove { line-height: 22px !important; padding: 0 3px !important; border: 1px solid #ccc !important; background-color: #f9f9f9 !important; }
+.__fuel__ div.html { padding-top: 10px; }
+
+/* notifications */
+.__fuel__ div.notification p, div.notification div, div.notification ul {  margin: 0; min-height: 21px; line-height: 21px; padding-left: 35px; list-style: none; background-repeat: no-repeat; background-position: 15px 3px; list-style: none; }
+#__fuel_notification__ { background-color: #c30 !important; color: #fff !important; position: absolute; top: 0px; left: 0px; right: 0px; }
+#__fuel_notification__ .error li {  color: #fff !important; line-height: 20px !important; border: none !important; }
+.__fuel__ .inline_errors { background-color: #c30 !important; color: #fff !important; background-repeat: no-repeat; line-height: 21px; background-position: 3px 3px;  }
+.__fuel__ .inline_errors li { color: #fff !important; border: none !important; }
+
+/* misc styles */
+.__fuel_edit__ .clear { clear: both; font-size: 0px; height: 0px; line-height: 0px; }
+.__fuel__ .fillin { color: #999 !important; }
+.__fuel__ .tooltip { cursor: help; text-decoration: none !important; border-bottom: 1px dotted #0e3e7e !important;}
+.__fuel_modal__ table.asset_select td { padding: 0 4px 0 0 !important; }
+.__fuel_modal__ #asset_select { max-width: 350px;}
+.__fuel_modal__ li { border: 1px solid #ccc !important; }
+.__fuel__ a.asset_select_button { background: #e6e6e6 url(../images/btn.png) repeat-x !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
+.__fuel__ a.asset_select_button:hover { background-position: 0 -27px !important; }
+
+/* markers for editors */
+.__fuel_marker__ { position: relative !important; z-index: 1000 !important; height: 0px !important; display: block !important; }
+#__fuel_tooltip__ { }
+
+
+/* editor icons */
+.__fuel_edit__ { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+.__fuel_edit__ { position: absolute; z-index: 1000; color: #000; }
+.__fuel_edit__ .__fuel_edit_marker__ { text-align: left; position: relative; display: block; background: transparent url(../images/ico_pencil.png) no-repeat; min-width: 16px; height: 20px; color: #fff; }
+.__fuel_edit__ .__fuel_edit_marker_inner__ { display: none; }
+.__fuel_edit__ .__fuel_edit_marker_new__ { background-image: url(../images/ico_add.png); }
+.__fuel_edit__ .__fuel_edit_marker__ span { cursor: pointer; margin: 0 0 0 20px !important; display: block; background-color: #333; padding: 3px 5px !important; white-space: nowrap; line-height: 16px; color: #fff; }
+.__fuel_edit__ .__fuel_edit_form__ { margin-left: 20px; }
+.__fuel_edit_form__ { color: #000; padding: 10px; background-color: #fff; border: 1px solid #ccc; display: none; }
+.__fuel_edit_form__ table.inline_form { border: none; border-spacing: 0; }
+.__fuel_edit_form__ table.inline_form td { text-align: right; padding: 2px 5px 2px 0px !important; font-size: 11px !important; vertical-align: top !important; }
+.__fuel_edit_form__ table.inline_form td.value { padding: 2px 0 2px 0 !important; float: none !important; text-align: left !important; }
+.__fuel_edit_form__ table.inline_form td.label { float: none !important; font-weight: bold; white-space: nowrap; text-transform: none; }
+.__fuel_edit_form__ table.inline_form td.section { text-align: left !important; }
+.__fuel_edit_form__ table.inline_form td.section h3{ background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; font-size: 12px; }
+.__fuel_edit_form__ table.inline_form td.required { text-align: left !important; padding: 10px 0 0 30px !important; }
+.__fuel_edit_form__ table.inline_form input, 
+.__fuel_edit_form__ table.inline_form textarea,
+.__fuel_edit_form__ table.inline_form select { border: auto !important; float: none !important; background: #fff !important; border: 1px solid #ccc !important; padding: 2px !important; color: #333 !important; }
+.__fuel_edit_form__ table.inline_form input.datepicker { float: left !important; }
+.__fuel_edit_form__ table.inline_form input.fillin { color: #ccc !important; }
+.__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 200px !important; }
+.__fuel_edit_active__ { z-index: 1001; }
+
+/* fuel edit bar */
+div#__fuel_edit_bar__ { display: none; height: 28px; position: fixed; z-index: 999; top: 0px; right: 0; opacity: .9; -moz-opacity: .9; filter:alpha(opacity=90); font-size: 11px; font-family: Arial; }
+div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; background-color: #c30 !important; background-image: none !important; color: #fff; float: left;line-height: 22px; padding: 0 10px; }
+div#__fuel_edit_bar__ li { display: block; }
+div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 30px !important; background-position: center center !important; }
+div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
+
+
+/* modal window */
+ __fuel_modal__ { display: none; position: fixed; top: 20%; left: 50%; margin-left: -222px; color: #333; padding: 10px 20px; width: 400px; border: 2px solid #666; z-index: 1002; background-color: #fff; }
+ __fuel_modal__ { background-color: #000; }

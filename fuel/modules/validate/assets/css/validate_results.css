@@ -1,0 +1,22 @@
+* { -moz-outline-style: none; }
+body { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+h1 { font-size: 18px;  margin-bottom: 10px; }
+h2 { font-size: 14px; margin-bottom: 10px; }
+h3 { font-size: 12px; margin: 15px 0 3px 0; }
+a { color: #0e3e7e; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:visited { color: #4679bd;}
+p { margin: 5px 0 15px 0; }
+ul { margin-bottom: 10px; }
+
+/* tag classes */
+.success { background: #6ec461; }
+.warning { background: #ff1; }
+.error { background: #c30; color: #fff; }
+span.error, span.success { color: #fff; padding: 2px 5px;}
+span.warning { padding: 2px 5px; }
+.clear { clear: both; height: 0; font-size: 0px; line-height: 0px; }
+
+.ico_error {  background-image: url(../images/ico_cancel.png); }
+
+div#edit_url { display: none; }

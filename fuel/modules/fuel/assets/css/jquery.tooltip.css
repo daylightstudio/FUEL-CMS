@@ -1,0 +1,13 @@
+#__fuel_tooltip__ {
+	position: absolute;
+	z-index: 1000000;
+	border: 1px solid #ccc;
+	background-color: #ffffcc;
+	padding: 3px;
+	font-size: 10px !important;
+	font-weight: normal;
+	width: 200px;
+	color: #333;
+	/*opacity: 0.85;*/
+}
+#__fuel_tooltip__ h3, #__fuel_tooltip__ div { margin: 0; font-size: 11px !important; font-weight: bold; }
