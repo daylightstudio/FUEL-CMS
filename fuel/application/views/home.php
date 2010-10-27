@@ -77,14 +77,16 @@
 		<div id="content">
 			<h3>Getting Started</h3>
 			<ol>
-				<li>Install the database by first creating the database in MySQL and then running the fuel_schema.sql file found at the <strong>fuel/install/fuel_schema.sql</strong> of the downloaded FUEL folder (If you want to use the FUEL admin)</li>
+				<li>Install the database by first creating the database in MySQL and then running the fuel_schema.sql file found at the <strong>fuel/install/fuel_schema.sql</strong> of the downloaded FUEL folder (If you want to use the FUEL admin).
+					Then, change the database configuration found in <strong>fuel/application/config/database.php</strong> 
+				</li>
 				
 				<li>Make the following folders writable:
 					<ul>
-						<li class="<?=(is_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
+						<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
 							<?=BASEPATH.'cache/'?>
 						</li>
-						<li class="<?=(is_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
+						<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
 							<?=assets_server_path('', 'images')?>
 						</li>
 					</ul>
