@@ -1,5 +1,5 @@
 <h1>Blog Documentation</h1>
-<p>This Blog documentation is for version the Blog module version <?=BLOG_VERSION?>.</p>
+<p>This Blog documentation is for version <?=BLOG_VERSION?>.</p>
 
 <h2>Overview</h2>
 <p>The FUEL Blog is a module that allows you to have blog functionality without the need
