@@ -7,7 +7,7 @@ class User_guide extends Fuel_base_controller {
 	
 	function __construct()
 	{
-		parent::__construct();
+		parent::__construct(FALSE);
 		$this->load->module_config(USER_GUIDE_FOLDER, 'user_guide');
 		if ($this->config->item('user_guide_authenticate'))
 		{
@@ -35,7 +35,7 @@ class User_guide extends Fuel_base_controller {
 		
 		foreach($modules as $m)
 		{
-			if ($this->fuel_auth->has_permission('user_guide_'.$m) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$m.'/views/_docs/index'.EXT)) 
+			if ((!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$m)) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$m.'/views/_docs/index'.EXT)) 
 			{
 				$module_view = $this->load->module_view($m, '_docs/index', array(), TRUE);
 				$mod_page_title = $this->_get_page_title($module_view);

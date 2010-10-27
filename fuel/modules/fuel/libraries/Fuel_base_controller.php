@@ -8,7 +8,7 @@ class Fuel_base_controller extends Controller {
 	public $js_controller_params = array();
 	public $nav_selected;
 	
-	function __construct()
+	function __construct($validate = TRUE)
 	{
 		parent::Controller();
 
@@ -37,9 +37,9 @@ class Fuel_base_controller extends Controller {
 		
 		// set asset output settings
 		$this->asset->assets_output = $this->config->item('fuel_assets_output', 'fuel');
-		
+
 		// check if logged in
-		if (!$this->fuel_auth->is_logged_in() OR !is_fuelified())
+		if ($validate && (!$this->fuel_auth->is_logged_in() OR !is_fuelified()))
 		{
 			$login = $this->config->item('fuel_path', 'fuel').'login';
 			$cookie = array(
@@ -66,20 +66,24 @@ class Fuel_base_controller extends Controller {
 		$this->load->helpers(array('ajax','date'));
 		
 		// set up default variables
-		$user = $this->fuel_auth->user_data();
-
-		$this->load->vars(array(
+		$load_vars = array(
 			'js' => '', 
 			'css' => $this->_load_css(),
-			'user' => $user, 
 			'js_controller_params' => array(), 
 			'keyboard_shortcuts' => $this->config->item('keyboard_shortcuts', 'fuel'),
 			'nav' => $this->_nav(),
 			'modules_allowed' => $this->config->item('modules_allowed', 'fuel'),
-			'session_key' => $this->fuel_auth->get_session_namespace(),
 			'page_title' => $this->_page_title()
-			)
-		);
+			);
+			
+		if ($validate)
+		{
+			$load_vars['user'] = $this->fuel_auth->user_data();
+			$load_vars['session_key'] = $this->fuel_auth->get_session_namespace();
+		}
+
+		$this->load->vars($load_vars);
+
 		
 		// set configuration paths. site paths are used for the preview since
 		$this->asset->assets_modul ='fuel';
