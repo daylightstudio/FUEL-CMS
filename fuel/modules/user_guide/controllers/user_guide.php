@@ -51,7 +51,7 @@ class User_guide extends Fuel_base_controller {
 		if ($this->_get_page_segment(1) == 'modules' AND $this->_get_page_segment(2) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT))
 		{
 			$module = $this->_get_page_segment(2);
-			if ($this->fuel_auth->has_permission('user_guide_'.$module))
+			if (!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$module))
 			{
 				$vars['body'] = $this->load->module_view($module, $module_view_path, $vars, TRUE);
 				if ($this->_get_page_segment(3))
