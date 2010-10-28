@@ -45,7 +45,8 @@ class User_guide extends Fuel_base_controller {
 		
 		// render page
 		// pull from modules folder if URI says so	
-		$module_page = uri_path(FALSE, 5);
+		$uri_path_index = count(explode('/', $this->config->item('user_guide_root_url'))) + 1;
+		$module_page = uri_path(FALSE, $uri_path_index);
 		$module_view_path = (!empty($module_page)) ? '_docs/'.$module_page : '_docs/index';
 		
 		if ($this->_get_page_segment(1) == 'modules' AND $this->_get_page_segment(2) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT))
