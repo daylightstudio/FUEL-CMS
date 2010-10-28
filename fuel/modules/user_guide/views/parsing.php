@@ -13,9 +13,9 @@ FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP
 	<li>{swf_path('my_swf.swf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">swf_path()</a> function. The <dfn>.swf</dfn> extension is optional.</li>
 	<li>{media_path('my_movie.mov')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">media_path()</a> function.</li>
 	<li>{pdf_path('my_pdf.pdf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">pdf_path()</a> function. The <dfn>.pdf</dfn> extension is optional.</li>
-	<li>{mailto('my@email.com', 'text')} - Uses builtin Dwoo function.</li>
-	<li>{redirect('my_redirect_page')} - Maps to the <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">safe_mailto()</a> function.</li>
-	<li>{show_404} - Maps to the <a href="http://codeigniter.com/user_guide/general/errors.html" target="_blank">safe_mailto()</a> function.</li>
+	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">safe_mailto()</a> function.</li>
+	<li>{redirect('my_redirect_page')} - Maps to the <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">redirect()</a> function.</li>
+	<li>{show_404} - Maps to the <a href="http://codeigniter.com/user_guide/general/errors.html" target="_blank">show_404()</a> function.</li>
 </ul>
 
 <h2>Namespaced Functions</h2>
@@ -24,7 +24,7 @@ FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP
 	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_var()</a> function.</li>
 	<li>{fuel_model(model, array(key="val"...)} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_modules()</a> function.</li>
 	<li>{fuel_block(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_block()</a> function.</li>
-	<li>{fuel_nav(array(key="val"...))} OR {fuel:nav...key="val"} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_nav()</a> function.</li>
+	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_nav()</a> function.</li>
 	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_edit()</a> function.</li>
 </ul>
 <p class="important">Note that several of the functions require an associative array paramter with the <dfn>key="val"</dfn> syntax.</p>
