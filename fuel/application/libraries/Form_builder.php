@@ -844,11 +844,13 @@ Class Form_builder {
 					'readonly' => $params['readonly'], 
 					'disabled' => $params['disabled']
 				);
-				if (($i == 0 AND !$default) OR  ($default == $val)){
+				if (($i == 0 AND !$default) OR  ($default == $val))
+				{
 					$attrs['checked'] = 'checked';
 				}
 				$str .= $this->form->radio($params['name'], $val, $attrs);
-				$str .= ' <label for="'.Form::create_id($params['name']).'">'.$val.'</label>';
+				$name = Form::create_id($params['name']);
+				$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $val).'">'.$val.'</label>';
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$i++;
 			}
