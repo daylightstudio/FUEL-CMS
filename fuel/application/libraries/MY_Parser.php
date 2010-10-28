@@ -76,16 +76,16 @@ class MY_Parser extends CI_Parser {
 
 		// try to create directory if it doesn't exist'
 		// added by David McReynolds @ Daylight Studio 9/16/10 to prevent problems of axing the entire directory
-		if (is_dir($this->_parser_compile_dir) AND is_writable($this->_parser_compile_dir))
+		if (!is_dir($this->_parser_compile_dir))
+		{
+			@mkdir($this->_parser_compile_dir, 0777, TRUE);
+			chmodr($this->_parser_compile_dir, 0777);
+		}
+
+		if (is_writable($this->_parser_compile_dir))
 		{
 			// Main Dwoo object
 			$dwoo = new Dwoo;
-
-			if (!is_dir($this->_parser_compile_dir))
-			{
-				@mkdir($this->_parser_compile_dir, 0777, TRUE);
-				chmodr($this->_parser_compile_dir, 0777);
-			}
 
 			// The directory where compiled templates are located
 			$dwoo->setCompileDir($this->_parser_compile_dir);
