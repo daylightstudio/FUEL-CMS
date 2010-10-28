@@ -47,7 +47,7 @@ Posts are powered by a <dfn>blog_posts_model</dfn> and have a grandparent class 
 
 <h2>get_excerpt_formatted(<var>char_limit</var>, <var>'[readmore]'</var>)</h2>
 <p>Gets the post excerpt.
-The <dfn>char_limit</df> parameter will return only a certain character limit (if so, strip_tags is applied).
+The <dfn>char_limit</dfn> parameter will return only a certain character limit (if so, strip_tags is applied).
 The <dfn>readmore</dfn> parameter will be appended to the end of the excerpt with a link to the full post.
 </p>
 

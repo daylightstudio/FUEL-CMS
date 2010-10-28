@@ -304,12 +304,14 @@ CREATE TABLE `fuel_logs` (
 CREATE TABLE `fuel_navigation` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `group_id` int(5) unsigned NOT NULL default '1',
-  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name (e.g. comany/about_us)',
+  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name that you want the link to go to (e.g. comany/about_us)',
+  `nav_key` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The nav key is a friendly ID that you can use for setting the selected state. If left blank, a default value will be set for you.',
   `label` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The name you want to appear in the menu',
+  `parent_id` int(10) unsigned NOT NULL default '0' COMMENT 'Used for creating menu hierarchies. No value means it is a root level menu item',
   `precedence` int(10) unsigned NOT NULL default '0' COMMENT 'The higher the number, the greater the precedence and farther up the list the navigational element will appear',
   `attributes` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Extra attributes that can be used for navigation implementation',
-  `parent_id` int(10) unsigned NOT NULL default '0' COMMENT 'Used for creating menu hierarchies. No value means it is a root level menu item',
-  `hidden` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
+  `selected` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The pattern to match for the active state. Most likely you leave this field blank',
+  `hidden` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no' COMMENT 'A hidden value can be used in rendering the menu. In some areas, the menu item may not want to be displayed',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'Determines whether the item is displayed or not',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`)
@@ -478,7 +480,7 @@ CREATE TABLE `fuel_users` (
 -- 
 
 INSERT INTO `fuel_users` (`id`, `user_name`, `password`, `email`, `first_name`, `last_name`, `super_admin`, `active`) VALUES 
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'dave@thedaylightstudio.com', 'David', 'McReynolds', 'yes', 'yes');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '', 'Admin', '', 'yes', 'yes');
 
 -- --------------------------------------------------------
 
