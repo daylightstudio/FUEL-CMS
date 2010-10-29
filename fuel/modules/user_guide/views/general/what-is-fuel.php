@@ -6,7 +6,7 @@ a framework and a CMS.</p>
 
 <p>FUEL CMS evolved out of the need for having a development platform that
 was a Framework first and a CMS second. CodeIgniter fit the bill as a 
-lightweight PHP framework that didn't try and to too much behind the scenes.
+lightweight PHP framework that didn't try and do too much behind the scenes.
 It allowed us to cleanly structure our code and use MVC principles (when needed).
 </p>
 
