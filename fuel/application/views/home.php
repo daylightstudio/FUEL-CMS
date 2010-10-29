@@ -91,7 +91,7 @@
 						</li>
 					</ul>
 				</li>
-				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory</li>
+				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'</strong></li>
 				<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 				<li>If you are wanting to use the FUEL admin, change the $config['admin_enabled'] configuration property to <strong>TRUE</strong> in the fuel/application/config/MY_fuel.php file</li>
 				<?php endif; ?>

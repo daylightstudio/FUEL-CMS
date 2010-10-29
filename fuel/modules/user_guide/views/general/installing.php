@@ -4,6 +4,7 @@
 	<li>Download the latest version from <a href="http://www.getfuelcms.com" target="_blank">getfuelcms.com</a></li>
 	<li>Place the <dfn>web</dfn> folder onto your webserver and make sure your <dfn>data_backup</dfn>, <dfn>install</dfn> and <dfn>crons</dfn> folders are in a folder inaccessible to the web <strong>(the .htaccess file has these blocked by default so you may not need to do anything)</strong>.</li>
 	<li>Browse to the index page. <kbd>NOTE: Windows users will need to change the INSTALL_ROOT variable at the top of the page to the server path of the fuel folder.</kbd></li>
+	<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'</strong></li>
 	<li>Install the database by first creating the database in MySQL and then running the fuel_schema.sql file found at the root of the downloaded FUEL folder</li>
 	<li>Configure the <dfn>config/database</dfn> file with the proper database connection settings (like with any other CodeIgniter database application)</li>
 	<li>Make the following folders writable:
