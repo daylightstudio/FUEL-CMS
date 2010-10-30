@@ -1,7 +1,7 @@
 == FUEL CMS ==
 FUEL CMS is a CodeIgniter based Content Management System. To learn more about
 it's features visit:
-http://www.getfuelcms.com/
+http://www.getfuelcms.com
 
 
 == INSTALLATION ==
@@ -15,7 +15,7 @@ change the INSTALL_ROOT constant found in the index.php bootstrap file.
 
 == DOCUMENTATION ==
 To access the documentation, you can visit:
-http://www.getfuelcms.com/user_guide/
+http://www.getfuelcms.com/user_guide
 
 
 == TEAM ==
