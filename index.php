@@ -2,7 +2,7 @@
 /* ATTENTION WINDOWS USERS
 You may need to change the INSTALL_ROOT to the server path of the fuel folder. Below is a dynamic way of doing this 
 (although obviously requires a little procesing time compared to a static value)
-define('INSTALL_ROOT', preg_replace("#\\\#", '/', realpath(sprintf('%s/%s',dirname(__FILE__),'/fuel/')).DIRECTORY_SEPARATOR));
+define('INSTALL_ROOT', str_replace('\\', '/', realpath(sprintf('%s/%s',dirname(__FILE__),'/fuel/')).DIRECTORY_SEPARATOR));
 */
 define('INSTALL_ROOT', realpath(sprintf('%s/%s',dirname(__FILE__),'/fuel/')).DIRECTORY_SEPARATOR);
 

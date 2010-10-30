@@ -20,7 +20,7 @@
 
 <?php if ($use_nav) : ?>
 <!-- START NAVIGATION -->
-<div id="nav">
+<div id="nav" style="display: none;">
 	<div id="nav_inner">
 		
 		<?php $this->load->view('_blocks/toc')?>

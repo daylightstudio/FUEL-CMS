@@ -80,18 +80,20 @@
 				<li>Install the database by first creating the database in MySQL and then running the fuel_schema.sql file found at the <strong>fuel/install/fuel_schema.sql</strong> of the downloaded FUEL folder (If you want to use the FUEL admin).
 					Then, change the database configuration found in <strong>fuel/application/config/database.php</strong> 
 				</li>
-				
+				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'</strong></li>
 				<li>Make the following folders writable:
 					<ul>
 						<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
 							<?=BASEPATH.'cache/'?>
+						</li>
+						<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
+							<?=BASEPATH.'cache/dwoo/compiled'?>
 						</li>
 						<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
 							<?=assets_server_path('', 'images')?>
 						</li>
 					</ul>
 				</li>
-				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'</strong></li>
 				<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 				<li>If you are wanting to use the FUEL admin, change the $config['admin_enabled'] configuration property to <strong>TRUE</strong> in the fuel/application/config/MY_fuel.php file</li>
 				<?php endif; ?>

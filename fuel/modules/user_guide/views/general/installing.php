@@ -9,15 +9,17 @@
 	<li>Configure the <dfn>config/database</dfn> file with the proper database connection settings (like with any other CodeIgniter database application)</li>
 	<li>Make the following folders writable:
 		<ul>
-			<li class="<?=(is_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
+			<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
 				<?=BASEPATH.'cache/'?>
 			</li>
-			<li class="<?=(is_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
+			<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
+				<?=BASEPATH.'cache/dwoo/compiled'?>
+			</li>
+			<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
 				<?=assets_server_path('', 'images')?>
 			</li>
 		</ul>
 	</li>
-	<li>Alter your Apache .htaccess file to the proper web root directory</li>
 </ol>
 
 <p>That's it!</p>

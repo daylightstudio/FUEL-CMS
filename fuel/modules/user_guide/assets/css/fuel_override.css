@@ -18,6 +18,11 @@
 
 .clear { clear: both; height: 0; line-height: 0; font-size: 0; }
 .hidden { display: none; }
+
+.success { background-color: #6ec461; background-repeat: no-repeat; padding: 2px 5px; color: #fff; }
+.warning { background-color: #ff1; background-repeat: no-repeat; }
+.error { background-color: #c30; background-repeat: no-repeat; padding: 2px 5px; color: #fff; }
+
 .img_left { float: left; margin: 0 15px 15px 0; }
 .img_right { float: right; margin: 0 0 15px 15px; }
 div#content img.screen { display: block; border: 1px solid #ccc; margin: 3px 3px 35px 3px; padding: 3px; -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.4); -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.4); }
