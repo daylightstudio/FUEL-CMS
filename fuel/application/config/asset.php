@@ -7,7 +7,7 @@ $config['assets_path'] = 'assets/';
 $config['assets_module_path'] = 'fuel/modules/{module}/assets/';
 
 // file path to assets folder
-$config['assets_server_path'] = WEB_ROOT.$config['assets_path'];
+$config['assets_server_path'] = WEB_ROOT.'assets'.DIRECTORY_SEPARATOR;
 
 // leave blank to set the default context to the main asset_path
 $config['assets_module'] = '';

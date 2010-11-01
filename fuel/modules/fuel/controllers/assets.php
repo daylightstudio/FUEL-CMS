@@ -25,8 +25,8 @@ class Assets extends Module {
 			if ($this->input->post('asset_folder')) $dir = $this->input->post('asset_folder');
 			if (!in_array($dir, array_keys($this->model->get_dirs()))) show_404();
 			
-			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('../', '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
-			$upload_path = $this->config->item('assets_server_path').$this->model->get_dir($dir).'/'.$subfolder; //assets_server_path is in assets config
+			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
+			$upload_path = $this->config->item('assets_server_path').$this->model->get_dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 
 			$overwrite  = ($this->input->post('overwrite')) ? TRUE : FALSE;
 			$posted['userfile_path'] = $upload_path;
@@ -93,6 +93,9 @@ class Assets extends Module {
 	function _form($dir = NULL)
 	{
 		$this->load->library('form_builder');
+		$this->load->helper('convert');
+		if (!empty($dir)) $dir = uri_safe_decode($dir);
+		
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		
@@ -165,7 +168,7 @@ class Assets extends Module {
 				$vars['id'] = $id;
 				if (isset($data[$this->display_field])) $vars['title'] = $data[$this->display_field];
 			}
-			if (empty($data) OR !empty($data['server_path']) AND empty($data['name'])) show_404();
+			if (empty($data) OR (!empty($data['server_path']) AND empty($data['name']))) show_404();
 			$vars['error'] = $this->model->get_errors();
 			$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 			$this->_render($this->views['delete'], $vars);

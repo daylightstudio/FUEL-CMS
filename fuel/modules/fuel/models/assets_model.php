@@ -47,9 +47,17 @@ class Assets_model extends Model {
 		$CI->load->helper('convert');
 		if (!isset($this->filters['group_id'])) return array();
 		$group_id = $this->filters['group_id'];
+		if (strpos($group_id, '/') !== FALSE)
+		{
+			$this->filters['group_id'] = uri_safe_encode($group_id); // to pass the current folder
+		}
+		else
+		{
+			$group_id = uri_safe_decode($group_id);
+		}
 		$asset_dir = $this->get_dir($group_id);
 		
-		$assets_path = $CI->asset->assets_server_path.$asset_dir.'/';
+		$assets_path = $CI->asset->assets_server_path.$asset_dir.DIRECTORY_SEPARATOR;
 		
 		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE);
 		
@@ -91,14 +99,14 @@ class Assets_model extends Model {
 		{
 			if (is_image_file($return[$key]['name']))
 			{
-				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'" border="0"></a></div>';
-				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_type_path.$return[$key]['name'].'</a>';
+				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_dir.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'" border="0"></a></div>';
+				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.$return[$key]['name'].'</a>';
 				
 			}
 			else
 			{
 				$return[$key]['preview/kb'] = $return[$key]['preview/kb'];
-				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_type_path.$return[$key]['name'].'</a>';
+				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.$return[$key]['name'].'</a>';
 			}
 		}
 		return $return;
@@ -140,6 +148,7 @@ class Assets_model extends Model {
 	{
 		$CI =& get_instance();
 		$asset_path = WEB_ROOT.$CI->config->item('assets_path').$file;
+		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
 		return get_file_info($asset_path);
 	}
 	
