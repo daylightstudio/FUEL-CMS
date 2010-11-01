@@ -2,7 +2,6 @@
 
 <?=fuel_block('header')?>
 	<div id="features_screenshots">
-		<?=fuel_block(array('view' => 'screenshots'))?>
 		
 		<div id="features">
 			<div id="for_clients">

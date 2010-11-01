@@ -47,14 +47,11 @@
 			<div id="fuel_intro">
 				<h1 id="fuel_cms">FUEL CMS</h1>
 				<div id="fuel_tagline"></div>
-				<?php if (!uri_path(FALSE) || uri_path(FALSE) == 'home') : ?>
 				<div id="fuel_text">
 					<p class="intro"><strong>An easy, flexible, empowering Content Management System for rapid development</strong>
 						that transforms your CodeIgniter projects into client manageable brilliance. 
 					</p>
-					<a href="#" id="btn_screenshots" class="btn btn_big btn_double_arrow" >SCREENSHOTS <span class="double_arrow">&raquo;</span></a>
 				</div>
-				<?php endif; ?>
 			</div>
 		
 		

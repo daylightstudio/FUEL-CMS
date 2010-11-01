@@ -95,8 +95,6 @@ div#main li { background-repeat: no-repeat; padding-left: 44px; }
 
 div#main_inner { width: 400px; float: right; }
 
-div#features_screenshots { padding-top: 30px; }
-a#btn_screenshots { margin-left: -6px; }
 div#features { padding-top: 120px; }
 div#for_clients { width: 342px; float: left; padding-right: 20px; }
 div#for_developers { width: 342px; float: left;  padding-left: 20px;}
