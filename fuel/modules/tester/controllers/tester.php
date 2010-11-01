@@ -83,7 +83,7 @@ class Tester extends Fuel_base_controller {
 			$this->unit->reset();
 			$test_class = str_replace(EXT, '', end(explode('/', $test)));
 			$test_arr = explode(':', $test);
-			$test = $test_arr[1];
+			$test = end($test_arr);
 			$module = $test_arr[0];
 			require_once($test);
 
