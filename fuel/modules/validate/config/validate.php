@@ -15,7 +15,7 @@ $config['nav']['tools']['tools/validate'] = 'Validate';
 $config['validate'] = array();
 
 // validator url
-$config['validate']['validator_url'] = 'http://validator.w3.org/check/';
+$config['validate']['validator_url'] = 'http://validator.w3.org/check';
 
 // a list of valid internal domains. Can contain regular expression or :any, :num wildcards
 $config['validate']['valid_internal_server_names'] = array('localhost', '192\.168\.:any');

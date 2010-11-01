@@ -54,7 +54,7 @@ class Validate extends Fuel_base_controller {
 			foreach($servers as $server)
 			{
 				$server = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $server));
-				if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = true;
+				if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = TRUE;
 			}
 			if ($local)
 			{
@@ -62,7 +62,7 @@ class Validate extends Fuel_base_controller {
 				// scrape html from page running on localhost
 				$ch = curl_init(); 
 				curl_setopt($ch, CURLOPT_URL, $this->input->post('uri'));
-				curl_setopt($ch, CURLOPT_HEADER, 0); 
+				curl_setopt($ch, CURLOPT_HEADER, 0);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($ch, CURLOPT_USERAGENT, $this->agent->agent_string());
 				
@@ -70,7 +70,7 @@ class Validate extends Fuel_base_controller {
 				curl_close($ch); 
 
 				// post data using fragment variable
-				$tmp_filename = str_replace('/', '_', $this->input->post('uri'));
+				$tmp_filename = str_replace(array('/', ':'), '_', $this->input->post('uri'));
 				$tmp_filename = substr($tmp_filename, 4);
 				$tmp_file_for_validation_urls = BASEPATH.'cache/validation_url-'.$tmp_filename.'.html';
 				write_file($tmp_file_for_validation_urls, $fragment);
@@ -95,7 +95,7 @@ class Validate extends Fuel_base_controller {
 			else
 			{
 				$ch = curl_init(); 
-				curl_setopt($ch, CURLOPT_URL, $validate_config['validator_url'].'check?uri='.$this->input->post('uri'));
+				curl_setopt($ch, CURLOPT_URL, $validate_config['validator_url'].'?uri='.$this->input->post('uri'));
 				curl_setopt($ch, CURLOPT_HEADER, 0); 
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				// curl_setopt($ch, CURLOPT_POST, 1);
@@ -105,10 +105,12 @@ class Validate extends Fuel_base_controller {
 			}
 
 			// do some html cleanup so that css and images pull
-			$results = str_replace('</head>', "<base href=\"".$validate_config['validator_url']."\" />".PHP_EOL."</head>", $results);
+			$url_parts = parse_url($validate_config['validator_url']);
+			$base_url = 'http://'.$url_parts['host'].'/';
+			$results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
 			if (!empty($page_data['id'])) $results = str_replace('<body>', "<body><span style=\"display: none\" id=\"edit_url\">".fuel_url('pages/edit/'.$page_data['id'])."</span>", $results);
-			$results = str_replace('"./style/base.css"', '"'.$validate_config['validator_url'].'style/base.css"', $results);
-			$results = str_replace('"./style/results.css"', '"'.$validate_config['validator_url'].'style/results.css"', $results);
+			$results = str_replace('"./style/base.css"', '"'.$base_url.'style/base.css"', $results);
+			$results = str_replace('"./style/results.css"', '"'.$base_url.'style/results.css"', $results);
 			$vars['results'] = $results;
 			$this->output->set_output($results);
 			return;
