@@ -116,7 +116,7 @@ class Fuel_auth {
 	function get_permissions()
 	{
 		$valid_user = $this->valid_user();
-		if (empty($valid_user)) return FALSE;
+		if (empty($valid_user['id'])) return FALSE;
 		
 		// get the users permissions
 		$CI =& get_instance();
@@ -133,7 +133,7 @@ class Fuel_auth {
 	{
 		$valid_user = $this->valid_user();
 		
-		if (!empty($valid_user)) {
+		if (!empty($valid_user['super_admin'])) {
 			return ($valid_user['super_admin'] == 'yes');
 		}
 		return NULL;

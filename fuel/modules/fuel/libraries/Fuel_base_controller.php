@@ -31,36 +31,10 @@ class Fuel_base_controller extends Controller {
 		{
 			show_404();
 		}
-
-		// load this after the the above because it needs a database connection. Avoids a database connection error if there isn't one'
-		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
-		
 		// set asset output settings
 		$this->asset->assets_output = $this->config->item('fuel_assets_output', 'fuel');
-
-		// check if logged in
-		if ($validate && (!$this->fuel_auth->is_logged_in() OR !is_fuelified()))
-		{
-			$login = $this->config->item('fuel_path', 'fuel').'login';
-			$cookie = array(
-				'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
-				'path' => WEB_PATH
-			);
-			delete_cookie($cookie);
-			if (!is_ajax())
-			{
-				redirect($login.'/'.uri_safe_encode($this->uri->uri_string()));
-			}
-			else 
-			{
-				$output = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
-				$output .= "top.window.location = '".site_url($login)."'\n";
-				$output .= "</script>\n";
-				$this->output->set_output($output);
-				return;
-			}
-		}
-
+		
+		if ($validate) $this->_check_login();
 		
 		$this->load->module_model(FUEL_FOLDER, 'logs_model');
 		$this->load->helpers(array('ajax','date'));
@@ -91,7 +65,36 @@ class Fuel_base_controller extends Controller {
 		$this->_last_page();
 		
 	}
-	
+	protected function _check_login()
+	{
+		// load this after the the above because it needs a database connection. Avoids a database connection error if there isn't one'
+		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
+		
+		// check if logged in
+		if (!$this->fuel_auth->is_logged_in() OR !is_fuelified())
+		{
+			$login = $this->config->item('fuel_path', 'fuel').'login';
+			$cookie = array(
+				'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
+				'path' => WEB_PATH
+			);
+			delete_cookie($cookie);
+			if (!is_ajax())
+			{
+				redirect($login.'/'.uri_safe_encode($this->uri->uri_string()));
+			}
+			else 
+			{
+				$output = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
+				$output .= "top.window.location = '".site_url($login)."'\n";
+				$output .= "</script>\n";
+				$this->output->set_output($output);
+				return;
+			}
+		}
+
+		
+	}
 	protected function _validate_user($permission, $type = 'edit', $show_error = TRUE)
 	{
 		if (!$this->fuel_auth->has_permission($permission, $type))

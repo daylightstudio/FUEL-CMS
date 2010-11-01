@@ -23,7 +23,7 @@
 <div id="nav" style="display: none;">
 	<div id="nav_inner">
 		
-		<?php $this->load->view('_blocks/toc')?>
+	<?php $this->load->module_view(USER_GUIDE_FOLDER, '_blocks/toc')?>
 		
 	</div>
 </div>

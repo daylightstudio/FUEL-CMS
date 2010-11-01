@@ -11,7 +11,7 @@ class User_guide extends Fuel_base_controller {
 		$this->load->module_config(USER_GUIDE_FOLDER, 'user_guide');
 		if ($this->config->item('user_guide_authenticate'))
 		{
-			$this->_validate_user('tools/user_guide');
+			$this->_check_login();
 		}
 	}
 	
@@ -49,7 +49,7 @@ class User_guide extends Fuel_base_controller {
 		$module_page = uri_path(FALSE, $uri_path_index);
 		$module_view_path = (!empty($module_page)) ? '_docs/'.$module_page : '_docs/index';
 		
-		if ($this->_get_page_segment(1) == 'modules' AND $this->_get_page_segment(2) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT))
+		if ($this->_get_page_segment(1) == 'modules' AND ($this->_get_page_segment(2) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT)))
 		{
 			$module = $this->_get_page_segment(2);
 			if (!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$module))
