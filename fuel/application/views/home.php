@@ -90,7 +90,7 @@
 							<?=BASEPATH.'cache/dwoo/compiled'?>
 						</li>
 						<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
-							<?=assets_server_path('', 'images')?>
+							<?=WEB_ROOT.'assets/images'?>
 						</li>
 					</ul>
 				</li>
@@ -101,16 +101,21 @@
 				<li>If you are wanting to edit pages in FUEL, change the $config['fuel_mode'] configuration property to <strong>AUTO</strong> in the fuel/application/config/MY_fuel.php file</li>
 				<?php endif; ?>
 				<li>WARNING: Make sure the <strong>data_backup</strong> folder and <strong>crons</strong> folder is inaccessible to the web. The .htaccess file that comes with FUEL, blocks the fuel/data_backup and fuel/cron folders by default</li>
-				<li>To access the FUEL admin, go to: <a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a></li>
+				<li>To access the FUEL admin, go to: <br />
+				<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br />
+				uid: <strong>admin</strong> <br />
+				pwd: <strong>admin</strong> <br />
+				</li>
 				
 			</ol>
 
 			<p class="important">That&rsquo;s it!</p>
 
-			<h3>Additional Resources</h3>
+			<h3>What's Next?</h3>
 			<ul>
-				<li><a href="<?=fuel_url('tools/user_guide/general/quickstart')?>">Quick Start Guide</a></li>
-				<li><a href="<?=fuel_url('tools/user_guide')?>">Documentation</a></li>
+				<li><a href="<?=site_url('example')?>">Review the Example Page (source found at fuel/application/views/example.php)</a></li>
+				<li><a href="<?=fuel_url('tools/user_guide/general/quickstart')?>">Review the Quick Start Guide</a></li>
+				<li><a href="<?=fuel_url('tools/user_guide')?>">Review the User Guide</a></li>
 			</ul>
 		</div>
 	</div>
