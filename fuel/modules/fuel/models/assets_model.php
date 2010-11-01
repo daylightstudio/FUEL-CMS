@@ -99,7 +99,7 @@ class Assets_model extends Model {
 		{
 			if (is_image_file($return[$key]['name']))
 			{
-				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_dir.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'" border="0"></a></div>';
+				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'" border="0"></a></div>';
 				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.$return[$key]['name'].'</a>';
 				
 			}
