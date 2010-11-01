@@ -12,6 +12,7 @@ class Validate extends Fuel_base_controller {
 		$this->load->config('validate');
 		$this->load->language('validate');
 		$this->js_controller_params['module'] = 'tools';
+		$this->_validate_user('tools/validate');
 	}
 	
 	function index()
