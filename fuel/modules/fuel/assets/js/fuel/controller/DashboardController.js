@@ -7,7 +7,8 @@ fuel.controller.DashboardController = jqx.createController(fuel.controller.BaseF
 		{
 			$('.dashboard_module').each(function(i){
 				var module = $(this).attr('id').replace('dashboard_', '').split('-').join('/');
-				$(this).load(jqx.config.basePath + module + '/dashboard', function(){
+				var page = (module == 'fuel') ? 'dashboard/ajax' : 'dashboard'; // need so back button will not show ajax
+				$(this).load(jqx.config.basePath + module + '/' + page, function(){
 					// console.log('loaded module ' + module);
 				});
 			});

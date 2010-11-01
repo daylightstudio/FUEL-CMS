@@ -13,17 +13,7 @@ class Dashboard extends Fuel_base_controller {
 	{
 		if (is_ajax())
 		{
-			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-
-			$vars['recently_modifed_pages'] = $this->pages_model->recently_updated();
-			$vars['latest_activity'] = $this->logs_model->list_items(10);
-			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
-			{
-				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
-			}
-			$vars['feed'] = $this->_feed();
-			$this->load->view('dashboard_ajax', $vars);
-			
+			$this->ajax();
 		}
 		else
 		{
@@ -61,6 +51,24 @@ class Dashboard extends Fuel_base_controller {
 			$this->_render('dashboard', $vars);
 		}
 
+	}
+	
+	/* need to be outside of index so when you click back button it will not show the ajax */
+	function ajax()
+	{
+		if (is_ajax())
+		{
+			$this->load->module_model(FUEL_FOLDER, 'pages_model');
+
+			$vars['recently_modifed_pages'] = $this->pages_model->recently_updated();
+			$vars['latest_activity'] = $this->logs_model->list_items(10);
+			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
+			{
+				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
+			}
+			$vars['feed'] = $this->_feed();
+			$this->load->view('dashboard_ajax', $vars);
+		}
 	}
 	
 	function _feed()
