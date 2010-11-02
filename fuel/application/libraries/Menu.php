@@ -165,7 +165,7 @@ class Menu {
 				// check to make sure parent_id does not equal id to prevent infinite loops
 				if ($return[$id]['id'] == $return[$id]['parent_id'])
 				{
-					$return[$id]['parent_id'] = NULL;
+					$return[$id]['parent_id'] = $this->root_value;
 				}
 				
 				// set nav_keys array for convenience
