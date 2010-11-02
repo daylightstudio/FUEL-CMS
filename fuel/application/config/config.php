@@ -12,7 +12,7 @@
 |
 */
 
-if ($_SERVER['SERVER_PORT'] != '80')
+if ($_SERVER['SERVER_PORT'] !== '80')
 {
 	$config['base_url'] = "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }
