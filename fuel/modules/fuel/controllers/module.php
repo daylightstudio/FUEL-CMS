@@ -1038,15 +1038,6 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function reset_page_state()
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		$user_data['page_state'] = array();
-		$this->session->set_userdata($session_key, $user_data);
-		redirect(fuel_url($this->module).'/items/');
-	}
-	
 	protected function _clear_cache()
 	{
 		// reset cache for that page only
@@ -1063,28 +1054,7 @@ class Module extends Fuel_base_controller {
 	{
 		return in_array($action, $this->item_actions);
 	}
-	
-	
-	protected function _save_page_state($vars = array())
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		if (!isset($user_data['page_state']))
-		{
-			$user_data['page_state'] = array();
-		}
-		$user_data['page_state'][$this->module_name] = $vars;
-		$this->session->set_userdata($session_key, $user_data);
-		
-	}
-	
-	protected function _get_page_state()
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		return (isset($user_data['page_state'][$this->module_name])) ? $user_data['page_state'][$this->module_name] : array();
-	}
-	
+
 	protected function _process_uploads($posted = NULL)
 	{
 		if (empty($posted)) $posted = $_POST;

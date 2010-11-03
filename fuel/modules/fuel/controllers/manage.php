@@ -4,6 +4,8 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Manage extends Fuel_base_controller {
 	
 	public $nav_selected = 'manage/cache';
+	public $module = 'manage/activity';
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -163,35 +165,6 @@ class Manage extends Fuel_base_controller {
 			$field_values = array();
 			$this->_render('manage/activity', $vars);
 		}
-	}
-	
-	function reset_page_state()
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		$user_data['page_state'] = array();
-		$this->session->set_userdata($session_key, $user_data);
-		redirect(fuel_url('manage/activity'));
-	}
-	
-	protected function _save_page_state($vars = array())
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		if (!isset($user_data['page_state']))
-		{
-			$user_data['page_state'] = array();
-		}
-		$user_data['page_state']['activity_log'] = $vars;
-		$this->session->set_userdata($session_key, $user_data);
-		
-	}
-
-	protected function _get_page_state()
-	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
-		return (isset($user_data['page_state']['activity_log'])) ? $user_data['page_state']['activity_log'] : array();
 	}
 	
 }

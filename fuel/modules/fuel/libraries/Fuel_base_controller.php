@@ -288,6 +288,59 @@ class Fuel_base_controller extends Controller {
 		return $page_title;
 	}
 
+	function reset_page_state()
+	{
+		$state_key = $this->_get_state_key();
+		if (!empty($state_key))
+		{
+			$session_key = $this->fuel_auth->get_session_namespace();
+			$user_data = $this->fuel_auth->user_data();
+			$user_data['page_state'] = array();
+			$this->session->set_userdata($session_key, $user_data);
+			redirect(fuel_url($state_key));
+		}
+	}
+	
+	protected function _save_page_state($vars = array())
+	{
+		$state_key = $this->_get_state_key();
+		if (!empty($state_key))
+		{
+			$session_key = $this->fuel_auth->get_session_namespace();
+			$user_data = $this->fuel_auth->user_data();
+			if (!isset($user_data['page_state']))
+			{
+				$user_data['page_state'] = array();
+			}
+			$user_data['page_state'][$state_key] = $vars;
+			$this->session->set_userdata($session_key, $user_data);
+		}
+		
+	}
+
+	protected function _get_page_state()
+	{
+		$state_key = $this->_get_state_key();
+		if (!empty($state_key))
+		{
+			$session_key = $this->fuel_auth->get_session_namespace();
+			$user_data = $this->fuel_auth->user_data();
+			return (isset($user_data['page_state'][$state_key])) ? $user_data['page_state'][$state_key] : array();
+		}
+	}
+	
+	protected function _get_state_key()
+	{
+		if (!empty($this->module))
+		{
+			return $this->module;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
 }
 
 /* End of file fuel_base.php */
