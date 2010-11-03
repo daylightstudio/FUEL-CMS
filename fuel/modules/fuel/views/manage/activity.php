@@ -13,6 +13,7 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tbody>
 				<tr>
+					<td><a href="<?=fuel_url('manage/reset_page_state')?>" class="reset"></a></td>
 					<td><?=$this->form->search('search_term', $params['search_term'])?> </td>
 					<td class="search"><?=$this->form->submit('Search')?></td>
 					<td class="show">Show: <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>

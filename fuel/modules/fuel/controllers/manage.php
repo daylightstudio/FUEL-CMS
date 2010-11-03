@@ -73,6 +73,8 @@ class Manage extends Fuel_base_controller {
 		
 		$this->nav_selected = 'manage/activity';
 		
+		$page_state = $this->_get_page_state();
+		
 		/* PROCESS PARAMS BEGIN */
 		$filters = array();
 
@@ -95,20 +97,22 @@ class Manage extends Fuel_base_controller {
 			$posted['search_term'] = $this->input->post('search_term');
 		}
 		
-		$params = array_merge($defaults, $uri_params, $posted);
+		//$params = array_merge($defaults, $uri_params, $posted);
+		$params = array_merge($defaults, $page_state, $uri_params, $posted);
+		
 		if ($params['search_term'] == 'Search') $params['search_term'] = null;
 		/* PROCESS PARAMS END */
 		
 		$seg_params = $params;
 		unset($seg_params['offset']);
+		
 		$seg_params = uri_safe_batch_encode($seg_params, '|', TRUE);
 
-		if (!is_ajax() AND !empty($_POST))
-		{
-			$uri = $this->config->item('fuel_path', 'fuel').'manage/activity/offset/'.$params['offset'];
-			
-			redirect($uri);
-		}
+		// if (!is_ajax() AND !empty($_POST))
+		// {
+		// 	$uri = fuel_url('manage/activity/offset/'.$params['offset']);
+		// 	redirect($uri);
+		// }
 		
 		$filters['first_name'] = $params['search_term'];
 		$filters['last_name'] = $params['search_term'];
@@ -122,10 +126,16 @@ class Manage extends Fuel_base_controller {
 		$config['total_rows'] = $this->logs_model->list_items_total();
 		$config['uri_segment'] = fuel_uri_index(4);
 		$config['per_page'] = $params['limit'];
+		$config['page_query_string'] = FALSE;
+		$config['num_links'] = 5;
+		
 		$this->pagination->initialize($config);
+		
+		$this->_save_page_state($params);
 		
 		// data table
 		$vars['params'] = $params;
+		
 		$vars['table'] = '';
 		
 		if (is_ajax())
@@ -154,4 +164,34 @@ class Manage extends Fuel_base_controller {
 			$this->_render('manage/activity', $vars);
 		}
 	}
+	
+	function reset_page_state()
+	{
+		$session_key = $this->fuel_auth->get_session_namespace();
+		$user_data = $this->fuel_auth->user_data();
+		$user_data['page_state'] = array();
+		$this->session->set_userdata($session_key, $user_data);
+		redirect(fuel_url('manage/activity'));
+	}
+	
+	protected function _save_page_state($vars = array())
+	{
+		$session_key = $this->fuel_auth->get_session_namespace();
+		$user_data = $this->fuel_auth->user_data();
+		if (!isset($user_data['page_state']))
+		{
+			$user_data['page_state'] = array();
+		}
+		$user_data['page_state']['activity_log'] = $vars;
+		$this->session->set_userdata($session_key, $user_data);
+		
+	}
+
+	protected function _get_page_state()
+	{
+		$session_key = $this->fuel_auth->get_session_namespace();
+		$user_data = $this->fuel_auth->user_data();
+		return (isset($user_data['page_state']['activity_log'])) ? $user_data['page_state']['activity_log'] : array();
+	}
+	
 }
