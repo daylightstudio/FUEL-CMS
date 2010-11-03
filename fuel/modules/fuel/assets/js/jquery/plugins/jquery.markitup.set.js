@@ -140,10 +140,16 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 	var isInline = (jQuery('#__FUEL__asset_modal').size());
 	var path = (isInline) ? __FUEL_PATH__ + '/assets/select_ajax/images' : jqx.config.fuelPath + '/assets/select_ajax/images';
+	var imgPath = (isInline) ? __FUEL_INIT_PARAMS__.assetsImgPath : jqx.config.assetsImgPath;
 	jQuery('#asset_modal, #__FUEL__asset_modal').jqm({
 		ajax: path,
 	 	onLoad: function(){
 
+			jQuery('#asset_select').change(function(e){
+				jQuery('#asset_preview').html('<img src="' + imgPath + jQuery('#asset_select').val() + '" />');
+			})
+			jQuery('#asset_select').change();
+			
 			jQuery('.ico_yes').click(function(){
 				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
 				var replace = '<img src="{img_path(\'' + jQuery('#asset_select').val() + '\')}" alt="" />';
@@ -155,6 +161,8 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
 				return false;
 			})
+			
+			
 		}
 	}).jqmShow();
 }

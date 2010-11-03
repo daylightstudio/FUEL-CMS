@@ -17,7 +17,7 @@ class Validate extends Fuel_base_controller {
 	
 	function index()
 	{
-		if (!$this->_has_module('fuel')) show_error(lang('error_missing_module', 'validate'));
+		//if (!$this->_has_module('fuel')) show_error(lang('error_missing_module', 'validate'));
 		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');
 		$pages = $this->pages_model->all_pages_including_views(TRUE);

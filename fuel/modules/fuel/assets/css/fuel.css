@@ -242,8 +242,10 @@ div#login_footer { position: absolute; width: 558px; bottom: -35px; }
 a#forgotten_pwd { text-align: center; display: block; margin-top: 10px; }
 
 /* assets & modal */
-div#asset_modal { border: 2px solid #666; background-color: #fff; height: 70px; padding-top: 20px; display: none; }
-div#asset_modal table.asset_select td { padding: 0 4px 0 0; }
+div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; }
+div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }
+div#asset_modal table.asset_select { width: 100%; }
+div#asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }
 div#asset_modal #asset_select { max-width: 350px;}
 div#asset_ajax_form td.label { width: auto; }
 div#asset_select_actions { margin: 10px 0 0 50px; }
@@ -252,7 +254,8 @@ div.img_crop { width: 400px; max-height: 200px; overflow: auto; }
 div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
-div#add_edit_inline_modal { width: 700px; margin-left: -350px; max-height: 400px; overflow: auto;}
+div#add_edit_inline_modal { width: 800px; margin-left: -400px; max-height: 400px; overflow: auto; }
+div#add_edit_inline_modal .add_inline_button, div#add_edit_inline_modal .edit_inline_button { display: none; }
 div#asset_modal .buttonbar, div#add_edit_inline_modal .buttonbar { float: right;}
 
 /* misc */

@@ -12,7 +12,7 @@
 .__fuel__ input { color: #000; }
 .__fuel__ label { text-transform: none !important; font-weight: normal !important; }
 /*.__fuel__ a:visited { color: #4679bd; }*/
-.__fuel__ h2.module_name { display: none; }
+/*.__fuel__ h2.module_name { display: none; }*/
 div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar { float: right; }
 .__fuel__ div.buttonbar ul { float: right; color: #000; }
@@ -70,8 +70,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ .fillin { color: #999 !important; }
 .__fuel__ .tooltip { cursor: help; text-decoration: none !important; border-bottom: 1px dotted #0e3e7e !important;}
 .__fuel_modal__ table.asset_select td { padding: 0 4px 0 0 !important; }
-.__fuel_modal__ #asset_select { max-width: 350px;}
-.__fuel_modal__ li { border: 1px solid #ccc !important; }
+
 .__fuel__ a.asset_select_button { background: #e6e6e6 url(../images/btn.png) repeat-x !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
 .__fuel__ a.asset_select_button:hover { background-position: 0 -27px !important; }
 
@@ -113,5 +112,10 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 
 
 /* modal window */
- __fuel_modal__ { display: none; position: fixed; top: 20%; left: 50%; margin-left: -222px; color: #333; padding: 10px 20px; width: 400px; border: 2px solid #666; z-index: 1002; background-color: #fff; }
- __fuel_modal__ { background-color: #000; }
+.__fuel_add_edit_modal__ { width: 800px; margin-left: -400px; max-height: 400px; overflow: auto; }
+.__fuel_add_edit_modal__ .add_inline_button, .__fuel_add_edit_modal__ .edit_inline_button { display: none !important; }
+#__FUEL__asset_modal { max-height: 400px; z-index: 3000001; }
+#__FUEL__asset_modal #asset_select { max-width: 350px;}
+#__FUEL__asset_modal div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }
+#__FUEL__asset_modal table.asset_select { width: 100%; }
+#__FUEL__asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }

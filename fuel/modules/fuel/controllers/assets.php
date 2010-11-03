@@ -72,8 +72,9 @@ class Assets extends Module {
 		$this->model->add_filters(array('group_id' => $dir));
 		$options = options_list($this->model->list_items(), 'name', 'name');
 		
+		$preview = '<div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
-		$fields['asset_select'] = array('value' => '', 'label' => 'Select', 'type' => 'select', 'options' => $options);
+		$fields['asset_select'] = array('value' => '', 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview);
 		$this->form_builder->css_class = 'asset_select';
 		$this->form_builder->submit_value = null;
 		$this->form_builder->use_form_tag = false;

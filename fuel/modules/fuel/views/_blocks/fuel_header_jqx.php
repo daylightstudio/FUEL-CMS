@@ -2,6 +2,10 @@ var jqx_config = {};
 jqx_config.basePath =  "<?=(substr(site_url(), -1) != '/') ? site_url().'/' : site_url();?>";
 jqx_config.jsPath = "<?=js_path('', 'fuel')?>";
 jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
+
+jqx_config.assetsImgPath = "<?=img_path('')?>";
+jqx_config.assetsPath = "<?=assets_path('')?>";
+
 jqx_config.jqxPath = jqx_config.jsPath + "jqx/";
 jqx_config.controllerPath = <?=$this->js_controller_path?>;
 jqx_config.pluginPath = jqx_config.jsPath + "jquery/";
