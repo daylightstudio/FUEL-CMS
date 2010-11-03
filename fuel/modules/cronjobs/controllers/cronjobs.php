@@ -109,3 +109,5 @@ class Cronjobs extends Fuel_base_controller {
 		$this->_render('cronjobs', $vars);
 	}
 }
+/* End of file cronjobs.php */
+/* Location: ./fuel/modules/cronjobs/controllers/cronjobs.php */

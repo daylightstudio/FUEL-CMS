@@ -155,3 +155,6 @@ class Tester extends Fuel_base_controller {
 		return $return;
 	}
 }
+
+/* End of file tester.php */
+/* Location: ./fuel/modules/tester/controllers/tester.php */

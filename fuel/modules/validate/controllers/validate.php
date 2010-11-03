@@ -466,6 +466,5 @@ class Validate extends Fuel_base_controller {
 	}
 
 }
-
-/* End of file tools.php */
-/* Location: ./codeigniter/application/modules/tools/controllers/validate.php */
+/* End of file validate.php */
+/* Location: ./fuel/modules/validate/controllers/validate.php */

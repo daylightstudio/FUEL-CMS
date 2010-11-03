@@ -144,3 +144,6 @@ class User_guide extends Fuel_base_controller {
 		return $vars;
 	}
 }
+
+/* End of file user_guide.php */
+/* Location: ./fuel/modules/user_guide/controllers/user_guide.php */

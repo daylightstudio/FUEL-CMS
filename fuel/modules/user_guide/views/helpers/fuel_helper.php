@@ -60,6 +60,9 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 <ul>
 	<li><strong>file</strong> - the name of the file containing the navigation information</li>
 	<li><strong>var</strong> - the variable name in the file to use</li>
+	<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
+	<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
+	<li><strong>group_id</strong> - the variable name in the file to use</li>
 	<li><strong>exclude</strong> - nav items to exclude from the menu</li>
 </ul>
 

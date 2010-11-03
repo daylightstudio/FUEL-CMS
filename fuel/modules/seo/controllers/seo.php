@@ -233,5 +233,5 @@ class Seo extends Seo_base_controller {
 	}
 }
 
-/* End of file tools.php */
-/* Location: ./codeigniter/application/modules/tools/controllers/page_analysis.php */
+/* End of file seo.php */
+/* Location: ./fuel/modules/seo/controllers/seo.php */
