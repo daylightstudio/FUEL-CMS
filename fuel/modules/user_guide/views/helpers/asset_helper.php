@@ -1,6 +1,6 @@
 <h1>Asset Helper</h1>
 
-<p>The Asset helper is really just a set of convenience functions that map to the asset class. 
+<p>The Asset helper is really just a set of convenience functions that map to the <a href="<?=user_guide_url('libraries/asset')?>">Asset class</a>. 
 This was done because these functions may be used a lot on in view files 
 and it is easier to type <kbd>&lt;?=img_path('my_img.jpg')?&gt;</kbd> instead of <kbd>&lt;?=$this->asset->img_path('my_img.jpg')?&gt;</kbd>.
 This helper is <strong>autoloaded</strong>.</p>
