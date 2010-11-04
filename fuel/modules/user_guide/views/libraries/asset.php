@@ -1,7 +1,7 @@
 <h1>Asset Class</h1>
 
 <p>The Asset class gives you a way to manage paths to asset files in your web project. 
-It also provide several convenient methods for embedding <kbd>css</kbd>, <kbd>javascript</kbd> and <kbd>flash</kbd> assets.
+It also provides several convenient methods for embedding <kbd>css</kbd>, <kbd>javascript</kbd> and <kbd>flash</kbd> assets.
 </p>
 
 <p class="important">This class must exist in the application libraries folder for the FUEL CMS admin to work</p>
