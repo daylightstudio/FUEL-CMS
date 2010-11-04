@@ -323,7 +323,6 @@ class Fuel_base_controller extends Controller {
 		$state_key = $this->_get_state_key();
 		if (!empty($state_key))
 		{
-			$session_key = $this->fuel_auth->get_session_namespace();
 			$user_data = $this->fuel_auth->user_data();
 			return (isset($user_data['page_state'][$state_key])) ? $user_data['page_state'][$state_key] : array();
 		}
