@@ -25,6 +25,8 @@ $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";
 $lang['data_saved'] = 'Data has been saved.';
 $lang['data_deleted'] = 'Data has been deleted.';
 $lang['no_data'] = 'No data to display.';
+$lang['no_preview_path'] = 'There is no preview path assigned to this module.';
+
 
 /*
 |--------------------------------------------------------------------------

@@ -229,7 +229,10 @@ class Module extends Fuel_base_controller {
 				}
 				else
 				{
-					$this->data_table->add_action($val, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+					if (strtoupper($val) != 'VIEW' OR (!empty($CI->preview_path) AND strtoupper($val) == 'VIEW'))
+					{
+						$this->data_table->add_action($val, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+					}
 				}
 			}
 			
@@ -856,7 +859,7 @@ class Module extends Fuel_base_controller {
 		}
 		else
 		{
-			show_error('There is no preview path assigned to this module.');
+			show_error(lang('no_preview_path'));
 		}
 	}
 
