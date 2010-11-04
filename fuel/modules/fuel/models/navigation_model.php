@@ -176,7 +176,7 @@ class Navigation_model extends Base_module_model {
 	function on_before_clean($values)
 	{
 		if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
-
+		$values['location'] = url_title($values['location']);
 		return $values;
 	}
 	

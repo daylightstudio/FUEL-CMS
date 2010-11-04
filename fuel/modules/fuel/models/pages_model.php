@@ -189,6 +189,12 @@ class Pages_model extends Base_module_model {
 		return $cleaned;
 	}
 	
+	function on_before_clean($values)
+	{
+		$values['location'] = url_title($values['location']);
+		return $values;
+	}
+	
 	function on_before_validate($values)
 	{
 		if (!empty($values['id']))
