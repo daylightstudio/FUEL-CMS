@@ -74,7 +74,8 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 	}
 
 	if (textarea.size() == 0){
-		jQuery('body').append('<textarea id="fullscreen">' + val + '</textarea>');
+		jQuery('body').append('<textarea id="fullscreen"></textarea>');
+		jQuery('#fullscreen').text(val);
 		
 		textarea = jQuery('#fullscreen');
 		
