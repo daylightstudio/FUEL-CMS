@@ -195,8 +195,21 @@ class MY_Parser extends CI_Parser {
 
 			$dwoo = $is_include ? self::spawn() : $this->_dwoo;
 
+			// Create the compiler instance
+			$compiler = new Dwoo_Compiler();
+
+			//Add a pre-processor to help fix javascript {}
+			// added by David McReynolds @ Daylight Studio 11/04/10 to prevent problems of axing the entire directory
+			$callback = create_function('$compiler', '
+				$string = $compiler->getTemplateSource();
+				$string = preg_replace("#{\s*}#", "{\n}", $string); 
+				$compiler->setTemplateSource($string);
+				return $string;
+			');
+			$compiler->addPreProcessor($callback);
+			
 			// render the template
-			$parsed_string = $dwoo->get($tpl, $dwoo_data);
+			$parsed_string = $dwoo->get($tpl, $dwoo_data, $compiler);
 		}
 
 		catch (Exception $e)
