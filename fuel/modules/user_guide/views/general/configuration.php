@@ -354,7 +354,7 @@ $config['nav']['manage'] = array(
 			<td colspan="4" class="hdr"><h4>DB Table Settings</h4></td>
 		</tr>
 		<tr>
-			<td><strong>default_home_view</strong></td>
+			<td><strong>tables</strong></td>
 			<td>
 <pre>
 array(
