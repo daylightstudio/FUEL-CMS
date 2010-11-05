@@ -308,7 +308,7 @@ class Category_model extends Base_module_record {
 </pre>
 <p>In this model we are doing a couple extra things. The first is we add the class property of <dfn>$record_class</dfn> to specify the name of the 
 record class to associate with this model. We do this because the singular version of <dfn>categories</dfn> cannot easily be determined 
-by removing the "s". The second thing we add is a hook to delete all categories_to_articles records with the category_id upon deletion of a category.
+by removing the "s". The second thing we add is a hook to delete all <dfn>categories_to_articles</dfn> records with the category_id upon deletion of a category.
 This will clean up any strays in the lookup table associated with the category that was just deleted.
 </p>
 
@@ -332,9 +332,10 @@ class Categories_to_articles_model extends MY_Model {
 
 	function _common_query()
 	{
-		$this->db->select('categories_to_articles.*, articles.title, categories.name AS category_name');
-		$this->db->join('articles', 'categories_to_articles.article_id = articles.id', 'left');
-		$this->db->join('categories', 'categories_to_articles.category_id = categories.id', 'left');
+        $this->db->select('categories_to_articles.*, articles.title, categories.name AS category_name, articles.author_id');
+        $this->db->join('articles', 'categories_to_articles.article_id = articles.id', 'left');
+        $this->db->join('categories', 'categories_to_articles.category_id = categories.id', 'left');
+        $this->db->join('authors', 'authors.id = articles.author_id', 'left');
 	}
 
 }
@@ -342,13 +343,12 @@ class Categories_to_articles_model extends MY_Model {
 class Category_to_article_model extends Data_record {
 	public $category_name = '';
 	public $title = '';
+	public $author_id;
 }
 </pre>
 <p>Similar to the <dfn>Categories_model</dfn>, we need to specify the record_class name property. 
-We also take advantage of the <dfn>_common_query</dfn> method to automatically join and select the article title and category name.
-We also will add two properties (which are record fields), to the record class to capture the article title and the category name
-being queried in the <dfn>_common_query</dfn>
-</p>
+We also take advantage of the <dfn>_common_query</dfn> method to automatically join and select the article title, category name and author_id.
+We also will add three properties (which are record fields), to the record class to capture the article title, category name and author_id.</p>
 
 <h3>Hooking Up the Categories Module</h3>
 <p>Now that our tables and model have been created, we need
@@ -361,10 +361,6 @@ $config['modules']['authors'] = array();
 
 <p>The categories form should look like the screen below:</p>
 <img src="<?=img_path('examples/categories_form.png', 'user_guide')?>" class="screen" />
-
-
-
-
 
 
 <a href="#categories_to_articles"></a>
@@ -607,7 +603,7 @@ function on_after_delete($where)
 <h4>Lazy Loading the Author to the Record Object</h4>
 <p>By adding the <dfn>foreign_keys</dfn> property to the <dfn>Articles_model</dfn> in one of our first steps, 
 the <dfn>Article_model</dfn> record class will automatically 'lazy load' the <dfn>Author_model</dfn> record object
-associated with the table record. This means you can acces authors like this: <dfn>$article->author->name</dfn>.
+associated with the table record. This means you can access authors like this: <dfn>$article->author->name</dfn>.
 </p>
 
 <p>You may also use the data record class's <dfn>lazy_load</dfn> method to load in record level objects manually. 
@@ -621,10 +617,17 @@ class Article_model extends Data_record {
 	}
 }
 </pre>
+<p>Similarly, we add the following <dfn>foreign_keys</dfn> to the categories_to_articles_model:</p>
+<pre class="brush: php">
+class Categories_to_articles_model extends MY_Model {
+ 
+    public $record_class = 'Category_to_article';
+	public $foreign_keys = array('category_id' => 'categories_model', 'article_id' => 'articles_model', 'author_id' => 'authors_model');
+...
+</pre>
+
 
 <br />
-
-
 
 <h3>Polishing the Categories Module</h3>
 <p>To improve the categories module, we are going to add required fields, add an on_after_delete hook and improve model validation.</p>
@@ -728,7 +731,7 @@ else
 &lt;?php endforeach; ?&gt;
 </pre>
 <p>Next, for this example, we will have FUEL automatically find the view file. To do that, we will overwrite the fuel <dfn>auto_search_views</dfn>
-variable in the FUEL configuration. This is done by adding <dfn>$config['auto_search_views'] = TRUE</dfn> in the <dfn>application/config/MY_fuel.php</dfn> file.</p>
+variable in the FUEL configuration. This is done by changing <dfn>$config['auto_search_views'] = TRUE</dfn> in the <dfn>application/config/MY_fuel.php</dfn> file.</p>
 
 <p class="important"><kbd>$CI</kbd> is a the CodeIgniter super object that FUEL automatically gets passed to the view as the variable <kbd>$CI</kbd></p>
 <p class="important"><kbd>content_formatted</kbd> is a magic method. By appending <kbd>_formatted</kbd> to the end of a string type field, it will format

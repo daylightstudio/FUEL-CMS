@@ -6,7 +6,6 @@ class Articles_model extends Base_module_model {
 
 	public $required = array();
 	public $foreign_keys = array('author_id' => 'authors_model');	
-	public $has_and_belongs_to_many = array('article_id' => 'categories_to_articles_model');
 	
 	function __construct()
 	{
