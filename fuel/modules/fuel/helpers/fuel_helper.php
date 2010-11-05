@@ -272,7 +272,8 @@ function fuel_nav($params = array())
 					'arrow_class' => 'arrow',
 					'display_current' => TRUE,
 					'home_link' => 'Home',
-					'exclude' => array()
+					'exclude' => array(),
+					'return_normalized' => FALSE
 					);
 
 	if (!is_array($params))
@@ -374,6 +375,12 @@ function fuel_nav($params = array())
 			unset($items[$e]);
 		}
 	}
+	
+	if ($p['return_normalized'] !== FALSE)
+	{
+		return $CI->menu->normalize_items($items);
+	}
+	
 	return $CI->menu->render($items, $p['active'], $p['parent']);
 }
 

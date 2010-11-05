@@ -40,8 +40,14 @@
 |
 */
 
-$route['default_controller'] = "fuel/fuel_router";
-$route['scaffolding_trigger'] = "";
+$route['default_controller'] = 'fuel/fuel_router';
+$route['scaffolding_trigger'] = '';
+
+/*	
+| Uncomment this line if you want to use the automatically generated sitemap based on your navigation.
+| To modify the sitemap.xml, go to the views/sitemap_xml.php file.
+*/ 
+//$route['sitemap.xml'] = 'sitemap_xml';
 
 include(APPPATH.MODULES_FOLDER.'/fuel/config/fuel_routes.php');
 

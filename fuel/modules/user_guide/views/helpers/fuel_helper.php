@@ -64,6 +64,7 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 	<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
 	<li><strong>group_id</strong> - the variable name in the file to use</li>
 	<li><strong>exclude</strong> - nav items to exclude from the menu</li>
+	<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
 </ul>
 
 <p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>
