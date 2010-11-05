@@ -238,9 +238,9 @@ array(
 		</tr>
 		<tr>
 			<td><strong>admin_enabled</strong></td>
-			<td>TRUE</td>
+			<td>FALSE</td>
 			<td>boolean TRUE/FALSE</td>
-			<td>Default password to alert against.</td>
+			<td>Enable the FUEL admin or not?</td>
 		</tr>
 		<tr>
 			<td><strong>num_logins_before_lock</strong></td>

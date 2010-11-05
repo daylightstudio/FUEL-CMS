@@ -154,8 +154,8 @@ $config['restrict_to_remote_ip'] = array();
 // default password to alert against
 $config['default_pwd'] = 'admin';
 
-// default password to alert against
-$config['admin_enabled'] = TRUE;
+// enable the FUEL admin or not?
+$config['admin_enabled'] = FALSE;
 
 // the number of times someone can attempt to login before they are locked out for 1 minute
 $config['num_logins_before_lock'] = 3;
