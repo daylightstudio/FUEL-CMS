@@ -727,6 +727,8 @@ else
 &lt;div class="author"&gt;&lt;?=$article-&gt;author-&gt;name?&gt;&lt;/div&gt;
 &lt;?php endforeach; ?&gt;
 </pre>
+<p>Next, for this example, we will have FUEL automatically find the view file. To do that, we will overwrite the fuel <dfn>auto_search_views</dfn>
+variable in the FUEL configuration. This is done by adding <dfn>$config['auto_search_views'] = TRUE</dfn> in the <dfn>application/config/MY_fuel.php</dfn> file.</p>
 
 <p class="important"><kbd>$CI</kbd> is a the CodeIgniter super object that FUEL automatically gets passed to the view as the variable <kbd>$CI</kbd></p>
 <p class="important"><kbd>content_formatted</kbd> is a magic method. By appending <kbd>_formatted</kbd> to the end of a string type field, it will format

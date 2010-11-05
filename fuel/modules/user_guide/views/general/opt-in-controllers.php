@@ -7,7 +7,7 @@ will cascade to all subviews of the page. You can even load in a library, model 
 This method also allows for deeper website structures without the need for special routing to controllers.
 </p>
 
-<h2>How it works?</h2>
+<h2>How it works</h2>
 <p>The CodeIgniter Router is modified to route all requests that don't map to a controller method to a default controller 
 named <dfn>fuel_router</dfn>. This controller will do one of two things, depending on the <dfn>fuel_mode</dfn> value set in the FUEL config file:
 </p>

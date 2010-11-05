@@ -365,10 +365,10 @@ $record->content
 In the table class, magic methods are used to find records in interesting ways. For example, you can do something like this (where <var>{}</var> enclose areas where the developer should change to a proper field name):</p>
 <pre class="brush: php">
 // to find multiple items 
-$this->examples_model->find_<var>all</var>_by_<var>{column1}</var>_and_<var>{column2}</var>(<var>'column1_val'</var>, <var>'column2_val'</var>);
+$this->examples_model->find_all_by_{column1}_and_{column2}('column1_val', 'column2_val');
 
 // to find one item 
-$this->examples_model->find_<var>one</var>_by_<var>{column1}</var>_or_<var>{column2}</var>(<var>'column1_val'</var>, <var>'column2_val'</var>);
+$this->examples_model->find_one_by_{column1}_or_{column2}('column1_val', 'column2_val');
 </pre>
 
 <h2>Working with Active Record</h2>
