@@ -14,6 +14,13 @@ It will even scan other modules for test directories to include in it's list of 
 	<li>Test database information can be set in the <dfn>config/tester.php</dfn> file</li>
 </ul>
 
+<h2>Configuration</h2>
+<ul>
+	<li><strong>dsn</strong> - the database connection information (if it is different then your main FUEL install databse)</li>
+	<li><strong>db_name</strong> - the name of your test database</li>
+</ul>
+<p class="important">You must first create a test database with the same name as <dfn>db_name</dfn> to run any test that uses MySQL.</p>
+
 <h2>Example</h2>
 <pre class="php:brush">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
