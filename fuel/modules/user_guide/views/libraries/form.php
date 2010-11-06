@@ -10,7 +10,7 @@
 	<li>The Form class is used in combination with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> and <a href="<?=user_guide_url('libraries/validator')?>">Validator</a> classes and so code control is important</li>
 	<li>The integration with other classes made it crucial to be bundled up as an object that could be shared</li>
 </ol>
-<p class="important">Unlike CI's helper, this Form class will automatically insert an ID attribute form most of the fields. This can be overwritten with <dfn>id=""</dfn> passed in the any of the methods <dfn>$attrs</dfn> parameter value.</p>
+<p class="important">Unlike CI's helper, this Form class will automatically insert an ID attribute for most of the fields. This can be overwritten with <dfn>id=""</dfn> passed in the any of the methods <dfn>$attrs</dfn> parameter value.</p>
 
 <h2>Configuring Form Information</h2>
 <p>There are several public properties you can use to configure the Form Class:</p>
@@ -20,6 +20,7 @@
 	<li><strong>focus_highlight_cssclass</strong> - The focus css class. Default is <dfn>field_highlight</dfn></li>
 	<li><strong>error_highlight_cssclass</strong> - The error highlight class. Default is <dfn>error_highlight</dfn></li>
 </ul>
+<br />
 
 <h1>Function Reference</h1>
 
