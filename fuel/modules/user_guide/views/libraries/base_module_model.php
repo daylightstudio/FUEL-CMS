@@ -47,24 +47,26 @@ function list_items()
 <h2>$this->module->archive(<var>ref_id</var>, <var>data</var>)</h2>
 <p>Saves data to the archive.</p>
 
-<h2>$this->module->get_last_archive(<var>ref_id</var>, <var>all_data</var>)</h2>
+<h2>$this->module->get_last_archive(<var>ref_id</var>, <var>[all_data]</var>)</h2>
 <p>Retrieves the last archived value.</p>
 
-<h2>$this->module->get_archive(<var>ref_id</var>, <var>version</var>, <var>all_data</var>)</h2>
+<h2>$this->module->get_archive(<var>ref_id</var>, <var>[version]</var>, <var>[all_data]</var>)</h2>
 <p>Retrieves an archived value.</p>
 
-<h2>$this->module->restore(<var>ref_id</var>, <var>version</var>)</h2>
+<h2>$this->module->restore(<var>ref_id</var>, <var>[version]</var>)</h2>
 <p>Restores module item from an archived value.</p>
 
-<h2>$this->module->others(<var>display_field</var>, <var>id</var>, <var>val_field</var>)</h2>
+<h2>$this->module->get_others(<var>'display_field'</var>, <var>id</var>, <var>[val_field]</var>)</h2>
 <p>Get other listed module items excluding the currently displayed.</p>
 
-<h2>$this->module->others(<var>display_field</var>, <var>id</var>, <var>val_field</var>)</h2>
-<p>Get other listed module items excluding the currently displayed.</p>
+<h2>$this->module->form_fields(<var>[values]</var>, <var>[related]</var>)</h2>
+<p>Overwrites MY_Model's form_field() method and adds some additional features including automatically creating 
+image upload fields for table column names that end with <dfn>image</dfn> or <dfn>img</dfn>.</p>
 
+<br />
 
 <h1>Base_module_record Function Reference</h1>
-<p>The <dfn>Base_module_record</dfn> class is what is returned by module table classes.</p>
+<p>The <dfn>Base_module_record</dfn> class is what is returned by module table classes and extends the <a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">Data_record class</a>.</p>
 
 <h2>set_parsed_fields()</h2>
 <p>Sets the fields to parse.</p>

@@ -382,9 +382,9 @@ abstract class Base_module_model extends MY_Model {
 	 * @param	int
 	 * @return	boolean
 	 */	
-	function form_fields($values = array())
+	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields($values);
+		$fields = parent::form_fields($values, $related);
 		$order = 1;
 		
 		
