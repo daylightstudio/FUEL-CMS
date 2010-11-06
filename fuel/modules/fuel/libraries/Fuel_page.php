@@ -646,12 +646,9 @@ class Fuel_page {
 		$view = implode('/', $view_parts);
 		if (!file_exists($this->views_path.$view.EXT) AND count($view_parts) > 1)
 		{
-			$this->find_view_file($view);
+			$view = $this->find_view_file($view);
 		}
-		else
-		{
-			return $view;
-		}
+		return $view;
 	}
 }
 /* End of file Fuel_page.php */
