@@ -124,7 +124,7 @@ class About extends Controller {
 	<li><strong>libraries</strong> - a string or array of library classes to load.</li>
 	<li><strong>models</strong> -  a string or array of models to load.</li>
 	<li><strong>layout</strong> - the path to the layout view. The <dfn>$body</dfn> variable is used within the layout to load the view file contents.</li>
-	<li><strong>views</strong> - a specific view file to use for the page. By default it will look for a view file that matches the uri path. 
+	<li><strong>view</strong> - a specific view file to use for the page. By default it will look for a view file that matches the uri path. 
 		If it doesn't find one, then it will search the uri path for a corresponding view.</li>
 	<li><strong>parse_view</strong> - determines whether the view file should be <a href="<?=user_guide_url('parsing/overview')?>">parsed</a>.</li>
 	<li><strong>allow_empty_content</strong> - determines whether to allow empty view content without showing the 404 page.</li>
