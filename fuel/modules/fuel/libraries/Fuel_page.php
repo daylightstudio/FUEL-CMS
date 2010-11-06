@@ -641,6 +641,9 @@ class Fuel_page {
 	function find_view_file($view)
 	{
 		if (!$this->_CI->config->item('auto_search_views', 'fuel')) return NULL;
+		static $cnt;
+		if (is_null($count)) $cnt = 0;
+		$cnt++;
 		$view_parts = explode('/', $view);
 		array_pop($view_parts);
 		$view = implode('/', $view_parts);
@@ -648,6 +651,7 @@ class Fuel_page {
 		{
 			$view = $this->find_view_file($view);
 		}
+		echo $cnt.'xxx';
 		return $view;
 	}
 }
