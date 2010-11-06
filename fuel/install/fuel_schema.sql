@@ -270,12 +270,6 @@ CREATE TABLE `fuel_blog_users` (
   PRIMARY KEY  (`fuel_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Dumping data for table `fuel_blog_users`
--- 
-
-INSERT INTO `fuel_blog_users` (`fuel_user_id`, `display_name`, `website`, `about`, `avatar`, `twitter`, `facebook`, `date_added`, `active`) VALUES 
-(1, 'David McReynolds', '', '', '', '', '', NULL, 'yes');
 
 -- --------------------------------------------------------
 
