@@ -27,6 +27,7 @@
 					<li><a href="<?=user_guide_url('general/configuration')?>">Configuring FUEL CMS</a></li>
 					<li><a href="<?=user_guide_url('general/quickstart')?>">Quick Start</a></li>
 					<li><a href="<?=user_guide_url('general/creating-pages')?>">Creating Pages</a></li>
+					<li><a href="<?=user_guide_url('general/pages-layouts-modules-blocks')?>">Pages, Layouts, Modules &amp; Blocks</a></li>
 				</ul>
 				
 				<h3>General Topics</h3>

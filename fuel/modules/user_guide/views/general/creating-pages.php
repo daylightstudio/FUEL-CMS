@@ -66,7 +66,7 @@ $vars['bigpic'] = 'about_bigpic.jpg';
 
 <a name="controller"></a>
 <h2>Using Controllers - about/contact</h2>
-<p>FUEL still allows you to create pages using the standar MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>about/contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>applications/views/_variables/</dfn> file like so:</p>
+<p>FUEL still allows you to create pages using the standard MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>about/contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>applications/views/_variables/</dfn> file like so:</p>
 
 <pre class="brush:php">
 class About extends Controller {
