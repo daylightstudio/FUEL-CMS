@@ -536,11 +536,11 @@ class Fuel_page {
 			}
 
 			$output = '<a class="__fuel_marker__" href="'.fuel_url($module).'/inline_edit/" rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
-			if (isset($xOffset) OR isset($yOffset))
+			if (isset($xoffset) OR isset($yoffset))
 			{
 				$output .= ' style="';
-				if (isset($xOffset)) $marker .= 'left:'.$xoffset.'px;';
-				if (isset($yOffset)) $marker .= 'top:'.$yoffset.'px;';
+				if (isset($xoffset)) $output .= 'left:'.$xoffset.'px;';
+				if (isset($yoffset)) $output .= 'top:'.$yoffset.'px;';
 				$output .= '"';
 			}
 			$output .= "></a>";
