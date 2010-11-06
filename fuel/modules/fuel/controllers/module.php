@@ -571,7 +571,7 @@ class Module extends Fuel_base_controller {
 					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
 					{
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-						log_message('error', $field_name);
+
 						if (isset($posted[$file_tmp.'_filename']))
 						{
 							$field_value = $posted[$file_tmp.'_filename'];

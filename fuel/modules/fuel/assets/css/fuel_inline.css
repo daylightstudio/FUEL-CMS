@@ -68,7 +68,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 /* misc styles */
 .__fuel_edit__ .clear { clear: both; font-size: 0px; height: 0px; line-height: 0px; }
 .__fuel__ .fillin { color: #999 !important; }
-.__fuel__ .tooltip { cursor: help; text-decoration: none !important; border-bottom: 1px dotted #0e3e7e !important;}
+.__fuel__ .tooltip { cursor: help; text-decoration: none !important; border-bottom: 1px dotted #0e3e7e !important; color: #000 !important; }
 .__fuel_modal__ table.asset_select td { padding: 0 4px 0 0 !important; }
 
 .__fuel__ a.asset_select_button { background: #e6e6e6 url(../images/btn.png) repeat-x !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
@@ -76,7 +76,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 
 /* markers for editors */
 .__fuel_marker__ { position: relative !important; z-index: 1000 !important; height: 0px !important; display: block !important; }
-#__fuel_tooltip__ { }
+#__fuel_tooltip__ h3 { color: #000 !important; font-weight: bold !important; text-decoration: none !important; font-style: normal !important; border: none !important; }
 
 
 /* editor icons */
@@ -91,9 +91,9 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel_edit_form__ table.inline_form { border: none; border-spacing: 0; }
 .__fuel_edit_form__ table.inline_form td { text-align: right; padding: 2px 5px 2px 0px !important; font-size: 11px !important; vertical-align: top !important; }
 .__fuel_edit_form__ table.inline_form td.value { padding: 2px 0 2px 0 !important; float: none !important; text-align: left !important; }
-.__fuel_edit_form__ table.inline_form td.label { float: none !important; font-weight: bold; white-space: nowrap; text-transform: none; }
+.__fuel_edit_form__ table.inline_form td.label { float: none !important; font-weight: normal !important; white-space: nowrap !important; text-transform: none !important; }
 .__fuel_edit_form__ table.inline_form td.section { text-align: left !important; }
-.__fuel_edit_form__ table.inline_form td.section h3{ background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; font-size: 12px; }
+.__fuel_edit_form__ table.inline_form td.section h3 { background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; font-size: 12px; }
 .__fuel_edit_form__ table.inline_form td.required { text-align: left !important; padding: 10px 0 0 30px !important; }
 .__fuel_edit_form__ table.inline_form input, 
 .__fuel_edit_form__ table.inline_form textarea,
