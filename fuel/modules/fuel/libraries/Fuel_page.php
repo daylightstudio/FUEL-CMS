@@ -642,16 +642,15 @@ class Fuel_page {
 	{
 		if (!$this->_CI->config->item('auto_search_views', 'fuel')) return NULL;
 		static $cnt;
-		if (is_null($count)) $cnt = 0;
+		if (is_null($cnt)) $cnt = 0;
 		$cnt++;
 		$view_parts = explode('/', $view);
 		array_pop($view_parts);
 		$view = implode('/', $view_parts);
-		if (!file_exists($this->views_path.$view.EXT) AND count($view_parts) > 1)
+		if (!file_exists($this->views_path.$view.EXT) AND count($view_parts) > 1 AND $cnt < 6) // hard coded 6 levels
 		{
 			$view = $this->find_view_file($view);
 		}
-		echo $cnt.'xxx';
 		return $view;
 	}
 }
