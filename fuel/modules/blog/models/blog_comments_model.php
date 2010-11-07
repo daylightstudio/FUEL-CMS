@@ -38,13 +38,13 @@ class Blog_comments_model extends Base_module_model {
 		$comments = $this->find_all($where, 'title asc');
 		foreach($comments as $comment)
 		{
-			if (!isset($return[$comment->post_permalink]))
+			if (!isset($return[$comment->post_id]))
 			{
-				$return['p_'.$comment->post_id] = array('label' => $comment->title, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id));
+				$return['p_'.$comment->post_id] = array('id' => 'p_'.$comment->post_id, 'label' => $comment->title, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id));
 			}
 			$label = (!empty($comment->author_name)) ? $comment->author_name : $comment->author_email;
 			$attributes = ($comment->published == 'no') ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-			$return['c_'.$comment->id] = array('id' => $comment->id, 'label' => $label, 'parent_id' => $comment->post_id, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id), 'attributes' =>  $attributes);
+			$return['c_'.$comment->id] = array('id' => $comment->id, 'label' => $label, 'parent_id' => 'p_'.$comment->post_id, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id), 'attributes' =>  $attributes);
 		}
 		$return = array_sorter($return, 'label', 'asc');
 		return $return;
