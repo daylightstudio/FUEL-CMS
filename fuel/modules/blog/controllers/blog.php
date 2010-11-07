@@ -155,7 +155,7 @@ class Blog extends Blog_base_controller {
 					$captcha = $this->_render_captcha();
 					$vars['captcha'] = $captcha;
 				}
-				$vars['thanks'] = ($this->session->flashdata('thanks')) ? $this->session->flashdata('thanks') : '';
+				$vars['thanks'] = ($this->session->flashdata('thanks')) ? blog_block('comment_thanks', $vars, TRUE) : '';
 				$vars['comment_form'] = '';
 				$this->session->set_userdata('antispam', $antispam);
 				
@@ -215,7 +215,6 @@ class Blog extends Blog_base_controller {
 	}
 	function _process_comment($post)
 	{
-	
 		if (!is_true_val($this->fuel_blog->settings('allow_comments'))) return;
 		
 		$notified = FALSE;
@@ -288,12 +287,9 @@ class Blog extends Blog_base_controller {
 					$this->load->library('session');
 					$vars['post'] = $post;
 					$vars['comment'] = $comment;
-					$thanks = blog_block('comment_thanks', $vars, TRUE);
-					$this->session->set_flashdata('thanks', $thanks);
-					
+					$this->session->set_flashdata('thanks', TRUE);
 					$this->session->set_userdata('last_comment_ip', $_SERVER['REMOTE_ADDR']);
 					$this->session->set_userdata('last_comment_time', time());
-					
 					redirect($post->url);
 				}
 				else
