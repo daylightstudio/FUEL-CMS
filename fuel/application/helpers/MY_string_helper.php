@@ -178,8 +178,8 @@ function safe_htmlentities($str)
 function php_to_template_syntax($str)
 {
 	// order matters!!!
-	$find = array('<?php endforeach', '<?php endif', '<!--', '-->', '<?php ', '<?=');
-	$replace = array('{/foreach', '{/if', '{*', '*}', '{', '{');
+	$find = array('<?php endforeach', '<?php endif', '<!--', '-->', '<?php echo ', '<?php ', '<?=', );
+	$replace = array('{/foreach', '{/if', '{*', '*}', '{', '{', '{');
 
 	// close ending php
 	$str = preg_replace('#([:|;])?\s*\?>#U', '}$3', $str);
