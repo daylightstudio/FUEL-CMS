@@ -1,23 +1,13 @@
 <?php $this->load->view('_blocks/header')?>
-
-<div id="main">
-	<div id="main_inner">
-		
-		<div id="main_inner_top"></div>
-		
-		<div id="left">
-			<?=$this->fuel_blog->sidemenu(array('search', 'categories'))?>
-		</div>
-
-		<div id="right">
-			<div id="content">
-				<?=$body?>
-			</div>
-		</div>
-		
-		<div class="clear"></div>
-		
+	
+	<div id="right">
+		<?php echo $this->fuel_blog->sidemenu(array('search', 'authors', 'categories', 'links', 'archives'))?>
 	</div>
-</div>
 
+	<div id="main_inner">
+		<?php echo fuel_var('body', ''); ?>
+	</div>
+	
+	<div class="clear"></div>
+	
 <?php $this->load->view('_blocks/footer')?>
