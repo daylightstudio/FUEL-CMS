@@ -59,11 +59,12 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.html { padding-top: 10px; }
 
 /* notifications */
-.__fuel__ div.notification p, div.notification div, div.notification ul {  margin: 0; min-height: 21px; line-height: 21px; padding-left: 35px; list-style: none; background-repeat: no-repeat; background-position: 15px 3px; list-style: none; }
+.__fuel__ div.notification>p, div.notification>div, div.notification>ul { margin: 0; min-height: 21px; line-height: 21px; padding-left: 35px !important; list-style: none !important; background-repeat: no-repeat !important; background-position: 15px 3px !important; list-style: none !important; color: #fff !important; }
 #__fuel_notification__ { background-color: #c30 !important; color: #fff !important; position: absolute; top: 0px; left: 0px; right: 0px; }
 #__fuel_notification__ .error li {  color: #fff !important; line-height: 20px !important; border: none !important; }
 .__fuel__ .inline_errors { background-color: #c30 !important; color: #fff !important; background-repeat: no-repeat; line-height: 21px; background-position: 3px 3px;  }
-.__fuel__ .inline_errors li { color: #fff !important; border: none !important; }
+.__fuel__ .inline_errors li { color: #fff !important; border: none !important; list-style: none !important; }
+.__fuel__ .inline_errors p { color: #fff !important; }
 
 /* misc styles */
 .__fuel_edit__ .clear { clear: both; font-size: 0px; height: 0px; line-height: 0px; }
