@@ -46,7 +46,7 @@ The <dfn>params</dfn> parameter is an associative array that can have the follow
 	<li><strong>return_method</strong> - the return method to use which can be an object or an array</li>
 	<li><strong>assoc_key</strong> - the field to be used as an associative key for the data results</li>
 	<li><strong>var</strong> - the variable name to assign the data returned from the module model query</li>
-	<li><strong>folder</strong> - specifies the module folder name to find the model</li>
+	<li><strong>module</strong> - specifies the module folder name to find the model</li>
 </ul>
 
 <h2>fuel_nav(<var>params</var>)</h2>

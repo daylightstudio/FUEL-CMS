@@ -8,7 +8,7 @@ div.post_content ul { margin-bottom: 20px; }
 div.post_content p, div.post_content li { line-height: 16px; }
 div.post_content li { list-style: disc; margin-left: 20px; margin-bottom: 5px;  }
 div.post_content img { float: left; display: block; margin: 0 5px 10px 0; }
-div.post_meta { font-size: 9px; line-height: 9px; padding: 6px 0 4px 0; }
+div.post_meta { padding: 6px 0 4px 0; }
 div.post_author_date { margin-bottom: 10px; font-weight: bold; }
 div.post_author_date a { color: #5d87a1; }
 

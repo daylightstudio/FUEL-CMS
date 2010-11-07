@@ -166,7 +166,7 @@ function fuel_model($model, $params = array())
 					'return_method' => 'auto', 
 					'assoc_key' => '',
 					'var' => '',
-					'folder'
+					'module' => ''
 					);
 					
 
@@ -189,9 +189,9 @@ function fuel_model($model, $params = array())
 	if (empty($model_name)) return NULL;
 
 	//echo $model_name;
-	if (!empty($folder))
+	if (!empty($module))
 	{
-		$CI->load->module_model($folder, $model_name);
+		$CI->load->module_model($module, $model_name);
 	}
 	else
 	{
