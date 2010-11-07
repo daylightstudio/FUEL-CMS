@@ -32,6 +32,7 @@ $config['modules']['pages'] = array(
 $config['modules']['blocks'] = array(
 	'display_field' => 'name',
 	'js_controller' => 'BlockController',
+	'sanitize_input' => 'php'
 );
 
 // navigation module init values
