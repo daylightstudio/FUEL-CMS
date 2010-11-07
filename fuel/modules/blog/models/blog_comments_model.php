@@ -44,7 +44,7 @@ class Blog_comments_model extends Base_module_model {
 			}
 			$label = (!empty($comment->author_name)) ? $comment->author_name : $comment->author_email;
 			$attributes = ($comment->published == 'no') ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-			$return['c_'.$comment->id] = array('id' => $comment->id, 'label' => $label, 'parent_id' => $comment->post_permalink, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id), 'attributes' =>  $attributes);
+			$return['c_'.$comment->id] = array('id' => $comment->id, 'label' => $label, 'parent_id' => $comment->post_id, 'location' => fuel_url('blog/posts/edit/'.$comment->post_id), 'attributes' =>  $attributes);
 		}
 		$return = array_sorter($return, 'label', 'asc');
 		return $return;
