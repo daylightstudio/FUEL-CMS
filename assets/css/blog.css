@@ -4,6 +4,7 @@
 .right { float: right; }
 .img_left { float: left; margin: 0 15px 15px 0; }
 .img_right { float: right; margin: 0 0px 15px 15px; }
+.search_highlight { background-color: #ff9; }
 
 /* post content */
 div.post { padding-bottom: 20px; }
