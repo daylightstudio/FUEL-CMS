@@ -4,7 +4,10 @@
 	<h3>Links</h3>
 	<ul>
 		<?php foreach($links as $link) : ?>
-		<li><?=$link->link?></li>
+		<li>
+			<?=fuel_edit($link->id, 'Edit Link: '.$link->name, 'blog/links')?>
+			<?=$link->link?>
+		</li>
 		<?php endforeach; ?>
 	</ul>
 </div>

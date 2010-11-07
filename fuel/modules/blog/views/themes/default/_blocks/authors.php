@@ -4,7 +4,10 @@
 	<h3>Authors</h3>
 	<ul>
 		<?php foreach($authors as $author) : ?>
-		<li><a href="<?=$author->url?>"><?=$author->name?></a></li>
+		<li>
+			<?=fuel_edit($author->id, 'Edit Author: '.$author->name, 'blog/users')?>
+			<a href="<?=$author->url?>"><?=$author->name?></a>
+		</li>
 		<?php endforeach; ?>
 	</ul>
 </div>
