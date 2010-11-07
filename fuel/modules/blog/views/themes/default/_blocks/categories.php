@@ -1,7 +1,7 @@
 <?php $posts_to_categories = $CI->fuel_blog->get_posts_to_categories(); ?>
 <?php if (!empty($posts_to_categories)) : ?>
-<h3>Categories</h3>
-<div class="leftmenu">
+<div class="blog_block">
+	<h3>Categories</h3>
 	<ul>
 		<?php foreach($posts_to_categories as $post_to_category) : ?>
 		<li>
