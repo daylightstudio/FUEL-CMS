@@ -166,7 +166,8 @@ class Pages extends Module {
 			{
 				$view_twin_info = get_file_info($view_twin);
 				if (!empty($saved)) {
-					if ($view_twin_info['date'] > strtotime($saved['last_modified']) ||
+					$tz = date('T');
+					if ($view_twin_info['date'] > strtotime($saved['last_modified'].' '.$tz) OR
 						$saved['last_modified'] == $saved['date_added'])
 					{
 						$import_view = TRUE;
@@ -431,7 +432,8 @@ class Pages extends Module {
 			if (file_exists($view_twin))
 			{
 				$view_twin_info = get_file_info($view_twin);
-				if ($view_twin_info['date'] > strtotime($page_data['last_modified']) ||
+				$tz = date('T');
+				if ($view_twin_info['date'] > strtotime($page_data['last_modified'].' '.$tz) OR
 					$page_data['last_modified'] == $page_data['date_added'])
 				{
 					// must have content in order to not return error

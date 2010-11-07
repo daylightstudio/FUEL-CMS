@@ -8,7 +8,6 @@ class Blocks extends Module {
 		parent::__construct();
 	}
 
-	
 	function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
 	{
 		$vars = parent::_form($id, $fields, $log_to_recent, $display_normal_submit_cancel);
@@ -17,15 +16,13 @@ class Blocks extends Module {
 		$warning_window = '';
 		if (!empty($saved['name'])) {
 			$view_twin = APPPATH.'views/_blocks/'.$saved['name'].EXT;
-			
 			if (file_exists($view_twin))
 			{
 				$view_twin_info = get_file_info($view_twin);
-
-				
 				if (!empty($saved)) 
 				{
-					if ($view_twin_info['date'] > strtotime($saved['last_modified']) OR 
+					$tz = date('T');
+					if ($view_twin_info['date'] > strtotime($saved['last_modified'].' '.$tz) OR 
 						$saved['last_modified'] == $saved['date_added'])
 					{
 						$warning_window = lang('blocks_updated_view', $view_twin);
@@ -36,7 +33,7 @@ class Blocks extends Module {
 		$vars['warning_window'] = $warning_window;
 		return $vars;
 	}
-
+	
 	function import_view_cancel()
 	{
 		if ($this->input->post('id')){
@@ -62,11 +59,13 @@ class Blocks extends Module {
 			$block_data = $this->model->find_by_key($this->input->post('id'), 'array');
 			$this->load->helper('file');
 			$view_twin = APPPATH.'views/_blocks/'.$block_data['name'].EXT;
-			
+
 			if (file_exists($view_twin))
 			{
 				$view_twin_info = get_file_info($view_twin);
-				if ($view_twin_info['date'] > strtotime($block_data['last_modified']) ||
+				
+				$tz = date('T');
+				if ($view_twin_info['date'] > strtotime($block_data['last_modified'].' '.$tz) OR
 					$block_data['last_modified'] == $block_data['date_added'])
 				{
 					// must have content in order to not return error
