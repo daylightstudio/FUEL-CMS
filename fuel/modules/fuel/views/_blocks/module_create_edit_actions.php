@@ -23,14 +23,14 @@
 
 		
 			<?php if ($this->fuel_auth->module_has_action('delete')) :?>
-				<li><a href="<?=fuel_url($this->module.'/delete/'.$id)?>" class="ico ico_delete delete_action">Delete</a></li>
+				<li><a href="<?=fuel_url($this->module_uri.'/delete/'.$id)?>" class="ico ico_delete delete_action">Delete</a></li>
 			<?php endif; ?>
 			
 			<?php if ($this->fuel_auth->module_has_action('duplicate')) : ?>
-				<li><a href="<?=fuel_url($this->module.'/create')?>" class="ico ico_duplicate duplicate_action">Duplicate</a></li>
+				<li><a href="<?=fuel_url($this->module_uri.'/create')?>" class="ico ico_duplicate duplicate_action">Duplicate</a></li>
 			<?php endif; ?>
 			<?php if ($this->fuel_auth->module_has_action('create')) : ?>
-				<li class="end"><a href="<?=fuel_url($this->module.'/create')?>" class="ico ico_create">Create</a></li>
+				<li class="end"><a href="<?=fuel_url($this->module_uri.'/create')?>" class="ico ico_create">Create</a></li>
 			<?php endif; ?>
 		<?php elseif ($action == 'create' && $this->fuel_auth->module_has_action('save')) : ?>
 			<li class="end"><a href="#" class="ico ico_save save" title="<?=$keyboard_shortcuts['save']?> to save">Save</a></li>
