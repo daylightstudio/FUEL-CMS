@@ -59,6 +59,15 @@ class Blog_users_model extends Base_module_model {
 		return $fields;
 	}
 	
+	function on_before_clean($values = array())
+	{
+		if (!(int) $values['date_added'])
+		{
+			$values['date_added'] = datetime_now();
+		}
+		return $values;
+	}
+	
 	function _common_query()
 	{
 		$this->db->select('fuel_blog_users.*,  fuel_users.id, CONCAT(first_name, " ", last_name) as name, fuel_users.first_name, fuel_users.last_name, fuel_users.email, fuel_users.user_name, fuel_users.active', FALSE);
