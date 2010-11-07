@@ -9,7 +9,7 @@ Blog Authors are powered by a <dfn>blog_users_model</dfn> and have a grandparent
 	<li><strong>Display name</strong> - The display name of the user</li>
 	<li><strong>Website</strong> - The author's website</li>
 	<li><strong>About</strong> - Bio information about the author</li>
-	<li><strong>Avatar</strong> - The image to associate with the author</li>
+	<li><strong>Avatar Image</strong> - The image to associate with the author</li>
 	<li><strong>Active</strong> - Determines whether the author page can be displayed</li>
 </ul>
 
@@ -27,7 +27,7 @@ Blog Authors are powered by a <dfn>blog_users_model</dfn> and have a grandparent
 	<li>display_name</li>
 	<li>website</li>
 	<li>about</li>
-	<li>avatar</li>
+	<li>avatar_image</li>
 	<li>date_added</li>
 	<li>active (returns 'yes' or 'no')</li>
 </ul>
@@ -46,5 +46,5 @@ Blog Authors are powered by a <dfn>blog_users_model</dfn> and have a grandparent
 <h2>get_avatar_image_path()</h2>
 <p>Returns image path to the avatar.</p>
 
-<h2>get_avatar_image()</h2>
+<h2>get_avatar_img_tag()</h2>
 <p>Returns image tag to the avatar.</p>

@@ -26,7 +26,7 @@
 					<a name="comment<?=$comment->id?>"></a>
 					<div class="comment_content">
 						<?php if ($comment->is_by_post_author()) :?>
-						<?=$comment->post->author->get_avatar_image(array('class' => 'img_left'))?>
+						<?=$comment->post->author->get_avatar_img_tag(array('class' => 'img_left'))?>
 						<?php endif; ?>
 						<?=$comment->content_formatted?>
 

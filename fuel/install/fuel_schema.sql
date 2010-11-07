@@ -264,7 +264,7 @@ CREATE TABLE `fuel_blog_users` (
   `display_name` varchar(50) NOT NULL default '',
   `website` varchar(100) NOT NULL,
   `about` text NOT NULL,
-  `avatar` varchar(255) NOT NULL default '',
+  `avatar_image` varchar(255) NOT NULL default '',
   `twitter` varchar(255) NOT NULL,
   `facebook` varchar(255) NOT NULL,
   `date_added` datetime default NULL,

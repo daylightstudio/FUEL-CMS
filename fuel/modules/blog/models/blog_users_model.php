@@ -47,10 +47,15 @@ class Blog_users_model extends Base_module_model {
 		$options = $CI->users_model->options_list();
 		$upload_image_path = assets_server_path($CI->fuel_blog->settings('asset_upload_path'));
 		$fields['fuel_user_id'] = array('label' => 'User', 'type' => 'select', 'options' => $options);
-		if (!empty($values['avatar'])) $fields['avatar']['after_html'] = '<img src="'.assets_path($CI->fuel_blog->settings('asset_upload_path').$values['avatar']).'"  style="margin: 0 0 -20px 5px;"/>';
-		$fields['avatar_upload'] = array('label' => 'Upload your avatar image', 'upload_path' => $upload_image_path, 'type' => 'file', 'overwrite' => TRUE, 'order' => 9999);
-		$fields['active']['order'] = 10000;
-		//unset($fields['date_added']); // so it will auto add
+
+		// put all project images into a projects suboflder.
+		$fields['avatar_image_upload']['upload_path'] = assets_server_path($CI->fuel_blog->settings('asset_upload_path'));
+
+		// fix the preview by adding projects in front of the image path since we are saving it in a subfolder
+		if (!empty($values['avatar_image']))
+		{
+			$fields['avatar_image_upload']['before_html'] = '<img src="'.assets_path($CI->fuel_blog->settings('asset_upload_path').$values['avatar_image']).'" style="float: right;"/>';
+		}
 		return $fields;
 	}
 	
@@ -99,18 +104,18 @@ class Blog_user_model extends Base_module_record {
 	{
 		$this->_CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$image_path = $this->_CI->fuel_blog->settings('asset_upload_path');
-		return assets_path($image_path.$this->avatar);
+		return assets_path($image_path.$this->avatar_image);
 	}
 
-	function get_avatar_image($attrs = array())
+	function get_avatar_img_tag($attrs = array())
 	{
 		$CI =& get_instance();
 		$CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$CI->load->helper('html');
 		$image_path = $CI->fuel_blog->settings('asset_upload_path');
-		$src = assets_path($image_path.$this->avatar);
+		$src = assets_path($image_path.$this->avatar_image);
 		$attrs = html_attrs($attrs);
-		if (!empty($this->avatar))
+		if (!empty($this->avatar_image))
 		{
 			return '<img src="'.$src.'"'.$attrs.' />';
 		}
