@@ -30,7 +30,8 @@ class Seo extends Seo_base_controller {
 			$url = $this->input->post('page');
 			$html = new DOMDocument(); 
 			//$url = 'http://www.thedaylightstudio.com';
-			$page_html = file_get_contents($url);
+			
+			$page_html = @file_get_contents($url); // suppress errors because it
 			
 			// scrape html from page running on localhost
 			$ch = curl_init(); 
