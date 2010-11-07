@@ -742,19 +742,19 @@ abstract class MY_Model extends Model {
 			$date_func = ($this->date_use_gmt) ? 'gmdate' : 'date';
 
 			// create dates for date added and last updated fields automatically
-			if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp') AND in_array($key, $this->auto_date_add))
+			if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_add))
 			{
 				$test_date = (int) $values[$key];
 
 				// if no key field then we assume it is a new save and so we add the date if it's empty'
 				if (!$this->_has_key_field_value($values) AND empty($test_date))
 				{
-					$values[$key] = $date_func('Y-m-d H:i:s');
+					$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 				}
 			} 
-			else if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp') AND in_array($key, $this->auto_date_update))
+			else if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_update))
 			{
-				$values[$key] = $date_func('Y-m-d H:i:s');
+				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
 
 			if (isset($values[$key]))
@@ -906,7 +906,7 @@ abstract class MY_Model extends Model {
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
 			$values = $this->on_before_validate($values);
-			
+
 			$validated = ($validate) ? $this->validate($values) : TRUE;
 			
 			if ($validated AND !empty($values))
