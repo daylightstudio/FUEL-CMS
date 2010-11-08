@@ -271,8 +271,12 @@ abstract class Tester_base
 	 * @param	array
 	 * @return	string
 	 */
-	protected function load_page($page, $post = array())
+	protected function load_page($page, $post = array(), $session = FALSE)
 	{
+		if (!is_array($post))
+		{
+			return FALSE;
+		}
 		
 		$this->CI->load->library('user_agent');
 		
@@ -287,6 +291,15 @@ abstract class Tester_base
 		curl_setopt($ch, CURLOPT_URL, site_url($page));
 		curl_setopt($ch, CURLOPT_HEADER, 0); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		
+		if($session)
+		{ 
+			curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookiefile.txt'); 
+			curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookiefile.txt'); 
+		}
+		
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		
 		if (!empty($post))
 		{
 			curl_setopt($ch, CURLOPT_POST, 1);
