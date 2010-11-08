@@ -102,7 +102,7 @@ CREATE TABLE `fuel_blocks` (
 CREATE TABLE `fuel_blog_categories` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL default '' COMMENT 'If left blank, the permalink will automatically be created for you.',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`),

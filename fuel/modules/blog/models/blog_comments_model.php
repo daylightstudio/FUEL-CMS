@@ -56,10 +56,10 @@ class Blog_comments_model extends Base_module_model {
 		$CI =& get_instance();
 		$CI->load->module_model(BLOG_FOLDER, 'blog_users_model');
 		$CI->load->module_model(BLOG_FOLDER, 'blog_posts_model');
-		add_error(lang('blog_post_is_not_published'));
+		
 		$post_title = '';
 
-		$post_options = $CI->blog_posts_model->options_list('id', 'title', array('published' => 'yes'), 'date_added desc');
+		$post_options = $CI->blog_posts_model->options_list('id', 'title', array(), 'date_added desc');
 		
 		if (empty($post_options))
 		{
@@ -72,6 +72,11 @@ class Blog_comments_model extends Base_module_model {
 		{
 			$post = $CI->blog_posts_model->find_by_key($values['post_id']);
 			$post_title = $post->title;
+			
+			if (!$post->is_published())
+			{
+				add_error(lang('blog_post_is_not_published'));
+			}
 			
 			$fields['post_id'] = array('type' => 'hidden', 'value' => $post_title, 'displayonly' => TRUE);
 

@@ -29,10 +29,8 @@
 						<?=$comment->post->author->get_avatar_img_tag(array('class' => 'img_left'))?>
 						<?php endif; ?>
 						<?=$comment->content_formatted?>
-
 					</div>
 
-					<div class="clear"></div>
 
 					<div class="comment_meta">
 						<cite><?=$comment->author_and_link?>, <?=$comment->get_date_formatted('h:iA / M d, Y')?></cite>
@@ -46,8 +44,12 @@
 	<a name="comments_form"></a>
 
 	<?php if ($post->is_within_comment_time_limit()) : ?>
+		<?php if (empty($thanks)) : ?>
 		<h3>Leave a Comment</h3>
+		<?php else: ?>
 		<?=$thanks?>
+		<?php endif;
+		 ?>
 		<?=$comment_form?>
 	<?php else: ?>
 		<p>Comments have been turned off for this post.</p>
