@@ -228,7 +228,14 @@ abstract class Tester_base
 	protected function load_sql($file = NULL, $module = 'tester')
 	{
 		if (!$this->_is_db_created) $this->create_db();
-		$sql_path = APPPATH.MODULES_FOLDER.'/'.$module.'/tests/sql/'.$file;
+		if (empty($module) OR $module == 'app')
+		{
+			$sql_path = APPPATH.'tests/sql/'.$file;
+		}
+		else
+		{
+			$sql_path = APPPATH.MODULES_FOLDER.'/'.$module.'/tests/sql/'.$file;
+		}
 		
 		// select the database
 		$sql = 'USE '.$this->config_item('db_name');
