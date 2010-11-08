@@ -58,6 +58,7 @@ class Fuel_layouts {
 
 	function layouts_list($no_builtin = FALSE)
 	{
+		$layouts = array();
 		if (!empty($this->layouts) AND is_array($this->layouts))
 		{
 			foreach($this->layouts as $key => $val)
