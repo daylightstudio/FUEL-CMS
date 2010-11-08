@@ -272,8 +272,9 @@ function fuel_nav($params = array())
 					'arrow_class' => 'arrow',
 					'display_current' => TRUE,
 					'home_link' => 'Home',
+					'order' => 'asc',
 					'exclude' => array(),
-					'return_normalized' => FALSE
+					'return_normalized' => FALSE,
 					);
 
 	if (!is_array($params))
