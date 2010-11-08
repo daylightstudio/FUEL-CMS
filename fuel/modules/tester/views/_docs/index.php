@@ -12,14 +12,16 @@ It will even scan other modules for test directories to include in it's list of 
 	<li>Test classes should always end with the suffix <dfn>_test</dfn> (e.g. my_app_test.php)</li>
 	<li>Test class methods should always begin with the prefix <dfn>test_</dfn></li>
 	<li>Test database information can be set in the <dfn>config/tester.php</dfn> file</li>
+	<li>The constant <dfn>TESTER</dfn> is created when running a test so you can use this in your application for test specific code</li>
 </ul>
 
 <h2>Configuration</h2>
 <ul>
 	<li><strong>dsn</strong> - the database connection information (if it is different then your main FUEL install databse)</li>
 	<li><strong>db_name</strong> - the name of your test database</li>
+	<li><strong>session_cookiejar_file</strong> - the cookie jar file path used for CURL sessions</li>
 </ul>
-<p class="important">You must first create a test database with the same name as <dfn>db_name</dfn> to run any test that uses MySQL.</p>
+<p class="important">You must use a database user that has the ability to create databases since a separate database is created for testing.</p>
 
 <h2>Example</h2>
 <pre class="php:brush">
@@ -105,7 +107,7 @@ The <dfn>name</dfn> parameter will help identify it in the results page.</p>
 The <dfn>dsn</dfn> parameter is the database connection information for the test database.</p>
 
 
-<h2>db_exists(<var>'[dsn]'</var>)</h2>
+<h2>db_exists()</h2>
 <p>Tests if the database for testing exists. Returns a boolean.</p>
 
 
@@ -114,15 +116,17 @@ The <dfn>dsn</dfn> parameter is the database connection information for the test
 
 
 <h2>remove_db(<var>[connect]</var>)</h2>
-<p>Removes the database and connects if $connect parameter is set to TRUE.</p>
+<p>Removes the database and connects if <dfn>connect</dfn> parameter is set to TRUE.</p>
 
 
 <h2>load_sql(<var>'file'</var>, <var>[module]</var>)</h2>
-<p>Loads the sql from a file in the {module}/test/sql folder. The default module is <dfn>tester</dfn>.</p>
+<p>Loads the sql from a file in the {module}/test/sql folder. The default module is <dfn>tester</dfn>. </p>
+<p class="important">Enter <dfn>NULL</dfn> or an empty string <dfn>''</dfn> if you are loading a page from your application directory.</p>
 
 
-<h2>load_page(<var>'file'</var>, <var>[module]</var>)</h2>
-<p>Loads the results of call to a controller. Additionally creates pq function to query dom nodes.
-The <dfn>pq</dfn> function allows you to use jQuery like syntax to query dom nodes on your page.
+<h2>load_page(<var>'file'</var>, <var>[post]</var>, <var>[session]</var>)</h2>
+<p>Loads the results of call to a controller. You can optionally pass in an associative array for post values and set the session parameter
+to TRUE if you are testing a page with a session (see config file for path to cookiejar file). Additionally, this function loads the <dfn>pq()</dfn> function to query dom nodes.
+The <dfn>pq()</dfn> function allows you to use jQuery like syntax to query dom nodes on your page.
 For more information, visit the <a href="http://code.google.com/p/phpquery/wiki/Manual" target="_blank">phpQuery</a> manual.
 </p>
