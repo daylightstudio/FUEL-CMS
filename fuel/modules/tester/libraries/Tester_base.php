@@ -43,6 +43,7 @@ abstract class Tester_base
 	public function __construct()
 	{
 		$this->CI =& get_instance();
+		define('TESTING', TRUE);
 	}
 	
 	// --------------------------------------------------------------------
@@ -295,7 +296,6 @@ abstract class Tester_base
 		
 		$output = curl_exec($ch);
 		curl_close($ch); 
-		
 		
 		//http://code.google.com/p/phpquery/wiki/Manual
 		require_once(TESTER_PATH.'libraries/phpQuery.php');
