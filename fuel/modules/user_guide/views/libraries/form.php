@@ -54,7 +54,7 @@ echo $this->form->open_multipart('id="my_form"', $validator);
 
 <h2>$this->form->close(<var>[html_before_form]</var>)</h2>
 <p>Will create a form open tag that has multipart attribute.
-The <dfn>$html_before_form</dfn> parameter is html to insert before closing the tag (optional).
+The <dfn>$html_before_form</dfn> parameter is HTML to insert before closing the tag (optional).
 </p>
 
 <pre class="brush: php">
@@ -67,7 +67,7 @@ echo $this->form->close('<!--END OF FORM-->');
 <h2>$this->form->fieldset_open(<var>'legend'</var>, <var>['attrs']</var>)</h2>
 <p>Will create a fieldset for the form.
 The <dfn>$legend</dfn> parameter is the name to use in the legend.
-The <dfn>$attrs</dfn> parameter is optional html attributes to use on the legend (optional).
+The <dfn>$attrs</dfn> parameter is optional HTML attributes to use on the legend (optional).
 </p>
 
 <pre class="brush: php">
