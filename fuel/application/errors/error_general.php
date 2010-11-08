@@ -10,11 +10,11 @@ h1 { margin: 0; padding:0; font-family: Arial,Helvetica,sans-serif; font-size: 2
 p { font-size: 12px; margin: 0 0 10px 0; line-height: 15px; }
 a { color: #690; text-decoration: none; }
 a:hover { color: #333; text-decoration: underline; }
-#content { width: 500px; margin: auto; border: 1px solid #ddd; padding: 0 20px 20px 20px;}
+#error_general { width: 500px; margin: auto; border: 1px solid #ddd; padding: 0 20px 20px 20px;}
 </style>
 </head>
 <body>
-	<div id="content">
+	<div id="error_general">
 		<h1><?php echo $heading; ?></h1>
 		<?php echo $message; ?>
 	</div>
