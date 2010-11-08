@@ -294,8 +294,9 @@ abstract class Tester_base
 		
 		if($session)
 		{ 
-			curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookiefile.txt'); 
-			curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookiefile.txt'); 
+			$tester_config = $this->CI->config->item('tester');
+			curl_setopt($ch, CURLOPT_COOKIEFILE, $tester_config['session_cookiejar_file']); 
+			curl_setopt($ch, CURLOPT_COOKIEJAR, $tester_config['session_cookiejar_file']); 
 		}
 		
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);

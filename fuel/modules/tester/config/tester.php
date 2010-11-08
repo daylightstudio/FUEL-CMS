@@ -20,3 +20,8 @@ $config['tester']['dsn'] = '';
 // the name of the test database
 $config['tester']['db_name'] = 'fuel_test';
 
+// the cookie jar file path used for CURL sessions
+// more info http://www.php.net/manual/en/function.curl-setopt.php
+$config['tester']['session_cookiejar_file'] = 'cookiefile.txt';
+
+
