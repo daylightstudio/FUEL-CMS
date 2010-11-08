@@ -1,4 +1,4 @@
-<div class="posts">
+<div class="posts left">
 	<?=fuel_edit('create', 'Create Post', 'blog/posts')?>
 	<?php if (!empty($posts)) : ?>
 		<?php foreach($posts as $post) : ?>
@@ -9,7 +9,7 @@
 
 			<div class="post_date">
 				Published <?=$post->get_date_formatted('F')?> <?=$post->get_date_formatted('d')?>, <?=$post->get_date_formatted('Y')?> 
-				 <span class="post_author_name"><?=$post->author_name?></span>
+				by <strong><span class="post_author_name"><?=$post->author_name?></span></strong>
 			</div>
 
 			<div class="post_content">

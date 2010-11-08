@@ -7,14 +7,13 @@ of installing a 3rd party application like Wordpress. It allows you to create po
 There are various <a href="<?=user_guide_url('modules/blog/settings')?>">setting options</a> to taylor the blog to your liking. Read below for more information.
 </p>
 
-<h2>Installation</h2>
-<p>The following are the steps to installing the FUEL Blog module:</p>
+<h2>Basic Configuration</h2>
+<p>The following are the steps to configuring the FUEL Blog module:</p>
 <ol>
-	<li>Download the latest version of the FUEL Blog module from <a href="http://www.getfuelcms.com" target="_blank">getfuelcms.com</a></li>
-	<li>Move the downloaded folder into the <dfn>fuel/modules</dfn> folder</li>
-	<li>Run the sql file in the FUEL database</li>
+	<li><a href="<?=user_guide_url('modules/blog/configuration')?>">Change the Blog settings</a> to have a proper Blog title and configure your comment security options</li>
 	<li>Create a new theme for your blog (see <a href="<?=user_guide_url('modules/blog/themes')?>">Creating Themes</a>)</li>
 	<li>The blog can be found at <dfn>/blog</dfn> of your website (you can use routes to change that though)</li>
+	<li>Create your authors (they must first have general access to the FUEL admin)</li>
 </ol>
 
 <h2>Sub-Modules</h2>

@@ -6,7 +6,8 @@
 		<?php foreach($authors as $author) : ?>
 		<li>
 			<?=fuel_edit($author->id, 'Edit Author: '.$author->name, 'blog/users')?>
-			<a href="<?=$author->url?>"><?=$author->name?></a>
+			<a href="<?=$author->url?>"><?=$author->name?>
+			<?php if (!empty($author->posts_count)) : ?>(<?=$author->posts_count?>)<?php endif; ?></a>
 		</li>
 		<?php endforeach; ?>
 	</ul>

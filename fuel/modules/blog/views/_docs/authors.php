@@ -21,7 +21,7 @@ Blog Authors are powered by a <dfn>blog_users_model</dfn> and have a grandparent
 	<li>id</li>
 	<li>first_name</li>
 	<li>last_name</li>
-	<li>name (combined first_name and last_name)</li>
+	<li>name (virtual property combined first_name and last_name)</li>
 	<li>email</li>
 	<li>user_name</li>
 	<li>display_name</li>
@@ -29,6 +29,7 @@ Blog Authors are powered by a <dfn>blog_users_model</dfn> and have a grandparent
 	<li>about</li>
 	<li>avatar_image</li>
 	<li>date_added</li>
+	<li>posts_count (virtual property)</li>
 	<li>active (returns 'yes' or 'no')</li>
 </ul>
 
