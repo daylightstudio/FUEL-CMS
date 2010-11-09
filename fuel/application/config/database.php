@@ -52,6 +52,12 @@ $db['default']['cachedir'] = "";
 $db['default']['char_set'] = "utf8";
 $db['default']['dbcollat'] = "utf8_general_ci";
 
+// used for testing purposes
+if (defined('TESTING'))
+{
+	@include(TESTER_PATH.'config/tester_database'.EXT);
+}
+
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */

@@ -43,7 +43,9 @@ abstract class Tester_base
 	public function __construct()
 	{
 		$this->CI =& get_instance();
-		define('TESTING', TRUE);
+		
+		// set testing constant if not already
+		if (!defined('TESTING')) define('TESTING', TRUE);
 	}
 	
 	// --------------------------------------------------------------------
@@ -90,6 +92,12 @@ abstract class Tester_base
 		{
 			$this->remove_db();
 		}
+		
+		// remove the cookie file
+		if (file_exists($this->config_item('session_cookiejar_file')))
+		{
+			@unlink($this->config_item('session_cookiejar_file'));
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -125,7 +133,7 @@ abstract class Tester_base
 		$tester_config = $this->CI->config->item('tester');
 		return $tester_config[$key];
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -141,15 +149,14 @@ abstract class Tester_base
 		if (empty($dsn))
 		{
 			$tester_config = $this->CI->config->item('tester');
-			$dsn = $this->config_item('dsn');
+			$dsn = $this->config_item('dsn_group');
 		}
 		
-		// default to test group name in the database config
-		if (empty($dsn))
-		{
-			$dsn = 'test';
-		}
-		
+		// // default to test group name in the database config
+		// if (empty($dsn))
+		// {
+		// 	$dsn = 'test';
+		// }
 		$this->CI->load->database($dsn);
 	}
 	
@@ -271,7 +278,7 @@ abstract class Tester_base
 	 * @param	array
 	 * @return	string
 	 */
-	protected function load_page($page, $post = array(), $session = FALSE)
+	protected function load_page($page, $post = array())
 	{
 		if (!is_array($post))
 		{
@@ -280,24 +287,24 @@ abstract class Tester_base
 		
 		$this->CI->load->library('user_agent');
 		
-		$_SERVER['PATH_INFO'] = $page;
-		$_SERVER['REQUEST_URI'] = $page;
+		// NO LONGER USED... OPTED FOR CURL INSTEAD!... kept for reference just in case though
+		// $_SERVER['PATH_INFO'] = $page;
+		// $_SERVER['REQUEST_URI'] = $page;
 
 		// must suppres warnings to remove constant warnings
-//		$exec = TESTER_PATH.'libraries/Controller_runner.php --run='.$page.' -CI='.FCPATH.' -D='.$_SERVER['SERVER_NAME'].' -P='.$_SERVER['SERVER_PORT'].' -X='.base64_encode(serialize($post));
-//		$output = shell_exec($exec);
+		// $exec = TESTER_PATH.'libraries/Controller_runner.php --run='.$page.' -CI='.FCPATH.' -D='.$_SERVER['SERVER_NAME'].' -P='.$_SERVER['SERVER_PORT'].' -X='.base64_encode(serialize($post));
+		// $output = shell_exec($exec);
 		
 		$ch = curl_init(); 
 		curl_setopt($ch, CURLOPT_URL, site_url($page));
 		curl_setopt($ch, CURLOPT_HEADER, 0); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		
-		if($session)
-		{ 
-			$tester_config = $this->CI->config->item('tester');
-			curl_setopt($ch, CURLOPT_COOKIEFILE, $tester_config['session_cookiejar_file']); 
-			curl_setopt($ch, CURLOPT_COOKIEJAR, $tester_config['session_cookiejar_file']); 
-		}
+		// set cookie jar for sessions and to tell system we are running tests
+		$tester_config = $this->CI->config->item('tester');
+		curl_setopt($ch, CURLOPT_COOKIEFILE, $tester_config['session_cookiejar_file']); 
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $tester_config['session_cookiejar_file']); 
+		curl_setopt($ch, CURLOPT_COOKIE, 'tester_dsn='.$this->config_item('dsn_group')); 
 		
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		
