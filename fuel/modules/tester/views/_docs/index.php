@@ -12,7 +12,7 @@ It will even scan other modules for test directories to include in it's list of 
 	<li>Test classes should always end with the suffix <dfn>_test</dfn> (e.g. my_app_test.php)</li>
 	<li>Test class methods should always begin with the prefix <dfn>test_</dfn></li>
 	<li>Test database information can be set in the <dfn>config/tester.php</dfn> file</li>
-	<li>The constant <dfn>TESTER</dfn> is created when running a test so you can use this in your application for test specific code</li>
+	<li>The constant <dfn>TESTING</dfn> is created when running a test so you can use this in your application for test specific code</li>
 </ul>
 
 <h2>Configuration</h2>
