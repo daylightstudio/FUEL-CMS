@@ -17,7 +17,7 @@ It will even scan other modules for test directories to include in it's list of 
 
 <h2>Configuration</h2>
 <ul>
-	<li><strong>dsn</strong> - the database connection information (if it is different then your main FUEL install databse)</li>
+	<li><strong>dsn</strong> - the database connection information (if it is different then your main FUEL install database)</li>
 	<li><strong>db_name</strong> - the name of your test database</li>
 	<li><strong>session_cookiejar_file</strong> - the cookie jar file path used for CURL sessions</li>
 	<li><strong>valid_testing_server_names</strong> - the server names that are valid for running tests. Default value is <dfn>array('localhost', '192\.168\.:any')</dfn></li>
@@ -100,11 +100,11 @@ The <dfn>name</dfn> parameter will help identify it in the results page.</p>
 
 
 <h2>config_item(<var>'[key]'</var>)</h2>
-<p>Return Tester specific configuration items.</p>
+<p>Return a Tester specific configuration item.</p>
 
 
 <h2>db_connect(<var>'[dsn]'</var>)</h2>
-<p>Connects to the testing database
+<p>Connects to the testing database. 
 The <dfn>dsn</dfn> parameter is the database connection information for the test database.</p>
 
 
@@ -112,21 +112,21 @@ The <dfn>dsn</dfn> parameter is the database connection information for the test
 <p>Tests if the database for testing exists. Returns a boolean.</p>
 
 
-<h2>create_db(<var>[connect]</var>)</h2>
-<p>Creates the database and connects if <dfn>connect</dfn> parameter is set to TRUE.</p>
+<h2>create_db()</h2>
+<p>Creates the test database.</p>
 
 
-<h2>remove_db(<var>[connect]</var>)</h2>
-<p>Removes the database and connects if <dfn>connect</dfn> parameter is set to TRUE.</p>
+<h2>remove_db()</h2>
+<p>Removes the test database.</p>
 
 
 <h2>load_sql(<var>'file'</var>, <var>[module]</var>)</h2>
-<p>Loads the sql from a file in the {module}/test/sql folder. The default module is <dfn>tester</dfn>. </p>
-<p class="important">Enter <dfn>NULL</dfn> or an empty string <dfn>''</dfn> if you are loading a page from your application directory.</p>
+<p>Loads the SQL from a file in the {module}/test/sql folder. The default module is <dfn>tester</dfn>. </p>
+<p class="important">Enter <dfn>NULL</dfn> or an empty string <dfn>''</dfn> if you are loading an SQL file from your application directory.</p>
 
 
 <h2>load_page(<var>'file'</var>, <var>[post]</var>)</h2>
-<p>Loads the results of call to a controller. You can optionally pass in an associative array for post values. Additionally, this function loads the <dfn>pq()</dfn> function to query dom nodes.
-The <dfn>pq()</dfn> function allows you to use jQuery like syntax to query dom nodes on your page.
+<p>Loads the results of a page and returns the contents of that page. You can optionally pass in an associative array for post values. Additionally, this function loads the <dfn>pq()</dfn> function to query DOM nodes.
+The <dfn>pq()</dfn> function allows you to use jQuery like syntax to query DOM nodes on your page.
 For more information, visit the <a href="http://code.google.com/p/phpquery/wiki/Manual" target="_blank">phpQuery</a> manual.
 </p>

@@ -151,12 +151,6 @@ abstract class Tester_base
 			$tester_config = $this->CI->config->item('tester');
 			$dsn = $this->config_item('dsn_group');
 		}
-		
-		// // default to test group name in the database config
-		// if (empty($dsn))
-		// {
-		// 	$dsn = 'test';
-		// }
 		$this->CI->load->database($dsn);
 	}
 	
@@ -178,15 +172,15 @@ abstract class Tester_base
 	// --------------------------------------------------------------------
 
 	/**
-	 *  Creates the database and connects if $connect parameter is set to TRUE
+	 *  Creates the database.
 	 *
 	 * @access	public
 	 * @param	boolean
 	 * @return	void
 	 */
-	protected function create_db($connect = TRUE)
+	protected function create_db()
 	{
-		if ($connect) $this->db_connect();
+		$this->db_connect();
 		
 		$this->CI->load->dbforge();
 		
@@ -203,15 +197,15 @@ abstract class Tester_base
 	// --------------------------------------------------------------------
 
 	/**
-	 *  Removes the test database and connects if $connect parameter is set to TRUE
+	 *  Removes the test database.
 	 *
 	 * @access	public
 	 * @param	boolean
 	 * @return	void
 	 */
-	protected function remove_db($connect = TRUE)
+	protected function remove_db()
 	{
-		if ($connect) $this->db_connect();
+		$this->db_connect();
 		
 		$this->CI->load->dbforge();
 		
