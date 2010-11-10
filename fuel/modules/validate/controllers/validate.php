@@ -167,7 +167,7 @@ class Validate extends Fuel_base_controller {
 			{
 				$href = $link->getAttribute('href');
 
-				if (substr($href, 0, 7) != 'mailto:')
+				if (substr($href, 0, 7) != 'mailto:' AND substr($href, 0, 1) != '#' AND substr($href, 0, 11) != 'javascript:')
 				{
 					if (substr($href, 0, 1) == '/')
 					{
