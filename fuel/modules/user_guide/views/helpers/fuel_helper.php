@@ -12,28 +12,26 @@ $this->load->module_helper(FUEL_FOLDER, 'fuel');
 
 <h2>fuel_block(<var>params</var>)</h2>
 <p>Allows you to load a view and pass data to it.
-The <dfn>params</dfn> parameter is an associative array that can have the following values:
+The <dfn>params</dfn> parameter can either be string value (in which case it will assume it is the name of the block view file) or an associative array that can have the following values:
 </p>
 <ul>
 	<li><strong>view</strong> - a view file located in the <dfn>views/_blocks</dfn></li>
 	<li><strong>view_string</strong> - a string value to be used for the view</li>
-	<li><strong>is_block</strong> - should the data results be iterated through or is it a single result?</li>
-	<li><strong>module</strong> - the module to get data</li>
-	<li><strong>find</strong> - the find method to use on the module model</li>
-	<li><strong>where</strong> - the where condition to be used in the find query</li>
-	<li><strong>order</strong> - order the data results and sort them </li>
-	<li><strong>limit</strong> - limit the number of data results returned</li>
-	<li><strong>offset</strong> - offset the data results</li>
+	<li><strong>model</strong> - the model to load and be available for the view</li>
+	<li><strong>find</strong> - the find method on the model to use (e.g. 'one', 'all' or 'key')</li>
+	<li><strong>where</strong> - the where condition on the model to be used in the find query</li>
+	<li><strong>order</strong> - order the data results returned from the model and sort them </li>
+	<li><strong>limit</strong> - limit the number of data results returned by the model</li>
+	<li><strong>offset</strong> - offset the data results returned by the model</li>
 	<li><strong>return_method</strong> - the return method to use which can be an object or an array</li>
 	<li><strong>assoc_key</strong> - the field to be used as an associative key for the data results</li>
-	<li><strong>var</strong> - the variable name to assign the data returned from the module model query</li>
-	<li><strong>data</strong> - data to be passed to the view if a module isn't provided</li>
+	<li><strong>data</strong> - data to be passed to the view if a model isn't provided</li>
 	<li><strong>editable</strong> - insert in inline editing</li>
-	<li><strong>label_field</strong> - label field for inline editing</li>
+	<li><strong>parse</strong> - parse the contents of the page. Default is set to 'auto' which will NOT try and parse if your <dfn>fuel_mode</dfn> value in the fuel config file is set to "views".</li>
 </ul>
 
 
-<h2>fuel_model(<var>module</var>, <var>params</var>)</h2>
+<h2>fuel_model(<var>module</var>, <var>[params]</var>)</h2>
 <p>Loads a module's model and creates a variable that you can use to merge data into your view.
 The <dfn>params</dfn> parameter is an associative array that can have the following values:
 </p>
