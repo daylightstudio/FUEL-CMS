@@ -26,7 +26,8 @@ class My_super_model extends Base_module_model {
 
 
 <h2>$this->module->list_items(<var>[limit]</var>, <var>[offset]</var>, <var>[col]</var>, <var>[order]</var>)</h2>
-<p>Lists the module items. By default it will list all tables. To filter out columns, simply override this method and use CodeIgniter's Active Record
+<p>Returns an associative array of the table records and is used by the <a href="<?=user_guide_url('libraries/data_table')?>">Data_table</a> class to display the module's items in the list view. 
+By default it will list all columns. To filter out columns, simply override this method and use CodeIgniter's Active Record
 select statement like so:</p>
 
 <pre class="brush:php">
@@ -39,7 +40,7 @@ function list_items()
 ...
 </pre>
 
-<p class="important">You should always include the primary key id in this select so the data table can use it in the rows edit and delete actions.</p>
+<p class="important">You should always include the primary key id in this select so the <a href="<?=user_guide_url('libraries/data_table')?>">Data_table</a> object can use it in the table row's edit and delete actions.</p>
 
 <h2>$this->module->list_items_total()</h2>
 <p>Lists the total number of module items. Used in calculating the number of pages when paginating.</p>

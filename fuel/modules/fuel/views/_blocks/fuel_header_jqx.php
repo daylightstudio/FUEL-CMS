@@ -14,7 +14,7 @@ jqx_config.pluginPath = jqx_config.jsPath + 'jquery/plugins/';
 jqx_config.fuelPath = '<?=site_url($this->config->item('fuel_path', 'fuel'))?>';
 jqx_config.cookieDefaultPath = '<?=$this->config->item('fuel_cookie_path', 'fuel')?>';
 <?php if (!empty($keyboard_shortcuts)){ ?>jqx_config.keyboardShortcuts = <?=json_encode($keyboard_shortcuts)?>;<?php } ?>
-jqx_config.warnIfModified = <?=(int)$this->config->item('warn_if_modified', 'fuel')?>;
+jqx_config.warnIfModified = <?=(int)$this->config->item('warn_if_modified', 'fuel')?>; 
 jqx_config.cacheString = new Date('<?=date('F d, Y H:i:s', strtotime($this->config->item('last_updated'))) ?>').getTime().toString();
 jqx_config.assetsAccept = '<?php $editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel'); echo (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png'); ?>';
 
