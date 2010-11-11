@@ -33,7 +33,7 @@ class Validate extends Fuel_base_controller {
 
 	function html()
 	{
-		if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
+		//if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
 		
 		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
 		
@@ -140,7 +140,7 @@ class Validate extends Fuel_base_controller {
 
 	function links()
 	{
-		if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
+		//if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
 		
 		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
 		if ($this->input->post('uri'))
@@ -251,7 +251,7 @@ class Validate extends Fuel_base_controller {
 
 	function size_report()
 	{
-		if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
+		//if (!$this->_has_module('fuel')) show_error(lang('error_missing_module'));
 		
 		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
 		$this->load->helper('number');
@@ -269,10 +269,18 @@ class Validate extends Fuel_base_controller {
 			libxml_clear_errors(); 
 			
 			$url = $this->input->post('uri');
+			
+			$this->benchmark->mark('load_page_check_weight_start');
+			
+			
 			//$url = $uri;
 			$html = new DOMDocument(); 
 
-			$html->loadHTMLFile($url); 
+			$html->loadHTMLFile($url);
+			
+			$this->benchmark->mark('load_page_check_weight_end');
+			
+			//echo 'LOAD PAGE: '.$this->benchmark->elapsed_time('load_page_check_weight_start', 'load_page_check_weight_end').'<br />';
 			$xpath = new DOMXPath( $html );
 			
 			$imgs = $xpath->query("//img[@src]");
@@ -282,8 +290,8 @@ class Validate extends Fuel_base_controller {
 			$ext_resources = array($imgs, $css, $js);
 			$ext_resources_xpath_attr = array('src', 'href', 'src');
 			
-			$resources = array($url);
-			$css_resources = array($url);
+			$resources = array();
+			$css_resources = array();
 			
 			$i = 0;
 			foreach($ext_resources as $val)
@@ -342,7 +350,7 @@ class Validate extends Fuel_base_controller {
 			
 			// remove duplicates
 			$resources = array_unique($resources);
-
+			
 			$i++;
 			$results = '';
 			
@@ -354,6 +362,9 @@ class Validate extends Fuel_base_controller {
 			$filesize_range = array('warn' => array(), 'ok' => array());
 			$total_kb = 0;
 			$ch = curl_init();
+			
+			$this->benchmark->mark('load_page_files_start');
+			
 			foreach($resources as $link)
 			{
 				curl_setopt($ch, CURLOPT_URL, $link);
@@ -399,16 +410,22 @@ class Validate extends Fuel_base_controller {
 				
 			}
 			curl_close($ch);
+			$this->benchmark->mark('load_page_files_end');
+			
+			//echo 'FILE PAGE: '.$this->benchmark->elapsed_time('load_page_files_start', 'load_page_files_end').'<br />';
 			
 			// sort array in reverse order of size
-			arsort($output_arr);
+			//arsort($output_arr);
+			if (!empty($filesize_range['error'])) arsort($filesize_range['error']);
+			if (!empty($filesize_range['warn'])) arsort($filesize_range['warn']);
+			if (!empty($filesize_range['ok'])) arsort($filesize_range['ok']);
 
 			$vars['invalid'] = $invalid;
 			$vars['valid'] = $valid;
 			$vars['total'] = count($resources);
 			$vars['total_kb'] = $total_kb;
 			$vars['link'] = $url;
-			$vars['output_arr'] = $output_arr;
+		//	$vars['output_arr'] = $output_arr;
 			$vars['config_limit'] = $config_limit;
 			$vars['filesize_range'] = $filesize_range;
 			
