@@ -69,11 +69,13 @@ $config['layouts'] = 'AUTO';
 $config['layout_fields'] = array();
 
 $config['layout_fields']['301_redirect'] = array(
+	'copy' => array('copy' => 'This layout will do a 301 redirect to another page.'),
 	'redirect_to' => '',
 );
 
 
 $config['layout_fields']['sitemap_xml'] = array(
+	'copy' => array('copy' => 'This layout is used to generate a sitemap.'),
 	'frequency' => array(
 		'type' => 'select',
 		'options' => array(
@@ -90,6 +92,7 @@ $config['layout_fields']['sitemap_xml'] = array(
 );
 
 $config['layout_fields']['none'] = array(
+	'copy' => array('copy' => 'This layout is the equivalent of having no layout assigned.'),
 	'body' => array('type' => 'textarea'),
 );
 

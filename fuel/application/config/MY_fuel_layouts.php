@@ -14,6 +14,7 @@
 
 // main layout fields
 $config['layout_fields']['main'] =  array(
+	'copy' => array('copy' => 'This is the main layout to be used for your site.'),
 	'page_title' => '',
 	'meta_description' => '',
 	'meta_keywords' => '',
