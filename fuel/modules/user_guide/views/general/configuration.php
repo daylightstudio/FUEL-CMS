@@ -267,6 +267,12 @@ array(
 			<td>If the URI is about/history and the about/history view does not exist but about does, it will render the about page.</td>
 		</tr>
 		<tr>
+			<td><strong>module_sanitize_funcs</strong></td>
+			<td>TRUE</td>
+			<td>boolean TRUE/FALSE, string of "xss", "php", "template" OR "entities", OR array for multiple values of array('xss', 'php', 'template', 'entities')</td>
+			<td>Functions that can be used for the sanitize_input value on a basic module. The key of the array is what should be used when configuring your module</td>
+		</tr>
+		<tr>
 			<td colspan="4" class="hdr"><h4>Module Settings</h4></td>
 		</tr>
 		<tr>

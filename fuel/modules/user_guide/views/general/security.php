@@ -16,10 +16,18 @@ CI application.</p>
 <h2>Module Specific Security Settings</h2>
 <p>Additionally, the following module specific security settings exist:</p>
 <ul>
-	<li><strong>sanitize_input</strong> - cleans the input before inserting or updating the data source. Values can be either 
-		<dfn>TRUE</dfn>, in which the <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a> function will be applied, 
-		<dfn>php</dfn>, in which the <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">encode_php_tags</a> function will be applied, or
-		<dfn>FALSE</dfn>, in which no sanitizing will be used.</li>
+	<li><strong>sanitize_input</strong> - cleans the input before inserting or updating the data source. 
+		A value of <dfn>TRUE</dfn>, will apply the <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a> function. 
+		A value of <dfn>FALSE</dfn>, will apply no sanitation functions.
+		You can use an array to appy more then one function to sanitize your input.
+		The list of functions to sanitize the input is set by the <dfn>module_sanitize_funcs</dfn> <a href="<?=user_guide_url('general/configuration')?>">FUEL configuration</a> value under the security settings.
+		The default values are listed below:
+		<ul>
+			<li><strong>xss</strong> = xss_clean</li>
+			<li><strong>php</strong> = encode_php_tags</li>
+			<li><strong>template</strong> = php_to_template_syntax</li>
+			<li><strong>entities</strong> = entities</li>
+		</ul>
 	<li><strong>sanitize_images</strong> - uses <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a> function on images.</li>
 </ul>
 

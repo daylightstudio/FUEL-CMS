@@ -25,14 +25,14 @@ $config['modules']['pages'] = array(
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => 'Here you can manage the data associated with the page.',
 	'archivable' => TRUE,
-	'sanitize_input' => 'php'
+	'sanitize_input' => array('template','php')
 );
 
 // navigation module init values
 $config['modules']['blocks'] = array(
 	'display_field' => 'name',
 	'js_controller' => 'BlockController',
-	'sanitize_input' => 'php'
+	'sanitize_input' => array('template','php')
 );
 
 // navigation module init values

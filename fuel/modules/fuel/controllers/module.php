@@ -606,10 +606,21 @@ class Module extends Fuel_base_controller {
 	protected function _sanitize($data)
 	{
 		$posted = $data;
-		if ($this->sanitize_input)
+		
+		if (!empty($this->sanitize_input))
 		{
-			if ($this->sanitize_input === 'php')
+			// functions that are valid for sanitizing
+			$valid_funcs = $this->config->item('module_sanitize_funcs', 'fuel');
+			
+			if ($this->sanitize_input === TRUE)
 			{
+				$posted = xss_clean($data);
+			}
+			else
+			{
+				// force to array to normalize
+				$sanitize_input = (array) $this->sanitize_input;
+				
 				if (is_array($data))
 				{
 					foreach($data as $key => $post)
@@ -620,20 +631,33 @@ class Module extends Fuel_base_controller {
 						}
 						else
 						{
-							$posted[$key] = encode_php_tags($data[$key]);
+							// loop through sanitzation functions 
+							foreach($sanitize_input as $func)
+							{
+								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
+								if ($func)
+								{
+									$posted[$key] = $func($posted[$key]);
+								}
+							}
 						}
 					}
 				}
 				else
 				{
-					$posted = encode_php_tags($data);
+					// loop through sanitzation functions 
+					foreach($sanitize_input as $key => $val)
+					{
+						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
+						if ($func)
+						{
+							$posted = $func($posted);
+						}
+					}
 				}
 			}
-			else
-			{
-				$posted = xss_clean($data);
-			}
 		}
+
 		return $posted;
 	}
 	

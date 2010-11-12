@@ -170,6 +170,14 @@ $config['dev_password'] = '';
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
 $config['auto_search_views'] = FALSE;
 
+// functions that can be used for the sanitize_input value on a basic module. 
+// The key of the array is what should be used when configuring your module
+$config['module_sanitize_funcs'] = array(
+	'xss' => 'xss_clean', 
+	'php' => 'encode_php_tags', 
+	'template' => 'php_to_template_syntax', 
+	'entities' => 'htmlentities',
+);
 
 /*
 |--------------------------------------------------------------------------

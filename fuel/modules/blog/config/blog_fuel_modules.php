@@ -16,6 +16,7 @@ $config['modules']['blog_posts'] = array(
 	'language' => array('blog' => 'blog'),
 	'default_col' => 'date_added',
 	'default_order' => 'desc',
+	'sanitize_input' => array('template','php')
 );
 
 $config['modules']['blog_categories'] = array(
@@ -62,7 +63,7 @@ $config['modules']['blog_comments'] = array(
 	'archivable' => TRUE,
 	'configuration' => array('blog' => 'blog'),
 	'nav_selected' => 'blog/comments',
-	'language' => array('blog' => 'blog')
+	'language' => array('blog' => 'blog'),
 );
 
 $config['modules']['blog_links'] = array(
