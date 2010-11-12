@@ -25,7 +25,7 @@ $config['modules']['pages'] = array(
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => 'Here you can manage the data associated with the page.',
 	'archivable' => TRUE,
-	'sanitize_input' => TRUE
+	'sanitize_input' => 'php'
 );
 
 // navigation module init values
