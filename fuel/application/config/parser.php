@@ -76,9 +76,9 @@ $config['parser_allowed_php_functions'] = array(
 	'strip_tags', 
 	'js', 'cs', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
 	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_block2', // FUEL specific
-	'quote', 'safe_mailto', // HTML specific
+	'quote', 'safe_mailto', // HTML/URL specific
 	'session_flashdata', 'session_flashdata', // Session specific
-	'site_url', 'show_404', 'redirect', 'uri_segment' // CI specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment' // CI specific
 );
 
 
