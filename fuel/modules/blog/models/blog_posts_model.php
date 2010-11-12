@@ -67,7 +67,7 @@ class Blog_posts_model extends Base_module_model {
 		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		$category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], $this->_tables['blog_categories'].'.published' => 'yes'))) : array();
 		
-		$fields['categories'] = array('label' => 'Categories', 'type' => 'array', 'options' => $category_options, 'class' => 'add_edit blog/categories combo', 'value' => $category_values);
+		$fields['categories'] = array('label' => 'Categories', 'type' => 'array', 'options' => $category_options, 'class' => 'add_edit blog/categories combo', 'value' => $category_values, 'mode' => 'multi');
 		
 		$user_options = $CI->blog_users_model->options_list();
 		$user = $this->fuel_auth->user_data();
