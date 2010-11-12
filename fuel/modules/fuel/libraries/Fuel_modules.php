@@ -53,7 +53,7 @@ class Fuel_modules {
 	 */	
 	public function info($module)
 	{
-		if (!empty($_cached[$module])) return $_cached[$module];
+		if (!empty($this->_cached[$module])) return $this->_cached[$module];
 		//if (!$this->is_allowed($module)) return FALSE;
 		
 		if (!isset($this->_modules[$module])) return FALSE;
@@ -111,7 +111,7 @@ class Fuel_modules {
 				$return[$key] = $val;
 			}
 		}
-		$_cached[$module] = $return;
+		$this->_cached[$module] = $return;
 		
 		return $return;
 		

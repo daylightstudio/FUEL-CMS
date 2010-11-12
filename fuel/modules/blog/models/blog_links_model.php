@@ -42,7 +42,7 @@ class Blog_link_model extends Base_module_record {
 			$url = 'http://'.$url;
 		}
 		$label = (!empty($this->name)) ? $this->name : $this->url;
-		$attrs = (!empty($this->target)) ? '_'.$this->target : '';
+		$attrs = (!empty($this->target)) ? 'target="_'.$this->target.'"' : '';
 		return anchor($url, $label, $attrs);
 	}
 }

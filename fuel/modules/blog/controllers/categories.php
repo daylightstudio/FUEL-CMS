@@ -39,7 +39,7 @@ class Categories extends Blog_base_controller {
 			{
 				$vars['posts'] = $this->fuel_blog->get_category_posts($category);
 				$vars['page_title'] = $category;
-				if (empty($vars['posts'])) show_404();
+				//if (empty($vars['posts'])) show_404();
 				$output = $this->_render('posts', $vars, TRUE);
 			}
 			else
