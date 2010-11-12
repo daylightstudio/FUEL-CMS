@@ -55,7 +55,6 @@ class Fuel_modules {
 	{
 		if (!empty($this->_cached[$module])) return $this->_cached[$module];
 		//if (!$this->is_allowed($module)) return FALSE;
-		
 		if (!isset($this->_modules[$module])) return FALSE;
 		
 		$CI =& get_instance();
@@ -112,7 +111,6 @@ class Fuel_modules {
 			}
 		}
 		$this->_cached[$module] = $return;
-		
 		return $return;
 		
 	}
@@ -169,6 +167,68 @@ class Fuel_modules {
 			}
 		}
 		return $module_init;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the module init info before being merged with defaults
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function get_pages()
+	{
+		$CI =& get_instance();
+		$modules = $this->get_modules();
+		$pages = array();
+		foreach($modules as $mod => $module)
+		{
+			$info = $this->info($mod);
+
+			if (!empty($info['model_location']))
+			{
+				$CI->load->module_model($info['model_location'], $info['model_name']);
+			}
+			else
+			{
+				$CI->load->model($info['model_name']);
+			}
+			$model = $info['model_name'];
+			if (method_exists($model, 'find_all_array'))
+			{
+				$records = $CI->$model->find_all_array();
+			}
+			
+			$callback = create_function(
+			            '$matches',
+						
+			            '
+						$record = $GLOBALS["__temp_record__"];
+						if (!empty($record[$matches[2]]))
+						{
+							return $matches[1].$record[$matches[2]];
+						}
+						return "";'
+			        );
+
+			foreach($records as $record)
+			{
+				// need to put in global namesapce for preg_replace_callback to access
+				$GLOBALS['__temp_record__'] = $record;
+				
+				$page = preg_replace_callback('#^(.+){(\w+)}$#', $callback, $info['preview_path'], 1, $cnt);
+				if (!empty($cnt))
+				{
+					$pages[$page] = $page;
+				}
+			}
+			
+			// remove $GLOBALS
+			unset($GLOBALS["__temp_record__"]);
+			
+		}
+		return $pages;
 	}
 	
 	// --------------------------------------------------------------------
