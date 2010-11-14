@@ -62,5 +62,5 @@ $config['assets_cache_folder'] = 'cache/';
 // time limit on gzip cache file in seconds
 $config['assets_gzip_cache_expiration'] = 3600;
 
-/* End of file assets.php */
-/* Location: ./application/config/assets.php */
+/* End of file asset.php */
+/* Location: ./application/config/asset.php */

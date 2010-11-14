@@ -995,7 +995,7 @@ class Fuel_blog {
 	 */
 	protected function _publish_status($t = 'blog_posts', $where = array())
 	{
-		$this->_CI->load->module_helper('fuel');
+		$this->_CI->load->module_helper(FUEL_FOLDER, 'fuel');
 		$tables = $this->_CI->config->item('tables');
 		
 		if (!is_fuelified())

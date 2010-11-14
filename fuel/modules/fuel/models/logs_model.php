@@ -24,7 +24,7 @@ class Logs_model extends Base_module_model {
 			}
 		}
 		
-		$this->db->orderby($col, $order);
+		$this->db->order_by($col, $order);
 		$this->db->limit($limit, $offset);
 		$query = $this->get();
 		//$data = $query->result_array();

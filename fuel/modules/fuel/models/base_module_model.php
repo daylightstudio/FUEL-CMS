@@ -195,7 +195,7 @@ abstract class Base_module_model extends MY_Model {
 			}
 		}
 		
-		if (!empty($col) && !empty($order)) $this->db->orderby($col, $order);
+		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
 		$query = $this->db->get($this->table_name);

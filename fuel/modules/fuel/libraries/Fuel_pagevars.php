@@ -142,7 +142,7 @@ class Fuel_pagevars {
 		$vars = array_merge($vars, $page_vars);
 		return $vars;
 	}
-
+	//  FIX ME
 	private function _preview_module_vars($location)
 	{
 		if (is_null($location))
@@ -159,17 +159,17 @@ class Fuel_pagevars {
 
 			//$regex = preg_replace('#(.*\{)([a-zA-Z0-9-_]+)(\}.*)#', '$1([a-zA-Z0-9-_]+)$3', $mod_info['preview_path']);
 			$regex = preg_match_all('#(.*\{)(/([a-zA-Z0-9-_]+)+)(\}.*)#', $mod_info['preview_path'], $matches);
-			echo "<pre style=\"text-align: left;\">";
-			print_r($matches);
-			echo "</pre>";
-
-			exit();
+			// echo "<pre style=\"text-align: left;\">";
+			// print_r($matches);
+			// echo "</pre>";
+			// 
+			// exit();
 			preg_match('#'.$regex.'#', $location, $matches);
 			if (!empty($matches[1]))
 			{
-				echo "<pre style=\"text-align: left;\">";
-				print_r($matches);
-				echo "</pre>";
+				// echo "<pre style=\"text-align: left;\">";
+				// print_r($matches);
+				// echo "</pre>";
 
 			}
 

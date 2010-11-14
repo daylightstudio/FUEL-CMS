@@ -48,10 +48,13 @@ class Fuel_layouts {
 			$layouts = get_filenames(APPPATH.'views/'.$this->layouts_path);
 
 			$this->layouts = array();
-			foreach($layouts as $layout)
+			if (!empty($layouts))
 			{
-				$layout = substr($layout, 0, -4);
-				$this->layouts[$layout] = $this->layouts_path.$layout;
+				foreach($layouts as $layout)
+				{
+					$layout = substr($layout, 0, -4);
+					$this->layouts[$layout] = $this->layouts_path.$layout;
+				}
 			}
 		}
 	}

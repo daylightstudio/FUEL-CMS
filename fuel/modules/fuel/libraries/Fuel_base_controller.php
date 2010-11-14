@@ -275,7 +275,7 @@ class Fuel_base_controller extends Controller {
 			array_shift($segs);
 		}
 		$page_segs = array();
-		
+		if (empty($segs)) $segs = array('dashboard');
 		foreach($segs as $seg)
 		{
 			if (!is_numeric($seg))
