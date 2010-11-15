@@ -107,7 +107,7 @@ function fuel_block($params)
 		$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
 		if ($CI->config->item('fuel_mode', 'fuel') != 'views')
 		{
-			$CI->load->model('blocks_model');
+			$CI->load->module_model(FUEL_FOLDER, 'blocks_model');
 			
 			// find the block in FUEL db
 			$block = $CI->blocks_model->find_one_by_name($p['view']);

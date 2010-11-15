@@ -11,5 +11,5 @@
 		</li>
 		<?php endforeach; ?>
 	</ul>
-	<?php endif; ?>
 </div>
+<?php endif; ?>
