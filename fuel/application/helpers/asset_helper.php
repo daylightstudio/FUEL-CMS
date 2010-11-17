@@ -280,7 +280,10 @@ function swf($flash, $id, $width, $height, $options = array()){
 function _get_assets()
 {
 	$CI =& get_instance();
-	$CI->load->library('asset');
+	if (!isset($CI->asset))
+	{
+		$CI->load->library('asset');
+	}
 	return $CI;
 }
 

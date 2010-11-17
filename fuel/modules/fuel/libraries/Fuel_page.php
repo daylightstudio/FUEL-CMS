@@ -25,7 +25,7 @@ class Fuel_page {
 	{
 		$this->_CI =& get_instance();
 		$this->_CI->load->helper('cookie');
-		$this->_CI->load->module_helper(FUEL_FOLDER, 'fuel');
+		//$this->_CI->load->module_helper(FUEL_FOLDER, 'fuel'); // already loaded in autoload
 		$this->_CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 
 		if (count($params) > 0)
@@ -263,8 +263,6 @@ class Fuel_page {
 	function variables_render($return = FALSE, $fuelify = FALSE)
 	{
 
-		$this->_CI->load->library('parser');
-		
 		// get the location and load page vars
 		$page = $this->location;
 
@@ -373,6 +371,9 @@ class Fuel_page {
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
 			{
+				// load her to save on execution time... 
+				$this->_CI->load->library('parser');
+				
 				$body = file_get_contents($check_file);
 
 				// now parse any template like syntax
@@ -451,7 +452,8 @@ class Fuel_page {
 		} 
 		
 		$this->_CI->load->library('session');
-		$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
+		
+		
 		// add top edit bar for fuel
 		$this->_CI->config->module_load('fuel', 'fuel', TRUE);
 		
@@ -471,8 +473,9 @@ class Fuel_page {
 		$vars['layouts'] = $this->_CI->fuel_layouts->layouts_list(TRUE);
 		
 		$editable_asset_types = $this->_CI->config->item('editable_asset_filetypes', 'fuel');
+
+
 		// add javascript
-		
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
 		$vars['init_params']['basePath'] = WEB_PATH;
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
@@ -482,7 +485,16 @@ class Fuel_page {
 		
 		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
 		// otherwise we get an error when the mode is set to views
-		$vars['others'] = ($this->_CI->config->item('fuel_mode', 'fuel') == 'views') ? array() : $this->_CI->pages_model->get_others('location', $this->location, 'location');
+		if ($this->_CI->config->item('fuel_mode', 'fuel') == 'views')
+		{
+			$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
+			$vars['others'] = array();
+		}
+		else
+		{
+			$vars['others'] = $this->_CI->pages_model->get_others('location', $this->location, 'location');
+		}
+		
 		if (!$this->_fuelified_processed)
 		{
 			$inline_edit_bar = $this->_CI->load->view('_blocks/inline_edit_bar', $vars, TRUE);
@@ -490,7 +502,6 @@ class Fuel_page {
 			$output = str_replace('</body>', $inline_edit_bar."\n</body>", $output);
 			$this->_CI->config->set_item('assets_path', $this->_CI->config->item('assets_path'));
 		}
-		
 		$this->_fuelified_processed = TRUE;
 		return $output;
 	}

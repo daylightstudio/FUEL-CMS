@@ -225,7 +225,7 @@ abstract class MY_Model extends Model {
 	public function get($force_array = TRUE, $return_method = NULL, $assoc_key = NULL, $use_common_query = NULL){
 
 		if (!empty($this->return_method) AND empty($return_method)) $return_method = $this->return_method;
-		$this->fields();
+		//$this->fields();
 		
 		if (!isset($use_common_query)) $use_common_query =  $this->use_common_query;
 		
