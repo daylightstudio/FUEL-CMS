@@ -46,7 +46,7 @@
 |
 */
 
-    define('CRON_CI_INDEX', '/Library/WebServer/Documents/daylight/FUEL/repo/trunk/web/index.php');   // Your CodeIgniter main index.php file
+    define('CRON_CI_INDEX', '/var/www/httpdocs/index.php');   // Your CodeIgniter main index.php file
     define('CRON', TRUE);   // Test for this in your controllers if you only want them accessible via cron
 
 

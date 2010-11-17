@@ -429,7 +429,8 @@ INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(25,'tools/seo','Page Analysis','yes'),
 	(26,'tools/tester','Tester Module','yes'),
 	(27,'blocks','Manage Blocks','yes'),
-	(28,'site_docs','Site Documentation','yes');
+	(28,'site_docs','Site Documentation','yes'),
+	(29,'tools/cronjobs','Cronjobs','yes');
 
 -- --------------------------------------------------------
 
