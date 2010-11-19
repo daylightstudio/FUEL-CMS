@@ -78,7 +78,7 @@
 			<h3>Getting Started</h3>
 			<ol>
 				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'</strong></li>
-				<li>Install the database by first creating the database in MySQL and then running the fuel_schema.sql file found at the <strong>fuel/install/fuel_schema.sql</strong> of the downloaded FUEL folder (If you want to use the FUEL admin).
+				<li>Install the database by first creating the database in MySQL and then running either <strong>fuel/install/fuel_schema.sql</strong> OR the <strong>fuel/install/widgicorp.sql</strong> with the latter if you want the demo site to run.
 					Then, change the database configuration found in <strong>fuel/application/config/database.php</strong> 
 				</li>
 				<li>Make the following folders writable:
@@ -98,7 +98,7 @@
 				<li>If you are wanting to use the FUEL admin, change the $config['admin_enabled'] configuration property to <strong>TRUE</strong> in the fuel/application/config/MY_fuel.php file</li>
 				<?php endif; ?>
 				<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
-				<li>If you are wanting to edit pages in FUEL, change the $config['fuel_mode'] configuration property to <strong>AUTO</strong> in the fuel/application/config/MY_fuel.php file</li>
+				<li>If you are wanting to edit pages in FUEL, change the $config['fuel_mode'] configuration property to <strong>AUTO</strong> in the fuel/application/config/MY_fuel.php file. <strong>This must be done to view the demo site.</strong></li>
 				<?php endif; ?>
 				<li>WARNING: Make sure the <strong>data_backup</strong> folder and <strong>crons</strong> folder is inaccessible to the web. The .htaccess file that comes with FUEL, blocks the fuel/data_backup and fuel/cron folders by default</li>
 				<li>To access the FUEL admin, go to: <br />

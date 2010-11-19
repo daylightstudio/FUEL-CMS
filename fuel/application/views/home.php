@@ -1,4 +1,9 @@
 <?php fuel_set_var('layout', '')?>
+<?php if ($CI->config->item('fuel_mode', 'fuel') == 'views') : ?>
+
+<?php $CI->load->view('install') ?>
+
+<?php else : ?>
 
 <?php $this->load->view('_blocks/header')?>
 
@@ -38,3 +43,4 @@
 </div>
 
 <?php $this->load->view('_blocks/footer')?>
+<?php endif; ?>

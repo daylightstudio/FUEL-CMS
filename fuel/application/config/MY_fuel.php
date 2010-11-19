@@ -6,7 +6,7 @@ $config['site_name'] = 'WidgiCorp';
 
 // options are cms, views, auto... cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder
-$config['fuel_mode'] = 'auto';
+$config['fuel_mode'] = 'views';
 
 // used for system emails. Needs to be overwritten by MY_fuel.php
 $config['domain'] = '';
@@ -26,7 +26,7 @@ $config['modules_allowed'] = array(
 	);
 
 // default password to alert against
-$config['admin_enabled'] = TRUE;
+$config['admin_enabled'] = FALSE;
 
 // will auto search view files. 
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
