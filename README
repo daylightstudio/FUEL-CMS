@@ -6,8 +6,9 @@ http://www.getfuelcms.com
 
 == INSTALLATION ==
 To install FUEL CMS, copy the contents of this folder to a web accessible 
-folder and browse to the index.php file. Next, follow the directions on the 
-screen. 
+folder and browse to the index.php/install page. Next, follow the directions on the 
+screen. However, instead of installing the fuel_schema.sql file, install the 
+fuel/install/widgicorp.sql file.
 
 
 == DOCUMENTATION ==
