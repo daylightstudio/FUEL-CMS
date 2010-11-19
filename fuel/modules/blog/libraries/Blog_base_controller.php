@@ -1,9 +1,9 @@
 <?php
-class Blog_base_controller extends Controller {
+class Blog_base_controller extends CI_Controller {
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		if (!$this->fuel_auth->accessible_module('blog'))
 		{
@@ -50,7 +50,6 @@ class Blog_base_controller extends Controller {
 		}
 
 		$output = $this->load->module_view($this->fuel_blog->settings('theme_module'), $view, $vars, TRUE);
-		
 		$this->load->module_library(FUEL_FOLDER, 'fuel_page');
 		$this->fuel_page->initialize();
 		$output = $this->fuel_page->fuelify($output);

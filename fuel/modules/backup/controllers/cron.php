@@ -1,9 +1,9 @@
 <?php
-class Cron extends Controller  {
+class Cron extends CI_Controller  {
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 		$this->config->load('backup');
 		$this->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
 		$this->load->language('backup');

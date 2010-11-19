@@ -57,7 +57,6 @@ function blog_block($view, $vars = array(), $return = TRUE)
 {
 	$CI =& get_instance();
 	$view_folder = $CI->fuel_blog->theme_path();
-	
 	$block = $CI->load->module_view(BLOG_FOLDER, $view_folder.'_blocks/'.$view, $vars, TRUE);
 	if ($return)
 	{

@@ -25,9 +25,9 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/base_module_model
  */
 
-require_once(APPPATH.'libraries/MY_Model.php');
+require_once(APPPATH.'core/MY_Model.php');
 
-abstract class Base_module_model extends MY_Model {
+class Base_module_model extends MY_Model {
 	
 	public $filters = array(); // filters to apply to when searching for items
 	public $filter_value = NULL; // the values of the filters

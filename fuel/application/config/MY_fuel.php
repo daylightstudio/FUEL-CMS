@@ -2,11 +2,11 @@
 // IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
 
 // the name to be displayed on the top left of the admin
-$config['site_name'] = 'My Website';
+$config['site_name'] = 'WidgiCorp';
 
 // options are cms, views, auto... cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder
-$config['fuel_mode'] = 'views';
+$config['fuel_mode'] = 'auto';
 
 // used for system emails. Needs to be overwritten by MY_fuel.php
 $config['domain'] = '';
@@ -26,7 +26,7 @@ $config['modules_allowed'] = array(
 	);
 
 // default password to alert against
-$config['admin_enabled'] = FALSE;
+$config['admin_enabled'] = TRUE;
 
 // will auto search view files. 
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
@@ -49,4 +49,4 @@ $config['assets_excluded_dirs'] = array(
 	);
 
 /* End of file MY_fuel.php */
-/* Location: ./application/config/MY_fuel.php */ 
+/* Location: ./application/config/MY_fuel.php */

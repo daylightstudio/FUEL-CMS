@@ -13,6 +13,7 @@ $config['modules'] = array();
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
 	'model_name' => 'Pages_model',
+	'model_location' => 'fuel',
 	'display_field' => 'location',
 	'js_controller' => 'PageController',
 	'js_controller_params' => array('import_view_key' => 'vars--body'),
@@ -31,6 +32,7 @@ $config['modules']['pages'] = array(
 // navigation module init values
 $config['modules']['blocks'] = array(
 	'display_field' => 'name',
+	'model_location' => 'fuel',
 	'js_controller' => 'BlockController',
 	'sanitize_input' => array('template','php')
 );
@@ -39,6 +41,7 @@ $config['modules']['blocks'] = array(
 $config['modules']['navigation'] = array(
 	'module_name' => 'Navigation',
 	'model_name' => 'navigation_model',
+	'model_location' => 'fuel',
 	'display_field' => 'label',
 	'js_controller' => 'NavigationController',
 	'preview_path' => '',
@@ -56,12 +59,14 @@ $config['modules']['navigation'] = array(
 // navigation module init values
 $config['modules']['navigation_group'] = array(
 	'model_name' => 'navigation_groups_model',
+	'model_location' => 'fuel',
 	'hidden' => TRUE,
 );
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',
 	'model_name' => 'assets_model',
+	'model_location' => 'fuel',
 	'js_controller' => 'AssetsController',
 	'display_field' => 'name',
 	'preview_path' => '',
@@ -80,6 +85,7 @@ $config['modules']['assets'] = array(
 $config['modules']['users'] = array(
 	'module_name' => 'Users',
 	'model_name' => 'users_model',
+	'model_location' => 'fuel',
 	'display_field' => 'email',
 	'preview_path' => '',
 	'permission' => 'users',
@@ -95,6 +101,7 @@ $config['modules']['users'] = array(
 $config['modules']['permissions'] = array(
 	'module_name' => 'Permissions',
 	'model_name' => 'Permissions_model',
+	'model_location' => 'fuel',
 	'display_field' => 'name',
 	'preview_path' => '',
 	'permission' => 'permissions',
@@ -109,6 +116,7 @@ $config['modules']['permissions'] = array(
 $config['modules']['sitevariables'] = array(
 	'module_name' => 'Site Variables',
 	'model_name' => 'Sitevariables_model',
+	'model_location' => 'fuel',
 	'display_field' => 'name',
 	'preview_path' => '',
 	'permission' => 'sitevariables',

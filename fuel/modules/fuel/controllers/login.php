@@ -1,11 +1,11 @@
 <?php
-class Login extends Controller {
+class Login extends CI_Controller {
 
 	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 
 		// for flash data
 		$this->load->library('session');

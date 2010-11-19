@@ -68,7 +68,7 @@ class Asset {
 	public $assets_gzip_cache_expiration = 3600;
 	
 	// module assets path 
-	public $assets_module_path = 'application/modules/{module}/assets/';
+	public $assets_module_path = 'fuel/modules/{module}/assets/';
 	
 	// module context for assets
 	public $assets_module = '';
@@ -286,7 +286,7 @@ class Asset {
 
 		$asset_type = (!empty($assets_folders[$path])) ? $assets_folders[$path] : $CI->config->item($path);
 		$path = WEB_PATH.$assets_path.$asset_type.$file.$cache;
-	
+
 		if ($absolute)
 		{
 			$path = 'http://'.$_SERVER['HTTP_HOST'].$path;

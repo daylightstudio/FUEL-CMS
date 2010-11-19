@@ -3,9 +3,9 @@
 <a href="http://www.google.com/search?client=safari&rls=en-us&q=cron+job+tutorial&ie=UTF-8&oe=UTF-8" target="_blank">click here</a>. 
 For cron jobs to work correctly, you must do the following:</p>
 <ol>
-	<li>Make the file <dfn><?=INSTALL_ROOT?>crons/ci_cron.php</dfn> executable. This file will run the CodeIgniter bootstrap index file.</li>
-	<li>Open up the <dfn><?=INSTALL_ROOT?>crons/ci_cron.php</dfn> and change the CRON_CI_INDEX, CRON_LOG, the $_SERVER['SERVER_NAME'], and the $_SERVER['SERVER_PORT'] (if needed).</li>
-	<li>Make the file <dfn><?=INSTALL_ROOT?>crons/crontab.php</dfn> writable.</li>
+	<li>Make the file <dfn><?=INSTALL_ROOT?>/crons/ci_cron.php</dfn> executable. This file will run the CodeIgniter bootstrap index file.</li>
+	<li>Open up the <dfn><?=INSTALL_ROOT?>/crons/ci_cron.php</dfn> and change the CRON_CI_INDEX, the $_SERVER['SERVER_NAME'], and the $_SERVER['SERVER_PORT'] (if needed).</li>
+	<li>Make the file <dfn><?=INSTALL_ROOT?>/crons/crontab.php</dfn> writable.</li>
 </ol>
 
 

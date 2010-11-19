@@ -22,7 +22,7 @@ $this->view = 'Dwoo';
 
 // Or you can also override the view property in your AppController class as such :
 
-class AppController extends Controller {
+class AppController extends CI_Controller {
     public $view = 'Dwoo';
 }
 

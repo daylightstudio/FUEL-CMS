@@ -12,6 +12,16 @@ $nav = fuel_nav(array('return_normalized' => TRUE));
 Add any dynamic pages and associate them to the $nav array here:
 **************************************************************/
 
+$CI->load->model('projects_model');
+$projects = $CI->projects_model->find_all(); // won't filter on published because they all should be'
+
+// add project pages
+foreach($projects as $project)
+{
+	$key = 'showcase/project/'.$project->slug;
+	$nav[$key] = array('location' => $key);
+}
+
 
 
 /**************************************************************/

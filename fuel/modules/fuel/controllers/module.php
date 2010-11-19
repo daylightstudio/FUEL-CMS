@@ -1033,7 +1033,7 @@ class Module extends Fuel_base_controller {
 			{
 				$vars = $this->_form($id, NULL, TRUE, FALSE);
 			}
-			$this->load->module_view($this->view_location, '_layouts/module_inline_edit', $vars);
+			$this->load->module_view(FUEL_FOLDER, '_layouts/module_inline_edit', $vars);
 		}
 	}
 	

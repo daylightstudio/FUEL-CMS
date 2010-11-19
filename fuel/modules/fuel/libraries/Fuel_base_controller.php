@@ -1,7 +1,7 @@
 <?php
 define('FUEL_ADMIN', TRUE);
 
-class Fuel_base_controller extends Controller {
+class Fuel_base_controller extends CI_Controller {
 	
 	public $js_controller = 'BaseFuelController';
 	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
@@ -10,7 +10,7 @@ class Fuel_base_controller extends Controller {
 	
 	function __construct($validate = TRUE)
 	{
-		parent::Controller();
+		parent::__construct();
 
 		$this->load->library('form');
 		$this->load->helper('convert');
@@ -20,15 +20,17 @@ class Fuel_base_controller extends Controller {
 		$this->load->helper('string');
 		$this->load->helper('text');
 
-		$this->config->load('fuel', TRUE);
+		$this->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 		$this->load->module_language(FUEL_FOLDER, 'fuel', $this->config->item('language'));
-		
+
 		$this->load->module_library(FUEL_FOLDER, 'fuel_modules');
 		$this->load->module_helper(FUEL_FOLDER, 'fuel');
 		
 		// check any remote host or IP restrictions first
+		
 		if (!$this->config->item('admin_enabled', 'fuel') OR ($this->config->item('restrict_to_remote_ip', 'fuel') AND !in_array($_SERVER['REMOTE_ADDR'], $this->config->item('restrict_to_remote_ip', 'fuel'))))
 		{
+
 			show_404();
 		}
 		// set asset output settings
@@ -36,7 +38,8 @@ class Fuel_base_controller extends Controller {
 		
 		if ($validate) $this->_check_login();
 		
-		$this->load->module_model(FUEL_FOLDER, 'logs_model');
+		$this->load->model(FUEL_FOLDER.'/logs_model');
+
 		$this->load->helpers(array('ajax','date'));
 		
 		// set up default variables

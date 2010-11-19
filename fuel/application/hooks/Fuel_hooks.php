@@ -26,6 +26,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide
  */
+
 class Fuel_hooks
 {
 	
@@ -40,7 +41,6 @@ class Fuel_hooks
 		// if called from same Wordpress, the the global scope will not work
 		global $method, $class, $RTR;
 		$class_methods = get_class_methods($class);
-
 		// for pages without methods defined
 		if ((isset($class_methods) AND !in_array($method, $class_methods) AND !in_array('_remap', $class_methods))  AND !empty($RTR->default_controller))
 		{

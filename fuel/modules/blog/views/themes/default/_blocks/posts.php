@@ -33,5 +33,5 @@
 	<div class="no_posts">
 		<p>There are no posts available.</p>
 	</div>
-	<?php endif; ?>
+	<?php endif; ?> 
 </div>

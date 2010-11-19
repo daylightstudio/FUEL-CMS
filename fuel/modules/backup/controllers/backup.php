@@ -12,7 +12,9 @@ class Backup extends Fuel_base_controller {
 		$this->load->language('backup');
 	}
 	
-	function index(){
+	function index()
+	{
+
 		$this->_validate_user('tools/backup');
 		$backup_config = $this->config->item('backup');
 		$download_path = $backup_config['db_backup_path'];

@@ -36,7 +36,7 @@ class MY_Image_lib extends CI_Image_lib {
 	
 	public function __construct()
 	{
-        parent::CI_Image_lib();
+        parent::__construct();
     }
 
 	// --------------------------------------------------------------------

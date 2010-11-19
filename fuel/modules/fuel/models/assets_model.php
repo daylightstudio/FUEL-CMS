@@ -4,7 +4,7 @@
 require_once(APPPATH.'libraries/Validator.php');
 
 
-class Assets_model extends Model {
+class Assets_model extends CI_Model {
 	
 	public $filters = array('group_id' => 'images');
 	public $filter_value = null;
@@ -16,7 +16,7 @@ class Assets_model extends Model {
 
 	function __construct()
 	{
-		parent::Model();
+		parent::__construct();
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		$this->_dirs = list_directories($CI->asset->assets_server_path, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE, TRUE);

@@ -181,6 +181,7 @@ class Fuel_modules {
 	{
 		$CI =& get_instance();
 		$modules = $this->get_modules();
+
 		$pages = array();
 		foreach($modules as $mod => $module)
 		{
@@ -194,7 +195,9 @@ class Fuel_modules {
 			{
 				$CI->load->model($info['model_name']);
 			}
+			
 			$model = $info['model_name'];
+
 			if (method_exists($model, 'find_all_array'))
 			{
 				$records = $CI->$model->find_all_array();
@@ -202,7 +205,6 @@ class Fuel_modules {
 			
 			$callback = create_function(
 			            '$matches',
-						
 			            '
 						$record = $GLOBALS["__temp_record__"];
 						if (!empty($record[$matches[2]]))

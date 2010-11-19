@@ -31,7 +31,7 @@ class MY_Zip extends CI_Zip {
 	
 	function MY_Zip()
 	{
-		parent::CI_Zip();
+		parent::__construct();
 	}
 
 	// added $orig_path to prevent deep file structures

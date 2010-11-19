@@ -94,11 +94,11 @@ passed to the layout file containing the view file.
 you can load it like so:
 </p>
 <pre class="brush:php">
-class About extends Controller {
+class About extends CI_Controller {
 	
 	function About()
 	{
-		parent::Controller();
+		parent::__construct();
 	}
 	
 	function contact()

@@ -142,7 +142,7 @@ class Fuel_pagevars {
 		$vars = array_merge($vars, $page_vars);
 		return $vars;
 	}
-	//  FIX ME
+
 	private function _preview_module_vars($location)
 	{
 		if (is_null($location))

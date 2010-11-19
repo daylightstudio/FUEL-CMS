@@ -188,7 +188,6 @@ function fuel_model($model, $params = array())
 	// return NULL if model_name is empty
 	if (empty($model_name)) return NULL;
 
-	//echo $model_name;
 	if (!empty($module))
 	{
 		$CI->load->module_model($module, $model_name);

@@ -1,5 +1,5 @@
 <?php
-class Fuel_router extends Controller {
+class Fuel_router extends CI_Controller {
 
 	public $segments = array();
 	public $layout = '';
@@ -7,7 +7,7 @@ class Fuel_router extends Controller {
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 		$this->config->load('MY_config');
 		$this->config->load('fuel', TRUE);
 		$this->load->library('cache');
@@ -124,7 +124,6 @@ class Fuel_router extends Controller {
 		// set up cache info 
 		$cache_group = $this->config->item('page_cache_group', 'fuel');
 		$cache_id = fuel_cache_id();
-
 		if ($this->config->item('use_page_cache', 'fuel') !== 'cms' AND $this->cache->get($cache_id, $cache_group, FALSE))
 		{
 			$output = $this->cache->get($cache_id, $cache_group);

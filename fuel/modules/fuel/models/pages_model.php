@@ -137,7 +137,7 @@ class Pages_model extends Base_module_model {
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-		
+
 		$cms_pages = $this->list_locations(FALSE);
 		
 		// get valid view files that may show up

@@ -17,7 +17,7 @@
 	<?=js($this->config->item('fuel_javascript', 'fuel'), 'fuel')?>
 	<?php if (!empty($js)) { echo js($js); } ?>
 
-	<?php if (!empty($this->js_controller)) : ?> 
+	<?php if ($this->js_controller) : ?> 
 	<script type="text/javascript">
 		<?php if ($this->js_controller != 'BaseFuelController') : ?>
 		jqx.addPreload('fuel.controller.BaseFuelController');
