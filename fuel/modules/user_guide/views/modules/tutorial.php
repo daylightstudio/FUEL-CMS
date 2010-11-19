@@ -112,7 +112,7 @@ or that you have the proper <a href="#permissions">permissions</a> to view that 
 
 
 <h2>The Articles Module</h2>
-<p>The articles module will contain the content of the articles as well as some meta information including a foriegn key to the authors table.</p>
+<p>The articles module will contain the content of the articles as well as some meta information including a foreign key to the authors table.</p>
 
 <h3>Setup the Articles Table</h3>
 <p>The following is the SQL code we will be using to drive the articles model. Copy this code 
@@ -243,7 +243,7 @@ we will revisit this model and associate categories to articles in the Articles_
 
 <a name="categories_model"></a>
 <h2>The Categories Module</h2>
-<p>The categories module will be used to group articles together. You will be able to create categories seperately 
+<p>The categories module will be used to group articles together. You will be able to create categories separately 
 as well as associate them to the article within the articles module (we'll get to that).</p>
 
 <h3>Setup the Category Tables</h3>
@@ -266,7 +266,7 @@ PRIMARY KEY (  `category_id` ,  `article_id` )
 
 <h3>Create the Category Models</h3>
 <p>We will now create two models, one for each table. However, the category_to_articles table will only
-be used to help associate categories to groups and will not be visbile in the FUEL admin.</p>
+be used to help associate categories to groups and will not be visible in the FUEL admin.</p>
 
 <h4>The Categories Model</h4>
 <p>Similar to above, we will create the categories model. So
@@ -395,7 +395,7 @@ function form_fields($values = array())
 <p>This will add a multi-select field to your form to associate categories to your article.</p>
 
 <h3>Adding an After Save Hook</h3>
-<p>We aren't quite done yet though. We need to make sure that the categories to articles information get's saved after we hit the save button. 
+<p>We aren't quite done yet though. We need to make sure that the categories to articles information gets saved after we hit the save button. 
 To do that we add an <dfn>on_after_save</dfn> hook to the <dfn>Articles_model</dfn>. We call the save_related method that will
 save data used for a many to many lookup table:</p>
 
@@ -424,12 +424,10 @@ To do that, </p>
 </ol>
 <p>Repeat these step to create the articles permissions.</p>
 
-
 <a name="polishing"></a>
 <h2>A Little Polishing</h2>
 <p>Now that we have the authors, articles and categories modules created and working, it's time to add a little polish.
 </p>
-<br />
 
 <h3>Polishing the Authors Module</h3>
 <p>To improve the authors module, we are going to do the following.</p>
@@ -439,7 +437,6 @@ To do that, </p>
 	<li>Add image upload functionality to the form</li>
 	<li>Add an avatar_image method to the record object</li>
 </ol>
-
 
 <h4>Required Fields</h4>
 <p>The first thing we will do is add some required fields to the model like so:</p>
@@ -544,9 +541,9 @@ function form_fields($values = array())
 <img src="<?=img_path('examples/add_edit.png', 'user_guide')?>" class="screen" />
 
 <h4>The Tree Method</h4>
-<p>FUEL allows you to create a tree method that will display the list data in a hiearchical tree format as opposed to the list view.
+<p>FUEL allows you to create a tree method that will display the list data in a hierarchical tree format as opposed to the list view.
 For the articles module, we will create a tree view that uses the category names. The method must return an array that follows the
-<a href="<?=user_guide_url('libraries/menu')?>">Menu</a> hierarchical structure. The class name will change based on it's published status.</p>
+<a href="<?=user_guide_url('libraries/menu')?>">Menu</a> hierarchical structure. The class name will change based on its published status.</p>
 
 <pre class="brush: php">
 ...
@@ -664,9 +661,9 @@ function on_after_delete($where)
 </pre>
 
 <h4>Adding a Before Validation Hook</h4>
-<p>Another common form of validation we may want to add involves maintaing unique field values across records.
+<p>Another common form of validation we may want to add involves maintaining unique field values across records.
 For the categories module, we want to ensure all records have a unique <strong>name</strong> value. This means that a record cannot
-have it's name value changed to a name value that aleady exists in an another record.
+have its name value changed to a name value that aleady exists in an another record.
 Similarly, we want to ensure that all new records contain name values that don't exist in other records.
 To do this we add an <dfn>on_before_validate</dfn> hook that checks to see if the record already exists and then adds
 either the <dfn>is_editable</dfn> or <dfn>is_new</dfn> validation.
@@ -689,7 +686,7 @@ function on_before_validate($values)
 ...
 </pre>
 
-<p class="important">The methods <kbd>is_editbale</kbd> and <kbd>is_new</kbd> are methods on the MY_Model class. For the second parameter
+<p class="important">The methods <kbd>is_editable</kbd> and <kbd>is_new</kbd> are methods on the MY_Model class. For the second parameter
 of <kbd>add_validation</kbd>, we first add the class instance and then the method name in an array as opposed to a simple string name of a function.</p>
 
 
