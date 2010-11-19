@@ -70,7 +70,7 @@ on the key value specified in the config (e.g. example):</p>
 		</tr>
 		<tr>
 			<td><strong>view_location</strong></td>
-			<td>By default it will look in the applications/views folder. If a value is given it will look in the <dfn>modules/{model_location}/views</dfn> folder</td>
+			<td>By default it will look in the applications/views folder. If a value is given it will look in the <dfn>modules/{view_location}/views</dfn> folder</td>
 			<td>None</td>
 			<td>the location of the view files</td>
 		</tr>
