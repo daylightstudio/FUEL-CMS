@@ -1,5 +1,5 @@
 <?php 
-define('TOOLS_VERSION', '0.9');
+define('TOOLS_VERSION', '0.91');
 define('TOOLS_FOLDER', 'tools');
 define('TOOLS_PATH', APPPATH.MODULES_FOLDER.'/'.TOOLS_FOLDER.'/');
 
