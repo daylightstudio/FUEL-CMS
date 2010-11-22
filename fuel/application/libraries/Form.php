@@ -406,7 +406,7 @@ Class Form {
 	 */
 	public static function prep($str)
 	{
-		static $prepped_fields = array();
+		//static $prepped_fields = array();
 		
 		if ($str === '')
 		{
