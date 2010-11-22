@@ -1422,7 +1422,7 @@ abstract class MY_Model extends Model {
 		// set auto validation field rules
 		foreach($this->auto_validate_fields as $key => $val)
 		{
-			if (preg_match("/".$key."/", $field))
+			if (preg_match("/".$key."/", $field) && !empty($value))
 			{
 				$this->validator->add_rule($field, $val, lang('error_'.$val, $val), $value);
 			}
