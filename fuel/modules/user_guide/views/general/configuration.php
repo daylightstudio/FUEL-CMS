@@ -222,7 +222,7 @@ array(
 			<td>CSS other then the fuel.css file which automatically gets loaded.</td>
 		</tr>
 		<tr>
-			<td><strong>fuel_css</strong></td>
+			<td><strong>fuel_assets_output</strong></td>
 			<td>None</td>
 			<td>TRUE, FALSE, inline, gzip, whitespace, or combine</td>
 			<td>Allow for asset optimization. Requires that all module folders have a writable assets/cache folder.</td>
