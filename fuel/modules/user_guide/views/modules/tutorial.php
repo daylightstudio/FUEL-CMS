@@ -8,7 +8,7 @@ The first one will be an authors module, followed by the articles module.
 The last we will create is the categories module which links articles to categories.
 </p>
 
-<h4><strong>These are the steps in the following tuturial:</strong></h4>
+<h4><strong>These are the steps in the following tutorial:</strong></h4>
 <ol>
 	<li><a href="#setup">Download and Setup</a></li>
 	<li><a href="#authors_model">The Authors Module</a></li>
@@ -90,9 +90,7 @@ it hooked up to the FUEL admin.
 
 <h3>Hooking Up the Authors Module</h3>
 <p>Now that our table and model have been created, we need
-to tell FUEL about it. To do that, open up the <dfn>applicaitons/config/MY_fuel_modules.php</dfn> file
-and add the following line.
-</p>
+to tell FUEL about it. To do that, open up the <dfn>applications/config/MY_fuel_modules.php</dfn> file and add the following line.</p>
 <pre class="brush: php">
 $config['modules']['authors'] = array(); 
 </pre>
@@ -182,7 +180,7 @@ class Articles_model extends Base_module_record {
 
 }
 </pre>
-<p>Note how we precede some of the column names in the select with the table name to prevent abiguity between the tables. Lastly,
+<p>Note how we precede some of the column names in the select with the table name to prevent ambiguity between the tables. Lastly,
 because we are using MYSQL functions in the select, we need to pass <dfn>FALSE</dfn> as the select's second parameter.
 </p>
 <p class="important">The key column (e.g. <kbd>id</kbd>) is not seen in the FUEL admin but is important to include because it is used to identify the row. </p>
@@ -517,7 +515,7 @@ class Authors_model extends Base_module_model {
 
 <h4>Integrate With the Authors Module</h4>
 <p>FUEL allows one click access to another module's form. For the articles module, we should allow users to add and edit authors directly in the articles module.
-To do this, you can take advantage of a <a href="<?=user_guide_url('modules/forms')?>">special css class name</a>, <dfn>add_edit</dfn>, that you can 
+To do this, you can take advantage of a <a href="<?=user_guide_url('modules/forms')?>">special CSS class name</a>, <dfn>add_edit</dfn>, that you can 
 place on a field to integrate with an existing module. Note that the example below has a <dfn>class</dfn> name added to the <dfn>author_id</dfn>. The first
 being the <dfn>add_edit</dfn> class and the second being the module key that you want to integrate with. The screen below the code example shows what it should look like in the form.
 </p>
@@ -663,7 +661,7 @@ function on_after_delete($where)
 <h4>Adding a Before Validation Hook</h4>
 <p>Another common form of validation we may want to add involves maintaining unique field values across records.
 For the categories module, we want to ensure all records have a unique <strong>name</strong> value. This means that a record cannot
-have its name value changed to a name value that aleady exists in an another record.
+have its name value changed to a name value that already exists in an another record.
 Similarly, we want to ensure that all new records contain name values that don't exist in other records.
 To do this we add an <dfn>on_before_validate</dfn> hook that checks to see if the record already exists and then adds
 either the <dfn>is_editable</dfn> or <dfn>is_new</dfn> validation.
@@ -732,7 +730,7 @@ variable in the FUEL configuration. This is done by changing <dfn>$config['auto_
 
 <p class="important"><kbd>$CI</kbd> is a the CodeIgniter super object that FUEL automatically gets passed to the view as the variable <kbd>$CI</kbd></p>
 <p class="important"><kbd>content_formatted</kbd> is a magic method. By appending <kbd>_formatted</kbd> to the end of a string type field, it will format
-the field using CI's <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typograph</a></p>
+the field using CI's <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a></p>
 <p class="important">Check out <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_model and fuel_block</a> helper functions that could be used instead.</p>
 
 

@@ -5,10 +5,10 @@
  The intention is to get you generally oriented with the interface.</p>
 
 <h2>Dashboard</h2>
-<p>Below is a standrd FUEL Dashboard that will appear right after you login.
+<p>Below is a standard FUEL Dashboard that will appear right after you login.
 Different modules can hook into the dashboard view so it may look slightly different
-for you based on the modules you have installed.
-</p>
+for you based on the modules you have installed.</p>
+
 <div class="screenshot">
 	<div class="overlay" style="top: 55px; left: 700px;">Last Backup</div>
 	<div class="overlay" style="top: 105px; left: 120px;">Standard FUEL Module</div>
@@ -19,7 +19,6 @@ for you based on the modules you have installed.
 	<div class="overlay" style="top: 230px; left: 260px;">Site Specific Documentation</div>
 	<img src="<?=img_path('examples/screen_dashboard.jpg', 'user_guide')?>" class="screen" />
 </div>
-
 
 <a name="list_view"></a>
 <h2>Module List View</h2>

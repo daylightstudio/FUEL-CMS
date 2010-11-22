@@ -48,7 +48,7 @@ $vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
 <p><strong>Controller variables</strong> are applied to what would normally be the controller level of a website. For example,
 If you have an <strong>about</strong> section of your website at http://www.mysite.com/about, you can create a <dfn>views/_variables/about.php</dfn>
 a variables file at <dfn>views/_variables/about.php</dfn> can be used. Variables in this file will overwrite any global variable with the same key.
-The variables will be extened automatically to all sub pages of the about section (e.g. http://www.mysite.com/about/contact) .
+The variables will be extended automatically to all sub pages of the about section (e.g. http://www.mysite.com/about/contact) .
 Variables at the controller level use the same <dfn>$vars</dfn> variable as global variables.
 </p>
 <pre class="brush:php">
@@ -60,7 +60,7 @@ $vars['body_class'] = 'about';
 <h2>Page Variables</h2>
 <p><strong>Page variables</strong> are applied to a specific URI path. They will overwrite any global or controller 
 variable set with the same key. As an example, you may want to overwrite the <dfn>page_title</dfn> 
-of <strong>About : My Website</strong> to <strong>Contact : My Website.</strong>. To do this, you can create a
+of <strong>About : My Website</strong> to <strong>Contact : My Website</strong>. To do this, you can create a
 <dfn>$pages</dfn> array variable in your global or controller variables file (e.g. <dfn>views/_variables/about.php</dfn>) 
 with the key being the URI of the page or a <strong>regular expression</strong> to match pages (just like routing files). 
 The value is an array of variables to pass to the page. 
@@ -124,10 +124,9 @@ class About extends Controller {
 	<li><strong>libraries</strong> - a string or array of library classes to load.</li>
 	<li><strong>models</strong> -  a string or array of models to load.</li>
 	<li><strong>layout</strong> - the path to the layout view. The <dfn>$body</dfn> variable is used within the layout to load the view file contents.</li>
-	<li><strong>view</strong> - a specific view file to use for the page. By default it will look for a view file that matches the uri path. 
+	<li><strong>view</strong> - a specific view file to use for the page. By default it will look for a view file that matches the URI path. 
 		If it doesn't find one, then it will search the uri path for a corresponding view.</li>
 	<li><strong>parse_view</strong> - determines whether the view file should be <a href="<?=user_guide_url('parsing/overview')?>">parsed</a>.</li>
 	<li><strong>allow_empty_content</strong> - determines whether to allow empty view content without showing the 404 page.</li>
 	<li><strong>CI</strong> - the CodeIgniter super object variable</li>
-	
 </ul>

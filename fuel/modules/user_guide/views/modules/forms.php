@@ -1,5 +1,5 @@
 <h1>Module Forms</h1>
-<p>Module's use the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class to create the form used to create and edit module information. 
+<p>Modules use the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class to create the form used to create and edit module information. 
 You can modify a model's <a href="<?=user_guide_url('libraries/my_model')?>">form_fields()</a> method to customize the form.</p>
 
 <h2>Trigger CSS Classes</h2>
@@ -13,6 +13,6 @@ You can modify a model's <a href="<?=user_guide_url('libraries/my_model')?>">for
 
 <p>Conversely, there are a couple CSS classes that are used to remove certain functionality.</p>
 <ul>
-	<li><strong>no_editor</strong> - the <dfn>no_editor</dfn> CSS class is used when you don't want to apply a MarkitUp editor to your text field'.</li>
+	<li><strong>no_editor</strong> - the <dfn>no_editor</dfn> CSS class is used when you don't want to apply a MarkitUp editor to your text field.</li>
 	<li><strong>no_combo</strong> - the <dfn>no_combo</dfn> CSS class is used when you don't want the combo box used and instead want a regular multi-select field.</li>
 </ul>

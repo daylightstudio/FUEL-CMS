@@ -1,6 +1,6 @@
 <h1>Configuring FUEL CMS</h1>
 <p>The following are the main configuration options that you can set for FUEL. 
-They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</p>
+They can be overwritten in the <dfn>application/config/MY_fuel.php</dfn> file:</p>
 
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
 	<tbody>
@@ -168,7 +168,7 @@ array(
 			<td><strong>assets_upload_max_width</strong></td>
 			<td>1024</td>
 			<td>None</td>
-			<td>Max width for asset images beign uploaded.</td>
+			<td>Max width for asset images being uploaded.</td>
 		</tr>
 		<tr>
 			<td><strong>assets_upload_max_height</strong></td>

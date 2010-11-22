@@ -1,5 +1,5 @@
 <h1>Assets Module</h1>
-<p>The Assets module is a simple front end for managing images, css files, javascript etc and 
+<p>The Assets module is a simple front end for managing images, CSS files, javascript etc. and 
 is enabled by default in a normal installation (if your version of FUEL does not show a Assets link 
 under the sites navigation on the left, you can skip this section). It will only allow you 
 to manage files that have writable asset directories. One thing to point out that is different from other modules is that you cannot edit 
