@@ -13,11 +13,13 @@
 	<meta name="description" content="<?php echo fuel_var('meta_description'); ?>" />
 
 	<?php echo css('main'); ?>
+	
+	<?php /* for IE specific  ?>
 	<?php echo css('ie6', '', array('ie_conditional' => 'lte IE 6')); ?>
 	<?php echo css('ie7', '', array('ie_conditional' => 'lte IE 7'));?>
+	<?php */ ?>
 	
-	<?php echo js('jquery'); ?>
-	<?php echo js('jquery.inputlabel, jquery.viewer, jquery.shadow, jquery.ifixpng.js, cufon_yui, geometric_400-geometric_800.font, jquery.fancyzoom, main');?>
+	<?php echo js('jquery, main'); ?>
 	<?php echo js($js); ?>
 	
 	
