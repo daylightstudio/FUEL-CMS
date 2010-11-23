@@ -485,9 +485,9 @@ class Fuel_page {
 		
 		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
 		// otherwise we get an error when the mode is set to views
+		$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
 		if ($this->_CI->config->item('fuel_mode', 'fuel') == 'views')
 		{
-			$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
 			$vars['others'] = array();
 		}
 		else
