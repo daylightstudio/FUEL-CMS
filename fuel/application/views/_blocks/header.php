@@ -14,7 +14,9 @@
 	<meta name="description" content="<?=fuel_var('meta_description')?>" />
 
 	<?php echo css('main'); ?>
-	<?php echo css('ie6', '', array('ie_conditional' => 'lte IE 6')); ?>
+	<?php /* for IE specific ... you can remove these commments?>
+		<?php echo css('ie6', '', array('ie_conditional' => 'lte IE 6')); ?>
+	<?php */ ?>
 	<?php echo css($css); ?>
 	
 	<?php echo js('jquery, main'); ?>
