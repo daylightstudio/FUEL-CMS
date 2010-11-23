@@ -1422,7 +1422,7 @@ class MY_Model extends CI_Model {
 		// set auto validation field rules
 		foreach($this->auto_validate_fields as $key => $val)
 		{
-			if (preg_match("/".$key."/", $field))
+			if (!empty($value) AND preg_match("/".$key."/", $field))
 			{
 				$this->validator->add_rule($field, $val, lang('error_'.$val, $val), $value);
 			}
