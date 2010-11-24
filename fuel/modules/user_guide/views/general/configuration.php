@@ -61,7 +61,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td><strong>max_number_archived</strong></td>
 			<td>5</td>
 			<td>None</td>
-			<td>Warn if a form field has changed before leaving page.</td>
+			<td>Maximum number module items to archive.</td>
 		</tr>
 		<tr>
 			<td><strong>warn_if_modified</strong></td>
