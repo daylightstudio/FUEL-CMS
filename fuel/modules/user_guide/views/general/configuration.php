@@ -1,6 +1,6 @@
 <h1>Configuring FUEL CMS</h1>
 <p>The following are the main configuration options that you can set for FUEL. 
-They can be overwritten in the <dfn>application/config/MY_fuel.php</dfn> file:</p>
+They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</p>
 
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
 	<tbody>
@@ -61,13 +61,13 @@ They can be overwritten in the <dfn>application/config/MY_fuel.php</dfn> file:</
 			<td><strong>max_number_archived</strong></td>
 			<td>5</td>
 			<td>None</td>
-			<td>Warn if a form field has changed before leaving page.</td>
+			<td>Maximum number module items to archive.</td>
 		</tr>
 		<tr>
 			<td><strong>warn_if_modified</strong></td>
 			<td>TRUE</td>
 			<td>boolean TRUE/FALSE</td>
-			<td>Warn if a form field has changed before leaving page</td>
+			<td>Warn if a form field has changed before leaving page.</td>
 		</tr>
 		<tr>
 			<td><strong>max_recent_pages</strong></td>
@@ -86,7 +86,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.php</dfn> file:</
 			<td>/</td>
 			<td>None</td>
 			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
-			must exist in the assets/css file and not the fuel/assets/css folder</td>
+			must exist in the assets/css file and not the fuel/assets/css folder.</td>
 		</tr>
 		<tr>
 			<td><strong>keyboard_shortcuts</strong></td>
@@ -101,7 +101,7 @@ array(
 			</td>
 			<td>None</td>
 			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
-			must exist in the assets/css file and not the fuel/assets/css folder</td>
+			must exist in the assets/css file and not the fuel/assets/css folder.</td>
 		</tr>
 		<tr>
 			<td><strong>dashboards</strong></td>
@@ -168,7 +168,7 @@ array(
 			<td><strong>assets_upload_max_width</strong></td>
 			<td>1024</td>
 			<td>None</td>
-			<td>Max width for asset images being uploaded.</td>
+			<td>Max width for asset images beign uploaded.</td>
 		</tr>
 		<tr>
 			<td><strong>assets_upload_max_height</strong></td>
