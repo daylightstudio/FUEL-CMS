@@ -67,7 +67,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td><strong>warn_if_modified</strong></td>
 			<td>TRUE</td>
 			<td>boolean TRUE/FALSE</td>
-			<td>Warn if a form field has changed before leaving page</td>
+			<td>Warn if a form field has changed before leaving page.</td>
 		</tr>
 		<tr>
 			<td><strong>max_recent_pages</strong></td>
@@ -86,7 +86,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td>/</td>
 			<td>None</td>
 			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
-			must exist in the assets/css file and not the fuel/assets/css folder</td>
+			must exist in the assets/css file and not the fuel/assets/css folder.</td>
 		</tr>
 		<tr>
 			<td><strong>keyboard_shortcuts</strong></td>
@@ -101,7 +101,7 @@ array(
 			</td>
 			<td>None</td>
 			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
-			must exist in the assets/css file and not the fuel/assets/css folder</td>
+			must exist in the assets/css file and not the fuel/assets/css folder.</td>
 		</tr>
 		<tr>
 			<td><strong>dashboards</strong></td>
