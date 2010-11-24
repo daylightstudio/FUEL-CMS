@@ -11,17 +11,16 @@ The last we will create is the categories module which links articles to categor
 <h4><strong>These are the steps in the following tutorial:</strong></h4>
 <ol>
 	<li><a href="#setup">Download and Setup</a></li>
-	<li><a href="#authors_model">The Authors Module</a></li>
-	<li><a href="#articles_model">The Articles Module</a></li>
-	<li><a href="#categories_model">The Categories Module</a></li>
+	<li><a href="#authors_module">The Authors Module</a></li>
+	<li><a href="#articles_module">The Articles Module</a></li>
+	<li><a href="#categories_module">The Categories Module</a></li>
 	<li><a href="#categories_to_articles">Associating Categories to Articles</a></li>
 	<li><a href="#permissions">Setting Up Permissions</a></li>
 	<li><a href="#polishing">A Little Polishing</a></li>
 	<li><a href="#views">Bringing it All Into View</a></li>
 </ol>
 
-<a name="#setup"></a>
-<h2>Download and Setup</h2>
+<h2 id="setup">Download and Setup</h2>
 <p>Before we get started with this tutorial, it is recommended that you <a href="<?=site_url(MODULES_WEB_PATH.USER_GUIDE_FOLDER.'/examples/fuel_modules_example.zip')?>"><strong>download the final files of the example</strong></a> and look them over briefly so it is easier to follow along.</p>
 
 <p>We will be creating four database tables to support the three modules &mdash; an authors table, an articles table, a categories table, 
@@ -31,8 +30,7 @@ and a categories_to_articles lookup table.</p>
 We will use that FUEL database to store the additional tables required for our models in this 
 tutorial.</p>
 
-<a name="authors_model"></a>
-<h2>The Authors Module</h2>
+<h2 id="authors_module">The Authors Module</h2>
 <p>We will start this tutorial by creating the authors module first.</p>
 
 <h3>Setup the Authors Table</h3>
@@ -108,8 +106,7 @@ or that you have the proper <a href="#permissions">permissions</a> to view that 
 <p>The form fields should look like the following:</p>
 <img src="<?=img_path('examples/authors_form.png', 'user_guide')?>" class="screen" />
 
-
-<h2>The Articles Module</h2>
+<h2 id="articles_module">The Articles Module</h2>
 <p>The articles module will contain the content of the articles as well as some meta information including a foreign key to the authors table.</p>
 
 <h3>Setup the Articles Table</h3>
@@ -239,8 +236,7 @@ we will revisit this model and associate categories to articles in the Articles_
 
 <img src="<?=img_path('examples/articles_form.png', 'user_guide')?>" class="screen" />
 
-<a name="categories_model"></a>
-<h2>The Categories Module</h2>
+<h2 id="categories_module">The Categories Module</h2>
 <p>The categories module will be used to group articles together. You will be able to create categories separately 
 as well as associate them to the article within the articles module (we'll get to that).</p>
 
@@ -360,9 +356,7 @@ $config['modules']['authors'] = array();
 <p>The categories form should look like the screen below:</p>
 <img src="<?=img_path('examples/categories_form.png', 'user_guide')?>" class="screen" />
 
-
-<a href="#categories_to_articles"></a>
-<h2>Associating Categories to Articles</h2>
+<h2 id="categories_to_articles">Associating Categories to Articles</h2>
 <p>Now that the category and the categories to articles models are created, we need to add a field to the article models form to allow you to associate one or more
 categories to an article. So go back to the articles model and add the following to the <dfn>form_fields</dfn> method:</p>
 
@@ -407,10 +401,7 @@ function on_after_save($values)
 ...
 </pre>
 
-
-
-<a name="permissions"></a>
-<h2>Creating the Permissions</h2>
+<h2 id="permissions">Creating the Permissions</h2>
 <img src="<?=img_path('examples/manage_permissions.png', 'user_guide')?>" class="screen img_right" />
 <p>Now that the modules are created, you will probably want to allow others to use them. To do this,
 you will need to create permissions so users can be allowed to access those modules in FUEL.
@@ -422,8 +413,7 @@ To do that, </p>
 </ol>
 <p>Repeat these step to create the articles permissions.</p>
 
-<a name="polishing"></a>
-<h2>A Little Polishing</h2>
+<h2 id="polishing">A Little Polishing</h2>
 <p>Now that we have the authors, articles and categories modules created and working, it's time to add a little polish.
 </p>
 
@@ -687,9 +677,7 @@ function on_before_validate($values)
 <p class="important">The methods <kbd>is_editable</kbd> and <kbd>is_new</kbd> are methods on the MY_Model class. For the second parameter
 of <kbd>add_validation</kbd>, we first add the class instance and then the method name in an array as opposed to a simple string name of a function.</p>
 
-
-<a name="views"></a>
-<h2>Bringing it All Into View</h2>
+<h2 id="views">Bringing it All Into View</h2>
 <p>Now that our modules are created for FUEL, we now can add the module's model data to our views.
 Although we could use controllers to marshall the data to the views, for our example, we will just incorporate that logic in the view itself 
 (<a href="<?=user_guide_url('general/opt-in-controllers')?>">read more about our opt-in controller philosophy</a>). In our view we will have a page that will either display articles based on a category or just list all. To start, create a file called 
@@ -748,7 +736,6 @@ place that function right inside the &lt;h2&gt; tag. </p>
 &lt;h2&gt;&lt;?=fuel_edit('create', 'Create', 'articles')?&gt;&lt;?=$article-&gt;title?&gt;&lt;/h2&gt;
 
 <p class="important"><a href="<?=user_guide_url('general/inline-editing')?>">Click here for more on inline editing</a></p>
-<a name="next_steps"></a>
 
 <p><strong>That's it!</strong></p>
 
