@@ -66,7 +66,7 @@ function is_date_format($date)
  */
 function is_db_format($date)
 {
-	return preg_match("/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/", $date);
+	return preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $date);
 }
 
 // --------------------------------------------------------------------
@@ -80,7 +80,7 @@ function is_db_format($date)
  */
 function is_english_format($date)
 {
-	return preg_match("/([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})/", $date);
+	return preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date);
 }
 
 // --------------------------------------------------------------------
