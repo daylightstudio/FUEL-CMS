@@ -567,9 +567,26 @@ class Fuel_page {
 		if (stripos($output, '<html') !== FALSE AND stripos($output, '</html>') !== FALSE)
 		{	
 
-			// move all edit markers in attributes to after the node
-			
-			$output = preg_replace('#(<[^>]+=["\'][^<]*)('.$marker_reg_ex.')#Ums', '${2}${1}', $output);
+			// move all edit markers in attributes to before the node
+			$callback = create_function(
+			            // single quotes are essential here,
+			            // or alternative escape all $ as \$
+			            '$matches',
+			            '
+						$CI =& get_instance();
+						$marker_reg_ex = $CI->fuel_page->get_marker_regex();
+						$output = $matches[0];
+						preg_match_all("#".$marker_reg_ex."#", $matches[0], $tagmatches);
+						if (!empty($tagmatches[0]))
+						{
+							// clean out the tag and append htem before the node
+							$output = $CI->fuel_page->remove_markers($matches[0]);
+							$output = implode($tagmatches[0], " ").$output;
+						}
+						return $output;'
+			        );
+			$output = preg_replace_callback('#<[^>]+=["\'][^<]*'.$marker_reg_ex.'.*(?<!--)>#Ums', $callback, $output);
+			//$output = preg_replace('#(=["\'][^<]*)('.$marker_reg_ex.')#Ums', '${2}${1}', $output);  // doesn't work with fuel_var in multiple tag attributes
 
 			// extract everything above the body
 			preg_match_all('/(.*)<body/Umis', $output, $head);
