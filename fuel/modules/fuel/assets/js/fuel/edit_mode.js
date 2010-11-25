@@ -56,9 +56,9 @@ if (fuel == undefined) var fuel = {};
 						$this.attr('id', '__fuel_marker__' + i);
 						var coords = getMarkerPosition($this);
 						var varName = $this.attr('title');
-						var newClass = ($this.attr('rel') == 'create') ? ' __fuel_edit_marker_new__' : '';
+						var newClass = ($this.attr('data-rel') == 'create') ? ' __fuel_edit_marker_new__' : '';
 						var html = '<div id="__fuel_edit__' + i + '" style="left:' + coords.x + 'px; top:' + coords.y + 'px;" class="__fuel__ __fuel_edit__" title="' + varName + '">';
-						html += '<a href="' + $this.attr('href') + '" rel="' + $this.attr('rel') + '" class="__fuel_edit_marker__'+ newClass +'">';
+						html += '<a href="' + $this.attr('data-href') + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass +'">';
 						html += '<span class="__fuel_edit_marker_inner__">'+varName+'</span>';
 						html += '</a>';
 						html += '<div class="__fuel_edit_form__" style="display: none;"><img src="' + imgPath + 'spinner_sm.gif" width="16" height="16" alt="loading"></div>';
@@ -192,7 +192,7 @@ if (fuel == undefined) var fuel = {};
 			
 			editors.each(function(i){
 				var $this = $(this);
-				var _anchor = $('a.__fuel_edit_marker__', this);
+				var _anchor = $('.__fuel_edit_marker__', this);
 
 				_anchor.mouseover(function(){
 					$('.__fuel_edit_marker_inner__', this).stop().css(resetCss).show();
