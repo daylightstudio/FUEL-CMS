@@ -6,6 +6,8 @@ define('FUEL_FOLDER', 'fuel');
 define('FUEL_PATH', APPPATH.MODULES_FOLDER.'/'.FUEL_FOLDER.'/');
 define('IN_FUEL_ADMIN', (strpos($_SERVER['REQUEST_URI'], '/'.FUEL_FOLDER.'/') !== FALSE));
 define('WEB_ROOT', str_replace('\\', '/', realpath(dirname(SELF)).DIRECTORY_SEPARATOR)); // replace \ with / for windows
+
+$_SERVER['SCRIPT_NAME'] = preg_replace('#^/(.+)\.php/(.*)#', '/$1.php', $_SERVER['SCRIPT_NAME']);
 define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 $segs = explode('/', FCPATH);
 define('WEB_FOLDER', $segs[count($segs)-2]);
