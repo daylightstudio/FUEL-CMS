@@ -8,9 +8,6 @@
 
 /* post content */
 div.post { padding-bottom: 20px; }
-div#sidebar div.post h3, div#sidebar div.post h3 a { color: #666; font-size: 11px; font-weight: bold; margin-bottom: 0; }
-div#sidebar div.post p { line-height: 14px; }
-div#sidebar div.post_meta { margin-bottom: 10px; }
 div.post_date { margin-bottom: 10px; }
 div.post_meta .categories { text-transform: uppercase; }
 div.post_content ul { margin-bottom: 20px; }
@@ -21,6 +18,7 @@ div.post_meta { padding: 6px 0 4px 0; }
 div.post_author_date { margin-bottom: 10px; font-weight: bold; }
 div.post_author_date a { color: #5d87a1; }
 
+/* comment area */
 div.comments .child { margin-left: 50px; }
 div.comment { border: 1px solid #eee; background-color: #fbfbfb; padding: 10px; margin-bottom: 10px;  }
 div.comment_meta cite { font-weight: bold; font-size: 10px;  }
