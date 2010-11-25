@@ -32,6 +32,7 @@ div.comment_form div.required { margin-top: 10px; }
 div#recent_posts { padding: 8px 25px 28px 25px; }
 
 /* sidebar */
+div#right { float: right; width: 210px; margin-left: 20px; }
 .blog_block { padding: 15px 0px; }
 .blog_block ul { margin-bottom: 0; }
 input#q { width: 150px; height: 16px; position: relative; top: -1px; }
