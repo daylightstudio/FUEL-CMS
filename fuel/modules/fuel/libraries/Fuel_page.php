@@ -546,7 +546,9 @@ class Fuel_page {
 				$label = ucfirst(str_replace('_', ' ', $label));
 			}
 
-			$output = '<a class="__fuel_marker__" href="'.fuel_url($module).'/inline_edit/" rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
+			// must use span tags because nesting anchors can cause issues
+			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/inline_edit/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
+
 			if (isset($xoffset) OR isset($yoffset))
 			{
 				$output .= ' style="';
@@ -554,7 +556,7 @@ class Fuel_page {
 				if (isset($yoffset)) $output .= 'top:'.$yoffset.'px;';
 				$output .= '"';
 			}
-			$output .= "></a>";
+			$output .= "></span>";
 			return $output;
 		}
 		return '';
