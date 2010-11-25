@@ -199,9 +199,9 @@ function fuel_model($model, $params = array())
 	}
 	
 	 // to get around escapinng issues we need to add spaces after =
-	if (!empty($where))
+	if (is_string($where))
 	{
-		$where = str_replace('=', ' = ', $where);
+		$where = preg_replace('#[^>|<]=#', ' = ', $where);
 	}
 	
 	
