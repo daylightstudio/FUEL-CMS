@@ -115,18 +115,17 @@ class Blog_user_model extends Base_module_record {
 	
 	function get_avatar_image_path()
 	{
-		$this->_CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
-		$image_path = $this->_CI->fuel_blog->settings('asset_upload_path');
-		return assets_path($image_path.$this->avatar_image);
+		//$this->_CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
+		//$image_path = $this->_CI->fuel_blog->settings('asset_upload_path');
+		//return assets_path($image_path.$this->avatar_image);
+		return img_path($this->avatar_image);
 	}
 
 	function get_avatar_img_tag($attrs = array())
 	{
 		$CI =& get_instance();
-		$CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$CI->load->helper('html');
-		$image_path = $CI->fuel_blog->settings('asset_upload_path');
-		$src = assets_path($image_path.$this->avatar_image);
+		$src = $this->get_avatar_image_path();
 		$attrs = html_attrs($attrs);
 		if (!empty($this->avatar_image))
 		{
