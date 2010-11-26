@@ -51,7 +51,7 @@ $autoload['libraries'] = array('template', 'asset');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'string', 'date', 'asset', 'fuel' => 'fuel', 'utility', 'my', 'html', 'compatibility');
+$autoload['helper'] = array('url', 'string', 'date', 'asset', 'fuel' => 'fuel', 'utility', 'my', 'html', 'validator', 'compatibility');
 
 
 /*
