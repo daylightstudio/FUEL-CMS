@@ -14,6 +14,23 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		});
 	},
 	
+	add_edit : function(){
+		// call parent
+		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+
+
+		$('#group_id').change(function(e){
+			var path = jqx.config.fuelPath + '/navigation/parents/' + $('#group_id').val();
+			$('#parent_id').parent().load(path, {}, function(){
+				
+			});
+		});
+
+		
+		$('#group_id').change();
+		
+	},
+	
 	upload : function(){
 		this._notifications();
 	}

@@ -47,7 +47,9 @@ class Navigation_model extends Base_module_model {
 		$data = array();
 
 		$where = array();
-		$where['group_id'] = $this->group_id;
+		$group_id = (!empty($this->filters['group_id'])) ? $this->filters['group_id'] : $this->group_id;
+		$where['group_id'] = $group_id;
+
 		if ($just_published) $where['published'] =  'yes';
 		$all_nav = $this->find_all_array_assoc('id', $where);
 
@@ -55,13 +57,13 @@ class Navigation_model extends Base_module_model {
 		if (!empty($parent))
 		{
 			$parent = $this->find_one_array(array('location' => $parent));
-			$where = array('group_id' => $this->group_id, 'parent_id' => $parent['id']);
+			$where = array('group_id' => $group_id, 'parent_id' => $parent['id']);
 		}
 		else
 		{
-			$where = array('group_id' => $this->group_id);
+			$where = array('group_id' => $group_id);
 		}
-		$data = $this->find_all_array($where, 'precedence desc');
+		$data = $this->find_all_array($where, 'precedence, location asc');
 		$return = array();
 		$i = 0;
 		foreach($data as $key => $val)
@@ -91,7 +93,7 @@ class Navigation_model extends Base_module_model {
 			}
 			$return[$key]['location'] = fuel_url('navigation/edit/'.$val['id']);
 		}
-		$return = array_sorter($return, 'label', 'asc');
+		//$return = array_sorter($return, 'label', 'asc');
 		return $return;
 	}
 	
@@ -144,7 +146,7 @@ class Navigation_model extends Base_module_model {
 		}
 		
 		$this->load->helper('array');
-		$parent_options = $this->options_list('id', 'nav_key');
+		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $group_value));
 		$fields['parent_id']['label'] = 'Parent';
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
