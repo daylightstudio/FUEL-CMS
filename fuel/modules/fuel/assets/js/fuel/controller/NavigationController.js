@@ -20,7 +20,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 
 
 		$('#group_id').change(function(e){
-			var path = jqx.config.fuelPath + '/navigation/parents/' + $('#group_id').val();
+			var path = jqx.config.fuelPath + '/navigation/parents/' + $('#group_id').val() + '/' + $('#parent_id').val();
 			$('#parent_id').parent().load(path, {}, function(){
 				
 			});
