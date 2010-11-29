@@ -133,7 +133,7 @@ class Navigation extends Module {
 			$this->load->library('form');
 			$this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
 			$parent_options = $this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
-			$select = $this->form->select('parent_id', $parent_options, $parent_id, 'None');
+			$select = $this->form->select('parent_id', $parent_options, $parent_id, '', 'None');
 			$this->output->set_output($select);
 		}
 		else
