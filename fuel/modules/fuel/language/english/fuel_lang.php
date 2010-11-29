@@ -85,10 +85,12 @@ $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these 
 $lang['error_inline_page_edit'] = 'This variable must be edited in the associated views/_variables file.';
 $lang['error_saving'] = 'There was an error saving.';
 $lang['error_cannot_preview'] = 'There was an error in trying to preview this page.';
-$lang['error_cannot_make_api_call'] = 'There was an error making the api call to %1s.';
+$lang['error_cannot_make_api_call'] = 'There was an error making the API call to %1s.';
 $lang['error_sending_email'] = 'There was an error sending an email to %1s.';
 $lang['error_nav_upload'] = 'There was an error uploading the navigation file.';
 $lang['error_create_nav_group'] = 'Please create a Navigation Group';
+$lang['error_missing_params'] = 'You are missing parameters to view this page';
+
 
 /*
 |--------------------------------------------------------------------------
