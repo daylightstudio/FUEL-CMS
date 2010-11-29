@@ -144,7 +144,7 @@ class Navigation_model extends Base_module_model {
 		}
 		
 		$this->load->helper('array');
-		$parent_options = $this->options_list('id', 'nav_key');
+		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $group_value));
 		$fields['parent_id']['label'] = 'Parent';
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
