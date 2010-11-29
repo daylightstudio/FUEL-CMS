@@ -370,9 +370,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			ajax: jqx.config.fuelPath + '/assets/select_ajax/' + _this.assetFolder,
 		 	onLoad: function(){
 				$('#asset_select').val($('#' + _this.activeField).val());
-				if (_this.assetFolder == 'images'){
+				var isImg = $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/);
+				//if (_this.assetFolder == 'images'){
+				if (isImg){
 					$('#asset_select').change(function(e){
-						$('#asset_preview').html('<img src="' + jqx.config.assetsImgPath + $('#asset_select').val() + '" />');
+						$('#asset_preview').html('<img src="' + jqx.config.assetsPath + _this.assetFolder + '/' + $('#asset_select').val() + '" />');
 					})
 					$('#asset_select').change();
 				} else {

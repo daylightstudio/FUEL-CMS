@@ -10,6 +10,8 @@ if (fuel == undefined) var fuel = {};
 	var imgPath = initObj.imgPath;
 	var cssPath = initObj.cssPath;
 	var jsPath = initObj.jsPath;
+	var assetsImgPath = initObj.assetsImgPath;
+	var assetsPath = initObj.assetsPath;
 	var assetsAccept = initObj.assetsAccept;
 
 	var markers = null;
@@ -296,7 +298,7 @@ if (fuel == undefined) var fuel = {};
 								$('.asset_select_button', context).click(function(e){
 									_this.activeField = $(e.target).prev().attr('id');
 									var assetTypeClasses = $(e.target).attr('className').split(' ');
-									
+
 									activeField = $(e.target).prev().attr('id');
 									var assetTypeClasses = $(e.target).attr('className').split(' ');
 									assetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
@@ -304,6 +306,17 @@ if (fuel == undefined) var fuel = {};
 										ajax: __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder,
 									 	onLoad: function(){
 											$('#asset_select').val($('#' + activeField).val());
+											var isImg = $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/);
+											//if (assetFolder == 'images'){
+											if (isImg){
+												$('#asset_select').change(function(e){
+													$('#asset_preview').html('<img src="' + assetsPath + assetFolder + '/' + $('#asset_select').val() + '" />');
+												})
+												$('#asset_select').change();
+											} else {
+												$('#asset_preview').hide();
+											}
+
 											$('.ico_yes', this).click(function(){
 												$('#__FUEL__asset_modal').jqmHide();
 												$('#' + activeField).val($('#asset_select').val());
