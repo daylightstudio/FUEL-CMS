@@ -214,7 +214,7 @@ class Articles_model extends Base_module_model {
 
     function form_fields($values = array())
     {
-        $fields = parent::form_fields();
+        $fields = parent::form_fields($values);
 		// ******************* ADD CUSOM FORM STUFF HERE ******************* 
         return $fields;
     }
@@ -445,7 +445,7 @@ class Authors_model extends Base_module_model {
 ... 
 function form_fields($values = array())
 {
-	$fields = parent::form_fields();
+	$fields = parent::form_fields($values);
 	
 	$upload_path = assets_server_path('authors/', 'images');
 	$fields['avatar_upload'] = array('type' => 'file', 'upload_path' => $upload_path, 'overwrite' => TRUE);
@@ -514,7 +514,7 @@ being the <dfn>add_edit</dfn> class and the second being the module key that you
 ... 
 function form_fields($values = array())
 {
-    $fields = parent::form_fields();
+    $fields = parent::form_fields($values);
     $CI =& get_instance();
 
     if ($CI->fuel_auth->has_permission('authors'))
