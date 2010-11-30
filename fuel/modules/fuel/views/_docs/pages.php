@@ -19,7 +19,7 @@ if their layout uses the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fu
 <img src="<?=img_path('examples/screen_page_edit.jpg', 'user_guide')?>" class="screen" />
 
 <h2>Importing Existing Views</h2>
-<p>If you are using <a href="<?=user_guide_url('general/opt-in-controller')?>">Opt-in Controllers</a>, 
+<p>If you are using <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-in Controllers</a>, 
 a view file that matches the URI location will trigger a prompt to import that view to edit if the modified date is after the pages last modified date.
 This is a convenient way to make edits outside of the admin interface and import them.</p>
 <img src="<?=img_path('examples/screen_page_import.jpg', 'user_guide')?>" class="screen" />
