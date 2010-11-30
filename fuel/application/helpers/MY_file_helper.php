@@ -55,7 +55,7 @@ function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FAL
 		if ($_recursion === FALSE)
 		{
 			$_filedata = array();
-			$source_dir = rtrim(realpath($source_dir), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+			$source_dir = str_replace("\\", "/", rtrim(realpath($source_dir), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
 		}
 
 		while (FALSE !== ($file = readdir($fp)))
@@ -89,6 +89,7 @@ function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FAL
 		return FALSE;
 	}
 }
+
 
 // --------------------------------------------------------------------
 
