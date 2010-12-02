@@ -452,7 +452,6 @@ function fuel_var($key, $default = '', $edit_module = 'pages', $evaluate = TRUE)
 			$val[$k] = eval_string($v);
 		}
 	}
-	$CI =& get_instance();
 	
 	if ($edit_module === TRUE) $edit_module = 'pages';
 	if (!empty($edit_module) AND $CI->config->item('fuel_mode', 'fuel') != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
