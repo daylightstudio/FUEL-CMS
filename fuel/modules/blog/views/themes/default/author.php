@@ -11,7 +11,7 @@
 	<?php endif; ?>
 	
 	<?php if (!empty($author->website)) : ?>
-	<li><a href="<?=$author->website?>"><?=$author->website?></a></li>
+	<li><?=$author->website_link?></li>
 	<?php endif; ?>
 </ul>
 

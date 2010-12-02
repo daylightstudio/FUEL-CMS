@@ -98,6 +98,11 @@ class Blog_user_model extends Base_module_record {
 		return $this->_CI->fuel_blog->url('authors/'.$this->id);
 	}
 
+	function get_website_link()
+	{
+		return '<a href="'.prep_url($this->website).'">'.$this->website.'</a>';
+	}
+	
 	function get_posts()
 	{
 		return $this->lazy_load(array('author_id' => $this->id), array(BLOG_FOLDER => 'blog_posts_model'), TRUE);
