@@ -1199,7 +1199,7 @@ class Module extends Fuel_base_controller {
 							if (!$this->upload->do_upload($file))
 							{
 								$errors = TRUE;
-								add_error(lang('upload_invalid_filetype'));
+								add_error($this->upload->display_errors('', ''));
 								$this->session->set_flashdata('error', $this->upload->display_errors('', ''));
 							}
 						}
