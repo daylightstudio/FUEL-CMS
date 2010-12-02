@@ -33,7 +33,7 @@ $config['modules']['example'] = array(
 
 <h3>Additional Configuration Parameters</h3>
 
-<p>Below is a list of all the parameters you can specify to further customize your module. Many of them base there default values
+<p>Below is a list of all the parameters you can specify to further customize your module. Many of them base their default values
 on the key value specified in the config (e.g. example):</p>
 
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
@@ -54,7 +54,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td><strong>module_uri</strong></td>
 			<td>The default is the module key (e.g. example)</td>
 			<td>None</td>
-			<td>the uri path to the module that will appear after <dfn>fuel</dfn>.</td>
+			<td>the URI path to the module that will appear after <dfn>fuel</dfn>.</td>
 		</tr>
 		<tr>
 			<td><strong>model_name</strong></td>
@@ -102,7 +102,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td><strong>preview_path</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>The uri path to preview the information from the module in the website</td>
+			<td>The URI path to preview the information from the module in the website</td>
 		</tr>
 		<tr>
 			<td><strong>views</strong></td>
@@ -203,7 +203,7 @@ on the key value specified in the config (e.g. example):</p>
 		<tr>
 			<td><strong>sanitize_input</strong></td>
 			<td>TRUE</td>
-			<td>Values can be either <dfn>TRUE</dfn>,<dfn>FALSE</dfn> or <dfn>php</dfn> with <dfn>TRUE</dfn> using xss_clean and <dfn>php</dfn> using the encode_php_tags security helper</td>
+			<td>Boolean TRUE/FALSE, string of "xss", "php", "template" OR "entities", OR array for multiple values of array('xss', 'php', 'template', 'entities'). See the FUEL <a href="<?=user_guide_url('general/configuration')?>">configuration</a> for changing different the different sanitization callbacks.</td>
 			<td>Cleans the input before inserting or updating the data source</td>
 		</tr>
 		<tr>
@@ -251,7 +251,7 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 <ul>
 	<li><a href="<?=user_guide_url('general/interface#list_view')?>"><strong>List view</strong></a> - where you can filter and select from a list and edit, delete or preview.</li>
 	<li><a href="<?=user_guide_url('general/interface#edit_view')?>"><strong>Form view</strong></a> - the form view that allows you to edit or input new records for the module</li>
-	<li><strong>Tree view (optional)</strong> - provides a tree like heirarchical structure. Requires a tree method on the module's model that follows the hierarchical <dfn>Menu</dfn> structure</li>
-	<li><strong>Preview view (optional)</strong> - the uri to the website to preview the module</li>
+	<li><strong>Tree view (optional)</strong> - provides a tree like hierarchical structure. Requires a tree method on the module's model that follows the hierarchical <dfn>Menu</dfn> structure</li>
+	<li><strong>Preview view (optional)</strong> - the URO to the website to preview the module</li>
 </ul>
 

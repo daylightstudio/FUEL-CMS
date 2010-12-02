@@ -31,7 +31,7 @@ $pages['home'] = array('layout' => '_layouts/home');
 <p>If you want to add a layout for your FUEL pages to use (those altered in the admin), you will need to 
 alter the <dfn>application/config/MY_fuel_layouts.php</dfn> file. You will need to add the name of the layout file 
 (or an array of names) to the <dfn>layouts</dfn> configuration. After that, you will need to specify the 
-<dfn>layout_fields</dfn> which is a multi-demensional array that maps to the <a href="<?=user_guide_url('libraries/form_builder.php')?>">Form_builder</a>.
+<dfn>layout_fields</dfn> which is a multi-demensional array that maps to the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>.
 </p>
 
 <pre class="brush:php">
