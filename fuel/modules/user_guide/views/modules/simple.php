@@ -203,7 +203,7 @@ on the key value specified in the config (e.g. example):</p>
 		<tr>
 			<td><strong>sanitize_input</strong></td>
 			<td>TRUE</td>
-			<td>Values can be either <dfn>TRUE</dfn>,<dfn>FALSE</dfn> or <dfn>php</dfn> with <dfn>TRUE</dfn> using xss_clean and <dfn>php</dfn> using the encode_php_tags security helper</td>
+			<td>Boolean TRUE/FALSE, string of "xss", "php", "template" OR "entities", OR array for multiple values of array('xss', 'php', 'template', 'entities'). See the FUEL <a href="<?=user_guide_url('general/configuration')?>">configuration</a> for changing different the different sanitization callbacks.</td>
 			<td>Cleans the input before inserting or updating the data source</td>
 		</tr>
 		<tr>
