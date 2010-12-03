@@ -9,10 +9,6 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- 
--- Database: `peery`
--- 
-
 -- --------------------------------------------------------
 
 -- 
@@ -27,7 +23,7 @@ CREATE TABLE `fuel_blog_categories` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_blog_categories`
@@ -56,12 +52,22 @@ CREATE TABLE `fuel_blog_comments` (
   `date_added` datetime NOT NULL,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
--- Dumping data for table `fuel_blog_comments`
+-- Table structure for table `fuel_blog_links`
 -- 
 
+CREATE TABLE `fuel_blog_links` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `url` varchar(255) default NULL,
+  `target` enum('blank','self','parent') default 'blank',
+  `description` varchar(100) default NULL,
+  `precedence` int(11) NOT NULL default '0',
+  `published` enum('yes','no') default 'yes',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -85,7 +91,7 @@ CREATE TABLE `fuel_blog_posts` (
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 -- 
 -- Dumping data for table `fuel_blog_posts`
 -- 

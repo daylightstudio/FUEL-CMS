@@ -9,10 +9,6 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- 
--- Database: `fuel_product_page`
--- 
-
 -- --------------------------------------------------------
 
 -- 
@@ -82,12 +78,11 @@ CREATE TABLE `fuel_blocks` (
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
   `view` text collate utf8_unicode_ci NOT NULL,
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
-  `date_added` datetime default NULL,
+  `date_added` date default NULL,
   `last_modified` timestamp NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 -- 
 -- Dumping data for table `fuel_blocks`
 -- 
@@ -264,7 +259,7 @@ CREATE TABLE `fuel_blog_users` (
   `display_name` varchar(50) NOT NULL,
   `website` varchar(100) NOT NULL,
   `about` text NOT NULL,
-  `avatar_image` varchar(255) NOT NULL,
+  `avatar` varchar(255) NOT NULL,
   `twitter` varchar(255) NOT NULL,
   `facebook` varchar(255) NOT NULL,
   `date_added` datetime default NULL,
@@ -272,6 +267,12 @@ CREATE TABLE `fuel_blog_users` (
   PRIMARY KEY  (`fuel_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- 
+-- Dumping data for table `fuel_blog_users`
+-- 
+
+INSERT INTO `fuel_blog_users` (`fuel_user_id`, `display_name`, `website`, `about`, `avatar`, `twitter`, `facebook`, `date_added`, `active`) VALUES 
+(1, 'David McReynolds', '', '', '', '', '', NULL, 'yes');
 
 -- --------------------------------------------------------
 
@@ -334,6 +335,9 @@ CREATE TABLE `fuel_navigation_groups` (
 -- 
 -- Dumping data for table `fuel_navigation_groups`
 -- 
+
+INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`) VALUES 
+(1, 'main', 'yes');
 
 
 -- --------------------------------------------------------
@@ -429,8 +433,7 @@ INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(25,'tools/seo','Page Analysis','yes'),
 	(26,'tools/tester','Tester Module','yes'),
 	(27,'blocks','Manage Blocks','yes'),
-	(28,'site_docs','Site Documentation','yes'),
-	(29,'tools/cronjobs','Cronjobs','yes');
+	(28,'site_docs','Site Documentation','yes');
 
 -- --------------------------------------------------------
 
