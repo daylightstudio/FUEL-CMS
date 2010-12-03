@@ -1,17 +1,16 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '0.91');
+define('FUEL_VERSION', '0.9');
 define('MODULES_FOLDER', '../modules');
 define('FUEL_FOLDER', 'fuel');
 define('FUEL_PATH', APPPATH.MODULES_FOLDER.'/'.FUEL_FOLDER.'/');
 define('IN_FUEL_ADMIN', (strpos($_SERVER['REQUEST_URI'], '/'.FUEL_FOLDER.'/') !== FALSE));
 define('WEB_ROOT', str_replace('\\', '/', realpath(dirname(SELF)).DIRECTORY_SEPARATOR)); // replace \ with / for windows
+
 $_SERVER['SCRIPT_NAME'] = preg_replace('#^/(.+)\.php/(.*)#', '/$1.php', $_SERVER['SCRIPT_NAME']);
 define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
-$_FUEL_SEGS = explode('/', FCPATH);
-$_FUEL_SEGS_INDEX = count($_FUEL_SEGS)-2;
-$_FUEL_SEGS_VAL = ($_FUEL_SEGS_INDEX > 0) ? $_FUEL_SEGS_INDEX : 0; 
-define('WEB_FOLDER', $_FUEL_SEGS[$_FUEL_SEGS_VAL]);
+$_FUEL_SEGS = explode('/', $_SERVER['SCRIPT_FILENAME']);
+define('WEB_FOLDER', $_FUEL_SEGS[count($_FUEL_SEGS)-2]);
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 if ($_SERVER['SERVER_PORT'] != '80')
 {
