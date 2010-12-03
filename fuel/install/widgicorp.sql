@@ -18,7 +18,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- 
 -- Table structure for table `fuel_archives`
 -- 
-DROP TABLE `fuel_archives`;
+DROP TABLE IF EXISTS `fuel_archives`;
 CREATE TABLE `fuel_archives` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `ref_id` int(10) unsigned NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `fuel_archives` (
 -- 
 -- Table structure for table `fuel_blocks`
 -- 
-DROP TABLE `fuel_blocks`;
+DROP TABLE IF EXISTS `fuel_blocks`;
 CREATE TABLE `fuel_blocks` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
@@ -64,7 +64,7 @@ INSERT INTO `fuel_blocks` (`id`, `name`, `view`, `published`, `date_added`, `las
 -- 
 -- Table structure for table `fuel_blog_categories`
 -- 
-DROP TABLE `fuel_blog_categories`;
+DROP TABLE IF EXISTS `fuel_blog_categories`;
 CREATE TABLE `fuel_blog_categories` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(255) collate utf8_unicode_ci NOT NULL,
@@ -88,7 +88,7 @@ INSERT INTO `fuel_blog_categories` (`id`, `name`, `permalink`, `published`) VALU
 -- 
 -- Table structure for table `fuel_blog_comments`
 -- 
-DROP TABLE `fuel_blog_comments`;
+DROP TABLE IF EXISTS `fuel_blog_comments`;
 CREATE TABLE `fuel_blog_comments` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `post_id` int(10) unsigned NOT NULL,
@@ -119,7 +119,7 @@ INSERT INTO `fuel_blog_comments` (`id`, `post_id`, `parent_id`, `author_id`, `au
 -- Table structure for table `fuel_blog_links`
 -- 
 
-DROP TABLE `fuel_blog_links`;
+DROP TABLE IF EXISTS `fuel_blog_links`;
 CREATE TABLE `fuel_blog_links` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -145,7 +145,7 @@ INSERT INTO `fuel_blog_links` (`id`, `name`, `url`, `target`, `description`, `pr
 -- Table structure for table `fuel_blog_posts`
 -- 
 
-DROP TABLE `fuel_blog_posts`;
+DROP TABLE IF EXISTS `fuel_blog_posts`;
 CREATE TABLE `fuel_blog_posts` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` varchar(255) collate utf8_unicode_ci NOT NULL,
@@ -177,7 +177,7 @@ INSERT INTO `fuel_blog_posts` (`id`, `title`, `content`, `content_filtered`, `fo
 -- Table structure for table `fuel_blog_posts_to_categories`
 -- 
 
-DROP TABLE `fuel_blog_posts_to_categories`;
+DROP TABLE IF EXISTS `fuel_blog_posts_to_categories`;
 CREATE TABLE `fuel_blog_posts_to_categories` (
   `post_id` int(10) unsigned NOT NULL,
   `category_id` int(10) unsigned NOT NULL,
@@ -197,7 +197,7 @@ INSERT INTO `fuel_blog_posts_to_categories` (`post_id`, `category_id`) VALUES
 -- Table structure for table `fuel_blog_settings`
 -- 
 
-DROP TABLE `fuel_blog_settings`;
+DROP TABLE IF EXISTS `fuel_blog_settings`;
 CREATE TABLE `fuel_blog_settings` (
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
   `value` text collate utf8_unicode_ci NOT NULL,
@@ -239,7 +239,7 @@ INSERT INTO `fuel_blog_settings` (`name`, `value`) VALUES
 -- Table structure for table `fuel_blog_users`
 -- 
 
-DROP TABLE `fuel_blog_users`;
+DROP TABLE IF EXISTS `fuel_blog_users`;
 CREATE TABLE `fuel_blog_users` (
   `fuel_user_id` int(10) unsigned NOT NULL,
   `display_name` varchar(50) NOT NULL default '',
@@ -266,7 +266,7 @@ INSERT INTO `fuel_blog_users` (`fuel_user_id`, `display_name`, `website`, `about
 -- Table structure for table `fuel_logs`
 -- 
 
-DROP TABLE `fuel_logs`;
+DROP TABLE IF EXISTS `fuel_logs`;
 CREATE TABLE `fuel_logs` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `entry_date` datetime NOT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE `fuel_logs` (
 -- Table structure for table `fuel_navigation`
 -- 
 
-DROP TABLE `fuel_navigation`;
+DROP TABLE IF EXISTS `fuel_navigation`;
 CREATE TABLE `fuel_navigation` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `group_id` int(5) unsigned NOT NULL default '1',
@@ -313,7 +313,7 @@ CREATE TABLE `fuel_navigation` (
 -- Table structure for table `fuel_navigation_groups`
 -- 
 
-DROP TABLE `fuel_navigation_groups`;
+DROP TABLE IF EXISTS `fuel_navigation_groups`;
 CREATE TABLE `fuel_navigation_groups` (
   `id` int(3) unsigned NOT NULL auto_increment,
   `name` varchar(255) collate utf8_unicode_ci NOT NULL,
@@ -332,7 +332,7 @@ CREATE TABLE `fuel_navigation_groups` (
 -- Table structure for table `fuel_pages`
 -- 
 
-DROP TABLE `fuel_pages`;
+DROP TABLE IF EXISTS `fuel_pages`;
 CREATE TABLE `fuel_pages` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Add the part of the url after the root of your site (usually after the domain name). For the homepage, just put the word ''home''',
@@ -360,7 +360,7 @@ INSERT INTO `fuel_pages` (`id`, `location`, `layout`, `published`, `cache`, `dat
 -- Table structure for table `fuel_page_variables`
 -- 
 
-DROP TABLE `fuel_page_variables`;
+DROP TABLE IF EXISTS `fuel_page_variables`;
 CREATE TABLE `fuel_page_variables` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `page_id` int(10) unsigned NOT NULL,
@@ -390,7 +390,7 @@ INSERT INTO `fuel_page_variables` (`id`, `page_id`, `name`, `scope`, `value`, `t
 -- Table structure for table `fuel_permissions`
 -- 
 
-DROP TABLE `fuel_permissions`;
+DROP TABLE IF EXISTS `fuel_permissions`;
 CREATE TABLE `fuel_permissions` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) collate utf8_unicode_ci NOT NULL COMMENT 'Permissions beginning with ''Manage '' will allow items to appear on the left menu',
@@ -442,7 +442,7 @@ INSERT INTO `fuel_permissions` (`id`, `name`, `description`, `active`) VALUES
 -- Table structure for table `fuel_site_variables`
 -- 
 
-DROP TABLE `fuel_site_variables`;
+DROP TABLE IF EXISTS `fuel_site_variables`;
 CREATE TABLE `fuel_site_variables` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
@@ -464,7 +464,7 @@ CREATE TABLE `fuel_site_variables` (
 -- Table structure for table `fuel_users`
 -- 
 
-DROP TABLE `fuel_users`;
+DROP TABLE IF EXISTS `fuel_users`;
 CREATE TABLE `fuel_users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `user_name` varchar(30) collate utf8_unicode_ci NOT NULL,
@@ -491,7 +491,7 @@ INSERT INTO `fuel_users` (`id`, `user_name`, `password`, `email`, `first_name`, 
 -- Table structure for table `fuel_user_to_permissions`
 -- 
 
-DROP TABLE `fuel_user_to_permissions`;
+DROP TABLE IF EXISTS `fuel_user_to_permissions`;
 CREATE TABLE `fuel_user_to_permissions` (
   `user_id` int(10) unsigned NOT NULL,
   `permission_id` int(10) unsigned NOT NULL,
@@ -537,7 +537,7 @@ INSERT INTO `fuel_user_to_permissions` (`user_id`, `permission_id`) VALUES
 -- Table structure for table `projects`
 -- 
 
-DROP TABLE `projects`;
+DROP TABLE IF EXISTS `projects`;
 CREATE TABLE `projects` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(255) collate utf8_unicode_ci NOT NULL default '' COMMENT 'The name of the project',
@@ -567,7 +567,7 @@ INSERT INTO `projects` (`id`, `name`, `slug`, `client`, `description`, `website`
 -- Table structure for table `quotes`
 -- 
 
-DROP TABLE `quotes`;
+DROP TABLE IF EXISTS `quotes`;
 CREATE TABLE `quotes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `content` text collate utf8_unicode_ci NOT NULL,
