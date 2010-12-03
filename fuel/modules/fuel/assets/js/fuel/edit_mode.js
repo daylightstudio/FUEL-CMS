@@ -306,6 +306,7 @@ if (fuel == undefined) var fuel = {};
 										ajax: __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder,
 									 	onLoad: function(){
 											$('#asset_select').val($('#' + activeField).val());
+											if (!$('#asset_select').val()) $('#asset_select').val($('#asset_select').children(':first').attr('value'));
 											var isImg = $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/);
 											//if (assetFolder == 'images'){
 											if (isImg){
