@@ -370,6 +370,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			ajax: jqx.config.fuelPath + '/assets/select_ajax/' + _this.assetFolder,
 		 	onLoad: function(){
 				$('#asset_select').val($('#' + _this.activeField).val());
+				if (!$('#asset_select').val()) $('#asset_select').val($('#asset_select').children(':first').attr('value'));
 				var isImg = $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/);
 				//if (_this.assetFolder == 'images'){
 				if (isImg){
