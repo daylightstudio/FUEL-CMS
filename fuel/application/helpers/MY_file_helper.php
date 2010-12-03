@@ -71,7 +71,7 @@ function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FAL
 				if (!empty($file_prefix))
 				{
 					$file = $file_prefix."/".$file;
-					$file = str_replace("//", "/", $file); // replace double slash
+					$file = str_replace(array("//", "\\/"), array("/", "/"), $file); // replace double slash
 					if (substr($file, 0, 1) == '/')
 					{
 						$file = substr($file, 1);
