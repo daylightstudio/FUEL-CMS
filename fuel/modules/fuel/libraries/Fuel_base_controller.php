@@ -22,6 +22,7 @@ class Fuel_base_controller extends Controller {
 
 		$this->config->load('fuel', TRUE);
 		$this->load->module_language(FUEL_FOLDER, 'fuel', $this->config->item('language'));
+		$this->config->load('asset');
 		
 		$this->load->module_library(FUEL_FOLDER, 'fuel_modules');
 		$this->load->module_helper(FUEL_FOLDER, 'fuel');
