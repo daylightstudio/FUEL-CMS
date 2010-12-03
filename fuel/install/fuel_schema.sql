@@ -9,10 +9,6 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- 
--- Database: `fuel_product_page`
--- 
-
 -- --------------------------------------------------------
 
 -- 
@@ -298,6 +294,9 @@ CREATE TABLE `fuel_navigation_groups` (
 -- 
 -- Dumping data for table `fuel_navigation_groups`
 -- 
+
+INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`) VALUES 
+(1, 'main', 'yes');
 
 
 -- --------------------------------------------------------

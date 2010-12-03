@@ -59,9 +59,19 @@ CREATE TABLE `fuel_blog_comments` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- 
--- Dumping data for table `fuel_blog_comments`
+-- Table structure for table `fuel_blog_links`
 -- 
 
+CREATE TABLE `fuel_blog_links` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `url` varchar(255) default NULL,
+  `target` enum('blank','self','parent') default 'blank',
+  `description` varchar(100) default NULL,
+  `precedence` int(11) NOT NULL default '0',
+  `published` enum('yes','no') default 'yes',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
