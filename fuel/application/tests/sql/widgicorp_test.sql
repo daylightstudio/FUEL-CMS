@@ -68,7 +68,7 @@ INSERT INTO `fuel_blocks` (`id`, `name`, `view`, `published`, `date_added`, `las
 CREATE TABLE `fuel_blog_categories` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL default '' COMMENT 'If left blank, the permalink will automatically be created for you.',
+  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'If left blank, the permalink will automatically be created for you.',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`),
@@ -96,7 +96,7 @@ CREATE TABLE `fuel_blog_comments` (
   `author_id` int(10) unsigned NOT NULL,
   `author_name` varchar(255) collate utf8_unicode_ci NOT NULL,
   `author_email` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `author_website` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `author_website` varchar(255) collate utf8_unicode_ci NOT NULL,
   `author_ip` varchar(32) collate utf8_unicode_ci NOT NULL,
   `is_spam` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `content` text collate utf8_unicode_ci NOT NULL,
@@ -237,10 +237,10 @@ INSERT INTO `fuel_blog_settings` (`name`, `value`) VALUES
 
 CREATE TABLE `fuel_blog_users` (
   `fuel_user_id` int(10) unsigned NOT NULL,
-  `display_name` varchar(50) NOT NULL default '',
+  `display_name` varchar(50) NOT NULL,
   `website` varchar(100) NOT NULL,
   `about` text NOT NULL,
-  `avatar_image` varchar(255) NOT NULL default '',
+  `avatar_image` varchar(255) NOT NULL,
   `twitter` varchar(255) NOT NULL,
   `facebook` varchar(255) NOT NULL,
   `date_added` datetime default NULL,
@@ -495,7 +495,7 @@ CREATE TABLE `fuel_user_to_permissions` (
 
 CREATE TABLE `projects` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL default '' COMMENT 'The name of the project',
+  `name` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The name of the project',
   `slug` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'If left blank, one will automatically be generated for you',
   `client` varchar(255) collate utf8_unicode_ci NOT NULL,
   `description` text collate utf8_unicode_ci NOT NULL,
@@ -526,7 +526,7 @@ CREATE TABLE `quotes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `content` text collate utf8_unicode_ci NOT NULL,
   `name` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `title` varchar(100) collate utf8_unicode_ci NOT NULL default '',
+  `title` varchar(100) collate utf8_unicode_ci NOT NULL,
   `precedence` int(11) NOT NULL default '0',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
