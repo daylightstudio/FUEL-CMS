@@ -13,7 +13,7 @@ class Blocks_model extends Base_module_model {
 	
 	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
 	{
-		$this->db->select('id, name, SUBSTRING(view, 1, 200) as view, published', FALSE);
+		$this->db->select('id, name, SUBSTRING(view, 1, 150) as view, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		foreach($data as $key => $val)
 		{

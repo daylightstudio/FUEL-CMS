@@ -51,7 +51,7 @@ $config['modules']['navigation'] = array(
 		'delete' => '_layouts/module_delete'),
 	'permission' => 'navigation',
 	'instructions' => 'Here you create and edit the top menu items of the page.',
-	'filters' => array('group_id' => array('default' => 1, 'label' => 'Navigation Groups', 'type' => 'select')),
+	'filters' => array('group_id' => array('default' => 1, 'label' => 'Navigation Group', 'type' => 'select')),
 	'archivable' => TRUE,
 	'list_actions' => array('navigation/upload' => 'Upload')
 );
