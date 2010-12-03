@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2 class="ico ico_<?=url_title(str_replace('/', '_', $this->module_uri),'_', TRUE)?>"><a href="<?=fuel_url($this->module)?>"><?=$this->module_name?></a> &gt; 
+	<h2 class="ico ico_<?=url_title(str_replace('/', '_', $this->module_uri),'_', TRUE)?>"><a href="<?=fuel_url($this->module_uri)?>"><?=$this->module_name?></a> &gt; 
 	<?=ucfirst($action)?><?php if (!empty($data[$this->display_field])) { ?>: <em><?=character_limiter(strip_tags($data[$this->display_field]), 50)?></em><?php } ?></h2>
 </div>
 <div class="clear"></div>
