@@ -22,6 +22,9 @@ class Projects_model extends Base_module_model {
 	{
 		$fields = parent::form_fields($values);
 		
+		// to limit the image folder to just the projects folder for selection
+		$fields['image']['class'] = 'asset_select images/projects';
+		
 		// put all project images into a projects suboflder.
 		$fields['image_upload']['upload_path'] = assets_server_path('projects', 'images');
 		

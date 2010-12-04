@@ -54,7 +54,7 @@ class Assets extends Module {
 	{
 		if (!is_numeric($dir))
 		{
-			$dir = $select_ajax_segment = fuel_uri_string(1, NULL, TRUE);
+			$dir = fuel_uri_string(1, NULL, TRUE);
 			$dirs = $this->model->get_dirs();
 			foreach($dirs as $key => $d)
 			{
