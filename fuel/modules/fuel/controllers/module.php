@@ -1186,7 +1186,7 @@ class Module extends Fuel_base_controller {
 
 						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
 						$tmp_file = file_get_contents($file_info['tmp_name']);
-						if ($this->sanitize_images AND $this->input->xss_clean($tmp_file, TRUE) === FALSE)
+						if ($this->sanitize_images AND xss_clean($tmp_file, TRUE) === FALSE)
 						{
 							$errors = TRUE;
 							add_error(lang('upload_invalid_filetype'));
