@@ -9,7 +9,7 @@ This method also allows for deeper website structures without the need for speci
 
 <h2>How it works</h2>
 <p>The CodeIgniter Router is modified to route all requests that don't map to a controller method to a default controller 
-named <dfn>fuel_router</dfn>. This controller will do one of two things, depending on the <dfn>fuel_mode</dfn> value set in the FUEL config file:
+named <dfn>page_router</dfn>. This controller will do one of two things, depending on the <dfn>fuel_mode</dfn> value set in the FUEL config file:
 </p>
 
 <ol>

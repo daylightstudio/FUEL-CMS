@@ -33,6 +33,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  **/
+
+// ------------------------------------------------------------------------
+
+/**
+ * Some additions to the  Modular Extension Library
+ *
+ * Denoted with <!-- FUEL and FUEL --> where changes were made
+ *
+ * @package		FUEL CMS
+ * @subpackage	Third Party
+ * @category	Third Party
+ * @author		Changes by David McReynolds @ Daylight Studio.
+ */
+
 class MX_Loader extends CI_Loader
 {
 	private $_module;
@@ -233,11 +247,13 @@ class MX_Loader extends CI_Loader
 	public function _ci_get_component($component) {
 		return CI::$APP->$component;
 	}  
-	
-	public function __get($class) {
-		return CI::$APP->$class;
-	}
 
+	// <!-- FUEL ... causing problems
+	// public function __get($class) {
+	// 	return CI::$APP->$class;
+	// }
+	// FUEL -->
+	
 	function _ci_load($_ci_data) {
 		
 		foreach (array('_ci_view', '_ci_vars', '_ci_path', '_ci_return') as $_ci_val) {

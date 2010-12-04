@@ -32,8 +32,8 @@
 | would be loaded.
 */
 
-$route['default_controller'] = 'fuel/fuel_router';
-$route['404_override'] = 'fuel/fuel_router';
+$route['default_controller'] = 'fuel/page_router';
+$route['404_override'] = 'fuel/page_router';
 
 
 /*	

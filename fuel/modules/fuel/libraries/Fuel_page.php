@@ -80,7 +80,7 @@ class Fuel_page {
 		
 		// if a location is provided in the init config, then use it instead of the uri segments and go no further
 
-		if ($this->location == 'fuel_router') $this->location = $default_home;
+		if ($this->location == 'page_router') $this->location = $default_home;
 		
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout');
 		$this->_page_data = $page_data;

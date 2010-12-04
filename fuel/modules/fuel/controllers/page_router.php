@@ -1,5 +1,5 @@
 <?php
-class Fuel_router extends CI_Controller {
+class Page_router extends CI_Controller {
 
 	public $segments = array();
 	public $layout = '';

@@ -271,6 +271,19 @@ class Fuel_Loader extends MX_Loader
 		//if (is_array($_ci_vars)) $this->_ci_cached_vars += $_ci_vars;
 		
 		//<!-- FUEL FIX
+		// This allows anything loaded using $this->load (views, files, etc.)
+		// to become accessible from within the Controller and Model functions.
+
+		$_ci_CI =& get_instance();
+		foreach (get_object_vars($_ci_CI) as $_ci_key => $_ci_var)
+		{
+			if ( ! isset($this->$_ci_key))
+			{
+				$this->$_ci_key =& $_ci_CI->$_ci_key;
+			}
+		}
+	
+		
 		if (is_array($_ci_vars))
 		{
 			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $_ci_vars);
@@ -297,6 +310,7 @@ class Fuel_Loader extends MX_Loader
 			$this->output->append_output(ob_get_clean());
 		}
 	}
+	
 	// --------------------------------------------------------------------
 
 	/**

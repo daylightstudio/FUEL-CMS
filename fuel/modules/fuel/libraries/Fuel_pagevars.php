@@ -112,7 +112,7 @@ class Fuel_pagevars {
 		}
 		// get controller name so that we can load in its corresponding variables file if exists
 		if (empty($controller)) $controller = current(explode('/', $location));
-		if (empty($controller) OR $controller == 'fuel_router') $controller = 'home';
+		if (empty($controller) OR $controller == 'page_router') $controller = 'home';
 		
 		$controller_vars =  $this->vars_path.$controller.EXT;
 		
