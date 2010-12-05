@@ -14,11 +14,6 @@
 
 	<?php echo css('main'); ?>
 	
-	<?php /* for IE specific  ?>
-	<?php echo css('ie6', '', array('ie_conditional' => 'lte IE 6')); ?>
-	<?php echo css('ie7', '', array('ie_conditional' => 'lte IE 7'));?>
-	<?php */ ?>
-	
 	<?php echo js('jquery, main'); ?>
 	<?php echo js($js); ?>
 	

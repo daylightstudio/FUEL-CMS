@@ -498,8 +498,8 @@ class Fuel_page {
 		if (!$this->_fuelified_processed)
 		{
 			$inline_edit_bar = $this->_CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
-			$output = str_replace('</head>', css('fuel_inline', 'fuel')."\n</head>", $output);
-			$output = str_replace('</body>', $inline_edit_bar."\n</body>", $output);
+			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
+			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
 			$this->_CI->config->set_item('assets_path', $this->_CI->config->item('assets_path'));
 		}
 		$this->_fuelified_processed = TRUE;
