@@ -71,12 +71,26 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 <p>Sets a variable for all views to use no matter what view it is declared in.</p>
 
 
-<h2>fuel_set_var(<var>key</var>, <var>[default]</var>, <var>[edit_module]</var>, <var>[evaluate]</var>)</h2>
-<p>Returns a variable and allows for a default value. 
+<h2>fuel_var(<var>key</var>, <var>[default]</var>, <var>[edit_module]</var>, <var>[evaluate]</var>)</h2>
+<p>Returns a variable and allows for a default value. Also creates inline editing marker.
 The <dfn>default</dfn> parameter will be used if the variable does not exist.
 The <dfn>edit_module</dfn> parameter specifies the module to include for inline editing.
 The <dfn>evaluate</dfn> parameter specifies whether to evaluate any php in the variables.
 </p>
+<p class="important">You should not use this function inside of another function because you may get unexepected results. This is
+because it returns inline editing markers that later get parsed out by FUEL. For example, you <kbd>shouldn't</kbd> do:</p>
+
+<pre class="brush:php">
+// NO
+&lt;a href="&lt;?=site_url(fuel_var('my_url'))?&gt;"&gt;my link&lt;/a&gt;
+</pre>
+
+<p>Instead you should use <dfn>fuel_edit()</dfn> like so:</p>
+
+<pre class="brush:php">
+// YES
+&lt;?=fuel_edit('my_url', 'Edit Link')?&gt; &lt;a href="&lt;?=site_url($my_url)?&gt;"&gt;my link&lt;/a&gt;
+</pre>
 
 
 <h2>fuel_edit(<var>id</var>, <var>[label]</var>, <var>[module]</var>, <var>[xOffset]</var>, <var>[yOffset]</var>)</h2>
