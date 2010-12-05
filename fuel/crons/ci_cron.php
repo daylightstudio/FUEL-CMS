@@ -47,7 +47,7 @@
 */
 
     define('CRON_CI_INDEX', '/var/www/httpdocs/index.php');   // Your CodeIgniter main index.php file
-	define('CRON_LOG', '/var/www/httpdocs/crons/cron.log'); // path to the cron log file... MUST BE WRITABLE!
+	define('CRON_LOG', '/var/www/httpdocs/fuel/crons/cron.log'); // path to the cron log file... MUST BE WRITABLE!
     define('CRON', TRUE);   // Test for this in your controllers if you only want them accessible via cron
 
 
