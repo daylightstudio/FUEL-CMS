@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 <head>
-	<?php if (!empty($is_blog)) { ?>
+	<?php if (!empty($is_blog)) : ?>
 	<title><?=$CI->fuel_blog->page_title($page_title, ' : ', 'right')?></title>
-	<?php } else { ?>
+	<?php else : ?>
 	<title><?=fuel_var('page_title', '')?></title>
-	<?php } ?>
+	<?php endif ?>
 	<meta charset="UTF-8" />
 	<meta name="ROBOTS" content="ALL" />
 	<meta name="MSSmartTagsPreventParsing" content="true" />
