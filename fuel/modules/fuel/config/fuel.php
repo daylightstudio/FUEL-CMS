@@ -97,7 +97,7 @@ $config['assets_excluded_dirs'] = array('js', 'css', 'cache', 'swf', 'captchas')
 $config['assets_allow_subfolder_creation'] = TRUE;
 
 // specifies what filetype extensions can be included in the folders
-$config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 'pdf' => 'pdf', 'media' => 'jpg|jpeg|jpe|png|gif|mov|mp3|aiff|pdf');
+$config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 'pdf' => 'pdf', 'media' => 'jpg|jpeg|jpe|png|gif|mov|mp3|aiff|pdf|css');
 
 // max upload files size for assets
 $config['assets_upload_max_size']	= '1000';
