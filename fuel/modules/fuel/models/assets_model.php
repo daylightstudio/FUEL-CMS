@@ -14,6 +14,8 @@ class Assets_model extends CI_Model {
 	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf');
 	protected $validator = NULL; // the validator object
 
+	private $_encoded = FALSE;
+
 	function __construct()
 	{
 		parent::__construct();
@@ -47,14 +49,18 @@ class Assets_model extends CI_Model {
 		$CI->load->helper('convert');
 		if (!isset($this->filters['group_id'])) return array();
 		$group_id = $this->filters['group_id'];
-		if (strpos($group_id, '/') !== FALSE)
+
+		// not encoded yet... then decode
+		if (!$this->_encoded)
 		{
 			$this->filters['group_id'] = uri_safe_encode($group_id); // to pass the current folder
+			$this->_encoded = TRUE;
 		}
 		else
 		{
 			$group_id = uri_safe_decode($group_id);
 		}
+
 		$asset_dir = $this->get_dir($group_id);
 		
 		$assets_path = $CI->asset->assets_server_path.$asset_dir.DIRECTORY_SEPARATOR;
@@ -121,7 +127,7 @@ class Assets_model extends CI_Model {
 	function get_dir($dir)
 	{
 		$dirs = (array) $this->get_dirs();
-		return (isset($dirs[$dir])) ? $dirs[$dir] : reset($dirs);
+		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->get_image_dir();
 	}
 	
 	function get_dirs()
@@ -133,6 +139,20 @@ class Assets_model extends CI_Model {
 		}
 		ksort($dirs);
 		return $dirs;
+	}
+	function get_image_dir()
+	{
+		$CI =& get_instance();
+		$editable_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
+		foreach($editable_filetypes as $folder => $types)
+		{
+			if (preg_match('#(jp(e){0,1}g|gif|png)#i', $types))
+			{
+				return $folder;
+			}
+		}
+		return key(reset($editable_filetypes));
+		
 	}
 
 	function get_dir_filetypes()
