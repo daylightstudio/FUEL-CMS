@@ -115,7 +115,7 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 /* modal window */
 .__fuel_add_edit_modal__ { width: 800px; margin-left: -400px; max-height: 400px; overflow: auto; }
 .__fuel_add_edit_modal__ .add_inline_button, .__fuel_add_edit_modal__ .edit_inline_button { display: none !important; }
-#__FUEL__asset_modal { max-height: 400px; z-index: 3000001; }
+#__FUEL__asset_modal { max-height: 400px; z-index: 300001; }
 #__FUEL__asset_modal #asset_select { max-width: 350px;}
 #__FUEL__asset_modal div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }
 #__FUEL__asset_modal table.asset_select { width: 100%; }
