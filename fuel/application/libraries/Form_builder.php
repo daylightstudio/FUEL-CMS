@@ -579,7 +579,7 @@ Class Form_builder {
 			'after_html' => '', // for html after the field
 			'displayonly' => FALSE,
 			'overwrite' => NULL, // for file uploading
-			'accept' => 'gif|jpg|png', // for file uploading
+			'accept' => 'gif|jpg|jpeg|png', // for file uploading
 			'upload_path' => NULL, // for file uploading
 			'filename' => NULL, // for file uploading
 			'sorting' => NULL, // for multi selects that may need to keep track of selected options (combo jquery plugin)
@@ -976,7 +976,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'accept' => $params['accept'],
+			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
 		$this->form_attrs['enctype'] = 'multipart/form-data';
