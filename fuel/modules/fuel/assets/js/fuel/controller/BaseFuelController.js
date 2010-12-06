@@ -345,7 +345,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// setup multi-file naming convention
 		$.fn.MultiFile.options.accept = jqx.config.assetsAccept;
-		$('.multifile:file').MultiFile({ namePattern: '$name___$i'}); 
+		$multiFile = $('.multifile:file');
+		
+		// get accept types and then remove the attribute from the DOM to prevent issue with Chrome
+		var acceptTypes = $multiFile.attr('accept');
+		$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
+		$multiFile.removeAttr('accept');// for Chrome bug
+		$multiFile.MultiFile({ namePattern: '$name___$i'});
 	},
 	
 	_getjQueryPluginOptions : function(elem){
