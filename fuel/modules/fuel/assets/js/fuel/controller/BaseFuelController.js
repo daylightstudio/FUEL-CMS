@@ -408,7 +408,21 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.asset_select', context).each(function(i){
 			var assetTypeClasses = $(this).attr('className').split(' ');
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
-			var btnLabel = (assetFolder == 'pdf') ? 'PDF' : 'Image';
+			var btnLabel = '';
+			switch(assetFolder.toLowerCase()){
+				case 'pdf':
+					btnLabel = 'PDF';
+					break;
+				case 'images': case 'img': case '_img':
+					btnLabel = 'Image';
+					break;
+				case 'swf': case 'flash':
+					btnLabel = 'Flash';
+					break;
+				default :
+					btnLabel = 'Asset';
+			}
+			
 			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">Select ' + btnLabel + '</a>');
 		});
 		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
