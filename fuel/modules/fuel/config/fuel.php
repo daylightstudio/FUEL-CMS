@@ -102,10 +102,10 @@ $config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 
 // max upload files size for assets
 $config['assets_upload_max_size']	= '1000';
 
-// max width for asset images beign uploaded
+// max width for asset images being uploaded
 $config['assets_upload_max_width']  = '1024';
 
-// max height for asset images beign uploaded
+// max height for asset images being uploaded
 $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files

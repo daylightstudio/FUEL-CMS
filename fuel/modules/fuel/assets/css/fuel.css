@@ -257,6 +257,7 @@ div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 div#add_edit_inline_modal { width: 800px; margin-left: -400px; max-height: 400px; overflow: auto; }
 div#add_edit_inline_modal .add_inline_button, div#add_edit_inline_modal .edit_inline_button { display: none; }
 div#asset_modal .buttonbar, div#add_edit_inline_modal .buttonbar { float: right;}
+div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
 /* misc */
 input#Save, input.submit { margin-top: 10px; width: 190px; text-align: center; }

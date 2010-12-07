@@ -102,6 +102,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel_edit_form__ table.inline_form input.datepicker { float: left !important; }
 .__fuel_edit_form__ table.inline_form input.fillin { color: #ccc !important; }
 .__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 200px !important; }
+.__fuel_edit_form__ table.inline_form div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 .__fuel_edit_active__ { z-index: 1001; }
 
 /* fuel edit bar */
