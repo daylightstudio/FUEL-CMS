@@ -291,7 +291,20 @@ if (fuel == undefined) var fuel = {};
 								$('.asset_select', context).each(function(i){
 									var assetTypeClasses = $(this).attr('className').split(' ');
 									var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
-									var btnLabel = (assetFolder == 'pdf') ? 'PDF' : 'Image';
+									var btnLabel = '';
+									switch(assetFolder.split('/')[0].toLowerCase()){
+										case 'pdf':
+											btnLabel = 'PDF';
+											break;
+										case 'images': case 'img': case '_img':
+											btnLabel = 'Image';
+											break;
+										case 'swf': case 'flash':
+											btnLabel = 'Flash';
+											break;
+										default :
+											btnLabel = 'Asset';
+									}
 									$(this).after('&nbsp;<a href="'+ __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">Select ' + btnLabel + '</a>');
 								});
 								
