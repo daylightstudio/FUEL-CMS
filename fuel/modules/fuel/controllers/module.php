@@ -195,6 +195,7 @@ class Module extends Fuel_base_controller {
 			else
 			{
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
+				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
 
 			// set data table actions... look first for item_actions set in the fuel_modules
@@ -248,7 +249,6 @@ class Module extends Fuel_base_controller {
 			}
 			$this->data_table->row_alt_class = 'alt';
 			$this->data_table->only_data_fields = array($this->model->key_field());
-			$this->data_table->set_sorting($params['col'], $params['order']);
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
