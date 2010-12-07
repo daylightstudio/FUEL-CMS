@@ -401,7 +401,7 @@ class Base_module_model extends MY_Model {
 				$img = '';
 				if (!empty($values['id']))
 				{
-					if (!empty($values[$key])) $img = '<img src="'.img_path($values[$key]).'" style="float: right;"/>';
+					if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
 				}
 			
 				$fields[$key]['class'] = 'asset_select';

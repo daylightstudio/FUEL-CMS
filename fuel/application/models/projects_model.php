@@ -31,7 +31,7 @@ class Projects_model extends Base_module_model {
 		// fix the preview by adding projects in front of the image path since we are saving it in a subfolder
 		if (!empty($values['image']))
 		{
-			$fields['image_upload']['before_html'] = '<img src="'.img_path('projects/'.$values['image']).'" style="float: right;"/>';
+			$fields['image_upload']['before_html'] = '<div class="img_display"><img src="'.img_path('projects/'.$values['image']).'" style="float: right;"/></div>';
 		}
 		return $fields;
 	}
