@@ -433,7 +433,7 @@ class CI_Router
      */
     function set_class($class)
     {
-        $this->class = $class;
+		$this->class = str_replace(array('/', '.'), '', $class);
     }
 
     // --------------------------------------------------------------------
