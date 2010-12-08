@@ -211,7 +211,7 @@ class CI_Router
 		if ($this->_no_controller)
 		{
 			// <-- FUEL
-			$fuel_path = explode('/', $this->default_controller);
+			$fuel_path = explode('/', $this->routes['404_override']);
 			$this->_matchbox->set_directory(MODULES_FOLDER);
 	        $this->_matchbox->set_module($fuel_path[0]);
 			$this->set_class($fuel_path[1]);

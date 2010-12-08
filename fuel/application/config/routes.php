@@ -41,6 +41,7 @@
 */
 
 $route['default_controller'] = 'fuel/fuel_router';
+$route['404_override'] = 'fuel/fuel_router';
 $route['scaffolding_trigger'] = '';
 
 /*	
