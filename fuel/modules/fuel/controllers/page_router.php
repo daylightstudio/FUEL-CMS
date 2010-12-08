@@ -74,7 +74,7 @@ class Page_router extends CI_Controller {
 		
 		// grab from cache if exists without checking expiration time... 
 		// Also.. saving from FUEL will remove cached page so you will always preview the latest saved
-		if ($this->config->item('use_page_cache', 'fuel') !== 'views' AND $this->cache->get($cache_id, $cache_group, FALSE) AND (is_true_val($this->fuel_page->is_cached)))
+		if ($this->config->item('use_page_cache', 'fuel') !== 'views' AND $this->cache->get($cache_id, $cache_group, FALSE) AND (is_true_val($this->fuel_page->is_cached)) AND !is_fuelified())
 		{
 			$output = $this->cache->get($cache_id, $cache_group);
 		}
@@ -124,7 +124,7 @@ class Page_router extends CI_Controller {
 		// set up cache info 
 		$cache_group = $this->config->item('page_cache_group', 'fuel');
 		$cache_id = fuel_cache_id();
-		if ($this->config->item('use_page_cache', 'fuel') !== 'cms' AND $this->cache->get($cache_id, $cache_group, FALSE))
+		if ($this->config->item('use_page_cache', 'fuel') !== 'cms' AND $this->cache->get($cache_id, $cache_group, FALSE) AND !is_fuelified())
 		{
 			$output = $this->cache->get($cache_id, $cache_group);
 		}
