@@ -74,7 +74,7 @@ class Fuel_router extends Controller {
 		
 		// grab from cache if exists without checking expiration time... 
 		// Also.. saving from FUEL will remove cached page so you will always preview the latest saved
-		if ($this->config->item('use_page_cache', 'fuel') !== 'views' AND $this->cache->get($cache_id, $cache_group, FALSE) AND (is_true_val($this->fuel_page->is_cached)))
+		if ($this->config->item('use_page_cache', 'fuel') !== 'views' AND $this->cache->get($cache_id, $cache_group, FALSE) AND (is_true_val($this->fuel_page->is_cached)) AND !is_fuelified())
 		{
 			$output = $this->cache->get($cache_id, $cache_group);
 		}
