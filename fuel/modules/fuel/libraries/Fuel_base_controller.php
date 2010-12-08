@@ -71,6 +71,9 @@ class Fuel_base_controller extends CI_Controller {
 	}
 	protected function _check_login()
 	{
+		// set no cache headers to prevent back button problems in FF
+		$this->_no_cache();
+		
 		// load this after the the above because it needs a database connection. Avoids a database connection error if there isn't one'
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		
@@ -343,6 +346,14 @@ class Fuel_base_controller extends CI_Controller {
 			return FALSE;
 		}
 	}
+	
+	protected function _no_cache()
+	{
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0',false);
+		header('Pragma: no-cache');
+	}
+
 
 }
 
