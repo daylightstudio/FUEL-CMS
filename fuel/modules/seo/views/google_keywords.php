@@ -22,7 +22,7 @@
 					<?=$this->form->text('keywords', $keywords, 'size="30"')?>
 				<?php } ?>
 				<?=$this->form->submit('Submit Keywords', 'submit_keywords')?>
-			</div
+			</div>
 			<div class="clear"></div>
 		</form>
 
