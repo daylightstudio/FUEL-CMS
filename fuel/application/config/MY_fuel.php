@@ -1,6 +1,9 @@
 <?php
 // IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
 
+// path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
+$config['fuel_path'] = 'admin/';
+
 // the name to be displayed on the top left of the admin
 $config['site_name'] = 'My Website';
 

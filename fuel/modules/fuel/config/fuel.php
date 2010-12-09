@@ -36,7 +36,7 @@
 // the name of the site to be displayed at the top. Also used to generate your session key
 $config['site_name'] = 'MyWebsite';
 
-// path to the fuel admin from the web base directory
+// path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
 $config['fuel_path'] = FUEL_FOLDER.'/';
 
 // options are cms, views, auto... cms pulls views and variables from the database,

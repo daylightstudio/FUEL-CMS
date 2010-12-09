@@ -7,12 +7,15 @@
 | The following are routes used by fuel specifically
 |
 */
+$route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";
 
-$route['fuel'] = "fuel/dashboard";
-$route['fuel/login/:any'] = "fuel/login"; // so we can pass forward param
 
 // to prevent the overhead of this on every request, we do a quick check of the path... IN_FUEL_ADMIN is defined in a presystem hook
-if (IN_FUEL_ADMIN) {
+if (IN_FUEL_ADMIN)
+{
+	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
+	$route[FUEL_ROUTE.'logout'] = "fuel/logout";
+	$route[FUEL_ROUTE.'dashboard'] = "fuel/dashboard";
 	
 	$module_folder = APPPATH.MODULES_FOLDER.'/';
 
@@ -32,28 +35,30 @@ if (IN_FUEL_ADMIN) {
 		{
 			include($routes_path);
 		}
-		// check FUEL folder for controller first
+		
+		// check FUEL folder for controller first... if not there then we use the default module to map to
 		else if (!file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
-				&& !file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT))
+				AND !file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT) 
+				)
 		{
-			$route[FUEL_FOLDER.'/'.$module] = FUEL_FOLDER.'/module';
-			//$route[FUEL_FOLDER.'/'.$module.'/:num'] = FUEL_FOLDER.'/module/items';
-			$route[FUEL_FOLDER.'/'.$module.'/(.*)'] = FUEL_FOLDER.'/module/$1';
+			$route[FUEL_ROUTE.$module] = FUEL_FOLDER.'/module';
+			$route[FUEL_ROUTE.$module.'/(.*)'] = FUEL_FOLDER.'/module/$1';
+		}
+		
+		// check if controller does exist in FUEL folder and if so, create the proper ROUTE if it does not equal the FUEL_FOLDER
+		else if (file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)) 
+		{
+			$route[FUEL_ROUTE.$module] = FUEL_FOLDER.'/'.$module;
+			$route[FUEL_ROUTE.$module.'/(.*)'] = FUEL_FOLDER.'/'.$module.'/$1';
 		}
 
 		// check module specific folder next
 		else if (file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT))
 		{
-			$route[FUEL_FOLDER.'/'.$module] = $module.'/'.$module.'_module';
-		//	$route[FUEL_FOLDER.'/'.$module.'/:num'] = $module.'/'.$module.'_module/items';
-			$route[FUEL_FOLDER.'/'.$module.'/(.*)'] = $module.'/'.$module.'_module/$1';
+			$route[FUEL_ROUTE.$module] = $module.'/'.$module.'_module';
+			$route[FUEL_ROUTE.$module.'/(.*)'] = $module.'/'.$module.'_module/$1';
 		}
-
-		// default to just using the FUEL module
-		else
-		{
-			//$route['fuel/'.$module.'/:num'] = FUEL_FOLDER.'/'.$module."/items";
-		}
+		
 
 	}
 }

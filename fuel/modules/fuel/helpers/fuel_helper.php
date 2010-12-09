@@ -546,7 +546,7 @@ function fuel_cache_id($location = NULL)
 function fuel_url($uri = '')
 {
 	$CI =& get_instance();
-	return site_url(FUEL_FOLDER.'/'.$uri);
+	return site_url($CI->config->item('fuel_path', 'fuel').$uri);
 }
 
 // --------------------------------------------------------------------

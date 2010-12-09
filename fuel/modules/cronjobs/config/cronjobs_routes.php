@@ -1,2 +1,2 @@
 <?php 
-$route[FUEL_FOLDER.'/tools/cronjobs'] = 'cronjobs';
+$route[FUEL_ROUTE.'tools/cronjobs'] = 'cronjobs';
