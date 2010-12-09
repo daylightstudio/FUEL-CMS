@@ -63,6 +63,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 #__fuel_notification__ { background-color: #c30 !important; color: #fff !important; position: absolute; top: 0px; left: 0px; right: 0px; }
 #__fuel_notification__ .error li {  color: #fff !important; line-height: 20px !important; border: none !important; }
 .__fuel__ .inline_errors { background-color: #c30 !important; color: #fff !important; background-repeat: no-repeat; line-height: 21px; background-position: 3px 3px;  }
+.__fuel__ .inline_errors ul.error { background-repeat: no-repeat !important; padding-left: 20px; line-height: 21px !important; background-position: 3px 3px !important; }
 .__fuel__ .inline_errors li { color: #fff !important; border: none !important; list-style: none !important; }
 .__fuel__ .inline_errors p { color: #fff !important; }
 
