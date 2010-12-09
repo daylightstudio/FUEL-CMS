@@ -32,6 +32,10 @@ jQuery.removeChecksave = function(){
 	window.onbeforeunload = null;
 }
 
+jQuery.changeChecksaveValue = function(inputKey, val){
+	window._pageVals[inputKey] = val;
+}
+
 jQuery.checkSaveChange = function(){
 	var msg;
 	var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
