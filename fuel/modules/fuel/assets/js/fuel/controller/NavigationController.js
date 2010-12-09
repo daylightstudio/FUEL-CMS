@@ -22,12 +22,13 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		$('#group_id').change(function(e){
 			var path = jqx.config.fuelPath + '/navigation/parents/' + $('#group_id').val() + '/' + $('#parent_id').val();
 			$('#parent_id').parent().load(path, {}, function(){
-				
+				$.changeChecksaveValue('parent_id', $('#parent_id').val());
 			});
 		});
 
 		
 		$('#group_id').change();
+		
 		
 	},
 	
