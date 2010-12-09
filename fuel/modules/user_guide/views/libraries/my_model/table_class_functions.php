@@ -73,7 +73,7 @@ $this->examples_model->find_by_key(TRUE, 'object', FALSE);
 </pre>
 
 
-<h2>$this->examples_model->find_one(<var>where</var>, <var>['order_by']</var>, <var>['return_method']</var>)</h2>
+<h2>$this->examples_model->find_one(<var>[where]</var>, <var>['order_by']</var>, <var>['return_method']</var>)</h2>
 <p>Finds a single record based on the where parameters passed to the method. The second parameter will sort the values before 
 returning the single record. The <dfn>return_method</dfn> determines if it is either an array of arrays or an array of objects.</p>
 <pre class="brush: php">
