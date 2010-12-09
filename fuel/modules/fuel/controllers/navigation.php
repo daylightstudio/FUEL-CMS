@@ -35,6 +35,7 @@ class Navigation extends Module {
 				if (!empty($nav))
 				{
 					$nav = $this->menu->normalize_items($nav);
+					
 					$group_id = $this->input->post('group_id');
 					if (is_true_val($this->input->post('clear_first')))
 					{
@@ -43,21 +44,22 @@ class Navigation extends Module {
 					
 					// save navigation group
 					$group = $this->navigation_groups_model->find_by_key($this->input->post('group_id'));
+					
+					// set default navigation group if it doesn't exist'
 					if (!isset($group->id))
 					{
 						$save['name'] = 'main';
 						$id = $this->navigation_groups_model->save($save);
 						$group_id = $id;
 					}
-					// convert string ids to numbers so we can save
+					// convert string ids to numbers so we can save... must start at last id in db
 					$ids = array();
-					$i = 1;
+					$i = $this->navigation_model->max_id() + 1;
 					foreach($nav as $item)
 					{
 						$ids[$item['id']] = $i;
 						$i++;
 					}
-					
 					// now loop through and save
 					$cnt = 0;
 					foreach($nav as $key => $item)
@@ -101,8 +103,12 @@ class Navigation extends Module {
 				}
 				else
 				{
+					// change list view page state to show the selected group id
+					$page_state = $this->_get_page_state($this->module);
+					$page_state['group_id'] = $group_id;
+					$this->_save_page_state($page_state);
 					$this->session->set_flashdata('success', lang('success_nav_upload'));
-					redirect($this->uri->uri_string());
+					redirect(fuel_url('navigation'));
 				}
 				
 			}
@@ -113,10 +119,10 @@ class Navigation extends Module {
 		}
 		
 		$fields = array();
-		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'));
+		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
-		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'label' => 'Navigation Group');
+		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'label' => 'Navigation Group', 'class' => 'add_edit navigation_group');
 		$fields['file'] = array('type' => 'file');
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$this->form_builder->set_fields($fields);
@@ -128,7 +134,7 @@ class Navigation extends Module {
 	
 	function parents($group_id = NULL, $parent_id = NULL)
 	{
-		if (is_ajax() AND !empty($group_id) AND !empty($parent_id))
+		if (is_ajax() AND !empty($group_id))
 		{
 			$this->load->library('form');
 			$this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
@@ -136,7 +142,7 @@ class Navigation extends Module {
 			$select = $this->form->select('parent_id', $parent_options, $parent_id, '', 'None');
 			$this->output->set_output($select);
 		}
-		else
+		else if ($parent_id != 0)
 		{
 			show_error(lang('error_missing_params'));
 		}

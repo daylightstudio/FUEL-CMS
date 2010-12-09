@@ -335,7 +335,7 @@ abstract class MY_Model extends Model {
 	 * @param	string	return type (object, array, query, auto)
 	 * @return	array
 	 */	
-	public function find_one($where, $order_by = NULL, $return_method = NULL)
+	public function find_one($where = array(), $order_by = NULL, $return_method = NULL)
 	{
 		$where = $this->_safe_where($where);
 		if (!empty($where)) $this->db->where($where);

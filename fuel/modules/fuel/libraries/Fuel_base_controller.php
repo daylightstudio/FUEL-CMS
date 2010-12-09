@@ -322,9 +322,12 @@ class Fuel_base_controller extends Controller {
 		
 	}
 
-	protected function _get_page_state()
+	protected function _get_page_state($state_key = NULL)
 	{
-		$state_key = $this->_get_state_key();
+		if (empty($state_key))
+		{
+			$state_key = $this->_get_state_key();
+		}
 		if (!empty($state_key))
 		{
 			$user_data = $this->fuel_auth->user_data();
