@@ -365,7 +365,10 @@ class Menu {
 					{
 						$str .= $this->_render_basic($subitems, $level);
 					}
-					$str .= "</".$this->item_tag.">\n";
+					if (!empty($this->item_tag))
+					{
+						$str .= "</".$this->item_tag.">\n";
+					}
 					$i++;
 				}
 				if (!empty($this->container_tag)) $str .= str_repeat("\t", $level)."</".$this->container_tag.">\n".str_repeat("\t", $level);
@@ -441,21 +444,30 @@ class Menu {
 				{
 					$level = $level + 1;
 					$subitems = $this->_get_menu_items($key);
-				
-					$str .= str_repeat("\t", $level)."<".$this->item_tag;
-					$str .= $this->_get_li_classes($key, $val['id'], $level, $i, ($i == (count($menu) -1)));
-					$str .= '>';
+					$str .= str_repeat("\t", $level);
+					if (!empty($this->item_tag))
+					{
+						$str .= "<".$this->item_tag;
+						$str .= $this->_get_li_classes($key, $val['id'], $level, $i, ($i == (count($menu) -1)));
+						$str .= '>';
+					}
 					$str .= anchor($val['location'], $label, $val['attributes']);
 					if (!empty($subitems))
 					{
 						$str .= $this->_render_collabsible($subitems, $level);
 					}
-					$str .= "</".$this->item_tag.">\n";
+					if (!empty($this->item_tag))
+					{
+						$str .= "</".$this->item_tag.">\n";
+					}
 				}
 				else
 				{
 					$str .= $this->_create_open_li($val, ($level -1), $i, ($i == (count($menu) -1)));
-					$str .= "</".$this->item_tag.">\n";
+					if (!empty($this->item_tag))
+					{
+						$str .= "</".$this->item_tag.">\n";
+					}
 				}
 				$i++;
 			}
@@ -498,16 +510,25 @@ class Menu {
 			}
 			
 			
-			$str .= "\t<".$this->item_tag.">";
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
 			$str .= $home_anchor;
 			if ($num >= 0) $str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
-			$str .= "</".$this->item_tag.">\n";
+			if (!empty($this->item_tag))
+			{
+				$str .= "</".$this->item_tag.">\n";
+			}
 		}
 		for ($i = $num; $i >= 0; $i--)
 		{
 			$val = $this->_active_items[$i];
 			$label = $this->_get_label($this->_items[$val]['label']);
-			$str .= "\t<".$this->item_tag.">";
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
 			if ($i != 0)
 			{
 				$str .= anchor($this->_items[$val]['location'], $label);
@@ -517,7 +538,10 @@ class Menu {
 			{
 				$str .= $label;
 			}
-			$str .= "</".$this->item_tag.">\n";
+			if (!empty($this->item_tag))
+			{
+				$str .= "</".$this->item_tag.">\n";
+			}
 		}
 
 		$return = '';
@@ -634,17 +658,22 @@ class Menu {
 	protected function _create_open_li($val, $level, $i, $is_last = FALSE)
 	{
 		$str = '';
-		$str .= str_repeat("\t", ($level + 1))."<".$this->item_tag;
-		
-		// set id
-		if (!empty($this->item_id_prefix))
+		$str .= str_repeat("\t", ($level + 1));
+
+		if (!empty($this->item_tag))
 		{
-			$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
-		}
+			$str .= "<".$this->item_tag;
+
+			// set id
+			if (!empty($this->item_id_prefix))
+			{
+				$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
+			}
 		
-		// set styles
-		$str .= $this->_get_li_classes($val, $level, $i, $is_last);
-		$str .= '>';
+			// set styles
+			$str .= $this->_get_li_classes($val, $level, $i, $is_last);
+			$str .= '>';
+		}
 
 		$label = $this->_get_label($val['label']);
 		
