@@ -355,6 +355,9 @@ if (fuel == undefined) var fuel = {};
 									var className = $field.attr('className').split(' ');
 									var module = '';
 									
+									var $modalContext = $('#__FUEL__add_edit_modal');
+									
+									
 									if (className.length > 1){
 										module = className[1];
 									} else {
@@ -399,7 +402,7 @@ if (fuel == undefined) var fuel = {};
 									}
 									
 									var editModule = function(url){
-										var $modalContext =$('#__FUEL__add_edit_modal');
+									//	var $modalContext =$('#__FUEL__add_edit_modal');
 										$modalContext.jqm({
 											ajax: url,
 										 	onLoad: function(){
@@ -448,8 +451,7 @@ if (fuel == undefined) var fuel = {};
 										}).jqmShow();
 									}
 
-									$('body').append('<div id="add_edit_inline_modal" class="jqmWindow"></div>');
-									var $modalContext = $('#add_edit_inline_modal');
+									var $modalContext = $('#__FUEL__add_edit_modal');
 
 									$('.add_inline_button', context).click(function(e){
 										editModule($(this).attr('href'));
