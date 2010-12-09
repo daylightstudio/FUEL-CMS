@@ -230,7 +230,7 @@ INSERT INTO `fuel_blog_settings` (`name`, `value`) VALUES
 ('theme_path', 'themes/default/'),
 ('use_cache', ''),
 ('cache_ttl', '3600'),
-('per_page', '2'),
+('per_page', '10'),
 ('description', ''),
 ('use_captchas', ''),
 ('monitor_comments', '1'),
