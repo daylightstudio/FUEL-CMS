@@ -4,6 +4,8 @@
 		<?php foreach($posts as $post) : ?>
 		<div class="post">
 			<?=fuel_edit($post->id, 'Edit Post: '.$post->title, 'blog/posts')?>
+
+			<?=blog_block('post_unpublished', array('post' => $post))?>
 		
 			<h2><a href="<?=$post->url?>"><?=$post->title?></a></h2> 
 

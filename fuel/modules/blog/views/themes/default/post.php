@@ -1,5 +1,8 @@
 <div class="post">
 	<?=fuel_edit($post->id, 'Edit Post', 'blog/posts')?>
+	
+	<?=blog_block('post_unpublished', array('post' => $post))?>
+	
 	<h1><?=$post->title?> </h1>
 	<div class="post_author_date">
 		Posted on <span class="post_content_date"><?=$post->get_date_formatted()?></span> by <span class="post_author_name"><?=$post->author_name?></span>
