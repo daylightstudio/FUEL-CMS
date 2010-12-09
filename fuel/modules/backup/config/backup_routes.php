@@ -1,3 +1,3 @@
 <?php 
-$route[FUEL_FOLDER.'/tools/backup'] = 'backup';
-$route[FUEL_FOLDER.'/backup/dashboard'] = 'backup/dashboard';
+$route[FUEL_ROUTE.'tools/backup'] = 'backup';
+$route[FUEL_ROUTE.'backup/dashboard'] = 'backup/dashboard';

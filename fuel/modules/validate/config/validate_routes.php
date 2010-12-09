@@ -1,3 +1,3 @@
 <?php 
-$route[FUEL_FOLDER.'/tools/validate'] = 'validate';
-$route[FUEL_FOLDER.'/tools/validate/(:any)'] = 'validate/$1';
+$route[FUEL_ROUTE.'tools/validate'] = 'validate';
+$route[FUEL_ROUTE.'tools/validate/(:any)'] = 'validate/$1';
