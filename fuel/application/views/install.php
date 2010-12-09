@@ -86,6 +86,9 @@
 						<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
 							<?=BASEPATH.'cache/'?>
 						</li>
+						<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/')) ? 'success' : 'error'; ?>">
+							<?=BASEPATH.'cache/dwoo/'?>
+						</li>
 						<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
 							<?=BASEPATH.'cache/dwoo/compiled'?>
 						</li>
