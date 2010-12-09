@@ -68,6 +68,10 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			return false;
 		});
 		
-		$('#layout').change();
+		// only change for those that already exist
+		if ($('#id').val().length){
+			$('#layout').change();
+		}
+		
 	}	
 });
