@@ -1655,7 +1655,7 @@ abstract class MY_Model extends Model {
 			}
 			$fields[$key]['required'] = (in_array($key, $required)) ? TRUE : FALSE;
 			
-			// change max_length returned to options
+			// create options for enum values
 			if ($val['type'] == 'enum')
 			{
 				if (is_array($val['options']))
@@ -1663,7 +1663,6 @@ abstract class MY_Model extends Model {
 					$fields[$key]['options'] = array_combine($val['options'], $val['options']);
 				}
 			}
-			
 			
 			// get lang value if one exists
 			$lang_key = strtolower(get_class($this)).'_'.$key;
