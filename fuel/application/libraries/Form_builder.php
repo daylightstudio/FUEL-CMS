@@ -838,19 +838,19 @@ Class Form_builder {
 		if ($mode == 'radios' OR ($mode == 'auto' AND count($params['options']) <= 2))
 		{
 			$default = (isset($params['value'])) ? $params['value'] : FALSE;
-			foreach($params['options'] as $val)
+			foreach($params['options'] as $key => $val)
 			{
 				$attrs = array(
 					'readonly' => $params['readonly'], 
 					'disabled' => $params['disabled']
 				);
-				if (($i == 0 AND !$default) OR  ($default == $val))
+				if (($i == 0 AND !$default) OR  ($default == $key))
 				{
 					$attrs['checked'] = 'checked';
 				}
-				$str .= $this->form->radio($params['name'], $val, $attrs);
+				$str .= $this->form->radio($params['name'], $key, $attrs);
 				$name = Form::create_id($params['name']);
-				$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $val).'">'.$val.'</label>';
+				$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$i++;
 			}
