@@ -1658,7 +1658,10 @@ abstract class MY_Model extends Model {
 			// change max_length returned to options
 			if ($val['type'] == 'enum')
 			{
-				$val['options'] = $val['max_length'];
+				if (is_array($val['options']))
+				{
+					$fields[$key]['options'] = array_combine($val['options'], $val['options']);
+				}
 			}
 			
 			
