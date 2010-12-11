@@ -55,7 +55,7 @@ carry special meaning in FUEL and will determine whether to display the content 
 
 <h3>Create the Authors Model</h3>
 <p>After creating the table, we will create the model that links to that table.
-To do that, create a file in your <dfn>fuel/applications/model</dfn> directory
+To do that, create a file in your <dfn>fuel/application/model</dfn> directory
 and name it <dfn>authors_model.php</dfn>. In that file we will be creating two
 classes. The first class, <dfn>Authors_model</dfn>, will extend the <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a> 
 (which is an extension of <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>).
@@ -88,7 +88,7 @@ it hooked up to the FUEL admin.
 
 <h3>Hooking Up the Authors Module</h3>
 <p>Now that our table and model have been created, we need
-to tell FUEL about it. To do that, open up the <dfn>applications/config/MY_fuel_modules.php</dfn> file and add the following line.</p>
+to tell FUEL about it. To do that, open up the <dfn>application/config/MY_fuel_modules.php</dfn> file and add the following line.</p>
 <pre class="brush: php">
 $config['modules']['authors'] = array(); 
 </pre>
@@ -128,7 +128,7 @@ CREATE TABLE `articles` (
 
 <h3>Create the Articles Model</h3>
 <p>Now that the table is created, we will follow similar steps as above to create the articles model. So
-create a new file in the <dfn>fuel/applications/model</dfn> folder and call it <dfn>articles_model.php</dfn>.
+create a new file in the <dfn>fuel/application/model</dfn> folder and call it <dfn>articles_model.php</dfn>.
 Now add the following code to that file:
 </p>
 
@@ -264,7 +264,7 @@ be used to help associate categories to groups and will not be visible in the FU
 
 <h4>The Categories Model</h4>
 <p>Similar to above, we will create the categories model. So
-create a new file in the <dfn>fuel/applications/model</dfn> folder and call it <dfn>categories_model.php</dfn>.
+create a new file in the <dfn>fuel/application/model</dfn> folder and call it <dfn>categories_model.php</dfn>.
 Now add the following code to that file:
 </p>
 
@@ -307,7 +307,7 @@ This will clean up any strays in the lookup table associated with the category t
 </p>
 
 <h4>The Categories to Articles Lookup Model</h4>
-<p>Now we will create a new file in the <dfn>fuel/applications/model</dfn> folder and call it <dfn>categories_to_articles.php</dfn>.
+<p>Now we will create a new file in the <dfn>fuel/application/model</dfn> folder and call it <dfn>categories_to_articles.php</dfn>.
 Now add the following code to that file:
 </p>
 

@@ -56,7 +56,7 @@ js/css function without multiple file in the first parameter
 
 $config['assets_output'] = FALSE;
 
-// cache folder relative to the web root folder... must be writable directory (default is the applications/assets/cache folder)
+// cache folder relative to the web root folder... must be writable directory (default is the application/assets/cache folder)
 $config['assets_cache_folder'] = 'cache/';
 
 // time limit on gzip cache file in seconds
