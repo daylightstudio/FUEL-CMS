@@ -428,6 +428,7 @@ class Blog extends Blog_base_controller {
 			$msg .= lang('blog_email_published').": ".$comment->published."\n";
 			$msg .= lang('blog_email_author_name').": ".$comment->author_name."\n";
 			$msg .= lang('blog_email_author_email').": ".$comment->author_email."\n";
+			$msg .= lang('blog_email_author_website').": ".$comment->author_website."\n";
 			$msg .= lang('blog_email_author_ip').": ".gethostbyaddr($comment->author_ip)." (".$comment->author_ip.")\n";
 			$msg .= lang('blog_email_content').": ".$comment->content."\n";
 
