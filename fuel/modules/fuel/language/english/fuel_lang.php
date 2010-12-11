@@ -89,6 +89,7 @@ $lang['error_cannot_make_api_call'] = 'There was an error making the API call to
 $lang['error_sending_email'] = 'There was an error sending an email to %1s.';
 $lang['error_nav_upload'] = 'There was an error uploading the navigation file.';
 $lang['error_create_nav_group'] = 'Please create a Navigation Group';
+$lang['error_requires_string_value'] = 'The name field should be a string value';
 $lang['error_missing_params'] = 'You are missing paramters to view this page';
 
 
