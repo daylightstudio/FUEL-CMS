@@ -19,6 +19,7 @@ $lang['blog_email_published'] = 'Published';
 $lang['blog_email_author_name'] = 'Author Name';
 $lang['blog_email_author_email'] = 'Author Email';
 $lang['blog_email_author_ip'] = 'Author IP';
+$lang['blog_email_author_website'] = 'Author Website';
 $lang['blog_email_content'] = 'Content';
 
 $lang['blog_error_no_posts_to_comment'] = 'There are no posts to comment on.';
