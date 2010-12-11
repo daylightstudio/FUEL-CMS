@@ -14,8 +14,6 @@ $route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";
 if (IN_FUEL_ADMIN)
 {
 	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
-	$route[FUEL_ROUTE.'logout'] = "fuel/logout";
-	$route[FUEL_ROUTE.'dashboard'] = "fuel/dashboard";
 	
 	$module_folder = APPPATH.MODULES_FOLDER.'/';
 
@@ -58,9 +56,10 @@ if (IN_FUEL_ADMIN)
 			$route[FUEL_ROUTE.$module] = $module.'/'.$module.'_module';
 			$route[FUEL_ROUTE.$module.'/(.*)'] = $module.'/'.$module.'_module/$1';
 		}
-		
-
 	}
+	// catch all
+	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
+	
 }
 
 /* End of file fuel_routes.php */
