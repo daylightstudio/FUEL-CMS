@@ -384,7 +384,7 @@ INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(17,'blog/posts','Blog Posts','yes'),
 	(18,'blog/categories','Blog Categories','yes'),
 	(19,'blog/comments','Blog Comments','yes'),
-	(20,'blog/links','Blog Comments','yes'),
+	(20,'blog/links','Blog Links','yes'),
 	(21,'blog/users','Blog Authors','yes'),
 	(22,'blog/settings','Blog Settings','yes'),
 	(23,'assets','Assets','yes'),
