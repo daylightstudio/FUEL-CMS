@@ -78,7 +78,7 @@ $config['keyboard_shortcuts'] = array(
 $config['dashboards'] = array('fuel', 'backup');
 
 // dashboard rss
-$config['dashboard_rss'] = 'http://www.thedaylightstudio.com/the-whiteboard/categories/fuel-cms/feed/rss';
+$config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
 
 
 /*
