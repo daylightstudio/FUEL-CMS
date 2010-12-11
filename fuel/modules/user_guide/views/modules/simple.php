@@ -64,13 +64,13 @@ on the key value specified in the config (e.g. example):</p>
 		</tr>
 		<tr>
 			<td><strong>model_location</strong></td>
-			<td>By default it will look in the applications/model folder. If a value is given it will look in the <dfn>modules/{model_location}/model</dfn> folder</td>
+			<td>By default it will look in the application/model folder. If a value is given it will look in the <dfn>modules/{model_location}/model</dfn> folder</td>
 			<td>None</td>
 			<td>The module folder location of the model.</td>
 		</tr>
 		<tr>
 			<td><strong>view_location</strong></td>
-			<td>By default it will look in the applications/views folder. If a value is given it will look in the <dfn>modules/{view_location}/views</dfn> folder</td>
+			<td>By default it will look in the application/views folder. If a value is given it will look in the <dfn>modules/{view_location}/views</dfn> folder</td>
 			<td>None</td>
 			<td>the location of the view files</td>
 		</tr>

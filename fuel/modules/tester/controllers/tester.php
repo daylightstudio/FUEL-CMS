@@ -19,7 +19,7 @@ class Tester extends Fuel_base_controller {
 		$this->load->helper('directory');
 		$this->load->helper('inflector');
 		
-		// get tests from applications folder
+		// get tests from application folder
 		$test_list = array();
 		$app_tests = $this->_get_tests(APPPATH.'/tests/', 'application');
 		

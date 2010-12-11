@@ -1,7 +1,7 @@
 <?php
 /***************************************************************
 ATTENTION: To use this dynamic sitemap, you must uncomment the 
-line in the applications/config/routes.php regarding the sitemap
+line in the application/config/routes.php regarding the sitemap
 **************************************************************/
 
 fuel_set_var('layout', '');

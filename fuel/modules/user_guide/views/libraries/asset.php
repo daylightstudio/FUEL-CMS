@@ -126,7 +126,7 @@ will put files in the assets cache folder.
 <p class="important"><strong>Important</strong> - The cache folder must have writable permissions.</p>
 
 <h2>Manage Assets in the FUEL Admin</h2>
-<p>FUEL CMS can help users manage asset files for their site. More information about managing assets can be found in the <a href="<?=user_guide_url('modules/assets')?>">asset modules</a> documentation</p>
+<p>FUEL CMS can help users manage asset files for their site. More information about managing assets can be found in the <a href="<?=user_guide_url('modules/fuel/assets')?>">asset modules</a> documentation</p>
 <p class="important"><strong>Important</strong> - To allow the FUEL Admin to manage your sites assets, you must give the folder(s) writable permissions.</p>
 
 

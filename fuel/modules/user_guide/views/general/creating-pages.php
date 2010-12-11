@@ -23,13 +23,13 @@
 <p>This is our about page</p>
 </pre>
 
-<p>Note how the <dfn>about</dfn> page should automatically have a header and footer applied to it. This is because the <dfn>applications/views/_variables/global.php</dfn> file specifies the <dfn>main</dfn> layout file to be applied to it (more about passing variables below). Layout files exist in the <dfn>applications/views/_layouts/</dfn> folder (more about layouts below as well).</p>
+<p>Note how the <dfn>about</dfn> page should automatically have a header and footer applied to it. This is because the <dfn>application/views/_variables/global.php</dfn> file specifies the <dfn>main</dfn> layout file to be applied to it (more about passing variables below). Layout files exist in the <dfn>application/views/_layouts/</dfn> folder (more about layouts below as well).</p>
 
 <p class="important">The <kbd>home</kbd> view file is reserved as the index page for the site.</p>
 
 <h3>Passing Variables to a Page</h3>
-<p>FUEL provides several ways to pass variables to view files without the need of creating controllers. By default, the <dfn>$vars</dfn> array variable in the <dfn>applications/views/_variables/global.php</dfn> file gets passed to every page created using the <a href="<?=user_guide_url('general/opt-in-controller')?>">Opt-In Controller</a>
-Method. For this tutorial, we would like add an additional variable to be used on each page called <dfn>$bigpic</dfn>. We want this variable to represent the top main picture of the page and change for each section of the site. We add this variable to the <dfn>applications/views/_variables/global.php</dfn> file as seen below:</p>
+<p>FUEL provides several ways to pass variables to view files without the need of creating controllers. By default, the <dfn>$vars</dfn> array variable in the <dfn>application/views/_variables/global.php</dfn> file gets passed to every page created using the <a href="<?=user_guide_url('general/opt-in-controller')?>">Opt-In Controller</a>
+Method. For this tutorial, we would like add an additional variable to be used on each page called <dfn>$bigpic</dfn>. We want this variable to represent the top main picture of the page and change for each section of the site. We add this variable to the <dfn>application/views/_variables/global.php</dfn> file as seen below:</p>
 
 <pre class="brush: php">
 
@@ -54,7 +54,7 @@ $pages = array();
 
 </pre>
 
-<p>We then create an <dfn>applications/views/_variables/about.php</dfn> variables file and add the following "controller-level" variable which will apply the $bigpic value of <dfn>about_bigpic.jpg</dfn> to all pages in the about section, overriding the global variables file:
+<p>We then create an <dfn>application/views/_variables/about.php</dfn> variables file and add the following "controller-level" variable which will apply the $bigpic value of <dfn>about_bigpic.jpg</dfn> to all pages in the about section, overriding the global variables file:
 </p>
 
 <pre class="brush: php">
@@ -66,7 +66,7 @@ $vars['bigpic'] = 'about_bigpic.jpg';
 
 <a name="controller"></a>
 <h2>Using Controllers - about/contact</h2>
-<p>FUEL still allows you to create pages using the standard MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>about/contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>applications/views/_variables/</dfn> file like so:</p>
+<p>FUEL still allows you to create pages using the standard MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>about/contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>application/views/_variables/</dfn> file like so:</p>
 
 <pre class="brush:php">
 class About extends Controller {

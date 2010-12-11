@@ -61,7 +61,7 @@ class Asset {
 	// optimize/cache assets
 	public $assets_output = FALSE;
 
-	// cache folder relative to the applications folder... must be writable directory (default is the applications/assets/cache folder)
+	// cache folder relative to the application folder... must be writable directory (default is the application/assets/cache folder)
 	public $assets_cache_folder = 'cache/';
 
 	// time limit on gzip cache file in seconds
