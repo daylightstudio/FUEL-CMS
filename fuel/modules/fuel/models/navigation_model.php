@@ -97,20 +97,35 @@ class Navigation_model extends Base_module_model {
 		return $return;
 	}
 	
+	function find_all_by_group($group_id = 1)
+	{
+		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
+		$data = $this->find_all_array($where);
+		return $data;
+	}
+
 	function children($parent, $group_id = 1)
 	{
 		$parent = $this->find_one_array(array('location' => $parent));
 		
 		$data = array();
-		if (!empty($parent)){
-			$data = $this->find_all_array(array('group_id' => $group_id, 'parent_id' => $parent['id'], 'published' => 'yes'));
+		if (!empty($parent))
+		{
+			$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
+			$where['published'] = 'yes';
+			$where['parent_id'] = $parent['id'];
+			$data = $this->find_all_array($where);
 		}
 		return $data;
 	}
 	
 	function root($group_id = 1)
 	{
-		$data = $this->find_all_array(array('group_id' => $group_id, 'parent_id' => 0, 'published' => 'yes'));
+		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
+		$where['published'] = 'yes';
+		$where['parent_id'] = 0;
+		$data = $this->find_all_array($where);
+		$data = $this->find_all_array($where);
 		return $data;
 	} 
 	

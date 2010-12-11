@@ -315,17 +315,11 @@ function fuel_nav($params = array())
 					include(APPPATH.'views/_variables/'.$p['file'].'.php');
 				}
 			}
-
 			// now load from FUEL and overwrite
 			$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
-			if (!empty($p['parent']))
-			{
-				$menu_items = $CI->navigation_model->children($p['group_id'], $p['parent']);
-			}
-			else
-			{
-				$menu_items = $CI->navigation_model->find_all_array(array('group_id' => $p['group_id']));
-			}
+			
+			// grab all menu items by group
+			$menu_items = $CI->navigation_model->find_all_by_group($p['group_id']);
 			
 			// if menu items isn't empty, then we overwrite the variabl with those menu items and change any parent value'
 			if (!empty($menu_items)) 
@@ -366,7 +360,7 @@ function fuel_nav($params = array())
 	$CI->menu->reset();
 	$CI->menu->initialize($p);
 	
-	$items = $$p['var'];
+	$items = (!empty($$p['var'])) ? $$p['var'] : array();
 	if (!empty($p['exclude']))
 	{
 		$p['exclude'] = (array) $p['exclude'];
