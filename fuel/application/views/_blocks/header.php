@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 <head>
 	<?php if (!empty($is_blog)) : ?>
-	<title><?=$CI->fuel_blog->page_title($page_title, ' : ', 'right')?></title>
+	<title><?php echo $CI->fuel_blog->page_title($page_title, ' : ', 'right')?></title>
 	<?php else : ?>
-	<title><?=fuel_var('page_title', '')?></title>
+	<title><?php echo fuel_var('page_title', '')?></title>
 	<?php endif ?>
 	<meta charset="UTF-8" />
 	<meta name="ROBOTS" content="ALL" />
 	<meta name="MSSmartTagsPreventParsing" content="true" />
 
-	<meta name="keywords" content="<?=fuel_var('meta_keywords')?>" />
-	<meta name="description" content="<?=fuel_var('meta_description')?>" />
+	<meta name="keywords" content="<?php echo fuel_var('meta_keywords')?>" />
+	<meta name="description" content="<?php echo fuel_var('meta_description')?>" />
 
 	<?php echo css('main'); ?>
 	<?php echo css($css); ?>
@@ -20,7 +20,7 @@
 	<?php echo js($js); ?>
 	
 	<?php if (!empty($is_blog)) : ?>
-	<?=$CI->fuel_blog->header()?>
+	<?php echo $CI->fuel_blog->header()?>
 	<?php endif; ?>
 	<base href="<?php echo site_url()?>" />
 	
