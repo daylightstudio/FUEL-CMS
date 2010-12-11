@@ -25,10 +25,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <?php foreach($nav as $uri=>$page) { ?>
-	<?php if(isset($page['location'])): ?>
+	<?php if(isset($page['location'])): ?> 
 		<url>
 			<loc><?=site_url($page['location'])?></loc>
-			<?php if (!empty($page['frequency'])) : ?><changefreq><?=$default_frequency?></changefreq><?php endif; ?>
+			<?php if (empty($page['frequency'])) : ?><changefreq><?=$default_frequency?></changefreq><?php endif; ?> 
 		</url>	
 	<?php elseif (is_string($page)): ?>
 	<url>
