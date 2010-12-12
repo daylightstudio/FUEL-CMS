@@ -1,21 +1,21 @@
 <h1>MY_Model Abstract Class</h1>
-<p>MY_Model extends the Model class to provide <a href="<?=user_guide_url('libraries/my_model/table_class_methods')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.</p>
+<p>MY_Model extends the Model class to provide <a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.</p>
 <p>It was developed to augment the CodeIgniter active record class and <strong>DOES NOT</strong> change any of those methods. 
 The class is abstract, meaning that it needs to be extended to work.</p>
 
 <p class="important">MY_Model may require the following classes and helpers (depending on class preferences):</p>
 <ul>
 	<li><a href="<?=user_guide_url('libraries/validator')?>">Validator Class</a></li>
-	<li><a href="<?=user_guide_url('helpers/string_helper')?>">String Helper</a></li>
-	<li><a href="<?=user_guide_url('helpers/date_helper')?>">Date Helper</a></li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">Security Helper</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_string_helper')?>">String Helper</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper')?>">Date Helper</a></li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html">Security Helper</a></li>
 </ul>
 
 <h2>Table, Result and Record Classes</h2>
 <p>MY_Model is actually made up of 2-3 classes:</p>
 <ul>
 	<li><a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
-	<li><a href="<?=user_guide_url('libraries/my_model/result_set_class_functions')?>"><strong>Result Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model/data_set_class_functions')?>"><strong>Data Set Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
 	<li><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attibutes of the table</a></li>
 </ul>
 
