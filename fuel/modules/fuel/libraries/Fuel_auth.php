@@ -71,9 +71,10 @@ class Fuel_auth {
 	
 	function is_logged_in()
 	{
-		return $this->valid_user() !== NULL;
+		$user = $this->valid_user();
+		return (!empty($user) AND !empty($user['user_name']));
 	}
-	
+
 	function has_permission($permission, $type = 'edit')
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
