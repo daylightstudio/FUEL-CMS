@@ -153,6 +153,12 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
  */
 function safe_htmlentities($str)
 {
+	// convert all hex single quotes to numeric ... 
+	// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
+	// but was inconsistent across different environments and versions... not sure the issue
+	// may need to look into other hex characters
+	$str = str_replace('&#x27;', '&#39;', $str);
+	
 	// setup temp markers for existing encoded tag brackets existing 
 	$find = array('&lt;','&gt;');
 	$replace = array('__TEMP_LT__','__TEMP_GT__');
