@@ -15,9 +15,9 @@
 	<?php endif; ?>
 </ul>
 
-<h2>Posts By <?=$author->name?></h2>
 <?php $posts = $author->posts; ?>
 <?php if (!empty($posts)) : ?>
+<h2>Posts By <?=$author->name?></h2>
 <ul>
 	<?php foreach($posts as $post) : ?>
 	<li><a href="<?=$post->url ?>"><?=$post->title?></a></li>

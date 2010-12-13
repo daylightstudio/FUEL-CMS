@@ -426,7 +426,7 @@ class Fuel_blog {
 	 * @param	string
 	 * @return	array
 	 */
-	function get_category_posts($category = '', $order_by = NULL, $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
+	function get_category_posts($category = '', $order_by = 'date_added desc', $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
 	{
 		$this->_CI->load->module_model(BLOG_FOLDER, 'blog_posts_model');
 		$this->_CI->blog_posts_model->readonly = TRUE;

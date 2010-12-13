@@ -105,7 +105,7 @@ class Blog_user_model extends Base_module_record {
 	
 	function get_posts()
 	{
-		return $this->lazy_load(array('author_id' => $this->id), array(BLOG_FOLDER => 'blog_posts_model'), TRUE);
+		return $this->lazy_load(array('author_id' => $this->id, 'published' => 'yes'), array(BLOG_FOLDER => 'blog_posts_model'), TRUE);
 	}
 
 	function get_posts_url($full_path = TRUE)
