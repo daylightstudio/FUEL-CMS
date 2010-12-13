@@ -24,8 +24,8 @@ to create one (it's not too tough!).
 			</li>
 			<li>In the routes file, add the fuel routes you want to use. For example, this <strong>user_guide</strong> module has the following routes:
 				<ul>
-					<li>$route[FUEL_FOLDER.'/tools/user_guide'] = 'user_guide';</li>
-					<li>$route[FUEL_FOLDER.'/tools/user_guide/:any'] = 'user_guide/$1';</li>
+					<li>$route[FUEL_ROUTE.'tools/user_guide'] = 'user_guide';</li>
+					<li>$route[FUEL_ROUTE.'tools/user_guide/:any'] = 'user_guide/$1';</li>
 				</ul>
 			</li>
 		</ul>
