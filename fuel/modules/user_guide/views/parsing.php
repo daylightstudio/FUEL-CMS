@@ -20,12 +20,12 @@ FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP
 
 <h2>Namespaced Functions</h2>
 <ul>
-	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">uri_segment(n)</a> function.</li>
-	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_var()</a> function.</li>
-	<li>{fuel_model(model, array(key="val"...)} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_modules()</a> function.</li>
-	<li>{fuel_block(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_block()</a> function.</li>
-	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_nav()</a> function.</li>
-	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel')?>">fuel_edit()</a> function.</li>
+	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">uri_segment(n)</a> function.</li>
+	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_var()</a> function.</li>
+	<li>{fuel_model(model, array(key="val"...)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_modules()</a> function.</li>
+	<li>{fuel_block(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_block()</a> function.</li>
+	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_nav()</a> function.</li>
+	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_edit()</a> function.</li>
 </ul>
 <p class="important">Note that several of the functions require an associative array paramter with the <dfn>key="val"</dfn> syntax.</p>
 
