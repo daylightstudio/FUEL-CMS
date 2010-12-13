@@ -113,25 +113,34 @@ abstract class MY_Model extends Model {
 			}
 		}
 		
-		if (empty($this->db))
+		// if a DSN property is set,then we will load that database in
+		if (!empty($this->dsn))
 		{
-			$this->load->database($this->dsn);
-		}
-
-		$CI =& get_instance();
-		if (isset($CI->db))
-		{
-			// create a copy of the DB object to prevent cross model interference
-			unset($this->db);
-			$this->db = clone $CI->db;
-			$this->validator = new Validator();
-			$this->validator->register_to_global_errors = FALSE;
+			$this->db = $this->load->database($this->dsn, TRUE, TRUE);
 		}
 		else
 		{
-			$CI->load->language('db');
-			show_error(lang('db_unable_to_connect'));
+			// else we use the database set on the CI object
+			if (empty($this->db))
+			{
+				$this->load->database($this->dsn);
+			}
+			$CI =& get_instance();
+			if (isset($CI->db))
+			{
+				// create a copy of the DB object to prevent cross model interference
+				unset($this->db);
+				$this->db = clone $CI->db;
+			}
+			else
+			{
+				$CI->load->language('db');
+				show_error(lang('db_unable_to_connect'));
+			}
 		}
+		$this->validator = new Validator();
+		$this->validator->register_to_global_errors = FALSE;
+
 	}
 
 	// --------------------------------------------------------------------
