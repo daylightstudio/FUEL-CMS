@@ -11,11 +11,35 @@ to create one (it's not too tough!).
 	<li>Create a folder to contain your code in the <dfn>fuel/modules/</dfn> folder</li>
 	<li>Create your config folder and add a <dfn>{module_name}.php</dfn>, <dfn>{module_name}_constants.php</dfn>, and a <dfn>{module_name}_routes.php</dfn>
 		<ul>
-			<li>In the config file, add your module specific configuration information as well as and FUEL admin interface information like:<br />
+			<li>In the <dfn>{module_name}.php</dfn> config file, add your module specific configuration information as well as any FUEL admin interface information like:<br />
 				<dfn>$config['nav']['tools']['tools/{module_name}'] = '{module_name}';</dfn><br />
-				This line will add the menu item in the admin.
+				This will create a menu <dfn>{module_name}</dfn> in the admin left navigation with a FUEL admin link of <dfn>tools/{module_name}</dfn>.<p>
+
+				As another example, let's look at the blogs configuration file found under <dfn>fuel/modules/blog/config/blog.php</dfn>:</p>
+				
+<pre class="brush: php">
+$config['nav']['blog'] = array(
+'blog/posts' => 'Posts', 
+'blog/categories' => 'Categories', 
+'blog/comments' => 'Comments', 
+'blog/links' => 'Links', 
+'blog/users' => 'Authors', 
+'blog/settings' => 'Settings'
+);
+</pre>
+
+
+				<p>This will create the following in the admin left navigation.</p>
+<pre class="brush: php">
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/posts&quot; class=&quot;ico ico_blog_posts&quot;&gt;Posts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/categories&quot; class=&quot;ico ico_blog_categories&quot;&gt;Categories&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/comments&quot; class=&quot;ico ico_blog_comments&quot;&gt;Comments&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/links&quot; class=&quot;ico ico_blog_links&quot;&gt;Links&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/users&quot; class=&quot;ico ico_blog_users&quot;&gt;Authors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/settings&quot; class=&quot;ico ico_blog_settings&quot;&gt;Settings&lt;/a&gt;&lt;/li&gt;
+</pre>				
 			</li>
-			<li>In the constants folder its a good idea to create the following constants (although not required)
+			<li>In the {module_name}_constants.php file its a good idea to create the following constants (although not required):
 				<ul>
 					<li><strong>{MODULE_NAME}_VERSION</strong> - the version number of the module</li>
 					<li><strong>{MODULE_NAME}_FOLDER</strong> - the folder name of the module</li>
