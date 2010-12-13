@@ -454,7 +454,7 @@ function form_fields($values = array())
 }
 ...
 </pre>
-<p class="important">A field name that ends in <kbd>image</kbd> or <kbd>img</kbd> will automatically be turned into an image select field/upload field.</p>
+<p class="important">A field name that ends in <kbd>image</kbd> or <kbd>img</kbd> will automatically be turned into an image select field/upload field for a module (not for layouts though. For layouts you must create the 2 fields manually).</p>
 <p class="important">The suffix of <kbd>_upload</kbd> triggers FUEL to upload the image and assign the value to the <kbd>avatar</kbd> field. 
 The <kbd>upload_path</kbd> array parameter tells FUEL where to upload the file. In this case we will upload path to the <kbd>assets/images/authors</kbd> folder
 <kbd>(the folder must have writable permissions)</kbd>.</p>
