@@ -72,7 +72,7 @@ class Fuel_auth {
 	function is_logged_in()
 	{
 		$user = $this->valid_user();
-		return (!empty($user) AND $user['user_name']);
+		return (!empty($user) AND !empty($user['user_name']));
 	}
 	
 	function has_permission($permission, $type = 'edit')
