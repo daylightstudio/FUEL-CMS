@@ -40,7 +40,8 @@ $config['site_name'] = 'MyWebsite';
 $config['fuel_path'] = FUEL_FOLDER.'/';
 
 // options are cms, views, auto... cms pulls views and variables from the database,
-// views mode pulls views from the views folder and variables from the _variables folder
+// views mode pulls views from the views folder and variables from the _variables folder.
+// The auto option will first check the database for a page and if it doesn't exist or is not published, it will then check for a corresponding view file.
 $config['fuel_mode'] = 'views';
 
 // used for system emails. Can be overwritten by MY_fuel.php
