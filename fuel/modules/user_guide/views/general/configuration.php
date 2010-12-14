@@ -29,8 +29,10 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td><strong>fuel_mode</strong></td>
 			<td>views</td>
 			<td>cms, views, auto</td>
-			<td>The option cms pulls views and variables from the database, 
-				views mode pulls views from the views folder and variables from the _variables folder.
+			<td>The option <dfn>cms</dfn> pulls views and variables from the database, 
+				<dfn>views</dfn> mode pulls views from the views folder and variables from the _variables folder.
+				The <dfn>auto</dfn> option will first check the database for a page and if it doesn't exist or is not published, 
+				it will then check for a corresponding view file.
 			</td>
 		</tr>
 		<tr>
