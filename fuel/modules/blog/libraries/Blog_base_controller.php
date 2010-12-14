@@ -30,8 +30,10 @@ class Blog_base_controller extends Controller {
 	{
 		if (empty($layout)) $layout = '_layouts/'.$this->fuel_blog->layout();
 		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
+
 		// get any global variables for the headers and footers
-		$_vars = $this->fuel_pagevars->view_variables(uri_path(), 'blog');
+		$_vars = $this->fuel_pagevars->retrieve(uri_path());
+		
 		if (is_array($_vars))
 		{
 			$vars = array_merge($_vars, $vars);
