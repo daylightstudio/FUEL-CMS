@@ -163,10 +163,10 @@ class Module extends Fuel_base_controller {
 		$this->config->set_item('enable_query_strings', FALSE);
 		
 		// pagination
-		$config['base_url'] = fuel_url($this->module).'/items/offset/';
-		
+		$config['base_url'] = fuel_url($this->module_uri).'/items/offset/';
+		$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
 		$config['total_rows'] = $this->model->list_items_total();
-		$config['uri_segment'] = fuel_uri_index(4);
+		$config['uri_segment'] = fuel_uri_index($uri_segment);
 		$config['per_page'] = (int) $params['limit'];
 		$config['page_query_string'] = FALSE;
 		$config['num_links'] = 5;
