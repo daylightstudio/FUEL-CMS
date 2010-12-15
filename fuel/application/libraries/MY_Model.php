@@ -1700,7 +1700,7 @@ abstract class MY_Model extends Model {
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list();
 				$fields[$key]['first_option'] = 'Select...';
-				$fields[$key]['label'] = ucfirst($CI->$model->short_name(TRUE, TRUE));
+				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->short_name(TRUE, TRUE)));
 			}
 		}
 		
