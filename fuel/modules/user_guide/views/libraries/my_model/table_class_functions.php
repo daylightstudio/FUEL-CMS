@@ -269,7 +269,7 @@ Does <srong>NOT</srong> perform any validation but <strong>DOES</strong> execute
 </p>
 <pre class="brush: php">
 $values['name'] = 'Darth Vader'; 
-$values['email'] = 'dvader@deathstart.com'; 
+$values['email'] = 'dvader@deathstar.com'; 
 
 $this->examples_model->insert($values);
 </pre>

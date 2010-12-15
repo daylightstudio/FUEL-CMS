@@ -50,9 +50,9 @@ If the <dfn>$include_derived</dfn> option is TRUE, then all <dfn>get_</dfn> meth
 will also be included.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $values = $record->values()
-echo $values['email']; // vader@deathstart.com 
+echo $values['email']; // vader@deathstar.com 
 </pre>
 
 
@@ -60,9 +60,9 @@ echo $values['email']; // vader@deathstart.com
 <p>Duplicates the record with all it's current values.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $duplicate_record = $record->duplicate()
-echo $duplicate_record->email; // vader@deathstart.com 
+echo $duplicate_record->email; // vader@deathstar.com 
 </pre>
 
 
@@ -74,7 +74,7 @@ Saving the record calls the parent model's save method passing it's own record v
 </p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->email = 'hsolo@milleniumfalcon.com';
 $record->save();
 </pre>
@@ -84,7 +84,7 @@ $record->save();
 <p>Validates the values of the object to makes sure they are valid to be saved.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
 if ($record->validate()) 
 { 
@@ -101,7 +101,7 @@ else
 <p>Returns <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if validation has been run and is valid.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
 $record->validate();
 
@@ -126,7 +126,7 @@ This is commonly called after saving because validation will occur automatically
 </p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
 if (!$record->save())
 { 
@@ -142,7 +142,7 @@ if (!$record->save())
 <p>Deletes the record. Similar to the save method, it will call the parent model's delete method passing itself as the where condition to delete.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->delete(); // note the invalid email address
 </pre>
 
@@ -151,10 +151,10 @@ $record->delete(); // note the invalid email address
 <p>Refreshes the object from the data source./p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->email = 'hsolo@milleniumfalcon.com';
 $record->refresh();
-echo $record->email; // dvader@deathstart.com
+echo $record->email; // dvader@deathstar.com
 </pre>
 
 
@@ -179,7 +179,7 @@ function get_spaceship()
 <p>Tests whether a property exists on the record.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 if ($record->prop_exists('email')))
 {
     echo $record->email;
@@ -191,7 +191,7 @@ if ($record->prop_exists('email')))
 <p>Prints to the screen the last query run by the parent model. An alias to the parent model's debug_query method.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->debug_query()))
 </pre>
 
@@ -200,6 +200,6 @@ $record->debug_query()))
 <p>Prints to the screen the property values of the of the object.</p>
 
 <pre class="brush: php">
-$record = $this->examples_model->find_one(array('email' => 'dvader@deathstart.com')); 
+$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
 $record->debug_data()))
 </pre>
