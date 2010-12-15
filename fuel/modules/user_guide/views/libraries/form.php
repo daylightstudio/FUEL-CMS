@@ -96,9 +96,9 @@ The <dfn>$attrs</dfn> parameter can be either an array or a string(optional).
 </p>
 
 <pre class="brush: php">
-echo $this->form->text('email', 'dvader@deathstart.com', 'class="txt_field"');
+echo $this->form->text('email', 'dvader@deathstar.com', 'class="txt_field"');
 // will echo the following
-&lt;input type="text" name="email" id="email" value="dvader@deathstart.com" class="txt_field" /&gt;
+&lt;input type="text" name="email" id="email" value="dvader@deathstar.com" class="txt_field" /&gt;
 </pre>
 
 
