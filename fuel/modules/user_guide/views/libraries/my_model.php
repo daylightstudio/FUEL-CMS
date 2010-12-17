@@ -139,9 +139,6 @@ The class is abstract, meaning that it needs to be extended to work.</p>
 			<td>TRUE/FALSE (boolean)</td>
 			<td>Sets the model to readonly mode and will not allow inserts, updates and deletes</td>
 		</tr>
-		
-		public $foreign_keys = array(); // foreign keys in the table models 
-		
 	</tbody>
 </table>
 
