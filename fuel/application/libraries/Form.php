@@ -406,16 +406,16 @@ Class Form {
 	 */
 	public static function prep($str)
 	{
-		//static $prepped_fields = array();
-		
 		if ($str === '')
 		{
 			return '';
 		}
-		$str = htmlspecialchars($str);
+		
+		// translate characters but only do it once
+		$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
 
 		// In case htmlspecialchars misses these.
-		$str = str_replace(array("'", '"'), array("&#39;", "&quot;"), $str);
+		$str = str_replace(array('&#x27;', "'", '"'), array("&#39;", "&#39;", "&quot;"), $str);
 		return $str;	
 		
 	}
