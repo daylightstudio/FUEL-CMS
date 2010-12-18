@@ -103,7 +103,7 @@ class Blog_comments_model extends Base_module_model {
 			}
 			$fields['replies'] = array('label' => 'Replies', 'displayonly' => TRUE, 'value' => implode('<br /><br />', $reply_arr));
 			
-			if ($values['author_id'] == $CI->fuel_auth->user_data('id') OR $CI->fuel_auth->is_super_admin())
+			if (!empty($post) AND $post->author_id == $CI->fuel_auth->user_data('id') OR $CI->fuel_auth->is_super_admin())
 			{
 				$fields['reply'] = array('label' => 'Reply', 'type' => 'textarea');
 				$notify_options = array('Commentor' => lang('blog_comment_notify_option2'), 'All' => lang('blog_comment_notify_option1'), 'None' => lang('blog_comment_notify_option3'));
