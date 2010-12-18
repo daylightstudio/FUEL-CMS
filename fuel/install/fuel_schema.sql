@@ -366,8 +366,8 @@ CREATE TABLE `fuel_permissions` (
 
 INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(1,'pages','Manage pages','yes'),
-	(2,'pages_publish','Ability to Publish Pages','yes'),
-	(3,'pages_delete','Ability to Delete Pages','yes'),
+	(2,'pages_publish','Publish Pages','yes'),
+	(3,'pages_delete','Delete Pages','yes'),
 	(4,'navigation','Manage navigation','yes'),
 	(5,'users','Manage users','yes'),
 	(6,'tools/backup','Manage database backup','yes'),

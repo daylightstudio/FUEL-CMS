@@ -25,7 +25,7 @@ class Projects_model extends Base_module_model {
 		// to limit the image folder to just the projects folder for selection
 		$fields['image']['class'] = 'asset_select images/projects';
 		
-		// put all project images into a projects suboflder.
+		// put all project images into a projects subfolder
 		$fields['image_upload']['upload_path'] = assets_server_path('projects', 'images');
 		
 		// fix the preview by adding projects in front of the image path since we are saving it in a subfolder
