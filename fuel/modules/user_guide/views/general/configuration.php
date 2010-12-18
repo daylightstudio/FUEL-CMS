@@ -102,8 +102,7 @@ array(
 </pre>
 			</td>
 			<td>None</td>
-			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
-			must exist in the assets/css file and not the fuel/assets/css folder.</td>
+			<td>Keyboard shortcuts for the FUEL admin.</td>
 		</tr>
 		<tr>
 			<td><strong>dashboards</strong></td>
