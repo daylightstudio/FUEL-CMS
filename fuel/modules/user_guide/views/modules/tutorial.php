@@ -350,7 +350,7 @@ to tell FUEL about it. To do that, open up the <dfn>applicaitons/config/MY_fuel_
 and add the following line.
 </p>
 <pre class="brush: php">
-$config['modules']['authors'] = array(); 
+$config['modules']['categories'] = array(); 
 </pre>
 
 <p>The categories form should look like the screen below:</p>
@@ -495,7 +495,7 @@ class Authors_model extends Data_record {
 
 <pre class="brush: php">
 ... 
-class Authors_model extends Base_module_model {
+class Articles_model extends Base_module_model {
 	
 	public $required = array('title', 'content');
 
@@ -628,7 +628,7 @@ class Categories_to_articles_model extends MY_Model {
 
 <pre class="brush: php">
 ... 
-class Authors_model extends Base_module_model {
+class Categories_model extends Base_module_model {
 	
 	public $required = array('name');
 
