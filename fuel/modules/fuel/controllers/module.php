@@ -258,7 +258,7 @@ class Module extends Fuel_base_controller {
 			$is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
 			if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
 			{ 
-				$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "published";
+				$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
 				$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
 				$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
 				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">no</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
@@ -413,6 +413,14 @@ class Module extends Fuel_base_controller {
 			$this->model->on_before_post();
 		
 			$posted = $this->_process();
+
+			// set publish status to no if you do not have the ability to publish
+			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+			{
+				$posted['published'] = 'no';
+				$posted['active'] = 'no';
+			}
+			
 			$model = $this->model;
 
 			// reset dup id

@@ -16,6 +16,13 @@ class Pages extends Module {
 		if (isset($_POST['id'])) // check for dupes
 		{
 			$posted = $this->_process();
+
+			// set publish status to no if you do not have the ability to publish
+			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+			{
+				$posted['published'] = 'no';
+			}
+			
 			
 			// reset dup id
 			if ($_POST['id'] == 'dup')
