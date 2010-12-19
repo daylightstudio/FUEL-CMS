@@ -82,15 +82,17 @@ $this->examples_model->find_one(array('published' => 'yes'), 'date_added desc', 
 
 
 <h2>$this->examples_model->find_one_array(<var>where</var>, <var>['order_by']</var>)</h2>
-<p>Finds a single record based on the where parameters passed to the method as an array. The second parameter will sort the values before 
-returning the single record.</p>
+<p>Finds a single record based on the where parameters which can be passed as either an array or string. 
+The returned value is an array. 
+Any custom methods or properties on the record class (if used), will not be available.
+The second parameter will sort the values before returning the single record.</p>
 <pre class="brush: php">
 $this->examples_model->find_one_array(array('published' => 'yes'), 'date_added desc'); 
 </pre>
 
 
 <h2>$this->examples_model->find_all(<var>where</var>, <var>['order_by']</var>, <var>[limit]</var>, <var>[offset]</var>, <var>['return_method']</var>, <var>['assoc_key']</var>)</h2>
-<p>Finds a multiple records based on the where parameters passed to the method. The second parameter will sort the values before 
+<p>Finds multiple records based on the where parameters which can be passed as either an array or string.  The second parameter will sort the values before 
 returning the single record. The <dfn>limit</dfn> paramter limits the returned results. The <dfn>offset</dfn> parameter will offset the returned results (e.g. like for pagination).
 The <dfn>return_method</dfn> determines if it is either an array of arrays or an array of objects.
 The <dfn>assoc_key</dfn> will fill the key value of the array with the value of a column instead of the normal 0 index
@@ -101,7 +103,9 @@ $this->examples_model->find_all(array('published' => 'yes'), 'date_added desc');
 
 
 <h2>$this->examples_model->find_all_array(<var>where</var>, <var>['order_by']</var>, <var>[limit]</var>, <var>[offset]</var>, <var>['assoc_key']</var>)</h2>
-<p>Finds a multiple records based on the where parameters passed to the method as an array. 
+<p>Finds multiple records based on the where parameters which can be passed as either an array or string. 
+The returned value is an array of array values (mulit-dimensional array). 
+Any custom methods or properties on the record class (if used), will not be available.
 The second parameter will sort the values before returning the single record. 
 The <dfn>limit</dfn> paramter limits the returned results. 
 The <dfn>offset</dfn> parameter will offset the returned results (e.g. like for pagination).
@@ -113,8 +117,8 @@ $this->examples_model->find_all_array(array('published' => 'yes'), 'date_added d
 
 
 <h2>$this->examples_model->find_all_assoc(<var>'assoc_key'</var>, <var>where</var>, <var>['order_by']</var>, <var>[limit]</var>, <var>[offset]</var>, <var>['assoc_key']</var>)</h2>
-<p>Finds a multiple records based on the where parameters passed to the method. 
-The second parameter, <dfn>assoc_key</dfn>, will fill the key value of the array with the value of a column instead of the normal 0 index.
+<p>Finds multiple records based on the where parameters which can be passed as either an array or string. 
+The first parameter, <dfn>assoc_key</dfn>, will fill the key value of the array with the value of a column instead of the normal 0 index.
 The <dfn>order_by</dfn> parameter will sort the values before returning the single record. 
 returning the single record. The <dfn>limit</dfn> paramter limits the returned results. The <dfn>offset</dfn> parameter will offset the returned results (e.g. like for pagination).
 </p>
@@ -124,8 +128,10 @@ $this->examples_model->find_all_assoc(array('published' => 'yes'), 'date_added d
 
 
 <h2>$this->examples_model->find_all_array_assoc(<var>'assoc_key'</var>, <var>where</var>, <var>['order_by']</var>, <var>[limit]</var>, <var>[offset]</var>)</h2>
-<p>Finds a multiple records based on the where parameters passed to the method as an array. 
-The second parameter, <dfn>assoc_key</dfn>, will fill the key value of the array with the value of a column instead of the normal 0 index.
+<p>Finds multiple records based on the where parameters which can be passed as either an array or string. 
+The returned value is an array of array values (mulit-dimensional array). 
+Any custom methods or properties on the record class (if used), will not be available.
+The first parameter, <dfn>assoc_key</dfn>, will fill the key value of the array with the value of a column instead of the normal 0 index.
 The <dfn>order_by</dfn> parameter will sort the values before returning the single record. 
 returning the single record. The <dfn>limit</dfn> paramter limits the returned results. The <dfn>offset</dfn> parameter will offset the returned results (e.g. like for pagination).
 </p>
