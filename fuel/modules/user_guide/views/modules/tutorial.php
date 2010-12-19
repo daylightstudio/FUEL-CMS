@@ -466,7 +466,7 @@ The <kbd>upload_path</kbd> array parameter tells FUEL where to upload the file. 
 
 <pre class="brush: php">
 ... 
-class Authors_model extends Data_record {
+class Author_model extends Data_record {
 	
 	public function get_avatar_image()
 	{
