@@ -14,8 +14,6 @@
 	
 </div>
 
-<?php if ($post->allow_comments) : ?>
-
 <a name="comments"></a>
 
 	<?php if ($post->comments_count > 0) : ?>
@@ -43,6 +41,7 @@
 		</div>
 	<?php endif; ?>
 
+<?php if ($post->allow_comments) : ?>
 	<div class="comment_form">
 	<a name="comments_form"></a>
 
@@ -59,4 +58,6 @@
 	<?php endif; ?>
 	</div>
 
+<?php else: ?>
+	<p>Comments have been closed.</p>
 <?php endif; ?>
