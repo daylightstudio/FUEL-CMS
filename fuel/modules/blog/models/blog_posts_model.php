@@ -19,7 +19,7 @@ class Blog_posts_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'date_added', $order = 'desc')
 	{
-		$this->db->select($this->_tables['blog_posts'].'.id, title, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, DATE_FORMAT('.$this->_tables['blog_posts'].'.date_added,"%m/%d/%Y") as date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
+		$this->db->select($this->_tables['blog_posts'].'.id, title, '.$this->_tables['blog_posts'].'.permalink, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, DATE_FORMAT('.$this->_tables['blog_posts'].'.date_added,"%m/%d/%Y") as date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
 		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['blog_posts'].'.author_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;

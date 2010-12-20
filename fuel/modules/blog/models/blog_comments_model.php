@@ -20,7 +20,7 @@ class Blog_comments_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'date_added', $order = 'desc')
 	{
-		$this->db->select($this->_tables['blog_comments'].'.id, title AS post_title, '.$this->_tables['blog_comments'].'.content AS comment, author_name AS comment_author_name, DATE_FORMAT('.$this->_tables['blog_comments'].'.date_added,"%m/%d/%Y %h:%i %p") as date_added, '.$this->_tables['blog_comments'].'.published', FALSE);
+		$this->db->select($this->_tables['blog_comments'].'.id, title AS post_title, '.$this->_tables['blog_comments'].'.content AS comment, author_name AS comment_author_name, '.$this->_tables['blog_comments'].'.is_spam, DATE_FORMAT('.$this->_tables['blog_comments'].'.date_added,"%m/%d/%Y %h:%i %p") as date_added, '.$this->_tables['blog_comments'].'.published', FALSE);
 		$this->db->join($this->_tables['blog_posts'], $this->_tables['blog_comments'].'.post_id = '.$this->_tables['blog_posts'].'.id', 'inner');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
