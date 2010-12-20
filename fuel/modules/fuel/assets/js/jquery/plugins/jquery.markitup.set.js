@@ -80,8 +80,9 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 		textarea = jQuery('#fullscreen');
 		
 		textarea.show();
-		
-		var fsSetting = myMarkItUpSettings.markupSet[myMarkItUpSettings.markupSet.length - 1];
+
+		//var fsSetting = myMarkItUpSettings.markupSet[myMarkItUpSettings.markupSet.length - 1];
+		var fsSetting = myMarkItUpSettings.markupSet[23];
 		fsSetting.className = 'minimize';
 		textarea.markItUp(myMarkItUpSettings);
 
