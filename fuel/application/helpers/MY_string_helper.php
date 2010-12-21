@@ -75,9 +75,10 @@ function eval_string($str, $vars = array())
 // 
 function lang($key, $args = NULL)
 {
+
 	// must test for this first because we may load a config 
-	// file that uses this function before get_instance is loaded
-	if (function_exists('get_instance'))
+	// file that uses this function before lang file is loaded
+	if (!empty($GLOBALS['LANG']))
 	{
 		$CI =& get_instance();
 		if (!is_array($args))
@@ -216,6 +217,25 @@ function php_to_template_syntax($str)
 	
 	$str = preg_replace_callback('#(array\()(.+)(\))#', $callback, $str);
 	return $str;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Convert string to Dwoo templating syntax
+ *
+ * @param 	string 	string to evaluate
+ * @param 	array 	variables to parse with string
+ * @return	string
+ */
+function parse_template_syntax($str, $vars = array())
+{
+	$CI =& get_instance();
+	if (!isset($CI->parser))
+	{
+		$CI->load->library('parser');
+	}
+	return $CI->parser->parse_string($str, $vars, TRUE);
 }
 
 /* End of file MY_string_helper.php */
