@@ -1,6 +1,6 @@
 <?php
-$this->load->module_model(FUEL_FOLDER, 'page_model');
-	$pages = $this->page_model->find_all(array('published' => 'yes'));
+$this->load->module_model(FUEL_FOLDER, 'pages_model');
+	$pages = $this->pages_model->find_all(array('published' => 'yes'));
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
