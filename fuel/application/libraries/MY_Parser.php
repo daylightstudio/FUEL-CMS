@@ -142,12 +142,15 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	function string_parse($string, $data = array(), $return = FALSE, $is_include = FALSE)
+	
+	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
+	function string_parse($string, $data = array(), $return = TRUE, $is_include = FALSE)
 	{
 		return $this->_parse($string, $data, $return, $is_include);
 	}
 
-	function parse_string($string, $data = array(), $return = FALSE, $is_include = FALSE)
+	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
+	function parse_string($string, $data = array(), $return = TRUE, $is_include = FALSE)
 	{
 		return $this->_parse($string, $data, $return, $is_include);
 	}
@@ -199,7 +202,7 @@ class MY_Parser extends CI_Parser {
 			$compiler = new Dwoo_Compiler();
 
 			//Add a pre-processor to help fix javascript {}
-			// added by David McReynolds @ Daylight Studio 11/04/10 to prevent problems of axing the entire directory
+			// added by David McReynolds @ Daylight Studio 11/04/10
 			$callback = create_function('$compiler', '
 				$string = $compiler->getTemplateSource();
 				$string = preg_replace("#{\s*}#", "{\n}", $string); 

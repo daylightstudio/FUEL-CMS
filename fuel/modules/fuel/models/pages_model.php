@@ -198,9 +198,12 @@ class Pages_model extends Base_module_model {
 	
 	function on_before_clean($values)
 	{
-		$values['location'] = str_replace('/', '___', $values['location']);
-		$values['location'] = url_title($values['location']);
-		$values['location'] = str_replace('___', '/', $values['location']);
+		if (!empty($values['location']))
+		{
+			$values['location'] = str_replace('/', '___', $values['location']);
+			$values['location'] = url_title($values['location']);
+			$values['location'] = str_replace('___', '/', $values['location']);
+		}
 		return $values;
 	}
 	
