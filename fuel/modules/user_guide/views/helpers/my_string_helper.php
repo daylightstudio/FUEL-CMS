@@ -71,9 +71,20 @@ echo safe_htmlentities($str, ENT_NOQUOTES, 'UTF-8', FALSE);
 </pre>
 
 <h2>php_to_template_syntax(<var>str</var>)</h2>
-<p>Convert PHP syntax to Dwoo templating syntax. Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</p>
+<p>Convert PHP syntax to <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>. Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</p>
 
 <pre class="brush: php">
 $str = '&lt;?=$my_var?&gt;';
 echo php_to_template_syntax($str);//  {$my_var}
 </pre>
+
+<h2>parse_template_syntax(<var>str</var>, <var>vars</var>)</h2>
+<p>Parses a strings <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>.</p>
+
+<pre class="brush: php">
+$vars = array('name' => 'Luke');
+$str = '{name}, I am your Father.';
+echo parse_template_syntax($str, $vars);//  Luke, I am your Father.
+</pre>
+
+
