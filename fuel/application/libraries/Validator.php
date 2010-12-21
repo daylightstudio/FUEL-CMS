@@ -228,6 +228,37 @@ Class Validator {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Catches multiple errors
+	 *
+	 * @access public
+	 * @param array of error messages
+	 * @return string key of variable input
+	 */
+	public function catch_errors($errors)
+	{
+	    if (is_array($errors))
+		{
+			foreach($errors as $key => $val)
+			{
+				if (is_int($key))
+				{
+					$this->catch_error($val);
+				}
+				else
+				{
+					$this->catch_error($val, $key);
+				}
+			}
+		}
+		else
+		{
+			return $this->catch_error($errors);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Retrieve errors
 	 *
 	 * @access public
