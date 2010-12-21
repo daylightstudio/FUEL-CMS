@@ -20,7 +20,7 @@ class Fuel_base_controller extends Controller {
 		$this->load->helper('string');
 		$this->load->helper('text');
 
-		$this->config->load('fuel', TRUE);
+		$this->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
 		$this->load->module_language(FUEL_FOLDER, 'fuel', $this->config->item('language'));
 		$this->config->load('asset');
 		
