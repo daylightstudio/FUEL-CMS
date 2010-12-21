@@ -4,7 +4,20 @@
 FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP 5 based templating system.
 </p>
 
+<h2>MY_Parser</h2>
+<p>FUEL overwrites the default CodeIgniter Parser library with the <a href="?=user_guide_url(libraries/my_parser')?>">MY_Parser</a> 
+library to implement the expanded Dwoo templating syntax.</p>
+
+
+<h2>String Helper Functions</h2>
+<p>FUEL comes with the following <a href="<?=user_guide_url('helpers/my_string_helper')?>">string helper functions</a> to help with parsing and converting from the Dwoo templating syntax:</p>
+<ul>
+	<li>php_to_template_syntax - Convert PHP syntax to <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>. Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</li>
+	<li>parse_template_syntax - Parses a strings <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>.</li>
+</ul>
+
 <h2>Non-Namespaced Functions</h2>
+<p>The following are non-namespaced functions that can be used in your application and will be translated by the templating system.</p>
 <ul>
 	<li>{site_url('/my/path/')}</li>
 	<li>{assets_path('images/my_asset.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">assets_path()</a> function</li>
@@ -19,6 +32,8 @@ FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP
 </ul>
 
 <h2>Namespaced Functions</h2>
+<p>The following are namespaced functions that can be used in your application and will be translated by the templating system.</p>
+
 <ul>
 	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">uri_segment(n)</a> function.</li>
 	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_var()</a> function.</li>
