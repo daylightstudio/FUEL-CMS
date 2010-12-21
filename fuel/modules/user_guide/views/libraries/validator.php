@@ -88,6 +88,16 @@ if ($A != $B)
 }
 </pre>
 
+<h2>$this->validator->catch_errors(<var>errors</var>)</h2>
+<p>Catches multiple errors  where <dfn>errors</dfn> is an array of error messages.</p>
+
+<pre class="brush: php">
+if (!$this->my_model->save())
+{
+	$errors = $this->my_model->get_errors();
+	$this->validator->catch_errors($errors);
+}
+</pre>
 
 <h2>$this->validator->get_errors()</h2>
 <p>Returns an array of error messages if they exist.</p>

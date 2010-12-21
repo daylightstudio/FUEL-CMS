@@ -654,6 +654,10 @@ function display_errors_js($ERRORS = NULL)
 		$msg = "msg = \"ERROR\\n\";";
 		foreach($ERRORS as $key => $value)
 		{
+			if (is_array($value))
+			{
+				$value = implode("|", $value);
+			}
 			$grouped_msgs = explode('|', $value);
 			if(is_array($grouped_msgs))
 			{
@@ -722,6 +726,10 @@ function display_errors($class = 'error', $ERRORS = NULL)
 		$str .= "<ul class=\"".$class."\">\n";
 		foreach($ERRORS as $key => $value)
 		{
+			if (is_array($value))
+			{
+				$value = implode("\n", $value);
+			}
 			$grouped_msgs = explode("\n", $value);
 			if (is_array($grouped_msgs))
 			{
