@@ -11,6 +11,11 @@ It also provides several convenient methods for embedding <kbd>css</kbd>, <kbd>j
 <p>Like most other classes in CodeIgniter, the Asset class is initialized in your controller using the <dfn>$this->load->library</dfn> function:</p>
 
 <pre class="brush: php">$this->load->library('asset');</pre>
+
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('asset', array('assets_path' => 'external_files', 'assets_last_updated' => '01/01/2010 00:00:00'));</pre>
+
 <p>Once loaded, the Asset object will be available using: <dfn>$this->asset</dfn>. 
 Additionally, you can use the <a href="<?=user_guide_url('helpers/asset')?>">asset helper</a>
 which provides a shortcut for many of the methods of the asset class.

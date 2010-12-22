@@ -8,6 +8,10 @@ This class provides methods to set the sorting, headers and data of the table. T
 
 <pre class="brush: php">$this->load->library('data_table');</pre>
 
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('data_table', array('id'=>'data_table', 'header_on_class' => 'active'));</pre>
+
 <h2>Configuring Data Table Information</h2>
 <p>The Asset class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
 configurable parameters:

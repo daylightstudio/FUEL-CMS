@@ -4,6 +4,13 @@
 <h2>Initializing the Class</h2>
 <p>Like most other classes in CodeIgniter, the Validator class is initialized in your controller using the <dfn>$this->load->library</dfn> function:</p>
 
+<pre class="brush: php">$this->load->library('validator');</pre>
+
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('validator', array('load_helpers' => FALSE));</pre>
+
+
 <p class="important">There is a <a href="<?=user_guide_url('helpers/validator_helper')?>">validator_helper</a> that will automatically get loaded with this class.
 This helper contains common validation functions that can be used with the Validator Class.</p>
 
