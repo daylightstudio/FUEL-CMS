@@ -4,6 +4,12 @@
 <h2>Initializing the Class</h2>
 <p>Like most other classes in CodeIgniter, the Menu class is initialized in your controller using the <dfn>$this->load->library</dfn> function:</p>
 
+<pre class="brush: php">$this->load->library('menu');</pre>
+
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('menu', array('active_class'=>'on', 'render_type' => 'collapsible'));</pre>
+
 <h2>Configuring Validator Information</h2>
 <p>There are several public properties you can use to configure the Menu Class:</p>
 

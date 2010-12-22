@@ -4,6 +4,12 @@
 <h2>Initializing the Class</h2>
 <p>Like most other classes in CodeIgniter, the Form Builder class is initialized in your controller using the <dfn>$this->load->library</dfn> function:</p>
 
+<pre class="brush: php">$this->load->library('form_builder');</pre>
+
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('form_builder', array('id'=>'contact_form','submit_value' => 'Send Message', 'textarea_rows' => '5', 'textarea_cols' => '28'));</pre>
+
 <h2>Configuring Form Builder Information</h2>
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
 	<tbody>

@@ -4,6 +4,13 @@
 <h2>Initializing the Class</h2>
 <p>Like most other classes in CodeIgniter, the Form class is initialized in your controller using the <dfn>$this->load->library</dfn> function:</p>
 
+<pre class="brush: php">$this->load->library('form');</pre>
+
+<p>Alternatively, you can pass initialization parameters as the second parameter:</p>
+
+<pre class="brush: php">$this->load->library('form', array('attrs' => 'method="get"', 'error_highlight_cssclass' => 'error'));</pre>
+
+
 <h2>Why a Form Class?</h2>
 <p>CodeIgniter has it's own <a href=http://codeigniter.com/user_guide/helpers/form_helper.html" target="_blank">Form helper</a>. There are a couple reasons why FUEL uses the <dfn>Form</dfn> class instead of the <dfn>CI Form helper</dfn>:</p>
 <ol>
