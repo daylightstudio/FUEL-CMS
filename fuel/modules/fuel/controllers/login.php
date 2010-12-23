@@ -26,7 +26,15 @@ class Login extends CI_Controller {
 
 		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 		$this->load->module_model(FUEL_FOLDER, 'users_model');
-		$this->asset->assets_module = 'fuel';
+
+		// set configuration paths for assets in case they are differernt from front end
+		$this->asset->assets_module ='fuel';
+		$this->asset->assets_folders = array(
+				'images' => 'images/',
+				'css' => 'css/',
+				'js' => 'js/',
+			);
+
 	}
 	
 	function index()
