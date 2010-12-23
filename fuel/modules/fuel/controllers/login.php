@@ -26,7 +26,14 @@ class Login extends Controller {
 
 		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 		$this->load->module_model(FUEL_FOLDER, 'users_model');
-		$this->asset->assets_module = 'fuel';
+
+		// set configuration paths. site paths are used for the preview since
+		$this->asset->assets_module ='fuel';
+		$this->asset->assets_folders = array(
+				'images' => 'images/',
+				'css' => 'css/',
+				'js' => 'js/',
+			);
 	}
 	
 	function index()
