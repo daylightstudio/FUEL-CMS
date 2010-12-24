@@ -22,7 +22,7 @@ which provides a shortcut for many of the methods of the asset class.
 </p>
 
 <h2>Configuring Asset Information</h2>
-<p>The Asset class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
+<p>The <dfn>Asset</dfn> class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
 configurable parameters:
 </p>
 
@@ -56,7 +56,7 @@ configurable parameters:
 			<td><strong>assets_module</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>The full server path to the main assets folder</td>
+			<td>The module assets folder to use</td>
 		</tr>
 		<tr>
 			<td><strong>assets_folders</strong></td>
