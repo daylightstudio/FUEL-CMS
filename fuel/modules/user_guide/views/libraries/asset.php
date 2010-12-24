@@ -56,7 +56,7 @@ configurable parameters:
 			<td><strong>assets_module</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>The full server path to the main assets folder</td>
+			<td>The module assets folder to use</td>
 		</tr>
 		<tr>
 			<td><strong>assets_folders</strong></td>

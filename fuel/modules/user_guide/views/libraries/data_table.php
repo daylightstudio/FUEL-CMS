@@ -13,9 +13,7 @@ This class provides methods to set the sorting, headers and data of the table. T
 <pre class="brush: php">$this->load->library('data_table', array('id'=>'data_table', 'header_on_class' => 'active'));</pre>
 
 <h2>Configuring Data Table Information</h2>
-<p>The Asset class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
-configurable parameters:
-</p>
+<p>The <dfn>Data_table</dfn> class has the following configuration parameters:</p>
 
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
 	<tbody>
@@ -277,12 +275,12 @@ $this->data_table->add_action($field, $action);
 
 
 <h2>$this->data_table->add_field_formatter(<var>'field'</var>, <var>'func'</var>)</h2>
-<p>Adds a formatter to a field. The formatter should be a function that accepts an array of field values. The functionExample:</p>
+<p>Adds a formatter to a field. The formatter should be a function that accepts an array of field values. Example:</p>
 
 <pre class="brush: php">
 function is_darkside($fields)
 {
-	return ($fields['darkside']) 'yes' : 'no';
+	return ($fields['darkside']) ? 'yes' : 'no';
 }
 
 $this->data_table->add_field_formatter('darkside', 'is_darkside'); // will echo out either yes or no for the field value
@@ -298,7 +296,7 @@ $this->data_table->set_table_attributes($attrs);
 <p class="important"><kbd>$attrs</kbd> must be a key value array.</p>
 
 
-<h2>$this->data_table->set_table_attributes(<var>attrs</var>)</h2>
+<h2>$this->data_table->set_body_attributes(<var>attrs</var>)</h2>
 <p>Sets the tbody attributes. Example:</p>
 
 <pre class="brush: php">
