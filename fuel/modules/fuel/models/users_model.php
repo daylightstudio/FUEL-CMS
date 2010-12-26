@@ -10,7 +10,6 @@ class Users_model extends Base_module_model {
 	function __construct()
 	{
 		parent::__construct('users');
-		$this->add_validation('email', 'valid_email', 'Please enter in a valid email address');
 	}
 	
 	function valid_user($user, $pwd)
@@ -118,8 +117,8 @@ class Users_model extends Base_module_model {
 		{
 			$pwd_field['type'] = 'password';
 			$pwd_field['size'] = 20;
+			$pwd_field['order'] = 5;
 			$fields['password']= $pwd_field;
-			$fields['password']['order'] = 5;
 		}
 		$fields['user_name']['order'] = 1;
 		$fields['email']['order'] = 2;
@@ -164,6 +163,27 @@ class Users_model extends Base_module_model {
 		$fields = array_merge($fields, $perm_fields);
 		unset($fields['reset_key']);
 		return $fields;
+	}
+	
+	function on_before_validate($values)
+	{
+		$this->add_validation('email', 'valid_email', lang('error_invalid_email'));
+		
+		// for new 
+		if (empty($values['id']))
+		{
+			$this->required[] = 'password';
+			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', 'email'));
+			$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['password'], $this->normalized_save_data['confirm_password']));
+		}
+		
+		// for editing
+		else
+		{
+			$this->add_validation('email', array(&$this, 'is_editable_email'), lang('error_val_empty_or_already_exists', 'email'), $values['id']);
+			$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
+		}
+		return $values;
 	}
 	
 	function on_before_clean($values)
@@ -240,7 +260,6 @@ class Users_model extends Base_module_model {
 		if (empty($data) || (!empty($data) AND $data['id'] == $id)) return TRUE;
 		return FALSE;
 	}
-	
 }
 
 class User_model extends Base_module_record {

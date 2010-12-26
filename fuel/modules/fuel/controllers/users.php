@@ -12,16 +12,11 @@ class Users extends Module {
 	
 	function create()
 	{
-		$this->model->required[] = 'password';
-		$this->model->add_validation('email', array(&$this->model, 'is_new_email'), 'The email is empty or already exists');
 		parent::create();
 	}
 
 	function edit($id)
 	{
-		if (!empty($_POST['new_password']) && isset($_POST['confirm_password'])) {
-			$this->model->get_validation()->add_rule('password', 'is_equal_to', 'Your password confirmation needs to match', array($_POST['new_password'], $_POST['confirm_password']));
-		}
 		$user = $this->model->find_by_key($id, 'array');
 		if (!empty($user))
 		{
@@ -30,7 +25,6 @@ class Users extends Module {
 				show_404();
 			}
 		}
-		$this->model->add_validation('email', array(&$this->model, 'is_editable_email'), 'The email is empty or already exists', $id);
 		parent::edit($id);
 	}
 
