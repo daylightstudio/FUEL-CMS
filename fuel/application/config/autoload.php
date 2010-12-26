@@ -82,8 +82,7 @@ $autoload['config'] = array('MY_config');
 |
 */
 
-//$autoload['language'] = array('fuel' => 'model');
-$autoload['language'] = array();
+$autoload['language'] = array('fuel/model');
 
 
 /*
