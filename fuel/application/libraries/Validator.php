@@ -275,6 +275,7 @@ Class Validator {
 	 * Retrieves a single error
 	 *
 	 * @access public
+	 * @param mixed key to error message
 	 * @return string error message
 	 */
 	public function get_error($key)
@@ -297,7 +298,7 @@ Class Validator {
 	 * @access public
 	 * @return string error message
 	 */
-	public function get_last_error($key)
+	public function get_last_error()
 	{
 		if (!empty($this->_errors))
 		{
@@ -328,10 +329,13 @@ Class Validator {
 	 * @access public
 	 * @return void
 	 */
-	public function reset()
+	public function reset($remove_fields = TRUE)
 	{
-		$this->_fields = array();
 		$this->_errors = array();
+		if ($remove_fields)
+		{
+			$this->_fields = array();
+		}
 	}
 }
 

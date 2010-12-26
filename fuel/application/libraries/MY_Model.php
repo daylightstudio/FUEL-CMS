@@ -911,6 +911,9 @@ abstract class MY_Model extends Model {
 			$fields = array();
 			$values = $this->normalize_save_values($record);
 			
+			// reset validator here so that all validation set with hooks will not be lost
+			$this->validator->reset();
+			
 			// run any prevalidation formatting... things you want to do to manipulate values before being validated
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
@@ -1255,7 +1258,6 @@ abstract class MY_Model extends Model {
 	 */	
 	public function validate($record)
 	{
-		$this->validator->reset();
 		$values = array();
 		if (is_array($record))
 		{

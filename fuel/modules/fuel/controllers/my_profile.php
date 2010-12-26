@@ -17,12 +17,6 @@ class My_profile extends Fuel_base_controller {
 		
 		if (!empty($_POST))
 		{
-			if (!empty($_POST['new_password']) && isset($_POST['confirm_password'])) {
-				$this->users_model->get_validation()->add_rule('password', 'is_equal_to', 'Your password confirmation needs to match', array($_POST['new_password'], $_POST['confirm_password']));
-			}
-			$this->users_model->add_validation('email', array(&$this->users_model, 'is_editable_email'), 'The email is empty or already exists', $id);
-
-
 			if ($id)
 			{
 				if ($this->users_model->save())

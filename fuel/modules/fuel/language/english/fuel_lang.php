@@ -74,6 +74,7 @@ $lang['error_max_attempts'] = 'Sorry, but your login information was incorrect a
 $lang['error_empty_user_pwd'] = 'Please enter in a user name and password.';
 $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
 $lang['error_invalid_email'] = 'The email address provided was not in the system.';
+$lang['error_invalid_password_match'] = 'The email passwords don\'t match.';
 $lang['error_empty_email'] = 'Please enter in an email address.';
 $lang['error_no_permissions'] = 'You do not have permissions to complete this action.';
 $lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it contains one or more of the following reserved words: %1s';
@@ -90,7 +91,7 @@ $lang['error_sending_email'] = 'There was an error sending an email to %1s.';
 $lang['error_nav_upload'] = 'There was an error uploading the navigation file.';
 $lang['error_create_nav_group'] = 'Please create a Navigation Group';
 $lang['error_requires_string_value'] = 'The name field should be a string value';
-$lang['error_missing_params'] = 'You are missing paramters to view this page';
+$lang['error_missing_params'] = 'You are missing parameters to view this page';
 
 
 /*
