@@ -337,7 +337,7 @@ function get_spaceship()
 </pre>
 
 <h3>Manipulate and Save at the Record Level</h3>
-<p>With custom record objects, you can update attribtes and save the record object like so:</p>
+<p>With custom record objects, you can update attributes and save the record object like so:</p>
 <pre class="brush: php">
 $foo = $this->examples_model->find_by_key(1);
 $foo->bar = 'This is a test';

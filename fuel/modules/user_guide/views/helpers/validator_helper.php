@@ -228,8 +228,8 @@ if(valid_date($date, $format, $delimiter))<br />
 <h2>valid_time(<var>'date'</var>)</h2>
 <p>A boolean check to ensure a time string conforms to a past test value.</p>
 <code>
-$date = '2010-03-27';<br /><br />
-if(valid_date($date))<br />
+$date = '2010-03-27 8:00:00';<br /><br />
+if(valid_time($date))<br />
 {<br />
 &nbsp;&nbsp;&nbsp;&nbsp;...code goes here<br />
 }

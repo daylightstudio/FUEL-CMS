@@ -442,7 +442,7 @@ function valid_date($date, $format = "ymd", $delimiter = "-")
 // --------------------------------------------------------------------
 
 /**
- * Test date for proper format
+ * Test time for proper format
  *
  * @access	public
  * @param	string	date as string value
