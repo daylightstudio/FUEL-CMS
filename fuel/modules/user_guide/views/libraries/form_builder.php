@@ -259,6 +259,12 @@
 			<td>table, divs</td>
 			<td>The HTML structure to render the form</td>
 		</tr>
+		<tr>
+			<td><strong>row_id_prefix</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>The id prefix to be used for assigning ids to each row of the form</td>
+		</tr>
 	</tbody>
 </table>
 
