@@ -680,7 +680,8 @@ Class Form_builder {
 				return '';
 				break;
 			case 'custom':
-				return $this->create_custom($params);
+				$func = (isset($params['func'])) ? $params['func'] : create_function('', '');
+				return $this->create_custom($func, $params);
 				break;
 			default : 
 				return $this->create_text($params);
@@ -1227,7 +1228,7 @@ Class Form_builder {
 	 */
 	public function create_custom($func, $params)
 	{
-		return call_user_func_array($func, $params);
+		return call_user_func($func, $params);
 	}
 	
 	// --------------------------------------------------------------------
