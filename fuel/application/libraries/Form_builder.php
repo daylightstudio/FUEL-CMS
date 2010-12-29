@@ -1223,6 +1223,7 @@ Class Form_builder {
 	 * Calls a function and passes it the field params
 	 * 
 	 * @access	public
+	 * @param	mixed function name
 	 * @param	array fields parameters
 	 * @return	string
 	 */
