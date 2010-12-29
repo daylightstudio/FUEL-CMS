@@ -17,6 +17,8 @@ class Navigation extends Module {
 	
 	function upload()
 	{
+		$this->load->helper('file');
+		$this->load->helper('security');
 		$this->load->library('form_builder');
 		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
 		$this->load->module_model(FUEL_FOLDER, 'navigation_model');
@@ -31,7 +33,21 @@ class Navigation extends Module {
 			{
 				$error = FALSE;
 				$file_info = $_FILES['file'];
-				@include($file_info['tmp_name']);
+				
+				// read in the file so we can filter it
+				$file = read_file($file_info['tmp_name']);
+				
+				// strip any php tags
+				$file = str_replace('<?php', '', $file);
+				
+				// run xss_clean on it 
+				$file = $this->input->xss_clean($file);
+				
+				// now evaluate the string to get the nav array
+				@eval($file);
+				
+				//@include($file_info['tmp_name']);
+				
 				if (!empty($nav))
 				{
 					$nav = $this->menu->normalize_items($nav);
@@ -96,6 +112,10 @@ class Navigation extends Module {
 						$cnt++;
 					}
 				}
+				else
+				{
+					$error = TRUE;
+				}
 				
 				if ($error)
 				{
@@ -123,7 +143,7 @@ class Navigation extends Module {
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
 		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'label' => 'Navigation Group', 'class' => 'add_edit navigation_group');
-		$fields['file'] = array('type' => 'file');
+		$fields['file'] = array('type' => 'file', 'accept' => '');
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
