@@ -41,7 +41,7 @@ class Navigation extends Module {
 				$file = str_replace('<?php', '', $file);
 				
 				// run xss_clean on it 
-				$file = $this->input->xss_clean($file);
+				$file = xss_clean($file);
 				
 				// now evaluate the string to get the nav array
 				@eval($file);
