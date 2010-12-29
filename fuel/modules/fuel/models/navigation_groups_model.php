@@ -23,6 +23,12 @@ class Navigation_groups_model extends Base_module_model {
 	{
 		return (!is_numeric($name));
 	}
+
+	 // cleanup navigation items if group is deleted
+	 function on_after_delete($where)
+	 {
+		$this->delete_related(array(FUEL_FOLDER => 'navigation_model'), 'group_id', $where);
+	 }
 }
 
 class Navigation_group_model extends Base_module_record {
