@@ -449,6 +449,13 @@ class Menu {
 					{
 						$str .= "<".$this->item_tag;
 						$str .= $this->_get_li_classes($key, $val['id'], $level, $i, ($i == (count($menu) -1)));
+						
+						// set id
+						if (!empty($this->item_id_prefix))
+						{
+							$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
+						}
+						
 						$str .= '>';
 					}
 					$str .= anchor($val['location'], $label, $val['attributes']);
