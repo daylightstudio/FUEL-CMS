@@ -33,7 +33,7 @@
 			<div id="topnav">
 				<ul>
 					<li><a href="http://www.thedaylightstudio.com">About Daylight</a></li>
-					<li class="last"><?php echo safe_mailto('info@thedaylightstudio.com', 'Contact');?></li>
+					<li class="last"><?php echo mailto('info@thedaylightstudio.com', 'Contact');?></li>
 				</ul>
 			</div>
 			<a href="http://www.thedaylightstudio.com" id="daylight_logo"></a>
