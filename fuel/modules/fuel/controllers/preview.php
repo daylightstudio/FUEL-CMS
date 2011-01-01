@@ -13,6 +13,9 @@ class Preview extends Fuel_base_controller {
 		$this->load->helper('string');
 		$this->load->library('parser');
 		
+		// don't want to fuelify'
+		define('FUELIFY', FALSE);
+		
 		// check for posted data
 		$data = $this->input->post('data', TRUE);
 		if (empty($data)) show_error(lang('error_cannot_preview'));
@@ -57,9 +60,6 @@ class Preview extends Fuel_base_controller {
 		}
 		// parse for template syntac
 		$output = $this->parser->parse_string($view, $vars, TRUE);
-		
-		// remove fuelify markers if needed
-		$output = $this->fuel_page->render_all_markers($output);
 		
 		// render the preview
 		$this->output->set_output($output);

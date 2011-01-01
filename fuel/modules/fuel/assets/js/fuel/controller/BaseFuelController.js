@@ -44,6 +44,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.tableLoaded = false;
 		this.leftMenuInited = false;
 		this.formController = null;
+		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
@@ -327,7 +328,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					q += '&preview=' + previewPath[previewPath.length - 1];
 				}
 			}
-			myMarkItUpSettings.previewParserPath = myMarkItUpSettings.previewParserPath + '?' + q;
+			myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
 			$markitupField.markItUp(myMarkItUpSettings);
 		}
 		
