@@ -377,6 +377,7 @@ class Validate extends Fuel_base_controller {
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 				curl_setopt($ch, CURLOPT_USERAGENT, $this->agent->agent_string());
+				curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE); // will cause strange behavior if not set to TRUE
 				
 				$ret = curl_exec($ch);
 				$err_num = curl_errno($ch);
