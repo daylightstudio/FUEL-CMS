@@ -143,6 +143,7 @@ class Fuel_pagevars {
 		return $vars;
 	}
 
+	/* SAVED FOR IN CASE WE WANT TO RESURRECT
 	private function _preview_module_vars($location)
 	{
 		if (is_null($location))
@@ -210,7 +211,7 @@ class Fuel_pagevars {
 
 			}
 		}
-	}
+	}*/
 
 }
 /* End of file Fuel_pagevars.php */
