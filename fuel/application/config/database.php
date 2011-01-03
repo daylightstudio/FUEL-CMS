@@ -57,6 +57,11 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+// used for testing purposes
+if (defined('TESTING'))
+{
+	@include(TESTER_PATH.'config/tester_database'.EXT);
+}
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
