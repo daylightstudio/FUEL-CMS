@@ -142,7 +142,7 @@ class Pages_model extends Base_module_model {
 		
 		// get valid view files that may show up
 		$views_path = APPPATH.'views/';
-		$view_files = directory_to_array($views_path, true, '/^_(.*)/', FALSE, TRUE);
+		$view_files = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
 		
 		// module pages
 		if ($include_modules)
