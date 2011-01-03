@@ -94,7 +94,7 @@ on the key value specified in the config (e.g. example):</p>
 		</tr>
 		<tr>
 			<td><strong>js</strong></td>
-			<td>td</td>
+			<td>None</td>
 			<td>None</td>
 			<td>additional javascript files to include for the module</td>
 		</tr>
