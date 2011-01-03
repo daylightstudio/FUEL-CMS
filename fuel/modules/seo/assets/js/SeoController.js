@@ -22,10 +22,6 @@ var SeoController = {
 			
 		};
 		$('#form').ajaxForm(options);
-		$('#submit_keywords').click(function(){
-			$('#form').submit();
-			return false;
-		})
 	},
 	
 	page_analysis : function(initObj){
