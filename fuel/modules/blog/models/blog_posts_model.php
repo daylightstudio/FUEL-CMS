@@ -19,9 +19,13 @@ class Blog_posts_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'date_added', $order = 'desc')
 	{
-		$this->db->select($this->_tables['blog_posts'].'.id, title, '.$this->_tables['blog_posts'].'.permalink, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, DATE_FORMAT('.$this->_tables['blog_posts'].'.date_added,"%m/%d/%Y") as date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
+		$this->db->select($this->_tables['blog_posts'].'.id, title, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, '.$this->_tables['blog_posts'].'.date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
 		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['blog_posts'].'.author_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
+		foreach($data as $key => $val)
+		{
+			$data[$key]['date_added'] = english_date($data[$key]['date_added'], TRUE);
+		}
 		return $data;
 	}
 	
@@ -328,13 +332,13 @@ class Blog_post_model extends Base_module_record {
 	function get_allow_comments()
 	{
 		$CI =& get_instance();
-		if (is_null($this->_fields['allow_comments']))
+		if (is_null($this->props['allow_comments']))
 		{
 			return is_true_val($this->_CI->fuel_blog->settings('allow_comments'));
 		}
 		else
 		{
-			return is_true_val($this->_fields['allow_comments']);
+			return is_true_val($this->props['allow_comments']);
 		}
 	}
 	
