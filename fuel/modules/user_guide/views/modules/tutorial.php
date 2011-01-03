@@ -166,7 +166,7 @@ class Articles_model extends Base_module_model {
     function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
     {
         $this->db->join('authors', 'authors.id = articles.author_id', 'left');
-        $this->db->select('articles.id, authors.name AS author, title, SUBSTRING(content, 1, 50) AS content, DATE_FORMAT(date_added,"%m/%d/%Y") as date_added, articles.published', FALSE);
+        $this->db->select('articles.id, authors.name AS author, title, SUBSTRING(content, 1, 50) AS content, date_added, articles.published', FALSE);
         $data = parent::list_items($limit, $offset, $col, $order);
         return $data;
     }
@@ -207,7 +207,7 @@ class Articles_model extends Base_module_model {
     function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
     {
         $this->db->join('authors', 'authors.id = articles.author_id', 'left');
-        $this->db->select('articles.id, authors.name AS author, title, SUBSTRING(content, 1, 50) AS content, DATE_FORMAT(date_added,"%m/%d/%Y") as date_added, articles.published', FALSE);
+        $this->db->select('articles.id, authors.name AS author, title, SUBSTRING(content, 1, 50) AS content, date_added, articles.published', FALSE);
         $data = parent::list_items($limit, $offset, $col, $order);
         return $data;
     }
