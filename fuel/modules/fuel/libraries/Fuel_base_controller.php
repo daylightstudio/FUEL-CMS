@@ -60,8 +60,8 @@ class Fuel_base_controller extends Controller {
 		$this->load->vars($load_vars);
 
 		
-		// set configuration paths. site paths are used for the preview since
-		$this->asset->assets_module ='fuel';
+		// set asset paths
+		//$this->asset->assets_module = FUEL_FOLDER;
 		$this->asset->assets_folders = array(
 				'images' => 'images/',
 				'css' => 'css/',
