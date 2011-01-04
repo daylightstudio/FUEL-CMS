@@ -135,7 +135,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Fields to filter the values in the list view</td>
 		</tr>
 		<tr>
-			<td><strong>filters</strong></td>
+			<td><strong>archivable</strong></td>
 			<td>TRUE</td>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>Saves to the archive table for later retrieval if you need to revert back</td>
