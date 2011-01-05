@@ -9,4 +9,5 @@ In fact, FUEL is no more then an advanced module itself.</p>
 	<li><a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a></li>
 	<li><a href="<?=user_guide_url('modules/tutorial')?>">Creating Simple Modules Tutorial</a></li>
 	<li><a href="<?=user_guide_url('modules/advanced')?>">Advanced Modules</a></li>
+	<li><a href="<?=user_guide_url('modules/forms')?>">Module Forms</a></li>
 </ul>
