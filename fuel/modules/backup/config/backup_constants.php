@@ -1,7 +1,4 @@
 <?php 
-define('TOOLS_VERSION', '0.9');
-define('TOOLS_FOLDER', 'tools');
-define('TOOLS_PATH', APPPATH.MODULES_FOLDER.'/'.TOOLS_FOLDER.'/');
-
-/* End of file fuel_contants.php */
-/* Location: ./codeigniter/application/modules/blog/config/blog_contants.php */
+define('BACKUP_VERSION', '0.9');
+define('BACKUP_FOLDER', 'backup');
+define('BACKUP_PATH', APPPATH.MODULES_FOLDER.'/'.BACKUP_FOLDER.'/');

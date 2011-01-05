@@ -35,6 +35,3 @@ foreach($config['modules_allowed'] as $module)
 		require_once($constants_path);
 	}
 }
-
-/* End of file fuel_constants.php */
-/* Location: ./application/modules/fuel/config/fuel_constants.php */
