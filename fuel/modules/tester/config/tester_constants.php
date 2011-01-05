@@ -28,6 +28,3 @@ if (!empty($_COOKIE['tester_dsn']))
 		}
 	}
 }
-
-/* End of file tester_contants.php */
-/* Location: ./codeigniter/application/modules/tester/config/tester_contants.php */
