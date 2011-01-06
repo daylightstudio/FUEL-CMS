@@ -33,7 +33,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar_notop li { border-top: none !important; }
 
 /* icos */
-.__fuel__ .ico { display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 27px; background-image: url(../images/ico_cog.png); width: auto !important; height: auto !important; }
+.__fuel__ .ico { display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 27px; background-image: url(../images/ico_cog.png); width: auto !important; height: auto !important; background-color: transparent !important; }
 .__fuel__ .ico_fuel { background-image: url(../images/ico_fuel.png); }
 .__fuel__ .ico_publish { background-image: url(../images/ico_page_green.png); }
 .__fuel__ .ico_unpublish { background-image: url(../images/ico_page_red.png); }
