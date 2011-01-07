@@ -85,7 +85,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 		</tr>
 		<tr>
 			<td><strong>xtra_css</strong></td>
-			<td>/</td>
+			<td>None</td>
 			<td>None</td>
 			<td>External css file for additional styles possibly needed for 3rd party integration and customizing. 
 			must exist in the assets/css file and not the fuel/assets/css folder.</td>
