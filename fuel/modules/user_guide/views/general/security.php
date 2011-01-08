@@ -5,7 +5,7 @@ CI application.</p>
 <h2>FUEL Configuration Security Settings</h2>
 <p>The <a href="<?=user_guide_url('general/configuration')?>">FUEL config</a> provides several security settings to:</p>
 <ul>
-	<li><strong>restrict_to_remote_ip</strong> - restrict fuel to only certain ip addresses (array only value so can include multiple).</li>
+	<li><strong>restrict_to_remote_ip</strong> - restrict FUEL to only certain IP addresses (array only value so can include multiple).</li>
 	<li><strong>default_pwd</strong> - default password to alert against. The default password is <dfn>admin</dfn>.</li>
 	<li><strong>admin_enabled</strong> - allow use of the CMS admin. The default is <dfn>FALSE</dfn>.</li>
 	<li><strong>num_logins_before_lock</strong> - the number of times someone can attempt to login before they are locked out for 1 minute. The default is 3.</li>
