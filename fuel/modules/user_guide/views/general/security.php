@@ -8,9 +8,9 @@ CI application.</p>
 	<li><strong>restrict_to_remote_ip</strong> - restrict FUEL to only certain IP addresses (array only value so can include multiple).</li>
 	<li><strong>default_pwd</strong> - default password to alert against. The default password is <dfn>admin</dfn>.</li>
 	<li><strong>admin_enabled</strong> - allow use of the CMS admin. The default is <dfn>FALSE</dfn>.</li>
-	<li><strong>num_logins_before_lock</strong> - the number of times someone can attempt to login before they are locked out for 1 minute. The default is 3.</li>
+	<li><strong>num_logins_before_lock</strong> - the number of times someone can attempt to login before they are locked out for 1 minute (or whatever is set for the <dfn>seconds_to_unlock</dfn>). The default is <dfn>3</dfn>.</li>
 	<li><strong>seconds_to_unlock</strong> - the number of seconds to lock out a person upon reaching the max number failed login attempts. The default is <dfn>60</dfn>.</li>
-	<li><strong>dev_password</strong> - if you set a dev password, the site will require a password to view.</li>
+	<li><strong>dev_password</strong> - if you set a dev password, the site will require a password to view. Testing your site may not work if a dev password is set. Default is no password.</li>
 </ul>
 
 <h2>Module Specific Security Settings</h2>
