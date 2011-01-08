@@ -40,6 +40,7 @@
 
 				<h3>Additional Resources</h3>
 				<ul>
+					<li><a href="http://www.getfuelcms.com/blog">FUEL CMS's Blog</a></li>
 					<li><a href="http://www.thedaylightstudio.com/the-whiteboard/categories/fuel-cms">Daylight's Blog</a></li>
 					<li><a href="http://codeigniter.com">CodeIgniter Website</a></li>
 				</ul>
