@@ -201,7 +201,7 @@ function fuel_model($model, $params = array())
 	 // to get around escapinng issues we need to add spaces after =
 	if (is_string($where))
 	{
-		$where = preg_replace('#([^>|<])=#', '$1 = ', $where);
+		$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
 	}
 	
 	
