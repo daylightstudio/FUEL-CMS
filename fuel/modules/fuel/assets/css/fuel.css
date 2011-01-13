@@ -242,7 +242,7 @@ div#login_footer { position: absolute; width: 558px; bottom: -35px; }
 a#forgotten_pwd { text-align: center; display: block; margin-top: 10px; }
 
 /* assets & modal */
-div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; }
+div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; z-index: 300001; }
 div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }
 div#asset_modal table.asset_select { width: 100%; }
 div#asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }
