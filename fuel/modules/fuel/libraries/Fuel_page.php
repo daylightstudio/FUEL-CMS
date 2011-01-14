@@ -271,9 +271,25 @@ class Fuel_page {
 		// load helpers
 		if (!empty($vars['helpers']))
 		{
-			$this->_CI->load->helpers($vars['helpers']);
-		}
-		
+			if (is_array($vars['helpers']))
+			{
+				foreach($vars['helpers'] as $key => $val)
+				{
+					if (!is_numeric($key))
+					{
+						$this->_CI->load->module_helper($key, $val);
+					}
+					else
+					{
+						$this->_CI->load->helper($val);
+					}
+				}
+			}
+			else
+			{
+				$this->_CI->load->helpers($vars['helpers']);
+			}
+		}		
 		// load libraries
 		if (!empty($vars['libraries']))
 		{
