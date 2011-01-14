@@ -29,6 +29,7 @@ class Preview extends Fuel_base_controller {
 		$vars['body'] = $data;
 		$vars['module'] = '';
 		$vars['field'] = '';
+		$vars['CI'] =& get_instance();
 		
 		/*
 		get query string parameters of module and field name if they exist so we can set those as variables 

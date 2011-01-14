@@ -319,18 +319,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// set up markitup
 		$markitupField = $('textarea:not(textarea[class=no_editor])', context);
-		if ($markitupField.size()){
-			var q = 'module=' + escape(this.module) + '&field=' + escape($markitupField.attr('name'));
-			var markitUpClass = $markitupField.attr('className');
-			if (markitUpClass.length){
-				var previewPath = markitUpClass.split(' ');
-				if (previewPath.length && previewPath[0] != 'no_editor'){
-					q += '&preview=' + previewPath[previewPath.length - 1];
+		$markitupField.each(function(){
+			if ($markitupField.size()){
+				var q = 'module=' + escape(_this.module) + '&field=' + escape($(this).attr('name'));
+				var markitUpClass = $(this).attr('className');
+				if (markitUpClass.length){
+					var previewPath = markitUpClass.split(' ');
+					if (previewPath.length && previewPath[0] != 'no_editor'){
+						q += '&preview=' + previewPath[previewPath.length - 1];
+					}
 				}
+				myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
+				$(this).markItUp(myMarkItUpSettings);
 			}
-			myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
-			$markitupField.markItUp(myMarkItUpSettings);
-		}
+		})
 		
 		// set up supercomboselects
 		$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
