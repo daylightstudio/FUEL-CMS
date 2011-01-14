@@ -765,6 +765,9 @@ class Menu {
 				{
 					$css_classes[] = $this->active_class;
 				}
+		
+		if (!empty($this->styles[$level][$i])) $css_classes[] = $this->styles[$level][$i];
+		
 		if (!empty($css_classes))
 		{
 			$str .= ' class="';
