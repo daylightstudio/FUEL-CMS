@@ -8,7 +8,7 @@
 <ul>
 	<?php foreach($archives as $post) : ?>
 	<li><?=fuel_edit($post->id, 'Edit Post: '.$post->title, 'blog/posts')?>
-		<a href="<?=$post->url()?>"><?=$post->title?></a> 
+		<a href="<?=$post->url?>"><?=$post->title?></a> 
 		<em><?=$post->author_name?></em>
 	</li>
 	<?php endforeach; ?>
