@@ -52,7 +52,8 @@ function fuel_block($params)
 					'assoc_key' => '',
 					'data' => array(),
 					'editable' => TRUE,
-					'parse' => 'auto'
+					'parse' => 'auto',
+					'vars' => array()
 					);
 
 	// for convenience
@@ -78,7 +79,7 @@ function fuel_block($params)
 	}
 	
 	// load the model and data
-	$vars = array();
+	$vars = (array) $p['vars'];
 	if (!empty($p['model']))
 	{
 		$data = fuel_model($p['model'], $p);
