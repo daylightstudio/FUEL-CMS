@@ -255,6 +255,7 @@ function fuel_nav($params = array())
 					'render_type' => 'basic', 
 					'active_class' => 'active', 
 					'active' => uri_path(FALSE), 
+					'styles' => array(),
 					'first_class' => 'first', 
 					'last_class' => 'last', 
 					'depth' => NULL, 
