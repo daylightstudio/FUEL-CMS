@@ -33,7 +33,7 @@ a.readmore { display: block; }
 table.form td { padding: 3px 5px 3px 0; }
 
 /* for form */
-.error { background-color: #c30; color: #fff; padding: 2px 5px; }
+div.error, li.error, ul.error { background-color: #c30; color: #fff; padding: 2px 5px; }
 span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
 
 
