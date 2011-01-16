@@ -173,7 +173,13 @@
 			<td><strong>key_check</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>The keycheck value used for forms that create session unique session variables to prevent spamming</td>
+			<td>The keycheck value used for forms that create session unique session variables to prevent spamming. If CSRF protection is enabled in CodeIgniter 2, then this value will be automatically filled out.</td>
+		</tr>
+		<tr>
+			<td><strong>key_check_name</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>The keycheck form name used for forms that create session unique session variables to prevent spamming.  If CSRF protection is enabled in CodeIgniter 2, then this value will be automatically filled out.</td>
 		</tr>
 		<tr>
 			<td><strong>tooltip_format</strong></td>

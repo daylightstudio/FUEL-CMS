@@ -62,6 +62,7 @@ Class Form_builder {
 	public $name_array = ''; // put the form fields into an array for namespacing
 	public $name_prefix = ''; // prefix the form fields as an alternatie to an array for namespacing
 	public $key_check = ''; // the keycheck value used for forms that create session unique session variables to prevent spamming
+	public $key_check_name = ''; // the keycheck form name used for forms that create session unique session variables to prevent spamming
 	public $tooltip_format = '<span title="{?}" class="tooltip">[?]</span>'; // tooltip formatting string
 	public $tooltip_labels = TRUE; // use tooltip labels?
 	public $single_select_mode = 'auto'; // auto will use enum if 2 or less and a single select if greater than 2. Other values are enum or select 
@@ -121,12 +122,18 @@ Class Form_builder {
 		}
 		
 		// create form object if not in initialization params
+		$CI=&get_instance();
 		if (is_null($this->form))
 		{
 //			require_once('Form.php');
-			$CI=&get_instance();
 			$CI->load->library('form');
 			$this->form = new Form();
+		}
+		
+		if ($CI->config->item('csrf_protection') === TRUE AND empty($this->key_check))
+		{
+			$this->key_check = $CI->security->csrf_hash;
+			$this->key_check_name = $CI->security->csrf_token_name;
 		}
 	}
 	
@@ -291,7 +298,7 @@ Class Form_builder {
 					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 				}
 				$str .= " class=\"field\">";
-				$str .= $this->create_label($val);
+				$str .= $this->create_label($val, TRUE);
 				$str .= $val['before_html'].$val['custom'].$val['after_html'];
 				$str .= "</div>\n";
 			}
@@ -320,7 +327,7 @@ Class Form_builder {
 					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 				}
 				$str .= " class=\"field\">";
-				$str .= $this->create_label($val);
+				$str .= $this->create_label($val, TRUE);
 				$str .= $val['before_html'].$this->create_field($val, FALSE).$val['after_html'];
 				$str .= "</div>\n";
 			}
@@ -381,7 +388,7 @@ Class Form_builder {
 		$this->_html .= $begin_str;
 		$this->_html .= $str;
 		$this->_html .= $end_str;
-		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => 'key_check', 'value' => $this->key_check));
+		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
 		if ($this->use_form_tag) $this->_html .= $this->form->close();
 		return $this->_html;
@@ -474,12 +481,12 @@ Class Form_builder {
 				$str .= ">\n\t<td class=\"label\">";
 				if ($this->label_layout != 'top')
 				{
-					$str .= $this->create_label($val);
+					$str .= $this->create_label($val, TRUE);
 					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
 				}
 				else
 				{
-					$str .= $this->create_label($val)."</td></tr>\n";
+					$str .= $this->create_label($val, TRUE)."</td></tr>\n";
 					$str .= "<tr";
 					if (!empty($this->row_id_prefix))
 					{
@@ -526,12 +533,12 @@ Class Form_builder {
 				$str .= ">\n\t<td class=\"label\">";
 				if ($this->label_layout != 'top')
 				{
-					$str .= $this->create_label($val);
+					$str .= $this->create_label($val, TRUE);
 					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
 				}
 				else
 				{
-					$str .= $this->create_label($val)."</td></tr>\n";
+					$str .= $this->create_label($val, TRUE)."</td></tr>\n";
 					$str .= "<tr";
 					if (!empty($this->row_id_prefix))
 					{
@@ -611,7 +618,7 @@ Class Form_builder {
 		$this->_html .= $begin_str;
 		$this->_html .= $str;
 		$this->_html .= $end_str;
-		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => 'key_check', 'value' => $this->key_check));
+		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
 		if ($this->use_form_tag) $this->_html .= $this->form->close();
 		return $this->_html;
@@ -626,8 +633,14 @@ Class Form_builder {
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	array
 	 */
-	protected function _normalize_value($val)
+	protected function _normalize_value($val, $force = FALSE)
 	{
+		// check to see if the array is already normalized
+		if ($this->_is_normalized($val) AND !$force)
+		{
+			return $val;
+		}
+		
 		if (is_object($val)) $val = get_object_vars($val);
 		
 		$defaults = array(
@@ -655,7 +668,8 @@ Class Form_builder {
 			'upload_path' => NULL, // for file uploading
 			'filename' => NULL, // for file uploading
 			'sorting' => NULL, // for multi selects that may need to keep track of selected options (combo jquery plugin)
-			'mode' => NULL // used for enums and multi fields whether to use selects or radios/checkbox
+			'mode' => NULL, // used for enums and multi fields whether to use selects or radios/checkbox
+			'__NORMALIZED__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
 		
 		$params = array_merge($defaults, $val);
@@ -704,6 +718,20 @@ Class Form_builder {
 		return $params;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Checks to see if the array to initialize a field is normalized or not
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	protected function _is_normalized($vals)
+	{
+		return (!empty($vals['__NORMALIZED__']));
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -776,6 +804,8 @@ Class Form_builder {
 	 */
 	public function create_label($params, $use_label = TRUE)
 	{
+		$params = $this->_normalize_value($params);
+		
 		$str = '';
 		if (empty($params['label']))
 		{
@@ -821,6 +851,8 @@ Class Form_builder {
 	 */
 	public function create_text($params)
 	{
+		$params = $this->_normalize_value($params);
+		
 		if (empty($params['size']))
 		{
 			if (!empty($params['max_length']))
@@ -861,6 +893,8 @@ Class Form_builder {
 	 */
 	public function create_textarea($params)
 	{
+		$params = $this->_normalize_value($params);
+		
 		$attrs = array(
 			'class' => $params['class'], 
 			'rows' => $this->textarea_rows, 
@@ -882,6 +916,8 @@ Class Form_builder {
 	 */
 	public function create_hidden($params)
 	{
+		$params = $this->_normalize_value($params);
+		
 		// need to do check here because hidden is used for key_check
 		$attrs = array();
 		if (!empty($params['class']))
@@ -905,6 +941,8 @@ Class Form_builder {
 	 */
 	public function create_enum($params)
 	{
+		$params = $this->_normalize_value($params);
+		
 		$i = 0;
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
@@ -947,6 +985,8 @@ Class Form_builder {
 	 */
 	public function create_multi($params)
 	{
+		$params = $this->_normalize_value($params);
+		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND count($params['options']) <= 5))
@@ -1008,6 +1048,8 @@ Class Form_builder {
 	 */
 	public function create_select($params)
 	{
+		$params = $this->_normalize_value($params);
+	
 		$attrs = array(
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
@@ -1045,6 +1087,8 @@ Class Form_builder {
 	 */
 	public function create_file($params)
 	{
+		$params = $this->_normalize_value($params);
+	
 		$attrs = array(
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
@@ -1084,6 +1128,8 @@ Class Form_builder {
 	 */
 	public function create_date($params)
 	{
+		$params = $this->_normalize_value($params);
+	
 		// check date to format it
 		if ((!empty($params['value']) AND (int) $params['value'] != 0)
 			&& (preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $params['value'], $regs1) 
@@ -1113,6 +1159,8 @@ Class Form_builder {
 	 */
 	public function create_time($params)
 	{
+		$params = $this->_normalize_value($params);
+
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1))) 
 		{
 			$time_params['value'] = date('h', strtotime($params['value']));
@@ -1145,6 +1193,8 @@ Class Form_builder {
 	 */
 	public function create_checkbox($params)
 	{
+		$params = $this->_normalize_value($params);
+
 		$str = '';
 		$attrs = array(
 			'readonly' => $params['readonly'], 
@@ -1195,6 +1245,8 @@ Class Form_builder {
 	 * @return	string
 	 */
 	public function create_section($params){
+		$params = $this->_normalize_value($params);
+
 		$section = '';
 		if (is_array($params) AND count($params) > 1)
 		{
@@ -1231,6 +1283,8 @@ Class Form_builder {
 	 * @return	string
 	 */
 	public function create_copy($params){
+		$params = $this->_normalize_value($params);
+	
 		$copy = '';
 		if (is_array($params))
 		{
@@ -1267,6 +1321,9 @@ Class Form_builder {
 	 * @return	string
 	 */
 	public function create_tooltip($params){
+
+		$params = $this->_normalize_value($params);
+
 		$str = '';
 		if (!empty($params['comment']))
 		{
@@ -1300,6 +1357,8 @@ Class Form_builder {
 	 */
 	public function create_custom($func, $params)
 	{
+		$params = $this->_normalize_value($params);
+
 		return call_user_func($func, $params);
 	}
 	
