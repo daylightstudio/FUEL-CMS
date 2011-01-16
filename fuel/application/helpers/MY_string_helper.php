@@ -167,7 +167,15 @@ function safe_htmlentities($str)
 	$str = str_replace($find,$replace, $str);
 
 	// safely translate now
-	$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8', FALSE);
+	if (version_compare(PHP_VERSION, '5.2.3', '>='))
+	{
+		$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
+	}
+	else
+	{
+		$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
+		$str = str_replace(array('<', '>', '\'', '"'), array('&lt;', '&gt;', '&#39;', '&quot;'), $str);
+	}
 	
 	// translate everything back
 	$str = str_replace($find, array('<','>'), $str);
