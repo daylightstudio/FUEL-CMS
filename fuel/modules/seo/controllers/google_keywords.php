@@ -20,8 +20,14 @@ class Google_keywords extends Seo_base_controller {
 		$seo_config = $this->config->item('seo');
 		
 		$vars = array();
-		$vars['domain'] = ($this->input->post('domain')) ? $this->input->post('domain') : 
-			(!empty($seo_config['keyword_search_default_domain'])) ? $seo_config['keyword_search_default_domain'] : $_SERVER['SERVER_NAME'];
+		if (!empty($_POST['domain']))
+		{
+			$vars['domain'] = $this->input->post('domain');
+		}
+		else
+		{
+			$vars['domain'] = (!empty($seo_config['keyword_search_default_domain'])) ? $seo_config['keyword_search_default_domain'] : $_SERVER['SERVER_NAME'];
+		}
 		$vars['keywords'] = (!empty($_POST['keywords'])) ? $this->input->post('keywords') : $seo_config['keyword_google_default_keywords'];
 		
 		if (is_array($vars['keywords']))
@@ -35,7 +41,7 @@ class Google_keywords extends Seo_base_controller {
 		}
 		$vars['num_results'] = $seo_config['keyword_google_num_results'];
 	
-		if (!empty($_POST['keywords']))
+		if (!empty($_POST))
 		{
 			$keywords = explode(',', $this->input->post('keywords'));
 			$domain = str_replace(array('http://', 'www'), '', $this->input->post('domain'));
