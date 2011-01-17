@@ -2,8 +2,13 @@
 <?php 
 define('USE_FUEL_MARKERS', FALSE);
 include(APPPATH.'views/_variables/global.php');
-$GLOBALS['page_title'] = '404 Error : Page Cannot Be Found';
 extract($vars);
+
+// set the 404 page title
+$GLOBALS['page_title'] = '404 Error : Page Cannot Be Found';
+
+// to prevent weird CSS errors if someone passes a name of a class used in your CSS
+$GLOBALS['body_class'] = '';
 
 require_once(APPPATH.'helpers/asset_helper.php');
 require_once(APPPATH.'helpers/MY_html_helper.php');
