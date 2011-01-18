@@ -16,7 +16,7 @@
 		It will also create a dated backup file on the web server in the directory:<br />
 			<strong><em><?=$download_path?></em></strong></p>
 	<?php else: ?>
-		To save the zipped data on the server, you must make the following directory writable or change the directory in the fuel config file:<br />
+		To save the zipped data on the server, you must make the following directory writable or change the directory in the fuel config file. <strong>Be sure that this directory is not accessible to others and is either above the web root directory or protected by .htaccess.</strong>:<br />
 			<strong><em><span class="error"><?=$download_path?></span></em>  (not writable)</strong></p>
 	<?php endif; ?>
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
