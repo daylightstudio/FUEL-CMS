@@ -514,8 +514,8 @@ class Fuel_page {
 		if (!$this->_fuelified_processed)
 		{
 			$inline_edit_bar = $this->_CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
-			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
-			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
+			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output, 1);
+			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output, 1);
 			$this->_CI->config->set_item('assets_path', $this->_CI->config->item('assets_path'));
 		}
 		$this->_fuelified_processed = TRUE;
@@ -619,14 +619,14 @@ class Fuel_page {
 				if (!empty($matches[1]))
 				{
 					$head_markers = implode("\n", array_unique($matches[1]));
-					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output);
+					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output, 1);
 				}
 				
 				// remove the markers from the head now that we've captured them'
 				$cleaned_head = preg_replace('/('.$marker_reg_ex.')/', '', $head[1][0]);
 				
 				// replace the cleaned head back on
-				$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output);
+				$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output, 1);
 			}
 		}
 		else
