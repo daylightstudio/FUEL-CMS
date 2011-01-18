@@ -11,6 +11,9 @@ class Login extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('fuel');
 		$this->config->load('fuel', true);
+
+		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
+
 		$this->load->vars(array(
 			'js' => '', 
 			'css' => '', 
@@ -24,7 +27,6 @@ class Login extends CI_Controller {
 		$this->load->helper('ajax');
 		$this->load->library('form_builder');
 
-		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 		$this->load->module_model(FUEL_FOLDER, 'users_model');
 
 		// set configuration paths for assets in case they are differernt from front end
