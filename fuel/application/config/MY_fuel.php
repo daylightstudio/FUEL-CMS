@@ -37,7 +37,7 @@ $config['admin_enabled'] = FALSE;
 $config['auto_search_views'] = FALSE;
 
 // max upload files size for assets
-$config['assets_upload_max_size']	= 100000;
+$config['assets_upload_max_size']	= 5000;
 
 // max width for asset images beign uploaded
 $config['assets_upload_max_width']  = 1024;
