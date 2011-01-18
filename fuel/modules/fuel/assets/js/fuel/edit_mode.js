@@ -274,7 +274,7 @@ if (fuel == undefined) var fuel = {};
 
 
 								// set up supercomboselects
-								$('select.combo', context).each(function(i){
+								$('select[multiple]', context).each(function(i){
 									var comboOpts = {};
 									var sortingId = 'sorting_' + $(this).attr('id');
 									if ($('#' + sortingId).size()){
