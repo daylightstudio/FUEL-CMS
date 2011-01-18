@@ -29,11 +29,8 @@ class Site_docs extends Fuel_base_controller {
 		// render page
 		if (file_exists(APPPATH.'/views/_docs/'.$page.'.php'))
 		{
-			// HACK to get it to go to the application directory set the _directories array to empty
-			$matchbox_dirs = $this->matchbox->_directories;
-			$this->matchbox->_directories = array();
-
-			$vars['body'] = $this->load->view('_docs/'.$page, $vars, TRUE);
+			// use app module which is the application directory
+			$vars['body'] = $this->load->module_view('app', '_docs/'.$page, $vars, TRUE);
 			
 			// get layout page
 			if (file_exists(APPPATH.'views/_layouts/documentation.php'))
@@ -42,7 +39,6 @@ class Site_docs extends Fuel_base_controller {
 			}
 			else if ($this->_has_module('user_guide'))
 			{
-				$this->matchbox->_directories = $matchbox_dirs;
 				$vars['page_title'] = $this->config->item('site_name', 'fuel');
 				$this->load->view('_layouts/documentation', $vars);
 			}
