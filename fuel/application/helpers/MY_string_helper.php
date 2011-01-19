@@ -168,12 +168,12 @@ function safe_htmlentities($str)
 	// safely translate now
 	if (version_compare(PHP_VERSION, '5.2.3', '>='))
 	{
-		$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
+		$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
 	}
 	else
 	{
 		$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
-		$str = str_replace(array('<', '>', '\'', '"'), array('&lt;', '&gt;', '&#39;', '&quot;'), $str);
+		$str = str_replace(array('<', '>'), array('&lt;', '&gt;'), $str);
 	}
 	
 	// translate everything back
