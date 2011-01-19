@@ -132,6 +132,7 @@ Class Form_builder {
 		
 		if ($CI->config->item('csrf_protection') === TRUE AND empty($this->key_check))
 		{
+			$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
 			$this->key_check = $CI->security->csrf_hash;
 			$this->key_check_name = $CI->security->csrf_token_name;
 		}
