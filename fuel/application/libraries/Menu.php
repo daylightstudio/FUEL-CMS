@@ -154,7 +154,7 @@ class Menu {
 			
 			foreach($items as $key => $val)
 			{
- 				$id = (is_array($val) AND !empty($val['id'])) ? $val['id'] : $key;
+ 				$id = (is_array($val) AND !empty($val['id'])) ? $val['id'] : trim($key);
 				$defaults[$key] = array('id' => $id, 'label' => '', 'location' => $key, 'attributes' => array(), 'active' => NULL, 'parent_id' => $this->root_value, 'hidden' => FALSE);
 				if (!is_array($val)) 
 				{
@@ -169,15 +169,15 @@ class Menu {
 				}
 				
 				// set nav_keys array for convenience
-				if (!empty($return[$id]['nav_key']))
+				if (isset($return[$id]['nav_key']))
 				{
 					$nav_keys[$return[$id]['nav_key']] = $return[$id];
 				}
 
 				// Capture all that have selected states so we can loop through later
-				if (!empty($return[$id]['active']) OR !empty($return[$id]['selected']))
+				if (isset($return[$id]['active']) OR isset($return[$id]['selected']))
 				{
-					$selected[$id] = (!empty($return[$id]['active'])) ? $return[$id]['active'] :  $return[$id]['selected'];
+					$selected[$id] = (isset($return[$id]['active'])) ? $return[$id]['active'] :  $return[$id]['selected'];
 				}
 				
 				if ($auto_nav_key AND !is_numeric($id)) 
@@ -186,7 +186,7 @@ class Menu {
 				}
 			}
 
-			if ($this->use_nav_key !== FALSE AND !empty($return[$this->active]['nav_key']))
+			if ($this->use_nav_key !== FALSE AND isset($return[$this->active]['nav_key']))
 			{
 				$active = $return[$this->active]['nav_key'];
 			}
@@ -197,8 +197,13 @@ class Menu {
 			
 				$match = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $active_regex));
 
+				if (empty($active))
+				{
+					$this->active = 'home';
+				}
+
 				// Does the RegEx match?
-				if (preg_match('#^'.$match.'$#', $active))
+				else if (preg_match('#^'.$match.'$#', $active))
 				{
 					$this->active = $s_id;
 				}
@@ -257,11 +262,13 @@ class Menu {
 		{
 			$this->render_type = $render_type;
 		}
+
 		if (!empty($active)) $this->active = $active;
 		if (!isset($parent_id)) $parent_id = $this->root_value;
 		
 		$this->_items = $this->normalize_items($items);
 		$root_items = $this->_get_menu_items($parent_id);
+		
 		$this->_active_items = $this->get_items_in_path($this->active);
 		return $this->_render($root_items);
 	}
@@ -688,7 +695,7 @@ class Menu {
 		{
 			$CI =& get_instance();
 			$CI->load->helper('url');
-			if (!empty($val['location']))
+			if (isset($val['location']))
 			{
 				if ($this->use_titles)
 				{
@@ -826,9 +833,10 @@ class Menu {
 		}
 		
 		if (!in_array($active, $active_items)) $active_items[] = $active;
+
 		foreach($this->_items as $key => $val)
 		{
-			if ($key == $active_parent)
+			if ($key === $active_parent AND !empty($key))
 			{
 				//echo $key .' - '.$active_parent.'<br>';
 				if (isset($this->_items[$key]))
@@ -838,6 +846,7 @@ class Menu {
 				$this->get_items_in_path($key, FALSE);
 			}
 		}
+		
 		return $active_items;
 	}
 	

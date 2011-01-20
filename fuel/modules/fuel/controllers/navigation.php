@@ -1,171 +1,886 @@
-<?php
-require_once('module.php');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
 
-class Navigation extends Module {
+// ------------------------------------------------------------------------
+
+/**
+ * A menu builder
+ *
+ * This class takes an array of elements that you can create a parent
+ * child relationship by creating an array like so:
+ * 
+ * $nav['about/history'] = array('label' => 'About', 'parent_id' => 'about');
+ * OR
+ * $nav['about/history'] = array('location' => 'about_us/history', label' => 'About', 'parent_id' => 'about');
+ * The documentation gives more detail
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/menu
+ */
+
+class Menu {
 	
-	function __construct()
-	{
-		parent::__construct();
-	}
+	public $active_class = 'active'; // the active css class
+	public $active = ''; // the active menu item
+	public $styles = array(); // css class styles to apply to menu items... can be a nested array
+	public $first_class = 'first'; // the css class for the first menu item
+	public $last_class = 'last';  // the css class for the last menu item
+	public $depth = NULL; // the depth of the menu to render at
+	public $use_titles = TRUE; // use the title attribute in the links
+	public $root_value = NULL; // the root parent value... can be NULL or 0
+	public $container_tag = 'ul'; // the html tag for the container of a set of menu items
+	public $container_tag_attrs = ''; // html attributes for the container tag
+	public $container_tag_id = ''; // html container id
+	public $container_tag_class = ''; // html container class
+	public $cascade_selected = TRUE; // cascade the selected items
+	public $include_hidden = FALSE; // include menu items with the hidden attribute
+	public $item_tag = 'li'; // the html list item element
+	public $item_id_prefix = ''; // the prefix to the item id
+	public $item_id_key = 'id'; // either id or location
+	public $use_nav_key = 'AUTO'; // use the nav_key value to match active
+	public $render_type = 'basic'; // basic, breadcrumb, page_title, collapsible
+	public $pre_render_func = ''; // function to apply to menu labels before rendering
 	
-	function items()
-	{
-		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		if (!empty($this->filters['group_id'])) $this->filters['group_id']['options'] = $this->navigation_groups_model->options_list('id', 'name', array(), false);
-		parent::items();
-	}
+	// for breadcrumb AND/OR page_title
+	public $delimiter = ' &gt; '; // the html element between the links 
+	public $display_current = TRUE; // display the current active breadcrumb item?
+	public $home_link = 'Home'; // the root home link
+
+	// for breadcrumb ONLY
+	public $arrow_class = 'arrow'; // the class for the arrows
 	
-	function upload()
+	// for page_title ONLY
+	public $order = 'asc'; // the order to display... for page_title ONLY
+	
+	
+	protected $_items = array(); // the items in the menu
+	protected $_active_items = array(); // the active menu items
+	protected $_reset_params = array(); // reset params
+	
+	
+	/**
+	 * Constructor - Sets Menu preferences
+	 *
+	 * The constructor can be passed an array of config values
+	 */
+	public function __construct($params = array())
 	{
-		$this->load->helper('file');
-		$this->load->helper('security');
-		$this->load->library('form_builder');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_model');
-		
-		$this->js_controller_params['method'] = 'upload';
-		
-		if (!empty($_POST))
+		$ignore = array('_reset_params');
+		$class_vars = get_class_vars(get_class($this));
+		foreach($class_vars as $key => $val)
 		{
-			$this->load->library('menu');
-			
-			if (!empty($_FILES['file']['name']))
+			if (!in_array($key, $ignore)) $this->_reset_params[$key] = $val;
+		}
+		$this->initialize($params);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Initialize preferences
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	public function initialize($params = array())
+	{
+		$valid_null = array('root_value', 'depth');
+		foreach ($params as $key => $val)
+		{
+			if (isset($this->$key) OR in_array($key, $valid_null))
 			{
-				$error = FALSE;
-				$file_info = $_FILES['file'];
-				
-				// read in the file so we can filter it
-				$file = read_file($file_info['tmp_name']);
-				
-				// strip any php tags
-				$file = str_replace('<?php', '', $file);
-				
-				// run xss_clean on it 
-				$file = xss_clean($file);
-				
-				// now evaluate the string to get the nav array
-				@eval($file);
-				
-				//@include($file_info['tmp_name']);
-				
-				if (!empty($nav))
+				$this->$key = $val;
+			}
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clear class values
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	public function reset()
+	{
+		foreach ($this->_reset_params as $key => $val)
+		{
+			$this->$key = $val;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Normalizes the menu data
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	array
+	 */
+	public function normalize_items($items)
+	{
+		$return = array();
+		if (is_array($items))
+		{
+			$active = $this->active;
+			$selected = array();
+			$nav_keys = array();
+
+			$auto_nav_key = FALSE;
+			if (is_string($this->use_nav_key) AND strtoupper($this->use_nav_key) == 'AUTO')
+			{
+				$this->use_nav_key = TRUE;
+				$auto_nav_key = TRUE;
+			}
+			
+			foreach($items as $key => $val)
+			{
+ 				$id = (is_array($val) AND !empty($val['id'])) ? $val['id'] : trim($key);
+				$defaults[$key] = array('id' => $id, 'label' => '', 'location' => $key, 'attributes' => array(), 'active' => NULL, 'parent_id' => $this->root_value, 'hidden' => FALSE);
+				if (!is_array($val)) 
 				{
-					$nav = $this->menu->normalize_items($nav);
-					
-					$group_id = $this->input->post('group_id');
-					if (is_true_val($this->input->post('clear_first')))
+					$val = array('id' => $key, 'label' => $val);
+				}
+				$return[$id] = array_merge($defaults[$key], $val);
+				
+				// check to make sure parent_id does not equal id to prevent infinite loops
+				if ($return[$id]['id'] == $return[$id]['parent_id'])
+				{
+					$return[$id]['parent_id'] = $this->root_value;
+				}
+				
+				// set nav_keys array for convenience
+				if (isset($return[$id]['nav_key']))
+				{
+					$nav_keys[$return[$id]['nav_key']] = $return[$id];
+				}
+
+				// Capture all that have selected states so we can loop through later
+				if (isset($return[$id]['active']) OR isset($return[$id]['selected']))
+				{
+					$selected[$id] = (isset($return[$id]['active'])) ? $return[$id]['active'] :  $return[$id]['selected'];
+				}
+				
+				if ($auto_nav_key AND !is_numeric($id)) 
+				{
+					$this->use_nav_key = FALSE;
+				}
+			}
+
+			if ($this->use_nav_key !== FALSE AND isset($return[$this->active]['nav_key']))
+			{
+				$active = $return[$this->active]['nav_key'];
+			}
+			
+			// now loop through the selected states
+			foreach($selected as $s_id => $active_regex)
+			{
+			
+				$match = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $active_regex));
+
+				if (empty($active))
+				{
+					$this->active = 'home';
+				}
+
+				// Does the RegEx match?
+				else if (preg_match('#^'.$match.'$#', $active))
+				{
+					$this->active = $s_id;
+				}
+			}
+		}
+		return $return;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders the menu output
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	string
+	 */
+	protected function _render($root_items)
+	{
+		switch($this->render_type)
+		{
+			case 'collapsible':
+				$output = $this->_render_collabsible($root_items);
+				break;
+			case 'breadcrumb':
+				$output = $this->_render_breadcrumb($root_items);
+				break;
+			case 'page_title':
+				$output = $this->_render_page_title($root_items);
+				break;
+			default:
+				$output = $this->_render_basic($root_items);
+		}
+		return $output;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders the menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @param	string basic, breadcrumb, page_title, collapsible
+	 * @return	string
+	 */
+	public function render($items, $active = NULL, $parent_id = NULL, $render_type = NULL)
+	{
+		if (empty($render_type))
+		{
+			$render_type = $this->render_type;
+		}
+		else
+		{
+			$this->render_type = $render_type;
+		}
+
+		if (!empty($active)) $this->active = $active;
+		if (!isset($parent_id)) $parent_id = $this->root_value;
+		
+		$this->_items = $this->normalize_items($items);
+		$root_items = $this->_get_menu_items($parent_id);
+		
+		$this->_active_items = $this->get_items_in_path($this->active);
+		return $this->_render($root_items);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders collapsible menu menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @return	string
+	 */
+	public function render_collapsible($items, $active = NULL, $parent_id = NULL)
+	{
+		return $this->render($items, $active, $parent_id, 'collapsible');
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders breadcrumb menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @return	string
+	 */
+	public function render_breadcrumb($items, $active = NULL, $parent_id = NULL)
+	{
+		return $this->render($items, $active, $parent_id, 'breadcrumb');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders page_title menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @return	string
+	 */
+	public function render_page_title($items, $active = NULL, $parent_id = NULL)
+	{
+		return $this->render($items, $active, $parent_id, 'page_title');
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders a basic menu
+	 *
+	 * @access	protected
+	 * @param	array nested array of menu elements
+	 * @param	int depth of menu to render
+	 * @return	string
+	 */
+	protected function _render_basic($menu, $level = -1)
+	{
+		$str = '';
+		if (!empty($menu) AND (isset($this->depth) AND $level < $this->depth) OR !isset($this->depth))
+		{
+			// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
+			$filtered_menu = array();
+			if (empty($this->include_hidden))
+			{
+				foreach($menu as $key => $val)
+				{
+					if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
 					{
-						$this->navigation_model->delete(array('group_id' => $this->input->post('group_id')));
+						$filtered_menu[$key] = $val;
 					}
-					
-					// save navigation group
-					$group = $this->navigation_groups_model->find_by_key($this->input->post('group_id'));
-					
-					// set default navigation group if it doesn't exist'
-					if (!isset($group->id))
+				}
+			}
+			else
+			{
+				$filtered_menu = $menu;
+			}
+
+			if (!empty($filtered_menu))
+			{
+				if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", ($level + 1))."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
+				if (!empty($this->container_tag_id) AND $level == -1) $str .= " id=\"".$this->container_tag_id."\"";
+				if (!empty($this->container_tag_class) AND $level == -1) $str .= " class=\"".$this->container_tag_class."\"";
+				if (!empty($this->container_tag)) $str .= ">\n";
+				$active_index = (count($this->_active_items) -1) - $level;
+				$level = $level + 1;
+				$i = 0;
+
+				foreach($filtered_menu as $key => $val)
+				{
+					$str .= $this->_create_open_li($val, $level, $i, ($i == (count($filtered_menu) -1)));
+					$subitems = $this->_get_menu_items($val['id']);
+
+					if (!empty($subitems))
 					{
-						$save['name'] = 'main';
-						$id = $this->navigation_groups_model->save($save);
-						$group_id = $id;
+						$str .= $this->_render_basic($subitems, $level);
 					}
-					// convert string ids to numbers so we can save... must start at last id in db
-					$ids = array();
-					$i = $this->navigation_model->max_id() + 1;
-					foreach($nav as $item)
+					if (!empty($this->item_tag))
 					{
-						$ids[$item['id']] = $i;
-						$i++;
+						$str .= "</".$this->item_tag.">\n";
 					}
-					// now loop through and save
-					$cnt = 0;
-					foreach($nav as $key => $item)
+					$i++;
+				}
+				if (!empty($this->container_tag)) $str .= str_repeat("\t", $level)."</".$this->container_tag.">\n".str_repeat("\t", $level);
+				
+			}
+		}
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders the collapsible menu output
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @param	int level to render menu data at
+	 * @return	string
+	 */
+	protected function _render_collabsible($menu, $level = 0)
+	{
+		$CI =& get_instance();
+		$CI->load->helper('url');
+
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		$filtered_menu = array();
+		
+		if (!$this->include_hidden)
+		{
+			foreach($menu as $key => $val){
+				if (!$val['hidden'])
+				{
+					$filtered_menu[$key] = $val;
+				}
+			}
+		}
+		else
+		{
+			$filtered_menu = $menu;
+		}
+		
+		$str = '';
+		
+		if (!empty($filtered_menu))
+		{
+			if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", $level)."<".$this->container_tag;
+			if (!empty($this->container_tag_id) AND $level == 0) $str .= " id=\"".$this->container_tag_id."\"";
+			if (!empty($this->container_tag_class) AND $level == 0) $str .= " class=\"".$this->container_tag_class."\"";
+			if (!empty($this->container_tag)) $str .= ">\n";
+			
+			$i = 0;
+			
+			// find start index
+			$active_index = 0;
+			if (!empty($this->_active_items))
+			{
+				foreach($this->_active_items as $index => $item)
+				{
+					if (!empty($filtered_menu[$item]))
 					{
-						$save = array();
-						$save['id'] = $ids[$item['id']];
-						$save['nav_key'] = $key;
-						$save['group_id'] = $group_id;
-						$save['label'] = $item['label'];
-						$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
-						$save['location'] = $item['location'];
-						$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
-						$save['hidden'] = (is_true_val($item['hidden'])) ? 'yes' : 'no';
-						$save['published'] = 'yes';
-						$save['precedence'] = $cnt;
-						if (is_array($item['attributes']))
+						$active_index = $index;
+						break;
+					}
+				}
+			}
+			
+			// loop through base menu items and start drill down
+			foreach($filtered_menu as $key => $val)
+			{
+				$label = $this->_get_label($val['label']);
+
+				if ($active_index > -1 AND $key == $this->_active_items[$active_index])
+				{
+					$level = $level + 1;
+					$subitems = $this->_get_menu_items($key);
+					$str .= str_repeat("\t", $level);
+					if (!empty($this->item_tag))
+					{
+						$str .= "<".$this->item_tag;
+						$str .= $this->_get_li_classes($key, $val['id'], $level, $i, ($i == (count($menu) -1)));
+						
+						// set id
+						if (!empty($this->item_id_prefix))
 						{
-							$attr = '';
-							foreach($item['attributes'] as $key => $val)
-							{
-								$attr .= $key .'="'.$val.'" ';
-							}
-							$attr = trim($attr);
+							$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
 						}
-						else
-						{
-							$save['attributes'] = $item['attributes'];
-						}
-						if (!$this->navigation_model->save($save))
-						{
-							$error = TRUE;
-							break;
-						}
-						$cnt++;
+						
+						$str .= '>';
+					}
+					$str .= anchor($val['location'], $label, $val['attributes']);
+					if (!empty($subitems))
+					{
+						$str .= $this->_render_collabsible($subitems, $level);
+					}
+					if (!empty($this->item_tag))
+					{
+						$str .= "</".$this->item_tag.">\n";
 					}
 				}
 				else
 				{
-					$error = TRUE;
+					$str .= $this->_create_open_li($val, ($level -1), $i, ($i == (count($menu) -1)));
+					if (!empty($this->item_tag))
+					{
+						$str .= "</".$this->item_tag.">\n";
+					}
 				}
-				
-				if ($error)
+				$i++;
+			}
+			if (!empty($this->container_tag))
+			{
+				if ($level > 1) $str .= str_repeat("\t", ($level -1));
+				$str .= "</".$this->container_tag.">\n";
+				if ($level > 1) $str .= str_repeat("\t", ($level -1));
+			}
+		}
+
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders the breadcrumb menu output
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	string
+	 */
+	protected function _render_breadcrumb($menu)
+	{
+		$CI =& get_instance();
+		$CI->load->helper('url');
+		$str = '';
+		$num = count($this->_active_items) -1;
+		if (!empty($this->home_link))
+		{
+			if (is_array($this->home_link))
+			{
+				$home_link = each($this->home_link);
+				$home_anchor = anchor($home_link['key'], $home_link['value']);
+			}
+			else
+			{
+				$home_anchor = anchor('', $this->home_link);
+			}
+			
+			
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
+			$str .= $home_anchor;
+			if ($num >= 0) $str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
+			if (!empty($this->item_tag))
+			{
+				$str .= "</".$this->item_tag.">\n";
+			}
+		}
+		for ($i = $num; $i >= 0; $i--)
+		{
+			$val = $this->_active_items[$i];
+			$label = $this->_get_label($this->_items[$val]['label']);
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
+			if ($i != 0)
+			{
+				$str .= anchor($this->_items[$val]['location'], $label);
+				$str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
+			}
+			else if ($this->display_current) 
+			{
+				$str .= $label;
+			}
+			if (!empty($this->item_tag))
+			{
+				$str .= "</".$this->item_tag.">\n";
+			}
+		}
+
+		$return = '';
+		if (!empty($str)) {
+			if (!empty($this->container_tag)) $return .= "\n<".$this->container_tag;
+			if (!empty($this->container_tag_id) AND $level == 0) $return .= " id=\"".$this->container_tag_id."\"";
+			if (!empty($this->container_tag)) $return .= ">\n";
+			
+			$return .= $str;
+			if (!empty($this->container_tag)) 	$return .= "</".$this->container_tag.">\n";
+		}
+		
+		return $return;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Renders the menu output
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	string
+	 */
+	protected function _render_page_title($menu)
+	{
+		$str = '';
+		$num = count($this->_active_items) -1;
+		$home_link = '';
+		if (!empty($this->home_link)){
+			if (is_array($this->home_link))
+			{
+				$home_link = reset($this->home_link);
+			}
+			else
+			{
+				$home_link = $this->home_link;
+			}
+		}
+
+		if ($this->order == 'desc')
+		{
+			for ($i = 0; $i <= $num; $i++)
+			{
+				$val = $this->_active_items[$i];
+				$label = $this->_get_label($this->_items[$val]['label']);
+				if ($i != 0)
 				{
-					add_error(lang('error_nav_upload'));
+					$str .= $this->delimiter;
 				}
-				else
+				$str .= $label;
+			}
+			if (($num >= 0 AND !empty($home_link)) OR (empty($home_link) AND $num > 0)) $str .= $this->delimiter;
+			$str .= $home_link;
+		}
+		else
+		{
+			$str .= $home_link;
+			if (($num >= 0 AND !empty($home_link)) OR (empty($home_link) AND $num > 0)) $str .= $this->delimiter;
+			for ($i = $num; $i >= 0; $i--)
+			{
+				$val = $this->_active_items[$i];
+				$label = $this->_get_label($this->_items[$val]['label']);
+				$str .= $label;
+				if ($i != 0)
 				{
-					// change list view page state to show the selected group id
-					$page_state = $this->_get_page_state($this->module);
-					$page_state['group_id'] = $group_id;
-					$this->_save_page_state($page_state);
-					$this->session->set_flashdata('success', lang('success_nav_upload'));
-					redirect(fuel_url('navigation'));
+					$str .= $this->delimiter;
 				}
+			}
+			
+		}
+
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get attributes of of the form elment
+	 *
+	 * @access	protected
+	 * @param	mixed takes a string or an array
+	 * @return	string
+	 */
+	protected function _get_attrs($attrs)
+	{
+		$str = '';
+		if (is_array($attrs))
+		{
+			foreach($this->container_tag_attrs as $key => $val)
+			{
+				$str .= ' '.$key.'="'.$val.'"';
+			}
+		}
+		else
+		{
+			if (!empty($attrs)) $str .= " ".$attrs;
+		}
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates an open list item element
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @param	int current level
+	 * @param	int current item index
+	 * @param	boolean whether the item is the last in the list
+	 * @return	string
+	 */
+	protected function _create_open_li($val, $level, $i, $is_last = FALSE)
+	{
+		$str = '';
+		$str .= str_repeat("\t", ($level + 1));
+
+		if (!empty($this->item_tag))
+		{
+			$str .= "<".$this->item_tag;
+
+			// set id
+			if (!empty($this->item_id_prefix))
+			{
+				$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
+			}
+		
+			// set styles
+			$str .= $this->_get_li_classes($val, $level, $i, $is_last);
+			$str .= '>';
+		}
+
+		$label = $this->_get_label($val['label']);
+		
+		if (function_exists('get_instance'))
+		{
+			$CI =& get_instance();
+			$CI->load->helper('url');
+			if (isset($val['location']))
+			{
+				if ($this->use_titles)
+				{
+					if (is_array($val['attributes']))
+					{
+						if (!in_array('title', $val['attributes'])) $val['attributes']['title'] = strip_tags($val['label']);
+					}
+					else if (strpos($val['attributes'], 'title=') === FALSE)
+					{
+						$val['attributes'] .= ' title="'.strip_tags($val['label']).'"';
+					}
+				}
+				$str .= anchor($val['location'], $label, $val['attributes']);
 				
 			}
 			else
 			{
-				add_error(lang('error_nav_upload'));
+				$str .= $label;
+			}
+			
+		} else {
+			$attrs = '';
+			if (!empty($val['location']))
+			{
+				if (!empty($val['attributes']))
+				{
+					if (is_array($val['attributes']))
+					{
+						foreach($val['attributes'] as $key2 => $val2) 
+						{
+							$attrs .= ' '.$key2.'="'.$val2.'"';
+						}
+					} else {
+						$attrs .= $val['attributes'];
+					}
+					if ($this->use_titles AND strpos($attrs, 'title=') === FALSE) $attrs .= ' title="'.$attrs['label'].'"';
+				}
+				$str .= '<a href="'.site_url($val['location']).'"'.$attrs.'>'.$label.'</a>';
+			}
+			else
+			{
+				$str .= $label;
+			}
+			
+			
+		}
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Gets the css classes for the list item styling
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @param	int current level
+	 * @param	int current item index
+	 * @param	boolean whether the item is the last in the list
+	 * @return	string
+	 */
+	protected function _get_li_classes($val, $level, $i, $is_last = FALSE)
+	{
+		$str = '';
+		$css_classes = array();
+		$active = (is_array($val)) ? $val['id'] : $val;
+
+		if (!empty($this->first_class) AND $i == 0) $css_classes[] = $this->first_class;
+		if (!empty($this->last_class) AND $is_last) $css_classes[] = $this->last_class;
+		
+		if ($this->active == $active OR ($this->cascade_selected AND 
+				is_array($this->_active_items) AND 
+				in_array($active, $this->_active_items))) 
+				{
+					$css_classes[] = $this->active_class;
+				}
+
+		if (!empty($this->styles[$level][$i])) $css_classes[] = $this->styles[$level][$i];
+
+		if (!empty($css_classes))
+		{
+			$str .= ' class="';
+			$str .= implode(' ', $css_classes);
+			$str .= '"';
+		}
+		return $str;
+	}
+	
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Generates the label of the menu item
+	 *
+	 * @access	protected
+	 * @param	string active element
+	 * @param	boolean first time iterating through?
+	 * @return	string
+	 */
+	protected function _get_label($label)
+	{
+		if (!empty($this->pre_render_func)) 
+		{
+			$label = call_user_func($this->pre_render_func, $label);
+		}
+		return $label;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Gets the css classes for the list item styling
+	 *
+	 * @access	public
+	 * @param	string active element
+	 * @param	boolean first time iterating through?
+	 * @return	string
+	 */
+	public function get_items_in_path($active, $first_time = TRUE){
+		static $active_items = array();
+		
+		// reset it if is called more then once
+		if ($first_time)
+		{
+			$active_items = array();
+		}
+
+		if (isset($this->_items[$active]))
+		{
+			$active_parent = $this->_items[$active]['parent_id'];
+		}
+		else
+		{
+			return;
+		}
+		
+		if (!in_array($active, $active_items)) $active_items[] = $active;
+
+		foreach($this->_items as $key => $val)
+		{
+			if ($key === $active_parent AND !empty($key))
+			{
+				//echo $key .' - '.$active_parent.'<br>';
+				if (isset($this->_items[$key]))
+				{
+					$active_items[] = $key;
+				}
+				$this->get_items_in_path($key, FALSE);
 			}
 		}
 		
-		$fields = array();
-		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
-		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
-		
-		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'label' => 'Navigation Group', 'class' => 'add_edit navigation_group');
-		$fields['file'] = array('type' => 'file', 'accept' => '');
-		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
-		$this->form_builder->set_fields($fields);
-		$this->form_builder->submit_value = '';
-		$this->form_builder->use_form_tag = FALSE;
-		$vars['form'] = $this->form_builder->render();
-		$this->_render('navigation_upload', $vars);
+		return $active_items;
 	}
 	
-	function parents($group_id = NULL, $parent_id = NULL)
+	// --------------------------------------------------------------------
+
+	/**
+	 * Gets the css classes for the list item styling
+	 *
+	 * @access	public
+	 * @param	string active element
+	 * @param	array menu items
+	 * @return	array
+	 */
+	protected function _get_menu_items($parent, $items = NULL)
 	{
-		if (is_ajax() AND !empty($group_id))
+		if (empty($items)) $items = $this->_items;
+		$str = '';
+		$subitems = array();
+		foreach($items as $key => $val)
 		{
-			$this->load->library('form');
-			$this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
-			$parent_options = $this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
-			$select = $this->form->select('parent_id', $parent_options, $parent_id, '', 'None');
-			$this->output->set_output($select);
+			// force numbers to be integers if numeric so we can do a strict comparison
+			if (is_numeric($val['parent_id'])) $val['parent_id'] = (int) $val['parent_id'];
+			if (is_numeric($parent)) $parent = (int) $parent;
+			
+			if ($parent === $val['parent_id'])
+			{
+				$subitems[$key] = $val;
+			}
 		}
-		else if ($parent_id != 0)
-		{
-			show_error(lang('error_missing_params'));
-		}
+		return $subitems;
 	}
-	
+
+
 }
+
+/* End of file Menu.php */
+/* Location: ./application/libraries/Menu.php */

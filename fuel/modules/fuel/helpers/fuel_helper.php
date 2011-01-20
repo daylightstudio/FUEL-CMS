@@ -254,7 +254,7 @@ function fuel_nav($params = array())
 					'parent' => NULL, 
 					'render_type' => 'basic', 
 					'active_class' => 'active', 
-					'active' => uri_path(FALSE),
+					'active' => (uri_path(FALSE) !== '') ? uri_path(FALSE) : 'home',
 					'styles' => array(),
 					'first_class' => 'first', 
 					'last_class' => 'last', 
