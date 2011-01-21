@@ -191,33 +191,53 @@ class MY_Parser extends CI_Parser {
 		$dwoo_data = new Dwoo_Data;
 		$dwoo_data->setData($data);
 
+		$parsed_string = '';
 		try
 		{
 			// Object of the template
 			$tpl = new Dwoo_Template_String($string);
 
 			$dwoo = $is_include ? self::spawn() : $this->_dwoo;
-
-			// Create the compiler instance
-			$compiler = new Dwoo_Compiler();
-
-			//Add a pre-processor to help fix javascript {}
-			// added by David McReynolds @ Daylight Studio 11/04/10
-			$callback = create_function('$compiler', '
-				$string = $compiler->getTemplateSource();
-				$string = preg_replace("#{\s*}#", "{\n}", $string); 
-				$compiler->setTemplateSource($string);
-				return $string;
-			');
-			$compiler->addPreProcessor($callback);
 			
-			// render the template
-			$parsed_string = $dwoo->get($tpl, $dwoo_data, $compiler);
+			// check for existence of dwoo object... may not be there if folder is not writable
+			// added by David McReynolds @ Daylight Studio 1/20/11
+			if (!empty($dwoo))
+			{
+				// Create the compiler instance
+				$compiler = new Dwoo_Compiler();
+
+				//Add a pre-processor to help fix javascript {}
+				// added by David McReynolds @ Daylight Studio 11/04/10
+				$callback = create_function('$compiler', '
+					$string = $compiler->getTemplateSource();
+					$string = preg_replace("#{\s*}#", "{\n}", $string); 
+					$compiler->setTemplateSource($string);
+					return $string;
+				');
+				$compiler->addPreProcessor($callback);
+
+				// render the template
+				$parsed_string = $dwoo->get($tpl, $dwoo_data, $compiler);
+			}
+			else
+			{
+				// load FUEL language file because it has the proper error
+				// added by David McReynolds @ Daylight Studio 1/20/11
+				$this->_ci->load->module_language(FUEL_FOLDER, 'fuel');
+				throw(new Exception(lang('error_cache_folder_not_writable')));
+			}
 		}
 
 		catch (Exception $e)
 		{
-			show_error($e);
+			if (strtolower(get_class($e)) == 'dwoo_exception')
+			{
+				echo ('<div class="error">'.$e->getMessage().'</div>');
+			}
+			else
+			{
+				show_error($e->getMessage());
+			}
 		}
 
 		// Finish benchmark
