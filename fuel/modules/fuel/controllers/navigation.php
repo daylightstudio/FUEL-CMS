@@ -71,23 +71,37 @@ class Navigation extends Module {
 					// convert string ids to numbers so we can save... must start at last id in db
 					$ids = array();
 					$i = $this->navigation_model->max_id() + 1;
-					foreach($nav as $item)
+					foreach($nav as $key => $item)
 					{
+						// if the id is empty then we assume it is the homepage
+						if (empty($item['id']))
+						{
+							$item['id'] = 'home';
+							$nav[$key]['id'] = 'home';
+						}
 						$ids[$item['id']] = $i;
 						$i++;
 					}
 					// now loop through and save
 					$cnt = 0;
+
 					foreach($nav as $key => $item)
 					{
 						$save = array();
 						$save['id'] = $ids[$item['id']];
-						$save['nav_key'] = $key;
+						$save['nav_key'] = (empty($key)) ? 'home' : $key;
 						$save['group_id'] = $group_id;
 						$save['label'] = $item['label'];
 						$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
 						$save['location'] = $item['location'];
 						$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
+							
+						// fix for homepage links
+						if (empty($save['selected']) AND $save['nav_key'] == 'home')
+						{
+							$save['selected'] = 'home$';
+						}
+						
 						$save['hidden'] = (is_true_val($item['hidden'])) ? 'yes' : 'no';
 						$save['published'] = 'yes';
 						$save['precedence'] = $cnt;
@@ -104,6 +118,7 @@ class Navigation extends Module {
 						{
 							$save['attributes'] = $item['attributes'];
 						}
+						
 						if (!$this->navigation_model->save($save))
 						{
 							$error = TRUE;
