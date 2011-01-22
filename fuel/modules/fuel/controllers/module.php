@@ -342,8 +342,10 @@ class Module extends Fuel_base_controller {
 			$defaults[$key] = (isset($val['default'])) ? $val['default'] : NULL;
 		}
 		
-		$uri_params = uri_safe_batch_decode(fuel_uri_segment(4), '|', TRUE);
-		$uri_params['offset'] = (fuel_uri_segment(4)) ? (int) fuel_uri_segment(4) : 0;
+		$mod_segs = explode('/',$this->module_uri);
+		$mod_offset_index = count($mod_segs) + 3;
+		$uri_params = uri_safe_batch_decode(fuel_uri_segment($mod_offset_index), '|', TRUE);
+		$uri_params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
 		
 		$posted = array();
 		if (!empty($_POST)){
