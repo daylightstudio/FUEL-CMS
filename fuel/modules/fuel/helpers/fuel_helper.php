@@ -43,7 +43,8 @@ function fuel_block($params)
 	$valid = array( 'view' => '',
 					'view_string' => FALSE,
 					'model' => '', 
-					'find' => 'all', 
+					'find' => 'all',
+					'select' => NULL,
 					'where' => '', 
 					'order' => '', 
 					'limit' => NULL, 
@@ -160,6 +161,7 @@ function fuel_model($model, $params = array())
 	$CI =& get_instance();
 	$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
 	$valid = array( 'find' => 'all',
+					'select' => NULL,
 					'where' => array(), 
 					'order' => '', 
 					'limit' => NULL, 
@@ -205,6 +207,11 @@ function fuel_model($model, $params = array())
 		$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
 	}
 	
+	// run select statement before the find
+	if (!empty($select))
+	{
+		$CI->$model_name->db()->select($select);
+	}
 	
 	// retrieve data based on the method
 	if ($find === 'key')
