@@ -19,6 +19,7 @@ The <dfn>params</dfn> parameter can either be string value (in which case it wil
 	<li><strong>view_string</strong> - a string value to be used for the view</li>
 	<li><strong>model</strong> - the model to load and be available for the view</li>
 	<li><strong>find</strong> - the find method on the model to use (e.g. 'one', 'all' or 'key')</li>
+	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
 	<li><strong>where</strong> - the where condition on the model to be used in the find query</li>
 	<li><strong>order</strong> - order the data results returned from the model and sort them </li>
 	<li><strong>limit</strong> - limit the number of data results returned by the model</li>
@@ -38,6 +39,7 @@ The <dfn>params</dfn> parameter is an associative array that can have the follow
 </p>
 <ul>
 	<li><strong>find</strong> - the find method to use on the module model</li>
+	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
 	<li><strong>where</strong> - the where condition to be used in the find query</li>
 	<li><strong>order</strong> - order the data results and sort them </li>
 	<li><strong>limit</strong> - limit the number of data results returned</li>
