@@ -342,9 +342,9 @@ class Fuel_base_controller extends Controller {
 	
 	protected function _get_state_key()
 	{
-		if (!empty($this->module))
+		if (!empty($this->module_uri))
 		{
-			return $this->module;
+			return $this->module_uri;
 		}
 		else
 		{

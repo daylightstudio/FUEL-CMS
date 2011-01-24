@@ -139,7 +139,7 @@ class Navigation extends Module {
 				else
 				{
 					// change list view page state to show the selected group id
-					$page_state = $this->_get_page_state($this->module);
+					$page_state = $this->_get_page_state($this->module_uri);
 					$page_state['group_id'] = $group_id;
 					$this->_save_page_state($page_state);
 					$this->session->set_flashdata('success', lang('success_nav_upload'));

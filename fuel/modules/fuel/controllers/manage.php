@@ -4,7 +4,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Manage extends Fuel_base_controller {
 	
 	public $nav_selected = 'manage/cache';
-	public $module = 'manage/activity';
+	public $module_uri = 'manage/activity';
 	
 	function __construct()
 	{
