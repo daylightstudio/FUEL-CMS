@@ -345,9 +345,9 @@ class Fuel_base_controller extends CI_Controller {
 	
 	protected function _get_state_key()
 	{
-		if (!empty($this->module))
+		if (!empty($this->module_uri))
 		{
-			return $this->module;
+			return $this->module_uri;
 		}
 		else
 		{
