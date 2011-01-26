@@ -119,6 +119,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @param	array
 	 * @param	bool
+	 * @param	bool
 	 * @return	string
 	 */
 	function parse($template, $data = array(), $return = FALSE, $is_include = FALSE)
@@ -139,6 +140,7 @@ class MY_Parser extends CI_Parser {
 	 * @access	public
 	 * @param	string
 	 * @param	array
+	 * @param	bool
 	 * @param	bool
 	 * @return	string
 	 */
@@ -166,6 +168,7 @@ class MY_Parser extends CI_Parser {
 	 * @access	public
 	 * @param	string
 	 * @param	array
+	 * @param	bool
 	 * @param	bool
 	 * @return	string
 	 */

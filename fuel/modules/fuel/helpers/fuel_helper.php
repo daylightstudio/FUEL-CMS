@@ -142,7 +142,7 @@ function fuel_block($params)
 	}
 	
 	// parse the view again to apply any variables from previous parse
-	$output = ($p['parse'] === TRUE) ? $output = $CI->parser->parse_string($view, $vars, TRUE) : $view;
+	$output = ($p['parse'] === TRUE) ? $CI->parser->parse_string($view, $vars, TRUE) : $view;
 
 	return $output;
 }
