@@ -39,7 +39,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		
 		$('#view_twin_cancel').click(function(){
 			var path = jqx.config.fuelPath + '/pages/import_view_cancel/';
-			$.post(path, {id:$('#id').val(), location:$('#location').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html == 'success'){
 					$('#view_twin_notification').hide();
 				}
@@ -50,7 +51,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		
 		$('#view_twin_import').click(function(){
 			var path = jqx.config.fuelPath + '/pages/import_view/';
-			$.post(path, {id:$('#id').val(), location:$('#location').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html != 'error'){
 					var id = '#' + _this.initObj.import_view_key;
 					if ($(id).exists())

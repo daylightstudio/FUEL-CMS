@@ -316,7 +316,8 @@ class Dwoo_Core
     {
         // a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
         if ($this->template instanceof Dwoo_ITemplate) {
-            return clone $this;
+            $clone = clone $this;
+            return $clone->get($_tpl, $data, $_compiler, $_output);
         }
 
         // auto-create template if required
