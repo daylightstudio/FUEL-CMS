@@ -113,10 +113,21 @@ Class Form {
 	 * 
 	 * @access public
 	 * @param string html to use before the closing form tag
+	 * @param string whether to include the csrf field before the closing tag
 	 * @return string
 	 */
-	public function close($html_before_form = '')
+	public function close($html_before_form = '', $add_csrf_field = TRUE)
 	{
+		// test for get_instance function just to make sure we are using CI, in case we want to use this class elsewhere
+		if (function_exists('get_instance') AND $add_csrf_field === TRUE)
+		{
+			$CI =& get_instance();
+			if ($CI->config->item('csrf_protection') === TRUE)
+			{
+				$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
+				$html_before_form .= $this->hidden($CI->security->csrf_token_name, $CI->security->csrf_hash);
+			}
+		}
 		return $html_before_form.'</form>';
 	}
 

@@ -59,9 +59,10 @@ echo $this->form->open_multipart('id="my_form"', $validator);
 </pre>
 
 
-<h2>$this->form->close(<var>[html_before_form]</var>)</h2>
+<h2>$this->form->close(<var>[html_before_form]</var><var>[add_csrf_field]</var>)</h2>
 <p>Will create a form open tag that has multipart attribute.
 The <dfn>$html_before_form</dfn> parameter is HTML to insert before closing the tag (optional).
+The <dfn>$add_csrf_field</dfn> parameter is whether to include a hidden field of the csrf token if csrf is turned on.
 </p>
 
 <pre class="brush: php">

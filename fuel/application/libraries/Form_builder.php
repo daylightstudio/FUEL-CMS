@@ -122,20 +122,29 @@ Class Form_builder {
 		}
 		
 		// create form object if not in initialization params
-		$CI=&get_instance();
 		if (is_null($this->form))
 		{
-//			require_once('Form.php');
-			$CI->load->library('form');
-			$this->form = new Form();
+			// test for get_instance function just to make sure we are using CI, in case we want to use this class elsewhere
+			if (function_exists('get_instance'))
+			{
+				$CI =& get_instance();
+				$CI->load->library('form');
+				$this->form = new Form();
+			}
+			else
+			{
+				require_once('Form.php');
+			}
+			
 		}
 		
-		if ($CI->config->item('csrf_protection') === TRUE AND empty($this->key_check))
+		if ($CI->config->item('csrf_protection') === TRUE AND empty($this->key_check) AND !$this->use_form_tag)
 		{
 			$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
 			$this->key_check = $CI->security->csrf_hash;
 			$this->key_check_name = $CI->security->csrf_token_name;
 		}
+		
 	}
 	
 	// --------------------------------------------------------------------
@@ -391,7 +400,7 @@ Class Form_builder {
 		$this->_html .= $end_str;
 		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
-		if ($this->use_form_tag) $this->_html .= $this->form->close();
+		if ($this->use_form_tag) $this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off
 		return $this->_html;
 	}
 	// --------------------------------------------------------------------
