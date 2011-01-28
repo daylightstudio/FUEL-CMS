@@ -1,5 +1,5 @@
 <h1>Module Forms</h1>
-<p>Module's use the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class to create the form used to create and edit module information. 
+<p>Modules use the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class to create the form used to create and edit module information. 
 You can modify a model's <a href="<?=user_guide_url('libraries/my_model')?>">form_fields()</a> method to customize the form.</p>
 
 <h2>Trigger CSS Classes</h2>
