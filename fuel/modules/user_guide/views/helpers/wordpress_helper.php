@@ -1,6 +1,6 @@
 <h1>Wordpress Helper</h1>
 
-<p>This helper is bridge between wordpress files and Codeigniter. It allows the user to inject code and output from the Codeigniter base into the wordpress schema.</p>
+<p>This helper is bridge between Wordpress files and Codeigniter. It allows the user to inject code and output from the Codeigniter base into the Wordpress schema.</p>
 
 <p>This helper is loaded using the following code:</p>
 
