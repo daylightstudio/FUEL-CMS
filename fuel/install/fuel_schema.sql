@@ -429,6 +429,7 @@ CREATE TABLE `fuel_users` (
   `email` varchar(100) collate utf8_unicode_ci NOT NULL,
   `first_name` varchar(30) collate utf8_unicode_ci NOT NULL,
   `last_name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `reset_key` varchar(64) collate utf8_unicode_ci NOT NULL,
   `super_admin` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
