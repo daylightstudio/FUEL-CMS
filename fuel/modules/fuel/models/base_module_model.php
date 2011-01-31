@@ -43,9 +43,25 @@ class Base_module_model extends MY_Model {
 	 * @param	string	the module name to 
 	 * @return	void
 	 */
-	function __construct($table, $module = NULL)
+	function __construct($table, $params = NULL)
 	{
 		$CI = & get_instance();
+		
+		// initialize parameters to pass to parent model
+		// if it is a string, then we assume it's a module name, if it is an array, then we extract the module name from it'
+		if (is_array($params))
+		{
+			if (isset($params['module']))
+			{
+				$module = $params['module'];
+			}
+		}
+		else
+		{
+			$module = $params;
+			$params = array();
+		}
+		
 		if (!isset($module)) $module = FUEL_FOLDER;
 		
 		$fuel_tables = array();
