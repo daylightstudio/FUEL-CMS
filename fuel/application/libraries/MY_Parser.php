@@ -232,7 +232,14 @@ class MY_Parser extends CI_Parser {
 
 		catch (Exception $e)
 		{
-			show_error($e->message);
+			if (strtolower(get_class($e)) == 'dwoo_exception')
+			{
+				echo ('<div class="error">'.$e->getMessage().'</div>');
+			}
+			else
+			{
+				show_error($e->getMessage());
+			}
 		}
 
 		// Finish benchmark
