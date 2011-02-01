@@ -101,7 +101,7 @@ abstract class Base_module_model extends MY_Model {
 		
 		// if no configuration mapping is found then we will assume it is just the straight up table name
 		
-		parent::__construct($table); // table name
+		parent::__construct($table, $params); // table name and params
 	}
 	
 
