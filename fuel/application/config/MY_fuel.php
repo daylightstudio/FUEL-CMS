@@ -5,7 +5,7 @@
 $config['fuel_path'] = 'fuel/';
 
 // the name to be displayed on the top left of the admin
-$config['site_name'] = 'WidgiCorp';
+$config['site_name'] = 'My Website';
 
 // options are cms, views, auto... cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder.

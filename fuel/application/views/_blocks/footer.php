@@ -1,8 +1,12 @@
+		</div>
 	</div>
 	<div id="footer">
-		<div id="copyright" class="left">Copyright &copy; <?php echo date('Y')?> WigiCorp,  All Rights Reserved.</div>
-		<?=fuel_nav(array('render_type' => 'delimited', 'item_id_prefix' => 'footer_', 'container_tag_class' => 'right'))?>
-		<div class="clear"></div>
+		<div id="footer_top">
+		
+		</div>
+		<div id="footer_bot">
+			<div id="copyright">FUEL CMS is a product by <a href="http://www.thedaylightstudio.com" target="_blank">Daylight Studio</a>. <br />Copyright &copy; <?php echo date('Y')?> Daylight Studio,  All Rights Reserved.</div>
+		</div>
 	</div>
 </div>
 
