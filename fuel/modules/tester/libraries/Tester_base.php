@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -236,7 +236,7 @@ abstract class Tester_base
 		}
 		else
 		{
-			$sql_path = APPPATH.MODULES_FOLDER.'/'.$module.'/tests/sql/'.$file;
+			$sql_path = MODULES_PATH.$module.'/tests/sql/'.$file;
 		}
 		
 		// select the database
@@ -333,4 +333,4 @@ abstract class Tester_base
 }
 
 /* End of file Tester_base.php */
-/* Location: ./application/modules/tester/libraries/Tester_base.php */
+/* Location: ./modules/tester/libraries/Tester_base.php */

@@ -31,7 +31,7 @@ class Settings extends Fuel_base_controller {
 			}
 			$this->fuel_blog->remove_cache();
 			$this->blog_settings_model->save($save);
-			$this->session->set_flashdata('success', $this->lang->line('data_saved'));
+			$this->session->set_flashdata('success', lang('data_saved'));
 			redirect($this->uri->uri_string());
 			
 		}
@@ -39,22 +39,22 @@ class Settings extends Fuel_base_controller {
 		$this->load->library('form_builder');
 		
 		$fields = array();
-		$fields['title'] = array('label' => 'Title');
-		$fields['description'] = array('label' => 'Description', 'size' => '80');
-		$fields['uri'] = array('label' => 'URL', 'value' => 'blog');
-		$fields['theme_path'] = array('label' => 'Theme location', 'value' => 'default');
-		$fields['theme_layout'] = array('label' => 'Theme layout', 'value' => 'blog', 'size' => '20');
-		$fields['theme_module'] = array('label' => 'Theme module', 'value' => 'blog', 'size' => '20');
-		$fields['use_cache'] = array('type' => 'checkbox', 'label' => 'Use cache', 'value' => '1');
-		$fields['allow_comments'] = array('type' => 'checkbox', 'label' => 'Allow comments', 'value' => '1');
-		$fields['monitor_comments'] = array('type' => 'checkbox', 'label' => 'Monitor comments', 'value' => '1');
-		$fields['use_captchas'] = array('type' => 'checkbox', 'label' => 'Use captchas', 'value' => '1');
-		$fields['save_spam'] = array('type' => 'checkbox', 'label' => 'Save spam', 'value' => '1');
-		$fields['akismet_api_key'] = array('label' => 'Akismet Key', 'value' => '', 'size' => '80');
+		$fields['title'] = array();
+		$fields['description'] = array('size' => '80');
+		$fields['uri'] = array('value' => 'blog');
+		$fields['theme_path'] = array('value' => 'default');
+		$fields['theme_layout'] = array('value' => 'blog', 'size' => '20');
+		$fields['theme_module'] = array('value' => 'blog', 'size' => '20');
+		$fields['use_cache'] = array('type' => 'checkbox', 'value' => '1');
+		$fields['allow_comments'] = array('type' => 'checkbox', 'value' => '1');
+		$fields['monitor_comments'] = array('type' => 'checkbox', 'value' => '1');
+		$fields['use_captchas'] = array('type' => 'checkbox', 'value' => '1');
+		$fields['save_spam'] = array('type' => 'checkbox', 'value' => '1');
+		$fields['akismet_api_key'] = array('value' => '', 'size' => '80');
 		
-		$fields['multiple_comment_submission_time_limit'] = array('label' => 'Comment submission time limit', 'size' => '5', 'after_html' => ' (in seconds)');
-		$fields['comments_time_limit'] = array('label' => 'Allow comments for how long', 'size' => '5', 'after_html' => ' after post date (in days)');
-		$fields['cache_ttl'] = array('label' => 'Cache time to live', 'value' => 3600, 'size' => 5);
+		$fields['multiple_comment_submission_time_limit'] = array('size' => '5', 'after_html' => lang('form_label_multiple_comment_submission_time_limit_after_html'));
+		$fields['comments_time_limit'] = array('size' => '5', 'after_html' => lang('form_label_comments_time_limit_after_html'));
+		$fields['cache_ttl'] = array('value' => 3600, 'size' => 5);
 		$fields['asset_upload_path'] = array('default' => 'images/blog/');
 		$fields['per_page'] = array('value' => 1, 'size' => 3);
 

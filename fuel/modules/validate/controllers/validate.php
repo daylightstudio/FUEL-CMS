@@ -12,7 +12,22 @@ class Validate extends Fuel_base_controller {
 		$this->load->config('validate');
 		$this->load->language('validate');
 		$this->js_controller_params['module'] = 'tools';
+		
+		// get localized js
+		$js_localized = json_lang('validate/validate_js', FALSE);
+		
+		$this->_load_js_localized($js_localized);
 		$this->_validate_user('tools/validate');
+		
+		// set pages input to blank if it is default value
+		if (!empty($_POST['pages_input']))
+		{
+			if ($_POST['pages_input'] == lang('validate_pages_input'))
+			{
+				$_POST['pages_input'] = FALSE;
+			}
+		}
+		
 	}
 	
 	function index()
@@ -24,10 +39,9 @@ class Validate extends Fuel_base_controller {
 		$validate_config = $this->config->item('validate');
 		$vars['default_page_input'] = $validate_config['default_page_input'];
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
-		$vars['validation_type'] = 'HTML';
+		$vars['validation_type'] = lang('validate_type_html');
 		$vars['pages_select'] = $pages;
 		$this->js_controller_params['method'] = 'validate';
-		$this->js_controller_params['pages_input'] = lang('pages_input');
 		$this->_render('validate', $vars);
 	}
 
@@ -73,7 +87,7 @@ class Validate extends Fuel_base_controller {
 				// post data using fragment variable
 				$tmp_filename = str_replace(array('/', ':'), '_', $this->input->post('uri'));
 				$tmp_filename = substr($tmp_filename, 4);
-				$tmp_file_for_validation_urls = BASEPATH.'cache/validation_url-'.$tmp_filename.'.html';
+				$tmp_file_for_validation_urls = $this->config->item('cache_path').'validation_url-'.$tmp_filename.'.html';
 				write_file($tmp_file_for_validation_urls, $fragment);
 
 				//$post['fragment'] = $fragment;
@@ -116,15 +130,16 @@ class Validate extends Fuel_base_controller {
 			$this->output->set_output($results);
 			return;
 		} 
-		else if (!$this->input->post('pages') && !$this->input->post('pages_input') && !$this->input->post('pages_serialized'))
+		else if (!$this->input->post('pages') AND !$this->input->post('pages_input') AND !$this->input->post('pages_serialized'))
 		{
+			echo lang('error_no_pages_selected');
 			$this->session->set_flashdata('error', lang('error_no_pages_selected'));
 			redirect(fuel_uri('tools/validate'));
 		}
-		
-		if (!is_writable(BASEPATH.'cache/'))
+
+		if (!is_writable($this->config->item('cache_path')))
 		{
-			$vars['error'] = lang('error_cache_folder_not_writable');
+			$vars['error'] = lang('error_cache_folder_not_writable', $this->config->item('cache_path'));
 		}
 		
 		$this->js_controller_params['method'] = 'html';
@@ -132,7 +147,7 @@ class Validate extends Fuel_base_controller {
 		$pages = $this->_get_pages();
 		$this->js_controller_params['pages'] = $pages;
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
-		$vars['validation_type'] = 'HTML';
+		$vars['validation_type'] = lang('validate_type_html');
 		$vars['page_title'] = $this->_page_title(array('Tools', 'Validate', 'HTML'), FALSE);
 		
 		$this->_render('run', $vars);
@@ -234,7 +249,7 @@ class Validate extends Fuel_base_controller {
 			$this->output->set_output($output);
 			return;
 		} 
-		else if (!$this->input->post('pages') && !$this->input->post('pages_input') && !$this->input->post('pages_serialized'))
+		else if (!$this->input->post('pages') AND !$this->input->post('pages_input') AND !$this->input->post('pages_serialized'))
 		{
 			$this->session->set_flashdata('error', lang('error_no_pages_selected'));
 			redirect(fuel_uri('tools/validate'));
@@ -245,7 +260,7 @@ class Validate extends Fuel_base_controller {
 		$this->js_controller_params['pages'] = $pages;
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
 		$vars['js_method'] = 'links';
-		$vars['validation_type'] = 'Links';
+		$vars['validation_type'] =  lang('validate_type_links');
 		$this->_render('run', $vars);
 	}
 
@@ -435,7 +450,7 @@ class Validate extends Fuel_base_controller {
 			$this->output->set_output($output);
 			return;
 		} 
-		else if (!$this->input->post('pages') && !$this->input->post('pages_input') && !$this->input->post('pages_serialized'))
+		else if (!$this->input->post('pages') AND !$this->input->post('pages_input') AND !$this->input->post('pages_serialized'))
 		{
 			$this->session->set_flashdata('error', lang('error_no_pages_selected'));
 			redirect(fuel_uri('tools/validate'));
@@ -448,7 +463,7 @@ class Validate extends Fuel_base_controller {
 		
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
 		
-		$vars['validation_type'] = 'Size Report';
+		$vars['validation_type'] = lang('validate_type_size_report');
 		$this->_render('run', $vars);
 	}
 	
@@ -456,7 +471,7 @@ class Validate extends Fuel_base_controller {
 	{
 		$pages_input = $this->input->post('pages_input');
 		$extra_pages = array();
-		if (!empty($pages_input) && $pages_input != lang('pages_input'))
+		if (!empty($pages_input) AND $pages_input != lang('validate_pages_input'))
 		{
 			$extra_pages = explode("\n", $pages_input);
 			foreach($extra_pages as $key => $page)

@@ -62,7 +62,7 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 		$vars = $rest + $vars;
 	}
 
-	$clone = $dwoo->get(null);
+	$clone = clone $dwoo;
 	$out = $clone->get($include, $vars);
 
 	if ($assign !== null) {

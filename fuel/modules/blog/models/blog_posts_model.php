@@ -1,14 +1,14 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once(FUEL_PATH.'models/base_module_model.php');
-require_once(APPPATH.MODULES_FOLDER.'/blog/config/blog_constants.php');
+require_once(MODULES_PATH.'/blog/config/blog_constants.php');
 
 class Blog_posts_model extends Base_module_model {
 
 	public $category = null;
 	public $required = array('title', 'content');
 	public $hidden_fields = array('content_filtered');
-	public $filters = array('first_name', 'last_name',);
+	public $filters = array('title', 'content_filtered', 'fuel_users.first_name', 'fuel_users.last_name');
 	public $unique_fields = array('permalink');
 
 	function __construct()
@@ -19,6 +19,9 @@ class Blog_posts_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'date_added', $order = 'desc')
 	{
+		// set the filter again here just in case the table names are different
+		$this->filters = array('title', 'content_filtered', $this->_tables['users'].'.first_name', $this->_tables['users'].'.last_name');
+		
 		$this->db->select($this->_tables['blog_posts'].'.id, title, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, '.$this->_tables['blog_posts'].'.date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
 		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['blog_posts'].'.author_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);

@@ -13,13 +13,6 @@ class Pages_model extends Base_module_model {
 		parent::__construct('pages');
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc')
-	{
-		$this->db->select($this->_tables['pages'].'.id, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.published');
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
-	
 	function tree($just_published = FALSE)
 	{
 		$CI =& get_instance();
@@ -137,7 +130,7 @@ class Pages_model extends Base_module_model {
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-		
+
 		$cms_pages = $this->list_locations(FALSE);
 		
 		// get valid view files that may show up
@@ -177,6 +170,10 @@ class Pages_model extends Base_module_model {
 	{
 		$fields = parent::form_fields();
 		$fields['date_added']['type'] = 'hidden';
+
+		$yes = lang('form_enum_option_yes');
+		$no = lang('form_enum_option_no');
+		$fields['cache']['options'] = array('yes' => $yes, 'no' => $no);
 		return $fields;
 	}
 	
@@ -184,7 +181,10 @@ class Pages_model extends Base_module_model {
 	{
 		$cleaned = parent::clean($values);
 		if (!empty($cleaned['location'])) {
-			if ($cleaned['location'] == 'example: company/about_us') $cleaned['location'] = '';
+			if ($cleaned['location'] == lang('pages_default_location'))
+			{
+				$cleaned['location'] = '';
+			}
 			$segments = explode('/', $cleaned['location']);
 			$cleaned_segments = array();
 			foreach($segments as $val)

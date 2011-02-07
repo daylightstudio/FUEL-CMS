@@ -1,4 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -8,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -61,33 +62,6 @@ function eval_string($str, $vars = array())
 	// change XML back
 	$str = str_replace('<@xml', '<?xml', $str);
 	return $str;
-}
-
-// --------------------------------------------------------------------
-
-/**
- * Get translated local strings with arguments
- *
- * @param 	string
- * @param 	mixed
- * @return	string
- */
-// 
-function lang($key, $args = NULL)
-{
-
-	// must test for this first because we may load a config 
-	// file that uses this function before lang file is loaded
-	if (!empty($GLOBALS['LANG']))
-	{
-		$CI =& get_instance();
-		if (!is_array($args))
-		{
-			$args = func_get_args();
-			$args[0] = $CI->lang->line($key);
-		}
-		return call_user_func_array('sprintf', $args);
-	}
 }
 
 // --------------------------------------------------------------------
@@ -152,7 +126,7 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
  * @param 	string 	string to evaluate
  * @return	string
  */
-function safe_htmlentities($str)
+function safe_htmlentities($str, $protect_amp = TRUE)
 {
 	// convert all hex single quotes to numeric ... 
 	// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
@@ -164,6 +138,12 @@ function safe_htmlentities($str)
 	$find = array('&lt;','&gt;');
 	$replace = array('__TEMP_LT__','__TEMP_GT__');
 	$str = str_replace($find,$replace, $str);
+	
+	// encode just &
+	if ($protect_amp)
+	{
+		$str = preg_replace('/&(?![a-z#]+;)/i', '__TEMP_AMP__', $str);
+	}
 
 	// safely translate now
 	if (version_compare(PHP_VERSION, '5.2.3', '>='))
@@ -179,6 +159,10 @@ function safe_htmlentities($str)
 	// translate everything back
 	$str = str_replace($find, array('<','>'), $str);
 	$str = str_replace($replace, $find, $str);
+	if ($protect_amp)
+	{
+		$str = str_replace('__TEMP_AMP__', '&', $str);
+	}
 	return $str;
 }
 

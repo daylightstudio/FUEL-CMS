@@ -4,7 +4,7 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['tools']['tools/cronjobs'] = 'Cronjobs';
+$config['nav']['tools']['tools/cronjobs'] = lang('module_cronjobs');
 
 
 /*

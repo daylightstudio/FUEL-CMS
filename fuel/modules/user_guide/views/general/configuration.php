@@ -78,6 +78,12 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td>Max number of recent pages to display.</td>
 		</tr>
 		<tr>
+			<td><strong>saved_page_state_max</strong></td>
+			<td>5</td>
+			<td>None</td>
+			<td>The maximum number of pages that page state will be saved before dumping the last one saved. This is used on the list pages in the admin to save sorting and filtering. Used to save on space needed for session.</td>
+		</tr>
+		<tr>
 			<td><strong>fuel_cookie_path</strong></td>
 			<td>/</td>
 			<td>None</td>
@@ -215,6 +221,27 @@ array(
 			</td>
 			<td>None</td>
 			<td>Javascript files (mostly jquery plugins) to be included other then the controller js files.</td>
+		</tr>
+		<tr>
+			<td><strong>fuel_js_localized</strong></td>
+			<td>
+<pre>
+array(
+	'label_search',
+	'btn_select',
+	'btn_asset',
+	'btn_image',
+	'btn_pdf',
+	'btn_edit',
+	'btn_add',
+	'comboselect_values_empty',
+	'comboselect_selected_empty',
+	'comboselect_filter',			
+);
+</pre>
+			</td>
+			<td>None</td>
+			<td>Language keys to pass to the front end javascript object.</td>
 		</tr>
 		<tr>
 			<td><strong>fuel_css</strong></td>

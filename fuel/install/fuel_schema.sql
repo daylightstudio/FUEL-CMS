@@ -12,42 +12,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `features`
--- 
-
-CREATE TABLE `features` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `title` varchar(100) collate utf8_unicode_ci NOT NULL,
-  `copy` text collate utf8_unicode_ci NOT NULL,
-  `type` enum('client','developer') collate utf8_unicode_ci NOT NULL,
-  `icon_class` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `precedence` int(10) unsigned NOT NULL,
-  `published` enum('yes','no') collate utf8_unicode_ci NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- 
--- Dumping data for table `features`
--- 
-
-INSERT INTO `features` (`id`, `title`, `copy`, `type`, `icon_class`, `precedence`, `published`) VALUES 
-(1, 'Inline Editing', 'Edit your page''s data on the actual page and see results immediately', 'client', 'ico_inline_editing', 0, 'yes'),
-(2, 'Simple Interface', 'An intuitive design gives your clients almost no learning curve to learn how to manage their site', 'client', 'ico_interface', 0, 'yes'),
-(3, 'WYS <u>IS</u> WYG', 'What You See <u>IS</u> What You Get. FUEL''s rich text editor, <a href="http://markitup.jaysalvat.com/home/" target="_blank">markItUp!</a>, does not mess with your beautiful code like other WYSIWYG editors (you know who your are)!', 'developer', 'ico_wysiwyg', 1, 'yes'),
-(4, 'Import Existing Static Pages', 'Easily import and keep your static view files in sync with FUEL''s built-in auto-detection capabilities', 'client', 'ico_view_import', 0, 'yes'),
-(5, 'Manage Users &amp; Permissions', 'Flexible user permission controls give you complete control for your admin environment.', 'client', 'ico_users', 0, 'yes'),
-(6, '3rd Party Integration', 'One click login into other 3rd part applications like Google Analytics, Clicky, Wordpress and phpMyAdmin.', 'client', 'ico_3rd_party', 0, 'yes'),
-(7, 'CodeIgnited!', 'Built upon the popular PHP web framework <a href="http://codeigniter.com" target="_blank">CodeIgniter</a> and works side-by-side with your existing installations', 'developer', 'ico_codeignited', 999, 'yes'),
-(8, 'Expanded Code Library', 'Asset helpers, menu builders, expanded model capabilities with custom record objects and much more!', 'developer', 'ico_expanded_library', 0, 'yes'),
-(9, 'Custom Module Creation', 'Easily create custom modules for your clients that give them immediate search, editing and publishing capabilities.', 'developer', 'ico_custom_modules', 0, 'yes'),
-(10, 'Opt-in Controller Development', 'Speed up development of simple pages by just creating view files without the need of controller methods. Associate variables to one or more pages just like you would assign routes in CodeIgniter!', 'developer', 'ico_optin_controller', 0, 'yes'),
-(11, 'Site-Wide Validation', 'Validate HTML, check page links and determine the weight of your pages with just a few simple clicks', 'developer', 'ico_validation', 0, 'yes'),
-(12, 'Cronjob Manager', 'Manage recurring tasks like backing up your database, with the built-in cronjob manager', 'developer', 'ico_cronjob', 0, 'no'),
-(13, 'Roll a Blog', 'Post, categorize and comment with our simple blogging platform module.', 'client', 'ico_blog', 0, 'yes');
-
--- --------------------------------------------------------
-
--- 
 -- Table structure for table `fuel_archives`
 -- 
 
@@ -77,12 +41,14 @@ CREATE TABLE `fuel_blocks` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
   `view` text collate utf8_unicode_ci NOT NULL,
+  `description` varchar(255) collate utf8_unicode_ci NOT NULL,
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
-  `date_added` date default NULL,
+  `date_added` datetime default NULL,
   `last_modified` timestamp NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 -- 
 -- Dumping data for table `fuel_blocks`
 -- 
@@ -259,7 +225,7 @@ CREATE TABLE `fuel_blog_users` (
   `display_name` varchar(50) NOT NULL,
   `website` varchar(100) NOT NULL,
   `about` text NOT NULL,
-  `avatar` varchar(255) NOT NULL,
+  `avatar_image` varchar(255) NOT NULL,
   `twitter` varchar(255) NOT NULL,
   `facebook` varchar(255) NOT NULL,
   `date_added` datetime default NULL,
@@ -267,12 +233,6 @@ CREATE TABLE `fuel_blog_users` (
   PRIMARY KEY  (`fuel_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Dumping data for table `fuel_blog_users`
--- 
-
-INSERT INTO `fuel_blog_users` (`fuel_user_id`, `display_name`, `website`, `about`, `avatar`, `twitter`, `facebook`, `date_added`, `active`) VALUES 
-(1, 'David McReynolds', '', '', '', '', '', NULL, 'yes');
 
 -- --------------------------------------------------------
 
@@ -301,7 +261,7 @@ CREATE TABLE `fuel_logs` (
 CREATE TABLE `fuel_navigation` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `group_id` int(5) unsigned NOT NULL default '1',
-  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name that you want the link to go to (e.g. comany/about_us)',
+  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name that you want the link to go to (e.g. comany/about)',
   `nav_key` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The nav key is a friendly ID that you can use for setting the selected state. If left blank, a default value will be set for you',
   `label` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The name you want to appear in the menu',
   `parent_id` int(10) unsigned NOT NULL default '0' COMMENT 'Used for creating menu hierarchies. No value means it is a root level menu item',
@@ -433,7 +393,8 @@ INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(25,'tools/seo','Page Analysis','yes'),
 	(26,'tools/tester','Tester Module','yes'),
 	(27,'blocks','Manage Blocks','yes'),
-	(28,'site_docs','Site Documentation','yes');
+	(28,'site_docs','Site Documentation','yes'),
+	(29,'tools/cronjobs','Cronjobs','yes');
 
 -- --------------------------------------------------------
 
@@ -469,6 +430,7 @@ CREATE TABLE `fuel_users` (
   `email` varchar(100) collate utf8_unicode_ci NOT NULL,
   `first_name` varchar(30) collate utf8_unicode_ci NOT NULL,
   `last_name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `language` varchar(30) collate utf8_unicode_ci NOT NULL default 'english',
   `reset_key` varchar(64) collate utf8_unicode_ci NOT NULL,
   `super_admin` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',

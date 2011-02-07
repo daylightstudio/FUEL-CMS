@@ -114,7 +114,7 @@ class Assets extends Module {
 		// other variables
 		$vars['id'] = null;
 		$vars['data'] = array();
-		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
+		$vars['action'] =  'create';
 		$preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
 		if (!empty($vars['data'][$preview_key])) $this->preview_path = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$vars['data']['\\2'].'\\3'", $this->preview_path);
 		
@@ -143,7 +143,7 @@ class Assets extends Module {
 			{
 				$this->model->delete(uri_safe_decode($id));
 			}
-			$this->session->set_flashdata('success', $this->lang->line('data_deleted'));
+			$this->session->set_flashdata('success', lang('data_deleted'));
 			$this->_clear_cache();
 			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
 			redirect(fuel_uri($this->module_uri));

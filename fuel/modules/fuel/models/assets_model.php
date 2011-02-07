@@ -4,7 +4,7 @@
 require_once(APPPATH.'libraries/Validator.php');
 
 
-class Assets_model extends Model {
+class Assets_model extends CI_Model {
 	
 	public $filters = array('group_id' => 'images');
 	public $filter_value = null;
@@ -13,12 +13,12 @@ class Assets_model extends Model {
 	protected $_dirs = array('images', 'pdf');
 	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf');
 	protected $validator = NULL; // the validator object
-	
+
 	private $_encoded = FALSE;
 
 	function __construct()
 	{
-		parent::Model();
+		parent::__construct();
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		$this->_dirs = list_directories($CI->asset->assets_server_path, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE, TRUE);
@@ -49,7 +49,7 @@ class Assets_model extends Model {
 		$CI->load->helper('convert');
 		if (!isset($this->filters['group_id'])) return array();
 		$group_id = $this->filters['group_id'];
-		
+
 		// not encoded yet... then decode
 		if (!$this->_encoded)
 		{
@@ -60,7 +60,7 @@ class Assets_model extends Model {
 		{
 			$group_id = uri_safe_decode($group_id);
 		}
-		
+
 		$asset_dir = $this->get_dir($group_id);
 		
 		$assets_path = $CI->asset->assets_server_path.$asset_dir.DIRECTORY_SEPARATOR;
@@ -72,7 +72,7 @@ class Assets_model extends Model {
 		$cnt = count($tmpfiles);
 		$return = array();
 		
-		$asset_type_path = WEB_PATH.$CI->asset->assets_path.$asset_dir.'/';
+		$asset_type_path = WEB_PATH.$CI->config->item('assets_path').$asset_dir.'/';
 		
 		//for ($i = $offset; $i < $cnt - 1; $i++)
 		for ($i = 0; $i < $cnt; $i++)
@@ -89,9 +89,9 @@ class Assets_model extends Model {
 
 					//$file['filename'] = $files[$key]['name'];
 					$file['name'] = $key;
-					$file['last_updated'] = english_date($files[$key]['date'], true);
 					$file['preview/kb'] = $files[$key]['size'];
 					$file['link'] = NULL;
+					$file['last_updated'] = english_date($files[$key]['date'], true);
 					$return[] = $file;
 				}
 			}
@@ -99,7 +99,9 @@ class Assets_model extends Model {
 		}
 		
 		$return = array_sorter($return, $col, $order, TRUE);
-		$return = array_slice($return, $offset, $limit);
+		
+		// do a check for empty limit values to prevent issues found where an empty $limit value would return nothing in 5.16
+		$return = (empty($limit)) ? array_slice($return, $offset) : array_slice($return, $offset, $limit);
 		
 		// after sorting add the images
 		foreach ($return as $key => $val)
@@ -140,7 +142,6 @@ class Assets_model extends Model {
 		ksort($dirs);
 		return $dirs;
 	}
-	
 	function get_image_dir()
 	{
 		$CI =& get_instance();
@@ -275,14 +276,14 @@ class Assets_model extends Model {
 		$fields = array();
 		$editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel');
 		$accepts = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|jpe|jpeg|gif|png');
-		$fields['userfile'] = array('label' => 'File', 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
-		$fields['asset_folder'] = array('type' => 'select', 'options' => $this->get_dirs(), 'comment' => 'The asset folder that it will be uploaded to');
-		$fields['userfile_filename'] = array('label' => 'New file name', 'comment' => 'If no name is provided, the filename that already exists will be used');
+		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
+		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $this->get_dirs(), 'comment' => 'The asset folder that it will be uploaded to');
+		$fields['userfile_filename'] = array('label' => lang('assets_model_new_file_name'), 'comment' => 'If no name is provided, the filename that already exists will be used');
 		if ($CI->config->item('assets_allow_subfolder_creation', 'fuel'))
 		{
-			$fields['subfolder'] = array('comment' => 'Will attempt to create a new subfolder to place your asset');
+			$fields['subfolder'] = array('label' => lang('assets_model_subfolder'), 'comment' => 'Will attempt to create a new subfolder to place your asset');
 		}
-		$fields['overwrite'] = array('type' => 'checkbox', 'comment' => 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.', 'checked' => true, 'value' => '1');
+		$fields['overwrite'] = array('label' => lang('assets_model_overwrite'), 'type' => 'checkbox', 'comment' => 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.', 'checked' => true, 'value' => '1');
 		return $fields;
 	}
 	

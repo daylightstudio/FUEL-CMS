@@ -53,8 +53,9 @@ class Fuel_modules {
 	 */	
 	public function info($module)
 	{
-		if (!empty($this->_cached[$module])) return $this->_cached[$module];
+		if (!empty($_cached[$module])) return $_cached[$module];
 		//if (!$this->is_allowed($module)) return FALSE;
+
 		if (!isset($this->_modules[$module])) return FALSE;
 		
 		$CI =& get_instance();
@@ -76,17 +77,19 @@ class Fuel_modules {
 			'permission' => $module,
 			'js_controller' => 'BaseFuelController',
 			'js_controller_params' => array(),
+			'js_localized' => array(),
 			'js' => '',
 			'edit_method' => 'find_one_array',
 			'instructions' => lang('module_instructions_default', $module),
 			'filters' => array(),
 			'archivable' => TRUE,
+			'table_headers' => array(),
 			'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
 			'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
 			'list_actions' => array(),
 			'rows_selectable' => TRUE,
 			'clear_cache_on_save' => TRUE,
-			'create_action_name' => 'Create',
+			'create_action_name' => lang('btn_create'),
 			'configuration' => '',
 			'nav_selected' => NULL,
 			'default_col' => NULL,
@@ -110,7 +113,20 @@ class Fuel_modules {
 				$return[$key] = $val;
 			}
 		}
-		$this->_cached[$module] = $return;
+		
+		// localize certain fields
+		if ($module_name = lang('module_'.$module))
+		{
+			$return['module_name'] = $module_name;
+		}
+		
+		if ($create_action_name = lang('module_'.$module.'_create'))
+		{
+			$return['create_action_name'] = $create_action_name;
+		}
+		
+		$_cached[$module] = $return;
+		
 		return $return;
 		
 	}
@@ -158,17 +174,18 @@ class Fuel_modules {
 		foreach($this->_allowed as $module)
 		{
 			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-			if (file_exists(APPPATH.MODULES_FOLDER.'/'.$module.'/config/'.$module.'_fuel_modules.php'))
+			if (file_exists(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php'))
 			{
 				$CI->config->module_load($module, $module.'_fuel_modules');
-				include(APPPATH.MODULES_FOLDER.'/'.$module.'/config/'.$module.'_fuel_modules.php');
+				include(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php');
 				$module_init = array_merge($module_init, $config['modules']);
 				
 			}
 		}
 		return $module_init;
 	}
-
+	
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -181,6 +198,7 @@ class Fuel_modules {
 	{
 		$CI =& get_instance();
 		$modules = $this->get_modules();
+
 		$pages = array();
 		foreach($modules as $mod => $module)
 		{
@@ -194,7 +212,9 @@ class Fuel_modules {
 			{
 				$CI->load->model($info['model_name']);
 			}
+			
 			$model = $info['model_name'];
+
 			if (method_exists($model, 'find_all_array'))
 			{
 				$records = $CI->$model->find_all_array();
@@ -202,7 +222,6 @@ class Fuel_modules {
 			
 			$callback = create_function(
 			            '$matches',
-						
 			            '
 						$record = $GLOBALS["__temp_record__"];
 						if (!empty($record[$matches[2]]))
@@ -242,7 +261,7 @@ class Fuel_modules {
 	 */	
 	static function module_path($module)
 	{
-		return APPPATH.MODULES_FOLDER.'/'.$module.'/';
+		return MODULES_PATH.$module.'/';
 	}
 
 	

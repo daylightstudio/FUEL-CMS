@@ -18,7 +18,6 @@ class Google_keywords extends Seo_base_controller {
 		$this->js_controller_params['method'] = 'google_keywords';
 		
 		$seo_config = $this->config->item('seo');
-		
 		$vars = array();
 		if (!empty($_POST['domain']))
 		{
@@ -29,7 +28,7 @@ class Google_keywords extends Seo_base_controller {
 			$vars['domain'] = (!empty($seo_config['keyword_search_default_domain'])) ? $seo_config['keyword_search_default_domain'] : $_SERVER['SERVER_NAME'];
 		}
 		$vars['keywords'] = (!empty($_POST['keywords'])) ? $this->input->post('keywords') : $seo_config['keyword_google_default_keywords'];
-		
+
 		if (is_array($vars['keywords']))
 		{
 			$options = array();
@@ -40,18 +39,18 @@ class Google_keywords extends Seo_base_controller {
 			$vars['keywords'] = $options;
 		}
 		$vars['num_results'] = $seo_config['keyword_google_num_results'];
-	
+		
 		if (!empty($_POST))
 		{
 			$keywords = explode(',', $this->input->post('keywords'));
 			$domain = str_replace(array('http://', 'www'), '', $this->input->post('domain'));
 			$ch = curl_init();
-			
+
 			$found = array();
 			foreach($keywords as $keyword)
 			{
 				$keyword = trim($keyword);
-				
+
 				$uri = 'http://www.google.com/search?q='.rawurlencode($keyword).'&num='.$seo_config['keyword_google_num_results'].'&'.http_build_query($seo_config['keyword_google_additional_params']);
 
 				// scrape html from page running on localhost
@@ -66,13 +65,13 @@ class Google_keywords extends Seo_base_controller {
 				// echo "</pre>";
 				// exit();
 				$results = array();
-				
-				
+
+
 				if (!empty($matches[2]))
 				{
 					$results = $matches[2];
 				}
-				
+
 				$num = 1;
 				foreach($results as $uri)
 				{
@@ -87,7 +86,7 @@ class Google_keywords extends Seo_base_controller {
 					$num++;
 				}
 			}
-			
+
 			curl_close($ch); 
 			$vars['results'] = $found;
 			if (is_ajax())
@@ -96,9 +95,10 @@ class Google_keywords extends Seo_base_controller {
 				return false;
 			}
 		}
+
 		$this->_render('google_keywords', $vars);
 	}
 }
 
 /* End of file tools.php */
-/* Location: ./codeigniter/application/modules/tools/controllers/google_keywords.php */
+/* Location: ./modules/tools/controllers/google_keywords.php */

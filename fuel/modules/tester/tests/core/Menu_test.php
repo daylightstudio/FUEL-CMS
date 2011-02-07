@@ -134,6 +134,22 @@ EOD;
 
 		}
 		
+		function test_delimited()
+		{
+			/*******************************************
+			basic test
+			********************************************/ 
+			$this->CI->menu->reset();
+			$active = NULL;
+			$this->CI->menu->container_tag_id = 'footer_menu';
+			$menu = $this->CI->menu->render($this->nav, $active, NULL, 'delimited');
+			$test =  strip_whitespace($menu);
+			$str = '<div id="footer_menu"><a href="'.site_url('about').'" title="About">About</a> &nbsp;|&nbsp; <a href="'.site_url('products').'" title="Products">Products</a></div>';
+			$expected = strip_whitespace($str);
+			$this->run($test, $expected, 'Menu delimited test');
+
+		}
+
 		function test_hidden_items()
 		{
 			$this->nav['about'] = 'About';

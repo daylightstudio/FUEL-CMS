@@ -16,13 +16,13 @@ class Navigation_model extends Base_module_model {
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'asc')
-	{
-		$this->db->select($this->_tables['navigation'].'.id, label, nav_key,'.$this->_tables['navigation'].'.published');
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
-	
+	// function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'asc')
+	// {
+	// 	$this->db->select($this->_tables['navigation'].'.id, label AS "'.lang('form_label_label').'", nav_key AS "'.lang('navigation_model_nav_key').'", '.$this->_tables['navigation'].'.published AS "'.lang('form_label_published').'"');
+	// 	$data = parent::list_items($limit, $offset, $col, $order);
+	// 	return $data;
+	// }
+	// 
 	function find_by_location($location, $group_id = 1)
 	{
 		// $this->db->select($this->_tables['navigation'].'.*, '.$this->_tables['navigation_groups'].'.name AS group_name');
@@ -151,7 +151,7 @@ class Navigation_model extends Base_module_model {
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 
 		$fields['group_id'] = array(
-		'label' => 'Navigation Group',
+		'label' => lang('navigation_model_group_id'),
 		'type' => 'select', 
 		'options' => $group_options,
 		'class' => 'add_edit navigation_group', 
@@ -170,11 +170,15 @@ class Navigation_model extends Base_module_model {
 		
 		$this->load->helper('array');
 		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $group_value));
-		$fields['parent_id']['label'] = 'Parent';
+		$fields['parent_id']['label'] = lang('navigation_model_parent_id');
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
 		$fields['parent_id']['first_option'] = array('0' => 'None');
 		$fields['published']['label_layout'] = 'left';
+		
+		$yes = lang('form_enum_option_yes');
+		$no = lang('form_enum_option_no');
+		$fields['hidden']['options'] = array('yes' => $yes, 'no' => $no);
 		
 		return $fields;
 	}
@@ -219,7 +223,8 @@ class Navigation_model extends Base_module_model {
 			$values['location'] = str_replace('___', '/', $values['location']);
 		}
 		return $values;
-	}	
+	}
+		
 	function on_before_validate($values)
 	{
 		if (!empty($values['id']))

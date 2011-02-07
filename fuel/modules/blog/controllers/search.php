@@ -1,5 +1,5 @@
 <?php
-require_once(APPPATH.MODULES_FOLDER.'/blog/libraries/Blog_base_controller.php');
+require_once(MODULES_PATH.'/blog/libraries/Blog_base_controller.php');
 
 class Search extends Blog_base_controller {
 	
@@ -13,7 +13,10 @@ class Search extends Blog_base_controller {
 		$this->load->library('pagination');
 		$this->load->helper('text');
 		
-		$this->uri->init_get_params();
+		//$this->uri->init_get_params();
+		echo "<pre style=\"text-align: left;\">";
+		print_r($_GET);
+		echo "</pre>";
 		
 		$q = $this->uri->segment(3);
 		$use_get = FALSE;
@@ -42,6 +45,10 @@ class Search extends Blog_base_controller {
 			$config['uri_segment'] = 3;
 			$config['page_query_string'] = $use_get;
 			$config['per_page'] = $limit;
+			$config['prev_link'] = lang('blog_prev_page');
+			$config['next_link'] = lang('blog_next_page');
+			$config['first_link'] = lang('blog_first_link');
+			$config['last_link'] = lang('blog_last_link');;
 
 			$this->pagination->initialize($config); 
 

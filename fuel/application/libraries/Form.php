@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -113,13 +113,24 @@ Class Form {
 	 * 
 	 * @access public
 	 * @param string html to use before the closing form tag
+	 * @param string whether to include the csrf field before the closing tag
 	 * @return string
 	 */
-	public function close($html_before_form = '')
+	public function close($html_before_form = '', $add_csrf_field = TRUE)
 	{
+		// test for get_instance function just to make sure we are using CI, in case we want to use this class elsewhere
+		if (function_exists('get_instance') AND $add_csrf_field === TRUE)
+		{
+			$CI =& get_instance();
+			if ($CI->config->item('csrf_protection') === TRUE)
+			{
+				$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
+				$html_before_form .= $this->hidden($CI->security->csrf_token_name, $CI->security->csrf_hash);
+			}
+		}
 		return $html_before_form.'</form>';
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -398,27 +409,35 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * A helper method to prepare string for textarea... taken from CI form_helper
+	 * A helper method to prepare string for textarea... taken from Kohana
 	 * 
 	 * @access public
 	 * @param string elements value
 	 * @return string
 	 */
-	public static function prep($str)
+	public static function prep($str, $double_encode = TRUE)
 	{
-		if ($str === '')
+		$str = (string) $str;
+		
+		if ($double_encode)
 		{
-			return '';
+			$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 		}
 		
-		// translate characters but only do it once
-		$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
-
-		// In case htmlspecialchars misses these.
-		$str = str_replace(array('&#x27;', "'", '"'), array("&#39;", "&#39;", "&quot;"), $str);
-		return $str;	
-		
+		// Do not encode existing HTML entities
+		// From PHP 5.2.3 this functionality is built-in, otherwise use a regex
+		if (version_compare(PHP_VERSION, '5.2.3', '>='))
+		{
+			$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
+		}
+		else
+		{
+			$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
+			$str = str_replace(array('<', '>', '\'', '"'), array('&lt;', '&gt;', '&#39;', '&quot;'), $str);
+		}
+		return $str;
 	}
+	
 	
 	// --------------------------------------------------------------------
 
@@ -668,7 +687,7 @@ Class Form_select {
 			}
 			else
 			{
-					$str .= "\t\t<option value=\"\" label=\"".Form::prep($this->first_option)."\">".Form::prep($this->first_option)."</option>\n";
+					$str .= "\t\t<option value=\"\" label=\"".Form::prep($this->first_option, FALSE)."\">".Form::prep($this->first_option, FALSE)."</option>\n";
 			}
 		}
 		$selected = '';
@@ -730,7 +749,7 @@ Class Form_select {
 				}
 			}
 		}
-		return "\t\t<option value=\"".Form::prep($key)."\" label=\"".$val."\"".$selected.">".Form::prep($val)."</option>\n";
+		return "\t\t<option value=\"".Form::prep($key, FALSE)."\" label=\"".$val."\"".$selected.">".Form::prep($val, FALSE)."</option>\n";
 
 	}
 

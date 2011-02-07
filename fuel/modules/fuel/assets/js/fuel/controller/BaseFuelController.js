@@ -45,6 +45,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.leftMenuInited = false;
 		this.formController = null;
 		this.previewPath = myMarkItUpSettings.previewParserPath;
+		this.localized = jqx.config.localized;
+		
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
@@ -121,6 +123,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$(".notification .success").stop(true, true).animate( { backgroundColor: '#dcffb8'}, 1500);
 		$(".notification .error").stop(true, true).animate( { backgroundColor: '#ee6060'}, 1500);
 		$(".notification .warning").stop(true, true).animate( { backgroundColor: '#ffff99'}, 1500);
+
 	},
 	
 	_submit : function(){
@@ -136,7 +139,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.treeLoaded = false;
 		this.tableLoaded = false;
 		this._notifications();
-		$('#search_term').fillin('Search').focus();
+		$('#search_term').fillin(this.lang('label_search')).focus();
 		$('#limit').change(function(e){
 			$('#form_table').submit();
 		});
@@ -265,16 +268,22 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
-		$('.save, #Save').live('click', function(e){
+		$('.save, #' + this.lang('btn_save')).live('click', function(e){
 			$.removeChecksave();
 			$('#form').submit();
 			return false;
 		});
 		
-		$('.cancel, #Cancel').live('click', function(e){
+		$('.cancel, #' + this.lang('btn_cancel')).live('click', function(e){
 			_this.go(_this.modulePath);
 			return false;
 		});
+		
+		$('.submit_action').click(function(){
+			$('#form').attr($(this).attr('href')).submit();
+			return false;
+		});
+		
 		
 		$('#version').change(function(e){
 			$.removeChecksave();
@@ -309,6 +318,21 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (jqx.config.warnIfModified) $.checksave();
 	},
 	
+	_comboOps : function(elem){
+		var comboOpts = {};
+		comboOpts.valuesEmptyString = this.lang('comboselect_values_empty');
+		comboOpts.selectedEmptyString = this.lang('comboselect_selected_empty');
+		comboOpts.defaultSearchBoxString = this.lang('comboselect_filter');
+		var sortingId = 'sorting_' + $(elem).attr('id');
+		if ($('#' + sortingId).size()){
+			comboOpts.autoSort = false;
+			comboOpts.isSortable = true;
+			comboOpts.selectedOrdering = eval(unescape($('#' + sortingId).val()));
+		}
+		
+		return comboOpts;
+	},
+	
 	initSpecialFields : function(context){
 		var _this = this;
 		this._initAssets(context);
@@ -332,17 +356,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
 				$(this).markItUp(myMarkItUpSettings);
 			}
-		})
-		
+		})		
 		// set up supercomboselects
 		$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
-			var comboOpts = {};
-			var sortingId = 'sorting_' + $(this).attr('id');
-			if ($('#' + sortingId).size()){
-				comboOpts.autoSort = false;
-				comboOpts.isSortable = true;
-				comboOpts.selectedOrdering = eval(unescape($('#' + sortingId).val()));
-			}
+			var comboOpts = _this._comboOps(this);
 			$(this).supercomboselect(comboOpts);
 		});
 		
@@ -414,18 +431,18 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var btnLabel = '';
 			switch(assetFolder.split('/')[0].toLowerCase()){
 				case 'pdf':
-					btnLabel = 'PDF';
+					btnLabel = _this.lang('btn_pdf');
 					break;
 				case 'images': case 'img': case '_img':
-					btnLabel = 'Image';
+					btnLabel = _this.lang('btn_image');
 					break;
 				case 'swf': case 'flash':
-					btnLabel = 'Flash';
+					btnLabel = _this.lang('btn_flast');
 					break;
 				default :
-					btnLabel = 'Asset';
+					btnLabel = _this.lang('btn_asset');
 			}
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">Select ' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + _this.lang('btn_select') + ' ' + btnLabel + '</a>');
 		});
 		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
 		$('.asset_select_button', context).click(function(e){
@@ -478,8 +495,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
 			}
 			var url = jqx.config.fuelPath + '/' + module + '/inline_edit/';
-			$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">Add</a>');
-			$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">Edit</a>');
+			$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + _this.lang('btn_add') + '</a>');
+			$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">' + _this.lang('btn_edit') + '</a>');
 			
 			
 			var refreshField = function(html){
@@ -491,7 +508,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					$modalContext.jqmHide();
 					$('#' + fieldId).replaceWith(html);
 					if ($('#' + fieldId + '[multiple]').not('select[class=no_combo]').size()){
-						$('#' + fieldId).supercomboselect();
+						var comboOpts = _this._comboOps(this);
+						$('#' + fieldId).supercomboselect(comboOpts);
 					}
 					$('#' + fieldId).change(function(){
 						changeField($(this));
@@ -574,7 +592,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('.delete', $modalContext).click(function(){
 					$.removeChecksave();
 					
-					if (confirm('Are you sure you want to delete this?')){
+					if (confirm(_this.lang('confirm_delete'))){
 						$form.find('.__fuel_inline_action__').val('delete');
 						$form.ajaxSubmit({
 							success: function(html){
@@ -692,6 +710,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	deleteItem : function(){
 		//this._submit();
+	},
+	
+	lang : function(key){
+		return this.localized[key];
 	}
 	
 	

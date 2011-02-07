@@ -1,7 +1,7 @@
 <?php
 define('FUEL_ADMIN', TRUE);
 
-class Fuel_base_controller extends Controller {
+class Fuel_base_controller extends CI_Controller {
 	
 	public $js_controller = 'BaseFuelController';
 	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
@@ -10,21 +10,42 @@ class Fuel_base_controller extends Controller {
 	
 	function __construct($validate = TRUE)
 	{
-		parent::Controller();
-
+		parent::__construct();
+		
+		// load all the helpers we need
 		$this->load->library('form');
 		$this->load->helper('convert');
 		$this->load->helper('ajax');
 		$this->load->helper('cookie');
 		$this->load->helper('inflector');
-		$this->load->helper('string');
+		//$this->load->helper('string'); already loaded in autoload
 		$this->load->helper('text');
+		
+		// load main fuel config
+		$this->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 
-		$this->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
-		$this->load->module_language(FUEL_FOLDER, 'fuel', $this->config->item('language'));
+		// load the authentication library
+		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
+		
+		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
+		$language = $this->fuel_auth->user_data('language');
+
+		// in case the language field doesn't exist... due to older fersions'
+		if (empty($language) OR !is_string($language)) $language = $this->config->item('language');
+		
+		// load this language file first because fuel_modules needs it
+		$this->load->module_language(FUEL_FOLDER, 'fuel', $language);
+
+		// now load the other languages
+		$this->_load_languages();
+		
+		// now load the fuel modules information
+		$this->load->module_library(FUEL_FOLDER, 'fuel_modules');
+		
+		// load assets
 		$this->config->load('asset');
 		
-		$this->load->module_library(FUEL_FOLDER, 'fuel_modules');
+		// load fuel helper
 		$this->load->module_helper(FUEL_FOLDER, 'fuel');
 		
 		// check any remote host or IP restrictions first
@@ -32,12 +53,14 @@ class Fuel_base_controller extends Controller {
 		{
 			show_404();
 		}
+		
 		// set asset output settings
 		$this->asset->assets_output = $this->config->item('fuel_assets_output', 'fuel');
 		
 		if ($validate) $this->_check_login();
 		
-		$this->load->module_model(FUEL_FOLDER, 'logs_model');
+		$this->load->model(FUEL_FOLDER.'/logs_model');
+
 		$this->load->helpers(array('ajax','date'));
 		
 		// set up default variables
@@ -58,7 +81,7 @@ class Fuel_base_controller extends Controller {
 		}
 
 		$this->load->vars($load_vars);
-
+		$this->_load_js_localized();
 		
 		// set asset paths
 		//$this->asset->assets_module = FUEL_FOLDER;
@@ -122,7 +145,7 @@ class Fuel_base_controller extends Controller {
 	protected function _has_module($module)
 	{
 		if ($module == 'fuel') return TRUE;
-		return (file_exists(APPPATH.MODULES_FOLDER.'/'.$module) && in_array($module, $this->config->item('modules_allowed', 'fuel')));
+		return (file_exists(MODULES_PATH.$module) && in_array($module, $this->config->item('modules_allowed', 'fuel')));
 	}
 	
 	protected function _last_page($key = NULL)
@@ -200,13 +223,14 @@ class Fuel_base_controller extends Controller {
 		
 		foreach($modules as $module)
 		{
-			$nav_path = APPPATH.MODULES_FOLDER.'/'.$module.'/config/'.$module.'.php';
+			$nav_path = MODULES_PATH.$module.'/config/'.$module.'.php';
 			if (file_exists($nav_path))
 			{
 				include($nav_path);
 				$nav = array_merge($nav, $config['nav']);
 			}
 		}
+		
 		
 		// automatically include modules if set to AUTO
 		if (is_string($nav['modules']) AND strtoupper($nav['modules']) == 'AUTO')
@@ -262,7 +286,7 @@ class Fuel_base_controller extends Controller {
 		foreach($modules as $module)
 		{
 			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-			if (file_exists(APPPATH.MODULES_FOLDER.'/'.$module.'/assets/css/'.$module.'.css'))
+			if (file_exists(MODULES_PATH.$module.'/assets/css/'.$module.'.css'))
 			{
 				$css[] = array($module => $module);
 			}
@@ -272,6 +296,20 @@ class Fuel_base_controller extends Controller {
 			$css[] = array('' => $this->config->item('xtra_css', 'fuel'));
 		}
 		return $css;
+	}
+
+	// load the css files for the admin include from other modules
+	protected function _load_languages()
+	{
+		$modules = $this->config->item('modules_allowed', 'fuel');
+		foreach($modules as $module)
+		{
+			$language = $this->fuel_auth->user_lang();
+			if (file_exists(MODULES_PATH.$module.'/language/'.$language.'/'.$module.'_lang'.EXT))
+			{
+				$this->load->module_language($module, $module);
+			}
+		}
 	}
 
 	// generate the page title
@@ -296,7 +334,23 @@ class Fuel_base_controller extends Controller {
 		$page_title = 'FUEL CMS : '.implode(' : ', $page_segs);
 		return $page_title;
 	}
-
+	
+	// get js localized strings
+	protected function _load_js_localized($js_localized = array(), $load = TRUE)
+	{
+		static $localized;
+		if (empty($localized))
+		{
+			$localized = json_lang('fuel/fuel_js', FALSE);
+		}
+		$localized = array_merge($localized, $js_localized);
+		if  ($load)
+		{
+			$this->load->vars(array('js_localized' => $localized));
+		}
+		return $localized;
+	}
+	
 	function reset_page_state()
 	{
 		$state_key = $this->_get_state_key();
@@ -321,6 +375,12 @@ class Fuel_base_controller extends Controller {
 			{
 				$user_data['page_state'] = array();
 			}
+			
+			// if greater then what is set in config, then we pop the array to save on page state info
+			if (count($user_data['page_state']) > $this->config->item('saved_page_state_max', 'fuel'))
+			{
+				array_pop($user_data['page_state']);
+			}
 			$user_data['page_state'][$state_key] = $vars;
 			$this->session->set_userdata($session_key, $user_data);
 		}
@@ -338,11 +398,12 @@ class Fuel_base_controller extends Controller {
 			$user_data = $this->fuel_auth->user_data();
 			return (isset($user_data['page_state'][$state_key])) ? $user_data['page_state'][$state_key] : array();
 		}
+		return array();
 	}
 	
 	protected function _get_state_key()
 	{
-		if (!empty($this->module_uri))
+		if (!empty($this->module))
 		{
 			return $this->module_uri;
 		}
@@ -351,13 +412,14 @@ class Fuel_base_controller extends Controller {
 			return FALSE;
 		}
 	}
-
+	
 	protected function _no_cache()
 	{
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0',false);
 		header('Pragma: no-cache');
 	}
+
 
 }
 

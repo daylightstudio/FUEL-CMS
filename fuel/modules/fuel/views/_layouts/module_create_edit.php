@@ -1,6 +1,6 @@
 <div id="main_top_panel">
 	<h2 class="ico ico_<?=url_title(str_replace('/', '_', $this->module_uri),'_', TRUE)?>"><a href="<?=fuel_url($this->module_uri)?>"><?=$this->module_name?></a> &gt; 
-	<?=ucfirst($action)?><?php if (!empty($data[$this->display_field])) { ?>: <em><?=character_limiter(strip_tags($data[$this->display_field]), 50)?></em><?php } ?></h2>
+	<?=lang('action_'.$action)?><?php if (!empty($data[$this->display_field])) { ?>: <em><?=character_limiter(strip_tags($data[$this->display_field]), 50)?></em><?php } ?></h2>
 </div>
 <div class="clear"></div>
 
@@ -28,8 +28,8 @@
 		
 			<div class="buttonbar" id="yes_no_modal">
 				<ul>
-					<li class="end"><a href="#" class="ico ico_no" id="no_modal"><?=lang('modal_no_btn')?></a></li>
-					<li class="end"><a href="#" class="ico ico_yes" id="yes_modal"><?=lang('modal_yes_btn')?></a></li>
+					<li class="end"><a href="#" class="ico ico_no" id="no_modal"><?=lang('btn_no')?></a></li>
+					<li class="end"><a href="#" class="ico ico_yes" id="yes_modal"><?=lang('btn_yes')?></a></li>
 				</ul>
 			</div>
 			<div class="clear"></div>

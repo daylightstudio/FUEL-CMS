@@ -310,7 +310,7 @@ class Dwoo_Core
      * @param Dwoo_ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
      *                                Dwoo_Compiler will be used.
      * @param bool $output flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
-     * @return string nothing or the template output if $output is true
+     * @return string nothing or the template output if $output is false
      */
     public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
     {

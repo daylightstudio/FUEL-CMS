@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -277,7 +277,7 @@ function fuel_nav($params = array())
 					'item_id_prefix' => '',
 					'item_id_key' => 'id',
 					'pre_render_func' => '',
-					'delimiter' => ' &gt; ',
+					'delimiter' => FALSE,
 					'arrow_class' => 'arrow',
 					'display_current' => TRUE,
 					'home_link' => 'Home',
@@ -384,6 +384,7 @@ function fuel_nav($params = array())
 	{
 		return $CI->menu->normalize_items($items);
 	}
+	$CI->menu->render($items, $p['active'], $p['parent']);
 	
 	return $CI->menu->render($items, $p['active'], $p['parent']);
 }
@@ -650,7 +651,7 @@ function fuel_uri_string($from = 0, $to = NULL, $rerouted = FALSE)
  * Check to see if you are logged in and can use inline editing
  *
  * @access	public
- * @return	boolean
+ * @return	booleanocal
  */
 function is_fuelified()
 {
@@ -658,5 +659,28 @@ function is_fuelified()
 	$CI->config->module_load('fuel', 'fuel', TRUE);
 	$CI->load->helper('cookie');
 	$CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
-	return (get_cookie($CI->fuel_auth->get_fuel_trigger_cookie_name()) == '1');
+	return (get_cookie($CI->fuel_auth->get_fuel_trigger_cookie_name()));
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns the user language of the person logged in... used for inline editing
+ *
+ * @access	public
+ * @return	booleanocal
+ */
+function fuel_user_lang()
+{
+	$CI =& get_instance();
+	$CI->config->module_load('fuel', 'fuel', TRUE);
+	$CI->load->helper('cookie');
+	$CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
+	$cookie_val = get_cookie($CI->fuel_auth->get_fuel_trigger_cookie_name());
+	$cookie_val = unserialize($cookie_val);
+	if (empty($cookie_val['language']))
+	{
+		$cookie_val['language'] = $CI->config->item('language');
+	}
+	return $cookie_val['language'];
 }

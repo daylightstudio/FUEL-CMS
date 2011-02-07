@@ -9,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -26,6 +26,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide
  */
+
 class Fuel_hooks
 {
 	
@@ -40,7 +41,6 @@ class Fuel_hooks
 		// if called from same Wordpress, the the global scope will not work
 		global $method, $class, $RTR;
 		$class_methods = get_class_methods($class);
-
 		// for pages without methods defined
 		if ((isset($class_methods) AND !in_array($method, $class_methods) AND !in_array('_remap', $class_methods))  AND !empty($RTR->default_controller))
 		{
@@ -55,7 +55,6 @@ class Fuel_hooks
 	function dev_password()
 	{
 		$CI =& get_instance();
-		$CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		if ($CI->config->item('dev_password', 'fuel') AND !$CI->fuel_auth->is_logged_in() AND !preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE)))
 		{
 			$CI->load->library('session');

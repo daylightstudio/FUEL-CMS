@@ -12,7 +12,9 @@ class Backup extends Fuel_base_controller {
 		$this->load->language('backup');
 	}
 	
-	function index(){
+	function index()
+	{
+
 		$this->_validate_user('tools/backup');
 		$backup_config = $this->config->item('backup');
 		$download_path = $backup_config['db_backup_path'];
@@ -61,7 +63,7 @@ class Backup extends Fuel_base_controller {
 			// download the file to your desktop. 
 			$this->zip->download($filename.'.zip');
 			
-			$msg = $this->lang->line('data_backup');
+			$msg = lang('data_backup');
 			$this->logs_model->logit($msg);
 		}
 		else 

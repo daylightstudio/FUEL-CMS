@@ -4,7 +4,7 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['tools']['tools/tester'] = 'Tester';
+$config['nav']['tools']['tools/tester'] = lang('module_tester');
 
 
 

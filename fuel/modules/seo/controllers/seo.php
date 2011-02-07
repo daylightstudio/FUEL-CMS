@@ -58,22 +58,26 @@ class Seo extends Seo_base_controller {
 
 			$results = array();
 			$keyword_limit = 20;
-			$top_keywords = 'Top '.$keyword_limit.' Keywords';
+			$heading_top_keywords = lang('heading_top_keywords', $keyword_limit);
+			$heading_first_100_words = lang('heading_first_100_words');
+			$heading_outbound_links = lang('heading_outbound_links');
+			$heading_image_alt = lang('heading_image_alt');
+			
 			
 			// search meta elements elements with attributes
 			$search_tags = array(
-				'Title' => 'title',
-				'Description' => 'meta[@name="description"];content', 
-				'Keywords' => 'meta[@name="keywords"];content',
+				lang('heading_title') => 'title',
+				lang('heading_description') => 'meta[@name="description"];content', 
+				lang('heading_keywords') => 'meta[@name="keywords"];content',
 				'&lt;H1&gt;' => 'h1', 
 				'&lt;H2&gt;' => 'h2', 
 				'&lt;H3&gt;' => 'h3', 
 				'&lt;H4&gt;' => 'h4', 
 			//	$top_keywords => 'h1|//h2|//h3|//h4|//h5|//h6|//p|//li|//blockquote|//a|//div|//address|//cite',
-				$top_keywords => 'body',
-				'First 100 Paragraph Words' => 'p',
+				$heading_top_keywords => 'body',
+				$heading_first_100_words => 'p',
 				'Links' => 'a[@href];href', 
-				'Image Alt Attributes' => 'img;alt;src'
+				$heading_image_alt => 'img;alt;src'
 			);
 				
 			foreach($search_tags as $key => $tag)
@@ -111,10 +115,10 @@ class Seo extends Seo_base_controller {
 				}
 			}
 			
-			if (!empty($results[$top_keywords][0]))
+			if (!empty($results[$heading_top_keywords][0]))
 			{
 				// clean up script tags and style tags
-				$page_content = $results[$top_keywords][0];
+				$page_content = $results[$heading_top_keywords][0];
 				// echo "<pre style=\"text-align: left;\">";
 				// print_r($page_content);
 				// echo "</pre>";
@@ -140,22 +144,20 @@ class Seo extends Seo_base_controller {
 
 				uasort($page_words_count, array(&$this, '_sort_word_density'));
 				$page_words_count_limited = array_slice($page_words_count, 0, $keyword_limit);
-				$results[$top_keywords] = $page_words_count_limited;
+				$results[$heading_top_keywords] = $page_words_count_limited;
 			}
 
 			
-			
-			
 			// format First 100 words
-			if (!empty($results['First 100 words']))
+			if (!empty($results[$heading_first_100_words]))
 			{
-				$results['First 100 words'] = word_limiter(implode(' ', $results['First 100 words']), 100);
+				$results[$heading_first_100_words] = word_limiter(implode(' ', $results[$heading_first_100_words]), 100);
 			}
 			
 			// format image alt tags
-			if (!empty($results['Image Alt Attributes']))
+			if (!empty($results[$heading_image_alt]))
 			{
-				foreach($results['Image Alt Attributes'] as $key => $img)
+				foreach($results[$heading_image_alt] as $key => $img)
 				{
 					if (substr($img['src'], 0, 4) != 'http')
 					{
@@ -163,9 +165,9 @@ class Seo extends Seo_base_controller {
 					}
 					if (empty($img['alt']))
 					{
-						$img['alt'] = '{EMPTY}';
+						$img['alt'] = lang('seo_image_alt_empty');
 					}
-					$results['Image Alt Attributes'][$key] = anchor($img['src'], $img['alt']);
+					$results[$heading_image_alt][$key] = anchor($img['src'], $img['alt']);
 				}
 			}
 			
@@ -190,7 +192,7 @@ class Seo extends Seo_base_controller {
 						$link_parsed = parse_url($link);
 						if (!empty($link_parsed['host']) && $link_parsed['host'] != $local_hostname['host'])
 						{
-							$results['Outbound Links'][] = anchor($link);
+							$results[$heading_outbound_links][] = anchor($link);
 						}
 
 					}

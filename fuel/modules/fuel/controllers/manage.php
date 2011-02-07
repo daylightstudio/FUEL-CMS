@@ -53,7 +53,7 @@ class Manage extends Fuel_base_controller {
 				}
 			}
 			
-			$msg = $this->lang->line('cache_cleared');
+			$msg = lang('cache_cleared');
 			$this->logs_model->logit($msg);
 			$this->session->set_flashdata('success', 'The cache has been cleared.');
 			redirect('fuel/manage/cache');
@@ -102,7 +102,7 @@ class Manage extends Fuel_base_controller {
 		//$params = array_merge($defaults, $uri_params, $posted);
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
 		
-		if ($params['search_term'] == 'Search') $params['search_term'] = null;
+		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
 		
 		$seg_params = $params;
@@ -130,6 +130,10 @@ class Manage extends Fuel_base_controller {
 		$config['per_page'] = $params['limit'];
 		$config['page_query_string'] = FALSE;
 		$config['num_links'] = 5;
+		$config['prev_link'] = lang('pagination_prev_page');
+		$config['next_link'] = lang('pagination_next_page');
+		$config['first_link'] = lang('pagination_first_link');
+		$config['last_link'] = lang('pagination_last_link');;
 		
 		$this->pagination->initialize($config);
 		
@@ -149,7 +153,8 @@ class Manage extends Fuel_base_controller {
 			$this->data_table->set_sorting($params['col'], $params['order']);
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->sort_js_func = 'page.sortList';
-			$this->data_table->assign_data($items);
+			$headers = array('entry_date' => lang('form_label_entry_date'), 'name' => lang('form_label_name'), 'message' => lang('form_label_message'));
+			$this->data_table->assign_data($items, $headers);
 			$vars['table'] = $this->data_table->render();
 			$this->load->view('_blocks/module_list_table', $vars);
 			return;

@@ -4,8 +4,8 @@
 
 	<div class="buttonbar" id="yes_no_modal" style="width: 400px;">
 		<ul>
-			<li class="end"><a href="#" class="ico ico_no jqmClose" id="change_pwd_cancel">I'll change my password later</a></li>
-			<li class="end"><a href="<?=fuel_url('my_profile/edit/')?>" class="ico ico_yes" id="change_pwd_go">Change password</a></li>
+			<li class="end"><a href="#" class="ico ico_no jqmClose" id="change_pwd_cancel"><?=lang('dashboard_change_pwd_later')?></a></li>
+			<li class="end"><a href="<?=fuel_url('my_profile/edit/')?>" class="ico ico_yes" id="change_pwd_go"><?=lang('dashboard_change_pwd')?></a></li>
 		</ul>
 	</div>
 	<div class="clear"></div>
@@ -13,7 +13,7 @@
 <?php } ?>
 
 <div id="main_top_panel">
-	<h2>Dashboard</h2>
+	<h2><?=lang('section_dashboard')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -22,8 +22,7 @@
 
 <div id="main_content" class="noaction">
 	<div id="main_content_inner">
-		<p class="instructions">Welcome to FUEL CMS.</p>
-		
+		<p class="instructions"><?=lang('dashboard_intro')?></p>
 		
 		<?php foreach($dashboards as $dashboard) : ?>
 			<div id="dashboard_<?=$dashboard?>" class="dashboard_module">

@@ -142,7 +142,7 @@ class Navigation extends Module {
 					$page_state = $this->_get_page_state($this->module_uri);
 					$page_state['group_id'] = $group_id;
 					$this->_save_page_state($page_state);
-					$this->session->set_flashdata('success', lang('success_nav_upload'));
+					$this->session->set_flashdata('success', lang('navigation_success_upload'));
 					redirect(fuel_url('navigation'));
 				}
 				
@@ -157,7 +157,7 @@ class Navigation extends Module {
 		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
-		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'label' => 'Navigation Group', 'class' => 'add_edit navigation_group');
+		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'class' => 'add_edit navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$this->form_builder->set_fields($fields);

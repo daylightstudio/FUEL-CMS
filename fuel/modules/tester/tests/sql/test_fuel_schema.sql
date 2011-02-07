@@ -80,6 +80,7 @@ CREATE TABLE `fuel_archives` (
 CREATE TABLE `fuel_blocks` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `description` varchar(255) collate utf8_unicode_ci NOT NULL,
   `view` text collate utf8_unicode_ci NOT NULL,
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   `date_added` datetime default NULL,
@@ -300,7 +301,7 @@ CREATE TABLE `fuel_logs` (
 CREATE TABLE `fuel_navigation` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `group_id` int(5) unsigned NOT NULL default '1',
-  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name that you want the link to go to (e.g. comany/about_us)',
+  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The part of the path after the domain name that you want the link to go to (e.g. comany/about)',
   `nav_key` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The nav key is a friendly ID that you can use for setting the selected state. If left blank, a default value will be set for you.',
   `label` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The name you want to appear in the menu',
   `parent_id` int(10) unsigned NOT NULL default '0' COMMENT 'Used for creating menu hierarchies. No value means it is a root level menu item',
@@ -403,8 +404,8 @@ CREATE TABLE `fuel_permissions` (
 
 INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(1,'pages','Manage pages','yes'),
-	(2,'pages_publish','Ability to Publish Pages','yes'),
-	(3,'pages_delete','Ability to Delete Pages','yes'),
+	(2,'pages_publish','Publish Pages','yes'),
+	(3,'pages_delete','Delete Pages','yes'),
 	(4,'navigation','Manage navigation','yes'),
 	(5,'users','Manage users','yes'),
 	(6,'tools/backup','Manage database backup','yes'),
@@ -421,7 +422,7 @@ INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
 	(17,'blog/posts','Blog Posts','yes'),
 	(18,'blog/categories','Blog Categories','yes'),
 	(19,'blog/comments','Blog Comments','yes'),
-	(20,'blog/links','Blog Comments','yes'),
+	(20,'blog/links','Blog Links','yes'),
 	(21,'blog/users','Blog Authors','yes'),
 	(22,'blog/settings','Blog Settings','yes'),
 	(23,'assets','Assets','yes'),
@@ -465,6 +466,8 @@ CREATE TABLE `fuel_users` (
   `email` varchar(100) collate utf8_unicode_ci NOT NULL,
   `first_name` varchar(30) collate utf8_unicode_ci NOT NULL,
   `last_name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `language` varchar(30) collate utf8_unicode_ci NOT NULL default 'english',
+  `reset_key` varchar(64) collate utf8_unicode_ci NOT NULL,
   `super_admin` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),

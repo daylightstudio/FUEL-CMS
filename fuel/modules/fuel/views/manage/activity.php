@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2><?=lang('h2_activty')?></h2>
+	<h2><a href="<?=fuel_url('manage')?>"><?=lang('section_manage')?></a> &gt; <?=lang('module_manage_activity')?></h2>
 </div>
 
 <div class="clear"></div>
@@ -15,8 +15,8 @@
 				<tr>
 					<td><a href="<?=fuel_url('manage/reset_page_state')?>" class="reset"></a></td>
 					<td><?=$this->form->search('search_term', $params['search_term'])?> </td>
-					<td class="search"><?=$this->form->submit('Search')?></td>
-					<td class="show">Show: <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
+					<td class="search"><?=$this->form->submit(lang('btn_search'))?></td>
+					<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
 					<td></td>
 				</tr>
 			</tbody>

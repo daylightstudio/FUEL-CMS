@@ -16,15 +16,10 @@ require_once(APPPATH.'helpers/MY_url_helper.php');
 require_once(APPPATH.'helpers/my_helper.php');
 include(APPPATH.'views/_blocks/header.php');
 ?>	
-</div>
 
-<div id="main">
-	<div id="content" style="margin: -70px 0 0 320px;">
-		<div id="error_db">
-			<h1><?php echo $heading; ?></h1>
-			<?php echo $message; ?>
-		</div>
-	</div>
+<div id="error_404">
+	<h1><?php echo $heading; ?></h1>
+	<?php echo $message; ?>
 </div>
 
 <?php include(APPPATH.'views/_blocks/footer.php'); ?>

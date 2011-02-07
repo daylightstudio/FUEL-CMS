@@ -1,7 +1,7 @@
 <?=js('SeoController', 'seo')?>
 
 <div id="main_top_panel">
-	<h2 class="ico ico_tools_seo"><a href="<?=fuel_url('tools')?>">Tools</a> &gt; Page Analysis</h2>
+	<h2 class="ico ico_tools_seo"><a href="<?=fuel_url('tools')?>"><?=lang('section_tools')?></a> &gt; <?=lang('module_page_analysis')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -11,12 +11,12 @@
 <div id="main_content" class="noaction">
 
 	<div id="main_content_inner">
-		<p class="instructions">Select the page from the dropdown to analyze. Results will appear below which will display some key semantic results of your page.</p>
+		<p class="instructions"><?=lang('seo_page_analysis_instructions')?></p>
 		<form action="<?=fuel_url('tools/seo')?>" method="post" id="form">
 			<?=site_url()?><?=$this->form->select('page', $pages_select, $this->input->post('page'))?>
 			<div style="text-align: center; margin-top: 10px;" class="buttonbar">
 				<ul>
-					<li class="end"><a href="#" class="ico ico_tools_seo" id="submit_page_analysis">Analyze</a></li>
+					<li class="end"><a href="#" class="ico ico_tools_seo" id="submit_page_analysis"><?=lang('btn_analyze')?></a></li>
 				</ul>
 			</div>
 		</form>

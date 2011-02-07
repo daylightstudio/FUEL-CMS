@@ -5,7 +5,7 @@
  * A lightweight javascript MVC framework.
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
 
@@ -59,7 +59,7 @@ jqx.init = function(ctrlName, initObj){
 		jqx.controllerName = ctrlName;
 		jqx.controllerInitObj = initObj;
 		jqx.includeObject(ctrlName);
-		
+
 		var readyCallback = function(){
 			jqx.domready = true;
 			if (jqx.config.showLoadErrors){

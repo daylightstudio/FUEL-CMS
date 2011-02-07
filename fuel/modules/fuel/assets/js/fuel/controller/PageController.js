@@ -7,27 +7,35 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 	},
 
 	add_edit : function(){
+		var _this = this;
 		// do this first so that the fillin is in the checksaved value
-		$('#location').fillin('example: company/about_us');
+		$('#location').fillin(_this.localized.pages_default_location);
 
 		// call parent
 		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
 
+		$.changeChecksaveValue('location', $('#location').val());
+
 		// correspond page title to navigation label for convenience
 		var blurred = false;
-		$('#navigation_label').focus(function(e){
-		}).keyup(function(){
-			if (!blurred) $('#vars_page_title').val($('#navigation_label').val());
-		}).blur(function(e){
-			blurred = true;
-		});
 		
-		$('#vars_page_title').focus(function(e){
-		}).keyup(function(){
-			if (!blurred) $('#navigation_label').val($('#vars_page_title').val());
-		}).blur(function(e){
-			blurred = true;
-		});
+		var bindFields = function(){
+			if ($('#vars--page_title').size()){
+				$('#navigation_label').live('keyup', function(){
+					if (!blurred) $('#vars--page_title').val($('#navigation_label').val());
+				}).blur(function(e){
+					blurred = true;
+				});
+			}
+
+			if ($('#vars--page_title').size()){
+				$('#navigation_label').live('keyup', function(){
+					if (!blurred) $('#navigation_label').val($('#vars--page_title').val());
+				}).blur(function(e){
+					blurred = true;
+				});
+			}
+		}
 		
 		var _this = this;
 		$('#layout').change(function(e){
@@ -73,6 +81,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		// only change for those that already exist
 		if ($('#id').val().length){
 			$('#layout').change();
+		} else {
+			bindFields();
 		}
 		
 	}	

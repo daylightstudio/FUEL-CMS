@@ -11,7 +11,7 @@
 |
 */
 
-$config['parser_cache_dir'] = BASEPATH.'cache/dwoo/';
+$config['parser_cache_dir'] = APPPATH.'cache/dwoo/';
 
 
 /*
@@ -25,7 +25,7 @@ $config['parser_cache_dir'] = BASEPATH.'cache/dwoo/';
 |
 */
 
-$config['parser_compile_dir'] = BASEPATH.'cache/dwoo/compiled/';
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
 
 
 /*

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -57,7 +57,6 @@ function blog_block($view, $vars = array(), $return = TRUE)
 {
 	$CI =& get_instance();
 	$view_folder = $CI->fuel_blog->theme_path();
-	
 	$block = $CI->load->module_view(BLOG_FOLDER, $view_folder.'_blocks/'.$view, $vars, TRUE);
 	if ($return)
 	{

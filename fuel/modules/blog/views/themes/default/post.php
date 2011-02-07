@@ -16,30 +16,30 @@
 
 <a name="comments"></a>
 
-<?php if ($post->comments_count > 0) : ?>
-	<h3>Comments</h3>
-	<div class="comments">
+	<?php if ($post->comments_count > 0) : ?>
+		<h3>Comments</h3>
+		<div class="comments">
 
-		<?php foreach($post->comments as $comment) : ?>
+			<?php foreach($post->comments as $comment) : ?>
 
-			<div class="<?=($comment->is_child()) ? 'comment child' : 'comment'?>">
+				<div class="<?=($comment->is_child()) ? 'comment child' : 'comment'?>">
 
-				<a name="comment<?=$comment->id?>"></a>
-				<div class="comment_content">
-					<?php if ($comment->is_by_post_author()) :?>
-					<?=$comment->post->author->get_avatar_img_tag(array('class' => 'img_left'))?>
-					<?php endif; ?>
-					<?=$comment->content_formatted?>
+					<a name="comment<?=$comment->id?>"></a>
+					<div class="comment_content">
+						<?php if ($comment->is_by_post_author()) :?>
+						<?=$comment->post->author->get_avatar_img_tag(array('class' => 'img_left'))?>
+						<?php endif; ?>
+						<?=$comment->content_formatted?>
+					</div>
+
+
+					<div class="comment_meta">
+						<cite><?=$comment->author_and_link?>, <?=$comment->get_date_formatted('h:iA / M d, Y')?></cite>
+					</div>
 				</div>
-
-
-				<div class="comment_meta">
-					<cite><?=$comment->author_and_link?>, <?=$comment->get_date_formatted('h:iA / M d, Y')?></cite>
-				</div>
-			</div>
-		<?php endforeach; ?>
-	</div>
-<?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
 
 <?php if ($post->allow_comments) : ?>
 	<div class="comment_form">

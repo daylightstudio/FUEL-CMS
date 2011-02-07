@@ -33,7 +33,7 @@ class Dashboard extends Fuel_base_controller {
 					{
 						// check if there is a dashboard controller for each module
 						if ($this->fuel_auth->has_permission($module) AND 
-							file_exists(APPPATH.MODULES_FOLDER.'/'.$module.'/controllers/dashboard.php'))
+							file_exists(MODULES_PATH.$module.'/controllers/dashboard.php'))
 						{
 							$dashboards[] = $module;
 						}

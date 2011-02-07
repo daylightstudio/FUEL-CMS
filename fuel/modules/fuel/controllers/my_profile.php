@@ -21,7 +21,7 @@ class My_profile extends Fuel_base_controller {
 			{
 				if ($this->users_model->save())
 				{
-					$this->session->set_flashdata('success', $this->lang->line('data_saved'));
+					$this->session->set_flashdata('success', lang('data_saved'));
 					redirect(fuel_uri('my_profile/edit/'));
 				}
 			}
@@ -61,7 +61,7 @@ class My_profile extends Fuel_base_controller {
 		}
 		
 		$this->form_builder->form->validator = &$this->users_model->get_validation();
-		$this->form_builder->submit_value = 'Save';
+		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->use_form_tag = false;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = false;

@@ -5,7 +5,6 @@ class Cache
 {
 	
 	public $options = array(
-						'dir' => 'cache',				//Default to BASEPATH.'cache'
 						'cache_postfix' => '.cache',	//Prefix to all cache filenames
 						'expiry_postfix' => '.exp',		//Expiry file prefix
 						'group_postfix' => '.group', 	//Group directory prefix
@@ -248,9 +247,10 @@ class Cache
 	
 	private function _group_dir($cache_group)
 	{
-		
+		$CI =& get_instance();
 		$dir = ($cache_group != NULL) ? md5($cache_group).$this->options['group_postfix'] : '';
-		return BASEPATH.$this->options['dir'].'/'.$dir;
+		$cache_path = ($CI->config->item('cache_path') != '') ?  $CI->config->item('cache_path') : APPPATH.'cache/';
+		return $cache_path.$dir;
 		
 	}
 	

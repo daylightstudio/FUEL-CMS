@@ -69,34 +69,34 @@ $config['layouts'] = 'AUTO';
 $config['layout_fields'] = array();
 
 $config['layout_fields']['301_redirect'] = array(
-	'copy' => array('copy' => 'This layout will do a 301 redirect to another page.'),
-	'redirect_to' => '',
+	'copy' => array('copy' => lang('layout_field_301_redirect_copy')),
+	'redirect_to' => array('label' => lang('layout_field_redirect_to')),
 );
 
 
 $config['layout_fields']['sitemap_xml'] = array(
-	'copy' => array('copy' => 'This layout is used to generate a sitemap.'),
+	'copy' => array('copy' => lang('layout_field_sitemap_xml_copy')),
 	'frequency' => array(
 		'type' => 'select',
 		'options' => array(
-			'always' => 'always',
-			'hourly' => 'hourly',
-			'daily' => 'daily',
-			'weekly' => 'weekly',
-			'monthly' => 'monthly',
-			'yearly' => 'yearly',
-			'never' => 'never'
+			'always' => lang('layout_field_frequency_always'),
+			'hourly' => lang('layout_field_frequency_hourly'),
+			'daily' => lang('layout_field_frequency_daily'),
+			'weekly' => lang('layout_field_frequency_weekly'),
+			'monthly' => lang('layout_field_frequency_monthly'),
+			'yearly' => lang('layout_field_frequency_yearly'),
+			'never' => lang('layout_field_frequency_never'),
 		),
-		'value' => 'always'
-	)
+		'value' => 'always',
+		'label' => lang('layout_field_frequency'))
 );
 
 $config['layout_fields']['none'] = array(
-	'copy' => array('copy' => 'This layout is the equivalent of having no layout assigned.'),
-	'body' => array('type' => 'textarea'),
+	'copy' => array('copy' => lang('layout_field_none_copy')),
+	'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
 );
 
 @include(APPPATH.'config/MY_fuel_layouts.php');
 
 /* End of file fuel_layouts.php */
-/* Location: ./codeigniter/application/modules/fuel/config/fuel_layouts.php */
+/* Location: ./modules/fuel/config/fuel_layouts.php */

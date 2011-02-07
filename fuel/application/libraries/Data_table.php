@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -53,6 +53,7 @@ class Data_table {
 	public $rows = array(); // an array of table rows
 	public $inner_td_class = ''; // the css class to be used for the span inside the td
 	public $no_data_str = 'No data to display.';
+	public $lang_prefix = 'table_header_';
 
 	protected $_ordering = TRUE; // sorting order
 	protected $_field = NULL; // sorted column
@@ -85,6 +86,12 @@ class Data_table {
 	 */
 	public function initialize($params = array())
 	{
+		// load localization helper if not already
+		if (!function_exists('lang'))
+		{
+			$this->_CI->load->helper('language');
+		}
+		
 		if (count($params) > 0)
 		{
 			foreach ($params as $key => $val)
@@ -114,6 +121,7 @@ class Data_table {
 	public function assign_data($data, $headers = array(), $attrs = array())
 	{
 		$this->data = (array)$data;
+
 		if (empty($headers))
 		{
 			if (current($data))
@@ -121,8 +129,7 @@ class Data_table {
 				$headers = array();
 				foreach(current($data) as $key => $val)
 				{
-					if (is_object($val)) $val = get_object_vars($val);
-					$headers[$key] = ucwords(str_replace('_', ' ', $key));
+					$headers[] = $key;
 					$sorting_params[] = ($this->auto_sort) ? $key : NULL;
 				}
 				$this->add_headers($headers, $sorting_params);
@@ -137,16 +144,6 @@ class Data_table {
 			foreach($headers as $key => $val)
 			{
 				if (is_object($val)) $val = get_object_vars($val);
-				
-				if (is_int($key))
-				{
-					$new_headers[$val] = ucwords(str_replace('_', ' ', $val));
-				}
-				else
-				{
-					$new_headers[$key] = $val;
-				}
-				
 				if ($this->auto_sort)
 				{
 					$sorting_params[$i] = (is_int($key)) ? $val : $key;
@@ -156,20 +153,18 @@ class Data_table {
 					$sorting_params[$i] = NULL;
 				}
 				
-				//$sorting_params[$i] = (is_int($key)) ? $val : $key;
-				
 				$i++;
 			}
 
-			$this->add_headers($new_headers, $sorting_params);
+			$this->add_headers($headers, $sorting_params);
 			$rows = array();
 			
+			// now filter rows to just the columns we want based on the headers passed
 			foreach($data as $key => $val)
 			{
-				foreach($new_headers as $key2 => $val2)
+				foreach($this->headers as $val2)
 				{
-					//if (isset($data[$key][$key2])) $rows[$key][$key2] = $data[$key][$key2];
-					 $rows[$key][$key2] = $data[$key][$key2];
+					 $rows[$key][$val2->col_key] = $data[$key][$val2->col_key];
 				}
 			}
 			$this->add_rows($rows, $attrs, $this->default_field_action);
@@ -570,6 +565,19 @@ class Data_table {
 		$num = count($headers);
 		foreach($headers as $key => $val)
 		{
+			// auto set name if it is non numerically indexed array
+			if (is_int($key))
+			{
+				$key = $val;
+				if (isset($this->lang_prefix) AND $lang_name = lang($this->lang_prefix.$key))
+				{
+					$val = $lang_name;
+				}
+				else
+				{
+					$val = ucwords(str_replace('_', ' ', $key));
+				}
+			}
 			if ($i == 0 AND !empty($this->_actions) AND $this->actions_field == 'first')
 			{
 				$this->add_header($key, '&nbsp;', NULL, $attrs, 'actions');
@@ -715,7 +723,7 @@ class Data_table {
 			else
 			{
 				// i love regexp... key is the e modifier that evaluates the code
-				$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$fields['\\2'].'\\3'", $val['url']);
+				$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.((!empty(\$fields['\\2'])) ? \$fields['\\2'] : '').'\\3'", $val['url']);
 				$attrs = (!empty($val['attrs'])) ? ' '.$this->_render_attrs($val['attrs']) : '';
 				$actions[] ='<a href="'.$url.'"'.$attrs.'>'.$key.'</a>';
 			}

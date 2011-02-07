@@ -16,13 +16,12 @@ class Pages extends Module {
 		if (isset($_POST['id'])) // check for dupes
 		{
 			$posted = $this->_process();
-
+			
 			// set publish status to no if you do not have the ability to publish
 			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
 			{
 				$posted['published'] = 'no';
 			}
-			
 			
 			// reset dup id
 			if ($_POST['id'] == 'dup')
@@ -153,8 +152,8 @@ class Pages extends Module {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_field_values($field_values);
 		$vars['page_fields'] = $this->form_builder->render();
-		$this->form_builder->submit_value = 'Save';
-		$this->form_builder->cancel_value = 'Cancel';
+		$this->form_builder->submit_value = lang('btn_save');
+		$this->form_builder->cancel_value = lang('btn_cancel');
 
 		// page variables
 		$fields = $this->fuel_layouts->fields($layout, empty($id));
@@ -372,12 +371,11 @@ class Pages extends Module {
 				}
 			}
 		}
-		$this->session->set_flashdata('success', $this->lang->line('data_saved'));
+		$this->session->set_flashdata('success', lang('data_saved'));
 		
 		// reset cache for that page only
 		if ($this->input->post('location')){
 			$this->load->library('cache');
-			$this->input->post('location');
 			$cache_group = $this->config->item('page_cache_group', 'fuel');
 			$this->cache->remove(fuel_cache_id($this->input->post('location')), $cache_group);
 		}
@@ -397,8 +395,8 @@ class Pages extends Module {
 		$this->load->library('form_builder');
 		$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
 		$this->form_builder->question_keys = array();
-		$this->form_builder->submit_value = 'Save';
-		$this->form_builder->cancel_value = 'Cancel';
+		$this->form_builder->submit_value = lang('btn_save');
+		$this->form_builder->cancel_value = lang('btn_cancel');
 		$this->form_builder->use_form_tag = FALSE;
 		//$this->form_builder->name_array = 'vars';
 		$this->form_builder->name_prefix = 'vars';

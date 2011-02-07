@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -62,6 +62,10 @@ $config['warn_if_modified'] = TRUE;
 // max number of recent pages to display
 $config['max_recent_pages'] = 5;
 
+// the maximum number of pages that page state will be saved before dumping the last one saved. 
+// This is used on the list pages in the admin to save sorting and filtering. Used to save on space needed for session.
+$config['saved_page_state_max'] = 5;
+
 // provide a cookie path... different from the CI config if you need it (default is same as CI config)
 $config['fuel_cookie_path'] = '/';
 
@@ -80,6 +84,7 @@ $config['dashboards'] = array('fuel', 'backup');
 
 // dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
+
 
 
 /*
@@ -134,6 +139,20 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.supercomboselect',
 	'jquery/plugins/jquery.MultiFile.pack'
 );
+
+// language keys to pass to the front end javascript object
+$config['fuel_js_localized'] = array(
+	'label_search',
+	'btn_select',
+	'btn_asset',
+	'btn_image',
+	'btn_pdf',
+	'btn_edit',
+	'btn_add',
+	'comboselect_values_empty',
+	'comboselect_selected_empty',
+	'comboselect_filter',
+	);
 
 // css other then the fuel.css file which automatically gets loaded
 $config['fuel_css'] = array();
@@ -191,12 +210,12 @@ $config['modules_allowed'] = array('blog', 'tools');
 
 // site... Dashboard will always be there
 $config['nav']['site'] = array(
-	'dashboard' => lang('nav_dashboard'),
-	'pages' => lang('nav_pages'),
-	'blocks' => lang('nav_blocks'),
-	'navigation' => lang('nav_navigation'),
-	'assets' => lang('nav_assets'),
-	'sitevariables' => lang('nav_sitevariables')
+	'dashboard' => lang('module_dashboard'),
+	'pages' => lang('module_pages'),
+	'blocks' => lang('module_blocks'),
+	'navigation' => lang('module_navigation'),
+	'assets' => lang('module_assets'),
+	'sitevariables' => lang('module_sitevariables')
 	);
 
 // my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
@@ -213,10 +232,10 @@ $config['nav']['tools'] = array();
 
 // manage
 $config['nav']['manage'] = array(
-	'users' => lang('nav_users'), 
-	'permissions' => lang('nav_permissions'),
-	'manage/cache' => lang('nav_manage/cache'), 
-	'manage/activity' => lang('nav_manage/activity')
+	'users' => lang('module_users'), 
+	'permissions' => lang('module_permissions'),
+	'manage/cache' => lang('module_manage_cache'), 
+	'manage/activity' => lang('module_manage_activity')
 	);
 
 /*
@@ -277,4 +296,4 @@ $config['page_uri_prefix'] = '';
 @include(APPPATH.'config/MY_fuel.php');
 
 /* End of file fuel.php */
-/* Location: ./application/modules/fuel/config/fuel.php */
+/* Location: ./modules/fuel/config/fuel.php */

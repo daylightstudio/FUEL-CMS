@@ -25,7 +25,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <?php foreach($nav as $uri=>$page) { ?>
-	<?php if(isset($page['location'])): ?>
+	<?php if(isset($page['location'])): ?> 
 		<url>
 			<loc><?=site_url($page['location'])?></loc>
 			<?php if (!empty($page['frequency'])) : ?><?=$page['frequency']?><?php else: ?><?=$default_frequency?><?php endif; ?>

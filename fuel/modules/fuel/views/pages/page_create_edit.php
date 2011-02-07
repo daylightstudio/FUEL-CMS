@@ -1,6 +1,6 @@
 <div id="main_top_panel">
 	<h2 class="ico ico_pages"><a href="<?=fuel_url($this->module)?>"><?=$this->module_name?></a> &gt; 
-	<?=ucfirst($action)?><?php if (!empty($data[$this->display_field])) { ?>: <em><?=$data[$this->display_field]?></em><?php } ?></h2>
+	<?=lang('action_'.$action)?><?php if (!empty($data[$this->display_field])) { ?>: <em><?=$data[$this->display_field]?></em><?php } ?></h2>
 </div>
 <div class="clear"></div>
 
@@ -13,7 +13,7 @@
 <div id="notification" class="notification">
 	<?=$notifications?>
 	<?php if (!empty($data['last_modified'])) : ?>
-	<p class="ico ico_info last_updated"> Last updated <?=english_date($data['last_modified'], true)?> by <?=$data['email']?></p>
+	<p class="ico ico_info last_updated"><?=lang('pages_last_updated_by', english_date($data['last_modified'], true), $data['email'])?></p>
 	<?php else: ?>
 
 	<?php endif; ?>
@@ -22,7 +22,7 @@
 
 	<?php  if (!empty($page_navs)) : ?>
 	<div id="page_navs">
-		<h3 class="ico ico_navigation">Associated Navigation</h3>
+		<h3 class="ico ico_navigation"><?=lang('pages_associated_navigation')?></h3>
 		<ul>
 			<?php foreach($page_navs as $nav) : ?>
 			<li><a href="<?=fuel_url('navigation/edit/'.$nav['id'])?>"><?=$nav['label']?> 
@@ -35,7 +35,7 @@
 
 	<div id="notification_extra" class="notification">
 		<?php if (!empty($data['published']) && !is_true_val($data['published'])) : ?>
-				<div class="warning ico ico_warn">This page is not published.</div>
+				<div class="warning ico ico_warn"><?=lang('pages_not_published')?></div>
 		<?php endif; ?>
 		
 	

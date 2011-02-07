@@ -5,7 +5,8 @@ require_once('base_module_model.php');
 class Blocks_model extends Base_module_model {
 	
 	public $required = array('name');
-
+	public $filters = array('description');
+	
 	public function __construct()
 	{
 		parent::__construct('blocks');
@@ -13,7 +14,7 @@ class Blocks_model extends Base_module_model {
 	
 	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
 	{
-		$this->db->select('id, name, SUBSTRING(view, 1, 150) as view, published', FALSE);
+		$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		foreach($data as $key => $val)
 		{
@@ -46,7 +47,7 @@ class Blocks_model extends Base_module_model {
 		$modules_allowed = $CI->config->item('modules_allowed', 'fuel');
 		foreach($modules_allowed as $module)
 		{
-			$module_path = APPPATH.MODULES_FOLDER.'/'.$module.'/models/';
+			$module_path = MODULES_PATH.$module.'/models/';
 			if (file_exists($module_path))
 			{
 				$models = directory_to_array($module_path, TRUE, $exclude, FALSE, TRUE);

@@ -1,6 +1,6 @@
 <?=js('CronjobsController', 'cronjobs')?>
 <div id="main_top_panel">
-	<h2 class="ico ico_tools_cronjobs"><a href="<?=fuel_url('tools')?>">Tools</a> &gt; <?=ucfirst($action) ?> Cron Jobs</h2>
+	<h2 class="ico ico_tools_cronjobs"><a href="<?=fuel_url('tools')?>"><?=lang('section_tools')?></a> &gt; <?=lang('module_cronjobs')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -10,13 +10,10 @@
 <div id="main_content" class="noaction">
 
 	<div id="main_content_inner">
-	<p class="instructions">Below is the cron jobs (crontab) that can be used to execute given tasks on a periodic basis. For example, cron jobs are perfect
-	for automatically backing up your database. In fact, we already have an example for you at <strong><?=INSTALL_ROOT.'crons'.DIRECTORY_SEPARATOR.'crontab_default.php'?></strong>.
-	We recommend <a href="http://www.google.com/search?client=safari&rls=en-us&q=cron+job+tutorial&ie=UTF-8&oe=UTF-8" target="_blank"><strong>clicking here to learn more about cron jobs</strong></a> if
-	you are not familiar with them already.</p>
+	<p class="instructions"><?=lang('cronjobs_instructions')?></p>
 	
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
-	<label for="mailto">Mail to:</label> <?=$this->form->text('mailto', $mailto, 'size="30"')?>
+	<label for="mailto"><?=lang('cronjobs_mailto')?></label> <?=$this->form->text('mailto', $mailto, 'size="30"')?>
 	<table border="0" cellspacing="0" cellpadding="0" class="cronjob">
 		<tbody>
 		
@@ -45,19 +42,19 @@
 		}
 	 	?>
 			<tr>
-				<td><?=$this->form->text('min['.$newnum.']', 'min', 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('hour['.$newnum.']', 'hour', 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('month_day['.$newnum.']', 'month day', 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('month_num['.$newnum.']', 'month num', 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('week_day['.$newnum.']', 'week day', 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('command['.$newnum.']', 'command', 'class="fillin" size="60"')?></td>
+				<td><?=$this->form->text('min['.$newnum.']', lang('cronjobs_min'), 'class="fillin" size="7"')?></td>
+				<td><?=$this->form->text('hour['.$newnum.']', lang('cronjobs_hour'), 'class="fillin" size="7"')?></td>
+				<td><?=$this->form->text('month_day['.$newnum.']', lang('cronjobs_month_day'), 'class="fillin" size="7"')?></td>
+				<td><?=$this->form->text('month_num['.$newnum.']', lang('cronjobs_month_num'), 'class="fillin" size="7"')?></td>
+				<td><?=$this->form->text('week_day['.$newnum.']', lang('cronjobs_week_day'), 'class="fillin" size="7"')?></td>
+				<td><?=$this->form->text('command['.$newnum.']', lang('cronjobs_command'), 'class="fillin" size="60"')?></td>
 			</tr>
 		</tbody>
 	</table>
 	<div class="buttonbar">
 		<ul>
-			<li class="end"><a href="#" class="ico ico_no" id="remove">Remove Cron Job(s)</a></li>
-			<li class="end"><a href="#" class="ico ico_yes" id="submit">Save Cron Job(s)</a></li>
+			<li class="end"><a href="#" class="ico ico_no" id="remove"><?=lang('btn_remove_cronjobs')?></a></li>
+			<li class="end"><a href="#" class="ico ico_yes" id="submit"><?=lang('btn_save_cronjobs')?></a></li>
 		</ul>
 	</div>
 	<?=$this->form->hidden('action', $action)?>

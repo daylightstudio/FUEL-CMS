@@ -173,7 +173,13 @@
 			<td><strong>key_check</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>The keycheck value used for forms that create session unique session variables to prevent spamming</td>
+			<td>The keycheck value used for forms that create session unique session variables to prevent spamming. If CSRF protection is enabled in CodeIgniter 2, then this value will be automatically filled out.</td>
+		</tr>
+		<tr>
+			<td><strong>key_check_name</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>The keycheck form name used for forms that create session unique session variables to prevent spamming.  If CSRF protection is enabled in CodeIgniter 2, then this value will be automatically filled out.</td>
 		</tr>
 		<tr>
 			<td><strong>tooltip_format</strong></td>
@@ -265,6 +271,13 @@
 			<td>None</td>
 			<td>The id prefix to be used for assigning ids to each row of the form</td>
 		</tr>
+		<tr>
+			<td><strong>lang_prefix</strong></td>
+			<td>form_label</td>
+			<td>None</td>
+			<td>The prefix to be used for looking up associated language strings for form labels. If a field's name is 'last_modified', it will look for a language string of {lang_prefix}last_modified.</td>
+		</tr>
+		
 	</tbody>
 </table>
 

@@ -7,6 +7,10 @@ class Fuel_auth {
 	function __construct(){
 		$this->_CI =& get_instance();
 		$this->_CI->load->library('session');
+		$this->_CI->load->helper('cookie');
+		
+		// needs to be loaded so that we can use the site name for namespacing
+		$this->_CI->config->module_load('fuel', 'fuel', TRUE);
 	}
 	
 	function valid_user()
@@ -47,7 +51,8 @@ class Fuel_auth {
 		$this->_CI->load->module_model(FUEL_FOLDER, 'users_model');
 		
 		$valid_user = $this->_CI->users_model->valid_user($user, $pwd);
-		if (!empty($valid_user)) {
+		if (!empty($valid_user))
+		{
 			//$valid_user = $this->_CI->users_model->user_info($valid_user['id']);
 			$this->set_valid_user($valid_user);
 			return TRUE;
@@ -58,6 +63,7 @@ class Fuel_auth {
 	function user_data($key = NULL)
 	{
 		$valid_user = $this->valid_user();
+		
 		if (!empty($valid_user))
 		{
 			if (!empty($key) && isset($valid_user[$key]))
@@ -74,7 +80,7 @@ class Fuel_auth {
 		$user = $this->valid_user();
 		return (!empty($user) AND !empty($user['user_name']));
 	}
-	
+
 	function has_permission($permission, $type = 'edit')
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
@@ -143,13 +149,31 @@ class Fuel_auth {
 	function module_has_action($action)
 	{
 		if (empty($this->_CI->item_actions)) return FALSE;
-		return in_array($action, $this->_CI->item_actions);
+		return (isset($this->_CI->item_actions[$action]) OR in_array($action, $this->_CI->item_actions));
 	}
 	
+	function is_fuelified()
+	{
+		return (get_cookie($this->get_fuel_trigger_cookie_name()));
+	}
+	
+	function user_lang()
+	{
+		$cookie_val = get_cookie($this->get_fuel_trigger_cookie_name());
+		$cookie_val = unserialize($cookie_val);
+		if (empty($cookie_val['language']) OR !is_string($cookie_val['language']))
+		{
+			$cookie_val['language'] = $this->_CI->config->item('language');
+		}
+		return $cookie_val['language'];
+		
+	}
+
 	function logout()
 	{
 		$this->_CI->session->unset_userdata($this->get_session_namespace());
 	}
+	
 }
 /* End of file Fuel_auth.php */
 /* Location: ./modules/fuel/libraries/fuel/Fuel_auth.php */

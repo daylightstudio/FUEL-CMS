@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2><a href="<?=fuel_url('manage')?>"><?=lang('h2_manage')?></a> &gt; <?=lang('h2_page_cache')?></h2>
+	<h2><a href="<?=fuel_url('manage')?>"><?=lang('section_manage')?></a> &gt; <?=lang('module_manage_cache')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -10,13 +10,13 @@
 <div id="main_content" class="noaction">
 	<div id="main_content_inner">
 
-	<p class="instructions"><?=lang('page_cache_instructions')?></p>
+	<p class="instructions"><?=lang('cache_instructions')?></p>
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
 	
 	<div class="buttonbar">
 		<ul>
-			<li class="end"><a href="<?=fuel_url('manage/')?>" class="ico ico_no">No, don't clear cache</a></li>
-			<li class="end"><a href="#" class="ico ico_yes" id="submit">Yes, clear cache</a></li>
+			<li class="end"><a href="<?=fuel_url('manage/')?>" class="ico ico_no"><?=lang('cache_no_clear')?></a></li>
+			<li class="end"><a href="#" class="ico ico_yes" id="submit"><?=lang('cache_yes_clear')?></a></li>
 		</ul>
 	</div>
 	

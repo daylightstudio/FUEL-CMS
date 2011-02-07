@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -25,9 +25,9 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/base_module_model
  */
 
-require_once(APPPATH.'libraries/MY_Model.php');
+require_once(APPPATH.'core/MY_Model.php');
 
-abstract class Base_module_model extends MY_Model {
+class Base_module_model extends MY_Model {
 	
 	public $filters = array(); // filters to apply to when searching for items
 	public $filter_value = NULL; // the values of the filters
@@ -100,7 +100,6 @@ abstract class Base_module_model extends MY_Model {
 		$CI->load->module_library(FUEL_FOLDER, 'fuel_auth'); // must do this for the cron job
 		
 		// if no configuration mapping is found then we will assume it is just the straight up table name
-		
 		parent::__construct($table, $params); // table name and params
 	}
 	
@@ -188,9 +187,12 @@ abstract class Base_module_model extends MY_Model {
 		
 		$data = array();
 		
-		if (is_array($this->filters)){
-			foreach($this->filters as $key => $val){
-				if (is_int($key)){
+		if (is_array($this->filters))
+		{
+			foreach($this->filters as $key => $val)
+			{
+				if (is_int($key))
+				{
 					$key = $val;
 					$val = $this->filter_value;
 				}
@@ -216,6 +218,7 @@ abstract class Base_module_model extends MY_Model {
 		$this->db->offset($offset);
 		$query = $this->db->get($this->table_name);
 		$data = $query->result_array();
+		
 		return $data;
 	}
 	
@@ -426,8 +429,19 @@ abstract class Base_module_model extends MY_Model {
 			}
 			$order++;
 		}
-		if (isset($fields['published'])) $fields['published']['order'] = 9999;
-		if (isset($fields['active'])) $fields['active']['order'] = 9999;
+		
+		$yes = lang('form_enum_option_yes');
+		$no = lang('form_enum_option_no');
+		if (isset($fields['published']))
+		{
+			$fields['published']['order'] = 9999;
+			$fields['published']['options'] = array('yes' => $yes, 'no' => $no);
+		}
+		if (isset($fields['active']))
+		{
+			$fields['active']['order'] = 9999;
+			$fields['active']['options'] = array('yes' => $yes, 'no' => $no);
+		}
 		
 		return $fields;
 	}

@@ -4,8 +4,8 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['tools']['tools/seo'] = 'Page Analysis';
-$config['nav']['tools']['tools/seo/google_keywords'] = 'Google Keywords';
+$config['nav']['tools']['tools/seo'] = lang('module_page_analysis');
+$config['nav']['tools']['tools/seo/google_keywords'] = lang('module_google_keywords');
 
 
 /*

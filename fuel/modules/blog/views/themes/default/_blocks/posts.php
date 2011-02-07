@@ -4,9 +4,9 @@
 		<?php foreach($posts as $post) : ?>
 		<div class="post">
 			<?=fuel_edit($post->id, 'Edit Post: '.$post->title, 'blog/posts')?>
-			
+
 			<?=blog_block('post_unpublished', array('post' => $post))?>
-			
+		
 			<h2><a href="<?=$post->url?>"><?=$post->title?></a></h2> 
 
 			<div class="post_date">
@@ -35,5 +35,5 @@
 	<div class="no_posts">
 		<p>There are no posts available.</p>
 	</div>
-	<?php endif; ?>
+	<?php endif; ?> 
 </div>

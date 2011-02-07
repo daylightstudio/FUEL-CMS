@@ -62,8 +62,8 @@ echo smart_ucwords($str); // <?=smart_ucwords('the return of the jedi')?>
 </pre>
 
 
-<h2>safe_htmlentities(<var>str</var>)</h2>
-<p>Safely converts a string's entities without encoding HTML tags and quotes.</p>
+<h2>safe_htmlentities(<var>str</var>, <var>protect_amp</var>)</h2>
+<p>Safely converts a string's entities without encoding HTML tags and quotes. The <dfn>protect_amp</dfn> parameter will protect ampersands as well and is set to <dfn>TRUE</dfn> by default.</p>
 
 <pre class="brush: php">
 $str = '<p>This is a test with special characters : “”‘’™–…&©"</p>';

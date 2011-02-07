@@ -1,11 +1,11 @@
 <?php
-class Login extends Controller {
+class Login extends CI_Controller {
 
 	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 
 		// for flash data
 		$this->load->library('session');
@@ -29,13 +29,14 @@ class Login extends Controller {
 
 		$this->load->module_model(FUEL_FOLDER, 'users_model');
 
-		// set configuration paths. site paths are used for the preview since
+		// set configuration paths for assets in case they are differernt from front end
 		$this->asset->assets_module ='fuel';
 		$this->asset->assets_folders = array(
 				'images' => 'images/',
 				'css' => 'css/',
 				'js' => 'js/',
 			);
+
 	}
 	
 	function index()
@@ -77,14 +78,14 @@ class Login extends Controller {
 
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
-						
 						// set the cookie for viewing the live site with added FUEL capabilities
 						$config = array(
 							'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
-							'value' => 1,
+							'value' => serialize(array('id' => $this->fuel_auth->user_data('id'), 'language' => $this->fuel_auth->user_data('language'))),
 							'expire' => 0,
 							'path' => WEB_PATH
 						);
+
 						set_cookie($config);
 
 						if ($this->input->post('forward'))
@@ -116,13 +117,13 @@ class Login extends Controller {
 						}
 						else
 						{
-							$this->users_model->add_error($this->lang->line('error_invalid_login'));
+							$this->users_model->add_error(lang('error_invalid_login'));
 						}
 					}
 				}
 				else
 				{
-					$this->users_model->add_error($this->lang->line('error_empty_user_pwd'));
+					$this->users_model->add_error(lang('error_empty_user_pwd'));
 				}
 			}
 			$this->session->set_userdata($session_key, $user_data);
@@ -134,7 +135,7 @@ class Login extends Controller {
 		$fields['password'] = array('type' => 'password', 'size' => 25);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
 		$this->form_builder->show_required = FALSE;
-		$this->form_builder->submit_value = 'Login';
+		$this->form_builder->submit_value = lang('login_btn');
 		$this->form_builder->set_fields($fields);
 		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
 		$vars['form'] = $this->form_builder->render();
@@ -194,8 +195,8 @@ class Login extends Controller {
 		$this->form_builder->set_validator($this->users_model->get_validation());
 		
 		// build form
-		$fields['Reset Password'] = array('type' => 'section');
-		$fields['email'] = array('label' => 'Email', 'required' => true, 'size' => 30);
+		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
+		$fields['email'] = array('required' => true, 'size' => 30);
 		$this->form_builder->show_required = false;
 		$this->form_builder->set_fields($fields);
 		$vars['form'] = $this->form_builder->render();

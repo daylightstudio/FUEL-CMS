@@ -32,10 +32,10 @@
 <div id="header">
 	<h1 id="client"><a href="<?=site_url()?>"><?=$this->config->item('site_name', 'fuel')?></a></h1>
 	<div id="login_logout">
-		Logged in as: 
+			<?=lang('logged_in_as')?>
 			<a href="<?=fuel_url('my_profile/edit/')?>"><strong><?=$user['user_name']?></strong></a>
 		&nbsp;&nbsp;|&nbsp;&nbsp;
-		<a href="<?=fuel_url('logout')?>">Logout</a>
+		<a href="<?=fuel_url('logout')?>"><?=lang('logout')?></a>
 	</div>
 </div>
 <div id="body">
@@ -61,8 +61,13 @@
 				{
 					if  (!$header_written)
 					{
+						$section_hdr = lang('section_'.$section);
+						if (empty($section_hdr))
+						{
+							$section_hdr = ucfirst(str_replace('_', ' ', $section));
+						}
 						echo "<div class=\"left_nav_section\" id=\"leftnav_".$section."\">\n";
-						echo "\t<h3>".ucfirst(str_replace('_', ' ', $section))."</h3>\n";
+						echo "\t<h3>".$section_hdr."</h3>\n";
 						echo "\t<ul>\n";
 					}
 					echo "\t\t<li";
@@ -88,7 +93,7 @@
 				$user_data = $this->fuel_auth->user_data();
 				if (isset($user_data['recent'])) : ?>
 			<div class="left_nav_section" id="leftnav_recent">
-				<h3>Recently Viewed</h3>
+				<h3><?=lang('section_recently_viewed')?></h3>
 				<ul>
 					<?php foreach($user_data['recent'] as $val) : ?>
 					<li><a href="<?=site_url($val['link'])?>" class="ico ico_<?=$val['type']?>" title="<?=$val['name']?>"><?=$val['name']?></a></li>

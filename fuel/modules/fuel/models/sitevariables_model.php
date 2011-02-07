@@ -10,13 +10,6 @@ class Sitevariables_model extends Base_module_model {
 	{
 		parent::__construct('fuel_site_variables');
 	}
-	
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
-	{
-		$this->db->select('id, name, value, active');
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
 
 	function retrieve_all()
 	{

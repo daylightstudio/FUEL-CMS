@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2>My Profile</h2>
+	<h2><?=lang('section_my_profile')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -7,7 +7,7 @@
 
 	<div class="buttonbar" id="actions">
 		<ul>
-			<li class="end"><a href="#" class="ico ico_save save" title="<?=$keyboard_shortcuts['save']?> to save">Save</a></li>
+			<li class="end"><a href="#" class="ico ico_save save" title="<?=$keyboard_shortcuts['save']?> to save"><?=lang('btn_save')?></a></li>
 		</ul>
 	</div>
 	
@@ -21,7 +21,7 @@
 
 	<div id="main_content_inner">
 
-		<p class="instructions">Change your profile information below:</p>
+		<p class="instructions"><?=lang('profile_instructions')?></p>
 
 		<form method="post" action="<?=fuel_url('my_profile/edit/')?>" id="form">
 		<?=$form?>

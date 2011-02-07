@@ -55,6 +55,9 @@ class Module extends Fuel_base_controller {
 			{
 				$lang_module = key($this->language);
 				$lang_file = current($this->language);
+
+				// now check to see if we need to load the language file or not... 
+				// we load the main language file automatically with the Fuel_base_controller.php
 				$this->load->module_language($lang_module, $lang_file);
 			}
 			else
@@ -111,6 +114,8 @@ class Module extends Fuel_base_controller {
 		if (!empty($params['js'])) $vars['js'] = $params['js'];
 		if (!empty($this->nav_selected)) $vars['nav_selected'] = $this->nav_selected;
 		$this->load->vars($vars);
+		
+		$this->_load_js_localized($params['js_localized']);
 
 		if (!empty($this->permission)) $this->_validate_user($this->permission);
 		
@@ -170,6 +175,10 @@ class Module extends Fuel_base_controller {
 		$config['per_page'] = (int) $params['limit'];
 		$config['page_query_string'] = FALSE;
 		$config['num_links'] = 5;
+		$config['prev_link'] = lang('pagination_prev_page');
+		$config['next_link'] = lang('pagination_next_page');
+		$config['first_link'] = lang('pagination_first_link');
+		$config['last_link'] = lang('pagination_last_link');;
 		
 		$this->pagination->initialize($config);
 
@@ -217,10 +226,10 @@ class Module extends Fuel_base_controller {
 					$delete_func = '
 					$CI =& get_instance();
 					$link = "";
-					if ($CI->fuel_auth->has_permission($CI->permission, "delete"))
+					if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
 						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
-						$link = "<a href=\"".$url."\">DELETE</a>";
+						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
 					return $link;';
@@ -232,7 +241,9 @@ class Module extends Fuel_base_controller {
 				{
 					if (strtoupper($val) != 'VIEW' OR (!empty($this->preview_path) AND strtoupper($val) == 'VIEW'))
 					{
-						$this->data_table->add_action($val, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+						$action_name = lang('table_action_'.strtolower($val));
+						if (empty($action_name)) $actino_name = $val;
+						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
 			}
@@ -252,23 +263,26 @@ class Module extends Fuel_base_controller {
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
+			$this->data_table->lang_prefix = 'form_label_';
 			$_unpub_func = '
 			$CI =& get_instance();
 			$can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
 			$is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
+			$no = lang("form_enum_option_no");
+			$yes = lang("form_enum_option_yes");
 			if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
 			{ 
 				$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
 				$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
 				$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">no</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
+				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$no."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
 			}
 			else
 			{ 
 				$text_class = ($can_publish) ? "publish_text published toggle_unpublish": "published";
 				$action_class = ($can_publish) ? "publish_action published hidden": "published hidden";
 				$col_txt = ($is_publish) ? \'click to unpublish\' : \'click to deactivate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">yes</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
+				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$yes."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
 			}';
 				
 			$_unpublished = create_function('$cols', $_unpub_func);
@@ -278,7 +292,7 @@ class Module extends Fuel_base_controller {
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->sort_js_func = 'page.sortList';
 			
-			$this->data_table->assign_data($items);
+			$this->data_table->assign_data($items, $this->table_headers);
 
 			$vars['table'] = $this->data_table->render();
 			$this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars);
@@ -325,11 +339,11 @@ class Module extends Fuel_base_controller {
 		/* PROCESS PARAMS BEGIN */
 		$filters = array();
 		
-		$page_state = $this->_get_page_state();
+		$page_state = $this->_get_page_state($this->module_uri);
 		
 		$defaults = array();
-		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col: $this->display_field;
-		$defaults['order'] = (!empty($this->default_order)) ? $this->default_order : NULL;
+		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
+		$defaults['order'] = (!empty($this->default_order)) ? $this->default_order : 'asc';
 		$defaults['offset'] = 0;
 		$defaults['limit'] = 25;
 		$defaults['search_term'] = '';
@@ -374,7 +388,7 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
-		if ($params['search_term'] == 'Search') $params['search_term'] = null;
+		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
 		
 		return $params;
@@ -406,8 +420,9 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
-	function create()
+	function create($redirect = TRUE)
 	{
+		$id = NULL;
 		if (!$this->fuel_auth->module_has_action('create')) show_404();
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
@@ -466,18 +481,22 @@ class Module extends Fuel_base_controller {
 						$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 						$this->logs_model->logit($msg);
 						$this->_clear_cache();
-						$this->session->set_flashdata('success', $this->lang->line('data_saved'));
 						$url = 'fuel/'.$this->module_uri.'/edit/'.$id;
-						redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+						if ($redirect === TRUE)
+						{
+							$this->session->set_flashdata('success', lang('data_saved'));
+							redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+						}
 					}
 				}
 			}
 		}
 		$vars = $this->_form();
 		$this->_render($this->views['create_edit'], $vars);
+		return $id;
 	}
 
-	function edit($id = null)
+	function edit($id = NULL, $redirect = TRUE)
 	{
 		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
 
@@ -509,9 +528,12 @@ class Module extends Fuel_base_controller {
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
-					$this->session->set_flashdata('success', $this->lang->line('data_saved'));
 					$this->_clear_cache();
-					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+					if ($redirect === TRUE)
+					{
+						$this->session->set_flashdata('success', lang('data_saved'));
+						redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+					}
 				}
 			}
 		}
@@ -723,8 +745,8 @@ class Module extends Fuel_base_controller {
 			// not inline edited
 			if ($display_normal_submit_cancel)
 			{
-				$this->form_builder->submit_value = 'Save';
-				$this->form_builder->cancel_value = 'Cancel';
+				$this->form_builder->submit_value = lang('btn_save');
+				$this->form_builder->cancel_value = lang('btn_cancel');
 			}
 			
 			// inline editied
@@ -781,12 +803,12 @@ class Module extends Fuel_base_controller {
 		// active or publish fields
 		if (isset($saved['published']))
 		{
-			$vars['publish'] = (!empty($saved['published']) AND is_true_val($saved['published'])) ? 'Unpublish' : 'Publish';
+			$vars['publish'] = (!empty($saved['published']) AND is_true_val($saved['published'])) ? 'unpublish' : 'publish';
 		}
 		
 		if (isset($saved['active']))
 		{
-			$vars['activate'] = (!empty($saved['active']) AND is_true_val($saved['active'])) ? 'Deactivate' : 'Activate';
+			$vars['activate'] = (!empty($saved['active']) AND is_true_val($saved['active'])) ? 'deactivate' : 'activate';
 		}
 		$vars['module'] = $this->module;
 
@@ -820,7 +842,7 @@ class Module extends Fuel_base_controller {
 			{
 				$this->model->delete(array($this->model->key_field() => $id));
 			}
-			$this->session->set_flashdata('success', $this->lang->line('data_deleted'));
+			$this->session->set_flashdata('success', lang('data_deleted'));
 			$this->_clear_cache();
 			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
 			redirect(fuel_uri($this->module_uri));
@@ -867,7 +889,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$this->session->set_flashdata('success', $this->lang->line('module_restored_success'));
+				$this->session->set_flashdata('success', lang('module_restored_success'));
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('ref_id')));
 		}
@@ -1043,7 +1065,7 @@ class Module extends Fuel_base_controller {
 			{
 				$vars = $this->_form($id, NULL, TRUE, FALSE);
 			}
-			$this->load->module_view($this->view_location, '_layouts/module_inline_edit', $vars);
+			$this->load->module_view(FUEL_FOLDER, '_layouts/module_inline_edit', $vars);
 		}
 	}
 	

@@ -1,9 +1,9 @@
 <?php
-class Reset extends Controller {
+class Reset extends CI_Controller {
 
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 		$this->config->load('fuel', true);
 	}
 	

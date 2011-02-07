@@ -230,7 +230,7 @@ The following view file uses the <a href="<?=user_guide_url('helpers/fuel_helper
 <a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">custom record objects</a>.</p>
 <pre class="brush: php">
 &lt;?php 
-$slug = uri_segment(3);
+$slug = uri_segment(2);
 if (!empty($slug))
 {
 	$news_item = fuel_model('news', array('find' => 'one', 'where' => array('slug' => $slug)));

@@ -14,12 +14,12 @@
 
 // main layout fields
 $config['layout_fields']['main'] =  array(
-	'copy' => array('copy' => 'This is the main layout to be used for your site.'),
-	'page_title' => '',
-	'meta_description' => '',
-	'meta_keywords' => '',
-	'body' => array('type' => 'textarea', 'description' => 'Main content of the page'),
-	'body_class' => ''
+	'copy' => array('copy' => lang('layout_field_main_copy')),
+	'page_title' => array('label' => lang('layout_field_page_title')),
+	'meta_description' => array('label' => lang('layout_field_meta_description')),
+	'meta_keywords' => array('label' => lang('layout_field_meta_keywords')),
+	'body' => array('label' => lang('layout_field_body'), 'type' => 'textarea', 'description' => lang('layout_field_body_description')),
+	'body_class' => array('label' => lang('layout_field_body_class')),
 	);
 
 

@@ -71,9 +71,13 @@
 		</tr>
 		<tr>
 			<td><strong>container_tag</strong></td>
-			<td>ul</td>
-			<td>None</td>
-			<td>The html tag for the container of a set of menu items</td>
+			<td>NULL</td>
+			<td>For menus with a render_type property of basic and collapsible, or breadcrumb, the default is 'ul'.
+				For menus with a render_type property of delimited is 'div'. 
+				For render_types of page_title, the container_tag property doesn't apply
+			</td>
+			<td>The html tag for the container of a set of menu items.</td>
+			
 		</tr>
 		<tr>
 			<td><strong>container_tag_attrs</strong></td>
@@ -132,7 +136,7 @@
 		<tr>
 			<td><strong>render_type</strong></td>
 			<td>basic</td>
-			<td>basic, breadcrumb, collapsible,  page_title</td>
+			<td>basic, breadcrumb, collapsible, page_title, delimited</td>
 			<td>The type of menu to render</td>
 		</tr>
 		<tr>
@@ -146,7 +150,9 @@
 		</tr>
 		<tr>
 			<td>delimiter</td>
-			<td>' &gt; '</td>
+			<td>For menus with a render_type property of page_title, or breadcrumb, the default is ' &amp;gt; '.
+				For menus with a render_type property of delimited is ' &amp;nbsp;|&amp;nbsp; '. 
+				For render_types of basic and collapsible, the delimiter property doesn't apply</td>
 			<td>None</td>
 			<td>The HTML element between the links</td>
 		</tr>
@@ -226,7 +232,10 @@
 	<li><strong>location</strong> -  the link location of the menu item. If none is specified, the array key value will be used</li>
 	<li><strong>attributes</strong> - additional HTML link attributes (e.g. target="_blank") to assign to the menu item</li>
 	<li><strong>hidden</strong> - whether to display the menu item or not.</li>
-	<li><strong>active</strong> - a regular expression that determines whether it should be given active status. If none is specified, it will be the same as the location value (e.g. about/history$|about/contact$)</li>
+	<li><strong>active</strong> - a regular expression that determines whether it should be given active status. If none is specified, it will be the same as the location value (e.g. about/history$|about/contact$). 
+		You can also use the <dfn>:children</dfn> active magic selector, which will highlight a menu item if it or any of it's sub pages are active. 
+		For example, if you have a news page, it allows you to easily highlight the news in the menu for all URI locations of news and news/{literal}{any}{/literal} (translates to news$|news/.+ in regular expression).
+	</li>
 </ul>
 
 <p>Below is an common example:</p>

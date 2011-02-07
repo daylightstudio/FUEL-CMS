@@ -15,7 +15,7 @@ if (IN_FUEL_ADMIN)
 {
 	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
 	
-	$module_folder = APPPATH.MODULES_FOLDER.'/';
+	$module_folder = MODULES_PATH.'/';
 
 	// config isn't loaded yet so do it manually'
 	include($module_folder.FUEL_FOLDER.'/config/fuel.php');
@@ -57,11 +57,10 @@ if (IN_FUEL_ADMIN)
 			$route[FUEL_ROUTE.$module.'/(.*)'] = $module.'/'.$module.'_module/$1';
 		}
 	}
-	
 	// catch all
 	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
 	
 }
 
 /* End of file fuel_routes.php */
-/* Location: ./codeigniter/application/modules/fuel/config/fuel_routes.php */
+/* Location: ./modules/fuel/config/fuel_routes.php */

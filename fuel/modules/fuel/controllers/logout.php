@@ -1,10 +1,10 @@
 <?php
 
-class Logout extends Controller {
+class Logout extends CI_Controller {
 	
 	function __construct()
 	{
-		parent::Controller();
+		parent::__construct();
 		$this->config->load('fuel', TRUE);
 		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 	}

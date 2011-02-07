@@ -22,7 +22,7 @@ which provides a shortcut for many of the methods of the asset class.
 </p>
 
 <h2>Configuring Asset Information</h2>
-<p>The <dfn>Asset</dfn> class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
+<p>The Asset class automatically loads the <dfn>config/asset.php</dfn> file to initialize. That file contains the following
 configurable parameters:
 </p>
 

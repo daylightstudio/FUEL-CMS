@@ -12,10 +12,19 @@ $config['modules'] = array();
 // page module init values
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
-	'model_name' => 'Pages_model',
+	'model_location' => 'fuel',
 	'display_field' => 'location',
+	'table_headers' => array(
+		'id', 
+		'location', 
+		'layout', 
+		'published',
+	),
+	'default_col' => 'location',
+	'default_order' => 'asc',
 	'js_controller' => 'PageController',
 	'js_controller_params' => array('import_view_key' => 'vars--body'),
+	'js_localized' => array('pages_default_location'),
 	'preview_path' => '{location}',
 	'views' => array(
 		'list' => '_layouts/module_list', 
@@ -23,14 +32,25 @@ $config['modules']['pages'] = array(
 		'delete' => '_layouts/module_delete'),
 	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish'),
 	// 'permission' => array('edit', 'publish', 'delete'),
-	'instructions' => 'Here you can manage the data associated with the page.',
+	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
 	'sanitize_input' => array('template','php')
 );
 
 // navigation module init values
 $config['modules']['blocks'] = array(
+	'module_name' => 'Blocks',
+	'model_location' => 'fuel',
 	'display_field' => 'name',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'description', 
+		'view', 
+		'published',
+	),
+	'default_col' => 'name',
+	'default_order' => 'desc',
 	'js_controller' => 'BlockController',
 	'sanitize_input' => array('template','php')
 );
@@ -38,8 +58,16 @@ $config['modules']['blocks'] = array(
 // navigation module init values
 $config['modules']['navigation'] = array(
 	'module_name' => 'Navigation',
-	'model_name' => 'navigation_model',
+	'model_location' => 'fuel',
 	'display_field' => 'label',
+	'table_headers' => array(
+		'id', 
+		'label', 
+		'nav_key',
+		'published',
+	),
+	'default_col' => 'nav_key',
+	'default_order' => 'asc',
 	'js_controller' => 'NavigationController',
 	'preview_path' => '',
 	'views' => array(
@@ -47,32 +75,69 @@ $config['modules']['navigation'] = array(
 		'create_edit' => '_layouts/module_create_edit', 
 		'delete' => '_layouts/module_delete'),
 	'permission' => 'navigation',
-	'instructions' => 'Here you create and edit the top menu items of the page.',
-	'filters' => array('group_id' => array('default' => 1, 'label' => 'Navigation Group', 'type' => 'select')),
+	'instructions' => lang('navigation_instructions'),
+	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select')),
 	'archivable' => TRUE,
-	'list_actions' => array('navigation/upload' => 'Upload')
+	'list_actions' => array('navigation/upload' => lang('btn_upload'))
 );
 
 // navigation module init values
 $config['modules']['navigation_group'] = array(
+	'module_name' => 'Navigation Groups',
 	'model_name' => 'navigation_groups_model',
-	'hidden' => TRUE,
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'label', 
+		'nav_key',
+	),
 );
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',
-	'model_name' => 'assets_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'preview/kb', 
+		'link', 
+		'last_updated',
+	),
+	'default_col' => 'name',
+	'default_order' => 'asc',
 	'js_controller' => 'AssetsController',
 	'display_field' => 'name',
 	'preview_path' => '',
 	'permission' => 'assets',
-	'instructions' => 'Here you can upload new assets. Select overwrite if you would like to overwrite a file with the same name.',
-	'filters' => array('group_id' => array('default' => 0, 'label' => 'Asset Folder', 'type' => 'select', 'options' => array(0 => 'images'))),
+	'instructions' => lang('assets_instructions'),
+	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'))),
 	'archivable' => FALSE,
 	'table_actions' => array('DELETE'),
 	'rows_selectable' => FALSE,
-	'create_action_name' => 'Upload',
+	'create_action_name' => lang('btn_upload'),
 	'sanitize_images' => FALSE
+);
+
+// sitevariable module init values
+$config['modules']['sitevariables'] = array(
+	'module_name' => 'Site Variables',
+	'model_name' => 'Sitevariables_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'value', 
+		'scope', 
+		'active', 
+	),
+	
+	'display_field' => 'name',
+	'preview_path' => '',
+	'permission' => 'sitevariables',
+	'instructions' => lang('sitevariables_instructions'),
+	'archivable' => FALSE,
+	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
+	'clear_cache_on_save' => FALSE
 );
 
 
@@ -80,41 +145,58 @@ $config['modules']['assets'] = array(
 $config['modules']['users'] = array(
 	'module_name' => 'Users',
 	'model_name' => 'users_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'email', 
+		'user_name', 
+		'first_name', 
+		'last_name', 
+		'super_admin', 
+		'active', 
+	),
+	
+	'js_controller' => 'UserController',
 	'display_field' => 'email',
 	'preview_path' => '',
 	'permission' => 'users',
 	'edit_method' => 'user_info',
-	'instructions' => 'Here you can manage the data for users.',
+	'instructions' => lang('users_instructions'),
 	'archivable' => FALSE,
-	'table_actions' => array('EDIT', 'DELETE' => array('func' => create_function('$cols', 'if ($cols[\'super_admin\'] != "yes") { return anchor(\'/fuel/users/delete/\'.$cols[\'id\'], \'DELETE\'); }'))),
+	'table_actions' => array('EDIT', 'DELETE' => array('func' => create_function('$cols', '
+		if ($cols[\'super_admin\'] != "yes") { 
+			$CI =& get_instance();
+			$link = "";
+			if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+			{
+				$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+				$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+			}
+			return $link;
+		}'))),
 	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
-	'clear_cache_on_save' => FALSE
+	'clear_cache_on_save' => FALSE,
 );
 
 // permissions module init values
 $config['modules']['permissions'] = array(
 	'module_name' => 'Permissions',
 	'model_name' => 'Permissions_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'description', 
+		'active', 
+	),
+	
 	'display_field' => 'name',
 	'preview_path' => '',
 	'permission' => 'permissions',
-	'instructions' => 'Here you can manage the permissions for FUEL modules 
-	and later assign them to users.',
+	'instructions' => lang('permissions_instructions'),
 	'archivable' => FALSE,
 	'item_actions' => array('save', 'delete', 'create'),
-	'clear_cache_on_save' => FALSE
-);
-
-// permissions module init values
-$config['modules']['sitevariables'] = array(
-	'module_name' => 'Site Variables',
-	'model_name' => 'Sitevariables_model',
-	'display_field' => 'name',
-	'preview_path' => '',
-	'permission' => 'sitevariables',
-	'instructions' => 'Here you can manage the site variables for your website.',
-	'archivable' => FALSE,
-	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
 	'clear_cache_on_save' => FALSE
 );
 
@@ -122,4 +204,4 @@ $config['modules']['sitevariables'] = array(
 
 
 /* End of file fuel_modules.php */
-/* Location: ./codeigniter/application/modules/fuel/config/fuel_modules.php */
+/* Location: ./modules/fuel/config/fuel_modules.php */

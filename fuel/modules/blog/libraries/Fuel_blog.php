@@ -9,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -27,7 +27,7 @@
  * @link		http://www.getfuelcms.com/user_guide/modules/blog/fuel_blog
  */
 
-require_once(APPPATH.MODULES_FOLDER.'/blog/config/blog_constants.php');
+require_once(MODULES_PATH.'/blog/config/blog_constants.php');
 
 class Fuel_blog {
 	
@@ -1009,4 +1009,4 @@ class Fuel_blog {
 }
 
 /* End of file Fuel_blog.php */
-/* Location: ./application/modules/blog/libraries/Fuel_blog.php */
+/* Location: ./modules/blog/libraries/Fuel_blog.php */

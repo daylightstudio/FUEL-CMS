@@ -9,3 +9,6 @@ $lang['error_valid_email'] = 'Please enter in a valid email address.';
 $lang['error_valid_phone'] = 'Please enter in a valid phone number.';
 $lang['error_method_does_not_exist'] = "Method %1s does not exist.";
 
+
+/* End of file model_lang.php */
+/* Location: ./modules/fuel/language/english/model_lang.php */

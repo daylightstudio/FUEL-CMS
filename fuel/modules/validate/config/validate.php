@@ -4,7 +4,7 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['tools']['tools/validate'] = 'Validate';
+$config['nav']['tools']['tools/validate'] = lang('module_validate');
 
 
 /*

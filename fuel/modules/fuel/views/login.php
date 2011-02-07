@@ -27,7 +27,7 @@
 		<?php endif; ?>
 		<?=$form?>
 		<?php if ($display_forgotten_pwd) : ?>
-			<a href="<?=fuel_url('login/pwd_reset')?>" id="forgotten_pwd">Forgot password?</a>
+			<a href="<?=fuel_url('login/pwd_reset')?>" id="forgotten_pwd"><?=lang('login_forgot_pwd')?></a>
 		<?php endif; ?>
 	</div>
 	<div id="login_footer"><?=$this->load->module_view('fuel', '_blocks/fuel_footer_copyright', array(), TRUE) ?></div>

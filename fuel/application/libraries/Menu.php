@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -53,11 +53,11 @@ class Menu {
 	public $item_id_prefix = ''; // the prefix to the item id
 	public $item_id_key = 'id'; // either id or location
 	public $use_nav_key = 'AUTO'; // use the nav_key value to match active
-	public $render_type = 'basic'; // basic, breadcrumb, page_title, collapsible
+	public $render_type = 'basic'; // basic, breadcrumb, page_title, collapsible, delimited
 	public $pre_render_func = ''; // function to apply to menu labels before rendering
 	
 	// for breadcrumb AND/OR page_title
-	public $delimiter = ' &gt; '; // the html element between the links 
+	public $delimiter = FALSE; // the html element between the links 
 	public $display_current = TRUE; // display the current active breadcrumb item?
 	public $home_link = 'Home'; // the root home link
 
@@ -80,6 +80,9 @@ class Menu {
 	 */
 	public function __construct($params = array())
 	{
+		$CI =& get_instance();
+		$CI->load->helper('url');
+
 		$ignore = array('_reset_params');
 		$class_vars = get_class_vars(get_class($this));
 		foreach($class_vars as $key => $val)
@@ -195,7 +198,8 @@ class Menu {
 			foreach($selected as $s_id => $active_regex)
 			{
 			
-				$match = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $active_regex));
+				$match = str_replace(':children', $s_id.'$|'.$s_id.'/.+', $active_regex);
+				$match = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $match));
 
 				if (empty($active))
 				{
@@ -233,6 +237,9 @@ class Menu {
 				break;
 			case 'page_title':
 				$output = $this->_render_page_title($root_items);
+				break;
+			case 'delimited':
+				$output = $this->_render_delimited($root_items);
 				break;
 			default:
 				$output = $this->_render_basic($root_items);
@@ -324,6 +331,22 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Renders page_title menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @return	string
+	 */
+	public function render_delimited($items, $active = NULL, $parent_id = NULL)
+	{
+		return $this->render($items, $active, $parent_id, 'delimited');
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Renders a basic menu
 	 *
 	 * @access	protected
@@ -388,7 +411,7 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Renders the collapsible menu output
+	 * Renders the menu output in a collapsible format
 	 *
 	 * @access	protected
 	 * @param	array menu item data
@@ -397,9 +420,6 @@ class Menu {
 	 */
 	protected function _render_collabsible($menu, $level = 0)
 	{
-		$CI =& get_instance();
-		$CI->load->helper('url');
-
 		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
 		$filtered_menu = array();
 		
@@ -421,7 +441,7 @@ class Menu {
 		
 		if (!empty($filtered_menu))
 		{
-			if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", $level)."<".$this->container_tag;
+			if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", $level)."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
 			if (!empty($this->container_tag_id) AND $level == 0) $str .= " id=\"".$this->container_tag_id."\"";
 			if (!empty($this->container_tag_class) AND $level == 0) $str .= " class=\"".$this->container_tag_class."\"";
 			if (!empty($this->container_tag)) $str .= ">\n";
@@ -460,7 +480,7 @@ class Menu {
 						// set id
 						if (!empty($this->item_id_prefix))
 						{
-							$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
+							$str .= ' id="'.$this->_get_id($val).'"';
 						}
 						
 						$str .= '>';
@@ -499,7 +519,7 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Renders the breadcrumb menu output
+	 * Renders the menu output in a breadcrumb format
 	 *
 	 * @access	protected
 	 * @param	array menu item data
@@ -507,8 +527,11 @@ class Menu {
 	 */
 	protected function _render_breadcrumb($menu)
 	{
-		$CI =& get_instance();
-		$CI->load->helper('url');
+		if (empty($this->delimiter))
+		{
+			$this->delimiter = ' &gt; ';
+		}
+
 		$str = '';
 		$num = count($this->_active_items) -1;
 		if (!empty($this->home_link))
@@ -559,22 +582,23 @@ class Menu {
 		}
 
 		$return = '';
-		if (!empty($str)) {
-			if (!empty($this->container_tag)) $return .= "\n<".$this->container_tag;
-			if (!empty($this->container_tag_id) AND $level == 0) $return .= " id=\"".$this->container_tag_id."\"";
+		if (!empty($str))
+		{
+			if (!empty($this->container_tag)) $return .= "\n<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
+			if (!empty($this->container_tag_id)) $return .= " id=\"".$this->container_tag_id."\"";
+			if (!empty($this->container_tag_class)) $return .= " class=\"".$this->container_tag_class."\"";
 			if (!empty($this->container_tag)) $return .= ">\n";
 			
 			$return .= $str;
 			if (!empty($this->container_tag)) 	$return .= "</".$this->container_tag.">\n";
 		}
-		
 		return $return;
 	}
 	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Renders the menu output
+	 * Renders the menu output in a page title format
 	 *
 	 * @access	protected
 	 * @param	array menu item data
@@ -582,6 +606,11 @@ class Menu {
 	 */
 	protected function _render_page_title($menu)
 	{
+		if (empty($this->delimiter))
+		{
+			$this->delimiter = ' &gt; ';
+		}
+
 		$str = '';
 		$num = count($this->_active_items) -1;
 		$home_link = '';
@@ -634,7 +663,63 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get attributes of of the form elment
+	 * Renders the menu output in a delimited format
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	string
+	 */
+	protected function _render_delimited($menu)
+	{
+		if ($this->container_tag !== FALSE)
+		{
+			$this->container_tag = 'div';
+		}
+		if (empty($this->delimiter))
+		{
+			$this->delimiter = ' &nbsp;|&nbsp; ';
+		}
+
+		$links = array();
+		foreach($menu as $val)
+		{
+			if (!empty($this->item_id_prefix))
+			{
+				if (is_array($val['attributes']))
+				{
+					if (!in_array('id', $val['attributes'])) $val['attributes']['id'] = $this->_get_id($val);
+				}
+				else if (strpos($val['id'], 'id=') === FALSE)
+				{
+					$val['attributes'] .= ' id="'.$this->_get_id($val).'"';
+				}
+			}
+			$links[] = $this->_create_link($val);
+		}
+		$str = implode($this->delimiter, $links);
+		
+		$return = '';
+		if (!empty($str))
+		{
+			if (!empty($this->container_tag)) $return .= "\n<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
+			if (!empty($this->container_tag_id)) $return .= " id=\"".$this->container_tag_id."\"";
+			if (!empty($this->container_tag_class)) $return .= " class=\"".$this->container_tag_class."\"";
+			if (!empty($this->container_tag)) $return .= ">\n";
+			
+			$return .= $str;
+			if (!empty($this->container_tag)) 	$return .= "</".$this->container_tag.">\n";
+		}
+		
+		return $return;
+		
+		
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get attributes of of the container tag elment
 	 *
 	 * @access	protected
 	 * @param	mixed takes a string or an array
@@ -655,6 +740,21 @@ class Menu {
 			if (!empty($attrs)) $str .= " ".$attrs;
 		}
 		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Create the ID for a item element
+	 *
+	 * @access	protected
+	 * @param	mixed takes a string or an array
+	 * @return	string
+	 */
+	protected function _get_id($val)
+	{
+		if (empty($this->item_id_prefix)) return;
+		return $this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key]));
 	}
 	
 	// --------------------------------------------------------------------
@@ -681,14 +781,33 @@ class Menu {
 			// set id
 			if (!empty($this->item_id_prefix))
 			{
-				$str .= ' id="'.$this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key])).'"';
+				$str .= ' id="'.$this->_get_id($val).'"';
 			}
 		
 			// set styles
 			$str .= $this->_get_li_classes($val, $level, $i, $is_last);
 			$str .= '>';
 		}
+		$str .= $this->_create_link($val);
+		return $str;
+	}
+	
+	
+	// --------------------------------------------------------------------
 
+	/**
+	 * Creates an open list item element
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @param	int current level
+	 * @param	int current item index
+	 * @param	boolean whether the item is the last in the list
+	 * @return	string
+	 */
+	protected function _create_link($val)
+	{
+		$str = '';
 		$label = $this->_get_label($val['label']);
 		
 		if (function_exists('get_instance'))
@@ -744,7 +863,6 @@ class Menu {
 		}
 		return $str;
 	}
-	
 	// --------------------------------------------------------------------
 
 	/**

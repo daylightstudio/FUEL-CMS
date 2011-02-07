@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -68,7 +68,7 @@ class Asset {
 	public $assets_gzip_cache_expiration = 3600;
 	
 	// module assets path 
-	public $assets_module_path = 'application/modules/{module}/assets/';
+	public $assets_module_path = 'fuel/modules/{module}/assets/';
 	
 	// module context for assets
 	public $assets_module = '';
@@ -145,9 +145,12 @@ class Asset {
 	 */	
 	public function css_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		if (!empty($file) AND substr($file, -4, 4) != '.css') 
+		if (!empty($file)) 
 		{
-			$file = $file.'.css';
+			if (!preg_match('#(\.css|\.php)(\?.+)?$#', $file))
+			{
+				$file = $file.'.css';
+			}
 		}
 		return $this->assets_path($file, 'css', $module, $absolute);
 	}
@@ -165,7 +168,13 @@ class Asset {
 	 */	
 	public function js_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		if (!empty($file) AND substr($file, -3, 3) != '.js') $file = $file.'.js';
+		if (!empty($file)) 
+		{
+			if (!preg_match('#(\.js|\.php)(\?.+)?$#', $file))
+			{
+				$file = $file.'.js';
+			}
+		}
 		return $this->assets_path($file, 'js', $module, $absolute);
 	}
 
@@ -182,7 +191,13 @@ class Asset {
 	 */	
 	public function swf_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		if (!empty($file) AND substr($file, -4, 4) != '.swf') $file = $file.'.swf';
+		if (!empty($file))
+		{
+			if (!preg_match('#(\.swf|\.php)(\?.+)?$#', $file))
+			{
+				$file = $file.'.swf';
+			}
+		}
 		return $this->assets_path($file, 'swf', $module, $absolute);
 	}
 
@@ -199,7 +214,13 @@ class Asset {
 	 */	
 	public function pdf_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		if (!empty($file) AND substr($file, -4, 4) != '.pdf') $file = $file.'.pdf';
+		if (!empty($file))
+		{
+			if (!preg_match('#(\.pdf|\.php)(\?.+)?$#', $file))
+			{
+				$file = $file.'.pdf';
+			}
+		}
 		return $this->assets_path($file, 'pdf', $module, $absolute);
 	}
 
@@ -271,7 +292,8 @@ class Asset {
 		$CI = $this->_get_assets_config();
 		if ($this->asset_append_cache_timestamp AND in_array($path, $this->asset_append_cache_timestamp) AND !empty($file))
 		{
-			$cache = '?c='.strtotime($this->assets_last_updated);
+			$q_str = (strpos($file, '?') === FALSE) ? '?' : '&';
+			$cache = $q_str.'c='.strtotime($this->assets_last_updated);
 		}
 	
 		// if it is an absolute path already provided, then we just return it without any caching
@@ -286,7 +308,7 @@ class Asset {
 
 		$asset_type = (!empty($assets_folders[$path])) ? $assets_folders[$path] : $CI->config->item($path);
 		$path = WEB_PATH.$assets_path.$asset_type.$file.$cache;
-	
+
 		if ($absolute)
 		{
 			$path = 'http://'.$_SERVER['HTTP_HOST'].$path;
@@ -928,7 +950,7 @@ class Asset {
 			if (empty($this->_module_config_loaded[$module]))
 			{
 				$assets_path = $this->assets_module_path;
-				$module_config = APPPATH.MODULES_FOLDER.'/'.$module.'/config/'.$module.EXT;
+				$module_config = MODULES_PATH.$module.'/config/'.$module.EXT;
 				if (file_exists($module_config))
 				{
 					include_once($module_config);

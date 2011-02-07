@@ -4,7 +4,7 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['tools']['tools/backup'] = 'Backup';
+$config['nav']['tools']['tools/backup'] = lang('module_backup');
 
 
 /*

@@ -8,8 +8,7 @@ var ValidateController = {
 	
 	validate : function(){
 		this._notifications();
-		$('.fillin').fillin(this.initObj.pages_input);
-		
+		$('.fillin').fillin(this.localized.validate_pages_input);
 		var _this = this;
 		$('#submit_html').click(function(){
 			$('.csadd').click();
@@ -28,7 +27,8 @@ var ValidateController = {
 			$('#form').attr('action', _this.modulePath + '/validate/size_report').submit();
 			return false;
 		})
-		$('#pages').supercomboselect();
+		var comboOpts = this._comboOps('#pages');
+		$('#pages').supercomboselect(comboOpts);
 	},
 	
 	html : function(){
@@ -57,7 +57,7 @@ var ValidateController = {
 							$(this).parent().find('.result').slideToggle();
 						});
 						if (totalToLoad == i){
-							var completedText = '<h2>Total Valid: <span class="success">' + totalValid + '</span> &nbsp; &nbsp; Total Invalid : <span class="error">' + totalInvalid + '</span></h2>';
+							var completedText = '<h2>' + _this.lang('validate_total_valid') + ': <span class="success">' + totalValid + '</span> &nbsp; &nbsp; ' + _this.lang('validate_total_invalid') + ': <span class="error">' + totalInvalid + '</span></h2>';
 							$('#validation_status_text').html(completedText);
 							$('#validation_status .loader').hide();
 						}
@@ -90,7 +90,7 @@ var ValidateController = {
 		var edit_url = $('#edit_url', doc).text();
 		
 		if (edit_url.length > 0){
-			$('#edit_' + i).html('<a href="' + edit_url + '">Edit</a>');
+			$('#edit_' + i).html('<a href="' + edit_url + '">' + _this.lang('btn_edit') + '</a>');
 		}
 		if ($invalid.size() > 0 ) {
 			var invalidStr = ($.trim($invalidText.text()).length) ? $invalidText.html() : $('#results', doc).html();
@@ -98,7 +98,7 @@ var ValidateController = {
 			$('#summary_' + i).html(summary);
 			return false;
 		} else{
-			summary += '<span class="success">Valid</span>';
+			summary += '<span class="success">' + _this.lang('validate_valid') + '</span>';
 			$('#summary_' + i).html(summary);
 			return true;
 		}
@@ -132,7 +132,7 @@ var ValidateController = {
 							$(this).parent().find('.result').slideToggle();
 						});
 						if (totalToLoad == i){
-							var completedText = '<h2>Total Valid: <span class="success">' + totalValid + '</span> &nbsp; &nbsp; Total Invalid : <span class="error">' + totalInvalid + '</span></h2>';
+							var completedText = '<h2>' + _this.lang('validate_total_valid') + ': <span class="success">' + totalValid + '</span> &nbsp; &nbsp; ' + _this.lang('validate_total_invalid') + ': <span class="error">' + totalInvalid + '</span></h2>';
 							$('#validation_status').html(completedText);
 							$('#validation_status .loader').hide();
 						}
@@ -165,7 +165,7 @@ var ValidateController = {
 		var edit_url = $('#edit_url', doc).text();
 		
 		if (edit_url.length > 0){
-			$('#edit_' + i).html('<a href="' + edit_url + '">Edit</a>');
+			$('#edit_' + i).html('<a href="' + edit_url + '">' + _this.lang('btn_edit') + '</a>');
 		}
 		
 		
@@ -174,7 +174,7 @@ var ValidateController = {
 			$('#summary_' + i).html(summary);
 			return false;
 		} else {
-			summary += '<span class="success">All links valid</span>';
+			summary += '<span class="success">' + _this.lang('validate_all_links_valid') + '</span>';
 			$('#summary_' + i).html(summary);
 			return true;
 		}
@@ -203,7 +203,7 @@ var ValidateController = {
 							$(this).parent().find('.result').slideToggle();
 						});
 						if (totalToLoad == i){
-							var completedText = '<h2>Processing Complete</h2>';
+							var completedText = '<h2>' + _this.lang('validate_processing_complete') + '</h2>';
 							$('#validation_status').html(completedText);
 							$('#validation_status .loader').hide();
 						}
@@ -232,7 +232,7 @@ var ValidateController = {
 		
 		var summary = '<span class="uri">' + u + '</span> &nbsp; ';
 		if ($('#total_error', doc).text().substr(0, 1) === '-'){
-			summary += '<span class="error">There was an error in reading the files on this page</span> ';
+			summary += '<span class="error">' + _this.lang('validate_error_reading_files') + '</span> ';
 		} else {
 			var total_error = parseInt($('#total_error .num', doc).text());
 			var total_warn = $('#total_warn', doc).text();
@@ -249,7 +249,7 @@ var ValidateController = {
 	
 	
 	displayProcessingText : function(num, totalToLoad){
-		$('#validation_status_text').html('Processing: ' + num + ' of ' + totalToLoad);
+		$('#validation_status_text').html(this.lang('validate_processing') + ' ' + num + ' of ' + totalToLoad);
 	},
 	
 	createResultsIframe : function(i, html){
@@ -285,7 +285,7 @@ var ValidateController = {
 				if (invalid_num > 0){
 					summary += '<span class="error">' + invalid_text + '</span>';
 				} else {
-					summary += '<span class="success">All links valid</span>';
+					summary += '<span class="success">' + _this.lang('validate_all_links_valid') + '</span>';
 				}
 
 				$('#summary_' + i).html(summary);

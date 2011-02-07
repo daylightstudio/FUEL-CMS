@@ -35,6 +35,10 @@ if (fuel == undefined) var fuel = {};
 
 	jQuery.resize.delay = (fuel.resizeDelay) ? fuel.resizeDelay : 1000;
 	
+	function lang(key){
+		return __FUEL_LOCALIZED__[key];
+	}
+	
 	$(document).ready(function(){
 		function init(){
 			initMarkers();
@@ -276,6 +280,10 @@ if (fuel == undefined) var fuel = {};
 								// set up supercomboselects
 								$('select[multiple]', context).each(function(i){
 									var comboOpts = {};
+									comboOpts.valuesEmptyString = lang('comboselect_values_empty');
+									comboOpts.selectedEmptyString = lang('comboselect_selected_empty');
+									comboOpts.defaultSearchBoxString = lang('comboselect_filter');
+									
 									var sortingId = 'sorting_' + $(this).attr('id');
 									if ($('#' + sortingId).size()){
 										comboOpts.autoSort = false;
@@ -294,18 +302,18 @@ if (fuel == undefined) var fuel = {};
 									var btnLabel = '';
 									switch(assetFolder.split('/')[0].toLowerCase()){
 										case 'pdf':
-											btnLabel = 'PDF';
+											btnLabel = lang('btn_pdf');
 											break;
 										case 'images': case 'img': case '_img':
-											btnLabel = 'Image';
+											btnLabel = lang('btn_image');
 											break;
 										case 'swf': case 'flash':
-											btnLabel = 'Flash';
+											btnLabel = lang('btn_flash');
 											break;
 										default :
-											btnLabel = 'Asset';
+											btnLabel = lang('btn_asset');
 									}
-									$(this).after('&nbsp;<a href="'+ __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">Select ' + btnLabel + '</a>');
+									$(this).after('&nbsp;<a href="'+ __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + lang('btn_select') + ' ' + btnLabel + '</a>');
 								});
 								
 								$('.asset_select_button', context).click(function(e){
@@ -364,8 +372,8 @@ if (fuel == undefined) var fuel = {};
 										module = fieldName.substr(0, fieldName.length - 3) + 's'; // eg id = client_id so module would be clients
 									}
 									var url =__FUEL_PATH__ + '/' + module + '/inline_edit/';
-									$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">Add</a>');
-									$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">Edit</a>');
+									$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + lang('btn_add') + '</a>');
+									$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">' + lang('btn_edit') + '</a>');
 
 									var refreshField = function(html){
 										var refreshUrl = jqx.config.fuelPath + '/' + _this.module + '/refresh_field';
@@ -433,7 +441,7 @@ if (fuel == undefined) var fuel = {};
 												});
 												
 												$('.delete', $modalContext).click(function(){
-													if (confirm('Are you sure you want to delete this?')){
+													if (confirm(lang('confirm_delete'))){
 														$form.find('.__fuel_inline_action__').val('delete');
 														$form.ajaxSubmit({
 															success: function(html){

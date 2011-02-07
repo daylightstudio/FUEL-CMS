@@ -48,6 +48,7 @@ span.error_highlight input, span.error_highlight textarea, span.error_highlight 
 a.delete { color: #c30; display: block; float: left; margin-top: 10px; border: 1px solid #ccc; padding: 5px; }
 a.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; height: 27px; line-height: 27px; display: block; padding: 0 15px 0 15px; float: left; }
 div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left; list-style: none;  margin: 0;  padding: 0 15px 0 0px; line-height: 27px; }
+.btn input, .btn .button { border: none; background-color: transparent; height: 19px; }
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
@@ -122,7 +123,7 @@ div#left_panel_inner li.active ul li.active a { text-decoration: underline; }
 .ico_view_all { background-image: none; line-height: 22px; padding-left: 5px; }
 .ico_refresh { background-image: url(../images/ico_arrow_refresh.png); }
 .ico_navigation_upload { background-image: url(../images/ico_page_white_get.png); }
-
+.ico_users_send_email { background-image: url(../images/ico_email_go.png); }
 
 /******************************************************
 main panel 
@@ -242,7 +243,7 @@ div#login_footer { position: absolute; width: 558px; bottom: -35px; }
 a#forgotten_pwd { text-align: center; display: block; margin-top: 10px; }
 
 /* assets & modal */
-div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; z-index: 300001; }
+div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; }
 div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }
 div#asset_modal table.asset_select { width: 100%; }
 div#asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }

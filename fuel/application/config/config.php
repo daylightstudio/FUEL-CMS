@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -8,18 +8,27 @@
 | URL to your CodeIgniter root. Typically this will be your base URL,
 | WITH a trailing slash:
 |
-|	http://www.your-site.com/
+|	http://example.com/
 |
 */
-
-if ($_SERVER['SERVER_PORT'] !== '80')
+if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
 {
-	$config['base_url'] = "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+	$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+	
+	if ($_SERVER['SERVER_PORT'] == '443')
+	{
+		$config['base_url'] = "https://".$_base_path;
+	}
+	else
+	{
+		$config['base_url'] = "http://".$_base_path;
+	}
 }
 else
 {
-	$config['base_url'] = "http://".$_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
-}
+	$config['base_url'] = "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+}	
+
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +105,7 @@ $config['charset'] = "UTF-8";
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = TRUE;
+$config['enable_hooks'] = FALSE;
 
 
 /*
@@ -119,9 +128,9 @@ $config['subclass_prefix'] = 'MY_';
 | Allowed URL Characters
 |--------------------------------------------------------------------------
 |
-| This lets you specify which characters are permitted within your URLs.
-| When someone tries to submit a URL with disallowed characters they will
-| get a warning message.
+| This lets you specify with a regular expression which characters are permitted
+| within your URLs.  When someone tries to submit a URL with disallowed
+| characters they will get a warning message.
 |
 | As a security measure you are STRONGLY encouraged to restrict URLs to
 | as few characters as possible.  By default only these are allowed: a-z 0-9~%.:_-
@@ -131,7 +140,7 @@ $config['subclass_prefix'] = 'MY_';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_-';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 
 
 /*
@@ -140,16 +149,16 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_-';
 |--------------------------------------------------------------------------
 |
 | By default CodeIgniter uses search-engine friendly segment based URLs:
-| www.your-site.com/who/what/where/
+| example.com/who/what/where/
 |
 | You can optionally enable standard query string based URLs:
-| www.your-site.com?who=me&what=something&where=here
+| example.com?who=me&what=something&where=here
 |
 | Options are: TRUE or FALSE (boolean)
 |
 | The other items let you set the query string "words" that will
 | invoke your controllers and its functions:
-| www.your-site.com/index.php?c=controller&m=function
+| example.com/index.php?c=controller&m=function
 |
 | Please note that some of the helpers won't work as expected when
 | this feature is enabled, since CodeIgniter is designed primarily to
@@ -157,16 +166,16 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_-';
 |
 */
 $config['enable_query_strings'] = FALSE;
-$config['directory_trigger'] = 'd';
-$config['controller_trigger'] = 'c';
-$config['function_trigger'] = 'm';
+$config['controller_trigger']	= 'c';
+$config['function_trigger']		= 'm';
+$config['directory_trigger']	= 'd'; // experimental not currently in use
 
 /*
 |--------------------------------------------------------------------------
 | Error Logging Threshold
 |--------------------------------------------------------------------------
 |
-| If you have enabled error logging, you can set an error threshold to 
+| If you have enabled error logging, you can set an error threshold to
 | determine what gets logged. Threshold options are:
 | You can enable error logging by setting a threshold over zero. The
 | threshold determines what gets logged. Threshold options are:
@@ -189,7 +198,7 @@ $config['log_threshold'] = 0;
 |--------------------------------------------------------------------------
 |
 | Leave this BLANK unless you would like to set something other than the default
-| system/logs/ folder.  Use a full server path with trailing slash.
+| application/logs/ folder.  Use a full server path with trailing slash.
 |
 */
 $config['log_path'] = '';
@@ -211,42 +220,49 @@ $config['log_date_format'] = 'Y-m-d H:i:s';
 |--------------------------------------------------------------------------
 |
 | Leave this BLANK unless you would like to set something other than the default
-| system/cache/ folder.  Use a full server path with trailing slash.
+| application/cache/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['cache_path'] = '';
+$config['cache_path'] = APPPATH.'/cache/';
 
 /*
 |--------------------------------------------------------------------------
 | Encryption Key
 |--------------------------------------------------------------------------
 |
-| If you use the Encryption class or the Sessions class with encryption
-| enabled you MUST set an encryption key.  See the user guide for info.
+| If you use the Encryption class or the Session class you
+| MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = "";
+$config['encryption_key'] = "abc123";
 
 /*
 |--------------------------------------------------------------------------
 | Session Variables
 |--------------------------------------------------------------------------
 |
-| 'session_cookie_name' = the name you want for the cookie
-| 'encrypt_sess_cookie' = TRUE/FALSE (boolean).  Whether to encrypt the cookie
-| 'session_expiration'  = the number of SECONDS you want the session to last.
-|  by default sessions last 7200 seconds (two hours).  Set to zero for no expiration.
-| 'time_to_update'		= how many seconds between CI refreshing Session Information
+| 'sess_cookie_name'		= the name you want for the cookie
+| 'sess_expiration'			= the number of SECONDS you want the session to last.
+|   by default sessions last 7200 seconds (two hours).  Set to zero for no expiration.
+| 'sess_expire_on_close'	= Whether to cause the session to expire automatically
+|   when the browser window is closed
+| 'sess_encrypt_cookie'		= Whether to encrypt the cookie
+| 'sess_use_database'		= Whether to save the session data to a database
+| 'sess_table_name'			= The name of the session database table
+| 'sess_match_ip'			= Whether to match the user's IP address when reading the session data
+| 'sess_match_useragent'	= Whether to match the User Agent when reading the session data
+| 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
 $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 7200;
+$config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
-$config['sess_time_to_update'] 		= 300;
+$config['sess_time_to_update']	= 300;
 
 /*
 |--------------------------------------------------------------------------
@@ -272,6 +288,17 @@ $config['cookie_path']		= "/";
 |
 */
 $config['global_xss_filtering'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Cross Site Request Forgery
+|--------------------------------------------------------------------------
+| Enables a CSRF cookie token to be set. When set to TRUE, token will be
+| checked on a submitted form. If you are accepting user data, it is strongly
+| recommended CSRF protection be enabled.
+*/
+$config['csrf_protection'] = FALSE;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -303,7 +330,7 @@ $config['compress_output'] = FALSE;
 | regarding date handling.
 |
 */
-$config['time_reference'] = 'gmt';
+$config['time_reference'] = 'local';
 
 
 /*
@@ -316,7 +343,22 @@ $config['time_reference'] = 'gmt';
 | in your view files.  Options are TRUE or FALSE (boolean)
 |
 */
-$config['rewrite_short_tags'] = TRUE;
+$config['rewrite_short_tags'] = FALSE;
 
-/* End of file user_agents.php */
+
+/*
+|--------------------------------------------------------------------------
+| Reverse Proxy IPs
+|--------------------------------------------------------------------------
+|
+| If your server is behind a reverse proxy, you must whitelist the proxy IP
+| addresses from which CodeIgniter should trust the HTTP_X_FORWARDED_FOR
+| header in order to properly identify the visitor's IP address.
+| Comma-delimited, e.g. '10.0.1.200,10.0.1.201'
+|
+*/
+$config['proxy_ips'] = '';
+
+
+/* End of file config.php */
 /* Location: ./application/config/config.php */

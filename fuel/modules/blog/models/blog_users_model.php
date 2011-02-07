@@ -17,7 +17,7 @@ class Blog_users_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
 	{
-		$this->db->select('fuel_user_id, CONCAT(first_name, " ", last_name) as name, fuel_blog_users.active', FALSE);
+		$this->db->select('fuel_user_id, CONCAT(first_name, " ", last_name) as name, display_name, fuel_blog_users.active', FALSE);
 		$this->db->join('fuel_users', 'fuel_users.id = fuel_blog_users.fuel_user_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;

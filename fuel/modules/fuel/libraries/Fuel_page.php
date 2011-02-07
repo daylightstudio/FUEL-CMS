@@ -80,7 +80,7 @@ class Fuel_page {
 		
 		// if a location is provided in the init config, then use it instead of the uri segments and go no further
 
-		if ($this->location == 'fuel_router') $this->location = $default_home;
+		if ($this->location == 'page_router') $this->location = $default_home;
 		
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout');
 		$this->_page_data = $page_data;
@@ -289,7 +289,8 @@ class Fuel_page {
 			{
 				$this->_CI->load->helpers($vars['helpers']);
 			}
-		}		
+		}
+				
 		// load libraries
 		if (!empty($vars['libraries']))
 		{
@@ -497,6 +498,14 @@ class Fuel_page {
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
+		
+		// load language files
+		$this->_CI->load->module_language(FUEL_FOLDER, 'fuel_inline_edit');
+		$this->_CI->load->module_language(FUEL_FOLDER, 'fuel_js');
+		
+		
+		// json localization
+		$vars['js_localized'] = json_lang('fuel/fuel_js');
 		$vars['assetsAccept']['assetsAccept'] = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png');
 		
 		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
@@ -514,8 +523,8 @@ class Fuel_page {
 		if (!$this->_fuelified_processed)
 		{
 			$inline_edit_bar = $this->_CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
-			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output, 1);
-			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output, 1);
+			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
+			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
 			$this->_CI->config->set_item('assets_path', $this->_CI->config->item('assets_path'));
 		}
 		$this->_fuelified_processed = TRUE;
@@ -597,7 +606,7 @@ class Fuel_page {
 						preg_match_all("#".$marker_reg_ex."#", $matches[0], $tagmatches);
 						if (!empty($tagmatches[0]))
 						{
-							// clean out the tag and append them before the node
+							// clean out the tag and append htem before the node
 							$output = $CI->fuel_page->remove_markers($matches[0]);
 							$output = implode($tagmatches[0], " ").$output;
 						}
@@ -619,14 +628,14 @@ class Fuel_page {
 				if (!empty($matches[1]))
 				{
 					$head_markers = implode("\n", array_unique($matches[1]));
-					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output, 1);
+					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output);
 				}
 				
 				// remove the markers from the head now that we've captured them'
 				$cleaned_head = preg_replace('/('.$marker_reg_ex.')/', '', $head[1][0]);
 				
 				// replace the cleaned head back on
-				$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output, 1);
+				$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output);
 			}
 		}
 		else

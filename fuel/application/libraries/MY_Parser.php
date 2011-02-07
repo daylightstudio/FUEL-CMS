@@ -169,7 +169,6 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @param	array
 	 * @param	bool
-	 * @param	bool
 	 * @return	string
 	 */
 	function _parse($string, $data, $return = FALSE, $is_include = FALSE)
@@ -194,6 +193,7 @@ class MY_Parser extends CI_Parser {
 		$dwoo_data = new Dwoo_Data;
 		$dwoo_data->setData($data);
 
+		$parsed_string = '';
 		try
 		{
 			// Object of the template
@@ -226,7 +226,7 @@ class MY_Parser extends CI_Parser {
 				// load FUEL language file because it has the proper error
 				// added by David McReynolds @ Daylight Studio 1/20/11
 				$this->_ci->load->module_language(FUEL_FOLDER, 'fuel');
-				throw(new Exception(lang('error_cache_folder_not_writable')));
+				throw(new Exception(lang('error_cache_folder_not_writable', $this->_ci->config->item('cache_path'))));
 			}
 		}
 

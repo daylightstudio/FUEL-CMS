@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2 class="ico ico_tools"><?=lang('h2_tools')?></h2>
+	<h2 class="ico ico_tools"><?=lang('section_tools')?></h2>
 </div>
 <div class="clear"></div>
 

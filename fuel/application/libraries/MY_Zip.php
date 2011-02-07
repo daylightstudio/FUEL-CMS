@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -31,7 +31,7 @@ class MY_Zip extends CI_Zip {
 	
 	function MY_Zip()
 	{
-		parent::CI_Zip();
+		parent::__construct();
 	}
 
 	// added $orig_path to prevent deep file structures

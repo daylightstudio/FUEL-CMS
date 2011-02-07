@@ -1,7 +1,7 @@
 <?php 
-define('TESTER_VERSION', '0.9');
+define('TESTER_VERSION', '0.9.2');
 define('TESTER_FOLDER', 'tester');
-define('TESTER_PATH', APPPATH.MODULES_FOLDER.'/'.TESTER_FOLDER.'/');
+define('TESTER_PATH', MODULES_PATH.TESTER_FOLDER.'/');
 
 // used for testing... basically triggers it to check for if it is a valid server name for us to run tests
 if (!empty($_COOKIE['tester_dsn']))

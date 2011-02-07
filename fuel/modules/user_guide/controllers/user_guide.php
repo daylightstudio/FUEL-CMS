@@ -35,7 +35,7 @@ class User_guide extends Fuel_base_controller {
 		
 		foreach($modules as $m)
 		{
-			if ((!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$m)) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$m.'/views/_docs/index'.EXT)) 
+			if ((!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$m)) AND file_exists(MODULES_PATH.$m.'/views/_docs/index'.EXT)) 
 			{
 				$module_view = $this->load->module_view($m, '_docs/index', array(), TRUE);
 				$mod_page_title = $this->_get_page_title($module_view);
@@ -49,7 +49,7 @@ class User_guide extends Fuel_base_controller {
 		$module_page = uri_path(FALSE, $uri_path_index);
 		$module_view_path = (!empty($module_page)) ? '_docs/'.$module_page : '_docs/index';
 		
-		if ($this->_get_page_segment(1) == 'modules' AND ($this->_get_page_segment(2) AND file_exists(APPPATH.MODULES_FOLDER.'/'.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT)))
+		if ($this->_get_page_segment(1) == 'modules' AND ($this->_get_page_segment(2) AND file_exists(MODULES_PATH.$this->_get_page_segment(2).'/views/'.$module_view_path.EXT)))
 		{
 			$module = $this->_get_page_segment(2);
 			if (!$this->config->item('user_guide_authenticate') OR $this->fuel_auth->has_permission('user_guide_'.$module))
@@ -63,7 +63,7 @@ class User_guide extends Fuel_base_controller {
 		}
 		else
 		{
-			if (!is_file(APPPATH.MODULES_FOLDER.'/'.USER_GUIDE_FOLDER.'/views/'.$this->current_page.EXT))
+			if (!is_file(MODULES_PATH.USER_GUIDE_FOLDER.'/views/'.$this->current_page.EXT))
 			{
 				show_404();
 			}
@@ -120,7 +120,7 @@ class User_guide extends Fuel_base_controller {
 		array_pop($page_arr);
 		$prev_page = implode('/', $page_arr);
 
-		if (is_file(APPPATH.MODULES_FOLDER.'/'.USER_GUIDE_FOLDER.'/views'.$prev_page.EXT))
+		if (is_file(MODULES_PATH.USER_GUIDE_FOLDER.'/views'.$prev_page.EXT))
 		{
 			
 			$prev_view = $this->load->module_view(USER_GUIDE_FOLDER, $prev_page, $vars, TRUE);

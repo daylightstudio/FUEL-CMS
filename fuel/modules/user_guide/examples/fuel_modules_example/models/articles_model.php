@@ -67,7 +67,7 @@ class Articles_model extends Base_module_model {
 	// add categories
 	function on_after_save($values)
 	{
-		$data = $this->normalized_save_data['categories'];
+		$data = (!empty($this->normalized_save_data['categories'])) ? $this->normalized_save_data['categories'] : array();
 		$this->save_related('categories_to_articles_model', array('article_id' => $values['id']), array('category_id' => $data));
 	}
 	

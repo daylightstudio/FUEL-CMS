@@ -149,8 +149,11 @@ on the key value specified in the config (e.g. example):</p>
 		<tr>
 			<td><strong>item_actions</strong></td>
 			<td>save, view, publish, activate, delete, duplicate, create</td>
-			<td>None</td>
-			<td>The form level actions to include in the toolbar</td>
+			<td>save, view, publish, activate, delete, duplicate, create, others</td>
+			<td>The form level actions to include in the toolbar. 
+				The <dfn>others</dfn> action is a key / value array with the key being the FUEL URI and the value being the button label.
+				It can be used to create additional custom buttons. Each button will submit the form information on the page to the link path of the button.
+			</td>
 		</tr>
 		<tr>
 			<td><strong>list_actions</strong></td>

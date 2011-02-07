@@ -6,13 +6,13 @@
 	<?=$form?>
 	
 	<?php if ($action != 'create'){ ?>
-	<a href="#" class="delete">Delete</a>
+	<a href="#" class="delete"><?=lang('btn_delete')?></a>
 	<?php } ?>
 	
 	<div class="buttonbar save_cancel">
 		<ul>
-			<li class="start end"><a href="#" class="ico ico_cancel modal_cancel">Cancel</a></li>
-			<li class="start end"><a href="#" class="ico ico_save">Save</a></li>
+			<li class="start end"><a href="#" class="ico ico_cancel modal_cancel"><?=lang('btn_cancel')?></a></li>
+			<li class="start end"><a href="#" class="ico ico_save"><?=lang('btn_save')?></a></li>
 		</ul>
 		<div class="clear"></div>
 	</div>

@@ -1,6 +1,6 @@
 <?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
-require_once(APPPATH.MODULES_FOLDER.'/'.TESTER_FOLDER.'/libraries/Tester_base.php');
+require_once(MODULES_PATH.TESTER_FOLDER.'/libraries/Tester_base.php');
 
 class Tester extends Fuel_base_controller {
 
@@ -10,6 +10,8 @@ class Tester extends Fuel_base_controller {
 	function __construct()
 	{
 		parent::__construct();
+		// must load first
+		$this->load->library('unit_test');
 		$this->load->module_language(TESTER_FOLDER, 'tester');
 		$this->_validate_user('tools/tester');
 	}
@@ -54,7 +56,6 @@ class Tester extends Fuel_base_controller {
 	function run()
 	{
 		if (empty($_POST)) redirect(fuel_url('tools/tester'));
-		$this->load->library('unit_test');
 		$this->load->helper('inflector');
 		$vars = array();
 		$tmpl = $this->load->module_view(TESTER_FOLDER, 'report_template', $vars, TRUE);
@@ -116,11 +117,15 @@ class Tester extends Fuel_base_controller {
 		
 		$vars['total_passed'] = 0;
 		$vars['total_failed'] = 0;
+		$lang_results = lang('ut_result');
+		$lang_passed = lang('ut_passed');
+		$lang_failed = lang('ut_failed');
+
 		foreach($vars['results'] as $key => $result)
 		{
 			foreach($result['raw'] as $k => $v)
 			{
-				if (strtolower($v['Result']) == 'passed')
+				if (strtolower($v[$lang_results]) == strtolower($lang_passed))
 				{
 					$vars['total_passed']++;
 					$vars['results'][$key]['passed']++;
@@ -132,6 +137,7 @@ class Tester extends Fuel_base_controller {
 				}
 			}
 		}
+		
 		$vars['tests_serialized'] = base64_encode(serialize($tests));
 		$this->_render('tester_results', $vars);
 	}

@@ -71,7 +71,7 @@ class Blog_comments_model extends Base_module_model {
 			return lang('blog_error_no_posts_to_comment');
 		}
 		
-		$fields['post_id'] = array('type' => 'select', 'options' => $post_options, 'label' => 'Post');
+		$fields['post_id'] = array('type' => 'select', 'options' => $post_options);
 
 		if (!empty($values['id']))
 		{
@@ -85,7 +85,7 @@ class Blog_comments_model extends Base_module_model {
 			
 			$fields['post_id'] = array('type' => 'hidden', 'value' => $post_title, 'displayonly' => TRUE);
 
-			$fields['post_title'] = array('label' => 'Post', 'value' => $post_title, 'order' => 1);
+			$fields['post_title'] = array('value' => $post_title, 'order' => 1);
 			
 			$fields['post_title']['displayonly'] = TRUE;
 			$fields['post_published']['displayonly'] = TRUE;
@@ -97,7 +97,7 @@ class Blog_comments_model extends Base_module_model {
 			$fields['date_submitted'] = array('displayonly' => TRUE, 'value' => english_date($values['date_added'], TRUE));
 			
 			$ip_host = (!empty($values['author_ip'])) ? gethostbyaddr($values['author_ip']).' ('.$values['author_ip'].')' : '';
-			$fields['ip_host'] = array('label' => 'IP/Host', 'value' => $ip_host, 'order' => 5, 'displayonly' => TRUE);
+			$fields['ip_host'] = array('value' => $ip_host, 'order' => 5, 'displayonly' => TRUE);
 			
 			$fields['Reply to this Comment'] = array('type' => 'section');
 			$replies = $this->find_all_array(array('parent_id' => $values['id']));
@@ -106,13 +106,13 @@ class Blog_comments_model extends Base_module_model {
 			{
 				$reply_arr[] = $r['content'];
 			}
-			$fields['replies'] = array('label' => 'Replies', 'displayonly' => TRUE, 'value' => implode('<br /><br />', $reply_arr));
+			$fields['replies'] = array('displayonly' => TRUE, 'value' => implode('<br /><br />', $reply_arr));
 			
 			if (!empty($post) AND $post->author_id == $CI->fuel_auth->user_data('id') OR $CI->fuel_auth->is_super_admin())
 			{
-				$fields['reply'] = array('label' => 'Reply', 'type' => 'textarea');
+				$fields['reply'] = array('type' => 'textarea');
 				$notify_options = array('Commentor' => lang('blog_comment_notify_option2'), 'All' => lang('blog_comment_notify_option1'), 'None' => lang('blog_comment_notify_option3'));
-				$fields['reply_notify'] = array('label' => 'Notfiy', 'type' => 'enum', 'options' => $notify_options);
+				$fields['reply_notify'] = array('type' => 'enum', 'options' => $notify_options);
 			}
 			
 			// hidden
@@ -130,7 +130,7 @@ class Blog_comments_model extends Base_module_model {
 		// set author to current fuel user
 		if (empty($fields['author_id']) AND $CI->fuel_auth->user_data('id'))
 		{
-			$fields['author_id'] = array('value' => $CI->fuel_auth->user_data('id'));
+			$fields['author_id']['value'] = $CI->fuel_auth->user_data('id');
 		}
 		$fields['author_id'] = array('type' => 'hidden');
 

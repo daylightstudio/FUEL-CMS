@@ -1,5 +1,5 @@
 <h1>What is FUEL CMS?</h1>
-<p>At its core, FUEL CMS is a modular based, CodeIgniter development platform for 
+<p>At it's core, FUEL CMS is a modular based, CodeIgniter development platform for 
 creating web applications. You can create your models, views and controllers 
 like normal and only use the CMS part when and if you need it. It's a hybrid of 
 a framework and a CMS.</p>

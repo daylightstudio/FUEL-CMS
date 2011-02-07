@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2 class="ico ico_tools_backup"><a href="<?=fuel_url('tools')?>">Tools</a> &gt; Backup Database</h2>
+	<h2 class="ico ico_tools_backup"><a href="<?=fuel_url('tools')?>"><?=lang('section_tools')?></a> &gt; <?=lang('module_backup')?></h2>
 </div>
 <div class="clear"></div>
 
@@ -9,24 +9,23 @@
 <div id="main_content" class="noaction">
 
 	<div id="main_content_inner">
-	<p class="instructions">You are about to backup your database. This will download a gzip file from your browser that you can 
-	save on your computer. 
+	<p class="instructions"><?=lang('data_backup_instructions')?>
 	
 	<?php if ($is_writable) : ?>
-		It will also create a dated backup file on the web server in the directory:<br />
+		<?=lang('data_backup_instructions_writable')?><br />
 			<strong><em><?=$download_path?></em></strong></p>
 	<?php else: ?>
-		To save the zipped data on the server, you must make the following directory writable or change the directory in the fuel config file. <strong>Be sure that this directory is not accessible to others and is either above the web root directory or protected by .htaccess.</strong>:<br />
-			<strong><em><span class="error"><?=$download_path?></span></em>  (not writable)</strong></p>
+		<?=lang('data_backup_instructions_not_writable')?><br />
+			<strong><em><span class="error"><?=$download_path?></span></em>  <?=lang('data_backup_not_writable')?></strong></p>
 	<?php endif; ?>
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
 	
-	<div style="padding: 10px 0;"><?=$this->form->checkbox('include_assets', '1')?> <label for="include_assets">Include the assets folder?</label></div>
+	<div style="padding: 10px 0;"><?=$this->form->checkbox('include_assets', '1')?> <label for="include_assets"><?=lang('data_backup_include_assets')?></label></div>
 	
 	<div class="buttonbar">
 		<ul>
-			<li class="end"><a href="<?=fuel_url('recent')?>" class="ico ico_no">No, don't back it up</a></li>
-			<li class="end"><a href="#" class="ico ico_yes" id="submit">Yes,  back it up</a></li>
+			<li class="end"><a href="<?=fuel_url('recent')?>" class="ico ico_no"><?=lang('data_backup_no_backup')?></a></li>
+			<li class="end"><a href="#" class="ico ico_yes" id="submit"><?=lang('data_backup_yes_backup')?></a></li>
 		</ul>
 	</div>
 	<?=$this->form->hidden('action', 'backup')?>

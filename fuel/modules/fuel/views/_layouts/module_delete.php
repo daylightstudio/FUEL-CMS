@@ -18,8 +18,8 @@
 
 	<div class="buttonbar">
 		<ul>
-			<li class="end"><a href="<?=fuel_url($this->module_uri.'/')?>" class="ico ico_no">No, don't delete it</a></li>
-			<li class="end"><a href="#" class="ico ico_yes" id="submit">Yes,  delete it</a></li>
+			<li class="end"><a href="<?=fuel_url($this->module_uri.'/')?>" class="ico ico_no"><?=lang('btn_no_dont_delete')?></a></li>
+			<li class="end"><a href="#" class="ico ico_yes" id="submit"><?=lang('btn_yes_dont_delete')?></a></li>
 		</ul>
 	</div>
 

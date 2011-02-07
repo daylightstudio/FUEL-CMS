@@ -9,8 +9,8 @@
 		<?=$this->form->hidden('model', 'fuel/pagevariable', 'id=""')?>
 	<div class="buttonbar save_cancel">
 		<ul>
-			<li class="start end"><a href="#" class="ico ico_cancel modal_cancel">Cancel</a></li>
-			<li class="start end"><a href="#" class="ico ico_save">Save</a></li>
+			<li class="start end"><a href="#" class="ico ico_cancel modal_cancel"><?=lang('btn_cancel')?></a></li>
+			<li class="start end"><a href="#" class="ico ico_save"><?=lang('btn_save')?></a></li>
 		</ul>
 		<div class="clear"></div>
 	</div>

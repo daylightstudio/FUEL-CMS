@@ -36,6 +36,8 @@
 					<li><a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-in Controller Development</a></li>
 					<li><a href="<?=user_guide_url('general/inline-editing')?>">Inline Editing</a></li>
 					<li><a href="<?=user_guide_url('general/security')?>">Security</a></li>
+					<li><a href="<?=user_guide_url('general/localization')?>">Localization</a></li>
+					<li><a href="http://www.getfuelcms.com/blog/2011/02/06/fuel-cms-0.9.2-released">What's New With 0.9.2</a></li>
 				</ul>
 
 				<h3>Additional Resources</h3>
@@ -147,6 +149,7 @@
 					<li><a href="<?=user_guide_url('helpers/my_directory_helper')?>">MY_directory helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_file_helper')?>">MY_file helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_html_helper')?>">MY_html helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/my_language_helper')?>">MY_language helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_string_helper')?>">MY_string helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_url_helper')?>">MY_url helper</a></li>
 				</ul>

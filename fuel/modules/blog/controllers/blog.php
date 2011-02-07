@@ -1,5 +1,5 @@
 <?php
-require_once(APPPATH.MODULES_FOLDER.'/blog/libraries/Blog_base_controller.php');
+require_once(MODULES_PATH.'/blog/libraries/Blog_base_controller.php');
 class Blog extends Blog_base_controller {
 	
 	function __construct()
@@ -74,8 +74,8 @@ class Blog extends Blog_base_controller {
 				$config['num_links'] = 2;
 				$config['prev_link'] = lang('blog_prev_page');
 				$config['next_link'] = lang('blog_next_page');
-				$config['first_link'] = '';
-				$config['last_link'] = '';
+				$config['first_link'] = lang('blog_first_link');
+				$config['last_link'] = lang('blog_last_link');;
 				
 				$this->pagination->initialize($config); 
 				
@@ -189,7 +189,6 @@ class Blog extends Blog_base_controller {
 					$this->form_builder->set_fields($fields);
 					$this->form_builder->set_field_values($field_values);
 					$this->form_builder->set_validator($this->blog_comments_model->get_validation());
-					
 					$vars['comment_form'] = $this->form_builder->render();
 					$vars['fields'] = $fields;
 				}
@@ -421,7 +420,7 @@ class Blog extends Blog_base_controller {
 			$this->email->to($post->author->email); 
 			$this->email->subject(lang('blog_comment_monitor_subject', $this->fuel_blog->settings('title')));
 
-			$msg = $this->lang->line('blog_comment_monitor_msg');
+			$msg = lang('blog_comment_monitor_msg');
 			$msg .= "\n".fuel_url('blog/comments/edit/'.$comment->id)."\n\n";
 
 			$msg .= (is_true_val($comment->is_spam)) ? lang('blog_email_flagged_as_spam')."\n" : '';
@@ -447,7 +446,7 @@ class Blog extends Blog_base_controller {
 		$this->load->library('captcha');
 		$blog_config = $this->config->item('blog');
 		$assets_folders = $this->config->item('assets_folders');
-		$blog_folder = APPPATH.MODULES_FOLDER.'/'.BLOG_FOLDER.'/';
+		$blog_folder = MODULES_PATH.BLOG_FOLDER.'/';
 		$captcha_path = $blog_folder.'assets/captchas/';
 		$word = strtoupper(random_string('alnum', 5));
 		

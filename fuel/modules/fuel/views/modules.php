@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2 class="ico"><?=lang('h2_my_modules')?></h2>
+	<h2 class="ico"><?=lang('section_my_modules')?></h2>
 </div>
 <div class="clear"></div>
 

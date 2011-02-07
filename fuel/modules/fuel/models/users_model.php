@@ -95,6 +95,9 @@ class Users_model extends Base_module_model {
 	
 	function form_fields($values = null)
 	{
+		$CI =& get_instance();
+		$CI->load->helper('directory');
+		
 		$fields = parent::form_fields();
 		
 		unset($fields['super_admin']);
@@ -111,7 +114,7 @@ class Users_model extends Base_module_model {
 
 		if (!empty($user_id))
 		{
-			$fields['new_password'] = array('type' => 'password', 'size' => 20, 'order' => 5);
+			$fields['new_password'] = array('label' => lang('form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
 		}
 		else
 		{
@@ -120,13 +123,29 @@ class Users_model extends Base_module_model {
 			$pwd_field['order'] = 5;
 			$fields['password']= $pwd_field;
 		}
+		
+		$lang_dirs = list_directories(FUEL_PATH.'language/', array(), FALSE);
+		$lang_options = array_combine($lang_dirs, $lang_dirs);
+		
+		if (count($lang_options) >= 2)
+		{
+			$fields['language'] = array('type' => 'select', 'options' => $lang_options, 'value' => 'english');
+		}
+		else
+		{
+			$fields['language']['type'] = 'hidden';
+		}
+
+
 		$fields['user_name']['order'] = 1;
 		$fields['email']['order'] = 2;
 		$fields['first_name']['order'] = 3;
 		$fields['last_name']['order'] = 4;
-		$fields['confirm_password'] = array('type' => 'password', 'size' => 20, 'order' => 6);
-		$fields['active']['order'] = 7;
-
+		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
+		
+		$fields['active']['order'] = 8;
+		
+		
 		// get permissions
 		$CI =& get_instance();
 		$perm_fields = array();
@@ -142,7 +161,7 @@ class Users_model extends Base_module_model {
 
 			// if (!empty($selected_perms)) 
 			// {
-				$fields['Permissions'] = array('type' => 'section', 'order' => 10);
+				$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 //			}
 			
 			$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
@@ -155,7 +174,12 @@ class Users_model extends Base_module_model {
 				$perm_fields[$perm_field]['type'] = 'checkbox';
 				$perm_fields[$perm_field]['value'] = $val['id'];
 				$perm_fields[$perm_field]['order'] = $order;
-				$perm_fields[$perm_field]['label'] = (!empty($val['description'])) ? $val['description'] : $val['name'];
+				$label = lang('perm_'.$val['name']);
+				if (empty($label))
+				{
+					$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
+				}
+				$perm_fields[$perm_field]['label'] = $label;
 				if (!empty($selected_perms[$val['id']])) $perm_fields[$perm_field]['checked'] = TRUE;
 				$order++;
 			}
@@ -231,10 +255,23 @@ class Users_model extends Base_module_model {
 		$user = $CI->fuel_auth->user_data();
 
 		// reset session information... 
-		if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'] AND !empty($values['password']))
+		//if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
+		if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
 		{
-			$CI->fuel_auth->set_valid_user_property('password', $values['password']);
+			if (!empty($values['password']))
+			{
+				$CI->fuel_auth->set_valid_user_property('password', $values['password']);
+			}
+
+			if (!empty($values['language']))
+			{
+				$CI->fuel_auth->set_valid_user_property('language', $values['language']);
+			}
+			
+			//$CI->fuel_auth->set_valid_user($values);
+			
 		}
+		
 	}
 	
 	function delete($where)

@@ -1,5 +1,5 @@
 <?php
-require_once(APPPATH.MODULES_FOLDER.'/blog/libraries/Blog_base_controller.php');
+require_once(MODULES_PATH.'/blog/libraries/Blog_base_controller.php');
 
 class Feed extends Blog_base_controller {
 	

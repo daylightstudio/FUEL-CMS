@@ -31,7 +31,7 @@ function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 	}
 
 	$tpl = new Dwoo_Template_String($var);
-	$clone = $dwoo->get(null);
+	$clone = clone $dwoo;
 	$out = $clone->get($tpl, $dwoo->readVar('_parent'));
 
 	if ($assign !== null) {
