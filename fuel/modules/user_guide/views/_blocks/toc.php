@@ -100,7 +100,7 @@
 				
 				<h3>3rd Party Classes</h3>
 				<ul>
-					<li><a href="<?=user_guide_url('libraries/matchbox')?>">Matchbox Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/modular_extensions')?>">Modular Extensions - HMVC Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/cache')?>">Cache Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/template')?>">Template Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/simplepie')?>">Simplepie Class</a></li>
