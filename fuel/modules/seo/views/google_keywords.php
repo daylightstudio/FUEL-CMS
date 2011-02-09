@@ -25,7 +25,7 @@
 			</div>
 			<div class="float_left btn" style="margin: -1px 0 0 10px;">
 			
-				<?=$this->form->submit('Submit Keywords', 'submit_keywords', 'class="hidden"')?>
+				<?=$this->form->submit('Submit Keywords', 'submit_keywords', 'style="height: 0px; width: 0px;"')?>
 			
 				<a href="#" class="ico ico_tools_seo_google_keywords" id="submit_google_keywords"><?=lang('btn_submit_keywords')?></a>
 			</div>				
