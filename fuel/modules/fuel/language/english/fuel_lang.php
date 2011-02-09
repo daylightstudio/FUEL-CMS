@@ -9,7 +9,7 @@ $lang['fuel_page_title'] = 'FUEL CMS';
 $lang['logged_in_as'] = 'Logged in as:';
 $lang['logout'] = 'Logout';
 $lang['fuel_developed_by'] = 'FUEL CMS version %1s is developed by <a href="http://www.thedaylightstudio.com" target="_blank">Daylight Studio</a> and built upon the <a href="http://www.codeigniter.com" target="_blank">CodeIgniter</a> framework.';
-$lang['fuel_copyright'] = 'Copyright &copy; 2010 Daylight Studio. All Rights Reserved.';
+$lang['fuel_copyright'] = 'Copyright &copy; %1s Daylight Studio. All Rights Reserved.';
 
 
 /*
@@ -387,6 +387,7 @@ $lang['form_label_excerpt'] = 'Excerpt';
 $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
+$lang['form_label_group_id'] = 'Group';
 
 $lang['form_enum_option_yes'] = 'yes';
 $lang['form_enum_option_no'] = 'no';
