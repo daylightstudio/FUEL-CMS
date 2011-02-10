@@ -469,7 +469,7 @@ class Validate extends Fuel_base_controller {
 	
 	function _get_pages()
 	{
-		$pages_input = $this->input->post('pages_input');
+		$pages_input = $this->input->post('pages_input', TRUE);
 		$extra_pages = array();
 		if (!empty($pages_input) AND $pages_input != lang('validate_pages_input'))
 		{
@@ -479,7 +479,7 @@ class Validate extends Fuel_base_controller {
 				$extra_pages[$key] = site_url(trim($page));
 			}
 		}
-		$post_pages = $this->input->post('pages') ? $this->input->post('pages') : array();
+		$post_pages = (!empty($_POST['pages'])) ? $this->input->post('pages', TRUE) : array();
 		$pages = array_merge($post_pages, $extra_pages);
 		
 		if (empty($pages) )
