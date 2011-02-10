@@ -167,13 +167,17 @@ class Navigation extends Module {
 		$this->_render('navigation_upload', $vars);
 	}
 	
-	function parents($group_id = NULL, $parent_id = NULL)
+	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
 	{
 		if (is_ajax() AND !empty($group_id))
 		{
 			$this->load->library('form');
-			$this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
-			$parent_options = $this->model->options_list('id', 'nav_key', array('group_id' => $group_id));
+			$where = array();
+			if (!empty($group_id)) $where['group_id'] = $group_id;
+			if (!empty($id)) $where['id !='] = $id;
+			if (!empty($id)) $where['parent_id !='] = $id;
+			
+			$parent_options = $this->model->options_list('id', 'nav_key', $where);
 			$select = $this->form->select('parent_id', $parent_options, $parent_id, '', 'None');
 			$this->output->set_output($select);
 		}

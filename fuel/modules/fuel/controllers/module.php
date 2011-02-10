@@ -712,7 +712,9 @@ class Module extends Fuel_base_controller {
 			if ($edit_method != 'find_one_array')
 			{
 				$saved = $this->model->$edit_method($id);
-			} else {
+			}
+			else
+			{
 				$saved = $this->model->$edit_method(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 			}
 			if (empty($saved)) show_404();
@@ -721,7 +723,7 @@ class Module extends Fuel_base_controller {
 		// create fields... start with the table info and go from there
 		if (empty($fields)) 
 		{
-			$fields = $this->model->form_fields($saved);
+			$fields = (!empty($saved)) ? $this->model->form_fields($saved) : $this->model->form_fields($_POST);
 
 			// set published/active to hidden since setting this is an buttton/action instead of a form field
 			//$fields['published']['type'] = 'hidden';
