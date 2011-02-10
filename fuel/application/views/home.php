@@ -79,7 +79,7 @@
 			<p>FUEL CMS uses CodeIgniter 2.0. If you are familiar with installing CodeIgniter, then many of the following steps will seem familiar to you.</p>
 
 			<ol>
-				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'
+				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web server's root directory. <strong>If you do not have mod_rewrite enabled, you will need to change the $config['index_page'] from blank to 'index.php'
 				in your <strong>fuel/application/config/config.php</strong> file</strong></li>
 				<li>Install the database by first creating the database in MySQL and then running either <strong>fuel/install/fuel_schema.sql</strong> OR the <strong>fuel/install/widgicorp.sql</strong> with the latter if you want the demo site to run.
 					If you have installed a previous version of FUEL CMS, you can run the <strong>fuel/install/fuel_0.9.2_upgrade.sql</strong> file.
@@ -107,7 +107,7 @@
 				<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
 				<li>If you are wanting to edit pages in FUEL, change the $config['fuel_mode'] configuration property to <strong>AUTO</strong> in the fuel/application/config/MY_fuel.php file. <strong>This must be done to view the demo site.</strong></li>
 				<?php endif; ?>
-				<li>WARNING: Make sure the <strong>data_backup</strong> folder and <strong>crons</strong> folder is inaccessible to the web. The .htaccess file that comes with FUEL, blocks the fuel/data_backup and fuel/cron folders by default</li>
+				<li>WARNING: Make sure the <strong>fuel/data_backup</strong> folder and <strong>fuel/crons</strong> folder is inaccessible to the web. The .htaccess file that comes with FUEL, blocks the fuel/data_backup and fuel/cron folders by default</li>
 				<li>To access the FUEL admin, go to: <br />
 				<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br />
 				uid: <strong>admin</strong> <br />
