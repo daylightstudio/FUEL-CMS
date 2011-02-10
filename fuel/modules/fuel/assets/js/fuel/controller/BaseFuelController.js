@@ -219,6 +219,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 		});
 		$('#multi_delete').hide();
+		
 	},
 	
 	add_edit : function(){
@@ -266,6 +267,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').attr('action', _this.modulePath + '/create');
 			$('#form').submit();
 			return false;
+		});
+		
+		$('.delete_action').click(function(e){
+			$.removeChecksave();
 		});
 		
 		$('.save, #' + this.lang('btn_save')).live('click', function(e){
