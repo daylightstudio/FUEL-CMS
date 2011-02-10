@@ -13,9 +13,6 @@ $vars['js'] = '';
 $vars['css'] = '';
 $vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
 
-$vars['blocks'] = array('showcase', 'quote');
-$vars['sidemenu'] = fuel_nav(array('container_tag_id' => 'sidemenu', 'parent' => uri_segment(1)));
-
 // page specific variables
 $pages = array();
 ?>
