@@ -19,6 +19,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		var blurred = false;
 		
 		var bindFields = function(){
+			
+			/* don't want to automatically fill out a navigation item if nav isn't being used
 			if ($('#vars--page_title').size()){
 				$('#navigation_label').live('keyup', function(){
 					if (!blurred) $('#vars--page_title').val($('#navigation_label').val());
@@ -32,6 +34,12 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					if (!blurred) $('#navigation_label').val($('#vars--page_title').val());
 				}).blur(function(e){
 					blurred = true;
+				});
+			}*/
+			
+			if ($('#vars--page_title').size()){
+				$('#navigation_label').live('keyup', function(){
+					$('#navigation_label').val($('#vars--page_title').val());
 				});
 			}
 		}
