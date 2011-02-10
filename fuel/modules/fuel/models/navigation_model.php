@@ -12,7 +12,6 @@ class Navigation_model extends Base_module_model {
 	function __construct()
 	{
 		parent::__construct('navigation');
-		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 	
@@ -146,12 +145,12 @@ class Navigation_model extends Base_module_model {
 			$CI->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
 		}
 		$CI->load->helper('array');
+		
 		$group_options = options_list($CI->navigation_groups_model->find_all_array());
 		$group_values = array_keys($group_options);
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 
 		$fields['group_id'] = array(
-		'label' => lang('navigation_model_group_id'),
 		'type' => 'select', 
 		'options' => $group_options,
 		'class' => 'add_edit navigation_group', 
@@ -169,12 +168,14 @@ class Navigation_model extends Base_module_model {
 		}
 		
 		$this->load->helper('array');
-		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $group_value));
+		
+		$parent_group = (!empty($values['group_id'])) ? $values['group_id'] : $group_value;
+		$this_id = (!empty($values['id'])) ? $values['id'] : 0;
+		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $parent_group, 'id !=' => $this_id, 'parent_id !=' => $this_id));
 		$fields['parent_id']['label'] = lang('navigation_model_parent_id');
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
 		$fields['parent_id']['first_option'] = array('0' => 'None');
-		$fields['published']['label_layout'] = 'left';
 		
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
@@ -188,11 +189,23 @@ class Navigation_model extends Base_module_model {
 	function no_location_and_parent_match($parent_id)
 	{
 		$data = $this->find_one_array(array('fuel_navigation.id' => $parent_id));
-		if (!empty($data)){
+		if (!empty($data))
+		{
 			if ($data['id'] == $data['parent_id']) return FALSE;
 		}
 		return TRUE;
 	}
+
+	// validation method
+	/*function no_id_and_parent_match($id, $parent_id)
+	{
+		$data = $this->find_one_array(array('fuel_navigation.parent_id' => $id));
+		if (!empty($data))
+		{
+			if ($data['id'] == $parent_id) return FALSE;
+		}
+		return TRUE;
+	}*/
 	
 	// validation method
 	function is_new_navigation($nav_key, $group_id, $parent_id)
@@ -227,13 +240,16 @@ class Navigation_model extends Base_module_model {
 		
 	function on_before_validate($values)
 	{
+		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
+	//	$this->add_validation('id', array(&$this, 'no_id_and_parent_match'), lang('error_location_parents_match'), $values['parent_id']);
+		
 		if (!empty($values['id']))
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', 'nav_key'), array($values['group_id'], $values['parent_id'], $values['id']));
+			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['parent_id'], $values['id']));
 		}
 		else
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', 'nav_key'), array($values['group_id'], $values['parent_id']));
+			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['parent_id']));
 		}
 		return $values;
 	}

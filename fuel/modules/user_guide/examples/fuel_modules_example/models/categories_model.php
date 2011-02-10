@@ -23,11 +23,11 @@ class Categories_model extends Base_module_model {
 	{
 		if (!empty($values['id']))
 		{
-			$this->add_validation('name', array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', 'name'), array('name', $values['id']));
+			$this->add_validation('name', array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', lang('form_label_name')), array('name', $values['id']));
 		}
 		else
 		{
-			$this->add_validation('name', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', 'name'), 'name');
+			$this->add_validation('name', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', lang('form_label_name')), 'name');
 		}
 		return $values;
 	}

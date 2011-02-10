@@ -76,6 +76,13 @@ class MY_Model extends CI_Model {
 	public function __construct($table = NULL, $params = array())
 	{
 		parent::__construct();
+		
+		// load helpers here 
+		$this->load->helper('string');
+		$this->load->helper('date');
+		$this->load->helper('security');
+		$this->load->helper('language');
+
 		$this->initialize($table, $params);
     }
 
@@ -713,6 +720,7 @@ class MY_Model extends CI_Model {
 	public function clean($values = array())
 	{
 		if (empty($values)) $values = $_POST;
+		// get table information to clean against
 		$fields = $this->table_info();
 
 		$clean = array();
@@ -724,11 +732,6 @@ class MY_Model extends CI_Model {
 				$clean[$key] = ($this->auto_trim) ? trim($values[$key]) : $values[$key];
 			}
 		}
-
-		// get table information to clean against
-		$this->load->helper('date');
-		$this->load->helper('string');
-		$this->load->helper('security');
 		
 		foreach ($fields as $key => $field)
 		{
@@ -1313,17 +1316,18 @@ class MY_Model extends CI_Model {
 		foreach($this->unique_fields as $field)
 		{
 			$has_key_field = $this->_has_key_field_value($values);
+			$friendly_field = ucwords(str_replace('_', ' ', $field));
 			if ($has_key_field)
 			{
 				$key_field = $this->key_field();
 				if (!is_array($key_field))
 				{
-					$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $field), array($field, $values[$key_field]));
+					$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values[$key_field]));
 				}
 			}
 			else
 			{
-				$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $field), $field);
+				$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), $field);
 			}
 		}
 

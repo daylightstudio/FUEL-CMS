@@ -197,14 +197,14 @@ class Users_model extends Base_module_model {
 		if (empty($values['id']))
 		{
 			$this->required[] = 'password';
-			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', 'email'));
+			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', lang('form_label_email')));
 			$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['password'], $this->normalized_save_data['confirm_password']));
 		}
 		
 		// for editing
 		else
 		{
-			$this->add_validation('email', array(&$this, 'is_editable_email'), lang('error_val_empty_or_already_exists', 'email'), $values['id']);
+			$this->add_validation('email', array(&$this, 'is_editable_email'), lang('error_val_empty_or_already_exists', lang('form_label_email')), $values['id']);
 			$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 		}
 		return $values;
