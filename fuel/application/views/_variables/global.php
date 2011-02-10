@@ -6,9 +6,9 @@ $CI =& get_instance();
 // generic global page variables used for all pages
 $vars = array();
 $vars['layout'] = 'main';
-$vars['page_title'] = fuel_nav(array('render_type' => 'page_title', 'delimiter' => ' : ', 'order' => 'desc', 'home_link' => 'WidgiCorp - Fine Makers of Widgets'));
-$vars['meta_keywords'] = 'Widgest, Sprockets';
-$vars['meta_description'] = 'Fine maker of widgets';
+$vars['page_title'] = fuel_nav(array('render_type' => 'page_title', 'delimiter' => ' : ', 'order' => 'desc', 'home_link' => 'My Website'));
+$vars['meta_keywords'] = '';
+$vars['meta_description'] = '';
 $vars['js'] = '';
 $vars['css'] = '';
 $vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
