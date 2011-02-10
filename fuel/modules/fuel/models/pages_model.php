@@ -180,11 +180,8 @@ class Pages_model extends Base_module_model {
 	function clean($values = array())
 	{
 		$cleaned = parent::clean($values);
-		if (!empty($cleaned['location'])) {
-			if ($cleaned['location'] == lang('pages_default_location'))
-			{
-				$cleaned['location'] = '';
-			}
+		if (!empty($cleaned['location']))
+		{
 			$segments = explode('/', $cleaned['location']);
 			$cleaned_segments = array();
 			foreach($segments as $val)
@@ -200,6 +197,11 @@ class Pages_model extends Base_module_model {
 	{
 		if (!empty($values['location']))
 		{
+			if ($values['location'] == lang('pages_default_location'))
+			{
+				$values['location'] = '';
+			}
+			
 			$values['location'] = str_replace('/', '___', $values['location']);
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace('___', '/', $values['location']);

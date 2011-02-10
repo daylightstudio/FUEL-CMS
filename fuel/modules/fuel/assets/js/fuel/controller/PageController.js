@@ -11,10 +11,9 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		// do this first so that the fillin is in the checksaved value
 		$('#location').fillin(_this.localized.pages_default_location);
 
-		// call parent
 		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
 
-		$.changeChecksaveValue('location', $('#location').val());
+		$.changeChecksaveValue('location', _this.localized.pages_default_location);
 
 		// correspond page title to navigation label for convenience
 		var blurred = false;
