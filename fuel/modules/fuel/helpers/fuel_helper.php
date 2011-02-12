@@ -331,7 +331,7 @@ function fuel_nav($params = array())
 			// grab all menu items by group
 			$menu_items = $CI->navigation_model->find_all_by_group($p['group_id']);
 			
-			// if menu items isn't empty, then we overwrite the variabl with those menu items and change any parent value'
+			// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 			if (!empty($menu_items)) 
 			{
 				$$p['var'] = $menu_items;

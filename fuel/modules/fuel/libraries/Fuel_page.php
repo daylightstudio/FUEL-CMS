@@ -606,7 +606,7 @@ class Fuel_page {
 						preg_match_all("#".$marker_reg_ex."#", $matches[0], $tagmatches);
 						if (!empty($tagmatches[0]))
 						{
-							// clean out the tag and append htem before the node
+							// clean out the tag and append them before the node
 							$output = $CI->fuel_page->remove_markers($matches[0]);
 							$output = implode($tagmatches[0], " ").$output;
 						}

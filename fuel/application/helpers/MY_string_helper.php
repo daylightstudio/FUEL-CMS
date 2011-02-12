@@ -134,7 +134,7 @@ function safe_htmlentities($str, $protect_amp = TRUE)
 	// may need to look into other hex characters
 	$str = str_replace('&#x27;', '&#39;', $str);
 	
-	// setup temp markers for existing encoded tag brackets existing 
+	// setup temp markers for existing encoded tag brackets 
 	$find = array('&lt;','&gt;');
 	$replace = array('__TEMP_LT__','__TEMP_GT__');
 	$str = str_replace($find,$replace, $str);
