@@ -19,4 +19,4 @@ $config['modules']['projects'] = array(
 	'sanitize_images' => FALSE // to prevent false positives with xss_clean image sanitation
 );
 
-*********************** EXAMPLE *********************************** /
+*********************** EXAMPLE ***********************************/
