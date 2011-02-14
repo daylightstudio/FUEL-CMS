@@ -13,7 +13,12 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 
 		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
 
-		$.changeChecksaveValue('location', _this.localized.pages_default_location);
+		// if new, then we use default fillin value... else set to actual value
+		if ($('#id').val() == ''){
+			$.changeChecksaveValue('location', _this.localized.pages_default_location);
+		} else {
+			$.changeChecksaveValue('location', $('#location').val());
+		}
 
 		// correspond page title to navigation label for convenience
 		var blurred = false;
@@ -38,8 +43,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			}*/
 			
 			if ($('#vars--page_title').size()){
-				$('#navigation_label').live('keyup', function(){
-					$('#navigation_label').val($('#vars--page_title').val());
+				$('#navigation_label').keyup(function(){
+					$('#vars--page_title').val($('#navigation_label').val());
 				});
 			}
 		}
