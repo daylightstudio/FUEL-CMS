@@ -14,19 +14,9 @@ class Navigation_model extends Base_module_model {
 		parent::__construct('navigation');
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
-	
-	// function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'asc')
-	// {
-	// 	$this->db->select($this->_tables['navigation'].'.id, label AS "'.lang('form_label_label').'", nav_key AS "'.lang('navigation_model_nav_key').'", '.$this->_tables['navigation'].'.published AS "'.lang('form_label_published').'"');
-	// 	$data = parent::list_items($limit, $offset, $col, $order);
-	// 	return $data;
-	// }
-	// 
+
 	function find_by_location($location, $group_id = 1)
 	{
-		// $this->db->select($this->_tables['navigation'].'.*, '.$this->_tables['navigation_groups'].'.name AS group_name');
-		// $this->db->join($this->_tables['navigation_groups'], $this->_tables['navigation_groups'].'.id = fuel_navigation.group_id', 'left');
-		
 		if (!empty($group_id))
 		{
 			$data = $this->find_one_array(array($this->_tables['navigation'].'.location' => $location, 'group_id' => $group_id));
@@ -170,8 +160,13 @@ class Navigation_model extends Base_module_model {
 		$this->load->helper('array');
 		
 		$parent_group = (!empty($values['group_id'])) ? $values['group_id'] : $group_value;
-		$this_id = (!empty($values['id'])) ? $values['id'] : 0;
-		$parent_options = $this->options_list('id', 'nav_key', array('group_id' => $parent_group, 'id !=' => $this_id, 'parent_id !=' => $this_id));
+		$where['group_id'] = $parent_group;
+		if (!empty($values['id']))
+		{
+			$where['id !='] = $values['id'];
+			$where['parent_id !='] = $values['id'];
+		}
+		$parent_options = $this->options_list('id', 'nav_key', $where);
 		$fields['parent_id']['label'] = lang('navigation_model_parent_id');
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
