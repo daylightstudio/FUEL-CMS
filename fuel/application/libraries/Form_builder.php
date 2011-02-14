@@ -1219,7 +1219,7 @@ Class Form_builder {
 		$time_params['name'] = $params['orig_name'].'_min';
 		$time_params['class'] = 'fillin datepicker_mm';
 		$str .= $this->create_text($this->_normalize_value($time_params));
-		$ampm_params['options'] = array('am', 'pm');
+		$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
 		$ampm_params['name'] = $params['orig_name'].'_am_pm';
 		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) > 12) ? 'pm' : 'am';
 		$str .= $this->create_enum($this->_normalize_value($ampm_params));
