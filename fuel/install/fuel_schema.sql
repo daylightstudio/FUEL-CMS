@@ -40,8 +40,8 @@ CREATE TABLE `fuel_archives` (
 CREATE TABLE `fuel_blocks` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
-  `view` text collate utf8_unicode_ci NOT NULL,
   `description` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `view` text collate utf8_unicode_ci NOT NULL,
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   `date_added` datetime default NULL,
   `last_modified` timestamp NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
