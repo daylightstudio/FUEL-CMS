@@ -38,8 +38,6 @@ class Preview extends Fuel_base_controller {
 
 		$vars['CI'] =& get_instance();
 		
-		
-		// set back to site path
 		$this->asset->assets_path = $this->config->item('assets_path');
 		$view = '';
 		if (file_exists(APPPATH.'views/'.$vars['preview'].EXT))
@@ -55,8 +53,11 @@ class Preview extends Fuel_base_controller {
 			$view = $this->load->view('_layouts/main', $vars, TRUE);
 		}
 
-		// parse for template syntac
+		// parse for template syntax
 		$output = $this->parser->parse_string($view, $vars, TRUE);
+		
+		// for safe_mailto issue causing conflict (and maybe other js we haven't found yet)
+		$output = str_replace(array('<script', '</script>'), array('<xscript', '</xscript>'), $output);
 		
 		// render the preview
 		$this->output->set_output($output);

@@ -79,6 +79,9 @@ class Asset {
 	// cache of module configs loaded
 	protected $_module_config_loaded = array();
 	
+	// has assets configuration been loaded?
+	protected $_asset_config_loaded = FALSE;
+	
 	/**
 	 * Constructor - Sets Asset preferences
 	 *
@@ -994,7 +997,11 @@ class Asset {
 		if (function_exists('get_instance'))
 		{
 			$CI =& get_instance();
-			$CI->load->config('asset');
+			if (!$this->_asset_config_loaded)
+			{
+				$CI->load->config('asset');
+				$this->_asset_config_loaded = TRUE;
+			}
 			return $CI;
 		}
 		return NULL;
