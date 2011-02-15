@@ -133,9 +133,10 @@ class Module extends Fuel_base_controller {
 		$this->load->library('data_table');
 		$params = $this->_list_process();
 		
-		$seg_params = $params;
-		unset($seg_params['offset']);
-		$seg_params = uri_safe_batch_encode($seg_params, '|', TRUE);
+		// save in case we need to pass more variables in the URI
+		// $seg_params = $params;
+		// unset($seg_params['offset']);
+		// $seg_params = uri_safe_batch_encode($seg_params, '|', TRUE);
 		
 		// save page state
 		$this->_save_page_state($params);
