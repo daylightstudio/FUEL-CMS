@@ -280,6 +280,6 @@ both the list view and detail view of the news.</p>
 
 <pre class="brush: php">
 &lt;?php 
-$var['news'] = array('view' => 'news');
+$vars['news'] = array('view' => 'news');
 ?&gt;
 </pre>
