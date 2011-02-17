@@ -1467,7 +1467,8 @@ class MY_Model extends CI_Model {
 					}
 					break;
 				case 'year':
-					$this->validator->add_rule($field, 'regex', lang('error_invalid_year', $field_name), array($value, '\d{4}'));
+					$reg_ex = (strlen(strval($value)) == 2) ? '\d{2}' : '\d{4}';
+					$this->validator->add_rule($field, 'regex', lang('error_invalid_year', $field_name), array($value, $reg_ex));
 					break;
 				case 'enum':
 					$options = (!empty($field_data['options'])) ? $field_data['options'] : $field_data['max_length'];
