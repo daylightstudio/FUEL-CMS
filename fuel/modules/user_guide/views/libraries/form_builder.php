@@ -318,7 +318,7 @@
 
 <h1>Function Reference</h1>
 
-<h2>$this->form->set_fields(<var>fields</var>)</h2>
+<h2>$this->form_builder->set_fields(<var>fields</var>)</h2>
 <p>Set the fields for the form. Check the field table above for possible array values.</p>
 
 <pre class="brush: php">
@@ -330,8 +330,8 @@ $this->form_builder->set_fields($fields);
 </pre>
 
 
-<h2>$this->form->set_field_values(<var>values</var>)</h2>
-<p>Sets the values of the fields.</p>
+<h2>$this->form_builder->set_field_values(<var>values</var>)</h2>
+<p>Sets the values of the fields. This must be called AFTER the set_fields() method if used.</p>
 
 <pre class="brush: php">
 $values['name'] = 'Darth Vader';
@@ -342,7 +342,7 @@ $this->form_builder->set_field_values($values);
 </pre>
 
 
-<h2>$this->form->render(<var>[fields]</var>, <var>['render_format']</var>)</h2>
+<h2>$this->form_builder->render(<var>[fields]</var>, <var>['render_format']</var>)</h2>
 <p>Renders the form.
 The <dfn>$fields</dfn> value is optional and will set the fields before rendering.
 The <dfn>$render_format</dfn> can be <dfn>table</dfn> or <dfn>divs</dfn>.
@@ -357,7 +357,7 @@ $this->form_builder->render($field, 'divs');
 </pre>
 
 
-<h2>$this->form->render_divs(<var>[fields]</var>)</h2>
+<h2>$this->form_builder->render_divs(<var>[fields]</var>)</h2>
 <p>Renders the form using <dfn>divs</dfn> for the HTML structure
 The <dfn>$fields</dfn> value is optional and will set the fields before rendering.
 </p>
@@ -371,7 +371,7 @@ $this->form_builder->render_divs($field);
 </pre>
 
 
-<h2>$this->form->render_table(<var>[fields]</var>)</h2>
+<h2>$this->form_builder->render_table(<var>[fields]</var>)</h2>
 <p>Renders the form using <dfn>table</dfn> for the HTML structure
 The <dfn>$fields</dfn> value is optional and will set the fields before rendering.
 </p>
@@ -388,7 +388,7 @@ $this->form_builder->render_table($field);
 <p class="important">Although the following functions can be used, it is important to note that the <dfn>render</dfn> methods above
 will call the approprate create field function based on the type of the field and therefore, these functions are rarely used.</p>
 
-<h2>$this->form->create_field(<var>params</var>, <var>[normalize]</var>)</h2>
+<h2>$this->form_builder->create_field(<var>params</var>, <var>[normalize]</var>)</h2>
 <p>Looks at the field type attribute and determines which form field to render.
 The <dfn>$normalize</dfn> value is optional and will normalize the params to a common array structure. Default is <dfn>TRUE</dfn>
 </p>
@@ -399,7 +399,7 @@ $this->form_builder->create_field($field, TRUE);
 </pre>
 
 
-<h2>$this->form->create_label(<var>params</var>, <var>[use_label]</var>)</h2>
+<h2>$this->form_builder->create_label(<var>params</var>, <var>[use_label]</var>)</h2>
 <p>Creates the label for the form.
 By default, if no label value is given, the method will generate one based on the name of the field.
 The <dfn>$use_label</dfn> value is optional and will wrap the label in an HTML label tag. Default is <dfn>TRUE</dfn>
@@ -411,7 +411,7 @@ $this->form_builder->create_label($params);
 </pre>
 
 
-<h2>$this->form->create_text(<var>params</var>)</h2>
+<h2>$this->form_builder->create_text(<var>params</var>)</h2>
 <p>Creates the text input for the form.</p>
 
 <pre class="brush: php">
@@ -420,7 +420,7 @@ $this->form_builder->create_text($params);
 </pre>
 
 
-<h2>$this->form->create_textarea(<var>params</var>)</h2>
+<h2>$this->form_builder->create_textarea(<var>params</var>)</h2>
 <p>Creates a textarea input for the form.</p>
 
 <pre class="brush: php">
@@ -429,7 +429,7 @@ $this->form_builder->create_textarea($params);
 </pre>
 
 
-<h2>$this->form->create_hidden(<var>params</var>)</h2>
+<h2>$this->form_builder->create_hidden(<var>params</var>)</h2>
 <p>Creates a hidden input for the form.</p>
 
 <pre class="brush: php">
@@ -438,7 +438,7 @@ $this->form_builder->create_hidden($params);
 </pre>
 
 
-<h2>$this->form->create_enum(<var>params</var>)</h2>
+<h2>$this->form_builder->create_enum(<var>params</var>)</h2>
 <p>Creates an enum input for the form. If the class paramenter <dfn>boolean_mode</dfn> is set to auto and their are less than 2 options, then it will render radio inputs. Otherwise it will render a select input</p>
 
 <pre class="brush: php">
@@ -451,7 +451,7 @@ $this->form_builder->create_enum($params);
 </pre>
 
 
-<h2>$this->form->create_multi(<var>params</var>)</h2>
+<h2>$this->form_builder->create_multi(<var>params</var>)</h2>
 <p>Creates a multi-select input for the form.</p>
 
 <pre class="brush: php">
@@ -464,7 +464,7 @@ $this->form_builder->create_multi($params);
 </pre>
 
 
-<h2>$this->form->create_select(<var>params</var>)</h2>
+<h2>$this->form_builder->create_select(<var>params</var>)</h2>
 <p>Creates a select input for the form.</p>
 
 <pre class="brush: php">
@@ -477,7 +477,7 @@ $this->form_builder->create_select($params);
 </pre>
 
 
-<h2>$this->form->create_file(<var>params</var>)</h2>
+<h2>$this->form_builder->create_file(<var>params</var>)</h2>
 <p>Creates a file input for the form.</p>
 
 <pre class="brush: php">
@@ -486,7 +486,7 @@ $this->form_builder->create_file($params);
 </pre>
 
 
-<h2>$this->form->create_date(<var>params</var>)</h2>
+<h2>$this->form_builder->create_date(<var>params</var>)</h2>
 <p>Creates an text field sized for date input with css classes of<dfn>datepicker</dfn> and <dfn>fillin</dfn> assigned to the field.
 jQuery is used to transform those fields into datepickers using those classes.
 </p>
@@ -497,7 +497,7 @@ $this->form_builder->create_date($params);
 </pre>
 
 
-<h2>$this->form->create_time(<var>params</var>)</h2>
+<h2>$this->form_builder->create_time(<var>params</var>)</h2>
 <p>Creates two text fields and some am/pm radio buttons with css classes of<dfn>datepicker_hh</dfn>, <dfn>datepicker_mm</dfn>, <dfn>datepicker_am_pm</dfn> assigned to each field respectively. Additionally, each text field also has the class of <dfn>fillin</dfn>.</p>
 
 <pre class="brush: php">
@@ -506,7 +506,7 @@ $this->form_builder->create_time($params);
 </pre>
 
 
-<h2>$this->form->create_checkbox(<var>params</var>)</h2>
+<h2>$this->form_builder->create_checkbox(<var>params</var>)</h2>
 <p>Creates a checkbox input for the form.</p>
 
 <pre class="brush: php">
@@ -515,7 +515,7 @@ $this->form_builder->create_checkbox($params);
 </pre>
 
 
-<h2>$this->form->create_boolean(<var>params</var>)</h2>
+<h2>$this->form_builder->create_boolean(<var>params</var>)</h2>
 <p>Creates either a checkbox or a radio input for the form. This method check 
 the boolean_mode attribute to determine what type of field, either checkbox or radio, to render.</p>
 
@@ -529,7 +529,7 @@ $this->form_builder->create_boolean($params);
 </pre>
 
 
-<h2>$this->form->create_section(<var>params</var>)</h2>
+<h2>$this->form_builder->create_section(<var>params</var>)</h2>
 <p>Creates a section in the form. First checks the value, then the label, then the name attribute 
 then wraps it in the copy_tag.</p>
 
@@ -539,7 +539,7 @@ $this->form_builder->create_section($params);
 </pre>
 
 
-<h2>$this->form->create_copy(<var>params</var>)</h2>
+<h2>$this->form_builder->create_copy(<var>params</var>)</h2>
 <p>Creates a copy area for for the form. First checks the value, then the label, then the name attribute 
 then wraps it in the copy_tag.</p>
 
@@ -549,7 +549,7 @@ $this->form_builder->create_copy($params);
 </pre>
 
 
-<h2>$this->form->create_tooltip(<var>params</var>)</h2>
+<h2>$this->form_builder->create_tooltip(<var>params</var>)</h2>
 <p>Creates a tooltip on the label. Uses the tooltip_format class attribute to determine how to render tooltip.</p>
 
 <pre class="brush: php">
@@ -557,7 +557,7 @@ $params = array('comment' => 'this is the comment for the tooltip', 'label' => '
 $this->form_builder->create_tooltip($params);
 </pre>
 
-<h2>$this->form->create_custom(<var>func</var>, <var>params</var>)</h2>
+<h2>$this->form_builder->create_custom(<var>func</var>, <var>params</var>)</h2>
 <p>Creates a custom input form field. Calls a function and passes it the field params.</p>
 
 <pre class="brush: php">
@@ -570,7 +570,7 @@ $this->form_builder->create_custom('my_custom_field', $params);
 </pre>
 
 
-<h2>$this->form->set_validator(<var>validator</var>)</h2>
+<h2>$this->form_builder->set_validator(<var>validator</var>)</h2>
 <p>Sets the validator object on the form object. 
 The validator object is used to determine if the fields have been filled out properly and will display any errors at the top of the form.</p>
 
@@ -580,7 +580,7 @@ $this->form_builder->set_validator($validator);
 </pre>
 
 
-<h2>$this->form->set_field_order(<var>[order_arr]</var>)</h2>
+<h2>$this->form_builder->set_field_order(<var>[order_arr]</var>)</h2>
 <p>Sets the order of the fields. If an array is passed to the method, then that will be used as opposed to the field values <dfn>order</dfn> attribute.</p>
 
 <pre class="brush: php">
