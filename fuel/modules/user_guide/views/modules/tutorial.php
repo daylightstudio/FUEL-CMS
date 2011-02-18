@@ -143,7 +143,7 @@ class Articles_model extends Base_module_model {
     }
 }
 
-class Articles_model extends Base_module_record {
+class Article_model extends Base_module_record {
 
 }
 </pre>
@@ -173,7 +173,7 @@ class Articles_model extends Base_module_model {
 
 }
 
-class Articles_model extends Base_module_record {
+class Article_model extends Base_module_record {
 
 }
 </pre>
@@ -395,7 +395,7 @@ save data used for a many to many lookup table:</p>
 ...
 function on_after_save($values)
 {
-	$data = $this->normalized_save_data['categories'];
+	$data = (!empty($this->normalized_save_data['categories'])) ? $this->normalized_save_data['categories'] : array();
 	$this->save_related('categories_to_articles_model', array('article_id' => $values['id']), array('category_id' => $data));
 }
 ...
@@ -543,7 +543,7 @@ function tree()
 
 	$return = array();
 	$categories = $CI->categories_model->find_all(array(), 'id asc');
-	$categories_to_articles = $CI->categories_to_articles_model->find_all('', 'name asc');
+	$categories_to_articles = $CI->categories_to_articles_model->find_all('', 'categories.name asc');
 	foreach($categories as $category)
 	{
 		$cat_id = $category->id;
