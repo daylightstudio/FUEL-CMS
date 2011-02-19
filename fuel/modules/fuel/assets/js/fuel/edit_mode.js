@@ -376,7 +376,7 @@ if (fuel == undefined) var fuel = {};
 									$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">' + lang('btn_edit') + '</a>');
 
 									var refreshField = function(html){
-										var refreshUrl = jqx.config.fuelPath + '/' + _this.module + '/refresh_field';
+										var refreshUrl = __FUEL_PATH__ + '/' + _this.module + '/refresh_field';
 										var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:html};
 										$.post(refreshUrl, params, function(html){
 											$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
