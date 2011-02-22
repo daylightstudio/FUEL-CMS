@@ -124,15 +124,14 @@ class Validate extends Fuel_base_controller {
 			$base_url = 'http://'.$url_parts['host'].'/';
 			$results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
 			if (!empty($page_data['id'])) $results = str_replace('<body>', "<body><span style=\"display: none\" id=\"edit_url\">".fuel_url('pages/edit/'.$page_data['id'])."</span>", $results);
-			$results = str_replace('"./style/base.css"', '"'.$base_url.'style/base.css"', $results);
-			$results = str_replace('"./style/results.css"', '"'.$base_url.'style/results.css"', $results);
+			$results = str_replace(array('"./style/base.css"', '"./style/base"'), '"'.$base_url.'style/base.css"', $results);
+			$results = str_replace(array('"./style/results.css"', '"./style/results"'), '"'.$base_url.'style/results.css"', $results);
 			$vars['results'] = $results;
 			$this->output->set_output($results);
 			return;
 		} 
 		else if (!$this->input->post('pages') AND !$this->input->post('pages_input') AND !$this->input->post('pages_serialized'))
 		{
-			echo lang('error_no_pages_selected');
 			$this->session->set_flashdata('error', lang('error_no_pages_selected'));
 			redirect(fuel_uri('tools/validate'));
 		}
