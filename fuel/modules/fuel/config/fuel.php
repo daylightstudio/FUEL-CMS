@@ -140,20 +140,6 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.MultiFile.pack'
 );
 
-// language keys to pass to the front end javascript object
-$config['fuel_js_localized'] = array(
-	'label_search',
-	'btn_select',
-	'btn_asset',
-	'btn_image',
-	'btn_pdf',
-	'btn_edit',
-	'btn_add',
-	'comboselect_values_empty',
-	'comboselect_selected_empty',
-	'comboselect_filter',
-	);
-
 // css other then the fuel.css file which automatically gets loaded
 $config['fuel_css'] = array();
 

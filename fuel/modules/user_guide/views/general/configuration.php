@@ -223,27 +223,6 @@ array(
 			<td>Javascript files (mostly jquery plugins) to be included other then the controller js files.</td>
 		</tr>
 		<tr>
-			<td><strong>fuel_js_localized</strong></td>
-			<td>
-<pre>
-array(
-	'label_search',
-	'btn_select',
-	'btn_asset',
-	'btn_image',
-	'btn_pdf',
-	'btn_edit',
-	'btn_add',
-	'comboselect_values_empty',
-	'comboselect_selected_empty',
-	'comboselect_filter',			
-);
-</pre>
-			</td>
-			<td>None</td>
-			<td>Language keys to pass to the front end javascript object.</td>
-		</tr>
-		<tr>
 			<td><strong>fuel_css</strong></td>
 			<td>None</td>
 			<td>None</td>
