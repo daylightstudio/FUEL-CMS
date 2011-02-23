@@ -220,31 +220,29 @@ class Fuel_modules {
 				$records = $CI->$model->find_all_array();
 			}
 			
-			$callback = create_function(
-			            '$matches',
-			            '
-						$record = $GLOBALS["__temp_record__"];
-						if (!empty($record[$matches[2]]))
-						{
-							return $matches[1].$record[$matches[2]];
-						}
-						return "";'
-			        );
-
 			foreach($records as $record)
 			{
 				// need to put in global namesapce for preg_replace_callback to access
-				$GLOBALS['__temp_record__'] = $record;
-				
-				$page = preg_replace_callback('#^(.+){(\w+)}$#', $callback, $info['preview_path'], 1, $cnt);
-				if (!empty($cnt))
+				preg_match_all('#{(\w+)}#', $info['preview_path'], $matches);
+				$page = $info['preview_path'];
+				$replaced = FALSE;
+				if (!empty($matches[1]))
+				{
+					foreach($matches[1] as $match)
+					{
+						if (!empty($record[$match]))
+						{
+							$page = str_replace('{'.$match.'}', $record[$match], $page);
+							$replaced = TRUE;
+						}
+					}
+				}
+
+				if (!empty($replaced))
 				{
 					$pages[$page] = $page;
 				}
 			}
-			
-			// remove $GLOBALS
-			unset($GLOBALS["__temp_record__"]);
 			
 		}
 		return $pages;
