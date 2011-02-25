@@ -30,7 +30,7 @@ $config['modules']['pages'] = array(
 		'list' => '_layouts/module_list', 
 		'create_edit' => '_layouts/module_create_edit', 
 		'delete' => '_layouts/module_delete'),
-	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish'),
+	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
