@@ -284,12 +284,14 @@
 <h2>Field Options</h2>
 <ul>
 	<li><strong>name</strong> - the name of the field</li>
-	<li><strong>type</strong> - the type of the field. Options are <dfn>text</dfn>, 
-								<dfn>hidden</dfn>, <dfn>textarea</dfn>, <dfn>enum</dfn>
+	<li><strong>type</strong> - the type of the field. If no type is specified it will default to a text input. Options are , 
+								<dfn>hidden</dfn>, <dfn>textarea/text</dfn>, <dfn>enum</dfn>,
 								<dfn>multi</dfn>, <dfn>select</dfn>, <dfn>file</dfn>
 								<dfn>date</dfn>, <dfn>time</dfn>, <dfn>checkbox</dfn>
 								<dfn>boolean</dfn>, <dfn>section</dfn>, <dfn>copy</dfn>
 								<dfn>custom</dfn>
+								<div class="important">You'll notice above that a type of 'text' is a textarea and NOT a 'text' input. This is due to integration with database table types. If you want a normal text field, don't specify a type value or specify one not on the list.</div>
+		
 	</li>
 	<li><strong>default</strong> - the default value of the field if no value is specified</li>
 	<li><strong>max_length</strong> - the max length value of the field</li>
