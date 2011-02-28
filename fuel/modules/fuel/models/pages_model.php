@@ -217,7 +217,7 @@ class Pages_model extends Base_module_model {
 		}
 		else
 		{
-			$this->add_validation('location', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', 'location'), lang('form_label_location'));
+			$this->add_validation('location', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array('location'));
 		}
 		return $values;
 	}
