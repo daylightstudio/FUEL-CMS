@@ -262,10 +262,14 @@ $this->examples_model->save($_POST, TRUE, TRUE); // Be sure to always clean your
 <a href="<?=user_guide_url('libraries/my_model#hooks')?>">Click here to view the hooks</a>.
 </p>
 
-<h2>$this->examples_model->save_related(<var>'model'</var>, <var>'key_field'</var>, <var>where</var>)</h2>
-<p>Saves related data to a many to many table. To be used in on_after_save hook.</p>
+<h2>$this->examples_model->save_related(<var>'model'</var>, <var>key_field</var>, <var>data</var>)</h2>
+<p>Saves related data to a many to many table. To be used in on_after_save hook. 
+The <dfn>key_field</dfn> parameter is an associative array with the key being the name of the field and the value being the value to save.
+The <dfn>key_field</dfn> also acts as where condition on the delete query that is used to clear out all data before saving.
+The <dfn>data</dfn> parameter is an associative array as well with the key being the name of the other field in which to save and the value is the data to iterate over and save.
+</p>
 <pre class="brush: php">
-$this->examples_model->save_related('examples_to_categories', array('example_id', $obj->id), array('categories_id', $_POST['categories']));
+$this->examples_model->save_related('examples_to_categories', array('example_id' => $obj->id), array('categories_id' => $_POST['categories']));
 </pre>
 
 <h2>$this->examples_model->insert(<var>'values'</var>)</h2>
