@@ -471,7 +471,7 @@ Class Form_builder {
 				{
 					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 				}
-				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"section\">".$this->create_section($key)."</td>\n</tr>\n";
+				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"section\">".$this->create_section($val)."</td>\n</tr>\n";
 				continue;
 			}
 			else if (!empty($val['section']))
