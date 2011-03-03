@@ -12,7 +12,7 @@ class Categories_to_articles_model extends MY_Model {
  
     function _common_query()
     {
-        $this->db->select('categories_to_articles.*, articles.title, categories.name AS category_name, articles.author_id');
+		$this->db->select('categories_to_articles.*, articles.title, categories.name AS category_name, articles.author_id, categories.published');
         $this->db->join('articles', 'categories_to_articles.article_id = articles.id', 'left');
         $this->db->join('categories', 'categories_to_articles.category_id = categories.id', 'left');
         $this->db->join('authors', 'authors.id = articles.author_id', 'left');
