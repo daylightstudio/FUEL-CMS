@@ -944,7 +944,7 @@ class MY_Model extends CI_Model {
 					$this->db->insert_ignore($this->table_name, $values, $insert_key);
 
 					// execute on_insert/update hook methods
-					if ($this->db->insert_id())
+					if (!$this->_has_key_field_value($values) AND $this->db->insert_id())
 					{
 						$this->on_after_insert($values);
 					}
@@ -956,7 +956,7 @@ class MY_Model extends CI_Model {
 					// execute on_insert/update hook methods on the Date_record model if exists
 					if (is_object($record) AND is_a($record, 'Data_record'))
 					{
-						if ($this->db->insert_id())
+						if (!$this->_has_key_field_value($values) AND $this->db->insert_id())
 						{
 							$record->on_after_insert($values);
 						}
