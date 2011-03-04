@@ -2,6 +2,7 @@
 $lang['module_backup'] = 'Backup';
 
 $lang['data_backup_dashboard'] = 'Remember to preiodically <a href="'.fuel_url('tools/backup').'">backup your database</a>';
+$lang['data_last_backup'] = 'last backup';
 $lang['data_backup'] = 'Data backed up.';
 $lang['cron_db_backup'] = "Database backed up with the file name: %s.";
 $lang['cron_db_backup_asset'] = "Database and assets folder was backed up with the file name: %s.";
