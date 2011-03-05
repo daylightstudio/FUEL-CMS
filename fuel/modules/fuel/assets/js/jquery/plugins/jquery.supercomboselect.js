@@ -19,11 +19,15 @@
 			selectedOrdering : {} // used for ordering the selected when you have something sorted and may not match the ordering on the left
 		}, settings);
 		
-		this.each(function(){
+		this.each(function(i){
 			
 			/**********************************************************************
 			SET UP VARIABLES
 			**********************************************************************/
+			
+			// set up reference to current element
+			var _this = this;
+			
 			
 			// the id of the original element
 			var selectID = this.id;
@@ -318,10 +322,16 @@
 			}
 			
 			function addSelectedToRight(highlight){
-				$('#' + leftID + ' li[class=' + settings.selectedClass + ']').each(function(i){
+				$selectedOpts = $('#' + leftID + ' li[class=' + settings.selectedClass + ']');
+				var selected = new Array();
+				$selectedOpts.each(function(i){
 					if (customSelectedSorting) theForm.find('#' + rightID).append($(this).removeClass(settings.selectedClass).html($(this).html()));
-					$(getOptionSourceRef(getIdNum(this))).attr('selected', 'selected');
+					var opt = $(getOptionSourceRef(getIdNum(this)));
+					opt.attr('selected', 'selected');
+					selected.push(opt.attr('value'));
 				});
+
+				$(_this).trigger('selectionAdded', [selected]);
 				
 				// reset search box area and refresh the list
 				if (searchBox && searchBox.val().length){
@@ -332,10 +342,16 @@
 			}
 			
 			function removeSelectedFromRight(){
-				$('#' + rightID + ' li[class=' + settings.selectedClass + ']').each(function(i){
+				$selectedOpts = $('#' + rightID + ' li[class=' + settings.selectedClass + ']')
+				var selected = new Array();
+				$selectedOpts.each(function(i){
 					if (customSelectedSorting) $(this).remove();
-					$(getOptionSourceRef(getIdNum(this))).removeAttr('selected');
+					var opt = $(getOptionSourceRef(getIdNum(this)));
+					opt.removeAttr('selected', 'selected');
+					selected.push(opt.attr('value'));
 				});
+				
+				$(_this).trigger('selectionRemoved', [selected]);
 				refreshLists();
 			}
 			
