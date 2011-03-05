@@ -285,7 +285,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$('.submit_action').click(function(){
-			$('#form').attr($(this).attr('href')).submit();
+			$.removeChecksave();
+			$('#form').attr('action', $(this).attr('href')).submit();
 			return false;
 		});
 		
