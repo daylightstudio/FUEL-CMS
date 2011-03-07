@@ -23,7 +23,7 @@ $config['tester']['db_name'] = 'fuel_test';
 
 // the cookie jar file path used for CURL sessions
 // more info http://www.php.net/manual/en/function.curl-setopt.php
-$config['tester']['session_cookiejar_file'] = BASEPATH.'cache/cookiefile.txt';
+$config['tester']['session_cookiejar_file'] = APPPATH.'cache/cookiefile.txt';
 
 // servers allowed to run tests
 $config['tester']['valid_testing_server_names'] = array('localhost', '192\.168\.:any');
