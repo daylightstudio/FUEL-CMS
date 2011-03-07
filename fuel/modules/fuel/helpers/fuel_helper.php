@@ -351,7 +351,7 @@ function fuel_nav($params = array())
 				if (!empty($p['active']) AND is_string($p['active']))
 				{
 					// WARNING... it is possible to have more then one navigation item with the same location so it's best not to location values but instead use ids'
-					$active = $CI->navigation_model->find_by_location($p['active']);
+					$active = $CI->navigation_model->find_by_location($p['active'], $p['group_id']);
 					if (!empty($active['id']))
 					{
 						$p['active'] = $active['id'];
