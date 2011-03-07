@@ -944,6 +944,11 @@ class Menu {
 		if (isset($this->_items[$active]))
 		{
 			$active_parent = $this->_items[$active]['parent_id'];
+			// to normalize so we can do a strict comparison
+			if (ctype_digit($active_parent))
+			{
+				$active_parent = (int) $active_parent;
+			}
 		}
 		else
 		{
@@ -954,6 +959,11 @@ class Menu {
 
 		foreach($this->_items as $key => $val)
 		{
+			// to normalize so we can do a strict comparison
+			if (ctype_digit($key))
+			{
+				$key = (int) $key;
+			}
 			if ($key === $active_parent AND !empty($key))
 			{
 				//echo $key .' - '.$active_parent.'<br>';
