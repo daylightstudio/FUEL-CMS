@@ -384,7 +384,6 @@ function fuel_nav($params = array())
 	{
 		return $CI->menu->normalize_items($items);
 	}
-	$CI->menu->render($items, $p['active'], $p['parent']);
 	
 	return $CI->menu->render($items, $p['active'], $p['parent']);
 }
