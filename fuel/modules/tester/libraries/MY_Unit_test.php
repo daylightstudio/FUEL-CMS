@@ -74,6 +74,15 @@ class MY_Unit_test extends CI_Unit_test{
 				
 		$back = $this->_backtrace();
 	
+		if (!is_string($test))
+		{
+			$test = var_export($test, TRUE);
+		}
+
+		if (!is_string($expected))
+		{
+			$expected = var_export($expected, TRUE);
+		}
 		$report[] = array (
 							'test_name'			=> $test_name,
 							'test_data'		=> gettype($test).' <pre>'.htmlentities($test).'</pre>',
