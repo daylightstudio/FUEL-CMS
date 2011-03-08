@@ -426,7 +426,7 @@ class Menu {
 		if (!$this->include_hidden)
 		{
 			foreach($menu as $key => $val){
-				if (!$val['hidden'])
+				if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
 				{
 					$filtered_menu[$key] = $val;
 				}
