@@ -288,7 +288,7 @@
 								<dfn>hidden</dfn>, <dfn>textarea/text</dfn>, <dfn>enum</dfn>,
 								<dfn>multi</dfn>, <dfn>select</dfn>, <dfn>file</dfn>
 								<dfn>date</dfn>, <dfn>time</dfn>, <dfn>checkbox</dfn>
-								<dfn>boolean</dfn>, <dfn>section</dfn>, <dfn>copy</dfn>
+								<dfn>boolean</dfn>, <dfn>section</dfn>, <dfn>copy</dfn>,
 								<dfn>custom</dfn>
 								<div class="important">You'll notice above that a type of 'text' is a textarea and NOT a 'text' input. This is due to integration with database table types. If you want a normal text field, don't specify a type value or specify one not on the list.</div>
 		
