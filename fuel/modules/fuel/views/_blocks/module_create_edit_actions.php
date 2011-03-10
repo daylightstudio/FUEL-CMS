@@ -34,12 +34,12 @@
 			<?php endif; ?>
 			
 			<?php if ($this->fuel_auth->module_has_action('others')) : ?>
-			<?php foreach($this->item_actions['others'] as $action => $label) : 
-				$ico_key = str_replace('/', '_', $action);
+			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
+				$ico_key = str_replace('/', '_', $other_action);
 				$lang_key = url_title($label, 'underscore', TRUE);
 				if ($new_label = lang('btn_'.$lang_key)) $label = $new_label;
 			?>
-				<li class="spacer end"><?=anchor(fuel_url($action), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
+				<li class="spacer end"><?=anchor(fuel_url($other_action), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
 			<?php endforeach; ?>
 			<?php endif; ?>
 			
