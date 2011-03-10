@@ -1207,7 +1207,7 @@ Class Form_builder {
 
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1))) 
 		{
-			$time_params['value'] = date('h', strtotime($params['value']));
+			$time_params['value'] = date('g', strtotime($params['value']));
 		}
 		$time_params['size'] = 2;
 		$time_params['max_length'] = 2;
@@ -1221,7 +1221,7 @@ Class Form_builder {
 		$str .= $this->create_text($this->_normalize_value($time_params));
 		$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
 		$ampm_params['name'] = $params['orig_name'].'_am_pm';
-		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) > 12) ? 'pm' : 'am';
+		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 		$str .= $this->create_enum($this->_normalize_value($ampm_params));
 		return $str;
 	}

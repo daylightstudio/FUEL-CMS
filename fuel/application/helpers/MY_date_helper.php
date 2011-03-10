@@ -199,7 +199,14 @@ function english_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am'
 	$min = (int) $min;
 	$sec = (int) $sec;
 	if ($hour > 12) $ampm = 'pm';
-	if ($ampm == 'pm') $hour += 12;
+	if ($ampm == 'pm' AND $hour < 12)
+	{
+		$hour += 12;
+	}
+	else if ($ampm == 'am' AND $hour == 12)
+	{
+		$hour = 0;
+	}
 	$date_arr = explode($delimiter, $date);
 	foreach($date_arr as $key => $val)
 	{
