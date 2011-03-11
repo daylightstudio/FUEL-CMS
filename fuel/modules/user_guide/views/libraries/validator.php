@@ -42,12 +42,13 @@ The <dfn>$field</dfn> parameter will most like be the name of your form field yo
 The <dfn>$func</dfn> parameter is the name of the function to execute. The function must return <dfn>TRUE</dfn> or <dfn>FALSE</dfn>.
 The <dfn>$msg</dfn> parameter is the error message to display if the <dfn>$func</dfn> returns <dfn>FALSE</dfn>.
 The <dfn>$params</dfn> parameter are the parameters to pass to the <dfn>$func</dfn>. If nothing is provided, it will look for <dfn>$_POST[$field]</dfn>.
+To pass multiple arguments to the processing <dfn>$func</dfn>, turn <dfn>$params</dfn> into an array with the additional arguments being added after the value to be processed (see example below for <dfn>length_max</dfn>).
 </p>
 
 <pre class="brush: php">
 $posted = $_POST;
 $this->validator->add_rule('name', 'required', 'The name field is required', $posted['name']);
-$this->validator->add_rule('name', 'length_max', 'The name field must be no greater then 20 characters', $posted['name']);
+$this->validator->add_rule('name', 'length_max', 'The name field must be no greater then 20 characters', array($posted['name'], 20));
 </pre>
 
 
@@ -58,12 +59,11 @@ If a <dfn>$func</dfn> parameter is passed, then it will limit the removal to jus
 </p>
 
 <pre class="brush: php">
-$posted = $_POST;
 $this->validator->remove_rule('name', 'required');
 </pre>
 
 <h2>$this->validator->validate()</h2>
-<p>Runs the validation rules and returns <dfn>TRUE</dfn> all rules are valid and <dfn>FALSE</dfn> otherwise.</p>
+<p>Runs the validation rules and returns <dfn>TRUE</dfn> when all rules are valid and <dfn>FALSE</dfn> otherwise.</p>
 
 <pre class="brush: php">
 if ($this->validator->validate())
@@ -162,7 +162,7 @@ foreach($fields as $key => $field)
 </pre>
 
 <h2>$this->validator->reset([<var>reset_fields</var>])</h2>
-<p>Resets the rules and errors of a Validator object. The optional <dfn>reset_fields</dfn> parameter will reset the fields to validate. The default value for <dfn>reset_fields</dfn> is <dfn>TRUE</dfn>.</p>
+<p>Resets the rules and errors of a Validator object. The optional <dfn>reset_fields</dfn> parameter will reset the fields to validate. The default value for <dfn>reset_fields</dfn> is <dfn>TRUE</dfn> which empties all the fields set by <dfn>add_rule</dfn> on the object.</p>
 
 <pre class="brush: php">
 $posted = $_POST;
@@ -173,5 +173,6 @@ $fields = $this->validator->fields();
 echo count($fields); // 2
 
 $this->validator->reset();
+$fields = $this->validator->fields();
 echo count($fields); // 0
 </pre>

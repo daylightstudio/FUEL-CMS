@@ -66,3 +66,11 @@ $config['nav']['blog'] = array(
 	<li>If you have this <dfn>user_guide</dfn> module installed, you can add documentation to the <dfn>views/_docs/</dfn> folder. There needs to be at least an <dfn>index.php</dfn> file before it will appear in the <dfn>user_guide</dfn> module.</li>
 	<li>Last but not least, in order to see your module you must add the folder name of your module to the <dfn>$config['modules_allowed']</dfn> array in your <dfn>fuel/application/config/MY_fuel.php</dfn> file.</li>
 </ol>
+
+
+<h2>Loading Module Assets</h2>
+<p>Loading module assets can be done one of two ways in your module controllers:</p>
+<ol>
+	<li><dfn>$this->load->library('my_module/my_lib');</dfn></li>
+	<li><dfn>$this->load->module_library('my_module', 'my_lib');</dfn></li>
+</ol>
