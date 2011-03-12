@@ -164,7 +164,7 @@ function cache_path($file = NULL, $module = NULL, $absolute = NULL)
 function captcha_path($file = NULL, $module = NULL, $absolute = NULL)
 {
 	$CI = _get_assets();
-	return $CI->asset->captcha_path($file, 'captchas', $module);
+	return $CI->asset->captcha_path($file, $module, $absolute);
 }
 
 // --------------------------------------------------------------------
