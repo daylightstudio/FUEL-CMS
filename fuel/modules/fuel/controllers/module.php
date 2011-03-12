@@ -148,6 +148,7 @@ class Module extends Fuel_base_controller {
 			redirect($uri);
 		}
 		
+		
 		// create search filter
 		$filters[$this->display_field] = $params['search_term'];
 		
@@ -296,6 +297,10 @@ class Module extends Fuel_base_controller {
 			$this->data_table->assign_data($items, $this->table_headers);
 
 			$vars['table'] = $this->data_table->render();
+			if (!empty($items[0]) AND (!empty($this->precedence_col) AND isset($items[0][$this->precedence_col])))
+			{
+				$vars['params']['precedence'] = 1;
+			}
 			$this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars);
 			return;
 		}
@@ -304,6 +309,8 @@ class Module extends Fuel_base_controller {
 		{
 			$this->load->library('form_builder');
 			$this->js_controller_params['method'] = 'items';
+			$this->js_controller_params['precedence_col'] = $this->precedence_col;
+			
 			
 			$vars['table'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars, TRUE);
 			$vars['pagination'] = $this->pagination->create_links();
@@ -350,6 +357,7 @@ class Module extends Fuel_base_controller {
 		$defaults['search_term'] = '';
 		$defaults['view_type'] = 'list';
 		$defaults['extra_filters'] = array();
+		$defaults['precedence'] = 0;
 		
 		// custom module filters defaults
 		foreach($this->filters as $key => $val)
@@ -363,10 +371,11 @@ class Module extends Fuel_base_controller {
 		$uri_params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
 		
 		$posted = array();
-		if (!empty($_POST)){
+		if (!empty($_POST))
+		{
 
 			$posted['search_term'] = $this->input->post('search_term');
-			$posted_vars = array('col', 'order', 'limit', 'offset', 'view_type');
+			$posted_vars = array('col', 'order', 'limit', 'offset', 'precedence', 'view_type');
 			foreach($posted_vars as $val)
 			{
 				if ($this->input->post($val)) $posted[$val] = $this->input->post($val);
@@ -419,6 +428,27 @@ class Module extends Fuel_base_controller {
 			$this->output->set_output($output);
 		}
 		
+	}
+	
+	function items_precedence()
+	{
+		if (is_ajax() AND !empty($_POST['data_table']) AND !empty($this->precedence_col))
+		{
+			if (is_array($_POST['data_table']))
+			{
+				$i = 0;
+				foreach($_POST['data_table'] as $row)
+				{
+					if (!empty($row))
+					{
+						$values = array($this->precedence_col => $i);
+						$where = array('id' => $row);
+						$this->model->update($values, $where);
+					}
+					$i++;
+				}
+			}
+		}
 	}
 	
 	function create($redirect = TRUE)
@@ -702,7 +732,8 @@ class Module extends Fuel_base_controller {
 
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
-
+		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
+		
 		// get saved data
 		$saved = array();
 		
@@ -821,7 +852,6 @@ class Module extends Fuel_base_controller {
 		$vars['error'] = $this->model->get_errors();
 		$notifications = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
-		
 		
 		// do this after rendering so it doesn't render current page'
 		if (!empty($vars['data'][$this->display_field]) AND $log_to_recent) 
@@ -1045,9 +1075,10 @@ class Module extends Fuel_base_controller {
 		else
 		{
 			$fields = $this->model->form_fields(array());
+			
 			if ($id === 'create')
 			{
-				$id = null;
+				$id = NULL;
 			}
 			
 			if (!is_int($column) AND isset($fields[$column]))
@@ -1068,6 +1099,9 @@ class Module extends Fuel_base_controller {
 			{
 				$vars = $this->_form($id, NULL, TRUE, FALSE);
 			}
+			
+			$vars['linked_fields'] = $this->model->linked_fields;
+			
 			$this->load->module_view(FUEL_FOLDER, '_layouts/module_inline_edit', $vars);
 		}
 	}
@@ -1095,9 +1129,37 @@ class Module extends Fuel_base_controller {
 			
 			if (!empty($selected)) $fields[$field]['value'] = $selected;
 			$fields[$field]['name'] = $field_id;
+			
+			// if the field is an ID, then we will do a select instead of a text field
+			if (isset($fields[$this->model->key_field()]))
+			{
+				$fields['id']['type'] = 'select';
+				$fields['id']['options'] = $this->model->options_list();
+			}
+
 			$output = $this->form_builder->create_field($fields[$field]);
 			$this->output->set_output($output);
 		}
+	}
+	
+	function process_linked()
+	{
+		if (!empty($_POST))
+		{
+			$master_field = $this->input->post('master_field', FALSE);
+			$master_value = $this->input->post('master_value', FALSE);
+			$slave_field = $this->input->post('slave_field', FALSE);
+			$values = array(
+				$master_field => $master_value,
+				$slave_field => '' // blank so we can process
+			);
+			$processed = $this->model->process_linked($values);
+			if (!empty($processed[$slave_field]))
+			{
+				$this->output->set_output($processed[$slave_field]);
+			}
+		}
+		
 	}
 	
 	protected function _clear_cache()

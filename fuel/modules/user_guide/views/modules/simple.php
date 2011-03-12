@@ -168,6 +168,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>A boolean value that will set the whole row to be clickable</td>
 		</tr>
 		<tr>
+			<td><strong>precedence_col</strong></td>
+			<td>precedence</td>
+			<td>None</td>
+			<td>The name of the column to contain the custom precedence sorting information</td>
+		</tr>
+		<tr>
 			<td><strong>clear_cache_on_save</strong></td>
 			<td>TRUE</td>
 			<td>Boolean Value TRUE/FALSE</td>

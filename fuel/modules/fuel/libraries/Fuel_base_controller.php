@@ -11,7 +11,7 @@ class Fuel_base_controller extends CI_Controller {
 	function __construct($validate = TRUE)
 	{
 		parent::__construct();
-		
+
 		// load all the helpers we need
 		$this->load->library('form');
 		$this->load->helper('convert');

@@ -53,7 +53,7 @@ class Menu {
 	public $item_id_prefix = ''; // the prefix to the item id
 	public $item_id_key = 'id'; // either id or location
 	public $use_nav_key = 'AUTO'; // use the nav_key value to match active
-	public $render_type = 'basic'; // basic, breadcrumb, page_title, collapsible, delimited
+	public $render_type = 'basic'; // basic, breadcrumb, page_title, collapsible, delimited, array
 	public $pre_render_func = ''; // function to apply to menu labels before rendering
 	
 	// for breadcrumb AND/OR page_title
@@ -146,7 +146,6 @@ class Menu {
 		{
 			$active = $this->active;
 			$selected = array();
-			$nav_keys = array();
 
 			$auto_nav_key = FALSE;
 			if (is_string($this->use_nav_key) AND strtoupper($this->use_nav_key) == 'AUTO')
@@ -171,12 +170,6 @@ class Menu {
 					$return[$id]['parent_id'] = $this->root_value;
 				}
 				
-				// set nav_keys array for convenience
-				if (isset($return[$id]['nav_key']))
-				{
-					$nav_keys[$return[$id]['nav_key']] = $return[$id];
-				}
-
 				// Capture all that have selected states so we can loop through later
 				if (isset($return[$id]['active']) OR isset($return[$id]['selected']))
 				{
@@ -240,6 +233,9 @@ class Menu {
 				break;
 			case 'delimited':
 				$output = $this->_render_delimited($root_items);
+				break;
+			case 'array':
+				$output = $this->_render_array($root_items);
 				break;
 			default:
 				$output = $this->_render_basic($root_items);
@@ -347,6 +343,22 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Renders page_title menu output
+	 *
+	 * @access	public
+	 * @param	array menu item data
+	 * @param	string the active menu item
+	 * @param	mixed int or string of the parent id to begin rendering the menu items
+	 * @return	string
+	 */
+	public function render_array($items, $active = NULL, $parent_id = NULL)
+	{
+		return $this->render($items, $active, $parent_id, 'array');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Renders a basic menu
 	 *
 	 * @access	protected
@@ -425,7 +437,12 @@ class Menu {
 		
 		if (!$this->include_hidden)
 		{
+<<<<<<< HEAD
 			foreach($menu as $key => $val){
+=======
+			foreach($menu as $key => $val)
+			{
+>>>>>>> 0.9.3
 				if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
 				{
 					$filtered_menu[$key] = $val;
@@ -471,6 +488,7 @@ class Menu {
 				{
 					$level = $level + 1;
 					$subitems = $this->_get_menu_items($key);
+
 					$str .= str_repeat("\t", $level);
 					if (!empty($this->item_tag))
 					{
@@ -711,6 +729,39 @@ class Menu {
 		}
 		
 		return $return;
+<<<<<<< HEAD
+=======
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Outputs a nested array
+	 *
+	 * @access	protected
+	 * @param	array menu item data
+	 * @return	string
+	 */
+	protected function _render_array($menu, $level = 0)
+	{
+		$return = array();
+		if (!empty($menu) AND (isset($this->depth) AND $level < $this->depth) OR !isset($this->depth))
+		{
+			foreach($menu as $key => $val)
+			{
+				$subitems = $this->_get_menu_items($val['id']);
+				$new_key = (isset($val['nav_key'])) ? $val['nav_key'] : $val['location'];
+				$return[$new_key] = $val;
+				
+				if (!empty($subitems))
+				{
+					$level = $level + 1;
+					$return[$new_key]['children'] = $this->_render_array($subitems, $level);
+				}
+			}
+		}
+		return $return;
+>>>>>>> 0.9.3
 	}
 	
 	// --------------------------------------------------------------------
@@ -751,7 +802,12 @@ class Menu {
 	protected function _get_id($val)
 	{
 		if (empty($this->item_id_prefix)) return;
-		return $this->item_id_prefix.strtolower(str_replace('/', '_', $val[$this->item_id_key]));
+		$id = strtolower(str_replace('/', '_', $val[$this->item_id_key]));
+		if (empty($id))
+		{
+			$id = 'home';
+		}
+		return $this->item_id_prefix.$id;
 	}
 	
 	// --------------------------------------------------------------------
@@ -941,6 +997,10 @@ class Menu {
 		if (isset($this->_items[$active]))
 		{
 			$active_parent = $this->_items[$active]['parent_id'];
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0.9.3
 			// to normalize so we can do a strict comparison
 			if (ctype_digit($active_parent))
 			{

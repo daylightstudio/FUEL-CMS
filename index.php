@@ -2,18 +2,47 @@
 define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fuel/');
 /*
  *---------------------------------------------------------------
- * PHP ERROR REPORTING LEVEL
+ * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
  *
- * By default CI runs with error reporting set to ALL.  For security
- * reasons you are encouraged to change this to 0 when your site goes live.
- * For more info visit:  http://www.php.net/error_reporting
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	ini_set('display_errors', 1);
-	error_reporting(E_ALL);
-	//error_reporting(E_ERROR | E_WARNING | E_PARSE);
-	//error_reporting(0);
+	define('ENVIRONMENT', 'development');
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
+
+	switch (ENVIRONMENT)
+	{
+		case 'development':
+			error_reporting(1);
+			error_reporting(E_ALL);
+		break;
+	
+		case 'testing':
+		case 'production':
+			error_reporting(0);
+		break;
+
+		default:
+			exit('The application environment is not set correctly.');
+	}
 
 /*
  *---------------------------------------------------------------
@@ -25,7 +54,7 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
  * as this file.
  *
  */
-	$system_path = INSTALL_ROOT."codeigniter";
+	$system_path = INSTALL_ROOT.'codeigniter';
 
 /*
  *---------------------------------------------------------------
@@ -41,7 +70,7 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = INSTALL_ROOT."application";
+	$application_folder = INSTALL_ROOT.'application';
 
 /*
  * --------------------------------------------------------------------
@@ -97,14 +126,18 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
 // --------------------------------------------------------------------
 
-
-
-
 /*
  * ---------------------------------------------------------------
  *  Resolve the system path for increased reliability
  * ---------------------------------------------------------------
  */
+
+	// Set the current directory correctly for CLI requests
+	if (defined('STDIN'))
+	{
+		chdir(dirname(__FILE__));
+	}
+
 	if (realpath($system_path) !== FALSE)
 	{
 		$system_path = realpath($system_path).'/';

@@ -26,7 +26,6 @@
  * @link		http://www.getfuelcms.com/user_guide/general/configuration
  */
 
-
 /*
 |--------------------------------------------------------------------------
 | General Settings
@@ -85,6 +84,28 @@ $config['dashboards'] = array('fuel', 'backup');
 // dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
 
+// text editor settings... options are markitup or ckeditor
+$config['text_editor'] = 'markitup';
+
+// ck editor specific settings
+$config['ck_editor_settings'] = array(
+	'toolbar' => array(
+			//array('Source'),
+			array('Bold','Italic','Strike'),
+			array('Format'),
+			array('Image','HorizontalRule'),
+			array('NumberedList','BulletedList'),
+			array('Link','Unlink'),
+			array('Undo','Redo','RemoveFormat'),
+			array('Preview'),
+			array('Maximize'),
+		),
+	'contentsCss' => WEB_PATH.'assets/css/main.css',
+	'htmlEncodeOutput' => FALSE,
+	'entities' => FALSE,
+	'bodyClass' => 'ckeditor',
+	'toolbarCanCollapse' => FALSE,
+);
 
 
 /*
@@ -119,8 +140,6 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/date',
 	'jquery/plugins/jquery.datePicker',
 	'jquery/plugins/jquery.fillin',
-	'jquery/plugins/jquery.markitup.pack',
-	'jquery/plugins/jquery.markitup.set',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',
@@ -137,7 +156,12 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery-ui-1.8.4.custom.min',
 	'jquery/plugins/jquery.disable.text.select.pack',
 	'jquery/plugins/jquery.supercomboselect',
-	'jquery/plugins/jquery.MultiFile.pack'
+	'jquery/plugins/jquery.MultiFile.pack',
+	'jquery/plugins/jquery.tablednd.js',
+	'editors/markitup/jquery.markitup.pack',
+	'editors/markitup/jquery.markitup.set',
+	'editors/ckeditor/ckeditor.js',
+	'fuel/linked_field_formatters.js',
 );
 
 // css other then the fuel.css file which automatically gets loaded

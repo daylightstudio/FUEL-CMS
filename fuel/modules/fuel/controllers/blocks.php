@@ -82,4 +82,62 @@ class Blocks extends Module {
 		$this->output->set_output($out);
 	}
 	
+	function upload()
+	{
+		$this->load->helper('file');
+		$this->load->helper('security');
+		$this->load->library('form_builder');
+		
+		$this->js_controller_params['method'] = 'upload';
+		
+		if (!empty($_POST))
+		{
+			if (!empty($_FILES['file']['name']))
+			{
+				
+				$error = FALSE;
+				$file_info = $_FILES['file'];
+				
+				// read in the file so we can filter it
+				$file = read_file($file_info['tmp_name']);
+				
+				// sanitize the file before saving
+				$file = $this->_sanitize($file);
+				$id =  $this->input->post('id', TRUE);
+
+				$save['id'] = $id;
+				$save['view'] = $file;
+				
+				if (!$this->model->save($save))
+				{
+					add_error(lang('error_upload'));
+				}
+				else
+				{
+					// change list view page state to show the selected group id
+					$this->session->set_flashdata('success', lang('blocks_success_upload'));
+					redirect(fuel_url('blocks/edit/'.$id));
+				}
+				
+			}
+			else if (!empty($_FILES['file']['error']))
+			{
+				add_error(lang('error_upload'));
+			}
+		}
+		
+		$fields = array();
+		$blocks = $this->model->options_list('id', 'name', array('published' => 'yes'), 'name');
+		
+		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'select', 'options' => $blocks, 'class' => 'add_edit blocks');
+		$fields['file'] = array('type' => 'file', 'accept' => '');
+		$this->form_builder->hidden = array();
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->set_field_values($_POST);
+		$this->form_builder->submit_value = '';
+		$this->form_builder->use_form_tag = FALSE;
+		$vars['instructions'] = lang('blocks_import_instructions');
+		$vars['form'] = $this->form_builder->render();
+		$this->_render('upload', $vars);
+	}
 }

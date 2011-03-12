@@ -442,7 +442,7 @@ class Base_module_model extends MY_Model {
 			$fields['active']['order'] = 9999;
 			$fields['active']['options'] = array('yes' => $yes, 'no' => $no);
 		}
-		
+
 		return $fields;
 	}
 	

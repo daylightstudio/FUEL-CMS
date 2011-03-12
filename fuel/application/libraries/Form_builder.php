@@ -319,7 +319,7 @@ Class Form_builder {
 				$str .= $val['before_html'].$val['custom'].$val['after_html'];
 				$str .= "</div>\n";
 			}
-			else if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
+			else if (in_array($val['name'], $this->hidden) OR $val['type'] == 'hidden')
 			{
 				$end_str .= $this->create_hidden($val);
 			}

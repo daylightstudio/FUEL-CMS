@@ -2,6 +2,7 @@
 RESET BROWSER VALUES SO EVERYONE IS THE SAME
 ***************************************************************/
 @import url(reset.css);
+@import url(common.css);
 
 
 /***************************************************************
@@ -28,15 +29,9 @@ GENERIC CLASSES
 ***************************************************************/
 .left { float: left; }
 .right { float: right; }
-.clear { clear: both; height: 0; line-height: 0; font-size: 0; }
-.txt_hidden { text-indent: -1000px; overflow: hidden; }
 .block { margin-bottom: 30px; }
 a.readmore { display: block; }
 table.form td { padding: 3px 5px 3px 0; }
-
-/* for form */
-.error { background-color: #c30; color: #fff; padding: 2px 5px; }
-span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
 
 
 /***************************************************************

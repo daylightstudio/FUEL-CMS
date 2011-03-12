@@ -3,6 +3,8 @@ require_once('module.php');
 
 class Pages extends Module {
 	
+	private $_importing = FALSE;
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -49,13 +51,13 @@ class Pages extends Module {
 				if (!empty($data))
 				{
 					$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
-					$this->logs_model->logit($msg);
 					redirect(fuel_uri('pages/edit/'.$id));
 				}
 			}
 			
 		}
-		$this->_form();
+		$vars = $this->_form();
+		$this->_render('pages/page_create_edit', $vars);
 	}
 
 	function edit($id = NULL)
@@ -82,10 +84,11 @@ class Pages extends Module {
 				redirect(fuel_uri('pages/edit/'.$id));
 			}
 		}
-		$this->_form($id);
+		$vars = $this->_form($id);
+		$this->_render('pages/page_create_edit', $vars);
 	}
 	
-	function _form($id = NULL)
+	function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
 	{
 		
 		$this->load->library('form_builder');
@@ -142,6 +145,31 @@ class Pages extends Module {
 		
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
 		
+		// not inline edited
+		if (!$display_normal_submit_cancel)
+		{
+			$this->form_builder->submit_value = NULL;
+			$this->form_builder->cancel_value = NULL;
+			//$this->form_builder->name_array = '__fuel_field__'.$this->module_name.'_'.$id;
+			$fields['__fuel_inline_action__'] = array('type' => 'hidden');
+			$fields['__fuel_inline_action__']['class'] = '__fuel_inline_action__';
+			$fields['__fuel_inline_action__']['value'] = (empty($id)) ? 'create' : 'edit';
+
+			$fields['__fuel_module__'] = array('type' => 'hidden');
+			$fields['__fuel_module__']['value'] = $this->module;
+			$fields['__fuel_module__']['class'] = '__fuel_module__';
+			$this->form_builder->name_prefix = '__fuel_field__'.$this->module.'_'.(empty($id) ? 'create' : $id);
+			$this->form_builder->css_class = 'inline_form';
+			
+		}
+		//$this->form_builder->hidden = (array) $this->model->key_field();
+		$this->form_builder->question_keys = array();
+		$this->form_builder->use_form_tag = FALSE;
+		
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		$this->form_builder->set_field_values($field_values);
+		$this->form_builder->displayonly = $this->displayonly;
 		// create page form fields
 		$this->form_builder->form->validator = &$this->page->validator;
 		$this->form_builder->submit_value = NULL;
@@ -151,10 +179,11 @@ class Pages extends Module {
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_field_values($field_values);
-		$vars['page_fields'] = $this->form_builder->render();
+		$vars['form'] = $this->form_builder->render();
+
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
-
+		
 		// page variables
 		$fields = $this->fuel_layouts->fields($layout, empty($id));
 		
@@ -269,6 +298,7 @@ class Pages extends Module {
 		
 		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
 		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
+		
 		$vars['publish'] = (!empty($saved['published']) && is_true_val($saved['published'])) ? 'Unpublish' : 'Publish';
 		$vars['import_view'] = $import_view;
 		$vars['view_twin'] = $view_twin;
@@ -283,11 +313,9 @@ class Pages extends Module {
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
 
-		$this->_render('pages/page_create_edit', $vars);
-		
 		// do this after rendering so it doesn't render current page'
 		if (!empty($vars['data'][$this->display_field])) $this->_recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
-		
+		return $vars;
 	}
 	
 	function _save_page_vars($id, $posted)
@@ -491,105 +519,186 @@ class Pages extends Module {
 		$this->output->set_output('error');
 	}
 	
-	function inline_edit($field, $page_id)
+	function inline_edit($field, $page_id = NULL)
 	{
-		if (is_ajax())
+		// if field is empty then we'll assume it is really the page ID'
+		if (empty($page_id))
 		{
-			if (!empty($_POST)) {
-				if (!empty($_POST['model']))
-				{
-					$this->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'editor_model');
-
-					$this->_process();
-					
-					$save = array();
-					$var_id = $this->input->post('var_id', TRUE);
-					$page_vars = $this->editor_model->find_by_key($var_id, 'array');
-					
-					
-					
-					$save['id'] = $this->input->post('var_id');
-					$save_val = $this->_sanitize($_POST['__fuel_field__pagevar'][$field]);
-					
-					if (is_array($save_val))
-					{
-						// serialize to normalize
-						$save_val = serialize($save_val);
-					}
-					else if ($page_vars['type'] == 'array')
-					{
-						// it may be an encoded string in which case we need to unencode and convert to an array
-						$save_val = json_decode(rawurldecode($save_val));
-						
-						// serialize to normalize
-						$save_val = serialize($save_val);
-					}
-					
-					$save['value'] = $save_val;
-
-					if ($this->editor_model->save($save))
-					{
-						$this->_process_uploads();
-					}
-					else
-					{
-						$vars['error'] = $this->model->get_errors();
-						$notification = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-						if (empty($notification))
-						{
-							$notification = lang('error_saving');
-						}
-						$this->output->set_output('<error>'.$notification.'</error>');
-						
-					}
-				}
-			}
-			else
+			$this->_importing = TRUE;
+			parent::inline_edit($field);
+			return;
+		}
+		else
+		{
+			if (is_ajax())
 			{
-				$page = $this->model->find_one_array(array('fuel_pages.id' => $page_id));
-				if (!empty($page))
-				{
-					$layout_fields = $this->fuel_layouts->fields($page['layout']);
-					$page_var = $this->pagevariables_model->find_one_array(array('page_id' => $page_id, 'name' => $field));
-					
-					$fields = array();
-					$fields[$field] = (isset($layout_fields[$field])) ? $layout_fields[$field] : '';
-					$fields[$field]['label'] = ' ';
-					$fields[$field]['value'] = (!empty($page_var)) ? $this->pagevariables_model->cast($page_var['value'], $page_var['type']) : '';
-					
-					$this->load->library('form_builder');
-					$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
-					$this->form_builder->question_keys = array();
-					$this->form_builder->submit_value = NULL;
-					$this->form_builder->use_form_tag = FALSE;
-					$this->form_builder->label_colons = FALSE;
-					$this->form_builder->name_array = '__fuel_field__pagevar';
-					$this->form_builder->set_fields($fields);
-					$this->form_builder->css_class = 'inline_form';
-					$this->form_builder->display_errors = FALSE;
-
-					$vars['form'] = $this->form_builder->render();
-					$vars['description'] = '';
-					$vars['field'] = $field;
-					$vars['page_id'] = $page_id;
-					$vars['var_id'] = (isset($page_var['id'])) ? $page_var['id'] : NULL;
-					if (!empty($fields[$field]['comment']))
+				if (!empty($_POST)) {
+					if (!empty($_POST['model']))
 					{
-						$vars['description'] = $fields[$field]['comment'];
-					}
-					else if (!empty($fields[$field]['description']))
-					{
-						$vars['description'] = $fields[$field]['description'];
-					}
+						$this->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'editor_model');
 
-					$this->load->view('pages/inline_edit', $vars);
+						$this->_process();
+
+						$save = array();
+						$var_id = $this->input->post('var_id', TRUE);
+						$page_vars = $this->editor_model->find_by_key($var_id, 'array');
+
+
+
+						$save['id'] = $this->input->post('var_id');
+						$save_val = $this->_sanitize($_POST['__fuel_field__pagevar'][$field]);
+
+						if (is_array($save_val))
+						{
+							// serialize to normalize
+							$save_val = serialize($save_val);
+						}
+						else if ($page_vars['type'] == 'array')
+						{
+							// it may be an encoded string in which case we need to unencode and convert to an array
+							$save_val = json_decode(rawurldecode($save_val));
+
+							// serialize to normalize
+							$save_val = serialize($save_val);
+						}
+
+						$save['value'] = $save_val;
+
+						if ($this->editor_model->save($save))
+						{
+							$this->_process_uploads();
+						}
+						else
+						{
+							$vars['error'] = $this->model->get_errors();
+							$notification = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
+							if (empty($notification))
+							{
+								$notification = lang('error_saving');
+							}
+							$this->output->set_output('<error>'.$notification.'</error>');
+
+						}
+					}
 				}
 				else
 				{
-					$this->output->set_output(lang('error_inline_page_edit'));
+					$page = $this->model->find_one_array(array('fuel_pages.id' => $page_id));
+					if (!empty($page))
+					{
+						$layout_fields = $this->fuel_layouts->fields($page['layout']);
+						$page_var = $this->pagevariables_model->find_one_array(array('page_id' => $page_id, 'name' => $field));
+
+						$fields = array();
+						$fields[$field] = (isset($layout_fields[$field])) ? $layout_fields[$field] : '';
+						$fields[$field]['label'] = ' ';
+						$fields[$field]['value'] = (!empty($page_var)) ? $this->pagevariables_model->cast($page_var['value'], $page_var['type']) : '';
+
+						$this->load->library('form_builder');
+						$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
+						$this->form_builder->question_keys = array();
+						$this->form_builder->submit_value = NULL;
+						$this->form_builder->use_form_tag = FALSE;
+						$this->form_builder->label_colons = FALSE;
+						$this->form_builder->name_array = '__fuel_field__pagevar';
+						$this->form_builder->set_fields($fields);
+						$this->form_builder->css_class = 'inline_form';
+						$this->form_builder->display_errors = FALSE;
+
+						$vars['form'] = $this->form_builder->render();
+						$vars['description'] = '';
+						$vars['field'] = $field;
+						$vars['page_id'] = $page_id;
+						$vars['var_id'] = (isset($page_var['id'])) ? $page_var['id'] : NULL;
+						if (!empty($fields[$field]['comment']))
+						{
+							$vars['description'] = $fields[$field]['comment'];
+						}
+						else if (!empty($fields[$field]['description']))
+						{
+							$vars['description'] = $fields[$field]['description'];
+						}
+
+						$this->load->view('pages/inline_edit', $vars);
+					}
+					else
+					{
+						$this->output->set_output(lang('error_inline_page_edit'));
+					}
 				}
 			}
 		}
+	}
+	
+	function upload()
+	{
+		$this->load->helper('file');
+		$this->load->helper('security');
+		$this->load->library('form_builder');
+		$this->js_controller_params['method'] = 'upload';
+
+		if (!empty($_POST))
+		{
+			if (!empty($_FILES['file']['name']))
+			{
+				
+				$error = FALSE;
+				$file_info = $_FILES['file'];
+				
+				// read in the file so we can filter it
+				$file = read_file($file_info['tmp_name']);
+				
+				// sanitize the file before saving
+				$id = $this->input->post('id', TRUE);
+				$field = $this->js_controller_params['import_view_key'];
+				$where['page_id'] = $id;
+				$where['name'] = $field;
+				$page_var = $this->pagevariables_model->find_one_array($where);
+
+				if (empty($page_var))
+				{
+					add_error(lang('error_upload'));
+				}
+				else
+				{
+					$file = $this->_sanitize($file);
+					$save['id'] = $page_var['id'];
+					$save['name'] = $this->js_controller_params['import_view_key'];
+					$save['page_id'] = $id;
+					$save['value'] = $file;
+					if (!$this->pagevariables_model->save($save))
+					{
+						add_error(lang('error_upload'));
+					}
+				}
+
+				if (!has_errors())
+				{
+					// change list view page state to show the selected group id
+					$this->session->set_flashdata('success', lang('pages_success_upload'));
+					redirect(fuel_url('pages/edit/'.$id));
+				}
+				
+			}
+			else if (!empty($_FILES['file']['error']))
+			{
+				add_error(lang('error_upload'));
+			}
+		}
+		
+		$fields = array();
+		$pages = $this->model->options_list('id', 'location', array('published' => 'yes'), 'location');
+		
+		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'select', 'options' => $pages, 'class' => 'add_edit pages');
+		$fields['file'] = array('type' => 'file', 'accept' => '');
+		$this->form_builder->hidden = array();
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->set_field_values($_POST);
+		$this->form_builder->submit_value = '';
+		$this->form_builder->use_form_tag = FALSE;
+		$vars['instructions'] = lang('pages_import_instructions');
+		$vars['form'] = $this->form_builder->render();
+		$this->_render('upload', $vars);
 	}
 	
 }

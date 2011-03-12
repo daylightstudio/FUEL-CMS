@@ -183,9 +183,11 @@ function php_to_template_syntax($str)
 	// close ending php
 	$str = preg_replace('#([:|;])?\s*\?>#U', '}$3', $str);
 
-	
 	$str = str_replace($find, $replace, $str);
-
+	
+	// TODO javascript escape... commented out because it's problematic... will need to revisit if it makes sense'
+	//$str = preg_replace('#((?<!\{literal\}).*)<script(.+)>(.+)<\/script>.*(?!\{\\\literal\})#Us', "$1\n{literal}\n<script$2>$3</script>\n{\literal}\n", $str);
+	
 	// foreach cleanup
 	$str = preg_replace('#{\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*}#U', '{foreach $1 $2 $4}', $str); // with and without keys
 
