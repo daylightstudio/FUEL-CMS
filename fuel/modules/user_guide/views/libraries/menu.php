@@ -72,9 +72,9 @@
 		<tr>
 			<td><strong>container_tag</strong></td>
 			<td>NULL</td>
-			<td>For menus with a render_type property of basic and collapsible, or breadcrumb, the default is 'ul'.
+			<td>For menus with a render_type property of basic, collapsible, or breadcrumb, the default is 'ul'.
 				For menus with a render_type property of delimited is 'div'. 
-				For render_types of page_title, the container_tag property doesn't apply
+				For render_types of page_title or array, the container_tag property doesn't apply
 			</td>
 			<td>The html tag for the container of a set of menu items.</td>
 			
@@ -136,7 +136,7 @@
 		<tr>
 			<td><strong>render_type</strong></td>
 			<td>basic</td>
-			<td>basic, breadcrumb, collapsible, page_title, delimited</td>
+			<td>basic, breadcrumb, collapsible, page_title, delimited, array</td>
 			<td>The type of menu to render</td>
 		</tr>
 		<tr>
@@ -152,7 +152,7 @@
 			<td>delimiter</td>
 			<td>For menus with a render_type property of page_title, or breadcrumb, the default is ' &amp;gt; '.
 				For menus with a render_type property of delimited is ' &amp;nbsp;|&amp;nbsp; '. 
-				For render_types of basic and collapsible, the delimiter property doesn't apply</td>
+				For render_types of basic, collapsible and array, the delimiter property doesn't apply</td>
 			<td>None</td>
 			<td>The HTML element between the links</td>
 		</tr>
@@ -188,39 +188,6 @@
 		</tr>
 	</tbody>
 </table>
-
-
-<?php /* ?>
-<ul>
-	<li><strong>active_class</strong> - the active css class. Default is <dfn>active</dfn></li>
-	<li><strong>active</strong> - the active menu item.</li>
-	<li><strong>styles</strong> - css class styles to apply to menu items... can be a nested array.</li>
-	<li><strong>first_class</strong> - the css class for the first menu item. Default is <dfn>first</dfn></li>
-	<li><strong>last_class</strong> - the css class for the last menu item. Default is <dfn>last</dfn></li>
-	<li><strong>depth</strong> - the depth of the menu to render at. Default is <dfn>FALSE</dfn></li>
-	<li><strong>use_titles</strong> - use the title attribute in the links. Default is <dfn>FALSE</dfn></li>
-	<li><strong>root_value</strong> - the root parent value... can be <dfn>NULL</dfn> or <dfn>0</dfn>. Default is <dfn>NULL</dfn></li>
-	<li><strong>container_tag</strong> - the html tag for the container of a set of menu items. Default is <dfn>FALSE</dfn></li>
-	<li><strong>container_tag_attrs</strong> - html attributes for the container tag. Default is <dfn>FALSE</dfn></li>
-	<li><strong>container_tag_id</strong> - html container id. Default is <dfn>FALSE</dfn></li>
-	<li><strong>cascade_selected</strong> - i=cascade the selected items. Default is <dfn>TRUE</dfn></li>
-	<li><strong>include_hidden</strong> - include menu items with the hidden attribute. Default is <dfn>FALSE</dfn></li>
-	<li><strong>item_tag</strong> - the html list item element. Default is <dfn>FALSE</dfn></li>
-
-	<li><strong>item_id_prefix</strong> - the prefix to the item id. Default is <dfn>FALSE</dfn></li>
-	<li><strong>render_type</strong> - values can be basic, breadcrumb, collapsible and page_title. Default is <dfn>basic</dfn></li>
-	<li><strong>pre_render_func</strong> - function to apply to menu labels before rendering</li>
-</ul>
-
-<h3>Specific to Breadcrumb Menus:</h3>
-<ul>	
-	<li><strong>delimiter</strong> - the html element between the links. Default is <dfn>' &gt; '</dfn></li>
-	<li><strong>arrow_class</strong> - the class for the arrows. Default is <dfn>arrow</dfn></li>
-	<li><strong>display_current</strong> - display the current active breadcrumb item?. Default is <dfn>TRUE</dfn></li>
-	<li><strong>home_link</strong> - the root home link. Default is <dfn>Home</dfn></li>
-</ul>
-
-<?php */ ?>
 
 <h2>The Menu Array Structure</h2>
 <p>The menu array can hav the following key/value pair:</p>
@@ -304,7 +271,7 @@ $nav['about/contact'] = array('label' => 'Contact', 'parent_id' => 'about');
 $nav['products'] = 'Products';
 
 $active = 'about/history';
-$menu = $this->menu->render($nav, $active, NULL, 'basic');
+$menu = $this->menu->render($nav, $active, NULL, 'collapsible');
 
 echo $menu;
 /* echoed output looks something like this. Note the difference in the product items not have a sub ul
@@ -336,7 +303,7 @@ $nav['about/contact'] = array('label' => 'Contact', 'parent_id' => 'about');
 $nav['products'] = 'Products';
 
 $active = 'about/history';
-$menu = $this->menu->render($nav, $active, NULL, 'basic');
+$menu = $this->menu->render($nav, $active, NULL, 'breadcrumb');
 
 echo $menu;
 /* echoed output looks something like this.
@@ -364,11 +331,101 @@ $nav['about/contact'] = array('label' => 'Contact', 'parent_id' => 'about');
 $nav['products'] = 'Products';
 
 $active = 'about/history';
-$menu = $this->menu->render($nav, $active, NULL, 'basic');
+$menu = $this->menu->render($nav, $active, NULL, 'page_title');
 
 echo $menu;
 /* echoed output looks something like this.
 Home &gt; About &gt; History
+*/
+</pre>
+
+
+<h2>$this->menu->render_array(<var>items</var>, <var>['active']</var>, <var>['parent_id']</var>)</h2>
+<p>Will output a nested array. The key of <dfn>children</dfn> will contain any child menu items.
+The <dfn>$items</dfn> the array of items to display. See above for format of the array.
+The <dfn>$active</dfn> parameter specifies which menu item is active.
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy
+</p>
+
+<pre class="brush: php">
+$nav = array();
+$nav['about'] = 'About';
+$nav['about/history'] = array('label' => 'History', 'parent_id' => 'about');
+$nav['about/contact'] = array('label' => 'Contact', 'parent_id' => 'about');
+
+$nav['products'] = 'Products';
+
+$active = 'about/history';
+$menu = $this->menu->render($nav, $active, NULL, 'array');
+
+print_r($menu);
+
+/* echoed output looks something like this.
+	Array
+	(
+	    [about] => Array
+	        (
+	            [id] => about
+	            [label] => About
+	            [location] => about
+	            [attributes] => Array
+	                (
+	                )
+
+	            [active] => 
+	            [parent_id] => 
+	            [hidden] => 
+	            [children] => Array
+	                (
+	                    [about/history] => Array
+	                        (
+	                            [id] => about/history
+	                            [label] => History
+	                            [location] => about/history
+	                            [attributes] => Array
+	                                (
+	                                )
+
+	                            [active] => 
+	                            [parent_id] => about
+	                            [hidden] => 
+	                        )
+
+	                    [about/wcontact] => Array
+	                        (
+	                            [id] => about/contact
+	                            [label] => Contact
+	                            [location] => about/contact
+	                            [attributes] => Array
+	                                (
+	                                )
+
+	                            [active] => 
+	                            [parent_id] => about
+	                            [hidden] => 
+	                        )
+
+	                )
+
+	        )
+
+	    [products] => Array
+	        (
+	            [id] => products
+	            [label] => Products
+	            [location] => products
+	            [attributes] => Array
+	                (
+	                )
+
+	            [active] => 
+	            [parent_id] => 
+	            [hidden] => 
+	        )
+
+
+	)
+	
 */
 </pre>
 

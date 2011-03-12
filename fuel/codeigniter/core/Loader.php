@@ -79,7 +79,7 @@ class CI_Loader {
 	{
 		if (is_array($library))
 		{
-			foreach($library as $read)
+			foreach ($library as $read)
 			{
 				$this->library($read);
 			}
@@ -127,7 +127,7 @@ class CI_Loader {
 	{
 		if (is_array($model))
 		{
-			foreach($model as $babe)
+			foreach ($model as $babe)
 			{
 				$this->model($babe);
 			}
@@ -880,8 +880,19 @@ class CI_Loader {
 				foreach ($config_component->_config_paths as $path)
 				{
 					// We test for both uppercase and lowercase, for servers that
-					// are case-sensitive with regard to file names
-					if (file_exists($path .'config/'.strtolower($class).EXT))
+					// are case-sensitive with regard to file names. Check for environment
+					// first, global next
+					if (file_exists($path .'config/'.ENVIRONMENT.'/'.strtolower($class).EXT))
+					{
+						include_once($path .'config/'.ENVIRONMENT.'/'.strtolower($class).EXT);
+						break;
+					}
+					elseif (file_exists($path .'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).EXT))
+					{
+						include_once($path .'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).EXT);
+						break;
+					}
+					elseif (file_exists($path .'config/'.strtolower($class).EXT))
 					{
 						include_once($path .'config/'.strtolower($class).EXT);
 						break;

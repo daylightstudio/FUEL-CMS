@@ -52,6 +52,7 @@ class MY_Model extends CI_Model {
 	public $readonly = FALSE; // sets the model to readonly mode where you can't save or delete data'
 	public $hidden_fields = array(); // fields to hide when creating a form
 	public $unique_fields = array(); // fields that are not IDs but are unique
+	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $foreign_keys = array(); // map foreign keys to table models
 	
 	protected $db; // CI database object
@@ -729,9 +730,12 @@ class MY_Model extends CI_Model {
 		{
 			if (isset($values[$key]))
 			{
-				$clean[$key] = ($this->auto_trim) ? trim($values[$key]) : $values[$key];
+				$values[$key] = ($this->auto_trim) ? trim($values[$key]) : $values[$key];
 			}
 		}
+		
+		// process linked fields
+		$values = $this->process_linked($values);
 		
 		foreach ($fields as $key => $field)
 		{
@@ -742,13 +746,13 @@ class MY_Model extends CI_Model {
 				if (isset($values[$key.'_hour']))
 				{
 					if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-					$values[$key] = english_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
+					$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
 				}
 			}
 			else if ($field['type'] == 'date')
 			{
 				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-				if (isset($values[$key]) AND !is_db_format($values[$key])) $values[$key] = english_to_db_format($values[$key]);
+				if (isset($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
 			}
 			
 			$date_func = ($this->date_use_gmt) ? 'gmdate' : 'date';
@@ -1871,7 +1875,50 @@ class MY_Model extends CI_Model {
 		return $values;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Process linked fields
+	 *
+	 * @access	public
+	 * @param	array	values to be saved
+	 * @return	array
+	 */	
+	public function process_linked($values)
+	{
+		
+		// process linked fields
+		foreach($this->linked_fields as $field => $func_val)
+		{
+			if (empty($values[$field]))
+			{
+				if (is_string($func_val) AND !empty($values[$func_val]))
+				{
+					// convenience for most common
+					$values[$field] = url_title($values[$func_val], 'dash', TRUE);
+				}
+				else if (is_array($func_val))
+				{
+					$func = current($func_val);
+					$val = key($func_val);
+					
+					if (!empty($values[$val]))
+					{
+						if (function_exists($func))
+						{
+							$values[$field] = call_user_func($func, $values[$val]);
+						}
+						else
+						{
+							$values[$field] = $values[$val];
+						}
+					}
+				}
+			}
+		}
+		return $values;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

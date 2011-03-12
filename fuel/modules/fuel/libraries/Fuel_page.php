@@ -79,7 +79,6 @@ class Fuel_page {
 		$default_home = $this->_CI->config->item('default_home_view', 'fuel');
 		
 		// if a location is provided in the init config, then use it instead of the uri segments and go no further
-
 		if ($this->location == 'page_router') $this->location = $default_home;
 		
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout');
@@ -92,7 +91,7 @@ class Fuel_page {
 		$segments = $this->_CI->uri->rsegment_array();
 		
 		// in case a Matchbox module has a module name the same (like news...)
-		if ($segments[count($segments)] == 'index')
+		if (!empty($segments) AND $segments[count($segments)] == 'index')
 		{
 			array_pop($segments);
 		}
@@ -498,6 +497,8 @@ class Fuel_page {
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
+		$vars['init_params']['editor'] = $this->_CI->config->item('text_editor', 'fuel');
+		$vars['init_params']['editorConfig'] = $this->_CI->config->item('ck_editor_settings', 'fuel');
 		
 		// load language files
 		$this->_CI->load->module_language(FUEL_FOLDER, 'fuel_inline_edit');

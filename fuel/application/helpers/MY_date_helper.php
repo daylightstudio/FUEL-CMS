@@ -52,7 +52,7 @@ function datetime_now(){
 function is_date_format($date)
 {
 	return (is_string($date) AND (!empty($date) AND (int)$date != 0) AND 
-	(is_english_format($date) OR is_db_format($date)));
+	(is_date_english_format($date) OR is_date_db_format($date)));
 }
 
 // --------------------------------------------------------------------
@@ -64,7 +64,7 @@ function is_date_format($date)
  * @param	string
  * @return	boolean
  */
-function is_db_format($date)
+function is_date_db_format($date)
 {
 	return preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $date);
 }
@@ -78,7 +78,7 @@ function is_db_format($date)
  * @param	string
  * @return	boolean
  */
-function is_english_format($date)
+function is_date_english_format($date)
 {
 	return preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date);
 }
@@ -193,7 +193,7 @@ function time_verbose($time, $include_seconds = FALSE)
  * @param	string
  * @return	string
  */
-function english_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am', $delimiter = '/')
+function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am', $delimiter = '/')
 {
 	$hour = (int) $hour;
 	$min = (int) $min;

@@ -33,6 +33,9 @@ span.required { color:#c30; }
 .hidden { display: none; }
 .float_left { float: left; }
 .float_right { float: right; }
+tr.drag { border: 1px solid #ccc !important; background-color: #ffe !important }
+tr.drag td { cursor: move !important; background-color: #ffe !important; }
+a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
 
 /* give body context to overwrite other generic styles like the jqModal background color*/
 body .success { background-color: #6ec461; background-repeat: no-repeat; }
@@ -58,8 +61,8 @@ div#header { line-height: 28px; }
 div#header, div#footer { height: 30px; background-color: #666; color: #fff;padding: 0 15px; color: #fff; text-shadow: #444 0px 1px 0px; }
 div#header a { color: #fff; }
 div#header a:hover { text-decoration: underline; }
-h1#client { float: left; font-size: 16px; }
-h1#client a { color: #fff; }
+h1#site_name { float: left; font-size: 16px; }
+h1#site_name a { color: #fff; }
 div#login_logout { float: right; }
 div#footer { font-size: 9px; position: absolute; left: 0px; bottom: 0px; right: 0px; text-align: center; color: #ccc; padding: 3px; height: 14px; }
 div#footer a { color: #fff; }
@@ -122,8 +125,10 @@ div#left_panel_inner li.active ul li.active a { text-decoration: underline; }
 .ico_remove_line { background-image: url(../images/ico_cancel.png); float: right;  }
 .ico_view_all { background-image: none; line-height: 22px; padding-left: 5px; }
 .ico_refresh { background-image: url(../images/ico_arrow_refresh.png); }
-.ico_navigation_upload { background-image: url(../images/ico_page_white_get.png); }
 .ico_users_send_email { background-image: url(../images/ico_email_go.png); }
+.ico_precedence { background-image: url(../images/table_row_insert.png); }
+.ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload { background-image: url(../images/ico_page_white_get.png); }
+
 
 /******************************************************
 main panel 
@@ -199,6 +204,7 @@ table#data_table { margin-top: 6px; }
 #data_table .publish_hover:hover .publish_action { display: inline; }
 #data_table .publish_hover:hover .publish_text { display: none; }
 
+table#data_table.rearrange tr:hover td { cursor: move !important; background-color: #ffe !important; }
 table.data { width: 98%; margin: 0px auto; }
 table.data th { padding: 0 20px 0 0; white-space: nowrap; }
 table.data td { padding: 5px 20px;  border-top: 1px solid #fff; white-space: nowrap; max-width: 300px; text-overflow: ellipsis; overflow: hidden; }
@@ -210,13 +216,13 @@ table.data th.desc a { background: transparent url(../images/th_arrow_desc.png) 
 table.data th { text-align: left; }
 table.data td.next_last { width: 100%; }
 table.data td.actions { text-align: right; white-space: nowrap; padding-left: 5px; }
-table.data tr.rowaction:hover td { background-color: #edf2f7 !important; cursor: pointer;}
+table.data tr.rowaction:hover td { background-color: #edf2f7 !important; cursor: pointer; }
 table.data th.col1 { min-width: 200px; }
 table.data tr.alt { background-color: #f3f3f3; }
 div.nodata { text-align: center; padding: 10px 0 15px 0;}
 
 /* specific data column classes */
-span.publish_col { width: 100px; display: block;}
+span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
 table.form { border: none; border-spacing: 0; }
@@ -259,6 +265,10 @@ div#add_edit_inline_modal { width: 800px; margin-left: -400px; max-height: 400px
 div#add_edit_inline_modal .add_inline_button, div#add_edit_inline_modal .edit_inline_button { display: none; }
 div#asset_modal .buttonbar, div#add_edit_inline_modal .buttonbar { float: right;}
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
+
+div#viewpage_modal { top: 16px; border: 2px solid #666; background-color: #fff; height: 96%; width: 96%; padding: 0; display: none; }
+a#viewpage_close { position: absolute; z-index: 1; right: 0px; top: -17px; color: #ccc; background-color: #666; padding: 1px 5px; }
+iframe#viewpage_iframe { border: none; width: 100%; height: 100%; }
 
 /* misc */
 input#Save, input.submit { margin-top: 10px; width: 190px; text-align: center; }

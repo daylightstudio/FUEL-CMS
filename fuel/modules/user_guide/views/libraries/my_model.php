@@ -125,7 +125,12 @@ The class is abstract, meaning that it needs to be extended to work.</p>
 			<td>None</td>
 			<td>Fields that are not IDs but are unique.</td>
 		</tr>
-		
+		<tr>
+			<td><strong>linked_fields</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>Fields that are are linked. Key is the field, value is a function name to transform it.</td>
+		</tr>
 		<tr>
 			<td><strong>foreign_keys</strong></td>
 			<td>None</td>

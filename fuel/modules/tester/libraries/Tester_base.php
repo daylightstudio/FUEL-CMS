@@ -29,6 +29,7 @@
 abstract class Tester_base 
 {
 	protected $CI;
+	protected $loaded_page;
 	
 	private $_is_db_created;
 	
@@ -91,6 +92,7 @@ abstract class Tester_base
 		if ($this->_is_db_created)
 		{
 			$this->remove_db();
+			$this->CI->db->close();
 		}
 		
 		// remove the cookie file
@@ -162,7 +164,7 @@ abstract class Tester_base
 	 * @access	public
 	 * @return	void
 	 */
-	protected function db_exists()
+	protected function db_exists($test)
 	{
 		$result = $this->CI->db->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "'.$this->config_item('db_name').'"');
 		$table = $result->row_array();
@@ -185,7 +187,7 @@ abstract class Tester_base
 		$this->CI->load->dbforge();
 		
 		// create the database if it doesn't exist'
-		if (!$this->db_exists())
+		if (!$this->db_exists('created'))
 		{
 			$this->CI->dbforge->create_database($this->config_item('db_name'));
 		}
@@ -210,7 +212,7 @@ abstract class Tester_base
 		$this->CI->load->dbforge();
 		
 		// drop the database if it exists
-		if ($this->db_exists())
+		if ($this->db_exists('remove'))
 		{
 			$this->CI->dbforge->drop_database($this->config_item('db_name'));
 		}
@@ -299,7 +301,6 @@ abstract class Tester_base
 		curl_setopt($ch, CURLOPT_COOKIEFILE, $tester_config['session_cookiejar_file']); 
 		curl_setopt($ch, CURLOPT_COOKIEJAR, $tester_config['session_cookiejar_file']); 
 		curl_setopt($ch, CURLOPT_COOKIE, 'tester_dsn='.$this->config_item('dsn_group')); 
-		
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		
 		if (!empty($post))
@@ -315,8 +316,32 @@ abstract class Tester_base
 		//http://code.google.com/p/phpquery/wiki/Manual
 		require_once(TESTER_PATH.'libraries/phpQuery.php');
 		phpQuery::newDocumentHTML($output, strtolower($this->CI->config->item('charset')));
+		$this->loaded_page = $output;
 		return $output;
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 *  Convenience method to test if something exists on a page
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @return	void
+	 */
+	public function page_contains($match, $use_jquery = TRUE)
+	{
+		if ($use_jquery)
+		{
+			return pq($match)->size();
+		}
+		else
+		{
+			return (preg_match('#'.$match.'#', $this->loaded_page));
+		}
+	}
+	
 	
 	// --------------------------------------------------------------------
 

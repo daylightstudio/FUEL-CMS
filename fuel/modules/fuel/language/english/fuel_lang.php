@@ -38,7 +38,7 @@ $lang['error_saving'] = 'There was an error saving.';
 $lang['error_cannot_preview'] = 'There was an error in trying to preview this page.';
 $lang['error_cannot_make_api_call'] = 'There was an error making the API call to %1s.';
 $lang['error_sending_email'] = 'There was an error sending an email to %1s.';
-$lang['error_nav_upload'] = 'There was an error uploading the navigation file.';
+$lang['error_upload'] = 'There was an error uploading the your file.';
 $lang['error_create_nav_group'] = 'Please create a Navigation Group';
 $lang['error_requires_string_value'] = 'The name field should be a string value';
 $lang['error_missing_params'] = 'You are missing parameters to view this page';
@@ -170,6 +170,9 @@ $lang['page_layout_vars'] = 'Layout Variables';
 
 $lang['pages_instructions'] = 'Here you can manage the data associated with the page.';
 $lang['pages_associated_navigation'] = 'Associated Navigation';
+$lang['pages_success_upload'] = 'The page view was successfully uploaded.';
+$lang['pages_upload_instructions'] = 'Select a view file and upload to a page below.';
+
 
 // page specific form fields
 $lang['form_label_layout'] = 'Layout';
@@ -185,6 +188,9 @@ $lang['pages_default_location'] = 'example: company/about';
 |--------------------------------------------------------------------------
 */
 $lang['blocks_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to import?';
+$lang['blocks_success_upload'] = 'The block view was successfully uploaded.';
+$lang['blocks_upload_instructions'] = 'Select a block view file and upload it below.';
+
 $lang['form_label_view'] = 'View';
 
 
@@ -194,7 +200,6 @@ $lang['form_label_view'] = 'View';
 |--------------------------------------------------------------------------
 */
 $lang['navigation_instructions'] = 'Here you create and edit the top menu items of the page.';
-$lang['navigation_import'] = 'Import';
 $lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable <strong>$nav</strong>. For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
 $lang['form_label_navigation_group'] = 'Navigation Group';
@@ -331,6 +336,7 @@ $lang['btn_list'] = 'List';
 $lang['btn_tree'] = 'Tree';
 $lang['btn_create'] = 'Create';
 $lang['btn_delete_multiple'] = 'Delete Multiple';
+$lang['btn_rearrange'] = 'Rearrange';
 $lang['btn_search'] = 'Search';
 $lang['btn_view'] = 'View';
 $lang['btn_publish'] = 'Publish';

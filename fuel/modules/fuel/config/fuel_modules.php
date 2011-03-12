@@ -23,7 +23,7 @@ $config['modules']['pages'] = array(
 	'default_col' => 'location',
 	'default_order' => 'asc',
 	'js_controller' => 'PageController',
-	'js_controller_params' => array('import_view_key' => 'vars--body'),
+	'js_controller_params' => array('import_view_key' => 'body'),
 	'js_localized' => array('pages_default_location'),
 	'preview_path' => '{location}',
 	'views' => array(
@@ -34,7 +34,10 @@ $config['modules']['pages'] = array(
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
-	'sanitize_input' => array('template','php')
+	'sanitize_input' => array('template','php'),
+	'list_actions' => array('pages/upload' => lang('btn_upload')),
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
+	
 );
 
 // navigation module init values
@@ -52,7 +55,9 @@ $config['modules']['blocks'] = array(
 	'default_col' => 'name',
 	'default_order' => 'desc',
 	'js_controller' => 'BlockController',
-	'sanitize_input' => array('template','php')
+	'sanitize_input' => array('template','php'),
+	'list_actions' => array('blocks/upload' => lang('btn_upload')),
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
 );
 
 // navigation module init values

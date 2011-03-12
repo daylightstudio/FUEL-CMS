@@ -148,11 +148,11 @@ INSERT INTO `fuel_blog_links` (`id`, `name`, `url`, `target`, `description`, `pr
 CREATE TABLE `fuel_blog_posts` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the url string. If left blank, the permalink will automatically be created for you.',
   `content` text collate utf8_unicode_ci NOT NULL,
   `content_filtered` text collate utf8_unicode_ci NOT NULL,
   `formatting` varchar(100) collate utf8_unicode_ci default NULL,
   `excerpt` text collate utf8_unicode_ci NOT NULL COMMENT 'A condensed version of the content',
-  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the url string. If left blank, the permalink will automatically be created for you.',
   `author_id` int(10) unsigned NOT NULL COMMENT 'If left blank, you will assumed be the author.',
   `sticky` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `allow_comments` enum('yes','no') collate utf8_unicode_ci default 'no',
@@ -336,7 +336,7 @@ CREATE TABLE `fuel_pages` (
   `last_modified_by` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `location` (`location`),
-  KEY `template_id` (`layout`)
+  KEY `layout` (`layout`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 -- 

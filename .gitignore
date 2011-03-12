@@ -1,0 +1,15 @@
+.DS_Store
+#.htaccess
+fuel/application/.htaccess
+#fuel/application/config/database.php
+fuel/application/cache/*.htaccess
+fuel/application/cache/*.spc
+fuel/application/cache/*.group
+fuel/application/cache/dwoo/compiled/*.php
+fuel/application/logs/*.php
+assets/css/*
+assets/images/*
+assets/js/*
+assets/pdf/*
+assets/swf/*
+assets/cache/*

@@ -78,11 +78,11 @@ CREATE TABLE `fuel_blog_links` (
 CREATE TABLE `fuel_blog_posts` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the url string. If left blank, the permalink will automatically be created for you.',
   `content` text collate utf8_unicode_ci NOT NULL,
   `content_filtered` text collate utf8_unicode_ci NOT NULL,
   `formatting` varchar(100) collate utf8_unicode_ci NOT NULL default 'auto_typography',
   `excerpt` text collate utf8_unicode_ci NOT NULL COMMENT 'A condensed version of the content',
-  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the url string. If left blank, the permalink will automatically be created for you.',
   `author_id` int(10) unsigned NOT NULL COMMENT 'If left blank, you will assumed be the author.',
   `sticky` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no' COMMENT 'Sticky posts will always be sorted toward the top on the homepage regardless of date',
   `allow_comments` enum('yes','no') collate utf8_unicode_ci default 'no' COMMENT 'Checking yes will allow comments to be displayed but only if they are enabled in the global settings',

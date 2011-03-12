@@ -1,6 +1,6 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '0.9.2');
+define('FUEL_VERSION', '0.9.3');
 define('MODULES_FOLDER', '../modules');
 define('FUEL_FOLDER', 'fuel');
 define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
@@ -13,13 +13,22 @@ $_FUEL_SEGS = explode('/', $_SERVER['SCRIPT_FILENAME']);
 define('WEB_FOLDER', $_FUEL_SEGS[count($_FUEL_SEGS)-2]);
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 
-if ($_SERVER['SERVER_PORT'] != '80')
+if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
 {
-	define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
+	$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+	
+	if ($_SERVER['SERVER_PORT'] == '443')
+	{
+		define('BASE_URL', "https://".$_base_path);
+	}
+	else
+	{
+		define('BASE_URL', "http://".$_base_path);
+	}
 }
 else
 {
-	define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
+	define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 }	
 
 // must include language helper if you want to use lang function

@@ -13,6 +13,8 @@ if (fuel == undefined) var fuel = {};
 	var assetsImgPath = initObj.assetsImgPath;
 	var assetsPath = initObj.assetsPath;
 	var assetsAccept = initObj.assetsAccept;
+	var editor = initObj.editor;
+	var editorConfig = initObj.editorConfig;
 
 	var markers = null;
 	var X_OFFSET = 16;
@@ -138,6 +140,16 @@ if (fuel == undefined) var fuel = {};
 			});
 		}
 		
+		function getFieldId(field, context){
+			var val = $('.__fuel_module__', context).attr('id');
+			var prefix = val.split('--')[0];
+			return prefix + '--' + field;
+		}
+		
+		function getModule(context){
+			return $('.__fuel_module__', context).val();
+		}
+		
 		function initEditors(){
 			
 			var formAction = '';
@@ -211,7 +223,7 @@ if (fuel == undefined) var fuel = {};
 						$('.__fuel_edit_marker_inner__', this).stop().css(resetCss).hide();
 					}
 				});
-
+				
 				_anchor.click(function(e){
 					if (!activeEditor || activeEditor != $this){
 						if (!loaderHTML.length){
@@ -227,8 +239,13 @@ if (fuel == undefined) var fuel = {};
 							_anchor.next('.__fuel_edit_form__').load(formAction, function(){
 								
 								var context = $(this).parents('.__fuel_edit__').find('.__fuel_edit_form__')[0];
-							
+								var module = getModule(context);
+								
 								$(this).show();
+								
+								/*****************************************************************
+								 date setup
+								*****************************************************************/
 								
 								// set up any date fields
 								Date.format = 'mm/dd/yyyy';
@@ -255,17 +272,22 @@ if (fuel == undefined) var fuel = {};
 								});
 								$('input:first', context).select();
 								
+
+								/*****************************************************************
+								 tooltips
+								*****************************************************************/
+								
 								// set up tooltips
 								$('.tooltip', context).tooltip({ delay: 0, showURL: false, id: '__fuel_tooltip__' });
 								
-								// set up markitup
-								$markitupField = $('textarea:not(textarea[class=no_editor])', context);
-								if ($markitupField.size()){
-									
-									var id = $this.attr('id').replace(/__fuel_edit__/, '');
-									var module = $('#__fuel_marker__' + id).attr('data-module');
-									var q = 'module=' + escape(module) + '&field=' + escape($markitupField.attr('name'));
-									var markitUpClass = $markitupField.attr('className');
+								
+								
+								/*****************************************************************
+								 editors fields
+								*****************************************************************/
+								var createMarkItUp = function(elem){
+									var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name'));
+									var markitUpClass = $(elem).attr('className');
 									if (markitUpClass.length){
 										var previewPath = markitUpClass.split(' ');
 										if (previewPath.length && previewPath[0] != 'no_editor'){
@@ -273,10 +295,201 @@ if (fuel == undefined) var fuel = {};
 										}
 									}
 									myMarkItUpSettings.previewParserPath = myMarkItUpSettings.previewParserPath + '?' + q;
-									$markitupField.markItUp(myMarkItUpSettings);
+									$(elem).markItUp(myMarkItUpSettings);
+								}
+								
+								
+								
+								var createCKEditor = function(elem){
+									var ckId = $(elem).attr('id');
+									var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + lang('btn_view_source') + '</a>';
+									// cleanup
+									if (CKEDITOR.instances[ckId]) {
+										CKEDITOR.remove(CKEDITOR.instances[ckId]);
+									}
+									CKEDITOR.replace(ckId, editorConfig);
+
+									// add this so that we can set that the page has changed
+									CKEDITOR.instances[ckId].on('instanceReady', function(){
+										this.document.on('keyup', function(){
+											CKEDITOR.instances[ckId].updateElement();
+										});
+
+										// so the formatting doesn't get too crazy from ckeditor
+										this.dataProcessor.writer.setRules( 'p',
+										{
+											indent : false,
+											breakBeforeOpen : true,
+											breakAfterOpen : false,
+											breakBeforeClose : false,
+											breakAfterClose : true
+										});
+									})
+									CKEDITOR.instances[ckId].resetDirty();
+
+
+									CKEDITOR.instances[ckId].hidden = false; // for toggline
+
+									$('#' + ckId).parent().append(sourceButton);
+
+									$('#' + ckId + '_viewsource').click(function(){
+										$elem = $(elem);
+										ckInstance = CKEDITOR.instances[ckId];
+
+										if (!CKEDITOR.instances[ckId].hidden){
+											CKEDITOR.instances[ckId].hidden = true;
+											if (!$elem.hasClass('markItUpEditor')){
+												createMarkItUp(elem);
+												$elem.show();
+											}
+											$('#cke_' + ckId).hide();
+											$elem.closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
+											//$elem.closest('.html').show();
+
+											$('#' + ckId + '_viewsource').text(lang('btn_view_editor'));
+
+											// update the info
+											ckInstance.updateElement();
+
+										} else {
+											CKEDITOR.instances[ckId].hidden = false;
+
+											$('#cke_' + ckId).show();
+
+											$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
+											//$elem.show().closest('.html').hide();
+											$('#' + ckId + '_viewsource').text(lang('btn_view_source'))
+
+											ckInstance.setData($elem.val());
+										}
+										return false;
+									})
+
+
 								}
 
 
+								$editors = $ckEditor = $('textarea:not(textarea[class=no_editor])', context);
+								$editors.each(function(i) {
+									if ((editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
+										createCKEditor(this);
+									} else {
+										createMarkItUp(this);
+									}
+								});
+								
+								// if (editor.toLowerCase() == 'ckeditor'){
+								// 
+								// 								$ckEditor = $('textarea:not(textarea[class=no_editor])', context);
+								// 
+								// 								$ckEditor.each( function() {
+								// 									var ckId = $(this).attr('id');
+								// 									// cleanup
+								// 									if (CKEDITOR.instances[ckId]) {
+								// 										CKEDITOR.remove(CKEDITOR.instances[ckId]);
+								// 									}
+								// 									CKEDITOR.replace(ckId, editorConfig);
+								// 								});
+								// 
+								// 							} else {
+								// 
+								// 								// set up markitup
+								// 								$markitupField = $('textarea:not(textarea[class=no_editor])', context);
+								// 								if ($markitupField.size()){
+								// 
+								// 									var id = $this.attr('id').replace(/__fuel_edit__/, '');
+								// 									var module = $('#__fuel_marker__' + id).attr('data-module');
+								// 									var q = 'module=' + escape(module) + '&field=' + escape($markitupField.attr('name'));
+								// 									var markitUpClass = $markitupField.attr('className');
+								// 									if (markitUpClass.length){
+								// 										var previewPath = markitUpClass.split(' ');
+								// 										if (previewPath.length && previewPath[0] != 'no_editor'){
+								// 											q += '&preview=' + previewPath[previewPath.length - 1];
+								// 										}
+								// 									}
+								// 									myMarkItUpSettings.previewParserPath = myMarkItUpSettings.previewParserPath + '?' + q;
+								// 									$markitupField.markItUp(myMarkItUpSettings);
+								// 								}
+								// 
+								// 							}
+								
+								
+								/*****************************************************************
+								 linked fields
+								*****************************************************************/
+
+								// needed for enclosure
+								var bindLinkedKeyup = function(slave, master, func){
+									var slaveId = getFieldId(slave, context);
+									var masterId = getFieldId(master, context);
+									if ($('#' + slaveId).val() == ''){
+										$('#' + masterId).keyup(function(e){
+
+											// for most common cases
+											if (func){
+												var newVal = func($(this).val());
+												$('#' + slaveId).val(newVal);
+											}
+
+										});
+
+										// setup ajax on blur to do server side processing if no javascript function exists
+										if (!func){
+											$('#' + masterId).blur(function(e){
+												var url = __FUEL_PATH__ + '/' + module + '/process_linked';
+												var parameters = {
+													master_field:master, 
+													master_value:$(this).val(), 
+													slave_field:slave
+												};
+												$.post(url, parameters, function(response){
+													$('#' + slaveId).val(response);
+												});
+											});
+										}
+
+									}
+								}
+
+								// needed for enclosure
+								var bindLinked = function(slave, master, func){
+									if ($('#' + getFieldId(slave, context)).val() == ''){
+										if (typeof(master) == 'string'){
+											bindLinkedKeyup(slave, master, url_title);
+										} else if (typeof(master) == 'object'){
+
+											for (var o in master){
+												var func = false;
+												var funcName = master[o];
+												var val = $('#' + getFieldId(o, context)).val();
+												if (funcName == 'url_title'){
+													var func = url_title;
+												// check for function scope, first check local function, then class, then global window object
+												} else if (funcName != 'url_title'){
+													if (this[funcName]){
+														var func = this[funcName];
+													} else if (window[funcName]){
+														var func = window[funcName];
+													}
+												}
+												bindLinkedKeyup(n, o, func);
+												break; // stop after first one
+											}
+										}
+									}
+								}
+
+								if (__FUEL_LINKED_FIELDS){
+									var linked = __FUEL_LINKED_FIELDS;
+									for(var n in linked){
+										bindLinked(n, linked[n]);
+									}
+								}
+								
+								/*****************************************************************
+								 comboboxes
+								*****************************************************************/
+								
 								// set up supercomboselects
 								$('select[multiple]', context).each(function(i){
 									var comboOpts = {};
@@ -293,6 +506,10 @@ if (fuel == undefined) var fuel = {};
 									$(this).supercomboselect(comboOpts);
 								});
 
+								
+								/*****************************************************************
+								 asset selects
+								*****************************************************************/
 								
 								// set up assets folder
 								var _this = this;
@@ -354,6 +571,10 @@ if (fuel == undefined) var fuel = {};
 									return false;
 								});
 								
+								
+								/*****************************************************************
+								 add edit fields
+								*****************************************************************/
 								
 								// set up add/edit
 								$('.add_edit', context).each(function(i){
