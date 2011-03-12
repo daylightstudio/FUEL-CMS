@@ -130,3 +130,7 @@ The <dfn>dsn</dfn> parameter is the database connection information for the test
 The <dfn>pq()</dfn> function allows you to use jQuery like syntax to query DOM nodes on your page.
 For more information, visit the <a href="http://code.google.com/p/phpquery/wiki/Manual" target="_blank">phpQuery</a> manual.
 </p>
+
+<h2>page_contains(<var>'match'</var>, <var>[use_jquery]</var>)</h2>
+<p>Convenience method to test if something exists on a page. The first parameter is a string to match. The second parameter says whether to use jquery syntax to match a specific DOM node (TRUE), or to use regular expression (FALSE).</p>
+

@@ -52,5 +52,29 @@ $config['assets_excluded_dirs'] = array(
 	'swf', 
 	);
 
+// text editor settings... options are markitup or ckeditor
+$config['text_editor'] = 'markitup';
+
+// ck editor specific settings
+$config['ck_editor_settings'] = array(
+	'toolbar' => array(
+			//array('Source'),
+			array('Bold','Italic','Strike'),
+			array('Format'),
+			array('Image','HorizontalRule'),
+			array('NumberedList','BulletedList'),
+			array('Link','Unlink'),
+			array('Undo','Redo','RemoveFormat'),
+			array('Preview'),
+			array('Maximize'),
+		),
+	'contentsCss' => WEB_PATH.'assets/css/main.css',
+	'htmlEncodeOutput' => FALSE,
+	'entities' => FALSE,
+	'bodyClass' => 'ckeditor',
+	'toolbarCanCollapse' => FALSE,
+);
+
+
 /* End of file MY_fuel.php */
 /* Location: ./application/config/MY_fuel.php */

@@ -330,7 +330,7 @@ function fuel_nav($params = array())
 			
 			// grab all menu items by group
 			$menu_items = $CI->navigation_model->find_all_by_group($p['group_id']);
-			
+
 			// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 			if (!empty($menu_items)) 
 			{
@@ -374,9 +374,21 @@ function fuel_nav($params = array())
 	if (!empty($p['exclude']))
 	{
 		$p['exclude'] = (array) $p['exclude'];
-		foreach($p['exclude'] as $e)
+		foreach($items as $key => $item)
 		{
-			unset($items[$e]);
+			if (is_int($key) AND !empty($item['location']))
+			{
+				$check = $item['location'];
+			}
+			else
+			{
+				$check = $key;
+			}
+			if (in_array($check, $p['exclude']))
+			{
+				unset($items[$key]);
+			}
+			
 		}
 	}
 	
@@ -384,7 +396,6 @@ function fuel_nav($params = array())
 	{
 		return $CI->menu->normalize_items($items);
 	}
-	
 	return $CI->menu->render($items, $p['active'], $p['parent']);
 }
 

@@ -2,7 +2,7 @@
 
 class Test_custom_records_model extends MY_Model {
 
-//	public $required = array('email');
+	public $required = array('email');
 	
 	function __construct()
 	{

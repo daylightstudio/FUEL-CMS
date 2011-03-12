@@ -9,6 +9,7 @@ You can modify a model's <a href="<?=user_guide_url('libraries/my_model')?>">for
 	<li><strong>asset_select [pdf, css, js]</strong> - the <dfn>asset_select</dfn> CSS class allows you input asset file names into your form fields. 
 	You can specify an optional second class to specify the specific asset folder (.e.g. 'class' => 'add_edit pdf'). The default asset folder is the <dfn>images</dfn> folder. This class works with text input fields.</li>
 	<li><strong>multifile</strong> - the <dfn>multifile</dfn> CSS class allows you to add multiple files at a time. Works on file upload fields.</li>
+	<li><strong>wysiwyg</strong> - the <dfn>wysiwyg</dfn> CSS class will trigger the CKEditor to be used instead of markItUp! on the field.</li>
 </ul>
 
 <p>Conversely, there are a couple CSS classes that are used to remove certain functionality.</p>

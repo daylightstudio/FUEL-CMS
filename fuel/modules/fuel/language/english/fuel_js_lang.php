@@ -17,6 +17,8 @@ $lang['btn_asset'] = 'Asset';
 $lang['btn_image'] = 'Image';
 $lang['btn_pdf'] = 'PDF';
 $lang['btn_flash'] = 'Flash';
+$lang['btn_view_source'] = 'View Source';
+$lang['btn_view_editor'] = 'View Editor';
 
 $lang['comboselect_values_empty'] = 'There are no more values to select';
 $lang['comboselect_selected_empty'] = 'Select from the values on the left';
@@ -26,6 +28,12 @@ $lang['tree_orphans'] = '_orphans';
 $lang['confirm_delete'] = 'Are you sure you want to delete this?';
 
 $lang['form_label_send_email_notification'] = 'Send password update email notification?';
+
+$lang['error_importing_ajax'] = 'Error importing view file';
+
+$lang['viewpage_close'] = 'Close';
+
+$lang['rearrange_on'] = 'You can change the precedence order by selecting and dragging the data rows below.';
 
 /*
 |--------------------------------------------------------------------------

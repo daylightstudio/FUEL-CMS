@@ -78,7 +78,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td><strong>display_field</strong></td>
 			<td>The default is the field <dfn>name</dfn>. If you do not have a field of <dfn>name</dfn>, you must specify a new field</td>
 			<td>None</td>
-			<td>The model field to be used for display purposes.</td>
+			<td>The model field to be used for display purposes</td>
 		</tr>
 		<tr>
 			<td><strong>js_controller</strong></td>
@@ -166,6 +166,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>TRUE</td>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>A boolean value that will set the whole row to be clickable</td>
+		</tr>
+		<tr>
+			<td><strong>precedence_col</strong></td>
+			<td>precedence</td>
+			<td>None</td>
+			<td>The name of the column to contain the custom precedence sorting information</td>
 		</tr>
 		<tr>
 			<td><strong>clear_cache_on_save</strong></td>

@@ -20,14 +20,16 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 {
 	protected static $childSource;
 	protected static $l;
+	protected static $lraw;
 	protected static $r;
+	protected static $rraw;
 	protected static $lastReplacement;
 
 	public static function compile(Dwoo_Compiler $compiler, $file)
 	{
-		list($l, $r) = $compiler->getDelimiters();
-		self::$l = preg_quote($l,'/');
-		self::$r = preg_quote($r,'/');
+		list(self::$lraw, self::$rraw) = $compiler->getDelimiters();
+		self::$l = preg_quote(self::$lraw,'/');
+		self::$r = preg_quote(self::$rraw,'/');
 
 		if ($compiler->getLooseOpeningHandling()) {
 			self::$l .= '\s*';
@@ -99,9 +101,11 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
 			// TODO parse blocks tree for child source and new source
 			// TODO replace blocks that are found in the child and in the parent recursively
-			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
+			$firstL = preg_quote(self::$lraw[0], '/');
+			$restL = preg_quote(substr(self::$lraw, 1), '/');
+			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)((?:[^'.$firstL.']*|'.$firstL.'(?!'.$restL.'\/block'.self::$r.'))*)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
 
-			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.$r.$newSource;
+			$newSource = self::$lraw.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.self::$rraw.$newSource;
 
 			if (self::$lastReplacement) {
 				break;
@@ -114,14 +118,15 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
 	protected static function replaceBlock(array $matches)
 	{
-		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2],'/').'\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
-			$l = stripslashes(self::$l);
-			$r = stripslashes(self::$r);
-
+		$matches[3] = self::cleanTrailingCRLF($matches[3]);
+		$firstL = preg_quote(self::$lraw[0], '/');
+		$restL = preg_quote(substr(self::$lraw, 1), '/');
+		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2],'/').'\1'.self::$r.'(?:\r?\n?)((?:[^'.$firstL.']*|'.$firstL.'(?!'.$restL.'\/block'.self::$r.'))*)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
+			$override[2] = self::cleanTrailingCRLF($override[2]);
 			if (self::$lastReplacement) {
 				return preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]);
 			} else {
-				return $l.'block '.$matches[1].$matches[2].$matches[1].$r.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]).$l.'/block'.$r;
+				return self::$lraw.'block '.$matches[1].$matches[2].$matches[1].self::$rraw.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]).self::$lraw.'/block'.self::$rraw;
 			}
 		} else {
 			if (self::$lastReplacement) {
@@ -130,5 +135,16 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 				return $matches[0];
 			}
 		}
+	}
+
+	protected static function cleanTrailingCRLF($input)
+	{
+		if (substr($input, -1) === "\n") {
+			if (substr($input, -2, 1) === "\r") {
+				return substr($input, 0, -2);
+			}
+			return substr($input, 0, -1);
+		}
+		return $input;
 	}
 }

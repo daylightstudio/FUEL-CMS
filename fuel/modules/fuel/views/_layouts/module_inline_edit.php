@@ -1,3 +1,8 @@
+<script type="text/javascript">
+//<![CDATA[
+	__FUEL_LINKED_FIELDS = <?=json_encode($linked_fields)?>;
+//]]>
+</script>
 <div>
 	<h2 class="module_name"><?=$this->module_name?>: <?=ucfirst($action)?></h2>
 	<?=$this->form->open(array('method' => 'post'))?>

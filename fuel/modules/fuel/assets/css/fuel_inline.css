@@ -56,7 +56,8 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ a.btn_field { display: inline-block; margin-bottom: 5px; background-image: url(../images/btn.png) !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
 .__fuel__ a.btn_field:hover { background-position: 0 -27px !important; }
 .__fuel__ .MultiFile-remove { line-height: 22px !important; padding: 0 3px !important; border: 1px solid #ccc !important; background-color: #f9f9f9 !important; }
-.__fuel__ div.html { padding-top: 10px; }
+.__fuel__ div.html { padding-top: 10px !important; }
+.__fuel__ a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
 
 /* notifications */
 .__fuel__ div.notification>p, div.notification>div, div.notification>ul { margin: 0; min-height: 21px; line-height: 21px; padding-left: 35px !important; list-style: none !important; background-repeat: no-repeat !important; background-position: 15px 3px !important; list-style: none !important; color: #fff !important; }
@@ -102,7 +103,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel_edit_form__ table.inline_form select { border: auto !important; float: none !important; background: #fff !important; border: 1px solid #ccc !important; padding: 2px !important; color: #333 !important; }
 .__fuel_edit_form__ table.inline_form input.datepicker { float: left !important; }
 .__fuel_edit_form__ table.inline_form input.fillin { color: #ccc !important; }
-.__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 200px !important; }
+.__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 238px !important; }
 .__fuel_edit_form__ table.inline_form div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 .__fuel_edit_active__ { z-index: 1001; }
 

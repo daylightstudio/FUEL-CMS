@@ -81,7 +81,7 @@
 
 			<div id="tab_page_variables">
 				<h3><?=lang('page_information')?></h3>
-				<?=$page_fields?>
+				<?=$form?>
 
 				<h3><?=lang('page_layout_vars')?></h3>
 				<div id="layout_vars"><?=$layout_fields?></div>

@@ -11,7 +11,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		// do this first so that the fillin is in the checksaved value
 		$('#location').fillin(_this.localized.pages_default_location);
 
-		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		fuel.controller.BaseFuelController.prototype.add_edit.call(this, false);
 
 		// if new, then we use default fillin value... else set to actual value
 		if ($('#id').val() == ''){
@@ -83,7 +83,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					}
 					$('#view_twin_notification').hide();
 				} else {
-					new jqx.Message('Error importing view file');
+					new jqx.Message(_this.lang('error_importing_ajax'));
 				}
 			});
 			$('.jqmWindow').jqm().jqmHide();
@@ -97,5 +97,12 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			bindFields();
 		}
 		
-	}	
+	},
+	
+	
+	upload : function(){
+		this._notifications();
+		this._initAddEditInline($('#form'));
+	}
+		
 });

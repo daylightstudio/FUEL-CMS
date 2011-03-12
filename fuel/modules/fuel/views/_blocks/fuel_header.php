@@ -30,7 +30,7 @@
 <body>
 
 <div id="header">
-	<h1 id="client"><a href="<?=site_url()?>"><?=$this->config->item('site_name', 'fuel')?></a></h1>
+	<h1 id="site_name"><a href="<?=site_url()?>"><?=$this->config->item('site_name', 'fuel')?></a></h1>
 	<div id="login_logout">
 			<?=lang('logged_in_as')?>
 			<a href="<?=fuel_url('my_profile/edit/')?>"><strong><?=$user['user_name']?></strong></a>

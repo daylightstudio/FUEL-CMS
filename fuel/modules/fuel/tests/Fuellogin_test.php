@@ -1,19 +1,14 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Fuellogin_test extends Tester_base {
-	
-	public $init = array();
+require_once('Fueltest_base.php');
+
+class Fuellogin_test extends Fueltest_base {
 	
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	public function setup()
-	{
-		$this->load_sql('test_fuel_schema.sql', 'tester');
-	}
-	
 	public function test_login()
 	{
 		$page = 'Dashboard';
@@ -35,18 +30,6 @@ class Fuellogin_test extends Tester_base {
 		$expected = TRUE;
 		$this->run($test, $expected, 'Test for left menu items: '.$page);
 
-	}
-	
-	public function _login($user_name = 'admin', $password = 'admin')
-	{
-		$post = array(
-			'user_name' => $user_name,
-			'password' => $password
-		);
-		
-		$page = 'fuel/login';
-		$dashboard = $this->load_page('fuel/login', $post);
-		return $dashboard;
 	}
 	
 	public function _check_leftmenu($exclude = array())
@@ -106,42 +89,5 @@ class Fuellogin_test extends Tester_base {
 		return TRUE;
 
 	}
-	
-	
-	private function _has_errors()
-	{
-		$error = ($this->_has_page_error() OR $this->_has_404_error() OR $this->_has_db_error() OR $this->_has_general_error() OR $this->_has_php_error());
-		return $error;
-	}
-
-	//for more on pq function 
-	//http://code.google.com/p/phpquery/wiki/Manual
-	private function _has_page_error()
-	{
-		return pq(".error")->size();
-	}
-
-	//for more on pq function 
-	//http://code.google.com/p/phpquery/wiki/Manual
-	private function _has_404_error()
-	{
-		return pq("#error_404")->size();
-	}
-
-	private function _has_db_error()
-	{
-		return pq("#error_db")->size();
-	}
-
-	private function _has_general_error()
-	{
-		return pq("#error_general")->size();
-	}
-
-	private function _has_php_error()
-	{
-		return pq("#error_php")->size();
-	}
-	
 
 }
