@@ -41,7 +41,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.modulePath = jqx.config.fuelPath + '/' + this.module;
 		this.tableAjaxURL = this.modulePath + '/items/';
 		this.treeAjaxURL = this.modulePath + '/items_tree/';
+		this.precedenceAjaxURL = this.modulePath + '/items_precedence/';
 		this.tableLoaded = false;
+		this.rearrangeOn = false;
 		this.leftMenuInited = false;
 		this.formController = null;
 		this.previewPath = myMarkItUpSettings.previewParserPath;
@@ -138,6 +140,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		var _this = this;
 		this.treeLoaded = false;
 		this.tableLoaded = false;
+		this.rearrangeOn = false;
+		
 		this._notifications();
 		$('#search_term').fillin(this.lang('label_search')).focus();
 		$('#limit').change(function(e){
@@ -220,9 +224,28 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		$('#multi_delete').hide();
 		
+		$('#rearrange').live('click', function(e){
+			$(this).parent().toggleClass('active');
+			if ($(this).parent().hasClass('active')){
+				_this.rearrangeOn = true;
+				_this.rearrangeItems();
+				$('#notification').append('<div class="ico_warn warning rearrange">' + _this.lang('rearrange_on') + '</div>');
+				
+			} else {
+				_this.rearrangeOn = false;
+				$("#data_table").removeClass('rearrange');
+				$('#notification .rearrange').remove();
+				
+			}
+			
+			return false;
+		});
+		
+		
 	},
 	
-	add_edit : function(){
+	add_edit : function(initSpecFields){
+		if (initSpecFields == null) initSpecFields = true;
 		var _this = this;
 		$('.tooltip').tooltip({
 			delay: 0,
@@ -232,7 +255,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this._notifications();
 		//this._submit();
 		
-		this.initSpecialFields($('#main_content_inner'));
+		if (initSpecFields) this.initSpecialFields($('#main_content_inner'));
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
@@ -320,7 +343,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//$('#form input:first').select();
 		$('#form input:first').focus();
 		
-		
 		if (jqx.config.warnIfModified) $.checksave();
 	},
 	
@@ -344,25 +366,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this._initAssets(context);
 		this._initAddEditInline(context);
 		this._initDatePicker(context);
+		this._initEditors(context);
+		this._initViewPage();
+		this._initLinkedFields();
 		
 		$('#form input:first', context).select();
 		
-		// set up markitup
-		$markitupField = $('textarea:not(textarea[class=no_editor])', context);
-		$markitupField.each(function(){
-			if ($markitupField.size()){
-				var q = 'module=' + escape(_this.module) + '&field=' + escape($(this).attr('name'));
-				var markitUpClass = $(this).attr('className');
-				if (markitUpClass.length){
-					var previewPath = markitUpClass.split(' ');
-					if (previewPath.length && previewPath[0] != 'no_editor'){
-						q += '&preview=' + previewPath[previewPath.length - 1];
-					}
-				}
-				myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
-				$(this).markItUp(myMarkItUpSettings);
-			}
-		})		
 		// set up supercomboselects
 		$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
 			var comboOpts = _this._comboOps(this);
@@ -450,7 +459,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + _this.lang('btn_select') + ' ' + btnLabel + '</a>');
 		});
-		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
+		if (!$('#asset_modal').size()){
+			$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
+		}
 		$('.asset_select_button', context).click(function(e){
 			_this.activeField = $(e.target).prev().attr('id');
 			var assetTypeClasses = $(e.target).attr('className').split(' ');
@@ -556,6 +567,230 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			});
 			changeField($field);
 		});
+	},
+	
+	_initEditors : function(context){
+		var _this = this;
+		var selector = 'textarea:not(textarea[class=no_editor])';
+		$editors = $ckEditor = $(selector, context);
+		
+		var createMarkItUp = function(elem){
+			var q = 'module=' + escape(_this.module) + '&field=' + escape($(elem).attr('name'));
+			var markitUpClass = $(elem).attr('className');
+			if (markitUpClass.length){
+				var previewPath = markitUpClass.split(' ');
+				if (previewPath.length && previewPath[0] != 'no_editor'){
+					q += '&preview=' + previewPath[previewPath.length - 1];
+				}
+			}
+			myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
+			$(elem).markItUp(myMarkItUpSettings);
+		}
+		
+		// fix ">" within template syntax
+		var fixCKEditorOutput = function(elem){
+			var elemVal = $(elem).val();
+			var re = new RegExp('([=|-])&gt;', 'g');
+			var newVal = elemVal.replace(re, '$1>');
+			$(elem).val(newVal);
+		}
+		
+		var createCKEditor = function(elem){
+
+			var ckId = $(elem).attr('id');
+			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + _this.lang('btn_view_source') + '</a>';
+			// cleanup
+			if (CKEDITOR.instances[ckId]) {
+				CKEDITOR.remove(CKEDITOR.instances[ckId]);
+			}
+			CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
+			
+			// add this so that we can set that the page has changed
+			CKEDITOR.instances[ckId].on('instanceReady', function(e){
+				editor = e.editor;
+				this.document.on('keyup', function(e){
+					editor.updateElement();
+				});
+				
+				// so the formatting doesn't get too crazy from ckeditor
+				this.dataProcessor.writer.setRules( 'p',
+				{
+					indent : false,
+					breakBeforeOpen : true,
+					breakAfterOpen : false,
+					breakBeforeClose : false,
+					breakAfterClose : true
+				});
+			})
+			CKEDITOR.instances[ckId].resetDirty();
+			
+			// needed so it doesn't update the content before submission which we need to clean up... 
+			// our keyup event took care of the update
+			CKEDITOR.config.autoUpdateElement = false;
+			
+			CKEDITOR.instances[ckId].hidden = false; // for toggline
+			
+			$('#' + ckId).parent().append(sourceButton);
+
+			$('#' + ckId + '_viewsource').click(function(){
+				$elem = $(elem);
+				ckInstance = CKEDITOR.instances[ckId];
+
+				//if (!$('#cke_' + ckId).is(':hidden')){
+				if (!CKEDITOR.instances[ckId].hidden){
+					CKEDITOR.instances[ckId].hidden = true;
+					if (!$elem.hasClass('markItUpEditor')){
+						createMarkItUp(elem);
+						$elem.show();
+					}
+					$('#cke_' + ckId).hide();
+					$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
+					//$elem.closest('.html').show();
+					
+					$('#' + ckId + '_viewsource').text(_this.lang('btn_view_editor'));
+					
+					if (!ckInstance.checkDirty()){
+						$.changeChecksaveValue(ckId, ckInstance.getData())
+					}
+
+					// update the info
+					ckInstance.updateElement();
+					
+					
+				} else {
+					CKEDITOR.instances[ckId].hidden = false;
+					
+					$('#cke_' + ckId).show();
+					
+					$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
+					//$elem.show().closest('.html').hide();
+					$('#' + ckId + '_viewsource').text(_this.lang('btn_view_source'))
+					
+					ckInstance.setData($elem.val());
+				}
+				
+				fixCKEditorOutput(elem);
+				
+				return false;
+			})
+
+			
+		}
+		
+		$editors.each(function(i) {
+			if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
+				createCKEditor(this);
+			} else {
+				createMarkItUp(this);
+			}
+		});
+		
+	},
+	
+	_initLinkedFields : function(context){
+		
+		var _this = this;
+		
+		// needed for enclosure
+		var bindLinkedKeyup = function(slave, master, func){
+			if ($('#' + slave).val() == ''){
+				$('#' + master).keyup(function(e){
+					
+					// for most common cases
+					if (func){
+						var newVal = func($(this).val());
+						$('#' + slave).val(newVal);
+					}
+					
+				});
+				
+				// setup ajax on blur to do server side processing if no javascript function exists
+				if (!func){
+					$('#' + master).blur(function(e){
+						var url = _this.modulePath + '/process_linked';
+						var parameters = {
+							master_field:master, 
+							master_value:$(this).val(), 
+							slave_field:slave
+						};
+						$.post(url, parameters, function(response){
+							$('#' + slave).val(response);
+						});
+					});
+				}
+				
+			}
+		}
+		
+		// needed for enclosure
+		var bindLinked = function(slave, master, func){
+			
+			if ($('#' + slave).val() == ''){
+				if (typeof(master) == 'string'){
+					bindLinkedKeyup(slave, master, url_title);
+				} else if (typeof(master) == 'object'){
+					
+					for (var o in master){
+						var func = false;
+						var funcName = master[o];
+						var val = $('#' + o).val();
+						if (funcName == 'url_title'){
+							var func = url_title;
+						// check for function scope, first check local function, then class, then global window object
+						} else if (funcName != 'url_title'){
+							if (this[funcName]){
+								var func = this[funcName];
+							} else if (window[funcName]){
+								var func = window[funcName];
+							}
+						}
+						bindLinkedKeyup(n, o, func);
+						break; // stop after first one
+					}
+				}
+			}
+		}
+		
+		if (this.initObj.linked_fields){
+			var linked = this.initObj.linked_fields;
+			for(var n in linked){
+				bindLinked(n, linked[n]);
+			}
+		}
+	
+	},
+	
+	_initViewPage : function(context){
+		var _this = this;
+		
+		var resizeViewPageModal = function(){
+			var half = Math.floor($('#viewpage_modal').width()/2);
+			$('#viewpage_modal').css('marginLeft', -half +'px');
+		}
+		if (!$('#viewpage_modal').size()){
+			$('body').append('<div id="viewpage_modal" class="jqmWindow"></div>');
+			$('#viewpage_modal').jqm({modal:false,toTop:true});
+		}
+		$('.view_action').click(function(){
+			$('#viewpage_modal').jqmShow();
+			var page = $(this).attr('href');
+			var iframe = '<a href="#" id="viewpage_close">' + _this.lang('viewpage_close') + '</a><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
+			$('#viewpage_modal').empty().append(iframe);
+			
+			$('#viewpage_close').click(function(){
+				$('#viewpage_modal').jqmHide();
+				return false;
+			});
+			resizeViewPageModal();
+			return false;
+		})
+		
+		$(window).resize(
+			function(e){
+				resizeViewPageModal();
+			}
+		);
+		
 	},
 	
 	editModule : function(url, callback){
@@ -671,17 +906,27 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			});
 			if ($(this).find('a').size() <= 0){
 				$(this).click(function(e){
-					var actions_col = $(this).parent().find('td.actions');
-					if (actions_col)
-					{
-						window.location = $('a:first', actions_col[0]).attr('href');
+					if (!_this.rearrangeOn){
+						var actions_col = $(this).parent().find('td.actions');
+						if (actions_col)
+						{
+							window.location = $('a:first', actions_col[0]).attr('href');
+						}
 					}
 					return false;
 
 				});
 			}
 		});
-
+		
+		// setup rearranging precedence
+		if ($('#precedence').val() != 1){
+			$('#rearrange').hide();
+		}
+		if (_this.rearrangeOn){
+			_this.rearrangeItems();
+		}
+		
 	},
 	
 	redrawTree : function(){
@@ -716,6 +961,34 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	deleteItem : function(){
 		//this._submit();
+	},
+	
+	rearrangeItems : function(){
+		var _this = this;
+		if ($('#precedence').val() == 1 && this.rearrangeOn){
+			$('#data_table').tableDnD({
+				serializeRegexp: /[^data_table_row]*$/,
+				onDrop:function(e){
+					if (_this.rearrangeOn){
+						$('#col').val(_this.initObj.precedence_col);
+						$('#order').val('asc');
+						var params = {
+							data: $('#data_table').tableDnDSerialize(),
+							url: _this.precedenceAjaxURL,
+							type: 'post',
+							success: function(html){
+								_this.redrawTable(true, false);
+							}
+						
+						}
+						$.ajax(params);
+					}
+				}
+			});
+			
+			$("#data_table").addClass('rearrange');
+			
+		}
 	},
 	
 	lang : function(key){

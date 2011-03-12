@@ -10,6 +10,7 @@ class Blog_posts_model extends Base_module_model {
 	public $hidden_fields = array('content_filtered');
 	public $filters = array('title', 'content_filtered', 'fuel_users.first_name', 'fuel_users.last_name');
 	public $unique_fields = array('permalink');
+	public $linked_fields = array('permalink' => array('title' => 'url_title'));
 
 	function __construct()
 	{
@@ -114,7 +115,7 @@ class Blog_posts_model extends Base_module_model {
 		//$fields['date_added']['type'] = 'hidden'; // so it will auto add
 		$fields['date_added']['type'] = 'datetime'; // so it will auto add
 		$fields['last_modified']['type'] = 'hidden'; // so it will auto add
-		
+		$fields['permalink']['order'] = 2; // for older versions where the schema order was different
 		return $fields;
 	}
 	

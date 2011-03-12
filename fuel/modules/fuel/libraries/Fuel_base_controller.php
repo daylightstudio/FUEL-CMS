@@ -4,14 +4,13 @@ define('FUEL_ADMIN', TRUE);
 class Fuel_base_controller extends CI_Controller {
 	
 	public $js_controller = 'BaseFuelController';
-	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
 	public $js_controller_params = array();
 	public $nav_selected;
 	
 	function __construct($validate = TRUE)
 	{
 		parent::__construct();
-		
+
 		// load all the helpers we need
 		$this->load->library('form');
 		$this->load->helper('convert');

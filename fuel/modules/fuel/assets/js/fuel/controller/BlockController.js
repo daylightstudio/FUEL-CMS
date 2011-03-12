@@ -41,6 +41,11 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 			return false;
 		});
 		
+	},
+	
+	upload : function(){
+		this._notifications();
+		this._initAddEditInline($('#form'));
+	}
 		
-	}	
 });

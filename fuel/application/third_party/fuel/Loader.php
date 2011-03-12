@@ -361,8 +361,15 @@ class Fuel_Loader extends MX_Loader
 
 				if ( ! file_exists($baseclass))
 				{
-					log_message('error', "Unable to load the requested class: ".$class);
-					show_error("Unable to load the requested class: ".$class);
+					//<!-- FUEL ... changed so that base classes can be loaded from application directory too
+					$baseclass = APPPATH.'libraries/'.ucfirst($class).EXT;
+					
+					if ( ! file_exists($baseclass))
+					{
+						log_message('error', "Unable to load the requested class: ".$class);
+						show_error("Unable to load the requested class: ".$class);
+					}
+					// FUEL -->
 				}
 
 				// Safety:  Was the class already loaded by a previous call?
@@ -384,7 +391,7 @@ class Fuel_Loader extends MX_Loader
 					log_message('debug', $class." class already loaded. Second attempt ignored.");
 					return;
 				}
-
+				
 				include_once($baseclass);
 				include_once($subclass);
 				$this->_ci_loaded_files[] = $subclass;

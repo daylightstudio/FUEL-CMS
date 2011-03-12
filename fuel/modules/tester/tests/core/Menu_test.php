@@ -150,6 +150,88 @@ EOD;
 
 		}
 
+		function test_array()
+		{
+			/*******************************************
+			basic test
+			********************************************/ 
+			$this->CI->menu->reset();
+			$active = NULL;
+			$menu = $this->CI->menu->render($this->nav, $active, NULL, 'array');
+			$test =  $menu;
+			$array = array (
+			  'about' => 
+			  array (
+			    'id' => 'about',
+			    'label' => 'About',
+			    'location' => 'about',
+			    'attributes' => 
+			    array (
+			    ),
+			    'active' => NULL,
+			    'parent_id' => NULL,
+			    'hidden' => false,
+			    'children' => 
+			    array (
+			      'about/history' => 
+			      array (
+			        'id' => 'about/history',
+			        'label' => 'History',
+			        'location' => 'about/history',
+			        'attributes' => 
+			        array (
+			        ),
+			        'active' => NULL,
+			        'parent_id' => 'about',
+			        'hidden' => false,
+			      ),
+			      'about/contact' => 
+			      array (
+			        'id' => 'about/contact',
+			        'label' => 'Contact',
+			        'location' => 'about/contact',
+			        'attributes' => 
+			        array (
+			        ),
+			        'active' => NULL,
+			        'parent_id' => 'about',
+			        'hidden' => false,
+			      ),
+			    ),
+			  ),
+			  'products' => 
+			  array (
+			    'id' => 'products',
+			    'label' => 'Products',
+			    'location' => 'products',
+			    'attributes' => 
+			    array (
+			    ),
+			    'active' => NULL,
+			    'parent_id' => NULL,
+			    'hidden' => false,
+			    'children' => 
+			    array (
+			      'products/X3000' => 
+			      array (
+			        'id' => 'products/X3000',
+			        'label' => 'X3000',
+			        'location' => 'products/X3000',
+			        'attributes' => 
+			        array (
+			        ),
+			        'active' => NULL,
+			        'parent_id' => 'products',
+			        'hidden' => false,
+			      ),
+			    ),
+			  ),
+			);
+			$expected = $array;
+			$this->run($test, $expected, 'Menu array test');
+
+		}
+
 		function test_hidden_items()
 		{
 			$this->nav['about'] = 'About';

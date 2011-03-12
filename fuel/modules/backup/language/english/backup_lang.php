@@ -19,3 +19,4 @@ $lang['data_backup_not_writable'] = '(not writable)';
 $lang['data_backup_include_assets'] = 'Include the assets folder?';
 $lang['data_backup_no_backup'] = 'No, don\'t back it up';
 $lang['data_backup_yes_backup'] = 'Yes,  back it up';
+

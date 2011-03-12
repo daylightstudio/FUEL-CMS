@@ -6,9 +6,10 @@ jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
 
 jqx_config.assetsImgPath = "<?=img_path('')?>";
 jqx_config.assetsPath = "<?=assets_path('')?>";
+jqx_config.assetsCssPath = "<?=css_path('')?>";
 
 jqx_config.jqxPath = jqx_config.jsPath + "jqx/";
-jqx_config.controllerPath = <?=$this->js_controller_path?>;
+jqx_config.controllerPath = jqx_config.jsPath + "fuel/controller/";
 jqx_config.pluginPath = jqx_config.jsPath + "jquery/";
 jqx_config.helpersPath = jqx_config.jqxPath + 'helpers/';
 jqx_config.pluginPath = jqx_config.jsPath + 'jquery/plugins/';
@@ -21,4 +22,7 @@ jqx_config.assetsAccept = '<?php $editable_asset_types = $this->config->item('ed
 <?php if (!empty($js_localized)) :?>
 jqx_config.localized = <?=json_lang($js_localized)?>;
 <?php endif; ?>
+jqx_config.editor = '<?=$this->config->item('text_editor', 'fuel')?>';
+jqx_config.ckeditorConfig = <?=json_encode($this->config->item('ck_editor_settings', 'fuel'))?>;
+
 var __FUEL_PATH__ = '<?=site_url($this->config->item('fuel_path', 'fuel'))?>'; // for preview in markitup settings

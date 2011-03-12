@@ -40,8 +40,9 @@
 			<li class="end"><a href="<?=fuel_url($create_url)?>" class="ico ico_create" id="create_item"><?=$this->create_action_name?></a></li>
 			<?php endif; ?>
 			<?php if ($this->fuel_auth->module_has_action('delete') && $this->fuel_auth->has_permission($this->permission, 'delete')) : ?>
-				<li class="spacer end"><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
+			<li class="spacer end"><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
 			<?php endif; ?>
+			<li class="spacer end"><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
 		<?php endif; ?>
 		<?php if (!empty($this->list_actions)) : ?>
 			<?php 

@@ -6,6 +6,7 @@ class Blog_categories_model extends Base_module_model {
 	public $required = array('name');
 	public $record_class = 'Blog_category';
 	public $unique_fields = array('permalink', 'name');
+	public $linked_fields = array('permalink' => array('name' => 'url_title'));
 	
 	function __construct()
 	{

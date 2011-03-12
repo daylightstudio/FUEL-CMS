@@ -88,6 +88,7 @@ class Fuel_modules {
 			'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
 			'list_actions' => array(),
 			'rows_selectable' => TRUE,
+			'precedence_col' => 'precedence',
 			'clear_cache_on_save' => TRUE,
 			'create_action_name' => lang('btn_create'),
 			'configuration' => '',

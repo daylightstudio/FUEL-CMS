@@ -99,8 +99,8 @@
 .markItUpEditor {
 	font:11px 'Courier New', Courier, monospace;
 	padding-left:5px;
-	width:550px;
-	height:200px;
+	width:520px;
+	height:230px;
 	clear:both; display:block;
 	line-height:18px;
 	overflow:auto;
@@ -109,8 +109,8 @@
 .markItUpPreviewFrame	{
 	overflow:auto;
 	background-color:#FFFFFF;
-	width:555px;
-	height:250px;
+	width:525px;
+	height:280px;
 	margin:5px 0;
 	border: 1px solid #ccc;
 }
@@ -120,7 +120,7 @@
 .markItUpResizeHandle {
 	overflow:hidden;
 	width:22px; height:5px;
-	margin: 0 auto 20px auto !important;
+	margin: 0 auto 0px auto !important;
 	background-image:url(../images/markitup/handle.png);
 	cursor:n-resize;
 }

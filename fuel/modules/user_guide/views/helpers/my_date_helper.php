@@ -29,17 +29,17 @@ is_date_format('2010-01-01');
 </pre>
 
 
-<h2>is_db_format('<var>date</var>')</h2>
+<h2>is_date_db_format('<var>date</var>')</h2>
 <p>Returns a boolean value as to whether the date is in a valid database (yyyy-mm-dd) format.</p>
 <pre class="brush: php">
 is_date_format('2010-01-01');
 // returns TRUE
 </pre>
 
-<h2>is_english_format('<var>date</var>')</h2>
+<h2>is_date_english_format('<var>date</var>')</h2>
 <p>Returns a boolean value as to whether the date is in a valid 'english' (mm/dd/yyy) format.</p>
 <pre class="brush: php">
-is_english_format('01/01/2010');
+is_date_english_format('01/01/2010');
 // returns TRUE
 </pre>
 
@@ -71,12 +71,12 @@ time_verbose(time(), TRUE);
 //returns <?=time_verbose(time(), TRUE)?>
 </pre>
 
-<h2>english_to_db_format(<var>date</var>, <var>[hour]</var>, <var>[min]</var>, <var>[sec]</var>, <var>[ampm]</var>, <var>[delimiter]</var>)</h2>
+<h2>english_date_to_db_format(<var>date</var>, <var>[hour]</var>, <var>[min]</var>, <var>[sec]</var>, <var>[ampm]</var>, <var>[delimiter]</var>)</h2>
 <p>Converts a date from english (e.g. mm/dd/yyyy) to db format (e.g yyyy-mm-dd). The default delimiter parameter is <strong>'/'</strong>.</p>
 
 <pre class="brush: php">
-english_to_db_format('01/01/2010', 12, 10, 0);
-// returns <?=english_to_db_format('01/01/2010', 12, 10, 0)?>
+english_date_to_db_format('01/01/2010', 12, 10, 0);
+// returns <?=english_date_to_db_format('01/01/2010', 12, 10, 0)?>
 </pre>
 
 

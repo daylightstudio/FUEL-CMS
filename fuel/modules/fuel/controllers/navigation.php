@@ -134,7 +134,7 @@ class Navigation extends Module {
 				
 				if ($error)
 				{
-					add_error(lang('error_nav_upload'));
+					add_error(lang('error_upload'));
 				}
 				else
 				{
@@ -149,7 +149,7 @@ class Navigation extends Module {
 			}
 			else
 			{
-				add_error(lang('error_nav_upload'));
+				add_error(lang('error_upload'));
 			}
 		}
 		
@@ -163,8 +163,9 @@ class Navigation extends Module {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->_render('navigation_upload', $vars);
+		$this->_render('upload', $vars);
 	}
 	
 	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
