@@ -10,7 +10,7 @@ $config['site_name'] = 'My Website';
 // options are cms, views, auto... cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder.
 // The auto option will first check the database for a page and if it doesn't exist or is not published, it will then check for a corresponding view file.
-$config['fuel_mode'] = 'views';
+$config['fuel_mode'] = 'auto';
 
 // used for system emails. Needs to be overwritten by MY_fuel.php
 $config['domain'] = '';
@@ -30,7 +30,7 @@ $config['modules_allowed'] = array(
 	);
 
 // default password to alert against
-$config['admin_enabled'] = FALSE;
+$config['admin_enabled'] = TRUE;
 
 // will auto search view files. 
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
@@ -53,7 +53,7 @@ $config['assets_excluded_dirs'] = array(
 	);
 
 // text editor settings... options are markitup or ckeditor
-$config['text_editor'] = 'markitup';
+$config['text_editor'] = 'ckeditor';
 
 // ck editor specific settings
 $config['ck_editor_settings'] = array(

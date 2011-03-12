@@ -4,7 +4,6 @@ define('FUEL_ADMIN', TRUE);
 class Fuel_base_controller extends CI_Controller {
 	
 	public $js_controller = 'BaseFuelController';
-	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
 	public $js_controller_params = array();
 	public $nav_selected;
 	

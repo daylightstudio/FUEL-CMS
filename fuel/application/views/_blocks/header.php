@@ -26,33 +26,13 @@
 	
 </head>
 
-
-<body class="<?php echo fuel_var('body_class', 'Body Class');?>">
+<body class="<?php echo fuel_var('body_class', '');?>">
 <div id="container">
-	<div id="container_inner">
-		<div id="header">
-			<div id="topnav">
-				<ul>
-					<li><a href="http://www.thedaylightstudio.com">About Daylight</a></li>
-					<li class="last"><?php echo mailto('info@thedaylightstudio.com', 'Contact');?></li>
-				</ul>
-			</div>
-			<a href="http://www.thedaylightstudio.com" id="daylight_logo"></a>
-		
-	
-			<a href="<?php echo site_url()?>" id="fuel_logo">FUEL CMS</a>
 
-			<div id="fuel_intro">
-				<h1 id="fuel_cms">FUEL CMS</h1>
-				<div id="fuel_tagline"></div>
-				<div id="fuel_text">
-					<p class="intro"><strong>An easy, flexible, empowering Content Management System for rapid development</strong>
-						that transforms your CodeIgniter projects into client manageable brilliance. 
-					</p>
-				</div>
-			</div>
+	<div id="header">
+		<a href="<?php echo site_url(); ?>" id="logo">WigiCorp</a>
+
+		<?php echo fuel_nav(array('container_tag_id' => 'topmenu', 'item_id_prefix' => 'topmenu_')); ?>
 		
-		
-		</div>
-	
-		<div id="main">
+	</div>
+	<div id="main">

@@ -8,12 +8,12 @@ RESET BROWSER VALUES SO EVERYONE IS THE SAME
 /***************************************************************
 TAG STYLES
 ***************************************************************/
-body { background: #dc4812; font-family: Arial, 'Lucida Grande', sans-serif; color: #fff; }
-h1 { font-size: 30px; }
-h2 { font-size: 24px; color: #fff; margin-bottom: 15px; }
-h3 { font-size: 16px; color: #ea5b17; margin-bottom: 5px; font-weight: normal; }
+body { background: #444; font-family: Arial, 'Lucida Grande', sans-serif; color: #333; font-size: 12px; }
+h1 { font-size: 30px; margin-bottom: 15px;  }
+h2 { font-size: 20px; color: #666; margin-bottom: 5px; }
+h3 { font-size: 16px; color: #f30; margin-bottom: 5px; font-weight: normal; }
 h4 { font-size: 12px; margin-bottom: 5px; }
-a { color: #dc461c; }
+a { color: #f63; }
 p { margin-bottom: 15px; line-height: 16px; }
 blockquote { font-style: italic; margin-bottom: 20px; }
 cite { display: block; font-size: 12px; color: #e95c18; margin-top: 10px; } 
@@ -27,56 +27,70 @@ textarea { font-family: Arial, 'Lucida Grande', sans-serif; color: #333; font-si
 /***************************************************************
 GENERIC CLASSES 
 ***************************************************************/
-.left { float: left; }
-.right { float: right; }
 .block { margin-bottom: 30px; }
 a.readmore { display: block; }
 table.form td { padding: 3px 5px 3px 0; }
 
 
 /***************************************************************
-SPECIFIC AREAS
+MAIN AREAS
 ***************************************************************/
+div#container { width: 960px; margin: auto; background-color: #fff;  border-bottom: 1px solid #666; border-left: 1px solid #666;  border-right: 1px solid #666;}
+div#header { position: relative; height: 100px; }
+a#logo { background: transparent url(../images/wigicorp_logo.png) no-repeat; display: block; position: absolute; top: 20px; left: 20px; width: 180px; height: 70px; text-indent: -1000px; overflow: hidden; }
+div#main { padding: 20px;  }
+div#main_inner {  width: 640px; }
 
-div#container { background: #000 url(../images/bg_waves.jpg) no-repeat top center;  }
-div#container_inner { position: relative; width: 960px; margin: auto; }
-div#header { width: 840px; height: 370px; margin: auto; position: relative; }
+ul#topmenu { position: absolute; right: 20px; top: 20px; border-left: 1px solid #ccc; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+ul#topmenu li { display: block; float: left; position: relative; }
+ul#topmenu li a { background-color: #f3f3f3; display: block; font-size: 14px; text-align: center; padding: 10px 20px; border-right: 1px solid #ccc; text-decoration: none;}
+ul#topmenu li a:hover { background-color: #f6f6f6; color: #db5629; }
+ul#topmenu li ul { display: none; margin: 0; position: absolute; left: -1px; font-size: 12px; border-left: 1px solid #ccc; border-top: 1px solid #ccc; }
+ul#topmenu li:hover ul { display: block; }
+ul#topmenu li ul li { border-bottom: 1px solid #ccc;}
+ul#topmenu li ul li a { text-align: left; padding: 3px 20px; width: 100px; font-size: 12px;  }
+ul#topmenu li.active a { background-color: #fcfcfc; }
 
-/* top nav*/
-div#topnav { position: absolute; top: 10px; right: 0px; z-index: 10; }
-div#topnav, div#topnav a { color: #5a7995; font-size: 12px; }
-div#topnav li { float: left; display: block;  border-right: 1px solid #5a6e7f; }
-div#topnav li a { display: block; margin: 0 10px; line-height: 12px; text-decoration: none; }
-div#topnav li.last { border: none; }
+div#right { background-color: #fcfcfc; float: right; width: 210px; border: 1px solid #ccc; padding: 20px; margin-left: 20px; }
 
-/* logo */
-a#daylight_logo { position: absolute; top: 20px; left: 0px; background: transparent url(../images/logo_daylight.png) no-repeat center center; width: 166px; height: 30px; display: block; }
-a#fuel_logo { display: block; text-indent: -10000px; overflow: hidden; position: absolute; top: 60px; left: 0px; background: transparent url(../images/logo_fuel.png) no-repeat center center; height: 340px; width: 340px; }
+ul#sidemenu { margin: 0 0 30px 0; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-right: 1px solid #ccc; }
+ul#sidemenu li { display: block; list-style: none; border-bottom: 1px solid #ccc; }
+ul#sidemenu li a { color: #666; background-color: #fdfdfd; display: block; padding: 5px 10px; text-decoration: none; }
+ul#sidemenu li a:hover { background-color: #fff; }
+ul#sidemenu li.active a { color: #f63; background-color: #fff; text-decoration: underline; }
 
-div#fuel_intro { padding-top: 120px; margin-left: 360px; position: relative; }
-div#fuel_intro h1#fuel_cms { background: transparent url(../images/fuel_cms.png) no-repeat center center; width: 247px; height: 53px; text-indent: -10000px; overflow: hidden; margin-bottom: 10px;}
-div#fuel_intro div#fuel_tagline {  background: transparent url(../images/hdr_tagline.png) no-repeat center center; width: 338px; height: 46px; margin-bottom: 5px; }
-div#fuel_intro div#fuel_text { font-size: 13px; margin-left: 30px; position: relative; }
-div#fuel_intro div#fuel_text p { margin-bottom: 10px; } 
+div#blocks { }
+div#footer { padding: 10px 25px; font-size: 10px; }
 
-div#main { width: 724px; margin: auto; padding: 40px 30px 30px 30px; }
-div#main h3 { color: #f93; font-weight: bold; font-size: 14px; margin-bottom: 0px; }
-div#main li { background-repeat: no-repeat; padding-left: 44px; }
 
-div#main_inner { width: 400px; float: right; }
+/***************************************************************
+HOME
+***************************************************************/
+div#bigpic { }
+div#home_cols { padding-top: 20px; }
+div#home_news { width: 460px; float: left; }
+div#home_about { width: 440px; float: left; padding-20px; }
 
-div#features { padding-top: 120px; }
-div#for_clients { width: 342px; float: left; padding-right: 20px; }
-div#for_developers { width: 342px; float: left;  padding-left: 20px;}
 
-/* footer */
-div#footer { color: #fff;  background: transparent url(../images/footer_bg.jpg) repeat-x; height: 117px; }
-div#footer p, div#footer li, div#footer address { font-size: 11px; }
-div#footer p, div#footer address { line-height: 11px; }
-div#footer h4 { margin-bottom: 5px; }
-div#footer a { color: #fff; }
-div#footer_top { padding: 20px 50px 20px 50px; background: #ef9742 url(../images/footer_bg.jpg) repeat-x; height: 110px; }
-div#footer_top div#footer_follow {  width: 120px; }
-div#footer_bot { padding: 10px 50px; background-color: #dc481d; height: 30px; }
-div#request_demo_container { position: absolute; right: 85px; top: 30px; }
-div#copyright { color: #f4ca95; text-align: center; width: 500px; margin: auto;}
+/***************************************************************
+WHAT THEY SAY
+***************************************************************/
+div#quotes blockquote { background-color: #fafafa; border: 1px solid #eee; padding: 10px; }
+
+
+/***************************************************************
+TEAM
+***************************************************************/
+div.member img { float: left; margin: 0 20px 20px 0; }
+div.member div.member_bio { margin-left: 120px; }
+
+
+/***************************************************************
+SHOWCASE
+***************************************************************/
+div.project { margin-bottom: 30px; float: left; width: 320px; }
+div.project img, div.project_detail img { float: left; margin-bottom: 20px; }
+div.project_info {  width: 400px; }
+div.project_info ul { margin-bottom: 10px; }
+div.project div.project_info { margin-left: 120px; }
+div.project_detail div.project_info { margin-left: 230px; }

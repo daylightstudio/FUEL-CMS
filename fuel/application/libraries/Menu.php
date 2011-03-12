@@ -437,12 +437,8 @@ class Menu {
 		
 		if (!$this->include_hidden)
 		{
-<<<<<<< HEAD
-			foreach($menu as $key => $val){
-=======
 			foreach($menu as $key => $val)
 			{
->>>>>>> 0.9.3
 				if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
 				{
 					$filtered_menu[$key] = $val;
@@ -729,8 +725,6 @@ class Menu {
 		}
 		
 		return $return;
-<<<<<<< HEAD
-=======
 	}
 	
 	// --------------------------------------------------------------------
@@ -761,7 +755,6 @@ class Menu {
 			}
 		}
 		return $return;
->>>>>>> 0.9.3
 	}
 	
 	// --------------------------------------------------------------------
@@ -997,10 +990,7 @@ class Menu {
 		if (isset($this->_items[$active]))
 		{
 			$active_parent = $this->_items[$active]['parent_id'];
-<<<<<<< HEAD
-=======
 
->>>>>>> 0.9.3
 			// to normalize so we can do a strict comparison
 			if (ctype_digit($active_parent))
 			{

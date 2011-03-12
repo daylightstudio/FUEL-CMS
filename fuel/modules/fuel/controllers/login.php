@@ -1,8 +1,6 @@
 <?php
 class Login extends CI_Controller {
 
-	public $js_controller_path = 'jqx_config.jsPath + "fuel/controller/"';
-	
 	function __construct()
 	{
 		parent::__construct();

@@ -78,7 +78,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td><strong>display_field</strong></td>
 			<td>The default is the field <dfn>name</dfn>. If you do not have a field of <dfn>name</dfn>, you must specify a new field</td>
 			<td>None</td>
-			<td>The model field to be used for display purposes.</td>
+			<td>The model field to be used for display purposes</td>
 		</tr>
 		<tr>
 			<td><strong>js_controller</strong></td>

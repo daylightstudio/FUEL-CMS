@@ -207,10 +207,6 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 	{
 		$hour = 0;
 	}
-<<<<<<< HEAD
-=======
-	
->>>>>>> 0.9.3
 	$date_arr = explode($delimiter, $date);
 	foreach($date_arr as $key => $val)
 	{
