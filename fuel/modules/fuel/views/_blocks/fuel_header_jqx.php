@@ -9,7 +9,7 @@ jqx_config.assetsPath = "<?=assets_path('')?>";
 jqx_config.assetsCssPath = "<?=css_path('')?>";
 
 jqx_config.jqxPath = jqx_config.jsPath + "jqx/";
-jqx_config.controllerPath = 'jqx_config.jsPath + "fuel/controller/"';
+jqx_config.controllerPath = jqx_config.jsPath + "fuel/controller/";
 jqx_config.pluginPath = jqx_config.jsPath + "jquery/";
 jqx_config.helpersPath = jqx_config.jqxPath + 'helpers/';
 jqx_config.pluginPath = jqx_config.jsPath + 'jquery/plugins/';

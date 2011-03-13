@@ -298,7 +298,13 @@ if (fuel == undefined) var fuel = {};
 									$(elem).markItUp(myMarkItUpSettings);
 								}
 								
-								
+								// fix ">" within template syntax
+								var fixCKEditorOutput = function(elem){
+									var elemVal = $(elem).val();
+									var re = new RegExp('([=|-])&gt;', 'g');
+									var newVal = elemVal.replace(re, '$1>');
+									$(elem).val(newVal);
+								}
 								
 								var createCKEditor = function(elem){
 									var ckId = $(elem).attr('id');
@@ -311,8 +317,9 @@ if (fuel == undefined) var fuel = {};
 
 									// add this so that we can set that the page has changed
 									CKEDITOR.instances[ckId].on('instanceReady', function(){
-										this.document.on('keyup', function(){
-											CKEDITOR.instances[ckId].updateElement();
+										editor = e.editor;
+										this.document.on('keyup', function(e){
+											editor.updateElement();
 										});
 
 										// so the formatting doesn't get too crazy from ckeditor
@@ -327,6 +334,9 @@ if (fuel == undefined) var fuel = {};
 									})
 									CKEDITOR.instances[ckId].resetDirty();
 
+									// needed so it doesn't update the content before submission which we need to clean up... 
+									// our keyup event took care of the update
+									CKEDITOR.config.autoUpdateElement = false;
 
 									CKEDITOR.instances[ckId].hidden = false; // for toggline
 
@@ -362,6 +372,9 @@ if (fuel == undefined) var fuel = {};
 
 											ckInstance.setData($elem.val());
 										}
+										
+										fixCKEditorOutput(elem);
+										
 										return false;
 									})
 

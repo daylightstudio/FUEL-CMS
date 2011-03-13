@@ -171,7 +171,7 @@ $lang['page_layout_vars'] = 'Layout Variables';
 $lang['pages_instructions'] = 'Here you can manage the data associated with the page.';
 $lang['pages_associated_navigation'] = 'Associated Navigation';
 $lang['pages_success_upload'] = 'The page view was successfully uploaded.';
-$lang['pages_import_instructions'] = 'Select a view file and upload as a page below.';
+$lang['pages_upload_instructions'] = 'Select a view file and upload to a page below.';
 
 
 // page specific form fields
@@ -189,7 +189,7 @@ $lang['pages_default_location'] = 'example: company/about';
 */
 $lang['blocks_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to import?';
 $lang['blocks_success_upload'] = 'The block view was successfully uploaded.';
-$lang['blocks_import_instructions'] = 'Select a block view file and upload as a block below.';
+$lang['blocks_upload_instructions'] = 'Select a block view file and upload it below.';
 
 $lang['form_label_view'] = 'View';
 
