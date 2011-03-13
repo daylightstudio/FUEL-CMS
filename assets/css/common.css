@@ -1,0 +1,15 @@
+/***************************************************************
+GENERIC CLASSES 
+***************************************************************/
+.clear { clear: both; height: 0; line-height: 0; font-size: 0; }
+.hidden { display: none; }
+.float_left { float: left; }
+.float_right { float: right; }
+.txt_hidden { text-indent: -1000px; overflow: hidden; }
+
+/* for form */
+div.error, li.error, ul.error { background-color: #c30; color: #fff; padding: 2px 5px; }
+span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
+
+/* for ckeditor */
+.ckeditor { background-color: #fff; padding: 5px; color: #000; font-size: 12px; }

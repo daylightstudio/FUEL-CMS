@@ -696,7 +696,7 @@ class Pages extends Module {
 		$this->form_builder->set_field_values($_POST);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
-		$vars['instructions'] = lang('pages_import_instructions');
+		$vars['instructions'] = lang('pages_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
 		$this->_render('upload', $vars);
 	}

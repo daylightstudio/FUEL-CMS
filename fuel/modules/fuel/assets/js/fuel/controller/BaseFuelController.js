@@ -571,6 +571,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	_initEditors : function(context){
 		var _this = this;
+		var selector = 'textarea:not(textarea[class=no_editor])';
+		$editors = $ckEditor = $(selector, context);
+		
 		var createMarkItUp = function(elem){
 			var q = 'module=' + escape(_this.module) + '&field=' + escape($(elem).attr('name'));
 			var markitUpClass = $(elem).attr('className');
@@ -584,7 +587,16 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$(elem).markItUp(myMarkItUpSettings);
 		}
 		
+		// fix ">" within template syntax
+		var fixCKEditorOutput = function(elem){
+			var elemVal = $(elem).val();
+			var re = new RegExp('([=|-])&gt;', 'g');
+			var newVal = elemVal.replace(re, '$1>');
+			$(elem).val(newVal);
+		}
+		
 		var createCKEditor = function(elem){
+
 			var ckId = $(elem).attr('id');
 			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + _this.lang('btn_view_source') + '</a>';
 			// cleanup
@@ -594,9 +606,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
 			
 			// add this so that we can set that the page has changed
-			CKEDITOR.instances[ckId].on('instanceReady', function(){
-				this.document.on('keyup', function(){
-					CKEDITOR.instances[ckId].updateElement();
+			CKEDITOR.instances[ckId].on('instanceReady', function(e){
+				editor = e.editor;
+				this.document.on('keyup', function(e){
+					editor.updateElement();
 				});
 				
 				// so the formatting doesn't get too crazy from ckeditor
@@ -611,6 +624,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			})
 			CKEDITOR.instances[ckId].resetDirty();
 			
+			// needed so it doesn't update the content before submission which we need to clean up... 
+			// our keyup event took care of the update
+			CKEDITOR.config.autoUpdateElement = false;
 			
 			CKEDITOR.instances[ckId].hidden = false; // for toggline
 			
@@ -640,6 +656,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					// update the info
 					ckInstance.updateElement();
 					
+					
 				} else {
 					CKEDITOR.instances[ckId].hidden = false;
 					
@@ -651,14 +668,15 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					
 					ckInstance.setData($elem.val());
 				}
+				
+				fixCKEditorOutput(elem);
+				
 				return false;
 			})
 
 			
 		}
 		
-		
-		$editors = $ckEditor = $('textarea:not(textarea[class=no_editor])', context);
 		$editors.each(function(i) {
 			if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
 				createCKEditor(this);
@@ -666,6 +684,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				createMarkItUp(this);
 			}
 		});
+		
 	},
 	
 	_initLinkedFields : function(context){

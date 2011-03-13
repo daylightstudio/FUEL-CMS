@@ -176,6 +176,7 @@ jqx.include = function(){
 jqx.includeObject = function(){
 	var a = arguments;
 	if (a[0].constructor == Array) a = a[0];
+	
 	jQuery.each(a, function(i, n){
 		var path = jqx.config.jsPath + n.split(".").join("/") + ".js";
 		if (jqx._includeCache.isCached(path)) return;
