@@ -391,41 +391,6 @@ if (fuel == undefined) var fuel = {};
 									}
 								});
 								
-								// if (editor.toLowerCase() == 'ckeditor'){
-								// 
-								// 								$ckEditor = $('textarea:not(textarea[class=no_editor])', context);
-								// 
-								// 								$ckEditor.each( function() {
-								// 									var ckId = $(this).attr('id');
-								// 									// cleanup
-								// 									if (CKEDITOR.instances[ckId]) {
-								// 										CKEDITOR.remove(CKEDITOR.instances[ckId]);
-								// 									}
-								// 									CKEDITOR.replace(ckId, editorConfig);
-								// 								});
-								// 
-								// 							} else {
-								// 
-								// 								// set up markitup
-								// 								$markitupField = $('textarea:not(textarea[class=no_editor])', context);
-								// 								if ($markitupField.size()){
-								// 
-								// 									var id = $this.attr('id').replace(/__fuel_edit__/, '');
-								// 									var module = $('#__fuel_marker__' + id).attr('data-module');
-								// 									var q = 'module=' + escape(module) + '&field=' + escape($markitupField.attr('name'));
-								// 									var markitUpClass = $markitupField.attr('className');
-								// 									if (markitUpClass.length){
-								// 										var previewPath = markitUpClass.split(' ');
-								// 										if (previewPath.length && previewPath[0] != 'no_editor'){
-								// 											q += '&preview=' + previewPath[previewPath.length - 1];
-								// 										}
-								// 									}
-								// 									myMarkItUpSettings.previewParserPath = myMarkItUpSettings.previewParserPath + '?' + q;
-								// 									$markitupField.markItUp(myMarkItUpSettings);
-								// 								}
-								// 
-								// 							}
-								
 								
 								/*****************************************************************
 								 linked fields
