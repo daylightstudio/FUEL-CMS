@@ -5,6 +5,7 @@ class Archives_model extends MY_Model {
 	function __construct()
 	{
 		$CI =& get_instance();
+		$CI->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
 		$tables = $CI->config->item('tables', 'fuel');
 		parent::__construct($tables['archives']);
 	}
