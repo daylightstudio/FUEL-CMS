@@ -86,6 +86,7 @@ class Manage extends Fuel_base_controller {
 		$defaults['offset'] = 0;
 		$defaults['limit'] = 25;
 		$defaults['search_term'] = '';
+		$defaults['precedence'] = NULL;
 		$uri_params = uri_safe_batch_decode(fuel_uri_segment(4), '|', TRUE);
 		$uri_params = array();
 		if (fuel_uri_segment(4)) $uri_params['offset'] = (int) fuel_uri_segment(4);
