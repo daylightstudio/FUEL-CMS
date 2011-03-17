@@ -398,5 +398,39 @@ function get_age($bday_ts, $at_time_ts = NULL)
 	return $diff_year; 
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * Standard Date.. OVERWRITE CI version due to bugs
+ *
+ * Returns a date formatted according to the submitted standard.
+ *
+ * @access	public
+ * @param	string	the chosen format
+ * @param	integer	Unix timestamp
+ * @return	string
+ */
+function standard_date($fmt = 'DATE_RFC822', $time = '')
+{
+	$formats = array(
+					'DATE_ATOM'		=>	'%Y-%m-%dT%H:%i:%s%P',
+					'DATE_COOKIE'	=>	'%l, %d-%M-%y %H:%i:%s UTC',
+					'DATE_ISO8601'	=>	'%Y-%m-%dT%H:%i:%s%P',
+					'DATE_RFC822'	=>	'%D, %d %M %y %H:%i:%s %O',
+					'DATE_RFC850'	=>	'%l, %d-%M-%y %H:%m:%i UTC',
+					'DATE_RFC1036'	=>	'%D, %d %M %y %H:%i:%s %O',
+					'DATE_RFC1123'	=>	'%D, %d %M %Y %H:%i:%s %O',
+					'DATE_RSS'		=>	'%D, %d %M %Y %H:%i:%s %O',
+					'DATE_W3C'		=>	'%Y-%m-%dT%H:%i:%s%P'
+					);
+
+	if ( ! isset($formats[$fmt]))
+	{
+		return FALSE;
+	}
+
+	return mdate($formats[$fmt], $time);
+}
+
 /* End of file MY_date_helper.php */
 /* Location: ./application/helpers/MY_date_helper.php */

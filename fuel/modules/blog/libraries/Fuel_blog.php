@@ -111,16 +111,52 @@ class Fuel_blog {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the language of the blog specified in the settings
+	 * Returns the language abbreviation currently used in CodeIgniter
 	 *
 	 * @access	public
+	 * @param	boolean
 	 * @return	string
 	 */
-	function language()
+	function language($code = FALSE)
 	{
-		return $this->_CI->config->item('language');
+		$language = $this->_CI->config->item('language');
+		if ($code)
+		{
+			$this->_CI->config->module_load(BLOG_FOLDER, 'language_codes');
+			$codes = $this->_CI->config->item('lang_codes');
+			$flipped_codes = array_flip($codes);
+			if (isset($flipped_codes[$language]))
+			{
+				return $flipped_codes[$language];
+			}
+			return FALSE;
+		}
+		else
+		{
+			return $language;
+		}
 	}
-	
+
+	/**
+	 * Returns the domain to be used for the blog based on the FUEL configuration. 
+	 * If empty it will return whatever $_SERVER['SERVER_NAME']. Needed for Atom feeds
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	string
+	 */
+	function domain()
+	{
+		if ($this->_CI->config->item('domain', 'fuel'))
+		{
+			return $this->_CI->config->item('domain', 'fuel');
+		}
+		else
+		{
+			return $_SERVER['SERVER_NAME'];
+		}
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -168,7 +204,7 @@ class Fuel_blog {
 	 */
 	function feed_header()
 	{
-		header('Content-Type: application/xml; charset=ISO-8859-1');
+		header('Content-Type: application/xml; charset=UTF-8');
 	}
 	
 	// --------------------------------------------------------------------
