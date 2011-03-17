@@ -18,8 +18,12 @@ $this->load->module_library(BLOG_FOLDER, 'fuel_blog');
 <p>Returns the descripton of the blog specified in the settings.</p>
 
 
-<h2>$this->fuel_blog->language()</h2>
-<p>Returns the language of the blog specified in the settings.</p>
+<h2>$this->fuel_blog->language(<var>'[code]'</var>)</h2>
+<p>Returns the language code based on the language currently set in CodeIgniter config. If <dfn>code</dfn> is set to TRUE, then it will return the full language code.</p>
+
+
+<h2>$this->fuel_blog->domain()</h2>
+<p>Returns the domain to be used for the blog based on the FUEL configuration. If empty it will return whatever $_SERVER['SERVER_NAME']. Needed for Atom feeds.</p>
 
 
 <h2>$this->fuel_blog->url(<var>'uri'</var>)</h2>
