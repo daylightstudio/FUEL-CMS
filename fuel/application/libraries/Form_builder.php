@@ -1140,7 +1140,14 @@ Class Form_builder {
 			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
-		$this->form_attrs['enctype'] = 'multipart/form-data';
+		if (is_array($this->form_attrs))
+		{
+			$this->form_attrs['enctype'] = ' multipart/form-data';
+		}
+		else if (is_string($this->form_attrs) AND strpos($this->form_attrs, 'enctype') === FALSE)
+		{
+			$this->form_attrs .= ' enctype="multipart/form-data"';
+		}
 		
 		$file = $this->form->file($params['name'], $attrs);
 		if (isset($params['overwrite']))
