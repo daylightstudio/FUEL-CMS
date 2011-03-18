@@ -1345,7 +1345,7 @@ class MY_Model extends CI_Model {
 					$rule_val = (array) $val;
 					if (empty($rule[3]))
 					{
-						$rule[3] = array();
+						$rule[3] = (!empty($values[$key])) ? array($values[$key]) : array();
 					} 
 					else if (!is_array($rule[3])) 
 					{
