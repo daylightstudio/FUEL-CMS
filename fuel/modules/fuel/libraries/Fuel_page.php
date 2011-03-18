@@ -347,16 +347,18 @@ class Fuel_page {
 		else
 		{
 			$view = $page;
-		}
-		// do not display any views that have an underscore at the beginning of the view name, or is part of the path (e.g. about/_hidden/contact_email1.php)
-		$view_parts = explode('/', $view);
-		
-		foreach($view_parts as $view_part)
-		{
-			if (!strncmp($view_part, '_', 1))
+
+			// do not display any views that have an underscore at the beginning of the view name, or is part of the path (e.g. about/_hidden/contact_email1.php)
+			$view_parts = explode('/', $view);
+
+			foreach($view_parts as $view_part)
 			{
-				show_404();
+				if (!strncmp($view_part, '_', 1))
+				{
+					show_404();
+				}
 			}
+
 		}
 
 		$output = NULL;
