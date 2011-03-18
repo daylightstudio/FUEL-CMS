@@ -35,6 +35,13 @@ else
 include(APPPATH.'helpers/MY_language_helper.php');
 include(FUEL_PATH.'config/fuel.php');
 
+// used for CLI... must create $_SERVER['REQUEST_URI]
+if (defined('STDIN'))
+{
+	$args = array_slice($_SERVER['argv'], 1);
+	$_SERVER['REQUEST_URI'] = $args ? implode('/', $args) : '';
+}
+
 define('IN_FUEL_ADMIN', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
 define('FUEL_ROUTE', $config['fuel_path']);
 
