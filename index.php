@@ -1,5 +1,42 @@
 <?php
+/*
+ *---------------------------------------------------------------
+ * FUEL INSTALL DIRECTORY
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ *
+ */
 define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fuel/');
+
+
+/*
+ *---------------------------------------------------------------
+ * FUEL CLI (Command Line Interface)
+ *---------------------------------------------------------------
+ *
+ * You may need to alter these if you are using the CLI.  These $_SERVER variables
+ * are used for calculating the $config['base_url'] which is used in the site_url() function.
+ * So if your output requires the correct site_url() path, you will need to change these.
+ */
+
+if (defined('STDIN'))
+{
+	$_SERVER['SERVER_NAME'] = 'localhost';
+	$_SERVER['SERVER_PORT'] = 80;
+}
+
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

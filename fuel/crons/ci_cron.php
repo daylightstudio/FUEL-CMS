@@ -12,6 +12,7 @@
 | Created 08/19/2008
 | Version 1.2 (last updated 12/25/2008)
 |
+| Updated on 3/17/2011 By David McReynolds of Daylight Studio to fix CI 2.x issues
 |
 | PURPOSE
 | -------------------------------------------------------------
@@ -24,16 +25,7 @@
 | 2) Set the CRON_CI_INDEX constant to the location of your CodeIgniter index.php file
 | 3) Make this file executable (chmod a+x cron.php)
 | 4) You can then use this file to call any controller function:
-|    ./cron.php --run=/controller/method [--show-output] [--log-file=logfile] [--time-limit=N] [--server=http_server_name]
-|
-|
-| OPTIONS
-| -------------------------------------------------------------
-|   --run=/controller/method   Required   The controller and method you want to run.
-|   --show-output              Optional   Display CodeIgniter's output on the console (default: don't display)
-|   --log-file=logfile         Optional   Log the date/time this was run, along with CodeIgniter's output
-|   --time-limit=N             Optional   Stop running after N seconds (default=0, no time limit)
-|   --server=http_server_name  Optional   Set the $_SERVER['SERVER_NAME'] system variable (useful if your application needs to know what the server name is)
+|    ./cron.php controller/method
 |
 |
 | NOTE: Do not load any authentication or session libraries in controllers you want to run via cron. If you do, they probably won't run right.
@@ -46,61 +38,33 @@
 |
 */
 
-    define('CRON_CI_INDEX', '/var/www/httpdocs/index.php');   // Your CodeIgniter main index.php file
-	define('CRON_LOG', '/var/www/httpdocs/fuel/crons/cron.log'); // path to the cron log file... MUST BE WRITABLE!
-    define('CRON', TRUE);   // Test for this in your controllers if you only want them accessible via cron
-
-
+	define('CRON_CI_INDEX', '/var/www/httpdocs/index.php');   // Your CodeIgniter main index.php file
+	define('CRON_LOG', '/var/www/httpdocs/fuel/application/logs/cron.log'); // path to the cron log file... MUST BE WRITABLE!
+	define('CRON', TRUE);   // Test for this in your controllers if you only want them accessible via cron
+	define('CRON_FLUSH_BUFFERS', TRUE);
+	define('CRON_TIME_LIMIT', 0);
+	
+	/* 
+	You may need to set the following $_SERVER variables in your index.php bootstrap at the top where it specifies "FUEL CLI (Command Line Interface)"
 	$_SERVER['SERVER_NAME'] = 'localhost';
 	$_SERVER['SERVER_PORT'] = 80;
-
-# Parse the command line
+	*/
+	
+	# Parse the command line
     $script = array_shift($argv);
     $cmdline = implode(' ', $argv);
-    $usage = "Usage: ci_cron.php --run=/controller/method [--show-output][-S] [--log-file=logfile] [--time-limit=N] [--server=http_server_name]\n\n";
-    $required = array('--run' => FALSE);
-    foreach($argv as $arg)
-    {
-        list($param, $value) = explode('=', $arg);
-        switch($param)
-        {
-            case '--run':
-                // Simulate an HTTP request
-                $_SERVER['PATH_INFO'] = $value;
-                $_SERVER['REQUEST_URI'] = $value;
-                $required['--run'] = TRUE;
-                break;
+    $usage = "Usage: ci_cron.php URI_PATH\n\n";
 
-            case '-S':
-            case '--show-output':
-                define('CRON_FLUSH_BUFFERS', TRUE);
-                break;
-
-            case '--log-file':
-                if(is_writable($value)) define('CRON_LOG', $value);
-                else die("Logfile $value does not exist or is not writable!\n\n");
-                break;
-
-            case '--time-limit':
-                define('CRON_TIME_LIMIT', $value);
-                break;
-                
-            case '--server':
-                $_SERVER['SERVER_NAME'] = $value;
-                break;
-
-            default:
-                die($usage);
-        }
-    }
+	if (empty($argv))
+	{
+	    die($usage);
+	}
+	$_SERVER['PATH_INFO'] = $argv[0];
+	$_SERVER['REQUEST_URI'] = $argv[0];
+	
 
     if(!defined('CRON_LOG')) define('CRON_LOG', 'cron.log');
     if(!defined('CRON_TIME_LIMIT')) define('CRON_TIME_LIMIT', 0);
-
-    foreach($required as $arg => $present)
-    {
-        if(!$present) die($usage);
-    }
 
 
 
@@ -120,7 +84,6 @@
     } else {
         ob_end_clean();
     }
-
 
 # Log the results of this run
     error_log("### ".date('Y-m-d H:i:s')." cron.php $cmdline\n", 3, CRON_LOG);
