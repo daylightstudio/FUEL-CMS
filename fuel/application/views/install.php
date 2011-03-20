@@ -84,14 +84,14 @@
 				</li>
 				<li>Make the following folders writable:
 					<ul>
-						<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
-							<?=BASEPATH.'cache/'?>
+						<li class="<?=(is_really_writable(APPPATH.'cache/')) ? 'success' : 'error'; ?>">
+							<?=APPPATH.'cache/'?>
 						</li>
-						<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/')) ? 'success' : 'error'; ?>">
-							<?=BASEPATH.'cache/dwoo/'?>
+						<li class="<?=(is_really_writable(APPPATH.'cache/dwoo/')) ? 'success' : 'error'; ?>">
+							<?=APPPATH.'cache/dwoo/'?>
 						</li>
-						<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
-							<?=BASEPATH.'cache/dwoo/compiled'?>
+						<li class="<?=(is_really_writable(APPPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
+							<?=APPPATH.'cache/dwoo/compiled'?>
 						</li>
 						<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
 							<?=WEB_ROOT.'assets/images'?>
