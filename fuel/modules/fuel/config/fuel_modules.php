@@ -23,7 +23,7 @@ $config['modules']['pages'] = array(
 	'default_col' => 'location',
 	'default_order' => 'asc',
 	'js_controller' => 'PageController',
-	'js_controller_params' => array('import_view_key' => 'body'),
+	'js_controller_params' => array('import_view_key' => 'vars--body'),
 	'js_localized' => array('pages_default_location'),
 	'preview_path' => '{location}',
 	'views' => array(

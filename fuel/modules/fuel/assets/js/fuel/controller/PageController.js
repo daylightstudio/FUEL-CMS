@@ -79,7 +79,13 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					{
 						$(id).val(html);
 						$(id).addClass('change');
-						$('#main_content').scrollTo($(id), 800);
+						if (CKEDITOR.instances[_this.initObj.import_view_key]){
+							CKEDITOR.instances[_this.initObj.import_view_key].setData($(id).val());
+							var scrollTo = '#cke_' + _this.initObj.import_view_key;
+						} else {
+							var scrollTo = id;
+						}
+						$('#main_content').scrollTo($(scrollTo), 800);
 					}
 					$('#view_twin_notification').hide();
 				} else {

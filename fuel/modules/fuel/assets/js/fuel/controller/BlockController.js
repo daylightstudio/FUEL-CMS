@@ -31,6 +31,13 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 					{
 						$(id).val(html);
 						$(id).addClass('change');
+						if (CKEDITOR.instances['view']){
+							CKEDITOR.instances['view'].setData($('#view').val());
+							var scrollTo = '#cke_' + 'view';
+						} else {
+							var scrollTo = id;
+						}
+						$('#main_content').scrollTo($(scrollTo), 800);
 					}
 					$('#warning_window').hide();
 				} else {
