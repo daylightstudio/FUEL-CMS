@@ -127,6 +127,7 @@
 					<li><a href="<?=user_guide_url('helpers/ajax_helper')?>">Ajax helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/asset_helper')?>">Asset helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/browser_helper')?>">Browser helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/compatibility_helper')?>">Compatibility helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/convert_helper')?>">Convert helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/fuel_helper')?>">FUEL helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/format_helper')?>">Format helper</a></li>
@@ -144,7 +145,6 @@
 				<h3>Extended Helpers</h3>
 				<ul>
 					<li><a href="<?=user_guide_url('helpers/my_array_helper')?>">MY_array helper</a></li>
-					<li><a href="<?=user_guide_url('helpers/my_compatibility_helper')?>">MY_compatability helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_date_helper')?>">MY_date helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_directory_helper')?>">MY_directory helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/my_file_helper')?>">MY_file helper</a></li>
