@@ -322,8 +322,9 @@ class Fuel_base_controller extends CI_Controller {
 		}
 		$page_segs = array();
 		if (empty($segs)) $segs = array('dashboard');
-		foreach($segs as $seg)
+		foreach($segs as $key => $seg)
 		{
+			if ($key >= 2) break;
 			if (!is_numeric($seg))
 			{
 				if ($humanize) $seg =  humanize($seg);
