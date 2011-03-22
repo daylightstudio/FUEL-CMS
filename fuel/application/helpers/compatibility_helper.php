@@ -23,7 +23,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/my_compatibility_helper
+ * @link		http://www.getfuelcms.com/user_guide/helpers/compatibility_helper
  */
 
 
@@ -198,5 +198,5 @@ if(!function_exists('str_putcsv'))
 	}
 }
 
-/* End of file MY_compatibility_helper.php */
-/* Location: ./application/helpers/MY_compatibility_helper.php */
+/* End of file compatibility_helper.php */
+/* Location: ./application/helpers/compatibility_helper.php */
