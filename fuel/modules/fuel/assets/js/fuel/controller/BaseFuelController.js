@@ -452,7 +452,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					btnLabel = _this.lang('btn_image');
 					break;
 				case 'swf': case 'flash':
-					btnLabel = _this.lang('btn_flast');
+					btnLabel = _this.lang('btn_flash');
 					break;
 				default :
 					btnLabel = _this.lang('btn_asset');
