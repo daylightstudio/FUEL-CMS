@@ -192,7 +192,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 			
 		}
-		$_table_info_cache[$table] = $retval;
+		$this->_table_info_cache[$table] = $retval;
 		return $retval;
 	}
 	
