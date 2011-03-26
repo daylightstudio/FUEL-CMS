@@ -101,6 +101,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			$('#layout').change();
 		} else {
 			bindFields();
+			_this.initSpecialFields();
 		}
 		
 	},
