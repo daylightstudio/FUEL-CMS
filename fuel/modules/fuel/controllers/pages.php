@@ -348,7 +348,7 @@ class Pages extends Module {
 			{
 				$value = (!empty($vars[$key]) ) ? $vars[$key] : NULL;
 
-				if ($val['type'] == 'array')
+				if ($val['type'] == 'array' OR $val['type'] == 'multi')
 				{
 					$value = serialize($value);
 				}
@@ -362,7 +362,6 @@ class Pages extends Module {
 					$page_variables_archive[$key] = $this->pagevariables_model->cleaned_data();
 				}
 			}
-
 			// archive
 			$archive = $this->model->cleaned_data();
 			$archive['variables'] = $page_variables_archive;
