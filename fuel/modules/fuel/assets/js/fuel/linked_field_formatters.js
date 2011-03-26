@@ -8,11 +8,11 @@ function url_title(text) {
 }
 
 // // to match PHP strtolower function
-// function strtolower(text){
-// 	return text.toLowerCase();	
-// }
-// 
-// // to match PHP strtoupper function
-// function strtoupper(text){
-// 	return text.toUpperCase();
-// }
+function strtolower(text){
+	return text.toLowerCase();	
+}
+
+// to match PHP strtoupper function
+function strtoupper(text){
+	return text.toUpperCase();
+}
