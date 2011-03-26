@@ -839,6 +839,11 @@ Class Form_builder {
 	 */
 	public function create_label($params, $use_label = TRUE)
 	{
+		if (is_string($params))
+		{
+			$params = array('label' => $params);
+		}
+		
 		$params = $this->_normalize_value($params);
 		
 		$str = '';
@@ -1005,7 +1010,9 @@ Class Form_builder {
 				}
 				$str .= $this->form->radio($params['name'], $key, $attrs);
 				$name = Form::create_id($params['name']);
-				$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
+				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
+				$enum_params = array('label' => $val, 'name' => $name.'_'.Form::create_id($key));
+				$str .= ' '.$this->create_label($enum_params);
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$i++;
 			}
