@@ -70,7 +70,7 @@ class Pagevariables_model extends MY_Model {
 			case 'boolean':
 				$return = is_true_val($val);
 				break;
-			case 'array':
+			case 'array': case 'multi':
 				$return = (is_serialized_str($val)) ? unserialize($val) : array();
 				break;
 			default:
