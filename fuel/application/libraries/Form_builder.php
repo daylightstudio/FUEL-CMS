@@ -849,7 +849,7 @@ Class Form_builder {
 		$str = '';
 		if (empty($params['label']))
 		{
-			if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$params['orig_name']))
+			if ($lang = $this->_label_lang($params['orig_name']))
 			{
 				$params['label'] = $lang;
 			}
@@ -1011,7 +1011,9 @@ Class Form_builder {
 				$str .= $this->form->radio($params['name'], $key, $attrs);
 				$name = Form::create_id($params['name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
-				$enum_params = array('label' => $val, 'name' => $name.'_'.Form::create_id($key));
+				$enum_name = $name.'_'.Form::create_id($key);
+				$label = ($lang = $this->_label_lang($enum_name)) ? $lang : $val;
+				$enum_params = array('label' => $label, 'name' => $enum_name);
 				$str .= ' '.$this->create_label($enum_params);
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$i++;
@@ -1063,7 +1065,10 @@ Class Form_builder {
 					
 				}
 				$str .= $this->form->checkbox($params['name'], $key, $attrs);
-				$str .= ' &nbsp;<label for="'.$attrs['id'].'">'.$val.'</label>';
+				
+				$label = ($lang = $this->_label_lang($attrs['id'])) ? $lang : $val;
+				$enum_params = array('label' => $label, 'name' => $attrs['id']);
+				$str .= ' '.$this->create_label($enum_params);
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$str .= '</span>';
 				$i++;
@@ -1469,6 +1474,24 @@ Class Form_builder {
 		}
 		$this->_fields = $this->_fields_sorter($this->_fields, 'order');
 		
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the language key value if it exist, otherwise it returns FALSE
+	 * 
+	 * @access	protected
+	 * @param	string
+	 * @return	string
+	 */
+	protected function _label_lang($key)
+	{
+		if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$key))
+		{
+			return $lang;
+		}
+		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
