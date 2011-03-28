@@ -46,7 +46,7 @@ function lang($key, $args = NULL)
 
 	// must test for this first because we may load a config 
 	// file that uses this function before lang file is loaded
-	if (!empty($GLOBALS['LANG']))
+	if (class_exists('CI_Controller'))
 	{
 		$CI =& get_instance();
 		if (!is_array($args))
