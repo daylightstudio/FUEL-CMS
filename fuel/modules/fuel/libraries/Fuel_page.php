@@ -637,8 +637,11 @@ class Fuel_page {
 				// remove the markers from the head now that we've captured them'
 				$cleaned_head = preg_replace('/('.$marker_reg_ex.')/', '', $head[1][0]);
 				
-				// replace the cleaned head back on
-				$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output);
+				// replace the cleaned head back on.. removed 's' modifier because it was causing memory issues
+				//$output = preg_replace('/(.*)(<body.+)/Umis', "$cleaned_head\\2", $output);
+				preg_match('/(<body.+){1}/mis', $output, $matches);
+				$body = $matches[0];
+				$output = $cleaned_head.$body;
 			}
 		}
 		else
