@@ -259,28 +259,45 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
-			$('#published_yes').attr('checked', true);
+			if ($('#published').size() > 0){
+				$('#published').val('yes');
+			} else {
+				$('#published_yes').attr('checked', true);
+			}
 			$('#form').submit();
 			return false;
 		});
 
 		$('.unpublish_action').click(function(e){
 			$.removeChecksave();
-			$('#published_no').attr('checked', true);
+			if ($('#published').size() > 0){
+				$('#published').val('no');
+			} else {
+				$('#published_no').attr('checked', true);
+			}
 			$('#form').submit();
 			return false;
 		});
 
 		$('.activate_action').click(function(e){
 			$.removeChecksave();
-			$('#active_yes').attr('checked', true);
+			if ($('#active').size() > 0){
+				$('#active').val('yes');
+			} else {
+				$('#active_yes').attr('checked', true);
+			}
+			
 			$('#form').submit();
 			return false;
 		});
 
 		$('.deactivate_action').click(function(e){
 			$.removeChecksave();
-			$('#active_no').attr('checked', true);
+			if ($('#active').size() > 0){
+				$('#active').val('no');
+			} else {
+				$('#active_no').attr('checked', true);
+			}
 			$('#form').submit();
 			return false;
 		});
