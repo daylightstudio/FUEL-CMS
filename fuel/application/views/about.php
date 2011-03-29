@@ -9,5 +9,3 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nulla tincidunt condim
 	<li>Consectetuer adipiscing elit</li>
 	<li>Sed ut elit. Morbi lectus. Sed</li>
 </ul>
-
-<?php echo fuel_block('recording');  ?> 
