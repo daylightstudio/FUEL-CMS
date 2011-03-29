@@ -134,7 +134,6 @@
 					<li><a href="<?=user_guide_url('helpers/google_helper')?>">Google helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/utility_helper')?>">Utility helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/validator_helper')?>">Validator helper</a></li>
-					<li><a href="<?=user_guide_url('helpers/wordpress_helper')?>">Wordpress helper</a></li>
 				</ul>
 				
 				<h3>3rd Party Helpers</h3>
