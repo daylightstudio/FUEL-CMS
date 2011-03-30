@@ -489,7 +489,7 @@ class Menu {
 					if (!empty($this->item_tag))
 					{
 						$str .= "<".$this->item_tag;
-						$str .= $this->_get_li_classes($key, $val['id'], $level, $i, ($i == (count($menu) -1)));
+						$str .= $this->_get_li_classes($key, $val['id'], $level, ($i == (count($menu) -1)));
 						
 						// set id
 						if (!empty($this->item_id_prefix))
