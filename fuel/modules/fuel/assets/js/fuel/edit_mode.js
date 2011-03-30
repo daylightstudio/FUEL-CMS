@@ -168,18 +168,29 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			var ajaxSubmit = function($form){
-				$form.attr('action', formAction).ajaxSubmit(function(html){
-					if ($(html).is('error')){
-						var msg = $(html).html();
-						if (msg != '' || msg != '1'){
-							$form.find('.inline_errors').html(msg).animate( { backgroundColor: '#ee6060'}, 1500);
-							$.scrollTo($form);
+				
+				$form.attr('action', formAction).ajaxSubmit({
+					
+					beforeSubmit:function(){
+						if (CKEDITOR){
+							for(var n in CKEDITOR.instances){
+								CKEDITOR.instances[n].updateElement();
+							}
 						}
-					} else {
-						closeEditor();
-						window.location.reload(true);
+					},
+					success: function(html){
+						if ($(html).is('error')){
+							var msg = $(html).html();
+							if (msg != '' || msg != '1'){
+								$form.find('.inline_errors').html(msg).animate( { backgroundColor: '#ee6060'}, 1500);
+								$.scrollTo($form);
+							}
+						} else {
+							closeEditor();
+							window.location.reload(true);
+						}
+						return false;
 					}
-					return false;
 				});
 			}
 			
@@ -316,7 +327,7 @@ if (fuel == undefined) var fuel = {};
 									CKEDITOR.replace(ckId, editorConfig);
 
 									// add this so that we can set that the page has changed
-									CKEDITOR.instances[ckId].on('instanceReady', function(){
+									CKEDITOR.instances[ckId].on('instanceReady', function(e){
 										editor = e.editor;
 										this.document.on('keyup', function(e){
 											editor.updateElement();
@@ -384,6 +395,8 @@ if (fuel == undefined) var fuel = {};
 
 								$editors = $ckEditor = $('textarea:not(textarea[class=no_editor])', context);
 								$editors.each(function(i) {
+									var ckId = $(this).attr('id');
+									
 									if ((editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
 										createCKEditor(this);
 									} else {
@@ -495,18 +508,20 @@ if (fuel == undefined) var fuel = {};
 									var assetTypeClasses = $(this).attr('className').split(' ');
 									var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
 									var btnLabel = '';
-									switch(assetFolder.split('/')[0].toLowerCase()){
-										case 'pdf':
-											btnLabel = lang('btn_pdf');
-											break;
-										case 'images': case 'img': case '_img':
-											btnLabel = lang('btn_image');
-											break;
-										case 'swf': case 'flash':
-											btnLabel = lang('btn_flash');
-											break;
-										default :
-											btnLabel = lang('btn_asset');
+									if (assetFolder.split('/')[0] != undefined){
+										switch(assetFolder.split('/')[0].toLowerCase()){
+											case 'pdf':
+												btnLabel = lang('btn_pdf');
+												break;
+											case 'images': case 'img': case '_img':
+												btnLabel = lang('btn_image');
+												break;
+											case 'swf': case 'flash':
+												btnLabel = lang('btn_flash');
+												break;
+											default :
+												btnLabel = lang('btn_asset');
+										}
 									}
 									$(this).after('&nbsp;<a href="'+ __FUEL_PATH__ + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + lang('btn_select') + ' ' + btnLabel + '</a>');
 								});
