@@ -924,6 +924,12 @@ class MY_Model extends CI_Model {
 			$values = $this->clean($values);
 			$values = $this->on_before_validate($values);
 
+			// if any errors are generated in the previous hooks then we return FALSE
+			if ($this->get_errors())
+			{
+				return FALSE;
+			}
+
 			$validated = ($validate) ? $this->validate($values) : TRUE;
 			
 			if ($validated AND !empty($values))
