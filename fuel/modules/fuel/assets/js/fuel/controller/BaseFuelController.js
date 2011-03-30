@@ -461,18 +461,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var assetTypeClasses = $(this).attr('className').split(' ');
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
 			var btnLabel = '';
-			switch(assetFolder.split('/')[0].toLowerCase()){
-				case 'pdf':
-					btnLabel = _this.lang('btn_pdf');
-					break;
-				case 'images': case 'img': case '_img':
-					btnLabel = _this.lang('btn_image');
-					break;
-				case 'swf': case 'flash':
-					btnLabel = _this.lang('btn_flash');
-					break;
-				default :
-					btnLabel = _this.lang('btn_asset');
+			if (assetFolder.split('/')[0] != undefined){
+				switch(assetFolder.split('/')[0].toLowerCase()){
+					case 'pdf':
+						btnLabel = _this.lang('btn_pdf');
+						break;
+					case 'images': case 'img': case '_img':
+						btnLabel = _this.lang('btn_image');
+						break;
+					case 'swf': case 'flash':
+						btnLabel = _this.lang('btn_flash');
+						break;
+					default :
+						btnLabel = _this.lang('btn_asset');
+				}
 			}
 			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + _this.lang('btn_select') + ' ' + btnLabel + '</a>');
 		});
@@ -687,7 +689,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 				
 				fixCKEditorOutput(elem);
-				
 				return false;
 			})
 
@@ -695,12 +696,23 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		
 		$editors.each(function(i) {
+			var ckId = $(this).attr('id');
 			if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
 				createCKEditor(this);
 			} else {
 				createMarkItUp(this);
 			}
+			
+			// setup update of element on save just in case
+			$(this).parents('form').submit(function(){
+				if (CKEDITOR){
+					CKEDITOR.instances[ckId].updateElement();
+				}
+			})
 		});
+		
+		
+		
 		
 	},
 	
