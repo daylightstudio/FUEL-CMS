@@ -628,7 +628,7 @@ class Data_table {
 				}
 				
 				// add the actions
-				if (!empty($action)) $action = $this->default_field_action;
+				if (empty($action)) $action = $this->default_field_action;
 				if (!empty($action))
 				{
 					$action = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$columns['\\2'].'\\3'", $action);
