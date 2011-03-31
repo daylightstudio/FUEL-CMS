@@ -172,7 +172,7 @@ if (fuel == undefined) var fuel = {};
 				$form.attr('action', formAction).ajaxSubmit({
 					
 					beforeSubmit:function(){
-						if (CKEDITOR){
+						if (CKEDITOR && CKEDITOR.instances != undefined){
 							for(var n in CKEDITOR.instances){
 								CKEDITOR.instances[n].updateElement();
 							}
