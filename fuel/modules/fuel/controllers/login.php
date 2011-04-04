@@ -58,13 +58,15 @@ class Login extends CI_Controller {
 		$session_key = $this->fuel_auth->get_session_namespace();
 		
 		$user_data = $this->session->userdata($session_key);
-		
 		if (!empty($_POST))
 		{
-			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < $this->config->item('seconds_to_unlock', 'fuel'))
+
+			// check if they are locked out out or not
+			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->config->item('seconds_to_unlock', 'fuel'))
 			{
-				$this->users_model->add_error(lang('error_max_attempts', $this->config->item('seconds_to_unlock', 'fuel')));
+ 				$this->users_model->add_error(lang('error_max_attempts', $this->config->item('seconds_to_unlock', 'fuel')));
 				$user_data['failed_login_timer'] = time();
+				
 			}
 			else
 			{
@@ -98,20 +100,26 @@ class Login extends CI_Controller {
 					}
 					else
 					{
-						if (isset($user_data['failed_login_attempts']) AND (time() - $user_data['failed_login_attempts']) > $this->config->item('seconds_to_unlock', 'fuel'))
+						// check if they are no longer in the locked out state and reset variables
+						if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->config->item('seconds_to_unlock', 'fuel'))
 						{
-							unset($user_data['failed_login_attempts']);
+							$user_data['failed_login_attempts'] = 0;
+							$this->session->unset_userdata('failed_login_timer');
+							unset($user_data['failed_login_timer']);
 						}
 						else
 						{
-							$num_attempts = (!$this->session->userdata('failed_login_attempts')) ? 0 : $this->session->userdata('failed_login_attempts') + 1;
+							// add to the number of attempts if it's an invalid login'
+							$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
 							$user_data['failed_login_attempts'] = $num_attempts;
+							
 						}
 						
-						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= $this->config->item('num_logins_before_lock', 'fuel') -1)
+						// check if they should be locked out
+						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->config->item('num_logins_before_lock', 'fuel') -1)
 						{
 							$this->users_model->add_error(lang('error_max_attempts', $this->config->item('seconds_to_unlock', 'fuel')));
-							$user_data['failed_login_attempts'] = time();
+							$user_data['failed_login_timer'] = time();
 						}
 						else
 						{
