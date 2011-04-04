@@ -1,7 +1,7 @@
 <h1>Advanced Modules</h1>
 <p>Think of Advanced Modules as another application folder that can contain it's own
 controllers, helpers, libraries, language and view files. They can also contain their
-own assets folders. FUEL itself is an advanced module as us this <dfn>user_guide</dfn> module.
+own assets folders. FUEL itself is an advanced module as is this <dfn>user_guide</dfn> module.
 It is highly recommended that you take a peek at this module's files and any others to get a sense of how
 to create one (it's not too tough!).
 </p>
