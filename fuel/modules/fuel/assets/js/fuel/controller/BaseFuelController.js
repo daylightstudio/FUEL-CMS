@@ -499,21 +499,21 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.datepicker_mm', context).fillin('mm');
 		//$('.datepicker').datePicker();
 		var dpOptions = {startDate: '01/01/2000', endDate: '12/31/2100'}
-		
-		$('.datepicker', context).filter(":not('.dp-applied')").each(function(i){
-			if ($(this).val() != Date.format){
-				var d = $(this).val();
-				var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
-			} else {
-				var picker = $(this).datePicker(dpOptions);
-			}
-			picker.bind(
-				'dateSelected', 
-				function(e, selectedDates) {
-					$(this).removeClass("fillin");
+		$('.datepicker', context).filter(":not('.dp-applied'),:not(input[disabled='disabled'])").each(function(i){
+			if (!$(this).attr('disabled') && !$(this).attr('readonly')){
+				if ($(this).val() != Date.format){
+					var d = $(this).val();
+					var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
+				} else {
+					var picker = $(this).datePicker(dpOptions);
 				}
-			);
-			
+				picker.bind(
+					'dateSelected', 
+					function(e, selectedDates) {
+						$(this).removeClass("fillin");
+					}
+				);
+			}
 		});
 	},
 	
