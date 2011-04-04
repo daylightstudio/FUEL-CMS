@@ -268,18 +268,20 @@ if (fuel == undefined) var fuel = {};
 								var dpOptions = {startDate: '01/01/2000', endDate: '12/31/2100'}
 
 								$('.datepicker', context).filter(":not('.dp-applied')").each(function(i){
-									if ($(this).val() != Date.format){
-										var d = $(this).val();
-										var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
-									} else {
-										var picker = $(this).datePicker(dpOptions);
-									}
-									picker.bind(
-										'dateSelected', 
-										function(e, selectedDates) {
-											$(this).removeClass("fillin");
+									if (!$(this).attr('disabled') && !$(this).attr('readonly')){
+										if ($(this).val() != Date.format){
+											var d = $(this).val();
+											var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
+										} else {
+											var picker = $(this).datePicker(dpOptions);
 										}
-									);
+										picker.bind(
+											'dateSelected', 
+											function(e, selectedDates) {
+												$(this).removeClass("fillin");
+											}
+										);
+									}
 								});
 								$('input:first', context).select();
 								
