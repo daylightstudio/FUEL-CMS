@@ -1232,6 +1232,7 @@ Class Form_builder {
 		$time_params['max_length'] = 2;
 		$time_params['name'] = $params['orig_name'].'_hour';
 		$time_params['class'] = 'fillin datepicker_hh';
+		$time_params['disabled'] = $params['disabled'];
 		$str = $this->create_text($this->_normalize_value($time_params));
 		$str .= ":";
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1))) $time_params['value'] = date('i', strtotime($params['value']));
@@ -1241,6 +1242,7 @@ Class Form_builder {
 		$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
 		$ampm_params['name'] = $params['orig_name'].'_am_pm';
 		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
+		$ampm_params['disabled'] = $params['disabled'];
 		$str .= $this->create_enum($this->_normalize_value($ampm_params));
 		return $str;
 	}
