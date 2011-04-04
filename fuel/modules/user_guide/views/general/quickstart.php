@@ -7,7 +7,7 @@
 	<li><a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-in Controller Development</a></li>
 	<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
 	<li><a href="<?=user_guide_url('helpers/fuel_helper')?>">FUEL helper</a></li>
-	<li><a href="<?=user_guide_url('libraries/asset_helper')?>">Asset helper</a></li>
+	<li><a href="<?=user_guide_url('helpers/asset_helper')?>">Asset helper</a></li>
 	<li><a href="<?=user_guide_url('modules/tutorial')?>">Creating Modules Tutorial</a></li>
 	<li><a href="<?=user_guide_url('general/pages-layouts-modules-blocks')?>">Pages, Layouts, Modules &amp; Blocks Explained</a></li>
 </ul>
