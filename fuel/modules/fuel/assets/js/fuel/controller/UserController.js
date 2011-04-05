@@ -12,16 +12,19 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 
 		$send_email_notification = $('#send_email_notification');
 		$send_email = $('#send_email');
-		$('#confirm_password,#new_password').keyup(function(){
-			if ($('#new_password').val() != '' && $('#new_password').val() == $('#confirm_password').val()){
+		$('#password,#confirm_password,#new_password').keyup(function(){
+			var password = ($('#password').size()) ? $('#password').val() : $('#new_password').val();
+			if (password != '' && password == $('#confirm_password').val()){
 				$send_email_notification.show();
 				$send_email.removeAttr('disabled');
 			} else {
 				$send_email_notification.hide();
 				$send_email.attr('disabled', 'disabled');
 			}
-		})
-		$('#confirm_password,#new_password').keyup();
+		});
+		
+		// trigger keyup initially just in case the values are the same
+		$('#password,#confirm_password,#new_password').keyup();
 		
 		// toggle on off
 		var toggleHTML = ' &nbsp; <input id="toggle_perms" name="toggle_perms" type="checkbox" value="1" class="float_right"/>';
