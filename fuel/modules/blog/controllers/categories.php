@@ -46,7 +46,7 @@ class Categories extends Blog_base_controller {
 			{
 				$vars['categories'] = $this->fuel_blog->get_categories();
 				$vars['page_title'] = lang('blog_categories_page_title');
-				$output = $this->_render('post', $vars, TRUE);
+				$output = $this->_render('categories', $vars, TRUE);
 			}
 			$this->fuel_blog->save_cache($cache_id, $output);
 		}

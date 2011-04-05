@@ -85,7 +85,6 @@ class Blog_category_model extends Base_module_record {
 	{
 		$this->_CI->load->module_model('blog', 'blog_posts_to_categories_model');
 		$where = array('category_id' => $this->id, $this->_tables['blog_posts'].'.published' => 'yes');
-		$this->_CI->blog_posts_to_categories_model->group_by('category_id');
 		$posts = $this->_CI->blog_posts_to_categories_model->find_all($where);
 		return $posts;
 	}
@@ -100,7 +99,7 @@ class Blog_category_model extends Base_module_record {
 	
 	function get_url($full_path = TRUE)
 	{
-		$this->_CI->_url = 'categories/articles/'.$this->permalink;
+		$url = 'categories/articles/'.$this->permalink;
 		if ($full_path)
 		{
 			return $this->_CI->fuel_blog->url($url);
