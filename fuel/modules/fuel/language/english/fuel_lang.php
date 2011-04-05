@@ -251,7 +251,7 @@ $lang['new_user_email'] = 'Your FUEL CMS account has been created. You can login
 Login URL:'.site_url('fuel/login').'
 User name: %1s
 Password: %2s';
-$lang['new_user_created_notification'] = 'A new user was created and a notification was sent to %1s.';
+$lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 
 
 /*
