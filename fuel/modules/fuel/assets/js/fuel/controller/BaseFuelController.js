@@ -385,7 +385,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this._initDatePicker(context);
 		this._initEditors(context);
 		this._initViewPage();
-		this._initLinkedFields();
+		this._initLinkedFields(context);
 		
 		$('#form input:first', context).select();
 		
@@ -717,25 +717,27 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	_initLinkedFields : function(context){
-		
 		var _this = this;
 		
 		// needed for enclosure
 		var bindLinkedKeyup = function(slave, master, func){
-			if ($('#' + slave).val() == ''){
-				$('#' + master).keyup(function(e){
+			var slaveId = _this._getFieldId(slave, context);
+			var masterId = _this._getFieldId(master, context);
+			
+			if ($('#' + slaveId).val() == ''){
+				$('#' + masterId).keyup(function(e){
 					
 					// for most common cases
 					if (func){
 						var newVal = func($(this).val());
-						$('#' + slave).val(newVal);
+						$('#' + slaveId).val(newVal);
 					}
 					
 				});
 				
 				// setup ajax on blur to do server side processing if no javascript function exists
 				if (!func){
-					$('#' + master).blur(function(e){
+					$('#' + masterId).blur(function(e){
 						var url = _this.modulePath + '/process_linked';
 						var parameters = {
 							master_field:master, 
@@ -743,7 +745,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 							slave_field:slave
 						};
 						$.post(url, parameters, function(response){
-							$('#' + slave).val(response);
+							$('#' + slaveId).val(response);
 						});
 					});
 				}
@@ -753,8 +755,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// needed for enclosure
 		var bindLinked = function(slave, master, func){
-			
-			if ($('#' + slave).val() == ''){
+			if ($('#' + _this._getFieldId(slave, context)).val() == ''){
 				if (typeof(master) == 'string'){
 					bindLinkedKeyup(slave, master, url_title);
 				} else if (typeof(master) == 'object'){
@@ -762,7 +763,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					for (var o in master){
 						var func = false;
 						var funcName = master[o];
-						var val = $('#' + o).val();
+						var val = $('#' + _this._getFieldId(o, context)).val();
 						if (funcName == 'url_title'){
 							var func = url_title;
 						// check for function scope, first check local function, then class, then global window object
@@ -779,14 +780,22 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 			}
 		}
-		
-		if (this.initObj.linked_fields){
-			var linked = this.initObj.linked_fields;
+		if (this.initObj.linked_fields || window['__FUEL_LINKED_FIELDS'] != undefined){
+			var linked = (window['__FUEL_LINKED_FIELDS'] != undefined) ? window['__FUEL_LINKED_FIELDS'] : this.initObj.linked_fields;
 			for(var n in linked){
 				bindLinked(n, linked[n]);
 			}
 		}
 	
+	},
+	
+	_getFieldId : function(field, context){
+		if ($('.__fuel_module__', context).size()){
+			var val = $('.__fuel_module__', context).attr('id');
+			var prefix = val.split('--')[0];
+			return prefix + '--' + field;
+		}
+		return field;
 	},
 	
 	_initViewPage : function(context){
