@@ -3,10 +3,10 @@
 		$posts = $category->posts;
 		if (!empty($posts)) :
 	 ?>
-<h2><?=anchor($category->url, $category->name)?></h2>
+<h2><?=fuel_edit($category->id, 'Edit Category', 'blog/categories')?><?=anchor($category->url, $category->name)?></h2>
 	<ul class="bullets">
 	<?php foreach($posts as $post) : ?>
-		<li><?=anchor($post->url, $post->title)?></li>
+		<li><?=fuel_edit($post->post_id, 'Edit Post', 'blog/posts')?><?=anchor($this->fuel_blog->url('id/'.$post->post_id), $post->title)?></li>
 	<?php endforeach; ?>
 	</ul>
 <?php endif; ?>
