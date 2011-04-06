@@ -143,8 +143,7 @@ class Module extends Fuel_base_controller {
 		
 		if (!is_ajax() AND !empty($_POST))
 		{
-			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-			$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
+			$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
 			redirect($uri);
 		}
 		
