@@ -99,7 +99,7 @@ class Blog_category_model extends Base_module_record {
 	
 	function get_url($full_path = TRUE)
 	{
-		$url = 'categories/articles/'.$this->permalink;
+		$url = 'categories/'.$this->permalink;
 		if ($full_path)
 		{
 			return $this->_CI->fuel_blog->url($url);
