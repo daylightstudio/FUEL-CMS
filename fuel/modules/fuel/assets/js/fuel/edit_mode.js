@@ -177,7 +177,8 @@ if (fuel == undefined) var fuel = {};
 								if (CKEDITOR.instances[n].hidden == false){
 									CKEDITOR.instances[n].updateElement();
 								}
-							}						}
+							}
+						}
 					},
 					success: function(html){
 						if ($(html).is('error')){
@@ -376,7 +377,9 @@ if (fuel == undefined) var fuel = {};
 
 										} else {
 											CKEDITOR.instances[ckId].hidden = false;
+
 											$('#cke_' + ckId).show();
+
 											$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
 											//$elem.show().closest('.html').hide();
 											$('#' + ckId + '_viewsource').text(lang('btn_view_source'))
