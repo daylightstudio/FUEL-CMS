@@ -705,7 +705,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			
 			// setup update of element on save just in case
 			$(this).parents('form').submit(function(){
-				if (CKEDITOR && CKEDITOR.instances[ckId] != undefined){
+				if (CKEDITOR && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
 					CKEDITOR.instances[ckId].updateElement();
 				}
 			})
