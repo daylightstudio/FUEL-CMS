@@ -29,7 +29,7 @@
 </head>
 <body>
 
-<div id="header">
+<div id="fuel_header">
 	<h1 id="site_name"><a href="<?=site_url()?>"><?=$this->config->item('site_name', 'fuel')?></a></h1>
 	<div id="login_logout">
 			<?=lang('logged_in_as')?>
@@ -38,9 +38,9 @@
 		<a href="<?=fuel_url('logout')?>"><?=lang('logout')?></a>
 	</div>
 </div>
-<div id="body">
-	<div id="left_panel">
-		<div id="left_panel_inner">
+<div id="fuel_body">
+	<div id="fuel_left_panel">
+		<div id="fuel_left_panel_inner">
 			
 <?php 
 	foreach($nav as $section => $nav_items)
