@@ -973,8 +973,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	redrawTable : function(useAjax, useCache){
+		if (useAjax !== false) useAjax = true;
 		$('#table_loader').show();
-		this.submitForm('#form_table', '#data_table_container', this.tableAjaxURL, true, this.tableCallback, useCache);
+		this.submitForm('#form_table', '#data_table_container', this.tableAjaxURL, useAjax, this.tableCallback, useCache);
 	},
 	
 	submitForm : function(formId, loadId, path, useAjax, callback, useCache){

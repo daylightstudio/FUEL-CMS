@@ -36,7 +36,14 @@ class Search extends Blog_base_controller {
 		{
 			$limit = $this->fuel_blog->settings('per_page');
 			$this->config->set_item('enable_query_strings', TRUE);
-			$config['base_url'] = $this->fuel_blog->url('/search?q='.$q);
+			if ($use_get)
+			{
+				$config['base_url'] = $this->fuel_blog->url('search?q='.$q);
+			}
+			else
+			{
+				$config['base_url'] = $this->fuel_blog->url('search');
+			}
 			$config['total_rows'] = count($this->fuel_blog->search_posts($q));
 			$config['uri_segment'] = 3;
 			$config['page_query_string'] = $use_get;
