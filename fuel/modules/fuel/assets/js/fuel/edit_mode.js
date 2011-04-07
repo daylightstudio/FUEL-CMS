@@ -174,7 +174,9 @@ if (fuel == undefined) var fuel = {};
 					beforeSubmit:function(){
 						if (CKEDITOR && CKEDITOR.instances != undefined){
 							for(var n in CKEDITOR.instances){
-								CKEDITOR.instances[n].updateElement();
+								if (CKEDITOR.instances[n].hidden == false){
+									CKEDITOR.instances[n].updateElement();
+								}
 							}
 						}
 					},
@@ -366,8 +368,7 @@ if (fuel == undefined) var fuel = {};
 												$elem.show();
 											}
 											$('#cke_' + ckId).hide();
-											$elem.closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-											//$elem.closest('.html').show();
+											$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
 
 											$('#' + ckId + '_viewsource').text(lang('btn_view_editor'));
 
