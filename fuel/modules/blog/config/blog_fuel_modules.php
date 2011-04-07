@@ -1,6 +1,4 @@
 <?php
-// included in the main config/MY_fuel_modules.php
-
 $config['modules']['blog_posts'] = array(
 	'module_name' => 'Posts',
 	'module_uri' => 'blog/posts',
