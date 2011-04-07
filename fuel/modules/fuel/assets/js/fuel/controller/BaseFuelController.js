@@ -664,7 +664,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					}
 					$('#cke_' + ckId).hide();
 					$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-					//$elem.closest('.html').show();
+					
 					
 					$('#' + ckId + '_viewsource').text(_this.lang('btn_view_editor'));
 					
@@ -705,7 +705,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			
 			// setup update of element on save just in case
 			$(this).parents('form').submit(function(){
-				if (CKEDITOR && CKEDITOR.instances[ckId] != undefined){
+				if (CKEDITOR && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
 					CKEDITOR.instances[ckId].updateElement();
 				}
 			})
