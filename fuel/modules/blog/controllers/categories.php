@@ -35,11 +35,13 @@ class Categories extends Blog_base_controller {
 				// set the output
 				$output = $this->fuel_blog->feed_output($type, $category);
 			}
-			else if (!empty($category) && $category != 'index')
+			else if (!empty($category) AND $category != 'index')
 			{
+				$category_obj = $this->fuel_blog->get_category($category);
+				if (!isset($category_obj->id)) show_404();
+
 				$vars['posts'] = $this->fuel_blog->get_category_posts($category);
-				$vars['page_title'] = $category;
-				//if (empty($vars['posts'])) show_404();
+				$vars['page_title'] = $this->fuel_blog->page_title(array($category_obj->name, lang('blog_categories_page_title')));
 				$output = $this->_render('posts', $vars, TRUE);
 			}
 			else
