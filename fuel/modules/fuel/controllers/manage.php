@@ -33,7 +33,7 @@ class Manage extends Fuel_base_controller {
 			
 			// also delete DWOO compiled files
 			$this->load->helper('file');
-			$dwoo_path = BASEPATH.'cache/dwoo/compiled/';
+			$dwoo_path = APPPATH.'cache/dwoo/compiled/';
 			if (is_dir($dwoo_path) AND is_writable($dwoo_path))
 			{
 				@delete_files($dwoo_path);
