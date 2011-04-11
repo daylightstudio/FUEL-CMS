@@ -1009,7 +1009,7 @@ Class Form_builder {
 					$attrs['checked'] = 'checked';
 				}
 				$str .= $this->form->radio($params['name'], $key, $attrs);
-				$name = Form::create_id($params['name']);
+				$name = Form::create_id($params['orig_name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$enum_name = $name.'_'.Form::create_id($key);
 				$label = ($lang = $this->_label_lang($enum_name)) ? $lang : $val;
