@@ -101,7 +101,7 @@
 			combo += '<ul id="' + rightID + '" class="supercomboselect_list">';
 			combo += '</ul>';
 			combo += '</div>';
-			combo += '<div style="clear: both; height: 0px; line-height: 0px; font-size: 0px;></div>"'; // clears any floats
+			combo += '<div style="clear: both; height: 0px; line-height: 0px; font-size: 0px;"></div>'; // clears any floats
 			combo += '</div>';
 			combo += '</div>'
 		
