@@ -971,8 +971,8 @@ class Module extends Fuel_base_controller {
 		
 		if ($id)
 		{
-			$this->model->set_return_method('array');
-			$save = $this->model->find_by_key($id);
+			//$this->model->set_return_method('array');
+			$save = $this->model->find_by_key($id, 'array');
 			if ($this->fuel_auth->has_permission($this->permission, 'publish') AND !empty($save))
 			{
 				if ($pub_unpub == 'publish')
@@ -989,7 +989,7 @@ class Module extends Fuel_base_controller {
 				if ($this->model->save($save))
 				{
 					// log it
-					$data = $this->model->find_by_key($id);
+					$data = $this->model->find_by_key($id, 'array');
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
 				}
