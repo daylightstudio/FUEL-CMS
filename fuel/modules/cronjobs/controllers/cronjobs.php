@@ -27,6 +27,7 @@ class Cronjobs extends Fuel_base_controller {
 		$config['cronfile'] = $cronjob_path;
 		$config['mailto'] = $this->input->post('mailto');
 		$config['user'] = $cronjobs_config['cron_user'];
+		$config['sudo_pwd'] = $cronjobs_config['sudo_pwd'];
 		$this->cronjob->initialize($config);
 		
 		if (!empty($_POST))
