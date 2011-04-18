@@ -25,10 +25,10 @@ include the assets folder as well as email it as an attachment. Below is an exam
 php /var/www/httpdocs/index.php backup/cron
 
 // using the ci_cron.php script that comes with FUEL
-php /var/www/httpdocs/fuel/data_backup/ci_cron.php backup/cron
+php /var/www/httpdocs/fuel/crons/ci_cron.php backup/cron
 
 // adding a 1 at the end of the URI path will include the assets (if not specified in the config) and can be used with either method
-php /var/www/httpdocs/fuel/data_backup/ci_cron.php backup/cron/1
+php /var/www/httpdocs/fuel/crons/ci_cron.php backup/cron/1
 
 </pre>
 <p class="important">If you are on a MAC and having trouble where the script is outputting nothing, you may need to make sure 
