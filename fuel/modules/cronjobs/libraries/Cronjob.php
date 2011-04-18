@@ -35,7 +35,8 @@ class Cronjob {
 	public $cronfile = 'crons/crontab.txt'; // path to the crontab fle
 	public $mailto = ''; // mailto value of crontab
 	public $user = ''; // the user the crontab belongs to
-	
+	public $sudo_pwd = ''; //the user password
+
 	private $_jobs = array();
 	
 	/**
@@ -250,7 +251,7 @@ class Cronjob {
 		{
 			if (!empty($this->sudo_pwd))
 			{
-				$exec = 'echo password_for_the_user | sudo -S '.$exec;
+				$exec = 'echo '.$this->sudo_pwd.' | sudo -S '.$exec;
 			}
 			$exec .= ' -u '.$this->user;
 		}
