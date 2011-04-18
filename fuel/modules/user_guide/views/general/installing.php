@@ -8,19 +8,19 @@
 	<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php' in <strong>fuel/application/config.php</strong></strong></li>
 	<li>Install the database by first creating the database in MySQL and then running the <dfn>fuel/install/fuel_schema.sql</dfn> file</li>
 	<li>Configure the <dfn>fuel/application/config/database.php</dfn> file with the proper database connection settings (like with any other CodeIgniter database application)</li>
-	<li>Make the following folders writable:
+	<li>Make the following folders writable (note that <dfn>/var/www/httpdocs/</dfn> is the path to your web server):
 		<ul>
 			<li class="<?=(is_really_writable(BASEPATH.'cache/')) ? 'success' : 'error'; ?>">
-				<?=BASEPATH.'cache/'?>
+				/var/www/httpdocs/cache/
 			</li>
 			<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/')) ? 'success' : 'error'; ?>">
-				<?=BASEPATH.'cache/dwoo/'?>
+				/var/www/httpdocs/cache/dwoo/
 			</li>
 			<li class="<?=(is_really_writable(BASEPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
-				<?=BASEPATH.'cache/dwoo/compiled'?>
+				/var/www/httpdocs/cache/dwoo/compiled
 			</li>
 			<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
-				<?=WEB_ROOT.'assets/images'?>
+				/var/www/httpdocs/assets/images
 			</li>
 		</ul>
 	</li>

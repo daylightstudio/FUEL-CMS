@@ -25,7 +25,7 @@ class Sitevariables_model extends Base_module_model {
 	
 	function form_fields($values = array()){
 		$fields = parent::form_fields();
-		$CI =& get_instance();
+		$fields['value']['class'] = 'markitup';
 		return $fields;
 	}
 
