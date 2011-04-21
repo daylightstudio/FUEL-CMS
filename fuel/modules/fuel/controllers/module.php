@@ -143,7 +143,8 @@ class Module extends Fuel_base_controller {
 		
 		if (!is_ajax() AND !empty($_POST))
 		{
-			$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
+			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
+			$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
 			redirect($uri);
 		}
 		
@@ -367,7 +368,6 @@ class Module extends Fuel_base_controller {
 		$mod_segs = explode('/',$this->module_uri);
 		$mod_offset_index = count($mod_segs) + 3;
 		$uri_params = uri_safe_batch_decode(fuel_uri_segment($mod_offset_index), '|', TRUE);
-		$uri_params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
 		
 		$posted = array();
 		if (!empty($_POST))
@@ -397,6 +397,8 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
+		$params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
+		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
 		
