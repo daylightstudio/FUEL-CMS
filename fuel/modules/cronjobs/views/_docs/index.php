@@ -19,7 +19,7 @@ This method only requires you to make the file <dfn>fuel/crons/crontab.php</dfn>
 include the assets folder as well as email it as an attachment. Below is an example of the command to specify for a cron job to do that using both options mentioned above:</p>
 
 <pre class="brush: php">
-// note that "/var/www/httpdocs/" is the bath to your webserver
+// note that "/var/www/httpdocs/" is the path to your web server
 
 // using the CI 2.x CLI (Command Line Interface)
 php /var/www/httpdocs/index.php backup/cron
