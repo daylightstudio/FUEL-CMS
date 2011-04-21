@@ -4,7 +4,10 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Module extends Fuel_base_controller {
 	
 	public $module = '';
-	
+
+	// array of data about all (if any) uploaded files
+	public $upload_data = array();
+
 	function __construct()
 	{
 		parent::__construct();
@@ -1300,11 +1303,18 @@ class Module extends Fuel_base_controller {
 								add_error($this->upload->display_errors('', ''));
 								$this->session->set_flashdata('error', $this->upload->display_errors('', ''));
 							}
+							else
+							{
+								// saves data about successfully uploaded file
+								$this->upload_data[] = $this->upload->data();
+							}
 						}
 					}
 				}
 			}
 		}
+		// transfers data about successfully uploaded file to the model
+		$this->model->upload_data = $this->upload_data;
 		return !$errors;
 	}
 }
