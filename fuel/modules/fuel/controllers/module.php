@@ -1313,8 +1313,12 @@ class Module extends Fuel_base_controller {
 				}
 			}
 		}
+		
 		// transfers data about successfully uploaded file to the model
-		$this->model->upload_data = $this->upload_data;
+		if (isset($this->model->upload_data))
+		{
+			$this->model->upload_data = $this->upload_data;
+		}
 		return !$errors;
 	}
 }
