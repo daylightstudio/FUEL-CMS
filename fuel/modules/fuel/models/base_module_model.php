@@ -33,6 +33,7 @@ class Base_module_model extends MY_Model {
 	public $filter_value = NULL; // the values of the filters
 	public $filter_join = 'or'; // how to combine the filters in the query (and or or)
 	public $parsed_fields = array(); // fields to automatically parse
+	public $upload_data = array(); // data about all uploaded files
 	protected $_tables = array(); // fuel tables
 	
 	/**
