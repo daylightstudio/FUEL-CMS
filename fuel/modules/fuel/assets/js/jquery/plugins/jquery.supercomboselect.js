@@ -112,7 +112,6 @@
 			/**********************************************************************
 			BIND EVENTS
 			**********************************************************************/
-			
 			$('#' + leftID + ' li').live('dblclick', function(e){
 				addSelectedToRight();
 			});
@@ -164,7 +163,7 @@
 				removeSelectedFromRight();
 			});
 			
-			$('.supercomboselect_left_empty_msg, .supercomboselect_right_empty_msg').hide();
+			$('#' + settings.wrapperId + ' .supercomboselect_left_empty_msg, #' + settings.wrapperId + ' .supercomboselect_right_empty_msg').hide();
 			
 			
 			if (settings.isSortable){

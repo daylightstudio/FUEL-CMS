@@ -1740,8 +1740,8 @@ class MY_Model extends CI_Model {
 					$lookup_model = $this->load_model($val);
 					
 					$options = $CI->$related_model->options_list();
-					$values = (!empty($values['id'])) ? array_keys($CI->$lookup_model->find_all_array_assoc($CI->$related_model->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
-					$fields[$key] = array('label' => ucfirst($key), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $values, 'mode' => 'multi');
+					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_model->find_all_array_assoc($CI->$related_model->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
+					$fields[$key] = array('label' => ucfirst($key), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
 		}
