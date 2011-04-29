@@ -46,7 +46,10 @@ jQuery.checkSaveChange = function(){
 				var cmp = new Array();
 				var selector = 'input:text[name="' + fieldName + '"],input:checked[name="' + fieldName + '"],textarea[name="' + fieldName + '"],select[name="' + fieldName + '"]';
 				$(selector).each(function(i){
-					cmp.push($(this).val().toString());
+					var val = $(this).val();
+					if (val){
+						cmp.push(val.toString());
+					}
 				});
 				if (window._pageVals[fieldName] && cmp.toString() != window._pageVals[fieldName].toString()){
 					msg = changedMsg;
