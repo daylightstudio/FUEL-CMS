@@ -1200,7 +1200,7 @@ class Module extends Fuel_base_controller {
 			$config['max_width']  = $this->config->item('assets_upload_max_width', 'fuel');
 			$config['max_height']  = $this->config->item('assets_upload_max_height', 'fuel');
 			
-			// loop through all asset types
+			// loop through all the uploaded files
 			foreach($_FILES as $file => $file_info)
 			{
 				if ($file_info['error'] == 0)
@@ -1214,6 +1214,7 @@ class Module extends Fuel_base_controller {
 					$is_multi = (count($test_multi) > 1);
 					$multi_root = $test_multi[0];
 					
+					// loop through all the allowed file types that are accepted for the asset directory
 					foreach($this->assets_model->get_dir_filetypes() as $key => $val)
 					{
 						$file_types = explode('|', strtolower($val));
@@ -1309,6 +1310,11 @@ class Module extends Fuel_base_controller {
 								$this->upload_data[] = $this->upload->data();
 							}
 						}
+					}
+					else
+					{
+						$errors = TRUE;
+						add_error(lang('upload_invalid_filetype'));
 					}
 				}
 			}
