@@ -28,7 +28,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	<?php if(isset($page['location'])): ?> 
 		<url>
 			<loc><?=site_url($page['location'])?></loc>
-			<?php if (!empty($page['frequency'])) : ?><?=$page['frequency']?><?php else: ?><?=$default_frequency?><?php endif; ?>
+			<changefreq><?php if (!empty($page['frequency'])) : ?><?=$page['frequency']?><?php else: ?><?=$default_frequency?><?php endif; ?></changefreq>
 		</url>	
 	<?php elseif (is_string($page)): ?>
 	<url>
