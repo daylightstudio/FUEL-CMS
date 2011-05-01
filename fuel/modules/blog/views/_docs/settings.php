@@ -13,7 +13,7 @@
 	<li><strong>Use cache</strong> - Determines whether to use the cache or not</li>
 	<li><strong>Allow comments</strong> - Allow people to comment on your posts</li>
 	<li><strong>Cache time to live</strong> - How long the cached file should exist</li>
-	<li><strong>Use captchas</strong> - Use captchas for comment submission</li>
+	<li><strong>Use captchas</strong> - Use captchas for comment submission. <kbd>You must make the fuel/modules/blog/assets/captchas/ folder have writable permissions</kbd>.</li>
 	<li><strong>Monitor comments</strong> - Monitor comments before publishing</li>
 	<li><strong>Save spam</strong> - Save those comments flagged by spam</li>
 	<li><strong>Akismet Key</strong> - The <a href="http://akismet.com/personal/" target="_blank">Akismet</a> antispam key</li>
