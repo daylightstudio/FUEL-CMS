@@ -881,13 +881,19 @@ class Module extends Fuel_base_controller {
 			foreach ($posted as $id)
 			{
 				if ($this->model->delete(array($this->model->key_field() => $id)))
+				{
 					$any_success = TRUE;
+				}
 				else
+				{
 					$any_failure = TRUE;
+				}
 			}
 			// set a success delete message
 			if ($any_success)
+			{
 				$this->session->set_flashdata('success', lang('data_deleted'));
+			}
 			
 			// set an error delete message
 			if ($any_failure)
@@ -897,7 +903,9 @@ class Module extends Fuel_base_controller {
 				
 				// if there is none like that, lets use default message
 				if (is_null($msg))
+				{
 					$msg = lang('data_not_deleted');
+				}
 
 				$this->session->set_flashdata('error', $msg);
 			}
