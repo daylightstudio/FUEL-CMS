@@ -875,11 +875,41 @@ class Module extends Fuel_base_controller {
 		if (!empty($_POST['id']))
 		{
 			$posted = explode('|', $this->input->post('id'));
-			foreach($posted as $id)
+			
+			// Flags
+			$any_success = $any_failure = FALSE;
+			foreach ($posted as $id)
 			{
-				$this->model->delete(array($this->model->key_field() => $id));
+				if ($this->model->delete(array($this->model->key_field() => $id)))
+				{
+					$any_success = TRUE;
+				}
+				else
+				{
+					$any_failure = TRUE;
+				}
 			}
-			$this->session->set_flashdata('success', lang('data_deleted'));
+			// set a success delete message
+			if ($any_success)
+			{
+				$this->session->set_flashdata('success', lang('data_deleted'));
+			}
+			
+			// set an error delete message
+			if ($any_failure)
+			{
+				// first try to get an error added in model by $this->add_error('...')
+				$msg = $this->model->get_validation()->get_last_error();
+				
+				// if there is none like that, lets use default message
+				if (is_null($msg))
+				{
+					$msg = lang('data_not_deleted');
+				}
+
+				$this->session->set_flashdata('error', $msg);
+			}
+
 			$this->_clear_cache();
 			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
 			redirect(fuel_uri($this->module_uri));

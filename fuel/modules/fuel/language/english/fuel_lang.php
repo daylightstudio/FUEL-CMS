@@ -149,6 +149,7 @@ $lang['cannot_determine_module'] = "Cannot determine module.";
 $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";
 $lang['data_saved'] = 'Data has been saved.';
 $lang['data_deleted'] = 'Data has been deleted.';
+$lang['data_not_deleted'] = 'Some or all data couldn\'t be deleted.';
 $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
