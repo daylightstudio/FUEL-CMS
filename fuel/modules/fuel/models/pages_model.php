@@ -230,12 +230,9 @@ class Pages_model extends Base_module_model {
 		return $values;
 	}
 	
-	function delete($where)
+	function on_after_delete($where)
 	{
-		parent::delete($where);
-		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
-		$CI->pagevariables_model->delete(array('page_id' => $where['id']));
+		$this->delete_related(array(FUEL_FOLDER => 'pagevariables_model'), 'page_id', $where);
 	}
 	
 	// overwrite parent
