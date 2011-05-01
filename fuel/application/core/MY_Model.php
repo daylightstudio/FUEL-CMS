@@ -1199,7 +1199,6 @@ class MY_Model extends CI_Model {
 		
 		// delete all has and belongs to many
 		$CI =& get_instance();
-		$id_field = $this->key_field();
 		$id = $this->_determine_key_field_value($where);
 		if (!empty($id))
 		{
