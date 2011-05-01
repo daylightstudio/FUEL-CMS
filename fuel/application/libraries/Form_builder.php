@@ -805,6 +805,10 @@ Class Form_builder {
 				$str .= $this->create_time($params);
 				return $str;
 				break;
+			case 'time' :
+				$str = $this->create_time($params);
+				return $str;
+				break;
 			case 'multi' : case 'array' :
 				return $this->create_multi($params);
 				break;

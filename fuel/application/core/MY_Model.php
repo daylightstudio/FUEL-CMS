@@ -739,9 +739,18 @@ class MY_Model extends CI_Model {
 		
 		foreach ($fields as $key => $field)
 		{
-			
-			// make it easier for dates
-			if (($field['type'] == 'datetime'))
+			if  ($field['type'] == 'time')
+			{
+				if (isset($values[$key.'_hour']))
+				{
+					if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $date_func('H:i:s');
+					//the js seem like only supply minute field, assign 00 for sec now
+					if (empty($values[$key.'_sec']))$values[$key.'_sec'] = '00';
+					$values[$key] = date("H:i:s", strtotime(@$values[$key.'_hour'].':'.@$values[$key.'_min'].':'.@$values[$key.'_sec'].' '.@$values[$key.'_am_pm']));
+				}
+			}
+				// make it easier for dates
+			else if (($field['type'] == 'datetime'))
 			{
 				if (isset($values[$key.'_hour']))
 				{
