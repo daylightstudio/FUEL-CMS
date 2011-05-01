@@ -348,6 +348,12 @@ class Fuel_page {
 		{
 			$view = $page;
 
+			// if view is the index.html file, then show a 404
+			if ($view == 'index.html')
+			{
+				show_404();
+			}
+
 			// do not display any views that have an underscore at the beginning of the view name, or is part of the path (e.g. about/_hidden/contact_email1.php)
 			$view_parts = explode('/', $view);
 
