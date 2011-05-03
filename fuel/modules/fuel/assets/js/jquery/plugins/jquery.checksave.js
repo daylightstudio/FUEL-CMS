@@ -30,11 +30,13 @@ jQuery.checksave = function() {
 
 jQuery.removeChecksave = function(){
 	window.onbeforeunload = null;
-}
+};
 
 jQuery.changeChecksaveValue = function(inputKey, val){
-	window._pageVals[inputKey] = val;
-}
+	if (window._pageVals){
+		window._pageVals[inputKey] = val;
+	}
+};
 
 jQuery.checkSaveChange = function(){
 	var msg;
@@ -63,4 +65,4 @@ jQuery.checkSaveChange = function(){
 		}
 	});
 	return msg;
-}
+};
