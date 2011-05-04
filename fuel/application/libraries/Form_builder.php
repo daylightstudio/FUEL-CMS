@@ -37,7 +37,7 @@
 Class Form_builder {
 
 	public $form; // form object used to create the form fields and associate errors with
-	public $id = ''; // id to be used for the form
+	public $id = ''; // id to be used for the containing table or div
 	public $css_class = 'form'; // css class to be used with the form
 	public $form_attrs = 'method="post" action=""'; // form tag attributes
 	public $label_colons = FALSE; // add colons to form labels?

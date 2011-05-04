@@ -29,7 +29,7 @@
 			<td><strong>id</strong></td>
 			<td>None</td>
 			<td>None</td>
-			<td>ID to be used for the form</td>
+			<td>ID to be used for the containing table or id</td>
 		</tr>
 		<tr>
 			<td><strong>css_class</strong></td>
