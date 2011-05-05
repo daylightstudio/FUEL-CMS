@@ -144,8 +144,10 @@ The <dfn>return</dfn> parameter determines whether to echo the output or just re
 
 
 <h2>$this->fuel_blog->get_comments(<var>[where]</var>, <var>'[order_by]'</var>, <var>[limit]</var>, <var>[offset]</var>, <var>'[return_method]'</var>, <var>'[assoc_key]'</var>)</h2>
-<p>Returns a single post. The post parameter can be either the permalink value or the post's id.</p>
+<p>Returns a comments from posts based on the where condition.</p>
 
+<h2>$this->fuel_blog->get_comments(<var>[where]</var>, <var>'[order_by]'</var>, <var>[limit]</var>, <var>[offset]</var>, <var>'[return_method]'</var>, <var>'[assoc_key]'</var>)</h2>
+<p>Returns a single comment.</p>
 
 <h2>$this->fuel_blog->get_links(<var>[where]</var>, <var>'[order_by]'</var>, <var>[limit]</var>, <var>[offset]</var>, <var>'[return_method]'</var>, <var>'[assoc_key]'</var>)</h2>
 <p>Returns links.</p>
