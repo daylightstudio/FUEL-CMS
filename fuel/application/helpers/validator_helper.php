@@ -828,5 +828,23 @@ function get_error($key = null)
 	}
 }
 
+
+// --------------------------------------------------------------------
+
+/**
+ * Get all global error messages
+ *
+ * @access	public
+ * @return	array
+ */
+function get_errors()
+{
+	if (defined('GLOBAL_ERRORS') AND !empty($GLOBALS[GLOBAL_ERRORS]))
+	{
+		return $GLOBALS[GLOBAL_ERRORS];
+	}
+	return NULL;
+}
+
 /* End of file validator_helper.php */
 /* Location: ./application/helpers/validator_helper.php */
