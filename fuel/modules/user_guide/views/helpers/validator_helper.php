@@ -301,13 +301,16 @@ if(is_future_date($val))<br /><br />
 <p>This function passes user-defined errors to a javascript function and injects it's content as a child of any element owning the included class.</p>
 
 <h2>has_errors()</h2>
-<p>Returns all user defined global errors assigned to global var <dfn>GLOBAL_ERRORS</dfn></p>
+<p>Returns all user defined global errors assigned to global var <dfn>GLOBAL_ERRORS</dfn>.</p>
 
 <h2>add_error(<var>'msg'</var>, <var>'key'</var>)</h2>
-<p>Add an error message in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn></p>
+<p>Add an error message in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn>.</p>
 
 <h2>add_errors(<var>'errors'</var>)</h2>
-<p>Add an array of error messages in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn></p>
+<p>Add an array of error messages in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn>.</p>
 
 <h2>get_error(<var>'key'</var>)</h2>
-<p>Returns an error message from the <dfn>GLOBAL_ERRORS</dfn> array if it exists under a particular key</p>
+<p>Returns an error message from the <dfn>GLOBAL_ERRORS</dfn> array if it exists under a particular key.</p>
+
+<h2>get_errors()</h2>
+<p>Returns an array of all error messages from the <dfn>GLOBAL_ERRORS</dfn> array if it exists.</p>
