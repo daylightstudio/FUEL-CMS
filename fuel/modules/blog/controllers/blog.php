@@ -312,7 +312,7 @@ class Blog extends Blog_base_controller {
 		// check captcha
 		if (is_true_val($this->fuel_blog->settings('use_captchas')))
 		{
-			if ($this->input->post('captcha') AND strtoupper($this->input->post('captcha')) != strtoupper($this->session->userdata('comment_captcha')))
+			if (!$this->input->post('captcha') OR strtoupper($this->input->post('captcha')) != strtoupper($this->session->userdata('comment_captcha')))
 			{
 				$valid = FALSE;
 			}
