@@ -48,7 +48,7 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			<td>Used for system emails.</td>
 		</tr>
 		<tr>
-			<td><strong>domain</strong></td>
+			<td><strong>fuel_path</strong></td>
 			<td>fuel/</td>
 			<td>None</td>
 			<td>Path to the fuel admin from the web base directory.</td>
