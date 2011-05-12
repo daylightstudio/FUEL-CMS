@@ -1,5 +1,5 @@
 <h1>Simple Modules</h1>
-<p>Modules in FUEL can range from simple forms to a complex, interactive, multi-page interfaces. 
+<p>Modules in FUEL can range from simple forms to a complex, interactive, multi-page interface. 
 <strong>Simple</strong> modules don't require additional views and controllers to be created. 
 Common examples of simple modules include events, news and job postings.</p>
 <p>For more on creating a simple module, <a href="<?=user_guide_url('modules/tutorial')?>">view the user guide's tutorial</a>.</p>
