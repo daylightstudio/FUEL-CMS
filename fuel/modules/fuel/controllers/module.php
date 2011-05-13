@@ -335,6 +335,8 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->css_class = 'more_filters';
 			$this->form_builder->set_field_values($field_values);
 			
+			// keycheck is already put in place by $this->form->close() in module_list layout
+			$this->form_builder->key_check = FALSE; 
 			$vars['more_filters'] = $this->form_builder->render();
 
 			$this->_render($this->views['list'], $vars);

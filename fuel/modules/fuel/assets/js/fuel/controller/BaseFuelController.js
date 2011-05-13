@@ -921,8 +921,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		_this.tableLoaded = true;
 		var publishUnpublish = function(__this, publishOrUnpublish){
 			var id = $(__this).parent().find('.toggle_' + publishOrUnpublish).attr('id').substr(14);
-			var params = { id: id, published : ((publishOrUnpublish == 'publish') ? 'yes' : 'no')};
-			
+			var $form = $(__this).closest('form');
+			var params = $form.formSerialize(true);
+			params['id'] = id;
+			params['published'] = ((publishOrUnpublish == 'publish') ? 'yes' : 'no')
 			$.post(_this.modulePath + '/' + publishOrUnpublish + '/' + id, params, function(html){
 				_this.redrawTable(true, false);
 			});
