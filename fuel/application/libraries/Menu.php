@@ -971,7 +971,7 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Gets the css classes for the list item styling
+	 * Gets the items in the active menu path
 	 *
 	 * @access	public
 	 * @param	string active element
@@ -1028,10 +1028,10 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Gets the css classes for the list item styling
+	 * Gets the menu items based on the parent
 	 *
 	 * @access	public
-	 * @param	string active element
+	 * @param	mixed parent id
 	 * @param	array menu items
 	 * @return	array
 	 */
