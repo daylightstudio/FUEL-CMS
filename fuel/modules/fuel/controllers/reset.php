@@ -49,7 +49,6 @@ class Reset extends CI_Controller {
 			}
 			else
 			{
-				exit('yo3');
 				$this->session->set_flashdata('error', lang('error_pwd_reset'));
 			}
 		}
