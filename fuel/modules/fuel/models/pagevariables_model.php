@@ -81,7 +81,6 @@ class Pagevariables_model extends MY_Model {
 	
 	function _common_query()
 	{
-		parent::_common_query();
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
 	}
 
