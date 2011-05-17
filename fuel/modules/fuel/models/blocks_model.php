@@ -58,9 +58,6 @@ class Blocks_model extends Base_module_model {
 		return $all_models;
 	}
 
-	public function _common_query()
-	{
-	}
 }
 
 class Block_model extends Base_module_record {
