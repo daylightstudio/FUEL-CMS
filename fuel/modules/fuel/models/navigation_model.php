@@ -251,6 +251,7 @@ class Navigation_model extends Base_module_model {
 	
 	function _common_query()
 	{
+		parent::_common_query();
 		$this->db->select($this->_tables['navigation'].'.*, '.$this->_tables['navigation_groups'].'.id group_id, '.$this->_tables['navigation_groups'].'.name group_name');
 		$this->db->join($this->_tables['navigation_groups'], $this->_tables['navigation_groups'].'.id='.$this->_tables['navigation'].'.group_id', 'left');
 		$this->db->order_by('precedence, location asc');
