@@ -6,6 +6,7 @@ class Users_model extends Base_module_model {
 	
 	public $required = array('user_name', 'email', 'first_name', 'last_name');
 	public $filters = array('first_name', 'last_name', 'user_name');
+	public $unique_fields = array('user_name');
 	
 	function __construct()
 	{
