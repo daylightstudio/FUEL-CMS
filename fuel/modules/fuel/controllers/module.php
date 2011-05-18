@@ -373,6 +373,7 @@ class Module extends Fuel_base_controller {
 		$mod_segs = explode('/',$this->module_uri);
 		$mod_offset_index = count($mod_segs) + 3;
 		$uri_params = uri_safe_batch_decode(fuel_uri_segment($mod_offset_index), '|', TRUE);
+		$uri_params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
 		
 		$posted = array();
 		if (!empty($_POST))
@@ -382,7 +383,7 @@ class Module extends Fuel_base_controller {
 			$posted_vars = array('col', 'order', 'limit', 'offset', 'precedence', 'view_type');
 			foreach($posted_vars as $val)
 			{
-				if ($this->input->post($val)) $posted[$val] = $this->input->post($val);
+				if ($this->input->post($val)) $posted[$val] = $this->input->post($val, TRUE);
 			}
 			
 			// custom module filters
@@ -392,17 +393,23 @@ class Module extends Fuel_base_controller {
 			{
 				if (isset($_POST[$key]))
 				{
-					$posted[$key] = $this->input->post($key);
-					$this->filters[$key]['value'] = $this->input->post($key);
-					$extra_filters[$key] = $this->input->post($key);
+					$posted[$key] = $this->input->post($key, TRUE);
+					$this->filters[$key]['value'] = $posted[$key];
+					$extra_filters[$key] = $posted[$key];
 				}
 			}
 			$posted['extra_filters'] = $extra_filters;
 			
 		}
 		
+		//$params = array_merge($defaults, $page_state, $uri_params, $posted);
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
-		$params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
+		
+		// reset offset if you apply a filter (via POST and not ajax)
+		if (!empty($_POST) and !is_ajax())
+		{
+			$params['offset'] = 0;
+		}
 		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
