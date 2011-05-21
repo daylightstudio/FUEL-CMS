@@ -1,4 +1,5 @@
 <?php
+
 class Page_router extends CI_Controller {
 
 	public $segments = array();
@@ -9,7 +10,7 @@ class Page_router extends CI_Controller {
 	{
 		parent::__construct();
 		$this->config->load('MY_config');
-		$this->config->load('fuel', TRUE);
+		$this->config->module_load('fuel', 'fuel', TRUE);
 		$this->load->library('cache');
 		
 	}
