@@ -13,8 +13,8 @@ if (fuel == undefined) var fuel = {};
 	var assetsImgPath = initObj.assetsImgPath;
 	var assetsPath = initObj.assetsPath;
 	var assetsAccept = initObj.assetsAccept;
-	var editor = initObj.editor;
-	var editorConfig = initObj.editorConfig;
+	var textEditor = initObj.editor;
+	var textEditorConfig = initObj.editorConfig;
 
 	var markers = null;
 	var X_OFFSET = 16;
@@ -169,17 +169,15 @@ if (fuel == undefined) var fuel = {};
 			
 			var ajaxSubmit = function($form){
 				
-				$form.attr('action', formAction).ajaxSubmit({
-					
-					beforeSubmit:function(){
-						if (CKEDITOR && CKEDITOR.instances != undefined){
-							for(var n in CKEDITOR.instances){
-								if (CKEDITOR.instances[n].hidden == false){
-									CKEDITOR.instances[n].updateElement();
-								}
-							}
+				// update CK Editor instances ... using beforeSubmit callback wan't work because data is already set at this point
+				if (CKEDITOR && CKEDITOR.instances != undefined){
+					for(var n in CKEDITOR.instances){
+						if (CKEDITOR && CKEDITOR.instances[n] != undefined && CKEDITOR.instances[n].hidden == false){
+							CKEDITOR.instances[n].updateElement();
 						}
-					},
+					}
+				}
+				$form.attr('action', formAction).ajaxSubmit({
 					success: function(html){
 						if ($(html).is('error')){
 							var msg = $(html).html();
@@ -328,7 +326,7 @@ if (fuel == undefined) var fuel = {};
 									if (CKEDITOR.instances[ckId]) {
 										CKEDITOR.remove(CKEDITOR.instances[ckId]);
 									}
-									CKEDITOR.replace(ckId, editorConfig);
+									CKEDITOR.replace(ckId, textEditorConfig);
 
 									// add this so that we can set that the page has changed
 									CKEDITOR.instances[ckId].on('instanceReady', function(e){
@@ -400,11 +398,21 @@ if (fuel == undefined) var fuel = {};
 								$editors.each(function(i) {
 									var ckId = $(this).attr('id');
 									
-									if ((editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
+									if ((textEditor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
 										createCKEditor(this);
 									} else {
 										createMarkItUp(this);
 									}
+									
+									
+									// setup update of element on save just in case
+								 /* Taken care of on ajax submit
+									$(this).parents('form').submit(function(){
+										if (CKEDITOR && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
+											CKEDITOR.instances[ckId].updateElement();
+										}
+									})*/
+
 								});
 								
 								
