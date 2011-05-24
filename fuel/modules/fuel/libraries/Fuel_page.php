@@ -78,7 +78,6 @@ class Fuel_page {
 	{
 		$default_home = $this->_CI->config->item('default_home_view', 'fuel');
 		
-		// if a location is provided in the init config, then use it instead of the uri segments and go no further
 		if ($this->location == 'page_router') $this->location = $default_home;
 		
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout');
@@ -87,10 +86,19 @@ class Fuel_page {
 		{
 			return;
 		}
-
-		$segments = $this->_CI->uri->rsegment_array();
 		
-		// in case a Matchbox module has a module name the same (like news...)
+		// if a location is provided in the init config, then use it instead of the uri segments
+		if (!empty($this->location))
+		{
+			$segs = explode('/', $this->location);
+			$segments = array_combine(range(1, count($segs)), array_values($segs));
+		}
+		else
+		{
+			$segments = $this->_CI->uri->rsegment_array();
+		}
+		
+		// in case a module has a name the same (like news...)
 		if (!empty($segments) AND $segments[count($segments)] == 'index')
 		{
 			array_pop($segments);
@@ -101,7 +109,7 @@ class Fuel_page {
 		// is and what are params being passed to the location
 		$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
 
-		if (count($this->_CI->uri->segment_array()) == 0) 
+		if (count($this->_CI->uri->segment_array()) == 0 OR $this->locaton == $default_home) 
 		{
 			$page_data = $this->_CI->pages_model->find_by_location($default_home, $this->_only_published);
 			$location = $default_home;
