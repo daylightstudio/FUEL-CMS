@@ -45,7 +45,7 @@ class MY_Model extends CI_Model {
 	public $auto_date_add = array('date_added', 'entry_date'); // field names to automatically set the date when the value is NULL
 	public $auto_date_update = array('last_modified', 'last_updated'); // field names to automatically set the date on updates
 	public $date_use_gmt = FALSE; // datetime method
-	public $default_date = '0000-00-00'; // default date value that get's passed to the model on save
+	public $default_date = 0; // default date value that get's passed to the model on save. Using 0000-00-00 will not work if it is a required field since it is not seen as an empty value
 	public $auto_trim = TRUE; // will trim on clean
 	public $auto_encode_entities = TRUE; // automatically encode html entities 
 	public $xss_clean = FALSE; // automatically run the xss_clean
@@ -508,25 +508,8 @@ class MY_Model extends CI_Model {
 
 			// merge params with defaults
 			$params = array_merge($defaults, $params);
-
-			// now merge params with model specific sql if it exists
-			foreach($defaults2 as $key => $val)
-			{
-				if (!empty($this->sql[$val])){
-					if (is_array($this->sql[$val]) AND is_array($params[$val]))
-					{
-						$params[$val] = array_merge($this->sql[$val], $params[$val]);
-					} 
-					else if (empty($params[$val]))
-					{
-						$params[$val] = $this->sql[$val];
-					}
-				}
-			}
-
-			// add select as string instead of array like above 
-			if (!empty($this->sql['select'])) $params['select'] = $params['select'].', '.$this->sql['select'];
-
+			
+			// add joins
 			if (!empty($params['join'][0]))
 			{
 				$join_select = '';
@@ -552,7 +535,10 @@ class MY_Model extends CI_Model {
 			if (!empty($params['join_select'])) $this->db->select($join_select, FALSE);
 
 			// from
-			$this->db->from($params['from']);
+			if ($params['from'] != $this->table_name)
+			{
+				$this->db->from($params['from']);
+			}
 
 			// loop through list above to set params
 			foreach($defaults2 as $val)
@@ -733,7 +719,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($this->auto_trim) ? trim($values[$key]) : $values[$key];
 			}
 		}
-		
+
 		// process linked fields
 		$values = $this->process_linked($values);
 		
