@@ -109,7 +109,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 
 /* fuel edit bar */
 div#__fuel_edit_bar__ { display: none; height: 28px; position: fixed; z-index: 999; top: 0px; right: 0; opacity: .9; -moz-opacity: .9; filter:alpha(opacity=90); font-size: 11px; font-family: Arial; }
-div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; background-color: #c30 !important; background-image: none !important; color: #fff; float: left;line-height: 22px; padding: 0 10px; }
+div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; background-color: #c30 !important; background-image: none !important; color: #fff !important; float: left !important;line-height: 22px !important; padding: 0 10px !important; }
 div#__fuel_edit_bar__ li { display: block !important; margin: 0 !important; list-style: none !important; padding: 0 !important; float: left !important; }
 div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 30px !important; background-position: center center !important; }
 div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
