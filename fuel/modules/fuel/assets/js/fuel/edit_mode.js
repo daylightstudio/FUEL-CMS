@@ -332,9 +332,9 @@ if (fuel == undefined) var fuel = {};
 
 									// add this so that we can set that the page has changed
 									CKEDITOR.instances[ckId].on('instanceReady', function(e){
-										editor = e.editor;
+										editorElem = e.editor;
 										this.document.on('keyup', function(e){
-											editor.updateElement();
+											editorElem.updateElement();
 										});
 
 										// so the formatting doesn't get too crazy from ckeditor
