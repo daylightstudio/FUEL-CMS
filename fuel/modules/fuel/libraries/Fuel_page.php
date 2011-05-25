@@ -109,7 +109,7 @@ class Fuel_page {
 		// is and what are params being passed to the location
 		$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
 
-		if (count($this->_CI->uri->segment_array()) == 0 OR $this->locaton == $default_home) 
+		if (count($this->_CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
 		{
 			$page_data = $this->_CI->pages_model->find_by_location($default_home, $this->_only_published);
 			$location = $default_home;
