@@ -203,18 +203,18 @@ class Navigation_model extends Base_module_model {
 	}*/
 	
 	// validation method
-	function is_new_navigation($nav_key, $group_id, $parent_id)
+	function is_new_navigation($nav_key, $group_id)
 	{
 		if (empty($group_id)) return FALSE;
-		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'parent_id' => $parent_id));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key));
 		if (!empty($data)) return FALSE;
 		return TRUE;
 	}
 
 	// validation method
-	function is_editable_navigation($nav_key, $group_id, $parent_id, $id)
+	function is_editable_navigation($nav_key, $group_id, $id)
 	{
-		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'parent_id' => $parent_id));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
 		return FALSE;
 	}
@@ -240,11 +240,11 @@ class Navigation_model extends Base_module_model {
 		
 		if (!empty($values['id']))
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['parent_id'], $values['id']));
+			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['id']));
 		}
 		else
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['parent_id']));
+			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id']));
 		}
 		return $values;
 	}
