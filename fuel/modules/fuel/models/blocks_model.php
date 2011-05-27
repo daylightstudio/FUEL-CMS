@@ -18,7 +18,7 @@ class Blocks_model extends Base_module_model {
 		$data = parent::list_items($limit, $offset, $col, $order);
 		foreach($data as $key => $val)
 		{
-			$data[$key]['view'] = htmlentities($val['view']);
+			$data[$key]['view'] = htmlentities($val['view'], ENT_QUOTES, 'UTF-8');
 		}
 		return $data;
 	}
