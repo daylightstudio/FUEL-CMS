@@ -219,6 +219,23 @@ class Navigation_model extends Base_module_model {
 		return FALSE;
 	}
 	
+	// validation method
+	function is_new_location($location, $group_id, $parent_id)
+	{
+		if (empty($group_id)) return FALSE;
+		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id));
+		if (!empty($data)) return FALSE;
+		return TRUE;
+	}
+
+	// validation method
+	function is_editable_location($location, $group_id, $parent_id, $id)
+	{
+		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id));
+		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
+		return FALSE;
+	}
+	
 	function on_before_clean($values)
 	{
 		if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
@@ -241,10 +258,12 @@ class Navigation_model extends Base_module_model {
 		if (!empty($values['id']))
 		{
 			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['id']));
+			$this->add_validation('location', array(&$this, 'is_editable_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['id']));
 		}
 		else
 		{
 			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id']));
+			$this->add_validation('location', array(&$this, 'is_new_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id']));
 		}
 		return $values;
 	}
