@@ -7,9 +7,13 @@ define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
 define('FUEL_PATH', MODULES_PATH.FUEL_FOLDER.'/');
 define('WEB_ROOT', str_replace('\\', '/', realpath(dirname(SELF)).DIRECTORY_SEPARATOR)); // replace \ with / for windows
 
+// needed to take care of some server environments
 $_SERVER['SCRIPT_NAME'] = preg_replace('#^/(.+)\.php/(.*)#', '/$1.php', $_SERVER['SCRIPT_NAME']);
 define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
-$_FUEL_SEGS = explode('/', $_SERVER['SCRIPT_FILENAME']);
+
+// change slashes for some Windows platforms
+$_FUEL_SEGS = explode('/', str_replace("\\", '/', $_SERVER['SCRIPT_FILENAME']));
+
 define('WEB_FOLDER', $_FUEL_SEGS[count($_FUEL_SEGS)-2]);
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 
