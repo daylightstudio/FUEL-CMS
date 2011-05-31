@@ -3,7 +3,8 @@ define('FUEL_ADMIN', TRUE);
 
 class Fuel_base_controller extends CI_Controller {
 	
-	public $js_controller = 'BaseFuelController';
+	public $js_controller = 'fuel.controller.BaseFuelController';
+	public $js_controller_path = '';
 	public $js_controller_params = array();
 	public $nav_selected;
 	
@@ -78,6 +79,8 @@ class Fuel_base_controller extends CI_Controller {
 			$load_vars['user'] = $this->fuel_auth->user_data();
 			$load_vars['session_key'] = $this->fuel_auth->get_session_namespace();
 		}
+
+		$this->js_controller_path = js_path('', FUEL_FOLDER);
 
 		$this->load->vars($load_vars);
 		$this->_load_js_localized();

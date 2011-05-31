@@ -22,7 +22,7 @@
 		<?php if ($this->js_controller != 'BaseFuelController') : ?>
 		jqx.addPreload('fuel.controller.BaseFuelController');
 		<?php endif; ?>
-		jqx.init('fuel.controller.<?=$this->js_controller?>', <?=json_encode($this->js_controller_params)?> );
+		jqx.init('<?=$this->js_controller?>', <?=json_encode($this->js_controller_params)?>, '<?=$this->js_controller_path?>');
 	</script>
 	<?php endif; ?>
 
