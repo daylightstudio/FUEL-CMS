@@ -84,7 +84,15 @@ on the key value specified in the config (e.g. example):</p>
 			<td><strong>js_controller</strong></td>
 			<td>The default is BaseFuelController</td>
 			<td>None</td>
-			<td>The name of the javascript controller. For more information on creating javascript controllers, visit the section on the javascript <a href="<?=user_guide_url('javascript/jqx')?>">jqx Framework</a></td>
+			<td>The name of the javascript controller. If an array is given, then the key of the array is considered the module folder to look in and the value the name of the controller.
+			The <dfn>js_controller_path</dfn> will automatically be changed to the module's assets folder if no <dfn>js_controller_path</dfn> is provided.
+			For more information on creating javascript controllers, visit the section on the javascript <a href="<?=user_guide_url('javascript/jqx')?>">jqx Framework</a></td>
+		</tr>
+		<tr>
+			<td><strong>js_controller_path</strong></td>
+			<td>The default is the path to the fuel module's asset folder (e.g. fuel/modules/fuel/assets/js/</td>
+			<td>None</td>
+			<td>The base path of where to look for the controller file.</td>
 		</tr>
 		<tr>
 			<td><strong>js_controller_params</strong></td>

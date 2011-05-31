@@ -76,6 +76,7 @@ class Fuel_modules {
 				'delete' => '_layouts/module_delete'),
 			'permission' => $module,
 			'js_controller' => 'BaseFuelController',
+			'js_controller_path' => '',
 			'js_controller_params' => array(),
 			'js_localized' => array(),
 			'js' => '',
@@ -120,6 +121,31 @@ class Fuel_modules {
 		{
 			$return['module_name'] = $module_name;
 		}
+		
+		// set proper jqxController name
+		if (is_array($return['js_controller']))
+		{
+			if (empty($return['js_controller_path']))
+			{
+				$return['js_controller_path'] = js_path('', key($return['js_controller']));
+			}
+			$return['js_controller'] = current($return['js_controller']);
+		}
+		else if (is_string($return['js_controller']) AND strpos($return['js_controller'], '.') === FALSE)
+		{
+			$return['js_controller'] = 'fuel.controller.'.$return['js_controller'];
+		}
+
+		// convert slashes to jqx object periods
+		$return['js_controller'] = str_replace('/', '.', $return['js_controller']);
+		
+		// set the base path to the controller file if still empty
+		if (empty($return['js_controller_path']))
+		{
+			$return['js_controller_path'] = js_path('', FUEL_FOLDER);
+		}
+		
+		
 		
 		if ($create_action_name = lang('module_'.$module.'_create'))
 		{
