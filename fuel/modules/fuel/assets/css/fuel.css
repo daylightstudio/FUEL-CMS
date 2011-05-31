@@ -33,6 +33,7 @@ span.required { color:#c30; }
 .hidden { display: none; }
 .float_left { float: left; }
 .float_right { float: right; }
+.tiny { font-size: 9px; }
 tr.drag { border: 1px solid #ccc !important; background-color: #ffe !important }
 tr.drag td { cursor: move !important; background-color: #ffe !important; }
 a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
