@@ -1,3 +1,8 @@
+// simply mirror the text
+function mirror(text){
+	return text;
+}
+
 // standard slugify borrowed from http://www.milesj.me/resources/snippet/13
 function url_title(text) {
 	text = text.replace(/([^-a-zA-Z0-9\s]|\,|\&)+/gi, '');
