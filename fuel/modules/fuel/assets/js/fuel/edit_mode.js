@@ -434,23 +434,22 @@ if (fuel == undefined) var fuel = {};
 											}
 
 										});
-
-										// setup ajax on blur to do server side processing if no javascript function exists
-										if (!func){
-											$('#' + masterId).blur(function(e){
-												var url = __FUEL_PATH__ + '/' + module + '/process_linked';
-												var parameters = {
-													master_field:master, 
-													master_value:$(this).val(), 
-													slave_field:slave
-												};
-												$.post(url, parameters, function(response){
-													$('#' + slaveId).val(response);
-												});
-											});
-										}
-
 									}
+									// setup ajax on blur to do server side processing if no javascript function exists
+									if (!func){
+										$('#' + masterId).blur(function(e){
+											var url = __FUEL_PATH__ + '/' + module + '/process_linked';
+											var parameters = {
+												master_field:master, 
+												master_value:$(this).val(), 
+												slave_field:slave
+											};
+											$.post(url, parameters, function(response){
+												$('#' + slaveId).val(response);
+											});
+										});
+									}
+
 								}
 
 								// needed for enclosure
