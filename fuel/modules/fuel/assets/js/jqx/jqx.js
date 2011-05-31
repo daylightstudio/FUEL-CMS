@@ -47,7 +47,7 @@ jqx.createController = function(parentObj, ctrlObj){
 	return parentObj.extend(ctrlObj);
 };
 	
-jqx.init = function(ctrlName, initObj){
+jqx.init = function(ctrlName, initObj, path){
 	if (ctrlName) {
 		jQuery.each(jqx.config.preload, function(i, n){
 			if (n.indexOf('/') != -1) {
@@ -56,9 +56,21 @@ jqx.init = function(ctrlName, initObj){
 				jqx.includeObject(n);
 			}
 		});
+		
 		jqx.controllerName = ctrlName;
 		jqx.controllerInitObj = initObj;
+		
+		// set the jsPath value to the path to the controller so that we can include the object
+		var origJSPath = jqx.config.jsPath;
+		
+		if (path && path.length) {
+			jqx.config.controllerPath = path;
+			jqx.config.jsPath = jqx.config.controllerPath;
+		}
 		jqx.includeObject(ctrlName);
+		
+		// now change back jsPath back to what it was 
+		jqx.config.jsPath = origJSPath;
 
 		var readyCallback = function(){
 			jqx.domready = true;
@@ -176,7 +188,6 @@ jqx.include = function(){
 jqx.includeObject = function(){
 	var a = arguments;
 	if (a[0].constructor == Array) a = a[0];
-	
 	jQuery.each(a, function(i, n){
 		var path = jqx.config.jsPath + n.split(".").join("/") + ".js";
 		if (jqx._includeCache.isCached(path)) return;
@@ -310,7 +321,7 @@ jqx.config.cssPath = jqx.config.basePath + "css/";
 jqx.config.htmlPath = jqx.config.basePath;
 jqx.config.pluginPath = jqx.config.jsPath + "jquery/plugins/";
 jqx.config.helpersPath = jqx.config.jqxPath + "helpers/";
-jqx.config.controllerPath =  jqx.config.jqxPath + "controller/";
+jqx.config.controllerPath =  jqx.config.jsPath + "controller/";
 jqx.config.preload = ["jqx.lib.Class", "jqx.lib.BaseController"];
 jqx.config.cookieDefaultLifetime = 30;
 jqx.config.cookieDefaultPath = jqx.config.basePath;
