@@ -184,12 +184,6 @@ array(
 			<td>Max height for asset images beign uploaded.</td>
 		</tr>
 		<tr>
-			<td><strong>assets_upload_max_height</strong></td>
-			<td>768</td>
-			<td>None</td>
-			<td>Max height for asset images beign uploaded.</td>
-		</tr>
-		<tr>
 			<td><strong>fuel_javascript</strong></td>
 			<td>
 <pre>
