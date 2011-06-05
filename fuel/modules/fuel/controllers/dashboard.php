@@ -6,7 +6,7 @@ class Dashboard extends Fuel_base_controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->js_controller = 'DashboardController';
+		$this->js_controller = 'fuel.controller.DashboardController';
 	}
 	
 	function index()
