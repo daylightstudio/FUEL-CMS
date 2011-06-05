@@ -9,7 +9,7 @@ class Manage extends Fuel_base_controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->js_controller = 'ManageController';
+		$this->js_controller = 'fuel.controller.ManageController';
 	}
 	
 	function index()
