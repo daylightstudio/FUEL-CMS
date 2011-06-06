@@ -168,7 +168,9 @@ echo $this->asset->img_path('banner.jpg', 'my_module');
 // /fuel/modules/my_module/assets/images/banner.jpg (assuming /fuel/modules is where the module folder is located)
 
 echo $this->asset->img_path('banner.jpg', NULL, TRUE);
-// http://www.mysite.com/assets/images/banner.jpg
+// http://www.mysite.com/assets/images/banner.jpg (if the "assets_module" Asset class property is empty)
+// http://www.mysite.com/fuel/modules/my_module/assets/images/banner.jpg (if the "assets_module" Asset class property is my_module)
+
 </pre>
 <p class="important">File extension <strong>must</strong> be included.</p>
 
