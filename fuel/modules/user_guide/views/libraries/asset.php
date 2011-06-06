@@ -171,6 +171,9 @@ echo $this->asset->img_path('banner.jpg', NULL, TRUE);
 // http://www.mysite.com/assets/images/banner.jpg (if the "assets_module" Asset class property is empty)
 // http://www.mysite.com/fuel/modules/my_module/assets/images/banner.jpg (if the "assets_module" Asset class property is my_module)
 
+echo $this->asset->img_path('banner.jpg', '', TRUE);
+// http://www.mysite.com/assets/images/banner.jpg (and empty string for the module parameter will properly ignore anything in the assets_module Asset class property)
+
 </pre>
 <p class="important">File extension <strong>must</strong> be included.</p>
 
