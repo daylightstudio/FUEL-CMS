@@ -148,7 +148,6 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
 	'jquery/plugins/jquery.treeview.min',
-	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.fillin',
