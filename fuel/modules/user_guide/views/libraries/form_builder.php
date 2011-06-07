@@ -587,5 +587,5 @@ $this->form_builder->set_validator($validator);
 
 <pre class="brush: php">
 $order = array('name', 'email', 'password');
-$this->form_builder->set_field_order(<var>order_arr</var>);
+$this->form_builder->set_field_order($order);
 </pre>
