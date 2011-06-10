@@ -93,7 +93,7 @@ function fuel_block($params)
 	}
 	else
 	{
-		$data = $p['data'];
+		$vars['data'] = $p['data'];
 	}
 	
 	$output = '';
