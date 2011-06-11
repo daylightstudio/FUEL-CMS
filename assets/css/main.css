@@ -50,7 +50,7 @@ div#topnav li a { display: block; margin: 0 10px; line-height: 12px; text-decora
 div#topnav li.last { border: none; }
 
 /* logo */
-a#daylight_logo { position: absolute; top: 20px; left: 0px; background: transparent urlhttp://www.getfuelcms.com/assets/images/logo_daylight.png) no-repeat center center; width: 166px; height: 30px; display: block; }
+a#daylight_logo { position: absolute; top: 20px; left: 0px; background: transparent url(http://www.getfuelcms.com/assets/images/logo_daylight.png) no-repeat center center; width: 166px; height: 30px; display: block; }
 a#fuel_logo { display: block; text-indent: -10000px; overflow: hidden; position: absolute; top: 60px; left: 0px; background: transparent url(http://www.getfuelcms.com/assets/images/logo_fuel.png) no-repeat center center; height: 340px; width: 340px; }
 
 div#fuel_intro { padding-top: 120px; margin-left: 360px; position: relative; }
