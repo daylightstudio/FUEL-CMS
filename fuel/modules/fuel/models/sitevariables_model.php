@@ -14,12 +14,12 @@ class Sitevariables_model extends Base_module_model {
 	function retrieve_all()
 	{
 		$vars = $this->options_list('name', 'value', array('active' => 'yes'));
-			return $vars;
+		return $vars;
 	}
 
 	function retrieve_one($name = null)
 	{
-		$vars = $this->find_one(array('active' => 'yes', 'name' => $name));
+		$vars = $this->find_one_array(array('active' => 'yes', 'name' => $name));
 		return $vars['value'];
 	}
 	
