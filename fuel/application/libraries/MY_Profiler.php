@@ -58,9 +58,10 @@ class MY_Profiler extends CI_Profiler {
 				// check each module for databases
 				else if (is_subclass_of(get_class($CI_object), 'CI_Model') )
 				{
-					if (is_object($CI_object->db) && is_subclass_of(get_class($CI_object->db), 'CI_DB'))
+					$module_db = $CI_object->db();
+					if (is_object($module_db) && is_subclass_of(get_class($module_db), 'CI_DB'))
 					{
-						$dbs[get_class($CI_object)] = $CI_model_object;
+						$dbs[get_class($CI_object)] = $module_db;
 					}
 				}
 			}

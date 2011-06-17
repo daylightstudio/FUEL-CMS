@@ -55,7 +55,7 @@ class MY_Model extends CI_Model {
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $foreign_keys = array(); // map foreign keys to table models
 	
-	public $db; // CI database object
+	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
 	protected $key_field = 'id'; // usually the tables primary key(s)... can be an array if compound key
 	protected $normalized_save_data = NULL; // the saved data before it is cleaned
