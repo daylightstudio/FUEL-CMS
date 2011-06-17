@@ -370,9 +370,9 @@ function is_of_file_type($fileName, $fileType)
  * @param	string	filename
  * @return	boolean
  */
-function valid_file_upload($fileName)
+function valid_file_upload($file_name)
 {
-	if($_FILES[$fileName]['error'] > 0)
+	if(empty($_FILES[$file_name]) OR $_FILES[$file_name]['error'] > 0)
 	{
 		return FALSE;
 	} 
