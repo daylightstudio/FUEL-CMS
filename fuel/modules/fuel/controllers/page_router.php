@@ -96,6 +96,10 @@ class Page_router extends CI_Controller {
 			}
 			else
 			{
+				// do any redirects... will exit script if any
+				$this->_redirects();
+
+				// else show 404
 				show_404();
 			}
 		}
@@ -144,6 +148,10 @@ class Page_router extends CI_Controller {
 		// show 404 if output is explicitly set to FALSE
 		if ($output === FALSE)
 		{
+			// do any redirects... will exit script if any
+			$this->_redirects();
+			
+			// else show 404
 			show_404();
 		}
 		
@@ -153,6 +161,41 @@ class Page_router extends CI_Controller {
 		// render output
 		$this->output->set_output($output);
 		
+	}
+	
+	/*
+	* ------------------------------------------------------
+	* Looks for any redirects to perform. 
+	* Used before showing
+	* ------------------------------------------------------
+	*/
+	function _redirects()
+	{
+		include(APPPATH.'config/redirects.php');
+		
+		$uri = implode('/', $this->uri->segments);
+
+		if (!empty($redirect))
+		{
+			
+			foreach ($redirect as $key => $val)
+			{
+				// Convert wild-cards to RegEx
+				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
+
+				// Does the RegEx match?
+				if (preg_match('#^'.$key.'$#', $uri))
+				{
+					// Do we have a back-reference?
+					if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
+					{
+						$val = preg_replace('#^'.$key.'$#', $val, $uri);
+					}
+					$url = site_url($val);
+					redirect($url, 301);
+				}
+			}
+		}
 	}
 
 }
