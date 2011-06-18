@@ -5,6 +5,7 @@ require_once('base_module_model.php');
 class Sitevariables_model extends Base_module_model {
 
 	public $required = array('name');
+	public $unique_fields = array('name');
 	
 	function __construct()
 	{

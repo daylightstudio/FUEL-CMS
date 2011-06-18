@@ -28,9 +28,19 @@ class Assets extends Module {
 			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
 			$upload_path = $this->config->item('assets_server_path').$this->model->get_dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 
-			$overwrite  = ($this->input->post('overwrite')) ? TRUE : FALSE;
+			$overwrite = ($this->input->post('overwrite')) ? TRUE : FALSE;
+			$create_thumb = ($this->input->post('create_thumb')) ? TRUE : FALSE;
+			$maintain_ratio = ($this->input->post('maintain_ratio')) ? TRUE : FALSE;
+
+			$posted['userfile_width'] = $this->input->post('width');
+			$posted['userfile_height'] = $this->input->post('height');
+			
 			$posted['userfile_path'] = $upload_path;
 			$posted['userfile_overwrite'] = $overwrite;
+			$posted['userfile_create_thumb'] = $create_thumb;
+			$posted['userfile_maintain_ratio'] = $maintain_ratio;
+			$posted['userfile_master_dim'] = $this->input->post('master_dim');
+			
 			$posted['userfile_filename'] = $this->input->post('userfile_filename');
 			
 			if ($this->_process_uploads($posted))
@@ -43,6 +53,8 @@ class Assets extends Module {
 				$this->session->set_flashdata('uploaded_post', $_POST);
 				$this->session->set_flashdata('success', lang('data_saved'));
 			}
+			
+			$this->model->on_after_post($posted);
 			
 			redirect(fuel_uri($this->module.'/create/'));
 		}
