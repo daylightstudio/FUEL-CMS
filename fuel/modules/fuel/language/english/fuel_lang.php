@@ -227,7 +227,25 @@ $lang['form_label_asset_folder'] = 'Asset Folder';
 $lang['form_label_new_file_name'] = 'New file name';
 $lang['form_label_subfolder'] = 'Subfolder';
 $lang['form_label_overwrite'] = 'Overwrite';
+$lang['form_label_create_thumb'] = 'Create thumb';
+$lang['form_label_maintain_ratio'] = 'Maintain ratio';
+$lang['form_label_overwrite'] = 'Overwrite';
+$lang['form_label_width'] = 'Width';
+$lang['form_label_height'] = 'Height';
+$lang['form_label_master_dimension'] = 'Master dimension';
 $lang['assets_upload_action'] = 'Upload';
+$lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploaded to';
+$lang['assets_comment_filename'] = 'If no name is provided, the filename that already exists will be used.';
+$lang['assets_comment_subfolder'] = 'Will attempt to create a new subfolder to place your asset.';
+$lang['assets_comment_overwrite'] = 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.';
+$lang['assets_heading_image_specific'] = 'Image Specific';
+$lang['assets_comment_thumb'] = 'Create a thumbnail of the image.';
+$lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image if resized.';
+$lang['assets_comment_width'] = 'Will change the width of an image to the desired amount.';
+$lang['assets_comment_height'] = 'Will change the height of an image to the desired amount.';
+$lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
+
+
 
 
 /*

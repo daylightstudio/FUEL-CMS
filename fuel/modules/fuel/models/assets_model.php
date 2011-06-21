@@ -277,20 +277,20 @@ class Assets_model extends CI_Model {
 		$editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel');
 		$accepts = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|jpe|jpeg|gif|png');
 		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
-		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $this->get_dirs(), 'comment' => 'The asset folder that it will be uploaded to');
-		$fields['userfile_filename'] = array('label' => lang('assets_model_new_file_name'), 'comment' => 'If no name is provided, the filename that already exists will be used');
+		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $this->get_dirs(), 'comment' => lang('assets_comment_asset_folder'));
+		$fields['userfile_filename'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
 		if ($CI->config->item('assets_allow_subfolder_creation', 'fuel'))
 		{
-			$fields['subfolder'] = array('label' => lang('assets_model_subfolder'), 'comment' => 'Will attempt to create a new subfolder to place your asset');
+			$fields['subfolder'] = array('label' => lang('form_label_subfolder'), 'comment' => lang('assets_comment_filename'));
 		}
-		$fields['overwrite'] = array('label' => lang('assets_model_overwrite'), 'type' => 'checkbox', 'comment' => 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.', 'checked' => true, 'value' => '1');
+		$fields['overwrite'] = array('label' => lang('form_label_overwrite'), 'type' => 'checkbox', 'comment' => lang('assets_comment_overwrite'), 'checked' => true, 'value' => '1');
 
-		$fields['Image Specific'] = array('type' => 'section');
-		$fields['create_thumb'] = array('label' => lang('assets_model_create_thumb'), 'type' => 'checkbox', 'comment' => 'Create a thumbnail of the image.', 'value' => '1');
-		$fields['maintain_ratio'] = array('label' => lang('assets_model_maintain_ratio'), 'type' => 'checkbox', 'comment' => 'Maintain the aspect ratio of the image if resized.', 'value' => '1');
-		$fields['width'] = array('label' => lang('assets_model_width'), 'comment' => 'Will change the width of an image to the desired amount.', 'size' => '3');
-		$fields['height'] = array('label' => lang('assets_model_height'), 'comment' => 'Will change the height of an image to the desired amount.', 'size' => '3');
-		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('assets_model_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.');
+		$fields[lang('assets_heading_image_specific')] = array('type' => 'section');
+		$fields['create_thumb'] = array('label' => lang('form_label_create_thumb'), 'type' => 'checkbox', 'comment' => lang('assets_comment_thumb'), 'value' => '1');
+		$fields['maintain_ratio'] = array('label' => lang('form_label_maintain_ratio'), 'type' => 'checkbox', 'comment' => lang('assets_comment_aspect_ratio'), 'value' => '1');
+		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
+		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
+		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
 		return $fields;
 	}
 	
