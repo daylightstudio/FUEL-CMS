@@ -1,6 +1,6 @@
 <?php if ($this->fuel_auth->has_permission('logs')) : ?>
 <?php if (!empty($latest_activity)) : ?>
-<div class="dashboard_pod" style="width: 450px;">
+<div class="dashboard_pod" style="width: 400px;">
 
 	<h3><?=lang('dashboard_hdr_latest_activity')?></h3>
 	<ul class="nobullets">
@@ -14,7 +14,7 @@
 <?php endif; ?>
 
 <?php if (!empty($feed)) : ?>
-<div class="dashboard_pod" style="width: 250px;">
+<div class="dashboard_pod" style="width: 230px;">
 
 	<h3><?=lang('dashboard_hdr_latest_news')?></h3>
 	<ul class="nobullets">
@@ -27,7 +27,7 @@
 <?php endif; ?>
 
 <?php if (!empty($recently_modifed_pages)) : ?>
-<div class="dashboard_pod" style="width: 250px;">
+<div class="dashboard_pod" style="width: 230px;">
 	<h3><?=lang('dashboard_hdr_modified')?></h3>
 		<ul class="nobullets">
 			<?php foreach($recently_modifed_pages as $val) : ?>
@@ -40,7 +40,7 @@
 
 
 <?php if (!empty($docs) AND $this->fuel_auth->has_permission('site_docs')) : ?>
-<div class="dashboard_pod" style="width: 250px;">
+<div class="dashboard_pod" style="width: 230px;">
 
 	<h3><?=lang('dashboard_hdr_site_docs')?></h3>
 	<?php if (is_array($docs)) : ?>
