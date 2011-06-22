@@ -351,6 +351,7 @@ class Pages extends Module {
 				if ($val['type'] == 'array' OR $val['type'] == 'multi')
 				{
 					$value = serialize($value);
+					$val['type'] = 'array'; // force the type to be an array
 				}
 				
 				if (!in_array($val['type'], $var_types)) $val['type'] = 'string';
