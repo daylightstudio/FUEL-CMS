@@ -871,7 +871,7 @@ Class Form_builder {
 		}
 		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
 		{
-			$str .= "<label for=\"".Form::create_id($params['name'])."\" id=\"label_".Form::create_id($params['name'])."\">";
+			$str .= "<label for=\"".Form::create_id($params['orig_name'])."\" id=\"label_".Form::create_id($params['orig_name'])."\">";
 		}
 		if ($this->tooltip_labels)
 		{
