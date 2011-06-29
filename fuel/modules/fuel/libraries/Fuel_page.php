@@ -484,6 +484,7 @@ class Fuel_page {
 		} 
 		
 		$this->_CI->load->library('session');
+		$this->_CI->load->helper('convert');
 		
 		
 		// add top edit bar for fuel
@@ -503,7 +504,10 @@ class Fuel_page {
 		$this->_CI->load->library('form');
 		$vars['page'] = $this->properties();
 		$vars['layouts'] = $this->_CI->fuel_layouts->layouts_list(TRUE);
-		
+		$last_page = uri_path();
+		if (empty($last_page)) $last_page = $this->_CI->config->item('default_home_view', 'fuel');
+		$vars['last_page'] = uri_safe_encode($last_page);
+
 		$editable_asset_types = $this->_CI->config->item('editable_asset_filetypes', 'fuel');
 
 
