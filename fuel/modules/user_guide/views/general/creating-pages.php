@@ -14,7 +14,7 @@
 <h2>Creating a Static Page - about</h2>
 
 <h3>Opt-In Controller Method</h3>
-<p>There are several ways to create a page in FUEL. The easest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controller')?>">Opt-In Controller</a> Method. This allows you to create pages without the need for a controller. A URI path of <strong>about/contact</strong> would have a view file created at <strong>views/about/contact.php</strong>. The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.</p>
+<p>There are several ways to create a page in FUEL. The easest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a> Method. This allows you to create pages without the need for a controller. A URI path of <strong>about/contact</strong> would have a view file created at <strong>views/about/contact.php</strong>. The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.</p>
 
 <p>For this tutorial we will make the <dfn>about</dfn> page a static view file. To do that, create the following file at <dfn>application/views/about.php</dfn>: </p>
 
@@ -28,7 +28,7 @@
 <p class="important">The <kbd>home</kbd> view file is reserved as the index page for the site.</p>
 
 <h3>Passing Variables to a Page</h3>
-<p>FUEL provides several ways to pass variables to view files without the need of creating controllers. By default, the <dfn>$vars</dfn> array variable in the <dfn>application/views/_variables/global.php</dfn> file gets passed to every page created using the <a href="<?=user_guide_url('general/opt-in-controller')?>">Opt-In Controller</a>
+<p>FUEL provides several ways to pass variables to view files without the need of creating controllers. By default, the <dfn>$vars</dfn> array variable in the <dfn>application/views/_variables/global.php</dfn> file gets passed to every page created using the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a>
 Method. For this tutorial, we would like add an additional variable to be used on each page called <dfn>$bigpic</dfn>. We want this variable to represent the top main picture of the page and change for each section of the site. We add this variable to the <dfn>application/views/_variables/global.php</dfn> file as seen below:</p>
 
 <pre class="brush: php">

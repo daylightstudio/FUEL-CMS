@@ -87,15 +87,16 @@ class Login extends CI_Controller {
 						);
 
 						set_cookie($config);
-
-						if ($this->input->post('forward'))
+						
+						$forward = $this->input->post('forward');
+						$forward_uri = uri_safe_decode($forward);
+						if ($forward AND $forward_uri != fuel_uri('dashboard'))
 						{
-							$forward = uri_safe_decode($this->input->post('forward'));
-							redirect($forward);
+							redirect($forward_uri);
 						}
 						else
 						{
-							redirect(fuel_uri());
+							redirect($this->config->item('login_redirect', 'fuel'));
 						}
 					}
 					else

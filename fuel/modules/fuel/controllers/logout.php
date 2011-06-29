@@ -9,7 +9,7 @@ class Logout extends CI_Controller {
 		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 	}
 	
-	function index()
+	function _remap($segment)
 	{
 		$this->load->library('session');
 		$this->session->sess_destroy();
@@ -21,6 +21,21 @@ class Logout extends CI_Controller {
 			'path' => WEB_PATH
 		);
 		delete_cookie($config);
-		redirect(fuel_uri('login'));
+		
+		$redirect = $this->config->item('logout_redirect', 'fuel');
+		if ($redirect == ':last')
+		{
+			$this->load->helper('convert');
+			
+			// if ($segment == 'index')
+			// {
+			// 	$redirect = fuel_uri('login');
+			// }
+			// else
+			// {
+				$redirect = uri_safe_decode($segment);
+			//}
+		}
+		redirect($redirect);
 	}
 }
