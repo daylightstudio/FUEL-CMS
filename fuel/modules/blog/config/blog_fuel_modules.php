@@ -56,6 +56,7 @@ $config['modules']['blog_comments'] = array(
 		'comment', 
 		'comment_author_name', 
 		'is_spam', 
+		'date_submitted',
 		'published', 
 	),
 	'display_field' => 'author_name',
