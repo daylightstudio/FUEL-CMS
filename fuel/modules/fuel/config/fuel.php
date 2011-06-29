@@ -46,6 +46,13 @@ $config['fuel_mode'] = 'views';
 // used for system emails. Can be overwritten by MY_fuel.php
 $config['domain'] = $_SERVER['SERVER_NAME'];
 
+// the page to redirect to AFTER logging in
+$config['login_redirect'] = $config['fuel_path'].'dashboard';
+
+// the page to redirect to AFTER logging out. . Use the special value :last to redirect to the last page you were on.
+//$config['logout_redirect'] = $config['fuel_path'].'login'; // to take you back to the login page instead of the last page you were on
+$config['logout_redirect'] = ':last';
+
 // used for system emails
 $config['from_email'] = 'admin@'.$config['domain'];
 

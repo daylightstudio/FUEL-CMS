@@ -36,6 +36,18 @@ They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</
 			</td>
 		</tr>
 		<tr>
+			<td><strong>login_redirect</strong></td>
+			<td>fuel/dashboard</td>
+			<td>None</td>
+			<td>The page to redirect to AFTER logging in.</td>
+		</tr>
+		<tr>
+			<td><strong>logout_redirect</strong></td>
+			<td>:last</td>
+			<td>None</td>
+			<td>the page to redirect to AFTER logging out. Use the special value <strong>:last</strong> to redirect to the last page you were on.</td>
+		</tr>
+		<tr>
 			<td><strong>domain</strong></td>
 			<td>$_SERVER['SERVER_NAME']</td>
 			<td>None</td>
