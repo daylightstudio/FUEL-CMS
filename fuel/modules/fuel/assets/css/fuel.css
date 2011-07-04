@@ -268,7 +268,10 @@ div#asset_modal .buttonbar, div#add_edit_inline_modal .buttonbar { float: right;
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
 div#viewpage_modal { top: 16px; border: 2px solid #666; background-color: #fff; height: 96%; width: 96%; padding: 0; display: none; }
-a#viewpage_close { position: absolute; z-index: 1; right: 0px; top: -17px; color: #ccc; background-color: #666; padding: 1px 5px; }
+div#viewpage_btns { position: absolute; z-index: 1; top: -17px; right: -2px; }
+a.viewpage_btn { float: left; margin-right: 2px; color: #ccc; background-color: #666; padding: 1px 5px; }
+a#viewpage_close { right: 0px; }
+a#viewpage_new_page { right: 100px; }
 iframe#viewpage_iframe { border: none; width: 100%; height: 100%; }
 
 /* misc */

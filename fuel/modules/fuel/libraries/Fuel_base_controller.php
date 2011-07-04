@@ -247,14 +247,20 @@ class Fuel_base_controller extends CI_Controller {
 				{
 					// if (in_array($key, $this->config->item('modules_allowed', 'fuel')))
 					// {
-						if (!empty($module['module_name']))
-						{
-							$nav['modules'][$key] = $module['module_name'];
-						}
-						else
-						{
-							$nav['modules'][$key] = humanize($key);
-						}
+					if (isset($module['hidden']) AND $module['hidden'] === TRUE)
+					{
+						continue;
+					}
+					
+					
+					if (!empty($module['module_name']))
+					{
+						$nav['modules'][$key] = $module['module_name'];
+					}
+					else
+					{
+						$nav['modules'][$key] = humanize($key);
+					}
 					// }
 				}
 				

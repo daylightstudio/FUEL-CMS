@@ -65,6 +65,31 @@ foreach($rows->result() as $id => $row)
 }
 </pre>
 
+<h2>$this->examples_model->map_query_records(<var>query</var>, <var>['assoc_key']</var>)</h2>
+<p>Maps a query result object to an array of record objects. The second parameter is optional and if used, should contain the name of the field you want 
+to use for the returned array's key value.</p>
+<pre class="brush: php">
+...
+$query = $this->db->query('SELECT * FROM USERS');
+$users = $this->examples_model->map_query_records($query, 'id');
+foreach($users as $id => $user)
+{
+    echo $user->name;
+}
+
+</pre>
+
+<h2>$this->examples_model->map_to_record_class(<var>row</var>, <var>[fields]</var>)</h2>
+<p>Maps an associative record array to the models custom record object. The second  parameter is optional and specifies all the field names the record can contain however, 
+the values of those fields are determined by the <dfn>row</dfn> value passed. If no <dfn>fields</dfn> parameter is passed, then the key values of the $row, will be used.</p>
+<pre class="brush: php">
+$my_user['id'] = 1;
+$my_user['name'] = 'Darth Vader';
+$my_user['email'] = 'darth@deathstar.com';
+$my_custom_record = $this->examples_model->map_to_record_class($my_user); 
+echo $my_custom_record->name;
+</pre>
+
 <h2>$this->examples_model->find_by_key(<var>key_val</var>, <var>['return_method']</var>)</h2>
 <p>Finds a single record based on the tables key value(s). The second  parameter is optional and specifies if the object
 should be returned as an array or an object.</p>
