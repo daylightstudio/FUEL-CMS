@@ -100,6 +100,7 @@ class Fuel_modules {
 			'sanitize_images' => TRUE,
 			'displayonly' => FALSE,
 			'language' => '',
+			'hidden' => FALSE,
 			);
 		$return = array();
 		$params = $this->_modules[$module];
