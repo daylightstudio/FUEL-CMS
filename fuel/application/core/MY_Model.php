@@ -282,14 +282,31 @@ class MY_Model extends CI_Model {
 		}
 		
 		//This array holds all result data
+		$result_objects = $this->map_query_records($query, $assoc_key);
+
+		$query->free_result();
+		$this->last_data_set = new Data_set($result_objects, $force_array);
+		return $this->last_data_set;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Maps a query result object to an array of record objects
+	 *
+	 * @access	public
+	 * @param	object	the query object
+	 * @param	string	the field name to be used the key value
+	 * @return	array
+	 */	
+	function map_query_records($query, $assoc_key = NULL)
+	{
 		$result_objects = array();
+		
 		$fields = $query->list_fields();
 		foreach ($query->result_array() as $row) 
 		{
-			$record_class = $this->record_class_name();
-			$record = new $record_class();
-			$record->initialize($this, $fields);
-			$record->fill($row);
+			$record = $this->map_to_record_class($row, $fields);
 			if (!empty($assoc_key))
 			{
 				$result_objects[$row[$assoc_key]] = $record;
@@ -299,9 +316,30 @@ class MY_Model extends CI_Model {
 				$result_objects[] = $record;
 			}
 		}
-		$query->free_result();
-		$this->last_data_set = new Data_set($result_objects, $force_array);
-		return $this->last_data_set;
+		return $result_objects;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Maps an associative record array to a record object
+	 *
+	 * @access	public
+	 * @param	array	field values
+	 * @param	array	all the fields available for the object
+	 * @return	array
+	 */	
+	function map_to_record_class($row, $fields = NULL)
+	{
+		if (empty($fields))
+		{
+			$fields = array_keys($row);
+		}
+		$record_class = $this->record_class_name();
+		$record = new $record_class();
+		$record->initialize($this, $fields);
+		$record->fill($row);
+		return $record;
 	}
 	
 	// --------------------------------------------------------------------

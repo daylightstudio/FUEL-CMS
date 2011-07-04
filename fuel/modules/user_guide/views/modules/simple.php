@@ -241,6 +241,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>None</td>
 			<td>Additional language files to load</td>
 		</tr>
+		<tr>
+			<td><strong>hidden</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If set to TRUE, it will hide the module in the admin menu</td>
+		</tr>
 	</tbody>
 </table>
 

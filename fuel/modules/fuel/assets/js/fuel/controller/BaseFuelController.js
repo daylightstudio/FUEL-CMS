@@ -809,7 +809,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.view_action').click(function(){
 			$('#viewpage_modal').jqmShow();
 			var page = $(this).attr('href');
-			var iframe = '<a href="#" id="viewpage_close">' + _this.lang('viewpage_close') + '</a><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
+			var iframe = '<div id="viewpage_btns"><a href="' + page + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a><a href="#" id="viewpage_close" class="viewpage_btn">' + _this.lang('viewpage_close') + '</a></div><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
 			$('#viewpage_modal').empty().append(iframe);
 			
 			$('#viewpage_close').click(function(){
