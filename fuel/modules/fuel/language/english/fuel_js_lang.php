@@ -32,6 +32,7 @@ $lang['form_label_send_email_notification'] = 'Send password update email notifi
 $lang['error_importing_ajax'] = 'Error importing view file';
 
 $lang['viewpage_close'] = 'Close';
+$lang['viewpage_new_window'] = 'New Window';
 
 $lang['rearrange_on'] = 'You can change the precedence order by selecting and dragging the data rows below.';
 
