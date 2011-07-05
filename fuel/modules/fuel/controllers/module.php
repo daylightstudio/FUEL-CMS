@@ -519,7 +519,7 @@ class Module extends Fuel_base_controller {
 				{
 					// archive data
 					$archive_data = $this->model->cleaned_data();
-					$archive_data[$this->model->key_field()] = $saved_id;
+					$archive_data[$this->model->key_field()] = $id;
 					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 					if (!empty($data))
