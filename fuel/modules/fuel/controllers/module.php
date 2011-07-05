@@ -518,7 +518,9 @@ class Module extends Fuel_base_controller {
 				else
 				{
 					// archive data
-					if ($this->archivable) $this->model->archive($id, $this->model->cleaned_data());
+					$archive_data = $this->model->cleaned_data();
+					$archive_data[$this->model->key_field()] = $saved_id;
+					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 					if (!empty($data))
 					{
@@ -568,7 +570,8 @@ class Module extends Fuel_base_controller {
 				else
 				{
 					// archive data
-					if ($this->archivable) $this->model->archive($id, $this->model->cleaned_data());
+					$archive_data = $this->model->cleaned_data();
+					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
@@ -1096,7 +1099,9 @@ class Module extends Fuel_base_controller {
 				{
 					
 					// archive data
-					if ($this->archivable) $this->model->archive($id, $this->model->cleaned_data());
+					$archive_data = $this->model->cleaned_data();
+					$archive_data[$this->model->key_field()] = $saved_id;
+					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$this->_clear_cache();
 					$str = (is_ajax()) ? $saved_id : '<script type="text/javascript">parent.location.reload(true);</script>';
 					$this->output->set_output($str);
