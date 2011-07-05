@@ -365,7 +365,9 @@ class Pages extends Module {
 			}
 			// archive
 			$archive = $this->model->cleaned_data();
+			$archive[$this->model->key_field()] = $id;
 			$archive['variables'] = $page_variables_archive;
+			
 			$this->model->archive($id, $archive);
 			
 			// save to navigation if config allows it
