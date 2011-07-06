@@ -1655,7 +1655,7 @@ class MY_Model extends CI_Model {
 	 */	
 	public function remove_all_validation()
 	{
-		$this->validator->reset();
+		$this->validator->reset(TRUE);
 		$this->rules = array();
 	}
 	
