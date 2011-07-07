@@ -457,12 +457,6 @@ class Fuel_page {
 		
 		if ($fuelify) $output = $this->fuelify($output);
 
-		if ($return) 
-		{
-			return $output;
-		}
-		$this->_CI->output->set_output($output);
-		
 		if ($return)
 		{
 			return $output;
