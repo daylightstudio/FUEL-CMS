@@ -15,7 +15,7 @@
 	<?=js('jquery/jquery', 'fuel')?>
 	<?=js('jqx/jqx', 'fuel')?>
 	<?=js($this->config->item('fuel_javascript', 'fuel'), 'fuel')?>
-	<?php if (!empty($js)) { echo js($js); } ?>
+	<?php foreach($js as $m => $j) : echo js(array($m => $j)); endforeach; ?>
 
 	<?php if (!empty($this->js_controller)) : ?> 
 	<script type="text/javascript">
