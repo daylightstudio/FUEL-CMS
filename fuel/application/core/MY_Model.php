@@ -1768,12 +1768,14 @@ class MY_Model extends CI_Model {
 			{
 				foreach($related as $key => $val)
 				{
+					// related  need to be loaded usng
+					$related_name = end(explode('/', $key));
 					$related_model = $this->load_model($key.'_model');
 					$lookup_model = $this->load_model($val);
 					
 					$options = $CI->$related_model->options_list();
 					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_model->find_all_array_assoc($CI->$related_model->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
-					$fields[$key] = array('label' => ucfirst($key), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
+					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
 		}

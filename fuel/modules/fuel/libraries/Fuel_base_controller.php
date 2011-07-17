@@ -65,7 +65,7 @@ class Fuel_base_controller extends CI_Controller {
 		
 		// set up default variables
 		$load_vars = array(
-			'js' => '', 
+			'js' => array(), 
 			'css' => $this->_load_css(),
 			'js_controller_params' => array(), 
 			'keyboard_shortcuts' => $this->config->item('keyboard_shortcuts', 'fuel'),
