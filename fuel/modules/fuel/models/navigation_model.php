@@ -243,9 +243,9 @@ class Navigation_model extends Base_module_model {
 		// if the path is local, then we clean it
 		if (!is_http_path($values['location']))
 		{
-			$values['location'] = str_replace('/', '___', $values['location']);
+			$values['location'] = str_replace(array('/', '#'), array('____', '___'), $values['location']);
 			$values['location'] = url_title($values['location']);
-			$values['location'] = str_replace('___', '/', $values['location']);
+			$values['location'] = str_replace(array('____', '___'), array('/', '#'), $values['location']);
 		}
 		return $values;
 	}

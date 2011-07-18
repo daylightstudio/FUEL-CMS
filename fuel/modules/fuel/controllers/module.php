@@ -114,7 +114,14 @@ class Module extends Fuel_base_controller {
 		
 		// global variables
 		$vars = array();
-		if (!empty($params['js'])) $vars['js'] = (array)$params['js'];
+		if (!empty($params['js']))
+		{
+			if (is_string($params['js']))
+			{
+				$params['js'] = preg_split("/,\s*/", $params['js']);
+			}
+			$vars['js'] = $params['js'];
+		}
 		if (!empty($this->nav_selected)) $vars['nav_selected'] = $this->nav_selected;
 		$this->load->vars($vars);
 		
