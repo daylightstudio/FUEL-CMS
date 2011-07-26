@@ -157,7 +157,7 @@ This class provides methods to set the sorting, headers and data of the table. T
 		</tr>
 		<tr>
 			<td><strong>field_styles</strong></td>
-			<td></td>
+			<td>array()</td>
 			<td>None</td>
 			<td>Styles to apply to the data columns. Index is the column and the value is the style</td>
 		</tr>
@@ -189,11 +189,16 @@ $data[] = array(
 	'name' => 'Han Solo',
 	'weapon' => 'blaster',
 	'darkside' => FALSE,
-	'active' => 'yes'
+	'active' => 'yes',
+	'__field__' => array('name' => array('class' => 'highlight'))
 );
 
 $this->data_table->assign_data($data);
 </pre>
+<p class="important">Note the <dfn>'__field__'</dfn> field (that's 2 underscores on each side). 
+This is a special field that allows you to add attributes to the parent &lt;td&gt; tag. In the above example, the CSS class of "highlight" 
+is applied to the Han Solo named column.</p>
+
 
 
 <h2>$this->data_table->render()</h2>
