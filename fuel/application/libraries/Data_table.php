@@ -38,7 +38,6 @@ class Data_table {
 	public $header_on_class = 'on'; // table header on class
 	public $header_asc_class = 'asc'; // table header asc class
 	public $header_desc_class = 'desc'; // table header desc class
-	public $header_styles = array(); // header styles array. Index value is the column index and the value is a class
 	public $row_alt_class = 'alt'; // row alternating class
 	public $sort_js_func = "alert('you must assign a javascript function to the \$sort_js_func attribute of the Data_table instance'); return false;"; // javascript sorting function
 	public $body_attrs = array(); // tbody attributes
@@ -52,8 +51,9 @@ class Data_table {
 	public $data = array(); // the data applied to the table
 	public $rows = array(); // an array of table rows
 	public $inner_td_class = ''; // the css class to be used for the span inside the td
-	public $no_data_str = 'No data to display.';
-	public $lang_prefix = 'table_header_';
+	public $no_data_str = 'No data to display.'; //The default string to display when no data exists
+	public $lang_prefix = 'table_header_'; // the language prefix to associate with table headers
+	public $field_styles = array(); // styles to apply to the data columns. Index is the column and the value is the style
 
 	protected $_ordering = TRUE; // sorting order
 	protected $_field = NULL; // sorted column
@@ -365,6 +365,19 @@ class Data_table {
 						$col->attrs['class'] = 'col'.($i + 1);
 					}
 					
+				}
+				
+				// now set styles
+				if (!empty($this->field_styles))
+				{
+					if (isset($this->field_styles[$i]))
+					{
+						$col->attrs['class'] .= ' '.$this->field_styles[$i];
+					}
+					else if (isset($this->field_styles[$col->heading]))
+					{
+						$col->attrs['class'] .= ' '.$this->field_styles[$col->heading];
+					}
 				}
 
 				$str .= $this->_render_attrs($col->attrs);
