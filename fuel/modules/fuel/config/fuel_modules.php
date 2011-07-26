@@ -53,7 +53,7 @@ $config['modules']['blocks'] = array(
 		'published',
 	),
 	'default_col' => 'name',
-	'default_order' => 'desc',
+	'default_order' => 'asc',
 	'js_controller' => 'BlockController',
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('blocks/upload' => lang('btn_upload')),
