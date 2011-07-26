@@ -120,6 +120,10 @@ class Data_table {
 	 */
 	public function assign_data($data, $headers = array(), $attrs = array())
 	{
+		
+		// manually add the special __field__ column
+		$this->only_data_fields[] = '__field__';
+		
 		$this->data = (array)$data;
 
 		if (empty($headers))
@@ -132,6 +136,7 @@ class Data_table {
 					$headers[] = $key;
 					$sorting_params[] = ($this->auto_sort) ? $key : NULL;
 				}
+
 				$this->add_headers($headers, $sorting_params);
 				$this->add_rows($data, $attrs, $this->default_field_action);
 			}
@@ -165,6 +170,12 @@ class Data_table {
 				foreach($this->headers as $val2)
 				{
 					 $rows[$key][$val2->col_key] = $data[$key][$val2->col_key];
+				}
+				
+				// add back in the special __field__ column
+				if (isset($data[$key]['__field__']))
+				{
+					$rows[$key]['__field__'] = $data[$key]['__field__'];
 				}
 			}
 			$this->add_rows($rows, $attrs, $this->default_field_action);
@@ -228,6 +239,7 @@ class Data_table {
 			$str .= "<thead>\n";
 			$str .= "<tr>\n";
 			$i = 0;
+			
 			foreach($headers as $th)
 			{
 				if (in_array($th->col_key, $this->only_data_fields))
@@ -286,9 +298,11 @@ class Data_table {
 	{
 		$str = '';
 		$this->_render_row_index = 0;
-		if (is_array($rows)){
+		if (is_array($rows))
+		{
 			$i = 0;
-			foreach($rows as $row){
+			foreach($rows as $row)
+			{
 				$str .= '<tr';
 				if (!empty($row->attrs))
 				{
@@ -308,7 +322,9 @@ class Data_table {
 				$i++;
 			}
 			return $str;
-		} else {
+		}
+		else
+		{
 			return $rows;
 		}
 	}
@@ -343,7 +359,7 @@ class Data_table {
 				if (!empty($col->action)) $str .= ' '.$col->action;
 				if (!empty($col->attrs['class']))
 				{
-					$col->attrs['class'] .= ' col'.($i + 1);
+					$col->attrs['class'] = 'col'.($i + 1).' '.$col->attrs['class'];
 				}
 				else
 				{
@@ -379,7 +395,7 @@ class Data_table {
 						$col->attrs['class'] .= ' '.$this->field_styles[$col->heading];
 					}
 				}
-
+				
 				$str .= $this->_render_attrs($col->attrs);
 				$str .= ">";
 				if (!empty($this->inner_td_class))
@@ -631,15 +647,20 @@ class Data_table {
 		{
 			$i = 0;
 			$this->row_data[] = array();
+			
+			
+			
 			foreach($columns as $key => $val)
 			{
+				// handle the __field__
+				$col_attrs = (isset($columns['__field__'][$key])) ? $columns['__field__'][$key] : array();
 				
 				if ($i == 0 AND !empty($this->_actions) AND $this->actions_field == 'first') 
 				{
 					$fields[] = new Data_table_field('actions', $this->_render_actions($this->_actions, $columns), array('class' => 'actions'));
 					$i++;
 				}
-				
+
 				// add the actions
 				if (empty($action)) $action = $this->default_field_action;
 				if (!empty($action))
@@ -649,7 +670,7 @@ class Data_table {
 				}
 				else
 				{
-					$fields[] = new Data_table_field($key, $val);
+					$fields[] = new Data_table_field($key, $val, $col_attrs);
 				}
 
 				$i++;
@@ -661,7 +682,7 @@ class Data_table {
 			}
 		}
 		$attrs['id'] = (!empty($columns[$this->row_id_key])) ? $this->id.'_row'.$columns[$this->row_id_key] : $this->id.'_row'.$index;
-		$this->rows[$index] = new Data_table_row($fields, $attrs);
+		$this->rows[$index] = new Data_table_row($fields, $attrs, $col_attrs);
 		return $this->rows[$index];
 	}
 	
@@ -772,15 +793,22 @@ class Data_table_body {
 class Data_table_row {
 	public $fields = array();
 	public $attrs = array();
+	public $col_attrs = array();
 
-	public function __construct($fields = array(), $attrs = array())
+	public function __construct($fields = array(), $attrs = array(), $col_attrs = array())
 	{
 		$this->fields = $fields;
 		$this->attrs = $attrs;
+		$this->col_attrs = $col_attrs;
 	}
 	
 	public function add_column($heading, $value, $attrs = array(), $action = NULL)
 	{
+		$attrs = settype($attrs, 'array');
+		if (!empty($this->col_attrs))
+		{
+			$attrs = array_merge($this->col_attrs, $attrs);
+		}
 		$this->fields[] = new Data_table_field($heading, $value, $attrs, $action);
 	}
 }
