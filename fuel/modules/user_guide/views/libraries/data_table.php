@@ -37,13 +37,13 @@ This class provides methods to set the sorting, headers and data of the table. T
 		</tr>
 		<tr>
 			<td><strong>headers</strong></td>
-			<td>NULL</td>
+			<td>array()</td>
 			<td>None</td>
 			<td>The table headers</td>
 		</tr>
 		<tr>
 			<td><strong>table_attrs</strong></td>
-			<td>None</td>
+			<td>array()</td>
 			<td>Can be string or an array of attributes</td>
 			<td>The table attributes</td>
 		</tr>
@@ -66,12 +66,6 @@ This class provides methods to set the sorting, headers and data of the table. T
 			<td>Table header desc class</td>
 		</tr>
 		<tr>
-			<td><strong>header_styles</strong></td>
-			<td>None</td>
-			<td>None</td>
-			<td>Header styles array. Index value is the column index and the value is a class</td>
-		</tr>
-		<tr>
 			<td><strong>row_alt_class</strong></td>
 			<td>alt</td>
 			<td>None</td>
@@ -85,7 +79,7 @@ This class provides methods to set the sorting, headers and data of the table. T
 		</tr>
 		<tr>
 			<td><strong>body_attrs</strong></td>
-			<td>NULL</td>
+			<td>array()</td>
 			<td>None</td>
 			<td>tbody attributes</td>
 		</tr>
@@ -109,7 +103,7 @@ This class provides methods to set the sorting, headers and data of the table. T
 		</tr>
 		<tr>
 			<td><strong>only_data_fields</strong></td>
-			<td>NULL</td>
+			<td>array()</td>
 			<td>None</td>
 			<td>Data columns that won't be displayed</td>
 		</tr>
@@ -133,19 +127,19 @@ This class provides methods to set the sorting, headers and data of the table. T
 		</tr>
 		<tr>
 			<td><strong>data</strong></td>
-			<td>NULL</td>
+			<td>array()</td>
 			<td>None</td>
 			<td>The data applied to the table</td>
 		</tr>
 		<tr>
 			<td><strong>rows</strong></td>
-			<td>NULL</td>
+			<td>array()</td>
 			<td>None</td>
 			<td>An array of table rows</td>
 		</tr>
 		<tr>
 			<td><strong>inner_td_class</strong></td>
-			<td>NULL</td>
+			<td>empty string ''</td>
 			<td>None</td>
 			<td>The css class to be used for the span inside the td</td>
 		</tr>
@@ -154,6 +148,18 @@ This class provides methods to set the sorting, headers and data of the table. T
 			<td>No data to display.</td>
 			<td>None</td>
 			<td>The default string to display when no data exists</td>
+		</tr>
+		<tr>
+			<td><strong>lang_prefix</strong></td>
+			<td>table_header_</td>
+			<td>None</td>
+			<td>The language prefix to associate with table headers</td>
+		</tr>
+		<tr>
+			<td><strong>field_styles</strong></td>
+			<td></td>
+			<td>None</td>
+			<td>Styles to apply to the data columns. Index is the column and the value is the style</td>
 		</tr>
 	</tbody>
 </table>
