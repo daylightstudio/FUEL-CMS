@@ -5,8 +5,8 @@ $config['social']['bookmarks'] = array();
 $config['social']['bookmarks']['Digg'] = 'http://digg.com/submit?phase=2&amp;url={url}&amp;title={title}';
 $config['social']['bookmarks']['Technorati'] = 'http://technorati.com/faves?add={url}';
 $config['social']['bookmarks']['del.icio.us'] = 'http://del.icio.us/post?url={url}&amp;title={title}';
-$config['social']['bookmarks']['Stumbleupon'] = 'http://reddit.com/submit?url={url}&amp;title={title}';
-$config['social']['bookmarks']['reddit'] = 'http://digg.com/submit?phase=2&amp;url={url}&amp;title={title}';
+$config['social']['bookmarks']['Stumbleupon'] = 'http://www.stumbleupon.com/submit?url={url}&amp;title={title}';
+$config['social']['bookmarks']['reddit'] = 'http://reddit.com/submit?url={url}&amp;title={title}';
 $config['social']['bookmarks']['Furl'] = 'http://www.furl.net/storeIt.jsp?t={title}&amp;u={url}';
 
 // facebook
