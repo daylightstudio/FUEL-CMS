@@ -856,56 +856,30 @@ class Menu {
 		$str = '';
 		$label = $this->_get_label($val['label']);
 		
-		if (function_exists('get_instance'))
+		$attrs = '';
+		if (!empty($val['location']))
 		{
-			$CI =& get_instance();
-			$CI->load->helper('url');
-			if (isset($val['location']))
+			if (!empty($val['attributes']))
 			{
-				if ($this->use_titles)
+				if (is_array($val['attributes']))
 				{
-					if (is_array($val['attributes']))
+					foreach($val['attributes'] as $key2 => $val2) 
 					{
-						if (!in_array('title', $val['attributes'])) $val['attributes']['title'] = strip_tags($val['label']);
+						$attrs .= ' '.$key2.'="'.$val2.'"';
 					}
-					else if (strpos($val['attributes'], 'title=') === FALSE)
-					{
-						$val['attributes'] .= ' title="'.strip_tags($val['label']).'"';
-					}
+				} else {
+					$attrs .= $val['attributes'];
 				}
-				$str .= anchor($val['location'], $label, $val['attributes']);
-				
 			}
-			else
+			if ($this->use_titles AND (empty($attrs) OR strpos($attrs, 'title=') === FALSE))
 			{
-				$str .= $label;
+				$attrs .= 'title="'.$val['label'].'"';
 			}
-			
-		} else {
-			$attrs = '';
-			if (!empty($val['location']))
-			{
-				if (!empty($val['attributes']))
-				{
-					if (is_array($val['attributes']))
-					{
-						foreach($val['attributes'] as $key2 => $val2) 
-						{
-							$attrs .= ' '.$key2.'="'.$val2.'"';
-						}
-					} else {
-						$attrs .= $val['attributes'];
-					}
-					if ($this->use_titles AND strpos($attrs, 'title=') === FALSE) $attrs .= ' title="'.$attrs['label'].'"';
-				}
-				$str .= '<a href="'.site_url($val['location']).'"'.$attrs.'>'.$label.'</a>';
-			}
-			else
-			{
-				$str .= $label;
-			}
-			
-			
+			$str .= '<a href="'.site_url($val['location']).'" '.$attrs.'>'.$label.'</a>';
+		}
+		else
+		{
+			$str .= $label;
 		}
 		return $str;
 	}
@@ -937,7 +911,18 @@ class Menu {
 					$css_classes[] = $this->active_class;
 				}
 
-		if (!empty($this->styles[$level][$i])) $css_classes[] = $this->styles[$level][$i];
+		if (!empty($this->styles[$level][$i]))
+		{
+			if (is_array($this->styles[$level]))
+			{
+				$css_classes[] = $this->styles[$level][$i];
+			}
+			else if (is_string($this->styles[$level]))
+			{
+				$css_classes[] = $this->styles[$level];
+			}
+			
+		}
 
 		if (!empty($css_classes))
 		{
