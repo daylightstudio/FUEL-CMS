@@ -122,7 +122,7 @@ function social_tweetme($post_url)
 {
 	$social_config = _get_social_config();
 	$str = '<script type="text/javascript">tweetmeme_url = "'.$post_url.'";</script>';
-	$str .= generate_social_js($social_config['tweetme']);
+	$str .= generate_social_js($social_config['tweetme'], FALSE);
 	return $str;
 }
 
@@ -137,7 +137,7 @@ function social_tweetme($post_url)
 function social_stumbleupon()
 {
 	$social_config = _get_social_config();
-	return generate_social_js($social_config['stumbleupon']);
+	return generate_social_js($social_config['stumbleupon'], FALSE);
 }
 
 // --------------------------------------------------------------------
