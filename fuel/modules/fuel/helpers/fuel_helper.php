@@ -210,7 +210,7 @@ function fuel_model($model, $params = array())
 	// run select statement before the find
 	if (!empty($select))
 	{
-		$CI->$model_name->db()->select($select);
+		$CI->$model_name->db()->select($select, FALSE);
 	}
 	
 	// retrieve data based on the method
