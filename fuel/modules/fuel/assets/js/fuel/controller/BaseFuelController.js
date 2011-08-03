@@ -83,7 +83,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		
 		var ids = [];
-		$('#left_panel_inner h3').each(function(i){
+		$('#fuel_left_panel_inner h3').each(function(i){
 			var id = $(this).parent().attr('id');
 			ids.push(id);
 		});
