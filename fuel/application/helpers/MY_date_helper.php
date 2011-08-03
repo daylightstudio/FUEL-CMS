@@ -35,9 +35,15 @@
  * @access	public
  * @return	string
  */
-function datetime_now(){
-	
-	return date("Y-m-d H:i:s");
+function datetime_now($hms = TRUE){
+	if ($hms)
+	{
+		return date("Y-m-d H:i:s");
+	}
+	else
+	{
+		return date("Y-m-d");
+	}
 }
 
 // --------------------------------------------------------------------

@@ -10,11 +10,12 @@ $this->load->helper('date');
 
 <p>The following functions are available:</p>
 
-<h2>datetime_now()</h2>
-<p>Returns a the current time in a yyyy-mm-dd hh:mm:ss format which can be used with MySQL databases.</p>
+<h2>datetime_now([<var>hms</var>])</h2>
+<p>Returns a the current time in a yyyy-mm-dd hh:mm:ss format which can be used with MySQL databases. The optional parameter
+will return the current date without the time if set to FALSE (default is TRUE).</p>
 <pre class="brush: php">
-echo datetime_now();
-// <?=datetime_now()?>
+echo datetime_now(); // <?=datetime_now()?> 
+echo datetime_now(FALSE); // <?=datetime_now(FALSE)?>
 </pre>
 
 
