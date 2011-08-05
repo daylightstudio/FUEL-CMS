@@ -395,6 +395,7 @@ class MY_Model extends CI_Model {
 		$where = $this->_safe_where($where);
 		if (!empty($where)) $this->db->where($where);
 		if (!empty($order_by)) $this->db->order_by($order_by);
+		$this->db->limit(1);
 		$query = $this->get(FALSE, $return_method);
 		if ($return_method == 'query') return $query;
 		return $query->result();
