@@ -1110,7 +1110,7 @@ class Module extends Fuel_base_controller {
 					$archive_data[$this->model->key_field()] = $saved_id;
 					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$this->_clear_cache();
-					$str = (is_ajax()) ? $saved_id : '<script type="text/javascript">parent.location.reload(true);</script>';
+					$str = (is_ajax()) ? "<success>$saved_id</success>" : '<script type="text/javascript">parent.location.reload(true);</script>';
 					$this->output->set_output($str);
 				}
 				else
