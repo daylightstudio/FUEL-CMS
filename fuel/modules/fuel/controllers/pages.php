@@ -47,7 +47,10 @@ class Pages extends Module {
 				
 				$this->_save_page_vars($id, $posted);
 				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-
+				
+				// run hook
+				$this->_run_hook('create', $data);
+				
 				if (!empty($data))
 				{
 					$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
@@ -79,6 +82,10 @@ class Pages extends Module {
 				
 				$this->_save_page_vars($id, $posted);
 				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+				
+				// run hook
+				$this->_run_hook('edit', $data);
+				
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 				$this->logs_model->logit($msg);
 				redirect(fuel_uri('pages/edit/'.$id));
@@ -569,6 +576,10 @@ class Pages extends Module {
 						if ($this->editor_model->save($save))
 						{
 							$this->_process_uploads();
+							
+							// run hook
+							$this->_run_hook('inline', $save);
+							
 						}
 						else
 						{

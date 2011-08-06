@@ -178,7 +178,19 @@ class Fuel_auth {
 
 	function logout()
 	{
+		$this->_CI->load->library('session');
+		$this->_CI->session->sess_destroy();
+		
+		$this->_CI->load->helper('cookie');
+		
 		$this->_CI->session->unset_userdata($this->get_session_namespace());
+		
+		$config = array(
+			'name' => $this->get_fuel_trigger_cookie_name(),
+			'path' => WEB_PATH
+		);
+		delete_cookie($config);
+		
 	}
 	
 }

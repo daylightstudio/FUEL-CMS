@@ -4,7 +4,7 @@
 | FUEL ROUTES
 |--------------------------------------------------------------------------
 |
-| The following are routes used by fuel specifically
+| The following are routes used by FUEL specifically
 |
 */
 $route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";

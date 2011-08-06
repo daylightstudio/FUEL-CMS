@@ -10,6 +10,53 @@ class My_super_model extends Base_module_model {
 ...
 </pre>
 
+<h2>Configuring Base_module_model Information</h2>
+<p>There are several public properties you can use to configure the Base_module_model Class:</p>
+
+<table border="0" cellspacing="1" cellpadding="0" class="tableborder">
+	<tbody>
+		<tr>
+			<th>Preference</th>
+			<th>Default Value</th>
+			<th>Options</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><strong>filters</strong></td>
+			<td>array()</td>
+			<td>None</td>
+			<td>Field names of where to search for items</td>
+		</tr>
+		<tr>
+			<td><strong>filter_value</strong></td>
+			<td>NULL</td>
+			<td>None</td>
+			<td>The values of the filters. Set automatically when filters are selected</td>
+		</tr>
+		<tr>
+			<td><strong>filter_join</strong></td>
+			<td>or</td>
+			<td>and, or</td>
+			<td>How to combine filters in the list_items method query</td>
+		</tr>
+		<tr>
+			<td><strong>parsed_fields</strong></td>
+			<td>array()</td>
+			<td>None</td>
+			<td>Fields to automatically do template parsing</td>
+		</tr>
+		<tr>
+			<td><strong>upload_data</strong></td>
+			<td>array()</td>
+			<td>None</td>
+			<td>Data about all uploaded files. Set after uploads</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<br /><br />
+
 <h1>Base_module_model Function Reference</h1>
 <p>The <dfn>Base_module_model</dfn> is a table class and returns <dfn>Base_module_record</dfn> objects (see reference below).</p>
 
