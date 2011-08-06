@@ -204,11 +204,21 @@ Class Form_builder {
 					{
 						$is_checkbox = FALSE;
 					}
+					
+					// don't set the values of these form types'
+					else if ($val['type'] == 'submit' OR $val['type'] == 'button')
+					{
+						continue;
+					}
 					else
 					{
 						$is_checkbox = (($val['type'] == 'checkbox') OR ($val['type'] == 'boolean' AND $this->boolean_mode == 'checkbox'));
 					}
-					if (!$is_checkbox) $this->_fields[$key]['value'] = $values[$key];
+					if (!$is_checkbox)
+					{
+						$this->_fields[$key]['value'] = $values[$key];
+					}
+					
 					if (!empty($val['type']))
 					{
 						if ($is_checkbox)
@@ -815,6 +825,12 @@ Class Form_builder {
 			case 'blob' : case 'file' :
 				return $this->create_file($params);
 				break;
+			case 'submit':
+				return $this->create_submit($params);
+				break;
+			case 'button':
+				return $this->create_button($params);
+				break;
 			case 'none': case 'blank':
 				return '';
 				break;
@@ -824,7 +840,6 @@ Class Form_builder {
 				break;
 			default : 
 				return $this->create_text($params);
-				break;
 		}
 	}
 	
@@ -933,6 +948,47 @@ Class Form_builder {
 			return $this->form->password($params['name'], $params['value'], $attrs);
 		}
 		return $this->form->text($params['name'], $params['value'], $attrs);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a submit button input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_submit($params)
+	{
+		$params = $this->_normalize_value($params);
+		$attrs = array(
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled']
+		);
+		return $this->form->submit($params['value'], $params['name'], $attrs);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a basic form button for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_button($params)
+	{
+		$params = $this->_normalize_value($params);
+		$attrs = array(
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled']
+		);
+		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
+		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
 	}
 
 	// --------------------------------------------------------------------

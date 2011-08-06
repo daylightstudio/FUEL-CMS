@@ -9,28 +9,18 @@
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
-$hook['pre_controller'] = array(
-                                'class'    => 'Fuel_hooks',
-                                'function' => 'pre_controller',
-                                'filename' => 'Fuel_hooks.php',
-                                'filepath' => 'hooks',
-                                'params'   => array()
-                                );
-$hook['post_controller_constructor'] = array(
-                                'class'    => 'Fuel_hooks',
-                                'function' => 'dev_password',
-                                'filename' => 'Fuel_hooks.php',
-                                'filepath' => 'hooks',
-                                'params'   => array()
-                                );
 
-$hook['post_controller'] = array(
-                                'class'    => 'Fuel_hooks',
-                                'function' => 'post_controller',
-                                'filename' => 'Fuel_hooks.php',
-                                'filepath' => 'hooks',
-                                'params'   => array()
-                                );
+/* Example of a module hook for a module named projects
+$hook['before_create_projects'] = array(
+								'class'    => 'Test_hooks',
+								'function' => 'before_create_projects',
+								'filename' => 'Test_hooks.php',
+								'filepath' => 'hooks',
+								'params'   => array(),
+								'module' => 'app',
+*/
+// include hooks specific to FUEL
+include(FUEL_PATH.'config/fuel_hooks.php');
 
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */

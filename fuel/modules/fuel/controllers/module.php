@@ -218,7 +218,7 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
-
+			
 			// set data table actions... look first for item_actions set in the fuel_modules
 			foreach($this->table_actions as $key => $val)
 			{
@@ -344,7 +344,7 @@ class Module extends Fuel_base_controller {
 			
 			// keycheck is already put in place by $this->form->close() in module_list layout
 			$this->form_builder->key_check = FALSE; 
-			$vars['more_filters'] = $this->form_builder->render();
+			$vars['more_filters'] = $this->form_builder->render_divs();
 
 			$this->_render($this->views['list'], $vars);
 		}
@@ -490,7 +490,13 @@ class Module extends Fuel_base_controller {
 			}
 			
 			$model = $this->model;
-
+			
+			// run before_create hook
+			$this->_run_hook('before_create', $posted);
+			
+			// run before_save hook
+			$this->_run_hook('before_save', $posted);
+			
 			// reset dup id
 			if ($_POST[$this->model->key_field()] == 'dup')
 			{
@@ -529,8 +535,16 @@ class Module extends Fuel_base_controller {
 					$archive_data[$this->model->key_field()] = $id;
 					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+
+					// run after_create hook
+					$this->_run_hook('after_create', $data);
+					
+					// run after_save hook
+					$this->_run_hook('after_save', $posted);
+					
 					if (!empty($data))
 					{
+						
 						$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 						$this->logs_model->logit($msg);
 						$this->_clear_cache();
@@ -559,6 +573,12 @@ class Module extends Fuel_base_controller {
 			
 			$posted = $this->_process();
 			
+			// run before_edit hook
+			$this->_run_hook('before_edit', $posted);
+			
+			// run before_save hook
+			$this->_run_hook('before_save', $posted);
+			
 			if ($this->model->save($posted))
 			{
 				// process $_FILES
@@ -580,6 +600,13 @@ class Module extends Fuel_base_controller {
 					$archive_data = $this->model->cleaned_data();
 					if ($this->archivable) $this->model->archive($id, $archive_data);
 					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+					
+					// run after_edit hook
+					$this->_run_hook('after_edit', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
 					$this->_clear_cache();
@@ -895,6 +922,10 @@ class Module extends Fuel_base_controller {
 		{
 			$posted = explode('|', $this->input->post('id'));
 			
+			
+			// run before_delete hook
+			$this->_run_hook('before_delete', $posted);
+			
 			// Flags
 			$any_success = $any_failure = FALSE;
 			foreach ($posted as $id)
@@ -928,7 +959,10 @@ class Module extends Fuel_base_controller {
 
 				$this->session->set_flashdata('error', $msg);
 			}
-
+			
+			// run after_delete hook
+			$this->_run_hook('after_delete', $posted);
+			
 			$this->_clear_cache();
 			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
 			redirect(fuel_uri($this->module_uri));
@@ -1092,6 +1126,16 @@ class Module extends Fuel_base_controller {
 					unset($values['published']);
 				}
 				
+				// run hook
+				if ($id === 'create')
+				{
+					$this->_run_hook('before_create', $posted);
+				}
+				else
+				{
+					$this->_run_hook('before_edit', $posted);
+				}
+				
 				$saved_id = $this->model->save($posted);
 
 				if (!$this->_process_uploads())
@@ -1109,6 +1153,18 @@ class Module extends Fuel_base_controller {
 					$archive_data = $this->model->cleaned_data();
 					$archive_data[$this->model->key_field()] = $saved_id;
 					if ($this->archivable) $this->model->archive($id, $archive_data);
+					
+					// run hook
+					if ($id === 'create')
+					{
+						$this->_run_hook('after_create', $archive_data);
+					}
+					else
+					{
+						$this->_run_hook('after_edit', $archive_data);
+					}
+					
+					
 					$this->_clear_cache();
 					$str = (is_ajax()) ? $saved_id : '<script type="text/javascript">parent.location.reload(true);</script>';
 					$this->output->set_output($str);
@@ -1377,5 +1433,12 @@ class Module extends Fuel_base_controller {
 			$this->model->upload_data = $this->upload_data;
 		}
 		return !$errors;
+	}
+	
+	protected function _run_hook($hook, $params = array())
+	{
+		// call hook
+		$hook_name = $hook.'_'.$this->module;
+		return $GLOBALS['EXT']->_call_hook($hook_name, $params);
 	}
 }

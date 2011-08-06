@@ -5,6 +5,7 @@ class Fuel_modules {
 	protected $_modules = array();
 	protected $_allowed = array();
 	protected $_cached = array();
+	protected $_overwrites = NULL;
 	
 	function __construct($params = array())
 	{
@@ -154,7 +155,6 @@ class Fuel_modules {
 		}
 		
 		$_cached[$module] = $return;
-		
 		return $return;
 		
 	}
@@ -207,7 +207,17 @@ class Fuel_modules {
 				$CI->config->module_load($module, $module.'_fuel_modules');
 				include(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php');
 				$module_init = array_merge($module_init, $config['modules']);
-				
+			}
+		}
+		
+		
+		// now must loop through the array and overwrite any values... array_merge_recursive won't work'
+		$overwrites = $this->module_overwrites();
+		if (!empty($overwrites) AND is_array($overwrites))
+		{
+			foreach($overwrites as $module => $val)
+			{
+				$module_init[$module] = array_merge($module_init[$module], $val);
 			}
 		}
 		return $module_init;
@@ -274,6 +284,34 @@ class Fuel_modules {
 			
 		}
 		return $pages;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Module overwrites
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function module_overwrites()
+	{
+		if (isset($this->_overwrites))
+		{
+			return $this->_overwrites;
+		}
+		
+		@include(APPPATH.'config/MY_fuel_modules.php');
+		
+		if (isset($config['module_overwrites']))
+		{
+			$this->_overwrites = $config['module_overwrites'];
+		}
+		else
+		{
+			$this->_overwrites = array();
+		}
+		return $this->_overwrites;
 	}
 	
 	// --------------------------------------------------------------------

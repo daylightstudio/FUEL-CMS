@@ -230,8 +230,10 @@ table.form { border: none; border-spacing: 0; }
 table.form td.label, table.inline_form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
 table.form td.value, table.inline_form td.value { padding: 3px 0;vertical-align: top; }
 table.form td.required, table.inline_form td.required { padding-top: 10px; }
-table.more_filters td.label { padding: 0 3px 0 15px; }
-table.more_filters td.value {  }
+div.more_filters div.field { float: left; }
+div.more_filters div.field { padding: 0 3px 0 10px; }
+div.more_filters div.field label { padding-right: 5px; }
+div.more_filters div.value {  }
 div#main_content_inner table.form td.label { min-width: 130px; }
 
 /* tree */
