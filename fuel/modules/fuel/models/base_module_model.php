@@ -202,7 +202,7 @@ class Base_module_model extends MY_Model {
 				{
 					if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
 					
-					if ($this->filter_join == 'and') 
+					if (strtolower($this->filter_join) == 'and') 
 					{
 						$this->db->like('LOWER('.$key.')', strtolower($val), 'both');
 					}
