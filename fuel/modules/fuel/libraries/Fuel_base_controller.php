@@ -92,7 +92,7 @@ class Fuel_base_controller extends CI_Controller {
 				'css' => 'css/',
 				'js' => 'js/',
 			);
-
+		
 		$this->_last_page();
 		
 	}
@@ -100,7 +100,7 @@ class Fuel_base_controller extends CI_Controller {
 	{
 		// set no cache headers to prevent back button problems in FF
 		$this->_no_cache();
-		
+
 		// load this after the the above because it needs a database connection. Avoids a database connection error if there isn't one'
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		
@@ -108,11 +108,10 @@ class Fuel_base_controller extends CI_Controller {
 		if (!$this->fuel_auth->is_logged_in() OR !is_fuelified())
 		{
 			$login = $this->config->item('fuel_path', 'fuel').'login';
-			$cookie = array(
-				'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
-				'path' => WEB_PATH
-			);
-			delete_cookie($cookie);
+			
+			// logout officially to unset the cookie data
+			$this->fuel_auth->logout();
+			
 			if (!is_ajax())
 			{
 				redirect($login.'/'.uri_safe_encode($this->uri->uri_string()));
@@ -232,7 +231,6 @@ class Fuel_base_controller extends CI_Controller {
 				$nav = array_merge($nav, $config['nav']);
 			}
 		}
-		
 		
 		// automatically include modules if set to AUTO
 		if (is_string($nav['modules']) AND strtoupper($nav['modules']) == 'AUTO')
