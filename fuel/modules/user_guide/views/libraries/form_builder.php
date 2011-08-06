@@ -421,6 +421,22 @@ $params = array('name' => 'name', 'label' => 'Full Name', 'required' => TRUE);
 $this->form_builder->create_text($params);
 </pre>
 
+<h2>$this->form_builder->create_submit(<var>params</var>)</h2>
+<p>Creates a submit button.</p>
+
+<pre class="brush: php">
+$params = array('value' => 'My Submit');
+$this->form_builder->create_submit($params);
+</pre>
+
+<h2>$this->form_builder->create_button(<var>params</var>)</h2>
+<p>Creates a button. The <dfn>use_input</dfn> parameter determines whether to use the input type of button or to use the &lt;button&gt; tag.</p>
+
+<pre class="brush: php">
+$params = array('value' => 'My Button', 'use_input' => FALSE);
+$this->form_builder->create_button($params);
+</pre>
+
 
 <h2>$this->form_builder->create_textarea(<var>params</var>)</h2>
 <p>Creates a textarea input for the form.</p>
