@@ -10,7 +10,7 @@
 
 <pre class="brush: php">$this->load->library('menu', array('active_class'=>'on', 'render_type' => 'collapsible'));</pre>
 
-<h2>Configuring Validator Information</h2>
+<h2>Configuring Menu Information</h2>
 <p>There are several public properties you can use to configure the Menu Class:</p>
 
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
