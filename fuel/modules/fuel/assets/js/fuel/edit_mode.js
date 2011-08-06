@@ -179,6 +179,7 @@ if (fuel == undefined) var fuel = {};
 				}
 				$form.attr('action', formAction).ajaxSubmit({
 					success: function(html){
+						html = $.trim(html);
 						if ($(html).is('error')){
 							var msg = $(html).html();
 							if (msg != '' || msg != '1'){
@@ -654,6 +655,7 @@ if (fuel == undefined) var fuel = {};
 												$('.ico_save', $modalContext).click(function(){
 													$form.ajaxSubmit({
 														success: function(html){
+															html = $.trim(html);
 															if ($(html).is('error')){
 																displayError($form, html);
 															} else {
@@ -669,6 +671,7 @@ if (fuel == undefined) var fuel = {};
 														$form.find('.__fuel_inline_action__').val('delete');
 														$form.ajaxSubmit({
 															success: function(html){
+																html = $.trim(html);
 																if ($(html).is('error')){
 																	displayError($form, html);
 																} else {

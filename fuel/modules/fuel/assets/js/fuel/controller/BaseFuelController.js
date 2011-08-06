@@ -856,6 +856,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					
 					$form.ajaxSubmit({
 						success: function(html){
+							html = $.trim(html);
 							if ($(html).is('error')){
 								_this.displayError($form, html);
 							} else if (callback){
@@ -872,6 +873,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 						$form.find('.__fuel_inline_action__').val('delete');
 						$form.ajaxSubmit({
 							success: function(html){
+								html = $.trim(html);
 								if ($(html).is('error')){
 									displayError($form, html);
 								} else if (callback){
