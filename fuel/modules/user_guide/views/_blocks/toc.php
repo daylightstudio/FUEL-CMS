@@ -57,6 +57,8 @@
 					<li><a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a></li>
 					<li><a href="<?=user_guide_url('modules/advanced')?>">Advanced Modules</a></li>
 					<li><a href="<?=user_guide_url('modules/tutorial')?>">Creating Modules</a></li>
+					<li><a href="<?=user_guide_url('modules/forms')?>">Module Forms</a></li>
+					<li><a href="<?=user_guide_url('modules/hooks')?>">Module Hooks</a></li>
 				</ul>
 
 				<?php if (!empty($modules)) : ?>
