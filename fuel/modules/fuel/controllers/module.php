@@ -1273,6 +1273,40 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	function ajax($method = NULL)
+	{
+		// must not be empty and must start with find_ (... don't want to access methods like delete)
+		if (is_ajax())
+		{
+			// append ajax to the method name... to prevent any conflicts with default methods
+			$method = 'ajax_'.$method;
+			$this->uri->init_get_params();
+			$params = $_GET;
+			
+			if (!method_exists($this->model, $method))
+			{
+				show_error(lang('error_invalid_method'));
+			}
+			
+			$results = $this->model->$method($params);
+			
+			if (is_string($results))
+			{
+				$this->output->set_output($results);
+			}
+			else
+			{
+				$this->output->set_header('Cache-Control: no-cache, must-revalidate');
+				$this->output->set_header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+				$this->output->set_header('Last-Modified: '. gmdate('D, d M Y H:i:s').'GMT');
+				$this->output->set_header('Content-type: application/json');
+				$output = json_encode($results);
+				print($output);
+			}
+			
+		}
+	}
+	
 	protected function _clear_cache()
 	{
 		// reset cache for that page only
