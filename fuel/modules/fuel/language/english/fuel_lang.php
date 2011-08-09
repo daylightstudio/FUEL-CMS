@@ -42,6 +42,7 @@ $lang['error_upload'] = 'There was an error uploading the your file.';
 $lang['error_create_nav_group'] = 'Please create a Navigation Group';
 $lang['error_requires_string_value'] = 'The name field should be a string value';
 $lang['error_missing_params'] = 'You are missing parameters to view this page';
+$lang['error_invalid_method'] = 'Invalid method name';
 
 
 /*
