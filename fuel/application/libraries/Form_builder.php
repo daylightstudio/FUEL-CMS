@@ -1224,7 +1224,8 @@ Class Form_builder {
 		$file = $this->form->file($params['name'], $attrs);
 		if (isset($params['overwrite']))
 		{
-			$file .= $this->form->hidden($params['name'].'_overwrite', 1);
+			$overwrite = ($params['overwrite'] == 1 OR $params['overwrite'] === TRUE OR $params['overwrite'] === 'yes' OR $params['overwrite'] === 'y') ? '1' : '0';
+			$file .= $this->form->hidden($params['name'].'_overwrite', $overwrite);
 		}
 		if (isset($params['upload_path']))
 		{
