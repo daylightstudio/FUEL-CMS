@@ -1006,8 +1006,8 @@ Class Form_builder {
 		
 		$attrs = array(
 			'class' => $params['class'], 
-			'rows' => $this->textarea_rows, 
-			'cols' => $this->textarea_cols, 
+			'rows' => (!empty($params['rows'])) ? $params['rows'] : $this->textarea_rows, 
+			'cols' => (!empty($params['cols'])) ? $params['cols'] : $this->textarea_cols, 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled']
 		);
