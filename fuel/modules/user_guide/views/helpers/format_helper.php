@@ -10,10 +10,13 @@ $this->load->helper('format');
 
 <p>The following function is available:</p>
 
-<h2>dollar(<var>'value'</var>)</h2>
-<p>Returns a dollar formatted string</p>
+<h2>dollar(<var>'value'</var>, <var>[include_cents]</var>)</h2>
+<p>Returns a dollar formatted string. The second parameter <dfn>include_cents</dfn> defaults to <dfn>TRUE</dfn>.</p>
 <pre class="brush: php">
-$str = capture(false, 'all');
 echo dollar('100000');
+// $100,000.00
+
+echo dollar('100000', FALSE);
 // $100,000
+
 </pre>
