@@ -28,9 +28,26 @@
 
 
 
-function dollar($value)
+// ------------------------------------------------------------------------
+
+/**
+ * Formats value into a dollar string
+ *
+ * @access	public
+ * @param	string
+ * @param	bool	whether to include the cents or not
+ * @return	string
+ */
+function dollar($value, $include_cents = TRUE)
 {
-	return "$".number_format($value, 2, '.', ',');
+	if (!$include_cents)
+	{
+		return "$".number_format($value);
+	}
+	else
+	{
+		return "$".number_format($value, 2, '.', ',');
+	}
 }
 
 /* End of file format_helper.php */
