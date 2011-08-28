@@ -766,7 +766,7 @@ class MY_Model extends CI_Model {
 		{
 			if  ($field['type'] == 'time')
 			{
-				if (isset($values[$key.'_hour']))
+				if (isset($values[$key.'_hour']) AND is_numeric($values[$key.'_hour']))
 				{
 					if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $date_func('H:i:s');
 					//the js seem like only supply minute field, assign 00 for sec now
@@ -774,19 +774,23 @@ class MY_Model extends CI_Model {
 					$values[$key] = date("H:i:s", strtotime(@$values[$key.'_hour'].':'.@$values[$key.'_min'].':'.@$values[$key.'_sec'].' '.@$values[$key.'_am_pm']));
 				}
 			}
-				// make it easier for dates
-			else if (($field['type'] == 'datetime'))
+			// make it easier for dates
+			else if ($field['type'] == 'datetime')
 			{
+				
+				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (isset($values[$key.'_hour']))
 				{
-					if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-					$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
+					if (!empty($values[$key]) AND is_numeric($values[$key.'_hour']))
+					{
+						$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
+					}
 				}
 			}
 			else if ($field['type'] == 'date')
 			{
-				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-				if (isset($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
+				if (empty($values[$key]) OR (int)$values[$key] == 0 OR !is_numeric($values[$key])) $values[$key] = $this->default_date;
+				if (!empty($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
 			}
 			
 			$date_func = ($this->date_use_gmt) ? 'gmdate' : 'date';
@@ -806,7 +810,6 @@ class MY_Model extends CI_Model {
 			{
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
-
 			if (isset($values[$key]))
 			{
 				// format dates
@@ -814,7 +817,7 @@ class MY_Model extends CI_Model {
 				{	
 					if ($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date')
 					{
-						if (strncmp($values[$key], '0000', 4) !== 0)
+						if (isset($values[$key]) AND strncmp($values[$key], '0000', 4) !== 0)
 						{
 							if ($field['type'] == 'date')
 							{
@@ -854,6 +857,7 @@ class MY_Model extends CI_Model {
 				$clean[$key] = $values[$key];
 			}
 		}
+
 		$this->cleaned_data = $clean;
 		return $clean;
 	}

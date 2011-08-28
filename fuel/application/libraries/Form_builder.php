@@ -1285,7 +1285,7 @@ Class Form_builder {
 	{
 		$params = $this->_normalize_value($params);
 
-		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1))) 
+		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00')
 		{
 			$time_params['value'] = date('g', strtotime($params['value']));
 		}
@@ -1296,7 +1296,7 @@ Class Form_builder {
 		$time_params['disabled'] = $params['disabled'];
 		$str = $this->create_text($this->_normalize_value($time_params));
 		$str .= ":";
-		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1))) $time_params['value'] = date('i', strtotime($params['value']));
+		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00') $time_params['value'] = date('i', strtotime($params['value']));
 		$time_params['name'] = $params['orig_name'].'_min';
 		$time_params['class'] = 'fillin datepicker_mm';
 		$str .= $this->create_text($this->_normalize_value($time_params));
