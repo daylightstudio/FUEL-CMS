@@ -60,3 +60,29 @@ The <dfn>primary_key</dfn> parameter is column to be used as the primary key. Th
 <pre class="brush:php">
 $field_info = $this->examples_model->db->field_info('example', 'my_field');
 </pre>
+
+<h2>$this->db->get_query_string([<var>$clear</var>])</h2>
+<p>Allows you to get the compiled active record string without running the query</dfn>. The <dfn>clear</dfn> parameter will by default clear the
+active record for subsequent queries. This method is an alias to active records <dfn>_compile_select()</dfn> method.</p>
+
+<pre class="brush:php">
+$this->db->select('my_field');
+$this->db->from('my_table');
+$this->db->where(array('active' => 'yes'));
+$sql = $this->examples_model->db->get_query_string();
+echo $sql; // SELECT my_field FROM my_table WHERE active = 'yes'
+</pre>
+
+<h2>$this->db->clear_query_string()</h2>
+<p>Clears the compiled query string</dfn>. This method is an alias to active records <dfn>_reset_select()</dfn> method.</p>
+
+<pre class="brush:php">
+$this->examples_model->db->select('my_field');
+$this->examples_model->db->from('my_table');
+$this->examples_model->db->where(array('active' => 'yes'));
+$sql = $this->examples_model->db->get_query_string();
+echo $sql; // SELECT my_field FROM my_table WHERE active = 'yes'
+$this->examples_model->db->clear_query_string();
+$sql = $this->examples_model->db->get_query_string();
+echo $sql; // ""
+</pre>
