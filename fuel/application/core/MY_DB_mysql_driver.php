@@ -268,7 +268,38 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $return;
 	}	
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Allows you to get the compiled active record string without running the query
+	 *
+	 * @access	public
+	 * @param	boolean	clear the active record
+	 * @return	string
+	 */
+	function get_query_string($clear = TRUE)
+	{
+		$sql = $this->_compile_select();
+		if ($clear)
+		{
+			$this->clear_query_string();
+		}
+		return $sql;
+	}
 	
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the compiled query string
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function clear_query_string()
+	{
+	   $this->_reset_select();
+	}
 }
 /* End of file MY_DB_mysql_driver.php */
 /* Location: ./application/libraries/MY_DB_mysql_driver.php */

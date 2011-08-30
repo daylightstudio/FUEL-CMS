@@ -39,7 +39,7 @@
 			
 			// for keyboard shortcuts to select multiple
 			var isShiftDown = false;
-			var isAltDown = false;
+			var isCtrlDown = false;
 			var lastSelected = null;
 
 			// the form which contains the original element
@@ -122,7 +122,7 @@
 			
 			
 			$('#' + leftID + ' li').live('click', function(e){
-				if (isAltDown) {
+				if (isCtrlDown) {
 					$(this).removeClass(settings.selectedClass);
 				} else {
 					markForMove(this, leftID);
@@ -131,7 +131,7 @@
 
 
 			$('#' + rightID + ' li').live('click', function(e){
-				if (isAltDown) {
+				if (isCtrlDown) {
 					$(this).removeClass(settings.selectedClass);
 				} else {
 					markForMove(this, rightID);
@@ -141,8 +141,9 @@
 			$(document).keydown(function(e){
 				if (e.shiftKey) {
 					isShiftDown = true;
-				} else if (e.altKey || e.keyCode == 224){
-					isAltDown = true;
+				//} else if (e.metaKey || e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93){ // Safari/Chrome right and left command keys are 91 and 93. Firefox is 224
+				} else if (e.metaKey || e.CtrlKey){
+					isCtrlDown = true;
 				} else if (e.keyCode == 38) {
 					if (lastSelected) markForMove($(lastSelected).prev());
 				} else if (e.keyCode == 40) {
@@ -152,7 +153,7 @@
 			
 			$(document).keyup(function(e){
 				isShiftDown = false;
-				isAltDown = false;
+				isCtrlDown = false;
 			});
 			
 			$('#' + settings.wrapperId + ' .csadd').click(function(){
@@ -208,7 +209,7 @@
 
 							// only refresh list when we know that the current search term doesn't begin with the previous search term
 							if (searchTerm.substr(0, (prevSearchText.length)) != prevSearchText || searchTerm.length == 0) {
-								refreshLists();
+								//refreshLists();
 							}
 							var val = $(this).val().toLowerCase();
 							if (val.length){
@@ -232,7 +233,7 @@
 							
 						// refresh list if someone is deleting... but only do it once if it is below the minNumSearchChars
 						} else if (searchTerm.length == (settings.minNumOfSearchChars - 1) && searchTerm.substr(0, (prevSearchText.length)) != prevSearchText && searchTerm.length != 0){
-							refreshLists();
+							//refreshLists();
 						}
 						prevSearchText = searchTerm;
 						
@@ -312,6 +313,7 @@
 				
 				// set this to false just in case the event doesn't get triggered
 				isShiftDown = false;
+				isCtrlDown = false;
 				
 				// IE hack to get overflow to expand the full width after scrollbars appear
 				$('.supercomboselect').css({overflowY:'hidden'}).css({overflowY:'auto'}).disableTextSelect();
@@ -373,6 +375,10 @@
 					$(selector).addClass(settings.selectedClass);
 					lastSelected = selector;
 				}
+				
+				// unfocus this field so that meta key tags will send proper events
+				searchBox.blur();
+				
 			}
 			
 			function getOptionSourceRef(idNum){
