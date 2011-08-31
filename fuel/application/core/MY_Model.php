@@ -1773,13 +1773,16 @@ class MY_Model extends CI_Model {
 			{
 				foreach($related as $key => $val)
 				{
-					// related  need to be loaded usng
+					// related  need to be loaded using slash syntax if model belongs in another module (e.g. my_module/my_model)
 					$related_name = end(explode('/', $key));
 					$related_model = $this->load_model($key.'_model');
-					$lookup_model = $this->load_model($val);
+					$related_model_name = $related_name.'_model';
 					
-					$options = $CI->$related_model->options_list();
-					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_model->find_all_array_assoc($CI->$related_model->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
+					$lookup_name = end(explode('/', $val));
+					$lookup_model = $this->load_model($val);
+
+					$options = $CI->$related_model_name->options_list();
+					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}

@@ -552,7 +552,7 @@ print_r($table_meta['active']['options']); // array('yes', 'no')
 </pre>
 
 
-<h2>$this->examples_model->form_fields(<var>values</var>, <var>related</var>)</h2>
+<h2>$this->examples_model->form_fields(<var>[values]</var>, <var>[related]</var>)</h2>
 <p>Somewhat similar to the table_info method with difference being that the returned array has information for creating a form.
 The related parameter is used to conveniently map other model information with this form to create a many to many multi-select form element.
 This method is usally used with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class.

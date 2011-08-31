@@ -187,9 +187,15 @@ class Assets_model extends CI_Model {
 	{
 		$CI =& get_instance();
 		$CI->load->helper('convert');
-		$filepath = WEB_ROOT.$CI->config->item('assets_path').$file;
-		$parent_folder = dirname($filepath).'/';
 		
+		// cleanup beginning slashes
+		if (substr($file, 0, 1) == '/')
+		{
+			$file = substr($file, 1);
+		}
+		$filepath = WEB_ROOT.$CI->config->item('assets_path').$file;
+		
+		$parent_folder = dirname($filepath).'/';
 		if (file_exists($filepath))
 		{
 			$deleted = unlink($filepath);
@@ -230,11 +236,20 @@ class Assets_model extends CI_Model {
 	private function _get_excluded_asset_server_folders()
 	{
 		$CI =& get_instance();
-		$excluded = $CI->config->item('assets_excluded_dirs', 'fuel');
+		$excluded = array_merge($CI->config->item('assets_excluded_dirs', 'fuel'), $CI->asset->assets_folders);
 		$return = array();
 		foreach($excluded as $folder)
 		{
-			$return[] = assets_server_path($folder).'/';
+			$folder_path = assets_server_path($folder);
+			if (substr($folder_path, -1, 1) != '/')
+			{
+				$folder_path = $folder_path.'/';
+			}
+			
+			if (!in_array($folder_path, $return))
+			{
+				$return[] = $folder_path;
+			}
 		}
 		return $return;
 	}
