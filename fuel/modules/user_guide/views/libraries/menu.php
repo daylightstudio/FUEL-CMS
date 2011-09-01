@@ -35,8 +35,8 @@
 		</tr>
 		<tr>
 			<td><strong>styles</strong></td>
-			<td></td>
-			<td></td>
+			<td>NULL</td>
+			<td>None</td>
 			<td>CSS class styles to apply to menu items... can be a nested array</td>
 		</tr>
 		<tr>
@@ -259,7 +259,7 @@ echo $menu;
 <p>Will create the HTML for a collapsible menu.
 The <dfn>$items</dfn> the array of items to display. See above for format of the array.
 The <dfn>$active</dfn> parameter specifies which menu item is active.
-The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy.
 </p>
 
 <pre class="brush: php">
@@ -291,7 +291,7 @@ echo $menu;
 <p>Will create the HTML for a breadcrumb menu.
 The <dfn>$items</dfn> the array of items to display. See above for format of the array.
 The <dfn>$active</dfn> parameter specifies which menu item is active.
-The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy.
 </p>
 
 <pre class="brush: php">
@@ -319,7 +319,7 @@ echo $menu;
 <p>Will create a page title based on the nav structure.
 The <dfn>$items</dfn> the array of items to display. See above for format of the array.
 The <dfn>$active</dfn> parameter specifies which menu item is active.
-The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy.
 </p>
 
 <pre class="brush: php">
@@ -340,11 +340,35 @@ Home &gt; About &gt; History
 </pre>
 
 
+<h2>$this->menu->render_delimited(<var>items</var>, <var>['active']</var>, <var>['parent_id']</var>)</h2>
+<p>Will create a delimited navigation structure (one level deep only). Useful for pipe delimited footer navigations.
+The <dfn>$items</dfn> the array of items to display. See above for format of the array.
+The <dfn>$active</dfn> parameter specifies which menu item is active.
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start.
+</p>
+
+<pre class="brush: php">
+$nav = array();
+$nav['about'] = 'About';
+$nav['history'] = 'History';
+$nav['contact'] = 'Contact';
+
+$nav['products'] = 'Products';
+
+$active = 'about/history';
+$menu = $this->menu->render($nav, $active, NULL, 'delimited');
+
+echo $menu;
+/* echoed output looks something like this.
+Home | About | History
+*/
+</pre>
+
 <h2>$this->menu->render_array(<var>items</var>, <var>['active']</var>, <var>['parent_id']</var>)</h2>
 <p>Will output a nested array. The key of <dfn>children</dfn> will contain any child menu items.
 The <dfn>$items</dfn> the array of items to display. See above for format of the array.
 The <dfn>$active</dfn> parameter specifies which menu item is active.
-The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy
+The <dfn>$parent_id</dfn> parameter specifies where in the $items to start the heirarchy.
 </p>
 
 <pre class="brush: php">
