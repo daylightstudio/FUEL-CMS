@@ -18,7 +18,7 @@ class Manage extends Fuel_base_controller {
 		$vars['notifications'] = '';
 		
 		$vars['xtras'] = $this->config->item('xtra', 'fuel');
-		$this->_render('manage', $vars);
+		$this->fuel->admin->render('manage', $vars);
 	}
 	
 	function cache(){
@@ -61,7 +61,7 @@ class Manage extends Fuel_base_controller {
 		else 
 		{
 			$vars['notifications'] = $this->load->view('_blocks/notifications', array(), TRUE);
-			$this->_render('manage/cache', $vars);
+			$this->fuel->admin->render('manage/cache', $vars);
 		}
 	}
 	
@@ -169,7 +169,7 @@ class Manage extends Fuel_base_controller {
 
 			// for extra module filters
 			$field_values = array();
-			$this->_render('manage/activity', $vars);
+			$this->fuel->admin->render('manage/activity', $vars);
 		}
 	}
 	

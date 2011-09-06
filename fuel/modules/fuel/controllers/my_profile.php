@@ -75,7 +75,7 @@ class My_profile extends Fuel_base_controller {
 		// active or publish fields
 		$vars['error'] = $this->users_model->get_errors();
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
-		$this->_render('my_profile', $vars);
+		$this->fuel->admin->render('my_profile', $vars);
 	}
 	
 }

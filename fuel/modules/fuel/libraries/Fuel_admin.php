@@ -114,7 +114,7 @@ class Fuel_admin {
 		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
 
 		$load_vars = array(
-			'js' => '', 
+			'js' => array(), 
 			'css' => $this->load_css(),
 			'js_controller_params' => array(), 
 			'keyboard_shortcuts' => $this->fuel->config('keyboard_shortcuts'),
@@ -123,11 +123,13 @@ class Fuel_admin {
 			'page_title' => $this->page_title()
 			);
 			
+			
 		if ($this->validate)
 		{
 			$load_vars['user'] = $this->fuel->auth->user_data();
 			$load_vars['session_key'] = $this->fuel->auth->get_session_namespace();
 		}
+		$this->CI->js_controller_path = js_path('', FUEL_FOLDER);
 
 		$this->CI->load->vars($load_vars);
 		$this->load_js_localized();

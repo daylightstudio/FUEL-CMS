@@ -10,11 +10,11 @@
 .jqmWindow {
     display: none;
     position: fixed;
-    top: 20%;
+    top: 50px;
     left: 50%;
     margin-left: -222px;
     color: #333;
-    padding: 10px 20px;
+/*    padding: 10px 20px;*/
 	width: 400px;
 	border: 2px solid #666;
 	z-index: 300000;

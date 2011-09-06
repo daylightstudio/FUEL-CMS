@@ -60,7 +60,10 @@ class Pages extends Module {
 			
 		}
 		$vars = $this->_form();
-		$this->_render('pages/page_create_edit', $vars);
+		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
+		$this->fuel->admin->set_breadcrumb($crumbs);
+		
+		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 
 	function edit($id = NULL)
@@ -92,7 +95,7 @@ class Pages extends Module {
 			}
 		}
 		$vars = $this->_form($id);
-		$this->_render('pages/page_create_edit', $vars);
+		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 	
 	function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
@@ -319,9 +322,19 @@ class Pages extends Module {
 		$vars['error'] = $this->model->get_errors();
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
+		
+		if ($vars['action'] == 'edit')
+		{
+			$crumbs = array($this->module_uri => $this->module_name, '' => character_limiter(strip_tags($vars['data'][$this->display_field]), 50));
+		}
+		else
+		{
+			$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
+		}
+		$this->fuel->admin->set_breadcrumb($crumbs);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($vars['data'][$this->display_field])) $this->_recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
+		if (!empty($vars['data'][$this->display_field])) $this->fuel->admin->recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
 		return $vars;
 	}
 	
@@ -711,7 +724,7 @@ class Pages extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('pages_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->_render('upload', $vars);
+		$this->fuel->admin->render('upload', $vars);
 	}
 	
 }

@@ -50,7 +50,7 @@ class Tester extends Fuel_base_controller {
 		asort($test_list);
 		
 		$vars['test_list'] = $test_list;
-		$this->_render('tester', $vars);
+		$this->fuel->admin->render('tester', $vars);
 	}
 	
 	function run()
@@ -139,7 +139,7 @@ class Tester extends Fuel_base_controller {
 		}
 		
 		$vars['tests_serialized'] = base64_encode(serialize($tests));
-		$this->_render('tester_results', $vars);
+		$this->fuel->admin->render('tester_results', $vars);
 	}
 
 	function _get_tests($folder, $module = NULL)

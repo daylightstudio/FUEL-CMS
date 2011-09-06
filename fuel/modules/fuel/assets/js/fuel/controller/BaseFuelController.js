@@ -46,7 +46,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.rearrangeOn = false;
 		this.leftMenuInited = false;
 		this.formController = null;
-		this.previewPath = myMarkItUpSettings.previewParserPath;
+//		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
 		
 		this._submit();
@@ -229,12 +229,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if ($(this).parent().hasClass('active')){
 				_this.rearrangeOn = true;
 				_this.rearrangeItems();
-				$('#notification').append('<div class="ico_warn warning rearrange">' + _this.lang('rearrange_on') + '</div>');
+				$('#fuel_notification').append('<div class="ico_warn warning rearrange">' + _this.lang('rearrange_on') + '</div>');
 				
 			} else {
 				_this.rearrangeOn = false;
 				$("#data_table").removeClass('rearrange');
-				$('#notification .rearrange').remove();
+				$('#fuel_notification .rearrange').remove();
 				
 			}
 			

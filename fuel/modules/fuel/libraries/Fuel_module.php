@@ -77,6 +77,7 @@ class Fuel_module {
 					'delete' => 'modules/module_delete'),
 				'permission' => $this->module,
 				'js_controller' => 'BaseFuelController',
+				'js_controller_path' => '',
 				'js_controller_params' => array(),
 				'js_localized' => array(),
 				'js' => '',
@@ -124,7 +125,7 @@ class Fuel_module {
 			}
 			
 			// localize certain fields
-			if ($module_name = lang('module_'.$module))
+			if ($module_name = lang('module_'.$this->module))
 			{
 				$info['module_name'] = $module_name;
 			}
@@ -154,7 +155,7 @@ class Fuel_module {
 
 
 
-			if ($create_action_name = lang('module_'.$module.'_create'))
+			if ($create_action_name = lang('module_'.$this->module.'_create'))
 			{
 				$info['create_action_name'] = $create_action_name;
 			}
@@ -295,10 +296,9 @@ class Fuel_module {
 	 * The server path to a module
 	 *
 	 * @access	public
-	 * @param	string	module name
 	 * @return	string
 	 */	
-	static function module_path($module)
+	static function module_path()
 	{
 		return MODULES_PATH.$this->module.'/';
 	}

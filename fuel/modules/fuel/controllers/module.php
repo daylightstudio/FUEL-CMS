@@ -506,7 +506,7 @@ class Module extends Fuel_base_controller {
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
 		
-		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
+		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
 		$this->fuel->admin->set_breadcrumb($crumbs);
 		
 		if ($inline === TRUE)
@@ -745,7 +745,6 @@ class Module extends Fuel_base_controller {
 					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
 				}
 			}
-		}
 		}
 		return FALSE;
 	}

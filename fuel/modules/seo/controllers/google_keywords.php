@@ -95,8 +95,10 @@ class Google_keywords extends Seo_base_controller {
 				return false;
 			}
 		}
-
-		$this->_render('google_keywords', $vars);
+		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('section_tools'), lang('module_google_keywords')), FALSE);
+		$crumbs = array('tools' => lang('section_tools'), lang('module_google_keywords'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_seo_google_keywords');
+		$this->fuel->admin->render('google_keywords', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }
 

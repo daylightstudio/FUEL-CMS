@@ -221,9 +221,10 @@ class Seo extends Seo_base_controller {
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['url'] = $url;
 		$vars['pages_select'] = $pages;
-		$vars['page_title'] = $this->_page_title(array('Tools', 'SEO'), FALSE);
-		
-		$this->_render('page_analysis', $vars);
+		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('section_tools'), 'SEO'), FALSE);
+		$crumbs = array('tools' => lang('section_tools'), lang('module_page_analysis'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_seo');
+		$this->fuel->admin->render('page_analysis', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		
 	}
 	

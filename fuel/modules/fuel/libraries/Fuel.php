@@ -36,6 +36,7 @@ class Fuel {
 	protected $_admin;
 	protected $_pages;
 	protected $_modules;
+	protected $_module_overwrites;
 
 	private static $_instance;
 	
@@ -155,6 +156,35 @@ class Fuel {
 			return FALSE;
 		}
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Module overwrites
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function module_overwrites()
+	{
+		if (isset($this->_module_overwrites))
+		{
+			return $this->_module_overwrites;
+		}
+		
+		@include(APPPATH.'config/MY_fuel_modules.php');
+		
+		if (isset($config['module_overwrites']))
+		{
+			$this->_module_overwrites = $config['module_overwrites'];
+		}
+		else
+		{
+			$this->_module_overwrites = array();
+		}
+		return $this->_module_overwrites;
+	}
+	
 	
 	function module_pages()
 	{

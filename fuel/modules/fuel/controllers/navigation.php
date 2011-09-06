@@ -165,7 +165,7 @@ class Navigation extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->_render('upload', $vars);
+		$this->fuel->admin->render('upload', $vars);
 	}
 	
 	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)

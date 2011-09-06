@@ -11,7 +11,7 @@ class My_modules extends Fuel_base_controller {
 	function index()
 	{
 		$vars = array();
-		$this->_render('modules', $vars);
+		$this->fuel->admin->render('modules', $vars);
 	}
 	
 }

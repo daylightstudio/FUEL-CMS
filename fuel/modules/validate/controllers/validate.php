@@ -42,7 +42,7 @@ class Validate extends Fuel_base_controller {
 		$vars['validation_type'] = lang('validate_type_html');
 		$vars['pages_select'] = $pages;
 		$this->js_controller_params['method'] = 'validate';
-		$this->_render('validate', $vars);
+		$this->fuel->admin->render('validate', $vars);
 	}
 
 	function html()
@@ -149,7 +149,7 @@ class Validate extends Fuel_base_controller {
 		$vars['validation_type'] = lang('validate_type_html');
 		$vars['page_title'] = $this->_page_title(array('Tools', 'Validate', 'HTML'), FALSE);
 		
-		$this->_render('run', $vars);
+		$this->fuel->admin->render('run', $vars);
 	}
 
 	function links()
@@ -260,7 +260,7 @@ class Validate extends Fuel_base_controller {
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
 		$vars['js_method'] = 'links';
 		$vars['validation_type'] =  lang('validate_type_links');
-		$this->_render('run', $vars);
+		$this->fuel->admin->render('run', $vars);
 	}
 
 	function size_report()
@@ -463,7 +463,7 @@ class Validate extends Fuel_base_controller {
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
 		
 		$vars['validation_type'] = lang('validate_type_size_report');
-		$this->_render('run', $vars);
+		$this->fuel->admin->render('run', $vars);
 	}
 	
 	function _get_pages()

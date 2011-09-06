@@ -2,15 +2,11 @@
 	<h2 class="ico <?=$breadcrumb_icon?>">
 	<?php if (!empty($breadcrumb)) : ?>
 	<?php 
-	$last_key = end(array_keys($breadcrumb));
+	$last_key = array_pop($breadcrumb);
 	foreach($breadcrumb as $url => $crumb) : ?>
-		<?php if ($last_key != $url) : ?>
-			<a href="<?=fuel_url($url)?>"><?=$crumb?></a>
-		<?php else: ?>
-			<em><?=$crumb?></em>
-		<?php endif; ?>
-		<?php if ($last_key != $url) : ?> &gt; <?php endif; ?>
+		<a href="<?=fuel_url($url)?>"><?=$crumb?></a> &gt;
 	<?php endforeach; ?>
+	<em><?=$last_key?></em>
 	<?php endif; ?>
 	</h2>
 	

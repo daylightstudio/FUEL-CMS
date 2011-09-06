@@ -14,7 +14,6 @@ fuel.fields.datetime_field = function(context, options)
 		endDate : '12/31/2100',
 	}
 	o = $.extend(o, options);
-	console.log(o)
 	Date.format = o.format;
 	Date.firstDayOfWeek = o.firstDayOfWeek;
 

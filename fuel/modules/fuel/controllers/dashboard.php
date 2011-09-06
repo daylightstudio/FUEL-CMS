@@ -48,7 +48,9 @@ class Dashboard extends Fuel_base_controller {
 				}
 			}
 			$vars['dashboards'] = $dashboards;
-			$this->_render('dashboard', $vars);
+			$crumbs = array('' => 'Dashboard');
+			$this->fuel->admin->set_breadcrumb($crumbs);
+			$this->fuel->admin->render('dashboard', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 
 	}

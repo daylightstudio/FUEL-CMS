@@ -274,8 +274,9 @@ a#forgotten_pwd { text-align: center; display: block; margin-top: 10px; }
 
 /* assets & modal */
 a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }
-div.modal_content { background-color: #fff; width: 100%; /*width: 100%;*/ /*max-height: 450px;*/ overflow: hidden; /*padding: 10px 20px;*/ }
+div.modal_content { background-color: #fff; width: 100%; /*width: 100%;*/ /*max-height: 450px;*/ overflow: hidden; }
 div.modal_content iframe { width: 100% !important; }
+div.modal_content_inner { padding: 10px 20px; }
 
 div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding-top: 20px; display: none; }
 div#asset_preview { height: 210px; width: 350px; overflow: auto; text-align: center; padding-top: 20px; }

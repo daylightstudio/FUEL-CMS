@@ -12,7 +12,7 @@ class Tools extends Fuel_base_controller {
 	function index()
 	{
 		$this->_validate_user('tools');
-		$this->_render('tools');
+		$this->fuel->admin->render('tools');
 	}
 
 }

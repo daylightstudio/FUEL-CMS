@@ -48,7 +48,7 @@ $config['custom_fields'] = array(
 		'filepath'	=> '',
 		'js'		=> array(
 			FUEL_FOLDER => array(
-				'jquery/plugins/jquery.MultiFile.pack',
+				'jquery/plugins/jquery.MultiFile',
 			)
 		),
 		'js_function' => 'fuel.fields.file_upload_field',
