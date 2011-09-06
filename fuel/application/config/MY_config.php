@@ -6,6 +6,10 @@ date_default_timezone_set('America/Los_Angeles');
 $config['dev_mode'] = TRUE;
 $config['dev_email'] = '';
 
+// date format used with date helpers
+$config['date_format'] = 'm/d/Y';
+$config['date_format_verbose'] = 'M. d, Y';
+
 // for debugging... there is a hook in place to turn this on
 $config['enable_profiler'] = FALSE;
 

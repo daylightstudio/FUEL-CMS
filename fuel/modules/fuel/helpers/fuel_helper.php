@@ -435,7 +435,7 @@ function fuel_set_var($key, $val = NULL)
  * @param	boolean
  * @return	string
  */
-function fuel_var($key, $default = '', $edit_module = 'pages', $evaluate = TRUE)
+function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate = TRUE)
 {
 	$CI =& get_instance();
 	
@@ -467,7 +467,7 @@ function fuel_var($key, $default = '', $edit_module = 'pages', $evaluate = TRUE)
 		}
 	}
 	
-	if ($edit_module === TRUE) $edit_module = 'pages';
+	if ($edit_module === TRUE) $edit_module = 'pagevariables';
 	if (!empty($edit_module) AND $CI->config->item('fuel_mode', 'fuel') != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
 	{
 		$marker = fuel_edit($key, humanize($key), $edit_module);
@@ -505,7 +505,7 @@ function fuel_var($key, $default = '', $edit_module = 'pages', $evaluate = TRUE)
  * @param	int
  * @return	string
  */
-function fuel_edit($id, $label = NULL, $module = 'pages', $xoffset = NULL, $yoffset = NULL)
+function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NULL, $yoffset = NULL)
 {
 	$CI =& get_instance();
 	$CI->load->module_library(FUEL_FOLDER, 'fuel_page');

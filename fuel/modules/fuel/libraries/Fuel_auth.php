@@ -2,32 +2,32 @@
 
 class Fuel_auth {
 	
-	protected $_CI = NULL;
+	protected $CI = NULL;
 	
 	function __construct(){
-		$this->_CI =& get_instance();
-		$this->_CI->load->library('session');
-		$this->_CI->load->helper('cookie');
+		$this->CI =& get_instance();
+		$this->CI->load->library('session');
+		$this->CI->load->helper('cookie');
 		
 		// needs to be loaded so that we can use the site name for namespacing
-		$this->_CI->config->module_load('fuel', 'fuel', TRUE);
+		$this->CI->config->module_load('fuel', 'fuel', TRUE);
 	}
 	
 	function valid_user()
 	{
-		return ($this->_CI->session->userdata($this->get_session_namespace())) ? $this->_CI->session->userdata($this->get_session_namespace()) : NULL;
+		return ($this->CI->session->userdata($this->get_session_namespace())) ? $this->CI->session->userdata($this->get_session_namespace()) : NULL;
 	}
 	
 	function set_valid_user($valid_user)
 	{
-		$this->_CI->load->helper('string');
-		$this->_CI->session->set_userdata($this->get_session_namespace(), $valid_user);
+		$this->CI->load->helper('string');
+		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
 	}
 	
 	function get_session_namespace()
 	{
-		$key = 'fuel_'.md5($this->_CI->config->item('site_name', 'fuel'));
-		if (!$this->_CI->session->userdata($key)) $this->_CI->session->set_userdata($key, array());
+		$key = 'fuel_'.md5($this->CI->config->item('site_name', 'fuel'));
+		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
 		return $key;
 	}
 	
@@ -38,22 +38,22 @@ class Fuel_auth {
 	
 	function set_valid_user_property($prop, $val)
 	{
-		$user_data = $this->_CI->session->userdata($this->get_session_namespace());
+		$user_data = $this->CI->session->userdata($this->get_session_namespace());
 		if (isset($user_data[$prop]))
 		{
 			$user_data[$prop] = $val;
-			$this->_CI->session->set_userdata($this->get_session_namespace(), $user_data);
+			$this->CI->session->set_userdata($this->get_session_namespace(), $user_data);
 		}
 	}
 	
 	function login($user, $pwd)
 	{
-		$this->_CI->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
 		
-		$valid_user = $this->_CI->users_model->valid_user($user, $pwd);
+		$valid_user = $this->CI->users_model->valid_user($user, $pwd);
 		if (!empty($valid_user))
 		{
-			//$valid_user = $this->_CI->users_model->user_info($valid_user['id']);
+			//$valid_user = $this->CI->users_model->user_info($valid_user['id']);
 			$this->set_valid_user($valid_user);
 			return TRUE;
 		}
@@ -94,9 +94,9 @@ class Fuel_auth {
 			{
 				foreach($permission as $key => $val)
 				{
-					if (is_int($key) && !empty($this->_CI->module))
+					if (is_int($key) && !empty($this->CI->module))
 					{
-						$permission[$val] = $this->_CI->module.'_'.$val;
+						$permission[$val] = $this->CI->module.'_'.$val;
 					}
 				}
 				if (!empty($permission[$type]))
@@ -115,8 +115,8 @@ class Fuel_auth {
 	
 	function accessible_module($module)
 	{
-		$this->_CI->load->module_config('fuel', 'fuel', TRUE);
-		$allowed = (array) $this->_CI->config->item('modules_allowed', 'fuel');
+		$this->CI->load->module_config('fuel', 'fuel', TRUE);
+		$allowed = (array) $this->CI->config->item('modules_allowed', 'fuel');
 		return in_array($module, $allowed);
 	}
 	
@@ -148,8 +148,8 @@ class Fuel_auth {
 	
 	function module_has_action($action)
 	{
-		if (empty($this->_CI->item_actions)) return FALSE;
-		return (isset($this->_CI->item_actions[$action]) OR in_array($action, $this->_CI->item_actions));
+		if (empty($this->CI->item_actions)) return FALSE;
+		return (isset($this->CI->item_actions[$action]) OR in_array($action, $this->CI->item_actions));
 	}
 	
 	function is_fuelified()
@@ -159,7 +159,7 @@ class Fuel_auth {
 	
 	function user_lang()
 	{
-		$default_lang = $this->_CI->config->item('language');
+		$default_lang = $this->CI->config->item('language');
 		$cookie_val = get_cookie($this->get_fuel_trigger_cookie_name());
 		if (is_string($cookie_val))
 		{
@@ -178,12 +178,12 @@ class Fuel_auth {
 
 	function logout()
 	{
-		$this->_CI->load->library('session');
-		$this->_CI->session->sess_destroy();
+		$this->CI->load->library('session');
+		$this->CI->session->sess_destroy();
 		
-		$this->_CI->load->helper('cookie');
+		$this->CI->load->helper('cookie');
 		
-		$this->_CI->session->unset_userdata($this->get_session_namespace());
+		$this->CI->session->unset_userdata($this->get_session_namespace());
 		
 		$config = array(
 			'name' => $this->get_fuel_trigger_cookie_name(),

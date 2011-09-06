@@ -145,7 +145,7 @@ $config['assets_upload_max_height']  = '768';
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
 	'jquery/plugins/date',
-	'jquery/plugins/jquery.datePicker',
+	// 'jquery/plugins/jquery.datePicker',
 	'jquery/plugins/jquery.fillin',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
@@ -155,20 +155,25 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
 	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.fillin',
-	'jquery/plugins/jquery.selso',
-	'jquery/plugins/jquery-ui-1.8.4.custom.min',
-	'jquery/plugins/jquery.disable.text.select.pack',
-	'jquery/plugins/jquery.supercomboselect',
-	'jquery/plugins/jquery.MultiFile',
+	// 'jquery/plugins/jquery.selso',
+	// 'jquery/plugins/jquery-ui-1.8.4.custom.min',
+	// 'jquery/plugins/jquery.disable.text.select.pack',
+	// 'jquery/plugins/jquery.supercomboselect',
+//	'jquery/plugins/jquery.MultiFile.pack',
 	'jquery/plugins/jquery.tablednd.js',
-	'editors/markitup/jquery.markitup.pack',
-	'editors/markitup/jquery.markitup.set',
-	'editors/ckeditor/ckeditor.js',
-	'fuel/linked_field_formatters.js',
+	// 'editors/markitup/jquery.markitup.pack',
+	// 'editors/markitup/jquery.markitup.set',
+	// 'editors/ckeditor/ckeditor.js',
+	//'fuel/linked_field_formatters.js',
+	'fuel/custom_fields.js',
+	'jquery/plugins/jquery.formbuilder',
+	'fuel/global',
 );
+
 
 // css other then the fuel.css file which automatically gets loaded
 $config['fuel_css'] = array();

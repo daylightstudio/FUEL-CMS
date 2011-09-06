@@ -92,7 +92,8 @@ function is_date_english_format($date)
 // --------------------------------------------------------------------
 
 /**
- * Returns date in mm/dd/yyy format
+ * Returns date in mm/dd/yyy format by default
+ * Can be configured with a date_format config value
  *
  * @access	public
  * @param	string
@@ -131,6 +132,7 @@ function english_date($date, $long = FALSE, $timezone = NULL, $delimiter = '/')
 
 /**
  * Returns date in 'verbose' (e.g. Jan. 1, 2010) format
+ * Can be configured with a date_format_verbose config value
  *
  * @access	public
  * @param	string

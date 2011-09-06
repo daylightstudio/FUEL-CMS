@@ -4,10 +4,10 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Module extends Fuel_base_controller {
 	
 	public $module = '';
-
+	
 	// array of data about all (if any) uploaded files
 	public $upload_data = array();
-
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -20,14 +20,19 @@ class Module extends Fuel_base_controller {
 			show_error(lang('cannot_determine_module'));
 		}
 		
-		$params = $this->fuel_modules->info($this->module);
-
-		if (empty($params))
+		$params = array();
+		if ($this->fuel->has_module($this->module))
 		{
-			// if it is a module with multiple controllers, then we'll check first and second FUEL segment with a hyphen'
+			$params = $this->fuel->modules($this->module)->info();
+		}
+		else
+		{
+			// if it is a module with multiple controllers, then we'll check first and second FUEL segment with an underscore'
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
-			$params = $this->fuel_modules->info($this->module);
-			if ($params === FALSE) $params = array();
+			if ($this->fuel->has_module($this->module))
+			{
+				$params = $this->fuel->modules($this->module)->info();
+			}
 		}
 
 		foreach($params as $key => $val)
@@ -122,10 +127,11 @@ class Module extends Fuel_base_controller {
 			}
 			$vars['js'] = $params['js'];
 		}
+		
 		if (!empty($this->nav_selected)) $vars['nav_selected'] = $this->nav_selected;
 		$this->load->vars($vars);
 		
-		$this->_load_js_localized($params['js_localized']);
+		$this->fuel->admin->load_js_localized($params['js_localized']);
 
 		if (!empty($this->permission)) $this->_validate_user($this->permission);
 		
@@ -137,7 +143,7 @@ class Module extends Fuel_base_controller {
 		$this->items();
 	}
 	
-	function items()
+	function items($inline = FALSE)
 	{
 		
 		$this->load->library('data_table');
@@ -149,12 +155,13 @@ class Module extends Fuel_base_controller {
 		// $seg_params = uri_safe_batch_encode($seg_params, '|', TRUE);
 		
 		// save page state
-		$this->_save_page_state($params);
+		$this->fuel->admin->save_page_state($params);
 		
 		if (!is_ajax() AND !empty($_POST))
 		{
 			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-			$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
+			//$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
+			$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
 			redirect($uri);
 		}
 		
@@ -218,7 +225,7 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
-			
+
 			// set data table actions... look first for item_actions set in the fuel_modules
 			foreach($this->table_actions as $key => $val)
 			{
@@ -240,7 +247,7 @@ class Module extends Fuel_base_controller {
 					$link = "";
 					if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
-						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+						$url = site_url("/".$CI->fuel->config("fuel_path").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
@@ -255,7 +262,7 @@ class Module extends Fuel_base_controller {
 					{
 						$action_name = lang('table_action_'.strtolower($val));
 						if (empty($action_name)) $actino_name = $val;
-						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+						$this->data_table->add_action($action_name, site_url('/'.$this->fuel->config('fuel_path').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
 			}
@@ -323,6 +330,7 @@ class Module extends Fuel_base_controller {
 			
 			
 			$vars['table'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars, TRUE);
+			
 			$vars['pagination'] = $this->pagination->create_links();
 
 			// for extra module 'filters'
@@ -341,12 +349,14 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->display_errors = FALSE;
 			$this->form_builder->css_class = 'more_filters';
 			$this->form_builder->set_field_values($field_values);
+			$this->form_builder->key_check = FALSE;
 			
-			// keycheck is already put in place by $this->form->close() in module_list layout
-			$this->form_builder->key_check = FALSE; 
-			$vars['more_filters'] = $this->form_builder->render_divs();
-
-			$this->_render($this->views['list'], $vars);
+			$vars['more_filters'] = $this->form_builder->render();
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_actions', $vars, TRUE);
+			$crumbs = array($this->module_uri => $this->module_name);
+			$this->fuel->admin->set_breadcrumb($crumbs);
+			
+			$this->fuel->admin->render($this->views['list'], $vars);
 		}
 	}
 
@@ -359,7 +369,7 @@ class Module extends Fuel_base_controller {
 		/* PROCESS PARAMS BEGIN */
 		$filters = array();
 		
-		$page_state = $this->_get_page_state($this->module_uri);
+		$page_state = $this->fuel->admin->get_page_state($this->module_uri);
 		
 		$defaults = array();
 		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
@@ -409,15 +419,13 @@ class Module extends Fuel_base_controller {
 			
 		}
 		
-		//$params = array_merge($defaults, $page_state, $uri_params, $posted);
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
-		
+
 		// reset offset if you apply a filter (via POST and not ajax)
 		if (!empty($_POST) and !is_ajax())
 		{
 			$params['offset'] = 0;
 		}
-		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
 		
@@ -470,146 +478,128 @@ class Module extends Fuel_base_controller {
 			}
 		}
 	}
-	
-	function create($redirect = TRUE)
+
+	function create($field = NULL, $inline = FALSE)
 	{
 		$id = NULL;
 		if (!$this->fuel_auth->module_has_action('create')) show_404();
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
 		{
-			$this->model->on_before_post();
-		
-			$posted = $this->_process();
-
-			// set publish status to no if you do not have the ability to publish
-			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+			if ($id = $this->_process_create())
 			{
-				$posted['published'] = 'no';
-				$posted['active'] = 'no';
-			}
-			
-			$model = $this->model;
-			
-			// run before_create hook
-			$this->_run_hook('before_create', $posted);
-			
-			// run before_save hook
-			$this->_run_hook('before_save', $posted);
-			
-			// reset dup id
-			if ($_POST[$this->model->key_field()] == 'dup')
-			{
-				$_POST[$this->model->key_field()] = '';
-			}
-			else if ($id = $this->model->save($posted))
-			{
-				if (empty($id))
+				if ($inline === TRUE)
 				{
-					show_error('Not a valid ID returned to save template variables');
-				}
-				
-				// process $_FILES
-				if (!$this->_process_uploads($posted))
-				{
-					$this->session->set_flashdata('error', get_error());
-					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
-				}
-				
-				// add id value to the posted array
-				if (!is_array($this->model->key_field()))
-				{
-					$posted[$this->model->key_field()] = $id;
-				}
-				
-				$this->model->on_after_post($posted);
-				
-				if (!$this->model->is_valid())
-				{
-					add_errors($this->model->get_errors());
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
 				}
 				else
 				{
-					// archive data
-					$archive_data = $this->model->cleaned_data();
-					$archive_data[$this->model->key_field()] = $id;
-					if ($this->archivable) $this->model->archive($id, $archive_data);
-					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
-
-					// run after_create hook
-					$this->_run_hook('after_create', $data);
-					
-					// run after_save hook
-					$this->_run_hook('after_save', $posted);
-					
-					if (!empty($data))
-					{
-						
-						$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-						$this->logs_model->logit($msg);
-						$this->_clear_cache();
-						$url = 'fuel/'.$this->module_uri.'/edit/'.$id;
-						if ($redirect === TRUE)
-						{
-							$this->session->set_flashdata('success', lang('data_saved'));
-							redirect(fuel_uri($this->module_uri.'/edit/'.$id));
-						}
-					}
+					$url = fuel_uri($this->module_uri.'/edit/'.$id);
 				}
+				$this->session->set_flashdata('success', lang('data_saved'));
+				redirect($url);
 			}
 		}
-		$vars = $this->_form();
-		$this->_render($this->views['create_edit'], $vars);
+		
+		$shell_vars = $this->_shell_vars($id);
+		$form_vars = $this->_form_vars($id, array(), FALSE, $inline);
+		$vars = array_merge($shell_vars, $form_vars);
+		$vars['action'] = 'create';
+		
+		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
+		$this->fuel->admin->set_breadcrumb($crumbs);
+		
+		if ($inline === TRUE)
+		{
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
+		}
+		else
+		{
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
+		}
+		$this->fuel->admin->render($this->views['create_edit'], $vars);
 		return $id;
 	}
-
-	function edit($id = NULL, $redirect = TRUE)
+	
+	function inline_create($field = NULL)
 	{
-		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
+		$this->create($field, TRUE);
+	}
+	
+	protected function _process_create()
+	{
+		$this->model->on_before_post();
+	
+		$posted = $this->_process();
 
-		if ($this->input->post($this->model->key_field()))
+		// set publish status to no if you do not have the ability to publish
+		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
 		{
-			$this->model->on_before_post();
-			
-			$posted = $this->_process();
-			
-			// run before_edit hook
-			$this->_run_hook('before_edit', $posted);
-			
-			// run before_save hook
-			$this->_run_hook('before_save', $posted);
-			
-			if ($this->model->save($posted))
+			$posted['published'] = 'no';
+			$posted['active'] = 'no';
+		}
+		
+		$model = $this->model;
+
+		// run before_create hook
+		$this->_run_hook('before_create', $posted);
+		
+		// run before_save hook
+		$this->_run_hook('before_save', $posted);
+		
+		// reset dup id
+		if ($_POST[$this->model->key_field()] == 'dup')
+		{
+			$_POST[$this->model->key_field()] = '';
+		}
+		else if ($id = $this->model->save($posted))
+		{
+			if (empty($id))
 			{
-				// process $_FILES
-				if (!$this->_process_uploads($posted))
-				{
-					$this->session->set_flashdata('error', get_error());
-					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
-				}
+				add_error(lang('error_invalid_id'));
+				return FALSE;
+			}
+			
+			// process $_FILES
+			if (!$this->_process_uploads($posted))
+			{
+				return FALSE;
+			}
+			
+			// add id value to the posted array
+			if (!is_array($this->model->key_field()))
+			{
+				$posted[$this->model->key_field()] = $id;
+			}
+			
+			$this->model->on_after_post($posted);
+			
+			if (!$this->model->is_valid())
+			{
+				add_errors($this->model->get_errors());
+			}
+			else
+			{
+				// archive data
+				$archive_data = $this->model->cleaned_data();
+				$archive_data[$this->model->key_field()] = $id;
+				if ($this->archivable) $this->model->archive($id, $archive_data);
+				$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+
+				// run after_create hook
+				$this->_run_hook('after_create', $data);
 				
-				$this->model->on_after_post($posted);
+				// run after_save hook
+				$this->_run_hook('after_save', $posted);
 				
-				if (!$this->model->is_valid())
+				if (!empty($data))
 				{
-					add_errors($this->model->get_errors());
-				}
-				else
-				{
-					// archive data
-					$archive_data = $this->model->cleaned_data();
-					if ($this->archivable) $this->model->archive($id, $archive_data);
-					$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 					
-					// run after_edit hook
-					$this->_run_hook('after_edit', $data);
-
-					// run after_save hook
-					$this->_run_hook('after_save', $data);
-
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
 					$this->_clear_cache();
+					$url = 'fuel/'.$this->module_uri.'/edit/'.$id;
 					if ($redirect === TRUE)
 					{
 						$this->session->set_flashdata('success', lang('data_saved'));
@@ -618,10 +608,359 @@ class Module extends Fuel_base_controller {
 				}
 			}
 		}
-		$vars = $this->_form($id);
-		$this->_render($this->views['create_edit'], $vars);
 	}
 	
+	function edit($id = NULL, $field = NULL, $inline = FALSE)
+	{
+		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
+
+		if ($this->input->post($this->model->key_field()))
+		{
+			if ($this->_process_edit($id))
+			{
+				$this->session->set_flashdata('success', lang('data_saved'));
+				if ($inline === TRUE)
+				{
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
+				}
+				else
+				{
+					$url = fuel_uri($this->module_uri.'/edit/'.$id);
+				}
+				redirect($url);
+			}
+		}
+		//$vars = $this->_form($id);
+		$data = $this->_saved_data($id);
+		$action = (!empty($data[$this->model->key_field()])) ? 'edit' : 'create';
+	
+		// substitute data values into preview path
+		preg_match_all('#\{(.+)\}+#U', $this->preview_path, $matches);
+		
+		if (!empty($matches[1]))
+		{
+			foreach($matches[1] as $match)
+			{
+				if (!empty($data[$match]))
+				{
+					$this->preview_path = str_replace('{'.$match.'}', $data[$match], $this->preview_path);
+				}
+			}
+		}
+
+		$shell_vars = $this->_shell_vars($id, $action);
+		$form_vars = $this->_form_vars($id, $data, $field, $inline);
+		
+		$vars = array_merge($shell_vars, $form_vars);
+		$vars['data'] = $data;
+		$vars['action'] = $action;
+		
+		$crumbs = array($this->module_uri => $this->module_name, '' => character_limiter(strip_tags($data[$this->display_field]), 50));
+		$this->fuel->admin->set_breadcrumb($crumbs);
+		
+		// active or publish fields
+		if (isset($data['published']))
+		{
+			$vars['publish'] = (!empty($data['published']) AND is_true_val($data['published'])) ? 'unpublish' : 'publish';
+		}
+		
+		if (isset($data['active']))
+		{
+			$vars['activate'] = (!empty($data['active']) AND is_true_val($data['active'])) ? 'deactivate' : 'activate';
+		}
+		
+		if (!empty($field))
+		{
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+		}
+		else if ($inline === TRUE)
+		{
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
+		}
+		else
+		{
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
+		}
+		$this->fuel->admin->render($this->views['create_edit'], $vars);
+
+		// do this after rendering so it doesn't render current page'
+		if (!empty($data[$this->display_field])) 
+		{
+			$this->fuel->admin->recent_pages($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
+		}
+		
+	}
+	
+	function inline_edit($id, $field = NULL)
+	{
+		$this->edit($id, $field, TRUE);
+	}
+	
+	protected function _process_edit($id)
+	{
+		$this->model->on_before_post();
+		
+		$posted = $this->_process();
+
+		// run before_edit hook
+		$this->_run_hook('before_edit', $posted);
+		
+		// run before_save hook
+		$this->_run_hook('before_save', $posted);
+		
+		if ($this->model->save($posted))
+		{
+			// process $_FILES...
+			if (!$this->_process_uploads($posted))
+			{
+				return FALSE;
+			}
+			
+			$this->model->on_after_post($posted);
+			
+			if (!$this->model->is_valid())
+			{
+				add_errors($this->model->get_errors());
+			}
+			else
+			{
+				// archive data
+				$archive_data = $this->model->cleaned_data();
+				if ($this->archivable) $this->model->archive($id, $archive_data);
+				$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+				
+				// run after_edit hook
+				$this->_run_hook('after_edit', $data);
+
+				// run after_save hook
+				$this->_run_hook('after_save', $data);
+
+				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+				$this->logs_model->logit($msg);
+				$this->_clear_cache();
+				if ($redirect === TRUE)
+				{
+					$this->session->set_flashdata('success', lang('data_saved'));
+					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+				}
+			}
+		}
+		}
+		return FALSE;
+	}
+	
+	protected function _sanitize($data)
+	{
+		$posted = $data;
+		
+		if (!empty($this->sanitize_input))
+		{
+			// functions that are valid for sanitizing
+			$valid_funcs = $this->fuel->config('module_sanitize_funcs');
+			
+			if ($this->sanitize_input === TRUE)
+			{
+				$posted = xss_clean($data);
+			}
+			else
+			{
+				// force to array to normalize
+				$sanitize_input = (array) $this->sanitize_input;
+				
+				if (is_array($data))
+				{
+					foreach($data as $key => $post)
+					{
+						if (is_array($post))
+						{
+							$posted[$key] = $this->_sanitize($data[$key]);
+						}
+						else
+						{
+							// loop through sanitzation functions 
+							foreach($sanitize_input as $func)
+							{
+								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
+								if ($func)
+								{
+									$posted[$key] = $func($posted[$key]);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					// loop through sanitzation functions 
+					foreach($sanitize_input as $key => $val)
+					{
+						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
+						if ($func)
+						{
+							$posted = $func($posted);
+						}
+					}
+				}
+			}
+		}
+
+		return $posted;
+	}
+	
+	protected function _shell_vars($id = NULL, $action = 'create')
+	{
+
+		$model = $this->model;
+		$this->js_controller_params['method'] = 'add_edit';
+		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
+		
+		// other variables
+		$vars['id'] = $id;
+		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
+		$vars['others'] = $this->model->get_others($this->display_field, $id);
+		$vars['action'] =  $action;
+		
+		$vars['module'] = $this->module;
+		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
+		
+		return $vars;
+	}
+	
+	protected function _saved_data($id)
+	{
+		if (empty($id)) return array();
+		
+		$edit_method = $this->edit_method;
+		if ($edit_method != 'find_one_array')
+		{
+			$saved = $this->model->$edit_method($id);
+		}
+		else
+		{
+			$saved = $this->model->$edit_method(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+		}
+		return $saved;
+	}
+	
+	// seperated to make it easier in subclasses to use the form without rendering the page
+	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
+	{
+		$this->load->library('form_builder');
+
+		$model = $this->model;
+		$this->js_controller_params['method'] = 'add_edit';
+		$action = (!empty($values[$this->model->key_field()])) ? 'edit' : 'create';
+		
+		// create fields... start with the table info and go from there
+		$fields = (!empty($values)) ? $this->model->form_fields($values) : $this->model->form_fields($_POST);
+
+		// if field parameter is set, then we just display a single field
+		if (!empty($field))
+		{
+			if (is_string($field) AND isset($fields[$field]))
+			{
+				$single_field[$field] = $fields[$field];
+				$single_field[$field]['label'] = ' ';
+				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
+				$fields = $single_field;
+			}
+			else
+			{
+				$fields = NULL;
+			}
+		}
+		
+		// set published/active to hidden since setting this is an buttton/action instead of a form field
+		$form = '';
+		if (is_array($fields))
+		{
+			
+			$field_values = (!empty($_POST)) ? $_POST : $values;
+			
+			$published_active = array(
+				'publish' => 'published',
+				'active' => 'activate'
+			);
+			foreach($published_active as $k => $v)
+			{
+				if (!$this->fuel_auth->has_permission($this->permission, $k))
+				{
+					unset($fields[$v]);
+				}
+
+				if (isset($fields[$v]) AND !empty($values[$v]))
+				{
+					$fields['published']['value'] = $values[$v];
+				}
+			}
+
+
+			//$this->form_builder->form->validator = &$this->model->get_validation();
+			$this->form_builder->set_validator($this->model->get_validation());
+
+			// add hidden field with the module name for convenience
+			$fields['__fuel_module__'] = array('type' => 'hidden');
+			$fields['__fuel_module__']['value'] = $this->module;
+			$fields['__fuel_module__']['class'] = '__fuel_module__';
+
+			$fields['__fuel_module_uri__'] = array('type' => 'hidden');
+			$fields['__fuel_module_uri__']['value'] = $this->module_uri;
+			$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+
+			$fields['__fuel_inline_action__'] = array('type' => 'hidden');
+			$fields['__fuel_inline_action__']['class'] = '__fuel_inline_action__';
+			$fields['__fuel_inline_action__']['value'] = (empty($id)) ? 'create' : 'edit';
+			
+			
+			$fields['__fuel_inline__'] = array('type' => 'hidden');
+			$fields['__fuel_inline__']['value'] = ($inline) ? 1 : 0;
+			
+			
+			$form_action = ($inline) ? fuel_url($this->module_uri.'/inline_'.$action.'/'.$id) : fuel_url($this->module_uri.'/'.$action.'/'.$id) ;
+			$this->form_builder->form_attrs = 'method="post" action="'.$form_action.'" enctype="multipart/form-data" id="form"';
+			$this->form_builder->submit_value = lang('btn_save');
+			$this->form_builder->question_keys = array();
+			$this->form_builder->use_form_tag = TRUE;
+			$this->form_builder->set_fields($fields);
+			$this->form_builder->display_errors = FALSE;
+			$this->form_builder->set_field_values($field_values);
+
+			if ($this->config->item('date_format'))
+			{
+				$this->form_builder->date_format = $this->config->item('date_format');
+			}
+
+			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
+			//$this->form_builder->auto_execute_js = FALSE;
+			$this->form_builder->displayonly = $this->displayonly;
+			if ($inline)
+			{
+				$this->form_builder->cancel_value = lang('viewpage_close');
+			}
+			else
+			{
+				$this->form_builder->cancel_value = lang('btn_cancel');
+				
+			}
+			
+			// position the field to be on top
+			if (!empty($field))
+			{
+				$this->form_builder->label_layout = 'top';
+			}
+			$form = $this->form_builder->render();
+		}
+
+		$vars['form'] = $form;
+		$vars['data'] = $values;
+		$vars['error'] = $this->model->get_errors();
+		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
+		$vars['instructions'] = (empty($field)) ? $this->instructions : '';
+		$vars['field'] = (!empty($field));
+		return $vars;
+	}
+
 	protected function _process()
 	{
 		$this->load->helper('security');
@@ -716,202 +1055,14 @@ class Module extends Fuel_base_controller {
 		return $posted;
 	}
 	
-	protected function _sanitize($data)
+	function form($id = NULL, $field = NULL)
 	{
-		$posted = $data;
-		
-		if (!empty($this->sanitize_input))
-		{
-			// functions that are valid for sanitizing
-			$valid_funcs = $this->config->item('module_sanitize_funcs', 'fuel');
-			
-			if ($this->sanitize_input === TRUE)
-			{
-				$posted = xss_clean($data);
-			}
-			else
-			{
-				// force to array to normalize
-				$sanitize_input = (array) $this->sanitize_input;
-				
-				if (is_array($data))
-				{
-					foreach($data as $key => $post)
-					{
-						if (is_array($post))
-						{
-							$posted[$key] = $this->_sanitize($data[$key]);
-						}
-						else
-						{
-							// loop through sanitzation functions 
-							foreach($sanitize_input as $func)
-							{
-								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
-								if ($func)
-								{
-									$posted[$key] = $func($posted[$key]);
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					// loop through sanitzation functions 
-					foreach($sanitize_input as $key => $val)
-					{
-						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
-						if ($func)
-						{
-							$posted = $func($posted);
-						}
-					}
-				}
-			}
-		}
-
-		return $posted;
+		$saved = $this->_saved_data($id);
+		$vars = $this->_form_vars($id, $saved, $field);
+		$this->load->module_view(FUEL_FOLDER, '_layouts/module_form', $vars);
 	}
-	
-	// seperated to make it easier in subclasses to use the form without rendering the page
-	protected function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
-	{
-		$this->load->library('form_builder');
-//		$this->model->set_return_method('array');
 
-		$model = $this->model;
-		$this->js_controller_params['method'] = 'add_edit';
-		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
-		
-		// get saved data
-		$saved = array();
-		
-		if (!empty($id) AND $id != 'create') 
-		{
-			
-			$edit_method = $this->edit_method;
-			if ($edit_method != 'find_one_array')
-			{
-				$saved = $this->model->$edit_method($id);
-			}
-			else
-			{
-				$saved = $this->model->$edit_method(array($this->model->table_name().'.'.$this->model->key_field() => $id));
-			}
-			if (empty($saved)) show_404();
-		}
-		
-		// create fields... start with the table info and go from there
-		if (empty($fields)) 
-		{
-			$fields = (!empty($saved)) ? $this->model->form_fields($saved) : $this->model->form_fields($_POST);
-
-			// set published/active to hidden since setting this is an buttton/action instead of a form field
-			//$fields['published']['type'] = 'hidden';
-			if (is_array($fields))
-			{
-				if (!empty($saved['published'])) $fields['published']['value'] = $saved['published'];
-
-				if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
-				{
-					unset($fields['published']);
-				}
-			}
-		}
-		
-		if (is_array($fields))
-		{
-			$field_values = (!empty($_POST)) ? $_POST : $saved;
-
-			$this->form_builder->form->validator = &$this->model->get_validation();
-			
-			// not inline edited
-			if ($display_normal_submit_cancel)
-			{
-				$this->form_builder->submit_value = lang('btn_save');
-				$this->form_builder->cancel_value = lang('btn_cancel');
-			}
-			
-			// inline editied
-			else
-			{
-				$this->form_builder->submit_value = NULL;
-				$this->form_builder->cancel_value = NULL;
-				//$this->form_builder->name_array = '__fuel_field__'.$this->module_name.'_'.$id;
-				$fields['__fuel_inline_action__'] = array('type' => 'hidden');
-				$fields['__fuel_inline_action__']['class'] = '__fuel_inline_action__';
-				$fields['__fuel_inline_action__']['value'] = (empty($id)) ? 'create' : 'edit';
-
-				$fields['__fuel_module__'] = array('type' => 'hidden');
-				$fields['__fuel_module__']['value'] = $this->module;
-				$fields['__fuel_module__']['class'] = '__fuel_module__';
-				$this->form_builder->name_prefix = '__fuel_field__'.$this->module.'_'.(empty($id) ? 'create' : $id);
-				$this->form_builder->css_class = 'inline_form';
-				
-			}
-			//$this->form_builder->hidden = (array) $this->model->key_field();
-			$this->form_builder->question_keys = array();
-			$this->form_builder->use_form_tag = FALSE;
-			
-			$this->form_builder->set_fields($fields);
-			$this->form_builder->display_errors = FALSE;
-			$this->form_builder->set_field_values($field_values);
-			$this->form_builder->displayonly = $this->displayonly;
-			$vars['form'] = $this->form_builder->render();
-		}
-		else
-		{
-			$vars['form'] = $fields;
-		}
-
-		// other variables
-		$vars['id'] = $id;
-		$vars['data'] = $saved;
-		$vars['action'] =  (!empty($saved[$this->model->key_field()])) ? 'edit' : 'create';
-		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
-		$vars['others'] = $this->model->get_others($this->display_field, $id);
-
-		preg_match_all('#\{(.+)\}+#U', $this->preview_path, $matches);
-		if (!empty($matches[1]))
-		{
-			foreach($matches[1] as $match)
-			{
-				if (!empty($vars['data'][$match]))
-				{
-					$this->preview_path = str_replace('{'.$match.'}', $vars['data'][$match], $this->preview_path);
-				}
-			}
-		}
-		
-		// active or publish fields
-		if (isset($saved['published']))
-		{
-			$vars['publish'] = (!empty($saved['published']) AND is_true_val($saved['published'])) ? 'unpublish' : 'publish';
-		}
-		
-		if (isset($saved['active']))
-		{
-			$vars['activate'] = (!empty($saved['active']) AND is_true_val($saved['active'])) ? 'deactivate' : 'activate';
-		}
-		$vars['module'] = $this->module;
-
-		$actions = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
-		$vars['actions'] = $actions;
-		
-		$vars['error'] = $this->model->get_errors();
-		$notifications = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-		$vars['notifications'] = $notifications;
-		
-		// do this after rendering so it doesn't render current page'
-		if (!empty($vars['data'][$this->display_field]) AND $log_to_recent) 
-		{
-			$this->_recent_pages($this->uri->uri_string(), $this->module_name.': '.$vars['data'][$this->display_field], $this->module);
-		}
-		return $vars;
-	}
-	
-	function delete($id = NULL)
+	function delete($id = NULL, $inline = FALSE)
 	{
 		if (!$this->fuel_auth->has_permission($this->permission, 'delete')) 
 		{
@@ -992,8 +1143,21 @@ class Module extends Fuel_base_controller {
 			if (empty($data)) show_404();
 			$vars['error'] = $this->model->get_errors();
 			$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-			$this->_render($this->views['delete'], $vars);
+			if ($inline === TRUE)
+			{
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+			}
+			else
+			{
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
+			}
+			$this->fuel->admin->render($this->views['delete'], $vars);
 		}
+	}
+	
+	function inline_delete($id)
+	{
+		$this->delete($id, TRUE);
 	}
 	
 	function restore()
@@ -1030,7 +1194,7 @@ class Module extends Fuel_base_controller {
 			
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
-			$this->_last_page($last_page);
+			$this->fuel->admin->last_page($last_page);
 			redirect($url);
 		}
 		else
@@ -1098,7 +1262,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function inline_edit($id, $column = null)
+	function inline_edit_old($id, $column = null)
 	{
 		if (!$this->fuel_auth->module_has_action('save') OR !$this->fuel_auth->module_has_action('create')) return false;
 		
@@ -1126,16 +1290,6 @@ class Module extends Fuel_base_controller {
 					unset($values['published']);
 				}
 				
-				// run hook
-				if ($id === 'create')
-				{
-					$this->_run_hook('before_create', $posted);
-				}
-				else
-				{
-					$this->_run_hook('before_edit', $posted);
-				}
-				
 				$saved_id = $this->model->save($posted);
 
 				if (!$this->_process_uploads())
@@ -1150,21 +1304,7 @@ class Module extends Fuel_base_controller {
 				{
 					
 					// archive data
-					$archive_data = $this->model->cleaned_data();
-					$archive_data[$this->model->key_field()] = $saved_id;
-					if ($this->archivable) $this->model->archive($id, $archive_data);
-					
-					// run hook
-					if ($id === 'create')
-					{
-						$this->_run_hook('after_create', $archive_data);
-					}
-					else
-					{
-						$this->_run_hook('after_edit', $archive_data);
-					}
-					
-					
+					if ($this->archivable) $this->model->archive($id, $this->model->cleaned_data());
 					$this->_clear_cache();
 					$str = (is_ajax()) ? $saved_id : '<script type="text/javascript">parent.location.reload(true);</script>';
 					$this->output->set_output($str);
@@ -1219,7 +1359,7 @@ class Module extends Fuel_base_controller {
 	
 	function refresh_field()
 	{
-		if (is_ajax() AND !empty($_POST))
+		if (!empty($_POST))
 		{
 			$fields = $this->model->form_fields();
 			$field = $this->input->post('field', TRUE);
@@ -1247,7 +1387,6 @@ class Module extends Fuel_base_controller {
 				$fields['id']['type'] = 'select';
 				$fields['id']['options'] = $this->model->options_list();
 			}
-
 			$output = $this->form_builder->create_field($fields[$field]);
 			$this->output->set_output($output);
 		}
@@ -1273,40 +1412,6 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
-	function ajax($method = NULL)
-	{
-		// must not be empty and must start with find_ (... don't want to access methods like delete)
-		if (is_ajax())
-		{
-			// append ajax to the method name... to prevent any conflicts with default methods
-			$method = 'ajax_'.$method;
-			$this->uri->init_get_params();
-			$params = $_GET;
-			
-			if (!method_exists($this->model, $method))
-			{
-				show_error(lang('error_invalid_method'));
-			}
-			
-			$results = $this->model->$method($params);
-			
-			if (is_string($results))
-			{
-				$this->output->set_output($results);
-			}
-			else
-			{
-				$this->output->set_header('Cache-Control: no-cache, must-revalidate');
-				$this->output->set_header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-				$this->output->set_header('Last-Modified: '. gmdate('D, d M Y H:i:s').'GMT');
-				$this->output->set_header('Content-type: application/json');
-				$output = json_encode($results);
-				print($output);
-			}
-			
-		}
-	}
-	
 	protected function _clear_cache()
 	{
 		// reset cache for that page only
@@ -1314,7 +1419,7 @@ class Module extends Fuel_base_controller {
 		{
 			$CI =& get_instance();
 			$this->load->library('cache');
-			$cache_group = $this->config->item('page_cache_group', 'fuel');
+			$cache_group = $this->fuel->config('page_cache_group');
 			$this->cache->remove_group($cache_group);
 		}
 	}
@@ -1323,7 +1428,6 @@ class Module extends Fuel_base_controller {
 	{
 		return in_array($action, $this->item_actions);
 	}
-
 	protected function _process_uploads($posted = NULL)
 	{
 		if (empty($posted)) $posted = $_POST;

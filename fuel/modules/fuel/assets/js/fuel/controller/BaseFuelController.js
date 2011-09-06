@@ -380,30 +380,30 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	initSpecialFields : function(context){
 		var _this = this;
-		this._initAssets(context);
-		this._initAddEditInline(context);
-		this._initDatePicker(context);
-		this._initEditors(context);
-		this._initViewPage();
-		this._initLinkedFields(context);
+	//	this._initAssets(context);
+	//	this._initAddEditInline(context);
+	//	this._initDatePicker(context);
+		// this._initEditors(context);
+		// this._initViewPage();
+		// this._initLinkedFields(context);
 		
 		$('#form input:first', context).select();
 		
 		// set up supercomboselects
-		$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
-			var comboOpts = _this._comboOps(this);
-			$(this).supercomboselect(comboOpts);
-		});
-		
-		// setup multi-file naming convention
-		$.fn.MultiFile.options.accept = jqx.config.assetsAccept;
-		$multiFile = $('.multifile:file');
-		
-		// get accept types and then remove the attribute from the DOM to prevent issue with Chrome
-		var acceptTypes = $multiFile.attr('accept');
-		$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
-		$multiFile.removeAttr('accept');// for Chrome bug
-		$multiFile.MultiFile({ namePattern: '$name___$i'});
+		// $('select[multiple]', context).not('select[class=no_combo]').each(function(i){
+		// 	var comboOpts = _this._comboOps(this);
+		// 	$(this).supercomboselect(comboOpts);
+		// });
+		// 
+		// // setup multi-file naming convention
+		// $.fn.MultiFile.options.accept = jqx.config.assetsAccept;
+		// $multiFile = $('.multifile:file');
+		// 
+		// // get accept types and then remove the attribute from the DOM to prevent issue with Chrome
+		// var acceptTypes = $multiFile.attr('accept');
+		// $multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
+		// $multiFile.removeAttr('accept');// for Chrome bug
+		// $multiFile.MultiFile({ namePattern: '$name___$i'});
 	},
 	
 	_getjQueryPluginOptions : function(elem){
