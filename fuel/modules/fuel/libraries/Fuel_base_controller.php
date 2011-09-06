@@ -338,7 +338,7 @@ class Fuel_base_controller extends CI_Controller {
 				$page_segs[] = $seg;
 			}
 		}
-		$page_title = 'FUEL CMS : '.implode(' : ', $page_segs);
+		$page_title = lang('fuel_page_title').' : '.implode(' : ', $page_segs);
 		return $page_title;
 	}
 	
