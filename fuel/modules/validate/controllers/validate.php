@@ -16,7 +16,7 @@ class Validate extends Fuel_base_controller {
 		// get localized js
 		$js_localized = json_lang('validate/validate_js', FALSE);
 		
-		$this->_load_js_localized($js_localized);
+		$this->fuel->admin->load_js_localized($js_localized);
 		$this->_validate_user('tools/validate');
 		
 		// set pages input to blank if it is default value
@@ -42,7 +42,10 @@ class Validate extends Fuel_base_controller {
 		$vars['validation_type'] = lang('validate_type_html');
 		$vars['pages_select'] = $pages;
 		$this->js_controller_params['method'] = 'validate';
-		$this->fuel->admin->render('validate', $vars);
+		
+		$crumbs = array('tools' => lang('section_tools'), lang('module_validate'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+		$this->fuel->admin->render('validate', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 	function html()
@@ -463,7 +466,11 @@ class Validate extends Fuel_base_controller {
 		$vars['pages_serialized'] = base64_encode(serialize($pages));
 		
 		$vars['validation_type'] = lang('validate_type_size_report');
-		$this->fuel->admin->render('run', $vars);
+		
+		$crumbs = array('tools' => lang('section_tools'), lang('module_validate'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+
+		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 	
 	function _get_pages()

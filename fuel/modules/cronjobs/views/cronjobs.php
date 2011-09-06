@@ -1,15 +1,5 @@
 <?=js('CronjobsController', 'cronjobs')?>
-<div id="main_top_panel">
-	<h2 class="ico ico_tools_cronjobs"><a href="<?=fuel_url('tools')?>"><?=lang('section_tools')?></a> &gt; <?=lang('module_cronjobs')?></h2>
-</div>
-<div class="clear"></div>
-
-<div id="notification" class="notification">
-	<?=$notifications?>
-</div>
-<div id="main_content" class="noaction">
-
-	<div id="main_content_inner">
+<div id="fuel_main_content_inner">
 	<p class="instructions"><?=lang('cronjobs_instructions')?></p>
 	
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
@@ -59,6 +49,4 @@
 	</div>
 	<?=$this->form->hidden('action', $action)?>
 	<?=$this->form->close()?>
-	</div>
-
 </div>

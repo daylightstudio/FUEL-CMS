@@ -11,7 +11,7 @@ class User_guide extends Fuel_base_controller {
 		$this->load->module_config(USER_GUIDE_FOLDER, 'user_guide');
 		if ($this->config->item('user_guide_authenticate'))
 		{
-			$this->_check_login();
+			$this->fuel->admin->check_login();
 		}
 	}
 	

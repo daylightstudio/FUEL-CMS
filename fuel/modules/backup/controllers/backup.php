@@ -71,7 +71,10 @@ class Backup extends Fuel_base_controller {
 			$vars['download_path'] = $download_path;
 			$vars['is_writable'] = $is_writable;
 			$vars['backup_assets'] = $backup_config['backup_assets'];
-			$this->fuel->admin->render('backup', $vars);
+			
+			$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
+			$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_backup');
+			$this->fuel->admin->render('backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 	}
 }

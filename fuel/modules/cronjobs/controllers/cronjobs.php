@@ -107,7 +107,9 @@ class Cronjobs extends Fuel_base_controller {
 		$vars['action'] = $action;
 		$vars['mailto'] = $mailto;
 		$vars['cronjob_lines'] = $cronjob_lines;
-		$this->fuel->admin->render('cronjobs', $vars);
+		$crumbs = array('tools' => lang('section_tools'), lang('module_cronjobs'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_cronjobs');
+		$this->fuel->admin->render('cronjobs', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }
 /* End of file cronjobs.php */
