@@ -1,9 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+require_once('base_module_model.php');
 
-class Pagevariables_model extends MY_Model {
+class Pagevariables_model extends Base_module_model {
 
 	public $page_id;
-	private $_tables;
 	
 	function __construct()
 	{

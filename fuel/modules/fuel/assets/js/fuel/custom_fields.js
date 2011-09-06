@@ -272,149 +272,6 @@ fuel.fields.asset_field = function(context){
 	});
 }
 
-// for editing related modules value from within the context of a module
-fuel.fields.inline_edit_field_old = function(context){
-	
-	var displayError = function($form, html){
-		$form.find('.inline_errors').addClass('notification error ico_error').html(html).animate( { backgroundColor: '#ee6060'}, 1500);
-	}
-	
-	var editModule = function(url, callback){
-		var _this = this;
-		//if ($('#add_edit_inline_modal').size() == 0){
-			$('body').append('<div id="add_edit_inline_modal" class="jqmWindow"><div class="loader"></div></div>');
-		//}
-		var $modalContext = $('#add_edit_inline_modal');
-		$modalContext.jqm({
-			ajax: url,
-		 	onLoad: function(){
-				var $form = $modalContext.find('form');
-				$form.attr('action', url);
-				$form.submit(function(e){
-					if (e.which !== 13)
-					{
-						$('.ico_save', $modalContext).click();
-					}
-					return false;
-				});
-				
-				$('.modal_cancel', $modalContext).click(function(){
-					$modalContext.jqmHide();
-					return false;
-				})
-				$('.ico_save', $modalContext).click(function(){
-					$.removeChecksave();
-					
-					$form.ajaxSubmit({
-						success: function(html){
-							if ($(html).is('error')){
-								displayError($form, html);
-							} else if (callback){
-								callback(html);
-							}
-						}
-					});
-					return false;
-				});
-				$('.delete', $modalContext).click(function(){
-					$.removeChecksave();
-					
-					if (confirm(fuel.lang('confirm_delete'))){
-						$form.find('.__fuel_inline_action__').val('delete');
-						$form.ajaxSubmit({
-							success: function(html){
-								if ($(html).is('error')){
-									displayError($form, html);
-								} else if (callback){
-									callback(html);
-								}
-							}
-						});
-					}
-					return false;
-				});
-				
-				
-				//_this.initSpecialFields($modalContext);
-			}
-		}).jqmShow();
-	}
-	
-	$('.add_edit', context).each(function(i){
-		var $field = $(this);
-		var fieldId = $field.attr('id');
-		var $form = $field.closest('form:first');
-		var className = $field.attr('className').split(' ');
-		var module = '';
-		if (className.length > 1){
-			module = className[className.length -1];
-		} else {
-			module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
-		}
-		var url = jqx.config.fuelPath + '/' + module + '/inline_';
-		$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
-		$field.after('&nbsp;<a href="' + url + 'edit/' + $field.val() + '" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-		
-		
-		var refreshField = function(html){
-			var refreshUrl = jqx.config.fuelPath + '/' + _this.module + '/refresh_field';
-			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:html};
-			$.post(refreshUrl, params, function(html){
-				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
-				//_this._notifications();
-				$modalContext.jqmHide();
-				$('#' + fieldId).replaceWith(html);
-				
-				// already inited with custom fields
-				$form.formBuilder()
-				// refresh field with formBuilder jquery
-				
-				
-				/*if ($('#' + fieldId + '[multiple]').not('select[class=no_combo]').size()){
-					var comboOpts = _this._comboOps(this);
-					$('#' + fieldId).supercomboselect(comboOpts);
-				}*/
-				$('#' + fieldId).change(function(){
-					changeField($(this));
-				});
-				changeField($('#' + fieldId));
-			});
-		}
-		
-		var changeField = function($this){
-			if (($this.val() == '' || $this.attr('multiple')) || $this.find('option').size() == 0){
-				if ($this.is('select') && $this.find('option').size() == 0){
-					$this.hide();
-				}
-				if ($this.is('input, select')) $this.next('.btn_field').hide();
-			} else {
-				$this.next('.btn_field').show();
-			}	
-		}
-		
-		
-		if ($('#add_edit_inline_modal').size() == 0){
-			$('body').append('<div id="add_edit_inline_modal" class="jqmWindow"><div class="loader"></div></div>');
-		}
-		var $modalContext = $('#add_edit_inline_modal');
-		
-		$('.add_inline_button', context).click(function(e){
-			editModule($(this).attr('href'), refreshField);
-			return false;
-		});
-
-		$('.edit_inline_button', context).click(function(e){
-			editModule(url + $(this).prev().val(), refreshField);
-			return false;
-		});
-
-		$field.change(function(){
-			changeField($(this));
-		});
-		changeField($field);
-	});
-}
-
 fuel.fields.inline_edit_field = function(context){
 
 
@@ -478,7 +335,7 @@ fuel.fields.inline_edit_field = function(context){
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
 		var addCss = 'add_inline_button';
 		$field.after('&nbsp;<a href="' + url + 'create" class="btn_field ' + addCss + '">' + fuel.lang('btn_add') + '</a>');
-		$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		$field.after('&nbsp;<a href="' + url + 'edit/' + $field.val() + '" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		if (isMulti) addCss += ' float_left';
 		
 		var refreshField = function(){
@@ -526,9 +383,8 @@ fuel.fields.inline_edit_field = function(context){
 		});
 
 		$('.edit_inline_button', context).click(function(e){
-			//editModule(url + $(this).prev().val(), refreshField);
 			//editModule($form, url + $(this).prev().val(), refreshField);
-			
+			editModule($(this).attr('href'), null, refreshField);
 			return false;
 		});
 

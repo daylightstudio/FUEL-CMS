@@ -75,7 +75,10 @@ class Settings extends Fuel_base_controller {
 		$vars['form'] = $this->form_builder->render();
 		$vars['warn_using_config'] = !$this->config->item('blog_use_db_table_settings');
 		
-		$this->_render('settings', $vars);
+		$crumbs = array(lang('module_blog_settings'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_blog_settings');
+		
+		$this->fuel->admin->render('settings', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 
 	}
 

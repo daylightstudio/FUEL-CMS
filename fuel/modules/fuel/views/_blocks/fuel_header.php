@@ -19,7 +19,7 @@
 
 	<?php if (!empty($this->js_controller)) : ?> 
 	<script type="text/javascript">
-		<?php if ($this->js_controller != 'BaseFuelController') : ?>
+		<?php if ($this->js_controller != 'fuel.controller.BaseFuelController') : ?>
 		jqx.addPreload('fuel.controller.BaseFuelController');
 		<?php endif; ?>
 		jqx.init('<?=$this->js_controller?>', <?=json_encode($this->js_controller_params)?>, '<?=$this->js_controller_path?>');

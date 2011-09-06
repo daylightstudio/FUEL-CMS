@@ -71,6 +71,9 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 		$('.jqmWindow .loader', $context).hide();
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
+		$('.cancel', contentDoc).click(function(){
+			$modal.jqmHide();
+		})
 		setTimeout(function(){
 			if ($('#login').size()){
 				var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though

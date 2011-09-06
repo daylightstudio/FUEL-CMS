@@ -36,6 +36,23 @@ $config['modules']['pages'] = array(
 	
 );
 
+// page module init values
+$config['modules']['pagevariables'] = array(
+	'module_name' => 'Page Variables',
+	'model_location' => 'fuel',
+	'display_field' => 'name',
+	'table_headers' => array(
+		'id', 
+		'location', 
+		'name',
+		'value',
+		'type'
+	),
+	'default_col' => 'page_id',
+	'default_order' => 'asc',
+	'hidden' => TRUE
+);
+
 // navigation module init values
 $config['modules']['blocks'] = array(
 	'module_name' => 'Blocks',
@@ -71,10 +88,6 @@ $config['modules']['navigation'] = array(
 	'default_order' => 'asc',
 	'js_controller' => 'NavigationController',
 	'preview_path' => '',
-	'views' => array(
-		'list' => '_layouts/module_list', 
-		'create_edit' => '_layouts/module_create_edit', 
-		'delete' => '_layouts/module_delete'),
 	'permission' => 'navigation',
 	'instructions' => lang('navigation_instructions'),
 	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select')),

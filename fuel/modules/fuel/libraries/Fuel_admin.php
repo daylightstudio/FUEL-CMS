@@ -237,7 +237,7 @@ class Fuel_admin {
 	
 	function validate_user($permission, $type = 'edit', $show_error = TRUE)
 	{
-		if (!$this->fuel_auth->has_permission($permission, $type))
+		if (!$this->fuel->auth->has_permission($permission, $type))
 		{
 			if ($show_error)
 			{

@@ -143,7 +143,7 @@ class Module extends Fuel_base_controller {
 		$this->items();
 	}
 	
-	function items($inline = FALSE)
+	function items()
 	{
 		
 		$this->load->library('data_table');
@@ -160,8 +160,7 @@ class Module extends Fuel_base_controller {
 		if (!is_ajax() AND !empty($_POST))
 		{
 			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-			//$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
-			$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
+			$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
 			redirect($uri);
 		}
 		
@@ -225,7 +224,7 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
-
+			
 			// set data table actions... look first for item_actions set in the fuel_modules
 			foreach($this->table_actions as $key => $val)
 			{
@@ -247,7 +246,7 @@ class Module extends Fuel_base_controller {
 					$link = "";
 					if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
-						$url = site_url("/".$CI->fuel->config("fuel_path").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
@@ -262,7 +261,7 @@ class Module extends Fuel_base_controller {
 					{
 						$action_name = lang('table_action_'.strtolower($val));
 						if (empty($action_name)) $actino_name = $val;
-						$this->data_table->add_action($action_name, site_url('/'.$this->fuel->config('fuel_path').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
 			}
@@ -330,7 +329,6 @@ class Module extends Fuel_base_controller {
 			
 			
 			$vars['table'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars, TRUE);
-			
 			$vars['pagination'] = $this->pagination->create_links();
 
 			// for extra module 'filters'
@@ -349,13 +347,14 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->display_errors = FALSE;
 			$this->form_builder->css_class = 'more_filters';
 			$this->form_builder->set_field_values($field_values);
-			$this->form_builder->key_check = FALSE;
 			
-			$vars['more_filters'] = $this->form_builder->render();
+			// keycheck is already put in place by $this->form->close() in module_list layout
+			$this->form_builder->key_check = FALSE; 
+			$vars['more_filters'] = $this->form_builder->render_divs();
 			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_actions', $vars, TRUE);
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_breadcrumb($crumbs);
-			
+
 			$this->fuel->admin->render($this->views['list'], $vars);
 		}
 	}
@@ -419,13 +418,15 @@ class Module extends Fuel_base_controller {
 			
 		}
 		
+		//$params = array_merge($defaults, $page_state, $uri_params, $posted);
 		$params = array_merge($defaults, $page_state, $uri_params, $posted);
-
+		
 		// reset offset if you apply a filter (via POST and not ajax)
 		if (!empty($_POST) and !is_ajax())
 		{
 			$params['offset'] = 0;
 		}
+		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
 		

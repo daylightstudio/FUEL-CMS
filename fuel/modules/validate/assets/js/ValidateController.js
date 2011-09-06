@@ -1,3 +1,9 @@
+jqx.load('plugin', 'jquery-ui-1.8.4.custom.min');
+jqx.load('plugin', 'jquery.disable.text.select.pack');
+jqx.load('plugin', 'jquery.selso');
+jqx.load('plugin', 'jquery.fillin');
+jqx.load('plugin', 'jquery.supercomboselect');
+
 var ValidateController = {
 	
 	init : function(initObj){

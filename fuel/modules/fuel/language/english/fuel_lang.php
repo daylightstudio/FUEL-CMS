@@ -180,6 +180,7 @@ $lang['pages_upload_instructions'] = 'Select a view file and upload to a page be
 // page specific form fields
 $lang['form_label_layout'] = 'Layout';
 $lang['form_label_cache'] = 'Cache';
+$lang['pages_last_updated'] = 'Last updated %1s';
 $lang['pages_last_updated_by'] = 'Last updated %1s by %2s';
 $lang['pages_not_published'] = 'This page is not published.';
 $lang['pages_default_location'] = 'example: company/about';
@@ -202,6 +203,7 @@ $lang['form_label_view'] = 'View';
 | Navigation
 |--------------------------------------------------------------------------
 */
+$lang['navigation_import'] = 'Import Navigation';
 $lang['navigation_instructions'] = 'Here you create and edit the top menu items of the page.';
 $lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable <strong>$nav</strong>. For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
@@ -247,8 +249,6 @@ $lang['assets_comment_height'] = 'Will change the height of an image to the desi
 $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
 
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Site Variables
@@ -256,6 +256,7 @@ $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for 
 */
 $lang['sitevariables_instructions'] = 'Here you can manage the site variables for your website.';
 $lang['sitevariables_scope'] = 'Scope';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -465,6 +466,7 @@ $lang['pagination_last_link'] = 'Last &rsaquo;';
 $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
 
+$lang['import'] = 'Import';
 
 // now include the Javascript specific ones since there is some crossover
 include('fuel_js_lang.php');

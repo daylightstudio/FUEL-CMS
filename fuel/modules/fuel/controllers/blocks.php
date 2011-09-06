@@ -138,6 +138,10 @@ class Blocks extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->fuel->admin->render('upload', $vars);
+		
+		$crumbs = array($this->module_uri => $this->module_name, lang('import'));
+		$this->fuel->admin->set_breadcrumb($crumbs);
+		
+		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }

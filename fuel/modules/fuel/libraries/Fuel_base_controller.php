@@ -5,7 +5,7 @@ require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/Fuel.php');
 
 class Fuel_base_controller extends CI_Controller {
 	
-	public $js_controller = 'BaseFuelController';
+	public $js_controller = 'fuel.controller.BaseFuelController';
 	public $js_controller_params = array();
 	public $js_controller_path = '';
 	public $nav_selected;

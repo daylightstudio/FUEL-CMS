@@ -12,7 +12,9 @@
 	<?php echo display_errors('error ico_error')?>
 <?php endif; ?>
 
-<?php if (!empty($data['last_modified'])) : ?>
-<p class="ico ico_info last_updated"><?=lang('pages_last_updated_by', english_date($data['last_modified'], true), $data['email'])?></p>
+<?php if (!empty($last_updated)) : ?>
+<p class="ico ico_info last_updated">
+	<?=$last_updated?>
+</p>
 <?php endif; ?>
 

@@ -320,6 +320,7 @@ class Pages extends Module {
 		$actions = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['actions'] = $actions;
 		$vars['error'] = $this->model->get_errors();
+		$vars['last_updated'] = lang('pages_last_updated_by', english_date($vars['data']['last_modified'], true), $vars['data']['email']);
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
 		
