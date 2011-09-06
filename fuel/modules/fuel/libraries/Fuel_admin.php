@@ -213,12 +213,12 @@ class Fuel_admin {
 		$this->no_cache();
 
 		// check if logged in
-		if (!$this->fuel->auth->is_logged_in() OR !is_fuelified())
+		if (!$this->CI->fuel->auth->is_logged_in() OR !is_fuelified())
 		{
-			$login = $this->config->item('fuel_path', 'fuel').'login';
+			$login = $this->CI->fuel->config('fuel_path').'login';
 			
 			// logout officially to unset the cookie data
-			$this->fuel_auth->logout();
+			$this->CI->fuel->auth->logout();
 			
 			if (!is_ajax())
 			{
