@@ -316,6 +316,7 @@
 	<li><strong>filename</strong> - the file name to convert the upload to</li>
 	<li><strong>sorting</strong> - for multi selects that may need to keep track of selected options (combo jquery plugin)</li>
 	<li><strong>mode</strong> - used for enums and multiple select fields whether to use selects or radios/checkbox</li>
+	<li><strong>label_colons</strong> - used for adding colons after the label. The default will be whatever is set as the Form_builders <dfn>label_colons</dfn> class property</li>
 </ul>
 
 <h1>Function Reference</h1>

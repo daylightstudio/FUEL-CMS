@@ -85,9 +85,9 @@ Class Form_builder {
 	public $auto_execute_js = TRUE;
 	
 	protected $_html; // html string
-	protected $_fields = array(); // fields to be used for the form
-	protected $_cached = array(); // cached parameters
-	protected $_js = array(); // to be executed once per render
+	protected $_fields; // fields to be used for the form
+	protected $_cached; // cached parameters
+	protected $_js; // to be executed once per render
 	
 	
 	/**
@@ -111,6 +111,9 @@ Class Form_builder {
 	 */
 	public function initialize($params = array())
 	{
+		// clear out any data before initializing
+		$this->clear();
+		
 		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key))
@@ -160,6 +163,14 @@ Class Form_builder {
 		}
 		
 	}
+	
+	public function clear()
+	{
+		$this->_fields = array();
+		$this->_html = '';
+	}
+
+	
 	
 	// --------------------------------------------------------------------
 
@@ -754,8 +765,7 @@ Class Form_builder {
 			'value' => '',
 			'readonly' => '',
 			'disabled' => '',
-			
-			'linked' => FALSE,
+			'label_colons' => NULL,
 			
 			'order' => 9999,
 			'before_html' => '', // for html before the field
@@ -771,6 +781,11 @@ Class Form_builder {
 		if (!isset($val['value']) AND ($params['type'] != 'checkbox' AND !($params['type'] == 'boolean' AND $this->boolean_mode == 'checkbox')))
 		{
 			$params['value'] = $params['default'];
+		}
+		
+		if (!isset($params['label_colons']))
+		{
+			$params['label_colons'] = $this->label_colons;
 		}
 		
 		if (!empty($val['name']))
@@ -1061,7 +1076,7 @@ Class Form_builder {
 			$str .= '<span class="required">'.$this->required_indicator.'</span>';
 			$this->has_required = TRUE;
 		}
-		if ($this->label_colons) $str .= ':';
+		if ($params['label_colons']) $str .= ':';
 		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
 		{
 			$str .= "</label>";
