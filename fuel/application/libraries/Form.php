@@ -419,6 +419,10 @@ Class Form {
 	{
 		$str = (string) $str;
 		
+		// clean the string for utf8
+		$CI =& get_instance();
+		$str = $CI->utf8->clean_string($str);
+
 		if ($double_encode === TRUE)
 		{
 			$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');

@@ -122,27 +122,19 @@ Class Form_builder {
 			}
 		}
 		
+		$CI =& get_instance();
+		
 		// create form object if not in initialization params
 		if (is_null($this->form))
 		{
-			// test for get_instance function just to make sure we are using CI, in case we want to use this class elsewhere
-			if (function_exists('get_instance'))
-			{
-				$CI =& get_instance();
-				$CI->load->library('form');
-				$this->form = new Form();
-				
-				// load localization helper if not already
-				if (!function_exists('lang'))
-				{
-					$CI->load->helper('language');
-				}
-			}
-			else
-			{
-				require_once('Form.php');
-			}
+			$CI->load->library('form');
+			$this->form = new Form();
 			
+			// load localization helper if not already
+			if (!function_exists('lang'))
+			{
+				$CI->load->helper('language');
+			}
 		}
 		
 		// CSRF protections
@@ -154,6 +146,20 @@ Class Form_builder {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clear fields and html
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function clear()
+	{
+		$this->_fields = array();
+		$this->_html = '';
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
