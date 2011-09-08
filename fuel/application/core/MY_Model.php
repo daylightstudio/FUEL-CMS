@@ -1847,13 +1847,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Set the default return type
+	 * Get the default return type
 	 *
 	 * @access	public
-	 * @param	string	return type (object, array, query, auto)
-	 * @return	void
+	 * @return	mixed
 	 */	
-	public function get_return_method($return_method)
+	public function get_return_method()
 	{
 		return $this->return_method;
 	}
