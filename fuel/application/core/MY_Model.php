@@ -781,15 +781,16 @@ class MY_Model extends CI_Model {
 				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (isset($values[$key.'_hour']))
 				{
-					if (!empty($values[$key]) AND is_numeric($values[$key.'_hour']))
+					if (!empty($values[$key]))
 					{
 						$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
 					}
+					
 				}
 			}
 			else if ($field['type'] == 'date')
 			{
-				if (empty($values[$key]) OR (int)$values[$key] == 0 OR !is_numeric($values[$key])) $values[$key] = $this->default_date;
+				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (!empty($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
 			}
 			
@@ -798,6 +799,7 @@ class MY_Model extends CI_Model {
 			// create dates for date added and last updated fields automatically
 			if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_add))
 			{
+				
 				$test_date = (isset($values[$key])) ? (int) $values[$key] : 0;
 
 				// if no key field then we assume it is a new save and so we add the date if it's empty'
@@ -812,6 +814,7 @@ class MY_Model extends CI_Model {
 			} 
 			if (isset($values[$key]))
 			{
+				
 				// format dates
 				if (!in_array($key, $this->auto_date_add))
 				{	
@@ -1856,7 +1859,6 @@ class MY_Model extends CI_Model {
 	{
 		return $this->return_method;
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
