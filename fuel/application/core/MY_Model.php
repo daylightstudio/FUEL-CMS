@@ -781,15 +781,16 @@ class MY_Model extends CI_Model {
 				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (isset($values[$key.'_hour']))
 				{
-					if (!empty($values[$key]) AND is_numeric($values[$key.'_hour']))
+					if (!empty($values[$key]))
 					{
 						$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
 					}
+					
 				}
 			}
 			else if ($field['type'] == 'date')
 			{
-				if (empty($values[$key]) OR (int)$values[$key] == 0 OR !is_numeric($values[$key])) $values[$key] = $this->default_date;
+				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (!empty($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
 			}
 			
