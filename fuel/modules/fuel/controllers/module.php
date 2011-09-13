@@ -611,7 +611,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function edit($id = NULL, $field = NULL, $inline = FALSE)
+	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
 		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
 
@@ -698,7 +698,7 @@ class Module extends Fuel_base_controller {
 		$this->edit($id, $field, TRUE);
 	}
 	
-	protected function _process_edit($id)
+	protected function _process_edit($id, $redirect = TRUE)
 	{
 		$this->model->on_before_post();
 		

@@ -57,7 +57,7 @@ fuel.fields.multi_field = function(context){
 		return comboOpts;
 	}
 	// set up supercomboselects
-	$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
+	$('select[multiple]', context).not('.no_combo').each(function(i){
 		var comboOpts = comboOptions(this);
 		$(this).supercomboselect(comboOpts);
 	});
@@ -66,8 +66,7 @@ fuel.fields.multi_field = function(context){
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
 	
-	var selector = 'textarea:not(textarea[class=no_editor])';
-	$editors = $ckEditor = $(selector, context);
+	$editors = $ckEditor = $('textarea', context).not('.no_editor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
 
@@ -124,7 +123,7 @@ fuel.fields.wysiwyg_field = function(context){
 		// our keyup event took care of the update
 		CKEDITOR.config.autoUpdateElement = false;
 		
-		CKEDITOR.instances[ckId].hidden = false; // for toggline
+		CKEDITOR.instances[ckId].hidden = false; // for toggling
 		
 		$('#' + ckId).parent().append(sourceButton);
 
@@ -289,7 +288,7 @@ fuel.fields.inline_edit_field = function(context){
 		return comboOpts;
 	}
 	// set up supercomboselects
-	$('select[multiple]', context).not('select[class=no_combo]').each(function(i){
+	$('select[multiple]', context).not('.no_combo').each(function(i){
 		var comboOpts = comboOptions(this);
 		$(this).supercomboselect(comboOpts);
 	});
