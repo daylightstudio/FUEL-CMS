@@ -82,7 +82,7 @@ class Fuel_module {
 				'js_localized' => array(),
 				'js' => '',
 				'edit_method' => 'find_one_array',
-				'instructions' => lang('module_instructions_default', $this->module),
+				'instructions' => lang('module_instructions_default', strtolower(humanize($this->module))),
 				'filters' => array(),
 				'archivable' => TRUE,
 				'table_headers' => array(),
