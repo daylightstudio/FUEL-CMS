@@ -426,6 +426,34 @@ function fuel_set_var($key, $val = NULL)
 // --------------------------------------------------------------------
 
 /**
+ * Appends a value to an array variable
+ *
+ * @access	public
+ * @param	string
+ * @param	mixed
+ * @return	void
+ */
+function fuel_var_append($key, $value)
+{
+	$CI =& get_instance();
+	$vars = $CI->load->_ci_cached_vars;
+	if (isset($vars[$key]) AND is_array($vars[$key]))
+	{
+		if (is_array($value))
+		{
+			$vars[$key] = array_merge($vars[$key], $value);
+		}
+		else
+		{
+			array_push($vars[$key], $value);
+		}
+		fuel_set_var($key, $vars[$key]);
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns a variable and allows for a default value
  *
  * @access	public

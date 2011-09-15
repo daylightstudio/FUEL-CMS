@@ -73,6 +73,8 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 <h2>fuel_set_var(<var>key</var>, <var>val</var>)</h2>
 <p>Sets a variable for all views to use no matter what view it is declared in.</p>
 
+<h2>fuel_var_append(<var>key</var>, <var>val</var>)</h2>
+<p>Appends a value to an array variable for all views to use no matter what view it is declared in.</p>
 
 <h2>fuel_var(<var>key</var>, <var>[default]</var>, <var>[edit_module]</var>, <var>[evaluate]</var>)</h2>
 <p>Returns a variable and allows for a default value. Also creates inline editing marker.

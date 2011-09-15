@@ -58,7 +58,7 @@ class Fuel_pagevars {
 	 * @param	string
 	 * @return	array
 	 */
-	function db_variables($location = null)
+	function db_variables($location = NULL, $parse = FALSE)
 	{
 		if (is_null($location))
 		{
@@ -84,6 +84,13 @@ class Fuel_pagevars {
 			}
 		}
 		$page_vars = $this->_CI->pagevariables_model->find_all_by_location($location);
+		if ($parse)
+		{
+			foreach($page_vars as $key => $val)
+			{
+				$page_vars[$key] = $this->_CI->parser->parse_string($val, $page_vars, TRUE);
+			}
+		}
 		$vars = array_merge($vars, $page_vars);
 		return $vars;
 	}
