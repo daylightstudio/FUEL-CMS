@@ -5,7 +5,7 @@ FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP
 </p>
 
 <h2>MY_Parser</h2>
-<p>FUEL overwrites the default CodeIgniter Parser library with the <a href="?=user_guide_url(libraries/my_parser')?>">MY_Parser</a> 
+<p>FUEL overwrites the default CodeIgniter Parser library with the <a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser</a> 
 library to implement the expanded Dwoo templating syntax.</p>
 
 
