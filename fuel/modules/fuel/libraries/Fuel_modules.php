@@ -82,7 +82,7 @@ class Fuel_modules {
 			'js_localized' => array(),
 			'js' => '',
 			'edit_method' => 'find_one_array',
-			'instructions' => lang('module_instructions_default', $module),
+			'instructions' => NULL,
 			'filters' => array(),
 			'archivable' => TRUE,
 			'table_headers' => array(),
@@ -122,6 +122,12 @@ class Fuel_modules {
 		if ($module_name = lang('module_'.$module))
 		{
 			$return['module_name'] = $module_name;
+		}
+		
+		// set instructions
+		if (empty($return['instructions']))
+		{
+			$return['instructions'] = lang('module_instructions_default', strtolower($return['module_name']));
 		}
 		
 		// set proper jqxController name
