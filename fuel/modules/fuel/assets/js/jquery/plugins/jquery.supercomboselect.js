@@ -259,10 +259,10 @@
 				var rightOpts = [];
 				refs = []; // reset arrays
 				var idNum = 0;
-				
-				var maxSelected = settings.selectedOrdering.length;
+
+				var maxSelected = (typeof settings.selectedOrdering == 'boolean') ? 0 : settings.selectedOrdering.length;
 				var flippedSelectedOrder = {};
-				if (customSelectedSorting){
+				if (customSelectedSorting && typeof settings.selectedOrdering == 'object'){
 					for(var n in settings.selectedOrdering){
 						flippedSelectedOrder[settings.selectedOrdering[n]] = n;
 					}
@@ -273,7 +273,7 @@
 					var text = $(this).text();
 					var value = $(this).attr('value');
 					var id = (settings.optionsIdPrefix + idNum);
-					
+
 					var opt = '';
 					if (customSelectedSorting){
 						if (flippedSelectedOrder[value]){
