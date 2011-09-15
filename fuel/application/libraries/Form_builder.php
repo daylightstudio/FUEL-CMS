@@ -1150,7 +1150,7 @@ Class Form_builder {
 				{
 					$params['sorting'] = $params['value'];
 				}
-				$sorting_params['name'] = 'sorting_'.$params['name'];
+				$sorting_params['name'] = 'sorting_'.$params['orig_name'];
 				$sorting_params['value'] = rawurlencode(json_encode($params['sorting']));
 
 				$str .= $this->create_hidden($sorting_params);
