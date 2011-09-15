@@ -873,7 +873,7 @@ class Menu {
 			}
 			if ($this->use_titles AND (empty($attrs) OR strpos($attrs, 'title=') === FALSE))
 			{
-				$attrs .= 'title="'.$val['label'].'"';
+				$attrs .= ' title="'.strip_tags($val['label']).'"';
 			}
 			$str .= '<a href="'.site_url($val['location']).'" '.$attrs.'>'.$label.'</a>';
 		}

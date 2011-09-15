@@ -7,7 +7,7 @@ This class is <strong>optional</strong>. If it it doesn't exist, then the Table 
 will use either a standard generic class or an array depending on the return method specified.
 </p>
 
-<p class="important">Most module records in FUEL extend the <a href="<?=user_guide_url('libraries/base_module_record')?>">Base_module_record</a>
+<p class="important">Most module records in FUEL extend the <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_record</a>
 class which has some extended functionality for module records.</p>
 
 
