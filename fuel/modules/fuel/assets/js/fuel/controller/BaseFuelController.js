@@ -368,7 +368,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		comboOpts.valuesEmptyString = this.lang('comboselect_values_empty');
 		comboOpts.selectedEmptyString = this.lang('comboselect_selected_empty');
 		comboOpts.defaultSearchBoxString = this.lang('comboselect_filter');
-		var sortingId = 'sorting_' + $(elem).attr('id');
+		var sortingId = $(elem).next().attr('id');
 		if ($('#' + sortingId).size()){
 			comboOpts.autoSort = false;
 			comboOpts.isSortable = true;

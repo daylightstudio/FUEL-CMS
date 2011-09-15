@@ -644,7 +644,7 @@ class Menu {
 			for ($i = 0; $i <= $num; $i++)
 			{
 				$val = $this->_active_items[$i];
-				$label = $this->_get_label($this->_items[$val]['label']);
+				$label = $this->_get_label(strip_tags($this->_items[$val]['label']));
 				if ($i != 0)
 				{
 					$str .= $this->delimiter;
@@ -652,7 +652,7 @@ class Menu {
 				$str .= $label;
 			}
 			if (($num >= 0 AND !empty($home_link)) OR (empty($home_link) AND $num > 0)) $str .= $this->delimiter;
-			$str .= $home_link;
+			$str .= strip_tags($home_link);
 		}
 		else
 		{
@@ -661,7 +661,7 @@ class Menu {
 			for ($i = $num; $i >= 0; $i--)
 			{
 				$val = $this->_active_items[$i];
-				$label = $this->_get_label($this->_items[$val]['label']);
+				$label = $this->_get_label(strip_tags($this->_items[$val]['label']));
 				$str .= $label;
 				if ($i != 0)
 				{
