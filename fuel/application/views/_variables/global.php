@@ -9,8 +9,8 @@ $vars['layout'] = 'main';
 $vars['page_title'] = fuel_nav(array('render_type' => 'page_title', 'delimiter' => ' : ', 'order' => 'desc', 'home_link' => 'WidgiCorp - Fine Makers of Widgets'));
 $vars['meta_keywords'] = 'Widgest, Sprockets';
 $vars['meta_description'] = 'Fine maker of widgets';
-$vars['js'] = '';
-$vars['css'] = '';
+$vars['js'] = array();
+$vars['css'] = array();
 $vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
 
 $vars['blocks'] = array('showcase', 'quote');
