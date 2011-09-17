@@ -270,7 +270,7 @@ class Data_table {
 				$str .= ">\n";
 				if (!empty($th->sorting_param) AND !empty($this->sort_js_func))
 				{
-					$str .= '<a href="javascript:;" onclick="'.$this->sort_js_func.'(\''.$th->sorting_param.'\');return false;">'.$th->name.'</a>';
+					$str .= '<a href="javascript:;" onclick="'.$this->sort_js_func.'(\''.$th->sorting_param.'\', this);return false;">'.$th->name.'</a>';
 				}
 				else
 				{

@@ -211,11 +211,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	{
 		if (empty($values)) return false;
 		$sql = "INSERT IGNORE ";
-		$sql .= "INTO ".$table." (";
+		$sql .= "INTO ".$this->protect_identifiers($table)." (";
 		
 		foreach($values as $key => $val)
 		{
-			$sql .= $key.", ";
+			$sql .= $this->_escape_identifiers($key).", ";
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
 		
@@ -252,11 +252,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		{
 			if ((is_string($primary_key) AND $primary_key == $key) OR (is_array($primary_key) AND in_array($key, $primary_key)))
 			{
-				$sql .=  $key.' = LAST_INSERT_ID('.$key.'), ';
+				$sql .=  $this->_escape_identifiers($key).' = LAST_INSERT_ID('.$this->_escape_identifiers($key).'), ';
 			}
 			else
 			{
-				$sql .= $key.' = VALUES('.$key.'), ';
+				$sql .= $this->_escape_identifiers($key).' = VALUES('.$this->_escape_identifiers($key).'), ';
 			}
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
@@ -266,7 +266,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$last_insert = $this->insert_id();
 		if (!empty($last_insert)) return $last_insert;
 		return $return;
-	}	
+	}
 	
 	// --------------------------------------------------------------------
 
