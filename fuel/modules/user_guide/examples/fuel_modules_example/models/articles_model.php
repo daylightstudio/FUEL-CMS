@@ -29,6 +29,8 @@ class Articles_model extends Base_module_model {
 		$return = array();
 		$categories = $CI->categories_model->find_all(array(), 'id asc');
 		$categories_to_articles = $CI->categories_to_articles_model->find_all('', 'categories.name asc');
+
+		$cat_id = -1;
 		foreach($categories as $category)
 		{
 			$cat_id = $category->id;
