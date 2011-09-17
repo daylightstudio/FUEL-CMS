@@ -1376,7 +1376,7 @@ class Module extends Fuel_base_controller {
 		$errors = FALSE;
 		if (!empty($_FILES))
 		{
-			$this->load->model('assets_model');
+			$this->load->module_model(FUEL_FOLDER, 'assets_model');
 			$this->load->library('upload');
 			$this->load->helper('directory');
 						

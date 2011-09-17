@@ -391,6 +391,9 @@ $this->form_builder->render_table($field);
 <p class="important">Although the following functions can be used, it is important to note that the <dfn>render</dfn> methods above
 will call the approprate create field function based on the type of the field and therefore, these functions are rarely used.</p>
 
+<h2>$this->form_builder->clear()</h2>
+<p>Resets the html and fields applied to the current instance.</p>
+
 <h2>$this->form_builder->create_field(<var>params</var>, <var>[normalize]</var>)</h2>
 <p>Looks at the field type attribute and determines which form field to render.
 The <dfn>$normalize</dfn> value is optional and will normalize the params to a common array structure. Default is <dfn>TRUE</dfn>

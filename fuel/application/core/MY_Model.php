@@ -799,6 +799,7 @@ class MY_Model extends CI_Model {
 			// create dates for date added and last updated fields automatically
 			if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_add))
 			{
+				
 				$test_date = (isset($values[$key])) ? (int) $values[$key] : 0;
 
 				// if no key field then we assume it is a new save and so we add the date if it's empty'
@@ -813,6 +814,7 @@ class MY_Model extends CI_Model {
 			} 
 			if (isset($values[$key]))
 			{
+				
 				// format dates
 				if (!in_array($key, $this->auto_date_add))
 				{	
