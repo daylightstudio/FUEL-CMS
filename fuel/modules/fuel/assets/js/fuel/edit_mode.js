@@ -499,7 +499,7 @@ if (fuel == undefined) var fuel = {};
 									comboOpts.selectedEmptyString = lang('comboselect_selected_empty');
 									comboOpts.defaultSearchBoxString = lang('comboselect_filter');
 									
-									var sortingId = 'sorting_' + $(this).attr('id');
+									var sortingId = $(this).next().attr('id');
 									if ($('#' + sortingId).size()){
 										comboOpts.autoSort = false;
 										comboOpts.isSortable = true;
