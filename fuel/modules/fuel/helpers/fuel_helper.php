@@ -129,6 +129,9 @@ function fuel_block($params)
 			}
 			else if (file_exists(APPPATH.'views/_blocks/'.$p['view'].EXT))
 			{
+				// pass in reference to global CI object
+				$vars['CI'] =& get_instance();
+				
 				// pass along these since we know them... perhaps the view can use them
 				$view = $CI->load->view("_blocks/".$p['view'], $vars, TRUE);
 			}
@@ -517,6 +520,35 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 			$marker = '<span>'.$marker.'</span>';
 		}
 		return $marker;
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Appends a value to an array variable
+ *
+ * @access	public
+ * @param	string
+ * @param	mixed
+ * @return	void
+ */
+function fuel_var_append($key, $value)
+{
+	$CI =& get_instance();
+	$vars = $CI->load->_ci_cached_vars;
+	
+	if (isset($vars[$key]) AND is_array($vars[$key]))
+	{
+		if (is_array($value))
+		{
+			$vars[$key] = array_merge($vars[$key], $value);
+		}
+		else
+		{
+			array_push($vars[$key], $value);
+		}
+		fuel_set_var($key, $vars[$key]);
 	}
 }
 
