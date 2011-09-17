@@ -372,23 +372,9 @@ class Menu {
 		if (!empty($menu) AND (isset($this->depth) AND $level < $this->depth) OR !isset($this->depth))
 		{
 			// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
-			$filtered_menu = array();
-			if (empty($this->include_hidden))
-			{
-				foreach($menu as $key => $val)
-				{
-					if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
-					{
-						$filtered_menu[$key] = $val;
-					}
-				}
-			}
-			else
-			{
-				$filtered_menu = $menu;
-			}
+			$menu = $this->_filter_hidden($menu);
 
-			if (!empty($filtered_menu))
+			if (!empty($menu))
 			{
 				if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", ($level + 1))."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
 				if (!empty($this->container_tag_id) AND $level == -1) $str .= " id=\"".$this->container_tag_id."\"";
@@ -398,9 +384,9 @@ class Menu {
 				$level = $level + 1;
 				$i = 0;
 
-				foreach($filtered_menu as $key => $val)
+				foreach($menu as $key => $val)
 				{
-					$str .= $this->_create_open_li($val, $level, $i, ($i == (count($filtered_menu) -1)));
+					$str .= $this->_create_open_li($val, $level, $i, ($i == (count($menu) -1)));
 					$subitems = $this->_get_menu_items($val['id']);
 
 					if (!empty($subitems))
@@ -433,26 +419,11 @@ class Menu {
 	protected function _render_collabsible($menu, $level = 0)
 	{
 		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
-		$filtered_menu = array();
-		
-		if (!$this->include_hidden)
-		{
-			foreach($menu as $key => $val)
-			{
-				if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
-				{
-					$filtered_menu[$key] = $val;
-				}
-			}
-		}
-		else
-		{
-			$filtered_menu = $menu;
-		}
+		$menu = $this->_filter_hidden($menu);
 		
 		$str = '';
 		
-		if (!empty($filtered_menu))
+		if (!empty($menu))
 		{
 			if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", $level)."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
 			if (!empty($this->container_tag_id) AND $level == 0) $str .= " id=\"".$this->container_tag_id."\"";
@@ -467,7 +438,7 @@ class Menu {
 			{
 				foreach($this->_active_items as $index => $item)
 				{
-					if (!empty($filtered_menu[$item]))
+					if (!empty($menu[$item]))
 					{
 						$active_index = $index;
 						break;
@@ -476,7 +447,7 @@ class Menu {
 			}
 			
 			// loop through base menu items and start drill down
-			foreach($filtered_menu as $key => $val)
+			foreach($menu as $key => $val)
 			{
 				$label = $this->_get_label($val['label']);
 
@@ -541,6 +512,9 @@ class Menu {
 	 */
 	protected function _render_breadcrumb($menu)
 	{
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		$menu = $this->_filter_hidden($menu);
+		
 		if (empty($this->delimiter))
 		{
 			$this->delimiter = ' &gt; ';
@@ -620,6 +594,9 @@ class Menu {
 	 */
 	protected function _render_page_title($menu)
 	{
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		$menu = $this->_filter_hidden($menu);
+		
 		if (empty($this->delimiter))
 		{
 			$this->delimiter = ' &gt; ';
@@ -685,6 +662,9 @@ class Menu {
 	 */
 	protected function _render_delimited($menu)
 	{
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		$menu = $this->_filter_hidden($menu);
+		
 		if ($this->container_tag !== FALSE)
 		{
 			$this->container_tag = 'div';
@@ -1015,7 +995,7 @@ class Menu {
 	/**
 	 * Gets the menu items based on the parent
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @param	mixed parent id
 	 * @param	array menu items
 	 * @return	array
@@ -1037,6 +1017,37 @@ class Menu {
 			}
 		}
 		return $subitems;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Filter out hidden menu items
+	 *
+	 * @access	protected
+	 * @param	array menu items
+	 * @return	array
+	 */
+	protected function _filter_hidden($menu)
+	{
+		$filtered_menu = array();
+		if (!$this->include_hidden)
+		{
+			foreach($menu as $key => $val)
+			{
+				if (!$val['hidden'] OR strtolower($val['hidden']) == 'no')
+				{
+					$filtered_menu[$key] = $val;
+				}
+			}
+		}
+		else
+		{
+			$filtered_menu = $menu;
+		}
+		
+		return $filtered_menu;
+		
 	}
 
 
