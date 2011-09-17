@@ -9,8 +9,8 @@ $vars['layout'] = 'main';
 $vars['page_title'] = fuel_nav(array('render_type' => 'page_title', 'delimiter' => ' : ', 'order' => 'desc', 'home_link' => 'My Website'));
 $vars['meta_keywords'] = '';
 $vars['meta_description'] = '';
-$vars['js'] = '';
-$vars['css'] = '';
+$vars['js'] = array();
+$vars['css'] = array();
 $vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
 
 // page specific variables
