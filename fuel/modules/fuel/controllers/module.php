@@ -1262,101 +1262,6 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function inline_edit_old($id, $column = null)
-	{
-		if (!$this->fuel_auth->module_has_action('save') OR !$this->fuel_auth->module_has_action('create')) return false;
-		
-		if (!empty($_POST))
-		{
-			$posted = $this->_process();
-			
-			if (!empty($posted['__fuel_inline_action__']) AND $posted['__fuel_inline_action__'] == 'delete' AND !empty($posted['id']))
-			{
-				$this->model->delete(array($this->model->key_field() => $posted['id']));
-				$this->_clear_cache();
-				$str = (is_ajax()) ? '' : '<script type="text/javascript">parent.location.reload(true);</script>';
-				$this->output->set_output($str);
-				return;
-			}
-			else
-			{
-				$after_post = $posted;
-				if ($id === 'create')
-				{
-					unset($posted['id']);
-				}
-				if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
-				{
-					unset($values['published']);
-				}
-				
-				$saved_id = $this->model->save($posted);
-
-				if (!$this->_process_uploads())
-				{
-					$this->model->add_error($this->session->flashdata('error'));
-				}
-				
-				$after_post[$this->model->key_field()] = $saved_id;
-				$this->model->on_after_post($after_post);
-				
-				if ($saved_id && $this->model->is_valid())
-				{
-					
-					// archive data
-					if ($this->archivable) $this->model->archive($id, $this->model->cleaned_data());
-					$this->_clear_cache();
-					$str = (is_ajax()) ? $saved_id : '<script type="text/javascript">parent.location.reload(true);</script>';
-					$this->output->set_output($str);
-				}
-				else
-				{
-					//$this->output->set_output('<error>'.lang('error_saving').'</error>');
-					$vars['error'] = $this->model->get_errors();
-					$notification = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-					if (empty($notification))
-					{
-						$notification = lang('error_saving');
-					}
-					$this->output->set_output('<error>'.$notification.'</error>');
-				}
-			}
-
-		}
-		else
-		{
-			$fields = $this->model->form_fields(array());
-			
-			if ($id === 'create')
-			{
-				$id = NULL;
-			}
-			
-			if (!is_int($column) AND isset($fields[$column]))
-			{
-				// load it here again so that we can set the use_label
-				$this->load->library('form_builder');
-				//$this->form_builder->hidden = (array) $this->model->key_field();
-				$this->form_builder->label_colons = FALSE;
-				$this->form_builder->question_keys = array();
-				$this->form_builder->css_class = 'inline_form';
-				$single_field = array();
-				$single_field[$column] = $fields[$column];
-				$single_field[$column]['label'] = ' ';
-				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
-				$vars = $this->_form($id, $single_field, TRUE, FALSE);
-			}
-			else
-			{
-				$vars = $this->_form($id, NULL, TRUE, FALSE);
-			}
-			
-			$vars['linked_fields'] = $this->model->linked_fields;
-			
-			$this->load->module_view(FUEL_FOLDER, '_layouts/module_inline_edit', $vars);
-		}
-	}
-	
 	function refresh_field()
 	{
 		if (!empty($_POST))
@@ -1410,6 +1315,40 @@ class Module extends Fuel_base_controller {
 			}
 		}
 		
+	}
+	
+	function ajax($method = NULL)
+	{
+		// must not be empty and must start with find_ (... don't want to access methods like delete)
+		if (is_ajax())
+		{
+			// append ajax to the method name... to prevent any conflicts with default methods
+			$method = 'ajax_'.$method;
+			$this->uri->init_get_params();
+			$params = $_GET;
+			
+			if (!method_exists($this->model, $method))
+			{
+				show_error(lang('error_invalid_method'));
+			}
+			
+			$results = $this->model->$method($params);
+			
+			if (is_string($results))
+			{
+				$this->output->set_output($results);
+			}
+			else
+			{
+				$this->output->set_header('Cache-Control: no-cache, must-revalidate');
+				$this->output->set_header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+				$this->output->set_header('Last-Modified: '. gmdate('D, d M Y H:i:s').'GMT');
+				$this->output->set_header('Content-type: application/json');
+				$output = json_encode($results);
+				print($output);
+			}
+			
+		}
 	}
 	
 	protected function _clear_cache()
