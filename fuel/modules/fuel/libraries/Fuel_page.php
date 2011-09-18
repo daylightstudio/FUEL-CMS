@@ -472,9 +472,10 @@ class Fuel_page {
 	{
 		// if not logged in then we remove the markers
 		if (!$this->_CI->config->item('admin_enabled', 'fuel') OR $this->variables('fuelified') === FALSE OR 
-			!$this->_fuelified OR empty($output) OR (defined('FUELIFY') AND FUELIFY === FALSE)) 
+			!$this->_fuelified OR empty($output) OR (defined('FUELIFY') AND FUELIFY === FALSE) ) 
 		{
-			return $this->remove_markers($output);
+			return $output;
+			//return $this->remove_markers($output);
 		} 
 		
 		$this->_CI->load->library('session');
