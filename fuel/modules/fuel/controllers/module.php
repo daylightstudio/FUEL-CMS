@@ -1026,7 +1026,9 @@ class Module extends Fuel_base_controller {
 
 						if (isset($posted[$file_tmp.'_filename']))
 						{
-							$field_value = $posted[$file_tmp.'_filename'];
+							// get file extension
+							$path_info = pathinfo($file_info['name']);
+							$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
 						}
 						else
 						{
