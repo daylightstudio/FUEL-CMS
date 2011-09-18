@@ -167,7 +167,14 @@ class Menu {
 				// check to make sure parent_id does not equal id to prevent infinite loops
 				if ($return[$id]['id'] == $return[$id]['parent_id'])
 				{
-					$return[$id]['parent_id'] = $this->root_value;
+					if ($return[$id]['id'] == 0)
+					{
+						unset($return[$id]);
+					}
+					else
+					{
+						$return[$id]['parent_id'] = $this->root_value;
+					}
 				}
 				
 				// Capture all that have selected states so we can loop through later

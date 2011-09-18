@@ -30,6 +30,7 @@ The <dfn>params</dfn> parameter can either be string value (in which case it wil
 	<li><strong>editable</strong> - insert in inline editing</li>
 	<li><strong>parse</strong> - parse the contents of the page. Default is set to 'auto' which will NOT try and parse if your <dfn>fuel_mode</dfn> value in the fuel config file is set to "views".</li>
 	<li><strong>vars</strong> - additional variables to pass to the block</li>
+	<li><strong>cache</strong> - will cache the block</li>
 </ul>
 
 
@@ -66,6 +67,7 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 	<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
 	<li><strong>exclude</strong> - nav items to exclude from the menu</li>
 	<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
+	<li><strong>append</strong> - adds additional menu items to the current list</li>
 </ul>
 
 <p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>

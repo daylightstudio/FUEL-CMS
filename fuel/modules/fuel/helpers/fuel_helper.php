@@ -40,6 +40,7 @@ function fuel_block($params)
 {
 	$CI =& get_instance();
 	$CI->load->library('parser');
+	
 	$valid = array( 'view' => '',
 					'view_string' => FALSE,
 					'model' => '', 
@@ -54,7 +55,8 @@ function fuel_block($params)
 					'data' => array(),
 					'editable' => TRUE,
 					'parse' => 'auto',
-					'vars' => array()
+					'vars' => array(),
+					'cache' => FALSE,
 					);
 
 	// for convenience
@@ -72,11 +74,25 @@ function fuel_block($params)
 		}
 		$params = $new_params;
 	}
-					
+
 	$p = array();
 	foreach($valid as $param => $default)
 	{
 		$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
+	}
+	
+	// pull from cache if cache is TRUE and it exists
+	if ($p['cache'] === TRUE)
+	{
+		$CI->load->library('cache');
+		$cache_group = $CI->config->item('page_cache_group', 'fuel');
+		$cache_id = (!empty($p['view_string'])) ? $p['view_string'] : $p['view'];
+		$cache_id = md5($cache_id);
+		$cache = $CI->cache->get($cache_id, $cache_group);
+		if (!empty($cache))
+		{
+			return $cache;
+		}
 	}
 	
 	// load the model and data
@@ -145,7 +161,12 @@ function fuel_block($params)
 	
 	// parse the view again to apply any variables from previous parse
 	$output = ($p['parse'] === TRUE) ? $CI->parser->parse_string($view, $vars, TRUE) : $view;
-
+	
+	if ($p['cache'] === TRUE)
+	{
+		$CI->cache->save($cache_id, $output, $cache_group, $CI->config->item('page_cache_ttl', 'fuel'));
+	}
+	
 	return $output;
 }
 
@@ -374,6 +395,8 @@ function fuel_nav($params = array())
 	$CI->menu->initialize($p);
 	
 	$items = (!empty($$p['var'])) ? $$p['var'] : array();
+	
+	// exclude any items
 	if (!empty($p['exclude']))
 	{
 		$p['exclude'] = (array) $p['exclude'];
@@ -540,7 +563,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
 {
 	$CI =& get_instance();
 	$CI->load->module_library(FUEL_FOLDER, 'fuel_page');
-	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE))
+	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE) AND is_fuelified())
 	{
 		$marker['id'] = $id;
 		$marker['label'] = $label;
@@ -566,7 +589,8 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
  */
 function fuel_cache_id($location = NULL)
 {
-	if (empty($location)) {
+	if (empty($location))
+	{
 		$CI =& get_instance();
 		$segs = $CI->uri->segment_array();
 	
