@@ -119,14 +119,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.jqmWindowShow').jqmShow();
 	},
 
-	_notifications : function(){
-
-		// flash any notifications
-		$(".notification .success").stop(true, true).animate( { backgroundColor: '#dcffb8'}, 1500);
-		$(".notification .error").stop(true, true).animate( { backgroundColor: '#ee6060'}, 1500);
-		$(".notification .warning").stop(true, true).animate( { backgroundColor: '#ffff99'}, 1500);
-
-	},
 	
 	_submit : function(){
 		$('#submit').click(function(){
@@ -135,17 +127,45 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 	},
 	
-	items : function()
-	{
+	setNotification : function(msg, type, cssClass){
+		if (!cssClass){
+			cssClass = '';
+		}
+		switch(type){
+			case 'warn' : case 'warning':
+				cssClass = 'ico_warn warning ' + cssClass;
+				break;
+			case 'error':
+				cssClass = 'ico_error error ' + cssClass;
+				break;
+			case 'success': case 'saved':
+				cssClass = 'ico_success success ' + cssClass;
+				break;
+		}
+		
+		var html = '<div class="' + cssClass +'">' + msg + '</div>';
+		$('#fuel_notification').html(html);
+		this.notifications();
+	},
+	
+	notifications : function(){
+		// flash any notifications
+		var speed = 1500;
+		$(".notification .success").stop(true, true).animate( { backgroundColor: '#dcffb8'}, speed);
+		$(".notification .error").stop(true, true).animate( { backgroundColor: '#ee6060'}, speed);
+		$(".notification .warning").stop(true, true).animate( { backgroundColor: '#ffff99'}, speed);
+	},
+	
+	items : function(){
 		var _this = this;
 		this.treeLoaded = false;
 		this.tableLoaded = false;
 		this.rearrangeOn = false;
 		
-		this._notifications();
+		this.notifications();
 		$('#search_term').fillin(this.lang('label_search')).focus();
 		$('#limit').change(function(e){
-			$('#form_table').submit();
+			$('#form_actions').submit();
 		});
 		
 		if ($('#tree').exists()){
@@ -153,8 +173,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var itemViewsCookie = $.cookie(itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
-				
 				$('#toggle_tree').parent().addClass('active');
+				$('#fuel_notification .rearrange').hide();
 				$('#toggle_list').parent().removeClass('active');
 				$('#list_container').hide();
 				$('#tree_container').show();
@@ -168,7 +188,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 			$('#toggle_list').click(function(e){
-
+				$('#fuel_notification .rearrange').show();
 				$('#toggle_list').parent().addClass('active');
 				$('#toggle_tree').parent().removeClass('active');
 				$('#list_container').show();
@@ -204,14 +224,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			this.redrawTable();
 		}
 		
-		$('#form_table').submit(function(){
+		$('#form_actions').submit(function(){
 			$('#toggle_list').click();
 		});
 		
 		$('#multi_delete').click(function(){
 			$('#toggle_list').unbind('click');
 			var deleteUrl = _this.modulePath + '/delete/';
-			$('#form_table').attr('action', deleteUrl).submit();
+			$('#form_actions').attr('action', deleteUrl).submit();
 			return false;
 		});
 		
@@ -229,7 +249,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if ($(this).parent().hasClass('active')){
 				_this.rearrangeOn = true;
 				_this.rearrangeItems();
-				$('#fuel_notification').append('<div class="ico_warn warning rearrange">' + _this.lang('rearrange_on') + '</div>');
+				_this.setNotification(_this.lang('rearrange_on'), 'warning', 'rearrange');
 				
 			} else {
 				_this.rearrangeOn = false;
@@ -252,7 +272,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			showURL: false,
 			id: '__fuel_tooltip__'
 		});
-		this._notifications();
+		this.notifications();
 		//this._submit();
 		
 		if (initSpecFields) this.initSpecialFields($('#main_content_inner'));
@@ -540,7 +560,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:html};
 				$.post(refreshUrl, params, function(html){
 					$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
-					_this._notifications();
+					_this.notifications();
 					$modalContext.jqmHide();
 					$('#' + fieldId).replaceWith(html);
 					if ($('#' + fieldId + '[multiple]').not('select[class=no_combo]').size()){
@@ -894,7 +914,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	sortList : function(col){
-
 		// turn on ajax filtering but just for sorting
 		var newOrder = ($('#order').val() == 'desc' || col != $('#col').val()) ? 'asc' : 'desc';
 		$("#col").val(col);
@@ -970,13 +989,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	redrawTree : function(){
 		$('#tree_loader').show();
-		this.submitForm('#form_table', '#tree', this.treeAjaxURL, true, this.treeCallback);
+		this.submitForm('#form_actions', '#tree', this.treeAjaxURL, true, this.treeCallback);
 	},
 	
 	redrawTable : function(useAjax, useCache){
 		if (useAjax !== false) useAjax = true;
 		$('#table_loader').show();
-		this.submitForm('#form_table', '#data_table_container', this.tableAjaxURL, useAjax, this.tableCallback, useCache);
+		this.submitForm('#form_actions', '#data_table_container', this.tableAjaxURL, useAjax, this.tableCallback, useCache);
 	},
 	
 	submitForm : function(formId, loadId, path, useAjax, callback, useCache){

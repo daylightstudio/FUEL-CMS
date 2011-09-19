@@ -108,8 +108,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 	
 	
 	upload : function(){
-		this._notifications();
-		this._initAddEditInline($('#form'));
+		this.notifications();
+		//this._initAddEditInline($('#form'));
 	}
 		
 });

@@ -10,7 +10,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		//fuel.controller.BaseFuelController.prototype.items();
 		var _this = this;
 		$('#group_id').change(function(e){
-			$('#form_table').submit();
+			$('#form_actions').submit();
 		});
 	},
 	
@@ -30,7 +30,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 	},
 	
 	upload : function(){
-		this._notifications();
+		this.notifications();
 		this._initAddEditInline($('#form'));
 	}
 	

@@ -7,13 +7,13 @@ jqx.load('plugin', 'jquery.supercomboselect');
 var ValidateController = {
 	
 	init : function(initObj){
-		this._notifications();
+		this.notifications();
 		this._submit();
 		this._super(initObj);
 	},
 	
 	validate : function(){
-		this._notifications();
+		this.notifications();
 		$('.fillin').fillin(this.localized.validate_pages_input);
 		var _this = this;
 		$('#submit_html').click(function(){

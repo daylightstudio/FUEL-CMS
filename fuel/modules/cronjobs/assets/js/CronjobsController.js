@@ -1,9 +1,9 @@
 var CronjobsController = {
 	
 	init : function(initObj){
-		this._notifications();
 		this._submit();
 		this._super(initObj);
+		this.notifications();
 		
 	},
 	

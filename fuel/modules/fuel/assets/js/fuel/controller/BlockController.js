@@ -51,7 +51,7 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 	},
 	
 	upload : function(){
-		this._notifications();
+		this.notifications();
 		this._initAddEditInline($('#form'));
 	}
 		

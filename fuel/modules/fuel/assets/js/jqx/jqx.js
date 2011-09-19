@@ -57,7 +57,6 @@ jqx.init = function(ctrlName, initObj, path){
 			}
 		});
 		
-		jqx.controllerName = ctrlName;
 		jqx.controllerInitObj = initObj;
 		
 		// set the jsPath value to the path to the controller so that we can include the object
@@ -105,7 +104,12 @@ jqx.initCallback = function(ctrlName, initObj){
 	var controllerObj = eval(ctrlName);
 	if (jqx.extender.classObject) controllerObj = controllerObj.extend(jqx.extender.classObject);
 	if (jqx.extender.initObj) initObj = $.extend(initObj, jqx.extender.initObj);
-	jqx_global[pageVar] = new controllerObj(initObj);
+
+	var controller = new controllerObj(initObj);
+	if (jqx_global[pageVar] == undefined){
+		jqx_global[pageVar] = {};
+	}
+	jqx_global[pageVar] = jQuery.extend(jqx_global[pageVar], controller);
 };
 
 jqx.getControllerPath = function(ctrlName){

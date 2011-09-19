@@ -308,7 +308,7 @@ class Module extends Fuel_base_controller {
 			$this->data_table->add_field_formatter('published', $_unpublished);
 			$this->data_table->add_field_formatter('active', $_unpublished);
 			$this->data_table->auto_sort = TRUE;
-			$this->data_table->sort_js_func = 'page.sortList';
+			$this->data_table->sort_js_func = 'fuel.sortList';
 			
 			$this->data_table->assign_data($items, $this->table_headers);
 
@@ -600,18 +600,13 @@ class Module extends Fuel_base_controller {
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
 					$this->_clear_cache();
-					$url = 'fuel/'.$this->module_uri.'/edit/'.$id;
-					if ($redirect === TRUE)
-					{
-						$this->session->set_flashdata('success', lang('data_saved'));
-						redirect(fuel_uri($this->module_uri.'/edit/'.$id));
-					}
+					return $id;
 				}
 			}
 		}
 	}
 	
-	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
+	function edit($id = NULL, $field = NULL, $inline = FALSE)
 	{
 		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
 
@@ -619,7 +614,6 @@ class Module extends Fuel_base_controller {
 		{
 			if ($this->_process_edit($id))
 			{
-				$this->session->set_flashdata('success', lang('data_saved'));
 				if ($inline === TRUE)
 				{
 					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
@@ -628,6 +622,7 @@ class Module extends Fuel_base_controller {
 				{
 					$url = fuel_uri($this->module_uri.'/edit/'.$id);
 				}
+				$this->session->set_flashdata('success', lang('data_saved'));
 				redirect($url);
 			}
 		}
@@ -698,7 +693,7 @@ class Module extends Fuel_base_controller {
 		$this->edit($id, $field, TRUE);
 	}
 	
-	protected function _process_edit($id, $redirect = TRUE)
+	protected function _process_edit($id)
 	{
 		$this->model->on_before_post();
 		
@@ -740,11 +735,7 @@ class Module extends Fuel_base_controller {
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 				$this->logs_model->logit($msg);
 				$this->_clear_cache();
-				if ($redirect === TRUE)
-				{
-					$this->session->set_flashdata('success', lang('data_saved'));
-					redirect(fuel_uri($this->module_uri.'/edit/'.$id));
-				}
+				return TRUE;
 			}
 		}
 		return FALSE;
@@ -1092,33 +1083,48 @@ class Module extends Fuel_base_controller {
 					$any_failure = TRUE;
 				}
 			}
-			// set a success delete message
-			if ($any_success)
-			{
-				$this->session->set_flashdata('success', lang('data_deleted'));
-			}
-			
-			// set an error delete message
-			if ($any_failure)
-			{
-				// first try to get an error added in model by $this->add_error('...')
-				$msg = $this->model->get_validation()->get_last_error();
-				
-				// if there is none like that, lets use default message
-				if (is_null($msg))
-				{
-					$msg = lang('data_not_deleted');
-				}
-
-				$this->session->set_flashdata('error', $msg);
-			}
 			
 			// run after_delete hook
 			$this->_run_hook('after_delete', $posted);
 			
 			$this->_clear_cache();
-			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
-			redirect(fuel_uri($this->module_uri));
+			$this->logs_model->logit(lang('module_multiple_deleted', $this->module));
+			
+			if ($inline === TRUE)
+			{
+				//$vars['layout'] = FALSE;
+				$this->fuel->admin->render('modules/module_close_modal', $vars);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+				$this->fuel->admin->render($this->views['delete'], $vars);
+				
+			}
+			else
+			{
+				
+				// set a success delete message
+				if ($any_success)
+				{
+					$this->session->set_flashdata('success', lang('data_deleted'));
+				}
+
+				// set an error delete message
+				if ($any_failure)
+				{
+					// first try to get an error added in model by $this->add_error('...')
+					$msg = $this->model->get_validation()->get_last_error();
+
+					// if there is none like that, lets use default message
+					if (is_null($msg))
+					{
+						$msg = lang('data_not_deleted');
+					}
+
+					$this->session->set_flashdata('error', $msg);
+				}
+				
+				$url = fuel_uri($this->module_uri);
+				redirect($url);
+			}
 		}
 		else
 		{

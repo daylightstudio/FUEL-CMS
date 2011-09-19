@@ -7,7 +7,7 @@ jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
 jqx_config.assetsImgPath = "<?=img_path('')?>";
 jqx_config.assetsPath = "<?=assets_path('')?>";
 jqx_config.assetsCssPath = "<?=css_path('')?>";
-
+jqx_config.controllerName = 'fuel';
 jqx_config.jqxPath = jqx_config.jsPath + "jqx/";
 jqx_config.controllerPath = jqx_config.jsPath + "fuel/controller/";
 jqx_config.pluginPath = jqx_config.jsPath + "jquery/";

@@ -36,6 +36,7 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 		
 		<?php if (!empty($panels['actions'])) : ?>
 		<!-- ACTION PANEL -->
+		<?=$this->form->open(array('action' => fuel_url($this->module_uri.'/items'), 'method' => 'post', 'id' => 'form_actions'))?>
 		<div id="fuel_actions">
 			<?php if (!empty($actions)) : ?>
 			<?=$actions?>
@@ -89,6 +90,7 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 			<?=$body?>
 
 		</div>
+		<?=$this->form->close()?>
 	</div>
 </div>
 

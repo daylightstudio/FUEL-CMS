@@ -1,14 +1,4 @@
-<div id="main_top_panel">
-	<h2><?=lang('section_manage')?></h2>
-</div>
-<div class="clear"></div>
-
-<div id="notification" class="notification">
-	<?=$notifications?>
-</div>
-<div id="main_content" class="noaction">
-
-<div id="main_content_inner">
+<div id="fuel_main_content_inner">
 	
 	<div class="boxbuttons">
 		<ul>

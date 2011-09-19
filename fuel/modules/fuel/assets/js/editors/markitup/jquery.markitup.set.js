@@ -53,7 +53,7 @@ myMarkItUpSettings = {
 				return false;
 			}
 		},
-		{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" title="[![' + markitupLanguage('title') + ']!]" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},
+		{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},
 		
 		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto("', closeWith:'")}', placeHolder:markitupLanguage('placeholder_email') },
 		{name:markitupLanguage('php'), className:'fuel_var', key:'', openWith:'{$[![' + markitupLanguage('php') + ':!:]!]', closeWith:'}', placeHolder:'' },
@@ -148,10 +148,8 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 	//	minimize();
 	}
 
-
-
-	
 }
+
 myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 	var isInline = (jQuery('#__FUEL__asset_modal').size());
 	var path = (isInline) ? __FUEL_PATH__ + '/assets/select_ajax/images' : jqx.config.fuelPath + '/assets/select_ajax/images';

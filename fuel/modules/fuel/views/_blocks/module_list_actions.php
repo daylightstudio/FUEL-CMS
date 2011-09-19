@@ -1,5 +1,3 @@
-<?=$this->form->open(array('action' => fuel_url($this->module_uri.'/items'), 'method' => 'post', 'id' => 'form_table'))?>
-
 <div id="filters">
 	<table border="0" cellspacing="0" cellpadding="0">
 		<tbody>
@@ -48,4 +46,3 @@
 	
 </div>
 <?=$this->form->hidden('view_type', $params['view_type'])?>
-<?=$this->form->close()?>

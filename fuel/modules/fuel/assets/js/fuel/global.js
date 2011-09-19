@@ -53,6 +53,7 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
 	
+	
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
 		$('.jqmOverlay', $context).hide();
@@ -62,6 +63,7 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 	$context.append(modalHTML);
 	
 	$modal = $('#' + modalId, $context);
+	
 	var modalWidth = $modal.outerWidth();
 	var centerWidth = -((modalWidth/2));
 	$modal.css('marginLeft', centerWidth + 'px');
@@ -102,6 +104,11 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 	}
 	$modal.jqm(jqmOpts).jqmShow();
 	return $modal;
+}
+
+fuel.closeModal = function(){
+	var modalId = '__FUEL_modal__';
+	$('#' + modalId).jqmHide();
 }
 
 fuel.getModule = function(context){

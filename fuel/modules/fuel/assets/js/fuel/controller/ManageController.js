@@ -1,7 +1,7 @@
 fuel.controller.ManageController = jqx.createController(fuel.controller.BaseFuelController, {
 	
 	init: function(initObj){
-		this._notifications();
+		this.notifications();
 		this._submit();
 		this._super(initObj);
 	},

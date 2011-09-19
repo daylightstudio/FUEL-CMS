@@ -5,7 +5,7 @@ var SeoController = {
 	},
 	google_keywords : function(initObj){
 		this._submit();
-		this._notifications();
+		this.notifications();
 		var _this = this;
 		var options = { 
 			beforeSubmit: function(){
@@ -31,7 +31,7 @@ var SeoController = {
 	
 	page_analysis : function(initObj){
 		this._submit();
-		this._notifications();
+		this.notifications();
 		var _this = this;
 		var options = { 
 			beforeSubmit: function(){

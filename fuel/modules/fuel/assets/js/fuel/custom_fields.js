@@ -334,19 +334,18 @@ fuel.fields.inline_edit_field = function(context){
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
 		var addCss = 'add_inline_button';
 		$field.after('&nbsp;<a href="' + url + 'create" class="btn_field ' + addCss + '">' + fuel.lang('btn_add') + '</a>');
-		$field.after('&nbsp;<a href="' + url + 'edit/' + $field.val() + '" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		$field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		if (isMulti) addCss += ' float_left';
 		
 		var refreshField = function(){
 			
 			// if no value added,then no need to refresh
 			if (!selected) return;
-
 			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
 			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:selected};
 			$.post(refreshUrl, params, function(html){
 				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
-				//_this._notifications();
+				fuel.notifications();
 				$modal.jqmHide();
 				$('#' + fieldId, context).replaceWith(html);
 				
@@ -382,8 +381,8 @@ fuel.fields.inline_edit_field = function(context){
 		});
 
 		$('.edit_inline_button', context).click(function(e){
-			//editModule($form, url + $(this).prev().val(), refreshField);
-			editModule($(this).attr('href'), null, refreshField);
+			var url = $(this).attr('href') + $(this).prev().val();
+			editModule(url, null, refreshField);
 			return false;
 		});
 

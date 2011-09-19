@@ -1,5 +1,10 @@
 <div id="fuel_main_content_inner">
+	<?php if (!empty($success)) : ?>
 
+	<p class="instructions"><?=$success?></p>
+
+	<?php else : ?>
+	
 	<p class="instructions"><?=lang('delete_item_message')?><br/> <span class="delete"><?=$title?></span></p>
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
 	<?=$this->form->hidden('id', $id)?>
@@ -13,4 +18,5 @@
 
 	<?=$this->form->close()?>
 
+	<?php endif; ?>
 </div>

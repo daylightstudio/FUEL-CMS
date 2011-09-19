@@ -183,8 +183,7 @@ class Fuel_admin {
 			$this->set_display_mode($mode);
 		}
 		
-		$layout = (!empty($vars['layout'])) ? $vars['layout'] : 'admin_shell';
-		
+		$layout = (isset($vars['layout'])) ? $vars['layout'] : 'admin_shell';
 		if (!empty($layout))
 		{
 			$vars['body'] = $this->CI->load->module_view($module, $view, $vars, TRUE);
@@ -477,7 +476,7 @@ class Fuel_admin {
 		}
 	}
 	
-	function get_page_state($state_key)
+	function get_page_state($state_key = NULL)
 	{
 		if (empty($state_key))
 		{

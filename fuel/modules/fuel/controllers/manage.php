@@ -3,7 +3,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Manage extends Fuel_base_controller {
 	
-	public $nav_selected = 'manage/cache';
+	public $nav_selected = 'manage';
 	public $module_uri = 'manage/activity';
 	
 	function __construct()
@@ -18,6 +18,9 @@ class Manage extends Fuel_base_controller {
 		$vars['notifications'] = '';
 		
 		$vars['xtras'] = $this->config->item('xtra', 'fuel');
+		$crumbs = array(lang('section_manage'));
+		$this->fuel->admin->set_breadcrumb($crumbs);
+		$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
 		$this->fuel->admin->render('manage', $vars);
 	}
 	
@@ -60,8 +63,11 @@ class Manage extends Fuel_base_controller {
 		}
 		else 
 		{
-			$vars['notifications'] = $this->load->view('_blocks/notifications', array(), TRUE);
-			$this->fuel->admin->render('manage/cache', $vars);
+			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
+			$this->fuel->admin->set_breadcrumb($crumbs);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
+			
+			$this->fuel->admin->render('manage/cache');
 		}
 	}
 	
@@ -75,7 +81,7 @@ class Manage extends Fuel_base_controller {
 		
 		$this->nav_selected = 'manage/activity';
 		
-		$page_state = $this->_get_page_state();
+		$page_state = $this->fuel->admin->get_page_state();
 		
 		/* PROCESS PARAMS BEGIN */
 		$filters = array();
@@ -138,7 +144,7 @@ class Manage extends Fuel_base_controller {
 		
 		$this->pagination->initialize($config);
 		
-		$this->_save_page_state($params);
+		$this->fuel->admin->save_page_state($params);
 		
 		// data table
 		$vars['params'] = $params;
@@ -153,7 +159,7 @@ class Manage extends Fuel_base_controller {
 			$this->data_table->only_data_cols = array('id');
 			$this->data_table->set_sorting($params['col'], $params['order']);
 			$this->data_table->auto_sort = TRUE;
-			$this->data_table->sort_js_func = 'page.sortList';
+			$this->data_table->sort_js_func = 'fuel.sortList';
 			$headers = array('entry_date' => lang('form_label_entry_date'), 'name' => lang('form_label_name'), 'message' => lang('form_label_message'));
 			$this->data_table->assign_data($items, $headers);
 			$vars['table'] = $this->data_table->render();
@@ -169,7 +175,11 @@ class Manage extends Fuel_base_controller {
 
 			// for extra module filters
 			$field_values = array();
-			$this->fuel->admin->render('manage/activity', $vars);
+			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_activity'));
+			$this->fuel->admin->set_breadcrumb($crumbs);
+
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
+			$this->fuel->admin->render('modules/module_list', $vars);
 		}
 	}
 	

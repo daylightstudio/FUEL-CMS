@@ -113,9 +113,9 @@ $config['custom_fields'] = array(
 	),
 
 	'simple' => create_function('$params', '
-		echo "<pre style=\"text-align: left;\">";
-		//print_r($params);
-		echo "</pre>";
+		// echo "<pre style=\"text-align: left;\">";
+		// //print_r($params);
+		// echo "</pre>";
 		
 	')
 
