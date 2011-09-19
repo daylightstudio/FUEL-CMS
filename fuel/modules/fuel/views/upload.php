@@ -1,5 +1,5 @@
 <div id="main_top_panel">
-	<h2 class="ico ico_navigation"><a href="<?=fuel_url($this->module_uri)?>"><?=$this->module_name?></a> &gt; <?=lang('btn_upload')?></h2>
+	<h2 class="ico ico_<?=$this->module_uri?>"><a href="<?=fuel_url($this->module_uri)?>"><?=$this->module_name?></a> &gt; <?=lang('btn_upload')?></h2>
 </div>
 <div class="clear"></div>
 
