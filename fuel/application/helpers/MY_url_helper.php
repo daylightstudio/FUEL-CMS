@@ -41,8 +41,15 @@
 function site_url($uri = '')
 {
 	if (is_http_path($uri)) return $uri;
-	$CI =& get_instance();
-	return $CI->config->site_url($uri);
+	if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0))
+	{
+		return $uri;
+	}
+	else
+	{
+		$CI =& get_instance();
+		return $CI->config->site_url($uri);
+	}
 }
 
 // --------------------------------------------------------------------
