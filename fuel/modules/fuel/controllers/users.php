@@ -28,7 +28,7 @@ class Users extends Module {
 			}
 		}
 		$redirect = !isset($_POST['send_email']);
-		parent::edit($id, $redirect);
+		parent::edit($id, NULL, FALSE, $redirect);
 		$this->_send_email($id);
 	}
 

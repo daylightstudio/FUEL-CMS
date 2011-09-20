@@ -84,12 +84,14 @@ class Users_model extends Base_module_model {
 		if ($val == 'name')
 		{
 			$val = 'CONCAT(first_name, " ", last_name) as name';
+			$order = 'name';
 		}
+
 		if (!$CI->fuel_auth->is_super_admin())
 		{
 			$this->db->where(array('super_admin' => 'no'));
 		}
-		
+		$order = $val;
 		$return = parent::options_list($key, $val, $where , $order);
 		return $return;
 	}

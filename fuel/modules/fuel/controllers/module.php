@@ -480,7 +480,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 
-	function create($field = NULL, $inline = FALSE)
+	function create($field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
 		$id = NULL;
 		if (!$this->fuel_auth->module_has_action('create')) show_404();
@@ -497,8 +497,11 @@ class Module extends Fuel_base_controller {
 				{
 					$url = fuel_uri($this->module_uri.'/edit/'.$id);
 				}
-				$this->session->set_flashdata('success', lang('data_saved'));
-				redirect($url);
+				if ($redirect)
+				{
+					$this->session->set_flashdata('success', lang('data_saved'));
+					redirect($url);
+				}
 			}
 		}
 		
@@ -606,7 +609,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function edit($id = NULL, $field = NULL, $inline = FALSE)
+	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
 		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
 
@@ -622,8 +625,12 @@ class Module extends Fuel_base_controller {
 				{
 					$url = fuel_uri($this->module_uri.'/edit/'.$id);
 				}
-				$this->session->set_flashdata('success', lang('data_saved'));
-				redirect($url);
+				
+				if ($redirect)
+				{
+					$this->session->set_flashdata('success', lang('data_saved'));
+					redirect($url);
+				}
 			}
 		}
 		//$vars = $this->_form($id);

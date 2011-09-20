@@ -42,6 +42,7 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 			<?=$actions?>
 			<?php endif; ?>
 		</div>
+		<?=$this->form->close()?>
 		<?php endif; ?>
 		
 		
