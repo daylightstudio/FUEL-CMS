@@ -563,7 +563,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
 {
 	$CI =& get_instance();
 	$CI->load->module_library(FUEL_FOLDER, 'fuel_page');
-	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE) AND is_fuelified())
+	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE))
 	{
 		$marker['id'] = $id;
 		$marker['label'] = $label;
