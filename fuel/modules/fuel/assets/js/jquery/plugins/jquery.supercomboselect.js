@@ -380,6 +380,7 @@
 				if (searchBox){
 					searchBox.blur();
 				}
+				
 			}
 			
 			function getOptionSourceRef(idNum){
