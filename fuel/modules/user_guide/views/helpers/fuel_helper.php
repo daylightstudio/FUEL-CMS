@@ -30,6 +30,7 @@ The <dfn>params</dfn> parameter can either be string value (in which case it wil
 	<li><strong>editable</strong> - insert in inline editing</li>
 	<li><strong>parse</strong> - parse the contents of the page. Default is set to 'auto' which will NOT try and parse if your <dfn>fuel_mode</dfn> value in the fuel config file is set to "views".</li>
 	<li><strong>vars</strong> - additional variables to pass to the block</li>
+	<li><strong>cache</strong> - will cache the block</li>
 </ul>
 
 
