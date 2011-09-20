@@ -377,7 +377,9 @@
 				}
 				
 				// unfocus this field so that meta key tags will send proper events
-				searchBox.blur();
+				if (searchBox){
+					searchBox.blur();
+				}
 				
 			}
 			
