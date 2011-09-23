@@ -1951,6 +1951,7 @@ Class Form_builder {
 	}
 }
 
+<<<<<<< Updated upstream
 
 
 
@@ -2038,4 +2039,7 @@ Class Form_builder_field {
 
 
 /* End of file Form_builder.php */
+=======
+/* End of file Data_table.php */
+>>>>>>> Stashed changes
 /* Location: ./application/libraries/Form_builder.php */
