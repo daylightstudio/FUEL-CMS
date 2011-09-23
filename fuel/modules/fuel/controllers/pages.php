@@ -728,4 +728,43 @@ class Pages extends Module {
 		$this->fuel->admin->render('upload', $vars);
 	}
 	
+	function refresh_field()
+	{
+
+		if (is_ajax() AND !empty($_POST))
+		{
+			$layout =  $this->input->post('layout', TRUE);
+			$values = $this->input->post('values', TRUE);
+			$fields = $this->fuel_layouts->fields($layout, empty($values));
+			$field = $this->input->post('field', TRUE);
+			$field_key = end(explode('vars--', $field));
+			if (!isset($fields[$field_key])) return;
+			
+			$field_id = $this->input->post('field_id', TRUE);
+			$selected = $this->input->post('selected', TRUE);
+			
+			$this->load->library('form_builder');
+			
+			// for multi select
+			if (is_array($values))
+			{
+				$selected = (array) $selected;
+				$selected = array_merge($values, $selected);
+			}
+			
+			if (!empty($selected)) $fields[$field_key]['value'] = $selected;
+			$fields[$field_key]['name'] = $field_id;
+			
+			// if the field is an ID, then we will do a select instead of a text field
+			if (isset($fields[$this->model->key_field()]))
+			{
+				$fields['id']['type'] = 'select';
+				$fields['id']['options'] = $this->model->options_list();
+			}
+
+			$output = $this->form_builder->create_field($fields[$field_key]);
+			$this->output->set_output($output);
+		}
+	}
+	
 }

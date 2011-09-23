@@ -2436,7 +2436,7 @@ Class Data_record {
 	protected $_objs = array(); // nested objects
 	protected $_parent_model; // the name of the parent model
 	protected $_inited = FALSE;
-	protected $_date_format = 'm/d/Y'; // datetime method format
+	protected $_date_format = ''; // datetime method format... will first look in config and then will default to m/d/Y
 	protected $_time_format = 'h:i:s a'; // datetime method format
 	protected $_format_suffix = '_formatted'; // datetime method format
 	
@@ -3032,6 +3032,14 @@ Class Data_record {
 				$output = auto_typography($this->_fields[$field]);
 				break;
 			case 'datetime':
+				if (empty($this->_date_format))
+				{
+					$this->_date_format = $this->_CI->config->item('date_format');
+				}
+				if (empty($this->_date_format))
+				{
+					$this->_date_format = 'm/d/Y';
+				}
 				$output = date($this->_date_format.' '.$this->_time_format, strtotime($this->_fields[$field]));
 				break;
 			case 'date':

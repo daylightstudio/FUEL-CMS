@@ -72,7 +72,7 @@ time_verbose(time(), TRUE);
 //returns <?=time_verbose(time(), TRUE)?>
 </pre>
 
-<h2>english_date_to_db_format(<var>date</var>, <var>[hour]</var>, <var>[min]</var>, <var>[sec]</var>, <var>[ampm]</var>, <var>[delimiter]</var>)</h2>
+<h2>english_date_to_db_format(<var>date</var>, <var>[hour]</var>, <var>[min]</var>, <var>[sec]</var>, <var>[ampm]</var>)</h2>
 <p>Converts a date from english (e.g. mm/dd/yyyy) to db format (e.g yyyy-mm-dd). The default delimiter parameter is <strong>'/'</strong>.</p>
 
 <pre class="brush: php">

@@ -30,9 +30,43 @@
 // --------------------------------------------------------------------
 
 /**
+ * Returns the date into a specified format. Will look at the configuration
+ *
+ * @access	public'
+ * @param	string
+ * @param	mixed
+ * @return	string
+ */
+function date_formatter($date, $format = FALSE){
+	$date_ts = strtotime($date);
+	$CI = get_instance();
+	if ($format === FALSE AND $CI->config->item('date_format_verbose'))
+	{
+		$format = $CI->config->item('date_format');
+	}
+	else if (($format === TRUE OR $format === 'verbose') AND $CI->config->item('date_format_verbose'))
+	{
+		$format = $CI->config->item('date_format_verbose');
+	}
+	else if ($format == 'time')
+	{
+		$format =  $CI->config->item('date_format_verbose').' '. $CI->config->item('time_format');
+	}
+	else if (!is_string($format))
+	{
+		$format = 'm/d/Y';
+	}
+	return date($format, $date_ts);
+}
+
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the current datetime value in MySQL format
  *
  * @access	public
+ * @param	boolean
  * @return	string
  */
 function datetime_now($hms = TRUE){
@@ -198,10 +232,9 @@ function time_verbose($time, $include_seconds = FALSE)
  * @param	int
  * @param	int
  * @param	string
- * @param	string
  * @return	string
  */
-function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am', $delimiter = '/')
+function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am')
 {
 	$hour = (int) $hour;
 	$min = (int) $min;
@@ -215,18 +248,32 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 	{
 		$hour = 0;
 	}
-	$date_arr = explode($delimiter, $date);
+	$date_arr = preg_split('#-|/#', $date);
+	
+	if (count($date_arr) != 3) return 'invalid';
+	
+	// convert them all to integers
 	foreach($date_arr as $key => $val)
 	{
 		$date_arr[$key] = (int) $date_arr[$key]; // convert to integer
 	}
-	if (count($date_arr) != 3) return 'invalid';
 	
-	if (!checkdate($date_arr[0], $date_arr[1], $date_arr[2]))
+	if (preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date))
 	{
-		return 'invalid'; // null will cause it to be ignored in validation
+		if (!checkdate($date_arr[0], $date_arr[1], $date_arr[2]))
+		{
+			return 'invalid'; // null will cause it to be ignored in validation
+		}
+		$new_date = $date_arr[2].'-'.$date_arr[0].'-'.$date_arr[1].' '.$hour.':'.$min.':'.$sec;
 	}
-	$new_date = $date_arr[2].'-'.$date_arr[0].'-'.$date_arr[1].' '.$hour.':'.$min.':'.$sec;
+	else if (preg_match("#([0-9]{1,2})-([0-9]{1,2})-([0-9]{4})#", $date))
+	{
+		if (!checkdate($date_arr[1], $date_arr[0], $date_arr[2]))
+		{
+			return 'invalid'; // null will cause it to be ignored in validation
+		}
+		$new_date = $date_arr[2].'-'.$date_arr[1].'-'.$date_arr[0].' '.$hour.':'.$min.':'.$sec;
+	}
 	$date = date("Y-m-d H:i:s", strtotime($new_date)); // normalize
 	return $date;
 }

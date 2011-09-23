@@ -63,6 +63,8 @@ function copyr($source, $dest)
  
 	// Loop through the folder
 	$dir = dir($source);
+	if (!is_object($dir)) return FALSE;
+	
 	while (false !== $entry = $dir->read())
 	{
 		// Skip pointers
@@ -70,14 +72,14 @@ function copyr($source, $dest)
 		{
 			continue;
 		}
- 
+
 		// Deep copy directories
 		if ($dest !== "$source/$entry")
 		{
 			copyr("$source/$entry", "$dest/$entry");
 		}
 	}
- 
+
 	// Clean up
 	$dir->close();
 	return true;

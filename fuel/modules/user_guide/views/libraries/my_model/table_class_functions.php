@@ -197,7 +197,7 @@ $where['order_by'] = 'name asc';
 $where['limit'] = 10;
 
 $query = $this->examples_model->query($where); 
-$results = $query->results(); 
+$results = $query->result(); 
 </pre>
 
 <a name="options_list"></a>

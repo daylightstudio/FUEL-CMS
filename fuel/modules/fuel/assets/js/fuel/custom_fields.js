@@ -343,6 +343,12 @@ fuel.fields.inline_edit_field = function(context){
 			if (!selected) return;
 			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
 			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:selected};
+							
+			// fix for pages... a bit kludgy
+			if (module == 'pages'){
+				params['layout'] = $('#layout').val();
+			}
+
 			$.post(refreshUrl, params, function(html){
 				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
 				fuel.notifications();
