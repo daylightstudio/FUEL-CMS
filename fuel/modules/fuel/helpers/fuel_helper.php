@@ -748,3 +748,35 @@ function fuel_user_lang()
 	}
 	return $cookie_val['language'];
 }
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns HTML for publish/active fields in the list view
+ *
+ * @access	public
+ * @return	string
+ */
+function fuel_unpublish_func($cols)
+{   
+        $CI = & get_instance();
+        $can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
+        $is_publish = (isset($cols['published'])) ? TRUE : FALSE;
+        $no = lang("form_enum_option_no");
+        $yes = lang("form_enum_option_yes");            
+
+        if ((isset($cols['published']) AND $cols['published'] == "no") OR (isset($cols['active']) AND $cols['active'] == "no"))
+        {
+            $text_class = ($can_publish) ? "publish_text unpublished toggle_publish" : "unpublished";
+            $action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+            $col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
+            return '<span class="publish_hover"><span class="".$text_class."" id="row_published_".$cols["' . $CI->model->key_field() . '"]."">".$no."</span><span class="".$action_class."">".$col_txt."</span></span>';
+        }
+        else if ((isset($cols['published']) AND $cols['published'] == "yes") OR (isset($cols['active']) AND $cols['active'] == "yes"))
+        {
+            $text_class = ($can_publish) ? "publish_text published toggle_unpublish" : "published";
+            $action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+            $col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
+            return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$CI->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+        }
+}
