@@ -271,33 +271,16 @@ class Module extends Fuel_base_controller {
 				$this->data_table->row_action = TRUE;
 			}
 			$this->data_table->row_alt_class = 'alt';
-			$this->data_table->only_data_fields = array($this->model->key_field());
+                        
+                        // Key and boolean fields are data only
+			$this->data_table->only_data_fields = array_merge(array($this->model->key_field()), $this->model->boolean_fields);
+                        
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
 			$this->data_table->lang_prefix = 'form_label_';
-			$_unpub_func = '
-			$CI =& get_instance();
-			$can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
-			$is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
-			$no = lang("form_enum_option_no");
-			$yes = lang("form_enum_option_yes");
-			if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
-			{ 
-				$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
-				$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
-				$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$no."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			}
-			else
-			{ 
-				$text_class = ($can_publish) ? "publish_text published toggle_unpublish": "published";
-				$action_class = ($can_publish) ? "publish_action published hidden": "published hidden";
-				$col_txt = ($is_publish) ? \'click to unpublish\' : \'click to deactivate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$yes."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			}';
-				
-			$_unpublished = create_function('$cols', $_unpub_func);
+                        
+                        $_unpublished = 'fuel_unpublish_func';
 
 			$this->data_table->add_field_formatter('published', $_unpublished);
 			$this->data_table->add_field_formatter('active', $_unpublished);
@@ -623,7 +606,7 @@ class Module extends Fuel_base_controller {
 	}
 	
 	protected function _process()
-	{
+	{            
 		$this->load->helper('security');
 
 		// filter placeholder $_POST values 
@@ -637,8 +620,8 @@ class Module extends Fuel_base_controller {
 				$str = $matches[0];
 			}
 			return $str;
-		');
-		
+		');                
+	
 		// first loop through and create simple non-namespaced $_POST values if they don't exist for convenience'
 		foreach($_POST as $key => $val)
 		{
@@ -654,6 +637,12 @@ class Module extends Fuel_base_controller {
 				$_POST[$key] = preg_replace_callback('#(.*){(.+)\}(.*)#U', $callback, $val);
 			}
 		}
+                
+                // loop through all boolean columns and set their value
+                foreach($this->model->boolean_fields as $val)
+                {
+                    $_POST[$val] = (isset($_POST[$val])) ? $_POST[$val] : 0;                    
+                }
 		
 		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
 		{
