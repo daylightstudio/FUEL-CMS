@@ -119,12 +119,6 @@ class Pages_model extends Base_module_model {
 		return $data;
 	}
 	
-	function recently_updated($limit = 10)
-	{
-		$this->db->select($this->_tables['pages'].'.id, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published');
-		return $this->find_all_array(array(), 'last_modified desc', $limit);
-	}
-	
 	function all_pages_including_views($paths_as_keys = FALSE, $apply_site_url = TRUE, $include_modules = TRUE)
 	{
 		$CI =& get_instance();
@@ -166,11 +160,16 @@ class Pages_model extends Base_module_model {
 		
 	}
 	
-	function form_fields()
+	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields();
-		$fields['date_added']['type'] = 'hidden';
+		$CI =& get_instance();
+		$fields = parent::form_fields($values, $related);
+		$fields['layout']['type'] = 'select';
+		
+		// $fields['layout']['value'] = $layout;
 
+		$fields['date_added']['type'] = 'hidden';
+		
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['cache']['options'] = array('yes' => $yes, 'no' => $no);

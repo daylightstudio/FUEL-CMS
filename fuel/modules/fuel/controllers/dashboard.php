@@ -61,8 +61,7 @@ class Dashboard extends Fuel_base_controller {
 		if (is_ajax())
 		{
 			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-
-			$vars['recently_modifed_pages'] = $this->pages_model->recently_updated();
+			$vars['recently_modifed_pages'] = $this->pages_model->find_all(array(), 'last_modified desc', 10);
 			$vars['latest_activity'] = $this->logs_model->list_items(10);
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{

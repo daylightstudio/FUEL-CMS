@@ -34,37 +34,68 @@ class Fuel {
 	protected $CI;
 	protected $_auth;
 	protected $_admin;
+	protected $_layouts;
 	protected $_pages;
 	protected $_modules;
 	protected $_module_overwrites;
 
-	private static $_instance;
+	//private static $_instance;
 	
-	private function __construct()
+	//private function __construct()
+	function __construct()
 	{
 		$this->CI =& get_instance();
 		$this->initialize();
 	}
 	
-	static function get_instance()
-	{
-		if (!isset(self::$_instance))
-		{
-			$c = __CLASS__;
-			self::$_instance = new $c;
-		}
-		return self::$_instance;
-	}
-	
+	// static function get_instance()
+	// {
+	// 	if (!isset(self::$_instance))
+	// 	{
+	// 		$c = __CLASS__;
+	// 		self::$_instance = new $c;
+	// 	}
+	// 	return self::$_instance;
+	// }
+	// 
 	function initialize()
 	{
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 	}
 	
-	function config($item)
+	function config($item, $module = 'fuel')
 	{
-		return $this->CI->config->item($item, 'fuel');
+		return $this->CI->config->item($item, $module);
+	}
+	
+	function load_helper($helper, $module = NULL)
+	{
+		if (empty($module)) $module = FUEL_FOLDER;
+		$this->CI->load->module_helper($module, $helper);
+	}
+
+	function load_library($library, $module = NULL, $name = NULL)
+	{
+		if (empty($module)) $module = FUEL_FOLDER;
+		$this->CI->load->module_library(FUEL_FOLDER, $library, $name);
+	}
+
+	function load_model($model, $module = NULL, $name = NULL)
+	{
+		if (empty($module)) $module = FUEL_FOLDER;
+		if (substr($model, strlen($model) - 6) !='_model')
+		{
+			$name = $model;
+			$model = $model.'_model';
+		}
+		$this->CI->load->module_model(FUEL_FOLDER, $model, $name);
+	}
+
+	function load_language($lang, $module = NULL, $name = NULL)
+	{
+		if (empty($module)) $module = FUEL_FOLDER;
+		$this->CI->load->module_language(FUEL_FOLDER, $lang);
 	}
 	
 	function __get($var)
@@ -79,12 +110,13 @@ class Fuel {
 			throw new Exception(lang('error_class_property_does_not_exist', $var));
 		}
 	}
+	
 	protected function get_admin()
 	{
 		// lazy load ui object
 		if (!isset($this->_admin))
 		{
-			$this->CI->load->module_library(FUEL_FOLDER, 'fuel_admin');
+			$this->load_library('fuel_admin');
 			$this->_admin =& $this->CI->fuel_admin;
 		}
 		return $this->_admin;
@@ -95,127 +127,71 @@ class Fuel {
 		// lazy load auth object
 		if (!isset($this->_auth))
 		{
-			$this->CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
+			$this->load_library('fuel_auth');
 			$this->_auth =& $this->CI->fuel_auth;
 		}
 		return $this->_auth;
 	}
 	
-	function modules($module = NULL)
+	protected function get_layouts()
 	{
-		if (empty($this->_modules))
+		// lazy load layouts object
+		if (!isset($this->_layouts))
 		{
-			// get simple module init values. Must use require here because of the construct
-			require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_module.php');
-			$this->CI->load->module_library(FUEL_FOLDER, 'fuel_module');
-			$allowed = $this->config('modules_allowed');
+			$this->load_library('fuel_layouts');
+			$this->_layouts =& $this->CI->fuel_layouts;
+		}
+		return $this->_layouts;
+	}
 
-			// get FUEL modules first
-			include(MODULES_PATH.FUEL_FOLDER.'/config/fuel_modules.php');
-			$module_init = $config['modules'];
-			// then get the allowed modules
-			foreach($allowed as $mod)
-			{
-				// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-				if (file_exists(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php'))
-				{
-					include(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php');
-					$module_init = array_merge($module_init, $config['modules']);
-				}
-			}
-
-			// now must loop through the array and overwrite any values... array_merge_recursive won't work'
-			$overwrites = $this->module_overwrites();
-			if (!empty($overwrites) AND is_array($overwrites))
-			{
-				foreach($overwrites as $module => $val)
-				{
-					$module_init[$module] = array_merge($module_init[$module], $val);
-				}
-			}
-
-			// create module objects based on init values
-			foreach($module_init as $mod => $init)
-			{
-				$fuel_module = new Fuel_module($mod, $init);
-				$fuel_module->initialize($mod, $init);
-				$this->_modules[$mod] = $fuel_module;
-			}
-		}
-		
-		if (empty($module))
+	protected function get_modules()
+	{
+		// lazy load modules object
+		if (!isset($this->_modules))
 		{
-			return $this->_modules;
+			$this->load_library('fuel_modules');
+			$this->_modules =& $this->CI->fuel_modules;
 		}
-		else if (isset($this->_modules[$module]))
+		return $this->_modules;
+	}
+	
+	function get_pages()
+	{
+		// lazy load pages object
+		if (!isset($this->_pages))
 		{
-			return $this->_modules[$module];
+			$this->load_library('fuel_pages');
+			$this->_pages =& $this->CI->fuel_pages;
 		}
-		else
-		{
-			return FALSE;
-		}
+		return $this->_pages;
 	}
 	
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Module overwrites
+	 * alias to module information
 	 *
 	 * @access	public
 	 * @return	string
 	 */	
-	function module_overwrites()
+	function navigation()
 	{
-		if (isset($this->_module_overwrites))
-		{
-			return $this->_module_overwrites;
-		}
-		
-		@include(APPPATH.'config/MY_fuel_modules.php');
-		
-		if (isset($config['module_overwrites']))
-		{
-			$this->_module_overwrites = $config['module_overwrites'];
-		}
-		else
-		{
-			$this->_module_overwrites = array();
-		}
-		return $this->_module_overwrites;
+		return $this->modules->get('navigation');
 	}
-	
-	
-	function module_pages()
+
+	function blocks()
 	{
-		$all_pages = array();
-		foreach($this->modules() as $module)
-		{
-			$pages = $module->pages();
-			$all_pages = array_merge($all_pages, $pages);
-		}
-		return $all_pages;
+		return $this->modules->get('blocks');
 	}
-	
-	function pages()
+
+	function sitevariables()
 	{
-		// init page object
-		if (!isset($this->_pages))
-		{
-			$this->CI->load->module_library(FUEL_FOLDER, 'fuel_page');
-			$this->_pages =& $this->CI->fuel_page;
-		}
-		return $this->_pages;
+		return $this->modules->get('sitevariables');
 	}
-	
-	function page()
+
+	function blog()
 	{
-		return $this->pages($module);
-	}
-	
-	function has_module($module)
-	{
-		return $this->modules($module) !== FALSE;
+		return $this->modules->get('blog');
 	}
 	
 }

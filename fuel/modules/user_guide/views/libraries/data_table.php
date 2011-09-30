@@ -222,14 +222,18 @@ $this->data_table->render_headers();
 $this->data_table->render();
 </pre>
 
+<h2>$this->data_table->set_params($params)</h2>
+<p>Sets parameters on the object.</p>
 
-
-<h2>$this->data_table->clear()</h2>
-<p>Clears the data assigned to the table. Example:</p>
+<h2>$this->data_table->reset()</h2>
+<p>Resets the data assigned to the table. Example:</p>
 
 <pre class="brush: php">
-$this->data_table->clear();
+$this->data_table->reset();
 </pre>
+
+<h2>$this->data_table->clear()</h2>
+<p>Same as reset (to be consistent with some CI classes).</p>
 
 
 <h2>$this->data_table->set_sorting(<var>'col'</var>, <var>'ordering'</var>)</h2>

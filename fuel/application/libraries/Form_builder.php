@@ -82,7 +82,9 @@ Class Form_builder {
 	public $row_id_prefix = ''; // the row id prefix
 	public $lang_prefix = 'form_label_'; // language prefix to be applied before a label
 	public $custom_fields = array(); // custom fields
-	public $auto_execute_js = TRUE;
+	public $auto_execute_js = TRUE; // autmoatically execute the javascript for the form
+	public $html_prepend = ''; // prepended HTML to the form HINT: Can include JS script tags
+	public $html_append = ''; // appended HTML to the form HINT: Can include JS script tags
 	
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
@@ -112,24 +114,8 @@ Class Form_builder {
 	public function initialize($params = array())
 	{
 		// clear out any data before initializing
-		$this->clear();
-		
-		foreach ($params as $key => $val)
-		{
-			if (isset($this->$key))
-			{
-				$method = 'set_'.$key;
-
-				if (method_exists($this, $method))
-				{
-					$this->$method($val);
-				}
-				else
-				{
-					$this->$key = $val;
-				}
-			}
-		}
+		$this->reset();
+		$this->set_params($params);
 		
 		// setup custom fields
 		if (!empty($this->custom_fields))
@@ -164,13 +150,64 @@ Class Form_builder {
 		
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set object parameters
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function set_params($params)
+	{
+		if (is_array($params) AND count($params) > 0)
+		{
+			foreach ($params as $key => $val)
+			{
+				if (isset($this->$key))
+				{
+					$method = 'set_'.$key;
+
+					if (method_exists($this, $method))
+					{
+						$this->$method($val);
+					}
+					else
+					{
+						$this->$key = $val;
+					}
+				}
+			}
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Same as reset
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	public function clear()
+	{
+		$this->reset();
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clear class values
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function reset()
 	{
 		$this->_fields = array();
 		$this->_html = '';
 	}
-
-	
 	
 	// --------------------------------------------------------------------
 
@@ -188,13 +225,23 @@ Class Form_builder {
 		$i = 1;
 		foreach ($fields as $key => $val)
 		{
-			if (is_string($val))
+			
+			// __FORM_BUILDER__ allows you to set properties on the class
+			// convenient for models setting values
+			if (strtoupper($key) == '__FORM_BUILDER__')
 			{
-				$fields[$key] = array('name' => $key, 'value' => $val);
+				$this->set_params($val);
 			}
-			if (empty($val['name'])) $fields[$key]['name'] = $key;
-			if (empty($fields[$key]['order'])) $fields[$key]['order'] = $i;
-			$i++;
+			else
+			{
+				if (is_string($val))
+				{
+					$fields[$key] = array('name' => $key, 'value' => $val);
+				}
+				if (empty($val['name'])) $fields[$key]['name'] = $key;
+				if (empty($fields[$key]['order'])) $fields[$key]['order'] = $i;
+				$i++;
+			}
 		}
 		$this->_fields = $fields;
 	}
@@ -317,7 +364,7 @@ Class Form_builder {
 
 		// reoarder
 		$this->set_field_order();
-		$this->_html = '';
+		$this->_html = $this->html_append;
 		$str = '';
 		$begin_str = '';
 		$end_str = '';
@@ -493,6 +540,7 @@ Class Form_builder {
 			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
 		}
 		$this->_html .= $this->_render_js();
+		$this->_html .= $this->html_prepend;
 		return $this->_html;
 	}
 	// --------------------------------------------------------------------
@@ -510,7 +558,7 @@ Class Form_builder {
 
 		// reoarder
 		$this->set_field_order();
-		$this->_html = '';
+		$this->_html = $this->html_append;
 		$str = '';
 		$begin_str = '';
 		$end_str = '';
@@ -735,6 +783,7 @@ Class Form_builder {
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
 		if ($this->use_form_tag) $this->_html .= $this->form->close();
 		$this->_html .= $this->_render_js();
+		$this->_html .= $this->html_prepend;
 		return $this->_html;
 	}
 
@@ -1569,7 +1618,9 @@ Class Form_builder {
 		{
 			$section = $params;
 		}
-		return '<'.$this->section_tag.'>'.$section.'</'.$this->section_tag.'>';
+		
+		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
+		return '<'.$tag.'>'.$section.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------
@@ -1822,6 +1873,38 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Appends HTML to the form
+	 *
+	 * Used to append HTML after the form... good for Javascript files
+	 * 
+	 * @access	public
+	 * @param	string HTML to append
+	 * @return	void
+	 */
+	public function append_html($html)
+	{
+		$this->html_append .= $html;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Prepends HTML to the form
+	 *
+	 * Used to prepend HTML before the form... good for Javascript files
+	 * 
+	 * @access	public
+	 * @param	string HTML to append
+	 * @return	void
+	 */
+	protected function prepend_html($html)
+	{
+		$this->html_prepend .= $html;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Sorts the fields for the form
 	 *
 	 * Same as the MY_array_helper array_sorter function
@@ -1951,11 +2034,6 @@ Class Form_builder {
 	}
 }
 
-<<<<<<< Updated upstream
-
-
-
-
 
 // ------------------------------------------------------------------------
 
@@ -2036,10 +2114,5 @@ Class Form_builder_field {
 	}
 }
 
-
-
 /* End of file Form_builder.php */
-=======
-/* End of file Data_table.php */
->>>>>>> Stashed changes
 /* Location: ./application/libraries/Form_builder.php */

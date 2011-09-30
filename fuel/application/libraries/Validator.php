@@ -73,7 +73,22 @@ Class Validator {
 	 */
 	public function initialize($params = array())
 	{
-		if (count($params) > 0)
+		$this->reset();
+		$this->set_params($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set object parameters
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function set_params($params)
+	{
+		if (is_array($params) AND count($params) > 0)
 		{
 			foreach ($params as $key => $val)
 			{
@@ -322,6 +337,19 @@ Class Validator {
 		return $this->_fields;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Same as reset
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
+	public function clear()
+	{
+		$this->reset();
+	}
+	
 	// --------------------------------------------------------------------
 
 	/**

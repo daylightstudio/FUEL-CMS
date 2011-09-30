@@ -4,9 +4,10 @@ class Fuel_layouts {
 	
 	public $default_layout = 'main';
 	public $layouts = array();
+	public $layouts_path = '_layouts';
 	public $layout_fields = array();
 
-	public $layouts_path = '_layouts';
+	protected $_layouts = array();
 	
 	function __construct($params = array())
 	{
@@ -57,125 +58,164 @@ class Fuel_layouts {
 				}
 			}
 		}
+		
+		// initialize layout objects
+		foreach($this->layouts as $layout => $path)
+		{
+			$init = array();
+			$init['name'] = $layout;
+			$init['file'] = $path;
+
+			if (!empty($this->layout_fields[$layout]))
+			{
+				$init['fields'] = $this->layout_fields[$layout];
+			}
+			if (!empty($this->layout_hooks[$layout]))
+			{
+				$init['hooks'] = $this->layout_hooks[$layout];
+			}
+			$this->_layouts[$layout] = new Fuel_layout($init);
+		}
+	}
+	
+	function get($layout)
+	{
+		if (!empty($this->_layouts[$layout]))
+		{
+			return $this->_layouts[$layout];
+		}
+		return FALSE;
 	}
 
-	function layouts_list($no_builtin = FALSE)
+	function options_list()
 	{
-		$layouts = array();
-		if (!empty($this->layouts) AND is_array($this->layouts))
+		$options = array();
+		$layouts = $this->_layouts;
+		foreach($layouts as $layout)
 		{
-			foreach($this->layouts as $key => $val)
-			{
-				// check if builtin is set in the fuel_layouts.php for the layout
-				if (!is_array($val)) $val = array($val, $val['builtin'] => FALSE);
-				if (!$no_builtin || !isset($val['builtin']) || ($no_builtin && !$val['builtin']))
-				{
-					$layouts[$key] = $key;
-				}
-			}
+			$options[$layout->name] = $layout->name;
 		}
-		return $layouts;
-	}
-	
-	function fields($layout, $include_value = TRUE)
-	{
-		$vars = array();
-		$parts = $this->parts($layout);
-		if (is_array($parts))
-		{
-			foreach($parts as $key => $val)
-			{
-				if (!empty($this->layout_fields[$key])) 
-				{
-					$part_fields = $this->part_fields($key, $include_value);
-					if (is_array($part_fields)) $vars = array_merge($vars, $part_fields);
-				}
-			}
-		}
-		else if (!empty($this->layout_fields[$layout])) 
-		{
-			$vars = $this->part_fields($layout, $include_value);
-		}
-		return $vars;
-	}
-
-	function parts($layout)
-	{
-		if (!empty($this->layouts[$layout]))
-		{
-			if (is_string($this->layouts[$layout]))
-			{
-				return $this->layouts[$layout];
-			}
-			else
-			{
-				return $this->layouts[$layout]['parts'];
-			}
-		}
-		return null;
-	}
-	
-	function hooks($layout)
-	{
-		return (is_array($this->layouts[$layout]) && !empty($this->layouts[$layout]['hooks'])) ? $this->layouts[$layout]['hooks'] : array();
-	}
-	
-	function part_fields($layout_part, $include_value = TRUE)
-	{
-		$return = array();
-		if (!empty($this->layout_fields[$layout_part])){
-			foreach($this->layout_fields[$layout_part] as $key => $val)
-			{
-				$return[$key] = $this->layout_field($val, $include_value);
-			}
-		}
-		return $return;
-	}
-
-	function part_field_values($layout_part, $include_value = TRUE){
-		$return = array();
-		
-		if (!empty($this->layout_fields[$layout_part])){
-			foreach($this->layout_fields[$layout_part] as $key => $val)
-			{
-				$field_data = $this->layout_field($val, $include_value);
-				$return[$key] = $field_data['value'];
-			}
-		}
-		return $return;
-	}
-	
-	function layout_field($value, $include_value = TRUE)
-	{
-		$defaults = array('value' => '', 'type' => 'string');
-		if (is_string($value))
-		{
-			$value = array('value' => $value);
-		}
-		$return = array_merge($defaults, $value);
-		if (!$include_value && ($return['type'] != 'boolean' && $return['type'] != 'checkbox')) unset($return['value']); // need values still 
-		return $return;
-	}
-	
-	function call_hook($layout, $hook = 'pre_render', $vars = array())
-	{
-		$CI =& get_instance();
-		$ok_hooks = array('pre_render', 'post_render');
-		
-		if (!in_array($hook, $ok_hooks)) return;
-		
-		// execute pre layout hooks
-		$hooks = $this->hooks($layout);
-		if (!empty($hooks) && !empty($hooks[$hook]))
-		{
-			$hook_class = strtolower($hooks[$hook][0]);
-			$hook_method = $hooks[$hook][1];
-			$CI->load->library($hook_class);
-			$hook_vars = $CI->$hook_class->$hook_method($vars);
-			$CI->load->library('template');
-			$CI->template->assign_global($hook_vars);
-		}
+		return $options;
 	}
 }
+
+
+class Fuel_layout {
+	
+	public $name = '';
+	public $file = '';
+	public $hooks = array();
+	public $fields = array();
+	public $field_values = array();
+	public $folder = '_layouts';
+	
+	function __construct($params = array())
+	{
+		$this->initialize($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the user preferences
+	 *
+	 * Accepts an associative array as input, containing display preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
+	function initialize($config = array())
+	{
+		$CI =& get_instance();
+		
+		// setup any intialized variables
+		foreach ($config as $key => $val)
+		{
+			if (isset($this->$key))
+			{
+				$this->$key = $val;
+			}
+		}
+	}
+	
+	function set_file($layout)
+	{
+		$this->file = $layout;
+	}
+	
+	function view_path()
+	{
+		return $this->folder.'/'.$this->file;
+	}
+
+	function set_name($name)
+	{
+		$this->name = $name;
+	}
+
+	function name($name)
+	{
+		return $name;
+	}
+	
+	function set_fields($fields)
+	{
+		$this->fields = $fields;
+	}
+	
+	function fields()
+	{
+		return $this->fields;
+	}
+	
+	function add_field($key, $val)
+	{
+		$this->fields[$key] = $val;
+	}
+	
+	function set_field_values($values)
+	{
+		$this->field_values = $values;
+	}
+
+	function set_field_value($key, $value)
+	{
+		$this->field_values[$key] = $value;
+	}
+	
+	function set_hook($type, $hook)
+	{
+		$this->hooks[$type] = $hook;
+	}
+	
+	function call_hook($hook, $params = array())
+	{
+		// call hooks set in hooks file
+		$hook_name = $hook.'_'.$this->name;
+
+		// run any hooks set on the object
+		if (!empty($this->hooks[$hook]))
+		{
+			if (!is_array($GLOBALS['EXT']->hooks[$hook_name]))
+			{
+				$GLOBALS['EXT']->hooks[$hook_name] = array($GLOBALS['EXT']->hooks[$hook_name]);
+			}
+			$GLOBALS['EXT']->hooks[$hook_name][] = $this->hooks[$hook];
+		}
+		$hook_vars = $GLOBALS['EXT']->_call_hook($hook_name1, $params);
+
+		// load variables
+		if (!empty($hook_vars))
+		{
+			$CI->load->vars($hook_vars);
+		}
+		
+	}
+
+}
+
+
+
 /* End of file Fuel_layout.php */
 /* Location: ./application/libraries/fuel/Fuel_layout.php */

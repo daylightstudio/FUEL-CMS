@@ -277,6 +277,30 @@
 			<td>None</td>
 			<td>The prefix to be used for looking up associated language strings for form labels. If a field's name is 'last_modified', it will look for a language string of {lang_prefix}last_modified.</td>
 		</tr>
+		<tr>
+			<td><strong>custom_fields</strong></td>
+			<td>array()</td>
+			<td>None</td>
+			<td>An array of custom fields with the key being the type of field and the value being the custom field values</td>
+		</tr>
+		<tr>
+			<td><strong>auto_execute_js</strong></td>
+			<td>TRUE</td>
+			<td>TRUE/FALSE (boolean)</td>
+			<td>Autmoatically execute the javascript for the form</td>
+		</tr>
+		<tr>
+			<td><strong>html_append</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>Used to append HTML after the form</td>
+		</tr>
+		<tr>
+			<td><strong>html_prepend</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>Used to prepend HTML before the form</td>
+		</tr>
 		
 	</tbody>
 </table>
@@ -317,6 +341,7 @@
 	<li><strong>sorting</strong> - for multi selects that may need to keep track of selected options (combo jquery plugin)</li>
 	<li><strong>mode</strong> - used for enums and multiple select fields whether to use selects or radios/checkbox</li>
 	<li><strong>label_colons</strong> - used for adding colons after the label. The default will be whatever is set as the Form_builders <dfn>label_colons</dfn> class property</li>
+	<li><strong>__form_builder__</strong> - sets properties on the Form_builder object</li>
 </ul>
 
 <h1>Function Reference</h1>
@@ -391,8 +416,14 @@ $this->form_builder->render_table($field);
 <p class="important">Although the following functions can be used, it is important to note that the <dfn>render</dfn> methods above
 will call the approprate create field function based on the type of the field and therefore, these functions are rarely used.</p>
 
+<h2>$this->form_builder->set_params($params)</h2>
+<p>Sets parameters on the object.</p>
+
 <h2>$this->form_builder->clear()</h2>
 <p>Resets the html and fields applied to the current instance.</p>
+
+<h2>$this->form_builder->reset()</h2>
+<p>Same as reset (to be consistent with some CI classes).</p>
 
 <h2>$this->form_builder->create_field(<var>params</var>, <var>[normalize]</var>)</h2>
 <p>Looks at the field type attribute and determines which form field to render.
@@ -599,6 +630,23 @@ The validator object is used to determine if the fields have been filled out pro
 <pre class="brush: php">
 $validator = new Validator();
 $this->form_builder->set_validator($validator);
+</pre>
+
+
+<h2>$this->form_builder->append_html(<var>html</var>)</h2>
+<p>Appends HTML to the beginning of the form. Good for appending javascript.</p>
+
+<pre class="brush: php">
+$html = '<h1>My Comment Form</h1>';
+$this->form_builder->append_html($html);
+</pre>
+
+<h2>$this->form_builder->prepend_html(<var>html</var>)</h2>
+<p>Prepends HTML to the end of the form. Good for appending javascript.</p>
+
+<pre class="brush: php">
+$html = js('my_form.js');
+$this->form_builder->prepend_html($html);
 </pre>
 
 

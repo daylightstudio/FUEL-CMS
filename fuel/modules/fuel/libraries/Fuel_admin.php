@@ -23,7 +23,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_admin
  */
 
 // --------------------------------------------------------------------
@@ -52,7 +52,8 @@ class Fuel_admin {
 	function __construct($params = array())
 	{
 		$this->CI =& get_instance();
-		$this->fuel =& Fuel::get_instance();
+		//$this->fuel =& Fuel::get_instance();
+		$this->fuel =& $this->CI->fuel;
 
 		// load all the helpers we need
 		$this->CI->load->library('form');
@@ -63,7 +64,9 @@ class Fuel_admin {
 		$this->CI->load->helper('text');
 		$this->CI->load->helper('convert');
 		
-		$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');
+		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');... alternative syntax
+		$this->fuel->load_helper('fuel');
+		
 		
 		if (count($params) > 0)
 		{

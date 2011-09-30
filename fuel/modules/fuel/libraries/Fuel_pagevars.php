@@ -5,11 +5,11 @@ class Fuel_pagevars {
 	public $location = ''; // the default location used for grabbing variables
 	public $vars_path = ''; // the path to the _variables folder
 	
-	private $_CI;
+	private $CI;
 	
 	function __construct()
 	{
-		$this->_CI =& get_instance();
+		$this->CI =& get_instance();
 		$this->location = uri_path();
 	}
 	
@@ -64,10 +64,10 @@ class Fuel_pagevars {
 		{
 			$location = $this->location;
 		}
-		$this->_CI->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'pagevariables_model');
-		$this->_CI->load->module_model(FUEL_FOLDER, 'sitevariables_model', 'sitevariables_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'pagevariables_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'sitevariables_model', 'sitevariables_model');
 		
-		$site_vars = $this->_CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
 		
 		$vars = array();
 		
@@ -83,12 +83,12 @@ class Fuel_pagevars {
 				$vars[$site_var['name']] = $site_var['value'];
 			}
 		}
-		$page_vars = $this->_CI->pagevariables_model->find_all_by_location($location);
+		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
 		if ($parse)
 		{
 			foreach($page_vars as $key => $val)
 			{
-				$page_vars[$key] = $this->_CI->parser->parse_string($val, $page_vars, TRUE);
+				$page_vars[$key] = $this->CI->parser->parse_string($val, $page_vars, TRUE);
 			}
 		}
 		$vars = array_merge($vars, $page_vars);

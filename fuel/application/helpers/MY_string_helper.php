@@ -177,9 +177,11 @@ function safe_htmlentities($str, $protect_amp = TRUE)
 function php_to_template_syntax($str)
 {
 	// order matters!!!
-	$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<!--', '-->', '<?php echo ', '<?php ', '<?=');
-	$replace = array('$', '$', '{/foreach', '{/if', '{*', '*}', '{', '{', '{');
+	$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<?php echo ', '<?php ', '<?=');
+	$replace = array('$', '$', '{/foreach', '{/if', '{', '{', '{');
 
+	// translate HTML comments NOT! Javascript
+	
 	// close ending php
 	$str = preg_replace('#([:|;])?\s*\?>#U', '}$3', $str);
 

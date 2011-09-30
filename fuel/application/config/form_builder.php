@@ -124,14 +124,6 @@ $config['custom_fields'] = array(
 $config['custom_fields']['array'] = $config['custom_fields']['multi'];
 $config['custom_fields']['text'] = $config['custom_fields']['wysiwyg'];
 $config['custom_fields']['textarea'] = $config['custom_fields']['wysiwyg'];
-	'multi' => create_function('$params', '
-		echo "<pre style=\"text-align: left;\">";
-		//print_r($params);
-		echo "</pre>";
-		
-	')
-	);
-
 
 /* End of file form_builder.php */
 /* Location: ./application/config/form_builder.php */

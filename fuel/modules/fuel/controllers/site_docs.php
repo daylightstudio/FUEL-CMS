@@ -13,7 +13,7 @@ class Site_docs extends Fuel_base_controller {
 	{
 		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
 		
-		if ($this->_has_module('user_guide'))
+		if ($this->fuel->modules->exist('user_guide'))
 		{
 			$this->load->helper(USER_GUIDE_FOLDER, 'user_guide');
 		}
@@ -37,7 +37,7 @@ class Site_docs extends Fuel_base_controller {
 			{
 				$this->load->module_view(NULL, '_layouts/documentation', $vars);
 			}
-			else if ($this->_has_module('user_guide'))
+			else if ($this->fuel->modules->exist('user_guide'))
 			{
 				$vars['page_title'] = $this->config->item('site_name', 'fuel');
 				$this->load->view('_layouts/documentation', $vars);

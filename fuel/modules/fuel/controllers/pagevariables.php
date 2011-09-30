@@ -19,10 +19,16 @@ class Pagevariables extends Module {
 		// set $id to $var if we didn't find a site variable
 		// test if it is a string value first...
 		// numeric name values won't work!
+		$id = NULL;
 		if (!is_numeric($field))
 		{
 			$var = $this->pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id));
-			$id = $var->id;
+			$this->pagevariables_model->debug_query();
+			
+			if (isset($var->id))
+			{
+				$id = $var->id;
+			}
 		}
 		else
 		{

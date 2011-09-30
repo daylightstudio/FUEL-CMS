@@ -89,7 +89,8 @@ class Fuel_custom_fields {
 			if (strpos($params['module'], '/') === FALSE)
 			{
 				$CI =& get_instance();
-				$uri = $CI->fuel->modules($params['module'])->info('module_uri');
+				$module = $CI->fuel->modules->get($params['module']);
+				$uri = $module->info('module_uri');
 			}
 			else
 			{

@@ -161,8 +161,14 @@ foreach($fields as $key => $field)
 }
 </pre>
 
+<h2>$this->validator->set_params($params)</h2>
+<p>Sets parameters on the object.</p>
+
 <h2>$this->validator->reset([<var>reset_fields</var>])</h2>
 <p>Resets the rules and errors of a Validator object. The optional <dfn>reset_fields</dfn> parameter will reset the fields to validate. The default value for <dfn>reset_fields</dfn> is <dfn>TRUE</dfn> which empties all the fields set by <dfn>add_rule</dfn> on the object.</p>
+
+<h2>$this->validator->clear([<var>reset_fields</var>])</h2>
+<p>Same as reset (to be consistent with some CI classes).</p>
 
 <pre class="brush: php">
 $posted = $_POST;

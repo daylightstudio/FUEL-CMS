@@ -21,17 +21,21 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$params = array();
-		if ($this->fuel->has_module($this->module))
+		if ($this->fuel->modules->exists($this->module))
 		{
-			$params = $this->fuel->modules($this->module)->info();
+			//$params = $this->fuel->modules($this->module)->info();
+			$module = $this->fuel->modules->get($this->module);
+			$params = $module->info();
+			
 		}
 		else
 		{
 			// if it is a module with multiple controllers, then we'll check first and second FUEL segment with an underscore'
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
-			if ($this->fuel->has_module($this->module))
+			if ($this->fuel->modules->exists($this->module))
 			{
-				$params = $this->fuel->modules($this->module)->info();
+				$module = $this->fuel->modules->get($this->module);
+				$params = $module->info();
 			}
 		}
 
@@ -692,7 +696,7 @@ class Module extends Fuel_base_controller {
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($data[$this->display_field])) 
+		if (!empty($data[$this->display_field]) AND $inline !== TRUE)
 		{
 			$this->fuel->admin->recent_pages($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
 		}
@@ -935,7 +939,11 @@ class Module extends Fuel_base_controller {
 
 			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
 			//$this->form_builder->auto_execute_js = FALSE;
-			$this->form_builder->displayonly = $this->displayonly;
+			if (!isset($fields['__FORM_BUILDER__'], $fields['__FORM_BUILDER__']['displayonly']))
+			{
+				$this->form_builder->displayonly = $this->displayonly;
+			}
+			
 			if ($inline)
 			{
 				$this->form_builder->cancel_value = lang('viewpage_close');

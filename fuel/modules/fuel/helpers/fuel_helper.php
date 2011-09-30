@@ -209,9 +209,12 @@ function fuel_model($model, $params = array())
 	}
 
 	// load the model
-	$module_info = $CI->fuel_modules->info($model);
-	$model_name = $module_info['model_name'];
+	$mod = $CI->fuel->modules->get($model);
+	if (empty($mod)) return NULL;
 	
+	$module_info = $mod->info();
+	$model_name = $module_info['model_name'];
+
 	// return NULL if model_name is empty
 	if (empty($model_name)) return NULL;
 
@@ -423,6 +426,26 @@ function fuel_nav($params = array())
 		return $CI->menu->normalize_items($items);
 	}
 	return $CI->menu->render($items, $p['active'], $p['parent']);
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Creates a form using form builder
+ *
+ * @access	public
+ * @param	array
+ * @param	array
+ * @param	array
+ * @return	string
+ */
+function fuel_form($fields, $values = array(), $params = array())
+{
+	$CI =& get_instance();
+	$CI->load->library('form_builder', $params);
+	$CI->form_builder->set_fields($fields);
+	$CI->form_builder->set_field_values($values);
+	return $CI->form_builder->render();
 }
 
 // --------------------------------------------------------------------

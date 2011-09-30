@@ -81,16 +81,27 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 				var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
 				//var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 			} else {
-				var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
-				var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
-				if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
+				var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
+				var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
+				var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+				console.log('ACTIONS: ' + actionsHeight);
+				console.log('NOTIFICATIONS: ' + notificationsHeight);
+				console.log('MAIN: ' + mainContentHeight);
+				docHeight = actionsHeight + notificationsHeight + mainContentHeight;
+			//	var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+				//if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
+				
+				// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
+				// var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+				// if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
+				console.log(docHeight)
 				//var docWidth = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 			}
 
 			if (docHeight > 450) {
 				docHeight = 450;
 			}
-			docHeight = docHeight - (fuel.windowLevel() * 50);
+			//docHeight = docHeight - (fuel.windowLevel() * 50);
 			$(iframe).height(docHeight);
 		}, 200);
 		

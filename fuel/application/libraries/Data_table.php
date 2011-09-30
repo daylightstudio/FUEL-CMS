@@ -69,10 +69,7 @@ class Data_table {
 	 */
 	public function __construct($params = array())
 	{
-		if (count($params) > 0)
-		{
-			$this->initialize($params);
-		}
+		$this->initialize($params);
     }
 
 	// --------------------------------------------------------------------
@@ -86,13 +83,29 @@ class Data_table {
 	 */
 	public function initialize($params = array())
 	{
+		$this->reset();
+		
 		// load localization helper if not already
 		if (!function_exists('lang'))
 		{
 			$this->_CI->load->helper('language');
 		}
 		
-		if (count($params) > 0)
+		$this->set_params($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set object parameters
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function set_params($params)
+	{
+		if (is_array($params) AND count($params) > 0)
 		{
 			foreach ($params as $key => $val)
 			{
@@ -437,17 +450,30 @@ class Data_table {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Reset the header and rows data
+	 * Same as reset
 	 * 
 	 * @access	public
 	 * @return	void
 	 */
 	public function clear()
 	{
+		$this->reset();
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Reset the header and rows data
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
+	public function reset()
+	{
 		$this->headers = array();
 		$this->rows = array();
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**

@@ -453,10 +453,15 @@ print_r($menu);
 */
 </pre>
 
+<h2>$this->menu->set_params($params)</h2>
+<p>Sets parameters on the object.</p>
 
 <h2>$this->menu->reset()</h2>
 <p>Will reset the parameters back to their default values. Good to use when multiple menus are generated.</p>
 
 <pre class="brush: php">
-$menu = $this->menu->clear();
+$menu = $this->menu->reset();
 </pre>
+
+<h2>$this->menu->clear()</h2>
+<p>Same as reset (to be consistent with some CI classes).</p>

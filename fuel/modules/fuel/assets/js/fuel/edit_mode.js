@@ -76,10 +76,19 @@ if (fuel == undefined) var fuel = {};
 					var iframe = this;
 					
 					var contentDoc = iframe.contentDocument;
-					
-					var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
-					heightFudge += $('#fuel_actions', contentDoc).outerHeight();
-					var docHeight = $('#fuel_main_content_inner', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+
+					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
+					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
+					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+					console.log('ACTIONS: ' + actionsHeight);
+					console.log('NOTIFICATIONS: ' + notificationsHeight);
+					console.log('MAIN: ' + mainContentHeight);
+					docHeight = actionsHeight + notificationsHeight + mainContentHeight;
+					//docHeight = 100
+					// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
+					// heightFudge += $('#fuel_actions', contentDoc).outerHeight();
+					// var docHeight = $('#fuel_main_content_inner', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+					//console.log(docHeight)
 					if (docHeight > 450) docHeight = 450;
 					var docWidth = 900; // 74 includes the 37 in padding on each side
 					$(iframe).height(docHeight);
@@ -87,7 +96,7 @@ if (fuel == undefined) var fuel = {};
 					
 				})
 
-				$modal.jqm({}).jqmShow();
+				//$modal.jqm({}).jqmShow();
 			}
 			
 			fuel.refreshIframeSize = function(iframe){
@@ -103,8 +112,13 @@ if (fuel == undefined) var fuel = {};
 					var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
 					var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 				} else {
-					var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
-					var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
+					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
+					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+					docHeight = actionsHeight + notificationsHeight + mainContentHeight;
+					// 
+					// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
+					// var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
 					var docWidth = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 				}
 				$(iframe).height(docHeight);
@@ -314,12 +328,12 @@ if (fuel == undefined) var fuel = {};
 							//var url = $(this).attr('href') + param1 + '/' + param2;
 							//var url = $(this).attr('href') +  '/' + param2;
 							
-							var url = $(this).attr('href');
-							// var relArr = $(this).attr('rel').split('|');
-							// var param1 = relArr[0];
-							// var param2 = (relArr.length >= 2) ? relArr[1] : pageId;
+							//var url = $(this).attr('href');
+							var relArr = $(this).attr('rel').split('|');
+							var param1 = relArr[0];
+							var param2 = (relArr.length >= 2) ? relArr[1] : pageId;
 							// 
-							// var url = $(this).attr('href') + param1 + '/' + param2;
+							var url = $(this).attr('href') + param1 + '/' + param2;
 							
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');

@@ -17,7 +17,7 @@ class Fuel_base_controller extends CI_Controller {
 		
 		// load master fuel class
 		//$this->load->module_library(FUEL_FOLDER, 'fuel');
-		$this->fuel = Fuel::get_instance();
+		//$this->fuel = Fuel::get_instance();
 		$this->fuel->admin->initialize(array('validate' => $validate));
 	}
 

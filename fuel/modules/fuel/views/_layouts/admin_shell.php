@@ -69,7 +69,6 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 		
 		
 		<div id="fuel_main_content<?=($no_menu) ? '_compact' : ''?>"<?=(!empty($main_content_class)) ? ' class="'.$main_content_class.'"' : ''?>>
-		
 			<?php if (!empty($warning_window)) : ?>
 				<!-- WARNING WINDOW -->
 				<div class="warning jqmWindow jqmWindowShow" id="warning_window">
@@ -89,7 +88,6 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 
 			<!-- BODY -->
 			<?=$body?>
-
 		</div>
 		<?=$this->form->close()?>
 	</div>

@@ -1,224 +1,45 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-
 class Fuel_modules {
-	
+
 	protected $_modules = array();
-	protected $_allowed = array();
-	protected $_cached = array();
-	protected $_overwrites = NULL;
+	protected $_modules_grouped = array();
+	protected $_overwrites;
 	
-	function __construct($params = array())
+	function __construct()
 	{
-		if (count($params) > 0)
-		{
-			$this->initialize($params);
-		}
+		$this->CI =& get_instance();
+		$this->initialize();
 	}
 	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initialize the user preferences
-	 *
-	 * Accepts an associative array as input, containing display preferences
-	 *
-	 * @access	public
-	 * @param	array	config preferences
-	 * @return	void
-	 */	
-	public function initialize($config = array())
+	function initialize()
 	{
-		// setup any intialized variables
-		foreach ($config as $key => $val)
+		// get simple module init values. Must use require here because of the construct
+		//require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_modules.php');
+		$allowed = $this->CI->fuel->config('modules_allowed');
+
+		// get FUEL modules first
+		include(MODULES_PATH.FUEL_FOLDER.'/config/fuel_modules.php');
+		$module_init = $config['modules'];
+
+		$this->_modules_grouped['app'] = $module_init;
+		
+		// then get the allowed modules initialization information
+		foreach($allowed as $mod)
 		{
-			$key = '_'.$key;
-			if (isset($this->$key))
+			if (file_exists(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php'))
 			{
-				$this->$key = $val;
+				include(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php');
+				if (!empty($config['modules']))
+				{
+					$config['modules']['folder'] = $mod;
+					$this->_modules_grouped[$mod] = $config['modules'];
+					$module_init = array_merge($module_init, $config['modules']);
+				}
 			}
 		}
-		$CI =& get_instance();
-		$CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
-		$this->_allowed = $CI->config->item('modules_allowed', 'fuel');
-		$this->_modules = $this->get_modules();
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Retrieve the info for a module
-	 *
-	 * @access	public
-	 * @param	string	module name
-	 * @return	array
-	 */	
-	public function info($module)
-	{
-		if (!empty($_cached[$module])) return $_cached[$module];
-		//if (!$this->is_allowed($module)) return FALSE;
 
-		if (!isset($this->_modules[$module])) return FALSE;
-		
-		$CI =& get_instance();
-		$CI->load->helper('inflector');
-		$CI->load->helper('string');
-		
-		$defaults = array(
-			'module_name' => humanize($module),
-			'module_uri' => $module,
-			'model_name' => $module.'_model',
-			'model_location' => '',
-			'view_location' => '',
-			'display_field' => '',
-			'preview_path' => '',
-			'views' => array(
-				'list' => '_layouts/module_list', 
-				'create_edit' => '_layouts/module_create_edit', 
-				'delete' => '_layouts/module_delete'),
-			'permission' => $module,
-			'js_controller' => 'BaseFuelController',
-			'js_controller_path' => '',
-			'js_controller_params' => array(),
-			'js_localized' => array(),
-			'js' => '',
-			'edit_method' => 'find_one_array',
-			'instructions' => NULL,
-			'filters' => array(),
-			'archivable' => TRUE,
-			'table_headers' => array(),
-			'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
-			'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
-			'list_actions' => array(),
-			'rows_selectable' => TRUE,
-			'precedence_col' => 'precedence',
-			'clear_cache_on_save' => TRUE,
-			'create_action_name' => lang('btn_create'),
-			'configuration' => '',
-			'nav_selected' => NULL,
-			'default_col' => NULL,
-			'default_order' => NULL,
-			'sanitize_input' => TRUE,
-			'sanitize_images' => TRUE,
-			'displayonly' => FALSE,
-			'language' => '',
-			'hidden' => FALSE,
-			);
-		$return = array();
-		$params = $this->_modules[$module];
-
-		foreach ($defaults as $key => $val)
-		{
-			if (isset($params[$key]))
-			{
-				$return[$key] = $params[$key];
-			}
-			else
-			{
-				$return[$key] = $val;
-			}
-		}
-		
-		// localize certain fields
-		if ($module_name = lang('module_'.$module))
-		{
-			$return['module_name'] = $module_name;
-		}
-		
-		// set instructions
-		if (empty($return['instructions']))
-		{
-			$return['instructions'] = lang('module_instructions_default', strtolower($return['module_name']));
-		}
-		
-		// set proper jqxController name
-		if (is_array($return['js_controller']))
-		{
-			if (empty($return['js_controller_path']))
-			{
-				$return['js_controller_path'] = js_path('', key($return['js_controller']));
-			}
-			$return['js_controller'] = current($return['js_controller']);
-		}
-		else if (is_string($return['js_controller']) AND strpos($return['js_controller'], '.') === FALSE)
-		{
-			$return['js_controller'] = 'fuel.controller.'.$return['js_controller'];
-		}
-
-		// convert slashes to jqx object periods
-		$return['js_controller'] = str_replace('/', '.', $return['js_controller']);
-		
-		// set the base path to the controller file if still empty
-		if (empty($return['js_controller_path']))
-		{
-			$return['js_controller_path'] = js_path('', FUEL_FOLDER);
-		}
-		
-		
-		
-		if ($create_action_name = lang('module_'.$module.'_create'))
-		{
-			$return['create_action_name'] = $create_action_name;
-		}
-		
-		$_cached[$module] = $return;
-		return $return;
-		
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Allowed modules found in the FUEL config
-	 *
-	 * @access	public
-	 * @param	string	module name
-	 * @return	array
-	 */	
-	function allowed($module)
-	{
-		return $this->_allowed;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Is the module passed found in the FUEL config
-	 *
-	 * @access	public
-	 * @param	string	module name
-	 * @return	boolean
-	 */	
-	function is_allowed($module)
-	{
-		return in_array($module, $this->_allowed);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Get the module init info before being merged with defaults
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
-	function get_modules()
-	{
-		$CI =& get_instance();
-		$module_init = $this->_modules;
-		foreach($this->_allowed as $module)
-		{
-			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-			if (file_exists(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php'))
-			{
-				$CI->config->module_load($module, $module.'_fuel_modules');
-				include(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php');
-				$module_init = array_merge($module_init, $config['modules']);
-			}
-		}
-		
-		
 		// now must loop through the array and overwrite any values... array_merge_recursive won't work'
-		$overwrites = $this->module_overwrites();
+		$overwrites = $this->overwrites();
 		if (!empty($overwrites) AND is_array($overwrites))
 		{
 			foreach($overwrites as $module => $val)
@@ -226,72 +47,49 @@ class Fuel_modules {
 				$module_init[$module] = array_merge($module_init[$module], $val);
 			}
 		}
-		return $module_init;
+		
+		// create module objects based on init values
+		foreach($module_init as $mod => $init)
+		{
+			$this->add($mod, $init);
+		}
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get the module init info before being merged with defaults
+	 * Add a module 
 	 *
 	 * @access	public
-	 * @return	array
+	 * @param	string	module name
+	 * @param	array	module initialization parameters
+	 * @return	string
 	 */	
-	function get_pages()
+	function add($mod, $init)
 	{
-		$CI =& get_instance();
-		$modules = $this->get_modules();
-
-		$pages = array();
-		foreach($modules as $mod => $module)
-		{
-			$info = $this->info($mod);
-
-			if (!empty($info['model_location']))
-			{
-				$CI->load->module_model($info['model_location'], $info['model_name']);
-			}
-			else
-			{
-				$CI->load->model($info['model_name']);
-			}
-			
-			$model = $info['model_name'];
-
-			if (method_exists($model, 'find_all_array'))
-			{
-				$records = $CI->$model->find_all_array();
-			}
-			
-			foreach($records as $record)
-			{
-				// need to put in global namesapce for preg_replace_callback to access
-				preg_match_all('#{(\w+)}#', $info['preview_path'], $matches);
-				$page = $info['preview_path'];
-				$replaced = FALSE;
-				if (!empty($matches[1]))
-				{
-					foreach($matches[1] as $match)
-					{
-						if (!empty($record[$match]))
-						{
-							$page = str_replace('{'.$match.'}', $record[$match], $page);
-							$replaced = TRUE;
-						}
-					}
-				}
-
-				if (!empty($replaced))
-				{
-					$pages[$page] = $page;
-				}
-			}
-			
-		}
-		return $pages;
+		$fuel_module = new Fuel_module();
+		$fuel_module->initialize($mod, $init);
+		$this->_modules[$mod] = $fuel_module;
 	}
-
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Module get
+	 *
+	 * @access	public
+	 * @param	string	module name
+	 * @return	string
+	 */	
+	function get($module)
+	{
+		if (!empty($this->_modules[$module]))
+		{
+			return $this->_modules[$module];
+		}
+		return FALSE;
+	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -300,7 +98,7 @@ class Fuel_modules {
 	 * @access	public
 	 * @return	string
 	 */	
-	function module_overwrites()
+	function overwrites()
 	{
 		if (isset($this->_overwrites))
 		{
@@ -320,18 +118,355 @@ class Fuel_modules {
 		return $this->_overwrites;
 	}
 	
+	
+	function pages()
+	{
+		$all_pages = array();
+		foreach($this->_modules as $module)
+		{
+			$pages = $module->pages();
+			$all_pages = array_merge($all_pages, $pages);
+		}
+		return $all_pages;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determine whether a module exists or not
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function exists($module)
+	{
+		$module = $this->get($module);
+		return $module !== FALSE;
+	}
+	
+}
+
+
+
+class Fuel_module {
+	
+	protected $module = '';
+	protected $CI;
+	protected $_init = array();
+	protected $_info = array();
+	
+	function __construct($params = array())
+	{
+		$this->CI =& get_instance();
+		if (count($params) > 0)
+		{
+			$this->initialize($params);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the user preferences
+	 *
+	 * Accepts an associative array as input, containing display preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
+	function initialize($config = array(), $init = array())
+	{
+		// setup any intialized variables
+		if (is_array($config))
+		{
+			$this->module = $config['module'];
+			if (!empty($config['init']))
+			{
+				$this->_init = $config['init'];
+			}
+		}
+		else
+		{
+			$this->module = $config;
+			$this->_init = $init;
+		}
+		
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Retrieve the info for a module
+	 *
+	 * @access	public
+	 * @param	string	module name
+	 * @return	array
+	 */	
+	function info($prop = NULL)
+	{
+		if (empty($this->_info))
+		{
+			$this->CI->load->helper('inflector');
+			$this->CI->load->helper('string');
+
+			$defaults = array(
+				'module_name' => humanize($this->module),
+				'module_uri' => $this->module,
+				'model_name' => $this->module.'_model',
+				'model_location' => '',
+				'view_location' => '',
+				'display_field' => '',
+				'preview_path' => '',
+				'views' => array(
+					'list' => 'modules/module_list', 
+					'create_edit' => 'modules/module_create_edit', 
+					'delete' => 'modules/module_delete'),
+				'permission' => $this->module,
+				'js_controller' => 'BaseFuelController',
+				'js_controller_path' => '',
+				'js_controller_params' => array(),
+				'js_localized' => array(),
+				'js' => '',
+				'edit_method' => 'find_one_array',
+				'instructions' => lang('module_instructions_default', strtolower(humanize($this->module))),
+				'filters' => array(),
+				'archivable' => TRUE,
+				'table_headers' => array(),
+				'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
+				'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
+				'list_actions' => array(),
+				'rows_selectable' => TRUE,
+				'precedence_col' => 'precedence',
+				'clear_cache_on_save' => TRUE,
+				'create_action_name' => lang('btn_create'),
+				'configuration' => '',
+				'nav_selected' => NULL,
+				'default_col' => NULL,
+				'default_order' => NULL,
+				'sanitize_input' => TRUE,
+				'sanitize_images' => TRUE,
+				'displayonly' => FALSE,
+				'language' => '',
+				'hidden' => FALSE,
+				'icon_class' => '',
+				);
+			$info = array();
+
+			foreach ($defaults as $key => $val)
+			{
+				if (isset($this->_init[$key]))
+				{
+					$info[$key] = $this->_init[$key];
+				}
+				else
+				{
+					$info[$key] = $val;
+				}
+			}
+			
+			// icon class for module
+			if (empty($info['icon_class']))
+			{
+				$info['icon_class'] = 'ico_'.url_title(str_replace('/', '_', $info['module_uri']),'_', TRUE);
+			}
+			
+			// localize certain fields
+			if ($module_name = lang('module_'.$this->module))
+			{
+				$info['module_name'] = $module_name;
+			}
+
+			// set proper jqxController name
+			if (is_array($info['js_controller']))
+			{
+				if (empty($info['js_controller_path']))
+				{
+					$info['js_controller_path'] = js_path('', key($info['js_controller']));
+				}
+				$info['js_controller'] = current($info['js_controller']);
+			}
+			else if (is_string($info['js_controller']) AND strpos($info['js_controller'], '.') === FALSE)
+			{
+				$info['js_controller'] = 'fuel.controller.'.$info['js_controller'];
+			}
+
+			// convert slashes to jqx object periods
+			$info['js_controller'] = str_replace('/', '.', $info['js_controller']);
+
+			// set the base path to the controller file if still empty
+			if (empty($info['js_controller_path']))
+			{
+				$info['js_controller_path'] = js_path('', FUEL_FOLDER);
+			}
+
+
+
+			if ($create_action_name = lang('module_'.$this->module.'_create'))
+			{
+				$info['create_action_name'] = $create_action_name;
+			}
+			$this->_info = $info;
+		}
+		if (empty($prop))
+		{
+			return $this->_info;
+		}
+		else if (isset($this->_info[$prop]))
+		{
+			return $this->_info[$prop];
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the pages of a module
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function set_info($key, $prop)
+	{
+		$info = $this->info();
+		if (is_array($key))
+		{
+			foreach($key as $k => $v)
+			{
+				if (isset($this->_info[$k]))
+				{
+					$this->_info[$k] = $v;
+				}
+				else
+				{
+					throw new Exception(lang('error_class_property_does_not_exist', $k));
+				}
+			}
+		}
+		else
+		{
+			if (isset($this->_info[$key]))
+			{
+				return $this->_info[$key];
+			}
+			else
+			{
+				throw new Exception(lang('error_class_property_does_not_exist', $key));
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the pages of a module
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function __get($var)
+	{
+		$info = $this->info();
+		if (isset($info[$var]))
+		{
+			return $info[$var];
+		}
+		else
+		{
+			throw new Exception(lang('error_class_property_does_not_exist', $var));
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the pages of a module
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function pages()
+	{
+		$pages = array();
+		$info = $this->info();
+		echo "<pre style=\"text-align: left;\">";
+		print_r($info);
+		echo "</pre>";
+		
+		if (!empty($info['model_location']))
+		{
+			$this->CI->load->module_model($info['model_location'], $info['model_name']);
+		}
+		else
+		{
+			$this->CI->load->model($info['model_name']);
+		}
+		$model = $info['model_name'];
+		
+		$records = array();
+		if (method_exists($model, 'find_all_array'))
+		{
+			$records = $this->CI->$model->find_all_array();
+		}
+		
+		foreach($records as $record)
+		{
+			// need to put in global namesapce for preg_replace_callback to access
+			preg_match_all('#{(\w+)}#', $info['preview_path'], $matches);
+			$page = $info['preview_path'];
+			$replaced = FALSE;
+			if (!empty($matches[1]))
+			{
+				foreach($matches[1] as $match)
+				{
+					if (!empty($record[$match]))
+					{
+						$page = str_replace('{'.$match.'}', $record[$match], $page);
+						$replaced = TRUE;
+					}
+				}
+			}
+
+			if (!empty($replaced))
+			{
+				$pages[$page] = $page;
+			}
+		}
+		
+		return $pages;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the model of the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function &model()
+	{
+		$model = $this->_info['model_name'];
+		$this->CI->load->model($model);
+		return $this->CI->$model;
+	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
 	 * The server path to a module
 	 *
 	 * @access	public
-	 * @param	string	module name
 	 * @return	string
 	 */	
-	static function module_path($module)
+	static function module_path()
 	{
-		return MODULES_PATH.$module.'/';
+		return MODULES_PATH.$this->module.'/';
 	}
 
 	

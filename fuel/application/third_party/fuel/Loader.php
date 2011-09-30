@@ -453,7 +453,28 @@ class Fuel_Loader extends MX_Loader
 			show_error("Unable to load the requested class: ".$class);
 		}
 	}
+	
+	
+	// --------------------------------------------------------------------
 
+	/**
+	 * Return the cached view variables
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function get_vars($key = NULL)
+	{
+		if (isset($key))
+		{
+			if (isset($this->_ci_cached_vars[$key]))
+			{
+				return $this->_ci_cached_vars[$key];
+			}
+			return NULL;
+		}
+		return $this->_ci_cached_vars;
+	}
 }
 
 /** load the CI class for Modular Separation **/

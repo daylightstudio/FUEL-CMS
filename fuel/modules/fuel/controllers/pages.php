@@ -40,7 +40,7 @@ class Pages extends Module {
 				
 				$this->_process_uploads();
 				
-				if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+				if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 				{
 					unset($_POST['published']);
 				}
@@ -114,7 +114,7 @@ class Pages extends Module {
 			if (empty($saved)) show_404();
 		}
 		
-		$this->model->add_required('location');
+		//$this->model->add_required('location');
 		
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields();
@@ -137,10 +137,10 @@ class Pages extends Module {
 			$layout = $this->fuel_layouts->default_layout;
 		}
 		
-		$fields['layout']['type'] = 'select';
-		$fields['layout']['options'] = $this->fuel_layouts->layouts_list();
+		// $fields['layout']['type'] = 'select';
+		$fields['layout']['options'] = $this->fuel->layouts->options_list();
 		$fields['layout']['value'] = $layout;
-		
+
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
 		
@@ -195,8 +195,10 @@ class Pages extends Module {
 		$this->form_builder->cancel_value = lang('btn_cancel');
 		
 		// page variables
-		$fields = $this->fuel_layouts->fields($layout, empty($id));
-		
+		//$fields = $this->fuel_layouts->fields($layout, empty($id));
+		$layout =  $this->fuel->layouts->get($layout);
+		$fields = $layout->fields();
+
 		/*****************************************************************************
 		// check for twin view file, controller and extra routing to generate warnings
 		******************************************************************************/
@@ -436,7 +438,8 @@ class Pages extends Module {
 	{
 		
 		// check to make sure there is no conflict between page columns and layout vars
-		$fields = $this->fuel_layouts->fields($layout);
+		$layout = $this->fuel->layouts->get($layout);
+		$fields = $layout->fields();
 		$conflict = $this->_has_conflict($fields);
 		if (!empty($conflict))
 		{

@@ -35,7 +35,7 @@ class Validate extends Fuel_base_controller {
 		//if (!$this->_has_module('fuel')) show_error(lang('error_missing_module', 'validate'));
 		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');
-		$pages = $this->pages_model->all_pages_including_views(TRUE);
+		$pages = $this->fuel->pages->all_pages_including_views(TRUE);
 		$validate_config = $this->config->item('validate');
 		$vars['default_page_input'] = $validate_config['default_page_input'];
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';

@@ -12,7 +12,8 @@ class Fuel_page {
 	public $markers = array();
 	public static $marker_key = '__FUEL_MARKER__';
 	
-	private $_CI = NULL;
+	private $CI = NULL;
+	private $fuel = NULL;
 	private $_variables = array(); // variables applied to the page
 	private $_segments = array(); // uri segments to pass to the page
 	private $_page_data = array(); // specific data about the page (not variables being passed necessarily)
@@ -23,10 +24,11 @@ class Fuel_page {
 	
 	function __construct($params = array())
 	{
-		$this->_CI =& get_instance();
-		$this->_CI->load->helper('cookie');
-		//$this->_CI->load->module_helper(FUEL_FOLDER, 'fuel'); // already loaded in autoload
-		$this->_CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
+		$this->CI =& get_instance();
+		$this->fuel =& $this->CI->fuel;
+		$this->CI->load->helper('cookie');
+		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel'); // already loaded in autoload
+		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 
 		if (count($params) > 0)
 		{
@@ -76,7 +78,7 @@ class Fuel_page {
 	
 	private function _assign_location()
 	{
-		$default_home = $this->_CI->config->item('default_home_view', 'fuel');
+		$default_home = $this->fuel->config('default_home_view');
 		
 		if ($this->location == 'page_router') $this->location = $default_home;
 		
@@ -95,7 +97,7 @@ class Fuel_page {
 		}
 		else
 		{
-			$segments = $this->_CI->uri->rsegment_array();
+			$segments = $this->CI->uri->rsegment_array();
 		}
 		
 		// in case a module has a name the same (like news...)
@@ -107,11 +109,11 @@ class Fuel_page {
 		// MUST LOAD AFTER THE ABOVE SO THAT IT DOESN'T THROW A DB ERROR WHEN A DB ISN'T BEING USED
 		// get current page segments so that we can properly iterate through to determine what the actual location 
 		// is and what are params being passed to the location
-		$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
 
-		if (count($this->_CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
+		if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
 		{
-			$page_data = $this->_CI->pages_model->find_by_location($default_home, $this->_only_published);
+			$page_data = $this->CI->pages_model->find_by_location($default_home, $this->_only_published);
 			$location = $default_home;
 		} 
 		else 
@@ -119,21 +121,21 @@ class Fuel_page {
 			// if $location = xxx/yyy/zzz/, check first to see if /xxx/yyy/zzz exists in the DB, then reduce segments to xxx/yyy,
 			// xxx... until one is found in the DB. If only xxx is found in the database yyy and zzz will be treated as parameters
 			while(count($segments) >= 1){
-				if (count($this->_segments) > $this->_CI->config->item('max_page_params', 'fuel')) break;
+				if (count($this->_segments) > $this->fuel->config('max_page_params')) break;
 				$location = implode('/', $segments);
 				
 				// if a prefix for the location is provided in the config, change the location value accordingly so we can find it
-				$prefix = $this->_CI->config->item('page_uri_prefix', 'fuel');
+				$prefix = $this->fuel->config('page_uri_prefix');
 				if ($prefix)
 				{
 					if (strpos($location, $prefix) === 0){
 						$location = substr($location, strlen($prefix));
 					}
-					$page_data = $this->_CI->pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
 				}
 				else
 				{
-					$page_data = $this->_CI->pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
 				}
 				
 				if (!empty($page_data)){
@@ -160,17 +162,22 @@ class Fuel_page {
 	
 	private function _assign_variables()
 	{
-		$this->_CI->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
-		$page_mode = $this->_CI->config->item('fuel_mode', 'fuel');
+		$this->CI->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
+		$page_mode = $this->fuel->config('fuel_mode');
 		if (empty($this->views_path)) $this->views_path = APPPATH.'views/';
-		$this->_CI->fuel_pagevars->vars_path = $this->views_path.'_variables/';
-		$vars = $this->_CI->fuel_pagevars->retrieve($this->location, $page_mode);
+		$this->CI->fuel_pagevars->vars_path = $this->views_path.'_variables/';
+		$vars = $this->CI->fuel_pagevars->retrieve($this->location, $page_mode);
 		$this->add_variables($vars);
 	}
 	
 	private function _assign_layout()
 	{
-		$this->_CI->load->module_library(FUEL_FOLDER, 'fuel_layouts');
+		if (is_string($this->layout))
+		{
+			$this->layout = $this->fuel->layouts->get($this->layout);
+			//$this->layout = $layout->;
+		}
+		//$this->CI->load->module_library(FUEL_FOLDER, 'fuel_layouts');
 	}
 	
 	function render($return = FALSE, $fuelify = TRUE)
@@ -179,14 +186,14 @@ class Fuel_page {
 		if (!isset($this->_page_data['id']))
 		{
 			// can't use set item when setting for a section'
-			//$this->_CI->config->config['fuel']['fuel_mode'] = 'views';
+			//$this->CI->config->config['fuel']['fuel_mode'] = 'views';
 			$this->render_mode = 'views';
 			return $this->variables_render($return, $fuelify);
 		}
 		else
 		{
 			// can't use set item when setting for a section'
-			//$this->_CI->config->config['fuel']['fuel_mode'] = 'cms';
+			//$this->CI->config->config['fuel']['fuel_mode'] = 'cms';
 			$this->render_mode = 'cms';
 			return $this->cms_render($return, $fuelify);
 		}
@@ -194,23 +201,23 @@ class Fuel_page {
 	
 	function cms_render($return = FALSE, $fuelify = FALSE){
 
-		$this->_CI->load->library('template');
-		$this->_CI->load->library('parser');
+		$this->CI->load->library('template');
+		$this->CI->load->library('parser');
 		
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{
 			// get master layout files
-			$parts = $this->_CI->fuel_layouts->parts($this->layout);
+			$parts = $this->fuel_layouts->parts($this->layout);
 			
 			// assign layouts to the layout object
 			if (is_array($parts))
 			{
-				$this->_CI->template->assign_tpl($parts);
+				$this->CI->template->assign_tpl($parts);
 			}
 			else
 			{
-				$this->_CI->template->file = $parts;
+				$this->CI->template->file = $parts;
 			}
 
 			// assign vars to specific parts
@@ -218,41 +225,41 @@ class Fuel_page {
 			{
 				foreach($parts as $key => $val)
 				{
-					$part_fields = $this->_CI->fuel_layouts->part_field_values($key);
+					$part_fields = $this->fuel_layouts->part_field_values($key);
 					
 					// first assign default values for the layout
-					$this->_CI->template->assign_to($key, $part_fields);
+					$this->CI->template->assign_to($key, $part_fields);
 					
 					// then assign any variables assigned to the keys
-					$this->_CI->template->assign_to($key, $this->variables());
+					$this->CI->template->assign_to($key, $this->variables());
 				}
 			}
 			else
 			{
-				$part_fields = $this->_CI->fuel_layouts->part_field_values($this->layout);
+				$part_fields = $this->fuel_layouts->part_field_values($this->layout);
 				// first assign default values for the layout
-				$this->_CI->template->assign($part_fields);
+				$this->CI->template->assign($part_fields);
 				
 				// then assign any variables assigned to the keys
-				$this->_CI->template->assign($this->variables());
+				$this->CI->template->assign($this->variables());
 			}
 			
 			
 			
-//			$this->_CI->template->assign_global('CI', $CI);
+//			$this->CI->template->assign_global('CI', $CI);
 			
 			// call layout hooks
-			$this->_CI->fuel_layouts->call_hook($this->layout, 'pre_render');
+			$this->fuel_layouts->call_hook($this->layout, 'pre_render');
 			
 			// render the content
-			$output = $this->_CI->template->render(TRUE);
-			$vars = array_merge($this->variables(), $this->_CI->load->_ci_cached_vars);
-			$this->_CI->load->vars($vars);
+			$output = $this->CI->template->render(TRUE);
+			$vars = array_merge($this->variables(), $this->CI->load->get_vars());
+			$this->CI->load->vars($vars);
 
 			//unset($vars['CI']);
 			
 			// now parse any template like syntax... not good if javascript is used in templates
-			$output = $this->_CI->parser->parse_string($output, $vars, TRUE);
+			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
 			
 			// turn on inline editing if they are logged in and cookied
 			if ($fuelify) $output = $this->fuelify($output);
@@ -260,7 +267,7 @@ class Fuel_page {
 			{
 				return $output;
 			}
-			$this->_CI->output->set_output($output);
+			$this->CI->output->set_output($output);
 			return TRUE;
 		} else {
 			return FALSE;
@@ -284,17 +291,17 @@ class Fuel_page {
 				{
 					if (!is_numeric($key))
 					{
-						$this->_CI->load->module_helper($key, $val);
+						$this->CI->load->module_helper($key, $val);
 					}
 					else
 					{
-						$this->_CI->load->helper($val);
+						$this->CI->load->helper($val);
 					}
 				}
 			}
 			else
 			{
-				$this->_CI->load->helpers($vars['helpers']);
+				$this->CI->load->helpers($vars['helpers']);
 			}
 		}
 				
@@ -307,17 +314,17 @@ class Fuel_page {
 				{
 					if (!is_numeric($key))
 					{
-						$this->_CI->load->module_library($key, $val);
+						$this->CI->load->module_library($key, $val);
 					}
 					else
 					{
-						$this->_CI->load->library($val);
+						$this->CI->load->library($val);
 					}
 				}
 			}
 			else
 			{
-				$this->_CI->load->library($vars['libraries']);
+				$this->CI->load->library($vars['libraries']);
 			}
 		}
 		
@@ -330,23 +337,23 @@ class Fuel_page {
 				{
 					if (!is_numeric($key))
 					{
-						$this->_CI->load->module_model($key, $val);
+						$this->CI->load->module_model($key, $val);
 					}
 					else
 					{
-						$this->_CI->load->model($val);
+						$this->CI->load->model($val);
 					}
 				}
 			}
 			else
 			{
-				$this->_CI->load->model($vars['models']);
+				$this->CI->load->model($vars['models']);
 			}
 		}
 		
 		// for convenience we'll add the $CI object'
-		$vars['CI'] = &$this->_CI;
-		$this->_CI->load->vars($vars);
+		$vars['CI'] = &$this->CI;
+		$this->CI->load->vars($vars);
 
 		if (!empty($vars['view']))
 		{
@@ -404,21 +411,21 @@ class Fuel_page {
 			if (!empty($vars['parse_view']))
 			{
 				// load her to save on execution time... 
-				$this->_CI->load->library('parser');
+				$this->CI->load->library('parser');
 				
 				$body = file_get_contents($check_file);
 
 				// now parse any template like syntax
-				$vars = $this->_CI->load->_ci_cached_vars;
-				$body = $this->_CI->parser->parse_string($body, $vars, TRUE);
+				$vars = $this->CI->load->_ci_cached_vars;
+				$body = $this->CI->parser->parse_string($body, $vars, TRUE);
 			}
 			else
 			{
-				$body = $this->_CI->load->module_view('app', $view, $vars, TRUE);
+				$body = $this->CI->load->module_view('app', $view, $vars, TRUE);
 			}
 			
 			// now set $vars to the cached so that we have a fresh set to send to the layout in case any were declared in the view
-			$vars = $this->_CI->load->_ci_cached_vars;
+			$vars = $this->CI->load->_ci_cached_vars;
 
 			$layout = (!empty($vars['layout'])) ? $vars['layout'] : $this->layout;
 			
@@ -430,20 +437,20 @@ class Fuel_page {
 			{
 				if (is_array($layout))
 				{
-					$this->_CI->load->library('template');
+					$this->CI->load->library('template');
 					foreach($layout as $key => $val)
 					{
 						if (strncmp($val, '_layouts', 8) !== 0) $val = '_layouts/'.$val;
-						$this->_CI->template->assign_tpl($key, $val);
+						$this->CI->template->assign_tpl($key, $val);
 					}
-					$this->_CI->template->assign_to('body', 'body', $body);
-					$output = $this->_CI->template->render(TRUE);
+					$this->CI->template->assign_to('body', 'body', $body);
+					$output = $this->CI->template->render(TRUE);
 				}
 				else
 				{
 					$vars['body'] = $body;
 					if (strncmp($layout, '_layouts', 8) !== 0) $layout = '_layouts/'.$layout;
-					$output = $this->_CI->load->view($layout, $vars, TRUE);
+					$output = $this->CI->load->view($layout, $vars, TRUE);
 				}
 
 			}
@@ -463,7 +470,7 @@ class Fuel_page {
 		}
 		else
 		{
-			$this->_CI->output->set_output($output);
+			$this->CI->output->set_output($output);
 			return TRUE;
 		}
 	}
@@ -471,18 +478,18 @@ class Fuel_page {
 	function fuelify($output)
 	{
 		// if not logged in then we remove the markers
-		if (!$this->_CI->config->item('admin_enabled', 'fuel') OR $this->variables('fuelified') === FALSE OR 
+		if (!$this->fuel->config('admin_enabled') OR $this->variables('fuelified') === FALSE OR 
 			!$this->_fuelified OR empty($output) OR (defined('FUELIFY') AND FUELIFY === FALSE) ) 
 		{
 			return $this->remove_markers($output);
 		} 
 		
-		$this->_CI->load->library('session');
-		$this->_CI->load->helper('convert');
+		$this->CI->load->library('session');
+		$this->CI->load->helper('convert');
 		
 		
 		// add top edit bar for fuel
-		$this->_CI->config->module_load('fuel', 'fuel', TRUE);
+		$this->CI->config->module_load('fuel', 'fuel', TRUE);
 		
 		// render the markers to the proper html
 		$output = $this->render_all_markers($output);
@@ -493,16 +500,16 @@ class Fuel_page {
 			'assetsPath' => assets_path(''),
 			);
 		
-		$this->_CI->asset->assets_path = $this->_CI->config->item('fuel_assets_path', 'fuel');
-		$this->_CI->load->helper('ajax');
-		$this->_CI->load->library('form');
+		$this->CI->asset->assets_path = $this->fuel->config('fuel_assets_path');
+		$this->CI->load->helper('ajax');
+		$this->CI->load->library('form');
 		$vars['page'] = $this->properties();
-		$vars['layouts'] = $this->_CI->fuel_layouts->layouts_list(TRUE);
+		$vars['layouts'] = $this->fuel->layouts->options_list();
 		$last_page = uri_path();
-		if (empty($last_page)) $last_page = $this->_CI->config->item('default_home_view', 'fuel');
+		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);
 
-		$editable_asset_types = $this->_CI->config->item('editable_asset_filetypes', 'fuel');
+		$editable_asset_types = $this->fuel->config('editable_asset_filetypes');
 
 
 		// add javascript
@@ -511,12 +518,12 @@ class Fuel_page {
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
-		$vars['init_params']['editor'] = $this->_CI->config->item('text_editor', 'fuel');
-		$vars['init_params']['editorConfig'] = $this->_CI->config->item('ck_editor_settings', 'fuel');
+		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
+		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
 		
 		// load language files
-		$this->_CI->load->module_language(FUEL_FOLDER, 'fuel_inline_edit');
-		$this->_CI->load->module_language(FUEL_FOLDER, 'fuel_js');
+		$this->CI->load->module_language(FUEL_FOLDER, 'fuel_inline_edit');
+		$this->CI->load->module_language(FUEL_FOLDER, 'fuel_js');
 		
 		
 		// json localization
@@ -525,22 +532,22 @@ class Fuel_page {
 		
 		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
 		// otherwise we get an error when the mode is set to views
-		if ($this->_CI->config->item('fuel_mode', 'fuel') == 'views')
+		if ($this->fuel->config('fuel_mode') == 'views')
 		{
 			$vars['others'] = array();
 		}
 		else
 		{
-			$this->_CI->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['others'] = $this->_CI->pages_model->get_others('location', $this->location, 'location');
+			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
+			$vars['others'] = $this->CI->pages_model->get_others('location', $this->location, 'location');
 		}
 		
 		if (!$this->_fuelified_processed)
 		{
-			$inline_edit_bar = $this->_CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
+			$inline_edit_bar = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
 			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
 			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
-			$this->_CI->config->set_item('assets_path', $this->_CI->config->item('assets_path'));
+			$this->CI->config->set_item('assets_path', $this->CI->config->item('assets_path'));
 		}
 		$this->_fuelified_processed = TRUE;
 		return $output;
@@ -574,9 +581,9 @@ class Fuel_page {
 		if (empty($marker)) return '';
 		extract($marker);
 		
-		if ($this->_CI->config->item('admin_enabled', 'fuel') AND 
+		if ($this->fuel->config('admin_enabled') AND 
 			is_fuelified() AND 
-			(!isset($this->_CI->load->_ci_cached_vars['fuelified']) OR $this->_CI->load->_ci_cached_vars['fuelified'] === TRUE)
+			($this->CI->load->get_vars('fuelified') === TRUE)
 			)
 		{
 			if (empty($label))
@@ -586,8 +593,10 @@ class Fuel_page {
 				$label = ucfirst(str_replace('_', ' ', $label));
 			}
 
-			// must use span tags because nesting anchors can cause issues
-			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/inline_edit/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
+			// must use span tags because nesting anchors can cause issues;
+			
+			$edit_method = (empty($id) OR $id == 'create') ? 'inline_create' : 'inline_edit';
+			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/'.$edit_method.'/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
 
 			if (isset($xoffset) OR isset($yoffset))
 			{
@@ -713,7 +722,7 @@ class Fuel_page {
 	
 	function find_view_file($view)
 	{
-		if (!$this->_CI->config->item('auto_search_views', 'fuel')) return NULL;
+		if (!$this->fuel->config('auto_search_views')) return NULL;
 		static $cnt;
 		if (is_null($cnt)) $cnt = 0;
 		$cnt++;

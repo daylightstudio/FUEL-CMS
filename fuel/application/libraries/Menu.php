@@ -103,14 +103,45 @@ class Menu {
 	 */
 	public function initialize($params = array())
 	{
-		$valid_null = array('root_value', 'depth');
-		foreach ($params as $key => $val)
+		$this->reset();
+		$this->set_params($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set object parameters
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function set_params($params)
+	{
+		if (is_array($params) AND count($params) > 0)
 		{
-			if (isset($this->$key) OR in_array($key, $valid_null))
+			$valid_null = array('root_value', 'depth');
+			foreach ($params as $key => $val)
 			{
-				$this->$key = $val;
+				if (isset($this->$key) OR in_array($key, $valid_null))
+				{
+					$this->$key = $val;
+				}
 			}
 		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Same as reset
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function clear()
+	{
+		$this->reset();
 	}
 	
 	// --------------------------------------------------------------------
@@ -119,7 +150,6 @@ class Menu {
 	 * Clear class values
 	 *
 	 * @access	public
-	 * @param	array
 	 * @return	void
 	 */
 	public function reset()
