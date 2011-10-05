@@ -33,10 +33,10 @@ class Backup extends Fuel_base_controller {
 			$backup =& $this->dbutil->backup($db_back_prefs); 
 			
 			//fixes to work with PHPMYAdmin
-			$backup = str_replace('\\\t', "\t",	$backup);
-			$backup = str_replace('\\\n', '\n', $backup);
-			$backup = str_replace("\\'", "''", $backup);
-			$backup = str_replace('\\\\', '', $backup);
+			// $backup = str_replace('\\\t', "\t",	$backup);
+			// $backup = str_replace('\\\n', '\n', $backup);
+			// $backup = str_replace("\\'", "''", $backup);
+			// $backup = str_replace('\\\\', '', $backup);
 			
 			// load the file helper and write the file to your server
 			$this->load->helper('file');

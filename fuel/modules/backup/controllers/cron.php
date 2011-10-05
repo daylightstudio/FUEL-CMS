@@ -11,7 +11,7 @@ class Cron extends CI_Controller  {
 	}
 	
 	function _remap($method){
-		if (defined('CRON'))
+		if (defined('CRON') OR defined('STDIN'))
 		{
 			$this->load->library('email');
 			$this->load->helper('string');
@@ -39,17 +39,19 @@ class Cron extends CI_Controller  {
 			$backup =& $this->dbutil->backup($db_back_prefs); 
 
 			//fixes to work with PHPMYAdmin
-			$backup = str_replace('\\\t', "\t",	$backup);
-			$backup = str_replace('\\\n', '\n', $backup);
-			$backup = str_replace("\\'", "''", $backup);
-			$backup = str_replace('\\\\', '', $backup);
+			// $backup = str_replace('\\\t', "\t",	$backup);
+			// $backup = str_replace('\\\n', '\n', $backup);
+			// $backup = str_replace("\\'", "''", $backup);
+			// $backup = str_replace('\\\\', '', $backup);
 
 			// load the file helper and write the file to your server
 			$this->load->helper('file');
 			$this->load->library('zip');
 
-			$backup_date = date('Y-m-d');
-			$filename = $backup_config['backup_file_prefix'].'_'.$backup_date.'.sql';
+			$backup_date = date($backup_config['backup_file_date_format']);
+			$backup_file_prefix = (empty($backup_config['backup_file_prefix']) OR strtoupper($backup_config['backup_file_prefix']) == 'AUTO') ? url_title($this->config->item('site_name', 'fuel'), 'underscore', TRUE) : $backup_config['backup_file_prefix'];
+
+			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
 			$this->zip->add_data($filename, $backup);
 			
 			// include assets folder
@@ -87,6 +89,24 @@ class Cron extends CI_Controller  {
 					else
 					{
 						$output .= "\n".lang('cron_email_error', $backup_config['backup_cron_email']);
+					}
+				}
+				
+				// now delete old files
+				if (!empty($backup_config['backup_days_to_keep']))
+				{
+					$files = get_dir_file_info($download_path);
+					
+					foreach($files as $file)
+					{
+						$file_date = substr(end(explode($file['name'], '_')), 0, 10);
+						$file_date_ts = strtotime($file['date']);
+						$compare_date = mktime(0, 0, 0, date('m'), date('j') - $backup_config['backup_days_to_keep'], date('Y'));
+						
+						if ($file_date_ts < $compare_date AND strncmp($backup_config['backup_file_prefix'], $file['name'], strlen($backup_config['backup_file_prefix'])) === 0)
+						{
+							@unlink($file['server_path']);
+						}
 					}
 				}
 			}

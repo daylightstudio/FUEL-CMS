@@ -57,8 +57,15 @@ class Cronjobs extends Fuel_base_controller {
 					}
 				}
 
-				$this->cronjob->create();
-
+				if ($this->cronjob->create())
+				{
+					$this->session->set_flashdata('success', lang('cronjobs_success'));
+					redirect(fuel_uri('tools/cronjobs'));
+				}
+				else
+				{
+					add_error(lang('cronjobs_write_error', $this->cronjob->cronfile));
+				}
 			}
 			
 		}

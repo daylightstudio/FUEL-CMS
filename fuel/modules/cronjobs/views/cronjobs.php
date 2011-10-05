@@ -3,7 +3,8 @@
 	<p class="instructions"><?=lang('cronjobs_instructions')?></p>
 	
 	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
-	<label for="mailto"><?=lang('cronjobs_mailto')?></label> <?=$this->form->text('mailto', $mailto, 'size="30"')?>
+	<label for="mailto"><?=lang('cronjobs_mailto')?></label> <?=$this->form->text('mailto', $mailto, 'size="30"')?> &nbsp; 
+	<?=lang('cronjobs_current_datetime').' '.date('Y-m-d H:i:s')?>
 	<table border="0" cellspacing="0" cellpadding="0" class="cronjob">
 		<tbody>
 		

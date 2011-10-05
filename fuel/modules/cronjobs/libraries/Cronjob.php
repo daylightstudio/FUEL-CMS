@@ -157,8 +157,8 @@ class Cronjob {
 
 		if (file_exists($this->cronfile))
 		{
-			$open = fopen($this->cronfile, "w"); // This overwrites current line
-			fwrite($open, $cron); 
+			$open = @fopen($this->cronfile, "w"); // This overwrites current line
+			if (!@fwrite($open, $cron)) return FALSE;
 			fclose($open); 
 			
 			// this will reinstate your Cron job
@@ -176,13 +176,14 @@ class Cronjob {
 			}
 			touch($this->cronfile); // create the file, Directory "cron" must be writeable
 			chmod($this->cronfile, 0777); // make new file writeable
-			$open = fopen($this->cronfile, "w"); 
-			fwrite($open, $cron); 
+			$open = @fopen($this->cronfile, "w"); 
+			if (!@fwrite($open, $cron)) return FALSE;
 			fclose($open);
     		
 			// start the cron job! 
-	        exec($exec); 
+	        exec($exec);
 	    }
+		return TRUE;
 	}
 	
 	// --------------------------------------------------------------------
