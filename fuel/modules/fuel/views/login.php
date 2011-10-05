@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
- 	<title>FUEL CMS</title>
+ 	<title><?=$page_title?></title>
 	<?=css('fuel', FUEL_FOLDER)?>
 	<script type="text/javascript">
 	<?=$this->load->module_view('fuel', '_blocks/fuel_header_jqx', array(), true)?>
