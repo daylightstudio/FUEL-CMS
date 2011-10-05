@@ -236,7 +236,7 @@
 							
 						// refresh list if someone is deleting... but only do it once if it is below the minNumSearchChars
 						} else if (searchTerm.length == (settings.minNumOfSearchChars - 1) && searchTerm.substr(0, (prevSearchText.length)) != prevSearchText && searchTerm.length != 0){
-							//refreshLists();
+							refreshLists();
 						}
 						prevSearchText = searchTerm;
 						
