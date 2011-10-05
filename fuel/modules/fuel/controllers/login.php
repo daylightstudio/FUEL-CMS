@@ -152,6 +152,7 @@ class Login extends CI_Controller {
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
 		$vars['display_forgotten_pwd'] = $this->config->item('allow_forgotten_password', 'fuel');
+		$vars['page_title'] = lang('fuel_page_title');
 		$this->load->view('login', $vars);
 	}
 	
@@ -211,6 +212,7 @@ class Login extends CI_Controller {
 		// notifications template
 		$vars['error'] = $this->users_model->get_errors();
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
+		$vars['page_title'] = lang('fuel_page_title');
 		$this->load->view('pwd_reset', $vars);
 	}
 	
@@ -247,6 +249,7 @@ class Login extends CI_Controller {
 		
 		$vars['display_forgotten_pwd'] = FALSE;
 		$vars['instructions'] = lang('dev_pwd_instructions');
+		$vars['page_title'] = lang('fuel_page_title');
 		$this->load->view('login', $vars);
 		
 		
