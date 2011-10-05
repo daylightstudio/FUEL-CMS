@@ -279,7 +279,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published').size() > 0){
+			if ($('#published:checkbox') != undefined){
+				$('#published:checkbox').attr('checked', true);
+			} else if ($('#published').size() > 0){
 				$('#published').val('yes');
 			} else {
 				$('#published_yes').attr('checked', true);
@@ -290,7 +292,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 
 		$('.unpublish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published').size() > 0){
+			if ($('#published:checkbox') != undefined) {
+				$('#published:checkbox').attr('checked', false);
+			} else if ($('#published').size() > 0){
 				$('#published').val('no');
 			} else {
 				$('#published_no').attr('checked', true);
@@ -302,13 +306,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.activate_action').click(function(e){
 			$.removeChecksave();
                         
-                        // Check if element is a checkbox
-                        if(undefined != $('#active:checkbox'))
-                        {
-                            $('#active:checkbox').attr('checked', true);
-                        }
-                        
-			else if ($('#active').size() > 0){
+			// Check if element is a checkbox
+			if ($('#active:checkbox') != undefined){
+				$('#active:checkbox').attr('checked', true);
+			} else if ($('#active').size() > 0){
 				$('#active').val('yes');
 			} else {
 				$('#active_yes').attr('checked', true);
@@ -321,13 +322,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.deactivate_action').click(function(e){
 			$.removeChecksave();
                         
-                        // Check if element is a checkbox
-                        if(undefined != $('#active:checkbox'))
-                        {
-                            $('#active:checkbox').attr('checked', false);
-                        }
-                        
-			if ($('#active').size() > 0){
+			// Check if element is a checkbox
+			if ($('#active:checkbox') != undefined) {
+				$('#active:checkbox').attr('checked', false);
+			} else if ($('#active').size() > 0){
 				$('#active').val('no');
 			} else {
 				$('#active_no').attr('checked', true);

@@ -248,9 +248,9 @@ class Module extends Fuel_base_controller {
 					$delete_func = '
 					$CI =& get_instance();
 					$link = "";
-					if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+					if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
-						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+						$url = site_url("/".$CI->fuel->config("fuel_path").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
@@ -282,35 +282,39 @@ class Module extends Fuel_base_controller {
 			}
 			$this->data_table->row_alt_class = 'alt';
 			$this->data_table->only_data_fields = array($this->model->key_field());
+
+			// Key and boolean fields are data only
+//			$this->data_table->only_data_fields = array_merge(array($this->model->key_field()), $this->model->boolean_fields);
+
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
 			$this->data_table->lang_prefix = 'form_label_';
-			$_unpub_func = '
-			$CI =& get_instance();
-			$can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
-			$is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
-			$no = lang("form_enum_option_no");
-			$yes = lang("form_enum_option_yes");
-			if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
-			{ 
-				$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
-				$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
-				$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$no."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			}
-			else
-			{ 
-				$text_class = ($can_publish) ? "publish_text published toggle_unpublish": "published";
-				$action_class = ($can_publish) ? "publish_action published hidden": "published hidden";
-				$col_txt = ($is_publish) ? \'click to unpublish\' : \'click to deactivate\';
-				return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$yes."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			}';
-				
-			$_unpublished = create_function('$cols', $_unpub_func);
-
-			$this->data_table->add_field_formatter('published', $_unpublished);
-			$this->data_table->add_field_formatter('active', $_unpublished);
+			// $_unpub_func = '
+			// $CI =& get_instance();
+			// $can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
+			// $is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
+			// $no = lang("form_enum_option_no");
+			// $yes = lang("form_enum_option_yes");
+			// if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
+			// { 
+			// 	$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
+			// 	$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
+			// 	$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
+			// 	return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$no."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
+			// }
+			// else
+			// { 
+			// 	$text_class = ($can_publish) ? "publish_text published toggle_unpublish": "published";
+			// 	$action_class = ($can_publish) ? "publish_action published hidden": "published hidden";
+			// 	$col_txt = ($is_publish) ? \'click to unpublish\' : \'click to deactivate\';
+			// 	return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$yes."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
+			// }';
+			// 	
+			// $_unpublished = create_function('$cols', $_unpub_func);
+			$_publish_toggle_callback = array($this, '_publish_toggle_callback');
+			$this->data_table->add_field_formatter('published', $_publish_toggle_callback);
+			$this->data_table->add_field_formatter('active', $_publish_toggle_callback);
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->sort_js_func = 'fuel.sortList';
 			
@@ -1004,6 +1008,13 @@ class Module extends Fuel_base_controller {
 			}
 		}
 		
+		// set boolean fields 
+		foreach($this->model->boolean_fields as $val)
+		{
+			$_POST[$val] = (isset($_POST[$val])) ? $_POST[$val] : 0;
+		}
+
+		// if no permission to publish, then we revoke
 		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
 		{
 			unset($_POST['published']);
@@ -1378,12 +1389,34 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
+	function _publish_toggle_callback($cols)
+	{
+		$can_publish = $this->fuel->auth->has_permission($this->permission, "publish");
+		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
+		$no = lang("form_enum_option_no");
+		$yes = lang("form_enum_option_yes");            
+
+		if ((isset($cols['published']) AND $cols['published'] == "no") OR (isset($cols['active']) AND $cols['active'] == "no"))
+		{
+			$text_class = ($can_publish) ? "publish_text unpublished toggle_publish" : "unpublished";
+			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+			$col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+		}
+		else if ((isset($cols['published']) AND $cols['published'] == "yes") OR (isset($cols['active']) AND $cols['active'] == "yes"))
+		{
+			$text_class = ($can_publish) ? "publish_text published toggle_unpublish" : "published";
+			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+		}
+	}
+	
 	protected function _clear_cache()
 	{
 		// reset cache for that page only
 		if ($this->clear_cache_on_save) 
 		{
-			$CI =& get_instance();
 			$this->load->library('cache');
 			$cache_group = $this->fuel->config('page_cache_group');
 			$this->cache->remove_group($cache_group);

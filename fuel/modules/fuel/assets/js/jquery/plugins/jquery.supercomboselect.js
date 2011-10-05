@@ -112,6 +112,9 @@
 			/**********************************************************************
 			BIND EVENTS
 			**********************************************************************/
+			$('#' + leftID + ' li').die();
+			$('#' + rightID + ' li').die();
+			
 			$('#' + leftID + ' li').live('dblclick', function(e){
 				addSelectedToRight();
 			});
@@ -157,7 +160,7 @@
 			});
 			
 			$('#' + settings.wrapperId + ' .csadd').click(function(){
-				addSelectedToRight(true);
+				addSelectedToRight();
 			});
 
 			$('#' + settings.wrapperId + ' .csremove').click(function(){
@@ -322,7 +325,7 @@
 				
 			}
 			
-			function addSelectedToRight(highlight){
+			function addSelectedToRight(){
 				$selectedOpts = $('#' + leftID + ' li[class=' + settings.selectedClass + ']');
 				var selected = new Array();
 				$selectedOpts.each(function(i){

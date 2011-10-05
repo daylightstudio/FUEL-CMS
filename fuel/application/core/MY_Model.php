@@ -54,7 +54,7 @@ class MY_Model extends CI_Model {
 	public $unique_fields = array(); // fields that are not IDs but are unique
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $foreign_keys = array(); // map foreign keys to table models
-        public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
+	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
 	
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
@@ -1736,12 +1736,12 @@ class MY_Model extends CI_Model {
 				}
 			}
                         
-                        // create boolean checkboxes
-                        if(in_array($val['name'], $this->boolean_fields) AND ($val['type'] === 'tinyint'))
-                        {
-                            $fields[$key]['type'] = 'checkbox';
-                            $fields[$key]['value'] = 1;                            
-                        }
+			// create boolean checkboxes
+			if(in_array($val['name'], $this->boolean_fields) AND ($val['type'] === 'tinyint'))
+			{
+				$fields[$key]['type'] = 'checkbox';
+				$fields[$key]['value'] = 1;                            
+			}
 			
 			// get lang value if one exists... check first for model specific then look for a generic model lang key
 			// no longer needed because Form_builder does this

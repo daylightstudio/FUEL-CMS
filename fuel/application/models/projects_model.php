@@ -7,6 +7,7 @@ class Projects_model extends Base_module_model {
 	public $required = array('name', 'image_upload');
 	public $linked_fields = array('slug' => array('name' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => 'name', 'client' => 'name');
+	public $boolean_fields = array('boolean_test', 'published');
 	
 	function __construct()
 	{
@@ -15,7 +16,7 @@ class Projects_model extends Base_module_model {
 
 	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
 	{
-		$this->db->select('id, name, client, precedence, published', FALSE);
+		$this->db->select('id, name, client, precedence, boolean_test, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}

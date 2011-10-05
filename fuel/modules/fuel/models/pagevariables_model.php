@@ -15,7 +15,7 @@ class Pagevariables_model extends Base_module_model {
 	
 	function find_one_by_location($location, $name)
 	{
-		$data = $this->find_all_array(array($this->_tables['pages'].'.location' => $location, 'name' => $name));
+		$data = $this->find_one_array(array($this->_tables['pages'].'.location' => $location, 'name' => $name));
 		return  $this->_process_casting($data);
 	}
 	
