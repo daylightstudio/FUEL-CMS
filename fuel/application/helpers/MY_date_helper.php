@@ -120,7 +120,7 @@ function is_date_db_format($date)
  */
 function is_date_english_format($date)
 {
-	return preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date);
+	return preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date) OR preg_match("#([0-9]{1,2})-([0-9]{1,2})-([0-9]{4})#", $date);
 }
 
 // --------------------------------------------------------------------
@@ -258,6 +258,8 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 		$date_arr[$key] = (int) $date_arr[$key]; // convert to integer
 	}
 	
+	$new_date = '';
+	
 	if (preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date))
 	{
 		if (!checkdate($date_arr[0], $date_arr[1], $date_arr[2]))
@@ -273,6 +275,10 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 			return 'invalid'; // null will cause it to be ignored in validation
 		}
 		$new_date = $date_arr[2].'-'.$date_arr[1].'-'.$date_arr[0].' '.$hour.':'.$min.':'.$sec;
+	}
+	else
+	{
+		return 'invalid';
 	}
 	$date = date("Y-m-d H:i:s", strtotime($new_date)); // normalize
 	return $date;

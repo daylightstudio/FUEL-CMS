@@ -1,5 +1,37 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Fuel_modules {
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL module object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ */
+
+// --------------------------------------------------------------------
+
+// include base library class to extend
+require_once('Fuel_base_library.php');
+
+class Fuel_modules extends Fuel_base_library {
 
 	protected $_modules = array();
 	protected $_modules_grouped = array();
@@ -7,7 +39,7 @@ class Fuel_modules {
 	
 	function __construct()
 	{
-		$this->CI =& get_instance();
+		parent::__construct();
 		$this->initialize();
 	}
 	
@@ -394,10 +426,7 @@ class Fuel_module {
 	{
 		$pages = array();
 		$info = $this->info();
-		echo "<pre style=\"text-align: left;\">";
-		print_r($info);
-		echo "</pre>";
-		
+
 		if (!empty($info['model_location']))
 		{
 			$this->CI->load->module_model($info['model_location'], $info['model_name']);

@@ -1,15 +1,44 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
-class Fuel_pagevars {
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL pagevars 
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_admin
+ */
+
+// --------------------------------------------------------------------
+
+// include base library class to extend
+require_once('Fuel_base_library.php');
+
+class Fuel_pagevars extends Fuel_base_library {
 	
 	public $location = ''; // the default location used for grabbing variables
 	public $vars_path = ''; // the path to the _variables folder
 	
-	private $CI;
-	
 	function __construct()
 	{
-		$this->CI =& get_instance();
+		parent::__construct();
 		$this->location = uri_path();
 	}
 	

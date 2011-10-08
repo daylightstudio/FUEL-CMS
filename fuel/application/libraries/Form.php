@@ -76,6 +76,20 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Sets the validator object on the form object
+	 * 
+	 * @access public
+	 * @param object validator object
+	 * @return void
+	 */
+	public function set_validator(&$validator)
+	{
+		$this->validator = $validator;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the opening form element
 	 * 
 	 * @access public

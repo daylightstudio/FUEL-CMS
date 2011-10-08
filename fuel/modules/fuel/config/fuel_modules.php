@@ -18,6 +18,7 @@ $config['modules']['pages'] = array(
 		'id', 
 		'location', 
 		'layout', 
+		'last_modified',
 		'published',
 	),
 	'default_col' => 'location',

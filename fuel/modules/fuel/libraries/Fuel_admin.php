@@ -1,4 +1,4 @@
-<?php
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -20,18 +20,19 @@
  * FUEL master admin object
  *
  * @package		FUEL CMS
- * @subpackage	Helpers
- * @category	Helpers
+ * @subpackage	Libraries
+ * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_admin
  */
 
 // --------------------------------------------------------------------
 
-class Fuel_admin {
+// include base library class to extend
+require_once('Fuel_base_library.php');
+
+class Fuel_admin extends Fuel_base_library {
 	
-	protected $CI;
-	protected $fuel;
 	protected $validate = TRUE;
 	protected $panels = array(
 		'top' => TRUE,
@@ -51,10 +52,8 @@ class Fuel_admin {
 	
 	function __construct($params = array())
 	{
-		$this->CI =& get_instance();
-		//$this->fuel =& Fuel::get_instance();
-		$this->fuel =& $this->CI->fuel;
-
+		parent::__construct($params);
+		
 		// load all the helpers we need
 		$this->CI->load->library('form');
 		$this->CI->load->helper('ajax');
@@ -66,24 +65,14 @@ class Fuel_admin {
 		
 		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');... alternative syntax
 		$this->fuel->load_helper('fuel');
-		
-		
-		if (count($params) > 0)
-		{
-			$this->initialize($params);
-		}
+
 		
 	}
 	
-	function initialize($config = array())
+	function initialize($params = array())
 	{
-		foreach ($config as $key => $val)
-		{
-			if (isset($this->$key))
-			{
-				$this->$key = $val;
-			}
-		}
+		parent::initialize($params);
+
 		
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
 		$language = $this->fuel->auth->user_data('language');
@@ -601,9 +590,12 @@ class Fuel_admin {
 		return $this->breadcrumb_icon;
 	}
 	
+	function set_notification($msg, $type = 'success')
+	{
+		$this->CI->session->set_flashdata($type, $msg);
+	}
+	
 }
 
-
-
-/* End of file Fuel.php */
-/* Location: ./modules/fuel/libraries/Fuel.php */
+/* End of file Fuel_admn.php */
+/* Location: ./modules/fuel/libraries/Fuel_admn.php */

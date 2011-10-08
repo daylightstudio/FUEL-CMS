@@ -163,12 +163,13 @@ Class Validator {
 	 * @access public
 	 * @param array assoc array of values to validate (optional)
 	 * @param boolean exit on first error? (optional)
+	 * @param boolean reset validation errors (optional)
 	 * @return boolean
 	 */
-	public function validate($values = array(), $stop_on_first = FALSE)
+	public function validate($values = array(), $stop_on_first = FALSE, $reset = TRUE)
 	{
 		// reset errors to start with a fresh validation
-		$this->_errors = array();
+		if ($reset) $this->_errors = array();
 		
 		//if (empty($values)) $values = $_POST;
 		if (empty($values))

@@ -292,7 +292,7 @@ class Module extends Fuel_base_controller {
 			$this->data_table->lang_prefix = 'form_label_';
 			// $_unpub_func = '
 			// $CI =& get_instance();
-			// $can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
+			// $can_publish = $CI->fuel->auth->has_permission($CI->permission, "publish");
 			// $is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
 			// $no = lang("form_enum_option_no");
 			// $yes = lang("form_enum_option_yes");
@@ -495,7 +495,7 @@ class Module extends Fuel_base_controller {
 	function create($field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
 		$id = NULL;
-		if (!$this->fuel_auth->module_has_action('create')) show_404();
+		if (!$this->fuel->auth->module_has_action('create') OR !$this->fuel->auth->has_permission('create')) show_404();
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
 		{
@@ -550,7 +550,7 @@ class Module extends Fuel_base_controller {
 		$posted = $this->_process();
 
 		// set publish status to no if you do not have the ability to publish
-		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			$posted['published'] = 'no';
 			$posted['active'] = 'no';
@@ -623,7 +623,7 @@ class Module extends Fuel_base_controller {
 	
 	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
-		if (empty($id) OR !$this->fuel_auth->module_has_action('save')) show_404();
+		if (empty($id) OR !$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission('edit')) show_404();
 
 		if ($this->input->post($this->model->key_field()))
 		{
@@ -894,7 +894,7 @@ class Module extends Fuel_base_controller {
 			);
 			foreach($published_active as $k => $v)
 			{
-				if (!$this->fuel_auth->has_permission($this->permission, $k))
+				if (!$this->fuel->auth->has_permission($this->permission, $k))
 				{
 					unset($fields[$v]);
 				}
@@ -1015,7 +1015,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		// if no permission to publish, then we revoke
-		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			unset($_POST['published']);
 		}
@@ -1087,7 +1087,7 @@ class Module extends Fuel_base_controller {
 
 	function delete($id = NULL, $inline = FALSE)
 	{
-		if (!$this->fuel_auth->has_permission($this->permission, 'delete')) 
+		if (!$this->fuel->auth->has_permission($this->permission, 'delete')) 
 		{
 			show_error(lang('error_no_permissions'));
 		}
@@ -1256,14 +1256,14 @@ class Module extends Fuel_base_controller {
 	// reduce code by creating this shortcut function for the unpublish/publish
 	protected function _publish_unpublish($id, $pub_unpub)
 	{
-		if (!$this->fuel_auth->module_has_action('save')) return false;
+		if (!$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission('publish')) return FALSE;
 		if (empty($id)) $id = $this->input->post($this->model->key_field());
 		
 		if ($id)
 		{
 			//$this->model->set_return_method('array');
 			$save = $this->model->find_by_key($id, 'array');
-			if ($this->fuel_auth->has_permission($this->permission, 'publish') AND !empty($save))
+			if ($this->fuel->auth->has_permission($this->permission, 'publish') AND !empty($save))
 			{
 				if ($pub_unpub == 'publish')
 				{

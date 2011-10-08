@@ -62,8 +62,12 @@ If a <dfn>$func</dfn> parameter is passed, then it will limit the removal to jus
 $this->validator->remove_rule('name', 'required');
 </pre>
 
-<h2>$this->validator->validate()</h2>
-<p>Runs the validation rules and returns <dfn>TRUE</dfn> when all rules are valid and <dfn>FALSE</dfn> otherwise.</p>
+<h2>$this->validator->validate(<var>[values]</var>, <var>[stop_on_first]</var>, <var>[reset]</var>)</h2>
+<p>Runs the validation rules and returns <dfn>TRUE</dfn> when all rules are valid and <dfn>FALSE</dfn> otherwise. 
+You can optionally pass the parameters to the validate method with the first parameter.
+The second parameter is a boolean value that says whether to stop on the first error or not. Default is FALSE.
+The third parameter determines whether to reset the errors before validating again. Default is TRUE.
+</p>
 
 <pre class="brush: php">
 if ($this->validator->validate())
