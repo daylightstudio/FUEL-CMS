@@ -11,6 +11,8 @@ class Contact extends CI_Controller {
 		$this->load->library('session');
 		$this->load->library('form_builder');
 		
+		
+		// MAY NEED TO REMOVE $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] TO MAKE THE FORM WORK!!!
 		if (!empty($_POST) AND $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'])
 		{
 			// put your processing code here... we show what we do for emailing. You will need to add a correct email address
@@ -37,10 +39,8 @@ class Contact extends CI_Controller {
 		$vars['form'] = $this->form_builder->render();
 		
 		// use Fuel_page to render so it will grab all opt-in variables and do any necessary parsing
-		$page_init = array('location' => 'contact');
-		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
-		$this->fuel_page->add_variables($vars);
-		$this->fuel_page->render();
+		$this->fuel->pages->render('contact', $vars);
+		
 	}
 	
 	function _process($data)
