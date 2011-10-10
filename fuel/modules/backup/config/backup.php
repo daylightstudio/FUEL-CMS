@@ -21,6 +21,9 @@ $config['backup']['backup_file_prefix'] = 'AUTO';
 // date format to append to file name
 $config['backup']['backup_file_date_format'] = 'Y-m-d';
 
+// ZIP up the file or not
+$config['backup']['backup_zip'] = FALSE;
+
 // number of days to hold backups. A value of 0 or FALSE will be forever
 $config['backup']['backup_days_to_keep'] = 30;
 

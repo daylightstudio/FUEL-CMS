@@ -15,6 +15,7 @@ class Cron extends CI_Controller  {
 		{
 			$this->load->library('email');
 			$this->load->helper('string');
+			$this->load->helper('file');
 			$this->load->module_model(FUEL_FOLDER, 'logs_model');
 
 			$backup_config = $this->config->item('backup');
@@ -44,28 +45,45 @@ class Cron extends CI_Controller  {
 			// $backup = str_replace("\\'", "''", $backup);
 			// $backup = str_replace('\\\\', '', $backup);
 
-			// load the file helper and write the file to your server
-			$this->load->helper('file');
-			$this->load->library('zip');
-
 			$backup_date = date($backup_config['backup_file_date_format']);
-			$backup_file_prefix = (empty($backup_config['backup_file_prefix']) OR strtoupper($backup_config['backup_file_prefix']) == 'AUTO') ? url_title($this->config->item('site_name', 'fuel'), 'underscore', TRUE) : $backup_config['backup_file_prefix'];
+			if ($backup_config['backup_file_prefix'] == 'AUTO')
+			{
+				$this->load->helper('url');
+				$backup_config['backup_file_prefix'] = url_title($this->config->item('site_name', FUEL_FOLDER), '_', TRUE);
+			}
 
 			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
-			$this->zip->add_data($filename, $backup);
 			
-			// include assets folder
-			if ($include_assets)
+			if (!empty($backup_config['backup_zip']))
 			{
-				$this->zip->read_dir(assets_server_path());
+				$this->load->library('zip');
+				$this->zip->add_data($filename, $backup);
+
+				// include assets folder
+				if ($include_assets)
+				{
+					$this->zip->read_dir(assets_server_path());
+				}
+				$download_file = $download_path.$filename.'.zip';
 			}
-			
-			$download_file = $download_path.$filename.'.zip';
+			else
+			{
+				$download_file = $download_path.$filename;
+			}
 			
 			// write the zip file to a folder on your server. 
 			if (!file_exists($download_file))
 			{
-				$this->zip->archive($download_file);
+				
+				if (!empty($backup_config['backup_zip']))
+				{
+					$this->zip->archive($download_file);
+				}
+				else
+				{
+					write_file($download_file, $backup);
+				}
+				
 				$output = ($include_assets) ? lang('cron_db_backup_asset', $filename) : lang('cron_db_backup', $filename);
 				$this->logs_model->logit($output, 0); // the 0 is for the system as the user
 				
@@ -109,6 +127,7 @@ class Cron extends CI_Controller  {
 						}
 					}
 				}
+				
 			}
 			else
 			{

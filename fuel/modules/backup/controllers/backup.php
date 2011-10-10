@@ -42,26 +42,41 @@ class Backup extends Fuel_base_controller {
 			$this->load->helper('file');
 			$this->load->library('zip');
 			
+			$backup_date = date($backup_config['backup_file_date_format']);
 			if ($backup_config['backup_file_prefix'] == 'AUTO')
 			{
 				$this->load->helper('url');
 				$backup_config['backup_file_prefix'] = url_title($this->config->item('site_name', FUEL_FOLDER), '_', TRUE);
 			}
 			
-			$filename = $backup_config['backup_file_prefix'].'_'.date('Y-m-d');
-			$this->zip->add_data($filename.'.sql', $backup);
-
-			// include assets folder
-			if (!empty($_POST['include_assets']))
+			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
+			
+			if (!empty($backup_config['backup_zip']))
 			{
-				$this->zip->read_dir(assets_server_path());
+				$this->load->library('zip');
+				$this->zip->add_data($filename, $backup);
+
+				// include assets folder
+				if (!empty($_POST['include_assets']))
+				{
+					$this->zip->read_dir(assets_server_path());
+				}
+				$download_file = $download_path.$filename.'.zip';
+				
+				// write the zip file to a folder on your server. 
+				$this->zip->archive($download_file); 
+
+				// download the file to your desktop. 
+				$this->zip->download($filename.'.zip');
+
+				$msg = lang('data_backup');
+				
 			}
-
-			// write the zip file to a folder on your server. 
-			$this->zip->archive($download_path.$filename.'.zip'); 
-
-			// download the file to your desktop. 
-			$this->zip->download($filename.'.zip');
+			else
+			{
+				$download_file = $download_path.$filename;
+				write_file($download_file, $backup);
+			}
 			
 			$msg = lang('data_backup');
 			$this->logs_model->logit($msg);
