@@ -11,7 +11,7 @@ class Blog_base_controller extends CI_Controller {
 		}
 		$this->load->module_helper(FUEL_FOLDER, 'fuel');
 		$this->load->module_config(BLOG_FOLDER, 'blog');
-		$this->load->module_library(BLOG_FOLDER, 'fuel_blog');
+		//$this->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$this->load->module_helper(BLOG_FOLDER, 'blog');
 		$this->load->module_helper(BLOG_FOLDER, 'social');
 		$this->load->module_language(BLOG_FOLDER, 'blog');
@@ -28,7 +28,7 @@ class Blog_base_controller extends CI_Controller {
 	
 	function _render($view, $vars = array(), $return = FALSE, $layout = '')
 	{
-		if (empty($layout)) $layout = '_layouts/'.$this->fuel_blog->layout();
+		if (empty($layout)) $layout = '_layouts/'.$this->fuel->blog->layout();
 		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
 
 		// get any global variables for the headers and footers
@@ -38,23 +38,23 @@ class Blog_base_controller extends CI_Controller {
 		{
 			$vars = array_merge($_vars, $vars);
 		}
-		$view_folder = $this->fuel_blog->theme_path();
+		$view_folder = $this->fuel->blog->theme_path();
 		$vars['CI'] =& get_instance();
+		
+		$page = $this->fuel->pages->create();
 		
 		if (!empty($layout))
 		{
-			$vars['body'] = $this->load->module_view($this->fuel_blog->settings('theme_module'), $view_folder.$view, $vars, TRUE);
-			$view = $this->fuel_blog->theme_path().$this->fuel_blog->layout();
+			$vars['body'] = $this->load->module_view($this->fuel->blog->settings('theme_module'), $view_folder.$view, $vars, TRUE);
+			$view = $this->fuel->blog->theme_path().$this->fuel->blog->layout();
 		}
 		else
 		{
 			$view = $view_folder.$view;
 		}
 
-		$output = $this->load->module_view($this->fuel_blog->settings('theme_module'), $view, $vars, TRUE);
-		$this->load->module_library(FUEL_FOLDER, 'fuel_page');
-		$this->fuel_page->initialize();
-		$output = $this->fuel_page->fuelify($output);
+		$output = $this->load->module_view($this->fuel->blog->settings('theme_module'), $view, $vars, TRUE);
+		$output = $page->fuelify($output);
 
 		if ($return)
 		{
