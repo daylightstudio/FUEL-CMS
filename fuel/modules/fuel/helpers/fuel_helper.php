@@ -26,6 +26,25 @@
  * @link		http://www.getfuelcms.com/user_guide/helpers/fuel_helper
  */
 
+// --------------------------------------------------------------------
+
+/**
+ * Returns the instance of the FUEL object
+ *
+ * @access	public
+ * @param	mixed
+ * @return	string
+ */
+function &fuel_instance()
+{
+	return Fuel::get_instance();
+}
+
+function &FUEL()
+{
+	$f = & fuel_instance();
+	return $f;
+}
 
 // --------------------------------------------------------------------
 
@@ -432,6 +451,24 @@ function fuel_nav($params = array())
 // --------------------------------------------------------------------
 
 /**
+ * Generates a page using the Fuel_page class
+ *
+ * @access	public
+ * @param	string
+ * @param	array
+ * @param	array
+ * @return	string
+ */
+function fuel_page($location, $vars = array(), $params = array())
+{
+	$CI =& get_instance();
+	$output = $CI->fuel->pages->render($location, $vars, $params, TRUE);
+	return $output;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Creates a form using form builder
  *
  * @access	public
@@ -448,6 +485,7 @@ function fuel_form($fields, $values = array(), $params = array())
 	$CI->form_builder->set_field_values($values);
 	return $CI->form_builder->render();
 }
+
 
 // --------------------------------------------------------------------
 
@@ -586,7 +624,11 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NULL, $yoffset = NULL)
 {
 	$CI =& get_instance();
-	$CI->load->module_library(FUEL_FOLDER, 'fuel_page');
+	$page = $CI->fuel->pages->active();
+	if (empty($page))
+	{
+		$page = $CI->fuel->pages->create();
+	}
 	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE))
 	{
 		$marker['id'] = $id;
@@ -595,7 +637,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
 		$marker['xoffset'] = $xoffset;
 		$marker['yoffset'] = $yoffset;
 
-		$key = $CI->fuel_page->add_marker($marker);
+		$key = $page->add_marker($marker);
 
 		return '<!--'.$key.'-->';
 	}

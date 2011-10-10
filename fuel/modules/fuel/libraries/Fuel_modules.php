@@ -34,6 +34,7 @@ require_once('Fuel_base_library.php');
 class Fuel_modules extends Fuel_base_library {
 
 	protected $_modules = array();
+	protected $_advanced = array();
 	protected $_modules_grouped = array();
 	protected $_overwrites;
 	
@@ -47,7 +48,7 @@ class Fuel_modules extends Fuel_base_library {
 	{
 		// get simple module init values. Must use require here because of the construct
 		//require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_modules.php');
-		$allowed = $this->CI->fuel->config('modules_allowed');
+		$allowed = $this->fuel->config('modules_allowed');
 
 		// get FUEL modules first
 		include(MODULES_PATH.FUEL_FOLDER.'/config/fuel_modules.php');
@@ -161,6 +162,7 @@ class Fuel_modules extends Fuel_base_library {
 		}
 		return $all_pages;
 	}
+	
 	
 	// --------------------------------------------------------------------
 	
@@ -497,8 +499,6 @@ class Fuel_module {
 	{
 		return MODULES_PATH.$this->module.'/';
 	}
-
-	
 
 }
 /* End of file Fuel_modules.php */

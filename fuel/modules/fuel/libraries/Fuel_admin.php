@@ -49,6 +49,11 @@ class Fuel_admin extends Fuel_base_library {
 	const DISPLAY_NO_ACTION = 'no_action';
 	const DISPLAY_COMPACT = 'compact';
 	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
+
+	const NOTIFICATION_SUCCESS = 'success';
+	const NOTIFICATION_ERROR = 'error';
+	const NOTIFICATION_WARNING = 'warning';
+	const NOTIFICATION_INFO = 'info';
 	
 	function __construct($params = array())
 	{
@@ -590,8 +595,9 @@ class Fuel_admin extends Fuel_base_library {
 		return $this->breadcrumb_icon;
 	}
 	
-	function set_notification($msg, $type = 'success')
+	function set_notification($msg, $type = '')
 	{
+		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
 		$this->CI->session->set_flashdata($type, $msg);
 	}
 	

@@ -35,31 +35,33 @@ class Fuel extends Fuel_base_library {
 	
 
 	protected $CI;
-	protected $_auth;
-	protected $_admin;
-	protected $_layouts;
-	protected $_pages;
-	protected $_modules;
-	protected $_module_overwrites;
+	protected $_attached = array();
+	protected $_auto_attach = array(
+									'admin',
+									'auth',
+									'layouts',
+									'pages',
+									'modules',
+									'cache',
+									'logs',
+									'advanced_modules',
+									);
 
-	//private static $_instance;
+	private static $_instance;
 	
 	//private function __construct()
 	function __construct()
 	{
 		parent::__construct();
+		self::$_instance =& $this;
+		$this->initialize();
 	}
 	
-	// static function get_instance()
-	// {
-	// 	if (!isset(self::$_instance))
-	// 	{
-	// 		$c = __CLASS__;
-	// 		self::$_instance = new $c;
-	// 	}
-	// 	return self::$_instance;
-	// }
-	// 
+	public static function &get_instance()
+	{
+		return self::$_instance;
+	}
+	
 	function initialize()
 	{
 		// load main fuel config
@@ -102,84 +104,41 @@ class Fuel extends Fuel_base_library {
 	
 	function __get($var)
 	{
-		$method = 'get_'.$var;
-		if (method_exists($this, $method))
+		if (!isset($this->_attached[$var]))
 		{
-			return $this->$method();
+			if (in_array($var, $this->_auto_attach))
+			{
+				$this->attach($var);
+			}
+			else if ($this->advanced_modules->allowed($var))
+			{
+				$adv_module = $this->advanced_modules->get($var);
+				if ($adv_module AND $adv_module->lib_class())
+				{
+					$obj = $adv_module->lib_class();
+					$this->attach($var, $obj);
+				}
+			}
+			else
+			{
+				throw new Exception(lang('error_class_property_does_not_exist', $var));
+			}
+		}
+		return $this->_attached[$var];
+	}
+	
+	function attach($key, $obj = NULL)
+	{
+		if (isset($obj))
+		{
+			$this->_attached[$key] = $obj;
 		}
 		else
 		{
-			throw new Exception(lang('error_class_property_does_not_exist', $var));
+			$this->load_library('fuel_'.$key);
+			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
 		}
 	}
-	
-	protected function get_admin()
-	{
-		// lazy load ui object
-		if (!isset($this->_admin))
-		{
-			$this->load_library('fuel_admin');
-			$this->_admin =& $this->CI->fuel_admin;
-		}
-		return $this->_admin;
-	}
-	
-	protected function get_auth()
-	{
-		// lazy load auth object
-		if (!isset($this->_auth))
-		{
-			$this->load_library('fuel_auth');
-			$this->_auth =& $this->CI->fuel_auth;
-		}
-		return $this->_auth;
-	}
-	
-	protected function get_layouts()
-	{
-		// lazy load layouts object
-		if (!isset($this->_layouts))
-		{
-			$this->load_library('fuel_layouts');
-			$this->_layouts =& $this->CI->fuel_layouts;
-		}
-		return $this->_layouts;
-	}
-
-	protected function get_modules()
-	{
-		// lazy load modules object
-		if (!isset($this->_modules))
-		{
-			$this->load_library('fuel_modules');
-			$this->_modules =& $this->CI->fuel_modules;
-		}
-		return $this->_modules;
-	}
-	
-	protected function get_pages()
-	{
-		// lazy load pages object
-		if (!isset($this->_pages))
-		{
-			$this->load_library('fuel_pages');
-			$this->_pages =& $this->CI->fuel_pages;
-		}
-		return $this->_pages;
-	}
-	
-	protected function get_cache()
-	{
-		// lazy load pages object
-		if (!isset($this->_pages))
-		{
-			$this->load_library('fuel_pages');
-			$this->_pages =& $this->CI->fuel_pages;
-		}
-		return $this->_pages;
-	}
-	
-	// --------------------------------------------------------------------
 	
 	/**
 	 * alias to module information
