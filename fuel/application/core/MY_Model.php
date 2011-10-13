@@ -1577,7 +1577,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Remove an error of the validation
+	 * Remove a validation rule from the validator object
 	 *
 	 * @access	public
 	 * @param	string	field name

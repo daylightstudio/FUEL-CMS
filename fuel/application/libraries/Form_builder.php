@@ -1182,6 +1182,47 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates a submit button input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_submit($params)
+	{
+		$params = $this->normalize_params($params);
+		$attrs = array(
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled']
+		);
+		return $this->form->submit($params['value'], $params['name'], $attrs);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a basic form button for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_button($params)
+	{
+		$params = $this->normalize_params($params);
+		$attrs = array(
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled']
+		);
+		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
+		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the textarea input for the form
 	 *
 	 * @access	public

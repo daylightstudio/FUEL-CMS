@@ -9,6 +9,7 @@ class Assets_model extends CI_Model {
 	public $filters = array('group_id' => 'images');
 	public $filter_value = null;
 	public $key_field = 'id';
+	public $boolean_fields = array();
 	
 	protected $_dirs = array('images', 'pdf');
 	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf');

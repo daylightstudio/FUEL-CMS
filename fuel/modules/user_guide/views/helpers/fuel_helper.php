@@ -39,7 +39,7 @@ The <dfn>params</dfn> parameter can either be string value (in which case it wil
 The <dfn>params</dfn> parameter is an associative array that can have the following values:
 </p>
 <ul>
-	<li><strong>find</strong> - the find method to use on the module model</li>
+	<li><strong>find</strong> - the find method to use on the module model. Options are "one", "key", "all" or any method name on the model that begins with "find_" (excluding "find_" from the value)</li>
 	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
 	<li><strong>where</strong> - the where condition to be used in the find query</li>
 	<li><strong>order</strong> - order the data results and sort them </li>
