@@ -283,7 +283,10 @@ function fuel_model($model, $params = array())
 			$method = 'find_'.$find;
 			if (method_exists($CI->$model_name, $method))
 			{
-				$data = $CI->$model_name->$method($where, $order, $limit, $offset, $return_method, $assoc_key);
+				if (!empty($where)) $CI->$model_name->db()->where($where);
+				if (!empty($order)) $CI->$model_name->db()->order_by($order);
+				if (!empty($offset)) $CI->$model_name->db()->offset($offset);
+				$data = $CI->$model_name->$method($where, $order, $limit, $offset);
 				if (is_array($data) AND key($data) === 0)
 				{
 					$var = $CI->$model_name->short_name(TRUE, FALSE);

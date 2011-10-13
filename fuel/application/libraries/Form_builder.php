@@ -1060,7 +1060,7 @@ Class Form_builder {
 				return $this->create_button($params);
 				break;
 			case 'custom':
-				$func = (isset($params['func'])) ? $params['func'] : create_function('', '');
+				$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
 				return $this->create_custom($func, $params);
 				break;
 			default : 
@@ -1214,7 +1214,7 @@ Class Form_builder {
 		$attrs = array(
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled']
+			'disabled' => $params['disabled'],
 		);
 		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
 		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
