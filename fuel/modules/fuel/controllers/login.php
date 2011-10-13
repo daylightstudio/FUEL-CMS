@@ -165,34 +165,40 @@ class Login extends CI_Controller {
 		{
 			if ($this->input->post('email')){
 				$user = $this->users_model->find_one_array(array('email' => $this->input->post('email')));
-				$new_pwd = $this->users_model->reset_password($user['email']);
-				if ($new_pwd !== FALSE) {
+				if (!empty($user['email']))
+				{
+					$new_pwd = $this->users_model->reset_password($user['email']);
+					if ($new_pwd !== FALSE) {
 
-					// send email to user
-					$this->load->library('email');
+						// send email to user
+						$this->load->library('email');
 
-					$config['wordwrap'] = TRUE;
-					$this->email->initialize($config);
+						$config['wordwrap'] = TRUE;
+						$this->email->initialize($config);
 
-					$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
-					$this->email->to($this->input->post('email')); 
-					$this->email->subject(lang('pwd_reset_subject'));
-					$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
-					$msg = lang('pwd_reset_email', fuel_url($url));
+						$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
+						$this->email->to($this->input->post('email')); 
+						$this->email->subject(lang('pwd_reset_subject'));
+						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
+						$msg = lang('pwd_reset_email', fuel_url($url));
 
-					$this->email->message($msg);
-					if ($this->email->send()){
-						$this->session->set_flashdata('success', lang('pwd_reset'));
-					} else {
-						$this->session->set_flashdata('error', lang('error_pwd_reset'));
+						$this->email->message($msg);
+						if ($this->email->send()){
+							$this->session->set_flashdata('success', lang('pwd_reset'));
+						} else {
+							$this->session->set_flashdata('error', lang('error_pwd_reset'));
+						}
+						redirect(fuel_uri('login'));
 					}
-					redirect(fuel_uri('login'));
+					else
+					{
+						$this->users_model->add_error(lang('error_invalid_email'));
+					}
 				}
 				else
 				{
 					$this->users_model->add_error(lang('error_invalid_email'));
 				}
-
 
 			}
 			else
