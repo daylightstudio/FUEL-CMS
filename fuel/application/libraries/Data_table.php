@@ -138,7 +138,10 @@ class Data_table {
 		$this->only_data_fields[] = '__field__';
 		
 		$this->data = (array)$data;
-
+		
+		// to reset index values just in case
+		$this->data = array_values($this->data);
+		
 		if (empty($headers))
 		{
 			if (current($data))

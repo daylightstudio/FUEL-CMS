@@ -462,6 +462,18 @@ The optional <dfn>$key</dfn> argument is used as an identifier of the error mess
 $this->examples_model->add_error('There was an error in processing the data.', 'my_key'); 
 </pre>
 
+<h2>$this->examples_model->has_error()</h2>
+<p>Returns a <dfn>TRUE</dfn> if the model has any errors associated with it and <dfn>FALSE</dfn> otherwise.
+</p>
+
+<pre class="brush: php">
+if ($this->examples_model->has_error())
+{
+	return FALSE;
+}
+</pre>
+
+
 
 <h2>$this->examples_model->get_validation()</h2>
 <p>Returns all the models validation object. The validation object is the same from the <a href="<?=user_guide_url('libraries/validator')?>">Validator library class</a>.</p>

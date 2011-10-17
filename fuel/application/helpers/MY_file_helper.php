@@ -90,7 +90,6 @@ function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FAL
 	}
 }
 
-
 // --------------------------------------------------------------------
 
 /**
@@ -138,6 +137,45 @@ function delete_files($path, $del_dir = FALSE, $exclude = NULL, $level = 0)
 	}
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Deletes files in a directory older then a certain date with the added option to exclude certain files
+ *
+ * @access	public
+ * @param 	string
+ * @param 	string
+ * @param 	mixed
+ * @return	void
+ */
+function delete_old_files($dir, $older_than, $exclude = array())
+{
+	$files = get_dir_file_info($dir);
+	
+	$file_date_ts = (!is_numeric($older_than)) ? strtotime($older_than) : $older_than;
+	
+	foreach($files as $file)
+	{
+		$compare_date = time();
+		
+		if ($file_date_ts < $compare_date AND 
+			(is_null($exclude) || (is_array($exclude) && !in_array($file['name'], $exclude)) || (is_string($exclude) && !preg_match($exclude, $file['name']))))
+		{
+			@unlink($file['server_path']);
+		}
+	}
+}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Determines if the file is an image
+ *
+ * @access	public
+ * @param 	string
+ * @return	boolean
+ */
 function is_image_file($path)
 {
 	if (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i",$path))

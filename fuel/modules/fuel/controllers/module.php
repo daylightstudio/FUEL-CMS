@@ -1004,14 +1004,17 @@ class Module extends Fuel_base_controller {
 		{
 			if (is_string($val))
 			{
-				$_POST[$key] = preg_replace_callback('#(.*){(.+)\}(.*)#U', $callback, $val);
+				$_POST[$key] = preg_replace_callback('#(.*)\{(.+)\}(.*)#U', $callback, $val);
 			}
 		}
-		
+
 		// set boolean fields 
-		foreach($this->model->boolean_fields as $val)
+		if (!empty($this->model->boolean_fields) AND is_array($this->model->boolean_fields))
 		{
-			$_POST[$val] = (isset($_POST[$val])) ? $_POST[$val] : 0;
+			foreach($this->model->boolean_fields as $val)
+			{
+				$_POST[$val] = (isset($_POST[$val])) ? $_POST[$val] : 0;
+			}
 		}
 
 		// if no permission to publish, then we revoke
@@ -1025,7 +1028,7 @@ class Module extends Fuel_base_controller {
 		{
 			$_POST[$this->model->key_field()] = $_POST['id'];
 		}
-		
+
 		// sanitize input if set in module configuration
 		$posted = $this->_sanitize($_POST);
 		

@@ -565,7 +565,7 @@ Class Form {
 	{
 		$str = '';
 		$error = FALSE;
-		if (is_object($this->validator))
+		if (is_object($this->validator) AND is_a($this->validator, 'Validator')) 
 		{
 			$errors = $this->validator->get_errors();
 			if (!empty($errors))

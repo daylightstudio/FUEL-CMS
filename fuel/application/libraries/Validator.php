@@ -248,9 +248,10 @@ Class Validator {
 	 *
 	 * @access public
 	 * @param array of error messages
+	 * @param key of error message if a single message
 	 * @return string key of variable input
 	 */
-	public function catch_errors($errors)
+	public function catch_errors($errors, $key = NULL)
 	{
 	    if (is_array($errors))
 		{
@@ -268,10 +269,10 @@ Class Validator {
 		}
 		else
 		{
-			return $this->catch_error($errors);
+			return $this->catch_error($errors, $key);
 		}
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**

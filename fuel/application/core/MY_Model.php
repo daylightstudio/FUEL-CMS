@@ -747,6 +747,10 @@ class MY_Model extends CI_Model {
 	public function clean($values = array())
 	{
 		if (empty($values)) $values = $_POST;
+		
+		// run clean hook
+		$values = $this->on_before_clean($values);
+		
 		// get table information to clean against
 		$fields = $this->table_info();
 
@@ -961,17 +965,10 @@ class MY_Model extends CI_Model {
 			// reset validator here so that all validation set with hooks will not be lost
 			$this->validator->reset();
 			
-			// run any prevalidation formatting... things you want to do to manipulate values before being validated
-			$values = $this->on_before_clean($values);
+			// clean the data before saving. on_before_clean hook now runs in the clean() method
 			$values = $this->clean($values);
-			$values = $this->on_before_validate($values);
 
-			// if any errors are generated in the previous hooks then we return FALSE
-			if ($this->get_errors())
-			{
-				return FALSE;
-			}
-
+			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
 			
 			if ($validated AND !empty($values))
@@ -1094,6 +1091,12 @@ class MY_Model extends CI_Model {
 			}
 
 			$this->on_after_save($values);
+			
+			// check for errors here in case some are thrown in the hooks
+			if ($this->has_error())
+			{
+				return FALSE;
+			}
 			return $return;
 		}
 	}
@@ -1325,6 +1328,14 @@ class MY_Model extends CI_Model {
 			{
 				$values = get_object_vars($record);
 			}
+		}
+		
+		$values = $this->on_before_validate($values);
+
+		// if any errors are generated in the previous hooks then we return FALSE
+		if ($this->get_errors())
+		{
+			return FALSE;
 		}
 		
 		$required = array_merge($this->unique_fields, $this->required);
@@ -1571,7 +1582,20 @@ class MY_Model extends CI_Model {
 	 */	
 	public function add_error($msg, $key = NULL)
 	{
-		$this->validator->catch_error($msg, $key);
+		$this->validator->catch_errors($msg, $key);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether there are validation erros
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function has_error()
+	{
+		return (count($this->validator->get_errors()) > 1);
 	}
 	
 	// --------------------------------------------------------------------
@@ -2703,7 +2727,7 @@ Class Data_record {
 		$key_field = (array) $this->_parent_model->key_field();
 		foreach($key_field as $key)
 		{
-			$where[$key] = $values;
+			$where[$key] = $this->$key;
 		}
 		
 		$data = $this->_parent_model->find_one($where, NULL, 'array');
