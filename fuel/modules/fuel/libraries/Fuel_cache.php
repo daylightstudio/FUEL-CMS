@@ -33,6 +33,8 @@ require_once('Fuel_base_library.php');
 
 class Fuel_cache extends Fuel_base_library {
 	
+	public $ignore = '#^\..+#'; // files to exclude from clearing like .gitignore and .htaccess
+	
 	protected $_cache;
 	protected $_types = array(
 								'compiled',
@@ -94,9 +96,10 @@ class Fuel_cache extends Fuel_base_library {
 		// also delete DWOO compiled files
 		$this->CI->load->helper('file');
 		$dwoo_path = $this->CI->config('cache_path').'dwoo/compiled/';
+		
 		if (is_dir($dwoo_path) AND is_writable($dwoo_path))
 		{
-			@delete_files($dwoo_path);
+			@delete_files($dwoo_path, FALSE, $this->ignore);
 		}
 		
 		// remove asset cache files if exist
@@ -109,7 +112,7 @@ class Fuel_cache extends Fuel_base_library {
 			$cache_folder = assets_server_path($this->asset->assets_cache_folder, 'cache', $module);
 			if (is_dir($cache_folder) AND is_writable($cache_folder))
 			{
-				@delete_files($cache_folder);
+				$this->_delete_files($cache_folder);
 			}
 		}
 	}
@@ -132,7 +135,7 @@ class Fuel_cache extends Fuel_base_library {
 			$cache_folder = assets_server_path($this->asset->assets_cache_folder, 'cache', $module);
 			if (is_dir($cache_folder) AND is_writable($cache_folder))
 			{
-				@delete_files($cache_folder);
+				$this->_delete_files($cache_folder);
 			}
 		}
 		
@@ -153,15 +156,14 @@ class Fuel_cache extends Fuel_base_library {
 		$this->clear_pages();
 		$this->clear_compiled();
 		$this->clear_assets();
-		@delete_files($this->CI->config('cache_path'));
+		$this->_delete_files($this->CI->config('cache_path'));
 	}
 	
 	function create_id($location = NULL)
 	{
 		if (empty($location))
 		{
-			$CI =& get_instance();
-			$segs = $CI->uri->segment_array();
+			$segs = $this->CI->uri->segment_array();
 
 			if (empty($segs)) 
 			{
@@ -172,6 +174,10 @@ class Fuel_cache extends Fuel_base_library {
 		return str_replace('/', '.', $location);
 	}
 	
+	function _delete_files($path)
+	{
+		@delete_files($path, FALSE, $this->ignore);
+	}
 }
 
 /* End of file Fuel_cache.php */
