@@ -6,6 +6,7 @@ class Articles_model extends Base_module_model {
 
 	public $required = array();
 	public $foreign_keys = array('author_id' => 'authors_model');	
+	public $parsed_fields = array('content', 'content_formatted');
 	
 	function __construct()
 	{

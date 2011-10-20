@@ -188,7 +188,8 @@ because we are using MYSQL functions in the select, we need to pass <dfn>FALSE</
 <p>The next thing we should change is the the form used to create and edit an article. You'll notice that there is a text field for the author_id which
 isn't very convenient. Instead, we will put in a dropdown select that will allow the user to select from a list of authors. To do this, we will
 add a <dfn>foreign_keys</dfn> property to the model and identify <dfn>author_id</dfn> as a foreign key to the <dfn>authors_model</dfn>. Doing this,
-will create a dropdown of authors to appear by default.</p>
+will create a dropdown of authors to appear by default. Also, adding the <dfn>parsed_fields</dfn> property to the model will tell it to parse any template syntax
+for the specified fields. The <dfn>content_formatted</dfn> field is a derived field that can be called on the record model so it is added as well.</p>
 
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed'); 
@@ -198,6 +199,7 @@ require_once(FUEL_PATH.'models/base_module_model.php');
 class Articles_model extends Base_module_model {
 	
 	public $foreign_keys = array('author_id' => 'authors_model');
+	public $parsed_fields = array('content', 'content_formatted');
 	
     function __construct()
     {
