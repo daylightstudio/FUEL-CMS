@@ -14,8 +14,9 @@ class Backup extends Fuel_base_controller {
 	
 	function index()
 	{
-
 		$this->_validate_user('tools/backup');
+		echo $this->fuel->backup->config('db_backup_path');
+		exit();
 		$backup_config = $this->config->item('backup');
 		$download_path = $backup_config['db_backup_path'];
 		$is_writable = is_writable($download_path);

@@ -28,9 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
-require_once('Fuel_base_library.php');
-
 class Fuel_pagevars extends Fuel_base_library {
 	
 	public $location = ''; // the default location used for grabbing variables

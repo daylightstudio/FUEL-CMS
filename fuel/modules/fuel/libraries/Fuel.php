@@ -28,8 +28,10 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
+// include base library classes to extend
 require_once('Fuel_base_library.php');
+require_once('Fuel_advanced_module.php');
+//require_once('Fuel_module.php');
 
 class Fuel extends Fuel_base_library {
 	
@@ -82,7 +84,7 @@ class Fuel extends Fuel_base_library {
 	function load_library($library, $module = NULL, $name = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_library(FUEL_FOLDER, $library, $name);
+		$this->CI->load->module_library($module, $library, $name);
 	}
 
 	function load_model($model, $module = NULL, $name = NULL)
@@ -102,7 +104,7 @@ class Fuel extends Fuel_base_library {
 		$this->CI->load->module_language(FUEL_FOLDER, $lang);
 	}
 	
-	function __get($var)
+	function &__get($var)
 	{
 		if (!isset($this->_attached[$var]))
 		{
@@ -110,13 +112,17 @@ class Fuel extends Fuel_base_library {
 			{
 				$this->attach($var);
 			}
-			else if ($this->advanced_modules->allowed($var))
+			else if ($this->allowed($var))
 			{
-				$adv_module = $this->advanced_modules->get($var);
-				if ($adv_module AND $adv_module->lib_class())
+				$fuel_class = 'Fuel_'.$var;
+				if (file_exists(MODULES_PATH.$var.'/libraries/'.$fuel_class.'.php'))
 				{
-					$obj = $adv_module->lib_class();
-					$this->attach($var, $obj);
+					$lib_class = strtolower($fuel_class);
+					if (!isset($this->CI->$lib_class))
+					{
+						$this->load_library($lib_class, $var);
+					}
+					return $this->CI->$lib_class;
 				}
 			}
 			else
@@ -138,6 +144,11 @@ class Fuel extends Fuel_base_library {
 			$this->load_library('fuel_'.$key);
 			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
 		}
+	}
+	
+	function allowed($module)
+	{
+		return (in_array($module, $this->fuel->config('modules_allowed')));
 	}
 	
 	/**

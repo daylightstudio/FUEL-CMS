@@ -28,9 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
-require_once('Fuel_base_library.php');
-
 class Fuel_cache extends Fuel_base_library {
 	
 	public $ignore = '#^\..+#'; // files to exclude from clearing like .gitignore and .htaccess
@@ -174,7 +171,7 @@ class Fuel_cache extends Fuel_base_library {
 		return str_replace('/', '.', $location);
 	}
 	
-	function _delete_files($path)
+	protected function _delete_files($path)
 	{
 		@delete_files($path, FALSE, $this->ignore);
 	}

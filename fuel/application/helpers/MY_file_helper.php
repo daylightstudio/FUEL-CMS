@@ -165,7 +165,6 @@ function delete_old_files($dir, $older_than, $exclude = array())
 		}
 	}
 }
-}
 
 // --------------------------------------------------------------------
 

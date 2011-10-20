@@ -28,9 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
-require_once('Fuel_base_library.php');
-
 class Fuel_layouts extends Fuel_base_library {
 	
 	public $default_layout = 'main';

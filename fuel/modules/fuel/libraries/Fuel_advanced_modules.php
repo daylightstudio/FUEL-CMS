@@ -50,7 +50,7 @@ class Fuel_advanced_modules extends Fuel_base_library {
 			if (file_exists(MODULES_PATH.$mod))
 			{
 				$init = array('name' => $mod, 'folder' => $mod);
-				$this->_adv_modules[$mod] = new Fuel_module_advanced($init);
+				$this->_adv_modules[$mod] = new Fuel_advanced_module($init);
 			}
 		}
 	}
@@ -89,10 +89,11 @@ class Fuel_advanced_modules extends Fuel_base_library {
 
 }
 
-class Fuel_module_advanced extends Fuel_base_library {
+class Fuel_advanced_module extends Fuel_base_library {
 	
 	protected $name = '';
 	protected $folder = '';
+	private $_config = '';
 	
 	function __construct($params = array())
 	{
@@ -103,9 +104,13 @@ class Fuel_module_advanced extends Fuel_base_library {
 	function initialize($params)
 	{
 		parent::initialize($params);
-		if ($this->has_config())
+		
+		$this->load_config();
+		$this->_config = $this->CI->config->item($this->name);
+		
+		if ($this->has_lang())
 		{
-			$this->CI->load->module_config($this->name, $this->name, TRUE);
+			$this->load_language();
 		}
 	}
 	
@@ -136,19 +141,19 @@ class Fuel_module_advanced extends Fuel_base_library {
 		return WEB_ROOT.$this->folder();
 	}
 	
-	function &lib_class()
-	{
-		if ($this->has_lib_class())
-		{
-			$lib_class = strtolower($this->lib_class_name());
-			if (!isset($this->CI->$lib_class))
-			{
-				$this->load_library($lib_class);
-			}
-			return $this->CI->$lib_class;
-		}
-		return FALSE;
-	}
+	// function &lib_class()
+	// {
+	// 	if ($this->has_lib_class())
+	// 	{
+	// 		$lib_class = strtolower($this->lib_class_name());
+	// 		if (!isset($this->CI->$lib_class))
+	// 		{
+	// 			$this->load_library($lib_class);
+	// 		}
+	// 		return $this->CI->$lib_class;
+	// 	}
+	// 	return FALSE;
+	// }
 
 	function lib_class_name()
 	{
@@ -173,7 +178,12 @@ class Fuel_module_advanced extends Fuel_base_library {
 	
 	function config($item)
 	{
-		return $this->CI->config->item($item, $this->name);
+		return (isset($this->_config[$item])) ? $this->_config[$item] : FALSE;
+	}
+
+	function set_config($item, $val)
+	{
+		return $this->CI->config->set_item($item, $val, $this->name);
 	}
 	
 	function config_path()
@@ -183,9 +193,22 @@ class Fuel_module_advanced extends Fuel_base_library {
 	
 	function has_config()
 	{
-		return (file_exists($this->config_path()));
+		return (file_exists($this->lang_path()));
 	}
 	
+	function lang_path($lang = 'english', $file = NULL)
+	{
+		if (empty($file))
+		{
+			$file = strtolower($this->name);
+		}
+		return $this->server_path().'language/'.$lang.'/'.$file.'_lang.php';
+	}
+	
+	function has_lang()
+	{
+		return (file_exists($this->lang_path()));
+	}
 	
 	function routes()
 	{
@@ -244,8 +267,23 @@ class Fuel_module_advanced extends Fuel_base_library {
 		return (file_exists($this->docs_path()));
 	}
 	
-	function load_helper($helper)
+	function load_config($config = NULL)
 	{
+		if (empty($config))
+		{
+			$config = $this->name.'_config';
+		}
+
+		// last parameter tells it to fail gracefully
+		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
+	}
+
+	function load_helper($helper = NULL)
+	{
+		if (empty($helper))
+		{
+			$helper = $this->name;
+		}
 		$this->CI->load->module_helper($this->folder(), $helper);
 	}
 
@@ -264,9 +302,13 @@ class Fuel_module_advanced extends Fuel_base_library {
 		$this->CI->load->module_model($this->folder(), $model, $name);
 	}
 
-	function load_language($lang, $name = NULL)
+	function load_language($file, $lang = '')
 	{
-		$this->CI->load->module_language($this->folder(), $lang);
+		if (empty($file))
+		{
+			$file = strtolower($this->name);
+		}
+		$this->CI->load->module_language($this->folder(), $file, $lang);
 	}
 	
 	

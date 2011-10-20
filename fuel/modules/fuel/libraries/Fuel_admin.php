@@ -28,9 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
-require_once('Fuel_base_library.php');
-
 class Fuel_admin extends Fuel_base_library {
 	
 	protected $validate = TRUE;
@@ -109,7 +106,8 @@ class Fuel_admin extends Fuel_base_library {
 		if ($this->validate) $this->check_login();
 		
 		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
-
+		
+		// set variables
 		$load_vars = array(
 			'js' => array(), 
 			'css' => $this->load_css(),

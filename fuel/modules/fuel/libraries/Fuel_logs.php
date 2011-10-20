@@ -28,9 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// include base library class to extend
-require_once('Fuel_base_library.php');
-
 class Fuel_logs extends Fuel_base_library {
 	
 	function __construct($params = array())
@@ -41,7 +38,6 @@ class Fuel_logs extends Fuel_base_library {
 	function initialize($params)
 	{
 		parent::initialize($params);
-		
 		$this->fuel->load_model('logs');
 	}
 	
