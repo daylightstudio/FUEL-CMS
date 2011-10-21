@@ -43,19 +43,19 @@
 		<div id="fuel_left_panel_inner">
 			
 <?php 
-        // Get all modules
-        $modules = $this->fuel_modules->get_modules();
-        $mods = array();
-                
-        foreach($modules as $mod)
-        {
-            if(isset($mod['module_uri']))
-            {
-                // Index modules by their uri so we know which module belongs to a specific nav item
-                $mods[$mod['module_uri']] = isset($mod['permission']) ? $mod['permission'] : '';
-            }
-        }
+	// Get all modules
+	$modules = $this->fuel_modules->get_modules();
+	$mods = array();
         
+	foreach($modules as $mod)
+	{
+		if(isset($mod['module_uri']))
+		{
+			// Index modules by their uri so we know which module belongs to a specific nav item
+			$mods[$mod['module_uri']] = isset($mod['permission']) ? $mod['permission'] : '';
+		}
+	}
+
 	foreach($nav as $section => $nav_items)
 	{
             
@@ -67,9 +67,9 @@
 			{
 				$segments = explode('/', $key);
 				$url = $key;
-                                
-                                // Check for a specific module's permission                                
-                                $key = isset($mods[$key]) ? $mods[$key] : $key;
+
+				// Check for a specific module's permission                                
+				$key = isset($mods[$key]) ? $mods[$key] : $key;
 				
 				// Convert wild-cards to RegEx
 				$nav_selected = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $this->nav_selected));
