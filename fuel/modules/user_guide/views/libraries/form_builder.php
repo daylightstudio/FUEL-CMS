@@ -341,6 +341,7 @@
 	<li><strong>sorting</strong> - for multi selects that may need to keep track of selected options (combo jquery plugin)</li>
 	<li><strong>mode</strong> - used for enums and multiple select fields whether to use selects or radios/checkbox</li>
 	<li><strong>label_colons</strong> - used for adding colons after the label. The default will be whatever is set as the Form_builders <dfn>label_colons</dfn> class property</li>
+	<li><strong>display_label</strong> - for displaying the label or not</li>
 	<li><strong>__form_builder__</strong> - sets properties on the Form_builder object</li>
 </ul>
 
