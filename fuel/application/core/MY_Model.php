@@ -2829,7 +2829,7 @@ Class Data_record {
 	 */	
 	public function debug_query()
 	{
-		$this->_parent_model->db->debug_query();
+		$this->_parent_model->db()->debug_query();
 	}
 
 	// --------------------------------------------------------------------

@@ -633,21 +633,29 @@ Class Form_builder {
 				{
 					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 				}
-				$str .= ">\n\t<td class=\"label\">";
-				if ($this->label_layout != 'top')
+				$str .= ">\n\t";
+				if ($val['display_label'] !== FALSE)
 				{
-					$str .= $this->create_label($val, TRUE);
-					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"label\">";
+					if ($this->label_layout != 'top')
+					{
+						$str .= $this->create_label($val, TRUE);
+						$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+					}
+					else
+					{
+						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
+						$str .= "<tr";
+						if (!empty($this->row_id_prefix))
+						{
+							$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
+						}
+						$str .= ">\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+					}
 				}
 				else
 				{
-					$str .= $this->create_label($val, TRUE)."</td></tr>\n";
-					$str .= "<tr";
-					if (!empty($this->row_id_prefix))
-					{
-						$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-					}
-					$str .= ">\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"value\" colspan=\"2\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
 				}
 			}
 			else if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
@@ -685,22 +693,31 @@ Class Form_builder {
 				{
 					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 				}
-				$str .= ">\n\t<td class=\"label\">";
-				if ($this->label_layout != 'top')
+				$str .= ">\n\t";
+				if ($val['display_label'] !== FALSE)
 				{
-					$str .= $this->create_label($val, TRUE);
-					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"label\">";
+					if ($this->label_layout != 'top')
+					{
+						$str .= $this->create_label($val, TRUE);
+						$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+					}
+					else
+					{
+						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
+						$str .= "<tr";
+						if (!empty($this->row_id_prefix))
+						{
+							$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
+						}
+						$str .= ">\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+					}
 				}
 				else
 				{
-					$str .= $this->create_label($val, TRUE)."</td></tr>\n";
-					$str .= "<tr";
-					if (!empty($this->row_id_prefix))
-					{
-						$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-					}
-					$str .= ">\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"value\" colspan=\"2\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
 				}
+
 			}
 		}
 		if ($this->label_layout != 'top')
@@ -815,6 +832,7 @@ Class Form_builder {
 			'readonly' => '',
 			'disabled' => '',
 			'label_colons' => NULL,
+			'display_label' => TRUE,
 			
 			'order' => 9999,
 			'before_html' => '', // for html before the field
@@ -1092,6 +1110,8 @@ Class Form_builder {
 		$params = $this->normalize_params($params);
 		
 		$str = '';
+		if (isset($params['display_label']) AND $params['display_label'] === FALSE) return $str;
+		
 		if (empty($params['label']))
 		{
 			if ($lang = $this->_label_lang($params['orig_name']))
