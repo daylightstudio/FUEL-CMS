@@ -2,6 +2,19 @@
 		<div id="fuel_left_panel_inner">
 			
 <?php 
+	// // Get all modules
+	// $modules = $this->fuel_modules->get_modules();
+	// $mods = array();
+	//         
+	// foreach($modules as $mod)
+	// {
+	//     if(isset($mod['module_uri']))
+	//     {
+	//         // Index modules by their uri so we know which module belongs to a specific nav item
+	//         $mods[$mod['module_uri']] = isset($mod['permission']) ? $mod['permission'] : '';
+	//     }
+	// }
+	// 
 	foreach($nav as $section => $nav_items)
 	{
 		if (is_array($nav_items))
@@ -13,7 +26,10 @@
 				$segments = explode('/', $key);
 				$url = $key;
 				
-				if (($this->fuel_auth->has_permission($key)) || $key == 'dashboard')
+				// Check for a specific module's permission                                
+		//		$key = isset($mods[$key]) ? $mods[$key] : $key;
+				
+				if (($this->fuel->auth->has_permission($key)) || $key == 'dashboard')
 				{
 					if  (!$header_written)
 					{
