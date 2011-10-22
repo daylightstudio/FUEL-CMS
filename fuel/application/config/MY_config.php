@@ -3,8 +3,8 @@
 date_default_timezone_set('America/Los_Angeles');
 
 // used for development and testing
-$config['dev_mode'] = TRUE;
-$config['dev_email'] = '';
+$config['dev_mode'] = FALSE;
+$config['dev_email'] = 'dmmcreynolds@gmail.com';
 
 // date format used with date helpers
 $config['date_format'] = 'm/d/Y';

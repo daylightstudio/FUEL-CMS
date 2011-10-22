@@ -3,7 +3,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 require_once(MODULES_PATH.TESTER_FOLDER.'/libraries/Tester_base.php');
 
 class Tester extends Fuel_base_controller {
-
+	public $module_uri = 'tester';
 	public $view_location = 'tester';
 	public $nav_selected = 'tools/tester';
 	
@@ -32,7 +32,8 @@ class Tester extends Fuel_base_controller {
 		$test_list = array();
 		foreach($modules as $module)
 		{
-			$module_test_folder = Fuel_modules::module_path($module).'/tests/';
+			//$module_test_folder = Fuel_modules::module_path($module).'/tests/';
+			$module_test_folder = MODULES_PATH.$module.'/tests/';
 			$module_tests_list = $this->_get_tests($module_test_folder, $module);
 
 			// merge the arrays with a + to preserve keys
@@ -50,7 +51,11 @@ class Tester extends Fuel_base_controller {
 		asort($test_list);
 		
 		$vars['test_list'] = $test_list;
-		$this->fuel->admin->render('tester', $vars);
+		
+		
+		$crumbs = array('tools' => lang('section_tools'), lang('module_tester'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_tester');
+		$this->fuel->admin->render('tester', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 	
 	function run()
@@ -139,7 +144,10 @@ class Tester extends Fuel_base_controller {
 		}
 		
 		$vars['tests_serialized'] = base64_encode(serialize($tests));
-		$this->fuel->admin->render('tester_results', $vars);
+		
+		$crumbs = array('tools' => lang('section_tools'), lang('module_tester'), lang('tester_results'));
+		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_tester');
+		$this->fuel->admin->render('tester_results', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 	function _get_tests($folder, $module = NULL)

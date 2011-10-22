@@ -1,137 +1,116 @@
 <?php
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Cron backup Controller
+ *
+ * @package		FUEL CMS
+ * @subpackage	Controller
+ * @category	Controller
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/modules/backup
+ */
+
+// --------------------------------------------------------------------
+
 class Cron extends CI_Controller  {
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->config->load('backup');
-		$this->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
-		$this->load->language('backup');
-
+		$this->load->module_library(FUEL_FOLDER, 'fuel');
 	}
 	
-	function _remap($method){
+	function _remap($method)
+	{
+		// check for CRON OR STDIN constants
 		if (defined('CRON') OR defined('STDIN'))
 		{
-			$this->load->library('email');
-			$this->load->helper('string');
-			$this->load->helper('file');
-			$this->load->module_model(FUEL_FOLDER, 'logs_model');
-
-			$backup_config = $this->config->item('backup');
-			$include_assets = ($method == '1' OR ($method =='index' AND $backup_config['backup_assets']));
-			$download_path = $backup_config['db_backup_path'];
+			// set assets flag
+			$include_assets = ($method == '1' OR ($method =='index' AND $this->fuel->backup->config('include_assets')));
 			
-			if (!is_writable($download_path))
+			if (!empty($include_assets))
 			{
-				$this->output->set_output(lang('cron_db_folder_not_writable', $download_path));
-				return;
+				$this->fuel->backup->include_assets = TRUE;
 			}
-
-			// Load the DB utility class
-			$this->load->dbutil();
-
-			// Backup your entire database and assign it to a variable
-			//$config = array('newline' => "\r", 'format' => 'zip');
-
-			// need to do text here to make some fixes
-			$db_back_prefs = $backup_config['db_backup_prefs'];
-			$db_back_prefs['format'] = 'txt';
-			$backup =& $this->dbutil->backup($db_back_prefs); 
-
-			//fixes to work with PHPMYAdmin
-			// $backup = str_replace('\\\t', "\t",	$backup);
-			// $backup = str_replace('\\\n', '\n', $backup);
-			// $backup = str_replace("\\'", "''", $backup);
-			// $backup = str_replace('\\\\', '', $backup);
-
-			$backup_date = date($backup_config['backup_file_date_format']);
-			if ($backup_config['backup_file_prefix'] == 'AUTO')
-			{
-				$this->load->helper('url');
-				$backup_config['backup_file_prefix'] = url_title($this->config->item('site_name', FUEL_FOLDER), '_', TRUE);
-			}
-
-			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
+			//$this->fuel->backup->allow_overwrite = TRUE;
+			$this->fuel->backup->download = FALSE;
 			
-			if (!empty($backup_config['backup_zip']))
+			// perform backup
+			if (!$this->fuel->backup->do_backup())
 			{
-				$this->load->library('zip');
-				$this->zip->add_data($filename, $backup);
-
-				// include assets folder
-				if ($include_assets)
-				{
-					$this->zip->read_dir(assets_server_path());
-				}
-				$download_file = $download_path.$filename.'.zip';
+				$output = $this->fuel->backup->errors(TRUE);
 			}
 			else
 			{
-				$download_file = $download_path.$filename;
-			}
-			
-			// write the zip file to a folder on your server. 
-			if (!file_exists($download_file))
-			{
+				$backup_data = $this->fuel->backup->backup_data();
+				$file_name = $backup_data['file_name'];
+				$download_path = $backup_data['full_path'];
 				
-				if (!empty($backup_config['backup_zip']))
-				{
-					$this->zip->archive($download_file);
-				}
-				else
-				{
-					write_file($download_file, $backup);
-				}
+				// set initial output value
+				$output = ($include_assets) ? lang('cron_db_backup_asset', $file_name) : lang('cron_db_backup', $file_name);
 				
-				$output = ($include_assets) ? lang('cron_db_backup_asset', $filename) : lang('cron_db_backup', $filename);
-				$this->logs_model->logit($output, 0); // the 0 is for the system as the user
-				
-				// send email if set in config
-				if (!empty($backup_config['backup_cron_email']))
+
+				if ($this->fuel->backup->config('cron_email'))
 				{
-					$this->email->to($backup_config['backup_cron_email']);
-					$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
-					$this->email->message($output);
-					$this->email->subject(lang('cron_email_subject', $this->config->item('site_name', 'fuel')));
 					
-					if ($backup_config['backup_cron_email_file'])
+					// set parameters for notification
+					$params['to'] = $this->fuel->backup->config('cron_email');
+					$params['from'] = $this->fuel->config('from_email');
+					$params['from_name'] = $this->fuel->config('site_name');
+					$params['message'] = $output;
+					$params['subject'] = lang('cron_email_subject', $this->fuel->config('site_name'));
+					$params['use_dev_mode'] = FALSE; // must be set for emails to always go to what is sent in the backup config
+					if ($this->fuel->backup->config('cron_email_file'))
 					{
-						$this->email->attach($download_file);
+						$params['attachments'] = $download_path;
 					}
-					
-					if ($this->email->send())
+
+					if ($this->fuel->notification->send($params))
 					{
-						$output .= "\n".lang('cron_email', $backup_config['backup_cron_email']);
+						$output .= "\n".lang('cron_email', $this->fuel->backup->config('cron_email'));
 					}
 					else
 					{
-						$output .= "\n".lang('cron_email_error', $backup_config['backup_cron_email']);
+						$output .= "\n".lang('cron_email_error', $this->fuel->backup->config('cron_email'));
 					}
+					exit($output);
 				}
 				
-				// now delete old files
-				if (!empty($backup_config['backup_days_to_keep']))
+				if ($this->fuel->backup->config('days_to_keep'))
 				{
-					$files = get_dir_file_info($download_path);
-					
+					$files = get_dir_file_info($this->fuel->backup->backup_path);
+
 					foreach($files as $file)
 					{
 						$file_date = substr(end(explode($file['name'], '_')), 0, 10);
 						$file_date_ts = strtotime($file['date']);
-						$compare_date = mktime(0, 0, 0, date('m'), date('j') - $backup_config['backup_days_to_keep'], date('Y'));
+						$compare_date = mktime(0, 0, 0, date('m'), date('j') - $this->fuel->backup->config('days_to_keep'), date('Y'));
 						
-						if ($file_date_ts < $compare_date AND strncmp($backup_config['backup_file_prefix'], $file['name'], strlen($backup_config['backup_file_prefix'])) === 0)
+						if ($file_date_ts < $compare_date AND strncmp($this->fuel->backup->config('file_prefix'), $file['name'], strlen($this->fuel->backup->config('file_prefix'))) === 0)
 						{
 							@unlink($file['server_path']);
 						}
 					}
+					// log message
+					$msg = lang('data_backup');
+					$this->fuel->logs->logit($msg);
 				}
-				
-			}
-			else
-			{
-				$output = lang('cron_db_backed_up_already');
 			}
 			$this->output->set_output($output);
 		}
@@ -140,4 +119,4 @@ class Cron extends CI_Controller  {
 }
 
 /* End of file cron.php */
-/* Location: ./modules/fuel/controllers/cron.php */
+/* Location: ./fuel/modules/backup/controllers/cron.php */

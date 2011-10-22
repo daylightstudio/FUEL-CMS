@@ -27,12 +27,9 @@ class Logs_model extends Base_module_model {
 		$this->db->order_by($col, $order);
 		$this->db->limit($limit, $offset);
 		$query = $this->get();
-		//$data = $query->result_array();
 		$data = $query->result();
-	//	$this->db->debug_query();
 		return $data;
 	}
-	
 	
 	function logit($msg, $user = null){
 		$CI =& get_instance();

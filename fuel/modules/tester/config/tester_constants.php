@@ -1,5 +1,5 @@
 <?php 
-define('TESTER_VERSION', '0.9.2');
+define('TESTER_VERSION', '0.9.4');
 define('TESTER_FOLDER', 'tester');
 define('TESTER_PATH', MODULES_PATH.TESTER_FOLDER.'/');
 

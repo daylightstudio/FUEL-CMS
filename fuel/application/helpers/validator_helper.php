@@ -775,12 +775,12 @@ function has_errors()
  */
 function add_error($msg, $key = NULL)
 {
-	if(empty($key)) 
-	{
-		$key = count($GLOBALS[GLOBAL_ERRORS]);
-	}
 	if(defined('GLOBAL_ERRORS')) 
 	{
+		if(empty($key)) 
+		{
+			$key = count($GLOBALS[GLOBAL_ERRORS]);
+		}
 		$GLOBALS[GLOBAL_ERRORS][$key] = $msg;
 	}
 }

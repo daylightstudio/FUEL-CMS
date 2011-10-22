@@ -1,0 +1,4 @@
+<?php 
+define('PAGE_ANALYSIS_VERSION', '0.9.4');
+define('PAGE_ANALYSIS_FOLDER', 'page_analysis');
+define('PAGE_ANALYSIS_PATH', MODULES_PATH.PAGE_ANALYSIS_FOLDER.'/');

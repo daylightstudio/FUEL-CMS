@@ -23,7 +23,7 @@ $config['modules_allowed'] = array(
 	'user_guide',
 	'blog',
 	'backup',
-	'seo',
+	'page_analysis',
 	'validate',
 	'tester',
 	'cronjobs'

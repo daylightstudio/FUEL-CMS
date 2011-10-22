@@ -159,10 +159,11 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery-ui-1.8.4.custom.min',
-	// 'jquery/plugins/jquery.selso',
-	// 'jquery/plugins/jquery.disable.text.select.pack',
-	// 'jquery/plugins/jquery.supercomboselect',
-//	'jquery/plugins/jquery.MultiFile.pack',
+	/* needed for other modules */
+	'jquery/plugins/jquery.selso',
+	'jquery/plugins/jquery.disable.text.select.pack',
+	'jquery/plugins/jquery.supercomboselect',
+	'jquery/plugins/jquery.MultiFile',
 	'jquery/plugins/jquery.tablednd.js',
 	// 'editors/markitup/jquery.markitup.pack',
 	// 'editors/markitup/jquery.markitup.set',
@@ -226,7 +227,15 @@ $config['module_sanitize_funcs'] = array(
 */
 
 // specifies which modules are allowed to be used in the FUEL admin
-$config['modules_allowed'] = array('blog', 'tools');
+$config['modules_allowed'] = array(
+	'user_guide',
+	'blog',
+	'backup',
+	'page_analysis',
+	'validate',
+	'tester',
+	'cronjobs'
+);
 
 // site... Dashboard will always be there
 $config['nav']['site'] = array(

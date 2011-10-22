@@ -17,261 +17,402 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL pages 
+ * Backup object 
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_backup
+ * @link		http://www.getfuelcms.com/user_guide/modules/backup
  */
 
 // --------------------------------------------------------------------
 
 class Fuel_backup extends Fuel_advanced_module {
 	
+	public $file_prefix = 'AUTO'; // used for the name of the backup file. A value of AUTO will automatically create the name
+	public $file_date_format = 'Y-m-d'; // date format to append to file name
+	public $zip = TRUE; // ZIP up the file or not
+	public $include_assets = FALSE; // determines whether to backup assets by default
+	public $download = TRUE; // download the file or not from the browser
+	public $days_to_keep = 30; // number of days to hold backups. A value of 0 or FALSE will be forever
+	public $allow_overwrite = FALSE; // allow the backup to overwrite existing
+	public $backup = FALSE; // determines whether to backup assets by default
+	public $cron_email = ''; // the email address to send the backup cron notification
+	public $cron_email_file = TRUE; // determines whether to send files in an email with cron backup
+	public $backup_path = ''; //backup path for data. Deafult is at the same level as the system and application folder
+	public $db_backup_prefs = array( //ddatabase backup preferences
+									'ignore'	=> array(), // List of tables to omit from the backup
+									'add_drop'	=> TRUE, // Whether to add DROP TABLE statements to backup file
+									'add_insert'=> TRUE // Whether to add INSERT data to backup file
+									);
+	protected $_backup_data = array(); // an array of backed up data information
+	
+	/**
+	 * Constructor - Sets Fuel_backup preferences
+	 *
+	 * The constructor can be passed an array of config values
+	 */
 	function __construct($params = array())
 	{
 		parent::__construct($params);
+		$this->CI->load->library('zip');
+		$this->CI->load->helper('file');
+		
+		// initialize object if any parameters
+		if (!empty($params))
+		{
+			$this->initialize($params);
+		}
+		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the backup object
+	 *
+	 * Accepts an associative array as input, containing backup preferences.
+	 * Also will set the values in the config as properties of this object
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function initialize($params)
 	{
 		parent::initialize($params);
+		$this->set_params($this->_config);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Backs up the database / and assets (if configured) information to the specified backup path
+	 *
+	 * Accepts an associative array as input, containing backup preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	boolean
+	 */	
+	function do_backup($params = array())
+	{
+		if (!empty($params))
+		{
+			$this->set_params($params);
+		}
+		
+		$data = $this->_database();
+		$file_name = $this->_file_name().'.sql';
+		
+		// if zip is specified, we'll zip it up '
+		if (!empty($this->zip))
+		{
+			// clear any data on the object
+			$this->CI->zip->clear_data();
+			
+			// add database data
+			$this->CI->zip->add_data($file_name, $data);
+
+			// include assets?
+			if ($this->include_assets)
+			{
+				$this->CI->zip->read_dir(assets_server_path());
+			}
+			return $this->zip($file_name);
+		}
+		else
+		{
+			return $this->write($file_name, $data);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Backs up the database information to the specified backup path
+	 *
+	 * Accepts an associative array as input, containing backup preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	boolean
+	 */	
 	function database($params = array())
 	{
-		$default = array(
-			'backup_path' => $this->config('db_backup_path'),
-			'db_prefs' => $this->config('db_backup_prefs'),
-			'file_prefix' => $this->config('backup_file_prefix'),
-			'file_date_format' => $this->config('backup_file_date_format'),
-			'zip' => $this->config('backup_zip'),
-			'download' => $this->config('backup_download'),
-		);
-		
-		$params = array_merge($default, $params);
-		
-		$download_path = $params['backup_path'];
-		$is_writable = is_writable($download_path);
-
-		// Load the DB utility class
-		$this->load->dbutil();
-		
-		// need to do text here to make some fixes
-		$db_back_prefs = $params['db_prefs'];
-		$db_back_prefs['format'] = 'txt';
-		$backup =& $this->dbutil->backup($db_back_prefs); 
-		
-		$filename = $this->_filename($params['file_prefix'], $params['file_date_format']).'.sql';
-		
-		if (!empty($params['backup_zip']))
+		if (!empty($params))
 		{
-			return $this->_zip($filename, $backup, $download_path, $params['download']);
+			$this->set_params($params);
+		}
+		
+		$data = $this->_database();
+		
+		$file_name = $this->_file_name().'.sql';
+
+		if (!empty($this->zip))
+		{
+			// clear any data on the object
+			$this->CI->zip->clear_data();
+		
+			return $this->zip($file_name, $data);
 		}
 		else
 		{
-			$download_file = $download_path.$filename;
-			return $this->_write($download_file);
+			return $this->write($file_name, $data);
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Backs up the assets folder to the specified backup path
+	 *
+	 * Accepts an associative array as input, containing backup preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	boolean
+	 */	
 	function assets($params = array())
 	{
-		$default = array(
-			'backup_path' => $this->config('db_backup_path'),
-			'file_prefix' => $this->config('backup_file_prefix'),
-			'file_date_format' => $this->config('backup_file_date_format'),
-			'zip' => $this->config('backup_zip'),
-			'download' => $this->config('backup_download'),
-		);
-		
-		$params = array_merge($default, $params);
-		$filename = $this->_filename($params['file_prefix'], $params['file_date_format']);
-		
-		$this->CI->load->library('zip');
-		$this->CI->zip->read_dir(assets_server_path());
-		
-		if (!empty($params['backup_zip']))
+		if (!empty($params))
 		{
-			return $this->_zip($filename, $backup, $download_path, $params['download']);
+			$this->set_params($params);
+		}
+		
+		$file_name = $this->_file_name();
+		
+		if (!empty($params['zip']))
+		{
+			// clear any data on the object
+			$this->CI->zip->clear_data();
+	
+			return $this->zip($file_name, assets_server_path());
 		}
 		else
 		{
-			$download_file = $download_path.$filename;
-			return $this->_write($download_file);
+			return $this->write($file_name);
 		}
-		
 	}
-	// TODO FIX
-	function cron()
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Zips up data
+	 *
+	 * Accepts an associative array as input, containing backup preferences
+	 *
+	 * @access	public
+	 * @param	string	file name
+	 * @param	string	information to zip up
+	 * @return	boolean
+	 */	
+	function zip($file_name, $data = NULL)
 	{
-		if (defined('CRON') OR defined('STDIN'))
+		if (is_string($data))
 		{
-			$this->load->library('email');
-			$this->load->helper('string');
-			$this->load->helper('file');
-			$this->load->module_model(FUEL_FOLDER, 'logs_model');
-
-			$backup_config = $this->config->item('backup');
-			$include_assets = ($method == '1' OR ($method =='index' AND $backup_config['backup_assets']));
-			$download_path = $backup_config['db_backup_path'];
-			
-			if (!is_writable($download_path))
+			// if string is a directory path, then we read the directory... 
+			// may be too presumptious but it's convenient'
+			if (is_dir($data))
 			{
-				$this->output->set_output(lang('cron_db_folder_not_writable', $download_path));
-				return;
-			}
-
-			// Load the DB utility class
-			$this->load->dbutil();
-
-			// Backup your entire database and assign it to a variable
-			//$config = array('newline' => "\r", 'format' => 'zip');
-
-			// need to do text here to make some fixes
-			$db_back_prefs = $backup_config['db_backup_prefs'];
-			$db_back_prefs['format'] = 'txt';
-			$backup =& $this->dbutil->backup($db_back_prefs); 
-
-			//fixes to work with PHPMYAdmin
-			// $backup = str_replace('\\\t', "\t",	$backup);
-			// $backup = str_replace('\\\n', '\n', $backup);
-			// $backup = str_replace("\\'", "''", $backup);
-			// $backup = str_replace('\\\\', '', $backup);
-
-			$backup_date = date($backup_config['backup_file_date_format']);
-			if ($backup_config['backup_file_prefix'] == 'AUTO')
-			{
-				$this->load->helper('url');
-				$backup_config['backup_file_prefix'] = url_title($this->config->item('site_name', FUEL_FOLDER), '_', TRUE);
-			}
-
-			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
-			
-			if (!empty($backup_config['backup_zip']))
-			{
-				$this->load->library('zip');
-				$this->zip->add_data($filename, $backup);
-
-				// include assets folder
-				if ($include_assets)
-				{
-					$this->zip->read_dir(assets_server_path());
-				}
-				$download_file = $download_path.$filename.'.zip';
+				$this->CI->zip->read_dir($data);
 			}
 			else
 			{
-				$download_file = $download_path.$filename;
+				$this->CI->zip->add_data($file_name, $data);
 			}
-			
-			// write the zip file to a folder on your server. 
-			if (!file_exists($download_file))
-			{
-				
-				if (!empty($backup_config['backup_zip']))
-				{
-					$this->zip->archive($download_file);
-				}
-				else
-				{
-					write_file($download_file, $backup);
-				}
-				
-				$output = ($include_assets) ? lang('cron_db_backup_asset', $filename) : lang('cron_db_backup', $filename);
-				$this->logs_model->logit($output, 0); // the 0 is for the system as the user
-				
-				// send email if set in config
-				if (!empty($backup_config['backup_cron_email']))
-				{
-					$this->email->to($backup_config['backup_cron_email']);
-					$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
-					$this->email->message($output);
-					$this->email->subject(lang('cron_email_subject', $this->config->item('site_name', 'fuel')));
-					
-					if ($backup_config['backup_cron_email_file'])
-					{
-						$this->email->attach($download_file);
-					}
-					
-					if ($this->email->send())
-					{
-						$output .= "\n".lang('cron_email', $backup_config['backup_cron_email']);
-					}
-					else
-					{
-						$output .= "\n".lang('cron_email_error', $backup_config['backup_cron_email']);
-					}
-				}
-				
-				// now delete old files
-				if (!empty($backup_config['backup_days_to_keep']))
-				{
-					$files = get_dir_file_info($download_path);
-					
-					foreach($files as $file)
-					{
-						$file_date = substr(end(explode($file['name'], '_')), 0, 10);
-						$file_date_ts = strtotime($file['date']);
-						$compare_date = mktime(0, 0, 0, date('m'), date('j') - $backup_config['backup_days_to_keep'], date('Y'));
-						
-						if ($file_date_ts < $compare_date AND strncmp($backup_config['backup_file_prefix'], $file['name'], strlen($backup_config['backup_file_prefix'])) === 0)
-						{
-							@unlink($file['server_path']);
-						}
-					}
-				}
-				
-			}
-			else
-			{
-				$output = lang('cron_db_backed_up_already');
-			}
-			$this->output->set_output($output);
-		}
-	}
-	
-	protected function _filename($prefix, $date_format)
-	{
-		$backup_date = date($date_format);
-		if ($prefix == 'AUTO')
-		{
-			$prefix = url_title($this->fuel->config('site_name'), '_', TRUE);
 		}
 		
-		$filename = $prefix.'_'.$backup_date;
-		return $filename;
-	}
-	
-	protected function _zip($filename, $backup, $download_path, $download = TRUE)
-	{
-		$this->CI->load->library('zip');
-		$this->CI->zip->add_data($filename, $backup);
-		$download_file = $download_path.$filename.'.zip';
+		// check if folder is writable
+		if (!is_really_writable($this->backup_path))
+		{
+			$this->_add_error(lang('data_backup_folder_not_writable', $full_path));
+			return FALSE;
+		}
+		
+		// add .zip extension so file_name is correct
+		$file_name = $file_name.'.zip';
+		
+		// path to download file
+		$full_path = $this->backup_path.$file_name;
+		
+		if (file_exists($full_path) AND !$this->allow_overwrite)
+		{
+			$this->_add_error(lang('data_backup_already_exists'));
+			return FALSE;
+		}
 		
 		// write the zip file to a folder on your server. 
-		$archived = $this->CI->zip->archive($download_file); 
+		$archived = $this->CI->zip->archive($full_path); 
 		
-		if (!$archived) return FALSE;
-		
-		// download the file to your desktop. 
-		if ($download)
+		if (!$archived) 
 		{
-			$this->CI->zip->download($filename.'.zip');
+			$this->_add_error(lang('data_backup_zip_error'));
+			return FALSE;
 		}
+	
+		// download the file to your desktop. 
+		if ($this->download)
+		{
+			$this->CI->zip->download($file_name);
+		}
+
+		// save to backup data
+		$this->_add_backup_data('file_name', $file_name);
+
+		// save to backup data
+		$this->_add_backup_data('full_path', $full_path);
+
 		return $archived;
 	}
 	
-	protected function _write($path)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Writes a file to the backup folder
+	 *
+	 * Accepts an associative array as input, containing backup preferences
+	 *
+	 * @access	public
+	 * @param	string	file name
+	 * @param	string	information to write to the file
+	 * @return	boolean
+	 */	
+	function write($file_name, $data)
 	{
-		$this->CI->load->helper('file');
-		return write_file($path, $backup);
+		$full_path = $this->backup_path.$file_name;
+		
+		// check if folder is writable
+		if (!is_really_writable($this->backup_path))
+		{
+			$this->_add_error(lang('data_backup_folder_not_writable', $full_path));
+			return FALSE;
+		}
+		
+		// save to backup data
+		$this->_add_backup_data('file_name', $file_name);
+		
+		// save to backup data
+		$this->_add_backup_data('full_path', $full_path);
+		
+		return write_file($full_path, $data);
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the backed up data information
+	 *
+	 * Similar to File Upload class, provides post-mortem info
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function backup_data()
+	{
+		$backup_data = array(
+				'file_name' => '',
+				'full_path' => '',
+			);
+		$backup_data = array_merge($backup_data, $this->_backup_data);
+		return $backup_data;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds information to backup data
+	 *
+	 * This is a convenience method 
+	 *
+	 * @access	protected
+	 * @param	string	key name
+	 * @param	mixed	data
+	 * @return	void
+	 */	
+	function _add_backup_data($key, $data)
+	{
+		$this->_backup_data[$key] = $data;
+	}
+	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes a backup file from the backup directory
+	 *
+	 * @access	public
+	 * @param	string	file name
+	 * @return	boolean
+	 */	
+	function remove($backup_file)
+	{
+		$filepath = $this->backup_path.$backup_file;
+		$return = FALSE;
+		if (file_exists($filepath))
+		{
+			if (unlink($filepath))
+			{
+				$this->_add_error(lang('data_backup_error_could_not_delete'));
+			}
+			else
+			{
+				$return = TRUE;
+			}
+		}
+		return $return;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the file name based on the object parameters
+	 *
+	 * This is a convenience method 
+	 *
+	 * @access	protected
+	 * @return	string
+	 */	
+	protected function _file_name()
+	{
+		$backup_date = date($this->file_date_format);
+		$prefix = $this->file_prefix;
+		
+		if ($prefix == 'AUTO')
+		{
+			$prefix = url_title($this->fuel->config('site_name'), 'underscore', TRUE);
+		}
+		$file_name = $prefix.'_'.date($this->file_date_format);
+		return $file_name;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the backed up database as a string
+	 *
+	 * This is a convenience method 
+	 *
+	 * @access	protected
+	 * @return	string
+	 */	
+	protected function _database()
+	{
+		// Load the DB utility class
+		$this->CI->load->dbutil();
+		
+		// need to do text here to make some fixes
+		$db_back_prefs = $this->db_backup_prefs;
+		$db_back_prefs['format'] = 'txt';
+		$backup =& $this->CI->dbutil->backup($db_back_prefs); 
+		
+		return $backup;
+	}
+	
+	
+
 }
 
-
-
 /* End of file Fuel_backup.php */
-/* Location: ./modules/fuel/libraries/fuel/Fuel_backup.php */
+/* Location: ./modules/fuel/libraries/Fuel_backup.php */

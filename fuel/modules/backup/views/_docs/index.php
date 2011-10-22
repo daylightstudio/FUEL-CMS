@@ -5,11 +5,11 @@ The Backup module can be used along with the <a href="<?=user_guide_url('modules
 
 <h2>Backup Configuration</h2>
 <ul>
-	<li><dfn>backup_file_prefix</dfn> - used for the name of the backup file. A value of AUTO will automatically create the name.</li>
-	<li><dfn>backup_assets</dfn> - determines whether to backup assets by default.</li>
-	<li><dfn>backup_cron_email</dfn> - the email address to send the cron job notification.</li>
-	<li><dfn>backup_cron_email_file</dfn> - use the email address to email notifications (seperate from the cron email).</li>
-	<li><dfn>db_backup_path</dfn> - used for the admin/manage/backup. Beow default looks for folder called data_backup at the same level as the system and application folder</li>
+	<li><dfn>file_prefix</dfn> - used for the name of the backup file. A value of AUTO will automatically create the name.</li>
+	<li><dfn>include_assets</dfn> - determines whether to backup assets by default.</li>
+	<li><dfn>cron_email</dfn> - the email address to send the cron job notification.</li>
+	<li><dfn>cron_email_file</dfn> - use the email address to email notifications (seperate from the cron email).</li>
+	<li><dfn>backup_path</dfn> - used for the admin/manage/backup. Beow default looks for folder called data_backup at the same level as the system and application folder</li>
 	<li><dfn>db_backup_prefs</dfn> - use the email address to email notifications (seperate from the cron email). It is an array with the following options
 		<ul>
 			<li><strong>ignore</strong> - list of tables to omit from the backup.</li>

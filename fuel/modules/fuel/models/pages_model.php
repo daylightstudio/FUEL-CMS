@@ -131,10 +131,11 @@ class Pages_model extends Base_module_model {
 		$views_path = APPPATH.'views/';
 		$view_files = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
 		
+		$module_pages = array();
 		// module pages
 		if ($include_modules)
 		{
-			$module_pages = $CI->fuel_modules->get_pages();
+			//$module_pages = $CI->fuel_modules->get_pages();
 		}
 		
 		// merge them together for a complete list

@@ -47,6 +47,7 @@ class Fuel extends Fuel_base_library {
 									'cache',
 									'logs',
 									'advanced_modules',
+									'notification',
 									);
 
 	private static $_instance;
@@ -74,6 +75,13 @@ class Fuel extends Fuel_base_library {
 	{
 		return $this->CI->config->item($item, $module);
 	}
+
+	function set_config($item, $value, $module = 'fuel')
+	{
+		$fuel_config = $this->CI->config->item($module);
+		$fuel_config[$item] = $value;
+		return $this->CI->config->set_item($module, $fuel_config);
+	}
 	
 	function load_helper($helper, $module = NULL)
 	{
@@ -81,10 +89,10 @@ class Fuel extends Fuel_base_library {
 		$this->CI->load->module_helper($module, $helper);
 	}
 
-	function load_library($library, $module = NULL, $name = NULL)
+	function load_library($library, $module = NULL, $init = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_library($module, $library, $name);
+		$this->CI->load->module_library($module, $library, $init);
 	}
 
 	function load_model($model, $module = NULL, $name = NULL)
@@ -92,16 +100,16 @@ class Fuel extends Fuel_base_library {
 		if (empty($module)) $module = FUEL_FOLDER;
 		if (substr($model, strlen($model) - 6) !='_model')
 		{
-			$name = $model;
 			$model = $model.'_model';
+			if (empty($name)) $name = $model;
 		}
-		$this->CI->load->module_model(FUEL_FOLDER, $model, $name);
+		$this->CI->load->module_model($module, $model, $name);
 	}
 
 	function load_language($lang, $module = NULL, $name = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_language(FUEL_FOLDER, $lang);
+		$this->CI->load->module_language($module, $lang);
 	}
 	
 	function &__get($var)
@@ -120,7 +128,8 @@ class Fuel extends Fuel_base_library {
 					$lib_class = strtolower($fuel_class);
 					if (!isset($this->CI->$lib_class))
 					{
-						$this->load_library($lib_class, $var);
+						$init = array('name' => $var);
+						$this->load_library($lib_class, $var, $init);
 					}
 					return $this->CI->$lib_class;
 				}
@@ -137,11 +146,12 @@ class Fuel extends Fuel_base_library {
 	{
 		if (isset($obj))
 		{
-			$this->_attached[$key] = $obj;
+			$this->_attached[$key] =& $obj;
 		}
 		else
 		{
-			$this->load_library('fuel_'.$key);
+			$init = array('name' => $key);
+			$this->load_library('fuel_'.$key, FUEL_FOLDER, $init);
 			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
 		}
 	}
@@ -151,46 +161,6 @@ class Fuel extends Fuel_base_library {
 		return (in_array($module, $this->fuel->config('modules_allowed')));
 	}
 	
-	/**
-	 * alias to module information
-	 *
-	 * @access	public
-	 * @return	string
-	 */	
-	protected function get_navigation()
-	{
-		return $this->modules->get('navigation');
-	}
-
-	protected function get_blocks()
-	{
-		return $this->modules->get('blocks');
-	}
-
-	protected function get_sitevariables()
-	{
-		return $this->modules->get('sitevariables');
-	}
-
-	protected function get_blog()
-	{
-		return $this->modules->get('blog');
-	}
-	
-	protected function get_users()
-	{
-		return $this->modules->get('users');
-	}
-	
-	protected function get_permissions()
-	{
-		return $this->modules->get('permissions');
-	}
-	
-	protected function get_activity()
-	{
-		return $this->modules->get('activity');
-	}
 
 }
 

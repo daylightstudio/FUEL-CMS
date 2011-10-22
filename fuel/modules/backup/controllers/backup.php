@@ -1,92 +1,85 @@
 <?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Backup Controller
+ *
+ * @package		FUEL CMS
+ * @subpackage	Controller
+ * @category	Controller
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/modules/backup
+ */
+
+// --------------------------------------------------------------------
+
 class Backup extends Fuel_base_controller {
 	
-	public $nav_selected = 'tools/backup';
-	public $view_location = 'backup';
+	public $nav_selected = 'tools/backup'; // which navigation item should be selected
+	public $view_location = 'backup'; // location of view files
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->config->load('backup');
-		$this->load->language('backup');
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Backs up the database/assets for the site
+	 *
+	 * located at fuel/backup/
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function index()
 	{
 		$this->_validate_user('tools/backup');
-		echo $this->fuel->backup->config('db_backup_path');
-		exit();
-		$backup_config = $this->config->item('backup');
-		$download_path = $backup_config['db_backup_path'];
-		$is_writable = is_writable($download_path);
-		if ($post = $this->input->post('action'))
+		$download_path = $this->fuel->backup->config('backup_path');
+
+		if (!empty($_POST['action']))
 		{
-			// Load the DB utility class
-			$this->load->dbutil();
 			
-			// Backup your entire database and assign it to a variable
-			//$config = array('newline' => "\r", 'format' => 'zip');
-			
-			// need to do text here to make some fixes
-			$db_back_prefs = $backup_config['db_backup_prefs'];
-			$db_back_prefs['format'] = 'txt';
-			$backup =& $this->dbutil->backup($db_back_prefs); 
-			
-			//fixes to work with PHPMYAdmin
-			// $backup = str_replace('\\\t', "\t",	$backup);
-			// $backup = str_replace('\\\n', '\n', $backup);
-			// $backup = str_replace("\\'", "''", $backup);
-			// $backup = str_replace('\\\\', '', $backup);
-			
-			// load the file helper and write the file to your server
-			$this->load->helper('file');
-			$this->load->library('zip');
-			
-			$backup_date = date($backup_config['backup_file_date_format']);
-			if ($backup_config['backup_file_prefix'] == 'AUTO')
+			// set assets flag
+			if (!empty($_POST['include_assets'])) 
 			{
-				$this->load->helper('url');
-				$backup_config['backup_file_prefix'] = url_title($this->config->item('site_name', FUEL_FOLDER), '_', TRUE);
+				$this->fuel->backup->include_assets = TRUE;
 			}
 			
-			$filename = $backup_file_prefix.'_'.$backup_date.'.sql';
-			
-			if (!empty($backup_config['backup_zip']))
+			// perform backup
+			if (!$this->fuel->backup->do_backup())
 			{
-				$this->load->library('zip');
-				$this->zip->add_data($filename, $backup);
-
-				// include assets folder
-				if (!empty($_POST['include_assets']))
-				{
-					$this->zip->read_dir(assets_server_path());
-				}
-				$download_file = $download_path.$filename.'.zip';
-				
-				// write the zip file to a folder on your server. 
-				$this->zip->archive($download_file); 
-
-				// download the file to your desktop. 
-				$this->zip->download($filename.'.zip');
-
-				$msg = lang('data_backup');
-				
+				add_errors($this->fuel->backup->errors());
 			}
 			else
 			{
-				$download_file = $download_path.$filename;
-				write_file($download_file, $backup);
+				// log message
+				$msg = lang('data_backup');
+				$this->fuel->logs->logit($msg);
 			}
-			
-			$msg = lang('data_backup');
-			$this->logs_model->logit($msg);
+
 		}
 		else 
 		{
 			$vars['download_path'] = $download_path;
-			$vars['is_writable'] = $is_writable;
-			$vars['backup_assets'] = $backup_config['backup_assets'];
+			$vars['is_writable'] = is_writable($download_path);
 			
 			$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
 			$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_backup');

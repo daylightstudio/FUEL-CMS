@@ -41,7 +41,6 @@ class Fuel_logs extends Fuel_base_library {
 		$this->fuel->load_model('logs');
 	}
 	
-	
 	function logit($msg, $user = NULL)
 	{
 		$this->CI->logs_model->logit($msg, $user);

@@ -1,27 +1,4 @@
-<script type="text/javascript">
-//<![CDATA[
-	$(function(){
-		$('#tests').supercomboselect();
-		$('#run_tests').click(function(){
-			$('.csadd').click();
-			$('#form').submit();
-			return false;
-		});
-	})
-//]]>
-</script>
-
-<div id="main_top_panel">
-	<h2 class="ico ico_tools_tester"><a href="<?=fuel_url('tools')?>"><?=lang('section_tools')?></a> &gt; <?=lang('module_tester')?></h2>
-</div>
-<div class="clear"></div>
-
-<div id="notification" class="notification">
-	<?=$notifications?>
-</div>
-<div id="main_content" class="noaction">
-
-	<div id="main_content_inner">
+<div id="fuel_main_content_inner">
 	<p class="instructions"><?=lang('tester_instructions')?></p>
 
 	<form action="<?=fuel_url('tools/tester/run')?>" method="post" id="form">
@@ -34,5 +11,17 @@
 			</ul>
 		</div>
 	</form>
-
+	<?=js('')?>
+	<script type="text/javascript">
+	//<![CDATA[
+		$(function(){
+			$('#tests').supercomboselect();
+			$('#run_tests').click(function(){
+				$('.csadd').click();
+				$('#form').submit();
+				return false;
+			});
+		})
+	//]]>
+	</script>
 </div>

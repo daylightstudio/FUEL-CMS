@@ -67,8 +67,6 @@ class Fuel_admin extends Fuel_base_library {
 		
 		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');... alternative syntax
 		$this->fuel->load_helper('fuel');
-
-		
 	}
 	
 	function initialize($params = array())
