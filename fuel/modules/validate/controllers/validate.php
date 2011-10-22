@@ -63,29 +63,27 @@ class Validate extends Fuel_base_controller {
 			
 			$page_data = $this->pages_model->find_by_location($this->input->post('uri'), FALSE);
 			
+			$uri = $this->input->post('uri');
 			
-			// if valid_internal_domains config match then read the file and post to validator
-			// determine if server is local
+			
 			$results = '';
-			$local = false;
-			$servers = (array) $validate_config['valid_internal_server_names'];
+			$validator_url = $this->fuel->validate->config('validator_url');
+			$local = FALSE; // determine if server is local
+
+			// if valid_internal_domains config match then read the file and post to validator
+			$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
 			foreach($servers as $server)
 			{
 				$server = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $server));
 				if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = TRUE;
 			}
+			
+			// if local domain, then we need to upload the file to the validator
 			if ($local)
 			{
 				$this->load->helper('file');
-				// scrape html from page running on localhost
-				$ch = curl_init(); 
-				curl_setopt($ch, CURLOPT_URL, $this->input->post('uri'));
-				curl_setopt($ch, CURLOPT_HEADER, 0);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_USERAGENT, $this->agent->agent_string());
 				
-				$fragment = curl_exec($ch);
-				curl_close($ch); 
+				$fragment = $this->fuel->scraper->scrape($uri);
 
 				// post data using fragment variable
 				$tmp_filename = str_replace(array('/', ':'), '_', $this->input->post('uri'));
@@ -95,35 +93,24 @@ class Validate extends Fuel_base_controller {
 
 				//$post['fragment'] = $fragment;
 				$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
-				
-				$ch = curl_init(); 
-				curl_setopt($ch, CURLOPT_URL, $validate_config['validator_url']);
-				curl_setopt($ch, CURLOPT_HEADER, 0); 
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+				$results = $this->fuel->scraper->scrape($validator_url, $post);
 
-				$results = curl_exec($ch);
-				curl_close($ch); 
-
-				if (file_exists($tmp_file_for_validation_urls)) unlink($tmp_file_for_validation_urls);
+				// now remove any files that were written to the cache folder
+				if (file_exists($tmp_file_for_validation_urls))
+				{
+					@unlink($tmp_file_for_validation_urls);
+				}
 			}
 
 			// else just pass it the uri value for it to read itself
 			else
 			{
-				$ch = curl_init(); 
-				curl_setopt($ch, CURLOPT_URL, $validate_config['validator_url'].'?uri='.$this->input->post('uri'));
-				curl_setopt($ch, CURLOPT_HEADER, 0); 
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				// curl_setopt($ch, CURLOPT_POST, 1);
-				// curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-				$results = curl_exec($ch);
-				curl_close($ch); 
+				$validator_url = $validator_url.'?uri='.$uri;
+				$results = $this->fuel->scraper->scrape($uri);
 			}
 
 			// do some html cleanup so that css and images pull
-			$url_parts = parse_url($validate_config['validator_url']);
+			$url_parts = parse_url($validator_url);
 			$base_url = 'http://'.$url_parts['host'].'/';
 			$results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
 			if (!empty($page_data['id'])) $results = str_replace('<body>', "<body><span style=\"display: none\" id=\"edit_url\">".fuel_url('pages/edit/'.$page_data['id'])."</span>", $results);

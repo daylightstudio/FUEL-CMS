@@ -24,6 +24,7 @@ $config['modules_allowed'] = array(
 	'blog',
 	'backup',
 	'page_analysis',
+	'google_keywords',
 	'validate',
 	'tester',
 	'cronjobs'

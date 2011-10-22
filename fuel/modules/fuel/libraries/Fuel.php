@@ -48,6 +48,7 @@ class Fuel extends Fuel_base_library {
 									'logs',
 									'advanced_modules',
 									'notification',
+									'scraper',
 									);
 
 	private static $_instance;

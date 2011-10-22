@@ -31,7 +31,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Page_analysis extends Fuel_base_controller {
 	
-	public $nav_selected = 'tools/page_analysis';
+	public $nav_selected = 'tools/page_analysis'; // navigation item selected on menu
 	public $view_location = 'page_analysis'; // location of view files
 	
 	function __construct()
@@ -44,6 +44,8 @@ class Page_analysis extends Fuel_base_controller {
 		}
 		$this->js_controller = 'PageAnalysisController';
 		$this->js_controller_path = js_path('', PAGE_ANALYSIS_FOLDER);
+		$this->js_controller_params['method'] = 'page_analysis';
+		
 	}
 
 	function index()
@@ -61,13 +63,10 @@ class Page_analysis extends Fuel_base_controller {
 		} 
 		
 		
-		$this->js_controller_params['method'] = 'links';
-		$this->js_controller_params['pages'] = $this->input->post('pages');
 		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');
 		$pages = $this->pages_model->all_pages_including_views(TRUE);
 
-		$this->js_controller_params['method'] = 'page_analysis';
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['url'] = $url;
 		$vars['pages_select'] = $pages;

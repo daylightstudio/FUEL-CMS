@@ -159,7 +159,7 @@ class Fuel_page_analysis extends Fuel_advanced_module {
 		return $results;
 	}
 	
-	function title()
+	function title($page = NULL)
 	{
 		$content = $this->find('title', FALSE);
 		return $content;
