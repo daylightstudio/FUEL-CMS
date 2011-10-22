@@ -17,14 +17,20 @@ class Navigation_model extends Base_module_model {
 
 	function find_by_location($location, $group_id = 1)
 	{
+		$where = array();
+		$where[$this->_tables['navigation'].'.location'] = $location;
 		if (!empty($group_id))
 		{
-			$data = $this->find_one_array(array($this->_tables['navigation'].'.location' => $location, 'group_id' => $group_id));
+			if (is_string($group_id))
+			{
+				$where[$this->_tables['navigation_groups'].'.name'] = $group_id;
+			}
+			else
+			{
+				$where['group_id'] = (int)$group_id;
+			}
 		}
-		else
-		{
-			$data = $this->find_all_array(array($this->_tables['navigation'].'.location' => $location));
-		}
+		$data = $this->find_one_array($where);
 		return $data;
 	}
 	
