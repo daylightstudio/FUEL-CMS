@@ -4,7 +4,7 @@ jqx.load('plugin', 'jquery.selso');
 jqx.load('plugin', 'jquery.fillin');
 jqx.load('plugin', 'jquery.supercomboselect');
 
-var ValidateController = {
+ValidateController = jqx.createController(fuel.controller.BaseFuelController, {
 	
 	init : function(initObj){
 		this.notifications();
@@ -50,38 +50,43 @@ var ValidateController = {
 		for (var n in pages){
 			var uri = pages[n];
 			(function (u) {
-			  	$.post(_this.modulePath + '/validate/html', { uri : u }, 
-					function(html){
-						_this.displayProcessingText(i, totalToLoad);
-						if (_this.processHtmlResults(i, html, u)){
-							totalValid++;
-						} else {
-							totalInvalid++;
-						}
+				
+				setTimeout(function(){
+					$.post(_this.modulePath + '/validate/html', { uri : u }, 
+						function(html){
+							_this.displayProcessingText(i, totalToLoad);
+							if (_this.processHtmlResults(i, html, u)){
+								totalValid++;
+							} else {
+								totalInvalid++;
+							}
 
-						$('#summary_' + i).click(function(){
-							$(this).parent().find('.result').slideToggle();
-						});
-						if (totalToLoad == i){
-							var completedText = '<h2>' + _this.lang('validate_total_valid') + ': <span class="success">' + totalValid + '</span> &nbsp; &nbsp; ' + _this.lang('validate_total_invalid') + ': <span class="error">' + totalInvalid + '</span></h2>';
-							$('#validation_status_text').html(completedText);
-							$('#validation_status .loader').hide();
-						}
-						
-						(function (num, uri) {
-							$('#results_refresh_' + num).click(function(e){
-								var $this = $(this)
-								$this.addClass('loader_sm');
-								$.post(_this.modulePath + '/validate/html', { uri : uri }, 
-									function(html){
-										_this.processHtmlResults(num, html, u);
-										$this.removeClass('loader_sm');
-									});
-							})
-						})(i, u)
-						
-						i++;
-					});
+							$('#summary_' + i).click(function(){
+								$(this).parent().find('.result').slideToggle();
+								return false;
+							});
+							if (totalToLoad == i){
+								var completedText = '<h2>' + _this.lang('validate_total_valid') + ': <span class="success">' + totalValid + '</span> &nbsp; &nbsp; ' + _this.lang('validate_total_invalid') + ': <span class="error">' + totalInvalid + '</span></h2>';
+								$('#validation_status_text').html(completedText);
+								$('#validation_status .loader').hide();
+							}
+
+							(function (num, uri) {
+								$('#results_refresh_' + num).click(function(e){
+									var $this = $(this)
+									$this.addClass('loader_sm');
+									$.post(_this.modulePath + '/validate/html', { uri : uri }, 
+										function(html){
+											_this.processHtmlResults(num, html, u);
+											$this.removeClass('loader_sm');
+										});
+									return false;
+								})
+							})(i, u)
+
+							i++;
+						})
+				}, 1000); // paused for W3C throttling
 			})(uri);
 		}
 	},
@@ -127,7 +132,7 @@ var ValidateController = {
 			  	$.post(_this.modulePath + '/validate/links', { uri : u }, 
 					function(html){
 						_this.displayProcessingText(i, totalToLoad);
-						
+
 						if (_this.processLinksResults(i, html, u)){
 							totalValid++;
 						} else {
@@ -136,6 +141,7 @@ var ValidateController = {
 
 						$('#summary_' + i).click(function(){
 							$(this).parent().find('.result').slideToggle();
+							return false;
 						});
 						if (totalToLoad == i){
 							var completedText = '<h2>' + _this.lang('validate_total_valid') + ': <span class="success">' + totalValid + '</span> &nbsp; &nbsp; ' + _this.lang('validate_total_invalid') + ': <span class="error">' + totalInvalid + '</span></h2>';
@@ -152,6 +158,7 @@ var ValidateController = {
 										_this.processLinksResults(num, html, u);
 										$this.removeClass('loader_sm');
 									});
+								return false;
 							})
 						})(i, u)
 						
@@ -207,6 +214,7 @@ var ValidateController = {
 						_this.processSizeResults(i, html, u);
 						$('#summary_' + i).click(function(){
 							$(this).parent().find('.result').slideToggle();
+							return false;
 						});
 						if (totalToLoad == i){
 							var completedText = '<h2>' + _this.lang('validate_processing_complete') + '</h2>';
@@ -223,6 +231,7 @@ var ValidateController = {
 										_this.processSizeResults(num, html, u);
 										$this.removeClass('loader_sm');
 									});
+								return false;
 							})
 						})(i, u)
 						
@@ -299,5 +308,4 @@ var ValidateController = {
 	}
 	
 	
-};
-jqx.extendController(ValidateController);
+});

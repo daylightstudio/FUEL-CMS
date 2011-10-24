@@ -1,4 +1,3 @@
-<?=js('ValidateController', 'validate')?>
 <div id="fuel_main_content_inner">
 	<a href="<?=fuel_url('tools/validate')?>" id="back_to">&lt; <?=lang('validate_link_back_to_page_selection')?></a>
 	<div style="float: right;" class="btn">

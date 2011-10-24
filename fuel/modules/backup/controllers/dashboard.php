@@ -14,9 +14,7 @@ class Dashboard extends Fuel_base_controller {
 		$this->load->helper('array');
 		$this->load->helper('file');
 		
-		$backup_config = $this->config->item('backup');
-		
-		$backup_dir = $backup_config['db_backup_path'];
+		$backup_dir = $this->fuel->backup->config('backup_path');
 		$backup_dir_info = get_dir_file_info($backup_dir);
 		
 		$vars = array();

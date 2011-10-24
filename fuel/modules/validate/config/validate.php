@@ -25,3 +25,6 @@ $config['validate']['size_report_warn_limit'] = 100;
 
 // default value for page input field... must be delimited by \n
 $config['validate']['default_page_input'] = '';
+
+// number of seconds before the curl request times out
+$config['validate']['curl_timeout'] = 10;

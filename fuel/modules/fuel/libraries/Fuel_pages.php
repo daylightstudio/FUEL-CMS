@@ -70,7 +70,7 @@ class Fuel_pages extends Fuel_base_library {
 	function all_pages_including_views($paths_as_keys = FALSE, $apply_site_url = TRUE)
 	{
 		$this->CI->load->helper('directory');
-		$this->fuel->load_model('pages');
+		//$this->fuel->load_model('pages');
 		$cms_pages = $this->cms();
 		$module_pages = $this->modules();
 		$view_pages = $this->views();
@@ -79,7 +79,7 @@ class Fuel_pages extends Fuel_base_library {
 		$pages = array();
 		
 		// must get the merged unique values (array_values resets the indexes)
-		$pages = array_values(array_unique(array_merge($cms_pages, $view_files, $module_pages)));
+		$pages = array_values(array_unique(array_merge($cms_pages, $view_pages, $module_pages)));
 		sort($pages);
 		
 		if ($paths_as_keys)
@@ -100,6 +100,10 @@ class Fuel_pages extends Fuel_base_library {
 	
 	function modules()
 	{
+		
+		/// TODO ..... FIX ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		return array();
+		
 		$module_pages = $this->fuel->modules->pages();
 		return $module_pages;
 	}
@@ -117,7 +121,7 @@ class Fuel_pages extends Fuel_base_library {
 	function cms()
 	{
 		$this->fuel->load_model('pages');
-		$cms_pages = $this->CI->pages->list_locations(FALSE);
+		$cms_pages = $this->CI->pages_model->list_locations(FALSE);
 		return $cms_pages;
 	}
 	
