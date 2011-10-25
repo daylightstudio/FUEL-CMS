@@ -104,7 +104,7 @@ function fuel_block($params)
 	if ($p['cache'] === TRUE)
 	{
 		$CI->load->library('cache');
-		$cache_group = $CI->config->item('page_cache_group', 'fuel');
+		$cache_group = $CI->fuel->config('page_cache_group');
 		$cache_id = (!empty($p['view_string'])) ? $p['view_string'] : $p['view'];
 		$cache_id = md5($cache_id);
 		$cache = $CI->cache->get($cache_id, $cache_group);
@@ -142,7 +142,7 @@ function fuel_block($params)
 	else if (!empty($p['view']))
 	{
 		$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
-		if ($CI->config->item('fuel_mode', 'fuel') != 'views')
+		if ($CI->fuel->config('fuel_mode') != 'views')
 		{
 			$CI->load->module_model(FUEL_FOLDER, 'blocks_model');
 			
@@ -183,7 +183,7 @@ function fuel_block($params)
 	
 	if ($p['cache'] === TRUE)
 	{
-		$CI->cache->save($cache_id, $output, $cache_group, $CI->config->item('page_cache_ttl', 'fuel'));
+		$CI->cache->save($cache_id, $output, $cache_group, $CI->fuel->config('page_cache_ttl'));
 	}
 	
 	return $output;
@@ -371,7 +371,7 @@ function fuel_nav($params = array())
 	if (empty($p['items']))
 	{
 		// get the menu data based on the FUEL mode or if the file parameter is specified use that
-		if ($CI->config->item('fuel_mode', 'fuel') == 'views' OR !empty($params['file']))
+		if ($CI->fuel->config('fuel_mode') == 'views' OR !empty($params['file']))
 		{
 			if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
 			{
@@ -386,7 +386,7 @@ function fuel_nav($params = array())
 		// using FUEL admin
 		else
 		{
-			if ($CI->config->item('fuel_mode', 'fuel') != 'cms')
+			if ($CI->fuel->config('fuel_mode') != 'cms')
 			{
 				// load in navigation file as a starting poing
 				if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
@@ -577,9 +577,6 @@ function fuel_var_append($key, $value)
 function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate = TRUE)
 {
 	$CI =& get_instance();
-	
-	$CI->config->module_load('fuel', 'fuel', TRUE);
-	$CI->load->helper('string');
 	$CI->load->helper('inflector');
 	if (isset($GLOBALS[$key]))
 	{
@@ -607,7 +604,7 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 	}
 	
 	if ($edit_module === TRUE) $edit_module = 'pagevariables';
-	if (!empty($edit_module) AND $CI->config->item('fuel_mode', 'fuel') != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
+	if (!empty($edit_module) AND $CI->fuel->config('fuel_mode') != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
 	{
 		$marker = fuel_edit($key, humanize($key), $edit_module);
 	}
@@ -704,7 +701,7 @@ function fuel_cache_id($location = NULL)
 function fuel_url($uri = '')
 {
 	$CI =& get_instance();
-	return site_url($CI->config->item('fuel_path', 'fuel').$uri);
+	return site_url($CI->fuel->config('fuel_path').$uri);
 }
 
 // --------------------------------------------------------------------
@@ -719,7 +716,7 @@ function fuel_url($uri = '')
 function fuel_uri($uri = '')
 {
 	$CI =& get_instance();
-	return $CI->config->item('fuel_path', 'fuel').$uri;
+	return $CI->fuel->config('fuel_path').$uri;
 }
 
 // --------------------------------------------------------------------
@@ -757,7 +754,7 @@ function fuel_uri_segment($seg_index = 0, $rerouted = FALSE)
 function fuel_uri_index($seg_index = 0)
 {
 	$CI =& get_instance();
-	$fuel_path = $CI->config->item('fuel_path', 'fuel');
+	$fuel_path = $CI->fuel->config('fuel_path');
 	$start_index = count(explode('/', $fuel_path)) - 1;
 	return $start_index + $seg_index;
 }
@@ -810,10 +807,8 @@ function fuel_uri_string($from = 0, $to = NULL, $rerouted = FALSE)
 function is_fuelified()
 {
 	$CI =& get_instance();
-	$CI->config->module_load('fuel', 'fuel', TRUE);
 	$CI->load->helper('cookie');
-	$CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
-	return (get_cookie($CI->fuel_auth->get_fuel_trigger_cookie_name()));
+	return (get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name()));
 }
 
 // --------------------------------------------------------------------
@@ -827,10 +822,8 @@ function is_fuelified()
 function fuel_user_lang()
 {
 	$CI =& get_instance();
-	$CI->config->module_load('fuel', 'fuel', TRUE);
 	$CI->load->helper('cookie');
-	$CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
-	$cookie_val = get_cookie($CI->fuel_auth->get_fuel_trigger_cookie_name());
+	$cookie_val = get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name());
 	$cookie_val = unserialize($cookie_val);
 	if (empty($cookie_val['language']))
 	{
