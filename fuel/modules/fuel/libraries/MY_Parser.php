@@ -26,7 +26,7 @@
 
 // Modified by David McReynolds @ Daylight Studio to automatically create the compile directory if it doesn't exist 9/16/10'
 
-include(APPPATH . 'libraries/dwoo/dwooAutoload.php');
+include(FUEL_PATH . 'libraries/dwoo/dwooAutoload.php');
 
 class MY_Parser extends CI_Parser {
 

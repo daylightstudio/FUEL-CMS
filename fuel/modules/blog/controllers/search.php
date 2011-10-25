@@ -34,17 +34,17 @@ class Search extends Blog_base_controller {
 		$vars['page_title'] = lang('blog_search_page_title', '&ldquo;'.$q.'&rdquo;');
 		if (!empty($q))
 		{
-			$limit = $this->fuel_blog->settings('per_page');
+			$limit = $this->fuel->blog->settings('per_page');
 			if ($use_get)
 			{
 				$this->config->set_item('enable_query_strings', TRUE);
-				$config['base_url'] = $this->fuel_blog->url('search?q='.$q);
+				$config['base_url'] = $this->fuel->blog->url('search?q='.$q);
 			}
 			else
 			{
-				$config['base_url'] = $this->fuel_blog->url('search');
+				$config['base_url'] = $this->fuel->blog->url('search');
 			}
-			$config['total_rows'] = count($this->fuel_blog->search_posts($q));
+			$config['total_rows'] = count($this->fuel->blog->search_posts($q));
 			$config['uri_segment'] = 3;
 			$config['page_query_string'] = $use_get;
 			$config['per_page'] = $limit;
@@ -57,14 +57,14 @@ class Search extends Blog_base_controller {
 
 			$offset = ($use_get) ? $this->input->get('per_page') : $this->uri->segment($config['uri_segment']);
 			
-			$vars['posts'] = $this->fuel_blog->search_posts($q, 'date_added desc', $limit, $offset);
+			$vars['posts'] = $this->fuel->blog->search_posts($q, 'date_added desc', $limit, $offset);
 			$vars['limit'] = $limit;
 			$vars['offset'] = $offset;
 			$vars['pagination'] = $this->pagination->create_links();
 		}
 		$vars['q'] = $q;
 		$vars['searched'] = (!empty($q));
-		$vars['search_input'] = $this->fuel_blog->block('search');
+		$vars['search_input'] = $this->fuel->blog->block('search');
 		$this->_render('search', $vars);
 	}
 }

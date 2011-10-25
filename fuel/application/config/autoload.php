@@ -38,7 +38,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('template', 'asset', 'security', 'fuel/fuel');
+$autoload['libraries'] = array('fuel/asset', 'security', 'fuel/fuel');
 
 
 /*
@@ -50,7 +50,7 @@ $autoload['libraries'] = array('template', 'asset', 'security', 'fuel/fuel');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'string', 'language', 'date', 'asset', 'fuel/fuel', 'utility', 'my', 'html', 'validator');
+$autoload['helper'] = array('my', 'url', 'string', 'language', 'date', 'html', 'fuel/asset', 'fuel/fuel', 'fuel/utility', 'fuel/validator');
 
 
 /*
@@ -82,7 +82,7 @@ $autoload['config'] = array('MY_config');
 |
 */
 
-$autoload['language'] = array('fuel/model');
+$autoload['language'] = array();
 
 
 /*

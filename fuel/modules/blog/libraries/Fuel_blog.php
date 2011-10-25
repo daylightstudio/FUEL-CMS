@@ -27,9 +27,7 @@
  * @link		http://www.getfuelcms.com/user_guide/modules/blog/fuel_blog
  */
 
-require_once(MODULES_PATH.'/blog/config/blog_constants.php');
-
-class Fuel_blog {
+class Fuel_blog extends Fuel_advanced_module {
 	
 	private $_CI = NULL;
 	private $_settings = NULL;

@@ -9,6 +9,7 @@ class Page_router extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->add_package_path(FUEL_PATH, FALSE);
 	}
 	
 	function _remap($method)

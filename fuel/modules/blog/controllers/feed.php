@@ -8,7 +8,7 @@ class Feed extends Blog_base_controller {
 		parent::__construct();
 		
 		// set the header type
-		$this->fuel_blog->feed_header();
+		$this->fuel->blog->feed_header();
 	}
 	
 	function index()
@@ -18,12 +18,12 @@ class Feed extends Blog_base_controller {
 	
 	function atom()
 	{
-		print($this->fuel_blog->feed_output('atom'));
+		print($this->fuel->blog->feed_output('atom'));
 	}
 
 	function rss()
 	{
-		print($this->fuel_blog->feed_output('rss'));
+		print($this->fuel->blog->feed_output('rss'));
 	}
 
 }

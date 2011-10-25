@@ -30,7 +30,7 @@
  */
 
 
-require_once(APPPATH.'libraries/Validator.php');
+require_once(FUEL_PATH.'libraries/Validator.php');
 
 class MY_Model extends CI_Model {
 	
@@ -84,7 +84,7 @@ class MY_Model extends CI_Model {
 		$this->load->helper('date');
 		$this->load->helper('security');
 		$this->load->helper('language');
-
+		$this->load->module_language(FUEL_FOLDER, 'model');
 		$this->initialize($table, $params);
     }
 

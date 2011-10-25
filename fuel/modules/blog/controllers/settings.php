@@ -14,7 +14,6 @@ class Settings extends Fuel_base_controller {
 	function index()
 	{
 		$this->load->module_model(BLOG_FOLDER, 'blog_settings_model');
-		$this->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$this->js_controller_params['method'] = 'add_edit';
 		
 		$field_values = $this->blog_settings_model->find_all_array_assoc('name');
@@ -29,7 +28,7 @@ class Settings extends Fuel_base_controller {
 				$val = (isset($settings[$field])) ? $settings[$field] : '';
 				$save[] = array('name' => $field, 'value' => trim($val));
 			}
-			$this->fuel_blog->remove_cache();
+			$this->fuel->blog->remove_cache();
 			$this->blog_settings_model->save($save);
 			$this->session->set_flashdata('success', lang('data_saved'));
 			redirect($this->uri->uri_string());

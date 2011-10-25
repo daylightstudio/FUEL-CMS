@@ -11,7 +11,7 @@ class Authors extends Blog_base_controller {
 	function _remap($id = NULL)
 	{
 		$cache_id = fuel_cache_id();
-		if ($cache = $this->fuel_blog->get_cache($cache_id))
+		if ($cache = $this->fuel->blog->get_cache($cache_id))
 		{
 			$output =& $cache;
 		}
@@ -22,16 +22,16 @@ class Authors extends Blog_base_controller {
 			{
 				$author_id = (int) $this->uri->rsegment(3);
 				
-				$author = $this->fuel_blog->get_user($author_id);
+				$author = $this->fuel->blog->get_user($author_id);
 				if (empty($author)) show_404();
 				$where['author_id'] = $author_id;
-				$vars['posts'] = $this->fuel_blog->get_posts($where);
+				$vars['posts'] = $this->fuel->blog->get_posts($where);
 				$vars['page_title'] = lang('blog_author_posts_page_title', $author->name);
 				$output = $this->_render('posts', $vars, TRUE);
 			}
 			else if (!empty($id) && $id != 'index')
 			{
-				$author = $this->fuel_blog->get_user($id);
+				$author = $this->fuel->blog->get_user($id);
 				if (empty($author)) show_404();
 				$vars['author'] = $author;
 				$vars['page_title'] = $author->name;
@@ -39,11 +39,11 @@ class Authors extends Blog_base_controller {
 			}
 			else
 			{
-				$vars['authors'] = $this->fuel_blog->get_users();
+				$vars['authors'] = $this->fuel->blog->get_users();
 				$vars['page_title'] = lang('blog_authors_list_page_title');
 				$output = $this->_render('authors', $vars, TRUE);
 			}
-			$this->fuel_blog->save_cache($cache_id, $output);
+			$this->fuel->blog->save_cache($cache_id, $output);
 		}
 		$this->output->set_output($output);
 	}

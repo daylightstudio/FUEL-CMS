@@ -1,5 +1,7 @@
 <?php header("HTTP/1.1 404 Not Found"); ?>
 <?php 
+// This is a default setup. Feel free to change as see fit.
+
 define('USE_FUEL_MARKERS', FALSE);
 include(APPPATH.'views/_variables/global.php');
 extract($vars);

@@ -5,6 +5,7 @@ class Blog extends Blog_base_controller {
 	function __construct()
 	{
 		parent::__construct();
+		
 	}
 	
 	function _remap()
