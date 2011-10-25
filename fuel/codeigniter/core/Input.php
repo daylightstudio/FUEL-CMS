@@ -53,11 +53,8 @@ class CI_Input {
 		$this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
 		$this->_enable_csrf		= (config_item('csrf_protection') === TRUE);
 
-		// Do we need to load the security class?
-		if ($this->_enable_xss == TRUE OR $this->_enable_csrf == TRUE)
-		{
-			$this->security =& load_class('Security');
-		}
+		global $SEC;
+		$this->security =& $SEC;
 
 		// Do we need the UTF-8 class?
 		if (UTF8_ENABLED === TRUE)
@@ -92,8 +89,7 @@ class CI_Input {
 
 		if ($xss_clean === TRUE)
 		{
-			$_security =& load_class('Security');
-			return $_security->xss_clean($array[$index]);
+			return $this->security->xss_clean($array[$index]);
 		}
 
 		return $array[$index];
@@ -211,11 +207,12 @@ class CI_Input {
 	* @param	bool	true makes the cookie secure
 	* @return	void
 	*/
-	function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = NULL)
+	function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE)
 	{
 		if (is_array($name))
 		{
-			foreach (array('value', 'expire', 'domain', 'path', 'prefix', 'name', 'secure') as $item)
+			// always leave 'name' in last place, as the loop will break otherwise, due to $$item
+			foreach (array('value', 'expire', 'domain', 'path', 'prefix', 'secure', 'name') as $item)
 			{
 				if (isset($name[$item]))
 				{
@@ -236,6 +233,10 @@ class CI_Input {
 		{
 			$path = config_item('cookie_path');
 		}
+		if ($secure == FALSE AND config_item('cookie_secure') != FALSE)
+		{
+			$secure = config_item('cookie_secure');
+		}
 
 		if ( ! is_numeric($expire))
 		{
@@ -244,12 +245,6 @@ class CI_Input {
 		else
 		{
 			$expire = ($expire > 0) ? time() + $expire : 0;
-		}
-
-		// If TRUE/FALSE is not provided, use the config
-		if ( ! is_bool($secure))
-		{
-			$secure = (bool) (config_item('cookie_secure') === TRUE);
 		}
 
 		setcookie($prefix.$name, $value, $expire, $path, $domain, $secure);
@@ -528,6 +523,9 @@ class CI_Input {
 		{
 			$str = $this->uni->clean_string($str);
 		}
+		
+		// Remove control characters
+		$str = remove_invisible_characters($str);
 
 		// Should we filter the input data?
 		if ($this->_enable_xss === TRUE)
@@ -540,7 +538,7 @@ class CI_Input {
 		{
 			if (strpos($str, "\r") !== FALSE)
 			{
-				$str = str_replace(array("\r\n", "\r"), PHP_EOL, $str);
+				$str = str_replace(array("\r\n", "\r", "\r\n\n"), PHP_EOL, $str);
 			}
 		}
 
@@ -643,8 +641,7 @@ class CI_Input {
 
 		if ($xss_clean === TRUE)
 		{
-			$_security =& load_class('Security');
-			return $_security->xss_clean($this->headers[$index]);
+			return $this->security->xss_clean($this->headers[$index]);
 		}
 
 		return $this->headers[$index];		
@@ -675,7 +672,7 @@ class CI_Input {
 	 */
 	public function is_cli_request()
 	{
-		return (bool) defined('STDIN');
+		return (php_sapi_name() == 'cli') or defined('STDIN');
 	}
 
 }

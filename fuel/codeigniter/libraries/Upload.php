@@ -142,7 +142,7 @@ class CI_Upload {
 	 */
 	public function do_upload($field = 'userfile')
 	{
-		
+
 	// Is $_FILES[$field] set? If not, no reason to continue.
 		if ( ! isset($_FILES[$field]))
 		{
@@ -875,12 +875,6 @@ class CI_Upload {
 		}
 
 		$CI =& get_instance();
-
-		if ( ! isset($CI->security))
-		{
-			$CI->load->library('security');
-		}
-
 		return $CI->security->xss_clean($data, TRUE);
 	}
 
@@ -951,11 +945,21 @@ class CI_Upload {
 
 		if (count($this->mimes) == 0)
 		{
-			if (@require_once(APPPATH.'config/mimes'.EXT))
+			if (defined('ENVIRONMENT') AND is_file(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'))
 			{
-				$this->mimes = $mimes;
-				unset($mimes);
+				include(APPPATH.'config/'.ENVIRONMENT.'/mimes.php');
 			}
+			elseif (is_file(APPPATH.'config/mimes.php'))
+			{
+				include(APPPATH.'config//mimes.php');
+			}
+			else
+			{
+				return FALSE;
+			}
+
+			$this->mimes = $mimes;
+			unset($mimes);
 		}
 
 		return ( ! isset($this->mimes[$mime])) ? FALSE : $this->mimes[$mime];

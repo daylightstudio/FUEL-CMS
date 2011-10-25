@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 <head>
 	<?php if (!empty($is_blog)) : ?>
-	<title><?php echo $CI->fuel_blog->page_title($page_title, ' : ', 'right')?></title>
+	<title><?php echo $CI->fuel->blog->page_title($page_title, ' : ', 'right')?></title>
 	<?php else : ?>
 	<title><?php echo fuel_var('page_title', '')?></title>
 	<?php endif ?>
@@ -20,7 +20,7 @@
 	<?php echo js($js); ?>
 	
 	<?php if (!empty($is_blog)) : ?>
-	<?php echo $CI->fuel_blog->header()?>
+	<?php echo $CI->fuel->blog->header()?>
 	<?php endif; ?>
 	<base href="<?php echo site_url()?>" />
 	

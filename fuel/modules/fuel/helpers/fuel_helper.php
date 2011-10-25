@@ -547,7 +547,7 @@ function fuel_set_var($key, $val = NULL)
 function fuel_var_append($key, $value)
 {
 	$CI =& get_instance();
-	$vars = $CI->load->_ci_cached_vars;
+	$vars = $CI->load->get_vars();
 	if (isset($vars[$key]) AND is_array($vars[$key]))
 	{
 		if (is_array($value))
@@ -581,19 +581,19 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 	$CI->config->module_load('fuel', 'fuel', TRUE);
 	$CI->load->helper('string');
 	$CI->load->helper('inflector');
-
 	if (isset($GLOBALS[$key]))
 	{
 		$val = $GLOBALS[$key];
 	}
-	else if (isset($CI->load->_ci_cached_vars[$key]))
+	else if ($CI->load->get_var($key))
 	{
-		$val = $CI->load->_ci_cached_vars[$key];
+		$val = $CI->load->get_var($key);
 	}
 	else
 	{
 		$val = $default;
 	}
+	
 	if (is_string($val) AND $evaluate)
 	{
 		$val = eval_string($val);

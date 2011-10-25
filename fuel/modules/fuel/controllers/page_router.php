@@ -31,6 +31,7 @@ class Page_router extends CI_Controller {
 		{
 			$config['render_mode'] = 'views';
 			$page = $this->fuel->pages->create($config);
+			
 			$this->_remap_variables($page);
 		}
 		
@@ -47,8 +48,10 @@ class Page_router extends CI_Controller {
 					return;
 				}
 			}
+			
 			$this->_remap_cms($page);
 		}
+		
 	}
 	
 	
@@ -131,9 +134,10 @@ class Page_router extends CI_Controller {
 		}
 		else
 		{
+
 			// get the output
 			$output = $page->variables_render(TRUE, FALSE);
-
+			
 			// save to cache but you must not be logged in for it to save
 			if ($this->fuel->config('use_page_cache') !== FALSE AND $this->fuel->config('use_page_cache') !== 'cms' AND !is_fuelified())
 			{

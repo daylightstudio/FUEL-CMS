@@ -42,7 +42,7 @@
 function eval_string($str, $vars = array())
 {
 	$CI =& get_instance();
-	extract($CI->load->_ci_cached_vars); // extract cached variables
+	extract($CI->load->get_vars()); // extract cached variables
 	extract($vars);
 
 	// fix XML

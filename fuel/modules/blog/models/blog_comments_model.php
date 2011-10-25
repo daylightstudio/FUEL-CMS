@@ -163,8 +163,10 @@ class Blog_comments_model extends Base_module_model {
 			
 			if (!empty($posted['reply_notify']) AND strtolower($posted['reply_notify']) != 'none' AND $comment->validate())
 			{
+				
 				// create comment object
-				$CI->load->library('email');
+				$config['wordwrap'] = TRUE;
+				$CI->load->library('email', $config);
 				$CI->load->module_library(BLOG_FOLDER, 'fuel_blog');
 				$CI->load->module_model(BLOG_FOLDER, 'blog_comments_model');
 

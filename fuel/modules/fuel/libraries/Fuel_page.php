@@ -416,7 +416,7 @@ class Fuel_page {
 				$body = file_get_contents($check_file);
 
 				// now parse any template like syntax
-				$vars = $this->CI->load->_ci_cached_vars;
+				$vars = $this->CI->load->get_vars();
 				$body = $this->CI->parser->parse_string($body, $vars, TRUE);
 			}
 			else
@@ -425,7 +425,7 @@ class Fuel_page {
 			}
 			
 			// now set $vars to the cached so that we have a fresh set to send to the layout in case any were declared in the view
-			$vars = $this->CI->load->_ci_cached_vars;
+			$vars = $this->CI->load->get_vars();
 
 			$layout = (!empty($vars['layout'])) ? $vars['layout'] : $this->layout;
 			

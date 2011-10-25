@@ -61,7 +61,7 @@ class Dashboard extends Fuel_base_controller {
 		if (is_ajax())
 		{
 			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['recently_modifed_pages'] = $this->pages_model->find_all(array(), 'last_modified desc', 10);
+			$vars['recently_modifed_pages'] = $this->pages_model->find_all_array(array(), 'last_modified desc', 10);
 			$vars['latest_activity'] = $this->logs_model->list_items(10);
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{
@@ -78,12 +78,12 @@ class Dashboard extends Fuel_base_controller {
 		$limit = 3;
 		if (!empty($feed))
 		{
-			$this->load->library('simplepie');
+			$this->load->module_library(FUEL_FOLDER, 'simplepie');
 			$this->simplepie->set_feed_url($feed);
 			$this->simplepie->set_cache_duration(600);
 			$this->simplepie->enable_order_by_date(TRUE);
 			$this->simplepie->enable_cache(TRUE);
-			$this->simplepie->set_cache_location(BASEPATH.'cache');
+			$this->simplepie->set_cache_location($this->config->item('cache_path'));
 			@$this->simplepie->init();
 			$this->simplepie->handle_content_type();
 			

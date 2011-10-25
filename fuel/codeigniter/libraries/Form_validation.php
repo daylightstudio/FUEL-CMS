@@ -628,6 +628,10 @@ class CI_Form_validation {
 							$this->_field_data[$row['field']]['postdata'] = (is_bool($result)) ? $postdata : $result;
 						}
 					}
+					else
+					{
+						log_message('debug', "Unable to find validation rule: ".$rule);
+					}
 
 					continue;
 				}
@@ -1336,11 +1340,6 @@ class CI_Form_validation {
 	 */
 	function xss_clean($str)
 	{
-		if ( ! isset($this->CI->security))
-		{
-			$this->CI->load->library('security');
-		}
-
 		return $this->CI->security->xss_clean($str);
 	}
 

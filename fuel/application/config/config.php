@@ -10,6 +10,9 @@
 |
 |	http://example.com/
 |
+| If this is not set then CodeIgniter will guess the protocol, domain and
+| path to your installation.
+|
 */
 if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
 {
@@ -29,7 +32,6 @@ else
 	$config['base_url'] = "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }	
 
-
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -40,7 +42,7 @@ else
 | variable so that it is blank.
 |
 */
-$config['index_page'] = "";
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +50,7 @@ $config['index_page'] = "";
 |--------------------------------------------------------------------------
 |
 | This item determines which server global should be used to retrieve the
-| URI string.  The default setting of "AUTO" works for most servers.
+| URI string.  The default setting of 'AUTO' works for most servers.
 | If your links do not seem to work, try one of the other delicious flavors:
 |
 | 'AUTO'			Default - auto detects
@@ -58,7 +60,7 @@ $config['index_page'] = "";
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= "AUTO";
+$config['uri_protocol']	= 'AUTO';
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +73,7 @@ $config['uri_protocol']	= "AUTO";
 | http://codeigniter.com/user_guide/general/urls.html
 */
 
-$config['url_suffix'] = "";
+$config['url_suffix'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +85,7 @@ $config['url_suffix'] = "";
 | than english.
 |
 */
-$config['language']	= "english";
+$config['language']	= 'english';
 
 /*
 |--------------------------------------------------------------------------
@@ -94,14 +96,14 @@ $config['language']	= "english";
 | that require a character set to be provided.
 |
 */
-$config['charset'] = "UTF-8";
+$config['charset'] = 'UTF-8';
 
 /*
 |--------------------------------------------------------------------------
 | Enable/Disable System Hooks
 |--------------------------------------------------------------------------
 |
-| If you would like to use the "hooks" feature you must enable it by
+| If you would like to use the 'hooks' feature you must enable it by
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
@@ -151,12 +153,15 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | By default CodeIgniter uses search-engine friendly segment based URLs:
 | example.com/who/what/where/
 |
+| By default CodeIgniter enables access to the $_GET array.  If for some
+| reason you would like to disable it, set 'allow_get_array' to FALSE.
+|
 | You can optionally enable standard query string based URLs:
 | example.com?who=me&what=something&where=here
 |
 | Options are: TRUE or FALSE (boolean)
 |
-| The other items let you set the query string "words" that will
+| The other items let you set the query string 'words' that will
 | invoke your controllers and its functions:
 | example.com/index.php?c=controller&m=function
 |
@@ -165,6 +170,7 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | use segment based URLs.
 |
 */
+$config['allow_get_array']		= TRUE;
 $config['enable_query_strings'] = FALSE;
 $config['controller_trigger']	= 'c';
 $config['function_trigger']		= 'm';
@@ -198,7 +204,7 @@ $config['log_threshold'] = 0;
 |--------------------------------------------------------------------------
 |
 | Leave this BLANK unless you would like to set something other than the default
-| application/logs/ folder.  Use a full server path with trailing slash.
+| application/logs/ folder. Use a full server path with trailing slash.
 |
 */
 $config['log_path'] = '';
@@ -220,7 +226,7 @@ $config['log_date_format'] = 'Y-m-d H:i:s';
 |--------------------------------------------------------------------------
 |
 | Leave this BLANK unless you would like to set something other than the default
-| application/cache/ folder.  Use a full server path with trailing slash.
+| system/cache/ folder.  Use a full server path with trailing slash.
 |
 */
 $config['cache_path'] = APPPATH.'cache/';
@@ -234,7 +240,7 @@ $config['cache_path'] = APPPATH.'cache/';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = "abc123";
+$config['encryption_key'] = 'abc123';
 
 /*
 |--------------------------------------------------------------------------
@@ -272,11 +278,13 @@ $config['sess_time_to_update']	= 300;
 | 'cookie_prefix' = Set a prefix if you need to avoid collisions
 | 'cookie_domain' = Set to .your-domain.com for site-wide cookies
 | 'cookie_path'   =  Typically will be a forward slash
+| 'cookie_secure' =  Cookies will only be set if a secure HTTPS connection exists.
 |
 */
 $config['cookie_prefix']	= "";
 $config['cookie_domain']	= "";
 $config['cookie_path']		= "/";
+$config['cookie_secure']	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -296,9 +304,15 @@ $config['global_xss_filtering'] = FALSE;
 | Enables a CSRF cookie token to be set. When set to TRUE, token will be
 | checked on a submitted form. If you are accepting user data, it is strongly
 | recommended CSRF protection be enabled.
+|
+| 'csrf_token_name' = The token name
+| 'csrf_cookie_name' = The cookie name
+| 'csrf_expire' = The number in seconds the token should expire.
 */
 $config['csrf_protection'] = FALSE;
-
+$config['csrf_token_name'] = 'csrf_test_name';
+$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_expire'] = 7200;
 
 /*
 |--------------------------------------------------------------------------
@@ -314,7 +328,7 @@ $config['csrf_protection'] = FALSE;
 | means you are prematurely outputting something to your browser. It could
 | even be a line of whitespace at the end of one of your scripts.  For
 | compression to work, nothing can be sent before the output buffer is called
-| by the output class.  Do not "echo" any values with compression enabled.
+| by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
 $config['compress_output'] = FALSE;
@@ -324,9 +338,9 @@ $config['compress_output'] = FALSE;
 | Master Time Reference
 |--------------------------------------------------------------------------
 |
-| Options are "local" or "gmt".  This pref tells the system whether to use
-| your server's local time as the master "now" reference, or convert it to
-| GMT.  See the "date helper" page of the user guide for information
+| Options are 'local' or 'gmt'.  This pref tells the system whether to use
+| your server's local time as the master 'now' reference, or convert it to
+| GMT.  See the 'date helper' page of the user guide for information
 | regarding date handling.
 |
 */

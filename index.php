@@ -65,6 +65,8 @@ if (defined('STDIN'))
  * By default development will show errors but testing and live will hide them.
  */
 
+if (defined('ENVIRONMENT'))
+{
 	switch (ENVIRONMENT)
 	{
 		case 'development':
@@ -80,6 +82,7 @@ if (defined('STDIN'))
 		default:
 			exit('The application environment is not set correctly.');
 	}
+}
 
 /*
  *---------------------------------------------------------------
@@ -133,7 +136,7 @@ if (defined('STDIN'))
 	// if your controller is not in a sub-folder within the "controllers" folder
 	// $routing['directory'] = '';
 
-	// The controller class file name.  Example:  Mycontroller.php
+	// The controller class file name.  Example:  Mycontroller
 	// $routing['controller'] = '';
 
 	// The controller function you wish to be called.
@@ -198,6 +201,7 @@ if (defined('STDIN'))
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
 	// The PHP file extension
+	// this global constant is deprecated.
 	define('EXT', '.php');
 
 	// Path to the system folder
@@ -233,7 +237,7 @@ if (defined('STDIN'))
  * And away we go...
  *
  */
-require_once BASEPATH.'core/CodeIgniter'.EXT;
+require_once BASEPATH.'core/CodeIgniter.php';
 
 /* End of file index.php */
 /* Location: ./index.php */

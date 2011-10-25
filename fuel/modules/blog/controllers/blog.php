@@ -415,7 +415,8 @@ class Blog extends Blog_base_controller {
 		// send email to post author
 		if (!empty($post->author))
 		{
-			$this->load->library('email');
+			$config['wordwrap'] = TRUE;
+			$this->load->library('email', $config);
 
 			$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
 			$this->email->to($post->author->email); 

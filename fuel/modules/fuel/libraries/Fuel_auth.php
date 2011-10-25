@@ -30,7 +30,7 @@
 
 class Fuel_auth extends Fuel_base_library {
 	
-	function __construct($params){
+	function __construct($params = array()){
 		parent::__construct($params);
 
 		$this->CI->load->library('session');

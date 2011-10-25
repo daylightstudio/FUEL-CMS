@@ -96,7 +96,7 @@ class Fuel_Loader extends MX_Loader
 	}
 
 	/** Load Library Matchbox style for backwards compatability **/
-	public function module_library($module, $library, $params = array(), $object_name = NULL)
+	public function module_library($module, $library, $params = NULL, $object_name = NULL)
 	{
 		return $this->library($library, $params, $object_name, $module);
 	}
@@ -177,6 +177,7 @@ class Fuel_Loader extends MX_Loader
 	/** Load a module language file **/
 	public function language($langfile, $lang = '', $return = FALSE, $module = NULL)	{
 		if (!isset($module)) $module = $this->_module; // FUEL
+		
 		if (is_array($langfile)) return $this->languages($langfile);
 		return CI::$APP->lang->load($langfile, $lang, $return, $module);
 	}
@@ -206,8 +207,18 @@ class Fuel_Loader extends MX_Loader
 			$_alias = $this->_ci_classes[$class];
 		} else {		
 			Modules::load_file($_library, $path);
+			
 			$library = ucfirst($_library);
-			CI::$APP->$_alias = new $library($params);
+			
+			// FUEL fix due to issue with SImplePie library still seeing a NULL value as a parameter
+			if (!empty($params))
+			{
+				CI::$APP->$_alias = new $library($params);
+			}
+			else
+			{
+				CI::$APP->$_alias = new $library();
+			}
 			$this->_ci_classes[$class] = $_alias;
 		}
 		

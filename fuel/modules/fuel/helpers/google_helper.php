@@ -43,6 +43,8 @@ http://codeigniter.com/forums/viewthread/56515/
 function google_analytics($uacct = '')
 {
 	$CI =& get_instance();
+	$CI->load->config('google');
+	
 	if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
 	if (!empty($uacct))
 	{
