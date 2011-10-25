@@ -82,7 +82,7 @@ class Dashboard extends Fuel_base_controller {
 			$this->simplepie->set_cache_duration(600);
 			$this->simplepie->enable_order_by_date(TRUE);
 			$this->simplepie->enable_cache(TRUE);
-			$this->simplepie->set_cache_location(BASEPATH.'cache');
+			$this->simplepie->set_cache_location($this->config->item('cache_path'));
 			@$this->simplepie->init();
 			$this->simplepie->handle_content_type();
 			
