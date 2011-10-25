@@ -79,6 +79,7 @@
 			<ol>
 				<li>Alter your Apache .htaccess file to the proper RewriteBase directory. The default is your web servers root directory. <strong>If you do not have mod_rewrite enabled you will need to change the $config['index_page'] from blank to 'index.php'
 				in your <strong>fuel/application/config/config.php</strong> file</strong></li>
+				<li>Change the <dfn>$config['encryption_key']</dfn> found in the <dfn>fuel/application/config/config.php</dfn> file</li>
 				<li>Install the database by first creating the database in MySQL and then running either <strong>fuel/install/fuel_schema.sql</strong> OR the <strong>fuel/install/widgicorp.sql</strong> with the latter if you want the demo site to run.
 					Then, change the database configuration found in <strong>fuel/application/config/database.php</strong> 
 				</li>
