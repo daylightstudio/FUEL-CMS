@@ -633,12 +633,12 @@ $this->examples_model->debug_data();
 
 </pre>
 
-<h2>$this->examples_model->debug()</h2>
+<h2>$this->examples_model->debug_query()</h2>
 <p>Prints out to the screen the last query SQL ran by the model.
 </p>
 
 <pre class="brush: php">
-$this->examples_model->debug(); 
+$this->examples_model->debug_query(); 
 // prints out the last query run by the model
 
 </pre>
