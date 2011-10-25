@@ -19,17 +19,30 @@
 class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 {
 	protected static $childSource;
+	protected static $regex;
 	protected static $l;
-	protected static $lraw;
 	protected static $r;
-	protected static $rraw;
 	protected static $lastReplacement;
 
 	public static function compile(Dwoo_Compiler $compiler, $file)
 	{
-		list(self::$lraw, self::$rraw) = $compiler->getDelimiters();
-		self::$l = preg_quote(self::$lraw,'/');
-		self::$r = preg_quote(self::$rraw,'/');
+		list($l, $r) = $compiler->getDelimiters();
+		self::$l = preg_quote($l,'/');
+		self::$r = preg_quote($r,'/');
+		self::$regex = '/
+			'.self::$l.'block\s(["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)
+			((?:
+				(?R)
+				|
+				[^'.self::$l.']*
+				(?:
+					(?! '.self::$l.'\/?block\b )
+					'.self::$l.'
+					[^'.self::$l.']*+
+				)*
+			)*)
+			'.self::$l.'\/block'.self::$r.'
+			/six';
 
 		if ($compiler->getLooseOpeningHandling()) {
 			self::$l .= '\s*';
@@ -98,53 +111,51 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			if (!isset($newSource)) {
 				$newSource = $parent['source'];
 			}
-
-			// TODO parse blocks tree for child source and new source
-			// TODO replace blocks that are found in the child and in the parent recursively
-			$firstL = preg_quote(self::$lraw[0], '/');
-			$restL = preg_quote(substr(self::$lraw, 1), '/');
-			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)((?:[^'.$firstL.']*|'.$firstL.'(?!'.$restL.'\/block'.self::$r.'))*)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
-
-			$newSource = self::$lraw.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.self::$rraw.$newSource;
+			$newSource = preg_replace_callback(self::$regex, array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
+			$newSource = $l.'do extendsCheck('.var_export($parent['resource'].':'.$parent['identifier'], true).')'.$r.$newSource;
 
 			if (self::$lastReplacement) {
 				break;
 			}
 		}
-
 		$compiler->setTemplateSource($newSource);
 		$compiler->recompile();
 	}
 
 	protected static function replaceBlock(array $matches)
 	{
-		$matches[3] = self::cleanTrailingCRLF($matches[3]);
-		$firstL = preg_quote(self::$lraw[0], '/');
-		$restL = preg_quote(substr(self::$lraw, 1), '/');
-		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2],'/').'\1'.self::$r.'(?:\r?\n?)((?:[^'.$firstL.']*|'.$firstL.'(?!'.$restL.'\/block'.self::$r.'))*)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
-			$override[2] = self::cleanTrailingCRLF($override[2]);
+		$matches[3] = self::removeTrailingNewline($matches[3]);
+
+		if (preg_match_all(self::$regex, self::$childSource, $override) && in_array($matches[2], $override[2])) {
+			$key = array_search($matches[2], $override[2]);
+			$override = self::removeTrailingNewline($override[3][$key]);
+
+			$l = stripslashes(self::$l);
+			$r = stripslashes(self::$r);
+
 			if (self::$lastReplacement) {
-				return preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]);
-			} else {
-				return self::$lraw.'block '.$matches[1].$matches[2].$matches[1].self::$rraw.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]).self::$lraw.'/block'.self::$rraw;
+				return preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override);
 			}
-		} else {
-			if (self::$lastReplacement) {
-				return $matches[3];
-			} else {
-				return $matches[0];
-			}
+			return $l.'block '.$matches[1].$matches[2].$matches[1].$r.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override).$l.'/block'.$r;
 		}
+
+		if (preg_match(self::$regex, $matches[3])) {
+			return preg_replace_callback(self::$regex, array('Dwoo_Plugin_extends', 'replaceBlock'), $matches[3] );
+		}
+
+		if (self::$lastReplacement) {
+			return $matches[3];
+		}
+
+		return  $matches[0];
 	}
 
-	protected static function cleanTrailingCRLF($input)
+	protected static function removeTrailingNewline($text)
 	{
-		if (substr($input, -1) === "\n") {
-			if (substr($input, -2, 1) === "\r") {
-				return substr($input, 0, -2);
-			}
-			return substr($input, 0, -1);
-		}
-		return $input;
+		return substr($text, -1) === "\n"
+				? substr($text, -2, 1) === "\r"
+					? substr($text, 0, -2)
+					: substr($text, 0, -1)
+				: $text;
 	}
 }

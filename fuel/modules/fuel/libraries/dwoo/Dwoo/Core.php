@@ -338,6 +338,8 @@ class Dwoo_Core
             $this->data = $data->getData();
         } elseif (is_array($data)) {
             $this->data = $data;
+        } elseif ($data instanceof ArrayAccess) {
+            $this->data = $data;
         } else {
             throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s data argument must be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array', E_USER_NOTICE);
         }
@@ -1531,7 +1533,12 @@ class Dwoo_Core
                 $this->scope =& $this->data;
                 $this->scopeTree = array();
             } elseif (isset($this->scope[$bit])) {
-                $this->scope =& $this->scope[$bit];
+                if($this->scope instanceof ArrayAccess) {
+                    $tmp = $this->scope[$bit];
+                    $this->scope =& $tmp;
+                } else {
+                    $this->scope =& $this->scope[$bit];
+                }
                 $this->scopeTree[] = $bit;
             } else {
                 unset($this->scope);
