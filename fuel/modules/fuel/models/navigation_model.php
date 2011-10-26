@@ -29,8 +29,14 @@ class Navigation_model extends Base_module_model {
 			{
 				$where['group_id'] = (int)$group_id;
 			}
+			$data = $this->find_one_array($where);
+			
 		}
-		$data = $this->find_one_array($where);
+		else
+		{
+			$data = $this->find_all_array($where);
+			
+		}
 		return $data;
 	}
 	
