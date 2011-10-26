@@ -1,5 +1,4 @@
 <?php
-
 class Page_router extends CI_Controller {
 
 	public $segments = array();
@@ -9,7 +8,6 @@ class Page_router extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->add_package_path(FUEL_PATH, FALSE);
 	}
 	
 	function _remap($method)

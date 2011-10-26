@@ -37,7 +37,9 @@
 |
 */
 
-$autoload['packages'] = array();
+$autoload['packages'] = array(
+	FUEL_PATH
+	);
 
 
 /*

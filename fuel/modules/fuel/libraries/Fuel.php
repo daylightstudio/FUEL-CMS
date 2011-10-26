@@ -68,8 +68,6 @@ class Fuel extends Fuel_base_library {
 	
 	function initialize()
 	{
-		$this->CI->load->add_package_path(FUEL_PATH, FALSE);
-		
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 	}
