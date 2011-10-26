@@ -45,7 +45,7 @@ $record->fill($_POST);  // Be sure to always clean your $_POST variables before 
 
 
 <h2>$example_record->values(<var>[include_derived]</var>)</h2>
-<p>Teturns an array of the record's values. 
+<p>Returns an array of the record's values. 
 If the <dfn>$include_derived</dfn> option is TRUE, then all <dfn>get_</dfn> methods that don't require additional parameters
 will also be included.</p>
 
@@ -148,7 +148,7 @@ $record->delete(); // note the invalid email address
 
 
 <h2>$example_record->refresh()</h2>
-<p>Refreshes the object from the data source./p>
+<p>Refreshes the object from the data source.</p>
 
 <pre class="brush: php">
 $record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
