@@ -13,7 +13,10 @@ class Module extends Fuel_base_controller {
 		parent::__construct();
 
 		$this->load->module_model(FUEL_FOLDER, 'archives_model');
-		$this->module = fuel_uri_segment(1);
+		if (empty($this->module))
+		{
+			$this->module = fuel_uri_segment(1);
+		}
 
 		if (empty($this->module))
 		{
@@ -607,7 +610,7 @@ class Module extends Fuel_base_controller {
 				$this->_run_hook('after_create', $data);
 				
 				// run after_save hook
-				$this->_run_hook('after_save', $posted);
+				$this->_run_hook('after_save', $data);
 				
 				if (!empty($data))
 				{
@@ -1577,8 +1580,12 @@ class Module extends Fuel_base_controller {
 	
 	protected function _run_hook($hook, $params = array())
 	{
-		// call hook
+		// call module specific hook
 		$hook_name = $hook.'_'.$this->module;
-		return $GLOBALS['EXT']->_call_hook($hook_name, $params);
+		$GLOBALS['EXT']->_call_hook($hook_name, $params);
+
+		// call global module hook if any
+		$hook_name = $hook.'_module';
+		$GLOBALS['EXT']->_call_hook($hook_name, $params);
 	}
 }
