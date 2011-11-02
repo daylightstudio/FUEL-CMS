@@ -46,25 +46,30 @@ class Fuel_modules extends Fuel_base_library {
 		// get simple module init values. Must use require here because of the construct
 		//require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_modules.php');
 		$allowed = $this->fuel->config('modules_allowed');
-
-		// get FUEL modules first
+		$module_init = array();
+		
+		// load the application modules first
+		@include(APPPATH.'/config/MY_fuel_modules.php');
+		if (!empty($config['modules']))
+		{
+			$this->_modules_grouped['app'] = $config['modules'];
+			$module_init = $config['modules'];
+		}
+		
+		// next get FUEL modules first
 		include(MODULES_PATH.FUEL_FOLDER.'/config/fuel_modules.php');
-		$module_init = $config['modules'];
-
-		$this->_modules_grouped['app'] = $module_init;
+		$this->_modules_grouped['fuel'] = $config['modules'];
+		
+		$module_init = array_merge($module_init, $config['modules']);
 		
 		// then get the allowed modules initialization information
 		foreach($allowed as $mod)
 		{
-			if (file_exists(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php'))
+			$mod_config = $this->get_module_config($mod);
+			if (!empty($mod_config))
 			{
-				include(MODULES_PATH.$mod.'/config/'.$mod.'_fuel_modules.php');
-				if (!empty($config['modules']))
-				{
-					$config['modules']['folder'] = $mod;
-					$this->_modules_grouped[$mod] = $config['modules'];
-					$module_init = array_merge($module_init, $config['modules']);
-				}
+				$this->_modules_grouped[$mod] = $mod_config;
+				$module_init = array_merge($module_init, $mod_config);
 			}
 		}
 
@@ -83,6 +88,23 @@ class Fuel_modules extends Fuel_base_library {
 		{
 			$this->add($mod, $init);
 		}
+	}
+	
+	function get_module_config($module)
+	{
+		if (file_exists(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php'))
+		{
+			include(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php');
+			if (!empty($config['modules']))
+			{
+				return $config['modules'];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		
 	}
 	
 	// --------------------------------------------------------------------
@@ -113,7 +135,7 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function get($module)
 	{
-		if (!empty($this->_modules[$module]))
+ 		if (!empty($this->_modules[$module]))
 		{
 			return $this->_modules[$module];
 		}
@@ -472,6 +494,34 @@ class Fuel_module {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns the url based on the preview_path of the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function url($data = array())
+	{
+		$preview_path = $this->info('preview_path');
+		
+		// substitute data values into preview path
+		preg_match_all('#\{(.+)\}+#U', $preview_path, $matches);
+		
+		if (!empty($matches[1]))
+		{
+			foreach($matches[1] as $match)
+			{
+				if (!empty($data[$match]))
+				{
+					$preview_path = str_replace('{'.$match.'}', $data[$match], $preview_path);
+				}
+			}
+		}
+		return $preview_path;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Returns the model of the module
 	 *
 	 * @access	public
@@ -479,7 +529,7 @@ class Fuel_module {
 	 */	
 	function &model()
 	{
-		$model = $this->_info['model_name'];
+		$model = $this->info('model_name');
 		$this->CI->load->model($model);
 		return $this->CI->$model;
 	}

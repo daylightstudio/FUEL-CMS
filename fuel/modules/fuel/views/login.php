@@ -5,6 +5,9 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
  	<title><?=$page_title?></title>
 	<?=css('fuel', FUEL_FOLDER)?>
+	<?php if (!empty($css)) : ?>
+	<?=css($css, FUEL_FOLDER)?>
+	<?php endif; ?>
 	<script type="text/javascript">
 	<?=$this->load->module_view('fuel', '_blocks/fuel_header_jqx', array(), true)?>
 	</script>

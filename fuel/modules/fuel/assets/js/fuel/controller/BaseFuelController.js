@@ -416,7 +416,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	//	this._initAddEditInline(context);
 	//	this._initDatePicker(context);
 		// this._initEditors(context);
-		// this._initViewPage();
+		this._initViewPage();
 		// this._initLinkedFields(context);
 		
 		$('#form input:first', context).select();
@@ -841,7 +841,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.view_action').click(function(){
 			$('#viewpage_modal').jqmShow();
 			var page = $(this).attr('href');
-			var iframe = '<div id="viewpage_btns"><a href="' + page + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a><a href="#" id="viewpage_close" class="viewpage_btn">' + _this.lang('viewpage_close') + '</a></div><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
+			var iframe = '<a href="#" id="viewpage_close" class="modal_close">' + _this.lang('viewpage_close') + '</a><div id="viewpage_btns"><a href="' + page + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a></div><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
 			$('#viewpage_modal').empty().append(iframe);
 			
 			$('#viewpage_close').click(function(){

@@ -42,14 +42,27 @@ class Fuel_cache extends Fuel_base_library {
 	function __construct($params = array())
 	{
 		parent::__construct($params);
+		$this->CI->load->library('cache');
+		$this->_cache = & $this->CI->cache;
 	}
 	
 	function initialize($params)
 	{
 		parent::initialize($params);
 		
-		$this->CI->load->library('cache');
-		$this->_cache = & $this->CI->cache;
+	}
+	
+	/**
+	 * 	Get and return an item from the cache
+	 * 
+	 * 	@param	Cache Id
+	 * 	@param	Cache group Id
+	 * 	@param	Should I check the expiry time?
+	 * 	@return The object or NULL if not available
+	 */
+	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	{
+		$this->_cache->get($cache_id, $cache_group, $skip_checking);
 	}
 	
 	function save($cache_id, $data, $group = NULL, $ttl = NULL)

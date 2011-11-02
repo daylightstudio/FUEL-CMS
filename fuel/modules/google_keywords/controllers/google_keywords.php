@@ -1,5 +1,5 @@
 <?php
-require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
+
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -28,6 +28,8 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
  */
 
 // --------------------------------------------------------------------
+
+require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Google_keywords extends Fuel_base_controller {
 	

@@ -13,9 +13,10 @@ $config['nav']['tools']['tools/user_guide'] = lang('module_user_guide');
 | User Guide specific parameters
 |--------------------------------------------------------------------------
 */
+$config['user_guide'] = array();
 
 // user guide requires user authentication to view
-$config['user_guide_authenticate'] = TRUE;
+$config['user_guide']['authenticate'] = TRUE;
 
 // the URI path to the user guide
-$config['user_guide_root_url'] = FUEL_FOLDER.'/tools/'.USER_GUIDE_FOLDER.'/';
+$config['user_guide']['root_url'] = FUEL_FOLDER.'/tools/'.USER_GUIDE_FOLDER.'/';

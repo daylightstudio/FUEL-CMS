@@ -53,7 +53,7 @@ class Fuel_validate extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initialize the backup object
+	 * Initialize the validate object
 	 *
 	 * Accepts an associative array as input, containing backup preferences.
 	 * Also will set the values in the config as properties of this object
@@ -167,7 +167,7 @@ class Fuel_validate extends Fuel_advanced_module {
 		// determine if server is local
 		$results = '';
 		$local = FALSE;
-		$validator_url = $this->fuel->validate->config('validator_url');
+		$validator_url = $this->config('validator_url');
 		
 		$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
 		foreach($servers as $server)
@@ -241,16 +241,200 @@ class Fuel_validate extends Fuel_advanced_module {
 		return $results;
 	}
 	
+	function html2($uri)
+	{
+		$this->CI->load->library('user_agent');
+		
+		// if valid_internal_domains config match then read the file and post to validator
+		// determine if server is local
+		$results = '';
+		$local = TRUE;
+		$validator_url = $this->fuel->validate->config('validator_url').'/?output=soap12';
+		
+		$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
+		foreach($servers as $server)
+		{
+			$server = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $server));
+			if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = TRUE;
+		}
+		
+		// if the server is determined to be local, then we need to upload the file and post
+		if ($local)
+		{
+			$this->CI->load->helper('file');
+			
+			// scrape html from page running on localhost
+			$fragment = scrape_html($uri);
+
+			// post data using fragment variable
+			$tmp_filename = str_replace(array('/', ':'), '_', $uri);
+			$tmp_filename = substr($tmp_filename, 4);
+			$tmp_file_for_validation_urls = $this->CI->config->item('cache_path').'validation_url-'.$tmp_filename.'.html';
+			write_file($tmp_file_for_validation_urls, $fragment);
+			echo "<pre style=\"text-align: left;\">";
+			print_r($tmp_file_for_validation_urls);
+			echo "</pre>";
+			
+			echo "<pre style=\"text-align: left;\">";
+			print_r($validator_url);
+			echo "</pre>";
+			
+			$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
+			$results = scrape_html($validator_url, $post);
+			
+			
+			echo "<pre style=\"text-align: left;\">";
+			print_r($results);
+			echo "</pre>";
+			exit();
+			$result_arr = array();
+			$xml = new DomDocument();
+			@$xml->loadXML($results);
+			$xpath = new DOMXpath($xml);
+			$xpath->registerNamespace("m", "http://www.w3.org/2005/10/markup-validator");
+
+
+			$elements = $xpath->query("//m:validity");
+			if($elements->item(0)->nodeValue == 'true')
+			{
+				$result_arr['status'] = 'valid';
+			}
+			else
+			{
+				$result_arr['status'] = 'invalid';
+			}
+
+			$elements = $xpath->query("//m:errorcount");
+			$result_arr['err_num'] = intval($elements->item(0)->nodeValue);
+
+			$result_arr['errors'] = array();
+			$result_arr['warnings'] = array();
+
+			if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+			{
+
+				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:line");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['errors'][$i]['line'] = intval($node->nodeValue);
+					$i++;
+				}	
+
+				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:col");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['errors'][$i]['col'] = intval($node->nodeValue);
+					$i++;
+				}
+
+				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:message");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['errors'][$i]['message'] = $node->nodeValue;
+					$i++;
+				}
+
+				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:messageid");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['errors'][$i]['messageid'] = $node->nodeValue;
+					$i++;
+				}
+
+				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:explanation");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['errors'][$i]['explanation'] = trim($node->nodeValue);
+					$i++;
+				}
+			}
+
+			$elements = $xpath->query("//m:warningcount");
+			$result_arr['warn_num'] = intval($elements->item(0)->nodeValue);
+
+			if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+			{
+				$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:messageid");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['warnings'][$i]['messageid'] = trim($node->nodeValue);
+					$i++;
+				}
+				$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:message");
+				$i = 0;
+				foreach ($node_arr as $node)
+				{
+					$result_arr['warnings'][$i]['message'] = trim($node->nodeValue);
+					$i++;
+				}
+			}
+			
+			
+			$client = new SoapClient($validator_url);
+			// Call the SOAP method
+			$result = $client->call('hello', array('name' => 'Scott'));
+			// Display the result
+			print_r($result);
+			//$result = $client->TopGoalScorers(array('iTopN'=>5));
+			
+			// if just hte data to be returned, then we validate it here
+			if (!$w3c_view)
+			{
+				$results = $v->validateFile($tmp_file_for_validation_urls);
+			}
+			else
+			{
+				$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
+				$results = scrape_html($validator_url, $post);
+			}
+			
+			
+			if (file_exists($tmp_file_for_validation_urls)) 
+			{
+				unlink($tmp_file_for_validation_urls);
+			}
+		}
+
+		// else just pass it the uri value for it to read itself
+		else
+		{
+		}
+		
+		// 
+		// 
+		// // do some html cleanup so that css and images pull
+		// $url_parts = parse_url($validator_url);
+		// 
+		// // insert base_url so that the images/css pull from the correct place
+		// $base_url = 'http://'.$url_parts['host'].'/';
+		// $results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
+		// $results = str_replace(array('"./style/base.css"', '"./style/base"'), '"'.$base_url.'style/base.css"', $results);
+		// $results = str_replace(array('"./style/results.css"', '"./style/results"'), '"'.$base_url.'style/results.css"', $results);
+		// return $results;
+	}
+	
+	
 	function links($url, $just_invalid = FALSE)
 	{
 		// grab all the links from a remote file
-		$links = scrape_dom($url, '//a');
-
+		//$links = scrape_dom($url, '//a');
+		$this->CI->load->module_helper(FUEL_FOLDER, 'scraper');
+		// use this method which is faster
+		$html = scrape_html($url);
+		
+		preg_match_all("/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is", $html, $matches);
+		$links = (!empty($matches[1])) ? $matches[1] : array();
+		
 		$formatted_links = array();
-		foreach($links as $link)
+		foreach($links as $href)
 		{
-			$href = $link->getAttribute('href');
-
+			//$href = $link->getAttribute('href');
 			if (substr($href, 0, 7) != 'mailto:' AND substr($href, 0, 1) != '#' AND substr($href, 0, 11) != 'javascript:')
 			{
 				if (substr($href, 0, 1) == '/')

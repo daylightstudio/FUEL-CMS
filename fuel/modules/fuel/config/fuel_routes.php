@@ -16,7 +16,7 @@ if (IN_FUEL_ADMIN)
 
 	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
 	
-	$module_folder = MODULES_PATH.'/';
+	$module_folder = MODULES_PATH;
 
 	// config isn't loaded yet so do it manually'
 	include($module_folder.FUEL_FOLDER.'/config/fuel.php');

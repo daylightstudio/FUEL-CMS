@@ -70,9 +70,10 @@ class Html_w3c_validator extends Fuel_base_library {
 			$this->CI->fuel->scraper->curl($this->url);
 		}
 
-		if($this->curl_info['http_code'] == 200) {
-			return true;
-		}
+		// if($this->curl_info['http_code'] == 200)
+		// {
+		// 	return true;
+		// }
 		return false;
 	}
 	
@@ -125,7 +126,7 @@ class Html_w3c_validator extends Fuel_base_library {
 	}
 	
 	
-	private function xml_parsing($string) {
+	protected function xml_parsing($string) {
 		
 		$result_arr = array();
 		$xml = new DomDocument();
@@ -135,80 +136,91 @@ class Html_w3c_validator extends Fuel_base_library {
 		
 		
 		$elements = $xpath->query("//m:validity");
-		if($elements->item(0)->nodeValue == 'true') {
+		if($elements->item(0)->nodeValue == 'true')
+		{
 			$result_arr['status'] = 'valid';
-		}else {
+		}
+		else
+		{
 			$result_arr['status'] = 'invalid';
 		}
 		
 		$elements = $xpath->query("//m:errorcount");
 		$result_arr['err_num'] = intval($elements->item(0)->nodeValue);
 		
-
-		
 		$result_arr['errors'] = array();
 		$result_arr['warnings'] = array();
 		
-		if($elements->item(0) && $elements->item(0)->nodeValue > 0) {
+		if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+		{
 			
-		  $node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:line");
-		  $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['errors'][$i]['line'] = intval($node->nodeValue);
-			  $i++;
-		  }	
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:line");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['errors'][$i]['line'] = intval($node->nodeValue);
+				$i++;
+			}	
 			
-		  $node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:col");
-		  $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['errors'][$i]['col'] = intval($node->nodeValue);
-			  $i++;
-		  }	
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:col");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['errors'][$i]['col'] = intval($node->nodeValue);
+				$i++;
+			}
 			
-		  $node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:message");
-		  $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['errors'][$i]['message'] = $node->nodeValue;
-			  $i++;
-		  }
-		  $node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:messageid");
-		   $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['errors'][$i]['messageid'] = $node->nodeValue;
-			  $i++;
-		  }
-		  $node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:explanation");
-		   $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['errors'][$i]['explanation'] = trim($node->nodeValue);
-			  $i++;
-		  }
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:message");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['errors'][$i]['message'] = $node->nodeValue;
+				$i++;
+			}
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:messageid");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['errors'][$i]['messageid'] = $node->nodeValue;
+				$i++;
+			}
+			
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:explanation");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['errors'][$i]['explanation'] = trim($node->nodeValue);
+				$i++;
+			}
 		}
 		
 		$elements = $xpath->query("//m:warningcount");
 		$result_arr['warn_num'] = intval($elements->item(0)->nodeValue);
 		
-		if($elements->item(0) && $elements->item(0)->nodeValue > 0) {
-		  $node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:messageid");
-		  $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['warnings'][$i]['messageid'] = trim($node->nodeValue);
-			  $i++;
-		  }
-		  $node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:message");
-		  $i = 0;
-		  foreach ($node_arr as $node) {
-			  $result_arr['warnings'][$i]['message'] = trim($node->nodeValue);
-			  $i++;
-		  }
-			
+		if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+		{
+			$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:messageid");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['warnings'][$i]['messageid'] = trim($node->nodeValue);
+				$i++;
+			}
+			$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:message");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$result_arr['warnings'][$i]['message'] = trim($node->nodeValue);
+				$i++;
+			}
 		}
-		
 		
 		return $result_arr;
 	}
 
-	public function isValid($url) {//ritorna true o false
+	public function isValid($url)
+	{
 		$result = $this->fast_validate($url);
 		if(is_array($result) && $result['status'] == 'valid') {
 			return true;

@@ -31,7 +31,6 @@
 // include base library classes to extend
 require_once('Fuel_base_library.php');
 require_once('Fuel_advanced_module.php');
-//require_once('Fuel_module.php');
 
 class Fuel extends Fuel_base_library {
 	
@@ -46,9 +45,7 @@ class Fuel extends Fuel_base_library {
 									'modules',
 									'cache',
 									'logs',
-									'advanced_modules',
 									'notification',
-									'scraper',
 									);
 
 	private static $_instance;
@@ -129,7 +126,7 @@ class Fuel extends Fuel_base_library {
 					$lib_class = strtolower($fuel_class);
 					if (!isset($this->CI->$lib_class))
 					{
-						$init = array('name' => $var);
+						$init = array('name' => $var, 'folder' => $var);
 						$this->load_library($lib_class, $var, $init);
 					}
 					return $this->CI->$lib_class;

@@ -474,6 +474,8 @@ class Fuel_Loader extends MX_Loader
 	 * @access	public
 	 * @return	array
 	 */	
+	
+	//<!-- FUEL Added... 
 	function get_vars($key = NULL)
 	{
 		if (isset($key))

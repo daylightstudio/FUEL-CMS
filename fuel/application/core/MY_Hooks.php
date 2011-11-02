@@ -1,80 +1,30 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * CodeIgniter
+ * FUEL CMS
+ * http://www.getfuelcms.com
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
  *
- * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
- * @link		http://codeigniter.com
- * @since		Version 1.0
- * @filesource
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
  */
 
 // ------------------------------------------------------------------------
 
 /**
- * CodeIgniter Hooks Class
- *
- * Provides a mechanism to extend the base system without hacking.
- *
- * @package		CodeIgniter
+ * An extension of the Hooks class to allow for hooks within other modules
+ * 
+ * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/encryption.html
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/modules/hooks
  */
 class MY_Hooks extends CI_Hooks {
-
-	var $enabled		= FALSE;
-	var $hooks			= array();
-	var $in_progress	= FALSE;
-
-	/**
-	 * Constructor
-	 *
-	 */
-	function __construct()
-	{
-		$this->_initialize();
-		log_message('debug', "Hooks Class Initialized");
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Initialize the Hooks Preferences
-	 *
-	 * @access	private
-	 * @return	void
-	 */
-	function _initialize()
-	{
-		$CFG =& load_class('Config', 'core');
-
-		// If hooks are not enabled in the config file
-		// there is nothing else to do
-
-		if ($CFG->item('enable_hooks') == FALSE)
-		{
-			return;
-		}
-
-		// Grab the "hooks" definition file.
-		// If there are no hooks, we're done.
-
-		@include(APPPATH.'config/hooks'.EXT);
-
-		if ( ! isset($hook) OR ! is_array($hook))
-		{
-			return;
-		}
-
-		$this->hooks =& $hook;
-		$this->enabled = TRUE;
-	}
 
 	// --------------------------------------------------------------------
 

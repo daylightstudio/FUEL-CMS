@@ -33,7 +33,7 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 	public $domain = '';
 	public $keywords = '';
 	public $num_results = 100;
-	public $additional_params = '';
+	public $additional_params = array();
 	
 	/**
 	 * Constructor - Sets Fuel_backup preferences
@@ -79,6 +79,7 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 	// returns an array with the keywords being the key and the value being a comma separated value of the rankings
 	function results($params)
 	{
+		$this->CI->load->module_helper(FUEL_FOLDER, 'scraper');
 		$this->set_params($params);
 		
 		// normalize keywords into an array
@@ -101,14 +102,10 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 		{
 			$keyword = trim($keyword);
 			
-			$uri = 'http://www.google.com/search?q='.rawurlencode($keyword).'&num='.$this->num_results.'&'.http_build_query($this->additional_params);
+			$url = 'http://www.google.com/search?q='.rawurlencode($keyword).'&num='.$this->num_results.'&'.http_build_query($this->additional_params);
 
 			// scrape html from page running on localhost
-			$ch = curl_init(); 
-			curl_setopt($ch, CURLOPT_URL, $uri);
-			curl_setopt($ch, CURLOPT_HEADER, 0); 
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$google_page = curl_exec($ch);				
+			$google_page = scrape_html($url);
 			preg_match_all('|<h3 class=(["\'])?r\\1?><a.+href="(.+)".+</h3>|Umis', $google_page, $matches);
 
 			// echo "<pre style=\"text-align: left;\">";
@@ -135,7 +132,10 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 				}
 				$num++;
 			}
-			$found[$keyword] = implode(', ', $found[$keyword]);
+			if (!empty($found[$keyword]))
+			{
+				$found[$keyword] = implode(', ', $found[$keyword]);
+			}
 		}
 		curl_close($ch);
 		return $found;

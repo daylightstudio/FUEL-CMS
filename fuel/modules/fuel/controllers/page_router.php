@@ -108,7 +108,7 @@ class Page_router extends CI_Controller {
 		$this->output->set_output($output);
 		
 		// call the post render layout hook
-		$this->fuel->layouts->call_hook($page_data['layout'], 'post_render', $output);
+		$page->layout->call_hook($page_data['layout'], 'post_render', $output);
 		
 	}
 	

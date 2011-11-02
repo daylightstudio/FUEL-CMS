@@ -4,6 +4,7 @@ function scrape_html($url, $post = array(), $opts = array())
 {
 	$CI =& get_instance();
 	$CI->load->library('curl');
+	$CI->curl->initialize();
 	if (!empty($post))
 	{
 		$opts[CURLOPT_POST] = TRUE;
@@ -11,6 +12,16 @@ function scrape_html($url, $post = array(), $opts = array())
 		$opts[CURLOPT_HTTPGET] = FALSE;
 	}
 	return $CI->curl->execute($url, $opts);
+}
+
+function scrape_regex($url, $regex)
+{
+	$html = scrape_html();
+	if ($regex == 'links')
+	{
+		$regex = '/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is';
+	}
+//	preg_match_all("/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is", $html, $matches);
 }
 
 function scrape_dom($url, $xpath_query = NULL)

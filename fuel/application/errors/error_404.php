@@ -12,7 +12,7 @@ $GLOBALS['page_title'] = '404 Error : Page Cannot Be Found';
 // to prevent weird CSS errors if someone passes a name of a class used in your CSS
 $GLOBALS['body_class'] = '';
 
-require_once(APPPATH.'helpers/asset_helper.php');
+require_once(FUEL_PATH.'helpers/asset_helper.php');
 require_once(APPPATH.'helpers/MY_html_helper.php');
 require_once(APPPATH.'helpers/MY_url_helper.php');
 require_once(APPPATH.'helpers/my_helper.php');

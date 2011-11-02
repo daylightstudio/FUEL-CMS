@@ -16,7 +16,8 @@ just like the native <a href="http://codeigniter.com/user_guide/general/hooks.ht
 	<li><strong>after_delete_{module}</strong> - executed right AFTER deleting of module item(s). The IDs of the items deleted are passed as an array to the hook class/function.</li>
 </ul>
 
-<p class="important">The {module} part of the hook name is the name of the simple module that the hook applies to.</p>
+<p class="important">The {module} part of the hook name is the name of the simple module that the hook applies to.<strong> Additionally, the {module} of <dfn>"module"</dfn> will
+be applied to all modules.</strong></p>
 
 <p>The following is an example of an advanced module named "projects" that has a hook file located at <dfn>fuel/modules/projects/hooks/Project_hooks.php</dfn>.</p>
 

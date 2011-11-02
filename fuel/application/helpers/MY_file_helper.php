@@ -154,14 +154,17 @@ function delete_old_files($dir, $older_than, $exclude = array())
 	
 	$file_date_ts = (!is_numeric($older_than)) ? strtotime($older_than) : $older_than;
 	
-	foreach($files as $file)
+	if (!empty($files))
 	{
-		$compare_date = time();
-		
-		if ($file_date_ts < $compare_date AND 
-			(is_null($exclude) || (is_array($exclude) && !in_array($file['name'], $exclude)) || (is_string($exclude) && !preg_match($exclude, $file['name']))))
+		foreach($files as $file)
 		{
-			@unlink($file['server_path']);
+			$compare_date = time();
+
+			if ($file_date_ts < $compare_date AND 
+				(is_null($exclude) || (is_array($exclude) && !in_array($file['name'], $exclude)) || (is_string($exclude) && !preg_match($exclude, $file['name']))))
+			{
+				@unlink($file['server_path']);
+			}
 		}
 	}
 }

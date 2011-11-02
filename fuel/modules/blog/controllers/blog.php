@@ -10,6 +10,7 @@ class Blog extends Blog_base_controller {
 	
 	function _remap()
 	{
+		
 		$year = ($this->uri->rsegment(2) != 'index') ? (int) $this->uri->rsegment(2) : NULL;
 		$month = (int) $this->uri->rsegment(3);
 		$day = (int) $this->uri->rsegment(4);

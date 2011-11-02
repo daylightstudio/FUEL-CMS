@@ -23,7 +23,6 @@ class Pagevariables extends Module {
 		if (!is_numeric($field))
 		{
 			$var = $this->pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id));
-			$this->pagevariables_model->debug_query();
 			
 			if (isset($var->id))
 			{

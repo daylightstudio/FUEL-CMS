@@ -26,7 +26,6 @@ class Module extends Fuel_base_controller {
 		$params = array();
 		if ($this->fuel->modules->exists($this->module))
 		{
-			//$params = $this->fuel->modules($this->module)->info();
 			$module = $this->fuel->modules->get($this->module);
 			$params = $module->info();
 			
@@ -1282,10 +1281,23 @@ class Module extends Fuel_base_controller {
 					$save['active'] = 'no';
 				}
 				
+				// run before_edit hook
+				$this->_run_hook('before_edit', $save);
+	
+				// run before_save hook
+				$this->_run_hook('before_save', $save);
+				
 				if ($this->model->save($save))
 				{
 					// log it
 					$data = $this->model->find_by_key($id, 'array');
+					
+					// run after_edit hook
+					$this->_run_hook('after_edit', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->logs_model->logit($msg);
 				}

@@ -14,27 +14,24 @@ class Cronjobs extends Fuel_base_controller {
 	function index()
 	{
 		$this->_validate_user('cronjobs');
-		$this->load->module_config(CRONJOBS_FOLDER, 'cronjobs');
-		
-		$this->load->library('cronjob');
-		$this->load->library('validator');
-		
-		$cronjobs_config = $this->config->item('cronjobs');
 		
 		$this->js_controller_params['method'] = 'cronjobs';
-		$cronjob_path = INSTALL_ROOT.$cronjobs_config['crons_folder'].'crontab.php';
+
+		$crons_folder = $this->fuel->cronjobs->config('crons_folder');
+		$cronjob_path = INSTALL_ROOT.$crons_folder.'crontab.php';
 		
-		$config['cronfile'] = $cronjob_path;
-		$config['mailto'] = $this->input->post('mailto');
-		$config['user'] = $cronjobs_config['cron_user'];
-		$config['sudo_pwd'] = $cronjobs_config['sudo_pwd'];
-		$this->cronjob->initialize($config);
+		$params['cronfile'] = $cronjob_path;
+		$params['mailto'] = $this->input->post('mailto');
+		$params['user'] = $this->fuel->cronjobs->config('cron_user');
+		$params['sudo_pwd'] = $this->fuel->cronjobs->config('sudo_pwd');
+		
+		$this->fuel->cronjobs->set_params($params);
 		
 		if (!empty($_POST))
 		{
 			if ($this->input->post('action') == 'remove')
 			{
-				$this->cronjob->remove();
+				$this->fuel->cronjobs->remove();
 			}
 			else
 			{
@@ -53,25 +50,25 @@ class Cronjobs extends Fuel_base_controller {
 						$month_num = ($_POST['month_num'][$i] == 'month num') ? NULL : $_POST['month_num'][$i];
 						$week_day = ($_POST['week_day'][$i] == 'week day') ? NULL : $_POST['week_day'][$i];
 						$command = $_POST['command'][$i];
-						$this->cronjob->add($min, $hour, $month_day, $month_num, $week_day, $command);
+						$this->fuel->cronjobs->add($min, $hour, $month_day, $month_num, $week_day, $command);
 					}
 				}
 
-				if ($this->cronjob->create())
+				if ($this->fuel->cronjobs->create())
 				{
 					$this->session->set_flashdata('success', lang('cronjobs_success'));
 					redirect(fuel_uri('tools/cronjobs'));
 				}
 				else
 				{
-					add_error(lang('cronjobs_write_error', $this->cronjob->cronfile));
+					add_error(lang('cronjobs_write_error', $this->fuel->cronjobs->cronfile));
 				}
 			}
 			
 		}
 		
 		
-		$cronjob_file = $this->cronjob->view();
+		$cronjob_file = $this->fuel->cronjobs->view();
 		$action = 'edit';
 		$mailto = '';
 		

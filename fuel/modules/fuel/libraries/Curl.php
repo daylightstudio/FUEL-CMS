@@ -56,6 +56,8 @@ class Curl {
 				log_message('error', 'cURL Class - PHP was not built with cURL enabled. Rebuild PHP with --with-curl to use cURL.');
 			}
 		}
+		$this->CI = & get_instance();
+		$this->CI->load->library('user_agent');
 		$this->user_agent = $this->CI->agent->agent_string();
 		$this->cookie_file = $this->CI->config->item('cache_path').$this->cookie_file;
 		$this->initialize();
@@ -131,13 +133,13 @@ class Curl {
 				$o[$key] = $val;
 			}
 		}
-		
+
 		// set url 
-		curl_setopt($this->curl, CURLOPT_URL, $url);
+		curl_setopt($this->_curl, CURLOPT_URL, $url);
 		
 		// merge in any other options
 		curl_setopt_array($this->_curl, $o);
-		$output = curl_exec($ch);
+		$output = curl_exec($this->_curl);
 		
 		$this->_output = curl_exec($this->_curl); 
 		$this->_info = curl_getinfo($this->_curl);
@@ -203,7 +205,7 @@ class Curl {
 	function info($opt = NULL)
 	{
 		$info = curl_getinfo($this->_curl, $opt);
-		return $info
+		return $info;
 	}
 	
 	function error()

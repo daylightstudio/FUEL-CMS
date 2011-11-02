@@ -61,8 +61,6 @@ class Fuel_layouts extends Fuel_base_library {
 	 */	
 	function initialize($config = array())
 	{
-		$CI =& get_instance();
-		
 		// setup any intialized variables
 		foreach ($config as $key => $val)
 		{
@@ -75,7 +73,7 @@ class Fuel_layouts extends Fuel_base_library {
 		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
 		if ($this->layouts === TRUE OR (is_string($this->layouts) AND strtoupper($this->layouts) == 'AUTO'))
 		{
-			$CI->load->helper('file');
+			$this->CI->load->helper('file');
 			$layouts = get_filenames(APPPATH.'views/'.$this->layouts_path);
 
 			$this->layouts = array();
@@ -98,7 +96,14 @@ class Fuel_layouts extends Fuel_base_library {
 
 			if (!empty($this->layout_fields[$layout]))
 			{
-				$init['fields'] = $this->layout_fields[$layout];
+				$this->CI->load->library('form_builder');
+				$fields = $this->layout_fields[$layout];
+				foreach($fields as $key => $f)
+				{
+					$fields[$key] = $this->CI->form_builder->normalize_params($f);
+					unset($fields[$key]['__DEFAULTS__']);
+				}
+				$init['fields'] = $fields;
 			}
 			if (!empty($this->layout_hooks[$layout]))
 			{
@@ -139,6 +144,8 @@ class Fuel_layout {
 	public $field_values = array();
 	public $folder = '_layouts';
 	
+	protected $CI;
+	
 	function __construct($params = array())
 	{
 		$this->initialize($params);
@@ -157,7 +164,7 @@ class Fuel_layout {
 	 */	
 	function initialize($config = array())
 	{
-		$CI =& get_instance();
+		$this->CI =& get_instance();
 		
 		// setup any intialized variables
 		foreach ($config as $key => $val)
@@ -214,6 +221,17 @@ class Fuel_layout {
 		$this->field_values[$key] = $value;
 	}
 	
+	function field_values()
+	{
+		return $this->field_values;
+	}
+	
+	function field_value($key)
+	{
+		return $this->field_value[$key];
+	}
+	
+	
 	function set_hook($type, $hook)
 	{
 		$this->hooks[$type] = $hook;
@@ -233,7 +251,7 @@ class Fuel_layout {
 			}
 			$GLOBALS['EXT']->hooks[$hook_name][] = $this->hooks[$hook];
 		}
-		$hook_vars = $GLOBALS['EXT']->_call_hook($hook_name1, $params);
+		$hook_vars = $GLOBALS['EXT']->_call_hook($hook_name, $params);
 
 		// load variables
 		if (!empty($hook_vars))

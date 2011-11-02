@@ -307,7 +307,7 @@ class Pages extends Module {
 		// other variables
 		$vars['id'] = $id;
 		$vars['data'] = $saved;
-		
+
 		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
 		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
 		
@@ -318,11 +318,16 @@ class Pages extends Module {
 		$vars['uses_controller'] = $uses_controller;
 		$vars['others'] = $this->model->get_others('location', $id);
 		if (!empty($saved['location'])) $vars['page_navs'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
-		
+
 		$actions = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['actions'] = $actions;
 		$vars['error'] = $this->model->get_errors();
-		$vars['last_updated'] = lang('pages_last_updated_by', english_date($vars['data']['last_modified'], true), $vars['data']['email']);
+		
+		if (!empty($data['last_modified']))
+		{
+			$vars['last_updated'] = lang('pages_last_updated_by', english_date($vars['data']['last_modified'], true), $vars['data']['email']);
+		}
+		
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
 		
@@ -358,7 +363,8 @@ class Pages extends Module {
 
 		if (!empty($vars) && is_array($vars))
 		{
-			$fields = $this->fuel_layouts->fields($this->input->post('layout'));
+			$layout = $this->fuel->layouts->get($this->input->post('layout'));
+			$fields = $layout->fields();
 			$save = array();
 			
 			// clear out all other variables
@@ -386,6 +392,7 @@ class Pages extends Module {
 					$page_variables_archive[$key] = $this->pagevariables_model->cleaned_data();
 				}
 			}
+			
 			// archive
 			$archive = $this->model->cleaned_data();
 			$archive[$this->model->key_field()] = $id;
@@ -456,11 +463,13 @@ class Pages extends Module {
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
-		if (!empty($id)) {
+		if (!empty($id))
+		{
 			$page_vars = $this->pagevariables_model->find_all_by_page_id($id);
 			$this->form_builder->set_field_values($page_vars);
 		}
-		$this->output->set_output($this->form_builder->render());
+		$form = $this->form_builder->render();
+		$this->output->set_output($form);
 	}
 	
 	function _has_conflict($fields)

@@ -170,7 +170,7 @@ class Fuel_page {
 		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel'); // already loaded in autoload
 	//	$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
 
-		if (count($params) > 0)
+		if (!empty($params))
 		{
 			$this->initialize($params);
 		}
@@ -347,8 +347,23 @@ class Fuel_page {
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{
+			
+		//	$part_fields = $this->layout->part_field_values($this->layout);
+			// first assign default values for the layout
+		//	$this->CI->template->assign($part_fields);
+		
+			//$this->CI->template->assign($this->layout->field_values());
+			
+			
+			// then assign any variables assigned to the keys
+			//$this->CI->template->assign($this->variables());
+
+
+			$field_values = $this->layout->field_values();
+			
+			$vars = array_merge($field_values, $this->variables());
 			// get master layout files
-			$parts = $this->fuel_layouts->parts($this->layout);
+			/*$parts = $this->fuel->layouts->parts($this->layout);
 			
 			// assign layouts to the layout object
 			if (is_array($parts))
@@ -382,19 +397,20 @@ class Fuel_page {
 				
 				// then assign any variables assigned to the keys
 				$this->CI->template->assign($this->variables());
-			}
+			}*/
 			
 			
 			
 //			$this->CI->template->assign_global('CI', $CI);
 			
 			// call layout hooks
-			$this->fuel_layouts->call_hook($this->layout, 'pre_render');
+			$this->layout->call_hook('pre_render');
 			
 			// render the content
-			$output = $this->CI->template->render(TRUE);
-			$vars = array_merge($this->variables(), $this->CI->load->get_vars());
-			$this->CI->load->vars($vars);
+			$output = $this->CI->load->view($this->layout->file, $vars, TRUE);
+			// $output = $this->CI->template->render(TRUE);
+			// $vars = array_merge($this->variables(), $this->CI->load->get_vars());
+			// $this->CI->load->vars($vars);
 
 			//unset($vars['CI']);
 			
@@ -586,23 +602,25 @@ class Fuel_page {
 
 			if (!empty($layout))
 			{
-				if (is_array($layout))
-				{
-					$this->CI->load->library('template');
-					foreach($layout as $key => $val)
-					{
-						if (strncmp($val, '_layouts', 8) !== 0) $val = '_layouts/'.$val;
-						$this->CI->template->assign_tpl($key, $val);
-					}
-					$this->CI->template->assign_to('body', 'body', $body);
-					$output = $this->CI->template->render(TRUE);
-				}
-				else
-				{
+				// removed array of layouts
+				
+				// if (is_array($layout))
+				// {
+				// 	$this->CI->load->library('template');
+				// 	foreach($layout as $key => $val)
+				// 	{
+				// 		if (strncmp($val, '_layouts', 8) !== 0) $val = '_layouts/'.$val;
+				// 		$this->CI->template->assign_tpl($key, $val);
+				// 	}
+				// 	$this->CI->template->assign_to('body', 'body', $body);
+				// 	$output = $this->CI->template->render(TRUE);
+				// }
+				// else
+				// {
 					$vars['body'] = $body;
 					if (strncmp($layout, '_layouts', 8) !== 0) $layout = '_layouts/'.$layout;
 					$output = $this->CI->load->view($layout, $vars, TRUE);
-				}
+				// }
 
 			}
 			else
@@ -724,16 +742,20 @@ class Fuel_page {
 	
 	function render_marker($key)
 	{
-		if (!isset($this->markers[$key])) return '';
-			
-		$marker = $this->markers[$key];
 		
+		if (!isset($this->markers[$key])) return '';
+		
+		$marker = $this->markers[$key];
 		if (empty($marker)) return '';
 		extract($marker);
+		if (is_fuelified())
+		{
+			echo $this->CI->load->get_vars('fuelified');
+		}
 		
 		if ($this->fuel->config('admin_enabled') AND 
 			is_fuelified() AND 
-			($this->CI->load->get_vars('fuelified') === TRUE)
+			(is_null($this->CI->load->get_var('fuelified')) OR $this->CI->load->get_var('fuelified') === TRUE)
 			)
 		{
 			if (empty($label))
@@ -747,7 +769,6 @@ class Fuel_page {
 			
 			$edit_method = (empty($id) OR $id == 'create') ? 'inline_create' : 'inline_edit';
 			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/'.$edit_method.'/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
-
 			if (isset($xoffset) OR isset($yoffset))
 			{
 				$output .= ' style="';
@@ -775,13 +796,13 @@ class Fuel_page {
 			            '$matches',
 			            '
 						$CI =& get_instance();
-						$marker_reg_ex = $CI->fuel_page->get_marker_regex();
+						$marker_reg_ex = $CI->fuel->page->get_marker_regex();
 						$output = $matches[0];
 						preg_match_all("#".$marker_reg_ex."#", $matches[0], $tagmatches);
 						if (!empty($tagmatches[0]))
 						{
 							// clean out the tag and append them before the node
-							$output = $CI->fuel_page->remove_markers($matches[0]);
+							$output = $CI->fuel->page->remove_markers($matches[0]);
 							$output = implode($tagmatches[0], " ").$output;
 						}
 						return $output;'
@@ -791,20 +812,18 @@ class Fuel_page {
 
 			// extract everything above the body
 			preg_match_all('/(.*)<body/Umis', $output, $head);
-
 			// get all the markers in the head and move them to within the body
 			if (!empty($head[1][0]))
 			{
 				// match all markers in head
 				preg_match_all('/('.$marker_reg_ex.')/Umis', $head[1][0], $matches);
-				
+
 				// append them to the body
 				if (!empty($matches[1]))
 				{
 					$head_markers = implode("\n", array_unique($matches[1]));
 					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output);
 				}
-				
 				// remove the markers from the head now that we've captured them'
 				$cleaned_head = preg_replace('/('.$marker_reg_ex.')/', '', $head[1][0]);
 				
@@ -908,6 +927,7 @@ class Fuel_page_variables extends Fuel_base_library {
 	function __construct($params = array())
 	{
 		parent::__construct($params);
+		$this->initialize($params);
 	}
 	
 	function initialize($params)
@@ -931,12 +951,11 @@ class Fuel_page_variables extends Fuel_base_library {
 	{
 		
 		$location = $this->location;
-
 		switch($what)
 		{
-			case Fuel_page_variables::VARIABLE_TYPE_DB :
+			case Fuel_page_variables::VARIABLE_TYPE_DB:
 				return $this->db();
-			case Fuel_page_variables::VARIABLE_TYPE_VIEW :
+			case Fuel_page_variables::VARIABLE_TYPE_VIEW:
 				return $this->view();
 			default:
 				$db = (array) $this->db();
@@ -965,11 +984,11 @@ class Fuel_page_variables extends Fuel_base_library {
 	function db($parse = FALSE)
 	{
 		$location = $this->location;
+
 		$this->fuel->load_model('pagevariables_model');
 		$this->fuel->load_model('sitevariables_model');
 		
 		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
-		
 		$vars = array();
 		
 		// Loop through the pages array looking for wild-cards
@@ -985,6 +1004,7 @@ class Fuel_page_variables extends Fuel_base_library {
 			}
 		}
 		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
+
 		if ($parse)
 		{
 			$this->CI->load->library('parser');

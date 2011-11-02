@@ -44,7 +44,7 @@ $lang['error_requires_string_value'] = 'The name field should be a string value'
 $lang['error_missing_params'] = 'You are missing parameters to view this page';
 $lang['error_invalid_method'] = 'Invalid method name';
 $lang['error_curl_page'] = 'Error loading page with CURL';
-
+$lang['error_class_property_does_not_exist'] = 'Class property %1s does not exist';
 
 /*
 |--------------------------------------------------------------------------

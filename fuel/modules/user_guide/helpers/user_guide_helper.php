@@ -4,7 +4,7 @@
 function user_guide_url($uri = '')
 {
 	$CI =& get_instance();
-	$url_base = $CI->config->item('user_guide_root_url');
+	$url_base = $CI->fuel->user_guide->config('root_url');
 	return site_url($url_base.$uri);
 }
  ?>

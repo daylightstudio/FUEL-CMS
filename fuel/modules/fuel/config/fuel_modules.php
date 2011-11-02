@@ -216,7 +216,7 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-@include(APPPATH.'config/MY_fuel_modules.php');
+//@include(APPPATH.'config/MY_fuel_modules.php');
 
 
 /* End of file fuel_modules.php */

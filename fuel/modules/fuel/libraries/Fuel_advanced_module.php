@@ -32,6 +32,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	
 	protected $name = '';
 	protected $folder = '';
+	protected $uri_path = '';
 	protected $_attached = array();
 	protected $_config = array();
 	
@@ -53,6 +54,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 		// the parent Fuel_base_library before the rest of the constructor'
 		$this->load_config();
 		$this->_config = $this->CI->config->item($this->name);
+		
 		if ($this->has_lang())
 		{
 			$this->load_language();
@@ -60,9 +62,34 @@ class Fuel_advanced_module extends Fuel_base_library {
 		parent::initialize($params);
 	}
 	
+	function __get($var)
+	{
+		// look for sub modules magically
+		$sub_module_name = $this->name.'_'.$var;
+		
+		$sub_module = $this->fuel->modules->get($sub_module_name);
+		if (!empty($sub_module))
+		{
+			return $sub_module;
+		}
+		else
+		{
+			throw new Exception(lang('error_class_property_does_not_exist', $var));
+		}
+	}
+	
 	function name()
 	{
 		return $this->name;
+	}
+	
+	function folder()
+	{
+		if (empty($this->folder))
+		{
+			return $this->name;
+		}
+		return $this->folder;
 	}
 	
 	function path($full = TRUE)
@@ -98,15 +125,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 
-	function folder()
-	{
-		if (empty($this->folder))
-		{
-			return $this->name;
-		}
-		return $this->folder;
-	}
-	
 	function config($item)
 	{
 		return (isset($this->_config[$item])) ? $this->_config[$item] : FALSE;
@@ -127,7 +145,32 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return (file_exists($this->config_path()));
 	}
 	
+	function fuel_url()
+	{
+		return fuel_url($this->uri_path());
+	}
 	
+	function uri_path()
+	{
+		static $routes;
+		
+		// if uri path is not set, then we grab the first one on the routes
+		if (empty($this->uri_path))
+		{
+			$routes_file = $this->server_path().'config/'.$this->folder().'_routes.php';
+			@include($routes_file);
+			if (isset($route))
+			{
+				$this->uri_path = str_replace(FUEL_ROUTE, '', current($route));
+			}
+		}
+		return $this->uri_path;
+	}
+	
+	function set_uri_path($uri_path)
+	{
+		$this->uri_path = $uri_path;
+	}
 
 	function server_path($full = TRUE)
 	{
@@ -239,7 +282,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		
 		// last parameter tells it to fail gracefully
-		$this->CI->load->module_config($this->folder(), $config, FALSE, FALSE);
+		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
 	}
 
 	function load_helper($helper)

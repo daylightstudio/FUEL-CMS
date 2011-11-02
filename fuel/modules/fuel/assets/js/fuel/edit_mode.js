@@ -146,9 +146,9 @@ if (fuel == undefined) var fuel = {};
 						var html = '<div id="__fuel_edit__' + i + '" style="left:' + coords.x + 'px; top:' + coords.y + 'px;" class="__fuel__ __fuel_edit__" title="' + varName + '" data-module="' + module + '">';
 						var dataHref = $this.attr('data-href').replace(/\|/, '/');
 						
-						// handle the pages module different because we use the pagevariables name and the page_id to get the value to edit
+						// handle the pagevariables module different because we use the pagevariables name and the page_id to get the value to edit
 						if (module == 'pagevariables'){
-							dataHref = dataHref + '/' + pageId;
+						//	dataHref = dataHref + '/' + pageId;
 						}
 						
 						html += '<a href="' + dataHref + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass +'">';
@@ -321,20 +321,19 @@ if (fuel == undefined) var fuel = {};
 						
 						if ($('.__fuel_edit_form__', $this).children().not('img').size() == 0){
 							
-							// var relArr = $(this).attr('rel').split('|');
-							// var param1 = relArr[0];
-							// var param2 = (relArr.length >= 2) ? relArr[1] : pageId;
-							
-							//var url = $(this).attr('href') + param1 + '/' + param2;
-							//var url = $(this).attr('href') +  '/' + param2;
-							
-							//var url = $(this).attr('href');
 							var relArr = $(this).attr('rel').split('|');
 							var param1 = relArr[0];
-							var param2 = (relArr.length >= 2) ? relArr[1] : pageId;
-							// 
+							if (module == 'pagevariables')
+							{
+								var param2 = pageId;
+							}
+							else
+							{
+								var param2 = (relArr.length >= 2) ? relArr[1] : '';
+								
+							}
 							var url = $(this).attr('href') + param1 + '/' + param2;
-							
+
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');

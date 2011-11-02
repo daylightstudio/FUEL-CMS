@@ -922,7 +922,6 @@ Class Form_builder {
 		$params['class'] = (!empty($params['class'])) ? $field_class.' '.$params['class'] : $field_class;
 
 		$this->_cached[$params['name']] = $params;
-		
 		return $params;
 	}
 	

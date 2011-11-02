@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -19,18 +19,16 @@
 /**
  * A Cronjob wrapper class
  *
- * This class allows you to manage cron jobs
- * based on this:
- * http://www.underwaterdesign.com/2006/06/php_create_a_cron_job_with_php.php
- *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/cronjob.html
+ * @link		http://www.getfuelcms.com/user_guide/modules/validate
  */
 
-class Cronjob {
+// --------------------------------------------------------------------
+
+class Fuel_cronjobs extends Fuel_advanced_module {
 	
 	public $cronfile = 'crons/crontab.txt'; // path to the crontab fle
 	public $mailto = ''; // mailto value of crontab
@@ -46,33 +44,15 @@ class Cronjob {
 	 */
 	function __construct($params = array())
 	{
-		if (count($params) > 0)
+		parent::__construct($params);
+		
+		// initialize object if any parameters
+		if (!empty($params))
 		{
-			$this->initialize($params);		
+			$this->initialize($params);
 		}
 	}
 	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initialize the user preferences
-	 *
-	 * Accepts an associative array as input, containing display preferences
-	 *
-	 * @access	public
-	 * @param	array	config preferences
-	 * @return	void
-	 */	
-	function initialize($config = array())
-	{
-		foreach ($config as $key => $val)
-		{
-			if (isset($this->$key))
-			{
-				$this->$key = $val;
-			}
-		}
-	}
 	
 	// --------------------------------------------------------------------
 

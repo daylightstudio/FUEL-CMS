@@ -60,6 +60,8 @@ class Validate extends Fuel_base_controller {
 		if ($this->input->post('uri'))
 		{
 			$uri = $this->input->post('uri');
+			$results = $this->fuel->validate->html2($uri, TRUE);
+			exit();
 			$results = $this->fuel->validate->html($uri, TRUE);
 			$this->output->set_output($results);
 			return;

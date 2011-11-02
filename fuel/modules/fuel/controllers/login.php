@@ -7,19 +7,17 @@ class Login extends CI_Controller {
 
 		// for flash data
 		$this->load->library('session');
-		$this->load->helper('fuel');
-		$this->config->load('fuel', true);
 
-		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
+		if (!$this->fuel->config('admin_enabled')) show_404();
 
 		$this->load->vars(array(
 			'js' => '', 
-			'css' => '', 
+			'css' => $this->fuel->config('xtra_css'), 
 			'js_controller_params' => array(), 
-			'keyboard_shortcuts' => $this->config->item('keyboard_shortcuts', 'fuel')));
+			'keyboard_shortcuts' => $this->fuel->config('keyboard_shortcuts')));
 
 		// change assets path to admin
-		$this->asset->assets_path = $this->config->item('fuel_assets_path', 'fuel');
+		$this->asset->assets_path = $this->fuel->config('fuel_assets_path');
 		
 		$this->lang->load('fuel');
 		$this->load->helper('ajax');
@@ -55,16 +53,16 @@ class Login extends CI_Controller {
 		$this->load->helper('convert');
 		$this->load->helper('cookie');
 		
-		$session_key = $this->fuel_auth->get_session_namespace();
+		$session_key = $this->fuel->auth->get_session_namespace();
 		
 		$user_data = $this->session->userdata($session_key);
 		if (!empty($_POST))
 		{
 
 			// check if they are locked out out or not
-			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->config->item('seconds_to_unlock', 'fuel'))
+			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
- 				$this->users_model->add_error(lang('error_max_attempts', $this->config->item('seconds_to_unlock', 'fuel')));
+ 				$this->users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
 				
 			}
@@ -96,13 +94,13 @@ class Login extends CI_Controller {
 						}
 						else
 						{
-							redirect($this->config->item('login_redirect', 'fuel'));
+							redirect($this->fuel->config('login_redirect'));
 						}
 					}
 					else
 					{
 						// check if they are no longer in the locked out state and reset variables
-						if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->config->item('seconds_to_unlock', 'fuel'))
+						if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->fuel->config('seconds_to_unlock'))
 						{
 							$user_data['failed_login_attempts'] = 0;
 							$this->session->unset_userdata('failed_login_timer');
@@ -117,9 +115,9 @@ class Login extends CI_Controller {
 						}
 						
 						// check if they should be locked out
-						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->config->item('num_logins_before_lock', 'fuel') -1)
+						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
 						{
-							$this->users_model->add_error(lang('error_max_attempts', $this->config->item('seconds_to_unlock', 'fuel')));
+							$this->users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 							$user_data['failed_login_timer'] = time();
 						}
 						else
@@ -151,14 +149,14 @@ class Login extends CI_Controller {
 		$vars['error'] = $this->users_model->get_errors();
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
-		$vars['display_forgotten_pwd'] = $this->config->item('allow_forgotten_password', 'fuel');
+		$vars['display_forgotten_pwd'] = $this->fuel->config('allow_forgotten_password');
 		$vars['page_title'] = lang('fuel_page_title');
 		$this->load->view('login', $vars);
 	}
 	
 	function pwd_reset()
 	{
-		if (!$this->config->item('allow_forgotten_password', 'fuel')) show_404();
+		if (!$this->fuel->config('allow_forgotten_password')) show_404();
 		$this->js_controller_params['method'] = 'add_edit';
 
 		if (!empty($_POST))
@@ -176,7 +174,7 @@ class Login extends CI_Controller {
 						$config['wordwrap'] = TRUE;
 						$this->email->initialize($config);
 
-						$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
+						$this->email->from($this->fuel->config('from_email'), $this->fuel->config('site_name'));
 						$this->email->to($this->input->post('email')); 
 						$this->email->subject(lang('pwd_reset_subject'));
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
@@ -228,11 +226,11 @@ class Login extends CI_Controller {
 		$this->config->set_item('allow_forgotten_password', FALSE);
 		if (!empty($_POST))
 		{
-			if (!$this->config->item('dev_password', 'fuel'))
+			if (!$this->fuel->config('dev_password'))
 			{
 				redirect('');
 			}
-			else if ($this->config->item('dev_password', 'fuel') == $this->input->post('password', TRUE))
+			else if ($this->fuel->config('dev_password') == $this->input->post('password', TRUE))
 			{
 				$this->load->helper('convert');
 				$this->session->set_userdata('dev_password', TRUE);

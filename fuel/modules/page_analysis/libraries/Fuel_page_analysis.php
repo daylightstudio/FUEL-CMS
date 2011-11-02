@@ -28,13 +28,15 @@
 
 // --------------------------------------------------------------------
 
+require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
+
 class Fuel_page_analysis extends Fuel_advanced_module {
 	
 	public $url = '';
 	protected $_xpath = '';
 	
 	/**
-	 * Constructor - Sets Fuel_backup preferences
+	 * Constructor - Sets Fuel_backup page analysis
 	 *
 	 * The constructor can be passed an array of config values
 	 */
@@ -58,7 +60,7 @@ class Fuel_page_analysis extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initialize the backup object
+	 * Initialize the page analysis object
 	 *
 	 * Accepts an associative array as input, containing backup preferences.
 	 * Also will set the values in the config as properties of this object
