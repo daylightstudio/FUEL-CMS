@@ -209,6 +209,11 @@ class Base_module_model extends MY_Model {
 						{
 							$this->db->where(array($key => $val));
 						}
+						else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
+						{
+							$key = strtr($key,array('_from'=>' >','_fromequal'=>' >=','_to'=>' <','_toequal'=>' <='));
+							$this->db->where(array($key => $val));
+						}
 						else
 						{
 							$this->db->like('LOWER('.$key.')', strtolower($val), 'both');
@@ -219,6 +224,11 @@ class Base_module_model extends MY_Model {
 						// do a direct match if the values are integers and have _id in them
 						if (preg_match('#_id$#', $key) AND is_numeric($val))
 						{
+							$this->db->or_where(array($key => $val));
+						}
+						else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
+						{
+							$key = strtr($key,array('_from'=>' >','_fromequal'=>' >=','_to'=>' <','_toequal'=>' <='));
 							$this->db->or_where(array($key => $val));
 						}
 						else
