@@ -28,7 +28,6 @@
 
 // --------------------------------------------------------------------
 
-require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Fuel_page_analysis extends Fuel_advanced_module {
 	
@@ -36,7 +35,7 @@ class Fuel_page_analysis extends Fuel_advanced_module {
 	protected $_xpath = '';
 	
 	/**
-	 * Constructor - Sets Fuel_backup page analysis
+	 * Constructor
 	 *
 	 * The constructor can be passed an array of config values
 	 */
@@ -78,10 +77,17 @@ class Fuel_page_analysis extends Fuel_advanced_module {
 	
 	function set_page($url)
 	{
+		if (!is_http_path($url))
+		{
+			$url = site_url($url);
+		}
+		
 		// turn off the warnings for bad html
 		$old_setting = libxml_use_internal_errors(TRUE); 
 		libxml_clear_errors(); 
 		$dom = new DOMDocument(); 
+		
+		if (empty($url))
 		
 		$html = file_get_contents($url); // suppress errors because it
 		// scrape html from page running on localhost

@@ -166,7 +166,7 @@ class Module extends Fuel_base_controller {
 		if (!is_ajax() AND !empty($_POST))
 		{
 			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-			$uri = $this->config->item('fuel_path', 'fuel').$this->module_uri.'/items/offset/'.$params['offset'];
+			$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
 			redirect($uri);
 		}
 		
@@ -347,6 +347,7 @@ class Module extends Fuel_base_controller {
 			{
 				$field_values[$key] = $params[$key];
 			}
+			
 			$this->form_builder->question_keys = array();
 			//$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->label_layout = 'left';
@@ -366,8 +367,9 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->key_check = FALSE; 
 			$vars['more_filters'] = $this->form_builder->render_divs();
 			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_actions', $vars, TRUE);
+			$vars['form_action'] = $this->module_uri.'/items';
 			$crumbs = array($this->module_uri => $this->module_name);
-			$this->fuel->admin->set_breadcrumb($crumbs);
+			$this->fuel->admin->set_titlebar($crumbs);
 
 			$this->fuel->admin->render($this->views['list'], $vars);
 		}
@@ -525,7 +527,7 @@ class Module extends Fuel_base_controller {
 		$vars['action'] = 'create';
 		
 		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
-		$this->fuel->admin->set_breadcrumb($crumbs);
+		$this->fuel->admin->set_titlebar($crumbs);
 		
 		if ($inline === TRUE)
 		{
@@ -672,8 +674,13 @@ class Module extends Fuel_base_controller {
 		$vars['data'] = $data;
 		$vars['action'] = $action;
 		
-		$crumbs = array($this->module_uri => $this->module_name, '' => character_limiter(strip_tags($data[$this->display_field]), 50));
-		$this->fuel->admin->set_breadcrumb($crumbs);
+		$crumbs = array($this->module_uri => $this->module_name);
+		if (!empty($data))
+		{
+			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
+		}
+		
+		$this->fuel->admin->set_titlebar($crumbs);
 		
 		// active or publish fields
 		if (isset($data['published']))
@@ -702,7 +709,7 @@ class Module extends Fuel_base_controller {
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($data[$this->display_field]) AND $inline !== TRUE)
+		if (!empty($data[$this->display_field]) OR $inline !== TRUE)
 		{
 			$this->fuel->admin->recent_pages($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
 		}
@@ -929,11 +936,11 @@ class Module extends Fuel_base_controller {
 			$fields['__fuel_inline__']['value'] = ($inline) ? 1 : 0;
 			
 			
-			$form_action = ($inline) ? fuel_url($this->module_uri.'/inline_'.$action.'/'.$id) : fuel_url($this->module_uri.'/'.$action.'/'.$id) ;
-			$this->form_builder->form_attrs = 'method="post" action="'.$form_action.'" enctype="multipart/form-data" id="form"';
+			$form_action = ($inline) ? $this->module_uri.'/inline_'.$action.'/'.$id : $this->module_uri.'/'.$action.'/'.$id;
+			//$this->form_builder->form_attrs = 'method="post" action="'.$form_action.'" enctype="multipart/form-data" id="form"';
 			$this->form_builder->submit_value = lang('btn_save');
 			$this->form_builder->question_keys = array();
-			$this->form_builder->use_form_tag = TRUE;
+			$this->form_builder->use_form_tag = FALSE;
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->display_errors = FALSE;
 			$this->form_builder->set_field_values($field_values);
@@ -967,7 +974,7 @@ class Module extends Fuel_base_controller {
 			}
 			$form = $this->form_builder->render();
 		}
-
+		$vars['form_action'] = $form_action;
 		$vars['form'] = $form;
 		$vars['data'] = $values;
 		$vars['error'] = $this->model->get_errors();
@@ -1186,13 +1193,16 @@ class Module extends Fuel_base_controller {
 			if (empty($data)) show_404();
 			$vars['error'] = $this->model->get_errors();
 			$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
+			$vars['inline'] = $inline;
 			if ($inline === TRUE)
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
 			}
 			else
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
+				$vars['back_action '] = fuel_url($this->module_uri.'/');
 			}
 			$this->fuel->admin->render($this->views['delete'], $vars);
 		}
@@ -1205,9 +1215,9 @@ class Module extends Fuel_base_controller {
 	
 	function restore()
 	{
-		if ($this->input->post('version') AND $this->input->post('ref_id'))
+		if (!empty($_POST['restore_version']) AND !empty($_POST['restore_ref_id']))
 		{
-			if (!$this->model->restore($this->input->post('ref_id'), $this->input->post('version')))
+			if (!$this->model->restore($this->input->post('restore_ref_id'), $this->input->post('restore_version')))
 			{
 				$msg = lang('module_restored', $this->module_name);
 				$this->logs_model->logit($msg);
@@ -1218,7 +1228,7 @@ class Module extends Fuel_base_controller {
 			{
 				$this->session->set_flashdata('success', lang('module_restored_success'));
 			}
-			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('ref_id')));
+			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('restore_ref_id')));
 		}
 		else
 		{
@@ -1380,7 +1390,7 @@ class Module extends Fuel_base_controller {
 		{
 			// append ajax to the method name... to prevent any conflicts with default methods
 			$method = 'ajax_'.$method;
-			$this->uri->init_get_params();
+
 			$params = $_GET;
 			
 			if (!method_exists($this->model, $method))

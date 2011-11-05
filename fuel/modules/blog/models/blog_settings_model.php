@@ -7,9 +7,8 @@ class Blog_settings_model extends MY_Model {
 	
 	function __construct()
 	{
-		$CI =& get_instance();
-		$CI->config->module_load(BLOG_FOLDER, BLOG_FOLDER);
-		$tables = $CI->config->item('tables');
+		include(BLOG_PATH.'config/blog.php');
+		$tables = $config['tables'];
 		parent::__construct($tables['blog_settings']); // table name
 	}
 	

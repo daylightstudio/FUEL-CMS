@@ -19,9 +19,10 @@ if (IN_FUEL_ADMIN)
 	$module_folder = MODULES_PATH;
 
 	// config isn't loaded yet so do it manually'
-	include($module_folder.FUEL_FOLDER.'/config/fuel.php');
-	include($module_folder.FUEL_FOLDER.'/config/fuel_modules.php');
-
+	include(FUEL_PATH.'config/fuel.php');
+	include(FUEL_PATH.'config/fuel_modules.php');
+	@include(APPPATH.'/config/MY_fuel_modules.php');
+	
 	$modules = array_keys($config['modules']);
 	$modules = array_merge($config['modules_allowed'], $modules);
 
@@ -60,7 +61,6 @@ if (IN_FUEL_ADMIN)
 	}
 	// catch all
 	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
-	
 }
 
 /* End of file fuel_routes.php */

@@ -20,6 +20,11 @@ ul.nobullets { list-style: none; }
 .tooltip { cursor: help; text-decoration: none; border-bottom: 1px dotted #0e3e7e;}
 .fillin { color: #aaa; }
 .clear { clear: both; height: 0; font-size: 0px; line-height: 0px; }
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
 span.required { color:#c30; }
 .datepicker_hh { margin-right: 2px; }
 .datepicker_mm { margin: 0 5px 0 2px; }
@@ -103,7 +108,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_other { background-image: url(../images/ico_cog.png); }
 .ico_users { background-image: url(../images/ico_status_online.png); }
 .ico_manage_cache { background-image: url(../images/ico_page_lightning.png); }
-.ico_manage_activity { background-image: url(../images/ico_book_open.png); }
+.ico_logs { background-image: url(../images/ico_book_open.png); }
 .ico_save { background-image: url(../images/ico_disk.png); }
 .ico_duplicate { background-image: url(../images/ico_page_copy.png); }
 .ico_view { background-image: url(../images/ico_layout_content.png); }
@@ -154,8 +159,10 @@ div#fuel_main_content .buttonbar li { margin-right: 15px; }
 div#fuel_main_content_inner { padding: 15px 37px; }
 div#fuel_main_content_inner .bullets { margin-left: 15px; }
 div.noactions { top: 51px !important; }
-div.nocrumb { top: 69px !important; }
-div.noactions_nocrumb { top: 22px !important; }
+div.notitlebar { top: 69px !important; }
+div.noactions_notitlebar { top: 22px !important; }
+div.noactions_nonotification { top: 29px !important; }
+
 
 /* inline/compact mode */
 div#fuel_main_panel_compact { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #fff; }
@@ -247,7 +254,7 @@ div.nodata { text-align: center; padding: 10px 0 15px 0;}
 span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
-table.form { border: none; border-spacing: 0; }
+table.form { border: none; border-spacing: 0; width: 680px; }
 table.form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
 table.form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
 table.form td.required { padding-top: 10px; }

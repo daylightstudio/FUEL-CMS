@@ -1,7 +1,7 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // not pulling from the database so just extend the normal model
-require_once(APPPATH.'libraries/Validator.php');
+require_once(FUEL_PATH.'libraries/Validator.php');
 
 
 class Assets_model extends CI_Model {

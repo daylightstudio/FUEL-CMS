@@ -6,6 +6,7 @@ class Logs_model extends Base_module_model {
 
 	public $id;
 	
+	
 	function __construct()
 	{
 		parent::__construct('logs');
@@ -13,22 +14,27 @@ class Logs_model extends Base_module_model {
 	
 	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc')
 	{
-		$this->db->select('entry_date, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) as name, message', FALSE);
+		$this->db->select($this->_tables['logs'].'.id, entry_date, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) as name, message', FALSE);
 		$this->db->join($this->_tables['users'], $this->_tables['logs'].'.user_id = '.$this->_tables['users'].'.id', 'left');
-		
-		$data = array();
-		
-		if (is_array($this->filters)){
-			foreach($this->filters as $key => $val){
-				if (!empty($val)) $this->db->or_like('LOWER('.$key.')', strtolower($val), 'both');
-			}
-		}
-		
-		$this->db->order_by($col, $order);
-		$this->db->limit($limit, $offset);
-		$query = $this->get();
-		$data = $query->result();
+		$data = parent::list_items($limit, $offset, $col, $order);
+		//$this->debug_query();
 		return $data;
+		// 
+		// $data = array();
+		// 
+		// if (is_array($this->filters))
+		// {
+		// 	foreach($this->filters as $key => $val)
+		// 	{
+		// 		if (!empty($val)) $this->db->or_like('LOWER('.$key.')', strtolower($val), 'both');
+		// 	}
+		// }
+		// $this->db->from($this->table_name);
+		// $this->db->order_by($col, $order);
+		// $this->db->limit($limit, $offset);
+		// $query = $this->db->get();
+		// $data = $query->result_array();
+		// return $data;
 	}
 	
 	function logit($msg, $user = null){

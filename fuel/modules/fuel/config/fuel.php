@@ -265,7 +265,8 @@ $config['nav']['manage'] = array(
 	'users' => lang('module_users'), 
 	'permissions' => lang('module_permissions'),
 	'manage/cache' => lang('module_manage_cache'), 
-	'manage/activity' => lang('module_manage_activity')
+	//'manage/activity' => lang('module_manage_activity')
+	'logs' => lang('module_manage_activity')
 	);
 
 /*

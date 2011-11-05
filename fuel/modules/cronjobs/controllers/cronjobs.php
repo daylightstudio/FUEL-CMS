@@ -4,7 +4,6 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Cronjobs extends Fuel_base_controller {
 
 	public $nav_selected = 'tools/cronjobs';
-	public $view_location = 'cronjobs';
 	
 	function __construct()
 	{
@@ -112,7 +111,7 @@ class Cronjobs extends Fuel_base_controller {
 		$vars['mailto'] = $mailto;
 		$vars['cronjob_lines'] = $cronjob_lines;
 		$crumbs = array('tools' => lang('section_tools'), lang('module_cronjobs'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_cronjobs');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_cronjobs');
 		$this->fuel->admin->render('cronjobs', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }

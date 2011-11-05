@@ -674,14 +674,16 @@ class Fuel_page {
 		$this->CI->load->library('form');
 		$vars['page'] = $this->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
+		$vars['tools'] = array(fuel_url('tools/page_analysis/toolbar') => 'Page Analysis');
 		$last_page = uri_path();
 		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);
 
-		$editable_asset_types = $this->fuel->config('editable_asset_filetypes');
+		//$editable_asset_types = $this->fuel->config('editable_asset_filetypes');
 
 		// add javascript
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
+		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : '');
 		$vars['init_params']['basePath'] = WEB_PATH;
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
@@ -696,7 +698,7 @@ class Fuel_page {
 		
 		// json localization
 		$vars['js_localized'] = json_lang('fuel/fuel_js');
-		$vars['assetsAccept']['assetsAccept'] = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png');
+		//$vars['assetsAccept']['assetsAccept'] = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png');
 		
 		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
 		// otherwise we get an error when the mode is set to views

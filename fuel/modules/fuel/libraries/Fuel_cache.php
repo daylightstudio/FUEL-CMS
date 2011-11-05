@@ -30,7 +30,7 @@
 
 class Fuel_cache extends Fuel_base_library {
 	
-	public $ignore = '#^\..+#'; // files to exclude from clearing like .gitignore and .htaccess
+	public $ignore = '#^(\..+)|(index\.html)#'; // files to exclude from clearing like .gitignore and .htaccess
 	
 	protected $_cache;
 	protected $_types = array(
@@ -83,7 +83,11 @@ class Fuel_cache extends Fuel_base_library {
 			{
 				if (in_array($w, $this->_types))
 				{
-					$this->$w();
+					$method = 'clear_'.$w;
+					if (method_exists($this, $method))
+					{
+						$this->$method();
+					}
 				}
 			}
 		}
@@ -105,7 +109,7 @@ class Fuel_cache extends Fuel_base_library {
 		
 		// also delete DWOO compiled files
 		$this->CI->load->helper('file');
-		$dwoo_path = $this->CI->config('cache_path').'dwoo/compiled/';
+		$dwoo_path = $this->CI->config->item('cache_path').'dwoo/compiled/';
 		
 		if (is_dir($dwoo_path) AND is_writable($dwoo_path))
 		{
@@ -119,7 +123,7 @@ class Fuel_cache extends Fuel_base_library {
 		foreach($modules as $module)
 		{
 			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-			$cache_folder = assets_server_path($this->asset->assets_cache_folder, 'cache', $module);
+			$cache_folder = assets_server_path($this->CI->asset->assets_cache_folder, 'cache', $module);
 			if (is_dir($cache_folder) AND is_writable($cache_folder))
 			{
 				$this->_delete_files($cache_folder);
@@ -136,13 +140,13 @@ class Fuel_cache extends Fuel_base_library {
 	function clear_assets()
 	{
 		// remove asset cache files if exist
-		$modules = $this->fuel->config('modules_allowed', 'fuel');
+		$modules = $this->fuel->config('modules_allowed');
 		$modules[] = FUEL_FOLDER; // fuel
 		$modules[] = ''; // main application assets
 		foreach($modules as $module)
 		{
 			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
-			$cache_folder = assets_server_path($this->asset->assets_cache_folder, 'cache', $module);
+			$cache_folder = assets_server_path($this->CI->asset->assets_cache_folder, 'cache', $module);
 			if (is_dir($cache_folder) AND is_writable($cache_folder))
 			{
 				$this->_delete_files($cache_folder);
@@ -166,7 +170,7 @@ class Fuel_cache extends Fuel_base_library {
 		$this->clear_pages();
 		$this->clear_compiled();
 		$this->clear_assets();
-		$this->_delete_files($this->CI->config('cache_path'));
+		$this->_delete_files($this->CI->config->item('cache_path'));
 	}
 	
 	function create_id($location = NULL)

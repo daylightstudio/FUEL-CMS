@@ -7,12 +7,13 @@
 				<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
 				<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
 				<td>
+					<?php if (!empty($more_filters)) : ?>
 					<?=$more_filters?>
+					<?php endif; ?>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	
 </div>
 
 <div class="buttonbar" id="action_btns">
@@ -45,4 +46,6 @@
 	
 	
 </div>
+<?php if (!empty($params['view_type'])) : ?>
 <?=$this->form->hidden('view_type', $params['view_type'])?>
+<?php endif; ?>

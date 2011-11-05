@@ -216,6 +216,31 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
+// permissions module init values
+$config['modules']['logs'] = array(
+	'module_name' => 'Activity Log',
+	'model_name' => 'Logs_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'entry_date', 
+		'name', 
+		'message', 
+	),
+	
+	'default_col' => 'entry_date',
+	'default_order' => 'desc',
+	'display_field' => 'message',
+	'preview_path' => '',
+	'permission' => 'permissions',
+	'instructions' => lang('permissions_instructions'),
+	'archivable' => FALSE,
+	'item_actions' => array(),
+	'table_actions' => array(),
+	'rows_selectable' => FALSE,
+	'clear_cache_on_save' => FALSE
+);
+
 //@include(APPPATH.'config/MY_fuel_modules.php');
 
 

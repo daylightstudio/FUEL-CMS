@@ -1,8 +1,9 @@
 <?php 
 // set some render variables based on what is in the panels array
 $no_menu = (empty($panels['nav'])) ? TRUE : FALSE;
-$no_breadcrumb = (empty($panels['breadcrumb'])) ? TRUE : FALSE;
+$no_titlebar = (empty($panels['titlebar'])) ? TRUE : FALSE;
 $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
+$no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 ?>
 
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header');  ?>
@@ -26,23 +27,23 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 
 	
 	<div id="fuel_main_panel<?=($no_menu) ? '_compact' : ''?>">
+	
+		<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
+	
 
-
-		<?php if (!empty($panels['breadcrumb'])) : ?>
-		<!-- BREADCRUMB PANEL -->
-		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/breadcrumb')?>
+		<?php if (!empty($panels['titlebar'])) : ?>
+		<!-- BREADCRUMB/TITLE BAR PANEL -->
+		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/titlebar')?>
 		<?php endif; ?>
 		
 		
 		<?php if (!empty($panels['actions'])) : ?>
 		<!-- ACTION PANEL -->
-		<?=$this->form->open(array('action' => fuel_url($this->module_uri.'/items'), 'method' => 'post', 'id' => 'form_actions'))?>
 		<div id="fuel_actions">
 			<?php if (!empty($actions)) : ?>
 			<?=$actions?>
 			<?php endif; ?>
 		</div>
-		<?=$this->form->close()?>
 		<?php endif; ?>
 		
 		
@@ -58,10 +59,12 @@ $no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
 		
 		<?php 
 		$main_content_class = '';
-		if($no_actions AND $no_breadcrumb) :
-			$main_content_class = 'noactions_nocrumb';
-		elseif ($no_breadcrumb) :
-			$main_content_class = 'nocrumb';
+		if($no_actions AND $no_notification) :
+			$main_content_class = 'noactions_nonotification';
+		elseif($no_actions AND $no_titlebar) :
+			$main_content_class = 'noactions_notitle';
+		elseif ($no_titlebar) :
+			$main_content_class = 'notitle';
 		elseif ($no_actions) :
 			$main_content_class = 'noactions';
 		endif;

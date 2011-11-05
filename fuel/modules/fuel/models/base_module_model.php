@@ -76,7 +76,8 @@ class Base_module_model extends MY_Model {
 		// load in the module configuration file
 		if (!empty($module) && $module != FUEL_FOLDER)
 		{
-			$CI->config->module_load($module, $module, TRUE);
+			// fail gracefully is last parameter
+			$CI->config->module_load($module, $module, TRUE, TRUE);
 			if ($CI->config->item('tables', $module))
 			{
 				$module_tables = $CI->config->item('tables', $module);
@@ -88,7 +89,7 @@ class Base_module_model extends MY_Model {
 		{
 			$config_tables = $CI->config->item('tables');
 		}
-
+		
 		// create master list of tables
 		$this->_tables = array_merge($config_tables, $module_tables, $fuel_tables);
 		
@@ -209,9 +210,11 @@ class Base_module_model extends MY_Model {
 						{
 							$this->db->where(array($key => $val));
 						}
+						
+						// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
 						else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
 						{
-							$key = strtr($key,array('_from'=>' >','_fromequal'=>' >=','_to'=>' <','_toequal'=>' <='));
+							$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
 							$this->db->where(array($key => $val));
 						}
 						else

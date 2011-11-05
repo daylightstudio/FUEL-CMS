@@ -61,7 +61,7 @@ class Pages extends Module {
 		}
 		$vars = $this->_form();
 		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
-		$this->fuel->admin->set_breadcrumb($crumbs);
+		$this->fuel->admin->set_titlebar($crumbs);
 		
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
@@ -339,7 +339,7 @@ class Pages extends Module {
 		{
 			$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
 		}
-		$this->fuel->admin->set_breadcrumb($crumbs);
+		$this->fuel->admin->set_titlebar($crumbs);
 
 		// do this after rendering so it doesn't render current page'
 		if (!empty($vars['data'][$this->display_field])) $this->fuel->admin->recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);

@@ -295,6 +295,16 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$this->CI->load->module_library($this->folder(), $library, $name);
 	}
 
+	function load_view($view, $vars = array(), $return = FALSE)
+	{
+		if ($return)
+		{
+			return $this->CI->load->module_view($this->folder(), $view, $vars, TRUE);
+		}
+
+		$this->CI->load->module_view($this->folder(), $view, $vars);
+	}
+
 	function load_model($model, $name = NULL)
 	{
 		if (substr($model, strlen($model) - 6) !='_model')

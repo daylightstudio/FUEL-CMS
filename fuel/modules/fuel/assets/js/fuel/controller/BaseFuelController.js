@@ -165,7 +165,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.notifications();
 		$('#search_term').fillin(this.lang('label_search')).focus();
 		$('#limit').change(function(e){
-			$('#form_actions').submit();
+			$('#form').submit();
 		});
 		
 		if ($('#tree').exists()){
@@ -224,14 +224,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			this.redrawTable();
 		}
 		
-		$('#form_actions').submit(function(){
+		$('#form').submit(function(){
 			$('#toggle_list').click();
 		});
 		
 		$('#multi_delete').click(function(){
 			$('#toggle_list').unbind('click');
 			var deleteUrl = _this.modulePath + '/delete/';
-			$('#form_actions').attr('action', deleteUrl).submit();
+			$('#form').attr('action', deleteUrl).submit();
 			return false;
 		});
 		
@@ -276,10 +276,31 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//this._submit();
 		
 		if (initSpecFields) this.initSpecialFields($('#main_content_inner'));
+			// $('.publish_action').click(function(e){
+			// 	$.removeChecksave();
+			// 	if ($('#published').size() > 0){
+			// 		$('#published').val('yes');
+			// 	} else {
+			// 		$('#published_yes').attr('checked', true);
+			// 	}
+			// 	$('#form').submit();
+			// 	return false;
+			// });
+			// 
+			// $('.unpublish_action').click(function(e){
+			// 	$.removeChecksave();
+			// 	if ($('#published').size() > 0){
+			// 		$('#published').val('no');
+			// 	} else {
+			// 		$('#published_no').attr('checked', true);
+			// 	}
+			// 	$('#form').submit();
+			// 	return false;
+			// });
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox') != undefined){
+			if ($('#published:checkbox').size() > 1){
 				$('#published:checkbox').attr('checked', true);
 			} else if ($('#published').size() > 0){
 				$('#published').val('yes');
@@ -289,10 +310,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').submit();
 			return false;
 		});
-
+		
 		$('.unpublish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox') != undefined) {
+			if ($('#published:checkbox').size() > 1) {
 				$('#published:checkbox').attr('checked', false);
 			} else if ($('#published').size() > 0){
 				$('#published').val('no');
@@ -302,12 +323,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').submit();
 			return false;
 		});
-
+		
 		$('.activate_action').click(function(e){
 			$.removeChecksave();
                         
 			// Check if element is a checkbox
-			if ($('#active:checkbox') != undefined){
+			if ($('#active:checkbox').size() > 1){
 				$('#active:checkbox').attr('checked', true);
 			} else if ($('#active').size() > 0){
 				$('#active').val('yes');
@@ -323,7 +344,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
                         
 			// Check if element is a checkbox
-			if ($('#active:checkbox') != undefined) {
+			if ($('#active:checkbox').size() > 1) {
 				$('#active:checkbox').attr('checked', false);
 			} else if ($('#active').size() > 0){
 				$('#active').val('no');
@@ -363,11 +384,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		
-		$('#version').change(function(e){
+		$('#restore_version').change(function(e){
 			$.removeChecksave();
 			if ($(this).val() != ''){
 				if (confirm('Restoring previous data will overwrite the currently saved data. Are you sure you want to continue?')){
-					$('#restore_form').submit();
+					$('#form').attr('action', _this.modulePath + '/restore');
+					$('#form').submit();
 				}
 			}
 		});
@@ -1001,13 +1023,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	redrawTree : function(){
 		$('#tree_loader').show();
-		this.submitForm('#form_actions', '#tree', this.treeAjaxURL, true, this.treeCallback);
+		this.submitForm('#form', '#tree', this.treeAjaxURL, true, this.treeCallback);
 	},
 	
 	redrawTable : function(useAjax, useCache){
 		if (useAjax !== false) useAjax = true;
 		$('#table_loader').show();
-		this.submitForm('#form_actions', '#data_table_container', this.tableAjaxURL, useAjax, this.tableCallback, useCache);
+		this.submitForm('#form', '#data_table_container', this.tableAjaxURL, useAjax, this.tableCallback, useCache);
 	},
 	
 	submitForm : function(formId, loadId, path, useAjax, callback, useCache){
@@ -1015,6 +1037,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (useCache !== false) useCache = true;
 		if (useAjax){
 			var params = $(formId).formToArray(false);
+			console.log(params)
+
 			var cache_key = $(formId).formSerialize(true);
 			if (this.cache.isCached(cache_key) && useCache){
 				$(loadId).html(this.cache.get(cache_key));

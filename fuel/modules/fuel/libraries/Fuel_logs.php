@@ -46,6 +46,11 @@ class Fuel_logs extends Fuel_base_library {
 		$this->CI->logs_model->logit($msg, $user);
 	}
 	
+	function &model()
+	{
+		return $this->CI->logs_model;
+	}
+	
 }
 
 /* End of file fuel_logs.php */

@@ -9,9 +9,8 @@ class Blog_posts_to_categories_model extends MY_Model {
 	
 	function __construct()
 	{
-		$CI =& get_instance();
-		$CI->config->module_load(BLOG_FOLDER, BLOG_FOLDER);
-		$this->_tables = $CI->config->item('tables');
+		include(BLOG_PATH.'config/blog.php');
+		$this->_tables = $config['tables'];
 		parent::__construct($this->_tables['blog_posts_to_categories']); // table name
 	}
 

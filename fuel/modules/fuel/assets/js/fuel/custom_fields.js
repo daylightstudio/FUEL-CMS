@@ -242,7 +242,7 @@ fuel.fields.asset_field = function(context){
 	
 	var _this = this;
 	$('.asset_select', context).each(function(i){
-		var assetTypeClasses = $(this).attr('className').split(' ');
+		var assetTypeClasses = ($(this).attr('className') != undefined) ? $(this).attr('className').split(' ') : [];
 		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 		var btnLabel = '';
 		switch(assetFolder.split('/')[0].toLowerCase()){
@@ -319,7 +319,7 @@ fuel.fields.inline_edit_field = function(context){
 		var $field = $(this);
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
-		var className = $field.attr('className').split(' ');
+		var className = ($field.attr('className') != undefined) ? $field.attr('className').split(' ') : [];
 		var module = '';
 		
 		var isMulti = ($field.attr('multiple')) ? true : false;

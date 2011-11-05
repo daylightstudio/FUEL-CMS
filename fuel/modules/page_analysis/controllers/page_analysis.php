@@ -32,7 +32,6 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Page_analysis extends Fuel_base_controller {
 	
 	public $nav_selected = 'tools/page_analysis'; // navigation item selected on menu
-	public $view_location = 'page_analysis'; // location of view files
 	
 	function __construct()
 	{
@@ -42,9 +41,7 @@ class Page_analysis extends Fuel_base_controller {
 		{
 			add_error(lang('error_seo_dev_password'));
 		}
-		$this->js_controller = 'PageAnalysisController';
-		$this->js_controller_path = js_path('', PAGE_ANALYSIS_FOLDER);
-		$this->js_controller_params['method'] = 'page_analysis';
+		$this->js_controller_params['method'] = 'add_edit';
 		
 	}
 
@@ -53,13 +50,16 @@ class Page_analysis extends Fuel_base_controller {
 		$this->_validate_user('tools/page_analysis');
 		
 		$url = '';
+		$vars['report'] = '';
+		$vars['form_action'] = 'tools/page_analysis';
 		if ($this->input->post('page'))
 		{
 			$url = $this->input->post('page');
 			$this->load->helper('text');
-			
 			// get the page analysis report
+			$vars['url'] = $url;
 			$vars['results'] = $this->fuel->page_analysis->report($url);
+			$vars['report'] = $this->load->module_view(PAGE_ANALYSIS_FOLDER, 'report', $vars, TRUE);
 		} 
 		
 		
@@ -72,7 +72,7 @@ class Page_analysis extends Fuel_base_controller {
 		$vars['pages_select'] = $pages;
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('section_tools'), lang('module_page_analysis')), FALSE);
 		$crumbs = array('tools' => lang('section_tools'), lang('module_page_analysis'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_page_analysis');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_page_analysis');
 		$this->fuel->admin->render('page_analysis', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		
 	}

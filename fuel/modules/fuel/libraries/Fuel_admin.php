@@ -34,18 +34,19 @@ class Fuel_admin extends Fuel_base_library {
 	protected $panels = array(
 		'top' => TRUE,
 		'nav' => TRUE,
-		'breadcrumb' => TRUE,
+		'titlebar' => TRUE,
 		'actions' => TRUE,
 		'notification' => TRUE,
 		'bottom' => TRUE,
 	);
 	protected $display_mode = NULL;
-	protected $breadcrumb = array();
-	protected $breadcrumb_icon = '';
+	protected $titlebar = array();
+	protected $titlebar_icon = '';
 
 	const DISPLAY_NO_ACTION = 'no_action';
 	const DISPLAY_COMPACT = 'compact';
 	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
+	const DISPLAY_COMPACT_TITLE = 'compact_title';
 
 	const NOTIFICATION_SUCCESS = 'success';
 	const NOTIFICATION_ERROR = 'error';
@@ -113,7 +114,8 @@ class Fuel_admin extends Fuel_base_library {
 			'keyboard_shortcuts' => $this->fuel->config('keyboard_shortcuts'),
 			'nav' => $this->nav(),
 			'modules_allowed' => $this->fuel->config('modules_allowed'),
-			'page_title' => $this->page_title()
+			'page_title' => $this->page_title(),
+			'form_action' => $this->CI->uri->uri_string(),
 			);
 			
 			
@@ -134,7 +136,7 @@ class Fuel_admin extends Fuel_base_library {
 				'css' => 'css/',
 				'js' => 'js/',
 			);
-
+			
 		$this->last_page();
 	}
 	
@@ -146,7 +148,7 @@ class Fuel_admin extends Fuel_base_library {
 		// set the module parameter to know where to look for view files
 		if (!isset($module))
 		{
-			$module = (!empty($this->CI->view_location)) ? $this->CI->view_location : FUEL_FOLDER;
+			$module = (!empty($this->CI->view_location)) ? $this->CI->view_location : $this->CI->router->fetch_module();
 		}
 		
 		// get notification if not already loaded in $vars and if any errors
@@ -159,21 +161,31 @@ class Fuel_admin extends Fuel_base_library {
 			// }
 		}
 		
-		// get breadcrumb only if there is no $vars set for it
-		if (empty($vars['breadcrumb']))
+		// get titlebar only if there is no $vars set for it
+		if (empty($vars['titlebar']))
 		{
-			$vars['breadcrumb'] = $this->breadcrumb();
+			$vars['titlebar'] = $this->titlebar();
 		}
 
-		// get breadcrumb icon only if there is no $vars set for it
-		if (empty($vars['breadcrumb_icon']))
+		// get titlebar icon only if there is no $vars set for it
+		if (empty($vars['titlebar_icon']))
 		{
-			$vars['breadcrumb_icon'] = $this->breadcrumb_icon();
+			$vars['titlebar_icon'] = $this->titlebar_icon();
 		}
 		
 		if (!empty($mode))
 		{
 			$this->set_display_mode($mode);
+		}
+		
+		// set the form action
+		if (empty($vars['form_action']))
+		{
+			$vars['form_action'] = $this->CI->uri->uri_string();
+		}
+		else if (!empty($vars['form_action']) AND !is_http_path($vars['form_action']))
+		{
+			$vars['form_action'] = fuel_url($vars['form_action']);
 		}
 		
 		$layout = (isset($vars['layout'])) ? $vars['layout'] : 'admin_shell';
@@ -415,6 +427,8 @@ class Fuel_admin extends Fuel_base_library {
 	
 	function page_title($segs = array(), $humanize = TRUE)
 	{
+		$segs = (array) $segs;
+		
 		if (empty($segs))
 		{
 			$segs = $this->CI->uri->segment_array();
@@ -525,26 +539,33 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		switch($mode)
 		{
-			case Fuel_admin::DISPLAY_NO_ACTION:
+			case self::DISPLAY_NO_ACTION:
 				$this->set_panel_display('actions', FALSE);
 				break;
-			case Fuel_admin::DISPLAY_COMPACT:
+			case self::DISPLAY_COMPACT:
 				$this->set_panel_display('top', FALSE);
 				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('breadcrumb', FALSE);
+				$this->set_panel_display('titlebar', FALSE);
 				$this->set_panel_display('bottom', FALSE);
 				break;
-			case Fuel_admin::DISPLAY_COMPACT_NO_ACTION:
+			case self::DISPLAY_COMPACT_NO_ACTION:
 				$this->set_panel_display('top', FALSE);
 				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('breadcrumb', FALSE);
+				$this->set_panel_display('titlebar', FALSE);
 				$this->set_panel_display('actions', FALSE);
+				$this->set_panel_display('bottom', FALSE);
+				break;
+			case self::DISPLAY_COMPACT_TITLE:
+				$this->set_panel_display('top', FALSE);
+				$this->set_panel_display('nav', FALSE);
+				$this->set_panel_display('actions', FALSE);
+				$this->set_panel_display('notification', FALSE);
 				$this->set_panel_display('bottom', FALSE);
 				break;
 			default:
 				$this->set_panel_display('top', TRUE);
 				$this->set_panel_display('nav', TRUE);
-				$this->set_panel_display('breadcrumb', TRUE);
+				$this->set_panel_display('titlebar', TRUE);
 				$this->set_panel_display('actions', TRUE);
 				$this->set_panel_display('bottom', TRUE);
 				
@@ -552,43 +573,43 @@ class Fuel_admin extends Fuel_base_library {
 		$this->display_mode = $mode;
 	}
 	
-	function set_breadcrumb($crumbs, $icon = '')
+	function set_titlebar($title, $icon = '')
 	{
 		if (empty($icon))
 		{
-			$icon = $this->breadcrumb_icon();
+			$icon = $this->titlebar_icon();
 		}
 		else
 		{
-			$this->breadcrumb_icon = $icon;
+			$this->titlebar_icon = $icon;
 		}
-		$this->CI->load->vars(array('breadcrumb' => $crumbs, 'breadcrumb_icon' => $icon));
-		$this->breadcrumb = $crumbs;
+		$this->CI->load->vars(array('titlebar' => $title, 'titlebar_icon' => $icon));
+		$this->titlebar = $title;
 	}
 	
-	function breadcrumb()
+	function titlebar()
 	{
-		return $this->breadcrumb;
+		return $this->titlebar;
 	}
 	
-	function breadcrumb_icon()
+	function titlebar_icon()
 	{
-		if (!empty($this->breadcrumb_icon))
+		if (!empty($this->titlebar_icon))
 		{
-			return $this->breadcrumb_icon;
+			return $this->titlebar_icon;
 		}
 		
 		// set in simple module configuration
 		else if (!empty($this->CI->icon_class))
 		{
-			$this->breadcrumb_icon = $this->CI->icon_class;
+			$this->titlebar_icon = $this->CI->icon_class;
 		}
 		else if (!empty($this->CI->module_uri))
 		{
-			$this->breadcrumb_icon = url_title(str_replace('/', '_', $this->CI->module_uri),'_', TRUE);
+			$this->titlebar_icon = url_title(str_replace('/', '_', $this->CI->module_uri),'_', TRUE);
 		}
 
-		return $this->breadcrumb_icon;
+		return $this->titlebar_icon;
 	}
 	
 	function set_notification($msg, $type = '')

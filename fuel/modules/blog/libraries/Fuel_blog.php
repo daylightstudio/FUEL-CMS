@@ -53,13 +53,13 @@ class Fuel_blog extends Fuel_advanced_module {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array())
+	function initialize($params = array())
 	{
-		parent::initialize($config);
+		parent::initialize($params);
 		
-		if (count($config) > 0)
+		if (!empty($params))
 		{
-			foreach ($config as $key => $val)
+			foreach ($params as $key => $val)
 			{
 				$sans_blog_key = substr($key, count('blog_'));
 				if (isset($this->$key))

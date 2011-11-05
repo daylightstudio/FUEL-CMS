@@ -53,11 +53,8 @@
 <?php if (isset($action) AND $action == 'edit') : ?>
 <div id="filters">
 	<?php if (!empty($versions)) : ?>
-	<form method="post" action="<?=fuel_url($this->module_uri.'/restore')?>" id="restore_form">
-		<div class="versions"><?=$this->form->select('version', $versions, '', '', lang('label_restore_from_prev'))?></div>
-		<?=$this->form->hidden('ref_id', $id)?>
-		
-	</form>
+		<div class="versions"><?=$this->form->select('restore_version', $versions, '', '', lang('label_restore_from_prev'))?></div>
+		<?=$this->form->hidden('restore_ref_id', $id)?>
 	<?php endif; ?>
 </div>
 <?php endif; ?>

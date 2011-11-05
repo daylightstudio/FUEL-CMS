@@ -4,7 +4,6 @@ require_once(FUEL_PATH.'libraries/Fuel_base_controller.php');
 class Validate extends Fuel_base_controller {
 	
 	public $nav_selected = 'tools/validate|tools/validate/:any';
-	public $view_location = 'validate';
 	
 	function __construct()
 	{
@@ -47,7 +46,7 @@ class Validate extends Fuel_base_controller {
 		$this->js_controller_params['method'] = 'validate';
 		
 		$crumbs = array('tools' => lang('section_tools'), lang('module_validate'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 		$this->fuel->admin->render('validate', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
@@ -93,7 +92,7 @@ class Validate extends Fuel_base_controller {
 		
 		// set breadcrumb
 		$crumbs = array('tools' => lang('section_tools'), 'tools/validate' => lang('module_validate'), lang('validate_type_html'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 		
 		// render page
 		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
@@ -141,7 +140,7 @@ class Validate extends Fuel_base_controller {
 		
 		// set breadcrumb
 		$crumbs = array('tools' => lang('section_tools'), 'tools/validate' => lang('module_validate'), lang('validate_type_links'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 	
 		// render page
 		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
@@ -182,7 +181,7 @@ class Validate extends Fuel_base_controller {
 		
 		// set breadcrumb
 		$crumbs = array('tools' => lang('section_tools'), 'tools/validate' => lang('module_validate'), lang('validate_type_size_report'));
-		$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_validate');
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 	
 		// render page
 		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);

@@ -8,6 +8,7 @@ $lang['btn_analyze'] = 'Analyze';
 $lang['page_analysis_error_loading_html'] = 'There was an error loading the HTML from the page %1s';
 $lang['page_analysis_image_alt_empty'] = '{EMPTY}';
 $lang['page_analysis_no_data'] = 'No results available';
+$lang['page_analysis_no_url'] = 'Please provide a URL';
 
 $lang['heading_title'] = 'Title';
 $lang['heading_description'] = 'Description';

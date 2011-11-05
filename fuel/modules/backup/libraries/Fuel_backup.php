@@ -227,7 +227,7 @@ class Fuel_backup extends Fuel_advanced_module {
 		// check if folder is writable
 		if (!is_really_writable($this->backup_path))
 		{
-			$this->_add_error(lang('data_backup_folder_not_writable', $full_path));
+			$this->_add_error(lang('data_backup_folder_not_writable', $this->backup_path));
 			return FALSE;
 		}
 		
@@ -350,9 +350,9 @@ class Fuel_backup extends Fuel_advanced_module {
 	{
 		$filepath = $this->backup_path.$backup_file;
 		$return = FALSE;
-		if (file_exists($filepath))
+		if (file_exists($filepath) AND is_really_writable($filepath))
 		{
-			if (unlink($filepath))
+			if (@unlink($filepath))
 			{
 				$this->_add_error(lang('data_backup_error_could_not_delete'));
 			}

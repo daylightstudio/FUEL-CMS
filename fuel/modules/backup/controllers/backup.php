@@ -32,7 +32,6 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 class Backup extends Fuel_base_controller {
 	
 	public $nav_selected = 'tools/backup'; // which navigation item should be selected
-	public $view_location = 'backup'; // location of view files
 	
 	function __construct()
 	{
@@ -82,7 +81,7 @@ class Backup extends Fuel_base_controller {
 			$vars['is_writable'] = is_writable($download_path);
 			
 			$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
-			$this->fuel->admin->set_breadcrumb($crumbs, 'ico_tools_backup');
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_backup');
 			$this->fuel->admin->render('backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 	}
