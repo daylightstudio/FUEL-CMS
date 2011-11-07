@@ -201,7 +201,7 @@ class Fuel_modules extends Fuel_base_library {
 
 
 
-class Fuel_module {
+class Fuel_module extends Fuel_base_library {
 	
 	protected $module = '';
 	protected $CI;
@@ -228,20 +228,24 @@ class Fuel_module {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array(), $init = array())
+	function initialize($params = array(), $init = array())
 	{
 		// setup any intialized variables
-		if (is_array($config))
+		if (is_array($params))
 		{
-			$this->module = $config['module'];
-			if (!empty($config['init']))
+			if (!empty($params['module']))
 			{
-				$this->_init = $config['init'];
+				$this->module = $params['module'];
+			}
+			
+			if (!empty($params['init']))
+			{
+				$this->_init = $params['init'];
 			}
 		}
 		else
 		{
-			$this->module = $config;
+			$this->module = $params;
 			$this->_init = $init;
 		}
 		

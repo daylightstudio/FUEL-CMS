@@ -53,7 +53,7 @@ class Fuel_tester extends Fuel_advanced_module {
 
 	function run($tests)
 	{
-		$tmpl = $this->load_view('report_template', array(), TRUE);
+		$tmpl = ($this->is_cli()) ? $this->load_view('report_template_cli', array(), TRUE) : $this->load_view('report_template', array(), TRUE);
 		$this->CI->unit->set_template($tmpl);
 		$results = array();
 		
@@ -89,7 +89,7 @@ class Fuel_tester extends Fuel_advanced_module {
 			
 			$key = '<strong>'.$module.':</strong> '.humanize($test_class);
 			$results[$key] = array();
-			$results[$key]['report'] = $this->CI->unit->report();
+			$results[$key]['report'] = $this->CI->unit->report(array(), !$this->is_cli());
 			$results[$key]['raw'] = $this->CI->unit->result();
 			$results[$key]['passed'] = 0; // initialize
 			$results[$key]['failed'] = 0; // initialize
@@ -125,7 +125,7 @@ class Fuel_tester extends Fuel_advanced_module {
 		return $results;
 	}
 	
-	function get_tests($module = NULL, $folder = 'tests')
+	function get_tests($module = NULL, $folder = 'tests', $just_tests = FALSE)
 	{
 		if (!empty($module))
 		{
@@ -146,7 +146,6 @@ class Fuel_tester extends Fuel_advanced_module {
 			$test_list = array();
 			foreach($modules as $module)
 			{
-				//$module_test_folder = Fuel_modules::module_path($module).'/tests/';
 				$module_tests_list = $this->_get_tests($module, $folder);
 
 				// merge the arrays with a + to preserve keys
@@ -163,9 +162,29 @@ class Fuel_tester extends Fuel_advanced_module {
 			}
 			asort($test_list);
 		}
+		
+		if ($just_tests)
+		{
+			return array_keys($test_list);
+		}
 		return $test_list;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether the test is being run via Command Line Interface or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	static public function is_cli()
+	{
+		return Tester_base::is_cli();
+		// $is_cli = (defined('STDIN')) ? TRUE : FALSE;
+		// return $is_cli;
+	}
+	
 	protected function _get_tests($module = NULL, $folder = 'tests')
 	{
 		if (!empty($module) AND ($module != 'app' OR $module != 'application'))

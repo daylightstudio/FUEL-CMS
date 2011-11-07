@@ -462,7 +462,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	_getjQueryPluginOptions : function(elem){
 		var opts = {};
-		var cssClasses = $(elem).attr('className').split(' ');
+		var cssClasses = ($(elem).attr('class') != undefined) ? $(elem).attr('class').split(' ') : '';
 		for(var i = 0; i < cssClasses.length; i++){
 			if (cssClasses[i].substr(0, 7) == 'jqopts='){
 				var jqOptions = cssClasses[i].substr(7);
@@ -512,7 +512,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	_initAssets : function(context){
 		var _this = this;
 		$('.asset_select', context).each(function(i){
-			var assetTypeClasses = $(this).attr('className').split(' ');
+			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : '';
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
 			var btnLabel = '';
 			if (assetFolder.split('/')[0] != undefined){
@@ -537,7 +537,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		$('.asset_select_button', context).click(function(e){
 			_this.activeField = $(e.target).prev().attr('id');
-			var assetTypeClasses = $(e.target).attr('className').split(' ');
+			var assetTypeClasses = ($(e.target).attr('class') != undefined) ? $(e.target).attr('class').split(' ') : '';
 			_this.assetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			return _this.showAssetsSelect();
 		});
@@ -577,7 +577,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.add_edit', context).each(function(i){
 			var $field = $(this);
 			var fieldId = $field.attr('id');
-			var className = $field.attr('className').split(' ');
+			var className = ($field.attr('class') != undefined) ? $field.attr('class').split(' ') : '';
 			var module = '';
 			if (className.length > 1){
 				module = className[1];
@@ -649,7 +649,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		var createMarkItUp = function(elem){
 			var q = 'module=' + escape(_this.module) + '&field=' + escape($(elem).attr('name'));
-			var markitUpClass = $(elem).attr('className');
+			var markitUpClass = $(elem).attr('class');
 			if (markitUpClass.length){
 				var previewPath = markitUpClass.split(' ');
 				if (previewPath.length && previewPath[0] != 'no_editor'){

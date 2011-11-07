@@ -230,6 +230,7 @@ class Fuel_page {
 			return;
 		}
 		
+		
 		// if a location is provided in the init config, then use it instead of the uri segments
 		if (!empty($this->location))
 		{

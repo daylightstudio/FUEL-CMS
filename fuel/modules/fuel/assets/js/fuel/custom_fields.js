@@ -72,7 +72,7 @@ fuel.fields.wysiwyg_field = function(context){
 
 	var createMarkItUp = function(elem){
 		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name'));
-		var markitUpClass = $(elem).attr('className');
+		var markitUpClass = $(elem).attr('class');
 		if (markitUpClass.length){
 			var previewPath = markitUpClass.split(' ');
 			if (previewPath.length && previewPath[0] != 'no_editor'){
@@ -128,6 +128,7 @@ fuel.fields.wysiwyg_field = function(context){
 		$('#' + ckId).parent().append(sourceButton);
 
 		$('#' + ckId + '_viewsource').click(function(){
+
 			$elem = $(elem);
 			ckInstance = CKEDITOR.instances[ckId];
 
@@ -242,7 +243,7 @@ fuel.fields.asset_field = function(context){
 	
 	var _this = this;
 	$('.asset_select', context).each(function(i){
-		var assetTypeClasses = ($(this).attr('className') != undefined) ? $(this).attr('className').split(' ') : [];
+		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 		var btnLabel = '';
 		switch(assetFolder.split('/')[0].toLowerCase()){
@@ -265,7 +266,7 @@ fuel.fields.asset_field = function(context){
 	}
 	$('.asset_select_button', context).click(function(e){
 		activeField = $(e.target).prev().attr('id');
-		var assetTypeClasses = $(e.target).attr('className').split(' ');
+		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		return showAssetsSelect();
 	});
@@ -319,7 +320,7 @@ fuel.fields.inline_edit_field = function(context){
 		var $field = $(this);
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
-		var className = ($field.attr('className') != undefined) ? $field.attr('className').split(' ') : [];
+		var className = ($field.attr('class') != undefined) ? $field.attr('class').split(' ') : [];
 		var module = '';
 		
 		var isMulti = ($field.attr('multiple')) ? true : false;

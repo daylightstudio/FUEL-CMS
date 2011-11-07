@@ -10,6 +10,7 @@ $lang['ut_res_data']	= 'Expected Data';
 // $lang['ut_passed']	= 'Passed';
 
 // tester specific
+$lang['tester_no_cli_arguments'] = 'Please supply an additional argument of where to look for tests';
 $lang['tester_instructions'] = 'Select from the available list of tests below. To add more tests, you must add them to the tests folder of your module or application folder.';
 $lang['tester_accumulative'] = 'Accumulative Test Results';
 $lang['tester_back'] = 'Back';

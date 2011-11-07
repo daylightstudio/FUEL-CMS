@@ -34,6 +34,7 @@ if (defined('STDIN'))
 {
 	$_SERVER['SERVER_NAME'] = 'localhost';
 	$_SERVER['SERVER_PORT'] = 80;
+	$_SERVER['HTTP_HOST'] = 'localhost';
 }
 
 

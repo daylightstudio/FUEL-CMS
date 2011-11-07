@@ -55,29 +55,9 @@ class Blocks extends Module {
 	function import_view()
 	{
 		$out = 'error';
-		if ($this->input->post('id')){
-			$block_data = $this->model->find_by_key($this->input->post('id'), 'array');
-			$this->load->helper('file');
-			$view_twin = APPPATH.'views/_blocks/'.$block_data['name'].EXT;
-
-			if (file_exists($view_twin))
-			{
-				$view_twin_info = get_file_info($view_twin);
-				
-				$tz = date('T');
-				if ($view_twin_info['date'] > strtotime($block_data['last_modified'].' '.$tz) OR
-					$block_data['last_modified'] == $block_data['date_added'])
-				{
-					// must have content in order to not return error
-					$out = file_get_contents($view_twin);
-					
-					// replace PHP tags with template tags... comments are replaced because of xss_clean()
-					if ($this->sanitize_input)
-					{
-						$out = php_to_template_syntax($out);
-					}
-				}
-			}
+		if (!empty($_POST['id']))
+		{
+			$this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}
@@ -87,7 +67,7 @@ class Blocks extends Module {
 		$this->load->helper('file');
 		$this->load->helper('security');
 		$this->load->library('form_builder');
-		
+
 		$this->js_controller_params['method'] = 'upload';
 		
 		if (!empty($_POST))

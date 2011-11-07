@@ -60,10 +60,33 @@ abstract class Tester_base
 	 * @param	string
 	 * @return	string
 	 */
-	public function run($test, $expected, $name = '')
+	public function run($test, $expected, $name = '', $notes = '', $format = NULL)
 	{
-		$name = $this->format_test_name($name, $test, $expected);
-		return $this->CI->unit->run($test, $expected, $name);
+		if (is_null($format))
+		{
+			$format = !$this->is_cli();
+		}
+		
+		if ($format)
+		{
+			$name = $this->format_test_name($name, $test, $expected);
+		}
+
+		return $this->CI->unit->run($test, $expected, $name, $notes, $format);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether the test is being run via Command Line Interface or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	static public function is_cli()
+	{
+		$is_cli = (defined('STDIN')) ? TRUE : FALSE;
+		return $is_cli;
 	}
 	
 	// --------------------------------------------------------------------
@@ -92,7 +115,7 @@ abstract class Tester_base
 		if ($this->_is_db_created)
 		{
 			$this->remove_db();
-			$this->CI->db->close();
+			//$this->CI->db->close();// not needed because it is closed inside CodeIgniter.php
 		}
 		
 		// remove the cookie file

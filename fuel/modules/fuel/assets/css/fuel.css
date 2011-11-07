@@ -163,6 +163,7 @@ div.notitlebar { top: 69px !important; }
 div.noactions_notitlebar { top: 22px !important; }
 div.noactions_nonotification { top: 29px !important; }
 
+/*div#fuel_main_content .form { width: 680px; }*/
 
 /* inline/compact mode */
 div#fuel_main_panel_compact { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #fff; }
@@ -254,7 +255,7 @@ div.nodata { text-align: center; padding: 10px 0 15px 0;}
 span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
-table.form { border: none; border-spacing: 0; width: 680px; }
+table.form { border: none; border-spacing: 0; }
 table.form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
 table.form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
 table.form td.required { padding-top: 10px; }

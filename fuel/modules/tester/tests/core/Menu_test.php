@@ -48,7 +48,7 @@ class Menu_test extends Tester_base {
 	</li>
 </ul>';
 		$expected = strip_whitespace($str);
-		$this->run($test, $expected, 'Menu basic test', $test, $expected);
+		$this->run($test, $expected, 'Menu basic test');
 	}
 	
 	function test_collapsible()

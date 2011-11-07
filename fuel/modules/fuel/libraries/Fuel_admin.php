@@ -101,7 +101,7 @@ class Fuel_admin extends Fuel_base_library {
 		
 		// set asset output settings
 		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
-		
+
 		if ($this->validate) $this->check_login();
 		
 		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
@@ -181,7 +181,7 @@ class Fuel_admin extends Fuel_base_library {
 		// set the form action
 		if (empty($vars['form_action']))
 		{
-			$vars['form_action'] = $this->CI->uri->uri_string();
+			$vars['form_action'] = site_url($this->CI->uri->uri_string());
 		}
 		else if (!empty($vars['form_action']) AND !is_http_path($vars['form_action']))
 		{

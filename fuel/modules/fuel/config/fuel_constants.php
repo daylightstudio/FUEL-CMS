@@ -14,7 +14,7 @@ define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SC
 // change slashes for some Windows platforms
 $_FUEL_SEGS = explode('/', str_replace("\\", '/', $_SERVER['SCRIPT_FILENAME']));
 
-define('WEB_FOLDER', $_FUEL_SEGS[count($_FUEL_SEGS)-2]);
+define('WEB_FOLDER', (count($_FUEL_SEGS) > 1) ? $_FUEL_SEGS[count($_FUEL_SEGS)-2] : '/');
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 
 if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')

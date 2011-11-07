@@ -31,6 +31,7 @@
 // include base library classes to extend
 require_once('Fuel_base_library.php');
 require_once('Fuel_advanced_module.php');
+require_once('Fuel_modules.php');
 
 class Fuel extends Fuel_base_library {
 	
@@ -42,6 +43,7 @@ class Fuel extends Fuel_base_library {
 									'auth',
 									'layouts',
 									'pages',
+									'navigation',
 									'modules',
 									'cache',
 									'logs',

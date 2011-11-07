@@ -37,6 +37,59 @@ class MY_Unit_test extends CI_Unit_test{
 	var $_template_rows	= NULL;
 
 	// --------------------------------------------------------------------
+
+	/**
+	 * Generate a report
+	 *
+	 * Displays a table with the test data
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function report($result = array(), $format = FALSE)
+	{
+		if (count($result) == 0)
+		{
+			$result = $this->result();
+		}
+
+		$CI =& get_instance();
+		$CI->load->language('unit_test');
+
+		$this->_parse_template();
+
+		$r = '';
+		foreach ($result as $res)
+		{
+			$table = '';
+
+			foreach ($res as $key => $val)
+			{
+				if ($key == $CI->lang->line('ut_result'))
+				{
+					if ($val == $CI->lang->line('ut_passed') AND $format)
+					{
+						$val = '<span style="color: #0C0;">'.$val.'</span>';
+					}
+					elseif ($val == $CI->lang->line('ut_failed') AND $format)
+					{
+						$val = '<span style="color: #C00;">'.$val.'</span>';
+					}
+				}
+
+				$temp = $this->_template_rows;
+				$temp = str_replace('{item}', $key, $temp);
+				$temp = str_replace('{result}', $val, $temp);
+				$table .= $temp;
+			}
+
+			$r .= str_replace('{rows}', $table, $this->_template);
+		}
+
+		return $r;
+	}
+	
+	// --------------------------------------------------------------------
 	
 	/**
 	 * Run the tests
@@ -49,7 +102,7 @@ class MY_Unit_test extends CI_Unit_test{
 	 * @param	string
 	 * @return	string
 	 */	
-	function run($test, $expected = TRUE, $test_name = 'undefined')
+	function run($test, $expected = TRUE, $test_name = 'undefined', $notes = '', $format = FALSE)
 	{
 		if ($this->active == FALSE)
 		{
@@ -83,18 +136,30 @@ class MY_Unit_test extends CI_Unit_test{
 		{
 			$expected = var_export($expected, TRUE);
 		}
+		
+		if ($format)
+		{
+			$test_data = gettype($test).' <pre>'.htmlentities($test).'</pre>';
+			$res_data = $extype.' <pre>'.htmlentities($expected).'</pre>';
+		}
+		else
+		{
+			$test_data = gettype($test).' - '.$test;
+			$res_data = $extype.' - '.$expected;
+		}
 		$report[] = array (
 							'test_name'			=> $test_name,
-							'test_data'		=> gettype($test).' <pre>'.htmlentities($test).'</pre>',
-							'res_data'		=> $extype.' <pre>'.htmlentities($expected).'</pre>',
+							'test_data'		=> $test_data,
+							'res_data'		=> $res_data,
 							'result'			=> ($result === TRUE) ? 'passed' : 'failed',
 							'file'				=> $back['file'],
-							'line'				=> $back['line']
+							'line'				=> $back['line'],
+							'notes'				=> $notes
 						);
 
 		$this->results[] = $report;		
-				
-		return($this->report($this->result($report)));
+		
+		return($this->report($this->result($report), $format));
 	}
 	
 	// --------------------------------------------------------------------
@@ -112,7 +177,7 @@ class MY_Unit_test extends CI_Unit_test{
 		if (function_exists('debug_backtrace'))
 		{
 			$back = debug_backtrace();
-			$index = (string) count($back) - 5; // {{{ FUEL Added to get proper line numbers}}}
+			$index = (string) count($back) - 6; // {{{ FUEL Added to get proper line numbers}}}
 			$file = ( ! isset($back[$index]['file'])) ? '' : $back[$index]['file'];
 			$line = ( ! isset($back[$index]['line'])) ? '' : $back[$index]['line'];
 						

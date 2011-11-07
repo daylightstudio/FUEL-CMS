@@ -32,32 +32,6 @@ class Blocks_model extends Base_module_model {
 		return $fields;
 	}
 
-	public function get_available_models()
-	{
-		$CI =& get_instance();
-		$CI->load->helper('directory');
-		$CI->load->helper('file');
-		
-		$all_models = array();
-		$exclude = array('index.html');
-		$models = directory_to_array(APPPATH.'models/', TRUE, $exclude, FALSE, TRUE);
-		$all_models['application'] = array_combine($models, $models);
-		
-		// loop through allowed modules and get models
-		$modules_allowed = $CI->config->item('modules_allowed', 'fuel');
-		foreach($modules_allowed as $module)
-		{
-			$module_path = MODULES_PATH.$module.'/models/';
-			if (file_exists($module_path))
-			{
-				$models = directory_to_array($module_path, TRUE, $exclude, FALSE, TRUE);
-				$all_models[$module] = array_combine($models, $models);
-			}
-		}
-		
-		return $all_models;
-	}
-
 }
 
 class Block_model extends Base_module_record {

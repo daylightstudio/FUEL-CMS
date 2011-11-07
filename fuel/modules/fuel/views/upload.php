@@ -1,7 +1,5 @@
 <div id="fuel_main_content_inner">
 
-	<?=$this->form->open(array('id' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data'))?>
-	
 	<p class="instructions"><?=$instructions?></p>
 	<?=$form?>
 
@@ -15,8 +13,6 @@
 		</ul>
 	</div>
 
-	<?=$this->form->close()?>
-	
 	
 </div>
 
