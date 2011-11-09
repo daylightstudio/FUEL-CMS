@@ -673,9 +673,9 @@ class Fuel_page {
 		$this->CI->asset->assets_path = $this->fuel->config('fuel_assets_path');
 		$this->CI->load->helper('ajax');
 		$this->CI->load->library('form');
-		$vars['page'] = $this->properties();
-		$vars['layouts'] = $this->fuel->layouts->options_list();
-		$vars['tools'] = array(fuel_url('tools/page_analysis/toolbar') => 'Page Analysis');
+		// $vars['page'] = $this->properties();
+		// $vars['layouts'] = $this->fuel->layouts->options_list();
+		// $vars['tools'] = array(fuel_url('tools/page_analysis/toolbar') => 'Page Analysis');
 		$last_page = uri_path();
 		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);
@@ -683,6 +683,8 @@ class Fuel_page {
 		//$editable_asset_types = $this->fuel->config('editable_asset_filetypes');
 
 		// add javascript
+		/*
+		
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
 		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : '');
 		$vars['init_params']['basePath'] = WEB_PATH;
@@ -712,10 +714,12 @@ class Fuel_page {
 			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
 			$vars['others'] = $this->CI->pages_model->get_others('location', $this->location, 'location');
 		}
+		*/
 		
 		if (!$this->_fuelified_processed)
 		{
-			$inline_edit_bar = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
+			//$inline_edit_bar = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
+			$inline_edit_bar = $this->fuel->admin->toolbar();
 			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
 			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
 			$this->CI->config->set_item('assets_path', $this->CI->config->item('assets_path'));

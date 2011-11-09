@@ -1,5 +1,5 @@
 <?php fuel_set_var('layout', '')?>
-<?php if ($CI->config->item('fuel_mode', 'fuel') == 'views') : ?>
+<?php if ($CI->fuel->config('fuel_mode') == 'views') : ?>
 
 <?php $CI->load->view('install') ?>
 

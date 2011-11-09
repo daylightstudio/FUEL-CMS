@@ -145,9 +145,10 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return (file_exists($this->config_path()));
 	}
 	
-	function fuel_url()
+	function fuel_url($uri = '')
 	{
-		return fuel_url($this->uri_path());
+		$uri = trim($uri, '/');
+		return fuel_url($this->uri_path().'/'.$uri);
 	}
 	
 	function uri_path()
@@ -161,7 +162,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 			@include($routes_file);
 			if (isset($route))
 			{
-				$this->uri_path = str_replace(FUEL_ROUTE, '', current($route));
+				$this->uri_path = str_replace(FUEL_ROUTE, '', key($route));
 			}
 		}
 		return $this->uri_path;
@@ -273,7 +274,34 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		return (file_exists($this->docs_path()));
 	}
+
+	function has_dashboard()
+	{
+		return (file_exists($this->server_path().'controllers/dashboard'.EXT));
+	}
 	
+	function has_tools()
+	{
+		return ($this->config('toolbar') !== FALSE);
+	}
+
+	function tools()
+	{
+		$toolbar = $this->config('toolbar');
+		if (empty($toolbar))
+		{
+			return FALSE;
+		}
+		$tools = array();
+		foreach($toolbar as $key => $val)
+		{
+			$url = $this->fuel_url($key);
+			$tools[$url] = $val;
+		}
+		
+		return $tools;
+	}
+
 	function load_config($config = NULL)
 	{
 		if (empty($config))

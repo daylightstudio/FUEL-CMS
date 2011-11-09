@@ -20,33 +20,8 @@ class Dashboard extends Fuel_base_controller {
 			$user = $this->fuel_auth->user_data();
 			$vars['change_pwd'] = ($user['password'] == md5($this->config->item('default_pwd', 'fuel')));
 
-			$dashboards = array();
-			$dashboards_config = $this->config->item('dashboards', 'fuel');
-			if (!empty($dashboards_config))
-			{
-				
-				if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
-				{
-					$modules = $this->config->item('modules_allowed', 'fuel');
-
-					foreach($modules as $module)
-					{
-						// check if there is a dashboard controller for each module
-						if ($this->fuel_auth->has_permission($module) AND 
-							file_exists(MODULES_PATH.$module.'/controllers/dashboard.php'))
-						{
-							$dashboards[] = $module;
-						}
-					}
-				}
-				else if(is_array($dashboards_config))
-				{
-					foreach($dashboards_config as $module)
-					{
-						$dashboards[] = $module;
-					}
-				}
-			}
+			$dashboards = $this->fuel->admin->dashboards();
+			
 			$vars['dashboards'] = $dashboards;
 			$crumbs = array('' => 'Dashboard');
 			$this->fuel->admin->set_titlebar($crumbs);
@@ -60,6 +35,7 @@ class Dashboard extends Fuel_base_controller {
 	{
 		if (is_ajax())
 		{
+			$this->load->helper('simplepie');
 			$this->load->module_model(FUEL_FOLDER, 'pages_model');
 			$vars['recently_modifed_pages'] = $this->pages_model->find_all_array(array(), 'last_modified desc', 10);
 			$vars['latest_activity'] = $this->logs_model->list_items(10);
@@ -67,27 +43,10 @@ class Dashboard extends Fuel_base_controller {
 			{
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
 			}
-			$vars['feed'] = $this->_feed();
+			$feed = $this->fuel->config('dashboard_rss');
+			$limit = 3;
+			$vars['feed'] = simplepie($feed, $limit);
 			$this->load->view('dashboard_ajax', $vars);
-		}
-	}
-	
-	function _feed()
-	{
-		$feed = $this->config->item('dashboard_rss', 'fuel');
-		$limit = 3;
-		if (!empty($feed))
-		{
-			$this->load->module_library(FUEL_FOLDER, 'simplepie');
-			$this->simplepie->set_feed_url($feed);
-			$this->simplepie->set_cache_duration(600);
-			$this->simplepie->enable_order_by_date(TRUE);
-			$this->simplepie->enable_cache(TRUE);
-			$this->simplepie->set_cache_location($this->config->item('cache_path'));
-			@$this->simplepie->init();
-			$this->simplepie->handle_content_type();
-			
-			return $this->simplepie->get_items(0, $limit);
 		}
 	}
 	

@@ -49,23 +49,22 @@ class Fuel_modules extends Fuel_base_library {
 		$module_init = array();
 		
 		// load the application modules first
-		@include(APPPATH.'/config/MY_fuel_modules.php');
-		if (!empty($config['modules']))
-		{
-			$this->_modules_grouped['app'] = $config['modules'];
-			$module_init = $config['modules'];
-		}
+		$my_module_init = (array)$this->get_module_config('app');
+		$this->_modules_grouped['app'] = $my_module_init;
+
+		$fuel_module_init = (array)$this->get_module_config('fuel');
+		$this->_modules_grouped['fuel'] = $module_init;
 		
-		// next get FUEL modules first
-		include(MODULES_PATH.FUEL_FOLDER.'/config/fuel_modules.php');
-		$this->_modules_grouped['fuel'] = $config['modules'];
+		$module_init = array_merge($my_module_init, $fuel_module_init);
 		
-		$module_init = array_merge($module_init, $config['modules']);
+		// no longer need these so we get rid of them
+		unset($my_module_init, $fuel_module_init);
 		
 		// then get the allowed modules initialization information
 		foreach($allowed as $mod)
 		{
 			$mod_config = $this->get_module_config($mod);
+			
 			if (!empty($mod_config))
 			{
 				$this->_modules_grouped[$mod] = $mod_config;
@@ -92,11 +91,32 @@ class Fuel_modules extends Fuel_base_library {
 	
 	function get_module_config($module)
 	{
-		if (file_exists(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php'))
+		switch($module)
 		{
-			include(MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php');
+			case 'fuel':
+				$file_path = FUEL_PATH.'/config/fuel_modules.php';
+				break;
+			case 'application': case 'app':
+				$file_path = APPPATH.'/config/MY_fuel_modules.php';
+				break;
+			default:
+				$file_path = MODULES_PATH.$module.'/config/'.$module.'_fuel_modules.php';
+		}
+
+		if (file_exists($file_path))
+		{
+			include($file_path);
+			
 			if (!empty($config['modules']))
 			{
+				// add folder value to the module init
+				foreach($config['modules'] as $key => $val)
+				{
+					if (!isset($config['modules'][$key]['folder']))
+					{
+						$config['modules'][$key]['folder'] = $module;
+					}
+				}
 				return $config['modules'];
 			}
 			else
@@ -119,7 +139,27 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function add($mod, $init)
 	{
-		$fuel_module = new Fuel_module();
+		// check for specific module overwrites like for Fuel_navigation and Fuel_block
+		if (isset($init['folder']))
+		{
+			$class_name = 'Fuel_'.strtolower($mod);
+			$file_path = MODULES_PATH.$init['folder'].'/libraries/'.$class_name.EXT;
+
+			if (file_exists($file_path))
+			{
+				// class must extend the fuel_module class to be legit
+				if (strtolower(get_parent_class($class_name)) == 'fuel_module')
+				{
+					$this->CI->load->module_library($init['folder'], strtolower($class_name));
+					$fuel_module =& $this->CI->$class_name;
+				}
+			}
+		}
+		
+		if (!isset($fuel_module))
+		{
+			$fuel_module = new Fuel_module();
+		}
 		$fuel_module->initialize($mod, $init);
 		$this->_modules[$mod] = $fuel_module;
 	}
@@ -197,6 +237,16 @@ class Fuel_modules extends Fuel_base_library {
 		return $module !== FALSE;
 	}
 	
+	function advanced()
+	{
+		$advanced = array();
+		foreach($this->fuel->config('modules_allowed') as $module)
+		{
+			$advanced[$module] =& $this->fuel->$module;
+		}
+		return $advanced;
+	}
+	
 }
 
 
@@ -204,17 +254,12 @@ class Fuel_modules extends Fuel_base_library {
 class Fuel_module extends Fuel_base_library {
 	
 	protected $module = '';
-	protected $CI;
 	protected $_init = array();
 	protected $_info = array();
 	
 	function __construct($params = array())
 	{
-		$this->CI =& get_instance();
-		if (count($params) > 0)
-		{
-			$this->initialize($params);
-		}
+		parent::__construct($params);
 	}
 	
 	// --------------------------------------------------------------------

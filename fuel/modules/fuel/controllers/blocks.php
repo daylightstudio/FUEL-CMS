@@ -57,7 +57,10 @@ class Blocks extends Module {
 		$out = 'error';
 		if (!empty($_POST['id']))
 		{
-			$this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
+			//$this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
+			//$module = $this->fuel->modules->get($this->module);
+			//$module->upload($this->input->post('id'), $this->sanitize_input);
+			$this->module_obj->upload($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}

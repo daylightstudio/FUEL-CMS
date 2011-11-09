@@ -72,6 +72,13 @@ class Fuel_auth extends Fuel_base_library {
 			$this->CI->session->set_userdata($this->get_session_namespace(), $user_data);
 		}
 	}
+
+	// check any remote host or IP restrictions first
+	function can_access()
+	{
+		return ($this->fuel->config('admin_enabled') AND 
+					(!$this->fuel->config('restrict_to_remote_ip') OR !in_array($_SERVER['REMOTE_ADDR'], $this->fuel->config('restrict_to_remote_ip'))));
+	}
 	
 	function login($user, $pwd)
 	{

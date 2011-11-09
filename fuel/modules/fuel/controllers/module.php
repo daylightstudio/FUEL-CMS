@@ -3,6 +3,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Module extends Fuel_base_controller {
 	
+	public $module_obj;
 	public $module = '';
 	
 	// array of data about all (if any) uploaded files
@@ -26,8 +27,8 @@ class Module extends Fuel_base_controller {
 		$params = array();
 		if ($this->fuel->modules->exists($this->module))
 		{
-			$module = $this->fuel->modules->get($this->module);
-			$params = $module->info();
+			$this->module_obj = $this->fuel->modules->get($this->module);
+			$params = $this->module_obj->info();
 			
 		}
 		else
@@ -36,8 +37,8 @@ class Module extends Fuel_base_controller {
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
 			if ($this->fuel->modules->exists($this->module))
 			{
-				$module = $this->fuel->modules->get($this->module);
-				$params = $module->info();
+				$this->module_obj = $this->fuel->modules->get($this->module);
+				$params = $this->module_obj->info();
 			}
 		}
 

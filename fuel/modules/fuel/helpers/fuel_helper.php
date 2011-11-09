@@ -216,7 +216,6 @@ function fuel_model($model, $params = array())
 					'module' => ''
 					);
 					
-
 	if (!is_array($params))
 	{
 		$CI->load->helper('array');

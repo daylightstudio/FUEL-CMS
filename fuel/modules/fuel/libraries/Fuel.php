@@ -122,16 +122,20 @@ class Fuel extends Fuel_base_library {
 			}
 			else if ($this->allowed($var))
 			{
+				$init = array('name' => $var, 'folder' => $var);
 				$fuel_class = 'Fuel_'.$var;
 				if (file_exists(MODULES_PATH.$var.'/libraries/'.$fuel_class.'.php'))
 				{
 					$lib_class = strtolower($fuel_class);
 					if (!isset($this->CI->$lib_class))
 					{
-						$init = array('name' => $var, 'folder' => $var);
 						$this->load_library($lib_class, $var, $init);
 					}
 					return $this->CI->$lib_class;
+				}
+				else
+				{
+					return new Fuel_advanced_module($init);
 				}
 			}
 			else

@@ -202,7 +202,7 @@ div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #ccc; bord
 div.buttonbar li:hover { background-image: url(../images/btn.png); background-position: 0 -27px; }
 div.buttonbar li.active { background-image: url(../images/btn.png); background-position: 0 -54px; }
 div.buttonbar li.active a { color: #000; }
-div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 15px 0 28px; }
+div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
 div.buttonbar li.spacer { margin-left: 10px;}
 div.buttonbar li.end {  border-right: 1px solid #ccc; }
 div.buttonbar li.start { border-left: 1px solid #ccc; }

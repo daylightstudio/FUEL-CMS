@@ -1037,7 +1037,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (useCache !== false) useCache = true;
 		if (useAjax){
 			var params = $(formId).formToArray(false);
-			console.log(params)
 
 			var cache_key = $(formId).formSerialize(true);
 			if (this.cache.isCached(cache_key) && useCache){

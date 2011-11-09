@@ -87,14 +87,14 @@ class Fuel_admin extends Fuel_base_library {
 		// now load the other languages
 		$this->load_languages();
 		
-		// load assets
+		// load assets config
 		$this->CI->config->load('asset');
 		
 		// load fuel helper
 		$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');
 		
-		// check any remote host or IP restrictions first
-		if (!$this->fuel->config('admin_enabled') OR ($this->fuel->config('restrict_to_remote_ip') AND !in_array($_SERVER['REMOTE_ADDR'], $this->fuel->config('restrict_to_remote_ip'))))
+		// check if the admin is even accessible... this method looks at if the admin is enabled and at any remote host or IP restrictions
+		if (!$this->fuel->auth->can_access())
 		{
 			show_404();
 		}
@@ -618,6 +618,93 @@ class Fuel_admin extends Fuel_base_library {
 		$this->CI->session->set_flashdata($type, $msg);
 	}
 	
+	function dashboards()
+	{
+		$dashboards = array();
+		$dashboards_config = $this->fuel->config('dashboards');
+		if (!empty($dashboards_config))
+		{
+			
+			if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
+			{
+				$modules = $this->fuel->modules->advanced();
+				//$modules = $this->fuel->config('modules_allowed');
+
+				foreach($modules as $module)
+				{
+					// check if there is a dashboard controller for each module
+					if ($this->fuel->auth->has_permission($module) AND $module->had_dashboard())
+					{
+						$dashboards[] = $module;
+					}
+				}
+			}
+			else if (is_array($dashboards_config))
+			{
+				foreach($dashboards_config as $module)
+				{
+					if ($this->fuel->auth->has_permission($module))
+					{
+						$dashboards[] = $module;
+					}
+				}
+			}
+		}
+		return $dashboards;
+	}
+	
+	function tools()
+	{
+		$tools = array();
+		$modules = $this->fuel->modules->advanced();
+		
+		//$modules = $this->fuel->config('modules_allowed');
+
+		foreach($modules as $module)
+		{
+			// check if there is a dashboard controller for each module
+			$t = $module->tools();
+			if ($t)
+			{
+				$tools = $tools + $t;
+			}
+		}
+		return $tools;
+	}
+
+	function toolbar()
+	{
+		$this->fuel->load_language('fuel_inline_edit');
+		$this->fuel->load_language('fuel_js');
+	
+		$vars['page'] = $this->fuel->page->properties();
+		$vars['layouts'] = $this->fuel->layouts->options_list();
+		$vars['tools'] = $this->tools();
+		$vars['js_localized'] = json_lang('fuel/fuel_js');
+
+		if ($this->fuel->config('fuel_mode') == 'views')
+		{
+			$vars['others'] = array();
+		}
+		else
+		{
+			$location = uri_path();
+			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
+			$vars['others'] = $this->CI->pages_model->get_others('location', $location, 'location');
+		}
+		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
+		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : '');
+		$vars['init_params']['basePath'] = WEB_PATH;
+		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
+		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
+		$vars['init_params']['jsPath'] = js_path('', 'fuel');
+		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
+		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
+		
+		$output = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
+		
+		return $output;
+	}
 }
 
 /* End of file Fuel_admn.php */

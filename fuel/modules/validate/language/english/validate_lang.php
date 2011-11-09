@@ -24,6 +24,8 @@ $lang['validate_type_html'] = 'HTML';
 $lang['validate_type_links'] = 'Links';
 $lang['validate_type_size_report'] = 'Size Report';
 
+$lang['validate_no_url'] = 'Please provide a URL';
+
 // js localization
 include('validate_js_lang'.EXT);
 

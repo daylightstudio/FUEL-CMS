@@ -62,5 +62,5 @@ function is_valid_page($url)
 {
 	$CI =& get_instance();
 	$CI->load->library('curl');
-	$CI->curl->is_valid($url);
+	return $CI->curl->is_valid($url);
 }

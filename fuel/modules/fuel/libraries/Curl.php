@@ -18,6 +18,8 @@
 
 /**
  * Curl library
+ * Some code borrowed from:
+ * http://semlabs.co.uk/journal/object-oriented-curl-class-with-multi-threading
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -25,6 +27,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/curl
  */
+
 
 // --------------------------------------------------------------------
 
@@ -37,7 +40,7 @@ class Curl {
 	public $cookie_file = 'my_cookie.txt';
 	
 	protected $CI; // reference to the CI super object
-	protected $_curl;
+	protected $_sessions = array();
 	protected $_info;
 	protected $_error;
 	protected $_output;
@@ -49,12 +52,9 @@ class Curl {
 	 */
 	function __construct($params = array())
 	{
-		if (!extension_loaded('curl')) 
+		if (!$this->is_enabled())
 		{
-			if ( ! $this->is_enabled())
-			{
-				log_message('error', 'cURL Class - PHP was not built with cURL enabled. Rebuild PHP with --with-curl to use cURL.');
-			}
+			$this->_add_error('The cURL extension does not exist');
 		}
 		$this->CI = & get_instance();
 		$this->CI->load->library('user_agent');
@@ -78,17 +78,6 @@ class Curl {
 	function initialize($params = array())
 	{
 		$this->set_params($params);
-		$this->_curl = curl_init();
-		$default_opts = array(
-						CURLOPT_HEADER => 0,
-						CURLOPT_RETURNTRANSFER => TRUE,
-						CURLOPT_TIMEOUT => $this->timeout,
-						CURLOPT_CONNECTTIMEOUT => $this->connect_timeout,
-						CURLOPT_DNS_CACHE_TIMEOUT => $this->dns_cache_timeout,
-						CURLOPT_BINARYTRANSFER => TRUE,
-						CURLOPT_USERAGENT => $this->user_agent,
-					);
-		curl_setopt_array($this->_curl, $default_opts);
 	}
 	
 	// --------------------------------------------------------------------
@@ -114,48 +103,250 @@ class Curl {
 	}
 
 	
-	function execute($url, $opts = array())
+	function add_session($url, $opts = array())
 	{
 		// normalize the URL
 		$url = $this->_normalize_url($url);
 		
-		// make it easy to pass options
-		$o = array();
-		foreach($opts as $key => $val)
+		$this->_sessions[] = curl_init($url);
+		
+		$key = count($this->_sessions) - 1;
+		
+		// set default options
+		$this->set_defaults($key);
+		
+		if (!empty($opts))
 		{
-			if (is_string($key) && !is_numeric($key))
+			
+			// make it easy to pass options
+			$o = array();
+			foreach($opts as $key => $val)
 			{
-				$constant = constant('CURLOPT_' . strtoupper($key));
-				$o[$constant] = $val;
+				if (is_string($key) && !is_numeric($key))
+				{
+					$c = 'CURLOPT_' . strtoupper($key);
+					if (defined($c))
+					{
+						$constant = constant($c);
+						$o[$constant] = $val;
+					}
+				}
+				else
+				{
+					$o[$key] = $val;
+				}
+			}
+			
+			$this->set_options($key, $o);
+		}
+	}
+	
+	function set_defaults($key = 0)
+	{
+		$default_opts = array(
+						CURLOPT_HEADER => 0,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_TIMEOUT => $this->timeout,
+						CURLOPT_CONNECTTIMEOUT => $this->connect_timeout,
+						CURLOPT_DNS_CACHE_TIMEOUT => $this->dns_cache_timeout,
+						CURLOPT_BINARYTRANSFER => TRUE,
+						CURLOPT_USERAGENT => $this->user_agent,
+					);
+		$this->set_options($default_opts, $key);
+	}
+	
+	function set_options($opts = array(), $key = 0)
+	{
+		curl_setopt_array($this->_sessions[$key], $opts);
+	}
+	
+	function exec($key = 0, $clear = TRUE)
+	{
+		if (empty($this->_sessions))
+		{
+			return FALSE;
+		}
+		
+		if ($this->is_multi())
+		{
+			if ($key === FALSE)
+			{
+				$this->exec_multi($clear);
 			}
 			else
 			{
-				$o[$key] = $val;
+				$this->exec_single($key, $clear);
 			}
 		}
+		else
+		{
+			$this->exec_single($clear);
+		}
 
-		// set url 
-		curl_setopt($this->_curl, CURLOPT_URL, $url);
 		
-		// merge in any other options
-		curl_setopt_array($this->_curl, $o);
-		$output = curl_exec($this->_curl);
-		
-		$this->_output = curl_exec($this->_curl); 
-		$this->_info = curl_getinfo($this->_curl);
-		$this->_error  = curl_error($this->_curl);
-		curl_close($this->_curl);
-		
+		// set by exec_single/exec_multi
 		return $this->_output;
 	}
 	
+	function exec_single($key = 0, $clear = TRUE)
+	{
+		$this->_output = curl_exec($this->_sessions[$key]);
+		$this->_error[$key]  = curl_error($this->_sessions[$key]);
+		$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
+
+		// clear and close all sessions
+		if ($clear)
+		{
+			$this->clear();
+		}
+		return $this->_output;
+	}
+
+	public function exec_multi($clear = TRUE)
+	{
+		$mh = curl_multi_init();
+		
+		// add all sessions to multi handle
+		foreach ($this->_sessions as $key => $session)
+		{
+			curl_multi_add_handle($mh, $this->_sessions[$key]);
+		}
+
+		
+		do {
+			$mrc = curl_multi_exec($mh, $active);
+		} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+			
+		
+		
+		while ($active AND $mrc == CURLM_OK)
+		{
+			if (curl_multi_select($mh) != -1)
+			{
+				do {
+					$mrc = curl_multi_exec($mh, $active);
+				} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+			}
+		}
+		
+		if ($mrc != CURLM_OK)
+		{
+			return FALSE;
+		}
+			
+		
+		// get content foreach session, retry if applied
+		foreach ($this->_sessions as $key => $session)
+		{
+			$code = $this->info($key, 'http_code');
+			if ($code[0] > 0 && $code[0] < 400)
+			{
+				$this->_output[$key] = curl_multi_getcontent($this->_sessions[$key]);
+				$this->_error[$key]  = curl_error($this->_sessions[$key]);
+				$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
+			}
+			else
+			{
+				$this->_output[$key] = FALSE;
+			}
+			curl_multi_remove_handle($mh, $this->_sessions[$i]);
+		}
+		
+		// clear and close all sessions
+		if ($clear)
+		{
+			curl_multi_close($mh);
+			$this->clear();
+		}
+		
+		return $result;
+	}
+	
+	function is_multi()
+	{
+		$cnt = count($this->_sessions);
+		return $cnt > 1;
+	}
+	
+	
+	function info($key = FALSE, $opt = NULL)
+	{
+		// if there is only one session, then the key is 0
+		if (!$this->is_multi())
+		{
+			$key = 0;
+		}
+		
+		if ($key === FALSE)
+		{
+			foreach($this->_info as $key => $i)
+			{
+				if ($opt)
+				{
+					$info[$key] = $i[$opt];
+				}
+				else
+				{
+					$info[$key] = $i;
+				}
+			}
+		}
+		else
+		{
+			if ($opt)
+			{
+				$info = $this->_info[$key][$opt];
+			}
+			else
+			{
+				$info = $this->_info[$key];
+			}
+		}
+		
+		return $info;
+	}
+
+	/**
+	* Closes cURL sessions
+	* @param $key int, optional session to close
+	*/
+	function close($key = FALSE)
+	{
+		if($key === FALSE)
+		{
+			foreach($this->_sessions as $session)
+			{
+				curl_close($session);
+			}
+		}
+		else
+		{
+			curl_close( $this->_sessions[$key]);
+		}
+			
+	}
+	
+	/**
+	* Remove all cURL sessions
+	*/
+	public function clear()
+	{
+		foreach($this->_sessions as $session)
+		{
+			curl_close($session);
+		}
+		$this->_sessions = array();
+	}
+	
+
 	function get($url)
 	{
 		$opts = array(
 			CURLOPT_NOBODY => FALSE,
 			CURLOPT_HTTPGET => TRUE,
 			);
-		return $this->execute($url, $opts);
+		$this->add_session($url, $opts);
+		return $this->exec();
 	}
 	
 	function post($url, $post = array())
@@ -167,9 +358,8 @@ class Curl {
 			CURLOPT_POSTFIELDS => $post,
 			CURLOPT_HTTPGET => FALSE,
 			);
-		
-		$result = $this->execute($url, $opts);
-		return $result;
+		$this->add_session($url, $opts);
+		return $this->exec_single();
 	}
 	
 	function head($url)
@@ -178,7 +368,8 @@ class Curl {
 			CURLOPT_HEADER => TRUE, // no http header
 			CURLOPT_NOBODY => TRUE, // no return of body
 			);
-		$result = $this->execute($url, $opts);
+		$this->add_session($url, $opts);
+		return $this->exec_single();
 	}
 	
 	function cookie($url, $cookie, $cleanup = TRUE)
@@ -192,7 +383,8 @@ class Curl {
 			CURLOPT_COOKIEJAR => $this->cookie_file, // no return of body
 			CURLOPT_COOKIE => $cookie,
 			);
-		$result = $this->execute($url);
+		$this->add_session($url, $opts);
+		$result = $this->exec_single();
 		
 		// remove the cookie file
 		if (file_exists($this->cookie_file) AND $cleanup)
@@ -201,13 +393,7 @@ class Curl {
 		}
 		return $result;
 	}
-	
-	function info($opt = NULL)
-	{
-		$info = curl_getinfo($this->_curl, $opt);
-		return $info;
-	}
-	
+
 	function error()
 	{
 		return $this->_error;
@@ -219,23 +405,12 @@ class Curl {
 			CURLOPT_NOBODY => TRUE, // do a HEAD request only
 			CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects
 			);
-		$this->execute($url, $opts);
-		$retval = $this->info(CURLINFO_HTTP_CODE) == 200;// check if HTTP OK
+		$this->add_session($url, $opts);
+		$result = $this->exec_single();
+		
+		$retval = $this->info('http_code') == 200;// check if HTTP OK
 		return $retval;
 	}
-	
-	function query($url, $post = array())
-	{
-		$output = $this->post($url, $post);
-		
-		require_once(TESTER_PATH.'libraries/phpQuery.php');
-		
-		phpQuery::newDocumentHTML($output, strtolower($this->CI->config->item('charset')));
-		$this->loaded_page = $output;
-		return $output;
-		
-	}
-	
 	
 	public function is_enabled()
 	{
