@@ -30,15 +30,15 @@ class Validate extends Fuel_base_controller {
 		$this->js_controller_path = js_path('', VALIDATE_FOLDER);
 		$this->js_controller_params['method'] = 'validate';
 		$this->js_controller_params['module'] = 'tools';
+		
+		$this->load->module_model(FUEL_FOLDER, 'pages_model');
 	}
 	
 	function index()
 	{
-		$this->load->module_model(FUEL_FOLDER, 'pages_model');
-		
 		// TODO.... NEED TO FIX THIS METHOD OF GETTING ALL PAGES
 		$pages = $this->fuel->pages->all_pages_including_views(TRUE);
-
+		$vars['form_action'] = 'tools/validate/html';
 		$vars['default_page_input'] = $this->fuel->validate->config('default_page_input');
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['validation_type'] = lang('validate_type_html');
@@ -52,17 +52,22 @@ class Validate extends Fuel_base_controller {
 
 	function html()
 	{
-		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
-		
 		$validate_config = $this->config->item('validate');
 		
 		if ($this->input->post('uri'))
 		{
+			
 			$uri = $this->input->post('uri');
-			$results = $this->fuel->validate->html2($uri, TRUE);
-			exit();
-			$results = $this->fuel->validate->html($uri, TRUE);
-			$this->output->set_output($results);
+			$page_data = $this->pages_model->find_by_location($uri, FALSE);
+			
+			$vars = $this->fuel->validate->html($uri);
+			$vars['link'] = $uri;
+			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
+			
+			$vars['body'] = $this->load->view('html_output', $vars, TRUE);
+			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
+			
+			$this->output->set_output($output);
 			return;
 		} 
 		else if (!$this->input->post('pages') AND !$this->input->post('pages_input') AND !$this->input->post('pages_serialized'))
@@ -100,23 +105,16 @@ class Validate extends Fuel_base_controller {
 
 	function links()
 	{
-		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
-
 		if ($this->input->post('uri'))
 		{
 			$uri = $this->input->post('uri');
-			$links = $this->fuel->validate->links($uri);
-
-			$this->load->module_model(FUEL_FOLDER, 'pages_model');
 			$page_data = $this->pages_model->find_by_location($uri, FALSE);
-			
-			$vars['valid'] = $links['valid'];
-			$vars['invalid'] = $links['invalid'];
-			$vars['total'] = count($links['invalid']) + count($links['valid']);
 
+			$vars = $this->fuel->validate->links($uri);
 			$vars['link'] = $uri;
 			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
-			$output = $this->load->view('links_output', $vars, TRUE);
+			$vars['body'] = $this->load->view('links_output', $vars, TRUE);
+			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
 			
 			$this->output->set_output($output);
 			return;
@@ -148,7 +146,6 @@ class Validate extends Fuel_base_controller {
 
 	function size_report()
 	{
-		if (!extension_loaded('curl')) show_error(lang('error_no_curl_lib'));
 		$this->load->helper('number');
 		
 		$validate_config = $this->config->item('validate');
@@ -156,8 +153,12 @@ class Validate extends Fuel_base_controller {
 		if ($this->input->post('uri'))
 		{
 			$uri = $this->input->post('uri');
+			$page_data = $this->pages_model->find_by_location($uri, FALSE);
+			
 			$vars = $this->fuel->validate->size_report($uri);
-			$output = $this->load->view('size_report_output', $vars, TRUE);
+			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
+			$vars['body'] = $this->load->view('size_report_output', $vars, TRUE);
+			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
 			
 			$this->output->set_output($output);
 			return;

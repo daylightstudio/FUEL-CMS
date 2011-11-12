@@ -38,6 +38,7 @@ class Curl {
 	public $connect_timeout = 10;
 	public $dns_cache_timeout = 3600;
 	public $cookie_file = 'my_cookie.txt';
+	public $block_size = 5;
 	
 	protected $CI; // reference to the CI super object
 	protected $_sessions = array();
@@ -54,7 +55,7 @@ class Curl {
 	{
 		if (!$this->is_enabled())
 		{
-			$this->_add_error('The cURL extension does not exist');
+			$this->_add_error(lang('error_no_curl_lib')); // found in fuel_lang
 		}
 		$this->CI = & get_instance();
 		$this->CI->load->library('user_agent');
@@ -103,7 +104,7 @@ class Curl {
 	}
 
 	
-	function add_session($url, $opts = array())
+	function add_session($url, $opts = array(), $opt_params = NULL)
 	{
 		// normalize the URL
 		$url = $this->_normalize_url($url);
@@ -113,46 +114,59 @@ class Curl {
 		$key = count($this->_sessions) - 1;
 		
 		// set default options
-		$this->set_defaults($key);
+		$default_opts = $this->_opts();
+		$this->set_options($default_opts, $key);
 		
 		if (!empty($opts))
 		{
-			
-			// make it easy to pass options
 			$o = array();
-			foreach($opts as $key => $val)
+			
+			if (is_array($opts))
 			{
-				if (is_string($key) && !is_numeric($key))
+				// make it easy to pass options
+				$o = array();
+				foreach($opts as $k => $val)
 				{
-					$c = 'CURLOPT_' . strtoupper($key);
-					if (defined($c))
+					if (is_string($k) && !is_numeric($k))
 					{
-						$constant = constant($c);
-						$o[$constant] = $val;
+						$c = 'CURLOPT_' . strtoupper($k);
+						if (defined($c))
+						{
+							$constant = constant($c);
+							$o[$constant] = $val;
+						}
+					}
+					else
+					{
+						$o[$k] = $val;
 					}
 				}
-				else
+			}
+			else if (is_string($opts))
+			{
+				// shortcuts
+				switch($opts)
 				{
-					$o[$key] = $val;
+					case 'get':
+						$o = $this->_opts('get');
+						break;
+					case 'post':
+						$o = $this->_opts('post', $opt_params);
+						break;
+					case 'head':
+						$o = $this->_opts('head');
+						break;
+					case 'none':
+						$o = $this->_opts('none');
+						break;
+					case 'cookie':
+						$o = $this->_opts('cookie', $opt_params);
+						break;
 				}
 			}
-			
-			$this->set_options($key, $o);
+
+			$this->set_options($o, $key);
 		}
-	}
-	
-	function set_defaults($key = 0)
-	{
-		$default_opts = array(
-						CURLOPT_HEADER => 0,
-						CURLOPT_RETURNTRANSFER => TRUE,
-						CURLOPT_TIMEOUT => $this->timeout,
-						CURLOPT_CONNECTTIMEOUT => $this->connect_timeout,
-						CURLOPT_DNS_CACHE_TIMEOUT => $this->dns_cache_timeout,
-						CURLOPT_BINARYTRANSFER => TRUE,
-						CURLOPT_USERAGENT => $this->user_agent,
-					);
-		$this->set_options($default_opts, $key);
 	}
 	
 	function set_options($opts = array(), $key = 0)
@@ -160,7 +174,7 @@ class Curl {
 		curl_setopt_array($this->_sessions[$key], $opts);
 	}
 	
-	function exec($key = 0, $clear = TRUE)
+	function exec($key = FALSE, $clear = TRUE)
 	{
 		if (empty($this->_sessions))
 		{
@@ -171,7 +185,7 @@ class Curl {
 		{
 			if ($key === FALSE)
 			{
-				$this->exec_multi($clear);
+				$this->exec_multi($clear, $this->block_size);
 			}
 			else
 			{
@@ -180,9 +194,8 @@ class Curl {
 		}
 		else
 		{
-			$this->exec_single($clear);
+			$this->exec_single($key, $clear);
 		}
-
 		
 		// set by exec_single/exec_multi
 		return $this->_output;
@@ -191,7 +204,7 @@ class Curl {
 	function exec_single($key = 0, $clear = TRUE)
 	{
 		$this->_output = curl_exec($this->_sessions[$key]);
-		$this->_error[$key]  = curl_error($this->_sessions[$key]);
+		$this->_error[$key] = curl_error($this->_sessions[$key]);
 		$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
 
 		// clear and close all sessions
@@ -202,55 +215,92 @@ class Curl {
 		return $this->_output;
 	}
 
-	public function exec_multi($clear = TRUE)
+	public function exec_multi($clear = TRUE, $block_size = NULL)
 	{
 		$mh = curl_multi_init();
 		
-		// add all sessions to multi handle
-		foreach ($this->_sessions as $key => $session)
-		{
-			curl_multi_add_handle($mh, $this->_sessions[$key]);
-		}
+		if (empty($block_size)) $block_size = $this->block_size;
+		
+		// partially from http://stackoverflow.com/questions/2874845/whats-the-fastest-way-to-scrape-a-lot-of-pages-in-php/2874903#2874903
+		
+		$i = 0;  // count where we are in the list so we can break up the runs into smaller blocks
+		$block = array(); // to accumulate the curl_handles for each group we'll run simultaneously
+	
+		// reset arrays
+		$this->_output = array(); 
+		$this->_error = array();
+		$this->_info = array();
 
 		
-		do {
-			$mrc = curl_multi_exec($mh, $active);
-		} while ($mrc == CURLM_CALL_MULTI_PERFORM);
-			
-		
-		
-		while ($active AND $mrc == CURLM_OK)
-		{
-			if (curl_multi_select($mh) != -1)
-			{
-				do {
-					$mrc = curl_multi_exec($mh, $active);
-				} while ($mrc == CURLM_CALL_MULTI_PERFORM);
-			}
-		}
-		
-		if ($mrc != CURLM_OK)
-		{
-			return FALSE;
-		}
-			
-		
-		// get content foreach session, retry if applied
+
 		foreach ($this->_sessions as $key => $session)
 		{
-			$code = $this->info($key, 'http_code');
-			if ($code[0] > 0 && $code[0] < 400)
+			$i++; // increment the position-counter
+
+		    // add the handle to the curl_multi_handle and to our tracking "block"
+			curl_multi_add_handle($mh, $session);
+			$block[] = $session;
+
+			// -- check to see if we've got a "full block" to run or if we're at the end of out list of handles
+			if (($i % $block_size == 0) or ($i == count($this->_sessions)))
 			{
-				$this->_output[$key] = curl_multi_getcontent($this->_sessions[$key]);
-				$this->_error[$key]  = curl_error($this->_sessions[$key]);
-				$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
+				
+				$this->CI->benchmark->mark('a');
+				
+				
+				// -- run the block
+				$running = NULL;
+				do {
+					// track the previous loop's number of handles still running so we can tell if it changes
+					$running_before = $running;
+
+					// run the block or check on the running block and get the number of sites still running in $running
+					$mrc = curl_multi_exec($mh, $running);
+					
+					// if the number of sites still running changed, print out a message with the number of sites that are still running.
+					// if ($running != $running_before)
+					// {
+					// 	echo "<pre style=\"text-align: left;\">";
+					// 	print_r("Waiting for $running sites to finish...\n");
+					// 	echo "</pre>";
+					// }
+				} while ($running > 0);
+					$this->CI->benchmark->mark('b');
+					
+					echo "<pre style=\"text-align: left;\">x";
+					print_r($this->CI->benchmark->elapsed_time('a', 'b'));
+					echo "x</pre>";
+					
+				if ($mrc != CURLM_OK)
+				{
+					return FALSE;
+				}
+				
+				// get content foreach session, retry if applied
+				foreach ($block as $b)
+				{
+					$this->_error[]  = curl_error($b);
+					
+					$info = curl_getinfo($b);
+					$this->_info[] = $info;
+
+					// check for valid http_code
+					if ($info['http_code'] < 400)
+					{
+						$result = curl_multi_getcontent($b);
+						$this->_output[] = $result;
+					}
+					else
+					{
+						$this->_output[] = FALSE;
+					}
+					curl_multi_remove_handle($mh, $b);
+				}
+				$block = array();
 			}
-			else
-			{
-				$this->_output[$key] = FALSE;
-			}
-			curl_multi_remove_handle($mh, $this->_sessions[$i]);
 		}
+	
+		
 		
 		// clear and close all sessions
 		if ($clear)
@@ -259,7 +309,7 @@ class Curl {
 			$this->clear();
 		}
 		
-		return $result;
+		return $this->_output;
 	}
 	
 	function is_multi()
@@ -269,15 +319,10 @@ class Curl {
 	}
 	
 	
-	function info($key = FALSE, $opt = NULL)
+	function info($opt = NULL, $key = 0)
 	{
-		// if there is only one session, then the key is 0
-		if (!$this->is_multi())
-		{
-			$key = 0;
-		}
-		
-		if ($key === FALSE)
+		$info = array();
+		if ($key === TRUE)
 		{
 			foreach($this->_info as $key => $i)
 			{
@@ -291,7 +336,7 @@ class Curl {
 				}
 			}
 		}
-		else
+		else if (isset($this->_info[$key]))
 		{
 			if ($opt)
 			{
@@ -304,6 +349,16 @@ class Curl {
 		}
 		
 		return $info;
+	}
+	
+	function sessions()
+	{
+		return $this->_sessions;
+	}
+
+	function output()
+	{
+		return $this->_output;
 	}
 
 	/**
@@ -329,7 +384,7 @@ class Curl {
 	/**
 	* Remove all cURL sessions
 	*/
-	public function clear()
+	function clear()
 	{
 		foreach($this->_sessions as $session)
 		{
@@ -341,10 +396,7 @@ class Curl {
 
 	function get($url)
 	{
-		$opts = array(
-			CURLOPT_NOBODY => FALSE,
-			CURLOPT_HTTPGET => TRUE,
-			);
+		$opts = $this->_opts('get');
 		$this->add_session($url, $opts);
 		return $this->exec();
 	}
@@ -353,21 +405,14 @@ class Curl {
 	{
 		// NOTE TO SELF: to add a file to upload, you can do the following as a value:
 		//'@path/to/file.txt;type=text/html';
-		$opts = array(
-			CURLOPT_POST => TRUE,
-			CURLOPT_POSTFIELDS => $post,
-			CURLOPT_HTTPGET => FALSE,
-			);
+		$opts = $this->_opts('post', $post);
 		$this->add_session($url, $opts);
 		return $this->exec_single();
 	}
 	
 	function head($url)
 	{
-		$opts = array(
-			CURLOPT_HEADER => TRUE, // no http header
-			CURLOPT_NOBODY => TRUE, // no return of body
-			);
+		$opts = $this->_opts('head');
 		$this->add_session($url, $opts);
 		return $this->exec_single();
 	}
@@ -378,11 +423,7 @@ class Curl {
 		{
 			$cookie = http_build_query($params, NULL, '&amp;');
 		}
-		$opts = array(
-			CURLOPT_COOKIEFILE => $this->cookie_file, // no http header
-			CURLOPT_COOKIEJAR => $this->cookie_file, // no return of body
-			CURLOPT_COOKIE => $cookie,
-			);
+		$opts = $this->_opts('cookie', $cookie);
 		$this->add_session($url, $opts);
 		$result = $this->exec_single();
 		
@@ -401,17 +442,77 @@ class Curl {
 	
 	function is_valid($url)
 	{
-		$opts = array(
-			CURLOPT_NOBODY => TRUE, // do a HEAD request only
-			CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects
-			);
+		$opts = $this->_opts('head');
+		
+		$key = 0;
 		$this->add_session($url, $opts);
 		$result = $this->exec_single();
+		$retval = $this->info('http_code') < 400;// check if HTTP OK
 		
-		$retval = $this->info('http_code') == 200;// check if HTTP OK
 		return $retval;
 	}
 	
+	protected function _opts($type = NULL, $opt_params = NULL)
+	{
+		switch($type)
+		{
+			case 'get':
+				$opts = array(
+								CURLOPT_NOBODY => FALSE,
+								CURLOPT_HTTPGET => TRUE,
+								CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects
+							);
+				break;
+				
+			case 'post':
+				$opts = array(
+								CURLOPT_POST => TRUE,
+								CURLOPT_POSTFIELDS => $opt_params,
+								CURLOPT_HTTPGET => FALSE,
+							);
+				break;
+				
+			case 'head':
+				$opts = array(
+								CURLOPT_HEADER => TRUE, // just http header
+								CURLOPT_NOBODY => TRUE, // no return of body
+								CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects
+							);
+				break;
+				
+			case 'none':
+				$opts = array(
+								CURLOPT_HEADER => FALSE, // just http header
+								CURLOPT_NOBODY => TRUE, // no return of body
+								CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects
+							);
+				break;
+				
+			case 'cookie':
+				$opts = array(
+								CURLOPT_COOKIEFILE => $this->cookie_file, // no http header
+								CURLOPT_COOKIEJAR => $this->cookie_file, // no return of body
+								CURLOPT_COOKIE => $opt_params,
+							);
+				break;
+				
+			default:
+				$opts = array(
+								CURLOPT_HEADER => 0,
+								CURLOPT_RETURNTRANSFER => TRUE,
+								CURLOPT_TIMEOUT => $this->timeout,
+								CURLOPT_CONNECTTIMEOUT => $this->connect_timeout,
+								CURLOPT_DNS_CACHE_TIMEOUT => $this->dns_cache_timeout,
+								CURLOPT_BINARYTRANSFER => TRUE,
+								CURLOPT_USERAGENT => $this->user_agent,
+								
+							);
+		}
+		return $opts;
+		
+	}
+
+
 	public function is_enabled()
 	{
 		return function_exists('curl_init');

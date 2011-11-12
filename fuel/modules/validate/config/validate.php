@@ -15,9 +15,9 @@ $config['nav']['tools']['tools/validate'] = lang('module_validate');
 $config['validate'] = array();
 
 $config['validate']['toolbar'] = array(
-									'toolbar' => 'Validate HTML',
+									'toolbar/html' => 'Validate HTML',
 									'toolbar/links' => 'Validate Links',
-									'toolbar/weight' => 'Page Weight',
+									'toolbar/size_report' => 'Page Weight',
 							);
 
 // validator url

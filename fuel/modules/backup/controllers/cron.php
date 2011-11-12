@@ -109,7 +109,7 @@ class Cron extends CI_Controller  {
 					}
 					// log message
 					$msg = lang('data_backup');
-					$this->fuel->logs->logit($msg);
+					$this->fuel->logs->write($msg);
 				}
 			}
 			$this->output->set_output($output);

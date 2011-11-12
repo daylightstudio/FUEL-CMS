@@ -152,21 +152,20 @@ function delete_old_files($dir, $older_than, $exclude = array())
 {
 	$files = get_dir_file_info($dir);
 	
-	$file_date_ts = (!is_numeric($older_than)) ? strtotime($older_than) : $older_than;
+	if (!is_numeric($older_than)) $older_than = strtotime($older_than);
 	
 	if (!empty($files))
 	{
 		foreach($files as $file)
 		{
-			$compare_date = time();
-
-			if ($file_date_ts < $compare_date AND 
+			if ($file['date'] < $older_than AND 
 				(is_null($exclude) || (is_array($exclude) && !in_array($file['name'], $exclude)) || (is_string($exclude) && !preg_match($exclude, $file['name']))))
 			{
 				@unlink($file['server_path']);
 			}
 		}
 	}
+
 }
 
 // --------------------------------------------------------------------

@@ -91,24 +91,25 @@ class Fuel_pagevars extends Fuel_base_library {
 			$location = $this->location;
 		}
 		$this->CI->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'pagevariables_model');
-		$this->CI->load->module_model(FUEL_FOLDER, 'sitevariables_model', 'sitevariables_model');
-		
-		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
-		
-		$vars = array();
-		
-		// Loop through the pages array looking for wild-cards
-		foreach ($site_vars as $site_var){
-			
-			// Convert wild-cards to RegEx
-			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
-
-			// Does the RegEx match?
-			if (empty($key) OR preg_match('#^'.$key.'$#', $location))
-			{
-				$vars[$site_var['name']] = $site_var['value'];
-			}
-		}
+		$site_vars = $this->fuel->sitevariables->get($location);
+		// $this->CI->load->module_model(FUEL_FOLDER, 'sitevariables_model', 'sitevariables_model');
+		// 
+		// $site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		// 
+		// $vars = array();
+		// 
+		// // Loop through the pages array looking for wild-cards
+		// foreach ($site_vars as $site_var){
+		// 	
+		// 	// Convert wild-cards to RegEx
+		// 	$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
+		// 
+		// 	// Does the RegEx match?
+		// 	if (empty($key) OR preg_match('#^'.$key.'$#', $location))
+		// 	{
+		// 		$vars[$site_var['name']] = $site_var['value'];
+		// 	}
+		// }
 		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
 		if ($parse)
 		{

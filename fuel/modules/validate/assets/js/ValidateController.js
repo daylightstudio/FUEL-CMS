@@ -96,19 +96,25 @@ ValidateController = jqx.createController(fuel.controller.BaseFuelController, {
 		var doc = _this.createResultsIframe(i, html);
 
 		var summary = '<span class="uri">' + u + '</span> &nbsp; ';
-		var $invalid = $('.invalid', doc);
-		var $invalidText = $('td.invalid', doc);
+		// var $invalid = $('.invalid', doc);
+		// var $invalidText = $('td.invalid', doc);
+		
+		var invalid_text = $('#total_invalid', doc).text();
+		var invalid_num = parseInt($('#total_invalid_num', doc).text());
+		
+		var $invalidText = $('#total_invalid', doc);
+		var $invalidText = $('#total_invalid', doc);
 		var edit_url = $('#edit_url', doc).text();
 		
 		if (edit_url.length > 0){
 			$('#edit_' + i).html('<a href="' + edit_url + '">' + _this.lang('btn_edit') + '</a>');
 		}
-		if ($invalid.size() > 0 ) {
-			var invalidStr = ($.trim($invalidText.text()).length) ? $invalidText.html() : $('#results', doc).html();
-			summary += '<span class="error">' + invalidStr + '</span>';
+		
+		if (invalid_num > 0){
+			summary += '<span class="error">' + invalid_text + '</span>';
 			$('#summary_' + i).html(summary);
 			return false;
-		} else{
+		} else {
 			summary += '<span class="success">' + _this.lang('validate_valid') + '</span>';
 			$('#summary_' + i).html(summary);
 			return true;

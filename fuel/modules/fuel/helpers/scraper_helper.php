@@ -11,7 +11,18 @@ function scrape_html($url, $post = array(), $opts = array())
 		$opts[CURLOPT_POSTFIELDS] = $post;
 		$opts[CURLOPT_HTTPGET] = FALSE;
 	}
-	return $CI->curl->execute($url, $opts);
+	if (is_array($url))
+	{
+		foreach($url as $u)
+		{
+			$CI->curl->add_session($u, $opts);
+		}
+	}
+	else
+	{
+		$CI->curl->add_session($url, $opts);
+	}
+	return $CI->curl->exec();
 }
 
 function scrape_regex($url, $regex)

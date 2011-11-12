@@ -30,7 +30,35 @@
 
 class Fuel_sitevariables extends Fuel_base_library {
 	
+	
+	function get($location = NULL)
+	{
+		if (is_null($location))
+		{
+			$location = uri_path();
+		}
+		
+		$this->fuel->load_model('sitevariables_model');
+		
+		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		
+		$vars = array();
+		
+		// Loop through the pages array looking for wild-cards
+		foreach ($site_vars as $site_var){
+			
+			// Convert wild-cards to RegEx
+			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
 
+			// Does the RegEx match?
+			if (empty($key) OR preg_match('#^'.$key.'$#', $location))
+			{
+				$vars[$site_var['name']] = $site_var['value'];
+			}
+		}
+		return $vars;
+	}
+	
 }
 
 /* End of file Fuel_sitevariables.php */

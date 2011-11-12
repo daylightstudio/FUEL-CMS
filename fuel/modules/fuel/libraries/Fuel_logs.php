@@ -30,6 +30,8 @@
 
 class Fuel_logs extends Fuel_base_library {
 	
+	public $location = 'db';
+	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -41,9 +43,16 @@ class Fuel_logs extends Fuel_base_library {
 		$this->fuel->load_model('logs');
 	}
 	
-	function logit($msg, $user = NULL)
+	function write($msg, $type = 'info', $location = 'db')
 	{
-		$this->CI->logs_model->logit($msg, $user);
+		if ($location == 'db')
+		{
+			$this->CI->logs_model->logit($msg, $type);
+		}
+		else
+		{
+			log_message($type, $msg);
+		}
 	}
 	
 	function &model()

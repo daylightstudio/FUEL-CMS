@@ -40,6 +40,7 @@ class Fuel_validate extends Fuel_advanced_module {
 	{
 		parent::__construct($params);
 
+		$this->CI->load->library('curl');
 		$this->CI->load->helper('scraper');
 		
 		// initialize object if any parameters
@@ -68,23 +69,12 @@ class Fuel_validate extends Fuel_advanced_module {
 		$this->set_params($this->_config);
 		
 	}
-	
-	function html($uri, $w3c_view = FALSE)
+	function html($uri, $just_status = FALSE)
 	{
-		$this->CI->load->library('user_agent');
-		
-		if (!$w3c_view)
-		{
-			$path = VALIDATE_PATH.'libraries/';
-			set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-			require_once VALIDATE_PATH.'libraries/Services/W3C/HTMLValidator.php';
-			$v = new Services_W3C_HTMLValidator();
-		}
-		
 		// if valid_internal_domains config match then read the file and post to validator
 		// determine if server is local
 		$results = '';
-		$local = FALSE;
+		$local = TRUE;
 		$validator_url = $this->fuel->validate->config('validator_url');
 		
 		$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
@@ -108,323 +98,127 @@ class Fuel_validate extends Fuel_advanced_module {
 			$tmp_file_for_validation_urls = $this->CI->config->item('cache_path').'validation_url-'.$tmp_filename.'.html';
 			write_file($tmp_file_for_validation_urls, $fragment);
 			
-			// if just hte data to be returned, then we validate it here
-			if (!$w3c_view)
-			{
-				$results = $v->validateFile($tmp_file_for_validation_urls);
-			}
-			else
-			{
-				$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
-				$results = scrape_html($validator_url, $post);
-			}
-			
-			
-			if (file_exists($tmp_file_for_validation_urls)) 
-			{
-				unlink($tmp_file_for_validation_urls);
-			}
-		}
-
-		// else just pass it the uri value for it to read itself
-		else
-		{
-			if (!$w3c_view)
-			{
-				$results = $v->validate($uri);
-				
-			}
-			else
-			{
-				$w3c_url = $validator_url.'?uri='.$uri;
-				$results = scrape_html($w3c_url);
-			}
-		}
-		
-		
-		// just return data if not W3C view
-		if (!$w3c_view)
-		{
-			return $results;
-		}
-		
-		// do some html cleanup so that css and images pull
-		$url_parts = parse_url($validator_url);
-		
-		// insert base_url so that the images/css pull from the correct place
-		$base_url = 'http://'.$url_parts['host'].'/';
-		$results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
-		$results = str_replace(array('"./style/base.css"', '"./style/base"'), '"'.$base_url.'style/base.css"', $results);
-		$results = str_replace(array('"./style/results.css"', '"./style/results"'), '"'.$base_url.'style/results.css"', $results);
-		return $results;
-	}
-	
-	function w3c($uri)
-	{
-		$this->CI->load->library('user_agent');
-		
-		// if valid_internal_domains config match then read the file and post to validator
-		// determine if server is local
-		$results = '';
-		$local = FALSE;
-		$validator_url = $this->config('validator_url');
-		
-		$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
-		foreach($servers as $server)
-		{
-			$server = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $server));
-			if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = TRUE;
-		}
-		
-		// if the server is determined to be local, then we need to upload the file and post
-		if ($local)
-		{
-			$this->CI->load->helper('file');
-			
-			// scrape html from page running on localhost
-			$fragment = scrape_html($uri);
-
-			// post data using fragment variable
-			$tmp_filename = str_replace(array('/', ':'), '_', $uri);
-			$tmp_filename = substr($tmp_filename, 4);
-			$tmp_file_for_validation_urls = $this->CI->config->item('cache_path').'validation_url-'.$tmp_filename.'.html';
-			write_file($tmp_file_for_validation_urls, $fragment);
-			
-			// if just hte data to be returned, then we validate it here
-			if (!$w3c_view)
-			{
-				$results = $v->validateFile($tmp_file_for_validation_urls);
-			}
-			else
-			{
-				$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
-				$results = scrape_html($validator_url, $post);
-			}
-			
-			
-			if (file_exists($tmp_file_for_validation_urls)) 
-			{
-				unlink($tmp_file_for_validation_urls);
-			}
-		}
-
-		// else just pass it the uri value for it to read itself
-		else
-		{
-			if (!$w3c_view)
-			{
-				$results = $v->validate($uri);
-				
-			}
-			else
-			{
-				$w3c_url = $validator_url.'?uri='.$uri;
-				$results = scrape_html($w3c_url);
-			}
-		}
-		
-		
-		// just return data if not W3C view
-		if (!$w3c_view)
-		{
-			return $results;
-		}
-		
-		// do some html cleanup so that css and images pull
-		$url_parts = parse_url($validator_url);
-		
-		// insert base_url so that the images/css pull from the correct place
-		$base_url = 'http://'.$url_parts['host'].'/';
-		$results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
-		$results = str_replace(array('"./style/base.css"', '"./style/base"'), '"'.$base_url.'style/base.css"', $results);
-		$results = str_replace(array('"./style/results.css"', '"./style/results"'), '"'.$base_url.'style/results.css"', $results);
-		return $results;
-	}
-	
-	function html2($uri)
-	{
-		$this->CI->load->library('user_agent');
-		
-		// if valid_internal_domains config match then read the file and post to validator
-		// determine if server is local
-		$results = '';
-		$local = TRUE;
-		$validator_url = $this->fuel->validate->config('validator_url').'/?output=soap12';
-		
-		$servers = (array) $this->fuel->validate->config('valid_internal_server_names');
-		foreach($servers as $server)
-		{
-			$server = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $server));
-			if (preg_match('#^'.$server.'$#', $_SERVER['SERVER_NAME'])) $local = TRUE;
-		}
-		
-		// if the server is determined to be local, then we need to upload the file and post
-		if ($local)
-		{
-			$this->CI->load->helper('file');
-			
-			// scrape html from page running on localhost
-			$fragment = scrape_html($uri);
-
-			// post data using fragment variable
-			$tmp_filename = str_replace(array('/', ':'), '_', $uri);
-			$tmp_filename = substr($tmp_filename, 4);
-			$tmp_file_for_validation_urls = $this->CI->config->item('cache_path').'validation_url-'.$tmp_filename.'.html';
-			write_file($tmp_file_for_validation_urls, $fragment);
-			echo "<pre style=\"text-align: left;\">";
-			print_r($tmp_file_for_validation_urls);
-			echo "</pre>";
-			
-			echo "<pre style=\"text-align: left;\">";
-			print_r($validator_url);
-			echo "</pre>";
-			
+			// if just data, then we will do the Soap call
+			$post['output'] = 'soap12';
 			$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
-			$results = scrape_html($validator_url, $post);
-			
-			
-			echo "<pre style=\"text-align: left;\">";
-			print_r($results);
-			echo "</pre>";
-			exit();
-			$result_arr = array();
-			$xml = new DomDocument();
-			@$xml->loadXML($results);
-			$xpath = new DOMXpath($xml);
-			$xpath->registerNamespace("m", "http://www.w3.org/2005/10/markup-validator");
-
-
-			$elements = $xpath->query("//m:validity");
-			if($elements->item(0)->nodeValue == 'true')
-			{
-				$result_arr['status'] = 'valid';
-			}
-			else
-			{
-				$result_arr['status'] = 'invalid';
-			}
-
-			$elements = $xpath->query("//m:errorcount");
-			$result_arr['err_num'] = intval($elements->item(0)->nodeValue);
-
-			$result_arr['errors'] = array();
-			$result_arr['warnings'] = array();
-
-			if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
-			{
-
-				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:line");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['errors'][$i]['line'] = intval($node->nodeValue);
-					$i++;
-				}	
-
-				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:col");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['errors'][$i]['col'] = intval($node->nodeValue);
-					$i++;
-				}
-
-				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:message");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['errors'][$i]['message'] = $node->nodeValue;
-					$i++;
-				}
-
-				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:messageid");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['errors'][$i]['messageid'] = $node->nodeValue;
-					$i++;
-				}
-
-				$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:explanation");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['errors'][$i]['explanation'] = trim($node->nodeValue);
-					$i++;
-				}
-			}
-
-			$elements = $xpath->query("//m:warningcount");
-			$result_arr['warn_num'] = intval($elements->item(0)->nodeValue);
-
-			if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
-			{
-				$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:messageid");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['warnings'][$i]['messageid'] = trim($node->nodeValue);
-					$i++;
-				}
-				$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:message");
-				$i = 0;
-				foreach ($node_arr as $node)
-				{
-					$result_arr['warnings'][$i]['message'] = trim($node->nodeValue);
-					$i++;
-				}
-			}
-			
-			
-			$client = new SoapClient($validator_url);
-			// Call the SOAP method
-			$result = $client->call('hello', array('name' => 'Scott'));
-			// Display the result
-			print_r($result);
-			//$result = $client->TopGoalScorers(array('iTopN'=>5));
-			
-			// if just hte data to be returned, then we validate it here
-			if (!$w3c_view)
-			{
-				$results = $v->validateFile($tmp_file_for_validation_urls);
-			}
-			else
-			{
-				$post['uploaded_file'] = '@'.$tmp_file_for_validation_urls.';type=text/html';
-				$results = scrape_html($validator_url, $post);
-			}
-			
+			$output = scrape_html($validator_url, $post);
 			
 			if (file_exists($tmp_file_for_validation_urls)) 
 			{
-				unlink($tmp_file_for_validation_urls);
+				@unlink($tmp_file_for_validation_urls);
 			}
 		}
 
 		// else just pass it the uri value for it to read itself
 		else
 		{
+			$validator_url = $validator_url.'/?output=soap12';
+			$output = scrape_html($validator_url);
+			
 		}
 		
-		// 
-		// 
-		// // do some html cleanup so that css and images pull
-		// $url_parts = parse_url($validator_url);
-		// 
-		// // insert base_url so that the images/css pull from the correct place
-		// $base_url = 'http://'.$url_parts['host'].'/';
-		// $results = str_replace('</head>', "<base href=\"".$base_url."\" />".PHP_EOL."</head>", $results);
-		// $results = str_replace(array('"./style/base.css"', '"./style/base"'), '"'.$base_url.'style/base.css"', $results);
-		// $results = str_replace(array('"./style/results.css"', '"./style/results"'), '"'.$base_url.'style/results.css"', $results);
-		// return $results;
+		// now parse SOAP results
+		$results = array();
+		$xml = new DomDocument();
+		$xml->loadXML($output);
+		$xpath = new DOMXpath($xml);
+		$xpath->registerNamespace("m", "http://www.w3.org/2005/10/markup-validator");
+
+		$elements = $xpath->query("//m:validity");
+		if($elements->item(0)->nodeValue == 'true')
+		{
+			$results['status'] = 'valid';
+		}
+		else
+		{
+			$results['status'] = 'invalid';
+		}
+		
+		
+		// if only the status is wanted, we return it here
+		if ($just_status === TRUE)
+		{
+			return $results['status'];
+		}
+
+		// ... otherwise, we continue on
+		$elements = $xpath->query("//m:errorcount");
+		$results['errors_num'] = intval($elements->item(0)->nodeValue);
+
+		$results['errors'] = array();
+		$results['warnings'] = array();
+
+		if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+		{
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:line");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['errors'][$i]['line'] = intval($node->nodeValue);
+				$i++;
+			}	
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:col");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['errors'][$i]['col'] = intval($node->nodeValue);
+				$i++;
+			}
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:message");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['errors'][$i]['message'] = $node->nodeValue;
+				$i++;
+			}
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:messageid");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['errors'][$i]['messageid'] = $node->nodeValue;
+				$i++;
+			}
+
+			$node_arr = $xpath->query("//m:errors/m:errorlist/m:error/m:explanation");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['errors'][$i]['explanation'] = trim($node->nodeValue);
+				$i++;
+			}
+		}
+		
+		$elements = $xpath->query("//m:warningcount");
+		$results['warning_num'] = intval($elements->item(0)->nodeValue);
+
+		if ($elements->item(0) && $elements->item(0)->nodeValue > 0)
+		{
+			$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:messageid");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['warnings'][$i]['messageid'] = trim($node->nodeValue);
+				$i++;
+			}
+			$node_arr = $xpath->query("//m:warnings/m:warninglist/m:warning/m:message");
+			$i = 0;
+			foreach ($node_arr as $node)
+			{
+				$results['warnings'][$i]['message'] = trim($node->nodeValue);
+				$i++;
+			}
+		}
+		
+		return $results;
 	}
 	
 	
 	function links($url, $just_invalid = FALSE)
 	{
-		// grab all the links from a remote file
-		//$links = scrape_dom($url, '//a');
-		$this->CI->load->module_helper(FUEL_FOLDER, 'scraper');
 		// use this method which is faster
 		$html = scrape_html($url);
 		
@@ -451,34 +245,93 @@ class Fuel_validate extends Fuel_advanced_module {
 			}
 		}
 		
-		$results = '';
-		
 		// now loop through the links and check if they are valid
-		$return = ($just_invalid) ? array() :  array('valid' => array(), 'invalid' => array());
+		$results = ($just_invalid) ? array() :  array('valid' => array(), 'invalid' => array());
+		echo "<pre style=\"text-align: left;\">";
+		print_r($formatted_links);
+		echo "</pre>";
+		
+		$this->CI->benchmark->mark('code_start1');
 		foreach($formatted_links as $link)
 		{
-			$is_valid = is_valid_page($link);
+			$this->CI->curl->add_session($link, 'none');
+			$this->CI->curl->exec_single();
+			
+			// since TRUE is passed, it will return the full array of session info with the http_code
+			$code = $this->CI->curl->info('http_code', 0);
+			$is_valid = ($code < 400);
 			if ($just_invalid)
 			{
 				// capture just invalid links
 				if (!$is_valid)
 				{
-					$return[] = $link;
+					$results[] = $link;
 				}
 			}
 			else
 			{
 				if ($is_valid)
 				{
-					$return['valid'][] = $link;
+					$results['valid'][] = $link;
 				}
 				else
 				{
-					$return['invalid'][] = $link;
+					$results['invalid'][] = $link;
 				}
 			}
+			
 		}
-		return $return;
+		$this->CI->benchmark->mark('code_end1');
+		echo "<pre style=\"text-align: left;\">";
+		print_r($this->CI->benchmark->elapsed_time('code_start1', 'code_end1'));
+		echo "</pre>";
+		
+		
+		
+		$this->CI->benchmark->mark('code_start2');
+		foreach($formatted_links as $link)
+		{
+			$this->CI->curl->add_session($link, 'none');
+		}
+
+		// will execute a multi
+		$this->CI->curl->exec();
+		
+		// since TRUE is passed, it will return the full array of session info with the http_code
+		$codes = $this->CI->curl->info('http_code', TRUE);
+
+		foreach($codes as $code)
+		{
+			$is_valid = ($code < 400);
+			if ($just_invalid)
+			{
+				// capture just invalid links
+				if (!$is_valid)
+				{
+					$results[] = $link;
+				}
+			}
+			else
+			{
+				if ($is_valid)
+				{
+					$results['valid'][] = $link;
+				}
+				else
+				{
+					$results['invalid'][] = $link;
+				}
+			}
+			
+		}
+		$this->CI->benchmark->mark('code_end2');
+		echo "<pre style=\"text-align: left;\">";
+		print_r($this->CI->benchmark->elapsed_time('code_start2', 'code_end2'));
+		echo "</pre>";
+		exit();
+		
+		$results['total'] = count($results['invalid']) + count($results['valid']);
+		return $results;
 		
 	}
 	
@@ -568,25 +421,97 @@ class Fuel_validate extends Fuel_advanced_module {
 		$total_kb = 0;
 		
 		// using normal curl here so that we can use the same $ch object for multiple requests
+		$this->CI->benchmark->mark('code_start1');
+		/*
+		SLOWER TO USE MUTLI fFOR SOME REASON
+		*/
+		// $opts = array(
+		// 	//CURLOPT_FRESH_CONNECT => TRUE,
+		// 	//CURLOPT_FORBID_REUSE => TRUE,
+		// //	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
+		// 	CURLOPT_HEADER => FALSE,
+		// 	CURLOPT_NOBODY => TRUE,
+		// 	);
+		// foreach($resources as $link)
+		// {
+		// 	$this->CI->curl->add_session($link, 'none');
+		// }
+		// 
+		// // will execute a multi
+		// $this->CI->curl->exec();
+		// 
+		// // since TRUE is passed, it will return the full array of session info with the http_code
+		// $infos = $this->CI->curl->info(NULL, TRUE);
+		// // echo "<pre style=\"text-align: left;\">";
+		// // print_r($infos);
+		// // echo "</pre>";
+		// 
+		// foreach($infos as $info)
+		// {
+		// 	$link = $info['url'];
+		// 	if ($info['http_code'] >= 400)
+		// 	{
+		// 		$invalid[] = $link;
+		// 		$output_arr[$link] = 'Invalid';
+		// 	}
+		// 	else
+		// 	{
+		// 		$valid[] = $link;
+		// 		$output_arr[$link] = $info['download_content_length'];
+		// 		
+		// 		// set filesize range
+		// 		$kb = $output_arr[$link]/1000;
+		// 		$total_kb += $output_arr[$link];
+		// 		switch($kb)
+		// 		{
+		// 			case ($kb < 0):
+		// 				$filesize_range['error'][$link] = $output_arr[$link];
+		// 				break;
+		// 			case ($kb >= $config_limit):
+		// 				$filesize_range['warn'][$link] = $output_arr[$link];
+		// 				break;
+		// 			default:
+		// 				$filesize_range['ok'][$link] = $output_arr[$link];
+		// 		}
+		// 	}
+		// 	
+		// }
+		// $this->CI->benchmark->mark('code_end1');
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($this->CI->benchmark->elapsed_time('code_start1', 'code_end1'));
+		// echo "</pre>";
+		// 		
+		$this->CI->benchmark->mark('code_start2');
 		$ch = curl_init();
-		
 		foreach($resources as $link)
 		{
-			curl_setopt($ch, CURLOPT_URL, $link);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-			curl_setopt($ch, CURLOPT_NOBODY, 1);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-			curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 3600);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-			curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
-			curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE); // will cause strange behavior if not set to TRUE
+			$opts = array(
+				CURLOPT_FRESH_CONNECT => TRUE,
+				CURLOPT_HEADER => FALSE,
+				CURLOPT_NOBODY => TRUE,
+				);
+				
+			$this->CI->curl->add_session($link, $opts);
+			$ret = $this->CI->curl->exec_single(); // faster then using a multi-request for some reason
+// 			curl_setopt($ch, CURLOPT_URL, $link);
+// 			curl_setopt($ch, CURLOPT_HEADER, 0);
+// 			curl_setopt($ch, CURLOPT_NOBODY, 1);
+// 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// 			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+// 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+// 			curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 3600);
+// 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+// //			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+// 			curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
+// //			curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE); // will cause strange behavior if not set to TRUE
+// //			curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); // will cause strange behavior if not set to TRUE
 			
-			$ret = curl_exec($ch);
-			$err_num = curl_errno($ch);
-			$info = curl_getinfo($ch);
+			
+//			$ret = curl_exec($ch);
+			$info = $this->CI->curl->info();
+			// echo "<pre style=\"text-align: left;\">";
+			// print_r($this->CI->curl->info());
+			// echo "</pre>";
 			
 			if ($info['http_code'] >= 400)
 			{
@@ -615,7 +540,15 @@ class Fuel_validate extends Fuel_advanced_module {
 			}
 			
 		}
-		curl_close($ch);
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($_info);
+		// echo "</pre>";
+
+		$this->CI->benchmark->mark('code_end2');
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($this->CI->benchmark->elapsed_time('code_start2', 'code_end2'));
+		// echo "</pre>";
+		// exit();
 		
 		$results['invalid'] = $invalid;
 		$results['valid'] = $valid;

@@ -8,6 +8,7 @@ a:hover { text-decoration: underline; }
 a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 ul { margin-bottom: 10px; }
+li { line-height: 20px; }
 
 /* tag classes */
 .success { background: #6ec461; }
@@ -15,8 +16,11 @@ ul { margin-bottom: 10px; }
 .error { background: #c30; color: #fff; }
 span.error, span.success { color: #fff; padding: 2px 5px;}
 span.warning { padding: 2px 5px; }
+span.num { display: none; }
 .clear { clear: both; height: 0; font-size: 0px; line-height: 0px; }
 
 .ico_error {  background-image: url(../images/ico_cancel.png); }
 
+h2#total { float: left; }
 div#edit_url { display: none; }
+div#summary_key { float: right; margin-right: 10px; }

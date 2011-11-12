@@ -90,8 +90,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel_edit__ .__fuel_edit_marker_new__ { background-image: url(../images/ico_add.png); }
 .__fuel_edit__ .__fuel_edit_marker__ span { cursor: pointer; margin: 0 0 0 20px !important; display: block; background-color: #333; padding: 3px 5px !important; white-space: nowrap; line-height: 16px; color: #fff; }
 .__fuel_edit__ .__fuel_edit_form__ { margin-left: 20px; }
-.__fuel_edit_form__ { color: #000; background-color: #fff; border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3);
- }
+.__fuel_edit_form__ { color: #000; background-color: #fff; border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }
 .__fuel_edit_form__ table.inline_form { border: none; border-spacing: 0; }
 .__fuel_edit_form__ table.inline_form td { text-align: right; padding: 2px 5px 2px 0px !important; font-size: 11px !important; vertical-align: top !important; }
 .__fuel_edit_form__ table.inline_form td.value { padding: 2px 0 2px 0 !important; float: none !important; text-align: left !important; }
@@ -127,4 +126,6 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 .__fuel__ .loader_sm { margin: auto; width: 16px; height: 16px; text-align: center; background: #fff url(../images/spinner_sm.gif) no-repeat center center !important; }
 
 div#__FUEL_modal__ { width: 98%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__  { border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }
+
 a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }

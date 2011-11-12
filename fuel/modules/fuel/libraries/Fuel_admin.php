@@ -653,7 +653,31 @@ class Fuel_admin extends Fuel_base_library {
 		return $dashboards;
 	}
 	
-	function tools()
+	function add_dashboard($dashboard)
+	{
+		$dashboards = $this->fuel->config('dashboards');
+		if (is_array($dashboard))
+		{
+			foreach($dashboards as $d)
+			{
+				if (!in_array($d, $dashbaords))
+				{
+					$dashboards[] = $d;
+				}
+			}
+		}
+		else
+		{
+			if (!in_array($d, $dashboard))
+			{
+				$dashboards[] = $dashboard;
+			}
+		}
+		$this->fuel->set_config('dashboards', $dashboards);
+	}
+	
+	
+	function toolbar_tools()
 	{
 		$tools = array();
 		$modules = $this->fuel->modules->advanced();
@@ -679,7 +703,7 @@ class Fuel_admin extends Fuel_base_library {
 	
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
-		$vars['tools'] = $this->tools();
+		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js');
 
 		if ($this->fuel->config('fuel_mode') == 'views')

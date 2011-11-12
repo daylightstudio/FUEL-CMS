@@ -71,7 +71,7 @@ class Backup extends Fuel_base_controller {
 			{
 				// log message
 				$msg = lang('data_backup');
-				$this->fuel->logs->logit($msg);
+				$this->fuel->logs->write($msg);
 			}
 
 		}

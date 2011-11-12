@@ -73,7 +73,7 @@ if (fuel == undefined) var fuel = {};
 				$modal = $('#' + modalId, $context);
 				$modal.find('.modal_content').empty().append(html);
 				$modal.find('iframe').load(function(){
-					$('.jqmWindow .loader', $context).hide();
+					$('.jqmWindow .loader', $context).remove();
 					var iframe = this;
 					
 					var contentDoc = iframe.contentDocument;
@@ -81,6 +81,7 @@ if (fuel == undefined) var fuel = {};
 					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
 					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
 					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+					console.log($('#fuel_main_content_inner', contentDoc))
 					console.log('ACTIONS: ' + actionsHeight);
 					console.log('NOTIFICATIONS: ' + notificationsHeight);
 					console.log('MAIN: ' + mainContentHeight);

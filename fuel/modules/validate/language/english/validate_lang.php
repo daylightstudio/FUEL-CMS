@@ -20,11 +20,23 @@ $lang['validate_link_back_to_page_selection'] = 'Back to page selection';
 
 $lang['validate_pages_input'] = 'OR, input the page(s) manually relative to this domain, separated by a return';
 
+$lang['validate_approx_file_size'] = 'Approximate Total File Size';
+$lang['validate_invalid'] = 'Invalid';
+$lang['validate_resources_file_sizes'] = 'Resources and File Sizes';
+$lang['validate_file_size_greater'] = 'File size is 0 OR &gt;=';
+$lang['validate_file_size_less'] = 'File size is &lt; ';
+
+
 $lang['validate_type_html'] = 'HTML';
 $lang['validate_type_links'] = 'Links';
 $lang['validate_type_size_report'] = 'Size Report';
 
 $lang['validate_no_url'] = 'Please provide a URL';
+
+$lang['validate_line'] = 'Line';
+$lang['validate_column'] = 'Column';
+$lang['validate_errors'] = 'Errors';
+$lang['validate_warnings'] = 'Warning(s)';
 
 // js localization
 include('validate_js_lang'.EXT);

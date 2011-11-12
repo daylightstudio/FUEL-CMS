@@ -48,7 +48,7 @@ class Assets extends Module {
 				foreach($_FILES as $filename => $fileinfo)
 				{
 					$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
-					$this->logs_model->logit($msg);
+					$this->logs_model->write($msg);
 				}
 				$this->session->set_flashdata('uploaded_post', $_POST);
 				$this->session->set_flashdata('success', lang('data_saved'));
@@ -157,7 +157,7 @@ class Assets extends Module {
 			}
 			$this->session->set_flashdata('success', lang('data_deleted'));
 			$this->_clear_cache();
-			$this->logs_model->logit('Multiple module '.$this->module.' data deleted');
+			$this->logs_model->write('Multiple module '.$this->module.' data deleted');
 			redirect(fuel_uri($this->module_uri));
 		}
 		else

@@ -226,6 +226,7 @@ $config['modules']['logs'] = array(
 		'entry_date', 
 		'name', 
 		'message', 
+		'type', 
 	),
 	
 	'default_col' => 'entry_date',

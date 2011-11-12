@@ -83,12 +83,12 @@ left panel
 div#fuel_left_panel { position: absolute; top: 30px; left: 0px; bottom: 20px; width: 200px; background-color: #d4dde5; overflow: auto; border-right: 1px solid #c3c3c3; overflow-x: hidden; }
 div#fuel_left_panel a { color: #333; text-decoration: none; text-shadow: #fff 0px 1px 0px; display: block; overflow: hidden; text-overflow: ellipsis; width: 130px; }
 div#fuel_left_panel a:hover { color: #333; text-decoration: underline; }
-div#fuel_left_panel_inner { padding: 15px; text-shadow: #fff	 0px 1px 0px; }
+div#fuel_left_panel_inner { padding: 15px; text-shadow: #fff 0px 1px 0px; }
 div#fuel_left_panel_inner h3 { margin: 0; cursor: pointer; font-size: 11px; color: #999; text-transform: uppercase; background: transparent url(../images/toggle_arrow_down.png) no-repeat 0px 3px; padding-left: 15px; }
 div#fuel_left_panel_inner h3.closed { background-image: url(../images/toggle_arrow_right.png); background-position: 1px 3px;}
 div#fuel_left_panel_inner li { list-style: none; margin: 0 -15px 0 -15px; padding: 0 30px 0 30px; width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 div#fuel_left_panel_inner li.active { background: transparent url(../images/leftnav_on.png) repeat-x; color: #fff; }
-div#fuel_left_panel_inner li.active a { color: #fff;text-shadow: #555 0px 1px 0px; }
+div#fuel_left_panel_inner li.active a { color: #fff; text-shadow: #555 0px 1px 0px; }
 div#fuel_left_panel_inner li ul li a { margin-left: 15px; }
 div#fuel_left_panel_inner li.active ul li.active  {  background: none; }
 div#fuel_left_panel_inner li.active ul li a { color: #333; text-decoration: none; text-shadow: #fff 0px 1px 0px; background: none;  }

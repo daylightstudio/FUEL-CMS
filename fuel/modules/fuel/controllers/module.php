@@ -618,7 +618,7 @@ class Module extends Fuel_base_controller {
 				{
 					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-					$this->logs_model->logit($msg);
+					$this->fuel->logs->write($msg);
 					$this->_clear_cache();
 					return $id;
 				}
@@ -762,7 +762,7 @@ class Module extends Fuel_base_controller {
 				$this->_run_hook('after_save', $data);
 
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-				$this->logs_model->logit($msg);
+				$this->fuel->logs->write($msg);
 				$this->_clear_cache();
 				return TRUE;
 			}
@@ -1131,7 +1131,7 @@ class Module extends Fuel_base_controller {
 			$this->_run_hook('after_delete', $posted);
 			
 			$this->_clear_cache();
-			$this->logs_model->logit(lang('module_multiple_deleted', $this->module));
+			$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
 			
 			if ($inline === TRUE)
 			{
@@ -1221,7 +1221,7 @@ class Module extends Fuel_base_controller {
 			if (!$this->model->restore($this->input->post('restore_ref_id'), $this->input->post('restore_version')))
 			{
 				$msg = lang('module_restored', $this->module_name);
-				$this->logs_model->logit($msg);
+				$this->fuel->logs->write($msg);
 				
 				$this->session->set_flashdata('error', $this->model->get_validation()->get_last_error());
 			}
@@ -1310,7 +1310,7 @@ class Module extends Fuel_base_controller {
 					$this->_run_hook('after_save', $data);
 					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-					$this->logs_model->logit($msg);
+					$this->fuel->logs->write($msg);
 				}
 				else
 				{

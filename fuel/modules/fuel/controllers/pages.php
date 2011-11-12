@@ -90,7 +90,7 @@ class Pages extends Module {
 				$this->_run_hook('edit', $data);
 				
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-				$this->logs_model->logit($msg);
+				$this->fuel->logs->write($msg);
 				redirect(fuel_uri('pages/edit/'.$id));
 			}
 		}
