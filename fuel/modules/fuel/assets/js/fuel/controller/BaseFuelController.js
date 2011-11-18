@@ -978,11 +978,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		_this.tableLoaded = true;
 		var toggleOnOff = function(__this, toggleStatus){
 			var id = $(__this).parent().find('.toggle_' + toggleStatus).attr('id').substr(14);
+			var field = $(__this).parent().find('.toggle_' + toggleStatus).attr('data-field');
 			var $form = $(__this).closest('form');
 			var params = $form.formSerialize(true);
 			params['id'] = id;
-			//params['published'] = ((toggleStatus == 'on') ? 'yes' : 'no')
-			$.post(_this.modulePath + '/toggle_' + toggleStatus + '/' + id, params, function(html){
+			params['field'] = field;
+			$.post(_this.modulePath + '/toggle_' + toggleStatus + '/' + id + '/' + field, params, function(html){
 				_this.redrawTable(true, false);
 			});
 			

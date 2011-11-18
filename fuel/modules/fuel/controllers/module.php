@@ -1409,13 +1409,13 @@ class Module extends Fuel_base_controller {
 	// used in list view to quickly unpublish (if they have permisison)
 	function toggle_on($id = NULL, $field = 'published')
 	{
-		$this->_toggle($id, $field, 'off');
+		$this->_toggle($id, $field, 'on');
 	}
 
 	// used in list view to quickly publish (if they have permisison)
 	function toggle_off($id = NULL, $field = 'published')
 	{
-		$this->_toggle($id, $field, 'on');
+		$this->_toggle($id, $field, 'off');
 	}
 	
 	// reduce code by creating this shortcut function for the unpublish/publish
@@ -1435,18 +1435,7 @@ class Module extends Fuel_base_controller {
 		{
 			$save = $this->model->find_by_key($id, 'array');
 			$field_info = $this->model->field_info($field);
-			echo "<pre style=\"text-align: left;\">";
-			print_r($this->model->debug_query());
-			echo "</pre>";
-			
-			echo "<pre style=\"text-align: left;\">";
-			print_r($field);
-			echo "</pre>";
-			
-			echo "<pre style=\"text-align: left;\">";
-			print_r($field_info);
-			echo "</pre>";
-			
+
 			if (!empty($save))
 			{
 				if ($toggle == 'on')
@@ -1457,7 +1446,7 @@ class Module extends Fuel_base_controller {
 				{
 					$save[$field] = ($field_info['type'] != 'enum') ? 0 : 'no';
 				}
-				
+
 				// run before_edit hook
 				$this->_run_hook('before_edit', $save);
 	
@@ -1502,23 +1491,21 @@ class Module extends Fuel_base_controller {
 		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
 		$no = lang("form_enum_option_no");
 		$yes = lang("form_enum_option_yes");
-		echo "<pre style=\"text-align: left;\">";
-		print_r($heading);
-		echo "</pre>";
+
 		// boolean fields
-		if (is_true_val($cols[$heading]))
+		if (!is_true_val($cols[$heading]))
 		{
 			$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
 			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
 			$col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
 		}
 		else
 		{
 			$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
 			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
 			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
 			
 		}
 	}
