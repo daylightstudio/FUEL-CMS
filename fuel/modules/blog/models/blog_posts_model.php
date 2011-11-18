@@ -336,13 +336,13 @@ class Blog_post_model extends Base_module_record {
 	function get_allow_comments()
 	{
 		$CI =& get_instance();
-		if (is_null($this->props['allow_comments']))
+		if (is_null($this->_fields['allow_comments']))
 		{
 			return is_true_val($this->_CI->fuel_blog->settings('allow_comments'));
 		}
 		else
 		{
-			return is_true_val($this->props['allow_comments']);
+			return is_true_val($this->_fields['allow_comments']);
 		}
 	}
 	
