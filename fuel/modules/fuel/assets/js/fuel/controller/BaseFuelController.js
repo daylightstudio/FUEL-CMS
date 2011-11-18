@@ -174,7 +174,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			
 			$('#toggle_tree').click(function(e){
 				$('#toggle_tree').parent().addClass('active');
-				$('#fuel_notification .rearrange').hide();
+				if ($('#rearrange').parent().hasClass('active')){
+					$('#rearrange').click();
+				}
 				$('#toggle_list').parent().removeClass('active');
 				$('#list_container').hide();
 				$('#tree_container').show();
@@ -245,6 +247,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('#multi_delete').hide();
 		
 		$('#rearrange').live('click', function(e){
+			if (!$('#toggle_list').parent().hasClass('active')){
+				$('#toggle_list').click();
+			}
 			$(this).parent().toggleClass('active');
 			if ($(this).parent().hasClass('active')){
 				_this.rearrangeOn = true;
@@ -971,13 +976,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	tableCallback : function(_this){
 		$('#table_loader').hide();
 		_this.tableLoaded = true;
-		var publishUnpublish = function(__this, publishOrUnpublish){
-			var id = $(__this).parent().find('.toggle_' + publishOrUnpublish).attr('id').substr(14);
+		var toggleOnOff = function(__this, toggleStatus){
+			var id = $(__this).parent().find('.toggle_' + toggleStatus).attr('id').substr(14);
 			var $form = $(__this).closest('form');
 			var params = $form.formSerialize(true);
 			params['id'] = id;
-			params['published'] = ((publishOrUnpublish == 'publish') ? 'yes' : 'no')
-			$.post(_this.modulePath + '/' + publishOrUnpublish + '/' + id, params, function(html){
+			//params['published'] = ((toggleStatus == 'on') ? 'yes' : 'no')
+			$.post(_this.modulePath + '/toggle_' + toggleStatus + '/' + id, params, function(html){
 				_this.redrawTable(true, false);
 			});
 			
@@ -988,10 +993,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		// set up row clicks
 		$("#data_table td[class^='col']").each(function(){
 			$(".publish_action", this).click(function(e){
-				if ($(this).parent().find('.toggle_publish').size() > 0){
-					publishUnpublish(this, 'publish');
-				} else if ($(this).parent().find('.toggle_unpublish').size() > 0){
-					publishUnpublish(this, 'unpublish');
+				if ($(this).parent().find('.toggle_on').size() > 0){
+					toggleOnOff(this, 'on');
+				} else if ($(this).parent().find('.toggle_off').size() > 0){
+					toggleOnOff(this, 'off');
 				}
 				return false;
 

@@ -247,11 +247,8 @@ class Fuel_validate extends Fuel_advanced_module {
 		
 		// now loop through the links and check if they are valid
 		$results = ($just_invalid) ? array() :  array('valid' => array(), 'invalid' => array());
-		echo "<pre style=\"text-align: left;\">";
-		print_r($formatted_links);
-		echo "</pre>";
-		
-		$this->CI->benchmark->mark('code_start1');
+		//$this->CI->benchmark->mark('code_start1');
+		/*
 		foreach($formatted_links as $link)
 		{
 			$this->CI->curl->add_session($link, 'none');
@@ -280,15 +277,15 @@ class Fuel_validate extends Fuel_advanced_module {
 				}
 			}
 			
-		}
-		$this->CI->benchmark->mark('code_end1');
-		echo "<pre style=\"text-align: left;\">";
-		print_r($this->CI->benchmark->elapsed_time('code_start1', 'code_end1'));
-		echo "</pre>";
+		}*/
+		// $this->CI->benchmark->mark('code_end1');
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($this->CI->benchmark->elapsed_time('code_start1', 'code_end1'));
+		// echo "</pre>";
 		
 		
 		
-		$this->CI->benchmark->mark('code_start2');
+		//$this->CI->benchmark->mark('code_start2');
 		foreach($formatted_links as $link)
 		{
 			$this->CI->curl->add_session($link, 'none');
@@ -324,11 +321,11 @@ class Fuel_validate extends Fuel_advanced_module {
 			}
 			
 		}
-		$this->CI->benchmark->mark('code_end2');
-		echo "<pre style=\"text-align: left;\">";
-		print_r($this->CI->benchmark->elapsed_time('code_start2', 'code_end2'));
-		echo "</pre>";
-		exit();
+		// $this->CI->benchmark->mark('code_end2');
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($this->CI->benchmark->elapsed_time('code_start2', 'code_end2'));
+		// echo "</pre>";
+		// exit();
 		
 		$results['total'] = count($results['invalid']) + count($results['valid']);
 		return $results;

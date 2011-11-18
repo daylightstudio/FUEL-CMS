@@ -155,10 +155,7 @@ class Fuel_admin extends Fuel_base_library {
 		if (empty($vars['notifications']))
 		{
 			$vars['error'] = $this->get_model_errors();
-			// if ($vars['error'])
-			// {
-				$vars['notifications'] = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-			// }
+			$vars['notifications'] = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		}
 		
 		// get titlebar only if there is no $vars set for it
@@ -717,7 +714,7 @@ class Fuel_admin extends Fuel_base_library {
 			$vars['others'] = $this->CI->pages_model->get_others('location', $location, 'location');
 		}
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
-		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : '');
+		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : uri_path());
 		$vars['init_params']['basePath'] = WEB_PATH;
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 

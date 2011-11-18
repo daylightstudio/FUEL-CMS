@@ -98,10 +98,13 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				$this->CI->load->library('form_builder');
 				$fields = $this->layout_fields[$layout];
+				$order = 1;
 				foreach($fields as $key => $f)
 				{
 					$fields[$key] = $this->CI->form_builder->normalize_params($f);
+					$fields[$key]['order'] = $order;
 					unset($fields[$key]['__DEFAULTS__']);
+					$order++;
 				}
 				$init['fields'] = $fields;
 			}

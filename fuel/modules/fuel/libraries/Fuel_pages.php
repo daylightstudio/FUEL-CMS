@@ -47,19 +47,26 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
-	function variables($location, $vars_path = NULL)
-	{
-		$init_vars = array('location' => $location, 'vars_path' => $vars_path);
-		$page_vars = new Fuel_page_variables($init_vars);
-		return $page_vars;
-	}
-	
 	function set_active(&$page)
 	{
 		// for backwards compatability
 		$this->CI->fuel_page = $page;
 		$this->CI->fuel->attach('page', $page);
 		$this->_active = $page;
+	}
+	
+	function get($location)
+	{
+		$init['location'] = $location;
+		$page = $this->create($init, FALSE);
+		return $page;
+	}
+	
+	function variables($location, $vars_path = NULL)
+	{
+		$init_vars = array('location' => $location, 'vars_path' => $vars_path);
+		$page_vars = new Fuel_page_variables($init_vars);
+		return $page_vars;
 	}
 	
 	function &active()
@@ -97,17 +104,7 @@ class Fuel_pages extends Fuel_base_library {
 		return $pages;
 		
 	}
-	
-	function modules()
-	{
-		
-		/// TODO ..... FIX ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		return array();
-		
-		$module_pages = $this->fuel->modules->pages();
-		return $module_pages;
-	}
-	
+
 	function views()
 	{
 		$this->CI->load->helper('directory');

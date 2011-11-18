@@ -49,18 +49,23 @@ class Tester extends Fuel_base_controller {
 				return;
 			}
 			
-			// no loop through the arguments to 
-			for ($i = 2; $i < count($_SERVER['argv']); $i++)
+			$module = $_SERVER['argv'][2];
+			$folders = array();
+			
+			if (isset($_SERVER['argv'][3]))
 			{
-				$test_arr = explode('/', $_SERVER['argv'][$i]);
-				$module = $test_arr[0];
-				$folder = (isset($test_arr[1])) ? $test_arr[1] : 'tests';
-				$test = $this->fuel->tester->get_tests($module, $folder, TRUE);
-				if (!empty($test))
+				// no loop through the argv arguments to get the folders/tests
+				for ($i = 3; $i < count($_SERVER['argv']); $i++)
 				{
-					$tests = $tests + $test;
+					if (!empty($_SERVER['argv'][$i]))
+					{
+						$folders[] = $_SERVER['argv'][$i];
+					}
 				}
 			}
+			
+			$tests = $this->fuel->tester->get_tests($module, $folders, TRUE);
+			
 		}
 		else
 		{
@@ -69,7 +74,7 @@ class Tester extends Fuel_base_controller {
 		
 		$vars = array();
 		
-		if (empty($tests) )
+		if (empty($tests))
 		{
 			$tests = $this->input->post('tests_serialized');
 			if (empty($tests))

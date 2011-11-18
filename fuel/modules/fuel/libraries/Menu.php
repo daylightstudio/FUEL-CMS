@@ -183,7 +183,7 @@ class Menu {
 				$this->use_nav_key = TRUE;
 				$auto_nav_key = TRUE;
 			}
-			
+
 			foreach($items as $key => $val)
 			{
  				$id = (is_array($val) AND !empty($val['id'])) ? $val['id'] : trim($key);
@@ -197,7 +197,7 @@ class Menu {
 				// check to make sure parent_id does not equal id to prevent infinite loops
 				if ($return[$id]['id'] == $return[$id]['parent_id'])
 				{
-					if ($return[$id]['id'] == 0)
+					if ($return[$id]['id'] === 0)
 					{
 						unset($return[$id]);
 					}
@@ -206,7 +206,7 @@ class Menu {
 						$return[$id]['parent_id'] = $this->root_value;
 					}
 				}
-				
+
 				// Capture all that have selected states so we can loop through later
 				if (isset($return[$id]['active']) OR isset($return[$id]['selected']))
 				{
@@ -271,7 +271,7 @@ class Menu {
 			case 'delimited':
 				$output = $this->_render_delimited($root_items);
 				break;
-			case 'array':
+			case 'array': case 'data':
 				$output = $this->_render_array($root_items);
 				break;
 			default:
@@ -307,8 +307,8 @@ class Menu {
 		if (!isset($parent_id)) $parent_id = $this->root_value;
 		
 		$this->_items = $this->normalize_items($items);
-		$root_items = $this->_get_menu_items($parent_id);
 		
+		$root_items = $this->_get_menu_items($parent_id);
 		$this->_active_items = $this->get_items_in_path($this->active);
 		return $this->_render($root_items);
 	}
@@ -420,7 +420,7 @@ class Menu {
 				$active_index = (count($this->_active_items) -1) - $level;
 				$level = $level + 1;
 				$i = 0;
-
+				
 				foreach($menu as $key => $val)
 				{
 					$str .= $this->_create_open_li($val, $level, $i, ($i == (count($menu) -1)));

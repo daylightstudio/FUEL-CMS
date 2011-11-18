@@ -46,7 +46,7 @@ if (defined('STDIN'))
 	$_SERVER['REQUEST_URI'] = $args ? implode('/', $args) : '';
 }
 
-define('IN_FUEL_ADMIN', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
+define('USE_FUEL_ROUTES', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
 define('FUEL_ROUTE', $config['fuel_path']);
 
 foreach($config['modules_allowed'] as $module)

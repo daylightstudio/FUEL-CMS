@@ -37,7 +37,7 @@ MAIN AREAS
 ***************************************************************/
 div#container { width: 960px; margin: auto; background-color: #fff;  border-bottom: 1px solid #666; border-left: 1px solid #666;  border-right: 1px solid #666;}
 div#header { position: relative; height: 100px; }
-a#logo { background: transparent url(../images/wigicorp_logo.png) no-repeat; display: block; position: absolute; top: 20px; left: 20px; width: 180px; height: 70px; text-indent: -1000px; overflow: hidden; }
+a#logo { background: transparent url(../images/widgicorp_logo.png) no-repeat; display: block; position: absolute; top: 20px; left: 20px; width: 180px; height: 70px; text-indent: -1000px; overflow: hidden; }
 div#main { padding: 20px;  }
 div#main_inner {  width: 640px; }
 

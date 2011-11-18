@@ -42,11 +42,10 @@ class MY_Image_lib extends CI_Image_lib {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Generate a URI string from an associative array. Added noemptys parameter
+	 * Initializes the Image class
 	 *
 	 * @access	public
 	 * @param	array	an associative array of key/values
-	 * @param	boolean	indicates whether to remove empty array values from uri
 	 * @return	array
 	 */	
 	public function initialize($props = array())
@@ -63,7 +62,7 @@ class MY_Image_lib extends CI_Image_lib {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Generate a URI string from an associative array. Added noemptys parameter
+	 * Resize and crop an image
 	 *
 	 * @access	public
 	 * @return	array
@@ -222,5 +221,3 @@ class MY_Image_lib extends CI_Image_lib {
 		return TRUE;
 	}
 }
-
-?>

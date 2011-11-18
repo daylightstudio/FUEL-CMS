@@ -62,7 +62,6 @@ class Fuel_tester extends Fuel_advanced_module {
 			
 			$this->CI->unit->reset();
 			$test_class = str_replace(EXT, '', end(explode('/', $test)));
-			$test_arr = explode(':', $test);
 			if (preg_match('#'.preg_quote(MODULES_PATH).'#', $test))
 			{
 				$file_pieces = explode('/', str_replace(MODULES_PATH, '', $test));
@@ -125,11 +124,11 @@ class Fuel_tester extends Fuel_advanced_module {
 		return $results;
 	}
 	
-	function get_tests($module = NULL, $folder = 'tests', $just_tests = FALSE)
+	function get_tests($module = NULL, $folders = array(), $just_tests = FALSE)
 	{
 		if (!empty($module))
 		{
-			$test_list = $this->_get_tests($module);
+			$test_list = $this->_get_tests($module, $folders);
 		}
 		else
 		{
@@ -146,7 +145,7 @@ class Fuel_tester extends Fuel_advanced_module {
 			$test_list = array();
 			foreach($modules as $module)
 			{
-				$module_tests_list = $this->_get_tests($module, $folder);
+				$module_tests_list = $this->_get_tests($module, $folders);
 
 				// merge the arrays with a + to preserve keys
 				if (!empty($module_tests_list))
@@ -181,36 +180,64 @@ class Fuel_tester extends Fuel_advanced_module {
 	static public function is_cli()
 	{
 		return Tester_base::is_cli();
-		// $is_cli = (defined('STDIN')) ? TRUE : FALSE;
-		// return $is_cli;
 	}
 	
-	protected function _get_tests($module = NULL, $folder = 'tests')
+	protected function _get_tests($module = NULL, $folders = array())
 	{
-		if (!empty($module) AND ($module != 'app' OR $module != 'application'))
+		// convert folders to an array if just a string
+		if (empty($folders))
 		{
-			$dir_path = MODULES_PATH.$module.'/'.$folder.'/';
+			$folders = array('');
 		}
-		else
+		if (!is_array($folders))
 		{
-			$dir_path = APPPATH.$folder.'/';
-			$module = 'application';
+			$folders = array($folders);
 		}
-
+		
 		$return = array();
-		if (is_dir($dir_path))
+	
+		foreach($folders as $folder)
 		{
-			$tests = directory_to_array($dir_path);
-			foreach($tests as $test)
+			if (!empty($module) AND ($module != 'app' OR $module != 'application'))
 			{
-				$dir = '/'.$test;
-				if (substr($test, -9) ==  '_test.php')
+				$dir_path = MODULES_PATH.$module.'/tests/'.$folder;
+			}
+			else
+			{
+				$dir_path = APPPATH.'tests/'.$folder;
+				$module = 'application';
+			}
+			
+			// if a directory, grab all the tests in it
+			if (is_dir($dir_path))
+			{
+				$tests = directory_to_array($dir_path);
+				foreach($tests as $test)
 				{
-					$val = str_replace(EXT, '', end(explode('/', $test)));
-					$return[$dir] = (!empty($module)) ? '<strong>'.$module.':</strong> '.humanize($val) : humanize($val);
+					$dir = '/'.$test;
+					if (substr($test, -9) ==  '_test.php')
+					{
+						$val = str_replace(EXT, '', end(explode('/', $test)));
+						$return[$dir] = $module.': '.humanize($val);
+					}
 				}
 			}
+			
+			// if a file (without extension), add just that test
+			else if (is_file($dir_path.EXT))
+			{
+				$val = end(explode('/', $dir_path));
+				$return[$dir_path.EXT] = $module.': '.humanize($val);
+			}
+
+			// if a file (with an extension), add just that test
+			else if (substr($dir_path, -4) ==  EXT)
+			{
+				$val = str_replace(EXT, '', end(explode('/', $dir_path)));
+				$return[$dir_path] = $module.': '.humanize($val);
+			}
 		}
+		
 		return $return;
 	}
 }

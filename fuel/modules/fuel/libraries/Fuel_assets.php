@@ -30,143 +30,313 @@
 
 class Fuel_assets extends Fuel_base_library {
 	
-	public $name;
-	public $path;
-	public $create_thumb;
-	public $maintain_ratio;
-	public $width;
-	public $height;
-	public $master_dim;
+	protected $_data = array(); // holds uploaded file data
+	protected $_dirs = array('images', 'pdf');
+	protected $_dir_filetypes = array(
+										'images' => 'jpg|jpe|jpeg|png|gif',
+										'pdf' => 'pdf'
+									);
 	
-	protected $_data;
+	function __construct($params = array())
+	{
+		parent::__construct($params);
+		$this->CI->load->helper('directory');
+		$this->CI->load->helper('file');
+		$this->CI->load->library('upload');
+		$this->CI->lang->load('upload'); // loaded here as well so we can use some of the lang messages
+		
+	}
 	
-	function upload($params)
+	function initialize($params)
+	{
+		parent::initialize($params);
+		$this->normalize_files_array();
+		$this->_dir_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
+		$this->_dirs = list_directories($this->CI->asset->assets_server_path(), $this->CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
+	}
+	
+	
+	
+	function upload($params = array())
 	{
 		$this->CI->load->library('upload');
 		$this->CI->load->library('image_lib');
 
-		// set any parameters passed
-		$this->set_params($params);
-		
-		if (empty($params['upload_path'])) return;
-		
-		// normalize the $_FILES array so the Upload class can handle it
-		$i = 0;
-		foreach($_FILES as $key => $file)
+		$valid = array( 'upload_path' => '',
+						'override_post_params' => FALSE,
+						'file_name' => '', 
+						'xss_clean' => FALSE,
+						
+						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
+						'create_thumb' => NULL,
+						'maintain_ratio' => NULL, 
+						'master_dim' => NULL, 
+						'width' => NULL, 
+						'height' => NULL, 
+						'resize_and_crop' => FALSE, 
+						);
+
+		// set defaults
+		foreach($valid as $param => $default)
 		{
-			if (is_array($file['tmp_name']))
-			{
-				foreach($file as $f)
-				{
-					if (!empty($f['tmp_name']))
-					{
-						$_FILES['file___'.$i]['name'] = $f['name'];
-						$_FILES['file___'.$i]['type'] = $f['type'];
-						$_FILES['file___'.$i]['tmp_name'] = $f['tmp_name'];
-						$_FILES['file___'.$i]['error'] = $f['error'];
-						$_FILES['file___'.$i]['size'] = $f['size'];
-					}
-					$i++;
-				}
-			}
+			$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
 		
 		// upload the file
-		foreach($_FILES as $file)
+		foreach($_FILES as $key => $file)
 		{
-			$params['max_size'] = $this->fuel->config('assets_upload_max_size');
-			$params['max_width'] = $this->fuel->config('assets_upload_max_width');
-			$params['max_height'] = $this->fuel->config('assets_upload_max_height');
-			
-			// a little heavy handed here to do this... but it removes spaces and possible problematic characters... as well as helps normalized file names
-			$params['file_name'] = url_title($file['name'], 'underscore', TRUE);
-			
-			// make directory if it doesn't exist and subfolder creation is allowed'
-			if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))
+			if ($file['error'] == 0)
 			{
-				// will recursively create folder
-				@mkdir($params['upload_path'], 0777, TRUE);
-				if (!file_exists($params['upload_path']))
+				$ext = end(explode('.', $file['name']));
+				$field_name = current(explode('___', $key)); // extract out multi file upload infor
+			
+				// loop through all the allowed file types that are accepted for the asset directory
+				foreach($this->dir_filetypes() as $dir => $types)
 				{
-					$this->_add_error(lang('upload_not_writable'));
-				}
-				else
-				{
-					chmodr($params['upload_path'], 0777);
-				}
-			} 
-			
-			$this->upload->initialize($params);
-			
-			if (!$this->upload->do_upload($file['name']))
-			{
-				$valid = FALSE;
-				$this->_add_error($this->upload->display_errors('', ''));
-			}
-			
-			
-		}
-		
-		
-		// process any uploaded images files that have been specified
-		foreach($_FILES as $file)
-		{
-			if (is_image_file($file['name']) AND 
-					(!empty($params['create_thumb']) OR 
-					!empty($params['maintain_ratio']) OR 
-					!empty($params['width']) OR 
-					!empty($params['height'])))
-			{
-	
-
-				$config['max_size']	= $this->fuel->config('assets_upload_max_size');
-				$config['max_width']  = $this->fuel->config('assets_upload_max_width');
-				$config['max_height']  = $this->fuel->config('assets_upload_max_height');
-				
-				// if a new file is uploaded, then we need to process it and associate nice_name and file type to it
-				if (!empty($_FILES['file___'.$i]))
-				{
-
-					$this->upload->initialize($config);
-					
-					if (!$this->upload->do_upload())
+					$file_types = explode('|', strtolower($types));
+					if (in_array(strtolower($ext), $file_types))
 					{
-						$valid = FALSE;
-						$this->validator->catch_error($this->upload->display_errors('', ''), 'files[]');
+						$asset_dir = $dir;
+						break;
+					}
+				}
+			
+				if (empty($asset_dir))
+				{
+					$this->_add_error(lang('upload_invalid_filetype'));
+					return FALSE;
+				}
+			
+				// get params based on the posted variables
+				if (empty($params['override_post_params']))
+				{
+					$posted = array();
+					foreach($valid as $param)
+					{
+						if (!empty($_POST[$param]))
+						{
+							$posted[$param] = $this->CI->input->post($param);
+						}
+					}
+					$params = array_merge($params, $posted);
+				}
+			
+				// set restrictions 
+				$params['max_size'] = $this->fuel->config('assets_upload_max_size');
+				$params['max_width'] = $this->fuel->config('assets_upload_max_width');
+				$params['max_height'] = $this->fuel->config('assets_upload_max_height');
+				$params['allowed_types'] = ($this->dir_filetype($asset_dir)) ? $this->_dir_filetype($asset_dir) : 'jpg|jpeg|png|gif';
+				$params['remove_spaces'] = TRUE;
+			
+				// set the upload path
+				$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
+
+				// make directory if it doesn't exist and subfolder creation is allowed'
+				if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))
+				{
+					// will recursively create folder
+					@mkdir($params['upload_path'], 0777, TRUE);
+					if (!file_exists($params['upload_path']))
+					{
+						$this->_add_error(lang('upload_not_writable'));
 					}
 					else
 					{
-						$data = $this->upload->data();
-				
-				
-				$config['upload_path'] = $params['upload_path'];
-		
-		
-				if (is_image_file($file['name']) AND 
-						(!empty($params['create_thumb']) OR 
-						!empty($params['maintain_ratio']) OR 
-						!empty($params['width']) OR 
-						!empty($params['height'])))
+						chmodr($params['upload_path'], 0777);
+					}
+				} 
+			
+				// set file name
+				$params['file_name'] = (!empty($params[$field_name.'_filename'])) ? $params[$field_name.'_filename'] : url_title($file['name'], 'underscore', TRUE);
+			
+				if (!empty($params['xss_clean']))
 				{
-				$config['source_image']	= $params['path'].$file['name'];
-				$config['create_thumb'] = $params['create_thumb'];
-				$config['maintain_ratio'] = $params['maintain_ratio'];
+					$tmp_file = file_get_contents($file['tmp_name']);
+					if (xss_clean($tmp_file, TRUE) === FALSE)
+					{
+						$this->_add_error(lang('upload_invalid_filetype'));
+					}
+				}
+			
+			
+				// if errors, then we simply return FALSE at this point and don't continue any further processing'
+				if ($this->has_errors())
+				{
+					return FALSE;
+				}
+			
+				// UPLOAD!!!
+				$this->CI->upload->initialize($params);
+				if (!$this->CI->upload->do_upload($key))
+				{
+					$this->_add_error($this->CI->upload->display_errors('', ''));
+				}
+				else
+				{
+					$this->_data[] = $this->CI->upload->data();
+				}
+			}
+		}
+		
+		// now loop through the uploaded files to do any further image processing
+		foreach($this->_data as $file)
+		{
+			if (is_image_file($file['file_name']) AND 
+					(isset($params['create_thumb']) OR 
+					isset($params['maintain_ratio']) OR 
+					!empty($params['width']) OR 
+					!empty($params['height']) OR
+					!empty($params['master_dim'])
+					))
+			{
+				$params['source_image']	= $file['full_path'];
 				
-				if (!empty($params['width'])) $config['width'] = $params['width'];
-				if (!empty($params['height'])) $config['height'] = $params['height'];
-				if (!empty($params['master_dim'])) $config['master_dim'] = $params['master_dim'];
+				$this->CI->image_lib->initialize($params); 
 				
-				$this->CI->image_lib->initialize($config); 
+				// check for if they want just a resize or a resize AND crop
+				if (!empty($params['resize_and_crop']))
+				{
+					$resize = $this->CI->image_lib->resize_and_crop();
+				}
+				else
+				{
+					$resize = $this->CI->image_lib->resize();
+				}
+				
+				if (!$resize)
+				{
+					$this->_add_error($this->CI->image_lib->display_errors());
+				}
+			}
+		}
+		
+		if ($this->has_errors())
+		{
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
+	
+	function uploaded_data()
+	{
+		return $this->_data;
+	}
+	
+	// function get_params_from_post($key)
+	// {
+	// 	$valid_params = array(
+	// 							'file_name',
+	// 							'width',
+	// 							'height',
+	// 							'path',
+	// 							'overwrite',
+	// 							'create_thumb',
+	// 							'maintain_raio',
+	// 							'master_dim',
+	// 							'resize_and_crop',
+	// 						);
+	// 	$posted = array();
+	// 	foreach($valid_params as $param)
+	// 	{
+	// 		if (!empty($_POST[$param]))
+	// 		{
+	// 			$posted[$param] = $this->CI->input->post($param);
+	// 		}
+	// 	}
+	// 	return $posted;
+	// 	
+	// }
+	// 
+	function normalize_files_array()
+	{
+		$i = 0;
 
-				if (!$this->CI->image_lib->resize())
+		// normalize the $_FILES array so the Upload class can handle it... in particular multiple files with the same name
+		if (!empty($_FILES))
+		{
+			foreach($_FILES as $key => $file)
+			{
+				if (is_array($file['tmp_name']))
 				{
-					$error = $this->CI->image_lib->display_errors();
-					$this->CI->validator->catch_error($error);
+					foreach($file as $f)
+					{
+						if (!empty($f['tmp_name']))
+						{
+							$_FILES[$key.'___'.$i]['name'] = $f['name'];
+							$_FILES[$key.'___'.$i]['type'] = $f['type'];
+							$_FILES[$key.'___'.$i]['tmp_name'] = $f['tmp_name'];
+							$_FILES[$key.'___'.$i]['error'] = $f['error'];
+							$_FILES[$key.'___'.$i]['size'] = $f['size'];
+						}
+						$i++;
+					}
 				}
 			}
 		}
 	}
+	
+	function dir($dir)
+	{
+		$dirs = (array) $this->dirs();
+		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->image_dir();
+	}
+	
+	function dirs()
+	{	
+		$dirs = array();
+		if (!empty($this->_dirs))
+		{
+			$dirs = array_combine($this->_dirs, $this->_dirs);
+		}
+		ksort($dirs);
+		return $dirs;
+	}
+	function image_dir()
+	{
+		$editable_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
+		foreach($editable_filetypes as $folder => $types)
+		{
+			if (preg_match('#(jp(e){0,1}g|gif|png)#i', $types))
+			{
+				return $folder;
+			}
+		}
+		return key(reset($editable_filetypes));
+		
+	}
 
+	function dir_filetypes()
+	{
+		return $this->_dir_filetypes;
+	}
+
+	function dir_filetype($filetype)
+	{
+		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
+	}
+	
+	function excluded_asset_server_folders()
+	{
+		$excluded = array_merge($this->CI->fuel->config('assets_excluded_dirs'), $this->CI->asset->assets_folders);
+		$return = array();
+		foreach($excluded as $folder)
+		{
+			$folder_path = assets_server_path($folder);
+			if (substr($folder_path, -1, 1) != '/')
+			{
+				$folder_path = $folder_path.'/';
+			}
+			
+			if (!in_array($folder_path, $return))
+			{
+				$return[] = $folder_path;
+			}
+		}
+		return $return;
+	}
+	
+	
 }
 
 /* End of file Fuel_assets.php */

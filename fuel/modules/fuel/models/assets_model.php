@@ -22,7 +22,9 @@ class Assets_model extends CI_Model {
 		parent::__construct();
 		$CI =& get_instance();
 		$CI->load->helper('directory');
-		$this->_dirs = list_directories($CI->asset->assets_server_path, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE, TRUE);
+		
+		$this->_dirs = list_directories($CI->asset->assets_server_path(), $CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
+		
 		$this->_dir_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
 		$CI->load->helper('directory');
 		$CI->load->helper('file');
@@ -32,7 +34,8 @@ class Assets_model extends CI_Model {
 		
 	}
 	
-	function add_filters($filters){
+	function add_filters($filters)
+	{
 		if (empty($this->filters))
 		{
 			$this->filters = $filters;
@@ -62,9 +65,9 @@ class Assets_model extends CI_Model {
 			$group_id = uri_safe_decode($group_id);
 		}
 
-		$asset_dir = $this->get_dir($group_id);
+		$asset_dir = $CI->fuel->assets->dir($group_id);
 		
-		$assets_path = $CI->asset->assets_server_path.$asset_dir.DIRECTORY_SEPARATOR;
+		$assets_path = $CI->asset->assets_server_path().$asset_dir.DIRECTORY_SEPARATOR;
 		
 		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE);
 		
@@ -127,7 +130,7 @@ class Assets_model extends CI_Model {
 		return count($this->list_items());
 	}
 	
-	function get_dir($dir)
+	/*function get_dir($dir)
 	{
 		$dirs = (array) $this->get_dirs();
 		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->get_image_dir();
@@ -166,7 +169,7 @@ class Assets_model extends CI_Model {
 	function get_dir_filetype($filetype)
 	{
 		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
-	}
+	}*/
 	
 	function find_by_key($file)
 	{
@@ -187,7 +190,6 @@ class Assets_model extends CI_Model {
 	function delete($file)
 	{
 		$CI =& get_instance();
-		$CI->load->helper('convert');
 		
 		// cleanup beginning slashes
 		if (substr($file, 0, 1) == '/')
@@ -208,7 +210,8 @@ class Assets_model extends CI_Model {
 		while(!$end)
 		{
 			// if it is the last file in a subfolder (not one of the main asset folders), then we recursively remove the folder to clean things up
-			if (!in_array($parent_folder, $this->_get_excluded_asset_server_folders()))
+			$excluded_asset_folders = $CI->fuel->excluded_asset_server_folders();
+			if (!in_array($parent_folder, $excluded_asset_folders))
 			{
 				$dir_files = directory_to_array($parent_folder);
 
@@ -234,7 +237,7 @@ class Assets_model extends CI_Model {
 		return $deleted;
 	}
 	
-	private function _get_excluded_asset_server_folders()
+/*	private function _get_excluded_asset_server_folders()
 	{
 		$CI =& get_instance();
 		$excluded = array_merge($CI->config->item('assets_excluded_dirs', 'fuel'), $CI->asset->assets_folders);
@@ -253,7 +256,7 @@ class Assets_model extends CI_Model {
 			}
 		}
 		return $return;
-	}
+	}*/
 	
 	function key_field()
 	{
@@ -293,8 +296,8 @@ class Assets_model extends CI_Model {
 		$editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel');
 		$accepts = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|jpe|jpeg|gif|png');
 		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
-		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $this->get_dirs(), 'comment' => lang('assets_comment_asset_folder'));
-		$fields['userfile_filename'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
+		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $CI->fuel->assets->dirs(), 'comment' => lang('assets_comment_asset_folder'));
+		$fields['userfile_file_name'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
 		if ($CI->config->item('assets_allow_subfolder_creation', 'fuel'))
 		{
 			$fields['subfolder'] = array('label' => lang('form_label_subfolder'), 'comment' => lang('assets_comment_filename'));
@@ -310,7 +313,7 @@ class Assets_model extends CI_Model {
 		return $fields;
 	}
 	
-	function on_after_post($values)
+	/*function on_after_post($values)
 	{
 		if (empty($values['userfile_path'])) return;
 
@@ -343,5 +346,5 @@ class Assets_model extends CI_Model {
 				}
 			}
 		}
-	}
+	}*/
 }

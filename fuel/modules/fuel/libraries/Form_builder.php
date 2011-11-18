@@ -147,7 +147,6 @@ Class Form_builder {
 				$this->key_check_name = $CI->security->csrf_token_name;
 			}
 		}
-		
 	}
 	
 	// --------------------------------------------------------------------
@@ -364,6 +363,10 @@ Class Form_builder {
 
 		// reoarder
 		$this->set_field_order();
+		
+		// pre process field values
+		$this->pre_process_field_values();
+		
 		$this->_html = $this->html_append;
 		$str = '';
 		$begin_str = '';
@@ -414,7 +417,7 @@ Class Form_builder {
 				continue;
 			}
 			
-			if (!empty($val['custom']))
+			/*if (!empty($val['custom']))
 			{
 				$str .= "<div";
 				if (!empty($this->row_id_prefix))
@@ -426,7 +429,8 @@ Class Form_builder {
 				$str .= $val['before_html'].$val['custom'].$val['after_html'];
 				$str .= "</div>\n";
 			}
-			else if (in_array($val['name'], $this->hidden) OR $val['type'] == 'hidden')
+			else */
+			if (in_array($val['name'], $this->hidden) OR $val['type'] == 'hidden')
 			{
 				$end_str .= $this->create_hidden($val);
 			}
@@ -439,8 +443,7 @@ Class Form_builder {
 				}
 				$str .= " class=\"field\">";
 				$str .= $this->create_label($val, FALSE);
-				$str .= $val['value']."\n";
-				$str .= $this->create_hidden($val);
+				$str .= $this->create_readonly($val, FALSE)."\n";
 				$str .= "</div>\n";
 			}
 			else if (!in_array($val['name'], $this->exclude))
@@ -452,7 +455,7 @@ Class Form_builder {
 				}
 				$str .= " class=\"field\">";
 				$str .= $this->create_label($val, TRUE);
-				$str .= $val['before_html'].$this->create_field($val, FALSE).$val['after_html'];
+				$str .= $this->create_field($val, FALSE);
 				$str .= "</div>\n";
 			}
 		}
@@ -558,6 +561,10 @@ Class Form_builder {
 
 		// reoarder
 		$this->set_field_order();
+		
+		// pre process field values
+		$this->pre_process_field_values();
+		
 		$this->_html = $this->html_append;
 		$str = '';
 		$begin_str = '';
@@ -580,10 +587,11 @@ Class Form_builder {
 		}
 		$str .= ' id="'.$this->id.'"';
 		$str .= ">\n";
+		
 		foreach($this->_fields as $key => $val)
 		{
 			$val = $this->normalize_params($val);
-			
+		
 			if ($val['type'] == 'section')
 			{
 				$str .= "<tr";
@@ -626,7 +634,7 @@ Class Form_builder {
 				continue;
 			}
 			
-			if (!empty($val['custom']))
+			/*if (!empty($val['custom']))
 			{
 				$str .= "<tr";
 				if (!empty($this->row_id_prefix))
@@ -658,7 +666,8 @@ Class Form_builder {
 					$str .= "<td class=\"value\" colspan=\"2\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
 				}
 			}
-			else if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
+			else */
+			if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
 			{
 				$end_str .= $this->create_hidden($val);
 			}
@@ -683,7 +692,7 @@ Class Form_builder {
 					{
 						$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 					}
-					$str .= ">\n\t<td class=\"value\">".$val['value']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
+					$str .= ">\n\t<td class=\"value\">".$this->create_readonly($val, FALSE)."</td>\n</tr>\n";
 				}
 			}
 			else if (!in_array($val['name'], $this->exclude))
@@ -700,7 +709,7 @@ Class Form_builder {
 					if ($this->label_layout != 'top')
 					{
 						$str .= $this->create_label($val, TRUE);
-						$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+						$str .= "</td>\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 					else
 					{
@@ -710,12 +719,12 @@ Class Form_builder {
 						{
 							$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
 						}
-						$str .= ">\n\t<td class=\"value\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+						$str .= ">\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 				}
 				else
 				{
-					$str .= "<td class=\"value\" colspan=\"2\">".$val['before_html'].$this->create_field($val, FALSE).$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"value\" colspan=\"2\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 				}
 
 			}
@@ -833,11 +842,12 @@ Class Form_builder {
 			'disabled' => '',
 			'label_colons' => NULL,
 			'display_label' => TRUE,
-			
 			'order' => 9999,
 			'before_html' => '', // for html before the field
 			'after_html' => '', // for html after the field
 			'displayonly' => FALSE,
+			'pre_process' => NULL,
+			'post_process' => NULL,
 			'js' => '',
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -1034,56 +1044,62 @@ Class Form_builder {
 		switch($params['type'])
 		{
 			case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
-				return $this->create_textarea($params);
+				$str = $this->create_textarea($params);
 				break;
 			case 'enum' :
-				return $this->create_enum($params);
+				$str = $this->create_enum($params);
 				break;
 			case 'boolean' :
-				return $this->create_boolean($params);
+				$str = $this->create_boolean($params);
 				break;
  			case 'checkbox' :
-				return $this->create_checkbox($params);
+				$str = $this->create_checkbox($params);
 				break;
 			case 'select' :
-				return $this->create_select($params);
+				$str = $this->create_select($params);
 				break;
 			case 'date' : 
-				return $this->create_date($params);
+				$str = $this->create_date($params);
 				break;
 			case 'datetime': case 'timestamp' :
-				$str = $this->create_date($params);
-				$str .= ' ';
-				$str .= $this->create_time($params);
-				return $str;
+				$str = $this->create_datetime($params);
 				break;
 			case 'time' :
 				$str = $this->create_time($params);
 				return $str;
 				break;
 			case 'multi' : case 'array' :
-				return $this->create_multi($params);
+				$str = $this->create_multi($params);
 				break;
 			case 'blob' : case 'file' :
-				return $this->create_file($params);
+				$str = $this->create_file($params);
 				break;
 			case 'none': case 'blank':
-				return '';
+				$str = '';
+				break;
+			case 'readonly':
+				$str = $this->create_readonly($params);
 				break;
 			case 'submit':
-				return $this->create_submit($params);
+				$str = $this->create_submit($params);
 				break;
 			case 'button':
-				return $this->create_button($params);
+				$str = $this->create_button($params);
 				break;
 			case 'custom':
 				$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
-				return $this->create_custom($func, $params);
+				$str = $this->create_custom($func, $params);
 				break;
 			default : 
-				return $this->create_text($params);
+				$str = $this->create_text($params);
 				break;
 		}
+		
+		// add before/after html 
+		$str = $params['before_html'].$str.$params['after_html'];
+		
+		return $str;
+		
 	}
 	
 	// --------------------------------------------------------------------
@@ -1590,6 +1606,23 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates the date/time input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_datetime($params)
+	{
+		$str = $this->create_date($params);
+		$str .= ' ';
+		$str .= $this->create_time($params);
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the checkbox input for the form
 	 *
 	 * @access	public
@@ -1761,6 +1794,22 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates a read only field
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_readonly($params)
+	{
+		$params = $this->normalize_params($params);
+		$str = $params['value']."\n".$this->create_hidden($val);
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates a custom input form field
 	 *
 	 * Calls a function and passes it the field params
@@ -1909,7 +1958,6 @@ Class Form_builder {
 	 */
 	public function set_field_order($order_arr = array())
 	{
-		
 		// normalize
 		foreach($this->_fields as $key => $val)
 		{
@@ -1954,14 +2002,108 @@ Class Form_builder {
 	 * Used to prepend HTML before the form... good for Javascript files
 	 * 
 	 * @access	public
-	 * @param	string HTML to append
+	 * @param	string HTML to prepend
 	 * @return	void
 	 */
-	protected function prepend_html($html)
+	public function prepend_html($html)
 	{
 		$this->html_prepend .= $html;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Alters all the field values that have pre_process attribute specified
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function pre_process_field_values()
+	{
+		foreach($this->_fields as $key => $field)
+		{
+			if (!empty($field['pre_process']))
+			{
+				$process = $this->_normalize_process_func($field['pre_process'], $field['value']);
+				$func = $process['func'];
+				$params = $process['params'];
+				$this->_fields[$key]['value'] = call_user_func_array($func, $params);
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Alters all the field post values that have post_process attribute specified
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function post_process_field_values()
+	{
+		if (empty($_POST)) return;
+		foreach($this->_fields as $key => $field)
+		{
+			if (!empty($field['post_process']) AND isset($_POST[$key]))
+			{
+				$process = $this->_normalize_process_func($field['post_process'], $field['value']);
+				$func = $process['func'];
+				$params = $process['params'];
+				$_POST[$key] = call_user_func_array($func, $params);
+			}
+		}
+		echo "<pre style=\"text-align: left;\">";
+		print_r($_POST);
+		echo "</pre>";
+		exit();
+		
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Normalizes the processing function to be used in post/pre processing of a field
+	 *
+	 * @access	protected
+	 * @return	array
+	 */
+	protected function _normalize_process_func($process, $value)
+	{
+		$params = array($value);
+		if (is_array($process))
+		{
+			if (isset($process['func']))
+			{
+				$func = $process['func'];
+
+				// set any additional parameters
+				if (isset($process['params']))
+				{
+					$params = array_merge($params, $process['params']);
+				}
+			}
+			else
+			{
+				$func = current($process);
+				array_shift($process);
+				$params = array_merge($params, $process);
+			}
+		}
+		else
+		{
+			$func = $process;
+		}
+		
+		// shorthand if the function name is remove or clear, then we return an empty string
+		if ($func == 'remove' OR $func == 'clear')
+		{
+			$func = create_function('$value', 'return "";');
+		}
+		
+		return array('func' => $func, 'params' => $params);
+	}
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -1975,12 +2117,12 @@ Class Form_builder {
 	 */
 	protected function _fields_sorter($array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
 	{
-		if(is_array($array) AND count($array) > 0)
+		if (is_array($array) AND count($array) > 0)
 		{
 			foreach (array_keys($array) as $key)
 			{
-				$temp[$key]=$array[$key][$index];
-				if (! $nat_sort)
+				$temp[$key] = $array[$key][$index];
+				if (!$nat_sort)
 				{
 					($order=='asc') ? asort($temp) : arsort($temp);
 				} 
@@ -1996,7 +2138,7 @@ Class Form_builder {
 				(is_numeric($key)) ? $sorted[] = $array[$key] : $sorted[$key] = $array[$key];
 			}
 			return $sorted;
-	   }
+		}
 		return $array;
 	}
 	

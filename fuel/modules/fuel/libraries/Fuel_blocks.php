@@ -30,6 +30,150 @@
 class Fuel_blocks extends Fuel_module {
 	
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Allows you to load a view and pass data to it
+	 *
+	 * @access	public
+	 * @param	mixed
+	 * @return	string
+	 */
+	function render($params)
+	{
+		$this->CI->load->library('parser');
+
+		$valid = array( 'view' => '',
+						'view_string' => FALSE,
+						'model' => '', 
+						'find' => 'all',
+						'select' => NULL,
+						'where' => '', 
+						'order' => '', 
+						'limit' => NULL, 
+						'offset' => 0, 
+						'return_method' => 'auto', 
+						'assoc_key' => '',
+						'data' => array(),
+						'editable' => TRUE,
+						'parse' => 'auto',
+						'vars' => array(),
+						'cache' => FALSE,
+						);
+
+		// for convenience
+		if (!is_array($params))
+		{
+			$new_params = array();
+			if (strpos($params, '=') === FALSE)
+			{
+				$new_params['view'] = $params;
+			}
+			else
+			{
+				$this->CI->load->helper('array');
+				$new_params = parse_string_to_array($params);
+			}
+			$params = $new_params;
+		}
+
+		$p = array();
+		foreach($valid as $param => $default)
+		{
+			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
+		}
+
+		// pull from cache if cache is TRUE and it exists
+		if ($p['cache'] === TRUE)
+		{
+			$this->CI->load->library('cache');
+			$cache_group = $this->CI->fuel->config('page_cache_group');
+			$cache_id = (!empty($p['view_string'])) ? $p['view_string'] : $p['view'];
+			$cache_id = md5($cache_id);
+			$cache = $this->CI->cache->get($cache_id, $cache_group);
+			if (!empty($cache))
+			{
+				return $cache;
+			}
+		}
+
+		// load the model and data
+		$vars = (array) $p['vars'];
+		if (!empty($p['model']))
+		{
+			$data = fuel_model($p['model'], $p);
+			$module_info = $this->CI->fuel_modules->info($p['model']);
+			if (!empty($module_info))
+			{
+				$var_name = $this->CI->$module_info['model_name']->short_name(TRUE, FALSE);
+				$vars[$var_name] = $data;
+			}
+		}
+		else
+		{
+			$vars['data'] = $p['data'];
+		}
+
+		$output = '';
+
+		// load proper view to parse. If a view is given then we first look up the name in the DB
+		$view = '';
+		if (!empty($p['view_string']))
+		{
+			$view = $p['view_string'];
+		}
+		else if (!empty($p['view']))
+		{
+			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
+			if ($this->CI->fuel->config('fuel_mode') != 'views')
+			{
+				$this->fuel->load_model('blocks');
+
+				// find the block in FUEL db
+				$block = $this->CI->blocks_model->find_one_by_name($p['view']);
+				if (isset($block->id))
+				{
+					if (strtolower($p['parse']) == 'auto')
+					{
+						$p['parse'] = TRUE;
+					}
+
+					$view = $block->view;
+
+					if ($p['editable'] === TRUE)
+					{
+						$view = fuel_edit($block->id, 'Edit Block: '.$block->name, 'blocks').$view;
+					}
+				}
+				else if (file_exists(APPPATH.'views/_blocks/'.$p['view'].EXT))
+				{
+					// pass in reference to global CI object
+					$vars['CI'] =& $this->CI;
+
+					// pass along these since we know them... perhaps the view can use them
+					$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+				}
+			}
+			else if (file_exists($view_file))
+			{
+				// pass along these since we know them... perhaps the view can use them
+				$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+			}
+		}
+
+		// parse the view again to apply any variables from previous parse
+		$output = ($p['parse'] === TRUE) ? $this->CI->parser->parse_string($view, $vars, TRUE) : $view;
+
+		if ($p['cache'] === TRUE)
+		{
+			$this->CI->cache->save($cache_id, $output, $cache_group, $this->CI->fuel->config('page_cache_ttl'));
+		}
+
+		return $output;
+	}
+	
+	
+	
 	function upload($block, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');

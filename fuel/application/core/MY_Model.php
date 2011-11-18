@@ -1967,7 +1967,6 @@ class MY_Model extends CI_Model {
 	 */	
 	public function process_linked($values)
 	{
-		
 		// process linked fields
 		foreach($this->linked_fields as $field => $func_val)
 		{
@@ -1982,12 +1981,19 @@ class MY_Model extends CI_Model {
 				{
 					$func = current($func_val);
 					$val = key($func_val);
-					
 					if (!empty($values[$val]))
 					{
+						$params = array($values[$val]);
+						
+						if (is_array($func))
+						{
+							$f = array_shift($func);
+							$params = array_merge($params, $func);
+							$func = $f;
+						}
 						if (function_exists($func))
 						{
-							$values[$field] = call_user_func($func, $values[$val]);
+							$values[$field] = call_user_func_array($func, $params);
 						}
 						else
 						{

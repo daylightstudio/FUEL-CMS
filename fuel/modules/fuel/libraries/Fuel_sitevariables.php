@@ -17,7 +17,7 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL dashboard object
+ * FUEL sitevariables object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -38,7 +38,7 @@ class Fuel_sitevariables extends Fuel_base_library {
 			$location = uri_path();
 		}
 		
-		$this->fuel->load_model('sitevariables_model');
+		$this->fuel->load_model('sitevariables');
 		
 		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
 		

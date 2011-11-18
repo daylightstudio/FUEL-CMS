@@ -35,9 +35,6 @@ class Asset {
 	// relative to web_root
 	public $assets_path = 'assets/';
 
-	// file path to assets folder
-	public $assets_server_path = '';
-
 	// relative to web_root/assets_path
 	public $assets_folders = array(
 		'images' => 'images/',

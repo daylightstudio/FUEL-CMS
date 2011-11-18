@@ -30,7 +30,7 @@
 
 class Fuel_navigation extends Fuel_module {
 	
-	function menu($params = array())
+	function render($params = array())
 	{
 		$this->CI->load->library('menu');
 		$valid = array( 'items' => array(),
@@ -181,7 +181,35 @@ class Fuel_navigation extends Fuel_module {
 		return $this->CI->menu->render($items, $p['active'], $p['parent']);
 	}
 	
+	function breadcrumb($params)
+	{
+		$params['render_type'] = 'breadcrumb';
+		return $this->render($params);
+	}
+
+	function collapsible($params)
+	{
+		$params['render_type'] = 'collapsible';
+		return $this->render($params);
+	}
 	
+	function page_title($params)
+	{
+		$params['render_type'] = 'page_title';
+		return $this->render($params);
+	}
+
+	function delimited($params)
+	{
+		$params['render_type'] = 'delimited';
+		return $this->render($params);
+	}
+
+	function data($params)
+	{
+		$params['render_type'] = 'array';
+		return $this->render($params);
+	}
 	
 	function upload($file_path, $group_id = 'main', $clear_first = TRUE, $var_name = 'nav')
 	{

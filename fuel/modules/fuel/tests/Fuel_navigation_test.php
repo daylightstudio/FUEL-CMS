@@ -1,8 +1,8 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once('Fueltest_base.php');
+require_once('Fuel_test_base.php');
 
-class Fuelnavigation_test extends Fueltest_base {
+class Fuel_navigation_test extends Fuel_test_base {
 	
 	public function __construct()
 	{

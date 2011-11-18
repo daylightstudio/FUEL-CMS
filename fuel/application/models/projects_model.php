@@ -5,7 +5,8 @@ class Projects_model extends Base_module_model {
 
 	public $filters = array('name');
 	public $required = array('name', 'image_upload');
-	public $linked_fields = array('slug' => array('name' => 'url_title'), 'client' => array('name' => 'strtoupper'));
+	public $linked_fields = array('slug' => array('slug' => 'url_title'), 'client' => array('name' => 'strtoupper'));
+	//public $linked_fields = array('slug' => array('name' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => 'name', 'client' => 'name');
 	public $boolean_fields = array('boolean_test', 'published');
 	
@@ -28,6 +29,10 @@ class Projects_model extends Base_module_model {
 		$CI->load->module_model(BLOG_FOLDER, 'blog_posts_to_categories_model');
 		
 		$fields = parent::form_fields($values);
+		
+		//$fields['name']['pre_process'] = array('func' => 'url_title', 'params' => array('underscore', TRUE));
+		//$fields['name']['pre_process'] = array('url_title', 'underscore', TRUE);
+		$fields['name']['post_process'] = array('url_title', 'underscore', TRUE);
 		
 		// to limit the image folder to just the projects folder for selection
 		$fields['image']['class'] = 'asset_select images/projects';

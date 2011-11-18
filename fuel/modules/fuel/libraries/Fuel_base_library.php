@@ -94,9 +94,12 @@ class Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns any errors that may have occurred during backing up
+	 * Returns either an array of errors or a formatted string error message
 	 *
 	 * @access	public
+	 * @param	boolean
+	 * @param	string
+	 * @param	string
 	 * @return	array
 	 */	
 	function errors($formatted = FALSE, $open = '', $close = "\n\n")
@@ -115,6 +118,25 @@ class Fuel_base_library {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the last error
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function last_error()
+	{
+		$error = '';
+		if (!empty($this->_errors))
+		{
+			$key = count($this->_errors) -1;
+			$error = $this->_errors[$key];
+		}
+		return $error;
+		
+	}
 	// --------------------------------------------------------------------
 	
 	/**
@@ -137,9 +159,31 @@ class Fuel_base_library {
 	 * @param	string	error message
 	 * @return	array
 	 */	
-	protected function _add_error($error)
+	protected function _add_error($error, $use_lang = FALSE)
 	{
-		$this->_errors[] = $error;
+		
+		if (is_array($error))
+		{
+			foreach ($error as $val)
+			{
+				if ($use_lang AND $this->CI->lang->line($val) != FALSE)
+				{
+					$val = $this->CI->lang->line($val);
+				}
+				$this->_errors[] = $val;
+				log_message('error', $val);
+			}
+		}
+		else
+		{
+			if ($use_lang AND $this->CI->lang->line($error) != FALSE)
+			{
+				$error = $this->CI->lang->line($error);
+			}
+			$this->_errors[] = $error;
+			log_message('error', $error);
+		}
+		
 	}
 	
 	

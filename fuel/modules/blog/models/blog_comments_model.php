@@ -147,7 +147,7 @@ class Blog_comments_model extends Base_module_model {
 		$post = $CI->blog_posts_model->find_by_key($posted['post_id']);
 		// must be logged into FUEL, must be the author, must be in the admin pages, must have reply posted and be published
 		if ($CI->fuel_auth->is_logged_in() AND ($post->author_id == $CI->fuel_auth->user_data('id') 
-			OR $CI->fuel_auth->is_super_admin()) AND IN_FUEL_ADMIN AND !empty($posted['reply']) 
+			OR $CI->fuel_auth->is_super_admin()) AND in_fuel_admin() AND !empty($posted['reply']) 
 			)
 		{
 			$comment = $this->create();

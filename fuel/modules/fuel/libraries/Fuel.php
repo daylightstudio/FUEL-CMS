@@ -43,6 +43,8 @@ class Fuel extends Fuel_base_library {
 									'auth',
 									'layouts',
 									'pages',
+									'blocks',
+									'assets',
 									'navigation',
 									'modules',
 									'cache',
@@ -120,7 +122,7 @@ class Fuel extends Fuel_base_library {
 			{
 				$this->attach($var);
 			}
-			else if ($this->allowed($var))
+			else if ($this->modules->allowed($var))
 			{
 				$init = array('name' => $var, 'folder' => $var);
 				$fuel_class = 'Fuel_'.$var;
@@ -146,6 +148,19 @@ class Fuel extends Fuel_base_library {
 		return $this->_attached[$var];
 	}
 	
+	function __call($name, $args)
+	{
+		$obj = $this->$name;
+		if (method_exists($obj, 'get'))
+		{
+			return call_user_func_array(array($obj, 'get'), $args);
+		}
+		else
+		{
+			return $obj;
+		}
+	}
+	
 	function attach($key, $obj = NULL)
 	{
 		if (isset($obj))
@@ -160,12 +175,15 @@ class Fuel extends Fuel_base_library {
 		}
 	}
 	
-	function allowed($module)
-	{
-		return (in_array($module, $this->fuel->config('modules_allowed')));
-	}
-	
-
+	// function allowed($module)
+	// {
+	// 	return (in_array($module, $this->fuel->config('modules_allowed')));
+	// }
+	// 
+	// function __isset($name)
+	// {
+	// 	return isset($this->_attached[$name]);
+	// }
 }
 
 

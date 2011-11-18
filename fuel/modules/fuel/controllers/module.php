@@ -25,7 +25,7 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$params = array();
-		if ($this->fuel->modules->exists($this->module))
+		if ($this->fuel->modules->exists($this->module, FALSE))
 		{
 			$this->module_obj = $this->fuel->modules->get($this->module);
 			$params = $this->module_obj->info();
@@ -35,7 +35,7 @@ class Module extends Fuel_base_controller {
 		{
 			// if it is a module with multiple controllers, then we'll check first and second FUEL segment with an underscore'
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
-			if ($this->fuel->modules->exists($this->module))
+			if ($this->fuel->modules->exists($this->module, FALSE))
 			{
 				$this->module_obj = $this->fuel->modules->get($this->module);
 				$params = $this->module_obj->info();
@@ -293,31 +293,17 @@ class Module extends Fuel_base_controller {
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
 			$this->data_table->lang_prefix = 'form_label_';
-			// $_unpub_func = '
-			// $CI =& get_instance();
-			// $can_publish = $CI->fuel->auth->has_permission($CI->permission, "publish");
-			// $is_publish = (isset($cols[\'published\'])) ? TRUE : FALSE;
-			// $no = lang("form_enum_option_no");
-			// $yes = lang("form_enum_option_yes");
-			// if ((isset($cols[\'published\']) AND $cols[\'published\'] == "no") OR (isset($cols[\'active\']) AND $cols[\'active\'] == "no")) 
-			// { 
-			// 	$text_class = ($can_publish) ? "publish_text unpublished toggle_publish": "unpublished";
-			// 	$action_class = ($can_publish) ? "publish_action unpublished hidden": "unpublished hidden";
-			// 	$col_txt = ($is_publish) ? \'click to publish\' : \'click to activate\';
-			// 	return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$no."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			// }
-			// else
-			// { 
-			// 	$text_class = ($can_publish) ? "publish_text published toggle_unpublish": "published";
-			// 	$action_class = ($can_publish) ? "publish_action published hidden": "published hidden";
-			// 	$col_txt = ($is_publish) ? \'click to unpublish\' : \'click to deactivate\';
-			// 	return "<span class=\"publish_hover\"><span class=\"".$text_class."\" id=\"row_published_".$cols["'.$this->model->key_field().'"]."\">".$yes."</span><span class=\"".$action_class."\">".$col_txt."</span></span>";
-			// }';
-			// 	
-			// $_unpublished = create_function('$cols', $_unpub_func);
-			$_publish_toggle_callback = array($this, '_publish_toggle_callback');
-			$this->data_table->add_field_formatter('published', $_publish_toggle_callback);
-			$this->data_table->add_field_formatter('active', $_publish_toggle_callback);
+			
+			$boolean_fields = $this->model->boolean_fields;
+			if (!in_array('published', $boolean_fields)) $boolean_fields[] = 'published';
+			if (!in_array('active', $boolean_fields)) $boolean_fields[] = 'active';
+			foreach($boolean_fields as $bool)
+			{
+				$this->data_table->add_field_formatter($bool, array($this, '_toggle_callback'));
+			}
+			// $this->data_table->add_field_formatter('published', $_publish_toggle_callback);
+			// $this->data_table->add_field_formatter('active', $_publish_toggle_callback);
+			
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->sort_js_func = 'fuel.sortList';
 			
@@ -463,6 +449,7 @@ class Module extends Fuel_base_controller {
 			$this->menu->root_value = 0;
 			$this->model->add_filters($params['extra_filters']);
 			$menu_items = $this->model->tree();
+			
 			if (!empty($menu_items))
 			{
 				$output = $this->menu->render($menu_items);
@@ -1237,7 +1224,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function view($id = null)
+	function view($id = NULL)
 	{
 		if (!empty($this->preview_path))
 		{
@@ -1258,13 +1245,13 @@ class Module extends Fuel_base_controller {
 	}
 
 	// used in list view to quickly unpublish (if they have permisison)
-	function unpublish($id = null)
+	/*function unpublish($id = NULL)
 	{
 		$this->_publish_unpublish($id, 'unpublish');
 	}
 
 	// used in list view to quickly publish (if they have permisison)
-	function publish($id = null)
+	function publish($id = NULL)
 	{
 		$this->_publish_unpublish($id, 'publish');
 	}
@@ -1327,7 +1314,7 @@ class Module extends Fuel_base_controller {
 		{
 			$this->items();
 		}
-	}
+	}*/
 	
 	function refresh_field()
 	{
@@ -1417,8 +1404,126 @@ class Module extends Fuel_base_controller {
 			
 		}
 	}
+
+
+	// used in list view to quickly unpublish (if they have permisison)
+	function toggle_on($id = NULL, $field = 'published')
+	{
+		$this->_toggle($id, $field, 'off');
+	}
+
+	// used in list view to quickly publish (if they have permisison)
+	function toggle_off($id = NULL, $field = 'published')
+	{
+		$this->_toggle($id, $field, 'on');
+	}
 	
-	function _publish_toggle_callback($cols)
+	// reduce code by creating this shortcut function for the unpublish/publish
+	function _toggle($id, $field, $toggle)
+	{
+		if (!$this->fuel->auth->module_has_action('save') OR ($field == 'publish' AND !$this->fuel->auth->has_permission($this->permission, 'publish'))) 
+		{
+			return FALSE;
+		}
+		
+		if (empty($id))
+		{
+			$id = $this->input->post($this->model->key_field());
+		}
+		
+		if ($id)
+		{
+			$save = $this->model->find_by_key($id, 'array');
+			$field_info = $this->model->field_info($field);
+			echo "<pre style=\"text-align: left;\">";
+			print_r($this->model->debug_query());
+			echo "</pre>";
+			
+			echo "<pre style=\"text-align: left;\">";
+			print_r($field);
+			echo "</pre>";
+			
+			echo "<pre style=\"text-align: left;\">";
+			print_r($field_info);
+			echo "</pre>";
+			
+			if (!empty($save))
+			{
+				if ($toggle == 'on')
+				{
+					$save[$field] = ($field_info['type'] != 'enum') ? 1 : 'yes';
+				}
+				else
+				{
+					$save[$field] = ($field_info['type'] != 'enum') ? 0 : 'no';
+				}
+				
+				// run before_edit hook
+				$this->_run_hook('before_edit', $save);
+	
+				// run before_save hook
+				$this->_run_hook('before_save', $save);
+				
+				if ($this->model->save($save))
+				{
+					// log it
+					$data = $this->model->find_by_key($id, 'array');
+					
+					// run after_edit hook
+					$this->_run_hook('after_edit', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+					
+					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+					$this->fuel->logs->write($msg);
+				}
+				else
+				{
+					$this->output->set_output(lang('error_saving'));
+				}
+			}
+		}
+		
+		if (is_ajax())
+		{
+			$this->output->set_output($toggle);
+		}
+		else
+		{
+			$this->items();
+		}
+	}
+	
+	function _toggle_callback($cols, $heading)
+	{
+		//$can_publish = ($heading == 'publish' AND $this->fuel->auth->has_permission($this->permission, "publish"));
+		$can_publish = TRUE;
+		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
+		$no = lang("form_enum_option_no");
+		$yes = lang("form_enum_option_yes");
+		echo "<pre style=\"text-align: left;\">";
+		print_r($heading);
+		echo "</pre>";
+		// boolean fields
+		if (is_true_val($cols[$heading]))
+		{
+			$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
+			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+			$col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+		}
+		else
+		{
+			$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
+			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
+			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+			
+		}
+	}
+	
+	/*function _publish_toggle_callback($cols)
 	{
 		$can_publish = $this->fuel->auth->has_permission($this->permission, "publish");
 		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
@@ -1439,7 +1544,7 @@ class Module extends Fuel_base_controller {
 			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
 			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
 		}
-	}
+	}*/
 	
 	protected function _clear_cache()
 	{
@@ -1456,7 +1561,168 @@ class Module extends Fuel_base_controller {
 	{
 		return in_array($action, $this->item_actions);
 	}
+	
 	protected function _process_uploads($posted = NULL)
+	{
+		if (empty($posted)) $posted = $_POST;
+		
+		$errors = FALSE;
+		
+		if (!empty($_FILES))
+		{
+			$params['xss_clean'] = TRUE;
+			if (!$this->fuel->assets->upload($params))
+			{
+				$errors = TRUE;
+				$msg = $this->fuel->assets->last_error();
+				add_error($msg);
+				$this->session->set_flashdata('error', $msg);
+			}
+		}
+		return !$errors;
+		
+/*		$this->lang->load('upload');
+		
+		$errors = FALSE;
+		if (!empty($_FILES))
+		{
+			$this->load->module_model(FUEL_FOLDER, 'assets_model');
+			$this->load->library('upload');
+			$this->load->helper('directory');
+						
+			$config['max_size']	= $this->config->item('assets_upload_max_size', 'fuel');
+			$config['max_width']  = $this->config->item('assets_upload_max_width', 'fuel');
+			$config['max_height']  = $this->config->item('assets_upload_max_height', 'fuel');
+			
+			// loop through all the uploaded files
+			foreach($_FILES as $file => $file_info)
+			{
+				if ($file_info['error'] == 0)
+				{
+					// continue processing
+					$filename = $file_info['name'];
+					$filename_arr = explode('.', $filename);
+					$filename_no_ext = $filename_arr[0];
+					$ext = end($filename_arr);
+					$test_multi = explode('___', $file);
+					$is_multi = (count($test_multi) > 1);
+					$multi_root = $test_multi[0];
+					
+					// loop through all the allowed file types that are accepted for the asset directory
+					foreach($this->assets_model->get_dir_filetypes() as $key => $val)
+					{
+						$file_types = explode('|', strtolower($val));
+						if (in_array(strtolower($ext), $file_types))
+						{
+							$asset_dir = $key;
+							break;
+						}
+					}
+					if (!empty($asset_dir))
+					{
+						// upload path
+						if (!empty($posted[$file.'_path']))
+						{
+							$config['upload_path'] = $posted[$file.'_path'];
+						}
+						else if (!empty($posted[$multi_root.'_path']))
+						{
+							$config['upload_path'] = $posted[$multi_root.'_path'];
+						}
+						else
+						{
+							$config['upload_path'] = (isset($upload_path)) ? $upload_path : assets_server_path().$asset_dir.'/';
+						}
+						
+						if (!is_dir($config['upload_path']) AND $this->config->item('assets_allow_subfolder_creation', 'fuel'))
+						{
+							// will recursively create folder
+							//$old = umask(0)
+							@mkdir($config['upload_path'], 0777, TRUE);
+							if (!file_exists($config['upload_path']))
+							{
+								$errors = TRUE;
+								add_error(lang('upload_not_writable'));
+								$this->session->set_flashdata('error', lang('upload_not_writable'));
+							}
+							else
+							{
+								chmodr($config['upload_path'], 0777);
+							}
+							//umask($old);
+						} 
+						
+						// overwrite
+						if (!empty($posted[$file.'_overwrite']))
+						{
+							$config['overwrite'] = (!empty($posted[$file.'_overwrite']));
+						}
+						else if (!empty($posted[$multi_root.'_overwrite']))
+						{
+							$config['overwrite'] = (!empty($posted[$multi_root.'_overwrite']));
+						}
+						else
+						{
+							$config['overwrite'] = TRUE;
+						}
+						
+						// filename... lower case it for consistency
+						$config['file_name'] = url_title($filename, 'underscore', TRUE);
+						if (!empty($posted[$file.'_filename']))
+						{
+							$config['file_name'] = $posted[$file.'_filename'].'.'.$ext;
+						}
+						else if (!empty($posted[$multi_root.'_filename']))
+						{
+							$config['file_name'] = $posted[$multi_root.'_filename'].'.'.$ext;
+						}
+						
+						$config['allowed_types'] = ($this->assets_model->get_dir_filetype($asset_dir)) ? $this->assets_model->get_dir_filetype($asset_dir) : 'jpg|jpeg|png|gif';
+						$config['remove_spaces'] = TRUE;
+
+						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
+						$tmp_file = file_get_contents($file_info['tmp_name']);
+						if ($this->sanitize_images AND xss_clean($tmp_file, TRUE) === FALSE)
+						{
+							$errors = TRUE;
+							add_error(lang('upload_invalid_filetype'));
+							$this->session->set_flashdata('error', lang('upload_invalid_filetype'));
+						}
+						
+						if (!$errors)
+						{
+							$this->upload->initialize($config);
+							if (!$this->upload->do_upload($file))
+							{
+								$errors = TRUE;
+								add_error($this->upload->display_errors('', ''));
+								$this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+							}
+							else
+							{
+								// saves data about successfully uploaded file
+								$this->upload_data[] = $this->upload->data();
+							}
+						}
+					}
+					else
+					{
+						$errors = TRUE;
+						add_error(lang('upload_invalid_filetype'));
+					}
+				}
+			}
+		}
+		
+		// transfers data about successfully uploaded file to the model
+		if (isset($this->model->upload_data))
+		{
+			$this->model->upload_data = $this->upload_data;
+		}
+		return !$errors;*/
+	}
+	
+	/*protected function _process_uploads($posted = NULL)
 	{
 		if (empty($posted)) $posted = $_POST;
 
@@ -1599,7 +1865,7 @@ class Module extends Fuel_base_controller {
 			$this->model->upload_data = $this->upload_data;
 		}
 		return !$errors;
-	}
+	}*/
 	
 	protected function _run_hook($hook, $params = array())
 	{

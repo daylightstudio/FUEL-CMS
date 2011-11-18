@@ -22,7 +22,6 @@ class Pages_model extends Base_module_model {
 		$where = array();
 		if ($just_published) $sql['where'] = array('published' => 'yes');
 		$pages = $this->find_all_array_assoc('location', $where, 'location asc');
-		
 		foreach($pages as $key => $val)
 		{
 			$parts = explode('/', $val['location']);

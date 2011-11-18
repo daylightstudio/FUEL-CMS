@@ -173,13 +173,24 @@ class Fuel_modules extends Fuel_base_library {
 	 * @param	string	module name
 	 * @return	string
 	 */	
-	function get($module)
+	function get($module = NULL, $include_advanced = TRUE)
 	{
- 		if (!empty($this->_modules[$module]))
+		if (!empty($module))
 		{
-			return $this->_modules[$module];
+	 		if (!empty($this->_modules[$module]))
+			{
+				return $this->_modules[$module];
+			}
+			else if ($this->allowed($module) AND $include_advanced)
+			{
+				return $this->fuel->$module;
+			}
+			return FALSE;
 		}
-		return FALSE;
+		else
+		{
+			return $this->_modules;
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -231,9 +242,9 @@ class Fuel_modules extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function exists($module)
+	function exists($module, $include_advanced = TRUE)
 	{
-		$module = $this->get($module);
+		$module = $this->get($module, $include_advanced);
 		return $module !== FALSE;
 	}
 	
@@ -246,6 +257,12 @@ class Fuel_modules extends Fuel_base_library {
 		}
 		return $advanced;
 	}
+	
+	function allowed($module)
+	{
+		return (in_array($module, $this->fuel->config('modules_allowed')));
+	}
+	
 	
 }
 
@@ -353,6 +370,7 @@ class Fuel_module extends Fuel_base_library {
 				'language' => '',
 				'hidden' => FALSE,
 				'icon_class' => '',
+				'folder' => '',
 				);
 			$info = array();
 
@@ -471,27 +489,6 @@ class Fuel_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function __get($var)
-	{
-		$info = $this->info();
-		if (isset($info[$var]))
-		{
-			return $info[$var];
-		}
-		else
-		{
-			throw new Exception(lang('error_class_property_does_not_exist', $var));
-		}
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Get the pages of a module
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
 	function pages()
 	{
 		$pages = array();
@@ -568,20 +565,7 @@ class Fuel_module extends Fuel_base_library {
 		return $preview_path;
 	}
 	
-	// --------------------------------------------------------------------
 	
-	/**
-	 * Returns the model of the module
-	 *
-	 * @access	public
-	 * @return	string
-	 */	
-	function &model()
-	{
-		$model = $this->info('model_name');
-		$this->CI->load->model($model);
-		return $this->CI->$model;
-	}
 	
 	// --------------------------------------------------------------------
 	
@@ -596,6 +580,162 @@ class Fuel_module extends Fuel_base_library {
 		return MODULES_PATH.$this->module.'/';
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the model of the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function &model()
+	{
+		$model = $this->info('model_name');
+		$module = $this->info('folder');
+		if (!isset($this->CI->$model))
+		{
+			$this->CI->load->module_model($module, $model);
+		}
+		return $this->CI->$model;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Loads a module model and creates a variable in the view that you can use to merge data 
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	mixed
+	 * @return	string
+	 */
+	function find($params = array())
+	{
+		$valid = array( 'find' => 'all',
+						'select' => NULL,
+						'where' => '', 
+						'order' => '', 
+						'limit' => NULL, 
+						'offset' => 0, 
+						'return_method' => 'auto', 
+						'assoc_key' => '',
+						'var' => '',
+						'module' => '',
+						'params' => array(),
+						);
+
+		if (!is_array($params))
+		{
+			$this->CI->load->helper('array');
+			$params = parse_string_to_array($params);
+		}
+
+		foreach($valid as $p => $default)
+		{
+			$$p = (isset($params[$p])) ? $params[$p] : $default;
+		}
+
+		$model = $this->model();
+
+		 // to get around escapinng issues we need to add spaces after =
+		if (is_string($where))
+		{
+			$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
+		}
+
+		// run select statement before the find
+		if (!empty($select))
+		{
+			$model->db()->select($select, FALSE);
+		}
+
+		// retrieve data based on the method
+		$data = array();
+		if ($find === 'key')
+		{
+			$data = $model->find_by_key($where, $return_method);
+			$var = $model->short_name(TRUE, TRUE);
+		}
+		else if ($find === 'one')
+		{
+			$data = $model->find_one($where, $order, $return_method);
+			$var = $model->short_name(TRUE, TRUE);
+		}
+		else
+		{
+			if (empty($find) OR $find == 'all')
+			{
+				$data = $model->find_all($where, $order, $limit, $offset, $return_method, $assoc_key);
+				$var = $model->short_name(TRUE, FALSE);
+			}
+			else
+			{
+				$method = 'find_'.$find;
+				if (is_callable(array($model, $method)))
+				{
+					if (!empty($where)) $model->db()->where($where);
+					if (!empty($order)) $model->db()->order_by($order);
+					if (!empty($offset)) $model->db()->offset($offset);
+					
+					$data = call_user_func_array(array($model, $method), $params);
+					//$data = $model->$method($where, $order, $limit, $offset);
+					if (is_array($data) AND key($data) === 0)
+					{
+						$var = $model->short_name(TRUE, FALSE);
+					}
+					else
+					{
+						$var = $model->short_name(TRUE, TRUE);
+					}
+				}
+
+			}
+		}
+		$vars[$var] = $data;
+
+		// load the variable for the view to use
+		$this->CI->load->vars($vars);
+
+		// set the model to readonly so no data manipulation can occur
+		$model->readonly = TRUE;
+		return $data;
+	}
+
+	function __call($name, $args)
+	{
+		if (preg_match('#^find_#', $name))
+		{
+			//$find = preg_replace('#^find_#', '', $name);
+			//$params['find'] = $find;
+			$params['params'] = $args;
+			return $this->find($params);
+		}
+		else
+		{
+			throw new Exception(lang('error_class_method_does_not_exist', $name));
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the pages of a module
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function __get($var)
+	{
+		$info = $this->info();
+		if (isset($info[$var]))
+		{
+			return $info[$var];
+		}
+		else
+		{
+			throw new Exception(lang('error_class_property_does_not_exist', $var));
+		}
+	}
 }
 /* End of file Fuel_modules.php */
 /* Location: ./modules/fuel/libraries/fuel/Fuel_modules.php */

@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Fueltest_base extends Tester_base {
+class Fuel_test_base extends Tester_base {
 	
 	public $init = array();
 	

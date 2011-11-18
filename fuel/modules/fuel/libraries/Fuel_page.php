@@ -351,8 +351,10 @@ class Fuel_page {
 			}
 		}
 		
-		// for convenience we'll add the $CI object'
+		// for convenience we'll add the $CI and fuel objects
 		$vars['CI'] = &$this->CI;
+		$vars['fuel'] = &$this->fuel;
+		
 		$this->CI->load->vars($vars);
 
 		if (!empty($vars['view']))

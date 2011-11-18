@@ -107,7 +107,12 @@ class Fuel_advanced_module extends Fuel_base_library {
 	function models()
 	{
 		$this->CI->load->helper('file');
-		$models = get_filenames($this->path().'helpers/');
+		$model_files = get_filenames($this->path().'models/');
+		$models = array();
+		foreach($model_files as $m)
+		{
+			$models[] = substr(strtolower($m), 0 -4);
+		}
 		return $models;
 	}
 	

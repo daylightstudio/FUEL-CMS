@@ -10,8 +10,8 @@
 $route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";
 
 
-// to prevent the overhead of this on every request, we do a quick check of the path... IN_FUEL_ADMIN is defined in a presystem hook
-if (IN_FUEL_ADMIN)
+// to prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants
+if (USE_FUEL_ROUTES)
 {
 
 	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param

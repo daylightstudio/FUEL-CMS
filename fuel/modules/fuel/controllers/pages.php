@@ -447,6 +447,7 @@ class Pages extends Module {
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout);
 		$fields = $layout->fields();
+		
 		$conflict = $this->_has_conflict($fields);
 		if (!empty($conflict))
 		{

@@ -431,7 +431,7 @@ class Data_table {
 					if (!empty($this->_field_formatters[$col->heading]) AND isset($this->data[$this->_render_row_index]))
 					{
 						$func = $this->_field_formatters[$col->heading];
-						$str .= call_user_func($func, $this->data[$this->_render_row_index]);
+						$str .= call_user_func($func, $this->data[$this->_render_row_index], $col->heading);
 					}
 					else
 					{

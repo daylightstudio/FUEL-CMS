@@ -58,255 +58,7 @@ function &FUEL()
 function fuel_block($params)
 {
 	$CI =& get_instance();
-	$CI->load->library('parser');
-	
-	$valid = array( 'view' => '',
-					'view_string' => FALSE,
-					'model' => '', 
-					'find' => 'all',
-					'select' => NULL,
-					'where' => '', 
-					'order' => '', 
-					'limit' => NULL, 
-					'offset' => 0, 
-					'return_method' => 'auto', 
-					'assoc_key' => '',
-					'data' => array(),
-					'editable' => TRUE,
-					'parse' => 'auto',
-					'vars' => array(),
-					'cache' => FALSE,
-					);
-
-	// for convenience
-	if (!is_array($params))
-	{
-		$new_params = array();
-		if (strpos($params, '=') === FALSE)
-		{
-			$new_params['view'] = $params;
-		}
-		else
-		{
-			$CI->load->helper('array');
-			$new_params = parse_string_to_array($params);
-		}
-		$params = $new_params;
-	}
-
-	$p = array();
-	foreach($valid as $param => $default)
-	{
-		$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
-	}
-	
-	// pull from cache if cache is TRUE and it exists
-	if ($p['cache'] === TRUE)
-	{
-		$CI->load->library('cache');
-		$cache_group = $CI->fuel->config('page_cache_group');
-		$cache_id = (!empty($p['view_string'])) ? $p['view_string'] : $p['view'];
-		$cache_id = md5($cache_id);
-		$cache = $CI->cache->get($cache_id, $cache_group);
-		if (!empty($cache))
-		{
-			return $cache;
-		}
-	}
-	
-	// load the model and data
-	$vars = (array) $p['vars'];
-	if (!empty($p['model']))
-	{
-		$data = fuel_model($p['model'], $p);
-		$module_info = $CI->fuel_modules->info($p['model']);
-		if (!empty($module_info))
-		{
-			$var_name = $CI->$module_info['model_name']->short_name(TRUE, FALSE);
-			$vars[$var_name] = $data;
-		}
-	}
-	else
-	{
-		$vars['data'] = $p['data'];
-	}
-	
-	$output = '';
-	
-	// load proper view to parse. If a view is given then we first look up the name in the DB
-	$view = '';
-	if (!empty($p['view_string']))
-	{
-		$view = $p['view_string'];
-	}
-	else if (!empty($p['view']))
-	{
-		$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
-		if ($CI->fuel->config('fuel_mode') != 'views')
-		{
-			$CI->load->module_model(FUEL_FOLDER, 'blocks_model');
-			
-			// find the block in FUEL db
-			$block = $CI->blocks_model->find_one_by_name($p['view']);
-			if (isset($block->id))
-			{
-				if (strtolower($p['parse']) == 'auto')
-				{
-					$p['parse'] = TRUE;
-				}
-
-				$view = $block->view;
-				
-				if ($p['editable'] === TRUE)
-				{
-					$view = fuel_edit($block->id, 'Edit Block: '.$block->name, 'blocks').$view;
-				}
-			}
-			else if (file_exists(APPPATH.'views/_blocks/'.$p['view'].EXT))
-			{
-				// pass in reference to global CI object
-				$vars['CI'] =& get_instance();
-				
-				// pass along these since we know them... perhaps the view can use them
-				$view = $CI->load->view("_blocks/".$p['view'], $vars, TRUE);
-			}
-		}
-		else if (file_exists($view_file))
-		{
-			// pass along these since we know them... perhaps the view can use them
-			$view = $CI->load->view("_blocks/".$p['view'], $vars, TRUE);
-		}
-	}
-	
-	// parse the view again to apply any variables from previous parse
-	$output = ($p['parse'] === TRUE) ? $CI->parser->parse_string($view, $vars, TRUE) : $view;
-	
-	if ($p['cache'] === TRUE)
-	{
-		$CI->cache->save($cache_id, $output, $cache_group, $CI->fuel->config('page_cache_ttl'));
-	}
-	
-	return $output;
-}
-
-
-// --------------------------------------------------------------------
-
-/**
- * Loads a module model and creates a variable in the view that you can use to merge data 
- *
- * @access	public
- * @param	string
- * @param	mixed
- * @return	string
- */
-function fuel_model($model, $params = array())
-{
-	$CI =& get_instance();
-	$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-	$valid = array( 'find' => 'all',
-					'select' => NULL,
-					'where' => array(), 
-					'order' => '', 
-					'limit' => NULL, 
-					'offset' => 0, 
-					'return_method' => 'auto', 
-					'assoc_key' => '',
-					'var' => '',
-					'module' => ''
-					);
-					
-	if (!is_array($params))
-	{
-		$CI->load->helper('array');
-		$params = parse_string_to_array($params);
-	}
-
-	foreach($valid as $p => $default)
-	{
-		$$p = (isset($params[$p])) ? $params[$p] : $default;
-	}
-
-	// load the model
-	$mod = $CI->fuel->modules->get($model);
-	if (empty($mod)) return NULL;
-	
-	$module_info = $mod->info();
-	$model_name = $module_info['model_name'];
-
-	// return NULL if model_name is empty
-	if (empty($model_name)) return NULL;
-
-	//echo $model_name;
-	if (!empty($module))
-	{
-		$CI->load->module_model($module, $model_name);
-	}
-	else
-	{
-		$CI->load->model($model_name);
-	}
-	
-	 // to get around escapinng issues we need to add spaces after =
-	if (is_string($where))
-	{
-		$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
-	}
-	
-	// run select statement before the find
-	if (!empty($select))
-	{
-		$CI->$model_name->db()->select($select, FALSE);
-	}
-	
-	// retrieve data based on the method
-	if ($find === 'key')
-	{
-		$data = $CI->$model_name->find_by_key($where, $return_method);
-		$var = $CI->$model_name->short_name(TRUE, TRUE);
-	}
-	else if ($find === 'one')
-	{
-		$data = $CI->$model_name->find_one($where, $order, $return_method);
-		$var = $CI->$model_name->short_name(TRUE, TRUE);
-	}
-	else
-	{
-		if (empty($find) OR $find == 'all')
-		{
-			$data = $CI->$model_name->find_all($where, $order, $limit, $offset, $return_method, $assoc_key);
-			$var = $CI->$model_name->short_name(TRUE, FALSE);
-		}
-		else
-		{
-			$method = 'find_'.$find;
-			if (method_exists($CI->$model_name, $method))
-			{
-				if (!empty($where)) $CI->$model_name->db()->where($where);
-				if (!empty($order)) $CI->$model_name->db()->order_by($order);
-				if (!empty($offset)) $CI->$model_name->db()->offset($offset);
-				$data = $CI->$model_name->$method($where, $order, $limit, $offset);
-				if (is_array($data) AND key($data) === 0)
-				{
-					$var = $CI->$model_name->short_name(TRUE, FALSE);
-				}
-				else
-				{
-					$var = $CI->$model_name->short_name(TRUE, TRUE);
-				}
-			}
-
-		}
-	}
-
-	$vars[$var] = $data;
-	
-	// load the variable for the view to use
-	$CI->load->vars($vars);
-	
-	// set the model to readonly so no data manipulation can't occur
-	$CI->$model_name->readonly = TRUE;
-	return $data;
+	return $CI->fuel->blocks->render($params);
 }
 
 // --------------------------------------------------------------------
@@ -321,7 +73,7 @@ function fuel_model($model, $params = array())
 function fuel_nav($params = array())
 {
 	$CI =& get_instance();
-	return $CI->fuel->navigation->menu($params);
+	return $CI->fuel->navigation->render($params);
 }
 
 // --------------------------------------------------------------------
@@ -338,8 +90,7 @@ function fuel_nav($params = array())
 function fuel_page($location, $vars = array(), $params = array())
 {
 	$CI =& get_instance();
-	$output = $CI->fuel->pages->render($location, $vars, $params, TRUE);
-	return $output;
+	return $CI->fuel->pages->render($location, $vars, $params, TRUE);
 }
 
 // --------------------------------------------------------------------
@@ -362,6 +113,127 @@ function fuel_form($fields, $values = array(), $params = array())
 	return $CI->form_builder->render();
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Loads a module model and creates a variable in the view that you can use to merge data 
+ *
+ * @access	public
+ * @param	string
+ * @param	mixed
+ * @return	string
+ */
+function fuel_model($module, $params = array())
+{
+	$CI =& get_instance();
+	return $CI->fuel->modules($module)->find($params);
+	
+	// $CI =& get_instance();
+	// 	$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
+	// 	$valid = array( 'find' => 'all',
+	// 					'select' => NULL,
+	// 					'where' => array(), 
+	// 					'order' => '', 
+	// 					'limit' => NULL, 
+	// 					'offset' => 0, 
+	// 					'return_method' => 'auto', 
+	// 					'assoc_key' => '',
+	// 					'var' => '',
+	// 					'module' => ''
+	// 					);
+	// 					
+	// 	if (!is_array($params))
+	// 	{
+	// 		$CI->load->helper('array');
+	// 		$params = parse_string_to_array($params);
+	// 	}
+	// 
+	// 	foreach($valid as $p => $default)
+	// 	{
+	// 		$$p = (isset($params[$p])) ? $params[$p] : $default;
+	// 	}
+	// 
+	// 	// load the model
+	// 	$mod = $CI->fuel->modules->get($model);
+	// 	if (empty($mod)) return NULL;
+	// 	
+	// 	$module_info = $mod->info();
+	// 	$model_name = $module_info['model_name'];
+	// 
+	// 	// return NULL if model_name is empty
+	// 	if (empty($model_name)) return NULL;
+	// 
+	// 	//echo $model_name;
+	// 	if (!empty($module))
+	// 	{
+	// 		$CI->load->module_model($module, $model_name);
+	// 	}
+	// 	else
+	// 	{
+	// 		$CI->load->model($model_name);
+	// 	}
+	// 	
+	// 	 // to get around escapinng issues we need to add spaces after =
+	// 	if (is_string($where))
+	// 	{
+	// 		$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
+	// 	}
+	// 	
+	// 	// run select statement before the find
+	// 	if (!empty($select))
+	// 	{
+	// 		$CI->$model_name->db()->select($select, FALSE);
+	// 	}
+	// 	
+	// 	// retrieve data based on the method
+	// 	if ($find === 'key')
+	// 	{
+	// 		$data = $CI->$model_name->find_by_key($where, $return_method);
+	// 		$var = $CI->$model_name->short_name(TRUE, TRUE);
+	// 	}
+	// 	else if ($find === 'one')
+	// 	{
+	// 		$data = $CI->$model_name->find_one($where, $order, $return_method);
+	// 		$var = $CI->$model_name->short_name(TRUE, TRUE);
+	// 	}
+	// 	else
+	// 	{
+	// 		if (empty($find) OR $find == 'all')
+	// 		{
+	// 			$data = $CI->$model_name->find_all($where, $order, $limit, $offset, $return_method, $assoc_key);
+	// 			$var = $CI->$model_name->short_name(TRUE, FALSE);
+	// 		}
+	// 		else
+	// 		{
+	// 			$method = 'find_'.$find;
+	// 			if (method_exists($CI->$model_name, $method))
+	// 			{
+	// 				if (!empty($where)) $CI->$model_name->db()->where($where);
+	// 				if (!empty($order)) $CI->$model_name->db()->order_by($order);
+	// 				if (!empty($offset)) $CI->$model_name->db()->offset($offset);
+	// 				$data = $CI->$model_name->$method($where, $order, $limit, $offset);
+	// 				if (is_array($data) AND key($data) === 0)
+	// 				{
+	// 					$var = $CI->$model_name->short_name(TRUE, FALSE);
+	// 				}
+	// 				else
+	// 				{
+	// 					$var = $CI->$model_name->short_name(TRUE, TRUE);
+	// 				}
+	// 			}
+	// 
+	// 		}
+	// 	}
+	// 
+	// 	$vars[$var] = $data;
+	// 	
+	// 	// load the variable for the view to use
+	// 	$CI->load->vars($vars);
+	// 	
+	// 	// set the model to readonly so no data manipulation can't occur
+	// 	$CI->$model_name->readonly = TRUE;
+	// 	return $data;
+}
 
 // --------------------------------------------------------------------
 
@@ -655,7 +527,7 @@ function fuel_uri_string($from = 0, $to = NULL, $rerouted = FALSE)
  * Check to see if you are logged in and can use inline editing
  *
  * @access	public
- * @return	booleanocal
+ * @return	boolean
  */
 function is_fuelified()
 {
@@ -667,10 +539,23 @@ function is_fuelified()
 // --------------------------------------------------------------------
 
 /**
+ * Check to see if you are in the FUEL admin
+ *
+ * @access	public
+ * @return	boolean
+ */
+function in_fuel_admin()
+{
+	return (defined('FUEL_ADMIN') AND FUEL_ADMIN === TRUE);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the user language of the person logged in... used for inline editing
  *
  * @access	public
- * @return	booleanocal
+ * @return	boolean
  */
 function fuel_user_lang()
 {
@@ -683,36 +568,4 @@ function fuel_user_lang()
 		$cookie_val['language'] = $CI->config->item('language');
 	}
 	return $cookie_val['language'];
-}
-
-// --------------------------------------------------------------------
-
-/**
- * Returns HTML for publish/active fields in the list view
- *
- * @access	public
- * @return	string
- */
-function fuel_unpublish_func($cols)
-{   
-        $CI = & get_instance();
-        $can_publish = $CI->fuel_auth->has_permission($CI->permission, "publish");
-        $is_publish = (isset($cols['published'])) ? TRUE : FALSE;
-        $no = lang("form_enum_option_no");
-        $yes = lang("form_enum_option_yes");            
-
-        if ((isset($cols['published']) AND $cols['published'] == "no") OR (isset($cols['active']) AND $cols['active'] == "no"))
-        {
-            $text_class = ($can_publish) ? "publish_text unpublished toggle_publish" : "unpublished";
-            $action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-            $col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
-            return '<span class="publish_hover"><span class="".$text_class."" id="row_published_".$cols["' . $CI->model->key_field() . '"]."">".$no."</span><span class="".$action_class."">".$col_txt."</span></span>';
-        }
-        else if ((isset($cols['published']) AND $cols['published'] == "yes") OR (isset($cols['active']) AND $cols['active'] == "yes"))
-        {
-            $text_class = ($can_publish) ? "publish_text published toggle_unpublish" : "published";
-            $action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-            $col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
-            return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$CI->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
-        }
 }

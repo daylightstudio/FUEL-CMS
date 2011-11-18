@@ -13,7 +13,7 @@ class Assets extends Module {
 	
 	function items()
 	{
-		$dirs = $this->model->get_dirs();
+		$dirs = $this->fuel->assets->dirs();
 		$this->filters['group_id']['options'] = $dirs;
 		parent::items();
 	}
@@ -23,43 +23,73 @@ class Assets extends Module {
 		if (!empty($_FILES))
 		{
 			if ($this->input->post('asset_folder')) $dir = $this->input->post('asset_folder');
-			if (!in_array($dir, array_keys($this->model->get_dirs()))) show_404();
+			if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) show_404();
 			
 			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
-			$upload_path = $this->config->item('assets_server_path').$this->model->get_dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
-
-			$overwrite = ($this->input->post('overwrite')) ? TRUE : FALSE;
-			$create_thumb = ($this->input->post('create_thumb')) ? TRUE : FALSE;
-			$maintain_ratio = ($this->input->post('maintain_ratio')) ? TRUE : FALSE;
-
-			$posted['userfile_width'] = $this->input->post('width');
-			$posted['userfile_height'] = $this->input->post('height');
+			$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 			
-			$posted['userfile_path'] = $upload_path;
-			$posted['userfile_overwrite'] = $overwrite;
-			$posted['userfile_create_thumb'] = $create_thumb;
-			$posted['userfile_maintain_ratio'] = $maintain_ratio;
-			$posted['userfile_master_dim'] = $this->input->post('master_dim');
+			$params['upload_path'] = $upload_path;
 			
-			$posted['userfile_filename'] = $this->input->post('userfile_filename');
 			
-			if ($this->_process_uploads($posted))
+			// $overwrite = ($this->input->post('overwrite')) ? TRUE : FALSE;
+			// $create_thumb = ($this->input->post('create_thumb')) ? TRUE : FALSE;
+			// $maintain_ratio = ($this->input->post('maintain_ratio')) ? TRUE : FALSE;
+			// 
+			// $posted['userfile_width'] = $this->input->post('width');
+			// $posted['userfile_height'] = $this->input->post('height');
+			// 
+			// $posted['userfile_path'] = $upload_path;
+			// $posted['userfile_overwrite'] = $overwrite;
+			// $posted['userfile_create_thumb'] = $create_thumb;
+			// $posted['userfile_maintain_ratio'] = $maintain_ratio;
+			// $posted['userfile_master_dim'] = $this->input->post('master_dim');
+			
+			// $posted['userfile_file_name'] = $this->input->post('userfile_file_name');
+			$posted['overwrite'] = ($this->input->post('overwrite')) ? TRUE : FALSE;
+			$posted['create_thumb'] = ($this->input->post('create_thumb')) ? TRUE : FALSE;
+			$posted['maintain_ratio'] = ($this->input->post('maintain_ratio')) ? TRUE : FALSE;
+			$posted['width'] = $this->input->post('width');
+			$posted['height'] = $this->input->post('height');
+			$posted['master_dim'] = $this->input->post('master_dim');
+			$posted['file_name'] = $this->input->post('userfile_file_name');
+			
+			if ($this->fuel->assets->upload($posted))
 			{
 				foreach($_FILES as $filename => $fileinfo)
 				{
 					$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
-					$this->logs_model->write($msg);
+					$this->fuel->logs->write($msg);
 				}
 				$this->session->set_flashdata('uploaded_post', $_POST);
 				$this->session->set_flashdata('success', lang('data_saved'));
 			}
+			else
+			{
+				
+			}
+			
+			// if ($this->_process_uploads($posted))
+			// {
+			// 	foreach($_FILES as $filename => $fileinfo)
+			// 	{
+			// 		$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
+			// 		$this->fuel->logs->write($msg);
+			// 	}
+			// 	$this->session->set_flashdata('uploaded_post', $_POST);
+			// 	$this->session->set_flashdata('success', lang('data_saved'));
+			// }
 			
 			$this->model->on_after_post($posted);
 			
-			redirect(fuel_uri($this->module.'/create/'));
+			redirect(fuel_uri($this->module.'/create'));
 		}
 		$vars = $this->_form($dir);
-		$this->_render($this->views['create_edit'], $vars);
+		
+		$crumbs = array($this->module_uri => $this->module_name, lang('assets_upload_action'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		
+		$this->fuel->admin->render($this->views['create_edit'], $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		
 	}
 	
 	function select_ajax($dir = NULL)
@@ -67,7 +97,7 @@ class Assets extends Module {
 		if (!is_numeric($dir))
 		{
 			$dir = fuel_uri_string(1, NULL, TRUE);
-			$dirs = $this->model->get_dirs();
+			$dirs = $this->fuel->assets->dirs();
 			foreach($dirs as $key => $d)
 			{
 				if ($d == $dir)
@@ -124,7 +154,7 @@ class Assets extends Module {
 		$vars['form'] = $this->form_builder->render();
 		
 		// other variables
-		$vars['id'] = null;
+		$vars['id'] = NULL;
 		$vars['data'] = array();
 		$vars['action'] =  'create';
 		$preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
@@ -135,6 +165,7 @@ class Assets extends Module {
 		$vars['module'] = $this->module;
 		$vars['actions'] = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
+		$vars['form_action'] = $this->module_uri.'/create/'.$vars['id'];
 
 		// do this after rendering so it doesn't render current page'
 		if (!empty($vars['data'][$this->display_field])) $this->_recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
