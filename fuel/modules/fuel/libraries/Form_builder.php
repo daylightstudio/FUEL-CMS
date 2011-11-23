@@ -376,7 +376,7 @@ Class Form_builder {
 			$func = $this->display_errors_func;
 			if (function_exists($func))
 			{
-				$str .= $func();
+				$str .= $func($this->validator->get_errors());
 			}
 		}
 

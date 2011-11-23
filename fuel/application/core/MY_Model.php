@@ -995,6 +995,10 @@ class MY_Model extends CI_Model {
 					// execute on_insert/update hook methods
 					if (!$this->_has_key_field_value($values) AND $this->db->insert_id())
 					{
+						if (is_string($this->key_field))
+						{
+							$values[$this->key_field] = $this->db->insert_id();
+						}
 						$this->on_after_insert($values);
 					}
 					else
@@ -1015,14 +1019,21 @@ class MY_Model extends CI_Model {
 						}
 					}
 				}
-				else if(!$this->_has_key_field_value($values))
+				else if (!$this->_has_key_field_value($values))
 				{           	
 					// execute on_before_insert/update hook methods
 					$values = $this->on_before_save($values);
 					$values = $this->on_before_insert($values);
 					$this->db->insert($this->table_name, $values);
+					if (is_string($this->key_field))
+					{
+						$values[$this->key_field] = $this->db->insert_id();
+					}
 					$this->on_after_insert($values);
-					if (is_a($record, 'Data_record')) $record->on_after_insert($values);
+					if (is_a($record, 'Data_record'))
+					{
+						$record->on_after_insert($values);
+					}
 				}
 				else
 				{
@@ -1036,7 +1047,10 @@ class MY_Model extends CI_Model {
 					$values = $this->on_before_update($values);
 					$this->db->update($this->table_name, $values);
 					$this->on_after_update($values);
-					if (is_a($record, 'Data_record')) $record->on_after_update();
+					if (is_a($record, 'Data_record'))
+					{
+						$record->on_after_update();
+					}
 				}
 			} 
 			else
@@ -1044,13 +1058,10 @@ class MY_Model extends CI_Model {
 				return FALSE;
 			}
 			
+			// returns the key value of the record upon save
 			if ($this->db->insert_id())
 			{
 				$return = $this->db->insert_id();
-				if (is_string($this->key_field))
-				{
-					$values[$this->key_field] = $return;
-				}
 			}
 			else
 			{
@@ -1767,6 +1778,12 @@ class MY_Model extends CI_Model {
 				$fields[$key]['value'] = 1;                            
 			}
 			
+			// set password fields
+			if ($key == 'password' OR $key == 'pwd' OR $key == 'pass')
+			{
+				$fields[$key]['type'] = 'password';
+			}
+			
 			// get lang value if one exists... check first for model specific then look for a generic model lang key
 			// no longer needed because Form_builder does this
 			// $lang_key = strtolower(get_class($this)).'_'.$key;
@@ -1829,6 +1846,7 @@ class MY_Model extends CI_Model {
 		{
 			if (isset($fields[$f])) $fields[$f]['type'] = 'hidden';
 		}
+		
 		return $fields;
 	}
 	

@@ -48,6 +48,8 @@ class Base_module_model extends MY_Model {
 	{
 		$CI = & get_instance();
 		
+		$CI->load->module_language(FUEL_FOLDER, 'fuel');
+		
 		// initialize parameters to pass to parent model
 		// if it is a string, then we assume it's a module name, if it is an array, then we extract the module name from it'
 		if (is_array($params))

@@ -294,10 +294,10 @@ if(is_future_date($val))<br /><br />
 <h2>is_past_date(<var>'val'</var>)</h2>
 <p>A boolean check to esnure a date exists at some point in the past.</p>
 
-<h2>display_errors_js(<var>'ERRORS'</var>)</h2>
+<h2>display_errors_js(<var>[ERRORS]</var>)</h2>
 <p>This function passes user-defined errors to a javascript function and are dsiplayed using javascript alerts.</p>
 
-<h2>display_errors(<var>'class'</var>, <var>'ERRORS'</var>)</h2>
+<h2>display_errors(<var>[ERRORS]</var>, <var>[class]</var>)</h2>
 <p>This function passes user-defined errors to a javascript function and injects it's content as a child of any element owning the included class.</p>
 
 <h2>has_errors()</h2>
@@ -306,7 +306,7 @@ if(is_future_date($val))<br /><br />
 <h2>add_error(<var>'msg'</var>, <var>'key'</var>)</h2>
 <p>Add an error message in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn>.</p>
 
-<h2>add_errors(<var>'errors'</var>)</h2>
+<h2>add_errors(<var>[errors]</var>)</h2>
 <p>Add an array of error messages in key/value format to the global errors var <dfn>GLOBAL_ERRORS</dfn>.</p>
 
 <h2>get_error(<var>'key'</var>)</h2>

@@ -706,7 +706,7 @@ function display_errors_js($ERRORS = NULL)
  * @param	mixed	collection of errors created by user
  * @return	string
  */
-function display_errors($class = 'error', $ERRORS = NULL)
+function display_errors($ERRORS = NULL, $class = 'error')
 {
 	$CI =& get_instance();
 	$CI->load->library('form');
