@@ -997,6 +997,10 @@ class MY_Model extends CI_Model {
 					// execute on_insert/update hook methods
 					if (!$this->_has_key_field_value($values) AND $this->db->insert_id())
 					{
+						if (is_string($this->key_field))
+						{
+							$values[$this->key_field] = $this->db->insert_id();
+						}
 						$this->on_after_insert($values);
 					}
 					else
@@ -1023,6 +1027,10 @@ class MY_Model extends CI_Model {
 					$values = $this->on_before_save($values);
 					$values = $this->on_before_insert($values);
 					$this->db->insert($this->table_name, $values);
+					if (is_string($this->key_field))
+					{
+						$values[$this->key_field] = $this->db->insert_id();
+					}
 					$this->on_after_insert($values);
 					if (is_a($record, 'Data_record')) $record->on_after_insert($values);
 				}
@@ -1049,10 +1057,6 @@ class MY_Model extends CI_Model {
 			if ($this->db->insert_id())
 			{
 				$return = $this->db->insert_id();
-				if (is_string($this->key_field))
-				{
-					$values[$this->key_field] = $return;
-				}
 			}
 			else
 			{
@@ -1153,6 +1157,10 @@ class MY_Model extends CI_Model {
 		$this->_check_readonly();
 		$values = $this->on_before_insert($values);
 		$return = $this->db->insert($this->table_name, $values);
+		if (is_string($this->key_field))
+		{
+			$values[$this->key_field] = $this->db->insert_id();
+		}
 		$this->on_after_insert($values);
 		return $return;
 	}
