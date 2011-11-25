@@ -1027,9 +1027,18 @@ class Module extends Fuel_base_controller {
 		{
 			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 
-			// use regex to replace {} values in the preview path
-			$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$data['\\2'].'\\3'", $this->preview_path);
-			
+			$url = $this->preview_path;
+		
+			// get the keys from the preview path
+			preg_match_all('#\{(.+)\}#U', $this->preview_path, $matches, PREG_PATTERN_ORDER);
+			if (!empty($matches[1]))
+			{
+				foreach($matches[1] as $match)
+				{
+					$url = str_replace('{'.$match.'}', $data[$match], $url);
+				}
+			}
+
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
 			$this->_last_page($last_page);
