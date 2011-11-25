@@ -267,7 +267,7 @@ class Module extends Fuel_base_controller {
 					if (strtoupper($val) != 'VIEW' OR (!empty($this->preview_path) AND strtoupper($val) == 'VIEW'))
 					{
 						$action_name = lang('table_action_'.strtolower($val));
-						if (empty($action_name)) $actino_name = $val;
+						if (empty($action_name)) $action_name = $val;
 						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
@@ -1669,7 +1669,7 @@ class Module extends Fuel_base_controller {
 
 						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
 						$tmp_file = file_get_contents($file_info['tmp_name']);
-						if ($this->sanitize_images AND xss_clean($tmp_file, TRUE) === FALSE)
+						if ($this->sanitize_files AND xss_clean($tmp_file, TRUE) === FALSE)
 						{
 							$errors = TRUE;
 							add_error(lang('upload_invalid_filetype'));
@@ -1814,7 +1814,7 @@ class Module extends Fuel_base_controller {
 
 						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
 						$tmp_file = file_get_contents($file_info['tmp_name']);
-						if ($this->sanitize_images AND xss_clean($tmp_file, TRUE) === FALSE)
+						if ($this->sanitize_files AND xss_clean($tmp_file, TRUE) === FALSE)
 						{
 							$errors = TRUE;
 							add_error(lang('upload_invalid_filetype'));

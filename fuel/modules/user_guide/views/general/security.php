@@ -28,6 +28,6 @@ CI application.</p>
 			<li><strong>template</strong> = php_to_template_syntax</li>
 			<li><strong>entities</strong> = entities</li>
 		</ul>
-	<li><strong>sanitize_images</strong> - uses <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a> function on images.</li>
+	<li><strong>sanitize_files</strong> (was sanitize_images) - uses <a href="http://codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a> function on images.</li>
 </ul>
 

@@ -365,7 +365,7 @@ class Fuel_module extends Fuel_base_library {
 				'default_col' => NULL,
 				'default_order' => NULL,
 				'sanitize_input' => TRUE,
-				'sanitize_images' => TRUE,
+				'sanitize_files' => TRUE,
 				'displayonly' => FALSE,
 				'language' => '',
 				'hidden' => FALSE,

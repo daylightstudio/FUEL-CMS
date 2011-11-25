@@ -224,7 +224,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Cleans the input before inserting or updating the data source</td>
 		</tr>
 		<tr>
-			<td><strong>sanitize_images</strong></td>
+			<td><strong>sanitize_files</strong>  (was sanitize_images)</td>
 			<td>TRUE</td>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>uses xss_clean function on images</td>

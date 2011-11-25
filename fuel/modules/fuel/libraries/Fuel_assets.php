@@ -64,7 +64,7 @@ class Fuel_assets extends Fuel_base_library {
 
 		$valid = array( 'upload_path' => '',
 						'override_post_params' => FALSE,
-						'file_name' => '', 
+						'file_name' => '',
 						'xss_clean' => FALSE,
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
@@ -96,12 +96,12 @@ class Fuel_assets extends Fuel_base_library {
 					$file_types = explode('|', strtolower($types));
 					if (in_array(strtolower($ext), $file_types))
 					{
-						$asset_dir = $dir;
+						$default_asset_dir = $dir;
 						break;
 					}
 				}
 			
-				if (empty($asset_dir))
+				if (empty($default_asset_dir))
 				{
 					$this->_add_error(lang('upload_invalid_filetype'));
 					return FALSE;
@@ -120,12 +120,25 @@ class Fuel_assets extends Fuel_base_library {
 					}
 					$params = array_merge($params, $posted);
 				}
-			
+				
+				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
+
 				// set restrictions 
 				$params['max_size'] = $this->fuel->config('assets_upload_max_size');
 				$params['max_width'] = $this->fuel->config('assets_upload_max_width');
 				$params['max_height'] = $this->fuel->config('assets_upload_max_height');
-				$params['allowed_types'] = ($this->dir_filetype($asset_dir)) ? $this->_dir_filetype($asset_dir) : 'jpg|jpeg|png|gif';
+				if ($this->dir_filetype($asset_dir))
+				{
+					$params['allowed_types'] = $this->_dir_filetype($asset_dir);
+				}
+				else if ($this->dir_filetype($default_asset_dir))
+				{
+					$params['allowed_types'] = $this->_dir_filetype($default_asset_dir);
+				}
+				else
+				{
+					$params['allowed_types'] = 'jpg|jpeg|png|gif';
+				}
 				$params['remove_spaces'] = TRUE;
 			
 				// set the upload path

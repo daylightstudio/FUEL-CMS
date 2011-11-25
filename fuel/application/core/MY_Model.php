@@ -1168,6 +1168,10 @@ class MY_Model extends CI_Model {
 		$this->_check_readonly();
 		$values = $this->on_before_insert($values);
 		$return = $this->db->insert($this->table_name, $values);
+		if (is_string($this->key_field))
+		{
+			$values[$this->key_field] = $this->db->insert_id();
+		}
 		$this->on_after_insert($values);
 		return $return;
 	}
