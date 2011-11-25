@@ -254,7 +254,7 @@ class Module extends Fuel_base_controller {
 					if (strtoupper($val) != 'VIEW' OR (!empty($this->preview_path) AND strtoupper($val) == 'VIEW'))
 					{
 						$action_name = lang('table_action_'.strtolower($val));
-						if (empty($action_name)) $actino_name = $val;
+						if (empty($action_name)) $action_name = $val;
 						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
