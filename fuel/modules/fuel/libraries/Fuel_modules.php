@@ -277,6 +277,12 @@ class Fuel_module extends Fuel_base_library {
 	function __construct($params = array())
 	{
 		parent::__construct($params);
+		
+		// if the module name is still empty, then we will grab it from the class name
+		if (empty($this->module))
+		{
+			$this->module = substr(get_class($this), 5);
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -325,6 +331,7 @@ class Fuel_module extends Fuel_base_library {
 	 */	
 	function info($prop = NULL)
 	{
+		
 		if (empty($this->_info))
 		{
 			$this->CI->load->helper('inflector');
@@ -700,7 +707,21 @@ class Fuel_module extends Fuel_base_library {
 		$model->readonly = TRUE;
 		return $data;
 	}
+	
+	function save($values)
+	{
+		return $this->model()->save($values);
+	}
 
+	function create($values = array())
+	{
+		return $this->model()->create($values);
+	}
+	
+	function delete($where)
+	{
+		return $this->model()->delete($where);
+	}
 	function __call($name, $args)
 	{
 		if (preg_match('#^find_#', $name))

@@ -44,10 +44,22 @@ class Fuel_notification extends Fuel_base_library {
 	
 	function send($params = array())
 	{
+		// set defaults for from and from name
+		if (empty($params['from']))
+		{
+			$params['from'] = $this->fuel->config('from_email');
+		}
+
+		if (empty($params['from_name']))
+		{
+			$params['from_name'] = $this->fuel->config('site_name');
+		}
+
 		// set any parameters passed
 		$this->set_params($params);
 		
 		$config['wordwrap'] = TRUE;
+		
 		
 		// load email and set notification properties
 		$this->CI->load->library('email', $config);

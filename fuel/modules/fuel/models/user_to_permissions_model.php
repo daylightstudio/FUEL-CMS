@@ -2,7 +2,7 @@
 
 class User_to_permissions_model extends MY_Model {
 	
-	private $_tables;
+	protected $_tables;
 	
 	function __construct()
 	{
@@ -38,4 +38,7 @@ class User_to_permissions_model extends MY_Model {
 		return $this->record_exists($where);
 	}
 	
+}
+
+class User_to_permission_model extends Base_module_record {
 }

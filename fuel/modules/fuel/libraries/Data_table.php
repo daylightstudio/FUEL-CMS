@@ -777,7 +777,11 @@ class Data_table {
 		$actions = array();
 		foreach($this->_actions as $key => $val)
 		{
-			if (!is_array($val)) $val = array('url' => $val);
+			// normalize the data
+			if (!is_array($val))
+			{
+				$val = array('url' => $val);
+			}
 			if (!empty($val['func']))
 			{
 				$action = call_user_func($val['func'], $fields);

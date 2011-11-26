@@ -29,7 +29,6 @@
 // --------------------------------------------------------------------
 class Fuel_blocks extends Fuel_module {
 	
-
 	// --------------------------------------------------------------------
 
 	/**
@@ -172,8 +171,16 @@ class Fuel_blocks extends Fuel_module {
 		return $output;
 	}
 	
-	
-	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Uploads a block view file into the database
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @return	string
+	 */
 	function upload($block, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
@@ -188,7 +195,6 @@ class Fuel_blocks extends Fuel_module {
 			$block_data = $model->find_by_key($block, 'array');
 		}
 		
-		$this->load->helper('file');
 		$view_twin = APPPATH.'views/_blocks/'.$block_data['name'].EXT;
 
 		if (file_exists($view_twin))

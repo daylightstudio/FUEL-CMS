@@ -1490,7 +1490,8 @@ Class Form_builder {
 			'overwrite' => NULL, // for file uploading
 			'accept' => 'gif|jpg|jpeg|png', // for file uploading
 			'upload_path' => NULL, // for file uploading
-			'filename' => NULL, // for file uploading
+			'file_name' => NULL, // for file uploading
+			'encrypt_name' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1522,9 +1523,15 @@ Class Form_builder {
 		{
 			$file .= $this->form->hidden($params['name'].'_path', $params['upload_path']);
 		}
-		if (isset($params['filename']))
+		if (isset($params['file_name']) OR isset($params['filename']))
 		{
-			$file .= $this->form->hidden($params['name'].'_filename', $params['filename']);
+			$file_name = (isset($params['file_name'])) ? $params['file_name'] : $params['filename'];
+			$file .= $this->form->hidden($params['name'].'_file_name', $file_name);
+		}
+		if (isset($params['encrypt']) OR isset($params['encrypt_name']))
+		{
+			$encrypt_name = (isset($params['encrypt_name'])) ? $params['encrypt_name'] : $params['encrypt'];
+			$file .= $this->form->hidden($params['name'].'_encrypt_name', $encrypt_name);
 		}
 		return $file;
 	}

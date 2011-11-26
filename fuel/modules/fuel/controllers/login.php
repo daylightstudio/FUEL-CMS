@@ -70,16 +70,15 @@ class Login extends CI_Controller {
 			{
 				if ($this->input->post('user_name') AND $this->input->post('password'))
 				{
-					$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
-					if ($this->fuel_auth->login($this->input->post('user_name'), $this->input->post('password')))
+					if ($this->fuel->auth->login($this->input->post('user_name'), $this->input->post('password')))
 					{
 
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
 						// set the cookie for viewing the live site with added FUEL capabilities
 						$config = array(
-							'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
-							'value' => serialize(array('id' => $this->fuel_auth->user_data('id'), 'language' => $this->fuel_auth->user_data('language'))),
+							'name' => $this->fuel->auth->get_fuel_trigger_cookie_name(), 
+							'value' => serialize(array('id' => $this->fuel->auth->user_data('id'), 'language' => $this->fuel->auth->user_data('language'))),
 							'expire' => 0,
 							'path' => WEB_PATH
 						);
@@ -165,25 +164,26 @@ class Login extends CI_Controller {
 				$user = $this->users_model->find_one_array(array('email' => $this->input->post('email')));
 				if (!empty($user['email']))
 				{
-					$new_pwd = $this->users_model->reset_password($user['email']);
+					$users = $this->fuel->users;
+					
+					$new_pwd = $this->fuel->users->reset_password($user['email']);
+					
 					if ($new_pwd !== FALSE) {
-
-						// send email to user
-						$this->load->library('email');
-
-						$config['wordwrap'] = TRUE;
-						$this->email->initialize($config);
-
-						$this->email->from($this->fuel->config('from_email'), $this->fuel->config('site_name'));
-						$this->email->to($this->input->post('email')); 
-						$this->email->subject(lang('pwd_reset_subject'));
+						
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
 						$msg = lang('pwd_reset_email', fuel_url($url));
-
-						$this->email->message($msg);
-						if ($this->email->send()){
+						
+						$params['to'] = $this->input->post('email');
+						$params['subject'] = lang('pwd_reset_subject');
+						$params['message'] = $msg;
+						$params['use_dev_mode'] = FALSE;
+						
+						if ($this->fuel->notification->send($params))
+						{
 							$this->session->set_flashdata('success', lang('pwd_reset'));
-						} else {
+						}
+						else
+						{
 							$this->session->set_flashdata('error', lang('error_pwd_reset'));
 						}
 						redirect(fuel_uri('login'));

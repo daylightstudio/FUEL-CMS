@@ -13,7 +13,7 @@ class Users extends Module {
 	function create()
 	{
 		$redirect = !isset($_POST['send_email']);
-		$id = parent::create($redirect);
+		$id = parent::create(NULL, FALSE, $redirect);
 		$this->_send_email($id);
 	}
 
@@ -32,7 +32,7 @@ class Users extends Module {
 		$this->_send_email($id);
 	}
 
-	// seperated to make it easier in subclasses to use the form without rendering the page
+	// separated to make it easier in subclasses to use the form without rendering the page
 	function _form($id = NULL)
 	{
 	
@@ -50,19 +50,6 @@ class Users extends Module {
 		// set active to hidden since setting this is an buttton/action instead of a form field
 		// $fields['active']['type'] = 'hidden';
 		if (!empty($saved['active'])) $fields['active']['value'] = $saved['active'];
-		
-		$field_values = (!empty($_POST)) ? $_POST : $saved;
-
-		if (!empty($saved))
-		{
-			foreach($saved as $key => $val)
-			{
-				if (strncmp($key, 'permissions_', 12) === 0)
-				{
-					$field_values['permissions_'.$val['perm_id']] = TRUE;
-				}
-			}
-		}
 		
 		$this->form_builder->form->validator = &$this->model->get_validation();
 		$this->form_builder->submit_value = 'Save';

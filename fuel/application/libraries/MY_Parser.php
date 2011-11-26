@@ -38,6 +38,7 @@ class MY_Parser extends CI_Parser {
 	private $_parser_allow_php_tags = array();
 	private $_parser_allowed_php_functions = array();
 	private $_parser_assign_refs = array();
+	private $_compile = TRUE; // options are 'dwoo, or simple'
 
 	function __construct($config = array())
 	{
@@ -51,7 +52,7 @@ class MY_Parser extends CI_Parser {
 		// added by David McReynolds @ Daylight Studio 9/16/10 to prevent problems of axing the entire directory
 		$this->_ci->load->helper('directory');
 		$this->_ci = & get_instance();
-		$this->_dwoo = self::spawn();
+		
 	}
 
 	// --------------------------------------------------------------------
@@ -70,10 +71,49 @@ class MY_Parser extends CI_Parser {
 			$this->{'_' . $key} = $val;
 		}
 	}
+	
+	// --------------------------------------------------------------------
 
+	/**
+	 * Set compiled value which determines whether to use Dwoo or normal Parser class
+	 *
+	 * added by David McReynolds @ Daylight Studio 11/26/11 to allow for using normal Parser class
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	void
+	 */
+	function set_compile($compile)
+	{
+		$this->_compile = $compile;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether the parser will compile using Dwoo
+	 *
+	 * added by David McReynolds @ Daylight Studio 11/26/11 to allow for using normal Parser class
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	void
+	 */
+	function compile()
+	{
+		return $this->_compile;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates Dwoo parser object
+	 *
+	 * @access	public
+	 * @return	object
+	 */
 	function spawn()
 	{
-
 		// try to create directory if it doesn't exist'
 		// added by David McReynolds @ Daylight Studio 9/16/10 to prevent problems of axing the entire directory
 		if (!is_dir($this->_parser_compile_dir))
@@ -101,7 +141,8 @@ class MY_Parser extends CI_Parser {
 			$security->setPhpHandling($this->_parser_allow_php_tags);
 			$security->allowPhpFunction($this->_parser_allowed_php_functions);
 			$dwoo->setSecurityPolicy($security);
-
+			
+			// added by David McReynolds @ Daylight Studio 11/26/11
 			return $dwoo;
 		}
 
@@ -122,11 +163,11 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	function parse($template, $data = array(), $return = FALSE, $is_include = FALSE)
+	function parse($template, $data = array(), $return = FALSE, $compile = NULL)
 	{
 		$string = $this->_ci->load->view($template, $data, TRUE);
 
-		return $this->_parse($string, $data, $return, $is_include);
+		return $this->_parse($string, $data, $return, $compile);
 	}
 
 	// --------------------------------------------------------------------
@@ -146,15 +187,90 @@ class MY_Parser extends CI_Parser {
 	 */
 	
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
-	function string_parse($string, $data = array(), $return = TRUE, $is_include = FALSE)
+	// removed is_include parameter and changed to use compile parameter instead 11/26/11
+	function string_parse($string, $data = array(), $return = TRUE, $compile = NULL)
 	{
-		return $this->_parse($string, $data, $return, $is_include);
+		return $this->_parse($string, $data, $return, $compile);
 	}
 
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
-	function parse_string($string, $data = array(), $return = TRUE, $is_include = FALSE)
+	// removed is_include parameter and changed to use compile parameter instead 11/26/11
+	function parse_string($string, $data = array(), $return = TRUE, $compile = NULL)
 	{
-		return $this->_parse($string, $data, $return, $is_include);
+		return $this->_parse($string, $data, $return, $compile);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 *  Parse a template
+	 *
+	 * Parses pseudo-variables contained in the specified template,
+	 * replacing them with the data in the second param
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @param	bool
+	 * @return	string
+	 */
+	function _parse($string, $data, $return = TRUE, $compile = NULL)
+	{
+		if (!isset($compile))
+		{
+			$compile = $this->_compile;
+		}
+		if ($compile)
+		{
+			$string = $this->_parse_compiled($string, $data, $return);
+		}
+		else
+		{
+			$string = $this->_parse_simple($string, $data, $return);
+		}
+		return $string;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 *  Parse a template
+	 *
+	 * Parses pseudo-variables contained in the specified template,
+	 * replacing them with the data in the second param
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @param	bool
+	 * @return	string
+	 */
+	function _parse_simple($string, $data, $return = TRUE)
+	{
+		if ($string == '')
+		{
+			return FALSE;
+		}
+
+		foreach ($data as $key => $val)
+		{
+			if (is_array($val))
+			{
+				$string = $this->_parse_pair($key, $val, $string);
+			}
+			else
+			{
+				$string = $this->_parse_single($key, (string)$val, $string);
+			}
+		}
+
+		if ($return == FALSE)
+		{
+			$CI =& get_instance();
+			$CI->output->append_output($string);
+		}
+
+		return $string;
 	}
 
 	// --------------------------------------------------------------------
@@ -171,7 +287,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	function _parse($string, $data, $return = FALSE, $is_include = FALSE)
+	function _parse_compiled($string, $data, $return = FALSE)
 	{
 		// Start benchmark
 		$this->_ci->benchmark->mark('dwoo_parse_start');
@@ -199,7 +315,7 @@ class MY_Parser extends CI_Parser {
 			// Object of the template
 			$tpl = new Dwoo_Template_String($string);
 
-			$dwoo = $is_include ? self::spawn() : $this->_dwoo;
+			$dwoo = !isset($this->_dwoo) ? self::spawn() : $this->_dwoo;
 			
 			// check for existence of dwoo object... may not be there if folder is not writable
 			// added by David McReynolds @ Daylight Studio 1/20/11

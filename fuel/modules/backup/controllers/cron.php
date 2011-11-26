@@ -71,8 +71,6 @@ class Cron extends CI_Controller  {
 					
 					// set parameters for notification
 					$params['to'] = $this->fuel->backup->config('cron_email');
-					$params['from'] = $this->fuel->config('from_email');
-					$params['from_name'] = $this->fuel->config('site_name');
 					$params['message'] = $output;
 					$params['subject'] = lang('cron_email_subject', $this->fuel->config('site_name'));
 					$params['use_dev_mode'] = FALSE; // must be set for emails to always go to what is sent in the backup config

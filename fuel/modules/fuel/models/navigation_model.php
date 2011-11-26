@@ -105,31 +105,6 @@ class Navigation_model extends Base_module_model {
 		return $data;
 	}
 
-	function children($parent, $group_id = 1)
-	{
-		$parent = $this->find_one_array(array('location' => $parent));
-		
-		$data = array();
-		if (!empty($parent))
-		{
-			$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
-			$where['published'] = 'yes';
-			$where['parent_id'] = $parent['id'];
-			$data = $this->find_all_array($where);
-		}
-		return $data;
-	}
-	
-	function root($group_id = 1)
-	{
-		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
-		$where['published'] = 'yes';
-		$where['parent_id'] = 0;
-		$data = $this->find_all_array($where);
-		$data = $this->find_all_array($where);
-		return $data;
-	} 
-	
 	function max_id()
 	{
 		$this->db->select_max('id');

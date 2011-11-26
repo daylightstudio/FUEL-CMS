@@ -47,6 +47,8 @@ class Fuel extends Fuel_base_library {
 									'assets',
 									'navigation',
 									'modules',
+									'users',
+									'permissions',
 									'cache',
 									'logs',
 									'notification',
@@ -100,7 +102,7 @@ class Fuel extends Fuel_base_library {
 	function load_model($model, $module = NULL, $name = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
-		if (substr($model, strlen($model) - 6) !='_model')
+		if (substr($model, strlen($model) - 6) != '_model')
 		{
 			$model = $model.'_model';
 			if (empty($name)) $name = $model;

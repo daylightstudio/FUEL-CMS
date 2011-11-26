@@ -20,5 +20,5 @@ class Permissions_model extends Base_module_model {
 }
 
 
-class Permission_model extends Base_module_record {
+class Permission_model extends Data_record {
 }

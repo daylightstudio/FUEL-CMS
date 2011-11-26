@@ -99,7 +99,7 @@ function fuel_page($location, $vars = array(), $params = array())
  * Creates a form using form builder
  *
  * @access	public
- * @param	array
+ * @param	mixed
  * @param	array
  * @param	array
  * @return	string
@@ -107,6 +107,24 @@ function fuel_page($location, $vars = array(), $params = array())
 function fuel_form($fields, $values = array(), $params = array())
 {
 	$CI =& get_instance();
+	
+	// if a string is provided instead of array, we will assume it is a model
+	if (is_string($fields))
+	{
+		$model = $fields;
+		if (substr($model, strlen($model) - 6) != '_model')
+		{
+			$model = $model.'_model';
+		}
+		$CI->load->model($model);
+		
+		// check if the model has a form_fields method on it first
+		if (!method_exists('form_fields', $CI->$model))
+		{
+			return '';
+		}
+		$fields = $CI->$model->form_fields();
+	}
 	$CI->load->library('form_builder', $params);
 	$CI->form_builder->set_fields($fields);
 	$CI->form_builder->set_field_values($values);
@@ -127,112 +145,6 @@ function fuel_model($module, $params = array())
 {
 	$CI =& get_instance();
 	return $CI->fuel->modules($module)->find($params);
-	
-	// $CI =& get_instance();
-	// 	$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-	// 	$valid = array( 'find' => 'all',
-	// 					'select' => NULL,
-	// 					'where' => array(), 
-	// 					'order' => '', 
-	// 					'limit' => NULL, 
-	// 					'offset' => 0, 
-	// 					'return_method' => 'auto', 
-	// 					'assoc_key' => '',
-	// 					'var' => '',
-	// 					'module' => ''
-	// 					);
-	// 					
-	// 	if (!is_array($params))
-	// 	{
-	// 		$CI->load->helper('array');
-	// 		$params = parse_string_to_array($params);
-	// 	}
-	// 
-	// 	foreach($valid as $p => $default)
-	// 	{
-	// 		$$p = (isset($params[$p])) ? $params[$p] : $default;
-	// 	}
-	// 
-	// 	// load the model
-	// 	$mod = $CI->fuel->modules->get($model);
-	// 	if (empty($mod)) return NULL;
-	// 	
-	// 	$module_info = $mod->info();
-	// 	$model_name = $module_info['model_name'];
-	// 
-	// 	// return NULL if model_name is empty
-	// 	if (empty($model_name)) return NULL;
-	// 
-	// 	//echo $model_name;
-	// 	if (!empty($module))
-	// 	{
-	// 		$CI->load->module_model($module, $model_name);
-	// 	}
-	// 	else
-	// 	{
-	// 		$CI->load->model($model_name);
-	// 	}
-	// 	
-	// 	 // to get around escapinng issues we need to add spaces after =
-	// 	if (is_string($where))
-	// 	{
-	// 		$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
-	// 	}
-	// 	
-	// 	// run select statement before the find
-	// 	if (!empty($select))
-	// 	{
-	// 		$CI->$model_name->db()->select($select, FALSE);
-	// 	}
-	// 	
-	// 	// retrieve data based on the method
-	// 	if ($find === 'key')
-	// 	{
-	// 		$data = $CI->$model_name->find_by_key($where, $return_method);
-	// 		$var = $CI->$model_name->short_name(TRUE, TRUE);
-	// 	}
-	// 	else if ($find === 'one')
-	// 	{
-	// 		$data = $CI->$model_name->find_one($where, $order, $return_method);
-	// 		$var = $CI->$model_name->short_name(TRUE, TRUE);
-	// 	}
-	// 	else
-	// 	{
-	// 		if (empty($find) OR $find == 'all')
-	// 		{
-	// 			$data = $CI->$model_name->find_all($where, $order, $limit, $offset, $return_method, $assoc_key);
-	// 			$var = $CI->$model_name->short_name(TRUE, FALSE);
-	// 		}
-	// 		else
-	// 		{
-	// 			$method = 'find_'.$find;
-	// 			if (method_exists($CI->$model_name, $method))
-	// 			{
-	// 				if (!empty($where)) $CI->$model_name->db()->where($where);
-	// 				if (!empty($order)) $CI->$model_name->db()->order_by($order);
-	// 				if (!empty($offset)) $CI->$model_name->db()->offset($offset);
-	// 				$data = $CI->$model_name->$method($where, $order, $limit, $offset);
-	// 				if (is_array($data) AND key($data) === 0)
-	// 				{
-	// 					$var = $CI->$model_name->short_name(TRUE, FALSE);
-	// 				}
-	// 				else
-	// 				{
-	// 					$var = $CI->$model_name->short_name(TRUE, TRUE);
-	// 				}
-	// 			}
-	// 
-	// 		}
-	// 	}
-	// 
-	// 	$vars[$var] = $data;
-	// 	
-	// 	// load the variable for the view to use
-	// 	$CI->load->vars($vars);
-	// 	
-	// 	// set the model to readonly so no data manipulation can't occur
-	// 	$CI->$model_name->readonly = TRUE;
-	// 	return $data;
 }
 
 // --------------------------------------------------------------------
@@ -400,18 +312,8 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
  */
 function fuel_cache_id($location = NULL)
 {
-	if (empty($location))
-	{
-		$CI =& get_instance();
-		$segs = $CI->uri->segment_array();
-	
-		if (empty($segs)) 
-		{
-			return 'home';
-		}
-		return implode('.', $segs);
-	}
-	return str_replace('/', '.', $location);
+	$CI =& get_instance();
+	return $CI->fuel->cache->create_id($location);
 }
 
 // --------------------------------------------------------------------

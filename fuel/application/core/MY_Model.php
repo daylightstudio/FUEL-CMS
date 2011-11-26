@@ -731,7 +731,7 @@ class MY_Model extends CI_Model {
 		}
 		else
 		{
-			return NULL;
+			throw new Exception(lang('error_could_not_find_record_class', get_class($this)));
 		}
 	}
 	
@@ -742,14 +742,18 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	mixed	an array of values to be saved
+	 * @param	boolean	run on_before_clean hook or not
 	 * @return	array
 	 */	
-	public function clean($values = array())
+	public function clean($values = array(), $run_hook = FALSE)
 	{
 		if (empty($values)) $values = $_POST;
 		
 		// run clean hook
-		$values = $this->on_before_clean($values);
+		if ($run_hook)
+		{
+			$values = $this->on_before_clean($values);
+		}
 		
 		// get table information to clean against
 		$fields = $this->table_info();
@@ -961,12 +965,14 @@ class MY_Model extends CI_Model {
 			
 			$fields = array();
 			$values = $this->normalize_save_values($record);
-			
+
 			// reset validator here so that all validation set with hooks will not be lost
 			$this->validator->reset();
 			
 			// clean the data before saving. on_before_clean hook now runs in the clean() method
+			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
+			$values = $this->on_before_validate($values);
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
@@ -1324,9 +1330,10 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	mixed	object or array of values
+	 * @param	boolean	run on_before_validate hook or not
 	 * @return	array
 	 */	
-	public function validate($record)
+	public function validate($record, $run_hook = FALSE)
 	{
 		$values = array();
 		if (is_array($record))
@@ -1345,8 +1352,11 @@ class MY_Model extends CI_Model {
 			}
 		}
 		
-		$values = $this->on_before_validate($values);
-
+		if ($run_hook)
+		{
+			$values = $this->on_before_validate($values);
+		}
+		
 		// if any errors are generated in the previous hooks then we return FALSE
 		if ($this->get_errors())
 		{
@@ -2259,7 +2269,7 @@ class MY_Model extends CI_Model {
 	{
 		if ($this->readonly)
 		{
-			throw new Exception(lang('error_in_readonly_mode', strtolower(get_class($this))));
+			throw new Exception(lang('error_in_readonly_mode', get_class($this)));
 		}
 	}
 	

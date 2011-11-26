@@ -235,10 +235,10 @@ $this->examples_model->create($_POST); // Be sure to always clean your $_POST va
 </pre>
 
 
-<h2>$this->examples_model->clean(<var>'values'</var>)</h2>
+<h2>$this->examples_model->clean(<var>'values'</var>, <var>[run_hook]</var>)</h2>
 <p>The clean method will clean the values passed to it <strong>before</strong> saving. It will format date fields based on the
 <dfn>auto_date_add</dfn> and <dfn>auto_date_update</dfn> model properties. It will also encode entities if the auto_encode_entities
-property is set on the model.
+property is set on the model.  The <dfn>run_hook</dfn> parameter will run the model's on_before_clean hook if set to TRUE (default is FALSE);
 </p>
 <pre class="brush: php">
 $this->examples_model->clean($_POST); // Be sure to always clean your $_POST variables before using them
@@ -381,10 +381,11 @@ function on_before_validate($values)
 </pre>
 
 
-<h2>$this->examples_model->validate(<var>'record'</var>)</h2>
+<h2>$this->examples_model->validate(<var>'record'</var>, <var>[run_hook]</var>)</h2>
 <p>Can pass either a custom record object or an associative array of table column values.
 Will run all validation rules, including required and autovalidation (if auto_validation is set on the model)
-and return <dfn>TRUE</dfn> if it passes validation and <dfn>FALSE</dfn> if it fails.
+and return <dfn>TRUE</dfn> if it passes validation and <dfn>FALSE</dfn> if it fails. The <dfn>run_hook</dfn> parameter
+will run the model's on_before_validate hook if set to TRUE (default is FALSE);
 </p>
 
 <p>Using an array of values:</p>

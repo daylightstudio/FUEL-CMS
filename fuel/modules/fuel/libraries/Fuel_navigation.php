@@ -30,6 +30,13 @@
 
 class Fuel_navigation extends Fuel_module {
 	
+	function initialize($params = array())
+	{
+		parent::initialize($params);
+		$this->fuel->load_model('navigation_groups');
+		
+	}
+	
 	function render($params = array())
 	{
 		$this->CI->load->library('menu');
@@ -109,7 +116,7 @@ class Fuel_navigation extends Fuel_module {
 				$this->CI->load->module_model(FUEL_FOLDER, 'navigation_model');
 
 				// grab all menu items by group
-				$menu_items = $this->CI->navigation_model->find_all_by_group($p['group_id']);
+				$menu_items = $this->model()->find_all_by_group($p['group_id']);
 
 				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 				if (!empty($menu_items)) 
@@ -120,7 +127,7 @@ class Fuel_navigation extends Fuel_module {
 					if (!empty($p['parent']) AND is_string($p['parent']))
 					{
 						// WARNING... it is possible to have more then one navigation item with the same location so it's best not to location values but instead use ids
-						$parent = $this->CI->navigation_model->find_by_location($p['parent']);
+						$parent = $this->model()->find_by_location($p['parent']);
 						if (!empty($parent['id']))
 						{
 							$p['parent'] = $parent['id'];
@@ -131,7 +138,7 @@ class Fuel_navigation extends Fuel_module {
 					if (!empty($p['active']) AND is_string($p['active']))
 					{
 						// WARNING... it is possible to have more then one navigation item with the same location so it's best not to location values but instead use ids'
-						$active = $this->CI->navigation_model->find_by_location($p['active'], $p['group_id']);
+						$active = $this->model()->find_by_location($p['active'], $p['group_id']);
 						if (!empty($active['id']))
 						{
 							$p['active'] = $active['id'];
@@ -211,20 +218,44 @@ class Fuel_navigation extends Fuel_module {
 		return $this->render($params);
 	}
 	
-	function upload($file_path, $group_id = 'main', $clear_first = TRUE, $var_name = 'nav')
+	function upload($params)
 	{
+		$this->CI->load->library('form_builder');
+		$this->CI->load->library('menu');
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('security');
-		$this->CI->load->library('form_builder');
-		$this->CI->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		$this->CI->load->module_model(FUEL_FOLDER, 'navigation_model');
 		
-		$this->load->library('menu');
-			
+		$valid = array( 'file_path' => APPPATH.'views/_variables/nav.php',
+						'group_id' => 'main',
+						'var' => 'nav',
+						'clear_first' => TRUE,
+						'var_name' => 'nav',
+						);		
+
+		if (!is_array($params))
+		{
+			$this->CI->load->helper('array');
+			$params = parse_string_to_array($params);
+		}
+
+		$p = array();
+		foreach($valid as $param => $default)
+		{
+			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
+		}
+		
+		// extract out params to make it easier below
+		extract($p);
+
 		$error = FALSE;
-			
+		
 		// read in the file so we can filter it
 		$file = read_file($file_path);
+		
+		if (empty($file))
+		{
+			return FALSE;
+		}
 		
 		// strip any php tags
 		$file = str_replace('<?php', '', $file);
@@ -241,23 +272,23 @@ class Fuel_navigation extends Fuel_module {
 			
 			if (is_true_val($clear_first))
 			{
-				$this->navigation_model->delete(array('group_id' => $group_id));
+				$this->model()->delete(array('group_id' => $group_id));
 			}
 			
 			// save navigation group
-			$group = $this->navigation_groups_model->find_by_key($group_id);
+			$group = $this->group($group_id);
 			
 			// set default navigation group if it doesn't exist'
 			if (!isset($group->id))
 			{
-				$save['name'] = 'main';
-				$id = $this->navigation_groups_model->save($save);
-				$group_id = $id;
+				$group->name = 'main';
+				$id = $group->save();
+				$group_id = $group->id;
 			}
 			
 			// convert string ids to numbers so we can save... must start at last id in db
 			$ids = array();
-			$i = $this->navigation_model->max_id() + 1;
+			$i = $this->model()->max_id() + 1;
 			foreach($nav as $key => $item)
 			{
 				// if the id is empty then we assume it is the homepage
@@ -306,7 +337,7 @@ class Fuel_navigation extends Fuel_module {
 					$save['attributes'] = $item['attributes'];
 				}
 				
-				if (!$this->navigation_model->save($save))
+				if (!$this->model()->save($save))
 				{
 					$error = TRUE;
 					break;
@@ -317,6 +348,23 @@ class Fuel_navigation extends Fuel_module {
 		else
 		{
 			$error = TRUE;
+		}
+	}
+	
+	function groups()
+	{
+		return $this->CI->navigation_groups_model->find_all();
+	}
+	
+	function group($group)
+	{
+		if (is_int($group))
+		{
+			return $this->CI->navigation_groups_model->find_by_key($grou);
+		}
+		else
+		{
+			return $this->CI->navigation_groups_model->find_one(array('name' => $group));
 		}
 	}
 }

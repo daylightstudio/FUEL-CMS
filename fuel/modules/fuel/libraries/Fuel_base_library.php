@@ -32,7 +32,8 @@ class Fuel_base_library {
 	
 	protected $CI; // reference to the CI super object
 	protected $fuel; // reference to the fuel object
-	
+	protected $permission = ''; // permission required to run
+	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors
 	
 	/**
@@ -43,13 +44,10 @@ class Fuel_base_library {
 	function __construct($params = array())
 	{
 		$this->CI =& get_instance();
-		$this->fuel =& $this->CI->fuel;
-		// 
-		// // initialize object if any parameters
-		// if (!empty($params))
-		// {
-		// 	$this->initialize($params);
-		// }
+		if (isset($this->CI->fuel))
+		{
+			$this->fuel =& $this->CI->fuel;
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -66,6 +64,11 @@ class Fuel_base_library {
 	 */	
 	function initialize($params = array())
 	{
+		if ($this->init_permission_check === TRUE)
+		{
+			$this->_check_permissions();
+		}
+		
 		$this->set_params($params);
 	}
 	
@@ -183,10 +186,45 @@ class Fuel_base_library {
 			$this->_errors[] = $error;
 			log_message('error', $error);
 		}
-		
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Checks if the logged in user is authenticated to use this item based on specified permission
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _has_permission()
+	{
+		// check if the library requires permissions to run
+		if (!empty($this->permission))
+		{
+			if (!$this->fuel->auth->has_permission($this->permission))
+			{
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Checks if the logged in user is authenticated to use this item based on specified permission
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _check_permission()
+	{
+		// check if the library requires permissions to run
+		if (!$this->_has_permission())
+		{
+			show_error(lang('error_no_lib_permissions', ucfirst(get_class($this))));
+		}
+	}
 }
 
 /* End of file Fuel_base_library.php */

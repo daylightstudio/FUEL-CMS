@@ -11,7 +11,7 @@ $vars['meta_keywords'] = 'Widgest, Sprockets';
 $vars['meta_description'] = 'Fine maker of widgets';
 $vars['js'] = array();
 $vars['css'] = array();
-$vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
+$vars['body_class'] = uri_segment(1).' '.uri_segment(2);
 
 $vars['blocks'] = array('showcase', 'quote');
 $vars['sidemenu'] = fuel_nav(array('container_tag_id' => 'sidemenu', 'parent' => uri_segment(1)));

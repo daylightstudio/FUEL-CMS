@@ -66,6 +66,7 @@ class Fuel_assets extends Fuel_base_library {
 						'override_post_params' => FALSE,
 						'file_name' => '',
 						'xss_clean' => FALSE,
+						'encrypt_name' => FALSE,
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
 						'create_thumb' => NULL,
@@ -113,7 +114,7 @@ class Fuel_assets extends Fuel_base_library {
 					$posted = array();
 					foreach($valid as $param)
 					{
-						if (!empty($_POST[$param]))
+						if (!empty($_POST[$key.'_'.$param]))
 						{
 							$posted[$param] = $this->CI->input->post($param);
 						}

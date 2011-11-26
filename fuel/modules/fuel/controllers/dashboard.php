@@ -17,8 +17,10 @@ class Dashboard extends Fuel_base_controller {
 		}
 		else
 		{
-			$user = $this->fuel_auth->user_data();
-			$vars['change_pwd'] = ($user['password'] == md5($this->config->item('default_pwd', 'fuel')));
+			$this->fuel->load_model('users');
+			$auth_user = $this->fuel->auth->user_data();
+			$user = $this->users_model->find_by_key($auth_user['id'], 'array');
+			$vars['change_pwd'] = ($user['password'] == $this->users_model->salted_password_hash($this->config->item('default_pwd', 'fuel'), $user['salt']));
 
 			$dashboards = $this->fuel->admin->dashboards();
 			

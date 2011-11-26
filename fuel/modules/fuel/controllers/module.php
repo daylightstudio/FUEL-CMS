@@ -487,7 +487,10 @@ class Module extends Fuel_base_controller {
 	function create($field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
 		$id = NULL;
-		if (!$this->fuel->auth->module_has_action('create') OR !$this->fuel->auth->has_permission('create')) show_404();
+		if (!$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
+		{
+			show_404();
+		}
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
 		{
@@ -615,10 +618,14 @@ class Module extends Fuel_base_controller {
 	
 	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
 	{
-		if (empty($id) OR !$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission('edit')) show_404();
+		if (empty($id) OR !$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
+		{
+			show_404();
+		}
 
 		if ($this->input->post($this->model->key_field()))
 		{
+			
 			if ($this->_process_edit($id))
 			{
 				if ($inline === TRUE)
@@ -637,23 +644,13 @@ class Module extends Fuel_base_controller {
 				}
 			}
 		}
+		
 		//$vars = $this->_form($id);
 		$data = $this->_saved_data($id);
 		$action = (!empty($data[$this->model->key_field()])) ? 'edit' : 'create';
 	
 		// substitute data values into preview path
-		preg_match_all('#\{(.+)\}+#U', $this->preview_path, $matches);
-		
-		if (!empty($matches[1]))
-		{
-			foreach($matches[1] as $match)
-			{
-				if (!empty($data[$match]))
-				{
-					$this->preview_path = str_replace('{'.$match.'}', $data[$match], $this->preview_path);
-				}
-			}
-		}
+		$this->preview_path = $this->module_obj->url();
 
 		$shell_vars = $this->_shell_vars($id, $action);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
@@ -1055,13 +1052,7 @@ class Module extends Fuel_base_controller {
 						{
 							$field_value = $file_info['name'];
 						}
-						// FIX ME....
-						// foreach($_POST as $key => $val)
-						// {
-						// 	$tmp_key = end(explode('--', $key));
-						// 	$_POST[$tmp_key] = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$_POST['\\2'].'\\3'", $val);
-						// }
-						
+
 						if (strpos($field_value, '{') !== FALSE )
 						{
 							$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
@@ -1226,16 +1217,15 @@ class Module extends Fuel_base_controller {
 	
 	function view($id = NULL)
 	{
-		if (!empty($this->preview_path))
+		if (!empty($this->preview_path) AND !empty($id))
 		{
 			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 
-			// use regex to replace {} values in the preview path
-			$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$data['\\2'].'\\3'", $this->preview_path);
-			
+			$url = $this->module_obj->url();
+
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
-			$this->fuel->admin->last_page($last_page);
+			$this->_last_page($last_page);
 			redirect($url);
 		}
 		else
