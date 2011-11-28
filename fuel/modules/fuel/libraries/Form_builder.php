@@ -1503,7 +1503,7 @@ Class Form_builder {
 		
 		if (is_array($this->form_attrs))
 		{
-			$this->form_attrs['enctype'] = ' multipart/form-data';
+			$this->form_attrs['enctype'] = 'multipart/form-data';
 		}
 		else if (is_string($this->form_attrs) AND strpos($this->form_attrs, 'enctype') === FALSE)
 		{
