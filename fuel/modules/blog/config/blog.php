@@ -25,6 +25,7 @@ $config['blog_use_db_table_settings'] = TRUE;
 $config['blog'] = array();
 $config['blog']['title'] = '';
 $config['blog']['akismet_api_key'] = '';
+$config['blog']['uri'] = 'blog/';
 $config['blog']['theme_path'] = 'themes/default/';
 $config['blog']['use_cache'] = '';
 $config['blog']['cache_ttl'] = 3600;
