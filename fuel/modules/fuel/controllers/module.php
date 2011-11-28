@@ -6,9 +6,6 @@ class Module extends Fuel_base_controller {
 	public $module_obj;
 	public $module = '';
 	
-	// array of data about all (if any) uploaded files
-	public $upload_data = array();
-	
 	function __construct()
 	{
 		parent::__construct();
@@ -650,7 +647,7 @@ class Module extends Fuel_base_controller {
 		$action = (!empty($data[$this->model->key_field()])) ? 'edit' : 'create';
 	
 		// substitute data values into preview path
-		$this->preview_path = $this->module_obj->url();
+		$this->preview_path = $this->module_obj->url($data);
 
 		$shell_vars = $this->_shell_vars($id, $action);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
@@ -1042,11 +1039,11 @@ class Module extends Fuel_base_controller {
 					{
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
 
-						if (isset($posted[$file_tmp.'_filename']))
+						if (isset($posted[$file_tmp.'_file_name']))
 						{
 							// get file extension
 							$path_info = pathinfo($file_info['name']);
-							$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
+							$field_value = $posted[$file_tmp.'_file_name'].'.'.$path_info['extension'];
 						}
 						else
 						{
@@ -1221,7 +1218,7 @@ class Module extends Fuel_base_controller {
 		{
 			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 
-			$url = $this->module_obj->url();
+			$url = $this->module_obj->url($data);
 
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
@@ -1500,37 +1497,12 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	/*function _publish_toggle_callback($cols)
-	{
-		$can_publish = $this->fuel->auth->has_permission($this->permission, "publish");
-		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
-		$no = lang("form_enum_option_no");
-		$yes = lang("form_enum_option_yes");            
-
-		if ((isset($cols['published']) AND $cols['published'] == "no") OR (isset($cols['active']) AND $cols['active'] == "no"))
-		{
-			$text_class = ($can_publish) ? "publish_text unpublished toggle_publish" : "unpublished";
-			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-			$col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
-		}
-		else if ((isset($cols['published']) AND $cols['published'] == "yes") OR (isset($cols['active']) AND $cols['active'] == "yes"))
-		{
-			$text_class = ($can_publish) ? "publish_text published toggle_unpublish" : "published";
-			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
-		}
-	}*/
-	
 	protected function _clear_cache()
 	{
 		// reset cache for that page only
 		if ($this->clear_cache_on_save) 
 		{
-			$this->load->library('cache');
-			$cache_group = $this->fuel->config('page_cache_group');
-			$this->cache->remove_group($cache_group);
+			$this->fuel->cache->clear_pages();
 		}
 	}
 	
@@ -1555,294 +1527,44 @@ class Module extends Fuel_base_controller {
 				add_error($msg);
 				$this->session->set_flashdata('error', $msg);
 			}
-		}
-		return !$errors;
-		
-/*		$this->lang->load('upload');
-		
-		$errors = FALSE;
-		if (!empty($_FILES))
-		{
-			$this->load->module_model(FUEL_FOLDER, 'assets_model');
-			$this->load->library('upload');
-			$this->load->helper('directory');
-						
-			$config['max_size']	= $this->config->item('assets_upload_max_size', 'fuel');
-			$config['max_width']  = $this->config->item('assets_upload_max_width', 'fuel');
-			$config['max_height']  = $this->config->item('assets_upload_max_height', 'fuel');
-			
-			// loop through all the uploaded files
-			foreach($_FILES as $file => $file_info)
+			else
 			{
-				if ($file_info['error'] == 0)
+				// do post processing of updating field values if they changed during upload due to overwrite being FALSE
+				$uploaded_data = $this->fuel->assets->uploaded_data($key);
+				
+				foreach($_FILES as $key => $file)
 				{
-					// continue processing
-					$filename = $file_info['name'];
-					$filename_arr = explode('.', $filename);
-					$filename_no_ext = $filename_arr[0];
-					$ext = end($filename_arr);
-					$test_multi = explode('___', $file);
-					$is_multi = (count($test_multi) > 1);
-					$multi_root = $test_multi[0];
-					
-					// loop through all the allowed file types that are accepted for the asset directory
-					foreach($this->assets_model->get_dir_filetypes() as $key => $val)
+					// check if the file name is changed due to overwrite being set to FALSE
+					if ($uploaded_data[$key]['file_name'] != $uploaded_data[$key]['orig_name'])
 					{
-						$file_types = explode('|', strtolower($val));
-						if (in_array(strtolower($ext), $file_types))
-						{
-							$asset_dir = $key;
-							break;
-						}
-					}
-					if (!empty($asset_dir))
-					{
-						// upload path
-						if (!empty($posted[$file.'_path']))
-						{
-							$config['upload_path'] = $posted[$file.'_path'];
-						}
-						else if (!empty($posted[$multi_root.'_path']))
-						{
-							$config['upload_path'] = $posted[$multi_root.'_path'];
-						}
-						else
-						{
-							$config['upload_path'] = (isset($upload_path)) ? $upload_path : assets_server_path().$asset_dir.'/';
-						}
-						
-						if (!is_dir($config['upload_path']) AND $this->config->item('assets_allow_subfolder_creation', 'fuel'))
-						{
-							// will recursively create folder
-							//$old = umask(0)
-							@mkdir($config['upload_path'], 0777, TRUE);
-							if (!file_exists($config['upload_path']))
-							{
-								$errors = TRUE;
-								add_error(lang('upload_not_writable'));
-								$this->session->set_flashdata('error', lang('upload_not_writable'));
-							}
-							else
-							{
-								chmodr($config['upload_path'], 0777);
-							}
-							//umask($old);
-						} 
-						
-						// overwrite
-						if (!empty($posted[$file.'_overwrite']))
-						{
-							$config['overwrite'] = (!empty($posted[$file.'_overwrite']));
-						}
-						else if (!empty($posted[$multi_root.'_overwrite']))
-						{
-							$config['overwrite'] = (!empty($posted[$multi_root.'_overwrite']));
-						}
-						else
-						{
-							$config['overwrite'] = TRUE;
-						}
-						
-						// filename... lower case it for consistency
-						$config['file_name'] = url_title($filename, 'underscore', TRUE);
-						if (!empty($posted[$file.'_filename']))
-						{
-							$config['file_name'] = $posted[$file.'_filename'].'.'.$ext;
-						}
-						else if (!empty($posted[$multi_root.'_filename']))
-						{
-							$config['file_name'] = $posted[$multi_root.'_filename'].'.'.$ext;
-						}
-						
-						$config['allowed_types'] = ($this->assets_model->get_dir_filetype($asset_dir)) ? $this->assets_model->get_dir_filetype($asset_dir) : 'jpg|jpeg|png|gif';
-						$config['remove_spaces'] = TRUE;
+						$file_tmp = current(explode('___', $key));
 
-						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
-						$tmp_file = file_get_contents($file_info['tmp_name']);
-						if ($this->sanitize_files AND xss_clean($tmp_file, TRUE) === FALSE)
+						// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+						if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
 						{
-							$errors = TRUE;
-							add_error(lang('upload_invalid_filetype'));
-							$this->session->set_flashdata('error', lang('upload_invalid_filetype'));
+							$field_name = substr($file_tmp, 0, ($file_tmp - 7));
 						}
-						
-						if (!$errors)
+
+						// get the file name field
+						// if ithe file name field exists AND there is no specified hidden filename field to assign to it AND...
+						// the model does not have an array key field AND there is a key field value posted
+						if (isset($posted[$field_name]) AND !isset($posted[$field_name.'_file_name']) AND
+							!is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()])
+							)
 						{
-							$this->upload->initialize($config);
-							if (!$this->upload->do_upload($file))
-							{
-								$errors = TRUE;
-								add_error($this->upload->display_errors('', ''));
-								$this->session->set_flashdata('error', $this->upload->display_errors('', ''));
-							}
-							else
-							{
-								// saves data about successfully uploaded file
-								$this->upload_data[] = $this->upload->data();
-							}
+							$id = $posted[$this->model->key_field()];
+							$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+							$data[$field_name] = $this->upload_data[$key]['file_name'];
+							$this->model->save($data);
 						}
 					}
-					else
-					{
-						$errors = TRUE;
-						add_error(lang('upload_invalid_filetype'));
-					}
+					
 				}
+				
 			}
 		}
-		
-		// transfers data about successfully uploaded file to the model
-		if (isset($this->model->upload_data))
-		{
-			$this->model->upload_data = $this->upload_data;
-		}
-		return !$errors;*/
+		return !$errors;
 	}
-	
-	/*protected function _process_uploads($posted = NULL)
-	{
-		if (empty($posted)) $posted = $_POST;
-
-		$this->lang->load('upload');
-		
-		$errors = FALSE;
-		if (!empty($_FILES))
-		{
-			$this->load->module_model(FUEL_FOLDER, 'assets_model');
-			$this->load->library('upload');
-			$this->load->helper('directory');
-						
-			$config['max_size']	= $this->config->item('assets_upload_max_size', 'fuel');
-			$config['max_width']  = $this->config->item('assets_upload_max_width', 'fuel');
-			$config['max_height']  = $this->config->item('assets_upload_max_height', 'fuel');
-			
-			// loop through all the uploaded files
-			foreach($_FILES as $file => $file_info)
-			{
-				if ($file_info['error'] == 0)
-				{
-					// continue processing
-					$filename = $file_info['name'];
-					$filename_arr = explode('.', $filename);
-					$filename_no_ext = $filename_arr[0];
-					$ext = end($filename_arr);
-					$test_multi = explode('___', $file);
-					$is_multi = (count($test_multi) > 1);
-					$multi_root = $test_multi[0];
-					
-					// loop through all the allowed file types that are accepted for the asset directory
-					foreach($this->assets_model->get_dir_filetypes() as $key => $val)
-					{
-						$file_types = explode('|', strtolower($val));
-						if (in_array(strtolower($ext), $file_types))
-						{
-							$asset_dir = $key;
-							break;
-						}
-					}
-					if (!empty($asset_dir))
-					{
-						// upload path
-						if (!empty($posted[$file.'_path']))
-						{
-							$config['upload_path'] = $posted[$file.'_path'];
-						}
-						else if (!empty($posted[$multi_root.'_path']))
-						{
-							$config['upload_path'] = $posted[$multi_root.'_path'];
-						}
-						else
-						{
-							$config['upload_path'] = (isset($upload_path)) ? $upload_path : assets_server_path().$asset_dir.'/';
-						}
-						
-						if (!is_dir($config['upload_path']) AND $this->config->item('assets_allow_subfolder_creation', 'fuel'))
-						{
-							// will recursively create folder
-							//$old = umask(0)
-							@mkdir($config['upload_path'], 0777, TRUE);
-							if (!file_exists($config['upload_path']))
-							{
-								$errors = TRUE;
-								add_error(lang('upload_not_writable'));
-								$this->session->set_flashdata('error', lang('upload_not_writable'));
-							}
-							else
-							{
-								chmodr($config['upload_path'], 0777);
-							}
-							//umask($old);
-						} 
-						
-						// overwrite
-						if (!empty($posted[$file.'_overwrite']))
-						{
-							$config['overwrite'] = (!empty($posted[$file.'_overwrite']));
-						}
-						else if (!empty($posted[$multi_root.'_overwrite']))
-						{
-							$config['overwrite'] = (!empty($posted[$multi_root.'_overwrite']));
-						}
-						else
-						{
-							$config['overwrite'] = TRUE;
-						}
-						
-						// filename... lower case it for consistency
-						$config['file_name'] = url_title($filename, 'underscore', TRUE);
-						if (!empty($posted[$file.'_filename']))
-						{
-							$config['file_name'] = $posted[$file.'_filename'].'.'.$ext;
-						}
-						else if (!empty($posted[$multi_root.'_filename']))
-						{
-							$config['file_name'] = $posted[$multi_root.'_filename'].'.'.$ext;
-						}
-						
-						$config['allowed_types'] = ($this->assets_model->get_dir_filetype($asset_dir)) ? $this->assets_model->get_dir_filetype($asset_dir) : 'jpg|jpeg|png|gif';
-						$config['remove_spaces'] = TRUE;
-
-						//$config['xss_clean'] = TRUE; // causes problem with image if true... so we use the below method
-						$tmp_file = file_get_contents($file_info['tmp_name']);
-						if ($this->sanitize_files AND xss_clean($tmp_file, TRUE) === FALSE)
-						{
-							$errors = TRUE;
-							add_error(lang('upload_invalid_filetype'));
-							$this->session->set_flashdata('error', lang('upload_invalid_filetype'));
-						}
-						
-						if (!$errors)
-						{
-							$this->upload->initialize($config);
-							if (!$this->upload->do_upload($file))
-							{
-								$errors = TRUE;
-								add_error($this->upload->display_errors('', ''));
-								$this->session->set_flashdata('error', $this->upload->display_errors('', ''));
-							}
-							else
-							{
-								// saves data about successfully uploaded file
-								$this->upload_data[] = $this->upload->data();
-							}
-						}
-					}
-					else
-					{
-						$errors = TRUE;
-						add_error(lang('upload_invalid_filetype'));
-					}
-				}
-			}
-		}
-		
-		// transfers data about successfully uploaded file to the model
-		if (isset($this->model->upload_data))
-		{
-			$this->model->upload_data = $this->upload_data;
-		}
-		return !$errors;
-	}*/
 	
 	protected function _run_hook($hook, $params = array())
 	{

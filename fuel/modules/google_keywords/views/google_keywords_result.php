@@ -1,4 +1,3 @@
-<?=js('SeoController', 'seo')?>
 <?php if (!empty($results)){ ?>
 	<h3><?=lang('seo_google_keywords_results_text', $num_results)?></h3>
 	<ul class="nobullets">

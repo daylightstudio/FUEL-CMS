@@ -38,7 +38,6 @@ class MY_Parser extends CI_Parser {
 	private $_parser_allow_php_tags = array();
 	private $_parser_allowed_php_functions = array();
 	private $_parser_assign_refs = array();
-	private $_compile = TRUE; // options are 'dwoo, or simple'
 
 	function __construct($config = array())
 	{
@@ -72,38 +71,6 @@ class MY_Parser extends CI_Parser {
 		}
 	}
 	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Set compiled value which determines whether to use Dwoo or normal Parser class
-	 *
-	 * added by David McReynolds @ Daylight Studio 11/26/11 to allow for using normal Parser class
-	 *
-	 * @access	public
-	 * @param	boolean
-	 * @return	void
-	 */
-	function set_compile($compile)
-	{
-		$this->_compile = $compile;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns whether the parser will compile using Dwoo
-	 *
-	 * added by David McReynolds @ Daylight Studio 11/26/11 to allow for using normal Parser class
-	 *
-	 * @access	public
-	 * @param	boolean
-	 * @return	void
-	 */
-	function compile()
-	{
-		return $this->_compile;
-	}
-
 	// --------------------------------------------------------------------
 
 	/**
@@ -167,7 +134,7 @@ class MY_Parser extends CI_Parser {
 	{
 		$string = $this->_ci->load->view($template, $data, TRUE);
 
-		return $this->_parse($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $compile);
 	}
 
 	// --------------------------------------------------------------------
@@ -190,20 +157,20 @@ class MY_Parser extends CI_Parser {
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
 	function string_parse($string, $data = array(), $return = TRUE, $compile = NULL)
 	{
-		return $this->_parse($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $compile);
 	}
 
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
 	function parse_string($string, $data = array(), $return = TRUE, $compile = NULL)
 	{
-		return $this->_parse($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $compile);
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 *  Parse a template
+	 *  Parse a simple string
 	 *
 	 * Parses pseudo-variables contained in the specified template,
 	 * replacing them with the data in the second param
@@ -214,38 +181,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	function _parse($string, $data, $return = TRUE, $compile = NULL)
-	{
-		if (!isset($compile))
-		{
-			$compile = $this->_compile;
-		}
-		if ($compile)
-		{
-			$string = $this->_parse_compiled($string, $data, $return);
-		}
-		else
-		{
-			$string = $this->_parse_simple($string, $data, $return);
-		}
-		return $string;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 *  Parse a template
-	 *
-	 * Parses pseudo-variables contained in the specified template,
-	 * replacing them with the data in the second param
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	array
-	 * @param	bool
-	 * @return	string
-	 */
-	function _parse_simple($string, $data, $return = TRUE)
+	function parse_simple($string, $data, $return = TRUE)
 	{
 		if ($string == '')
 		{

@@ -206,6 +206,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>The left navigation item to be selected</td>
 		</tr>
 		<tr>
+			<td><strong>table_headers</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>The columns to use for the table view</td>
+		</tr>
+		<tr>
 			<td><strong>default_col</strong></td>
 			<td>The default is the second column of the table (e.g. the one normally after the id column)</td>
 			<td>None</td>

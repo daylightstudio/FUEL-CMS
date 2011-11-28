@@ -114,7 +114,7 @@ class Fuel_assets extends Fuel_base_library {
 					$posted = array();
 					foreach($valid as $param)
 					{
-						if (!empty($_POST[$key.'_'.$param]))
+						if (isset($_POST[$key.'_'.$param]))
 						{
 							$posted[$param] = $this->CI->input->post($param);
 						}
@@ -187,7 +187,7 @@ class Fuel_assets extends Fuel_base_library {
 				}
 				else
 				{
-					$this->_data[] = $this->CI->upload->data();
+					$this->_data[$key] = $this->CI->upload->data();
 				}
 			}
 		}
@@ -232,8 +232,12 @@ class Fuel_assets extends Fuel_base_library {
 		return TRUE;
 	}
 	
-	function uploaded_data()
+	function uploaded_data($key = NULL)
 	{
+		if (isset($key))
+		{
+			return $this->_data[$key];
+		}
 		return $this->_data;
 	}
 	

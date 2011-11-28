@@ -397,7 +397,9 @@ Class Form_builder {
 			
 			if ($val['type'] == 'section')
 			{
-				$str .= "<div class=\"section\">".$this->create_section($val)."</div>\n";
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"section\">".$this->create_section($val)."</span>\n";
+				$str .= "</div>\n";
 				continue;
 			}
 			else if (!empty($val['section']))
@@ -408,12 +410,16 @@ Class Form_builder {
 			
 			if ($val['type'] == 'copy')
 			{
-				$str .= "<div class=\"copy\">".$this->create_copy($val)."</div>\n";
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"copy\">".$this->create_copy($val)."</span>\n";
+				$str .= "</div>\n";
 				continue;
 			}
 			else if (!empty($val['copy']))
 			{
-				$str .= "<div class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></div>\n";
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></span>\n";
+				$str .= "</div>\n";
 				continue;
 			}
 			
@@ -436,26 +442,24 @@ Class Form_builder {
 			}
 			else if ((is_array($val['name']) AND in_array($val['name'], $this->displayonly)) OR  $val['displayonly'] OR  (is_string($this->displayonly) AND strtolower($this->displayonly) == 'all'))
 			{
-				$str .= "<div";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
-				$str .= " class=\"field\">";
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"label\">";
 				$str .= $this->create_label($val, FALSE);
+				$str .= "</span>";
+				$str .= "<span class=\"field\">";
 				$str .= $this->create_readonly($val, FALSE)."\n";
+				$str .= "</span>";
 				$str .= "</div>\n";
 			}
 			else if (!in_array($val['name'], $this->exclude))
 			{
-				$str .= "<div";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
-				$str .= " class=\"field\">";
-				$str .= $this->create_label($val, TRUE);
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"label\">";
+				$str .= $this->create_label($val, FALSE);
+				$str .= "</span>";
+				$str .= "<span class=\"field\">";
 				$str .= $this->create_field($val, FALSE);
+				$str .= "</span>";
 				$str .= "</div>\n";
 			}
 		}
@@ -594,42 +598,26 @@ Class Form_builder {
 		
 			if ($val['type'] == 'section')
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"section\">".$this->create_section($val)."</td>\n</tr>\n";
 				continue;
 			}
 			else if (!empty($val['section']))
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"section\"><".$this->section_tag.">".$val['section']."</".$this->section_tag."></td>\n</tr>\n";
 				continue;
 			}
 			
 			if ($val['type'] == 'copy')
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"copy\">".$this->create_copy($val)."</td></tr>\n";
 				continue;
 			}
 			else if (!empty($val['copy']))
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></td>\n</tr>\n";
 				continue;
 			}
@@ -673,11 +661,7 @@ Class Form_builder {
 			}
 			else if ((is_array($val['name']) AND in_array($val['name'], $this->displayonly))  OR  $val['displayonly'] OR  (is_string($this->displayonly) AND strtolower($this->displayonly) == 'all') OR $this->displayonly === TRUE)
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td class=\"label\">";
 				if ($this->label_layout != 'top')
 				{
@@ -687,21 +671,14 @@ Class Form_builder {
 				else
 				{
 					$str .= $this->create_label($val, FALSE)."</td></tr>\n";
-					$str .= "<tr";
-					if (!empty($this->row_id_prefix))
-					{
-						$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-					}
+					$str .= "<tr".$this->_open_row_attrs($val);
 					$str .= ">\n\t<td class=\"value\">".$this->create_readonly($val, FALSE)."</td>\n</tr>\n";
 				}
 			}
 			else if (!in_array($val['name'], $this->exclude))
 			{
 				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t";
 				if ($val['display_label'] !== FALSE)
 				{
@@ -715,10 +692,7 @@ Class Form_builder {
 					{
 						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
 						$str .= "<tr";
-						if (!empty($this->row_id_prefix))
-						{
-							$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-						}
+						$str .= "<tr".$this->_open_row_attrs($val);
 						$str .= ">\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 				}
@@ -811,6 +785,29 @@ Class Form_builder {
 		$this->_html .= $this->_render_js();
 		$this->_html .= $this->html_prepend;
 		return $this->_html;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the opening row TR or div with attrs
+	 * 
+	 * @access	public
+	 * @param	array fields values... will overwrite anything done with the set_fields method previously
+	 * @return	string
+	 */
+	protected function _open_row_attrs($val)
+	{
+		$str = '';
+		if (!empty($this->row_id_prefix))
+		{
+			$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
+		}
+		if (!empty($val['row_class']))
+		{
+			$str .= ' class="'.$val['row_class'].'"';
+		}
+		return $str;
 	}
 
 	// --------------------------------------------------------------------

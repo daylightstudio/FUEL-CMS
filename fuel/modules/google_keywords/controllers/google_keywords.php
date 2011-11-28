@@ -84,14 +84,11 @@ class Google_keywords extends Fuel_base_controller {
 			$params['domain'] = $domain;
 			$found =  $this->fuel->google_keywords->results($params);
 			$vars['results'] = $found;
-			if (is_ajax())
-			{
-				$this->load->view('google_keywords_result', $vars);
-				return false;
-			}
+			$this->load->view('google_keywords_result', $vars);
+			return;
 		}
 		
-		
+		$vars['form_action'] = 'tools/google_keywords';
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('section_tools'), lang('module_google_keywords')), FALSE);
 		$crumbs = array('tools' => lang('section_tools'), lang('module_google_keywords'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_google_keywords');
