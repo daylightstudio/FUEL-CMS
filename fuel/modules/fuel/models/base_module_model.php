@@ -79,10 +79,10 @@ class Base_module_model extends MY_Model {
 		if (!empty($module) && $module != FUEL_FOLDER)
 		{
 			// fail gracefully is last parameter
-			$CI->config->module_load($module, $module, TRUE, TRUE);
-			if ($CI->config->item('tables', $module))
+			$CI->config->module_load($module, $module, FALSE, TRUE);
+			if ($CI->config->item('tables'))
 			{
-				$module_tables = $CI->config->item('tables', $module);
+				$module_tables = $CI->config->item('tables');
 			}
 		}
 		

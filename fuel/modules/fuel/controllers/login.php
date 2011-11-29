@@ -208,8 +208,8 @@ class Login extends CI_Controller {
 		
 		// build form
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
-		$fields['email'] = array('required' => true, 'size' => 30);
-		$this->form_builder->show_required = false;
+		$fields['email'] = array('required' => TRUE, 'size' => 30);
+		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
 		$vars['form'] = $this->form_builder->render();
 		

@@ -47,6 +47,7 @@ class Fuel extends Fuel_base_library {
 									'assets',
 									'navigation',
 									'modules',
+									'sitevariables',
 									'users',
 									'permissions',
 									'cache',

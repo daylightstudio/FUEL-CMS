@@ -92,24 +92,6 @@ class Fuel_pagevars extends Fuel_base_library {
 		}
 		$this->CI->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'pagevariables_model');
 		$site_vars = $this->fuel->sitevariables->get($location);
-		// $this->CI->load->module_model(FUEL_FOLDER, 'sitevariables_model', 'sitevariables_model');
-		// 
-		// $site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
-		// 
-		// $vars = array();
-		// 
-		// // Loop through the pages array looking for wild-cards
-		// foreach ($site_vars as $site_var){
-		// 	
-		// 	// Convert wild-cards to RegEx
-		// 	$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
-		// 
-		// 	// Does the RegEx match?
-		// 	if (empty($key) OR preg_match('#^'.$key.'$#', $location))
-		// 	{
-		// 		$vars[$site_var['name']] = $site_var['value'];
-		// 	}
-		// }
 		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
 		if ($parse)
 		{
@@ -118,7 +100,7 @@ class Fuel_pagevars extends Fuel_base_library {
 				$page_vars[$key] = $this->CI->parser->parse_string($val, $page_vars, TRUE);
 			}
 		}
-		$vars = array_merge($vars, $page_vars);
+		$vars = array_merge($site_vars, $page_vars);
 		return $vars;
 	}
 	
@@ -130,7 +112,8 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function view_variables($location = null, $controller = null){
+	function view_variables($location = NULL, $controller = NULL)
+	{
 		if (is_null($location))
 		{
 			$location = $this->location;
@@ -138,15 +121,25 @@ class Fuel_pagevars extends Fuel_base_library {
 		$vars = array();
 		$page_vars = array();
 
-		if (empty($this->vars_path)) $this->vars_path = APPPATH.'/views/_variables/';
+		if (empty($this->vars_path))
+		{
+			$this->vars_path = APPPATH.'/views/_variables/';
+		}
+		
 		$global_vars = $this->vars_path.'global'.EXT;
 		if (file_exists($global_vars))
 		{
 			require($global_vars);
 		}
 		// get controller name so that we can load in its corresponding variables file if exists
-		if (empty($controller)) $controller = current(explode('/', $location));
-		if (empty($controller) OR $controller == 'page_router') $controller = 'home';
+		if (empty($controller))
+		{
+			$controller = current(explode('/', $location));
+		}
+		if (empty($controller) OR $controller == 'page_router')
+		{
+			$controller = 'home';
+		}
 		
 		$controller_vars =  $this->vars_path.$controller.EXT;
 		
