@@ -49,7 +49,7 @@ $config['nav']['blog'] = array(
 			<li>In the routes file, add the fuel routes you want to use. For example, this <strong>user_guide</strong> module has the following routes:
 				<ul>
 					<li>$route[FUEL_ROUTE.'tools/user_guide'] = 'user_guide';</li>
-					<li>$route[FUEL_ROUTE.'tools/user_guide/:any'] = 'user_guide/$1';</li>
+					<li>$route[FUEL_ROUTE.'tools/user_guide/(:any)'] = 'user_guide/$1';</li>
 				</ul>
 			</li>
 		</ul>
@@ -57,7 +57,7 @@ $config['nav']['blog'] = array(
 	</li>
 	<li>Create your controller files. 
 		<ul>
-			<li><strong>Admin Controllers</strong> - Pages that need to be displayed in the admin interface should inherit from the <dfn>fuel/modules/fuel/libraries/Fuel_base_controller.php</dfn> and can use the <dfn>_validate_user()</dfn>, protected controller method.</li>
+			<li><strong>Admin Controllers</strong> - Pages that need to be displayed in the admin interface should inherit from the <dfn>fuel/modules/fuel/libraries/Fuel_base_controller.php</dfn> OR <dfn>fuel/modules/fuel/controllers/module.php</dfn> (which inherits from Fuel_base_controller) and can use the <dfn>_validate_user()</dfn>, protected controller method.</li>
 			<li><strong>Dashboard Controller</strong> - If you add a controller with the name of <dfn>Dashboard</dfn>, then it can get pulled in to the FUEL admin (if the module is in the fuel $config['dashboards'] configuration)</li>
 		</ul>
 	</li>
