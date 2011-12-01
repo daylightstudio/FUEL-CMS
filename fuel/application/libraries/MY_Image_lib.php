@@ -88,6 +88,11 @@ class MY_Image_lib extends CI_Image_lib {
 		// 	$this->master_dim = 'width';
 		// }
 		// 
+		if (empty($orig_width) OR empty($orig_height))
+		{
+			return FALSE;
+		}
+		
 		$w_ratio = $this->width/$orig_width;
 		$h_ratio = $this->height/$orig_height;
 		if ($w_ratio > $h_ratio)
