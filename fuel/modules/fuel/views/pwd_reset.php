@@ -23,7 +23,6 @@
 			<?=$notifications?>
 		</div>
 		<?=$form?>
-		<a href="<?=fuel_url('auth/pwd_reset')?>"></a>
 	</div>
 	<div id="login_footer"><?=$this->load->module_view('fuel', '_blocks/fuel_footer_copyright', array(), true) ?></div>
 </div>
