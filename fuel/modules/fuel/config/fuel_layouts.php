@@ -69,13 +69,13 @@ $config['layouts'] = 'AUTO';
 $config['layout_fields'] = array();
 
 $config['layout_fields']['301_redirect'] = array(
-	'copy' => array('copy' => lang('layout_field_301_redirect_copy')),
+	'copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
 	'redirect_to' => array('label' => lang('layout_field_redirect_to')),
 );
 
 
 $config['layout_fields']['sitemap_xml'] = array(
-	'copy' => array('copy' => lang('layout_field_sitemap_xml_copy')),
+	'copy' => array('type' => 'copy', 'label' => lang('layout_field_sitemap_xml_copy')),
 	'frequency' => array(
 		'type' => 'select',
 		'options' => array(
@@ -92,7 +92,7 @@ $config['layout_fields']['sitemap_xml'] = array(
 );
 
 $config['layout_fields']['none'] = array(
-	'copy' => array('copy' => lang('layout_field_none_copy')),
+	'copy' => array('type' => 'copy', 'label' => lang('layout_field_none_copy')),
 	'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
 );
 

@@ -137,10 +137,6 @@ class Pages extends Module {
 			$layout = $this->fuel_layouts->default_layout;
 		}
 		
-		// $fields['layout']['type'] = 'select';
-		$fields['layout']['options'] = $this->fuel->layouts->options_list();
-		$fields['layout']['value'] = $layout;
-
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
 		
@@ -150,6 +146,7 @@ class Pages extends Module {
 		\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.');
 		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
+		$field_values['layout'] = $layout;
 		
 		if (!empty($field_values['location'])) $this->preview_path = $field_values['location'];
 		
@@ -376,8 +373,7 @@ class Pages extends Module {
 			foreach($fields as $key => $val)
 			{
 				$value = (!empty($vars[$key]) ) ? $vars[$key] : NULL;
-
-				if ($val['type'] == 'array' OR $val['type'] == 'multi')
+				if (is_array($val['value']) OR $val['type'] == 'array' OR $val['type'] == 'multi')
 				{
 					$value = serialize($value);
 					$val['type'] = 'array'; // force the type to be an array

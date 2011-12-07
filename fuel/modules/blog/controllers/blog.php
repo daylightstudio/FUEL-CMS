@@ -314,9 +314,23 @@ class Blog extends Blog_base_controller {
 		// check captcha
 		if (is_true_val($this->fuel->blog->settings('use_captchas')))
 		{
-			if (!$this->input->post('captcha') OR strtoupper($this->input->post('captcha')) != strtoupper($this->session->userdata('comment_captcha')))
+			if (!$this->input->post('captcha'))
 			{
 				$valid = FALSE;
+			}
+			else if (!is_string($this->input->post('captcha')))
+			{
+				$valid = FALSE;
+			}
+			else
+			{
+				
+				$post_captcha_md5 = $this->_get_encryption($this->input->post('captcha'));
+				$session_captcha_md5 = $this->session->userdata('comment_captcha');
+				if ($post_captcha_md5 != $session_captcha_md5)
+				{
+					$valid = FALSE;
+				}
 			}
 		}
 		return $valid;
@@ -465,11 +479,16 @@ class Blog extends Blog_base_controller {
 			$captcha_options['word'] = $this->input->post('captcha');
 		}
 		$captcha = $this->captcha->get_captcha_image($captcha_options);
-		
-		$this->session->set_userdata('comment_captcha', $captcha['word']);
+		$captcha_md5 = $this->_get_encryption($captcha['word']);
+		$this->session->set_userdata('comment_captcha', $captcha_md5);
 		
 		return $captcha;
 	}
 	
+	function _get_encryption($word)
+	{
+		$captcha_md5 = md5(strtoupper($word).$this->config->item('encryption_key'));
+		return $captcha_md5;
+	}
 
 }

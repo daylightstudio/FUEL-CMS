@@ -155,9 +155,13 @@ Class Form {
 	 * @param mixed attrs if array then create string
 	 * @return string
 	 */
-	public function fieldset_open($legend, $attrs = null)
+	public function fieldset_open($legend, $attrs = NULL, $fieldset_id = NULL)
 	{
-		$str = "<fieldset>\n";
+		if (!empty($fieldset_id))
+		{
+			$fieldset_id = " id=\"".$fieldset_id."\"";
+		}
+		$str = "<fieldset".$fieldset_id.">\n";
 		$str .= "<legend".$this->_create_attrs($attrs).">".$legend."</legend>\n";
 		return $str;
 	}

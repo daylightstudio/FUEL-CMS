@@ -1020,6 +1020,12 @@ class Module extends Fuel_base_controller {
 			$_POST[$this->model->key_field()] = $_POST['id'];
 		}
 
+		// run any form field post processing hooks
+		$this->load->library('form_builder');
+		$fields = $this->model->form_fields($_POST);
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->post_process_field_values();
+	
 		// sanitize input if set in module configuration
 		$posted = $this->_sanitize($_POST);
 		

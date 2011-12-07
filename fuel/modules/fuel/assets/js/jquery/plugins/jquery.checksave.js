@@ -12,7 +12,7 @@ jQuery.checksave = function() {
 	
 	// get current values
 	$('input:text, input:checked, textarea, select').each(function(i){
-		var fieldName = $(this).attr('name');
+		var fieldName = $(this).attr('name') + i;  // add i to help with fields that have the same name
 		if (window._pageVals){
 			if (window._pageVals[fieldName]){
 				if (typeof(window._pageVals[fieldName]) == 'string'){
@@ -34,7 +34,12 @@ jQuery.removeChecksave = function(){
 
 jQuery.changeChecksaveValue = function(inputKey, val){
 	if (window._pageVals){
-		window._pageVals[inputKey] = val;
+		for(n in window._pageVals){
+			var regex = new RegExp('^' + inputKey + '\\d+');
+			if (regex.test(n)){
+				window._pageVals[n] = val;
+			}
+		}
 	}
 };
 
@@ -42,7 +47,7 @@ jQuery.checkSaveChange = function(){
 	var msg;
 	var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
     $('input:text, input:checked, textarea, select').each(function(i){
-		var fieldName = $(this).attr('name');
+		var fieldName = $(this).attr('name') + i; // add i to help with fields that have the same name
 		if (window._pageVals){
 			if (typeof(window._pageVals[fieldName]) != 'string'){
 				var cmp = new Array();

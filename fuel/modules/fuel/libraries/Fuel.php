@@ -53,6 +53,7 @@ class Fuel extends Fuel_base_library {
 									'cache',
 									'logs',
 									'notification',
+									'template',
 									);
 
 	private static $_instance;

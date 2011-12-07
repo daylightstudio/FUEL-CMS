@@ -367,7 +367,7 @@ Class Form_builder {
 		// pre process field values
 		$this->pre_process_field_values();
 		
-		$this->_html = $this->html_append;
+		$this->_html = $this->html_prepend;
 		$str = '';
 		$begin_str = '';
 		$end_str = '';
@@ -382,18 +382,42 @@ Class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$str .= "<div class=\"".$this->css_class."\"";
+		$str .= $this->_open_div(TRUE);
+
+		$fieldset_on = FALSE;
 		
-		// must have an id for javascript to execute on initialization
-		if (empty($this->id))
-		{
-			$this->id = uniqid('form_');
-		}
-		$str .= ' id="'.$this->id.'"';
-		$str .= ">\n";
 		foreach($this->_fields as $key => $val)
 		{
 			$val = $this->normalize_params($val);
+			
+			if ($val['type'] == 'fieldset' OR !empty($val['fieldset']))
+			{
+				// close any existing field sets
+				$str .= $this->_close_div();
+				if ($fieldset_on)
+				{
+					$fieldset_val['open'] = FALSE;
+					$str .= $this->create_fieldset($fieldset_val);
+				}
+				$fieldset_val['open'] = TRUE;
+				if (!empty($val['fieldset']))
+				{
+					$fieldset_val['value'] = $val['fieldset'];
+				}
+				else
+				{
+					$fieldset_val = $val;
+				}
+				$str .= $this->create_fieldset($fieldset_val);
+				$str .= $this->_open_div();
+				$fieldset_on = TRUE;
+				
+				// continue if the fieldset is part of the field values and not the "type"
+				if (empty($val['fieldset']))
+				{
+					continue;
+				}
+			}
 			
 			if ($val['type'] == 'section')
 			{
@@ -405,7 +429,6 @@ Class Form_builder {
 			else if (!empty($val['section']))
 			{
 				$str .= "<div class=\"section\"><".$this->section_tag.">".$val['section']."</".$this->section_tag."></div>\n";
-				continue;
 			}
 			
 			if ($val['type'] == 'copy')
@@ -420,23 +443,20 @@ Class Form_builder {
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></span>\n";
 				$str .= "</div>\n";
-				continue;
 			}
 			
-			/*if (!empty($val['custom']))
+			if (!empty($val['custom']))
 			{
-				$str .= "<div";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
-				$str .= " class=\"field\">";
-				$str .= $this->create_label($val, TRUE);
-				$str .= $val['before_html'].$val['custom'].$val['after_html'];
+				$str .= "<div".$this->_open_row_attrs($val).'>';
+				$str .= "<span class=\"label\">";
+				$str .= $this->create_label($val, FALSE);
+				$str .= "</span>";
+				$str .= "<span class=\"field\">";
+				$str .= $val['custom'];
+				$str .= "</span>";
 				$str .= "</div>\n";
 			}
-			else */
-			if (in_array($val['name'], $this->hidden) OR $val['type'] == 'hidden')
+			else if (in_array($val['name'], $this->hidden) OR $val['type'] == 'hidden')
 			{
 				$end_str .= $this->create_hidden($val);
 			}
@@ -463,6 +483,16 @@ Class Form_builder {
 				$str .= "</div>\n";
 			}
 		}
+
+		// close any open fieldsets
+		if ($fieldset_on)
+		{
+			$str .= $this->_close_table();
+			$val['open'] = FALSE;
+			$str .= $this->create_fieldset($val);
+			$str .= $this->_open_table();
+		}
+		
 		$str .= "<div class=\"actions\"><div class=\"actions_inner\">";
 		if (!empty($this->reset_value))
 		{
@@ -511,6 +541,7 @@ Class Form_builder {
 				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
 			}
 		}
+
 		if (!empty($this->other_actions)) $str .= $this->other_actions;
 		$str .= "</div></div>\n";
 		if ($this->has_required AND $this->show_required)
@@ -547,7 +578,7 @@ Class Form_builder {
 			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
 		}
 		$this->_html .= $this->_render_js();
-		$this->_html .= $this->html_prepend;
+		$this->_html .= $this->html_append;
 		return $this->_html;
 	}
 	// --------------------------------------------------------------------
@@ -569,7 +600,7 @@ Class Form_builder {
 		// pre process field values
 		$this->pre_process_field_values();
 		
-		$this->_html = $this->html_append;
+		$this->_html = $this->html_prepend;
 		$str = '';
 		$begin_str = '';
 		$end_str = '';
@@ -583,19 +614,43 @@ Class Form_builder {
 		}
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
-		
-		$str .= "<table class=\"".$this->css_class."\"";
-		if (empty($this->id))
-		{
-			$this->id = uniqid('form_');
-		}
-		$str .= ' id="'.$this->id.'"';
-		$str .= ">\n";
-		
+		$str .= $this->_open_table(TRUE);
+
+		$fieldset_on = FALSE;
+
 		foreach($this->_fields as $key => $val)
 		{
 			$val = $this->normalize_params($val);
 		
+			if ($val['type'] == 'fieldset' OR !empty($val['fieldset']))
+			{
+				// close any existing field sets
+				$str .= $this->_close_table();
+				if ($fieldset_on)
+				{
+					$fieldset_val['open'] = FALSE;
+					$str .= $this->create_fieldset($fieldset_val);
+				}
+				$fieldset_val['open'] = TRUE;
+				if (!empty($val['fieldset']))
+				{
+					$fieldset_val['value'] = $val['fieldset'];
+				}
+				else
+				{
+					$fieldset_val = $val;
+				}
+				$str .= $this->create_fieldset($fieldset_val);
+				$str .= $this->_open_table();
+				$fieldset_on = TRUE;
+				
+				// continue if the fieldset is part of the field values and not the "type"
+				if (empty($val['fieldset']))
+				{
+					continue;
+				}
+			}
+			
 			if ($val['type'] == 'section')
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
@@ -606,7 +661,6 @@ Class Form_builder {
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"section\"><".$this->section_tag.">".$val['section']."</".$this->section_tag."></td>\n</tr>\n";
-				continue;
 			}
 			
 			if ($val['type'] == 'copy')
@@ -619,16 +673,11 @@ Class Form_builder {
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td colspan=\"".$colspan."\" class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></td>\n</tr>\n";
-				continue;
 			}
 			
-			/*if (!empty($val['custom']))
+			if (!empty($val['custom']))
 			{
-				$str .= "<tr";
-				if (!empty($this->row_id_prefix))
-				{
-					$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-				}
+				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t";
 				if ($val['display_label'] !== FALSE)
 				{
@@ -636,26 +685,21 @@ Class Form_builder {
 					if ($this->label_layout != 'top')
 					{
 						$str .= $this->create_label($val, TRUE);
-						$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+						$str .= "</td>\n\t<td class=\"value\">".$val['custom']."</td>\n</tr>\n";
 					}
 					else
 					{
 						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
-						$str .= "<tr";
-						if (!empty($this->row_id_prefix))
-						{
-							$str .= ' id="'.$this->row_id_prefix.Form::create_id($val['name']).'"';
-						}
-						$str .= ">\n\t<td class=\"value\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+						$str .= "<tr".$this->_open_row_attrs($val);
+						$str .= ">\n\t<td class=\"value\">".$val['custom']."</td>\n</tr>\n";
 					}
 				}
 				else
 				{
-					$str .= "<td class=\"value\" colspan=\"2\">".$val['before_html'].$val['custom'].$val['after_html']."</td>\n</tr>\n";
+					$str .= "<td class=\"value\" colspan=\"2\">".$val['custom']."</td>\n</tr>\n";
 				}
 			}
-			else */
-			if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
+			else if (in_array($val['name'], $this->hidden) OR  $val['type'] == 'hidden')
 			{
 				$end_str .= $this->create_hidden($val);
 			}
@@ -703,6 +747,16 @@ Class Form_builder {
 
 			}
 		}
+
+		// close any open fieldsets
+		if ($fieldset_on)
+		{
+			$str .= $this->_close_table();
+			$val['open'] = FALSE;
+			$str .= $this->create_fieldset($val);
+			$str .= $this->_open_table();
+		}
+
 		if ($this->label_layout != 'top')
 		{
 			$str .= "<tr";
@@ -772,7 +826,7 @@ Class Form_builder {
 			$str .= str_replace('{required_indicator}', $this->required_indicator, $this->required_text);
 			$str .= "</td>\n</tr>\n";
 		}
-		$str .= "</table>\n";
+		$str .= $this->_close_table();
 		
 		if ($this->use_form_tag) $this->_html .= $this->form->open($this->form_attrs);
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_open($this->fieldset);
@@ -783,8 +837,85 @@ Class Form_builder {
 		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
 		if ($this->use_form_tag) $this->_html .= $this->form->close();
 		$this->_html .= $this->_render_js();
-		$this->_html .= $this->html_prepend;
+		$this->_html .= $this->html_append;
 		return $this->_html;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the opening div element that contains the form fields
+	 * 
+	 * @access	public
+	 * @return	string
+	 */
+	protected function _open_div($create_unique_id = FALSE)
+	{
+		$str = '';
+		$str .= "<div class=\"".$this->css_class."\"";
+		
+		// must have an id for javascript to execute on initialization
+		if ($create_unique_id AND empty($this->id))
+		{
+			$this->id = uniqid('form_');
+		}
+		$str .= ' id="'.$this->id.'"';
+		$str .= ">\n";
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the opening table element
+	 * 
+	 * @access	public
+	 * @return	string
+	 */
+	protected function _open_table($create_unique_id = FALSE)
+	{
+		$str = '';
+		$str .= "<table class=\"".$this->css_class."\"";
+		if ($create_unique_id AND empty($this->id))
+		{
+			$this->id = uniqid('form_');
+		}
+		$str .= ' id="'.$this->id.'"';
+		$str .= ">\n";
+		
+		$str .= "<tbody>\n";
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the closing element
+	 * 
+	 * @access	public
+	 * @return	string
+	 */
+	protected function _close_div()
+	{
+		$str = '';
+		$str .= "</div>\n";
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the closing table elements
+	 * 
+	 * @access	public
+	 * @return	string
+	 */
+	protected function _close_table()
+	{
+		$str = '';
+		$str .= "</tbody>\n";
+		$str .= "</table>\n";
+		return $str;
 	}
 
 	// --------------------------------------------------------------------
@@ -943,12 +1074,17 @@ Class Form_builder {
 	 */
 	function normalize_params($val, $defaults = array())
 	{
+		if ($val == '')
+		{
+			$val = array();
+		}
+
 		// check to see if the array is already normalized
 		if (!$this->_has_defaults($val))
 		{
 			$val = $this->_default($val);
 		}
-
+		
 		// set up defaults
 		$params = array_merge($defaults, $val);
 		
@@ -1041,55 +1177,34 @@ Class Form_builder {
 		switch($params['type'])
 		{
 			case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
-				$str = $this->create_textarea($params);
-				break;
-			case 'enum' :
-				$str = $this->create_enum($params);
-				break;
-			case 'boolean' :
-				$str = $this->create_boolean($params);
-				break;
- 			case 'checkbox' :
-				$str = $this->create_checkbox($params);
-				break;
-			case 'select' :
-				$str = $this->create_select($params);
-				break;
-			case 'date' : 
-				$str = $this->create_date($params);
+				return $this->create_textarea($params);
 				break;
 			case 'datetime': case 'timestamp' :
-				$str = $this->create_datetime($params);
-				break;
-			case 'time' :
-				$str = $this->create_time($params);
+				$str = $this->create_date($params);
+				$str .= ' ';
+				$str .= $this->create_time($params);
 				return $str;
 				break;
 			case 'multi' : case 'array' :
-				$str = $this->create_multi($params);
+				return $this->create_multi($params);
 				break;
 			case 'blob' : case 'file' :
-				$str = $this->create_file($params);
+				return $this->create_file($params);
 				break;
 			case 'none': case 'blank':
-				$str = '';
-				break;
-			case 'readonly':
-				$str = $this->create_readonly($params);
-				break;
-			case 'submit':
-				$str = $this->create_submit($params);
-				break;
-			case 'button':
-				$str = $this->create_button($params);
+				return '';
 				break;
 			case 'custom':
 				$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
-				$str = $this->create_custom($func, $params);
+				return $this->create_custom($func, $params);
 				break;
 			default : 
-				$str = $this->create_text($params);
-				break;
+				$method = 'create_'.$params['type'];
+				if (method_exists($this, $method))
+				{
+					return $this->$method($params);
+				}
+				return $this->create_text($params);
 		}
 		
 		// add before/after html 
@@ -1694,28 +1809,7 @@ Class Form_builder {
 	public function create_section($params)
 	{
 		$params = $this->normalize_params($params);
-
-		$section = '';
-		if (is_array($params) AND count($params) > 1)
-		{
-			if (!empty($params['value']))
-			{
-				$section = $params['value'];
-			}
-			else if (!empty($params['label']))
-			{
-				$section = $params['label'];
-			}
-			else if (!empty($params['name']))
-			{
-				$section = $params['name'];
-			}
-		}
-		else
-		{
-			$section = $params;
-		}
-		
+		$section = $this->_simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
 		return '<'.$tag.'>'.$section.'</'.$tag.'>';
 	}
@@ -1735,28 +1829,9 @@ Class Form_builder {
 	public function create_copy($params)
 	{
 		$params = $this->normalize_params($params);
-	
-		$copy = '';
-		if (is_array($params))
-		{
-			if (!empty($params['value']))
-			{
-				$copy = $params['value'];
-			}
-			else if (!empty($params['label']))
-			{
-				$copy = $params['label'];
-			}
-			else if (!empty($params['name']))
-			{
-				$copy = $params['name'];
-			}
-		}
-		else
-		{
-			$copy = $params;
-		}
-		return '<'.$this->copy_tag.'>'.$copy.'</'.$this->copy_tag.'>';
+		$copy = $this->_simple_field_value($params);
+		$tag = (empty($params['tag'])) ? $this->copy_tag : $params['tag'];
+		return '<'.$tag.'>'.$copy.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------
@@ -1811,6 +1886,186 @@ Class Form_builder {
 		return $str;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a legend for a form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_fieldset($params)
+	{
+		$params = $this->_normalize_value($params);
+		$attrs = array(
+			'class' => $params['class'], 
+		);
+		$str = '';
+		$legend = $this->_simple_field_value($params);
+		$str = "\n";
+		if (isset($params['open']) AND $params['open'] === FALSE)
+		{
+			$str .= $this->form->fieldset_close();
+		}
+		else
+		{
+			$str .= $this->form->fieldset_open($legend, $attrs);
+		}
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates fields based on a string or template view file. 
+	 *
+	 * You can use {field_name} for placeholders
+	 * 
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates fields based on a string or template view file. 
+	 *
+	 * You can use {field_name} for placeholders
+	 * 
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_template($params)
+	{
+		$CI =& get_instance();
+		$CI->load->library('parser');
+		
+		$params = $this->_normalize_value($params);
+		
+		$str = '';
+		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))
+		{
+			return $str;
+		}
+		
+		if (empty($params['template']) AND !empty($params['view']))
+		{
+			$str = $CI->load->view($params['view'], $params['value'], TRUE);
+		}
+		else
+		{
+			$str = $params['template'];
+		}
+		
+		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
+		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
+		
+		$fields = array();
+		$i = 0;
+		
+		if (!is_array($params['value']))
+		{
+			$params['value'] = array();
+		}
+		
+		if ($params['value'] == '')
+		{
+			$params['value'] = array();
+		}
+		
+		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
+		if ($num == 0) $num = 1;
+		
+		for ($i = 0; $i < $num; $i++)
+		{
+			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
+			foreach($params['fields'] as $key => $field)
+			{
+				$field['value'] = (isset($value[$key])) ? $value[$key] : $value;
+				
+				if ($repeatable)
+				{
+					if (!empty($this->name_array))
+					{
+						$field['name'] = $params['name'].'['.$i.']['.$key.']';
+					}
+					else
+					{
+						$field['name'] = $params['orig_name'].'['.$i.']['.$key.']';
+					}
+					$fields[$i][$key] = $this->create_field($field);
+					$fields[$i]['index'] = $i;
+					$fields[$i]['num'] = $i + 1;
+				}
+				else
+				{
+					if (!empty($this->name_array))
+					{
+						$field['name'] = $params['name'].'['.$key.']';
+					}
+					else
+					{
+						$field['name'] = $params['orig_name'].'['.$key.']';
+					}
+					$fields[$key] = $this->create_field($field);
+				}
+			}
+		}
+		
+		if ($repeatable)
+		{
+			$vars['fields'] = $fields;
+		}
+		else
+		{
+			$vars = $fields;
+		}
+		
+		// parse the string
+		$str = $CI->parser->parse_simple($str, $vars);
+		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a nested form_builder object and renders it
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_nested($params)
+	{
+		$CI =& get_instance();
+		$CI->load->library('parser');
+		$fb_class = get_class($this);
+		
+		if (empty($params['fields']) OR !is_array($params['fields']))
+		{
+			return '';
+		}
+		if (empty($params['init']))
+		{
+			$params['init'] = array();
+		}
+		
+		if (empty($params['value']))
+		{
+			$params['value'] = array();
+		}
+		
+		$form_builder = new $fb_class($params['init']);
+		$form_builder->set_fields($params['fields']);
+		$form_builder->submit_value = '';
+		$form_builder->set_validator($this->form->validator);
+		$form_builder->use_form_tag = FALSE;
+		$form_builder->set_field_values($params['value']);
+		return $form_builder->render();
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -2028,10 +2283,14 @@ Class Form_builder {
 		{
 			if (!empty($field['pre_process']))
 			{
-				$process = $this->_normalize_process_func($field['pre_process'], $field['value']);
+				$process = $this->_normalize_process_func($field['post_process'], $field['value']);
 				$func = $process['func'];
 				$params = $process['params'];
-				$this->_fields[$key]['value'] = call_user_func_array($func, $params);
+				if ($func == 'remove' OR $func == 'clear')
+				{
+					$func = create_function('$value, $field', 'return "";');
+				}
+				$this->_fields[$key]['value'] = call_user_func($func, $field['value'], $field);
 			}
 		}
 	}
@@ -2044,24 +2303,60 @@ Class Form_builder {
 	 * @access	public
 	 * @return	void
 	 */
-	public function post_process_field_values()
+	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
-		if (empty($_POST)) return;
+		if (empty($posted)) $posted = $_POST;
 		foreach($this->_fields as $key => $field)
 		{
-			if (!empty($field['post_process']) AND isset($_POST[$key]))
+			if (!empty($field['post_process']) AND isset($posted[$key]))
 			{
-				$process = $this->_normalize_process_func($field['post_process'], $field['value']);
-				$func = $process['func'];
-				$params = $process['params'];
-				$_POST[$key] = call_user_func_array($func, $params);
+				$func = $field['post_process'];
+				if ($func == 'remove' OR $func == 'clear')
+				{
+					$func = create_function('$value', 'return "";');
+				}
+				$posted[$key] = call_user_func($func, $posted[$key], $field);
+				if ($set_post)
+				{
+					$_POST[$key] = $posted[$key];
+				}
 			}
 		}
-		echo "<pre style=\"text-align: left;\">";
-		print_r($_POST);
-		echo "</pre>";
-		exit();
-		
+		return $posted;
+	}
+
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Looks for value, label, then name as the values
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function _simple_field_value($params)
+	{
+		if (is_array($params))
+		{
+			if (!empty($params['value']))
+			{
+				$str = $params['value'];
+			}
+			else if (!empty($params['label']))
+			{
+				$str = $params['label'];
+			}
+			else if (!empty($params['name']))
+			{
+				$str = $params['name'];
+			}
+		}
+		else
+		{
+			$str = $params;
+		}
+		return $str;
 	}
 	
 	// --------------------------------------------------------------------
@@ -2180,16 +2475,16 @@ Class Form_builder {
 		$str_inline = '';
 		$str_files = '';
 		$js_exec = array();
+		$script_regex = '#^<script(.+)src=#U';
+
 		foreach($this->_js as $type => $js)
 		{
-			$script_regex = '#^<script(.+)src=#U';
-			
 			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
 			if (is_array($js))
 			{
 				$j = current($js);
 				
-				// if the value is another array, then the key is the name of the function and the value is the name of a file to load
+				// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
 				if (is_array($j))
 				{
 					

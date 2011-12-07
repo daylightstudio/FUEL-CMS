@@ -662,7 +662,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 			}
 			myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
-			$(elem).markItUp(myMarkItUpSettings);
+			$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
 		}
 		
 		// fix ">" within template syntax

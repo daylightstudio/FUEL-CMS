@@ -80,7 +80,7 @@ fuel.fields.wysiwyg_field = function(context){
 			}
 		}
 		myMarkItUpSettings.previewParserPath = _previewPath + '?' + q;
-		$(elem).markItUp(myMarkItUpSettings);
+		$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
 	}
 	
 	// fix ">" within template syntax
