@@ -134,7 +134,7 @@ The class is abstract, meaning that it needs to be extended to work.</p>
 		<tr>
 			<td><strong>foreign_keys</strong></td>
 			<td>None</td>
-			<td>Array of column names with keys beign the column and the value being the model. If the model exists
+			<td>Array of column names with keys being the column and the value being the model. If the model exists
 			in a specific module, then use an array value with the key being the module.</td>
 			<td>Maps foreign keys in other models </td>
 		</tr>
