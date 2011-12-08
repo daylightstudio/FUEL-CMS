@@ -128,15 +128,6 @@ class Fuel_users extends Fuel_module {
 				return $reset_key;
 			}
 		}
-		echo "<pre style=\"text-align: left;\">";
-		print_r($user->errors());
-		echo "</pre>";
-		
-		echo "<pre style=\"text-align: left;\">";
-		print_r($user->values());
-		echo "</pre>";
-		exit();
-		
 		return FALSE;
 	}
 	

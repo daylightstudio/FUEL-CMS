@@ -158,13 +158,17 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
-	'jquery/plugins/jquery-ui-1.8.4.custom.min',
-	/* needed for other modules */
+	'jquery/plugins/jquery-ui-1.8.16.custom.min',
+	
+	/* needed for field types */
 	'jquery/plugins/jquery.selso',
 	'jquery/plugins/jquery.disable.text.select.pack',
 	'jquery/plugins/jquery.supercomboselect',
 	'jquery/plugins/jquery.MultiFile',
 	'jquery/plugins/jquery.tablednd.js',
+	'jquery/plugins/jquery.repeatable.js',
+	'jquery/plugins/jquery.simpletab.js',
+	
 	// 'editors/markitup/jquery.markitup.pack',
 	// 'editors/markitup/jquery.markitup.set',
 	// 'editors/ckeditor/ckeditor.js',

@@ -62,9 +62,9 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 		if($no_actions AND $no_notification) :
 			$main_content_class = 'noactions_nonotification';
 		elseif($no_actions AND $no_titlebar) :
-			$main_content_class = 'noactions_notitle';
+			$main_content_class = 'noactions_notitlebar';
 		elseif ($no_titlebar) :
-			$main_content_class = 'notitle';
+			$main_content_class = 'notitlebar';
 		elseif ($no_actions) :
 			$main_content_class = 'noactions';
 		endif;

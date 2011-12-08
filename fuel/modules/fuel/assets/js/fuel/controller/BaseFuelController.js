@@ -439,6 +439,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	initSpecialFields : function(context){
 		var _this = this;
+		this._initRepeatableFields();
+		this._initFormTabs();
+
 	//	this._initAssets(context);
 	//	this._initAddEditInline(context);
 	//	this._initDatePicker(context);
@@ -843,6 +846,32 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 		}
 	
+	},
+	
+	_initRepeatableFields : function(context){
+		$('.repeatable', context).parent().repeatable();
+	},
+	
+	_initFormTabs : function(context){
+		if (!$('#fuel_form_tabs', context).size()){
+			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
+			$legends = $('legend.tab', context);
+			$legends.each(function(i){
+				if ($(this).parent().attr('id') != '') {
+					$(this).parent().attr('id', 'fieldset' + i);
+				}
+				var id = ($(this).parent().attr('id'));
+				var text = $(this).text();
+				tabs += '<li><a href="#' + id + '">' + text + '</a></li>';
+			});
+			$legends.hide();
+			tabs += '</ul><div class="clear"></div></div>';
+			$legends.filter(':first').parent().before(tabs);
+			//$('#form').prepend(tabs);
+			//$('#form').tabs();
+			$('#fuel_form_tabs ul', context).simpleTab();
+			
+		}
 	},
 	
 	_getFieldId : function(field, context){

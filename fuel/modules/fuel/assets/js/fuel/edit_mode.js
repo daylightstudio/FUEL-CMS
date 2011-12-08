@@ -108,6 +108,7 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			fuel.setIframeSize = function(iframe){
+				var MIN_WIDTH = 620;
 				var contentDoc = iframe.contentDocument;
 				if ($('#login').size()){
 					var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
@@ -120,7 +121,10 @@ if (fuel == undefined) var fuel = {};
 					// 
 					// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
 					// var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
-					var docWidth = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
+					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
+					var width2 = $('#fuel_actions', contentDoc).outerWidth();
+					var docWidth = (width1 > width2) ? width1 : width2;
+					if (docWidth < MIN_WIDTH) docWidth = MIN_WIDTH;
 				}
 				$(iframe).height(docHeight);
 				$(iframe).width(docWidth);

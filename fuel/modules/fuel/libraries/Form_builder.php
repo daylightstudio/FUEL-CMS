@@ -721,7 +721,6 @@ Class Form_builder {
 			}
 			else if (!in_array($val['name'], $this->exclude))
 			{
-				$str .= "<tr";
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t";
 				if ($val['display_label'] !== FALSE)
@@ -1897,7 +1896,7 @@ Class Form_builder {
 	 */
 	public function create_fieldset($params)
 	{
-		$params = $this->_normalize_value($params);
+		$params = $this->normalize_params($params);
 		$attrs = array(
 			'class' => $params['class'], 
 		);
@@ -1942,7 +1941,7 @@ Class Form_builder {
 		$CI =& get_instance();
 		$CI->load->library('parser');
 		
-		$params = $this->_normalize_value($params);
+		$params = $this->normalize_params($params);
 		
 		$str = '';
 		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))

@@ -178,16 +178,6 @@ class Fuel extends Fuel_base_library {
 			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
 		}
 	}
-	
-	// function allowed($module)
-	// {
-	// 	return (in_array($module, $this->fuel->config('modules_allowed')));
-	// }
-	// 
-	// function __isset($name)
-	// {
-	// 	return isset($this->_attached[$name]);
-	// }
 }
 
 

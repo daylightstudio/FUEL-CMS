@@ -18,6 +18,7 @@ class Users_model extends Base_module_model {
 		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
 		$where = array('user_name' => $user, 'active' => 'yes');
 		$user = $this->find_one_array($where);
+
 		if (empty($user['salt'])) return FALSE;
 
 		if ($user['password'] == $this->salted_password_hash($pwd, $user['salt']))

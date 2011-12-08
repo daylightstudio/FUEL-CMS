@@ -13,7 +13,7 @@ option { margin: 0 2px; }
 input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
 ul { margin-bottom: 10px; }
 optgroup option { padding-left: 10px; }
-fieldset { border-top: 5px solid #f6f6f6; border-left: none; border-right: none; border-bottom: none; margin: 20px 0 0 0; padding: 20px 0 10px 0; }
+fieldset { border-top: 5px solid #f6f6f6; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
 legend { padding: 5px 30px 5px 5px; font-size: 12px; background-color: #f6f6f6; font-weight: bold; text-align: left; }
 
 /* generic classes */
@@ -64,11 +64,13 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin-bottom: -1px; }
 .repeatable h4 { overflow: hidden; margin: 0 auto 0px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat top center; cursor: move; }
 .repeatable .remove { position: absolute; top: 10px; right: 35px; }
-.add_another { float: right; padding: 10px 0; }
+.add_another { padding: 10px 0; }
 .repeatable.ui-sortable-helper { -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
+
+.tDnD_whileDrag { background-color: #ff1 !important; }
 
 /* header */
 div#fuel_top { line-height: 28px; }
@@ -170,7 +172,6 @@ div.noactions { top: 51px !important; }
 div.notitlebar { top: 69px !important; }
 div.noactions_notitlebar { top: 22px !important; }
 div.noactions_nonotification { top: 29px !important; }
-
 /*div#fuel_main_content .form { width: 680px; }*/
 
 /* inline/compact mode */
@@ -217,6 +218,11 @@ div.buttonbar li.start { border-left: 1px solid #ccc; }
 div.save_cancel { height: 35px;  }
 div.save_cancel li { margin: 5px 3px; }
 
+/* form tabs */
+div.form_tabs { margin-bottom: -1px; }
+div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border: 1px solid #f6f6f6; text-align: center; float: left; font-weight: bold; background-color: #ffffff; }
+div.form_tabs li.active { background-color: #f6f6f6; }
+div.form_tabs li.active a { color: #333; }
 
 /* box buttons use for manage */
 div.boxbuttons li {  float: left;  display: block; list-style: none; width: 110px; height: 50px;  border: 1px solid #ccc;  margin-bottom: 15px; margin-right: 15px; }

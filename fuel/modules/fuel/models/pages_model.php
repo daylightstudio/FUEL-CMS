@@ -160,15 +160,14 @@ class Pages_model extends Base_module_model {
 		
 	}
 	
-	function form_fields($values = array(), $related = array())
+	function form_fields()
 	{
 		$CI =& get_instance();
-		$fields = parent::form_fields($values, $related);
-		$fields['layout']['type'] = 'select';
 		
-		// $fields['layout']['value'] = $layout;
-
+		$fields = parent::form_fields();
 		$fields['date_added']['type'] = 'hidden';
+		$fields['layout']['type'] = 'select';
+		$fields['layout']['options'] = $CI->fuel->layouts->options_list();
 		
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');

@@ -26,10 +26,6 @@ class Blog_posts_model extends Base_module_model {
 		$this->db->select($this->_tables['blog_posts'].'.id, title, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) AS author, '.$this->_tables['blog_posts'].'.date_added, '.$this->_tables['blog_posts'].'.published', FALSE);
 		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['blog_posts'].'.author_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
-		foreach($data as $key => $val)
-		{
-			$data[$key]['date_added'] = english_date($data[$key]['date_added'], TRUE);
-		}
 		return $data;
 	}
 	
