@@ -663,27 +663,22 @@ class Pages extends Module {
 				
 				// sanitize the file before saving
 				$id = $this->input->post('id', TRUE);
-				$field = $this->js_controller_params['import_view_key'];
+				$field = end(explode('--', $this->js_controller_params['import_view_key']));
 				$where['page_id'] = $id;
 				$where['name'] = $field;
 				$page_var = $this->pagevariables_model->find_one_array($where);
 
-				if (empty($page_var))
+				$file = $this->_sanitize($file);
+				$save['id'] = (empty($page_var)) ? NULL : $page_var['id'];
+				$save['name'] = $field;
+				$save['page_id'] = $id;
+				$save['value'] = $file;
+				
+				if (!$this->pagevariables_model->save($save))
 				{
 					add_error(lang('error_upload'));
 				}
-				else
-				{
-					$file = $this->_sanitize($file);
-					$save['id'] = $page_var['id'];
-					$save['name'] = $this->js_controller_params['import_view_key'];
-					$save['page_id'] = $id;
-					$save['value'] = $file;
-					if (!$this->pagevariables_model->save($save))
-					{
-						add_error(lang('error_upload'));
-					}
-				}
+
 
 				if (!has_errors())
 				{
