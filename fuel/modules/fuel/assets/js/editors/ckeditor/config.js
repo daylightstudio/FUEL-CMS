@@ -20,7 +20,6 @@ CKEDITOR.editorConfig = function( config )
     // config.shiftEnterMode = CKEDITOR.ENTER_BR;
     // config.protectedSource.push( /<\?[\s\S]*?\?>/g );
 	
-	/* Moved here as apprently doesn't work in MY_fuel */
 	config.enterMode = CKEDITOR.ENTER_P;
 	config.shiftEnterMode = CKEDITOR.ENTER_BR;
 	

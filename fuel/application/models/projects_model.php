@@ -47,9 +47,12 @@ class Projects_model extends Base_module_model {
 			$fields['image_upload']['before_html'] = '<div class="img_display"><img src="'.img_path('projects/'.$values['image']).'" style="float: right;"/></div>';
 		}
 		$fields['image_upload']['overwrite'] = TRUE;
+		
+		
 		//test
 		//$fields = array();
-		$fields['asset'] = array('type' => 'asset');
+		$fields['image'] = array('type' => 'asset');
+		unset($fields['image_upload']);
 		
 		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		$category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], 'fuel_blog_categories.published' => 'yes'))) : array();
@@ -59,6 +62,11 @@ class Projects_model extends Base_module_model {
 		//$fields['name'] = array();
 		$fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
+		
+		$fields['test_image'] = array('type' => 'asset', 'upload' => FALSE);
+		
+		// temporary
+		unset($fields['_published']);
 		return $fields;
 	}
 	

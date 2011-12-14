@@ -90,7 +90,7 @@ Class Form_builder {
 	protected $_fields; // fields to be used for the form
 	protected $_cached; // cached parameters
 	protected $_js; // to be executed once per render
-	
+	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	
 	/**
 	 * Constructor - Sets Form_builder preferences
@@ -1101,6 +1101,7 @@ Class Form_builder {
 	 */
 	protected function _render_custom_field($params)
 	{
+		$field = FALSE;
 		if (is_array($params) AND isset($this->custom_fields[$params['type']]))
 		{
 			$func = $this->custom_fields[$params['type']];
@@ -1108,6 +1109,7 @@ Class Form_builder {
 			{
 				// give custom fields a reference to the current object
 				$params['instance'] =& $this;
+				$this->_rendering = TRUE;
 				
 				// take out javascript so we execute it only once per render
 				if (!empty($params['js']))
@@ -1121,21 +1123,20 @@ Class Form_builder {
 					$this->_js[$params['type']] = $func->js;
 				}
 				
-				return $func->render($params);
+				$field = $func->render($params);
 			}
 			else if (is_callable($func))
 			{
-				return $this->create_custom($func, $params);
-			}
-			else
-			{
-				return FALSE;
+				$field = $this->create_custom($func, $params);
 			}
 		}
 		else if (is_string($params))
 		{
-			return $params;
+			$field = $params;
 		}
+		
+		$this->_rendering = FALSE;
+		return $field;
 	}
 
 
@@ -1165,50 +1166,51 @@ Class Form_builder {
 	 */
 	public function create_field($params, $normalize = TRUE)
 	{
+		//if ($this->_rendering) return;
+
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
+		$str = $this->_render_custom_field($params);
 		
-		$rendered = $this->_render_custom_field($params);
-		if ($rendered)
+		if (!$str)
 		{
-			return $rendered;
-		}
-		
-		switch($params['type'])
-		{
-			case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
-				return $this->create_textarea($params);
-				break;
-			case 'datetime': case 'timestamp' :
-				$str = $this->create_date($params);
-				$str .= ' ';
-				$str .= $this->create_time($params);
-				return $str;
-				break;
-			case 'multi' : case 'array' :
-				return $this->create_multi($params);
-				break;
-			case 'blob' : case 'file' :
-				return $this->create_file($params);
-				break;
-			case 'none': case 'blank':
-				return '';
-				break;
-			case 'custom':
-				$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
-				return $this->create_custom($func, $params);
-				break;
-			default : 
-				$method = 'create_'.$params['type'];
-				if (method_exists($this, $method))
-				{
-					return $this->$method($params);
-				}
-				return $this->create_text($params);
+			switch($params['type'])
+			{
+				case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
+					$str = $this->create_textarea($params);
+					break;
+				case 'datetime': case 'timestamp' :
+					$str = $this->create_date($params);
+					$str .= ' ';
+					$str .= $this->create_time($params);
+					break;
+				case 'multi' : case 'array' :
+					$str = $this->create_multi($params);
+					break;
+				case 'blob' : case 'file' :
+					$str = $this->create_file($params);
+					break;
+				case 'none': case 'blank' :
+					$str = '';
+					break;
+				case 'custom':
+					$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
+					$str = $this->create_custom($func, $params);
+					break;
+				default : 
+					$method = 'create_'.$params['type'];
+					if (method_exists($this, $method))
+					{
+						$str = $this->$method($params);
+					}
+					else
+					{
+						$str = $this->create_text($params);
+					}
+			}
 		}
 		
 		// add before/after html 
 		$str = $params['before_html'].$str.$params['after_html'];
-		
 		return $str;
 		
 	}
@@ -2289,7 +2291,22 @@ Class Form_builder {
 				{
 					$func = create_function('$value, $field', 'return "";');
 				}
-				$this->_fields[$key]['value'] = call_user_func($func, $field['value'], $field);
+				if (is_array($func) AND isset($func[0]))
+				{
+					$params = $func;
+					
+					// the first parameter is the function name. This will return it and remove it from the array
+					$func = array_shift($params);
+					
+					// now add the current value as the first parameter
+					$func_params[] = $field['value'];
+					$func_params = array_merge($func_params, $params);
+					$this->_fields[$key]['value'] = call_user_func_array($func, $func_params);
+				}
+				else
+				{
+					$this->_fields[$key]['value'] = call_user_func($func, $field['value'], $field);
+				}
 			}
 		}
 	}
@@ -2314,7 +2331,24 @@ Class Form_builder {
 				{
 					$func = create_function('$value', 'return "";');
 				}
-				$posted[$key] = call_user_func($func, $posted[$key], $field);
+				
+				if (is_array($func) AND isset($func[0]))
+				{
+					$params = $func;
+					
+					// the first parameter is the function name. This will return it and remove it from the array
+					$func = array_shift($params);
+					
+					// now add the current value as the first parameter
+					$func_params[] = $posted[$key];
+					$func_params = array_merge($func_params, $params);
+					$posted[$key] = call_user_func_array($func, $func_params);
+				}
+				else
+				{
+					$posted[$key] = call_user_func($func, $posted[$key], $field);
+				}
+				
 				if ($set_post)
 				{
 					$_POST[$key] = $posted[$key];

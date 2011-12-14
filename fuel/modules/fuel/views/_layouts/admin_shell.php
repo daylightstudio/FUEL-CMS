@@ -92,6 +92,7 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 			<!-- BODY -->
 			<?=$body?>
 		</div>
+		<?=$this->form->hidden('fuel_display_mode', $this->fuel->admin->display_mode())?>
 		<?=$this->form->close()?>
 	</div>
 </div>

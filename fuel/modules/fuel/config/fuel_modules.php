@@ -108,6 +108,7 @@ $config['modules']['navigation_group'] = array(
 		'nav_key',
 	),
 );
+
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',

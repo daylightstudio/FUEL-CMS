@@ -27,7 +27,7 @@ class Toolbar extends Fuel_base_controller {
 		$vars['output'] = $this->load->view('html_output', $vars, TRUE);
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_html'), 'ico_tools_validate');
-		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLE);
+		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 	}
 
 	function links()
@@ -46,7 +46,7 @@ class Toolbar extends Fuel_base_controller {
 		
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_links'), 'ico_tools_validate');
-		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLE);
+		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 	}
 
 	function size_report()
@@ -65,7 +65,7 @@ class Toolbar extends Fuel_base_controller {
 		
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_size_report'), 'ico_tools_validate');
-		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLE);
+		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 	}
 
 }

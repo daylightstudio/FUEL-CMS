@@ -81,11 +81,14 @@ if (fuel == undefined) var fuel = {};
 					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
 					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
 					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+					var listTableHeight = $('#data_table_container', contentDoc).outerHeight();
 					console.log($('#fuel_main_content_inner', contentDoc))
+					console.log('LISTTABLEHEIGHT: ' + listTableHeight)
 					console.log('ACTIONS: ' + actionsHeight);
 					console.log('NOTIFICATIONS: ' + notificationsHeight);
 					console.log('MAIN: ' + mainContentHeight);
-					docHeight = actionsHeight + notificationsHeight + mainContentHeight;
+					docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
+					
 					//docHeight = 100
 					// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
 					// heightFudge += $('#fuel_actions', contentDoc).outerHeight();

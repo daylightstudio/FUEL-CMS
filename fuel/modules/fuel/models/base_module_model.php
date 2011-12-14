@@ -448,15 +448,15 @@ class Base_module_model extends MY_Model {
 			// get field names that end with _image
 			if ($fields[$key]['type'] == 'string' AND substr($key, -5) == 'image' OR substr($key, -3) == 'img')
 			{
-				$img = '';
-				if (!empty($values['id']))
-				{
-					if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
-				}
-			
-				$fields[$key]['class'] = 'asset_select';
+				// $img = '';
+				// if (!empty($values['id']))
+				// {
+				// 	if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
+				// }
+				$fields[$key]['type'] = 'asset';
+//				$fields[$key]['class'] = 'asset_select';
 				$order++;
-				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
+//				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
 			}
 			$order++;
 		}

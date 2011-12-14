@@ -53,7 +53,6 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
 	
-	
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
 		$('.jqmOverlay', $context).hide();
@@ -84,10 +83,12 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 				var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
 				var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
 				var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
+				var listTableHeight = $('#data_table_container', contentDoc).outerHeight();
+				console.log('LISTTABLEHEIGHT: ' + listTableHeight)
 				console.log('ACTIONS: ' + actionsHeight);
 				console.log('NOTIFICATIONS: ' + notificationsHeight);
 				console.log('MAIN: ' + mainContentHeight);
-				docHeight = actionsHeight + notificationsHeight + mainContentHeight;
+				docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
 			//	var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
 				//if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
 				

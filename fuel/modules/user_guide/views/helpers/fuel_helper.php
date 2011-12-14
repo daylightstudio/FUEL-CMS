@@ -138,8 +138,10 @@ If no <dfn>location</dfn> value is passed, it will default to the current <a hre
 </p>
 
 
-<h2>fuel_url(<var>[uri]</var>)</h2>
-<p>Creates the admin URL for FUEL (e.g. http://localhost/MY_PROJECT/fuel/admin).</p>
+<h2>fuel_url(<var>[uri]</var>, <var>[query_string]</var>)</h2>
+<p>Creates the admin URL for FUEL (e.g. http://localhost/MY_PROJECT/fuel/admin). 
+If the query_string parameter is passed an array, it will automatically append the query string variables to the end. 
+By default, any $_GET parameters will be appended unless FALSE is specified.</p>
 
 
 <h2>fuel_uri(<var>[uri]</var>)</h2>

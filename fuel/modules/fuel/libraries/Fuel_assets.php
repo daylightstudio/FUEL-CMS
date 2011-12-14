@@ -130,11 +130,11 @@ class Fuel_assets extends Fuel_base_library {
 				$params['max_height'] = $this->fuel->config('assets_upload_max_height');
 				if ($this->dir_filetype($asset_dir))
 				{
-					$params['allowed_types'] = $this->_dir_filetype($asset_dir);
+					$params['allowed_types'] = $this->dir_filetype($asset_dir);
 				}
 				else if ($this->dir_filetype($default_asset_dir))
 				{
-					$params['allowed_types'] = $this->_dir_filetype($default_asset_dir);
+					$params['allowed_types'] = $this->dir_filetype($default_asset_dir);
 				}
 				else
 				{
@@ -171,7 +171,6 @@ class Fuel_assets extends Fuel_base_library {
 						$this->_add_error(lang('upload_invalid_filetype'));
 					}
 				}
-			
 			
 				// if errors, then we simply return FALSE at this point and don't continue any further processing'
 				if ($this->has_errors())

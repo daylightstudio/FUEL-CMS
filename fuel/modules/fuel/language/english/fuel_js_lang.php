@@ -17,6 +17,7 @@ $lang['btn_asset'] = 'Asset';
 $lang['btn_image'] = 'Image';
 $lang['btn_pdf'] = 'PDF';
 $lang['btn_flash'] = 'Flash';
+$lang['btn_upload_asset'] = 'Upload Asset';
 $lang['btn_view_source'] = 'View Source';
 $lang['btn_view_editor'] = 'View Editor';
 

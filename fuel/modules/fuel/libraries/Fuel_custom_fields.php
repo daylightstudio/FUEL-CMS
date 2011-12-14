@@ -70,14 +70,28 @@ class Fuel_custom_fields {
 
 	public function asset($params)
 	{
+		$this->CI->load->helper('file');
+		
 		$form_builder =& $params['instance'];
 		if (empty($params['folder']))
 		{
 			$params['folder'] = 'images';
 		}
-		$asset_class = 'asset_select '.$params['folder'];
+		$asset_class = 'asset_select';
+		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
+		{
+			$asset_class .= ' asset_upload';
+		}
+		$asset_class .= ' '.$params['folder'];
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
-		return $form_builder->create_text($params);
+		
+		if (!empty($params['value']) AND is_image_file($params['value']))
+		{
+			$img = '<div class="img_display"><img src="'.img_path($params['value']).'" style="float: right;"/></div><div class="clear"></div>';
+			$params['after_html'] = $img;
+		}
+		$params['type'] = '';
+		return $form_builder->create_field($params);
 	}
 
 	public function inline_edit($params)

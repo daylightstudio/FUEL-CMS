@@ -323,12 +323,33 @@ function fuel_cache_id($location = NULL)
  *
  * @access	public
  * @param	string
+ * @param	boolean
  * @return	string
  */
-function fuel_url($uri = '')
+function fuel_url($uri = '', $query_string = TRUE)
 {
 	$CI =& get_instance();
-	return site_url($CI->fuel->config('fuel_path').$uri);
+	if (is_bool($query_string) AND $query_string !== FALSE)
+	{
+		$query_string = $_GET;
+	}
+	$q = '';
+	if (!empty($query_string))
+	{
+		if (is_array($query_string))
+		{
+			$q_str = http_build_query($query_string);
+			if (!empty($q_str))
+			{
+				$q = '?'.$q_str;
+			}
+		}
+		else if (is_string($query_string))
+		{
+			$q = (strncmp($query_string, '?', 1) !== 0) ? '?'.$query_string : $query_string;
+		}
+	}
+	return site_url($CI->fuel->config('fuel_path').$uri.$q);
 }
 
 // --------------------------------------------------------------------

@@ -39,7 +39,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.pageVals = {};
 		this.cache = new jqx.Cache();
 		this.modulePath = jqx.config.fuelPath + '/' + this.module;
+		this.displayMode = $('#fuel_display_mode').val();
 		this.tableAjaxURL = this.modulePath + '/items/';
+		if (this.displayMode.length) this.tableAjaxURL += '/?display_mode=' + this.displayMode;
 		this.treeAjaxURL = this.modulePath + '/items_tree/';
 		this.precedenceAjaxURL = this.modulePath + '/items_precedence/';
 		this.tableLoaded = false;
@@ -280,32 +282,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.notifications();
 		//this._submit();
 		
-		if (initSpecFields) this.initSpecialFields($('#main_content_inner'));
-			// $('.publish_action').click(function(e){
-			// 	$.removeChecksave();
-			// 	if ($('#published').size() > 0){
-			// 		$('#published').val('yes');
-			// 	} else {
-			// 		$('#published_yes').attr('checked', true);
-			// 	}
-			// 	$('#form').submit();
-			// 	return false;
-			// });
-			// 
-			// $('.unpublish_action').click(function(e){
-			// 	$.removeChecksave();
-			// 	if ($('#published').size() > 0){
-			// 		$('#published').val('no');
-			// 	} else {
-			// 		$('#published_no').attr('checked', true);
-			// 	}
-			// 	$('#form').submit();
-			// 	return false;
-			// });
+		if (initSpecFields) this.initSpecialFields($('#fuel_main_content_inner'));
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox').size() > 1){
+			if ($('#published:checkbox').size() > 0){
 				$('#published:checkbox').attr('checked', true);
 			} else if ($('#published').size() > 0){
 				$('#published').val('yes');
@@ -318,7 +299,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.unpublish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox').size() > 1) {
+			if ($('#published:checkbox').size() > 0) {
 				$('#published:checkbox').attr('checked', false);
 			} else if ($('#published').size() > 0){
 				$('#published').val('no');
@@ -402,7 +383,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('#others').change(function(e){
 			$.removeChecksave();
 			if ($(this).val() != ''){
-				window.location = _this.modulePath + '/edit/' + $(this).val();
+				var url =  _this.modulePath + '/edit/' + $(this).val();
+				if (_this.displayMode.length) url += '/?display_mode=' + _this.displayMode;
+				window.location = url;
 			}
 		});
 

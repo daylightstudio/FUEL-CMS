@@ -27,7 +27,7 @@ class Toolbar extends Fuel_base_controller {
 		
 		$this->fuel->admin->set_titlebar(lang('module_page_analysis'), 'ico_tools_page_analysis');
 		
-		$this->fuel->admin->render('toolbar_report', $vars, Fuel_admin::DISPLAY_COMPACT_TITLE);
+		$this->fuel->admin->render('toolbar_report', $vars, Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 		
 	}
 

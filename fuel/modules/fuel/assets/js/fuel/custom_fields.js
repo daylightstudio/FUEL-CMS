@@ -209,6 +209,11 @@ fuel.fields.asset_field = function(context){
 	var selectedAssetFolder = 'images';
 	var activeField = null;
 	
+	if (!$('#asset_modal').size()){
+		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
+	}
+	
+	// select asset
 	var showAssetsSelect = function(){
 		$('#asset_modal').jqm({
 			ajax: jqx.config.fuelPath + '/assets/select_ajax/' + selectedAssetFolder,
@@ -261,10 +266,68 @@ fuel.fields.asset_field = function(context){
 		}
 		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 	});
+
+	$('.asset_select_button', context).click(function(e){
+		activeField = $(e.target).prev().attr('id');
+		var assetTypeClasses = $(e.target).attr('class').split(' ');
+		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		return showAssetsSelect();
+	});
+	
+	
+	// asset upload 
+	
+	var showAssetUpload = function(url){
+		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+		$modal = fuel.modalWindow(html, 'inline_edit_modal');
+		
+		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
+		// $modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
+		// 	var iframeContext = this.contentDocument;
+		// 	selected = $('#id', iframeContext).val();
+		// })
+		return false;
+	}
+	$('.asset_upload', context).each(function(i){
+		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
+		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+		var btnLabel = fuel.lang('btn_upload_asset');
+		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
+	});
+	$('.asset_upload_button', context).click(function(e){
+		var assetTypeClasses = $(e.target).attr('class').split(' ');
+		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		var url = $(this).attr('href');
+		return showAssetUpload(url);
+	});
+}
+
+// upload an asset
+fuel.fields.asset_upload = function(context){
+	
+	$('.asset_upload', context).each(function(i){
+		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
+		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+		var btnLabel = '';
+		switch(assetFolder.split('/')[0].toLowerCase()){
+			case 'pdf':
+				btnLabel = fuel.lang('btn_pdf');
+				break;
+			case 'images': case 'img': case '_img':
+				btnLabel = fuel.lang('btn_image');
+				break;
+			case 'swf': case 'flash':
+				btnLabel = fuel.lang('btn_flast');
+				break;
+			default :
+				btnLabel = fuel.lang('btn_asset');
+		}
+		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+	});
 	if (!$('#asset_modal').size()){
 		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
 	}
-	$('.asset_select_button', context).click(function(e){
+	$('.asset_upload_button', context).click(function(e){
 		activeField = $(e.target).prev().attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';

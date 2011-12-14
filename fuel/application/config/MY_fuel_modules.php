@@ -30,3 +30,8 @@ $config['modules']['quotes'] = array(
 	'preview_path' => 'about',
 	'sanitize_images' => FALSE // to prevent false positives with xss_clean image sanitation
 );
+
+$config['modules']['portfolio'] = array(
+	'preview_path' => 'about',
+	'sanitize_images' => FALSE // to prevent false positives with xss_clean image sanitation
+);

@@ -147,7 +147,7 @@ class Module extends Fuel_base_controller {
 		$this->items();
 	}
 	
-	function items()
+	function items($inline = FALSE)
 	{
 		
 		$this->load->library('data_table');
@@ -250,7 +250,7 @@ class Module extends Fuel_base_controller {
 					$link = "";
 					if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
-						$url = site_url("/".$CI->fuel->config("fuel_path").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+						$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()], "'.http_build_query($_GET).'");
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
@@ -265,7 +265,8 @@ class Module extends Fuel_base_controller {
 					{
 						$action_name = lang('table_action_'.strtolower($val));
 						if (empty($action_name)) $action_name = $val;
-						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
+						$action_url = fuel_url($this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}');
+						$this->data_table->add_action($action_name, $action_url, 'url');
 					}
 				}
 			}
@@ -354,9 +355,18 @@ class Module extends Fuel_base_controller {
 			$vars['form_action'] = $this->module_uri.'/items';
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
-
+			
+			if ($inline === TRUE)
+			{
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
+			}
 			$this->fuel->admin->render($this->views['list'], $vars);
 		}
+	}
+	
+	function inline_items()
+	{
+		$this->items(TRUE);
 	}
 
 	protected function _list_process()
@@ -514,18 +524,16 @@ class Module extends Fuel_base_controller {
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
 		
-		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
+		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
 		$this->fuel->admin->set_titlebar($crumbs);
 		
 		if ($inline === TRUE)
 		{
-			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
-		else
-		{
-			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
-		}
+
+
+		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
 		return $id;
 	}
@@ -656,13 +664,6 @@ class Module extends Fuel_base_controller {
 		$vars['data'] = $data;
 		$vars['action'] = $action;
 		
-		$crumbs = array($this->module_uri => $this->module_name);
-		if (!empty($data))
-		{
-			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
-		}
-		
-		$this->fuel->admin->set_titlebar($crumbs);
 		
 		// active or publish fields
 		if (isset($data['published']))
@@ -677,17 +678,22 @@ class Module extends Fuel_base_controller {
 		
 		if (!empty($field))
 		{
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 		}
 		else if ($inline === TRUE)
 		{
-			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
 		}
-		else
+
+		$crumbs = array($this->module_uri => $this->module_name);
+		if (!empty($data))
 		{
-			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
+			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
 		}
+		
+		$this->fuel->admin->set_titlebar($crumbs);
+
+		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
 
 		// do this after rendering so it doesn't render current page'
@@ -863,6 +869,7 @@ class Module extends Fuel_base_controller {
 			{
 				$single_field[$field] = $fields[$field];
 				$single_field[$field]['label'] = ' ';
+				$single_field[$field]['required'] = FALSE;
 				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
 				$fields = $single_field;
 			}
@@ -1118,7 +1125,7 @@ class Module extends Fuel_base_controller {
 			{
 				//$vars['layout'] = FALSE;
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 				$this->fuel->admin->render($this->views['delete'], $vars);
 				
 			}
@@ -1178,12 +1185,12 @@ class Module extends Fuel_base_controller {
 			$vars['inline'] = $inline;
 			if ($inline === TRUE)
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
 			}
 			else
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION, TRUE);
 				$vars['back_action '] = fuel_url($this->module_uri.'/');
 			}
 			$this->fuel->admin->render($this->views['delete'], $vars);

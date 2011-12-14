@@ -176,7 +176,7 @@ div.noactions_nonotification { top: 29px !important; }
 
 /* inline/compact mode */
 div#fuel_main_panel_compact { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #fff; }
-div#fuel_main_content_compact { background-color: #fff; overflow: auto; position: absolute; top: 69px; left: 0px; right: 0px; bottom: 0px; }
+div#fuel_main_content_compact { background-color: #fff; overflow: auto; position: absolute; top: 99px; left: 0px; right: 0px; bottom: 0px; }
 
 
 
@@ -243,8 +243,7 @@ div#pagination b { color: #fff; background-color: #4f7193; line-height: 21px; pa
 
 /* data table */
 div#table_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}
-div#data_table_container { }
-table#data_table { margin-top: 6px; }
+div#data_table_container { padding: 6px 0; }
 #data_table .publish_hover:hover .publish_action { display: inline; }
 #data_table .publish_hover:hover .publish_text { display: none; }
 
@@ -314,6 +313,8 @@ div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
 div#__FUEL_modal__ { width: 98%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__  { border: 1px solid #888; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }
+
 /*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/
 /*div#add_edit_inline_modal { width: 500px; margin-left: -250px; max-height: 400px; overflow: auto; }*/
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }

@@ -313,6 +313,12 @@ class Assets_model extends CI_Model {
 		return $fields;
 	}
 	
+	// placeholder
+	function on_after_post($values)
+	{
+		
+	}
+	
 	/*function on_after_post($values)
 	{
 		if (empty($values['userfile_path'])) return;

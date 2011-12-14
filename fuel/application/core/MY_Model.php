@@ -976,7 +976,7 @@ class MY_Model extends CI_Model {
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
-			
+
 			if ($validated AND !empty($values))
 			{
 				// now clean the data to be ready for database saving

@@ -8,18 +8,19 @@ class Assets extends Module {
 	function __construct()
 	{
 		parent::__construct();
-		$this->views['create_edit'] = 'assets/assets_create_edit';
+//		$this->views['create_edit'] = 'assets/assets_create_edit';
 	}
 	
-	function items()
+	function items($inline = FALSE)
 	{
 		$dirs = $this->fuel->assets->dirs();
 		$this->filters['group_id']['options'] = $dirs;
-		parent::items();
+		parent::items($inline);
 	}
 
-	function create($dir = NULL)
+	function create($dir = NULL, $inline = FALSE)
 	{
+		$id = NULL;
 		if (!empty($_FILES))
 		{
 			if ($this->input->post('asset_folder')) $dir = $this->input->post('asset_folder');
@@ -28,7 +29,7 @@ class Assets extends Module {
 			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
 			$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 			
-			$params['upload_path'] = $upload_path;
+			$posted['upload_path'] = $upload_path;
 			
 			
 			// $overwrite = ($this->input->post('overwrite')) ? TRUE : FALSE;
@@ -52,7 +53,7 @@ class Assets extends Module {
 			$posted['height'] = $this->input->post('height');
 			$posted['master_dim'] = $this->input->post('master_dim');
 			$posted['file_name'] = $this->input->post('userfile_file_name');
-			
+			$id = $posted['file_name'];
 			if ($this->fuel->assets->upload($posted))
 			{
 				foreach($_FILES as $filename => $fileinfo)
@@ -81,15 +82,43 @@ class Assets extends Module {
 			
 			$this->model->on_after_post($posted);
 			
-			redirect(fuel_uri($this->module.'/create'));
+			if ($inline === TRUE)
+			{
+				$url = fuel_uri($this->module.'/inline_create/'.$dir);
+			}
+			else
+			{
+				$url = fuel_uri($this->module.'/create/'.$dir);
+			}
+			
+			redirect($url);
 		}
-		$vars = $this->_form($dir);
-		
-		$crumbs = array($this->module_uri => $this->module_name, lang('assets_upload_action'));
+		$vars = $this->_form($dir, $inline);
+
+		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;
+		$crumbs = array($list_view => $this->module_name, lang('assets_upload_action'));
 		$this->fuel->admin->set_titlebar($crumbs);
 		
-		$this->fuel->admin->render($this->views['create_edit'], $vars, Fuel_admin::DISPLAY_NO_ACTION);
+	//	$this->fuel->admin->render($this->views['create_edit'], $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		
+		if ($inline === TRUE)
+		{
+			//$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
+		}
+		else
+		{
+			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
+		}
+		$this->fuel->admin->render($this->views['create_edit'], $vars);
+		return $id;
+		
+		
+	}
+	
+	function inline_create($field = NULL)
+	{
+		$this->create($field, TRUE);
 	}
 	
 	function select_ajax($dir = NULL)
@@ -133,7 +162,7 @@ class Assets extends Module {
 	}
 	
 	// seperated to make it easier in subclasses to use the form without rendering the page
-	function _form($dir = NULL)
+	function _form($dir = NULL, $inline = FALSE)
 	{
 		$this->load->library('form_builder');
 		$this->load->helper('convert');
@@ -165,7 +194,15 @@ class Assets extends Module {
 		$vars['module'] = $this->module;
 		$vars['actions'] = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
-		$vars['form_action'] = $this->module_uri.'/create/'.$vars['id'];
+		
+		if ($inline === TRUE)
+		{
+			$vars['form_action'] = $this->module_uri.'/inline_create/'.$vars['id'];
+		}
+		else
+		{
+			$vars['form_action'] = $this->module_uri.'/create/'.$vars['id'];
+		}
 
 		// do this after rendering so it doesn't render current page'
 		if (!empty($vars['data'][$this->display_field])) $this->_recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);

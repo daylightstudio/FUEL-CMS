@@ -46,7 +46,7 @@ class Fuel_admin extends Fuel_base_library {
 	const DISPLAY_NO_ACTION = 'no_action';
 	const DISPLAY_COMPACT = 'compact';
 	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
-	const DISPLAY_COMPACT_TITLE = 'compact_title';
+	const DISPLAY_COMPACT_TITLEBAR = 'compact_title';
 
 	const NOTIFICATION_SUCCESS = 'success';
 	const NOTIFICATION_ERROR = 'error';
@@ -170,8 +170,18 @@ class Fuel_admin extends Fuel_base_library {
 			$vars['titlebar_icon'] = $this->titlebar_icon();
 		}
 		
-		if (!empty($mode))
+		
+		if (!empty($mode) OR !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode'))
 		{
+			if (!empty($_POST['fuel_display_mode']))
+			{
+				$mode = $this->CI->input->post('fuel_display_mode');
+			}
+			else if ($this->CI->input->get('display_mode'))
+			{
+				$mode = $this->CI->input->get('display_mode');
+			}
+			
 			$this->set_display_mode($mode);
 		}
 		
@@ -527,12 +537,12 @@ class Fuel_admin extends Fuel_base_library {
 		$this->panels[$key] = (bool) $value;
 	}
 
-	function display_mode($mode)
+	function display_mode()
 	{
 		return $this->display_mode;
 	}
 
-	function set_display_mode($mode)
+	function set_display_mode($mode, $set_get = FALSE)
 	{
 		switch($mode)
 		{
@@ -542,7 +552,8 @@ class Fuel_admin extends Fuel_base_library {
 			case self::DISPLAY_COMPACT:
 				$this->set_panel_display('top', FALSE);
 				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('titlebar', FALSE);
+				$this->set_panel_display('titlebar', TRUE);
+				$this->set_panel_display('actions', TRUE);
 				$this->set_panel_display('bottom', FALSE);
 				break;
 			case self::DISPLAY_COMPACT_NO_ACTION:
@@ -552,10 +563,11 @@ class Fuel_admin extends Fuel_base_library {
 				$this->set_panel_display('actions', FALSE);
 				$this->set_panel_display('bottom', FALSE);
 				break;
-			case self::DISPLAY_COMPACT_TITLE:
+			case self::DISPLAY_COMPACT_TITLEBAR:
 				$this->set_panel_display('top', FALSE);
 				$this->set_panel_display('nav', FALSE);
 				$this->set_panel_display('actions', FALSE);
+				$this->set_panel_display('titlebar', TRUE);
 				$this->set_panel_display('notification', FALSE);
 				$this->set_panel_display('bottom', FALSE);
 				break;
@@ -568,6 +580,13 @@ class Fuel_admin extends Fuel_base_library {
 				
 		}
 		$this->display_mode = $mode;
+		
+		// set $_GET parameter explicitly so fuel_url can properly render the URL
+		if ($set_get)
+		{
+			$_GET['display_mode'] = $this->display_mode;
+		}
+		
 	}
 	
 	function set_titlebar($title, $icon = '')
