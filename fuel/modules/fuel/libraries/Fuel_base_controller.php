@@ -87,11 +87,13 @@ class Fuel_base_controller extends CI_Controller {
 		
 		// set asset paths
 		//$this->asset->assets_module = FUEL_FOLDER;
+		/*
 		$this->asset->assets_folders = array(
 				'images' => 'images/',
 				'css' => 'css/',
 				'js' => 'js/',
 			);
+		*/
 		
 		$this->_last_page();
 		
