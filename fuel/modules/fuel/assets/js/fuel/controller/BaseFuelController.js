@@ -352,7 +352,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
 		});
 		
-		$('.save, #' + this.lang('btn_save')).live('click', function(e){
+		$('.save, #form input[type="submit"]').live('click', function(e){
 			$.removeChecksave();
 			$('#form').submit();
 			return false;
@@ -424,7 +424,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		var _this = this;
 		this._initRepeatableFields();
 		this._initFormTabs();
-
+//		$('#form').formBuilder().initialize();
 	//	this._initAssets(context);
 	//	this._initAddEditInline(context);
 	//	this._initDatePicker(context);
@@ -832,7 +832,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	_initRepeatableFields : function(context){
-		$('.repeatable', context).parent().repeatable();
+		var _this = this;
+		var repeatableCallback = function(clonedNode){
+			_this.initSpecialFields(clonedNode);
+		}
+		$('.repeatable', context).parent().repeatable({callback: repeatableCallback});
 	},
 	
 	_initFormTabs : function(context){

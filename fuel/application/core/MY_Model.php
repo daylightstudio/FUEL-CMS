@@ -994,7 +994,7 @@ class MY_Model extends CI_Model {
 					{
 						$values = $this->on_before_update($values);
 					}
-					
+
 					$insert_key = ($this->has_auto_increment) ? $this->key_field : NULL;
 					$this->db->insert_ignore($this->table_name, $values, $insert_key);
 
@@ -3001,6 +3001,18 @@ Class Data_record {
 				return $this->_fields[$found[1]];
 			}
 		}
+		else if (preg_match("/is_(.*)/", $method, $found))
+		{
+			if (array_key_exists($found[1], $this->_fields))
+			{
+				$field = $this->_parent_model->field_info($found[1]);
+				if (!empty($field) AND (($field['type'] == 'enum' AND count($field['options']) == 2) OR in_array($found[1], $this->_parent_model->boolean_fields)))
+				{
+					return is_true_val($this->_fields[$found[1]]);
+				}
+			}
+		}
+
 		return FALSE;
 	}
 	

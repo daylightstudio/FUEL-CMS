@@ -54,7 +54,7 @@ $config['assets_excluded_dirs'] = array(
 	);
 
 // text editor settings... options are markitup or ckeditor
-$config['text_editor'] = 'ckeditor';
+$config['text_editor'] = 'markitup';
 
 // ck editor specific settings
 $config['ck_editor_settings'] = array(

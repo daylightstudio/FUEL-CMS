@@ -173,10 +173,22 @@ class Assets_model extends CI_Model {
 	
 	function find_by_key($file)
 	{
+		$file = $this->get_file($file);
+
 		$CI =& get_instance();
 		$asset_path = WEB_ROOT.$CI->config->item('assets_path').$file;
 		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
 		return get_file_info($asset_path);
+	}
+	
+	function get_file($file)
+	{
+		// if no extension is provided, then we determine that it needs to be decoded
+		if (strpos('.', $file) === FALSE)
+		{
+			$file = uri_safe_decode($file);
+		}
+		return $file;
 	}
 	
 	function record_count($dir = 'images')
@@ -190,7 +202,33 @@ class Assets_model extends CI_Model {
 	function delete($file)
 	{
 		$CI =& get_instance();
+
 		
+		if (is_array($file))
+		{
+			$valid = TRUE;
+			foreach($file as $f)
+			{
+				if (!$this->_delete($f))
+				{
+					$valid = FALSE;
+				}
+			}
+			return $valid;
+		}
+		else
+		{
+			return $this->_delete($file);
+		}
+
+	}
+	
+	protected function _delete($file)
+	{
+		$CI =& get_instance();
+
+		$file = $this->get_file($file);
+
 		// cleanup beginning slashes
 		if (substr($file, 0, 1) == '/')
 		{
@@ -210,7 +248,7 @@ class Assets_model extends CI_Model {
 		while(!$end)
 		{
 			// if it is the last file in a subfolder (not one of the main asset folders), then we recursively remove the folder to clean things up
-			$excluded_asset_folders = $CI->fuel->excluded_asset_server_folders();
+			$excluded_asset_folders = $CI->fuel->assets->excluded_asset_server_folders();
 			if (!in_array($parent_folder, $excluded_asset_folders))
 			{
 				$dir_files = directory_to_array($parent_folder);
@@ -236,7 +274,6 @@ class Assets_model extends CI_Model {
 		if ($max_depth == $i) $end = TRUE;
 		return $deleted;
 	}
-	
 /*	private function _get_excluded_asset_server_folders()
 	{
 		$CI =& get_instance();
@@ -310,14 +347,22 @@ class Assets_model extends CI_Model {
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
+		$fields['uploaded_file_name'] = array('type' => 'hidden');
+		
 		return $fields;
 	}
 	
 	// placeholder
-	function on_after_post($values)
+	function on_before_post()
 	{
 		
 	}
+
+	// placeholder
+	function on_after_post($values)
+	{
+	}
+
 	
 	/*function on_after_post($values)
 	{

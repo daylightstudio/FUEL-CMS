@@ -5,8 +5,7 @@ if (fuel == undefined){
 fuel.fields = {};
 
 // date picker field
-fuel.fields.datetime_field = function(context, options)
-{
+fuel.fields.datetime_field = function(context, options){
 	var o = {
 		format : 'mm/dd/yyyy',
 		firstDayOfWeek : 0,
@@ -125,49 +124,52 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
 		
-		$('#' + ckId).parent().append(sourceButton);
-
-		$('#' + ckId + '_viewsource').click(function(){
-
-			$elem = $(elem);
-			ckInstance = CKEDITOR.instances[ckId];
-
-			//if (!$('#cke_' + ckId).is(':hidden')){
-			if (!CKEDITOR.instances[ckId].hidden){
-				CKEDITOR.instances[ckId].hidden = true;
-				if (!$elem.hasClass('markItUpEditor')){
-					createMarkItUp(elem);
-					$elem.show();
-				}
-				$('#cke_' + ckId).hide();
-				$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-				//$elem.closest('.html').show();
-				
-				$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
-				
-				if (!ckInstance.checkDirty()){
-					$.changeChecksaveValue(ckId, ckInstance.getData())
-				}
-
-				// update the info
-				ckInstance.updateElement();
-				
-				
-			} else {
-				CKEDITOR.instances[ckId].hidden = false;
-				
-				$('#cke_' + ckId).show();
-				
-				$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
-				//$elem.show().closest('.html').hide();
-				$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_source'))
-				
-				ckInstance.setData($elem.val());
-			}
+		if ($('#' + ckId).parent().find('.editor_viewsource').size() == 0){
 			
-			fixCKEditorOutput(elem);
-			return false;
-		})
+			$('#' + ckId).parent().append(sourceButton);
+
+			$('#' + ckId + '_viewsource').click(function(){
+
+				$elem = $(elem);
+				ckInstance = CKEDITOR.instances[ckId];
+
+				//if (!$('#cke_' + ckId).is(':hidden')){
+				if (!CKEDITOR.instances[ckId].hidden){
+					CKEDITOR.instances[ckId].hidden = true;
+					if (!$elem.hasClass('markItUpEditor')){
+						createMarkItUp(elem);
+						$elem.show();
+					}
+					$('#cke_' + ckId).hide();
+					$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
+					//$elem.closest('.html').show();
+				
+					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
+				
+					if (!ckInstance.checkDirty()){
+						$.changeChecksaveValue(ckId, ckInstance.getData())
+					}
+
+					// update the info
+					ckInstance.updateElement();
+				
+				
+				} else {
+					CKEDITOR.instances[ckId].hidden = false;
+				
+					$('#cke_' + ckId).show();
+				
+					$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
+					//$elem.show().closest('.html').hide();
+					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_source'))
+				
+					ckInstance.setData($elem.val());
+				}
+			
+				fixCKEditorOutput(elem);
+				return false;
+			})
+		}
 
 		
 	}
@@ -233,7 +235,7 @@ fuel.fields.asset_field = function(context){
 				
 				$('.ico_yes').click(function(){
 					$('#asset_modal').jqmHide();
-					$('#' + _this.activeField).val($('#asset_select').val());
+					$('#' + activeField).val($('#asset_select').val());
 					return false;
 				});
 				$('.ico_no').click(function(){
@@ -268,7 +270,7 @@ fuel.fields.asset_field = function(context){
 	});
 
 	$('.asset_select_button', context).click(function(e){
-		activeField = $(e.target).prev().attr('id');
+		activeField = $(e.target).parent().find('input:first').attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		return showAssetsSelect();
@@ -276,16 +278,19 @@ fuel.fields.asset_field = function(context){
 	
 	
 	// asset upload 
-	
 	var showAssetUpload = function(url){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal');
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
-		// $modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
-		// 	var iframeContext = this.contentDocument;
-		// 	selected = $('#id', iframeContext).val();
-		// })
+		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
+			var iframeContext = this.contentDocument;
+			selected = $('#uploaded_file_name', iframeContext).val();
+			if (selected && selected.length){
+				$('#' + activeField).val(selected);
+				$modal.jqmHide();
+			}
+		})
 		return false;
 	}
 	$('.asset_upload', context).each(function(i){
@@ -294,7 +299,9 @@ fuel.fields.asset_field = function(context){
 		var btnLabel = fuel.lang('btn_upload_asset');
 		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
 	});
+	
 	$('.asset_upload_button', context).click(function(e){
+		activeField = $(e.target).parent().find('input:first').attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		var url = $(this).attr('href');
@@ -447,6 +454,7 @@ fuel.fields.inline_edit_field = function(context){
 		
 		$('.add_inline_button', context).click(function(e){
 			editModule($(this).attr('href'), null, refreshField);
+			$(context).scrollTo('body', 800);
 			return false;
 		});
 
@@ -548,8 +556,51 @@ fuel.fields.linked_field = function(context){
 
 // create fillin property fields... placeholder value is really all you need though and this may be deprecated
 fuel.fields.fillin_field = function(context){
-	$('.fillin').each(function(i){
+	$('.fillin', context).each(function(i){
 		var placeholder = unescape($(this).attr('placeholder'));
 		$(this).fillin(placeholder);
 	});
+}
+
+// create fillin property fields... placeholder value is really all you need though and this may be deprecated
+fuel.fields.number_field = function(context, options){
+	$('.numeric', context).each(function(i){
+		var o = $.extend(options, {});
+		if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes"){
+			o.decimal = '.';
+		} else {
+			o.decimal = false;
+		}
+		if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes"){
+			o.negative = true;
+		}
+		$(this).numeric(o);
+	});
+}
+
+fuel.fields.template_field = function(context, options){
+	$repeatable = $('.repeatable', context).parent();
+	$repeatable.bind('cloned', function(e){
+		$('#form').formBuilder().initialize(e.clonedNode);
+	})
+	var currentCKTexts = {};
+	
+	// hack required for CKEditor so it will allow you to sort and not lose the data 
+	$repeatable.bind('sortStarted', function(e){
+		if (CKEDITOR != undefined){
+			for(var n in CKEDITOR.instances){
+				currentCKTexts[n] = CKEDITOR.instances[n].getData();
+			}
+		}
+	})
+
+	$repeatable.bind('sortStopped', function(e){
+		if (CKEDITOR != undefined){
+			for(var n in CKEDITOR.instances){
+				currentCKTexts[n] = CKEDITOR.instances[n].setData(currentCKTexts[n]);
+			}
+		}
+	})
+	
+	$('.repeatable', context).parent().repeatable(options);
 }

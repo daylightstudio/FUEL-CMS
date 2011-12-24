@@ -243,6 +243,22 @@ class Asset {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns a document asset path (e.g. doc, docx)
+	 *
+	 * @access	public
+	 * @param	string	doc file name including extension
+	 * @param	string	module folder if any
+	 * @param	boolean	whether to include http://... at beginning
+	 * @return	string
+	 */	
+	public function docs_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		return $this->assets_path($file, 'docs', $module, $absolute);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Returns a cache asset path
 	 *
 	 * @access	public

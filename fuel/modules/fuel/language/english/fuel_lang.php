@@ -230,7 +230,7 @@ $lang['form_label_clear_first'] = 'Clear First';
 $lang['assets_instructions'] = 'Here you can upload new assets. Select overwrite if you would like to overwrite a file with the same name.';
 $lang['form_label_preview/kb'] = 'Preview/kb';
 $lang['form_label_link'] = 'Link';
-$lang['form_label_asset_folder'] = 'Asset Folder';
+$lang['form_label_asset_folder'] = 'Asset Folder:';
 $lang['form_label_new_file_name'] = 'New file name';
 $lang['form_label_subfolder'] = 'Subfolder';
 $lang['form_label_overwrite'] = 'Overwrite';
@@ -467,6 +467,7 @@ $lang['pagination_last_link'] = 'Last &rsaquo;';
 
 $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
+$lang['action_delete'] = 'Delete';
 
 $lang['import'] = 'Import';
 

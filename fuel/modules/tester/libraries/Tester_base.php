@@ -189,6 +189,8 @@ abstract class Tester_base
 	 */
 	protected function db_exists($test)
 	{
+		//$this->dbutil->database_exists(); // may be replaced with this later
+
 		$result = $this->CI->db->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "'.$this->config_item('db_name').'"');
 		$table = $result->row_array();
 		return (!empty($table['SCHEMA_NAME']) && strtoupper($table['SCHEMA_NAME']) == strtoupper($this->config_item('db_name')));

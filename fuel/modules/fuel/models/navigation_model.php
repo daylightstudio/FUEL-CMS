@@ -123,7 +123,7 @@ class Navigation_model extends Base_module_model {
 		}
 		$CI->load->helper('array');
 		
-		$group_options = options_list($CI->navigation_groups_model->find_all_array());
+		$group_options = $CI->navigation_groups_model->options_list();
 		$group_values = array_keys($group_options);
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 

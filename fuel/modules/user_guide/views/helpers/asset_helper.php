@@ -32,6 +32,9 @@ $this->load->helper('asset');
 <h2>media_path(<var>['file']</var>, <var>['module']</var>, <var>[is_absolute]</var>)</h2>
 <p>This function is the same as <a href="<?=user_guide_url('libraries/asset#media_path')?>">$this->asset->media_path()</a>.</p>
 
+<h2>docs_path(<var>['file']</var>, <var>['module']</var>, <var>[is_absolute]</var>)</h2>
+<p>This function is the same as <a href="<?=user_guide_url('libraries/asset#docs_path')?>">$this->asset->docs_path()</a>.</p>
+
 <h2>cache_path(<var>['file']</var>, <var>['module']</var>, <var>[is_absolute]</var>)</h2>
 <p>This function is the same as <a href="<?=user_guide_url('libraries/asset#cache_path')?>">$this->asset->cache_path()</a>.</p>
 

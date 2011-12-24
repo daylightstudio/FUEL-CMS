@@ -458,6 +458,7 @@ class Base_module_model extends MY_Model {
 				$order++;
 //				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
 			}
+			
 			$order++;
 		}
 		
@@ -490,8 +491,28 @@ class Base_module_model extends MY_Model {
 		if (!defined('FUEL_ADMIN'))
 		{
 			$fields = $this->fields();
-			if (in_array('published', $fields)) $this->db->where(array($this->table_name.'.published' => 'yes'));
-			if (in_array('active', $fields)) $this->db->where(array($this->table_name.'.active' => 'yes'));
+			if (in_array('published', $fields))
+			{
+				if (in_array('published', $this->boolean_fields))
+				{
+					$this->db->where(array($this->table_name.'.published' => 1));
+				}
+				else
+				{
+					$this->db->where(array($this->table_name.'.published' => 'yes'));
+				}
+			}
+			if (in_array('active', $fields))
+			{
+				if (in_array('active', $this->boolean_fields))
+				{
+					$this->db->where(array($this->table_name.'.active' => 1));
+				}
+				else
+				{
+					$this->db->where(array($this->table_name.'.active' => 'yes'));
+				}
+			}
 		}
 	}
 	

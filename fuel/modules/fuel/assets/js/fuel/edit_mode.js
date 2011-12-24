@@ -114,16 +114,11 @@ if (fuel == undefined) var fuel = {};
 				var MIN_WIDTH = 620;
 				var contentDoc = iframe.contentDocument;
 				if ($('#login').size()){
-					var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
+					var docHeight = fuel.calcHeight('#login', contentDoc);
 					var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 				} else {
-					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
-					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
-					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
-					docHeight = actionsHeight + notificationsHeight + mainContentHeight;
-					// 
-					// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
-					// var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
+					var docHeight = fuel.calcHeight('#fuel_actions, #fuel_notification, #fuel_main_content_inner, #data_table_container', contentDoc);
+
 					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 					var width2 = $('#fuel_actions', contentDoc).outerWidth();
 					var docWidth = (width1 > width2) ? width1 : width2;

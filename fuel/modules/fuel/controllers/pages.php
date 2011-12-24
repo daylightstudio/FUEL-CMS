@@ -172,6 +172,7 @@ class Pages extends Module {
 		//$this->form_builder->hidden = (array) $this->model->key_field();
 		$this->form_builder->question_keys = array();
 		$this->form_builder->use_form_tag = FALSE;
+		//$this->form_builder->auto_execute_js = FALSE;
 		
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
@@ -186,6 +187,10 @@ class Pages extends Module {
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_field_values($field_values);
+		
+		// set this one to FALSE because the layout selection will execute the js again
+		$this->form_builder->auto_execute_js = FALSE;
+
 		$vars['form'] = $this->form_builder->render();
 
 		$this->form_builder->submit_value = lang('btn_save');
@@ -339,7 +344,10 @@ class Pages extends Module {
 		$this->fuel->admin->set_titlebar($crumbs);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($vars['data'][$this->display_field])) $this->fuel->admin->recent_pages($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
+		if (!empty($vars['data'][$this->display_field]))
+		{
+			$this->fuel->admin->add_recent_page($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
+		}
 		return $vars;
 	}
 	
@@ -372,8 +380,9 @@ class Pages extends Module {
 
 			foreach($fields as $key => $val)
 			{
-				$value = (!empty($vars[$key]) ) ? $vars[$key] : NULL;
-				if (is_array($val['value']) OR $val['type'] == 'array' OR $val['type'] == 'multi')
+				$value = (!empty($vars[$key])) ? $vars[$key] : NULL;
+				
+				if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
 				{
 					$value = serialize($value);
 					$val['type'] = 'array'; // force the type to be an array
@@ -456,10 +465,10 @@ class Pages extends Module {
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
 		$this->form_builder->use_form_tag = FALSE;
-		//$this->form_builder->name_array = 'vars';
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
+		
 		if (!empty($id))
 		{
 			$page_vars = $this->pagevariables_model->find_all_by_page_id($id);

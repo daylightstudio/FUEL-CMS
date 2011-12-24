@@ -545,7 +545,29 @@ Class Form {
 			$str = '';
 			foreach($attrs as $key => $val)
 			{
-				if ($val != '') $str .= ' '.$key.'="'.$val.'"';
+				// create data fields 
+				if ($key == 'id' AND $val === FALSE)
+				{
+					// this gets stripped out upon rendering if the id is blank so we set it so if the value is FALSE
+					$str .= ' id=""';
+				}
+				else if (is_array($val) AND $key == 'data')
+				{
+					foreach($val as $k => $v)
+					{
+						if ($v !== '')
+						{
+							$str .= ' data-'.$k.'="'.$v.'"';
+						}
+					}
+				}
+				else
+				{
+					if ($val != '')
+					{
+						$str .= ' '.$key.'="'.$val.'"';
+					}
+				}
 			}
 			return $str;
 		}
@@ -579,7 +601,7 @@ Class Form {
 			}
 		}
 		if ($error) $str .= "<span class=\"".$this->error_highlight_cssclass."\">";
-		$str .= $elem->writeIt();
+		$str .= $elem->render();
 		if ($error) $str .= "</span>";
 		return $str;
 	}
@@ -629,7 +651,7 @@ Class Form_input {
 	 * @access public
 	 * @return string
 	 */
-	public function writeIt ()
+	public function render ()
 	{
 		$id = '';
 		if (strpos($this->attrs, 'id="') === FALSE)
@@ -692,7 +714,7 @@ Class Form_select {
 	 * @access public
 	 * @return string
 	 */
-	public function writeIt()
+	public function render()
 	{
 		$str = '';
 		$id = '';
@@ -819,7 +841,7 @@ Class Form_textarea {
 	 * @access public
 	 * @return string
 	 */
-	public function writeIt()
+	public function render()
 	{
 		$id = '';
 		if (strpos($this->attrs, 'id="') === FALSE)
@@ -834,7 +856,6 @@ Class Form_textarea {
 		{
 			$this->attrs .= ' cols="40"';
 		}
-		
 		
 		$this->attrs = str_replace('id=""', '', $this->attrs);
 		$str = "<textarea name=\"".$this->name."\"".$id.$this->attrs.">".$this->value."</textarea>";
@@ -884,7 +905,7 @@ Class Form_button {
 	 * @access public
 	 * @return string
 	 */
-	public function writeIt ()
+	public function render()
 	{
 		$id = '';
 		if (strpos($this->attrs, 'id="') === FALSE)

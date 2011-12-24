@@ -28,7 +28,7 @@ CREATE TABLE `fuel_archives` (
   `version_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `archived_user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=50 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_archives`
@@ -50,15 +50,15 @@ CREATE TABLE `fuel_blocks` (
   `last_modified` timestamp NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_blocks`
 -- 
 
 INSERT INTO `fuel_blocks` (`id`, `name`, `view`, `published`, `date_added`, `last_modified`) VALUES 
-(2, 'quote', '{$quote = fuel_model(''quotes'', array(''find'' = ''one'', ''order'' = ''RAND()''))}\n{if ($quote) }\n<div id="block_quote">\n	{quote($quote->content, $quote->name, $quote->title)}\n</div>\n{/if}', 'no', '2010-11-06 18:34:33', '2010-11-07 01:47:36'),
-(3, 'showcase', '{$project = fuel_model(''projects'', array(''find'' = ''one'', ''where'' = array(''featured'' = ''yes''), ''order'' = ''RAND()''))}\n\n{if ($project) }\n<div id="block_showcase">\n	<h3>{$project->name}</h3>\n	<img src="{$project->image_path}" />\n</div>\n{/if}', 'yes', '2010-11-06 18:34:58', '2010-11-07 01:14:08');
+(1, 'quote', '{$quote = fuel_model(''quotes'', array(''find'' = ''one'', ''order'' = ''RAND()''))}\n{if ($quote) }\n<div id="block_quote">\n	{quote($quote->content, $quote->name, $quote->title)}\n</div>\n{/if}', 'no', '2010-11-06 18:34:33', '2010-11-07 01:47:36'),
+(2, 'showcase', '{$project = fuel_model(''projects'', array(''find'' = ''one'', ''where'' = array(''featured'' = ''yes''), ''order'' = ''RAND()''))}\n\n{if ($project) }\n<div id="block_showcase">\n	<h3>{$project->name}</h3>\n	<img src="{$project->image_path}" />\n</div>\n{/if}', 'yes', '2010-11-06 18:34:58', '2010-11-07 01:14:08');
 
 -- --------------------------------------------------------
 
@@ -74,7 +74,7 @@ CREATE TABLE `fuel_blog_categories` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_blog_categories`
@@ -105,7 +105,7 @@ CREATE TABLE `fuel_blog_comments` (
   `date_added` datetime NOT NULL,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_blog_comments`
@@ -129,7 +129,7 @@ CREATE TABLE `fuel_blog_links` (
   `precedence` int(11) NOT NULL default '0',
   `published` enum('yes','no') default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- 
 -- Dumping data for table `fuel_blog_links`
@@ -161,7 +161,7 @@ CREATE TABLE `fuel_blog_posts` (
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `permalink` (`permalink`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_blog_posts`
@@ -262,7 +262,7 @@ CREATE TABLE `fuel_logs` (
   `user_id` int(11) NOT NULL,
   `message` text collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=87 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_logs`
@@ -306,7 +306,7 @@ CREATE TABLE `fuel_navigation_groups` (
   `name` varchar(255) collate utf8_unicode_ci NOT NULL,
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_navigation_groups`
@@ -331,7 +331,7 @@ CREATE TABLE `fuel_pages` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `location` (`location`),
   KEY `layout` (`layout`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_pages`
@@ -356,7 +356,7 @@ CREATE TABLE `fuel_page_variables` (
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `page_id` (`page_id`,`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_page_variables`
@@ -382,7 +382,7 @@ CREATE TABLE `fuel_permissions` (
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=29 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_permissions`
@@ -432,7 +432,7 @@ CREATE TABLE `fuel_site_variables` (
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_site_variables`
@@ -458,7 +458,7 @@ CREATE TABLE `fuel_users` (
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `fuel_users`
@@ -503,7 +503,7 @@ CREATE TABLE `projects` (
   `precedence` int(11) NOT NULL default '999' COMMENT 'The higher the number, the more important',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `projects`
@@ -527,7 +527,7 @@ CREATE TABLE `quotes` (
   `precedence` int(11) NOT NULL default '0',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 
 -- Dumping data for table `quotes`

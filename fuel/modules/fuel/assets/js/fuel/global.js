@@ -78,25 +78,8 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 		setTimeout(function(){
 			if ($('#login').size()){
 				var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
-				//var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 			} else {
-				var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
-				var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
-				var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
-				var listTableHeight = $('#data_table_container', contentDoc).outerHeight();
-				console.log('LISTTABLEHEIGHT: ' + listTableHeight)
-				console.log('ACTIONS: ' + actionsHeight);
-				console.log('NOTIFICATIONS: ' + notificationsHeight);
-				console.log('MAIN: ' + mainContentHeight);
-				docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
-			//	var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
-				//if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
-				
-				// var heightFudge = $('#fuel_notification', contentDoc).outerHeight() + 30; // padding for #fuel_main_content_inner is 15 top and 15 bottom
-				// var docHeight = $('#fuel_main_content_inner .form', contentDoc).outerHeight() + $('#fuel_actions', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
-				// if ($('.instructions', contentDoc).size()) docHeight += $('.instructions', contentDoc).outerHeight() + 20;
-				console.log(docHeight)
-				//var docWidth = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
+				var docHeight = fuel.calcHeight('#fuel_actions, #fuel_notification, #fuel_main_content_inner, #data_table_container', contentDoc) + 30;
 			}
 
 			if (docHeight > 450) {
@@ -147,4 +130,12 @@ fuel.windowLevel = function(){
 		win = win.parent;
 	}
 	return level;
+}
+
+fuel.calcHeight = function(elems, context){
+	var height = 0;
+	$(elems, context).each(function(i){
+		height += $(this).outerHeight();
+	})
+	return height;
 }

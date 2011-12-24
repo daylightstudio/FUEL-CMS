@@ -32,13 +32,18 @@ class Fuel_cache extends Fuel_base_library {
 	
 	public $ignore = '#^(\..+)|(index\.html)#'; // files to exclude from clearing like .gitignore and .htaccess
 	
-	protected $_cache;
+	protected $_cache; // the Cache object used for saving, retrieving and deleting cached files
 	protected $_types = array(
 								'compiled',
 								'pages',
 								'assets',
-							);
+							); // method names used when doing clear_all()
 	
+	/**
+	 * Constructor
+	 *
+	 * The constructor can be passed an array of config values
+	 */
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -46,38 +51,112 @@ class Fuel_cache extends Fuel_base_library {
 		$this->_cache = & $this->CI->cache;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Initializes object
+	 *
+	 * @access	public
+	 * @param	array	array of initalization parameters  (optional)
+	 * @return	void
+	 */
 	function initialize($params)
 	{
 		parent::initialize($params);
 		
 	}
 	
+	// --------------------------------------------------------------------
+
 	/**
-	 * 	Get and return an item from the cache
+	 * Creates a cache ID based on the page location
+	 *
+	 * If no $location value is provided, then the ID will be based on the current URI segments
 	 * 
-	 * 	@param	Cache Id
-	 * 	@param	Cache group Id
-	 * 	@param	Should I check the expiry time?
-	 * 	@return The object or NULL if not available
+	 * @access	public
+	 * @param	string	location used in creating the ID (optional)
+	 * @return	string
+	 */
+	function create_id($location = NULL)
+	{
+		if (empty($location))
+		{
+			$segs = $this->CI->uri->segment_array();
+
+			if (empty($segs)) 
+			{
+				return 'home';
+			}
+			return implode('.', $segs);
+		}
+		return str_replace('/', '.', $location);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get and return an item from the cache
+	 * 
+	 * @access	public
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID (optinal)
+	 * @param	boolean	Skip checking if it is in the cache or not (optional)
+	 * @return	object	The object or NULL if not available
 	 */
 	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
 	{
-		$this->_cache->get($cache_id, $cache_group, $skip_checking);
+		return $this->_cache->get($cache_id, $cache_group, $skip_checking);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Saves an item to the cache
+	 * 
+	 * @access	public
+	 * @param	string	Cache Id
+	 * @param	string	Cache group Id
+	 * @param	mixed	Data to save to the cache  (optional)
+	 * @param	int		Time to live in seconds for cache  (optional)
+	 * @return	void
+	 */
 	function save($cache_id, $data, $group = NULL, $ttl = NULL)
 	{
-		return $this->_cache->save($cache_id, $data, $group, $ttl);
+		$this->_cache->save($cache_id, $data, $group, $ttl);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Checks if the file is cached based on the cache_id passed
+	 * 
+	 * @access	public
+	 * @param	string	Cache Id
+	 * @param	string	Cache group Id (optinal)
+	 * @return	boolean
+	 */
 	function is_cached($cache_id, $group = NULL)
 	{
 		return $this->_cache->is_cached($cache_id, $group);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the various types of caches
+	 * 
+	 * Value passed can be either a string or an array. 
+	 * If a string,the value must "compiled", "pages" or "assets".
+	 * If an array,the array must contain one or more of the values (e.g. array("compiled", "pages", "assets"))
+	 * If no parameters are passed, then all caches are cleared
+	 * 
+	 * @access	public
+	 * @param	mixed	Value can be either a string of one value or an array of multiple values. Valid values are compiled, pages and assets. (optional)
+	 * @return	void
+	 */
 	function clear($what = NULL)
 	{
-		if (is_array($what))
+		if (!empty($what) AND is_array($what))
 		{
 			foreach($what as $w)
 			{
@@ -91,7 +170,7 @@ class Fuel_cache extends Fuel_base_library {
 				}
 			}
 		}
-		else if (is_string($what))
+		else if (!empty($what) AND is_string($what))
 		{
 			if (in_array($what, $this->_types))
 			{
@@ -104,6 +183,14 @@ class Fuel_cache extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the compiled templating files
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
 	function clear_compiled()
 	{
 		
@@ -131,12 +218,30 @@ class Fuel_cache extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the pages cache
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
 	function clear_pages()
 	{
 		$cache_group = $this->fuel->config('page_cache_group');
 		$this->_cache->remove_group($cache_group);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the assets cache
+	 * 
+	 * Will look in module asset folders if the fuel/{module}/assets/cache/ directory exist for that module
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	function clear_assets()
 	{
 		// remove asset cache files if exist
@@ -155,16 +260,44 @@ class Fuel_cache extends Fuel_base_library {
 		
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears a single cache file
+	 * 
+	 * @access	public
+	 * @param	string	Cache Id
+	 * @return	void
+	 */
 	function clear_file($cache_id)
 	{
 		$this->_cache->remove($cache_id);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears a group of cached files
+	 * 
+	 * @access	public
+	 * @param	string	Cache group Id
+	 * @return	void
+	 */
 	function clear_group($group)
 	{
 		$this->_cache->remove_group($group);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears all cache types
+	 * 
+	 * Will remove page, compiled, and cached asset files
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
 	function clear_all()
 	{
 		$this->clear_pages();
@@ -173,21 +306,15 @@ class Fuel_cache extends Fuel_base_library {
 		$this->_delete_files($this->CI->config->item('cache_path'));
 	}
 	
-	function create_id($location = NULL)
-	{
-		if (empty($location))
-		{
-			$segs = $this->CI->uri->segment_array();
+	// --------------------------------------------------------------------
 
-			if (empty($segs)) 
-			{
-				return 'home';
-			}
-			return implode('.', $segs);
-		}
-		return str_replace('/', '.', $location);
-	}
-	
+	/**
+	 * Deletes cached files from specified path
+	 *
+	 * @access	protected
+	 * @param	string	path to file
+	 * @return	void
+	 */
 	protected function _delete_files($path)
 	{
 		@delete_files($path, FALSE, $this->ignore);

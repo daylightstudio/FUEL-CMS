@@ -136,6 +136,23 @@ function media_path($file = NULL, $module = NULL, $absolute = NULL)
 // --------------------------------------------------------------------
 
 /**
+ * Returns a document asset path (e.g. doc, docx)
+ *
+ * @access	public
+ * @param	string	docs file name including extension
+ * @param	string	module folder if any
+ * @param	boolean	whether to include http://... at beginning
+ * @return	string
+ */	
+function docs_path($file = NULL, $module = NULL, $absolute = NULL)
+{
+	$CI = _get_assets();
+	return $CI->asset->docs_path($file, $module, $absolute);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns a cache asset path
  *
  * @access	public

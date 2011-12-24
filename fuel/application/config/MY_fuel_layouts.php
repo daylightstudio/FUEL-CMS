@@ -22,7 +22,7 @@ $config['layout_fields']['main'] =  array(
 	'Body' => array('type' => 'fieldset', 'label' => 'Body', 'class' => 'tab'),
 	'body' => array('label' => lang('layout_field_body'), 'type' => 'textarea', 'description' => lang('layout_field_body_description')),
 	'body_class' => array('label' => lang('layout_field_body_class')),
-		'Sections' => array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'),
+	'Sections' => array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'),
 	'sections' => array(
 					'display_label' => FALSE,
 					'type' => 'template', 
@@ -41,6 +41,10 @@ $config['layout_fields']['main'] =  array(
 					'repeatable' => TRUE,
 					//'fieldset' => 'Sections',
 					),
+	// 'nested' => array('type' => 'nested', 'display_label' => FALSE, 'fields' => array(
+	// 													'test1' => array('type' => 'textarea'),
+	// 													'test2' => array('type' => 'enum', ''),
+	// 												)),
 
 	);
 

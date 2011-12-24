@@ -293,17 +293,40 @@ Examples:
 
 <pre class="brush: php">
 echo $this->asset->media_path('mymovie.mov');
-// /assets/swf/newsletter.pdf
+// /assets/media/mymovie.mov
 
-echo $this->asset->media_path('main', 'my_module');
-// /fuel/modules/my_module/assets/swf/newsletter.pdf (assuming /fuel/modules is where the module folder is located)
+echo $this->asset->media_path('mymovie.mov', 'my_module');
+// /fuel/modules/my_module/assets/media/nmymovie.mov (assuming /fuel/modules is where the module folder is located)
 
-echo $this->asset->media_path('main', NULL, TRUE);
-// http://www.mysite.com/assets/swf/newsletter.pdf
+echo $this->asset->media_path('mymovie.mov', NULL, TRUE);
+// http://www.mysite.com/assets/media/mymovie.mov
 </pre>
 
 <p class="important">File extensions <strong>must</strong> be included.</p>
 
+<a name="docs_path"></a>
+<h2>$this->asset->docs_path(<var>['file']</var>, <var>['module']</var>, <var>[is_absolute]</var>)</h2>
+<p>Returns the web path to a document asset (e.g. a word docs).
+This and the helper function equivalent are commonly used in anchor (<kbd>&lt;a&gt;</kbd>) tags linking to media files.
+
+The first parameter is the name of the document file. 
+The second parameter module folder name.
+The third parameter is a boolean value to return either a relative or an http absolute path.
+Examples:
+</p>
+
+<pre class="brush: php">
+echo $this->asset->docs_path('mydoc.doc');
+// /assets/docs/mydoc.doc
+
+echo $this->asset->docs_path('mydoc.doc', 'my_module');
+// /fuel/modules/my_module/assets/docs/mydoc.doc (assuming /fuel/modules is where the module folder is located)
+
+echo $this->asset->media_path('mydoc.doc', NULL, TRUE);
+// http://www.mysite.com/assets/docs/mydoc.doc
+</pre>
+
+<p class="important">File extensions <strong>must</strong> be included.</p>
 
 
 <a name="cache_path"></a>

@@ -75,8 +75,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			$.post(path, params, function(html){
 				if (html != 'error'){
 					var id = '#' + _this.initObj.import_view_key;
-					if ($(id).exists())
-					{
+					if ($(id).exists()){
 						$(id).val(html);
 						$(id).addClass('change');
 						if (CKEDITOR.instances[_this.initObj.import_view_key]){

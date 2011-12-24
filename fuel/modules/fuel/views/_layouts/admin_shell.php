@@ -1,9 +1,9 @@
 <?php 
 // set some render variables based on what is in the panels array
-$no_menu = (empty($panels['nav'])) ? TRUE : FALSE;
-$no_titlebar = (empty($panels['titlebar'])) ? TRUE : FALSE;
-$no_actions = (empty($panels['actions'])) ? TRUE : FALSE;
-$no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
+$no_menu = (!$this->fuel->admin->has_panel('nav')) ? TRUE : FALSE;
+$no_titlebar = (!$this->fuel->admin->has_panel('titlebar')) ? TRUE : FALSE;
+$no_actions = (!$this->fuel->admin->has_panel('actions') OR empty($actions)) ? TRUE : FALSE;
+$no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FALSE;
 ?>
 
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header');  ?>
@@ -11,7 +11,7 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 <body>
 
 
-<?php if (!empty($panels['top'])) : ?>
+<?php if ($this->fuel->admin->has_panel('top')) : ?>
 <!-- TOP MENU PANEL -->
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_top'); ?>
 <?php endif; ?>
@@ -20,7 +20,7 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 <div id="fuel_body">
 
 
-	<?php if (!empty($panels['nav'])) : ?>
+	<?php if ($this->fuel->admin->has_panel('nav')) : ?>
 	<!-- LEFT MENU PANEL -->
 	<?php $this->load->module_view(FUEL_FOLDER, '_blocks/nav'); ?>
 	<?php endif; ?>
@@ -31,13 +31,13 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 		<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
 	
 
-		<?php if (!empty($panels['titlebar'])) : ?>
+		<?php if ($this->fuel->admin->has_panel('titlebar')) : ?>
 		<!-- BREADCRUMB/TITLE BAR PANEL -->
 		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/titlebar')?>
 		<?php endif; ?>
 		
 		
-		<?php if (!empty($panels['actions'])) : ?>
+		<?php if ($this->fuel->admin->has_panel('actions') AND !empty($actions)) : ?>
 		<!-- ACTION PANEL -->
 		<div id="fuel_actions">
 			<?php if (!empty($actions)) : ?>
@@ -47,7 +47,7 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 		<?php endif; ?>
 		
 		
-		<?php if (!empty($panels['notification'])) : ?>
+		<?php if ($this->fuel->admin->has_panel('notification')) : ?>
 		<!-- NOTIFICATION PANEL -->
 		<div id="fuel_notification" class="notification">
 			<?php if (!empty($notifications)) : ?>
@@ -98,7 +98,7 @@ $no_notification = (empty($panels['notification'])) ? TRUE : FALSE;
 </div>
 
 
-<?php if (!empty($panels['bottom'])) : ?>
+<?php if ($this->fuel->admin->has_panel('bottom')) : ?>
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_bottom'); ?>
 <?php endif; ?>
 

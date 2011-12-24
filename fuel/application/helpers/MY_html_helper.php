@@ -79,12 +79,22 @@ function tag($tag, $vals)
 function quote($quote, $cite = NULL, $title = NULL, $class = 'quote')
 {
 	$str = '<blockquote';
-	if (!empty($class)) $str .= ' class="'.$class.'"';
-	if (!empty($class)) $str .= '>';
-	$str .= "<span class=\"quote_left\">&#8220;</span>".$quote."<span class=\"quote_right\">&#8221;</span><br />";
-	if (!empty($cite)) {
+	if (!empty($class))
+	{
+		$str .= ' class="'.$class.'"';
+	}
+	if (!empty($class))
+	{
+		$str .= '>';
+	}
+	$str .= "<span class=\"quote_left\">&#8220;</span>".$quote."<span class=\"quote_right\">&#8221;</span>";
+	if (!empty($cite))
+	{
 		$str .= "<cite>".$cite;
-		if (!empty($title)) $str .= ", <span class=\"cite_title\">".$title."</span>";
+		if (!empty($title))
+		{
+			$str .= ", <span class=\"cite_title\">".$title."</span>";
+		}
 		$str .= "</cite>";
 	}
 	$str .= "</blockquote>";
@@ -108,7 +118,23 @@ function html_attrs($attrs)
 		$str = '';
 		foreach($attrs as $key => $val)
 		{
-			if ($val != '') $str .= ' '.$key.'="'.$val.'"';
+			if (is_array($val) AND $key == 'data')
+			{
+				foreach($val as $k => $v)
+				{
+					if ($v !== '')
+					{
+						$str .= ' data-'.$k.'="'.$v.'"';
+					}
+				}
+			}
+			else
+			{
+				if ($val != '')
+				{
+					$str .= ' '.$key.'="'.$val.'"';
+				}
+			}
 		}
 		return $str;
 	}

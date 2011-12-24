@@ -355,10 +355,11 @@ class Module extends Fuel_base_controller {
 			$vars['form_action'] = $this->module_uri.'/items';
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
+			$this->fuel->admin->set_inline($inline);
 			
 			if ($inline === TRUE)
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR, TRUE);
 			}
 			$this->fuel->admin->render($this->views['list'], $vars);
 		}
@@ -526,6 +527,7 @@ class Module extends Fuel_base_controller {
 		
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
 		$this->fuel->admin->set_titlebar($crumbs);
+		$this->fuel->admin->set_inline($inline);
 		
 		if ($inline === TRUE)
 		{
@@ -692,14 +694,15 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$this->fuel->admin->set_titlebar($crumbs);
+		$this->fuel->admin->set_inline($inline);
 
 		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($data[$this->display_field]) OR $inline !== TRUE)
+		if (!empty($data[$this->display_field]) AND $inline !== TRUE)
 		{
-			$this->fuel->admin->recent_pages($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
+			$this->fuel->admin->add_recent_page($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
 		}
 		
 	}
@@ -1177,12 +1180,25 @@ class Module extends Fuel_base_controller {
 			{
 				$data = $this->model->find_by_key($id, 'array');
 				$vars['id'] = $id;
-				if (isset($data[$this->display_field])) $vars['title'] = $data[$this->display_field];
+				if (isset($data[$this->display_field]))
+				{
+					$vars['title'] = $data[$this->display_field];
+				}
 			}
-			if (empty($data)) show_404();
+			
+			if (empty($data))
+			{
+				show_404();
+			}
+			
 			$vars['error'] = $this->model->get_errors();
-			$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-			$vars['inline'] = $inline;
+			$this->fuel->admin->set_inline($inline);
+			
+			$crumbs = array($this->module_uri => $this->module_name);
+			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 50);
+			
+			$this->fuel->admin->set_titlebar($crumbs);
+			
 			if ($inline === TRUE)
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
@@ -1191,7 +1207,7 @@ class Module extends Fuel_base_controller {
 			else
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION, TRUE);
-				$vars['back_action '] = fuel_url($this->module_uri.'/');
+				$vars['back_action'] = fuel_url($this->module_uri.'/');
 			}
 			$this->fuel->admin->render($this->views['delete'], $vars);
 		}
@@ -1235,7 +1251,7 @@ class Module extends Fuel_base_controller {
 
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
-			$this->_last_page($last_page);
+			$this->fuel->admin->last_page($last_page);
 			redirect($url);
 		}
 		else

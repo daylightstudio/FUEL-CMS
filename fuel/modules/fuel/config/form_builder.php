@@ -110,6 +110,40 @@ $config['custom_fields'] = array(
 		'js_function' => 'fuel.fields.fillin_field',
 
 	),
+	
+	'number' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'number',
+		'filepath'	=> '',
+		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+		'js_function' => 'fuel.fields.number_field',
+		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
+	),
+
+	'template' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'template',
+		'filepath'	=> '',
+		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.repeatable'),
+		'js_function' => 'fuel.fields.template_field',
+		'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
+	),
+	
+	'nested' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'nested',
+		'filepath'	=> '',
+	),
+
+	'currency' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'currency',
+		'filepath'	=> '',
+		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+		'js_function' => 'fuel.fields.number_field',
+		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
+	),
+
 
 	'simple' => create_function('$params', '
 		// echo "<pre style=\"text-align: left;\">";

@@ -734,7 +734,6 @@ Class Form_builder {
 					else
 					{
 						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
-						$str .= "<tr";
 						$str .= "<tr".$this->_open_row_attrs($val);
 						$str .= ">\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
@@ -976,6 +975,7 @@ Class Form_builder {
 			'pre_process' => NULL,
 			'post_process' => NULL,
 			'js' => '',
+			'data' => array(),
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
 		
@@ -1008,7 +1008,10 @@ Class Form_builder {
 		{
 			if (!$this->names_id_match)
 			{
-				$params['id'] = $this->name_array.'['.$params['orig_name'].']';
+				if ($params['id'] !== FALSE)
+				{
+					$params['id'] = $this->name_array.'['.$params['orig_name'].']';
+				}
 				$params['name'] = $params['orig_name'];
 			}
 			else
@@ -1022,7 +1025,10 @@ Class Form_builder {
 		{
 			if (!$this->names_id_match)
 			{
-				$params['id'] = $this->name_prefix.'--'.$params['orig_name'];  // used double hyphen so easier to explode
+				if ($params['id'] !== FALSE)
+				{
+					$params['id'] = $this->name_prefix.'--'.$params['orig_name'];  // used double hyphen so easier to explode
+				}
 				$params['name'] = $params['orig_name'];
 			}
 			else
@@ -1033,10 +1039,16 @@ Class Form_builder {
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
 		}
 		
-		if (($params['type'] == 'enum' OR  $params['type'] == 'select') AND (empty($params['options']) AND is_array($params['options'])) AND is_array($params['max_length']) AND !empty($params['max_length']))
+		if ($params['type'] == 'enum' OR  $params['type'] == 'select')
 		{
-			$params['options'] = $params['max_length'];
-		//	unset($params['max_length']);
+			if (!isset($params['options']))
+			{
+				$params['options'] = array();
+			}
+			if ((empty($params['options']) AND is_array($params['options'])) AND is_array($params['max_length']) AND !empty($params['max_length']))
+			{
+				$params['options'] = $params['max_length'];
+			}
 		}
 		
 		// fix common errors
@@ -1166,8 +1178,6 @@ Class Form_builder {
 	 */
 	public function create_field($params, $normalize = TRUE)
 	{
-		//if ($this->_rendering) return;
-
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
 		$str = $this->_render_custom_field($params);
 		
@@ -1177,6 +1187,9 @@ Class Form_builder {
 			{
 				case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
 					$str = $this->create_textarea($params);
+					break;
+				case 'int' : case 'smallint' : case 'mediumint' :  case 'bigint' :
+					$str = $this->create_number($params);
 					break;
 				case 'datetime': case 'timestamp' :
 					$str = $this->create_date($params);
@@ -1310,6 +1323,7 @@ Class Form_builder {
 		{
 			$size = $params['size'];
 		}
+		
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
@@ -1319,11 +1333,13 @@ Class Form_builder {
 			'disabled' => $params['disabled'],
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'data' => $params['data'],
 		);
 		if ($params['type'] == 'password')
 		{
 			return $this->form->password($params['name'], $params['value'], $attrs);
 		}
+		
 		return $this->form->text($params['name'], $params['value'], $attrs);
 	}
 
@@ -1340,9 +1356,11 @@ Class Form_builder {
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
+			'id' => $params['id'],
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled']
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
 		);
 		return $this->form->submit($params['value'], $params['name'], $attrs);
 	}
@@ -1360,9 +1378,11 @@ Class Form_builder {
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
+			'id' => $params['id'],
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'data' => $params['data'],
 		);
 		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
 		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
@@ -1389,6 +1409,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'data' => $params['data'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -1409,6 +1430,7 @@ Class Form_builder {
 		// need to do check here because hidden is used for key_check
 		$attrs = array(
 			'id' => $params['id'],
+			'data' => $params['data'],
 		);
 		if (!empty($params['class']))
 		{
@@ -1566,6 +1588,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'data' => $params['data'],
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
@@ -1605,6 +1628,7 @@ Class Form_builder {
 			'upload_path' => NULL, // for file uploading
 			'file_name' => NULL, // for file uploading
 			'encrypt_name' => NULL,
+			'data' => $params['data'],
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1743,6 +1767,41 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates a number field for the form... basically a text field
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_number($params)
+	{
+		$numeric_class = 'numeric';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
+		
+		$decimal = (!empty($params['decimal'])) ? 1 : 0;
+		$negative = (!empty($params['negative'])) ? 1 : 0;
+		
+		if (empty($params['size']))
+		{
+			$params['size'] = 10;
+		}
+
+		if (empty($params['max_length']))
+		{
+			$params['max_length'] = 10;
+		}
+
+		// set data values for jquery plugin to use
+		$params['data'] = array(
+			'decimal' => $decimal,
+			'negative' => $negative,
+			);
+		return $this->create_text($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the checkbox input for the form
 	 *
 	 * @access	public
@@ -1761,7 +1820,8 @@ Class Form_builder {
 			'id' => $params['id'],
 			'class' => $params['class'],
 			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled']
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
 		);
 		if ($params['checked'])
 		{
@@ -1938,96 +1998,96 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_template($params)
-	{
-		$CI =& get_instance();
-		$CI->load->library('parser');
-		
-		$params = $this->normalize_params($params);
-		
-		$str = '';
-		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))
-		{
-			return $str;
-		}
-		
-		if (empty($params['template']) AND !empty($params['view']))
-		{
-			$str = $CI->load->view($params['view'], $params['value'], TRUE);
-		}
-		else
-		{
-			$str = $params['template'];
-		}
-		
-		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
-		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
-		
-		$fields = array();
-		$i = 0;
-		
-		if (!is_array($params['value']))
-		{
-			$params['value'] = array();
-		}
-		
-		if ($params['value'] == '')
-		{
-			$params['value'] = array();
-		}
-		
-		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
-		if ($num == 0) $num = 1;
-		
-		for ($i = 0; $i < $num; $i++)
-		{
-			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
-			foreach($params['fields'] as $key => $field)
-			{
-				$field['value'] = (isset($value[$key])) ? $value[$key] : $value;
-				
-				if ($repeatable)
-				{
-					if (!empty($this->name_array))
-					{
-						$field['name'] = $params['name'].'['.$i.']['.$key.']';
-					}
-					else
-					{
-						$field['name'] = $params['orig_name'].'['.$i.']['.$key.']';
-					}
-					$fields[$i][$key] = $this->create_field($field);
-					$fields[$i]['index'] = $i;
-					$fields[$i]['num'] = $i + 1;
-				}
-				else
-				{
-					if (!empty($this->name_array))
-					{
-						$field['name'] = $params['name'].'['.$key.']';
-					}
-					else
-					{
-						$field['name'] = $params['orig_name'].'['.$key.']';
-					}
-					$fields[$key] = $this->create_field($field);
-				}
-			}
-		}
-		
-		if ($repeatable)
-		{
-			$vars['fields'] = $fields;
-		}
-		else
-		{
-			$vars = $fields;
-		}
-		
-		// parse the string
-		$str = $CI->parser->parse_simple($str, $vars);
-		return $str;
-	}
+	// public function create_template($params)
+	// 	{
+	// 		$CI =& get_instance();
+	// 		$CI->load->library('parser');
+	// 		
+	// 		$params = $this->normalize_params($params);
+	// 		
+	// 		$str = '';
+	// 		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))
+	// 		{
+	// 			return $str;
+	// 		}
+	// 		
+	// 		if (empty($params['template']) AND !empty($params['view']))
+	// 		{
+	// 			$str = $CI->load->view($params['view'], $params['value'], TRUE);
+	// 		}
+	// 		else
+	// 		{
+	// 			$str = $params['template'];
+	// 		}
+	// 		
+	// 		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
+	// 		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
+	// 		
+	// 		$fields = array();
+	// 		$i = 0;
+	// 		
+	// 		if (!is_array($params['value']))
+	// 		{
+	// 			$params['value'] = array();
+	// 		}
+	// 		
+	// 		if ($params['value'] == '')
+	// 		{
+	// 			$params['value'] = array();
+	// 		}
+	// 		
+	// 		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
+	// 		if ($num == 0) $num = 1;
+	// 		
+	// 		for ($i = 0; $i < $num; $i++)
+	// 		{
+	// 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
+	// 			foreach($params['fields'] as $key => $field)
+	// 			{
+	// 				$field['value'] = (isset($value[$key])) ? $value[$key] : $value;
+	// 				
+	// 				if ($repeatable)
+	// 				{
+	// 					if (!empty($this->name_array))
+	// 					{
+	// 						$field['name'] = $params['name'].'['.$i.']['.$key.']';
+	// 					}
+	// 					else
+	// 					{
+	// 						$field['name'] = $params['orig_name'].'['.$i.']['.$key.']';
+	// 					}
+	// 					$fields[$i][$key] = $this->create_field($field);
+	// 					$fields[$i]['index'] = $i;
+	// 					$fields[$i]['num'] = $i + 1;
+	// 				}
+	// 				else
+	// 				{
+	// 					if (!empty($this->name_array))
+	// 					{
+	// 						$field['name'] = $params['name'].'['.$key.']';
+	// 					}
+	// 					else
+	// 					{
+	// 						$field['name'] = $params['orig_name'].'['.$key.']';
+	// 					}
+	// 					$fields[$key] = $this->create_field($field);
+	// 				}
+	// 			}
+	// 		}
+	// 		
+	// 		if ($repeatable)
+	// 		{
+	// 			$vars['fields'] = $fields;
+	// 		}
+	// 		else
+	// 		{
+	// 			$vars = $fields;
+	// 		}
+	// 		
+	// 		// parse the string
+	// 		$str = $CI->parser->parse_simple($str, $vars);
+	// 		return $str;
+	// 	}
 	
 	// --------------------------------------------------------------------
 
@@ -2038,34 +2098,34 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_nested($params)
-	{
-		$CI =& get_instance();
-		$CI->load->library('parser');
-		$fb_class = get_class($this);
-		
-		if (empty($params['fields']) OR !is_array($params['fields']))
-		{
-			return '';
-		}
-		if (empty($params['init']))
-		{
-			$params['init'] = array();
-		}
-		
-		if (empty($params['value']))
-		{
-			$params['value'] = array();
-		}
-		
-		$form_builder = new $fb_class($params['init']);
-		$form_builder->set_fields($params['fields']);
-		$form_builder->submit_value = '';
-		$form_builder->set_validator($this->form->validator);
-		$form_builder->use_form_tag = FALSE;
-		$form_builder->set_field_values($params['value']);
-		return $form_builder->render();
-	}
+	// public function create_nested($params)
+	// 	{
+	// 		$CI =& get_instance();
+	// 		$CI->load->library('parser');
+	// 		$fb_class = get_class($this);
+	// 		
+	// 		if (empty($params['fields']) OR !is_array($params['fields']))
+	// 		{
+	// 			return '';
+	// 		}
+	// 		if (empty($params['init']))
+	// 		{
+	// 			$params['init'] = array();
+	// 		}
+	// 		
+	// 		if (empty($params['value']))
+	// 		{
+	// 			$params['value'] = array();
+	// 		}
+	// 		
+	// 		$form_builder = new $fb_class($params['init']);
+	// 		$form_builder->set_fields($params['fields']);
+	// 		$form_builder->submit_value = '';
+	// 		$form_builder->set_validator($this->form->validator);
+	// 		$form_builder->use_form_tag = FALSE;
+	// 		$form_builder->set_field_values($params['value']);
+	// 		return $form_builder->render();
+	// 	}
 
 	// --------------------------------------------------------------------
 
@@ -2547,10 +2607,15 @@ Class Form_builder {
 			{
 				$cs_field = $this->custom_fields[$type];
 				$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
-				$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options);
+				$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
+				$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
+				
 			}
 			
 		}
+		
+		// sort the javascript
+		$js_exec = $this->_fields_sorter($js_exec, 'order');
 		
 		$out = $str_files;
 		$out .= $str_inline;
@@ -2590,6 +2655,7 @@ Class Form_builder_field {
 	public $render_func = array();
 	public $js_class = ''; // the CSS class used by the javascript to execute any javascript on the field
 	public $js_params = array(); // parameter to pass to the javascript function
+	public $js_exec_order = 1; // the order in which the javascript should be executed in relation to other fields... lower the sooner
 	public $html = ''; // html output for form field
 	public $js = array(); // the name of javascript file(s) to laod
 	public $js_function = ''; // the name of the javascript function to execute for the form field

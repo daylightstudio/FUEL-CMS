@@ -30,7 +30,9 @@
 
 class Fuel_admin extends Fuel_base_library {
 	
+	protected $main_layout = 'admin_shell';
 	protected $validate = TRUE;
+	protected $is_inline = FALSE;
 	protected $panels = array(
 		'top' => TRUE,
 		'nav' => TRUE,
@@ -40,13 +42,16 @@ class Fuel_admin extends Fuel_base_library {
 		'bottom' => TRUE,
 	);
 	protected $display_mode = NULL;
+	protected $_display_modes = array();
 	protected $titlebar = array();
 	protected $titlebar_icon = '';
-
+	
+	
 	const DISPLAY_NO_ACTION = 'no_action';
 	const DISPLAY_COMPACT = 'compact';
 	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
-	const DISPLAY_COMPACT_TITLEBAR = 'compact_title';
+	const DISPLAY_COMPACT_TITLEBAR = 'compact_titlebar';
+	const DISPLAY_DEFAULT = 'default';
 
 	const NOTIFICATION_SUCCESS = 'success';
 	const NOTIFICATION_ERROR = 'error';
@@ -135,13 +140,18 @@ class Fuel_admin extends Fuel_base_library {
 				'images' => 'images/',
 				'css' => 'css/',
 				'js' => 'js/',
+				'pdf' => 'pdf/',
+				'media' => 'media/',
+				'swf' => 'swf/',
 			);
-			
-		$this->last_page();
+		
+		$this->main_layout = $this->fuel->config('main_layout');
+		$this->init_display_modes();
 	}
 	
 	function render($view, $vars = array(), $mode = '', $module = NULL)
 	{
+		
 		// set the active state of the menu
 		$this->nav_selected();
 		
@@ -171,7 +181,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		
-		if (!empty($mode) OR !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode'))
+		if (!empty($mode) OR (empty($this->display_mode) AND !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode')))
 		{
 			if (!empty($_POST['fuel_display_mode']))
 			{
@@ -185,6 +195,7 @@ class Fuel_admin extends Fuel_base_library {
 			$this->set_display_mode($mode);
 		}
 		
+		
 		// set the form action
 		if (empty($vars['form_action']))
 		{
@@ -195,17 +206,30 @@ class Fuel_admin extends Fuel_base_library {
 			$vars['form_action'] = fuel_url($vars['form_action']);
 		}
 		
-		$layout = (isset($vars['layout'])) ? $vars['layout'] : 'admin_shell';
+		$layout = (isset($vars['layout'])) ? $vars['layout'] : $this->main_layout;
 		if (!empty($layout))
 		{
 			$vars['body'] = $this->CI->load->module_view($module, $view, $vars, TRUE);
 			$vars['panels'] = $this->panels;
-			$this->CI->load->module_view(FUEL_FOLDER, '_layouts/'.$layout, $vars);
+			if (is_array($layout))
+			{
+				$layout_module = key($layout);
+				$layout_view = current($layout);
+				$this->CI->load->module_view($layout_module, $layout_view, $vars);
+			}
+			else
+			{
+				$this->CI->load->module_view(FUEL_FOLDER, '_layouts/'.$layout, $vars);
+			}
 		}
 		else
 		{
 			$this->CI->load->module_view($module, $view, $vars);
 		}
+		
+		// register the last page
+		$this->last_page();
+		
 	}
 	
 	function get_model_errors()
@@ -261,8 +285,9 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
-	function last_page()
+	function last_page($key = NULL)
 	{
+		if ($this->is_inline()) return;
 		if (!isset($key)) $key = uri_path(FALSE);
 		$invalid = array(
 			fuel_uri('recent')
@@ -278,14 +303,14 @@ class Fuel_admin extends Fuel_base_library {
 		
 	}
 	
-	function recent_pages($link, $name, $type)
+	function add_recent_page($link, $name, $type)
 	{
 		$this->CI->load->helper('array');
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
-		
+
 		if (!isset($user_data['recent'])) $user_data['recent'] = array();
-		$already_included = false;
+		$already_included = FALSE;
 		foreach($user_data['recent'] as $key => $pages)
 		{
 			if ($pages['link'] == $link AND $pages['name'] == $name AND $pages['type'] == $type)
@@ -520,10 +545,30 @@ class Fuel_admin extends Fuel_base_library {
 	function no_cache()
 	{
 		header('Cache-Control: no-store, no-cache, must-revalidate');
-		header('Cache-Control: post-check=0, pre-check=0',false);
+		header('Cache-Control: post-check=0, pre-check=0', FALSE);
 		header('Pragma: no-cache');
 	}
 	
+	function is_inline()
+	{
+		return $this->is_inline;
+	}
+	
+	function set_inline($inline)
+	{
+		$this->is_inline = (bool) $inline;
+	}
+	
+	function set_main_layout($layout)
+	{
+		$this->main_layout = (string) $layout;
+	}
+
+	function main_layout()
+	{
+		return $this->main_layout;
+	}
+
 	function panel_display($key)
 	{
 		if (isset($this->panels))
@@ -536,6 +581,64 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		$this->panels[$key] = (bool) $value;
 	}
+	
+	function has_panel($key)
+	{
+		return $this->panels[$key];
+	}
+
+	function init_display_modes()
+	{
+		// no_action
+		$panels = array('actions' => FALSE);
+		$this->register_display_mode(self::DISPLAY_NO_ACTION, $panels);
+		
+		// compact
+		$panels = array(
+						'top' => FALSE,
+						'nav' => FALSE,
+						'titlebar' => FALSE,
+						'actions' => TRUE,
+						'bottom' => FALSE,
+						);
+		$this->register_display_mode(self::DISPLAY_COMPACT, $panels);
+
+		// compact_no_action
+		$panels = array(
+						'top' => FALSE,
+						'nav' => FALSE,
+						'titlebar' => FALSE,
+						'actions' => FALSE,
+						'bottom' => FALSE,
+						);
+		$this->register_display_mode(self::DISPLAY_COMPACT_NO_ACTION, $panels);
+
+
+		// compact_titlebar
+		$panels = array(
+						'top' => FALSE,
+						'nav' => FALSE,
+						'titlebar' => TRUE,
+						'actions' => TRUE,
+						'bottom' => FALSE,
+						);
+		$this->register_display_mode(self::DISPLAY_COMPACT_TITLEBAR, $panels);
+		
+		// default
+		$panels = array(
+						'top' => TRUE,
+						'nav' => TRUE,
+						'titlebar' => TRUE,
+						'actions' => TRUE,
+						'bottom' => TRUE,
+						);
+		$this->register_display_mode(self::DISPLAY_DEFAULT, $panels);
+	}
+	
+	function register_display_mode($name, $panels = array())
+	{
+		$this->_display_modes[$name] = $panels;
+	}
 
 	function display_mode()
 	{
@@ -544,49 +647,25 @@ class Fuel_admin extends Fuel_base_library {
 
 	function set_display_mode($mode, $set_get = FALSE)
 	{
-		switch($mode)
+		if (is_string($mode))
 		{
-			case self::DISPLAY_NO_ACTION:
-				$this->set_panel_display('actions', FALSE);
-				break;
-			case self::DISPLAY_COMPACT:
-				$this->set_panel_display('top', FALSE);
-				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('titlebar', TRUE);
-				$this->set_panel_display('actions', TRUE);
-				$this->set_panel_display('bottom', FALSE);
-				break;
-			case self::DISPLAY_COMPACT_NO_ACTION:
-				$this->set_panel_display('top', FALSE);
-				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('titlebar', FALSE);
-				$this->set_panel_display('actions', FALSE);
-				$this->set_panel_display('bottom', FALSE);
-				break;
-			case self::DISPLAY_COMPACT_TITLEBAR:
-				$this->set_panel_display('top', FALSE);
-				$this->set_panel_display('nav', FALSE);
-				$this->set_panel_display('actions', FALSE);
-				$this->set_panel_display('titlebar', TRUE);
-				$this->set_panel_display('notification', FALSE);
-				$this->set_panel_display('bottom', FALSE);
-				break;
-			default:
-				$this->set_panel_display('top', TRUE);
-				$this->set_panel_display('nav', TRUE);
-				$this->set_panel_display('titlebar', TRUE);
-				$this->set_panel_display('actions', TRUE);
-				$this->set_panel_display('bottom', TRUE);
-				
+			if (isset($this->_display_modes[$mode]))
+			{
+				foreach($this->_display_modes[$mode] as $panel => $display)
+				{
+					$this->set_panel_display($panel, $display);
+				}
+			}
 		}
+
 		$this->display_mode = $mode;
 		
 		// set $_GET parameter explicitly so fuel_url can properly render the URL
-		if ($set_get)
+		//if ($set_get )
+		if ($this->is_inline())
 		{
 			$_GET['display_mode'] = $this->display_mode;
 		}
-		
 	}
 	
 	function set_titlebar($title, $icon = '')

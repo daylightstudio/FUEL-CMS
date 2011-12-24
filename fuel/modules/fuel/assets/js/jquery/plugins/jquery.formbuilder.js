@@ -43,9 +43,11 @@ dave@thedaylightstudio.com
 			}
 		},
 		
-		initialize: function(){
-			var $form = $(this).parents('form')[0];
-			this.form($form);
+		initialize: function(context){
+			if (!context){
+				context = $(this).parents('form')[0];
+			}
+			this.form(context);
 			for(var n in this._funcs){
 				this.call(n);
 			}

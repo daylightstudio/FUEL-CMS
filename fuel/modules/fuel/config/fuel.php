@@ -79,6 +79,10 @@ $config['fuel_cookie_path'] = '/';
 // must exist in the assets/css file and not the fuel/assets/css folder
 $config['xtra_css'] = '';
 
+// the main layout file to be used for the interface.
+// By default, it will pull from the fuel module folder however, if an array is specified, the key will be the module and the value will be the view file.
+$config['main_layout'] = 'admin_shell';
+
 // keyboard shortcuts
 $config['keyboard_shortcuts'] = array(
 	'toggle_view' => 'Ctrl+Shift+m', 
