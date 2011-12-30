@@ -47,6 +47,7 @@ $config['layout_fields']['main'] =  array(
 	// 												)),
 
 	);
+	$config['layout_fields']['testing'] = $config['layout_fields']['main'];
 
 
 

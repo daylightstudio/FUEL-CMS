@@ -30,12 +30,17 @@
 
 class Fuel_advanced_module extends Fuel_base_library {
 	
-	protected $name = '';
-	protected $folder = '';
-	protected $uri_path = '';
-	protected $_attached = array();
-	protected $_config = array();
+	protected $name = ''; // name of the advanced module... usually the same as the folder name
+	protected $folder = ''; // name of the folder for the advanced module
+	protected $uri_path = ''; // the uri_path to the module
+	protected $_attached = array(); // attached objects to the advanced module
+	protected $_config = array(); // the config information for the advanced module
 	
+	/**
+	 * Constructor
+	 *
+	 * The constructor can be passed an array of config values
+	 */
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -48,7 +53,18 @@ class Fuel_advanced_module extends Fuel_base_library {
 		
 	}
 	
-	function initialize($params)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 *
+	 * @access	public
+	 * @param	array	Array of initalization parameters  (optional)
+	 * @return	void
+	 */	
+	function initialize($params = array())
 	{
 		// need this here instead of the constructor, because this gets executed by 
 		// the parent Fuel_base_library before the rest of the constructor'
@@ -62,6 +78,15 @@ class Fuel_advanced_module extends Fuel_base_library {
 		parent::initialize($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method that will return any sub modules attached to the object
+	 *
+	 * @access	public
+	 * @param	string	sub module name
+	 * @return	object
+	 */	
 	function __get($var)
 	{
 		// look for sub modules magically
@@ -78,11 +103,29 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The name of the module (usually the folder name)
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function name()
 	{
 		return $this->name;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The name of the folder for the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function folder()
 	{
 		if (empty($this->folder))
@@ -92,6 +135,16 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->folder;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The server or web path to the module
+	 *
+	 * @access	public
+	 * @param	boolean	Either return the full path to the module or the relative web_path (optional)
+	 * @return	string
+	 */	
 	function path($full = TRUE)
 	{
 		if ($full)
@@ -104,6 +157,14 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The models you can load for this advanced module
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function models()
 	{
 		$this->CI->load->helper('file');
@@ -117,6 +178,16 @@ class Fuel_advanced_module extends Fuel_base_library {
 	}
 	
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Attaches other objects to this object
+	 *
+	 * @access	public
+	 * @param	string	The name to be used for the attached object
+	 * @param	object	The object to attach. If blank, then it will look for a library class of 'Fuel_{$key} in the libraries folder (optional)
+	 * @return	void
+	 */	
 	function attach($key, $obj = NULL)
 	{
 		if (isset($obj))
@@ -130,11 +201,30 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an advanced module's config item
+	 *
+	 * @access	public
+	 * @param	string	The key name for the config item
+	 * @return	mixed
+	 */	
 	function config($item)
 	{
 		return (isset($this->_config[$item])) ? $this->_config[$item] : FALSE;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a config item for the advanced module
+	 *
+	 * @access	public
+	 * @param	string	The key value for the config item
+	 * @param	mixed	The value of the config item
+	 * @return	void
+	 */	
 	function set_config($item, $val)
 	{
 		return $this->CI->config->set_item($item, $val, $this->name);

@@ -215,7 +215,7 @@ class Seo extends Seo_base_controller {
 		$this->js_controller_params['pages'] = $this->input->post('pages');
 		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');
-		$pages = $this->pages_model->all_pages_including_views(TRUE);
+		$pages  $this->fuel->pages->options_list('all', TRUE);
 
 		$this->js_controller_params['method'] = 'page_analysis';
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';

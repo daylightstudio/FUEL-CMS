@@ -140,7 +140,7 @@ class Cache
 	{
 		
 		$group_dir = $this->_group_dir($cache_group);
-		
+
 		//
 		//	Empty the directory
 		//

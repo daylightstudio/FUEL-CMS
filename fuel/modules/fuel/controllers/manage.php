@@ -31,7 +31,7 @@ class Manage extends Fuel_base_controller {
 			$this->fuel->cache->clear();
 			
 			$msg = lang('cache_cleared');
-			$this->logs_model->write($msg);
+			$this->fuel->logs->write($msg);
 			$this->session->set_flashdata('success', 'The cache has been cleared.');
 			redirect('fuel/manage/cache');
 		}

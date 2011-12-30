@@ -28,7 +28,7 @@
 
 // --------------------------------------------------------------------
 
-require_once('Fuel_page_variables.php');
+require_once('Fuel_pagevars.php');
 
 class Fuel_pages extends Fuel_base_library {
 	
@@ -64,31 +64,37 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
-	function variables($location, $vars_path = NULL)
-	{
-		$init_vars = array('location' => $location, 'vars_path' => $vars_path);
-		$page_vars = new Fuel_page_variables($init_vars);
-		return $page_vars;
-	}
-	
+	// function variables($location, $vars_path = NULL)
+	// {
+	// 	$init_vars = array('location' => $location, 'vars_path' => $vars_path);
+	// 	$page_vars = new Fuel_pagevars($init_vars);
+	// 	return $page_vars;
+	// }
+	// 
 	function &active()
 	{
 		return $this->_active;
 	}
 	
-	function all_pages_including_views($paths_as_keys = FALSE, $apply_site_url = TRUE)
+	function options_list($include = 'all', $paths_as_keys = FALSE, $apply_site_url = TRUE)
 	{
-		$this->CI->load->helper('directory');
-		//$this->fuel->load_model('pages');
-		$cms_pages = $this->cms();
-		$module_pages = $this->modules();
-		$view_pages = $this->views();
-		
-		// merge them together for a complete list
+		$valid_include = array('cms', 'modules', 'views');
 		$pages = array();
 		
+		if (!is_array($include))
+		{
+			$include = $valid_include;
+		}
+		
+		foreach($include as $method)
+		{
+			if (in_array($method, $valid_include))
+			{
+				$pages = array_merge($pages, $this->$method());
+			}
+		}
 		// must get the merged unique values (array_values resets the indexes)
-		$pages = array_values(array_unique(array_merge($cms_pages, $view_pages, $module_pages)));
+		$pages = array_values(array_unique($pages));
 		sort($pages);
 		
 		if ($paths_as_keys)
@@ -102,7 +108,6 @@ class Fuel_pages extends Fuel_base_library {
 			$pages = $keyed_pages;
 		}
 		
-		// apply the site_url function to all pages
 		return $pages;
 		
 	}
@@ -123,6 +128,11 @@ class Fuel_pages extends Fuel_base_library {
 		$cms_pages = $this->CI->pages_model->list_locations(FALSE);
 		return $cms_pages;
 	}
+
+	function modules()
+	{
+		return $this->fuel->modules->pages();
+	}
 	
 	function render($location, $vars = array(), $params = array(), $return = FALSE)
 	{
@@ -139,7 +149,7 @@ class Fuel_pages extends Fuel_base_library {
 }
 
 
-class Fuel_page {
+class Fuel_page extends Fuel_base_library {
 	
 	public $id = NULL; // the page ID if it is coming from a database
 	public $location = ''; // the uri location 
@@ -151,24 +161,22 @@ class Fuel_page {
 	public $markers = array();
 	public static $marker_key = '__FUEL_MARKER__';
 	
-	private $CI = NULL;
-	private $fuel = NULL;
-	private $_variables = array(); // variables applied to the page
-	private $_segments = array(); // uri segments to pass to the page
-	private $_page_data = array(); // specific data about the page (not variables being passed necessarily)
-	private $_fuelified = FALSE; // is the person viewing the page logged in?... If so we will make inline editing and toolbar visible
-	private $_only_published = TRUE; // view only published pages is used if the person viewing page is not logged in
-	private $_fuelified_processed = FALSE; // if fuelify has already been called
-	private $_marker_salt = NULL;
-	
+	protected $_variables = array(); // variables applied to the page
+	protected $_segments = array(); // uri segments to pass to the page
+	protected $_page_data = array(); // specific data about the page (not variables being passed necessarily)
+	protected $_fuelified = FALSE; // is the person viewing the page logged in?... If so we will make inline editing and toolbar visible
+	protected $_only_published = TRUE; // view only published pages is used if the person viewing page is not logged in
+	protected $_fuelified_processed = FALSE; // if fuelify has already been called	
+
+	/**
+	 * Constructor
+	 *
+	 * The constructor can be passed an array of config values
+	 */
 	function __construct($params = array())
 	{
-		$this->CI =& get_instance();
-		$this->fuel =& $this->CI->fuel;
+		parent::__construct();
 		$this->CI->load->helper('cookie');
-		//$this->CI->load->module_helper(FUEL_FOLDER, 'fuel'); // already loaded in autoload
-	//	$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
-
 		if (!empty($params))
 		{
 			$this->initialize($params);
@@ -180,16 +188,22 @@ class Fuel_page {
 	/**
 	 * Initialize the user preferences
 	 *
-	 * Accepts an associative array as input, containing display preferences
+	 * Accepts an associative array as input, containing display preferences. If a string is passed it will assume it is the location property
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	mixed	config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array())
+	function initialize($params = array())
 	{
+		// if $paramsis a string then we will assume that they are passing the most common parameter location
+		if (is_string($params))
+		{
+			$params = array('location' => $params);
+		}
+		
 		// setup any intialized variables
-		foreach ($config as $key => $val)
+		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key))
 			{
@@ -205,30 +219,31 @@ class Fuel_page {
 		}
 		
 		// assign the location of the page
-		$this->_assign_location();
+		$this->assign_location($this->location);
 
 		// assign variables to the page
-		$this->_assign_variables();
+		$this->assign_variables();
 
 		// assign layout
-		$this->_assign_layout();
+		$this->assign_layout($this->layout);
 
 	}
 	
-	private function _assign_location()
+	function assign_location($location)
 	{
+		$this->location = $location;
+		
 		$default_home = $this->fuel->config('default_home_view');
 
 		if ($this->location == 'page_router') $this->location = $default_home;
 		
-		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout', 'location' => NULL);
+		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout' => NULL, 'location' => NULL);
 		$this->_page_data = $page_data;
 
 		if ($this->render_mode == 'views')
 		{
 			return;
 		}
-		
 		
 		// if a location is provided in the init config, then use it instead of the uri segments
 		if (!empty($this->location))
@@ -255,7 +270,7 @@ class Fuel_page {
 		if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
 		{
 			$page_data = $this->CI->pages_model->find_by_location($default_home, $this->_only_published);
-			$location = $default_home;
+			$this->location = $default_home;
 		} 
 		else 
 		{
@@ -269,7 +284,8 @@ class Fuel_page {
 				$prefix = $this->fuel->config('page_uri_prefix');
 				if ($prefix)
 				{
-					if (strpos($location, $prefix) === 0){
+					if (strpos($location, $prefix) === 0)
+					{
 						$location = substr($location, strlen($prefix));
 					}
 					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
@@ -301,22 +317,31 @@ class Fuel_page {
 		$this->_segments = array_reverse($this->_segments);
 	}
 	
-	private function _assign_variables()
+	function assign_variables($views_path = NULL, $page_mode = NULL)
 	{
-		$page_mode = $this->fuel->config('fuel_mode');
-		if (empty($this->views_path)) $this->views_path = APPPATH.'views/';
+		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
+		$page_mode = (empty($page_mode)) ? $this->fuel->config('fuel_mode') : $page_mode;
+		
 		$vars_path = $this->views_path.'_variables/';
 		$init_vars = array('location' => $this->location, 'vars_path' => $vars_path);
-		$page_vars = new Fuel_page_variables($init_vars);
+		$page_vars = new Fuel_pagevars($init_vars);
 		$vars = $page_vars->retrieve($page_mode);
 		$this->add_variables($vars);
 	}
 	
-	private function _assign_layout()
+	function assign_layout($layout)
 	{
 		if (is_string($this->layout))
 		{
 			$this->layout = $this->fuel->layouts->get($this->layout);
+		}
+		else if (is_a($layout, 'Fuel_layout'))
+		{
+			$this->layout = $this->layout;
+		}
+		else
+		{
+			$this->layout = new Fuel_layout();
 		}
 	}
 	
@@ -850,7 +875,7 @@ class Fuel_page {
 		return $output;
 	}
 	
-	private function _render_markers_callback($matches)
+	protected function _render_markers_callback($matches)
 	{
 		return $this->render_marker($matches[1]);
 	}
@@ -898,6 +923,82 @@ class Fuel_page {
 	function is_cached()
 	{
 		return is_true_val($this->is_cached);
+	}
+	
+	function save()
+	{
+		$this->fuel->load_model('pages');
+		$this->fuel->load_model('pagevariables');
+		
+		$page_props = $this->CI->pages_model->create();
+		$page_props->location = $this->location;
+		if (empty($this->layout))
+		{
+			$layout = new Fuel_layout();
+		}
+		else if (is_string($this->layout))
+		{
+			$layout = $this->fuel->layouts->get($this->layout);
+		}
+		else
+		{
+			$layout = $this->layout;
+		}
+		
+		$page_props->layout = $layout->name;
+		$page_props->published = $this->is_published;
+		$page_props->cache = $this->is_cached;
+		if (empty($page_props->is_published))
+		{
+			$page_props->published = 'yes';
+		}
+
+		if (empty($page_props->is_cached))
+		{
+			$page_props->cache = 'yes';
+		}
+		
+		if (!$id = $page_props->save())
+		{
+			return FALSE;
+		}
+		
+		$page_vars = $this->variables();
+
+		$valid = TRUE;
+		foreach($page_vars as $key => $val)
+		{
+			$page_var = $this->CI->pagevariables_model->create();
+			$page_var->page_id = $id;
+			$page_var->name = $key;
+			if (is_array($val))
+			{
+				$val = serialize($val);
+				$page_var->type = 'array';
+			}
+			$page_var->value = $val;
+			
+			if (!$page_var->save())
+			{
+				$valid = FALSE;
+			}
+			
+		}
+		return $valid;
+	}
+	
+	function delete()
+	{
+		// remove cached files
+		$this->fuel->load_model('pages');
+		$page_props = $this->properties();
+		$this->fuel->cache->clear_pages();
+		if (isset($page_props['id']))
+		{
+			$where['id'] = $page_props['id'];
+			return $this->CI->pages_model->delete($where);
+		}
+		return FALSE;
 	}
 	
 	function find_view_file($view)

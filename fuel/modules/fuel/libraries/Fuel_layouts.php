@@ -138,7 +138,7 @@ class Fuel_layouts extends Fuel_base_library {
 }
 
 
-class Fuel_layout {
+class Fuel_layout extends Fuel_base_library {
 	
 	public $name = '';
 	public $file = '';
@@ -147,10 +147,9 @@ class Fuel_layout {
 	public $field_values = array();
 	public $folder = '_layouts';
 	
-	protected $CI;
-	
 	function __construct($params = array())
 	{
+		parent::__construct();
 		$this->initialize($params);
 	}
 	
@@ -165,12 +164,14 @@ class Fuel_layout {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array())
+	function initialize($params = array())
 	{
-		$this->CI =& get_instance();
-		
+		if (is_string($params))
+		{
+			$params = array('name' => $params);
+		}
 		// setup any intialized variables
-		foreach ($config as $key => $val)
+		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key))
 			{

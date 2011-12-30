@@ -17,7 +17,7 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL base library object
+ * FUEL base library object that many other FUEL objects inherit from
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -37,7 +37,7 @@ class Fuel_base_library {
 	protected $_errors = array(); // array to keep track of errors
 	
 	/**
-	 * Constructor - Sets Fuel_base_library preferences and to any children
+	 * Constructor
 	 *
 	 * The constructor can be passed an array of config values
 	 */
@@ -59,7 +59,7 @@ class Fuel_base_library {
 	 * Also will set the values in the parameters array as properties of this object
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	Config preferences
 	 * @return	void
 	 */	
 	function initialize($params = array())
@@ -78,7 +78,7 @@ class Fuel_base_library {
 	 * Set object parameters
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	Config preferences
 	 * @return	void
 	 */
 	function set_params($params)
@@ -100,10 +100,10 @@ class Fuel_base_library {
 	 * Returns either an array of errors or a formatted string error message
 	 *
 	 * @access	public
-	 * @param	boolean
-	 * @param	string
-	 * @param	string
-	 * @return	array
+	 * @param	boolean	Whether to format the error messages
+	 * @param	string	The opening tag to append before the error messages
+	 * @param	string	The closing tag to append before the error messages
+	 * @return	mixed	Will return either an array of error messages or a formatted string if the first parameter is set to TRUE
 	 */	
 	function errors($formatted = FALSE, $open = '', $close = "\n\n")
 	{
@@ -124,10 +124,10 @@ class Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the last error
+	 * Returns the last error message
 	 *
 	 * @access	public
-	 * @return	array
+	 * @return	string
 	 */	
 	function last_error()
 	{
@@ -143,7 +143,7 @@ class Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns whether there were errors in backing up or not
+	 * Returns whether there were errors or not set on the object
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -159,8 +159,8 @@ class Fuel_base_library {
 	 * Adds an error to the _errors array
 	 *
 	 * @access	protected
-	 * @param	string	error message
-	 * @return	array
+	 * @param	string	Error message
+	 * @return	void
 	 */	
 	protected function _add_error($error, $use_lang = FALSE)
 	{

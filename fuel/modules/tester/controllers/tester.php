@@ -96,7 +96,7 @@ class Tester extends Fuel_base_controller {
 		{
 			$vars['tests_serialized'] = base64_encode(serialize($tests));
 
-			$crumbs = array('tools' => lang('section_tools'), lang('module_tester'), lang('tester_results'));
+			$crumbs = array('tools' => lang('section_tools'), 'tools/tester' => lang('module_tester'), lang('tester_results'));
 			$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_tester');
 			$this->fuel->admin->render('tester_results', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}

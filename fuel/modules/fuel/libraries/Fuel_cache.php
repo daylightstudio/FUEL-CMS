@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_console
+ * @link		http://www.getfuelcms.com/user_guide/modules/fuel/fuel_cache
  */
 
 // --------------------------------------------------------------------
@@ -52,14 +52,16 @@ class Fuel_cache extends Fuel_base_library {
 	}
 	
 	// --------------------------------------------------------------------
-
+	
 	/**
-	 * Initializes object
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
 	 *
 	 * @access	public
-	 * @param	array	array of initalization parameters  (optional)
+	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
-	 */
+	 */	
 	function initialize($params)
 	{
 		parent::initialize($params);
@@ -74,7 +76,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * If no $location value is provided, then the ID will be based on the current URI segments
 	 * 
 	 * @access	public
-	 * @param	string	location used in creating the ID (optional)
+	 * @param	string	Location used in creating the ID (optional)
 	 * @return	string
 	 */
 	function create_id($location = NULL)
@@ -95,27 +97,11 @@ class Fuel_cache extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get and return an item from the cache
-	 * 
-	 * @access	public
-	 * @param	string	Cache ID
-	 * @param	string	Cache group ID (optinal)
-	 * @param	boolean	Skip checking if it is in the cache or not (optional)
-	 * @return	object	The object or NULL if not available
-	 */
-	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
-	{
-		return $this->_cache->get($cache_id, $cache_group, $skip_checking);
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
 	 * Saves an item to the cache
 	 * 
 	 * @access	public
-	 * @param	string	Cache Id
-	 * @param	string	Cache group Id
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID
 	 * @param	mixed	Data to save to the cache  (optional)
 	 * @param	int		Time to live in seconds for cache  (optional)
 	 * @return	void
@@ -128,11 +114,27 @@ class Fuel_cache extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Get and return an item from the cache
+	 * 
+	 * @access	public
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID (optional)
+	 * @param	boolean	Skip checking if it is in the cache or not (optional)
+	 * @return	object	The object or NULL if not available
+	 */
+	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	{
+		return $this->_cache->get($cache_id, $cache_group, $skip_checking);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Checks if the file is cached based on the cache_id passed
 	 * 
 	 * @access	public
-	 * @param	string	Cache Id
-	 * @param	string	Cache group Id (optinal)
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID (optional)
 	 * @return	boolean
 	 */
 	function is_cached($cache_id, $group = NULL)
@@ -146,8 +148,8 @@ class Fuel_cache extends Fuel_base_library {
 	 * Clears the various types of caches
 	 * 
 	 * Value passed can be either a string or an array. 
-	 * If a string,the value must "compiled", "pages" or "assets".
-	 * If an array,the array must contain one or more of the values (e.g. array("compiled", "pages", "assets"))
+	 * If a string, the value must "compiled", "pages" or "assets".
+	 * If an array, the array must contain one or more of the values (e.g. array("compiled", "pages", "assets"))
 	 * If no parameters are passed, then all caches are cleared
 	 * 
 	 * @access	public
@@ -235,6 +237,23 @@ class Fuel_cache extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Clear a single page from the cache
+	 * 
+	 * @access	public
+	 * @param	string	Page location
+	 * @return	void
+	 */
+	function clear_page($location)
+	{
+		$cache_group = $this->fuel->config('page_cache_group');
+		$cache_id = $this->create_id($location);
+		$this->_cache->remove($cache_id, $cache_group);
+	}
+	
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Clears the assets cache
 	 * 
 	 * Will look in module asset folders if the fuel/{module}/assets/cache/ directory exist for that module
@@ -266,7 +285,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * Clears a single cache file
 	 * 
 	 * @access	public
-	 * @param	string	Cache Id
+	 * @param	string	Cache ID
 	 * @return	void
 	 */
 	function clear_file($cache_id)
@@ -280,7 +299,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * Clears a group of cached files
 	 * 
 	 * @access	public
-	 * @param	string	Cache group Id
+	 * @param	string	Cache group ID
 	 * @return	void
 	 */
 	function clear_group($group)

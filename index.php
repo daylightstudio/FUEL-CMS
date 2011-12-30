@@ -35,6 +35,9 @@ if (defined('STDIN'))
 	$_SERVER['SERVER_NAME'] = 'localhost';
 	$_SERVER['SERVER_PORT'] = 80;
 	$_SERVER['HTTP_HOST'] = 'localhost';
+	
+	 // if your FUEL installation exists in a subfolder, then you may want to change to /subfolder/index.php (Needed for using Tester module)
+	$_SERVER['SCRIPT_NAME'] = '/daylight/FUEL/v.9/index.php';
 }
 
 

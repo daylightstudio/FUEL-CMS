@@ -29,6 +29,8 @@
 abstract class Tester_base 
 {
 	protected $CI;
+	protected $fuel = NULL;
+	
 	protected $loaded_page;
 	
 	private $_is_db_created;
@@ -44,6 +46,11 @@ abstract class Tester_base
 	public function __construct()
 	{
 		$this->CI =& get_instance();
+		
+		if (isset($this->CI->fuel))
+		{
+			$this->fuel =& $this->CI->fuel;
+		}
 		
 		// set testing constant if not already
 		if (!defined('TESTING')) define('TESTING', TRUE);
@@ -308,15 +315,7 @@ abstract class Tester_base
 		
 		$this->CI->load->library('user_agent');
 		
-		// NO LONGER USED... OPTED FOR CURL INSTEAD!... kept for reference just in case though
-		// $_SERVER['PATH_INFO'] = $page;
-		// $_SERVER['REQUEST_URI'] = $page;
-
-		// must suppres warnings to remove constant warnings
-		// $exec = TESTER_PATH.'libraries/Controller_runner.php --run='.$page.' -CI='.FCPATH.' -D='.$_SERVER['SERVER_NAME'].' -P='.$_SERVER['SERVER_PORT'].' -X='.base64_encode(serialize($post));
-		// $output = shell_exec($exec);
-		
-		$ch = curl_init(); 
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, site_url($page));
 		curl_setopt($ch, CURLOPT_HEADER, 0); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

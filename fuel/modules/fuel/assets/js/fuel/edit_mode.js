@@ -454,6 +454,7 @@ if (fuel == undefined) var fuel = {};
 				var elem = $('#__fuel_page_published__')
 				var val = (elem.val() == 'yes') ? 'no' : 'yes';
 				elem.val(val);
+				
 				$('#__fuel_edit_bar_form__').ajaxSubmit(function(){
 					window.location.reload();
 				});

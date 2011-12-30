@@ -17,13 +17,13 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL module object
+ * FUEL modules object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ * @link		http://www.getfuelcms.com/user_guide/modules/fuel/fuel_modules
  */
 
 // --------------------------------------------------------------------
@@ -35,13 +35,29 @@ class Fuel_modules extends Fuel_base_library {
 	protected $_modules_grouped = array();
 	protected $_overwrites;
 	
-	function __construct()
+	/**
+	 * Constructor
+	 *
+	 * The constructor can be passed an array of config values
+	 */
+	function __construct($params = array())
 	{
 		parent::__construct();
-		$this->initialize();
+		$this->initialize($params);
 	}
 	
-	function initialize()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set module initialization parameters
+	 *
+	 * Accepts an associative array as input, containing module initialization preferences.
+	 *
+	 * @access	public
+	 * @param	array	Array of additional module initialiation parameters  (optional)
+	 * @return	void
+	 */	
+	function initialize($params = array())
 	{
 		// get simple module init values. Must use require here because of the construct
 		//require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_modules.php');
@@ -54,11 +70,10 @@ class Fuel_modules extends Fuel_base_library {
 
 		$fuel_module_init = (array)$this->get_module_config('fuel');
 		$this->_modules_grouped['fuel'] = $module_init;
-		
 		$module_init = array_merge($my_module_init, $fuel_module_init);
 		
 		// no longer need these so we get rid of them
-		unset($my_module_init, $fuel_module_init);
+		unset($my_module_init, $fuel_module_init, $params);
 		
 		// then get the allowed modules initialization information
 		foreach($allowed as $mod)
@@ -89,6 +104,15 @@ class Fuel_modules extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an advanced module's simple module config information (sounds strange I know)
+	 *
+	 * @access	public
+	 * @param	string	Advanced module folder name
+	 * @return	array
+	 */	
 	function get_module_config($module)
 	{
 		switch($module)
@@ -133,9 +157,9 @@ class Fuel_modules extends Fuel_base_library {
 	 * Add a module 
 	 *
 	 * @access	public
-	 * @param	string	module name
-	 * @param	array	module initialization parameters
-	 * @return	string
+	 * @param	string	Module name
+	 * @param	array	Module initialization parameters
+	 * @return	void
 	 */	
 	function add($mod, $init)
 	{
@@ -167,11 +191,14 @@ class Fuel_modules extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Module get
+	 * Returns a module object with the specified key name
+	 *
+	 * If no module parameter is passed, then an array of all simple modules will be returned
 	 *
 	 * @access	public
-	 * @param	string	module name
-	 * @return	string
+	 * @param	string	Module name (optional)
+	 * @param	boolean	Whether to include advanced modules in the search. Defeault is TRUE. (optional)
+	 * @return	object	Fuel_module object
 	 */	
 	function get($module = NULL, $include_advanced = TRUE)
 	{
@@ -198,6 +225,8 @@ class Fuel_modules extends Fuel_base_library {
 	/**
 	 * Module overwrites
 	 *
+	 * Used to overwrite existing module configurations (e.g. pages, blocks, etc)
+	 *
 	 * @access	public
 	 * @return	string
 	 */	
@@ -221,7 +250,14 @@ class Fuel_modules extends Fuel_base_library {
 		return $this->_overwrites;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns an array of all the pages
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function pages()
 	{
 		$all_pages = array();
@@ -230,9 +266,9 @@ class Fuel_modules extends Fuel_base_library {
 			$pages = $module->pages();
 			$all_pages = array_merge($all_pages, $pages);
 		}
+		
 		return $all_pages;
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
@@ -240,7 +276,9 @@ class Fuel_modules extends Fuel_base_library {
 	 * Determine whether a module exists or not
 	 *
 	 * @access	public
-	 * @return	string
+	 * @param	string	Module name
+	 * @param	boolean	Whether to include advanced modules in the search
+	 * @return	boolean
 	 */	
 	function exists($module, $include_advanced = TRUE)
 	{
@@ -248,6 +286,14 @@ class Fuel_modules extends Fuel_base_library {
 		return $module !== FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of all the advanced module objects
+	 *
+	 * @access	public
+	 * @return	array	An array of Fuel_advanced_module objects
+	 */	
 	function advanced()
 	{
 		$advanced = array();
@@ -258,6 +304,15 @@ class Fuel_modules extends Fuel_base_library {
 		return $advanced;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determine whether a module is allowed in the MY_config
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	boolean
+	 */	
 	function allowed($module)
 	{
 		return (in_array($module, $this->fuel->config('modules_allowed')));
@@ -267,7 +322,16 @@ class Fuel_modules extends Fuel_base_library {
 }
 
 
+// ------------------------------------------------------------------------
 
+/**
+ * FUEL module object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ */
 class Fuel_module extends Fuel_base_library {
 	
 	protected $module = '';
@@ -291,9 +355,11 @@ class Fuel_module extends Fuel_base_library {
 	 * Initialize the user preferences
 	 *
 	 * Accepts an associative array as input, containing display preferences
+	 * as well as an array for simple module configuration parameters
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
+	 * @param	array	simple module initialization parameters (optional)
 	 * @return	void
 	 */	
 	function initialize($params = array(), $init = array())
@@ -326,7 +392,7 @@ class Fuel_module extends Fuel_base_library {
 	 * Retrieve the info for a module
 	 *
 	 * @access	public
-	 * @param	string	module name
+	 * @param	string	module name (optional)
 	 * @return	array
 	 */	
 	function info($prop = NULL)
@@ -453,7 +519,7 @@ class Fuel_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get the pages of a module
+	 * Sets a simple module's property
 	 *
 	 * @access	public
 	 * @return	array
@@ -516,7 +582,6 @@ class Fuel_module extends Fuel_base_library {
 		{
 			$records = $this->CI->$model->find_all_array();
 		}
-		
 		foreach($records as $record)
 		{
 			// need to put in global namesapce for preg_replace_callback to access
@@ -534,7 +599,6 @@ class Fuel_module extends Fuel_base_library {
 					}
 				}
 			}
-
 			if (!empty($replaced))
 			{
 				$pages[$page] = $page;
@@ -547,9 +611,10 @@ class Fuel_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the url based on the preview_path of the module
+	 * Returns the url based on the preview_path configuration of the simple module
 	 *
 	 * @access	public
+	 * @param	array	data to be merged in with perview path URL
 	 * @return	string
 	 */	
 	function url($data = array())
@@ -571,8 +636,6 @@ class Fuel_module extends Fuel_base_library {
 		}
 		return $preview_path;
 	}
-	
-	
 	
 	// --------------------------------------------------------------------
 	
@@ -612,8 +675,7 @@ class Fuel_module extends Fuel_base_library {
 	 * Loads a module model and creates a variable in the view that you can use to merge data 
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	mixed
+	 * @param	array  (optional)
 	 * @return	string
 	 */
 	function find($params = array())
@@ -708,20 +770,58 @@ class Fuel_module extends Fuel_base_library {
 		return $data;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * An alias to the modules model to save
+	 *
+	 * @access	public
+	 * @param	arrray	An array of values to save to the module's model
+	 * @return	boolean
+	 */
 	function save($values)
 	{
 		return $this->model()->save($values);
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * An alias to the module's model t create a new record
+	 *
+	 * @access	public
+	 * @param	arrray	An array of values to save to the module's model (optional)
+	 * @return	object	Record_class object
+	 */
 	function create($values = array())
 	{
 		return $this->model()->create($values);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * An alias to the module's model t delete a  record
+	 *
+	 * @access	public
+	 * @param	array	Where condition to use for deleting record
+	 * @return	boolean
+	 */
 	function delete($where)
 	{
 		return $this->model()->delete($where);
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Magic method to find records on the module's model
+	 *
+	 * @access	private
+	 * @param	string	Method name
+	 * @param	array	Method arguments
+	 * @return	array
+	 */
 	function __call($name, $args)
 	{
 		if (preg_match('#^find_#', $name))
@@ -740,9 +840,10 @@ class Fuel_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get the pages of a module
+	 * Magic method to get value of a module property
 	 *
 	 * @access	public
+	 * @param	string	Module property
 	 * @return	array
 	 */	
 	function __get($var)
@@ -758,5 +859,6 @@ class Fuel_module extends Fuel_base_library {
 		}
 	}
 }
+
 /* End of file Fuel_modules.php */
 /* Location: ./modules/fuel/libraries/fuel/Fuel_modules.php */

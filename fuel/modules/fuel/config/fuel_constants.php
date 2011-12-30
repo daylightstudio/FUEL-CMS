@@ -17,23 +17,6 @@ $_FUEL_SEGS = explode('/', str_replace("\\", '/', $_SERVER['SCRIPT_FILENAME']));
 define('WEB_FOLDER', (count($_FUEL_SEGS) > 1) ? $_FUEL_SEGS[count($_FUEL_SEGS)-2] : '/');
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 
-if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
-{
-	$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
-	
-	if ($_SERVER['SERVER_PORT'] == '443')
-	{
-		define('BASE_URL', "https://".$_base_path);
-	}
-	else
-	{
-		define('BASE_URL', "http://".$_base_path);
-	}
-}
-else
-{
-	define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
-}	
 
 // must include language helper if you want to use lang function
 include(APPPATH.'helpers/MY_language_helper.php');
@@ -55,6 +38,27 @@ foreach($config['modules_allowed'] as $module)
 	if (file_exists($constants_path))
 	{
 		require_once($constants_path);
+	}
+}
+
+if (!defined('BASE_URL'))
+{
+	if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
+	{
+		$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+
+		if ($_SERVER['SERVER_PORT'] == '443')
+		{
+			define('BASE_URL', "https://".$_base_path);
+		}
+		else
+		{
+			define('BASE_URL', "http://".$_base_path);
+		}
+	}
+	else
+	{
+		define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 	}
 }
 

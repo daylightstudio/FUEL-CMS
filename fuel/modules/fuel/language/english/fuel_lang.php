@@ -170,6 +170,7 @@ $lang['page_route_warning'] = 'The location specified has the following routes a
 $lang['page_controller_assigned'] = 'There is a controller method already assigned to this page.';
 $lang['page_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to import it into the body of your page (if available)?';
 $lang['page_not_published'] = 'This page is not published.';
+
 $lang['page_no_import'] = 'No, don\'t import';
 $lang['page_yes_import'] = 'Yes, import';
 $lang['page_information'] = 'Page Information';

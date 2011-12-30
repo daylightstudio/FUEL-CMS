@@ -37,7 +37,7 @@ class Validate extends Fuel_base_controller {
 	function index()
 	{
 		// TODO.... NEED TO FIX THIS METHOD OF GETTING ALL PAGES
-		$pages = $this->fuel->pages->all_pages_including_views(TRUE);
+		$pages = $this->fuel->pages->options_list('all', TRUE);
 		$vars['form_action'] = 'tools/validate/html';
 		$vars['default_page_input'] = $this->fuel->validate->config('default_page_input');
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';

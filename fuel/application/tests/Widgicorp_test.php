@@ -130,7 +130,7 @@ class Widgicorp_test extends Tester_base {
 	private function _get_pages()
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
-		$pages = $this->CI->pages_model->all_pages_including_views(TRUE, FALSE);
+		$pages = $this->fuel->pages->options_list('all', TRUE, FALSE);
 
 		// remove project page and add dynamic ones
 		unset($pages['showcase/project']);

@@ -10,7 +10,6 @@ class Fuel_backup_test extends Tester_base {
 		
 		// load needed helpers
 		$this->CI->load->helper('file');
-		$this->fuel =& $this->CI->fuel;
 		$this->backup_path = INSTALL_ROOT.'data_backup/testing/';
 	}
 

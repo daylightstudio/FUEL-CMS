@@ -37,3 +37,5 @@ div.syntaxhighlighter .line.alt2 { background-color: #fcfcfc !important; }
 /* screenshot overlays */
 div.screenshot { position: relative; }
 div.overlay { position: absolute; z-index: 1; background-color: #ffc; font-size: 12px; padding: 5px; -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.4); -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.4); }
+
+#content pre.example { margin-bottom: 20px; }

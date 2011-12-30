@@ -12,7 +12,7 @@
 <?php /* ?>
 <?=js('jquery/jquery, jquery/plugins/jquery.form, jquery/plugins/jqModal, jquery/plugins/date, jquery/plugins/jquery.datePicker, jquery/plugins/jquery.tooltip, editors/ckeditor/ckeditor.js, fuel/linked_field_formatters.js, editors/markitup/jquery.markitup.pack, editors/markitup/jquery.markitup.set, jquery/plugins/jquery.serialize, jquery/plugins/jquery.cookie, jquery/plugins/jquery.supercookie, jquery/plugins/jquery-ui-1.8.4.custom.min, jquery/plugins/jquery.disable.text.select.pack, jquery/plugins/jquery.selso, jquery/plugins/jquery.fillin, jquery/plugins/jquery.supercomboselect, jquery/plugins/jquery.MultiFile.pack, jquery/plugins/jquery.scrollTo-min, jquery/plugins/jquery.ba-resize.min, fuel/edit_mode', 'fuel')?>
 <?php */ ?>
-<?=js('jquery/jquery, jquery/plugins/jqModal, jquery/plugins/jquery.serialize, jquery/plugins/jquery.cookie, jquery/plugins/jquery.supercookie, jquery/plugins/jquery.ba-resize.min, fuel/global, fuel/edit_mode', 'fuel')?>
+<?=js('jquery/jquery, jquery/plugins/jquery.form, jquery/plugins/jqModal, jquery/plugins/jquery.serialize, jquery/plugins/jquery.cookie, jquery/plugins/jquery.supercookie, jquery/plugins/jquery.ba-resize.min, fuel/global, fuel/edit_mode', 'fuel')?>
 
 <div  class="__fuel__ notification" id="__fuel_notification__">
 	<?=$this->load->module_view(FUEL_FOLDER, '_blocks/notifications')?>

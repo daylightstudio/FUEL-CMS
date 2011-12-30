@@ -2,10 +2,8 @@
 	<div id="tester_results">
 	
 			<div style="float: right;" class="btn">
-				<form action="<?=site_url($this->uri->uri_string())?>" method="post" id="reload_form">
-					<a href="javascript:$('#reload_form').submit()" class="ico ico_refresh"><?=lang('tester_reload_all')?></a>
-					<input type="hidden" name="tests_serialized" value="<?=$tests_serialized?>" />
-				</form>
+				<a href="javascript:$('#form').submit()" class="ico ico_refresh"><?=lang('tester_reload_all')?></a>
+				<input type="hidden" name="tests_serialized" value="<?=$tests_serialized?>" />
 			</div>
 		
 			<a href="<?=fuel_url('tools/tester')?>" class="back"><?=lang('tester_back')?></a>

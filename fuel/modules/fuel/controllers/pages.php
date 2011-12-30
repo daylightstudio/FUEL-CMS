@@ -35,7 +35,7 @@ class Pages extends Module {
 			{
 				if (empty($id))
 				{
-					show_error('Not a valid ID returned to save layout variables');
+					show_error(lang('error_saving'));
 				}
 				
 				$this->_process_uploads();
@@ -439,10 +439,9 @@ class Pages extends Module {
 		$this->session->set_flashdata('success', lang('data_saved'));
 		
 		// reset cache for that page only
-		if ($this->input->post('location')){
-			$this->load->library('cache');
-			$cache_group = $this->config->item('page_cache_group', 'fuel');
-			$this->cache->remove(fuel_cache_id($this->input->post('location')), $cache_group);
+		if ($this->input->post('location'))
+		{
+			$this->fuel->cache->clear_page($this->input->post('location'));
 		}
 	}
 

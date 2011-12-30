@@ -32,29 +32,66 @@ class Fuel_logs extends Fuel_base_library {
 	
 	public $location = 'db';
 	
+	/**
+	 * Constructor
+	 *
+	 * The constructor can be passed an array of config values
+	 */
 	function __construct($params = array())
 	{
 		parent::__construct($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 *
+	 * @access	public
+	 * @param	array	Array of initalization parameters  (optional)
+	 * @return	void
+	 */	
 	function initialize($params)
 	{
 		parent::initialize($params);
 		$this->fuel->load_model('logs');
 	}
 	
-	function write($msg, $type = 'info', $location = 'db')
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Writes a log message to either the database or to a log file
+	 *
+	 * @access	public
+	 * @param	string	Message to log
+	 * @param	string	Message level. Options are error, debug, info. Default is 'info'.   (optional)
+	 * @param	string	Where to store the log message. Options are 'db' or 'file'. Default is 'db.'  (optional)
+	 * @return	void
+	 */	
+	function write($msg, $level = 'info', $location = 'db')
 	{
 		if ($location == 'db')
 		{
-			$this->CI->logs_model->logit($msg, $type);
+			$this->CI->logs_model->logit($msg, $level);
 		}
 		else
 		{
-			log_message($type, $msg);
+			log_message($level, $msg);
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set module initialization parameters
+	 *
+	 * Accepts an associative array as input, containing module initialization preferences.
+	 *
+	 * @access	public
+	 * @return	object
+	 */
 	function &model()
 	{
 		return $this->CI->logs_model;

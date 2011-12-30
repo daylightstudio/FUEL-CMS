@@ -47,7 +47,7 @@ class Fuel extends Fuel_base_library {
 									'assets',
 									'navigation',
 									'modules',
-									'sitevariables',
+									'sitevars',
 									'users',
 									'permissions',
 									'cache',
@@ -58,7 +58,6 @@ class Fuel extends Fuel_base_library {
 
 	private static $_instance;
 	
-	//private function __construct()
 	function __construct()
 	{
 		parent::__construct();

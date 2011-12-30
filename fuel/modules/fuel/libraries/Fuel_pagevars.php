@@ -17,13 +17,13 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL pagevars 
+ * FUEL page variables 
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_admin
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_page_variables
  */
 
 // --------------------------------------------------------------------
@@ -33,36 +33,45 @@ class Fuel_pagevars extends Fuel_base_library {
 	public $location = ''; // the default location used for grabbing variables
 	public $vars_path = ''; // the path to the _variables folder
 	
-	function __construct()
+	const VARIABLE_TYPE_DB = 'db';
+	const VARIABLE_TYPE_VIEW = 'view';
+	
+	function __construct($params = array())
 	{
-		parent::__construct();
-		$this->location = uri_path();
+		parent::__construct($params);
+		$this->initialize($params);
 	}
+	
+	function initialize($params)
+	{
+		parent::initialize($params);
+		if (empty($this->location))
+		{
+			$this->location = uri_path();
+		}
+	}
+	
 	
 	/**
 	 * Retrieve all the variables for a specific location
 	 *
 	 * @access	public
 	 * @param	string
-	 * @param	string
 	 * @return	array
 	 */
-	function retrieve($location = null, $what = 'all')
+	function retrieve($what = '')
 	{
-		if (is_null($location))
-		{
-			$location = $this->location;
-		}
 		
+		$location = $this->location;
 		switch($what)
 		{
-			case 'db' :
-				return $this->db_variables($location);
-			case 'views' :
-				return $this->view_variables($location);
+			case self::VARIABLE_TYPE_DB:
+				return $this->db();
+			case self::VARIABLE_TYPE_VIEW:
+				return $this->view();
 			default:
-				$db = (array) $this->db_variables($location);
-				$view = (array) $this->view_variables($location);
+				$db = (array) $this->db();
+				$view = (array) $this->view();
 
 				//$page_data = (!empty($db)) ? $db : $view;
 				$page_data = array_merge($view, $db);
@@ -81,26 +90,42 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * Retrieve the FUEL db variables for a specific location
 	 *
 	 * @access	public
-	 * @param	string
+	 * @param	boolean
 	 * @return	array
 	 */
-	function db_variables($location = NULL, $parse = FALSE)
+	function db($parse = FALSE)
 	{
-		if (is_null($location))
-		{
-			$location = $this->location;
+		$location = $this->location;
+
+		$this->fuel->load_model('pagevariables_model');
+		$this->fuel->load_model('sitevariables_model');
+		
+		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		$vars = array();
+		
+		// Loop through the pages array looking for wild-cards
+		foreach ($site_vars as $site_var){
+			
+			// Convert wild-cards to RegEx
+			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
+
+			// Does the RegEx match?
+			if (empty($key) OR preg_match('#^'.$key.'$#', $location))
+			{
+				$vars[$site_var['name']] = $site_var['value'];
+			}
 		}
-		$this->CI->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'pagevariables_model');
-		$site_vars = $this->fuel->sitevariables->get($location);
 		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
+
 		if ($parse)
 		{
+			$this->CI->load->library('parser');
 			foreach($page_vars as $key => $val)
 			{
 				$page_vars[$key] = $this->CI->parser->parse_string($val, $page_vars, TRUE);
 			}
 		}
-		$vars = array_merge($site_vars, $page_vars);
+		$vars = array_merge($vars, $page_vars);
 		return $vars;
 	}
 	
@@ -109,40 +134,30 @@ class Fuel_pagevars extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string
-	 * @param	string
 	 * @return	array
 	 */
-	function view_variables($location = NULL, $controller = NULL)
-	{
-		if (is_null($location))
-		{
-			$location = $this->location;
-		}
+	function view($controller = NULL){
+
+		$location = $this->location;
+		
 		$vars = array();
 		$page_vars = array();
 
-		if (empty($this->vars_path))
-		{
-			$this->vars_path = APPPATH.'/views/_variables/';
-		}
+		if (empty($this->vars_path)) $this->vars_path = APPPATH.'/views/_variables/';
 		
 		$global_vars = $this->vars_path.'global'.EXT;
+		
 		if (file_exists($global_vars))
 		{
 			require($global_vars);
 		}
+		
 		// get controller name so that we can load in its corresponding variables file if exists
-		if (empty($controller))
-		{
-			$controller = current(explode('/', $location));
-		}
-		if (empty($controller) OR $controller == 'page_router')
-		{
-			$controller = 'home';
-		}
+		if (empty($controller)) $controller = current(explode('/', $location));
+		if (empty($controller) OR $controller == 'page_router') $controller = 'home';
 		
 		$controller_vars =  $this->vars_path.$controller.EXT;
-		
+
 		// load controller specific config if it exists... and any page specific vars
 		if (file_exists($controller_vars))
 		{
@@ -170,5 +185,3 @@ class Fuel_pagevars extends Fuel_base_library {
 		return $vars;
 	}
 }
-/* End of file Fuel_pagevars.php */
-/* Location: ./modules/fuel/libraries/Fuel_pagevars.php */
