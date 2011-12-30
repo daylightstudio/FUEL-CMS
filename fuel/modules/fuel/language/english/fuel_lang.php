@@ -469,8 +469,9 @@ $lang['pagination_last_link'] = 'Last &rsaquo;';
 $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
 $lang['action_delete'] = 'Delete';
+$lang['action_upload'] = 'Upload';
 
-$lang['import'] = 'Import';
+//$lang['import'] = 'Import';
 
 // now include the Javascript specific ones since there is some crossover
 include('fuel_js_lang.php');

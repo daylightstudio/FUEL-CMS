@@ -1331,16 +1331,13 @@ Class Form_builder {
 			'size' => $size, 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'type' => (!empty($params['type']) ? $params['type'] : NULL), 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 		);
-		if ($params['type'] == 'password')
-		{
-			return $this->form->password($params['name'], $params['value'], $attrs);
-		}
-		
-		return $this->form->text($params['name'], $params['value'], $attrs);
+		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -1409,6 +1406,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
@@ -1470,7 +1468,7 @@ Class Form_builder {
 			{
 				$attrs = array(
 					'readonly' => $params['readonly'], 
-					'disabled' => $params['disabled']
+					'disabled' => $params['disabled'],
 				);
 				if (($i == 0 AND !$default) OR  ($default == $key))
 				{
@@ -1588,6 +1586,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 		);
 		$name = $params['name'];
@@ -1638,6 +1637,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
@@ -1777,7 +1777,7 @@ Class Form_builder {
 	{
 		$numeric_class = 'numeric';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
-		
+		$params['type'] = 'number';
 		$decimal = (!empty($params['decimal'])) ? 1 : 0;
 		$negative = (!empty($params['negative'])) ? 1 : 0;
 		
@@ -1796,6 +1796,40 @@ Class Form_builder {
 			'decimal' => $decimal,
 			'negative' => $negative,
 			);
+		return $this->create_text($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates an email field for the form... supported by modern browsers
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_email($params)
+	{
+		$email_class = 'email';
+		$params['type'] = 'email';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		return $this->create_text($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates an telphone field for the form... supported by modern browsers
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_phone($params)
+	{
+		$email_class = 'phone';
+		$params['type'] = 'tel';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
 		return $this->create_text($params);
 	}
 	

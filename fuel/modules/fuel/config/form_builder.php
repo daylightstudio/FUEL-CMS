@@ -111,15 +111,24 @@ $config['custom_fields'] = array(
 
 	),
 	
-	'number' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'number',
-		'filepath'	=> '',
-		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
-		'js_function' => 'fuel.fields.number_field',
-		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
-	),
-
+	// 'number' => array(
+	// 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	// 	'function'	=> 'number',
+	// 	'filepath'	=> '',
+	// 	'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+	// 	'js_function' => 'fuel.fields.number_field',
+	// 	//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
+	// ),
+	// 
+	// 'email' => array(
+	// 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	// 	'function'	=> 'email',
+	// 	'filepath'	=> '',
+	// 	//'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+	// 	//'js_function' => 'fuel.fields.number_field',
+	// 	//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
+	// ),
+	// 
 	'template' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'template',

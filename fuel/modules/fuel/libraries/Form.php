@@ -182,6 +182,26 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates <input type="{text}"> tag
+	 * 
+	 * @access public
+	 * @param string name of the input element
+	 * @param string type of input element
+	 * @param string value for the input element
+	 * @param mixed html attributes for the input element
+	 * @return string
+	 */
+	public function input($name, $type = 'text', $value = '', $attrs = '')
+	{
+		$attrs = $this->_create_attrs($attrs);
+		if (empty($type)) $type = 'text';
+		$elem = new Form_input($type, $name, Form::prep($value), $attrs);
+		return $this->_create_element($elem);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates <input type="text"> tag
 	 * 
 	 * @access public
@@ -192,9 +212,7 @@ Class Form {
 	 */
 	public function text($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('text', $name, Form::prep($value), $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'text', Form::prep($value), $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -210,9 +228,7 @@ Class Form {
 	 */
 	public function password($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('password', $name, Form::prep($value), $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'password', Form::prep($value), $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -228,9 +244,7 @@ Class Form {
 	 */
 	public function search($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('search', $name, Form::prep($value), $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'search', Form::prep($value), $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -246,9 +260,7 @@ Class Form {
 	 */
 	public function hidden($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('hidden', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'hidden', $value, $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -264,9 +276,7 @@ Class Form {
 	 */
 	public function radio($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('radio', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'radio', $value, $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -281,9 +291,7 @@ Class Form {
 	 * @return string
 	 */
 	public function checkbox($name, $value = '', $attrs = ''){
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('checkbox', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'checkbox', $value, $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -299,9 +307,7 @@ Class Form {
 	 */
 	public function file($name, $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('file', $name, '', $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'file', '', $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -357,9 +363,7 @@ Class Form {
 	 */
 	public function submit($value, $name = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('submit', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'submit', $value, $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -375,16 +379,15 @@ Class Form {
 	 */
 	public function button($value, $name = '', $attrs = '', $use_input_type = TRUE)
 	{
-		$attrs = $this->_create_attrs($attrs);
 		if ($use_input_type)
 		{
-			$elem = new Form_input('button', $name, $value, $attrs);
+			$elem = $this->input($name, 'button', $value, $attrs);
 		}
 		else
 		{
 			$elem = new Form_button('button', $name, $value, $attrs);
 		}
-		return $this->_create_element($elem);
+		return $elem;
 	}
 
 	// --------------------------------------------------------------------
@@ -400,9 +403,7 @@ Class Form {
 	 */
 	public function reset($value, $name = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
-		$elem = new Form_input('reset', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		return $this->input($name, 'reset', $value, $attrs);
 	}
 
 	// --------------------------------------------------------------------
@@ -419,9 +420,8 @@ Class Form {
 	public function image($src, $name = '', $value = '', $attrs = '')
 	{
 		$src = $this->_create_attrs(array('src' => $src));
-		$attrs = $src.' '.$this->_create_attrs($attrs);
-		$elem = new Form_input('image', $name, $value, $attrs);
-		return $this->_create_element($elem);
+		$attrs = $src.$this->_create_attrs($attrs);
+		return $this->input($name, 'image', $value, $attrs);
 	}
 	
 	// --------------------------------------------------------------------

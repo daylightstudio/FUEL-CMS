@@ -64,8 +64,9 @@ class Projects_model extends Base_module_model {
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
 		
 		$fields['test_image'] = array('type' => 'asset', 'upload' => FALSE);
-		// $fields['numeric'] = array('type' => 'number', 'negative' => FALSE, 'decimal' => FALSE);
+		$fields['numeric'] = array('type' => 'number', 'negative' => TRUE, 'decimal' => FALSE);
 		$fields['currency'] = array('type' => 'currency');
+		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
 
 		// temporary
 		unset($fields['_published']);

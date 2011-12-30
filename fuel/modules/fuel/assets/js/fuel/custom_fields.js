@@ -266,7 +266,7 @@ fuel.fields.asset_field = function(context){
 			default :
 				btnLabel = fuel.lang('btn_asset');
 		}
-		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+	//	$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 	});
 
 	$('.asset_select_button', context).click(function(e){
@@ -573,6 +573,8 @@ fuel.fields.number_field = function(context, options){
 		}
 		if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes"){
 			o.negative = true;
+		} else {
+			o.negative = false;
 		}
 		$(this).numeric(o);
 	});

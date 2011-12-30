@@ -737,6 +737,10 @@ class Pages extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('pages_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
+		
+		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_upload'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		
 		$this->fuel->admin->render('upload', $vars);
 	}
 	

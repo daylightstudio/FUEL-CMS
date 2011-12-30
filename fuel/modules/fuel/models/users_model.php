@@ -166,8 +166,7 @@ class Users_model extends Base_module_model {
 		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
 		
 		$fields['active']['order'] = 8;
-		
-		
+
 		// get permissions
 		$CI =& get_instance();
 		$perm_fields = array();

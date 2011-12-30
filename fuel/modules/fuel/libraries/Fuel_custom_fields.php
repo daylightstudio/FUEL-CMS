@@ -161,34 +161,44 @@ class Fuel_custom_fields {
 		return $form_builder->create_text($params);
 	}
 
-	public function number($params)
-	{
-		$form_builder =& $params['instance'];
-		
-		$numeric_class = 'numeric';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
-		
-		$decimal = (!empty($params['decimal'])) ? 1 : 0;
-		$negative = (!empty($params['negative'])) ? 1 : 0;
-		
-		if (empty($params['size']))
-		{
-			$params['size'] = 10;
-		}
-
-		if (empty($params['max_length']))
-		{
-			$params['max_length'] = 10;
-		}
-
-		// set data values for jquery plugin to use
-		$params['data'] = array(
-			'decimal' => $decimal,
-			'negative' => $negative,
-			);
-		return $form_builder->create_text($params);
-	}
-	
+	// public function number($params)
+	// {
+	// 	$form_builder =& $params['instance'];
+	// 	
+	// 	$numeric_class = 'numeric';
+	// 	$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
+	// 	
+	// 	$decimal = (!empty($params['decimal'])) ? 1 : 0;
+	// 	$negative = (!empty($params['negative'])) ? 1 : 0;
+	// 	
+	// 	if (empty($params['size']))
+	// 	{
+	// 		$params['size'] = 10;
+	// 	}
+	// 
+	// 	if (empty($params['max_length']))
+	// 	{
+	// 		$params['max_length'] = 10;
+	// 	}
+	// 
+	// 	// set data values for jquery plugin to use
+	// 	$params['data'] = array(
+	// 		'decimal' => $decimal,
+	// 		'negative' => $negative,
+	// 		);
+	// 	return $form_builder->create_text($params);
+	// }
+	// 
+	// public function email($params)
+	// {
+	// 	$form_builder =& $params['instance'];
+	// 
+	// 	$email_class = 'email';
+	// 	$params['type'] = 'email';
+	// 	$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+	// 	return $form_builder->create_text($params);
+	// }
+	// 
 	public function template($params)
 	{
 		$this->CI->load->library('parser');

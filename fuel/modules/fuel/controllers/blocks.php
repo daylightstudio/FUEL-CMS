@@ -112,8 +112,12 @@ class Blocks extends Module {
 		$fields = array();
 		$blocks = $this->model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		
-		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'select', 'options' => $blocks, 'class' => 'add_edit blocks');
+		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'inline_edit', 'options' => $blocks, 'module' => 'blocks');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
+		
+		$common_fields = $this->_common_fields();
+		$fields = array_merge($fields, $common_fields);
+		
 		$this->form_builder->hidden = array();
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($_POST);
@@ -122,7 +126,7 @@ class Blocks extends Module {
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
 		
-		$crumbs = array($this->module_uri => $this->module_name, lang('import'));
+		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
 		$this->fuel->admin->set_titlebar($crumbs);
 		
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);

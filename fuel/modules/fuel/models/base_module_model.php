@@ -459,6 +459,18 @@ class Base_module_model extends MY_Model {
 //				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
 			}
 			
+			// specific to email
+			if ($key == 'email' OR $key == 'email_address')
+			{
+				$fields[$key]['type'] = 'email';
+			}
+			
+			// specific to phone
+			if ($key == 'phone' OR $key == 'telephone')
+			{
+				$fields[$key]['type'] = 'phone';
+			}
+			
 			$order++;
 		}
 		

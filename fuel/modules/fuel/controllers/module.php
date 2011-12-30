@@ -911,18 +911,12 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->set_validator($this->model->get_validation());
 
 			// add hidden field with the module name for convenience
-			$fields['__fuel_module__'] = array('type' => 'hidden');
-			$fields['__fuel_module__']['value'] = $this->module;
-			$fields['__fuel_module__']['class'] = '__fuel_module__';
-
-			$fields['__fuel_module_uri__'] = array('type' => 'hidden');
-			$fields['__fuel_module_uri__']['value'] = $this->module_uri;
-			$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+			$common_fields = $this->_common_fields();
+			$fields = array_merge($fields, $common_fields);
 
 			$fields['__fuel_inline_action__'] = array('type' => 'hidden');
 			$fields['__fuel_inline_action__']['class'] = '__fuel_inline_action__';
 			$fields['__fuel_inline_action__']['value'] = (empty($id)) ? 'create' : 'edit';
-			
 			
 			$fields['__fuel_inline__'] = array('type' => 'hidden');
 			$fields['__fuel_inline__']['value'] = ($inline) ? 1 : 0;
@@ -1538,6 +1532,18 @@ class Module extends Fuel_base_controller {
 	protected function _allow_action($action)
 	{
 		return in_array($action, $this->item_actions);
+	}
+	
+	protected function _common_fields()
+	{
+		$fields['__fuel_module__'] = array('type' => 'hidden');
+		$fields['__fuel_module__']['value'] = $this->module;
+		$fields['__fuel_module__']['class'] = '__fuel_module__';
+
+		$fields['__fuel_module_uri__'] = array('type' => 'hidden');
+		$fields['__fuel_module_uri__']['value'] = $this->module_uri;
+		$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+		return $fields;
 	}
 	
 	protected function _process_uploads($posted = NULL)
