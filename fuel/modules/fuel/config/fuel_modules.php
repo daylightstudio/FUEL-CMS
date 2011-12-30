@@ -69,6 +69,7 @@ $config['modules']['navigation'] = array(
 		'id', 
 		'label', 
 		'nav_key',
+		'precedence',
 		'published',
 	),
 	'default_col' => 'nav_key',
