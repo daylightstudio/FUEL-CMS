@@ -4,6 +4,7 @@ require_once('base_module_model.php');
 class Pagevariables_model extends Base_module_model {
 
 	public $page_id;
+	public $honor_page_status = TRUE; // will look at the pages published status as well
 	
 	function __construct()
 	{
@@ -82,13 +83,17 @@ class Pagevariables_model extends Base_module_model {
 	function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
-		$fields['value']['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
+		$fields['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
 		return $fields;
 	}
 	
 	function _common_query()
 	{
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
+		if ($this->honor_page_status)
+		{
+			$this->db->where(array($this->_tables['pages'].'.published' => 'yes'));
+		}
 	}
 
 }

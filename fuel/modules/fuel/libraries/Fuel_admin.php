@@ -597,7 +597,7 @@ class Fuel_admin extends Fuel_base_library {
 		$panels = array(
 						'top' => FALSE,
 						'nav' => FALSE,
-						'titlebar' => FALSE,
+						'titlebar' => TRUE,
 						'actions' => TRUE,
 						'bottom' => FALSE,
 						);
