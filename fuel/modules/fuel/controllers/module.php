@@ -1411,13 +1411,13 @@ class Module extends Fuel_base_controller {
 						} 
 						
 						// overwrite
-						if (!empty($posted[$file.'_overwrite']))
+						if (isset($posted[$file.'_overwrite']))
 						{
-							$config['overwrite'] = (!empty($posted[$file.'_overwrite']));
+							$config['overwrite'] = (is_true_val($posted[$file.'_overwrite']));
 						}
-						else if (!empty($posted[$multi_root.'_overwrite']))
+						else if (isset($posted[$multi_root.'_overwrite']))
 						{
-							$config['overwrite'] = (!empty($posted[$multi_root.'_overwrite']));
+							$config['overwrite'] = (is_true_val($posted[$multi_root.'_overwrite']));
 						}
 						else
 						{
