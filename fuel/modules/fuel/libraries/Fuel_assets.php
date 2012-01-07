@@ -65,6 +65,7 @@ class Fuel_assets extends Fuel_base_library {
 		$valid = array( 'upload_path' => '',
 						'override_post_params' => FALSE,
 						'file_name' => '',
+						'overwrite' => FALSE,
 						'xss_clean' => FALSE,
 						'encrypt_name' => FALSE,
 						
@@ -112,22 +113,24 @@ class Fuel_assets extends Fuel_base_library {
 				if (empty($params['override_post_params']))
 				{
 					$posted = array();
-					foreach($valid as $param)
+					foreach($valid as $param => $default)
 					{
-						if (isset($_POST[$key.'_'.$param]))
+						$input_key = $key.'_'.$param;
+						if (isset($_POST[$input_key]))
 						{
-							$posted[$param] = $this->CI->input->post($param);
+							$posted[$param] = $this->CI->input->post($input_key);
 						}
 					}
 					$params = array_merge($params, $posted);
+					unset($params['override_post_params']);
 				}
-				
 				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
 
 				// set restrictions 
 				$params['max_size'] = $this->fuel->config('assets_upload_max_size');
 				$params['max_width'] = $this->fuel->config('assets_upload_max_width');
 				$params['max_height'] = $this->fuel->config('assets_upload_max_height');
+				
 				if ($this->dir_filetype($asset_dir))
 				{
 					$params['allowed_types'] = $this->dir_filetype($asset_dir);
@@ -135,10 +138,12 @@ class Fuel_assets extends Fuel_base_library {
 				else if ($this->dir_filetype($default_asset_dir))
 				{
 					$params['allowed_types'] = $this->dir_filetype($default_asset_dir);
+					$asset_dir = $default_asset_dir;
 				}
 				else
 				{
 					$params['allowed_types'] = 'jpg|jpeg|png|gif';
+					$asset_dir = $default_asset_dir;
 				}
 				$params['remove_spaces'] = TRUE;
 			
@@ -163,6 +168,9 @@ class Fuel_assets extends Fuel_base_library {
 				// set file name
 				$params['file_name'] = (!empty($params[$field_name.'_filename'])) ? $params[$field_name.'_filename'] : url_title($file['name'], 'underscore', TRUE);
 			
+				// set overwrite
+				$params['overwrite'] = (is_true_val($params['overwrite']));
+
 				if (!empty($params['xss_clean']))
 				{
 					$tmp_file = file_get_contents($file['tmp_name']);
@@ -177,7 +185,7 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					return FALSE;
 				}
-			
+
 				// UPLOAD!!!
 				$this->CI->upload->initialize($params);
 				if (!$this->CI->upload->do_upload($key))

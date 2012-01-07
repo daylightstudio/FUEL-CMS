@@ -1623,6 +1623,7 @@ Class Form_builder {
 	{
 		$defaults = array(
 			'overwrite' => NULL, // for file uploading
+			'display_overwrite' => TRUE, // displays the overwrite checkbox
 			'accept' => 'gif|jpg|jpeg|png', // for file uploading
 			'upload_path' => NULL, // for file uploading
 			'file_name' => NULL, // for file uploading
@@ -1654,7 +1655,15 @@ Class Form_builder {
 		if (isset($params['overwrite']))
 		{
 			$overwrite = ($params['overwrite'] == 1 OR $params['overwrite'] === TRUE OR $params['overwrite'] === 'yes' OR $params['overwrite'] === 'y') ? '1' : '0';
-			$file .= $this->form->hidden($params['name'].'_overwrite', $overwrite);
+			if (!empty($params['display_overwrite']))
+			{
+				$file .= ' &nbsp; '.$this->form->checkbox($params['name'].'_overwrite', 1, Form::do_checked($overwrite));
+				$file .= ' <span class="overwrite_field">'.$this->create_label($this->_label_lang('overwrite')).'</span>';
+			}
+			else
+			{
+				$file .= $this->form->hidden($params['name'].'_overwrite', $overwrite);
+			}
 		}
 		if (isset($params['upload_path']))
 		{

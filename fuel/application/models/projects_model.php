@@ -67,7 +67,9 @@ class Projects_model extends Base_module_model {
 		$fields['numeric'] = array('type' => 'number', 'negative' => TRUE, 'decimal' => FALSE);
 		$fields['currency'] = array('type' => 'currency');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
-
+		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE);
+		
+		
 		// temporary
 		unset($fields['_published']);
 		return $fields;

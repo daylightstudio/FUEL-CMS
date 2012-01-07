@@ -156,7 +156,7 @@ class Fuel_user_guide extends Fuel_advanced_module {
 		{
 			$page = $this->current_page;
 		}
-		$vars = $this->CI->fuel_pagevars->view_variables($page, 'user_guide');
+		$vars = $this->CI->fuel_pagevars->view($page, 'user_guide');
 		$vars['modules'] = array();
 		$vars['site_docs'] = '';
 		$vars['use_search'] = $this->display_option('use_search');

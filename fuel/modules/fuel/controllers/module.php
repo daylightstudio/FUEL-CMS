@@ -1253,78 +1253,6 @@ class Module extends Fuel_base_controller {
 			show_error(lang('no_preview_path'));
 		}
 	}
-
-	// used in list view to quickly unpublish (if they have permisison)
-	/*function unpublish($id = NULL)
-	{
-		$this->_publish_unpublish($id, 'unpublish');
-	}
-
-	// used in list view to quickly publish (if they have permisison)
-	function publish($id = NULL)
-	{
-		$this->_publish_unpublish($id, 'publish');
-	}
-	
-	// reduce code by creating this shortcut function for the unpublish/publish
-	protected function _publish_unpublish($id, $pub_unpub)
-	{
-		if (!$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission('publish')) return FALSE;
-		if (empty($id)) $id = $this->input->post($this->model->key_field());
-		
-		if ($id)
-		{
-			//$this->model->set_return_method('array');
-			$save = $this->model->find_by_key($id, 'array');
-			if ($this->fuel->auth->has_permission($this->permission, 'publish') AND !empty($save))
-			{
-				if ($pub_unpub == 'publish')
-				{
-					$save['published'] = 'yes';
-					$save['active'] = 'yes';
-				}
-				else
-				{
-					$save['published'] = 'no';
-					$save['active'] = 'no';
-				}
-				
-				// run before_edit hook
-				$this->_run_hook('before_edit', $save);
-	
-				// run before_save hook
-				$this->_run_hook('before_save', $save);
-				
-				if ($this->model->save($save))
-				{
-					// log it
-					$data = $this->model->find_by_key($id, 'array');
-					
-					// run after_edit hook
-					$this->_run_hook('after_edit', $data);
-
-					// run after_save hook
-					$this->_run_hook('after_save', $data);
-					
-					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-					$this->fuel->logs->write($msg);
-				}
-				else
-				{
-					$this->output->set_output(lang('error_saving'));
-				}
-			}
-		}
-		
-		if (is_ajax())
-		{
-			$this->output->set_output($pub_unpub.'ed');
-		}
-		else
-		{
-			$this->items();
-		}
-	}*/
 	
 	function refresh_field()
 	{
@@ -1554,7 +1482,8 @@ class Module extends Fuel_base_controller {
 		
 		if (!empty($_FILES))
 		{
-			$params['xss_clean'] = TRUE;
+			$params['xss_clean'] = $this->sanitize_files;
+
 			if (!$this->fuel->assets->upload($params))
 			{
 				$errors = TRUE;
