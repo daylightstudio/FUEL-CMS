@@ -4,6 +4,7 @@ define('FUEL_VERSION', '0.9.4');
 define('MODULES_FOLDER', '../modules');
 define('FUEL_FOLDER', 'fuel');
 define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
+define('MODULES_FROM_APPCONTROLLERS', '../'.MODULES_FOLDER.'/');
 define('FUEL_PATH', MODULES_PATH.FUEL_FOLDER.'/');
 define('WEB_ROOT', str_replace('\\', '/', realpath(dirname(SELF)).DIRECTORY_SEPARATOR)); // replace \ with / for windows
 
