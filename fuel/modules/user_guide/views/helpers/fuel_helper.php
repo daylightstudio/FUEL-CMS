@@ -99,6 +99,12 @@ because it returns inline editing markers that later get parsed out by FUEL. For
 &lt;?=fuel_edit('my_url', 'Edit Link')?&gt; &lt;a href="&lt;?=site_url($my_url)?&gt;"&gt;my link&lt;/a&gt;
 </pre>
 
+<h2>fuel_edit(<var>id</var>, <var>[label]</var>, <var>[module]</var>, <var>[xOffset]</var>, <var>[yOffset]</var>)</h2>
+<p>Sets a variable marker (pencil icon) in a page which can be used for inline editing.
+The <dfn>id</dfn> parameter is the unique id that will be used to query the module. You can also pass an id value
+and a field like so <dfn>id|field</dfn>. This will display only a certain field instead of the entire module form.
+The <dfn>label</dfn> parameter specifies the label to display next to the pencil icon.
+The <dfn>xOffset</dfn> and <dfn>yOffset</dfn> are pixel values to offset the pencil icon.</p>
 
 <h2>fuel_var_append(<var>key</var>, <var>value</var>)</h2>
 <p>Appends a value to an array variable. This function makes it convenient if you are in a view file and want to say add a javascript
