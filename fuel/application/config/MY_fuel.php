@@ -7,12 +7,12 @@ $config['fuel_path'] = 'fuel/';
 // the name to be displayed on the top left of the admin
 $config['site_name'] = 'My Website';
 
-// options are cms, views, auto... cms pulls views and variables from the database,
+// options are cms, views, and auto. cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder.
-// The auto option will first check the database for a page and if it doesn't exist or is not published, it will then check for a corresponding view file.
+// the auto option will first check the database for a page and if it doesn't exist or is not published, it will then check for a corresponding view file.
 $config['fuel_mode'] = 'views';
 
-// used for system emails. Needs to be overwritten by MY_fuel.php
+// used for system emails.
 $config['domain'] = '';
 
 // default password to alert against
@@ -29,7 +29,7 @@ $config['modules_allowed'] = array(
 	'cronjobs'
 	);
 
-// default password to alert against
+// whether the admin backend is enabled
 $config['admin_enabled'] = FALSE;
 
 // will auto search view files. 
@@ -39,10 +39,10 @@ $config['auto_search_views'] = FALSE;
 // max upload files size for assets
 $config['assets_upload_max_size']	= 5000;
 
-// max width for asset images beign uploaded
+// max width for asset image uploads
 $config['assets_upload_max_width']  = 1024;
 
-// max height for asset images beign uploaded
+// max height for asset image uploads
 $config['assets_upload_max_height']  = 768;
 
 $config['assets_excluded_dirs'] = array(
@@ -52,7 +52,7 @@ $config['assets_excluded_dirs'] = array(
 	'swf', 
 	);
 
-// text editor settings... options are markitup or ckeditor
+// text editor settings  (options are markitup or ckeditor)
 $config['text_editor'] = 'markitup';
 
 // ck editor specific settings
