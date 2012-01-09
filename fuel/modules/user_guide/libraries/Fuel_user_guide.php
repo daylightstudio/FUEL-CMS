@@ -99,8 +99,9 @@ class Fuel_user_guide extends Fuel_advanced_module {
 	{
 		$uri = uri_path(FALSE);
 		$root_url = $this->config('root_url');
-		if (substr($root_url, -1) == '/') $root_url = substr($root_url, 0, (strlen($root_url) -1));
-		$new_uri = preg_replace('#^'.$root_url.'#', '', $uri);
+		if (substr($root_url, -1) == '/') $root_url = trim(substr($root_url, 0, (strlen($root_url) -1)), '/');
+		$new_uri = preg_replace('#^'.$root_url.'#', '', trim($uri, '/'));
+		
 		if (empty($new_uri)) $new_uri = 'home';
 		$this->set_current_page($new_uri);
 	}

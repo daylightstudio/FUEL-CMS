@@ -19,4 +19,4 @@ $config['user_guide'] = array();
 $config['user_guide']['authenticate'] = TRUE;
 
 // the URI path to the user guide
-$config['user_guide']['root_url'] = FUEL_ROUTE.'/tools/'.USER_GUIDE_FOLDER.'/';
+$config['user_guide']['root_url'] = FUEL_ROUTE.'tools/'.USER_GUIDE_FOLDER.'/';

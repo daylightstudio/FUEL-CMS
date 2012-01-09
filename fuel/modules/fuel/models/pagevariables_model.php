@@ -90,7 +90,7 @@ class Pagevariables_model extends Base_module_model {
 	function _common_query()
 	{
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
-		if ($this->honor_page_status)
+		if ($this->honor_page_status AND !defined('FUEL_ADMIN'))
 		{
 			$this->db->where(array($this->_tables['pages'].'.published' => 'yes'));
 		}

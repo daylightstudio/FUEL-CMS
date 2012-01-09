@@ -45,10 +45,9 @@ class User_guide extends Fuel_base_controller {
 	
 	function _remap()
 	{
-		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
 		$this->current_page = $this->fuel->user_guide->current_page();
 
-		$this->fuel_pagevars->vars_path = USER_GUIDE_PATH.'views/_variables/';
+		$this->fuel->pagevars->vars_path = USER_GUIDE_PATH.'views/_variables/';
 		$vars = array();
 		
 		// get modules

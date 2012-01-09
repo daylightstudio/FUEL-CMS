@@ -43,6 +43,7 @@ class Fuel extends Fuel_base_library {
 									'auth',
 									'layouts',
 									'pages',
+									'pagevars',
 									'blocks',
 									'assets',
 									'navigation',
