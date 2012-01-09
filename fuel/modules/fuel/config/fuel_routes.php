@@ -9,6 +9,10 @@
 */
 $route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";
 
+$module_folder = MODULES_PATH.'/';
+
+// config isn't loaded yet so do it manually'
+include(FUEL_PATH.'config/fuel.php');
 
 // to prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants
 if (USE_FUEL_ROUTES)
@@ -18,8 +22,6 @@ if (USE_FUEL_ROUTES)
 	
 	$module_folder = MODULES_PATH;
 
-	// config isn't loaded yet so do it manually'
-	include(FUEL_PATH.'config/fuel.php');
 	include(FUEL_PATH.'config/fuel_modules.php');
 	@include(APPPATH.'/config/MY_fuel_modules.php');
 	
@@ -61,6 +63,17 @@ if (USE_FUEL_ROUTES)
 	}
 	// catch all
 	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
+}
+
+// load any public routes for advanced modules
+foreach ($config['modules_allowed'] as $module)
+{
+	$routes_path = $module_folder.$module.'/config/'.$module.'_public_routes.php';
+	
+	if (file_exists($routes_path))
+	{
+		include($routes_path);
+	}
 }
 
 /* End of file fuel_routes.php */
