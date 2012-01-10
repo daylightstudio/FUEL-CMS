@@ -43,6 +43,8 @@ class Inspection {
 	 */
 	function __construct($file = NULL)
 	{
+		$CI =& get_instance();
+		$CI->load->helper('inflector');
 		$this->initialize($file);
 	}
 	
@@ -84,11 +86,12 @@ class Inspection {
 		
 		// get the functions of the file
 		$functions = $this->parse_functions($source);
+		
 		if (!empty($functions))
 		{
 			foreach($functions as $func)
 			{
-//				$this->_functions[$func] = new Inspection_function($func);
+				$this->_functions[$func] = new Inspection_function($func);
 			}
 		}
 	}
@@ -117,6 +120,7 @@ class Inspection {
 		$classes = array();
 		$tokens = token_get_all($code);
 		$count = count($tokens);
+		
 		for ($i = 2; $i < $count; $i++)
 		{
 			if ($tokens[$i - 2][0] == T_CLASS
@@ -131,72 +135,150 @@ class Inspection {
 	}
 
 
-	//http://stackoverflow.com/questions/928928/determining-what-classes-are-defined-in-a-php-class-file
+	//http://stackoverflow.com/questions/2666554/how-to-get-list-of-declared-functions-with-their-data-from-php-file
 	function parse_functions($code, $include_underscore_funcs = FALSE)
 	{
 		$functions = array();
 		$tokens = token_get_all($code);
 		$count = count($tokens);
-		for ($i = 2; $i < $count; $i++)
+		
+		$next_string_is_func = false;
+	    $in_class = false;
+	    $braces_count = 0;
+		foreach($tokens as $token)
 		{
-			if ($tokens[$i - 2][0] == T_FUNCTION
-				AND $tokens[$i - 1][0] == T_WHITESPACE
-				AND $tokens[$i][0] == T_STRING) {
+			switch($token[0])
+			{
+				case T_CLASS:
+					$in_class = TRUE;
+					break;
+				case T_FUNCTION:
+					if (! $in_class)
+					{
+						$next_string_is_func = TRUE;
+					}
+					break;
+				case T_STRING:
+					if ($next_string_is_func)
+					{
+						$next_string_is_func = FALSE;
+						if (!$include_underscore_funcs AND substr($token[1], 0, 1) == '_')
+						{
+							continue;
+						}
+						$functions[] = $token[1];
+					}
+					break;
+				
+				// Anonymous functions
+				case '(':
+				case ';':
+					$next_string_is_func = false;
+				break;
 
-				$func_name = $tokens[$i][1];
-				if (!$include_underscore_funcs AND substr($func_name, 0, 1) == '_')
-				{
-					continue;
-				}
-				$functions[] = $func_name;
-			}
+				// Exclude Classes
+				case '{':
+					if ($in_class)
+					{
+						$braces_count++;
+					}
+					break;
+
+				case '}':
+					if($in_class)
+					{
+						$braces_count--;
+						if ($braces_count === 0)
+						{
+							$in_class = FALSE;
+						}
+					}
+					break;
+		    }
 		}
 		return $functions;
-	}
-
-
-	function publish()
-	{
-		
 	}
 	
 }
 
-class Inspection_class {
-	public $name;
+class Inspection_class extends Inspection_base {
 
-	protected $reflection; //ReflectionMethod
-	protected $_comment; //Fuel_documentizer_comment
 	protected $_methods;
+	protected $_props;
 
 	function __construct($class)
 	{
-		$this->name = $class;
-		$this->reflection = new ReflectionClass($this->name);
+		parent::__construct('ReflectionClass', $class);
 	}
 
-	function comment()
+	function properties($types = array())
 	{
-		// lazy initialize
-		if (!isset($this->_comment))
+		if (!isset($this->_props))
 		{
-			$comment = $this->reflection->getDocComment();
-			$this->_comment = new Inspection_comment($comment);
+			$ref_props = $this->reflection->getProperties();
+			
+			foreach($ref_props as $p)
+			{
+				$prop_obj = new Inspection_property($this->name, $p->name);
+				$this->_props[$p->name] = $prop_obj;
+			}
 		}
-		return $this->_comment;
-	}
-	
-	function properties()
-	{
 		
-	}
-	
-	function inherited()
-	{
+		if (empty($types))
+		{
+			$types = array('public');
+		}
 		
+		if (is_string($types))
+		{
+			// if all is set, then we set $types to NULL so that it won't do any additional filtering'
+			if (strtolower($types) == 'all')
+			{
+				$types = NULL;
+			}
+			else
+			{
+				$types = (array) $types;
+			}
+		}
+		
+		$props = array();
+		foreach($this->_props as $name => $p)
+		{
+			if (!empty($types))
+			{
+				foreach($types as $type)
+				{
+					$type_method = 'is'.ucfirst($type);
+					if (method_exists($p->reflection, $type_method) AND $p->reflection->$type_method())
+					{
+						$props[$name] = $p;
+					}
+				}
+			}
+			else
+			{
+				$props[$key] = $p;
+			}
+		}
 	}
 	
-	function methods($method = NULL, $types = array(), $include_constructor = FALSE)
+	function parent()
+	{
+		$this->reflection->getParentClass()->name;
+	}
+	
+	function method($method)
+	{
+		$methods = $this->methods();
+		if (isset($methods[$method]))
+		{
+			return $methods[$method];
+		}
+		return FALSE;
+	}
+
+	function methods($types = array(), $include_parent = FALSE, $include_constructor = FALSE)
 	{
 		if (!isset($this->_methods))
 		{
@@ -213,7 +295,6 @@ class Inspection_class {
 			$types = array('public');
 		}
 		
-		
 		if (is_string($types))
 		{
 			// if all is set, then we set $types to NULL so that it won't do any additional filtering'
@@ -229,14 +310,21 @@ class Inspection_class {
 
 		// static, public, protected, private, abstract, final
 		$methods = array();
-		
+
 		foreach($this->_methods as $name => $m)
 		{
+			// filter out contstructors
 			if (!$include_constructor AND ($m == '__construct' OR $m == $this->name))
 			{
 				continue;
 			}
-			
+
+			// filter out parent methods
+			if (!$include_parent AND ($m->getDeclaringClass()->name == $this->name))
+			{
+				continue;
+			}
+
 			if (!empty($types))
 			{
 				foreach($types as $type)
@@ -253,114 +341,45 @@ class Inspection_class {
 				$methods[$key] = $m;
 			}
 		}
-	
-		if (!empty($method))
-		{
-			if (!isset($methods[$method]))
-			{
-				return FALSE;
-			}
-			return $methods[$method];
-		}
-		
 		return $methods;
 	}
 }
 
-class Inspection_method extends Inspection_function {
-	
-	public $obj;
-	function __construct($obj, $method)
-	{
-		$this->obj = $obj;
-		$this->name = $method;
-		$this->reflection = new ReflectionMethod($this->obj, $this->name);
-	}
-}
-
-class Inspection_function {
-	
-	public $reflection; //ReflectionMethod
-	protected $_comment; //Fuel_documentizer_comment
-	protected $_params;
-	protected $type = 'function';
+class Inspection_function extends Inspection_base {
 	
 	function __construct($function)
 	{
-		$this->name = $function;
-		$this->reflection = new ReflectionFunction($this->name);
-	}
-	
-	function name()
-	{
+		parent::__construct('ReflectionFunction', $function);
 		
-		return $this->reflection->name;
-	}
-	
-	function comment()
-	{
-		// lazy initialize
-		if (!isset($this->_comment))
-		{
-			$comment = $this->reflection->getDocComment();
-			$this->_comment = new Inspection_comment($comment);
-		}
-		return $this->_comment;
-	}
-	
-	function params($index = NULL)
-	{
-		if (!isset($this->_params))
-		{
-			$params = $this->reflection->getParameters();
-			foreach($params as $param)
-			{
-				$p = new Inspection_param($param);
-				$this->_params[] = $p;
-			}
-		}
-		
-		if (isset($index))
-		{
-			$index = (int) $index;
-			return $this->_params[$index];
-		}
-	
-		return $this->_params;
 	}
 }
 
-class Inspection_param {
+class Inspection_method extends Inspection_base {
 	
-	public $reflection; //ReflectionParameter
+	protected $_params;
 	
-	function __construct($ref_obj)
+	function __construct($method, $obj)
 	{
-		$this->reflection = $ref_obj;
+		parent::__construct('ReflectionMethod', $method), $obj;
+	}
+
+}
+
+class Inspection_property extends Inspection_base {
+	
+	function __construct($obj, $method)
+	{
+		parent::__construct('ReflectionProperty', $method, $obj);
 	}
 	
-	function name()
-	{
-		return $this->reflection->name;
-	}
+}
+
+class Inspection_param extends Inspection_base {
 	
-	function is_optional()
+	function __construct($method, $obj = NULL)
 	{
-		return $this->reflection->isOptional();
-	}
-	
-	function has_default()
-	{
-		return $this->reflection->isDefaultValueAvailable();
-	}
-	function default_value()
-	{
-		return $this->reflection->getDefaultValue();
-	}
-	
-	function is_array()
-	{
-		return $this->reflection->isArray();
+		//array('Some_Class', 'someMethod'), 4
+		parent::__construct('ReflectionParameter', $method, $obj);
 	}
 }
 
@@ -517,6 +536,104 @@ class Inspection_comment {
 		return $this->_description;
 	}
 
+}
+
+
+abstract class Inspection_base {
+	
+	public $reflection; // Reflection object
+	public $comment; // Fuel_documentizer_comment
+	public $name; // basic name value
+	public $obj; // the object (if any)
+	public $params; // the parameters of the object (if any)
+	
+	function __construct($ref_class, $method, $obj = NULL)
+	{
+		if (isset($obj))
+		{
+			$this->reflection = new $ref_class($obj, $method);
+			$this->obj = $obj;
+		}
+		else
+		{
+			$this->reflection = new $ref_class($method);
+		}
+		
+		$this->name = $this->reflection->getName();
+
+		$comment = $this->reflection->getDocComment();
+		$this->comment = new Inspection_comment($comment);
+		
+		
+		// used for functions and method objects
+		if (method_exists($this->reflection, 'getParameters'))
+		{
+			$params = $this->reflection->getParameters();
+			foreach($params as $param)
+			{
+				if ($obj)
+				{
+					 
+				}
+				$p = new Inspection_param($param);
+				$this->params[] = $p;
+			}
+		}
+	}
+	
+	function comment()
+	{
+		return $this->comment;
+	}
+	
+	function param($index)
+	{
+		if ($this->params[$index])
+		{
+			$index = (int) $index;
+			return $this->params[$index];
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	function params()
+	{
+		return $this->params;
+	}
+	
+	
+	function __call($name, $args)
+	{
+		if (!preg_match('#^get|is|set#', $name))
+		{
+			$name = 'get_'.$name;
+		}
+		
+		if (strpos('_', $name) !== FALSE)
+		{
+			$name = camelize($name);
+			
+		}
+		
+		if (method_exists($this->reflection, $name))
+		{
+			if (!empty($args))
+			{
+				return $this->reflection->$name($args);
+			}
+			else
+			{
+				return $this->reflection->$name();
+			}
+		}
+		else
+		{
+			throw new Exception(lang('error_method_does_not_exist', $name));
+		}
+	}
 }
 /* End of file Fuel_user_guide.php */
 /* Location: ./modules/fuel/libraries/Fuel_user_guide.php */
