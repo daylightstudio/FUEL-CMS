@@ -208,7 +208,7 @@ class Menu {
 				}
 
 				// Capture all that have selected states so we can loop through later
-				if (isset($return[$id]['active']) OR isset($return[$id]['selected']))
+				if (!empty($return[$id]['active']) OR !empty($return[$id]['selected']))
 				{
 					$selected[$id] = (isset($return[$id]['active'])) ? $return[$id]['active'] :  $return[$id]['selected'];
 				}
@@ -227,8 +227,8 @@ class Menu {
 			// now loop through the selected states
 			foreach($selected as $s_id => $active_regex)
 			{
-			
-				$match = str_replace(':children', $s_id.'$|'.$s_id.'/.+', $active_regex);
+				$location = $return[$s_id]['location'];
+				$match = str_replace(':children', $location.'$|'.$location.'/.+', $active_regex);
 				$match = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $match));
 
 				if (empty($active))
