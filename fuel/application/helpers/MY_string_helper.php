@@ -148,7 +148,8 @@ function safe_htmlentities($str, $protect_amp = TRUE)
 	// safely translate now
 	if (version_compare(PHP_VERSION, '5.2.3', '>='))
 	{
-		$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
+		//$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
+		$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8', FALSE);
 	}
 	else
 	{
