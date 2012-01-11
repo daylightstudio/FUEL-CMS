@@ -12,13 +12,14 @@
 
 /* Example of a module hook for a module named projects
 $hook['before_create_projects'] = array(
-								'class'    => 'Test_hooks',
-								'function' => 'before_create_projects',
-								'filename' => 'Test_hooks.php',
-								'filepath' => 'hooks',
-								'params'   => array(),
-								'module' => 'app',
+	'class'    => 'Test_hooks',
+	'function' => 'before_create_projects',
+	'filename' => 'Test_hooks.php',
+	'filepath' => 'hooks',
+	'params'   => array(),
+	'module' => 'app',
 */
+
 // include hooks specific to FUEL
 include(FUEL_PATH.'config/fuel_hooks.php');
 
