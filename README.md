@@ -1,5 +1,5 @@
 # FUEL CMS
-An easy, flexible, empowering Content Management System for rapid development that transforms your CodeIgniter projects into client manageable brilliance.
+__An easy, flexible, empowering Content Management System for rapid development__ that transforms your CodeIgniter projects into client manageable brilliance.
 
 To learn more about its features visit [the official site](http://www.getfuelcms.com).
 
