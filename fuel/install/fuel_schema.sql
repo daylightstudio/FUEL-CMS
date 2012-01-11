@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 2.10.2
--- http://www.phpmyadmin.net
--- 
--- Host: localhost
--- Generation Time: Oct 01, 2010 at 08:10 PM
--- Server version: 5.0.45
--- PHP Version: 5.3.2
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- --------------------------------------------------------
@@ -136,12 +127,12 @@ CREATE TABLE `fuel_blog_links` (
 CREATE TABLE `fuel_blog_posts` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the url string. If left blank, the permalink will automatically be created for you.',
+  `permalink` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'This is the last part of the URL string. If left blank, the permalink will automatically be created for you.',
   `content` text collate utf8_unicode_ci NOT NULL,
   `content_filtered` text collate utf8_unicode_ci NOT NULL,
   `formatting` varchar(100) collate utf8_unicode_ci default NULL,
-  `excerpt` text collate utf8_unicode_ci NOT NULL COMMENT 'A condensed version of the content',
-  `author_id` int(10) unsigned NOT NULL COMMENT 'If left blank, you will assumed be the author.',
+  `excerpt` text collate utf8_unicode_ci NOT NULL COMMENT 'A condensed version of the content.',
+  `author_id` int(10) unsigned NOT NULL COMMENT 'If left blank, you will be assumed the author.',
   `sticky` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   `allow_comments` enum('yes','no') collate utf8_unicode_ci default 'no',
   `date_added` datetime default NULL,
@@ -262,7 +253,7 @@ CREATE TABLE `fuel_navigation` (
   `precedence` int(10) unsigned NOT NULL default '0' COMMENT 'The higher the number, the greater the precedence and farther up the list the navigational element will appear',
   `attributes` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Extra attributes that can be used for navigation implementation',
   `selected` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'The pattern to match for the active state. Most likely you leave this field blank',
-  `hidden` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no' COMMENT 'A hidden value can be used in rendering the menu. In some areas, the menu item may not want to be displayed',
+  `hidden` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no' COMMENT 'A hidden value can be added to the rendered output. This is not always necessary',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'Determines whether the item is displayed or not',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`)
@@ -302,10 +293,10 @@ INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`) VALUES
 
 CREATE TABLE `fuel_pages` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Add the part of the url after the root of your site (usually after the domain name). For the homepage, just put the word ''home''',
+  `location` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Add the part of the URL after the root of your site (usually after the domain name). For the homepage, just put the word ''home''',
   `layout` varchar(50) collate utf8_unicode_ci NOT NULL COMMENT 'The name of the template to associate with this page',
-  `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'A ''yes'' value will display the page and an ''no'' value will give a 404 error message',
-  `cache` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'Cache controls whether the page will pull from the database or from a saved file which is more effeicent. If a page has content that is dynamic, it''s best to set cache to ''no''',
+  `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'A ''yes'' value will display the page and a ''no'' value will give a 404 error message',
+  `cache` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes' COMMENT 'Cache controls whether the page will pull from the database, or from a saved file (which is more efficient). If a page has content that is dynamic, it''s best to set cache to ''no'', to prevent new content not being displayed.',
   `date_added` datetime default NULL,
   `last_modified` timestamp NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `last_modified_by` int(10) unsigned NOT NULL,
@@ -348,7 +339,7 @@ CREATE TABLE `fuel_page_variables` (
 
 CREATE TABLE `fuel_permissions` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(50) collate utf8_unicode_ci NOT NULL COMMENT 'Permissions beginning with ''Manage '' will allow items to appear on the left menu',
+  `name` varchar(50) collate utf8_unicode_ci NOT NULL COMMENT 'Permissions beginning with ''Manage'' will allow items to appear on the left menu',
   `description` varchar(255) collate utf8_unicode_ci NOT NULL,
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
@@ -400,7 +391,7 @@ CREATE TABLE `fuel_site_variables` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) collate utf8_unicode_ci NOT NULL,
   `value` text collate utf8_unicode_ci NOT NULL,
-  `scope` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'leave blank if you want the variable to be available to all pages',
+  `scope` varchar(255) collate utf8_unicode_ci NOT NULL COMMENT 'Leave blank if you want the variable to be available to all pages',
   `active` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
@@ -454,5 +445,4 @@ CREATE TABLE `fuel_user_to_permissions` (
 -- 
 -- Dumping data for table `fuel_user_to_permissions`
 -- 
-
 

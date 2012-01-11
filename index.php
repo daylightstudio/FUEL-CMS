@@ -57,6 +57,7 @@ if (defined('STDIN'))
  *     production
  *
  * NOTE: If you change these, also change the error_reporting() code below
+ * Be sure to switch from 'development' on a production site!
  *
  */
 	define('ENVIRONMENT', 'development');
@@ -84,7 +85,7 @@ if (defined('ENVIRONMENT'))
 		break;
 
 		default:
-			exit('The application environment is not set correctly.');
+			exit('The application environment is not set correctly. Please correct this in index.php (line 63)');
 	}
 }
 
