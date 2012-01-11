@@ -16,8 +16,7 @@
 	<?php echo css('main'); ?>
 	<?php echo css($css); ?>
 	
-	<?php echo js('jquery, main'); ?>
-	<?php echo js($js); ?>
+	<!-- Javascript in footer for performance -->
 	
 	<?php if (!empty($is_blog)) : ?>
 	<?php echo $CI->fuel_blog->header()?>
