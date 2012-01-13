@@ -1,3 +1,8 @@
+<?php 
+$vars = array();
+echo generate_docs('Fuel_base_library', $vars);
+?>
+
 <h1>Fuel Base Library Class</h1>
 <p>This class provides various methods for saving, retrieving and deleting cached files from FUEL.</p>
 

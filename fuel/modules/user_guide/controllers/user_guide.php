@@ -72,21 +72,47 @@ class User_guide extends Fuel_base_controller {
 		$uri_path_index = count(explode('/', $this->fuel->user_guide->config('root_url'))) + 1;
 		$module_page = uri_path(FALSE, $uri_path_index);
 		$module_view_path = (!empty($module_page)) ? '_docs/'.$module_page : '_docs/index';
-		
-		if ($this->fuel->user_guide->get_page_segment(1) == 'modules' AND 
-			($this->fuel->user_guide->get_page_segment(2) AND file_exists(MODULES_PATH.$this->fuel->user_guide->get_page_segment(2).'/views/'.$module_view_path.EXT)))
+		$allow_auto_generation = $this->fuel->user_guide->config('allow_auto_generation');
+		if ($this->fuel->user_guide->get_page_segment(1) == 'modules' AND $this->fuel->user_guide->get_page_segment(2))
 		{
 			$module = $this->fuel->user_guide->get_page_segment(2);
+			$file = $this->fuel->user_guide->get_page_segment(3);
+			if (file_exists(MODULES_PATH.$module.'/views/'.$module_view_path.EXT))
+			{
+				$body = $this->load->module_view($module, $module_view_path, $vars, TRUE);
+			}
+			else if ($allow_auto_generation === TRUE OR in_array($module, $allow_auto_generation))
+			{
+				if (!empty($file))
+				{
+					$uri_folder = $this->fuel->user_guide->get_page_segment(4);
+					$valid_folders = array('libraries', 'helpers');
+					$file_name = ucfirst($file);
 
+					$folder = ($uri_folder AND in_array($uri_folder, $valid_folders)) ? $uri_folder : 'libraries';
+					if (preg_match('#_helper$#', $file))
+					{
+						$folder = 'helpers';
+						$file_name = strtolower($file);
+					}
+					
+					$file_path = MODULES_PATH.$module.'/'.$folder.'/'.$file_name.EXT;
+					if (file_exists($file_path))
+					{
+						$body = $this->fuel->user_guide->generate_docs($file_name, array(), $module, $folder);
+					}
+				}
+			}
 			
 			if (!$this->fuel->user_guide->config('authenticate') OR $this->fuel->auth->has_permission('user_guide_'.$module))
 			{
-				$vars['body'] = $this->load->module_view($module, $module_view_path, $vars, TRUE);
-				if ($this->fuel->user_guide->get_page_segment(3))
+				$vars['body'] = $body;
+				if ($file)
 				{
 					$vars['sections'] = array($vars['modules'][$module] => 'modules/'.$module);
 				}
 			}
+			
 		}
 		else
 		{
@@ -101,7 +127,6 @@ class User_guide extends Fuel_base_controller {
 			}
 		}
 		$vars['page_title'] = $this->fuel->user_guide->get_page_title($vars['body']);
-		
 		$this->load->module_view(USER_GUIDE_FOLDER, '_layouts/user_guide', $vars);
 	}
 }

@@ -59,6 +59,10 @@ class Fuel extends Fuel_base_library {
 
 	private static $_instance;
 	
+	/**
+	 * Constructor
+	 *
+	 */
 	function __construct()
 	{
 		parent::__construct();
@@ -66,27 +70,86 @@ class Fuel extends Fuel_base_library {
 		$this->initialize();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Static method that returns the instance of the FUEL object.
+	 *
+	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
+	 *
+	 * @access	public
+	 * @return	object	
+	 */	
 	public static function &get_instance()
 	{
 		return self::$_instance;
 	}
 	
-	function initialize()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Static method that returns the instance of the FUEL object.
+	 *
+	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
+	 *
+	 * @access	public
+	 * @param	array	Array of configuration parameters parameters  (optional)
+	 * @return	void
+	 */	
+	function initialize($config = array())
 	{
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
+		
+		if (!empty($config))
+		{
+			
+		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a configuration value for FUEL.
+	 *
+	 * @access	public
+	 * @param	string	The configuration items key
+	 * @param	string	The module to set the configuration item. Default is 'fuel
+	 * @return	void
+	 */	
 	function config($item, $module = 'fuel')
 	{
 		return $this->CI->config->item($item, $module);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Static method that returns the instance of the FUEL object.
+	 *
+	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
+	 *
+	 * @access	public
+	 * @param	mixed	Can be a string that references the configuration key or an array of values
+	 * @param	mixed	The value of the key configuration item (only works if $item parameter is not an array)
+	 * @param	string	The module to set the configuration item. Default is 'fuel
+	 * @return	void
+	 */	
 	function set_config($item, $value, $module = 'fuel')
 	{
 		$fuel_config = $this->CI->config->item($module);
-		$fuel_config[$item] = $value;
-		return $this->CI->config->set_item($module, $fuel_config);
+		if (is_array($item))
+		{
+			foreach($item as $key => $val)
+			{
+				$fuel_config[$key] = $val;
+			}
+		}
+		else
+		{
+			$fuel_config[$item] = $value;
+		}
+		$this->CI->config->set_item($module, $fuel_config);
 	}
 	
 	function load_helper($helper, $module = NULL)

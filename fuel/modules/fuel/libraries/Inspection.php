@@ -30,10 +30,10 @@
 
 class Inspection {
 	
-	public $file;
+	public $file = ''; // path to the file to inspect
 
-	public $_classes = array();
-	public $_functions = array();
+	protected $_classes = array(); // cache of classes found in the file
+	protected $_functions = array(); // cache of functions found in the file
 	
 
 	/**
@@ -54,7 +54,13 @@ class Inspection {
 		{
 			if (is_array($params) AND isset($params['file']))
 			{
-				$this->file = $params['file'];
+				foreach ($params as $key => $val)
+				{
+					if (isset($this->$key) AND substr($key, 0, 1) != '_')
+					{
+						$this->$key = $val;
+					}
+				}
 			}
 			else
 			{
@@ -63,23 +69,28 @@ class Inspection {
 		}
 		
 		// testing 
-//		$this->file = '/Library/WebServer/Documents/daylight/FUEL/v.9/fuel/modules/fuel/libraries/Fuel_cache.php';
 		if (!file_exists($this->file))
 		{
 			return FALSE;
 		}
-
-		require_once($this->file);
-
+		
 		// get the contents of the file
 		$source = file_get_contents($this->file);
 		
 		// get the classes of the file
 		$classes = $this->parse_classes($source);
+		
+		$loaded = FALSE;
 		if (!empty($classes))
 		{
 			foreach($classes as $class)
 			{
+				// load the file if the class does not exist
+				if (!class_exists($class) AND !$loaded)
+				{
+					require_once($this->file);
+					$loaded = TRUE;
+				}
 				$this->_classes[$class] = new Inspection_class($class);
 			}
 		}
@@ -91,6 +102,12 @@ class Inspection {
 		{
 			foreach($functions as $func)
 			{
+				// load the helper if the function does not exist
+				if (!function_exists($func) AND !$loaded)
+				{
+					require_once($this->file);
+					$loaded = TRUE;
+				}
 				$this->_functions[$func] = new Inspection_function($func);
 			}
 		}
@@ -202,7 +219,7 @@ class Inspection {
 }
 
 class Inspection_class extends Inspection_base {
-
+	
 	protected $_methods;
 	protected $_props;
 
@@ -210,7 +227,7 @@ class Inspection_class extends Inspection_base {
 	{
 		parent::__construct('ReflectionClass', $class);
 	}
-
+	
 	function properties($types = array())
 	{
 		if (!isset($this->_props))
@@ -219,7 +236,8 @@ class Inspection_class extends Inspection_base {
 			
 			foreach($ref_props as $p)
 			{
-				$prop_obj = new Inspection_property($this->name, $p->name);
+				$prop_obj = new Inspection_property($ref_props);
+				$prop_obj->class = &$this;
 				$this->_props[$p->name] = $prop_obj;
 			}
 		}
@@ -283,10 +301,9 @@ class Inspection_class extends Inspection_base {
 		if (!isset($this->_methods))
 		{
 			$ref_methods = $this->reflection->getMethods();
-			
 			foreach($ref_methods as $m)
 			{
-				$m_obj = new Inspection_method($this->name, $m->name);
+				$m_obj = new Inspection_method($m->name, $this->name);
 				$this->_methods[$m->name] = $m_obj;
 			}
 		}
@@ -314,13 +331,13 @@ class Inspection_class extends Inspection_base {
 		foreach($this->_methods as $name => $m)
 		{
 			// filter out contstructors
-			if (!$include_constructor AND ($m == '__construct' OR $m == $this->name))
+			if (!$include_constructor AND ($name == '__construct' OR $name == $this->name))
 			{
 				continue;
 			}
 
 			// filter out parent methods
-			if (!$include_parent AND ($m->getDeclaringClass()->name == $this->name))
+			if (!$include_parent AND ($m->getDeclaringClass()->name != $this->name))
 			{
 				continue;
 			}
@@ -350,7 +367,6 @@ class Inspection_function extends Inspection_base {
 	function __construct($function)
 	{
 		parent::__construct('ReflectionFunction', $function);
-		
 	}
 }
 
@@ -360,12 +376,14 @@ class Inspection_method extends Inspection_base {
 	
 	function __construct($method, $obj)
 	{
-		parent::__construct('ReflectionMethod', $method), $obj;
+		parent::__construct('ReflectionMethod', $method, $obj);
 	}
 
 }
 
 class Inspection_property extends Inspection_base {
+	
+	public $class;
 	
 	function __construct($obj, $method)
 	{
@@ -376,10 +394,70 @@ class Inspection_property extends Inspection_base {
 
 class Inspection_param extends Inspection_base {
 	
+	public $function;
+	
 	function __construct($method, $obj = NULL)
 	{
 		//array('Some_Class', 'someMethod'), 4
-		parent::__construct('ReflectionParameter', $method, $obj);
+		if (isset($obj))
+		{
+			parent::__construct('ReflectionParameter', $method, $obj);
+		}
+		else
+		{
+			parent::__construct('ReflectionParameter', $method);
+		}
+	}
+	
+	function default_value($to_string = FALSE)
+	{
+		if ($this->is_default_value_available())
+		{
+			$val = $this->reflection->getDefaultValue();
+			
+			
+			if ($to_string)
+			{
+				if (is_null($val))
+				{
+					return 'NULL';
+				}
+				else if (is_bool($val))
+				{
+					return ($val === TRUE) ? 'TRUE' : 'FALSE';
+				}
+				else if (is_string($val))
+				{
+					return '\''.$val.'\'';
+				}
+				else
+				{
+					// remove extra spaces and lowercase
+					return preg_replace('#\s*#', '', strtolower(print_r($val, TRUE)));
+				}
+				
+			}
+			return $this->reflection->getDefaultValue();
+		}
+		
+		return FALSE;
+	}
+	
+	function is_default_array()
+	{
+		if ($this->is_array())
+		{
+			return TRUE;
+		}
+		else if ($this->is_default_value_available())
+		{
+			return is_array($this->default_value());
+		}
+		else if ($this->function->comment->param($this->position(), 'type') == 'array')
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
 }
 
@@ -387,6 +465,7 @@ class Inspection_comment {
 	
 	protected $_text = '';
 	protected $_description;
+	protected $_example;
 	protected $_tags;
 	
 	function __construct($comment)
@@ -513,29 +592,62 @@ class Inspection_comment {
 		return $value;
 	}
 	
-	function description($long = TRUE)
+	function description($long = TRUE, $append_periods = TRUE)
 	{
 		if (!isset($this->_description))
 		{
 			preg_match('#/\*\*\s*(.+)@#Ums', $this->_text, $matches);
 			if (isset($matches[1]))
 			{
+				// removing preceding *
 				$this->_description = preg_replace('#\*\s+#ms', '', $matches[1]);
+				
+				// remove code examples since they are handled by the example method
+				$this->_description = preg_replace('#<code>.+</code>#ms', '', $this->_description);
 			}
 		}
 		
-		if (!$long)
+		// break into lines so we can clean up some formatting like periods
+		$desc_lines = explode(PHP_EOL, $this->_description);
+		
+		$desc = '';
+		foreach($desc_lines as $d)
 		{
-			$desc = explode(PHP_EOL, $this->_description);
-			if (!empty($desc[1]))
+			$d = trim($d);
+			if (!empty($d))
 			{
-				return $desc[1];
+				if ($append_periods)
+				{
+					if (!preg_match('#.+\.$#', $d))
+					{
+						$d = $d.'.';
+					}
+				}
+				if (!$long)
+				{
+					return $d;
+				}
+
+				$desc .= $d.' ';
 			}
 		}
-		
-		return $this->_description;
+		return trim($desc);
 	}
-
+	
+	function example($opening = '', $closing = '')
+	{
+		if (!isset($this->_example))
+		{
+			preg_match('#/\*\*\s*.+<code>(.+)</code>#Ums', $this->_text, $matches);
+			if (isset($matches[1]))
+			{
+				$this->_example = preg_replace('#\*\s+#ms', '', $matches[1]);
+			}
+		}
+		$example = $opening.$this->_example.$closing;
+		return $example;
+	}
+	
 }
 
 
@@ -549,7 +661,11 @@ abstract class Inspection_base {
 	
 	function __construct($ref_class, $method, $obj = NULL)
 	{
-		if (isset($obj))
+		if (is_object($method) AND strncasecmp(get_class($method), 'Reflection', 10) === 0)
+		{
+			$this->reflection = $method;
+		}
+		else if (isset($obj))
 		{
 			$this->reflection = new $ref_class($obj, $method);
 			$this->obj = $obj;
@@ -561,9 +677,11 @@ abstract class Inspection_base {
 		
 		$this->name = $this->reflection->getName();
 
-		$comment = $this->reflection->getDocComment();
-		$this->comment = new Inspection_comment($comment);
-		
+		if (method_exists($this->reflection, 'getDocComment'))
+		{
+			$comment = $this->reflection->getDocComment();
+			$this->comment = new Inspection_comment($comment);
+		}
 		
 		// used for functions and method objects
 		if (method_exists($this->reflection, 'getParameters'))
@@ -571,16 +689,18 @@ abstract class Inspection_base {
 			$params = $this->reflection->getParameters();
 			foreach($params as $param)
 			{
-				if ($obj)
-				{
-					 
-				}
 				$p = new Inspection_param($param);
+				$p->function = &$this;
 				$this->params[] = $p;
 			}
 		}
 	}
 	
+	function friendly_name()
+	{
+		return humanize($this->name);
+	}
+
 	function comment()
 	{
 		return $this->comment;
@@ -612,10 +732,9 @@ abstract class Inspection_base {
 			$name = 'get_'.$name;
 		}
 		
-		if (strpos('_', $name) !== FALSE)
+		if (strpos($name, '_') !== FALSE)
 		{
 			$name = camelize($name);
-			
 		}
 		
 		if (method_exists($this->reflection, $name))

@@ -189,7 +189,54 @@ class Fuel_user_guide extends Fuel_advanced_module {
 		return $this->display_options;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Generates the class documentation based on the class passed to it
+	 * 
+	 * <code>
+	 * $vars = array('intro');
+	 * echo generate_class_docs('Fuel_cache', $vars);
+	 * </code>
+	 *
+	 * @access	public
+	 * @param	string	Name of class
+	 * @param	array 	Variables to be passed to the layout
+	 * @param	string	Module folder name
+	 * @param	string	Subfolder in module. Deafult is the libraries
+	 * @return	string
+	 */
+	function generate_docs($file, $vars = array(), $module = 'fuel', $folder = 'libraries')
+	{
+		$class_path = MODULES_PATH.$module.'/'.$folder.'/'.$file.'.php';
+		$this->CI->load->module_library(FUEL_FOLDER, 'inspection', array('file' => $class_path));
+		$vars['module'] = $module;
+		$vars['folder'] = $folder;
+		switch($folder)
+		{
+			case 'helpers':
+				$layout = 'helper_layout';
+				$vars['helper'] = humanize($file);
+				$vars['helpers'] = $this->CI->inspection->functions($file);
+				break;
+			default:
+				$layout = 'class_layout';
+				$vars['class'] = $this->CI->inspection->classes($file);
+		}
+		
+		return $this->CI->load->module_view(USER_GUIDE_FOLDER, '_layouts/'.$layout, $vars, TRUE);
+	}
 	
+	
+	function block($block, $vars, $return = TRUE)
+	{
+		$output = $this->CI->load->module_view(USER_GUIDE_FOLDER, '_blocks/'.$block, $vars, $return);
+		
+		if ($return)
+		{
+			return $output;
+		}
+	}
 }
 
 /* End of file Fuel_user_guide.php */

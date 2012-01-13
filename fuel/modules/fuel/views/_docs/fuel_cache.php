@@ -33,8 +33,8 @@
 
 <h1>Function Reference</h1>
 
-<h2 id="cache_id">$this->fuel->cache->cache_id(<var>['location']</var>)</h2>
-<p>If no location value is provided, then the ID will be based on the current URI segments.</p>
+<h2 id="cache_id">$this->fuel->cache->create_id(<var>['location']</var>)</h2>
+<p>Creates a cache ID based on the page location. If no location value is provided, then the ID will be based on the current URI segments.</p>
 <pre>
 * @access	public
 * @param	string	Location used in creating the ID (optional)
@@ -42,7 +42,7 @@
 </pre>
 <h3>Example:</h3>
 <pre class="brush: php">
-$cache_id = $this->fuel->cache->cache_id(); // create a cache id... this will be based on the current URI location if no parameters are passed
+$cache_id = $this->fuel->cache->create_id(); // create a cache id... this will be based on the current URI location if no parameters are passed
 </pre>
 
 
@@ -58,7 +58,7 @@ $cache_id = $this->fuel->cache->cache_id(); // create a cache id... this will be
 
 <h3>Example:</h3>
 <pre class="brush: php">
-$cache_id = $this->fuel->cache->cache_id();
+$cache_id = $this->fuel->cache->create_id();
 $data = 'These are not the droids you are looking for.';
 
 // sets the cached item with a TTL of one hour
@@ -77,7 +77,7 @@ $file = $this->fuel->cache->save($cache_id, $data, NULL, 3600);
 
 <h3>Example:</h3>
 <pre class="brush: php">
-$cache_id = $this->fuel->cache->cache_id();
+$cache_id = $this->fuel->cache->create_id();
 $file = $this->fuel->cache->get($cache_id, 'pages', FALSE);
 </pre>
 
@@ -92,7 +92,7 @@ $file = $this->fuel->cache->get($cache_id, 'pages', FALSE);
 
 <h3>Example:</h3>
 <pre class="brush: php">
-$cache_id = $this->fuel->cache->cache_id();
+$cache_id = $this->fuel->cache->create_id();
 if ($this->fuel->cache->is_cached($cache_id)){
 	echo 'cached';
 } else {
@@ -116,12 +116,8 @@ If no parameters are passed, then all caches are cleared.
 
 <h3>Example:</h3>
 <pre class="brush: php">
-// as an array
-$this->fuel->cache->clear(array('compiled', 'pages'));
-
-// as string
-$this->fuel->cache->clear('assets');
-
+$this->fuel->cache->clear(array('compiled', 'pages')); // as an array
+$this->fuel->cache->clear('assets'); // as string
 </pre>
 
 
@@ -195,7 +191,7 @@ $this->fuel->cache->clear_assets();
 
 <h3>Example:</h3>
 <pre class="brush: php">
-$cache_id = $this->fuel->cache->cache_id();
+$cache_id = $this->fuel->cache->create_id();
 $this->fuel->cache->clear_file($cache_id);
 </pre>
 
