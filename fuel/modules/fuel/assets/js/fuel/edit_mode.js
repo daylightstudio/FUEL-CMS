@@ -24,6 +24,7 @@ if (fuel == undefined) var fuel = {};
 	var editorsOn = (parseInt($.supercookie('fuel_bar', 'show_editable_areas')) == 1);
 	var fuelBarOn = (parseInt($.supercookie('fuel_bar', 'show_fuel_bar')) == 1);
 
+	var activeEditor;
 	var activeField;
 	var assetFolder;
 	var iconHeight = 16;
@@ -104,7 +105,6 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			fuel.refreshIframeSize = function(iframe){
-				var contentDoc = iframe.contentDocument;
 				setTimeout(function(){
 					fuel.setIframeSize(iframe);
 				}, 200);
@@ -117,13 +117,13 @@ if (fuel == undefined) var fuel = {};
 					var docHeight = fuel.calcHeight('#login', contentDoc);
 					var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 				} else {
-					var docHeight = fuel.calcHeight('#fuel_actions, #fuel_notification, #fuel_main_content_inner, #data_table_container', contentDoc);
-
+					var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc);
 					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 					var width2 = $('#fuel_actions', contentDoc).outerWidth();
 					var docWidth = (width1 > width2) ? width1 : width2;
 					if (docWidth < MIN_WIDTH) docWidth = MIN_WIDTH;
 				}
+				console.log(docHeight)
 				$(iframe).height(docHeight);
 				$(iframe).width(docWidth);
 			}
@@ -174,6 +174,10 @@ if (fuel == undefined) var fuel = {};
 		function refresh(){
 			if (editorsOn){
 				moveMarkers();
+				if (activeEditor){
+					var iframe = activeEditor.find('iframe')[0];
+					fuel.setIframeSize(iframe);
+				}
 			}
 		}
 		
@@ -236,7 +240,6 @@ if (fuel == undefined) var fuel = {};
 			
 			var editors = $('.__fuel_edit__');
 
-			var activeEditor;
 			var resetCss = {height: 'auto', width: 'auto', opacity: 1, display: 'block'};
 
 			var closeEditor = function(){

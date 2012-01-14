@@ -117,49 +117,7 @@ class Pages_model extends Base_module_model {
 		$data = $this->find_one_array($where);
 		return $data;
 	}
-	
-	// function all_pages_including_views($paths_as_keys = FALSE, $apply_site_url = TRUE, $include_modules = TRUE)
-	// {
-	// 	$CI =& get_instance();
-	// 	$CI->load->helper('directory');
-	// 	$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-	// 
-	// 	$cms_pages = $this->list_locations(FALSE);
-	// 	
-	// 	// get valid view files that may show up
-	// 	$views_path = APPPATH.'views/';
-	// 	$view_files = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
-	// 	
-	// 	$module_pages = array();
-	// 	// module pages
-	// 	if ($include_modules)
-	// 	{
-	// 		//$module_pages = $CI->fuel_modules->get_pages();
-	// 	}
-	// 	
-	// 	// merge them together for a complete list
-	// 	$pages = array();
-	// 	
-	// 	// must get the merged unique values (array_values resets the indexes)
-	// 	$pages = array_values(array_unique(array_merge($cms_pages, $view_files, $module_pages)));
-	// 	sort($pages);
-	// 	
-	// 	if ($paths_as_keys)
-	// 	{
-	// 		$keyed_pages = array();
-	// 		foreach($pages as $page)
-	// 		{
-	// 			$key = ($apply_site_url) ? site_url($page) : $page;
-	// 			$keyed_pages[$key] = $page;
-	// 		}
-	// 		$pages = $keyed_pages;
-	// 	}
-	// 	
-	// 	// apply the site_url function to all pages
-	// 	return $pages;
-	// 	
-	// }
-	// 
+
 	function form_fields()
 	{
 		$CI =& get_instance();

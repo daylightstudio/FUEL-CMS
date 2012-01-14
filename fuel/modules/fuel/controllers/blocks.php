@@ -65,7 +65,7 @@ class Blocks extends Module {
 		$this->output->set_output($out);
 	}
 	
-	function upload()
+	function upload($inline = FALSE)
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
@@ -108,7 +108,7 @@ class Blocks extends Module {
 				add_error(lang('error_upload'));
 			}
 		}
-		
+
 		$fields = array();
 		$blocks = $this->model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		
@@ -118,6 +118,7 @@ class Blocks extends Module {
 		$common_fields = $this->_common_fields();
 		$fields = array_merge($fields, $common_fields);
 		
+		
 		$this->form_builder->hidden = array();
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($_POST);
@@ -125,6 +126,7 @@ class Blocks extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
+		$vars['back_action'] = $this->fuel->admin->last_page();
 		
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
 		$this->fuel->admin->set_titlebar($crumbs);

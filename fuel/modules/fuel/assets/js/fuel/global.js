@@ -79,7 +79,7 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 			if ($('#login').size()){
 				var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
 			} else {
-				var docHeight = fuel.calcHeight('#fuel_actions, #fuel_notification, #fuel_main_content_inner, #data_table_container', contentDoc) + 30;
+				var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc) + 30;
 			}
 
 			if (docHeight > 450) {

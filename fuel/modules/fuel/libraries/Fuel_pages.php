@@ -134,6 +134,20 @@ class Fuel_pages extends Fuel_base_library {
 		return $this->fuel->modules->pages();
 	}
 	
+	function find($id)
+	{
+		$this->fuel->load_model('pages');
+		if (!is_numeric($id))
+		{
+			$page = $this->CI->pages_model->find_by_location($id);
+		}
+		else
+		{
+			$page = $this->CI->pages_model->find_by_key($id);
+		}
+		return $page;
+	}
+	
 	function render($location, $vars = array(), $params = array(), $return = FALSE)
 	{
 		// TODO: cant have this be called within another page or will cause and infinite loop

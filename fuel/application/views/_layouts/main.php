@@ -26,6 +26,15 @@
 
 	<div id="main_inner">
 		<?php echo fuel_var('body', ''); ?>
+		<?php echo fuel_edit('sections', 'Sections') ?>
+		<?php foreach($sections as $section) : ?>
+		<?php 
+		echo "<pre style=\"text-align: left;\">";
+		print_r($section);
+		echo "</pre>";
+		
+		 ?>
+		<?php endforeach; ?>
 	</div>
 	
 	

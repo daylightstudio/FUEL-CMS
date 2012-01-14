@@ -82,13 +82,31 @@ class Pagevariables_model extends Base_module_model {
 	
 	function form_fields($values = array(), $related = array())
 	{
+		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
-		$fields['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
+		
+		$fields['value']['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
+
+		if (isset($values['page_id']))
+		{
+			$page = $CI->fuel->pages->find($values['page_id']);
+			$layout = $this->fuel->layouts->get($page->layout);
+			$layout_fields = $layout->fields();
+			if (isset($layout_fields[$values['name']]))
+			{
+				$fields['value'] = $layout_fields[$values['name']];
+			}
+		}
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($fields);
+		// echo "</pre>";
+		// exit('xxx');
 		return $fields;
 	}
 	
 	function _common_query()
 	{
+		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
 		if ($this->honor_page_status AND !defined('FUEL_ADMIN'))
 		{

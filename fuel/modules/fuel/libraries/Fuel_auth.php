@@ -63,15 +63,6 @@ class Fuel_auth extends Fuel_base_library {
 		return $this->get_session_namespace();
 	}
 	
-	function set_valid_user_property($prop, $val)
-	{
-		$user_data = $this->CI->session->userdata($this->get_session_namespace());
-		if (isset($user_data[$prop]))
-		{
-			$user_data[$prop] = $val;
-			$this->CI->session->set_userdata($this->get_session_namespace(), $user_data);
-		}
-	}
 
 	// check any remote host or IP restrictions first
 	function can_access()
@@ -92,6 +83,14 @@ class Fuel_auth extends Fuel_base_library {
 			return TRUE;
 		}
 		return FALSE;
+	}
+	
+	function set_user_data($key, $value)
+	{
+		$session_key = $this->fuel->auth->get_session_namespace();
+		$user_data = $this->fuel->auth->user_data();
+		$user_data[$key] = $value;
+		$this->CI->session->set_userdata($session_key, $user_data);
 	}
 	
 	function user_data($key = NULL)

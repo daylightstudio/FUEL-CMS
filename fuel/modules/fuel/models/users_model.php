@@ -261,12 +261,12 @@ class Users_model extends Base_module_model {
 		{
 			if (!empty($values['password']))
 			{
-				$CI->fuel->auth->set_valid_user_property('password', $values['password']);
+				$CI->fuel->auth->set_user_data('password', $values['password']);
 			}
 
 			if (!empty($values['language']))
 			{
-				$CI->fuel->auth->set_valid_user_property('language', $values['language']);
+				$CI->fuel->auth->set_user_data('language', $values['language']);
 			}
 			
 		}

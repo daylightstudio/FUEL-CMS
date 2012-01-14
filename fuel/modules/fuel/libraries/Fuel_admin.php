@@ -33,6 +33,7 @@ class Fuel_admin extends Fuel_base_library {
 	protected $main_layout = 'admin_shell';
 	protected $validate = TRUE;
 	protected $is_inline = FALSE;
+	protected $last_page = '';
 	protected $panels = array(
 		'top' => TRUE,
 		'nav' => TRUE,
@@ -146,6 +147,9 @@ class Fuel_admin extends Fuel_base_library {
 			);
 		
 		$this->main_layout = $this->fuel->config('main_layout');
+		
+		// set last page
+		$this->last_page = $this->fuel->auth->user_data('last_page');
 		$this->init_display_modes();
 	}
 	
@@ -228,7 +232,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		// register the last page
-		$this->last_page();
+		$this->set_last_page();
 		
 	}
 	
@@ -285,22 +289,24 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
-	function last_page($key = NULL)
+	function set_last_page($page = NULL)
 	{
-		if ($this->is_inline()) return;
-		if (!isset($key)) $key = uri_path(FALSE);
+		//if ($this->is_inline()) return;
+		if (!isset($page)) $page = uri_path(FALSE);
 		$invalid = array(
 			fuel_uri('recent')
 		);
-		$session_key = $this->fuel->auth->get_session_namespace();
-		$user_data = $this->fuel->auth->user_data();
 		
-		if (!is_ajax() AND empty($_POST) AND !in_array($key, $invalid))
+		if (!is_ajax() AND empty($_POST) AND !in_array($page, $invalid))
 		{
-			$user_data['last_page'] = $key;
-			$this->CI->session->set_userdata($session_key, $user_data);
+			$this->fuel->auth->set_user_data('last_page', $page);
 		}
 		
+	}
+	
+	function last_page()
+	{
+		return $this->last_page;
 	}
 	
 	function add_recent_page($link, $name, $type)
@@ -551,7 +557,11 @@ class Fuel_admin extends Fuel_base_library {
 	
 	function is_inline()
 	{
-		return $this->is_inline;
+		if ($this->is_inline OR (!empty($this->display_mode) AND $this->display_mode != self::DISPLAY_DEFAULT))
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	function set_inline($inline)
@@ -662,6 +672,7 @@ class Fuel_admin extends Fuel_base_library {
 		
 		// set $_GET parameter explicitly so fuel_url can properly render the URL
 		//if ($set_get )
+		
 		if ($this->is_inline())
 		{
 			$_GET['display_mode'] = $this->display_mode;

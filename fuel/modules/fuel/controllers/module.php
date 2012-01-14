@@ -492,13 +492,15 @@ class Module extends Fuel_base_controller {
 		}
 	}
 
-	function create($field = NULL, $inline = FALSE, $redirect = TRUE)
+	function create($field = NULL, $redirect = TRUE)
 	{
 		$id = NULL;
 		if (!$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
 		{
 			show_404();
 		}
+		
+		$inline = $this->fuel->admin->is_inline();
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
 		{
@@ -542,7 +544,8 @@ class Module extends Fuel_base_controller {
 	
 	function inline_create($field = NULL)
 	{
-		$this->create($field, TRUE);
+		$this->fuel->admin->set_inline(TRUE);
+		$this->create($field);
 	}
 	
 	protected function _process_create()
@@ -623,13 +626,15 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	function edit($id = NULL, $field = NULL, $inline = FALSE, $redirect = TRUE)
+	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		if (empty($id) OR !$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
 		{
 			show_404();
 		}
 
+		$inline = $this->fuel->admin->is_inline();
+		
 		if ($this->input->post($this->model->key_field()))
 		{
 			
@@ -694,7 +699,6 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->set_inline($inline);
 
 		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
 		$this->fuel->admin->render($this->views['create_edit'], $vars);
@@ -709,7 +713,8 @@ class Module extends Fuel_base_controller {
 	
 	function inline_edit($id, $field = NULL)
 	{
-		$this->edit($id, $field, TRUE);
+		$this->fuel->admin->set_inline(TRUE);
+		$this->edit($id, $field);
 	}
 	
 	protected function _process_edit($id)
@@ -820,7 +825,6 @@ class Module extends Fuel_base_controller {
 	
 	protected function _shell_vars($id = NULL, $action = 'create')
 	{
-
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
@@ -864,7 +868,6 @@ class Module extends Fuel_base_controller {
 		
 		// create fields... start with the table info and go from there
 		$fields = (!empty($values)) ? $this->model->form_fields($values) : $this->model->form_fields($_POST);
-
 		// if field parameter is set, then we just display a single field
 		if (!empty($field))
 		{
@@ -874,7 +877,15 @@ class Module extends Fuel_base_controller {
 				$single_field[$field]['label'] = ' ';
 				$single_field[$field]['required'] = FALSE;
 				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
-				$fields = $single_field;
+				
+				foreach($fields as $k => $f)
+				{
+					if ($k != $field)
+					{
+						$fields[$k]['type'] = 'hidden';
+					}
+				}
+				//$fields = $single_field;
 			}
 			else
 			{
@@ -1083,7 +1094,7 @@ class Module extends Fuel_base_controller {
 		$this->load->module_view(FUEL_FOLDER, '_layouts/module_form', $vars);
 	}
 
-	function delete($id = NULL, $inline = FALSE)
+	function delete($id = NULL)
 	{
 		if (!$this->fuel->auth->has_permission($this->permission, 'delete')) 
 		{
@@ -1118,17 +1129,14 @@ class Module extends Fuel_base_controller {
 			$this->_clear_cache();
 			$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
 			
-			if ($inline === TRUE)
+			if ($this->fuel->admin->is_inline())
 			{
-				//$vars['layout'] = FALSE;
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 				$this->fuel->admin->render($this->views['delete'], $vars);
-				
 			}
 			else
 			{
-				
 				// set a success delete message
 				if ($any_success)
 				{
@@ -1186,14 +1194,13 @@ class Module extends Fuel_base_controller {
 			}
 			
 			$vars['error'] = $this->model->get_errors();
-			$this->fuel->admin->set_inline($inline);
 			
 			$crumbs = array($this->module_uri => $this->module_name);
 			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 50);
 			
 			$this->fuel->admin->set_titlebar($crumbs);
 			
-			if ($inline === TRUE)
+			if ($this->fuel->admin->is_inline())
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
@@ -1209,7 +1216,8 @@ class Module extends Fuel_base_controller {
 	
 	function inline_delete($id)
 	{
-		$this->delete($id, TRUE);
+		$this->fuel->admin->set_inline(TRUE);
+		$this->delete($id);
 	}
 	
 	function restore()
@@ -1245,7 +1253,7 @@ class Module extends Fuel_base_controller {
 
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
-			$this->fuel->admin->last_page($last_page);
+			$this->fuel->admin->set_last_page($last_page);
 			redirect($url);
 		}
 		else

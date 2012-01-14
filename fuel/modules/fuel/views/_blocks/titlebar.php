@@ -4,7 +4,7 @@
 	<?php if (is_array($titlebar)) : ?>
 	<?php $last_key = array_pop($titlebar);
 		foreach($titlebar as $url => $crumb) : ?>
-			<a href="<?=fuel_url($url)?>"><?=$crumb?></a> &gt;
+			<?php if (!$this->fuel->admin->is_inline()) : ?><a href="<?=fuel_url($url)?>"><?php endif; ?><?=$crumb?><?php if (!$this->fuel->admin->is_inline()) : ?></a><?php endif; ?> &gt;
 		<?php endforeach; ?>
 		<em><?=$last_key?></em>
 		<?php else: ?>

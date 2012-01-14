@@ -244,8 +244,7 @@ class Fuel_custom_fields {
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
 			foreach($params['fields'] as $key => $field)
 			{
-				$field['value'] = (isset($value[$key])) ? $value[$key] : $value;
-				
+				$field['value'] = (!empty($value[$key])) ? $value[$key] : '';
 				if ($repeatable)
 				{
 					if (!empty($form_builder->name_array))
@@ -278,7 +277,7 @@ class Fuel_custom_fields {
 				}
 			}
 		}
-		
+
 		if ($repeatable)
 		{
 			$vars['fields'] = $fields;
