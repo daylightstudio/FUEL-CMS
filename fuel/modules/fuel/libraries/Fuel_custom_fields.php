@@ -226,11 +226,14 @@ class Fuel_custom_fields {
 		$fields = array();
 		$i = 0;
 		
+		if (is_serialized_str($params['value']))
+		{
+			$params['value'] = unserialize($params['value']);
+		}
 		if (!is_array($params['value']))
 		{
 			$params['value'] = array();
 		}
-		
 		if ($params['value'] == '')
 		{
 			$params['value'] = array();
@@ -238,10 +241,11 @@ class Fuel_custom_fields {
 		
 		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
 		if ($num == 0) $num = 1;
-		
+
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
+			
 			foreach($params['fields'] as $key => $field)
 			{
 				$field['value'] = (!empty($value[$key])) ? $value[$key] : '';

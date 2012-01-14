@@ -948,7 +948,8 @@ class MY_Model extends CI_Model {
 	{
 		$this->_check_readonly();
 		if (!isset($record)) $record = $_POST;
-		if (is_array($record) AND is_array(current($record)))
+		
+		if (is_array($record) AND (is_int(key($record)) AND is_array(current($record))))
 		{
 			$saved = TRUE;
 			foreach($record as $rec)
@@ -962,8 +963,8 @@ class MY_Model extends CI_Model {
 		}
 		else
 		{
-			
 			$fields = array();
+			
 			$values = $this->normalize_save_values($record);
 
 			// reset validator here so that all validation set with hooks will not be lost

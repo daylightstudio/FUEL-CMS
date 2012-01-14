@@ -86,15 +86,17 @@ class Pagevariables_model extends Base_module_model {
 		$fields = parent::form_fields($values, $related);
 		
 		$fields['value']['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
-
 		if (isset($values['page_id']))
 		{
 			$page = $CI->fuel->pages->find($values['page_id']);
-			$layout = $this->fuel->layouts->get($page->layout);
-			$layout_fields = $layout->fields();
-			if (isset($layout_fields[$values['name']]))
+			if (isset($page->id))
 			{
-				$fields['value'] = $layout_fields[$values['name']];
+				$layout = $this->fuel->layouts->get($page->layout);
+				$layout_fields = $layout->fields();
+				if (isset($layout_fields[$values['name']]))
+				{
+					$fields['value'] = $layout_fields[$values['name']];
+				}
 			}
 		}
 		// echo "<pre style=\"text-align: left;\">";
@@ -102,6 +104,15 @@ class Pagevariables_model extends Base_module_model {
 		// echo "</pre>";
 		// exit('xxx');
 		return $fields;
+	}
+	
+	function on_before_clean($values)
+	{
+		if (isset($values['value']) AND is_array($values['value']))
+		{
+			$values['value'] = serialize($values['value']);
+		}
+		return $values;
 	}
 	
 	function _common_query()

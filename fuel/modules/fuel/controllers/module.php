@@ -728,7 +728,7 @@ class Module extends Fuel_base_controller {
 		
 		// run before_save hook
 		$this->_run_hook('before_save', $posted);
-		
+
 		if ($this->model->save($posted))
 		{
 			// process $_FILES...
@@ -868,6 +868,7 @@ class Module extends Fuel_base_controller {
 		
 		// create fields... start with the table info and go from there
 		$fields = (!empty($values)) ? $this->model->form_fields($values) : $this->model->form_fields($_POST);
+
 		// if field parameter is set, then we just display a single field
 		if (!empty($field))
 		{
@@ -878,6 +879,7 @@ class Module extends Fuel_base_controller {
 				$single_field[$field]['required'] = FALSE;
 				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
 				
+				// set them to hidden... just in case model hooks require the values to be passed on save
 				foreach($fields as $k => $f)
 				{
 					if ($k != $field)
