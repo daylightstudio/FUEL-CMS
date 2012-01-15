@@ -76,15 +76,23 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 			$modal.jqmHide();
 		})
 		setTimeout(function(){
-			if ($('#login').size()){
+			if ($('#login', contentDoc).size()){
 				var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
 			} else {
 				var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc) + 30;
 			}
-
+			docHeight = iframe.contentDocument.body.scrollHeight;
+			//console.log($(iframe.contentWindow.parent.document).height())
 			if (docHeight > 450) {
 				docHeight = 450;
 			}
+			
+			//console.log($(iframe.contentWindow.parent.parent).find('iframe'))
+			// set the height of the parent iframe if it needs to be bigger
+			//if ($(iframe.contentWindow.parent.document).height() < docHeight){
+				$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
+		//	}
+		//	console.log(fuel.cascadeWindowHeight(iframe.contentWindow))
 			//docHeight = docHeight - (fuel.windowLevel() * 50);
 			$(iframe).height(docHeight);
 		}, 200);
@@ -138,4 +146,16 @@ fuel.calcHeight = function(elems, context){
 		height += $(this).outerHeight();
 	})
 	return height;
+}
+
+
+fuel.cascadeWindowHeight = function(win, height){
+	var level = 0;
+	//var win = window;
+	while (win != top && win.parent != null){ 
+		level++;
+		win = win.parent;
+		console.log(win.document.title + ' ' + $(win.document).find('body').height())
+	}
+	return level;
 }

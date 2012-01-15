@@ -113,7 +113,7 @@ if (fuel == undefined) var fuel = {};
 			fuel.setIframeSize = function(iframe){
 				var MIN_WIDTH = 620;
 				var contentDoc = iframe.contentDocument;
-				if ($('#login').size()){
+				if ($('#login', contentDoc).size()){
 					var docHeight = fuel.calcHeight('#login', contentDoc);
 					var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
 				} else {
@@ -123,7 +123,6 @@ if (fuel == undefined) var fuel = {};
 					var docWidth = (width1 > width2) ? width1 : width2;
 					if (docWidth < MIN_WIDTH) docWidth = MIN_WIDTH;
 				}
-				console.log(docHeight)
 				$(iframe).height(docHeight);
 				$(iframe).width(docWidth);
 			}
