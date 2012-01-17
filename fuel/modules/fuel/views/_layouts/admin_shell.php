@@ -92,16 +92,16 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 			<!-- BODY -->
 			<?=$body?>
 		</div>
-		<?=$this->form->hidden('fuel_display_mode', $this->fuel->admin->display_mode())?>
+		<?=$this->form->hidden('fuel_inline', (int)$this->fuel->admin->is_inline())?>
 		<?=$this->form->close()?>
 	</div>
 </div>
 
-
+<?php /* ?>
 <?php if ($this->fuel->admin->has_panel('bottom')) : ?>
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_bottom'); ?>
 <?php endif; ?>
-
+<?php */ ?>
 
 </body>
 </html>

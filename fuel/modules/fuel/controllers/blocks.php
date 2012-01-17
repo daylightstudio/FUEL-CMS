@@ -126,7 +126,8 @@ class Blocks extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$vars['back_action'] = $this->fuel->admin->last_page();
+		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
+		//$vars['back_action'] = fuel_uri($this->module_uri);
 		
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
 		$this->fuel->admin->set_titlebar($crumbs);

@@ -21,7 +21,7 @@ $config['search'] = array();
 $config['search']['indexing_enabled'] = TRUE;
 
 // the user agent used when indexing
-$config['user_agent'] = 'FUEL';
+$config['search']['user_agent'] = 'FUEL';
 
 // value can be either "like" which will do a %word% query OR "match" which will use the MATCH / AGAINST syntax
 // use "like" if you have a small number of records

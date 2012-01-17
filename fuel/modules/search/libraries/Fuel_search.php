@@ -33,9 +33,7 @@ class Fuel_search extends Fuel_advanced_module {
 	public $connect_timeout = 10; // CURL connection timeout
 	public $title_limit = 100; // max character limit of the title of content
 	public $user_agent = 'FUEL'; // the user agent used for indexing
-	protected $CI; // reference to the CI super object
-	protected $_errors = array(); // array to keep track of errors
-	protected $_log = array(); // log of items index
+	protected $_log = array(); // log of items indexed
 	
 	/**
 	 * Constructor - Sets Fuel_search preferences and to any children
@@ -44,16 +42,12 @@ class Fuel_search extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		$this->CI =& get_instance();
-		// $this->CI->load->module_config(SEARCH_FOLDER, 'search');
-		// $this->CI->load->module_language(SEARCH_FOLDER, 'search');
-		// $this->CI->load->module_model(SEARCH_FOLDER, 'search_model');
+		parent::__construct($params);
 
-		// initialize object if any parameters
-		if (!empty($params))
-		{
-			$this->initialize($params);
-		}
+		$this->load_model('search');
+		$this->CI->load->library('curl');
+
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
@@ -70,7 +64,7 @@ class Fuel_search extends Fuel_advanced_module {
 	 */	
 	function initialize($params = array())
 	{
-		$this->set_params($params);
+		parent::initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
@@ -934,7 +928,7 @@ class Fuel_search extends Fuel_advanced_module {
 	{
 		$this->_log[] = $rec;
 	}
-
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -961,83 +955,7 @@ class Fuel_search extends Fuel_advanced_module {
 		}
 		return $str;
 	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns a search config item
-	 *
-	 * @access	public
-	 * @param	string	key to config itme
-	 * @return	boolean
-	 */	
-	function config($key)
-	{
-		$config = $this->CI->config->item('search');
-		
-		if (isset($config[$key]))
-		{
-			return $config[$key];
-		}
-		else
-		{
-			return NULL;
-		}
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns any errors that may have occurred during backing up
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
-	function errors($formatted = FALSE, $open = '', $close = "\n\n")
-	{
-		if ($formatted === FALSE)
-		{
-			return $this->_errors;
-		}
-
-		$error = '';
-		foreach($this->_errors as $e)
-		{
-			$error .= $open.$e.$close;
-		}
-		return $error;
-		
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns whether there were errors in backing up or not
-	 *
-	 * @access	public
-	 * @return	boolean
-	 */	
-	function has_errors()
-	{
-		return count($this->_errors) > 0;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Adds an error to the _errors array
-	 *
-	 * @access	protected
-	 * @param	string	error message
-	 * @return	array
-	 */	
-	protected function _add_error($error)
-	{
-		$this->_errors[] = $error;
-	}
-	
-	
 }
 
-/* End of file Fuel_base_library.php */
-/* Location: ./modules/fuel/libraries/Fuel_base_library.php */
+/* End of file Fuel_search.php */
+/* Location: ./modules/search/libraries/Fuel_search.php */

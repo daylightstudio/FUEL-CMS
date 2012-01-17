@@ -50,7 +50,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			$this->initialize($params);
 		}
-		
 	}
 	
 	// --------------------------------------------------------------------
@@ -70,7 +69,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		// the parent Fuel_base_library before the rest of the constructor'
 		$this->load_config();
 		$this->_config = $this->CI->config->item($this->name);
-		
 		if ($this->has_lang())
 		{
 			$this->load_language();

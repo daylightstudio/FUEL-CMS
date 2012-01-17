@@ -90,7 +90,7 @@ div#fuel_body { }
 /******************************************************
 left panel 
 ******************************************************/
-div#fuel_left_panel { position: absolute; top: 30px; left: 0px; bottom: 20px; width: 200px; background-color: #d4dde5; overflow: auto; border-right: 1px solid #c3c3c3; overflow-x: hidden; }
+div#fuel_left_panel { position: absolute; top: 30px; left: 0px; bottom: 0px; width: 200px; background-color: #d4dde5; overflow: auto; border-right: 1px solid #c3c3c3; overflow-x: hidden; }
 div#fuel_left_panel a { color: #333; text-decoration: none; text-shadow: #fff 0px 1px 0px; display: block; overflow: hidden; text-overflow: ellipsis; width: 130px; }
 div#fuel_left_panel a:hover { color: #333; text-decoration: underline; }
 div#fuel_left_panel_inner { padding: 15px; text-shadow: #fff 0px 1px 0px; }
@@ -149,7 +149,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 /******************************************************
 main panel 
 ******************************************************/
-div#fuel_main_panel { position: absolute; top: 30px; left: 201px; right: 0px; bottom: 20px; background-color: #fff; }
+div#fuel_main_panel { position: absolute; top: 30px; left: 201px; right: 0px; bottom: 0px; background-color: #fff; }
 
 /* bread nav */
 div#fuel_main_top_panel { height: 29px; font-size: 13px; color: #fff; background-color: #7e7e7e; overflow: hidden; }
@@ -219,7 +219,6 @@ div.save_cancel { height: 35px;  }
 div.save_cancel li { margin: 5px 3px; }
 
 /* form tabs */
-div.form_tabs { margin-bottom: -1px; }
 div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border: 1px solid #f6f6f6; text-align: center; float: left; font-weight: bold; background-color: #ffffff; }
 div.form_tabs li.active { background-color: #f6f6f6; }
 div.form_tabs li.active a { color: #333; }
@@ -311,7 +310,7 @@ div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { width: 98%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #888; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
 /*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/

@@ -9,7 +9,6 @@ class Preview extends Fuel_base_controller {
 	
 	function index()
 	{
-		$this->load->module_library(FUEL_FOLDER, 'fuel_page');
 		$this->load->helper('string');
 		$this->load->library('parser');
 		
@@ -30,7 +29,6 @@ class Preview extends Fuel_base_controller {
 		get query string parameters of module and field name if they exist so we can set those as variables 
 		in the view to be used if they want to customize based on those parameters
 		*/
-		$this->uri->init_get_params();
 		$vars['body'] = $data;
 		$vars['module'] = $this->input->get('module', TRUE);
 		$vars['field'] = $this->input->get('field', TRUE);

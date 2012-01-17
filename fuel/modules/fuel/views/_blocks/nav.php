@@ -3,18 +3,19 @@
 			
 <?php 
 	// // Get all modules
-	// $modules = $this->fuel_modules->get_modules();
-	// $mods = array();
-	//         
-	// foreach($modules as $mod)
-	// {
-	//     if(isset($mod['module_uri']))
-	//     {
-	//         // Index modules by their uri so we know which module belongs to a specific nav item
-	//         $mods[$mod['module_uri']] = isset($mod['permission']) ? $mod['permission'] : '';
-	//     }
-	// }
-	// 
+	$modules = $this->fuel->modules->get();
+	$mods = array();
+	        
+	foreach($modules as $mod)
+	{
+		$info = $mod->info();
+	    if(isset($info['module_uri']))
+	    {
+	        // Index modules by their uri so we know which module belongs to a specific nav item
+	        $mods[$info['module_uri']] = isset($info['permission']) ? $info['permission'] : '';
+	    }
+	}
+	
 	foreach($nav as $section => $nav_items)
 	{
 		if (is_array($nav_items))
@@ -27,7 +28,7 @@
 				$url = $key;
 				
 				// Check for a specific module's permission                                
-		//		$key = isset($mods[$key]) ? $mods[$key] : $key;
+				$key = (isset($mods[$key]) AND !is_array($mods[$key])) ? $mods[$key] : $key;
 				
 				if (($this->fuel->auth->has_permission($key)) || $key == 'dashboard')
 				{

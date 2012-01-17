@@ -64,7 +64,6 @@ fuel.fields.multi_field = function(context){
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
-	
 	$editors = $ckEditor = $('textarea', context).not('.no_editor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;

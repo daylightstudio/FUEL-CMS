@@ -449,14 +449,15 @@ class Fuel_module extends Fuel_base_library {
 
 			foreach ($defaults as $key => $val)
 			{
-				// look for variables on the CI object first
-				if (isset($this->CI->$key))
-				{
-					$info[$key] = $this->CI->$key;
-				}
-				
+				// // look for variables on the CI object first
+				// if (!empty($this->CI->$key))
+				// {
+				// 	$info[$key] = $this->CI->$key;
+				// }
+				// 
 				// then look for variables in the module config file
-				else if (isset($this->_init[$key]))
+				// else if (isset($this->_init[$key]))
+				if (isset($this->_init[$key]))
 				{
 					$info[$key] = $this->_init[$key];
 				}

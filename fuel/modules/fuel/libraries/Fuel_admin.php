@@ -52,6 +52,7 @@ class Fuel_admin extends Fuel_base_library {
 	const DISPLAY_COMPACT = 'compact';
 	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
 	const DISPLAY_COMPACT_TITLEBAR = 'compact_titlebar';
+	const DISPLAY_INLINE = 'compact';
 	const DISPLAY_DEFAULT = 'default';
 
 	const NOTIFICATION_SUCCESS = 'success';
@@ -148,6 +149,8 @@ class Fuel_admin extends Fuel_base_library {
 		
 		$this->main_layout = $this->fuel->config('main_layout');
 		
+		$this->set_inline($this->CI->input->get('inline'));
+		
 		// set last page
 		$this->last_page = $this->fuel->auth->user_data('last_page');
 		$this->init_display_modes();
@@ -155,7 +158,6 @@ class Fuel_admin extends Fuel_base_library {
 	
 	function render($view, $vars = array(), $mode = '', $module = NULL)
 	{
-		
 		// set the active state of the menu
 		$this->nav_selected();
 		
@@ -185,20 +187,38 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		
-		if (!empty($mode) OR (empty($this->display_mode) AND !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode')))
+		// if (!empty($mode) OR (empty($this->display_mode) AND !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode')))
+		// {
+		// 	if (!empty($_POST['fuel_display_mode']))
+		// 	{
+		// 		$mode = $this->CI->input->post('fuel_display_mode');
+		// 	}
+		// 	else if ($this->CI->input->get('display_mode'))
+		// 	{
+		// 		$mode = $this->CI->input->get('display_mode');
+		// 	}
+		// 	
+		// 	$this->set_display_mode($mode);
+		// }
+		
+		if (!empty($mode) OR empty($this->display_mode))
 		{
-			if (!empty($_POST['fuel_display_mode']))
-			{
-				$mode = $this->CI->input->post('fuel_display_mode');
-			}
-			else if ($this->CI->input->get('display_mode'))
-			{
-				$mode = $this->CI->input->get('display_mode');
-			}
-			
 			$this->set_display_mode($mode);
 		}
 		
+		if (!empty($_POST['fuel_inline']) OR $this->CI->input->get('fuel_inline') != 0)
+		{
+			if (!empty($_POST['fuel_inline']) AND $_POST['fuel_inline'] != 0)
+			{
+				$inline = $this->CI->input->post('fuel_inline');
+			}
+			else if ($this->CI->input->get('fuel_inline') != 0)
+			{
+				$inline = $this->CI->input->get('fuel_inline');
+			}
+			
+			$this->set_inline($inline);
+		}
 		
 		// set the form action
 		if (empty($vars['form_action']))
@@ -293,10 +313,10 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		//if ($this->is_inline()) return;
 		if (!isset($page)) $page = uri_path(FALSE);
-		$invalid = array(
-			fuel_uri('recent')
-		);
 		
+		$invalid = array(
+			fuel_uri('recent'),
+		);
 		if (!is_ajax() AND empty($_POST) AND !in_array($page, $invalid))
 		{
 			$this->fuel->auth->set_user_data('last_page', $page);
@@ -557,16 +577,26 @@ class Fuel_admin extends Fuel_base_library {
 	
 	function is_inline()
 	{
-		if ($this->is_inline OR (!empty($this->display_mode) AND $this->display_mode != self::DISPLAY_DEFAULT))
-		{
-			return TRUE;
-		}
-		return FALSE;
+		return (bool) $this->is_inline;
+
+		//if ($this->is_inline OR (!empty($this->display_mode) AND $this->display_mode != self::DISPLAY_DEFAULT))
+		// {
+		// 	return TRUE;
+		// }
+		// return FALSE;
 	}
 	
 	function set_inline($inline)
 	{
 		$this->is_inline = (bool) $inline;
+		
+		// set the display mode if inline
+		if ($inline)
+		{
+			$this->set_panel_display('top', FALSE);
+			$this->set_panel_display('nav', FALSE);
+			//$this->set_panel_display('bottom', FALSE);
+		}
 	}
 	
 	function set_main_layout($layout)
@@ -675,7 +705,8 @@ class Fuel_admin extends Fuel_base_library {
 		
 		if ($this->is_inline())
 		{
-			$_GET['display_mode'] = $this->display_mode;
+			//$_GET['display_mode'] = $this->display_mode;
+			$_GET['inline'] = (int)$this->is_inline;
 		}
 	}
 	

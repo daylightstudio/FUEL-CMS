@@ -125,7 +125,7 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 .__fuel__ .loader { margin: 30px auto; width: 32px; height: 32px; text-align: center; background: #fff url(../images/spinner.gif) no-repeat center center; /*border: 1px solid #ddd;*/ }
 .__fuel__ .loader_sm { margin: auto; width: 16px; height: 16px; text-align: center; background: #fff url(../images/spinner_sm.gif) no-repeat center center !important; }
 
-div#__FUEL_modal__ { width: 98%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
 a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }

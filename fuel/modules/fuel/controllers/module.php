@@ -250,7 +250,7 @@ class Module extends Fuel_base_controller {
 					$link = "";
 					if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 					{
-						$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()], "'.http_build_query($_GET).'");
+						$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
@@ -533,9 +533,8 @@ class Module extends Fuel_base_controller {
 		
 		if ($inline === TRUE)
 		{
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
 		}
-
 
 		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
 		$this->fuel->admin->render($this->views['create_edit'], $vars);

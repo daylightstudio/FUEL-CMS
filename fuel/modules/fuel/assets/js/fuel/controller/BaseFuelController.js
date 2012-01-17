@@ -39,9 +39,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.pageVals = {};
 		this.cache = new jqx.Cache();
 		this.modulePath = jqx.config.fuelPath + '/' + this.module;
-		this.displayMode = $('#fuel_display_mode').val();
+		this.inline = parseInt($('#fuel_inline').val());
 		this.tableAjaxURL = this.modulePath + '/items/';
-		if (this.displayMode.length) this.tableAjaxURL += '/?display_mode=' + this.displayMode;
+		if (this.inline != 0) this.tableAjaxURL += '/?inline=' + this.inline;
 		this.treeAjaxURL = this.modulePath + '/items_tree/';
 		this.precedenceAjaxURL = this.modulePath + '/items_precedence/';
 		this.tableLoaded = false;
@@ -374,7 +374,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
 			if ($(this).val() != ''){
 				if (confirm('Restoring previous data will overwrite the currently saved data. Are you sure you want to continue?')){
-					$('#form').attr('action', _this.modulePath + '/restore');
+					var url =  _this.modulePath + '/restore';
+					if (_this.inline) url += '/?inline=' + _this.inline;
+					$('#form').attr('action', url);
 					$('#form').submit();
 				}
 			}
@@ -384,7 +386,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
 			if ($(this).val() != ''){
 				var url =  _this.modulePath + '/edit/' + $(this).val();
-				if (_this.displayMode.length) url += '/?display_mode=' + _this.displayMode;
+				if (_this.inline) url += '/?inline=' + _this.inline;
 				window.location = url;
 			}
 		});
@@ -422,7 +424,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	initSpecialFields : function(context){
 		var _this = this;
-		this._initRepeatableFields();
+	//	this._initRepeatableFields();
 		this._initFormTabs();
 //		$('#form').formBuilder().initialize();
 	//	this._initAssets(context);

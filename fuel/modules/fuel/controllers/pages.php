@@ -189,7 +189,7 @@ class Pages extends Module {
 		$this->form_builder->set_field_values($field_values);
 		
 		// set this one to FALSE because the layout selection will execute the js again
-		$this->form_builder->auto_execute_js = FALSE;
+		//$this->form_builder->auto_execute_js = FALSE;
 
 		$vars['form'] = $this->form_builder->render();
 
@@ -740,6 +740,8 @@ class Pages extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('pages_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
+		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
+		//$vars['back_action'] = fuel_uri($this->module_uri);
 		
 		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_upload'));
 		$this->fuel->admin->set_titlebar($crumbs);

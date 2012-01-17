@@ -96,7 +96,7 @@ if (fuel == undefined) var fuel = {};
 					// var docHeight = $('#fuel_main_content_inner', contentDoc).outerHeight() + heightFudge; // bottom margin is added... not sure from what though
 					//console.log(docHeight)
 					if (docHeight > 450) docHeight = 450;
-					var docWidth = 900; // 74 includes the 37 in padding on each side
+					var docWidth = 850; // 74 includes the 37 in padding on each side
 					$(iframe).height(docHeight);
 					$(iframe).width(docWidth);
 					

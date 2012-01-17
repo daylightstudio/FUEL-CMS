@@ -94,7 +94,7 @@ fuel.modalWindow = function(html, cssClass, onLoadCallback, onCloseCallback){
 			//if ($(iframe.contentWindow.parent.document).height() < docHeight){
 				$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
 		//	}
-			fuel.cascadeIframeWindowHeight(iframe.contentWindow, docHeight);
+			fuel.cascadeIframeWindowSize(iframe.contentWindow, docHeight);
 			//docHeight = docHeight - (fuel.windowLevel() * 50);
 			$(iframe).height(docHeight);
 		}, 200);
@@ -156,7 +156,7 @@ fuel.calcHeight = function(context){
 }
 
 
-fuel.cascadeIframeWindowHeight = function(win, height){
+fuel.cascadeIframeWindowSize = function(win, height){
 	var level = 0;
 	//var win = window;
 	// console.log(win.document.title)

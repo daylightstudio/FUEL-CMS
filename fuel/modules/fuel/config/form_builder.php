@@ -32,7 +32,7 @@ $config['custom_fields'] = array(
 		'filepath'	=> '',
 		'js'		=> array(
 			FUEL_FOLDER => array(
-				'editors/markitup/jquery.markitup.pack',
+				'editors/markitup/jquery.markitup',
 				'editors/markitup/jquery.markitup.set',
 				'editors/ckeditor/ckeditor.js',
 			)

@@ -7,7 +7,7 @@
 <?php elseif ($this->session->flashdata('success') AND $this->session->flashdata('success') !== TRUE AND $this->session->flashdata('success') !== '1') : ?>
 	<div class="success ico_success"><?=$this->session->flashdata('success');?></div>
 <?php else: ?>
-	<?php echo display_errors(array(), 'error ico_error')?>
+	<?php echo display_errors(NULL, 'error ico_error')?>
 <?php endif; ?>
 
 <?php if (!empty($last_updated)) : ?>
