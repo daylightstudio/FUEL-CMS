@@ -47,7 +47,7 @@ class Validate extends Fuel_base_controller {
 		
 		$crumbs = array('tools' => lang('section_tools'), lang('module_validate'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
-		$this->fuel->admin->render('validate', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/validate', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 	function html()
@@ -64,7 +64,7 @@ class Validate extends Fuel_base_controller {
 			$vars['link'] = $uri;
 			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
 			
-			$vars['body'] = $this->load->view('html_output', $vars, TRUE);
+			$vars['body'] = $this->load->view('_admin/html_output', $vars, TRUE);
 			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
 			
 			$this->output->set_output($output);
@@ -113,7 +113,7 @@ class Validate extends Fuel_base_controller {
 			$vars = $this->fuel->validate->links($uri);
 			$vars['link'] = $uri;
 			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
-			$vars['body'] = $this->load->view('links_output', $vars, TRUE);
+			$vars['body'] = $this->load->view('_admin/links_output', $vars, TRUE);
 			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
 			
 			$this->output->set_output($output);
@@ -157,7 +157,7 @@ class Validate extends Fuel_base_controller {
 			
 			$vars = $this->fuel->validate->size_report($uri);
 			$vars['edit_url'] = (!empty($page_data['id'])) ? fuel_url('pages/edit/'.$page_data['id']) : '';
-			$vars['body'] = $this->load->view('size_report_output', $vars, TRUE);
+			$vars['body'] = $this->load->view('_admin/size_report_output', $vars, TRUE);
 			$output = $this->load->view('_layouts/validate_layout', $vars, TRUE);
 			
 			$this->output->set_output($output);
@@ -185,7 +185,7 @@ class Validate extends Fuel_base_controller {
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 	
 		// render page
-		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 	
 	function _get_pages()

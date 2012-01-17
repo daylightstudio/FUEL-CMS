@@ -33,7 +33,12 @@ class Fuel_search extends Fuel_advanced_module {
 	public $connect_timeout = 10; // CURL connection timeout
 	public $title_limit = 100; // max character limit of the title of content
 	public $user_agent = 'FUEL'; // the user agent used for indexing
-	protected $_log = array(); // log of items indexed
+	
+	protected $_logs = array(); // log of items indexed
+	
+	const LOG_ERROR = 'error';
+	const LOG_REMOVED = 'removed';
+	const LOG_INDEXED = 'indexed';
 	
 	/**
 	 * Constructor - Sets Fuel_search preferences and to any children
@@ -165,7 +170,6 @@ class Fuel_search extends Fuel_advanced_module {
 		// check if indexing is enabled first
 		if ($this->config('indexing_enabled'))
 		{
-		
 			// clear out the entire index
 			if ($clear_all)
 			{
@@ -185,7 +189,6 @@ class Fuel_search extends Fuel_advanced_module {
 				}
 				else if ($index_method == 'crawl')
 				{
-				
 					// if we crawl the page, then we automatically will save it's contents to save on CURL requests'
 					return $this->crawl_pages();
 				}
@@ -194,6 +197,7 @@ class Fuel_search extends Fuel_advanced_module {
 				else
 				{
 					$pages = $this->sitemap_pages();
+
 					if (empty($pages))
 					{
 						return $this->crawl_pages();
@@ -209,6 +213,7 @@ class Fuel_search extends Fuel_advanced_module {
 				// find indexable content in the html and create the index in the database
 				$this->index_page($location);
 			}
+			return $pages;
 		}
 		
 		// if indexing isn't enabled, we'll add it to the errors list
@@ -512,7 +517,8 @@ class Fuel_search extends Fuel_advanced_module {
 			$url = site_url($url);
 		}
 
-		$curl = curl_init();
+		$this->CI->curl->initialize();
+		
 		$opts = array(
 						CURLOPT_URL => $url,
 						CURLOPT_RETURNTRANSFER => TRUE,
@@ -521,46 +527,40 @@ class Fuel_search extends Fuel_advanced_module {
 						CURLOPT_BINARYTRANSFER => TRUE,
 						CURLOPT_USERAGENT => $this->user_agent,
 					);
-		curl_setopt_array($curl, $opts);
-		
 		if ($just_header)
 		{
-			curl_setopt($curl, CURLOPT_HEADER, TRUE);
-			curl_setopt($curl, CURLOPT_NOBODY, TRUE);
+			$opts[CURLOPT_HEADER] = TRUE;
+			$opts[CURLOPT_NOBODY] = TRUE;
 		}
 		else
 		{
-			curl_setopt($curl, CURLOPT_HEADER, FALSE);
-			curl_setopt($curl, CURLOPT_NOBODY, FALSE);
+			$opts[CURLOPT_HEADER] = FALSE;
+			$opts[CURLOPT_NOBODY] = FALSE;
 		}
 		
-		$output = curl_exec($curl);
+		// add a CURL session
+		$this->CI->curl->add_session($url, $opts);
 		
-		// any errors we capture
-		$error = curl_error($curl);
+		// execut the CURL request to scrape the page
+		$output = $this->CI->curl->exec();
+		
+		// get any errors
+		$error = $this->CI->curl->error();
 		if (!empty($error))
 		{
 			$this->_add_error($error);
 		}
 		
 		// if the page doesn't return a 200 status, we don't scrape
-		$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		$http_code = $this->CI->curl->info('http_code');
+		
 		if ($http_code != 200)
 		{
-			// remove from index if exists
-			// $location = $this->get_location($url);
-			// $rec = $this->CI->search_model->find_by_location($location);
-			// if (isset($rec->id))
-			// {
-			// 	$this->remove($location);
-			// }
 			$msg = lang('search_log_index_page_error', 'HTTP Code '.$http_code.' for '.$url);
-			$this->log($msg);
+			$this->log_message($msg, self::LOG_ERROR);
 			$this->_add_error($msg);
 			return FALSE;
 		}
-		curl_close($curl);
-		
 		return $output;
 	}
 
@@ -796,7 +796,7 @@ class Fuel_search extends Fuel_advanced_module {
 		if ($saved)
 		{
 			$msg = lang('search_log_index_created', $values['location']);
-			$this->log($msg);
+			$this->log_message($msg, self::LOG_INDEXED);
 			return TRUE;
 		}
 		return FALSE;
@@ -822,7 +822,7 @@ class Fuel_search extends Fuel_advanced_module {
 		if ($deleted)
 		{
 			$msg = lang('search_log_index_removed', $location);
-			$this->log($msg);
+			$this->log_message($msg, self::LOG_REMOVED);
 			return TRUE;
 		}
 		return FALSE;
@@ -856,6 +856,8 @@ class Fuel_search extends Fuel_advanced_module {
 	{
 		$content = safe_htmlentities($content);
 		$content = strip_tags($content);
+		$content = trim(preg_replace('#(\s)\s+|(\n)\n+|(\r)\r+#m', '$1', $content));
+		$content = trim($content);
 		return $content;
 	}
 	
@@ -924,11 +926,26 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	object	search record
 	 * @return	boolean
 	 */	
-	function log($rec)
+	function log_message($rec, $type = self::LOG_ERROR)
 	{
-		$this->_log[] = $rec;
+		$this->_logs[$type][] = $rec;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of log messages
+	 * 
+	 * Used when printing out the index log informaiton
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function logs()
+	{
+		return $this->_logs;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -940,19 +957,39 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	object	search record
 	 * @return	boolean
 	 */	
-	function display_log($return = FALSE)
+	function display_log($type = 'all', $return = FALSE)
 	{
 		$str = '';
-		foreach($this->_log as $l)
+		$types = array(self::LOG_ERROR, self::LOG_REMOVED, self::LOG_INDEXED);
+		
+		if (is_string($type))
 		{
-			$str .= $l."\n";
+			if (empty($type) OR !in_array($type, $types))
+			{
+				$type = $types;
+			}
+			else
+			{
+				$type = (array) $type;
+			}
 		}
-		if (!$return)
+		foreach($types as $t)
 		{
-			echo '<pre>';
-			echo $str;
-			echo '</pre>';
+			if (isset($this->_logs[$t]))
+			{
+				foreach($this->_logs[$t] as $l)
+				{
+					$str .= $l."\n";
+				}
+				if (!$return)
+				{
+					echo '<pre>';
+					echo $str;
+					echo '</pre>';
+				}
+			}
 		}
+		
 		return $str;
 	}
 }

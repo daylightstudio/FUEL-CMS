@@ -24,7 +24,7 @@ class Toolbar extends Fuel_base_controller {
 		$vars['link'] = $url;
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('module_validate'), lang('validate_type_html')), FALSE);
-		$vars['output'] = $this->load->view('html_output', $vars, TRUE);
+		$vars['output'] = $this->load->view('_admin/html_output', $vars, TRUE);
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_html'), 'ico_tools_validate');
 		$this->fuel->admin->render('toolbar_validate', $vars, Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
@@ -42,7 +42,7 @@ class Toolbar extends Fuel_base_controller {
 		$vars['link'] = $url;
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('module_validate'), lang('validate_type_links')), FALSE);
-		$vars['output'] = $this->load->view('links_output', $vars, TRUE);
+		$vars['output'] = $this->load->view('_admin/links_output', $vars, TRUE);
 		
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_links'), 'ico_tools_validate');
@@ -61,7 +61,7 @@ class Toolbar extends Fuel_base_controller {
 		$vars['link'] = $url;
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('module_validate'), lang('validate_type_size_report')), FALSE);
-		$vars['output'] = $this->load->view('size_report_output', $vars, TRUE);
+		$vars['output'] = $this->load->view('_admin/size_report_output', $vars, TRUE);
 		
 		
 		$this->fuel->admin->set_titlebar(lang('validate_type_size_report'), 'ico_tools_validate');

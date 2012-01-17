@@ -78,7 +78,7 @@ class Settings extends Fuel_base_controller {
 		$crumbs = array(lang('module_blog_settings'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_blog_settings');
 		
-		$this->fuel->admin->render('settings', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/settings', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 
 	}
 

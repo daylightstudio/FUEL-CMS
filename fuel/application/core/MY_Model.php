@@ -2536,8 +2536,8 @@ Class Data_record {
 		$this->_CI->load->helper('typography');
 		$this->_CI->load->helper('date');
 		
-		$this->_db = $this->_CI->db;
 		$this->_parent_model = $parent;
+		$this->_db = $this->_parent_model->db();
 		
 		if (empty($this->_fields))
 		{

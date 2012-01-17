@@ -48,7 +48,6 @@ class Page_analysis extends Fuel_base_controller {
 	function index()
 	{
 		$this->_validate_user('tools/page_analysis');
-		
 		$url = '';
 		$vars['report'] = '';
 		$vars['form_action'] = 'tools/page_analysis';
@@ -62,18 +61,17 @@ class Page_analysis extends Fuel_base_controller {
 			$vars['report'] = $this->load->module_view(PAGE_ANALYSIS_FOLDER, 'report', $vars, TRUE);
 		} 
 		
-		
-		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');
 		$pages = $this->fuel->pages->options_list('all', TRUE);
 
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['url'] = $url;
 		$vars['pages_select'] = $pages;
+		
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('section_tools'), lang('module_page_analysis')), FALSE);
 		$crumbs = array('tools' => lang('section_tools'), lang('module_page_analysis'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_page_analysis');
-		$this->fuel->admin->render('page_analysis', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/page_analysis', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		
 	}
 	

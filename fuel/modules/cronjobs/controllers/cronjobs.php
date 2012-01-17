@@ -112,7 +112,7 @@ class Cronjobs extends Fuel_base_controller {
 		$vars['cronjob_lines'] = $cronjob_lines;
 		$crumbs = array('tools' => lang('section_tools'), lang('module_cronjobs'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_cronjobs');
-		$this->fuel->admin->render('cronjobs', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/cronjobs', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }
 /* End of file cronjobs.php */

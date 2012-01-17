@@ -266,10 +266,10 @@ class Curl {
 					// }
 				} while ($running > 0);
 					$this->CI->benchmark->mark('b');
-					
-					echo "<pre style=\"text-align: left;\">x";
-					print_r($this->CI->benchmark->elapsed_time('a', 'b'));
-					echo "x</pre>";
+					// 
+					// echo "<pre style=\"text-align: left;\">x";
+					// print_r($this->CI->benchmark->elapsed_time('a', 'b'));
+					// echo "x</pre>";
 					
 				if ($mrc != CURLM_OK)
 				{

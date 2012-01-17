@@ -28,7 +28,7 @@ class Tester extends Fuel_base_controller {
 		$vars['form_action'] = 'tools/tester/run';
 		$crumbs = array('tools' => lang('section_tools'), lang('module_tester'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_tester');
-		$this->fuel->admin->render('tester', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/tester', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 	
 	function run()
@@ -90,7 +90,7 @@ class Tester extends Fuel_base_controller {
 		
 		if ($is_cli)
 		{
-			$this->load->module_view(TESTER_FOLDER, 'tester_results_cli', $vars);
+			$this->load->module_view(TESTER_FOLDER, '_admin/tester_results_cli', $vars);
 		}
 		else
 		{
@@ -98,7 +98,7 @@ class Tester extends Fuel_base_controller {
 
 			$crumbs = array('tools' => lang('section_tools'), 'tools/tester' => lang('module_tester'), lang('tester_results'));
 			$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_tester');
-			$this->fuel->admin->render('tester_results', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+			$this->fuel->admin->render('_admin/tester_results', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 	}
 

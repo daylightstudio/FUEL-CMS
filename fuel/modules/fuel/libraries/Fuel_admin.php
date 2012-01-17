@@ -186,35 +186,20 @@ class Fuel_admin extends Fuel_base_library {
 			$vars['titlebar_icon'] = $this->titlebar_icon();
 		}
 		
-		
-		// if (!empty($mode) OR (empty($this->display_mode) AND !empty($_POST['fuel_display_mode']) OR $this->CI->input->get('display_mode')))
-		// {
-		// 	if (!empty($_POST['fuel_display_mode']))
-		// 	{
-		// 		$mode = $this->CI->input->post('fuel_display_mode');
-		// 	}
-		// 	else if ($this->CI->input->get('display_mode'))
-		// 	{
-		// 		$mode = $this->CI->input->get('display_mode');
-		// 	}
-		// 	
-		// 	$this->set_display_mode($mode);
-		// }
-		
 		if (!empty($mode) OR empty($this->display_mode))
 		{
 			$this->set_display_mode($mode);
 		}
 		
-		if (!empty($_POST['fuel_inline']) OR $this->CI->input->get('fuel_inline') != 0)
+		if (!empty($_POST['fuel_inline']) OR (int)$this->CI->input->get('inline') != 0)
 		{
 			if (!empty($_POST['fuel_inline']) AND $_POST['fuel_inline'] != 0)
 			{
 				$inline = $this->CI->input->post('fuel_inline');
 			}
-			else if ($this->CI->input->get('fuel_inline') != 0)
+			else if ((int) $this->CI->input->get('inline') != 0)
 			{
-				$inline = $this->CI->input->get('fuel_inline');
+				$inline = $this->CI->input->get('inline');
 			}
 			
 			$this->set_inline($inline);

@@ -34,7 +34,7 @@ class Dashboard extends Fuel_base_controller {
 				}
 			}
 		}
-		$this->load->view('dashboard', $vars);
+		$this->load->view('_admin/dashboard', $vars);
 	}
 
 }

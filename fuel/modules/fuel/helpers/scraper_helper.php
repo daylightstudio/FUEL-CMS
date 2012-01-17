@@ -25,16 +25,6 @@ function scrape_html($url, $post = array(), $opts = array())
 	return $CI->curl->exec();
 }
 
-function scrape_regex($url, $regex)
-{
-	$html = scrape_html();
-	if ($regex == 'links')
-	{
-		$regex = '/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is';
-	}
-//	preg_match_all("/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is", $html, $matches);
-}
-
 function scrape_dom($url, $xpath_query = NULL)
 {
 	if (is_http_path($url))

@@ -12,7 +12,7 @@ class Dashboard extends Fuel_base_controller {
 	function index()
 	{
 		$vars['posts'] = $this->fuel->blog->get_recent_posts();
-		$this->load->view('dashboard', $vars);
+		$this->load->view('_admin/dashboard', $vars);
 	}
 
 }

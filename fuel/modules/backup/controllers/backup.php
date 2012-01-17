@@ -82,7 +82,7 @@ class Backup extends Fuel_base_controller {
 			
 			$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
 			$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_backup');
-			$this->fuel->admin->render('backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+			$this->fuel->admin->render('_admin/backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 	}
 }

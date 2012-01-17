@@ -10,7 +10,7 @@ class Search_model extends Base_module_model {
 	
 	function __construct()
 	{
-		parent::__construct('search');
+		parent::__construct('fuel_search');
 	}
 	
 	function find_by_keyword($q, $mode = 'default', $limit = NULL, $offset = NULL, $excerpt_limit = 200)

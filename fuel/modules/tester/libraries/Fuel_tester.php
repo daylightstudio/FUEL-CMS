@@ -53,7 +53,7 @@ class Fuel_tester extends Fuel_advanced_module {
 
 	function run($tests)
 	{
-		$tmpl = ($this->is_cli()) ? $this->load_view('report_template_cli', array(), TRUE) : $this->load_view('report_template', array(), TRUE);
+		$tmpl = ($this->is_cli()) ? $this->load_view('_admin/report_template_cli', array(), TRUE) : $this->load_view('_admin/report_template', array(), TRUE);
 		$this->CI->unit->set_template($tmpl);
 		$results = array();
 		

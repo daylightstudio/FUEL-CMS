@@ -449,19 +449,10 @@ class Fuel_module extends Fuel_base_library {
 
 			foreach ($defaults as $key => $val)
 			{
-				// // look for variables on the CI object first
-				// if (!empty($this->CI->$key))
-				// {
-				// 	$info[$key] = $this->CI->$key;
-				// }
-				// 
-				// then look for variables in the module config file
-				// else if (isset($this->_init[$key]))
 				if (isset($this->_init[$key]))
 				{
 					$info[$key] = $this->_init[$key];
 				}
-				// otherwise use default
 				else
 				{
 					$info[$key] = $val;
@@ -587,10 +578,12 @@ class Fuel_module extends Fuel_base_library {
 		$model = $info['model_name'];
 		
 		$records = array();
+
 		if (method_exists($model, 'find_all_array'))
 		{
 			$records = $this->CI->$model->find_all_array();
 		}
+		
 		foreach($records as $record)
 		{
 			// need to put in global namesapce for preg_replace_callback to access

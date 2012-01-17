@@ -93,6 +93,7 @@ class Fuel_pages extends Fuel_base_library {
 				$pages = array_merge($pages, $this->$method());
 			}
 		}
+		
 		// must get the merged unique values (array_values resets the indexes)
 		$pages = array_values(array_unique($pages));
 		sort($pages);
