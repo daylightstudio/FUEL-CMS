@@ -130,7 +130,6 @@ class Fuel_assets extends Fuel_base_library {
 				$params['max_size'] = $this->fuel->config('assets_upload_max_size');
 				$params['max_width'] = $this->fuel->config('assets_upload_max_width');
 				$params['max_height'] = $this->fuel->config('assets_upload_max_height');
-				
 				if ($this->dir_filetype($asset_dir))
 				{
 					$params['allowed_types'] = $this->dir_filetype($asset_dir);
@@ -185,7 +184,7 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					return FALSE;
 				}
-
+				
 				// UPLOAD!!!
 				$this->CI->upload->initialize($params);
 				if (!$this->CI->upload->do_upload($key))
@@ -196,6 +195,7 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$this->_data[$key] = $this->CI->upload->data();
 				}
+				
 			}
 		}
 		

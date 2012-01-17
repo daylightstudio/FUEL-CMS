@@ -74,7 +74,6 @@ class Assets extends Module {
 			{
 				$url = fuel_uri($this->module.'/create/'.$dir);
 			}
-			
 			redirect($url);
 		}
 		$vars = $this->_form($dir, $inline);
@@ -84,11 +83,8 @@ class Assets extends Module {
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->set_inline($inline);
 		
-	//	$this->fuel->admin->render($this->views['create_edit'], $vars, Fuel_admin::DISPLAY_NO_ACTION);
-		
 		if ($inline === TRUE)
 		{
-			//$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 		}
 		else

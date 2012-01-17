@@ -111,18 +111,15 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			fuel.setIframeSize = function(iframe){
-				var MIN_WIDTH = 620;
+				var MIN_WIDTH = 850;
 				var contentDoc = iframe.contentDocument;
-				if ($('#login', contentDoc).size()){
-					var docHeight = fuel.calcHeight('#login', contentDoc);
-					var docWidth = $('#login', contentDoc).outerWidth(); // 74 includes the 37 in padding on each side
-				} else {
-					var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc);
-					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
-					var width2 = $('#fuel_actions', contentDoc).outerWidth();
-					var docWidth = (width1 > width2) ? width1 : width2;
-					if (docWidth < MIN_WIDTH) docWidth = MIN_WIDTH;
-				}
+				var docHeight = fuel.calcHeight(contentDoc);
+				var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
+				var width2 = $('#fuel_actions', contentDoc).outerWidth();
+				var docWidth = (width1 > width2) ? width1 : width2;
+				
+				// check if fuel_actions is there so that we don't make it too wide for single variables being edited
+				if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;
 				$(iframe).height(docHeight);
 				$(iframe).width(docWidth);
 			}
@@ -175,7 +172,7 @@ if (fuel == undefined) var fuel = {};
 				moveMarkers();
 				if (activeEditor){
 					var iframe = activeEditor.find('iframe')[0];
-					fuel.setIframeSize(iframe);
+					//fuel.setIframeSize(iframe);
 				}
 			}
 		}

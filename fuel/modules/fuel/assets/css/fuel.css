@@ -69,7 +69,7 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
-
+.MultiFile-list { float: right; }
 .tDnD_whileDrag { background-color: #ff1 !important; }
 
 /* header */

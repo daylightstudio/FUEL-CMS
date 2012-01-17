@@ -1504,12 +1504,12 @@ class Module extends Fuel_base_controller {
 			else
 			{
 				// do post processing of updating field values if they changed during upload due to overwrite being FALSE
-				$uploaded_data = $this->fuel->assets->uploaded_data($key);
+				$uploaded_data = $this->fuel->assets->uploaded_data();
 				
 				foreach($_FILES as $key => $file)
 				{
 					// check if the file name is changed due to overwrite being set to FALSE
-					if ($uploaded_data[$key]['file_name'] != $uploaded_data[$key]['orig_name'])
+					if (isset($uploaded_data[$key]) AND $uploaded_data[$key]['file_name'] != $uploaded_data[$key]['orig_name'])
 					{
 						$file_tmp = current(explode('___', $key));
 

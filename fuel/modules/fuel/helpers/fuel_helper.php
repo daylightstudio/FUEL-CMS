@@ -329,6 +329,22 @@ function fuel_cache_id($location = NULL)
 function fuel_url($uri = '', $query_string = TRUE)
 {
 	$CI =& get_instance();
+	$uri = fuel_uri($uri, $query_string);
+	return site_url($uri);
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns the FUEL admin URI path
+ *
+ * @access	public
+ * @param	string
+ * @return	string
+ */
+function fuel_uri($uri = '', $query_string = TRUE)
+{
+	$CI =& get_instance();
 	if (is_bool($query_string) AND $query_string !== FALSE)
 	{
 		$query_string = $_GET;
@@ -349,22 +365,7 @@ function fuel_url($uri = '', $query_string = TRUE)
 			$q = (strncmp($query_string, '?', 1) !== 0) ? '?'.$query_string : $query_string;
 		}
 	}
-	return site_url($CI->fuel->config('fuel_path').$uri.$q);
-}
-
-// --------------------------------------------------------------------
-
-/**
- * Returns the FUEL admin URI path
- *
- * @access	public
- * @param	string
- * @return	string
- */
-function fuel_uri($uri = '')
-{
-	$CI =& get_instance();
-	return $CI->fuel->config('fuel_path').$uri;
+	return $CI->fuel->config('fuel_path').$uri.$q;
 }
 
 // --------------------------------------------------------------------

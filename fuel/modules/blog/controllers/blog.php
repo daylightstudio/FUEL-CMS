@@ -385,15 +385,15 @@ class Blog extends Blog_base_controller {
 			{				
 				if ( $this->akismet->is_error('AKISMET_INVALID_KEY') )
 				{
-					log_error('AKISMET :: Theres a problem with the api key');
+					log_message('error', 'AKISMET :: Theres a problem with the api key');
 				}
 				elseif ( $this->akismet->is_error('AKISMET_RESPONSE_FAILED') )
 				{
-					log_error('AKISMET :: Looks like the servers not responding');
+					log_message('error', 'AKISMET :: Looks like the servers not responding');
 				}
 				elseif ( $this->akismet->is_error('AKISMET_SERVER_NOT_FOUND') )
 				{
-					log_error('AKISMET :: Wheres the server gone?');
+					log_message('error', 'AKISMET :: Wheres the server gone?');
 				}
 			}
 			else

@@ -209,7 +209,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 
 			if ($.cookie(itemViewsCookieId) == 'tree'){
 				$('#toggle_tree').click();
-				
 			} else {
 				$('#toggle_list').click();
 			}
@@ -227,6 +226,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		} else {
 			this.redrawTable();
 		}
+		
 		
 		$('#form').submit(function(){
 			$('#toggle_list').click();

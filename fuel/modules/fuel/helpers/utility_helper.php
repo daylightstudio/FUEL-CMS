@@ -147,6 +147,18 @@ function print_obj($obj, $return = false)
 // --------------------------------------------------------------------
 
 /**
+ * Logs an error message to logs file
+ *
+ * @param	string	Error message
+ * @return 	void
+ */
+function log_error($error) {
+	log_message('error', $error);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the global CI object
  *
  * @return 	object

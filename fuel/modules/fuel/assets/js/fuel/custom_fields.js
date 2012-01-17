@@ -261,12 +261,12 @@ fuel.fields.asset_field = function(context){
 				btnLabel = fuel.lang('btn_image');
 				break;
 			case 'swf': case 'flash':
-				btnLabel = fuel.lang('btn_flast');
+				btnLabel = fuel.lang('btn_flash');
 				break;
 			default :
 				btnLabel = fuel.lang('btn_asset');
 		}
-	//	$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 	});
 
 	$('.asset_select_button', context).click(function(e){
@@ -279,7 +279,7 @@ fuel.fields.asset_field = function(context){
 	
 	// asset upload 
 	var showAssetUpload = function(url){
-		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal');
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -375,7 +375,7 @@ fuel.fields.inline_edit_field = function(context){
 	var $modal = null;
 	var selected = null;
 	var editModule = function(url, onLoadCallback, onCloseCallback){
-		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', onLoadCallback, onCloseCallback);
 		
 		// bind listener here because iframe gets removed on close so we can't grab the id value on close

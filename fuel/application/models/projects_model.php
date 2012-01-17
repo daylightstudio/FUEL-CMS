@@ -57,13 +57,13 @@ class Projects_model extends Base_module_model {
 		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		$category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], 'fuel_blog_categories.published' => 'yes'))) : array();
 		
-		$fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'blog_categories', 'options' => $category_options);
+		$fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'projects', 'options' => $category_options);
 
 		//$fields['name'] = array();
 		$fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
 		
-		$fields['test_image'] = array('type' => 'asset', 'upload' => FALSE);
+		$fields['test_image'] = array('type' => 'asset', 'upload' => TRUE);
 		$fields['numeric'] = array('type' => 'number', 'negative' => TRUE, 'decimal' => FALSE);
 		$fields['currency'] = array('type' => 'currency');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
