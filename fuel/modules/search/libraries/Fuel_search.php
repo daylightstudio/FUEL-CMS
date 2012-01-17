@@ -27,7 +27,7 @@
 
 // --------------------------------------------------------------------
 
-class Fuel_search {
+class Fuel_search extends Fuel_advanced_module {
 	
 	public $timeout = 20; // CURL timeout
 	public $connect_timeout = 10; // CURL connection timeout
@@ -45,12 +45,10 @@ class Fuel_search {
 	function __construct($params = array())
 	{
 		$this->CI =& get_instance();
-		$this->CI->load->module_config(SEARCH_FOLDER, 'search');
-		$this->CI->load->module_language(SEARCH_FOLDER, 'search');
-		$this->CI->load->module_model(SEARCH_FOLDER, 'search_model');
-		$this->CI->load->module_library(FUEL_FOLDER, 'fuel_page');
-		$this->CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-		
+		// $this->CI->load->module_config(SEARCH_FOLDER, 'search');
+		// $this->CI->load->module_language(SEARCH_FOLDER, 'search');
+		// $this->CI->load->module_model(SEARCH_FOLDER, 'search_model');
+
 		// initialize object if any parameters
 		if (!empty($params))
 		{
@@ -166,7 +164,7 @@ class Fuel_search {
 	 * Indexes the data for the search
 	 *
 	 * @access	public
-	 * @return	array
+	 * @return	mixed
 	 */	
 	function index($pages = array(), $scope = 'pages', $clear_all = FALSE)
 	{
@@ -234,11 +232,11 @@ class Fuel_search {
 	 *
 	 * @access	public
 	 * @param	string
-	 * @return	array
+	 * @return	boolean
 	 */	
 	function is_indexable($location)
 	{
-		// sitemap.xml and robots.txt locations are automatically igonored
+		// sitemap.xml and robots.txt locations are automatically ignored
 		$auto_ignore = array(
 			'sitemap.xml',
 			'robots.txt',
@@ -415,6 +413,8 @@ class Fuel_search {
 		
 		$dom = new DOMDocument; 
 		$dom->preserveWhiteSpace = FALSE;
+		
+		$sitemap_xml = preg_replace('#<\?xml.+\?>#U', '', $sitemap_xml);
 		$dom->loadXML($sitemap_xml); 
 		$locs = $dom->getElementsByTagName('loc');
 		
@@ -725,10 +725,11 @@ class Fuel_search {
 		if (is_null($preview_paths))
 		{
 			// get all the preview paths
-			$modules = $this->CI->fuel_modules->get_modules();
+			$modules = $this->CI->fuel->modules->get();
 			foreach($modules as $mod => $module)
 			{
-				$info = $this->CI->fuel_modules->info($mod);
+				//$info = $this->CI->fuel_modules->info($mod);
+				$info = $module->info($mod);
 				if (!empty($info['preview_path']))
 				{
 					$preview_paths[$mod] = $info['preview_path'];
@@ -736,16 +737,19 @@ class Fuel_search {
 			}
 		}
 		
-		foreach($preview_paths as $mod => $path)
+		if (is_array($preview_paths))
 		{
-			// ignore the pages preview path which will be assigned by default if no matches
-			if ($path != '{location}')
+			foreach($preview_paths as $mod => $path)
 			{
-				$location = $this->get_location($location);
-				$path_regex = preg_replace('#(.+/)\{.+\}(.*)#', '$1.+$2', $path);
-				if (preg_match('#'.$path_regex.'#', $location))
+				// ignore the pages preview path which will be assigned by default if no matches
+				if ($path != '{location}')
 				{
-					return $mod;
+					$location = $this->get_location($location);
+					$path_regex = preg_replace('#(.+/)\{.+\}(.*)#', '$1.+$2', $path);
+					if (preg_match('#'.$path_regex.'#', $location))
+					{
+						return $mod;
+					}
 				}
 			}
 		}

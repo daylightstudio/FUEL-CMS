@@ -199,7 +199,10 @@ class Pages extends Module {
 		// page variables
 		//$fields = $this->fuel_layouts->fields($layout, empty($id));
 		$layout =  $this->fuel->layouts->get($layout);
-		$fields = $layout->fields();
+		if (!empty($layout))
+		{
+			$fields = $layout->fields();
+		}
 
 		/*****************************************************************************
 		// check for twin view file, controller and extra routing to generate warnings

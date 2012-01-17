@@ -23,5 +23,6 @@ $config['modules']['search'] = array(
 	'default_col' => 'date_added',
 	'default_order' => 'desc',
 	'sanitize_input' => array('template','php'),
-	'folder' => 'search'
+	'folder' => 'search',
+	'view_location' => 'fuel'
 );

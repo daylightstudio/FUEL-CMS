@@ -29,7 +29,7 @@ $config['search']['query_type'] = 'like';
 
 // search page content delimiters. used for scraping page content. Can be an HTML node or xpath syntax (e.g. //div[@id="main"])
 $config['search']['delimiters'] = array(
-	'<article id="primary">', 
+	'<div id="main_inner">', 
 );
 
 // the URI locations of pages to exclude from the index. 

@@ -23,6 +23,7 @@ $config['default_pwd'] = 'admin';
 // specifies which modules are allowed to be used in the fuel admin
 $config['modules_allowed'] = array(
 	'user_guide',
+	'search',
 	'blog',
 	'backup',
 	'page_analysis',
