@@ -160,9 +160,9 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @return	array
 	 */	
-	public function &db()
+	public function db()
 	{
-// 		$this->_check_readonly();
+ 		//$this->_check_readonly();
 		return $this->db;
 	}
 	
@@ -2515,7 +2515,7 @@ Class Data_record {
 	 * Constructor - requires a result set from MY_Model. 
 	 * @param	object	parent object
 	 */
-	public function __construct(&$parents = NULL)
+	public function __construct(&$parent = NULL)
 	{
 		if (!empty($parent)) $this->initialize($parent);
 	}

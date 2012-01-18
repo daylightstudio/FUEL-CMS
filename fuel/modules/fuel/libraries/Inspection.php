@@ -625,12 +625,18 @@ class Inspection_comment {
 				}
 				if (!$long)
 				{
+					// make any links hot
+					$d = auto_link($d);
 					return $d;
 				}
 
 				$desc .= $d.' ';
 			}
 		}
+		
+		// make any links hot
+		$desc = auto_link($desc);
+		
 		return trim($desc);
 	}
 	

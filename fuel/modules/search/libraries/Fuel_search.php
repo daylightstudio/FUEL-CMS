@@ -103,7 +103,7 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	string
 	 * @return	array
 	 */	
-	function query($q = '', $limit, $offset, $excerpt_limit)
+	function query($q = '', $limit = 100, $offset = 0, $excerpt_limit = 200)
 	{
 		$results = $this->CI->search_model->find_by_keyword($q, $limit, $offset, $excerpt_limit);
 		return $results;
@@ -957,7 +957,7 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	object	search record
 	 * @return	boolean
 	 */	
-	function display_log($type = 'all', $return = FALSE)
+	function display_log($type = 'all', $tag = 'span', $return = FALSE)
 	{
 		$str = '';
 		$types = array(self::LOG_ERROR, self::LOG_REMOVED, self::LOG_INDEXED);
@@ -979,13 +979,19 @@ class Fuel_search extends Fuel_advanced_module {
 			{
 				foreach($this->_logs[$t] as $l)
 				{
+					if (!empty($tag))
+					{
+						$str .= '<'.$tag.' class="'.$t.'">';
+					}
 					$str .= $l."\n";
+					if (!empty($tag))
+					{
+						$str .= '</'.$tag.'>';
+					}
 				}
 				if (!$return)
 				{
-					echo '<pre>';
 					echo $str;
-					echo '</pre>';
 				}
 			}
 		}

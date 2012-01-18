@@ -53,7 +53,7 @@ class Fuel_navigation extends Fuel_module {
 						'first_class' => 'first', 
 						'last_class' => 'last', 
 						'depth' => NULL, 
-						'use_titles' => TRUE,
+						'use_titles' => FALSE,
 						'container_tag' => 'ul',
 						'container_tag_attrs' => '',
 						'container_tag_id' => '',

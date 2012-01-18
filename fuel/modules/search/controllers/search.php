@@ -5,7 +5,6 @@ class Search extends CI_Controller {
 	{
 		parent::__construct();
 		if (!defined('SEARCH_FOLDER')) show_404();
-		$this->load->library('fuel_search');
 	}
 	
 	function index()
@@ -15,8 +14,11 @@ class Search extends CI_Controller {
 		
 		// $this->fuel_search->index();
 		// $this->fuel_search->display_log();
-		$q = '(lore\'m AND "ipsum") OR test NOT whatever';
-		$vars['results'] = $this->fuel_search->query($q, '', '', 300);
+		//$q = 'lorem';
+		// $q = 'test';
+		$q = $this->input->get('q');
+
+		$vars['results'] = $this->fuel->search->query($q);
 		$vars['q'] = $q;
 		$this->load->view('results', $vars);
 	}

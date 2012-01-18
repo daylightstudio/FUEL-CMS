@@ -25,7 +25,7 @@ $config['search']['user_agent'] = 'FUEL';
 
 // value can be either "like" which will do a %word% query OR "match" which will use the MATCH / AGAINST syntax
 // use "like" if you have a small number of records
-$config['search']['query_type'] = 'like';
+$config['search']['query_type'] = 'match';
 
 // search page content delimiters. used for scraping page content. Can be an HTML node or xpath syntax (e.g. //div[@id="main"])
 $config['search']['delimiters'] = array(

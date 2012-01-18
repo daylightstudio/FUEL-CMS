@@ -41,7 +41,7 @@ class Menu {
 	public $first_class = 'first'; // the css class for the first menu item
 	public $last_class = 'last';  // the css class for the last menu item
 	public $depth = NULL; // the depth of the menu to render at
-	public $use_titles = TRUE; // use the title attribute in the links
+	public $use_titles = FALSE; // use the title attribute in the links
 	public $root_value = NULL; // the root parent value... can be NULL or 0
 	public $container_tag = 'ul'; // the html tag for the container of a set of menu items
 	public $container_tag_attrs = ''; // html attributes for the container tag

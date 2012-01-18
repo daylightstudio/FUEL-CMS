@@ -430,7 +430,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (substr($model, strlen($model) - 6) !='_model')
 		{
-			$name = $model;
+			//$name = $model;
 			$model = $model.'_model';
 		}
 		$this->CI->load->module_model($this->folder(), $model, $name);
