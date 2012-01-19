@@ -34,41 +34,42 @@ class Fuel_custom_fields {
 	protected $CI;
 	public $datetime_js = 'datetime_field';
 	
-	public function __construct()
+	function __construct()
 	{
 		$this->CI =& get_instance();
 	}
 	
-	public function datetime($params)
-	{
-		$form_builder =& $params['instance'];
-		$params['class'] = 'datepicker '.$params['class'];
-		$str = $form_builder->create_date($params);
-		$str .= ' ';
-		$str .= $form_builder->create_time($params);
-		return $str;
-	}
-
-	public function multi($params)
-	{
-		$form_builder =& $params['instance'];
-		return $form_builder->create_multi($params);
-	}
-	
-	public function wysiwyg($params)
+	// function datetime($params)
+	// {
+	// 	$form_builder =& $params['instance'];
+	// 	$params['class'] = 'datepicker '.$params['class'];
+	// 	$str = $form_builder->create_datetime($params);
+	// 	return $str;
+	// }
+	// 
+	// function multi($params)
+	// {
+	// 	$form_builder =& $params['instance'];
+	// 	return $form_builder->create_multi($params);
+	// }
+	// 
+	function wysiwyg($params)
 	{
 		$form_builder =& $params['instance'];
 		return $form_builder->create_textarea($params);
-		
 	}
 	
-	public function file($params)
+	function file($params)
 	{
 		$form_builder =& $params['instance'];
+		if (!empty($params['multiple']))
+		{
+			$params['class'] = 'multifile '.$params['class'];
+		}
 		return $form_builder->create_file($params);
 	}
 
-	public function asset($params)
+	function asset($params)
 	{
 		$this->CI->load->helper('file');
 		
@@ -91,10 +92,10 @@ class Fuel_custom_fields {
 			$params['after_html'] = $img;
 		}
 		$params['type'] = '';
-		return $form_builder->create_field($params);
+		return $form_builder->create_text($params);
 	}
 
-	public function inline_edit($params)
+	function inline_edit($params)
 	{
 		$form_builder =& $params['instance'];
 		
@@ -128,7 +129,7 @@ class Fuel_custom_fields {
 		
 	}
 
-	public function linked($params)
+	function linked($params)
 	{
 		$form_builder =& $params['instance'];
 		$str = '';
@@ -144,7 +145,7 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
-	public function fillin($params)
+	function fillin($params)
 	{
 		$form_builder =& $params['instance'];
 		
@@ -161,45 +162,19 @@ class Fuel_custom_fields {
 		return $form_builder->create_text($params);
 	}
 
-	// public function number($params)
-	// {
-	// 	$form_builder =& $params['instance'];
-	// 	
-	// 	$numeric_class = 'numeric';
-	// 	$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
-	// 	
-	// 	$decimal = (!empty($params['decimal'])) ? 1 : 0;
-	// 	$negative = (!empty($params['negative'])) ? 1 : 0;
-	// 	
-	// 	if (empty($params['size']))
-	// 	{
-	// 		$params['size'] = 10;
-	// 	}
-	// 
-	// 	if (empty($params['max_length']))
-	// 	{
-	// 		$params['max_length'] = 10;
-	// 	}
-	// 
-	// 	// set data values for jquery plugin to use
-	// 	$params['data'] = array(
-	// 		'decimal' => $decimal,
-	// 		'negative' => $negative,
-	// 		);
-	// 	return $form_builder->create_text($params);
-	// }
-	// 
-	// public function email($params)
-	// {
-	// 	$form_builder =& $params['instance'];
-	// 
-	// 	$email_class = 'email';
-	// 	$params['type'] = 'email';
-	// 	$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
-	// 	return $form_builder->create_text($params);
-	// }
-	// 
-	public function template($params)
+	function number($params)
+	{
+		$form_builder =& $params['instance'];
+		return $form_builder->create_number($params);
+	}
+	
+	function email($params)
+	{
+		$form_builder =& $params['instance'];
+		return $form_builder->create_email($params);
+	}
+	
+	function template($params)
 	{
 		$this->CI->load->library('parser');
 		$form_builder =& $params['instance'];
@@ -300,7 +275,7 @@ class Fuel_custom_fields {
 		return $str;
 	}
 	
-	public function nested($params)
+	function nested($params)
 	{
 		$this->CI->load->library('parser');
 		$form_builder =& $params['instance'];

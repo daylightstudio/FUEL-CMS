@@ -85,13 +85,15 @@ Class Form_builder {
 	public $auto_execute_js = TRUE; // autmoatically execute the javascript for the form
 	public $html_prepend = ''; // prepended HTML to the form HINT: Can include JS script tags
 	public $html_append = ''; // appended HTML to the form HINT: Can include JS script tags
+	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
 	
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
 	protected $_cached; // cached parameters
 	protected $_js; // to be executed once per render
+	protected $_css; // to be executed once per render
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
-	
+
 	/**
 	 * Constructor - Sets Form_builder preferences
 	 *
@@ -552,33 +554,9 @@ Class Form_builder {
 		}
 		$str .= "</div>\n";
 		
-		if ($this->use_form_tag) 
-		{
-			$this->_html .= $this->form->open($this->form_attrs);
-		}
-		if (!empty($this->fieldset))
-		{
-			$this->_html .= $this->form->fieldset_open($this->fieldset);
-		}
-		$this->_html .= $begin_str;
-		$this->_html .= $str;
-		$this->_html .= $end_str;
+		$str = $begin_str . $str . $end_str;
+		$this->_close_form($str);
 		
-		if (!empty($this->key_check))
-		{
-			$this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
-		}
-		if (!empty($this->fieldset))
-		{
-			$this->_html .= $this->form->fieldset_close();
-		}
-		
-		if ($this->use_form_tag)
-		{
-			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
-		}
-		$this->_html .= $this->_render_js();
-		$this->_html .= $this->html_append;
 		return $this->_html;
 	}
 	// --------------------------------------------------------------------
@@ -825,17 +803,10 @@ Class Form_builder {
 			$str .= "</td>\n</tr>\n";
 		}
 		$str .= $this->_close_table();
-		
-		if ($this->use_form_tag) $this->_html .= $this->form->open($this->form_attrs);
-		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_open($this->fieldset);
-		$this->_html .= $begin_str;
-		$this->_html .= $str;
-		$this->_html .= $end_str;
-		if (!empty($this->key_check)) $this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
-		if (!empty($this->fieldset)) $this->_html .= $this->form->fieldset_close();
-		if ($this->use_form_tag) $this->_html .= $this->form->close();
-		$this->_html .= $this->_render_js();
-		$this->_html .= $this->html_append;
+
+		$str = $begin_str . $str . $end_str;
+		$this->_close_form($str);
+
 		return $this->_html;
 	}
 
@@ -938,6 +909,48 @@ Class Form_builder {
 		}
 		return $str;
 	}
+	
+	// --------------------------------------------------------------------
+	/**
+	 * Outputs the last part of the form rendering for both a table and div
+	 * 
+	 * @access	public
+	 * @param	string	
+	 * @return	void
+	 */
+	protected function _close_form($str)
+	{
+		if ($this->use_form_tag) 
+		{
+			$this->_html .= $this->form->open($this->form_attrs);
+		}
+		if (!empty($this->fieldset))
+		{
+			$this->_html .= $this->form->fieldset_open($this->fieldset);
+		}
+		$this->_html .= $str;
+		
+		if (!empty($this->key_check))
+		{
+			$this->_html .= $this->create_hidden(array('name' => $this->key_check_name, 'value' => $this->key_check));
+		}
+		if (!empty($this->fieldset))
+		{
+			$this->_html .= $this->form->fieldset_close();
+		}
+		
+		if ($this->use_form_tag)
+		{
+			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
+		}
+		$this->_html .= $this->_render_js();
+		$this->_html .= $this->html_append;
+		
+		// apply any CSS 
+		$this->_apply_css();
+		return $this->_html;
+	}
+	
 
 	// --------------------------------------------------------------------
 
@@ -975,6 +988,8 @@ Class Form_builder {
 			'pre_process' => NULL,
 			'post_process' => NULL,
 			'js' => '',
+			'css' => '',
+			'represents' => '',
 			'data' => array(),
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -1058,11 +1073,22 @@ Class Form_builder {
 			unset($params['maxlength']);
 		}
 		
-		
 		// take out javascript so we execute it only once per render
 		if (!empty($params['js']))
 		{
 			$this->_js[$params['type']] = $params['js'];
+		}
+
+		// take out css so we execute it only once per render
+		if (!empty($params['css']))
+		{
+			$this->_css[$params['type']] = $params['css'];
+		}
+		
+		// says whether this field can represent other field types
+		if (!empty($params['represents']))
+		{
+			$this->representatives[$params['type']] = $params['represents'];
 		}
 		
 		// set the field type CSS class
@@ -1117,12 +1143,25 @@ Class Form_builder {
 		if (is_array($params) AND isset($this->custom_fields[$params['type']]))
 		{
 			$func = $this->custom_fields[$params['type']];
+
 			if (is_a($func, 'Form_builder_field'))
 			{
 				// give custom fields a reference to the current object
 				$params['instance'] =& $this;
 				$this->_rendering = TRUE;
 				
+				// take out CSS so we execute it only once per render
+				if (!empty($params['css']))
+				{
+					$this->_css[$params['type']] = $params['css'];
+				}
+
+				// same here... but we are looking for CSS on the object
+				if (!empty($func->css))
+				{
+					$this->_css[$params['type']] = $func->css;
+				}
+
 				// take out javascript so we execute it only once per render
 				if (!empty($params['js']))
 				{
@@ -1139,6 +1178,7 @@ Class Form_builder {
 			}
 			else if (is_callable($func))
 			{
+				$this->_rendering = TRUE;
 				$field = $this->create_custom($func, $params);
 			}
 		}
@@ -1178,30 +1218,61 @@ Class Form_builder {
 	 */
 	public function create_field($params, $normalize = TRUE)
 	{
+		// needed to prevent runaway loops from custom fields
+		if ($this->_rendering)
+		{
+			return FALSE;
+		}
+		
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
+
+		// now we look at all the fields that may represent other field types based on parameters
+		if (!empty($this->representatives) AND is_array($this->representatives))
+		{
+			foreach($this->representatives as $key => $val)
+			{
+				$matched = FALSE;
+				
+				// if the represntative is an associative array with keys being parameters to match (e.g. type and name), then we loop through those parameters to find a match
+				if (is_array($val) AND is_string(key($val)))
+				{
+					foreach($val as $k => $v)
+					{
+						$matched = (is_array($v) AND in_array($params[$k], $v) OR (is_string($v) AND preg_match('#'.$v.'#', $params[$k]))) ? TRUE : FALSE;
+						if (!$matched)
+						{
+							break;
+						}
+					}
+				}
+				
+				// if the representative is an array and the param type is in that array then we are a match
+				else if (is_array($val) AND in_array($params['type'], $val))
+				{
+					$matched = TRUE;
+				}
+				
+				// if the representative is a string, then we do a regex to see if we are a match
+				else if (is_string($val) AND preg_match('#'.$val.'#', $params['type']))
+				{
+					$matched = TRUE;
+				}
+				
+				// if we matched,then set the param type to it's representative and we break the loop and continue on
+				if ($matched)
+				{
+					$params['type'] = $key;
+					break;
+				}
+			}
+		}
+		
 		$str = $this->_render_custom_field($params);
 		
 		if (!$str)
 		{
 			switch($params['type'])
 			{
-				case 'text' : case 'textarea' : case 'longtext' :  case 'mediumtext' :
-					$str = $this->create_textarea($params);
-					break;
-				case 'int' : case 'smallint' : case 'mediumint' :  case 'bigint' :
-					$str = $this->create_number($params);
-					break;
-				case 'datetime': case 'timestamp' :
-					$str = $this->create_date($params);
-					$str .= ' ';
-					$str .= $this->create_time($params);
-					break;
-				case 'multi' : case 'array' :
-					$str = $this->create_multi($params);
-					break;
-				case 'blob' : case 'file' :
-					$str = $this->create_file($params);
-					break;
 				case 'none': case 'blank' :
 					$str = '';
 					break;
@@ -1397,7 +1468,6 @@ Class Form_builder {
 	public function create_textarea($params)
 	{
 		$params = $this->normalize_params($params);
-		
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
@@ -1657,8 +1727,8 @@ Class Form_builder {
 			$overwrite = ($params['overwrite'] == 1 OR $params['overwrite'] === TRUE OR $params['overwrite'] === 'yes' OR $params['overwrite'] === 'y') ? '1' : '0';
 			if (!empty($params['display_overwrite']))
 			{
-				$file .= ' &nbsp; '.$this->form->checkbox($params['name'].'_overwrite', 1, Form::do_checked($overwrite));
-				$file .= ' <span class="overwrite_field">'.$this->create_label($this->_label_lang('overwrite')).'</span>';
+				$file .= ' &nbsp; <span class="overwrite_field">'.$this->form->checkbox($params['name'].'_overwrite', 1, Form::do_checked($overwrite));
+				$file .= ' '. $this->create_label($this->_label_lang('overwrite')).'</span>';
 			}
 			else
 			{
@@ -1787,7 +1857,7 @@ Class Form_builder {
 		$numeric_class = 'numeric';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
 		$params['type'] = 'number';
-		$decimal = (!empty($params['decimal'])) ? 1 : 0;
+		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
 		$negative = (!empty($params['negative'])) ? 1 : 0;
 		
 		if (empty($params['size']))
@@ -2018,120 +2088,7 @@ Class Form_builder {
 		}
 		return $str;
 	}
-	
-	// --------------------------------------------------------------------
 
-	/**
-	 * Creates fields based on a string or template view file. 
-	 *
-	 * You can use {field_name} for placeholders
-	 * 
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	// --------------------------------------------------------------------
-
-	/**
-	 * Creates fields based on a string or template view file. 
-	 *
-	 * You can use {field_name} for placeholders
-	 * 
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	// public function create_template($params)
-	// 	{
-	// 		$CI =& get_instance();
-	// 		$CI->load->library('parser');
-	// 		
-	// 		$params = $this->normalize_params($params);
-	// 		
-	// 		$str = '';
-	// 		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))
-	// 		{
-	// 			return $str;
-	// 		}
-	// 		
-	// 		if (empty($params['template']) AND !empty($params['view']))
-	// 		{
-	// 			$str = $CI->load->view($params['view'], $params['value'], TRUE);
-	// 		}
-	// 		else
-	// 		{
-	// 			$str = $params['template'];
-	// 		}
-	// 		
-	// 		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
-	// 		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
-	// 		
-	// 		$fields = array();
-	// 		$i = 0;
-	// 		
-	// 		if (!is_array($params['value']))
-	// 		{
-	// 			$params['value'] = array();
-	// 		}
-	// 		
-	// 		if ($params['value'] == '')
-	// 		{
-	// 			$params['value'] = array();
-	// 		}
-	// 		
-	// 		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
-	// 		if ($num == 0) $num = 1;
-	// 		
-	// 		for ($i = 0; $i < $num; $i++)
-	// 		{
-	// 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
-	// 			foreach($params['fields'] as $key => $field)
-	// 			{
-	// 				$field['value'] = (isset($value[$key])) ? $value[$key] : $value;
-	// 				
-	// 				if ($repeatable)
-	// 				{
-	// 					if (!empty($this->name_array))
-	// 					{
-	// 						$field['name'] = $params['name'].'['.$i.']['.$key.']';
-	// 					}
-	// 					else
-	// 					{
-	// 						$field['name'] = $params['orig_name'].'['.$i.']['.$key.']';
-	// 					}
-	// 					$fields[$i][$key] = $this->create_field($field);
-	// 					$fields[$i]['index'] = $i;
-	// 					$fields[$i]['num'] = $i + 1;
-	// 				}
-	// 				else
-	// 				{
-	// 					if (!empty($this->name_array))
-	// 					{
-	// 						$field['name'] = $params['name'].'['.$key.']';
-	// 					}
-	// 					else
-	// 					{
-	// 						$field['name'] = $params['orig_name'].'['.$key.']';
-	// 					}
-	// 					$fields[$key] = $this->create_field($field);
-	// 				}
-	// 			}
-	// 		}
-	// 		
-	// 		if ($repeatable)
-	// 		{
-	// 			$vars['fields'] = $fields;
-	// 		}
-	// 		else
-	// 		{
-	// 			$vars = $fields;
-	// 		}
-	// 		
-	// 		// parse the string
-	// 		$str = $CI->parser->parse_simple($str, $vars);
-	// 		return $str;
-	// 	}
-	
 	// --------------------------------------------------------------------
 
 	/**
@@ -2141,34 +2098,34 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	// public function create_nested($params)
-	// 	{
-	// 		$CI =& get_instance();
-	// 		$CI->load->library('parser');
-	// 		$fb_class = get_class($this);
-	// 		
-	// 		if (empty($params['fields']) OR !is_array($params['fields']))
-	// 		{
-	// 			return '';
-	// 		}
-	// 		if (empty($params['init']))
-	// 		{
-	// 			$params['init'] = array();
-	// 		}
-	// 		
-	// 		if (empty($params['value']))
-	// 		{
-	// 			$params['value'] = array();
-	// 		}
-	// 		
-	// 		$form_builder = new $fb_class($params['init']);
-	// 		$form_builder->set_fields($params['fields']);
-	// 		$form_builder->submit_value = '';
-	// 		$form_builder->set_validator($this->form->validator);
-	// 		$form_builder->use_form_tag = FALSE;
-	// 		$form_builder->set_field_values($params['value']);
-	// 		return $form_builder->render();
-	// 	}
+	public function create_nested($params)
+	{
+		$CI =& get_instance();
+		$CI->load->library('parser');
+		$fb_class = get_class($this);
+		
+		if (empty($params['fields']) OR !is_array($params['fields']))
+		{
+			return '';
+		}
+		if (empty($params['init']))
+		{
+			$params['init'] = array();
+		}
+		
+		if (empty($params['value']))
+		{
+			$params['value'] = array();
+		}
+		
+		$form_builder = new $fb_class($params['init']);
+		$form_builder->set_fields($params['fields']);
+		$form_builder->submit_value = '';
+		$form_builder->set_validator($this->form->validator);
+		$form_builder->use_form_tag = FALSE;
+		$form_builder->set_field_values($params['value']);
+		return $form_builder->render();
+	}
 
 	// --------------------------------------------------------------------
 
@@ -2217,9 +2174,16 @@ Class Form_builder {
 			// must have at least a function value otherwise you get nada
 			if (empty($custom_field['function']))
 			{
-				return FALSE;
+				if (method_exists($this, 'create_'.$key))
+				{
+					$custom_field['function'] = array($this, 'create_'.$key);
+				}
+				else
+				{
+					return FALSE;
+				}
 			}
-			
+
 			// if there's a filepath, then load it and instantiate the any class '
 			if (!empty($custom_field['filepath']))
 			{
@@ -2253,24 +2217,24 @@ Class Form_builder {
 			}
 			
 			// if no class parameter is set, then it will assume it's a helper'
-			else
+			else 
 			{
-				if (is_array($custom_field['function']))
+				if (!is_callable($custom_field['function']))
 				{
-					$module = key($custom_field['function']);
-					$helper = current($custom_field['function']);
-					$CI->load->module_library($module, $helper, $custom_field);
+					if (is_array($custom_field['function']) AND is_string(key($custom_field['function'])))
+					{
+						$module = key($custom_field['function']);
+						$helper = current($custom_field['function']);
+						$CI->load->module_library($module, $helper, $custom_field);
+					}
+					else 
+					{
+						$CI->load->helper($custom_field['function'], $custom_field);
+					}
 				}
-				else
-				{
-					$CI->load->helper($custom_field['function'], $custom_field);
-				}
-				
 				$func = $custom_field['function'];
-				
 			}
 			$params = $custom_field;
-			
 		}
 		
 		// if it's a simple function, then we'll just use this for rendering
@@ -2278,7 +2242,6 @@ Class Form_builder {
 		{
 			$func = $custom_field;
 		}
-		
 		else
 		{
 			return FALSE;
@@ -2289,6 +2252,13 @@ Class Form_builder {
 		$field = new Form_builder_field($params);
 		
 		$this->custom_fields[$key] = $field;
+		
+		
+		// says whether this field can represent other field types
+		if (!empty($params['represents']))
+		{
+			$this->representatives[$key] = $params['represents'];
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -2461,7 +2431,23 @@ Class Form_builder {
 		return $posted;
 	}
 
-	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets a representative for a field type.
+	 * 
+	 * This allows for one field type to represent several field types (e.g. number = int, bigint, smallint, tinyint,...etc)
+	 *
+	 * @access	public
+	 * @param	string The field type to be the representative
+	 * @param	mixed Either an array or a regex that other fields must match
+	 * @return	void
+	 */
+	public function set_representative($type, $match = '')
+	{
+		$this->representatives[$type] = $match;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -2674,6 +2660,38 @@ Class Form_builder {
 		$out .= "</script>\n";
 		return $out;
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Applies the CSS for the fields. A variable of $css must exist for the page to render
+	 * 
+	 * @access	protected
+	 * @return	string
+	 */
+	protected function _apply_css()
+	{
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($this->_css);
+		// echo "</pre>";
+		if (empty($this->_css)) return;
+
+		foreach($this->_css as $type => $js)
+		{
+			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
+			// if (is_array($js))
+			// {
+			// 	$j = current($js);
+			// 	
+			// 	// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
+			// 	if (is_array($j))
+			// 	{
+			// 		
+			// 	}
+			// 	$str_files .= js($js);
+			// }
+		}
+	}
 }
 
 
@@ -2702,7 +2720,9 @@ Class Form_builder_field {
 	public $html = ''; // html output for form field
 	public $js = array(); // the name of javascript file(s) to laod
 	public $js_function = ''; // the name of the javascript function to execute for the form field
-	
+	public $represents = ''; // the field types this form field will represent  (e.g. 'number'=>'bigint|smallint|tinyint|int')
+	public $css = ''; // a CSS file to load for this form field
+	public $css_class = ''; // a CSS class to automatically apply to the form field... very convenient for simply adding JS functionality to an existing field type
 	
 	/**
 	 * Constructor - Sets Form_builder preferences
@@ -2746,6 +2766,12 @@ Class Form_builder_field {
 	 */
 	public function render($params = array())
 	{
+		// add the CSS any css class as an additional parameter
+		if (!empty($this->css_class))
+		{
+			$params['class'] = $this->css_class.' '.$params['class'];
+		}
+		
 		if (!empty($this->render_func))
 		{
 			return call_user_func($this->render_func, $params);

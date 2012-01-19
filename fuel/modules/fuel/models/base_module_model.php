@@ -445,31 +445,31 @@ class Base_module_model extends MY_Model {
 		{
 			$fields[$key]['order'] = $order;
 			
-			// get field names that end with _image
-			if ($fields[$key]['type'] == 'string' AND substr($key, -5) == 'image' OR substr($key, -3) == 'img')
-			{
-				// $img = '';
-				// if (!empty($values['id']))
-				// {
-				// 	if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
-				// }
-				$fields[$key]['type'] = 'asset';
-//				$fields[$key]['class'] = 'asset_select';
-				$order++;
-//				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
-			}
+// 			// get field names that end with _image
+// 			if ($fields[$key]['type'] == 'string' AND substr($key, -5) == 'image' OR substr($key, -3) == 'img')
+// 			{
+// 				// $img = '';
+// 				// if (!empty($values['id']))
+// 				// {
+// 				// 	if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
+// 				// }
+// 			//	$fields[$key]['type'] = 'asset';
+// //				$fields[$key]['class'] = 'asset_select';
+// 				$order++;
+// //				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
+// 			}
 			
 			// specific to email
-			if ($key == 'email' OR $key == 'email_address')
-			{
-				$fields[$key]['type'] = 'email';
-			}
-			
-			// specific to phone
-			if ($key == 'phone' OR $key == 'telephone')
-			{
-				$fields[$key]['type'] = 'phone';
-			}
+			// if ($key == 'email' OR $key == 'email_address')
+			// {
+			// 	$fields[$key]['type'] = 'email';
+			// }
+			// 
+			// // specific to phone
+			// if ($key == 'phone' OR $key == 'telephone')
+			// {
+			// 	$fields[$key]['type'] = 'phone';
+			// }
 			
 			$order++;
 		}

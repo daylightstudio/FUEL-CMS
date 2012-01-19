@@ -51,7 +51,7 @@ class Projects_model extends Base_module_model {
 		
 		//test
 		//$fields = array();
-		$fields['image'] = array('type' => 'asset');
+		//$fields['image'] = array('type' => 'asset');
 		unset($fields['image_upload']);
 		
 		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
@@ -63,12 +63,11 @@ class Projects_model extends Base_module_model {
 		$fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
 		
-		$fields['test_image'] = array('type' => 'asset', 'upload' => TRUE);
-		$fields['numeric'] = array('type' => 'number', 'negative' => TRUE, 'decimal' => FALSE);
-		$fields['currency'] = array('type' => 'currency');
+		$fields['test_image'] = array('upload' => TRUE);
+		$fields['numeric'] = array('type' => 'number', 'represents' => 'int|smallint|mediumint|bigint');
+		$fields['currency'] = array('type' => 'currency', 'negative' => TRUE, 'decimal' => ',');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
-		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE);
-		
+		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE);
 		
 		// temporary
 		unset($fields['_published']);

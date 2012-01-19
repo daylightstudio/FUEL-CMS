@@ -1,19 +1,20 @@
 <?php 
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');
+$config['representatives'] = array(
+	'number' => array('int', 'smallint', 'mediumint', 'bigint'),
+	);
+	
 $config['custom_fields'] = array(
 	'datetime' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'datetime',
-		'filepath'	=> '',
+		'css_class' => 'datepicker',
+		'css' 		=> array(FUEL_FOLDER => 'datepicker'),
 		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.datePicker'),
 		'js_function' => 'fuel.fields.datetime_field',
-		'js_params' => array('format' => 'dd-mm-yyyy')
+		'js_params' => array('format' => 'dd-mm-yyyy'),
+		'represents' => 'datetime|timestamp',
 	),
 
 	'multi' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'multi',
-		'filepath'	=> '',
 		'js'		=> array(
 			FUEL_FOLDER => array(
 				'jquery/plugins/jquery.selso',
@@ -23,7 +24,7 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.multi_field',
-	
+		'represents' => 'array',
 	),
 	
 	'wysiwyg' => array(
@@ -38,6 +39,7 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.wysiwyg_field',
+		'represents' => array('text', 'textarea', 'longtext', 'mediumtext'),
 	
 	),
 
@@ -51,7 +53,8 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.file_upload_field',
-	
+		'represents' => 'blob',
+		
 	),
 
 	'asset' => array(
@@ -64,7 +67,7 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.asset_field',
-	
+		'represents' => array('name' => '.*image$|.*img$'),
 	),
 
 	'inline_edit' => array(
@@ -111,24 +114,6 @@ $config['custom_fields'] = array(
 
 	),
 	
-	// 'number' => array(
-	// 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-	// 	'function'	=> 'number',
-	// 	'filepath'	=> '',
-	// 	'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
-	// 	'js_function' => 'fuel.fields.number_field',
-	// 	//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
-	// ),
-	// 
-	// 'email' => array(
-	// 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-	// 	'function'	=> 'email',
-	// 	'filepath'	=> '',
-	// 	//'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
-	// 	//'js_function' => 'fuel.fields.number_field',
-	// 	//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
-	// ),
-	// 
 	'template' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'template',
@@ -138,35 +123,21 @@ $config['custom_fields'] = array(
 		'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
 	),
 	
-	'nested' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'nested',
-		'filepath'	=> '',
-	),
-
 	'currency' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'currency',
 		'filepath'	=> '',
 		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
 		'js_function' => 'fuel.fields.number_field',
-		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE)
+		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE) // globally set
 	),
-
-
-	'simple' => create_function('$params', '
-		// echo "<pre style=\"text-align: left;\">";
-		// //print_r($params);
-		// echo "</pre>";
-		
-	')
 
 );
 
 
-$config['custom_fields']['array'] = $config['custom_fields']['multi'];
-$config['custom_fields']['text'] = $config['custom_fields']['wysiwyg'];
-$config['custom_fields']['textarea'] = $config['custom_fields']['wysiwyg'];
+//$config['custom_fields']['array'] = $config['custom_fields']['multi'];
+//$config['custom_fields']['text'] = $config['custom_fields']['wysiwyg'];
+//$config['custom_fields']['textarea'] = $config['custom_fields']['wysiwyg'];
 
 // include from main application directory
 @include(APPPATH.'config/form_builder.php');

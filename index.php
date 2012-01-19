@@ -4,17 +4,7 @@
  * FUEL INSTALL DIRECTORY
  *---------------------------------------------------------------
  *
- * You can load different configurations depending on your
- * current environment. Setting the environment also influences
- * things like logging and error reporting.
- *
- * This can be set to anything, but default usage is:
- *
- *     development
- *     testing
- *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
+ * This is the directory path to the fuel installation folder
  *
  */
 define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fuel/');
@@ -85,7 +75,7 @@ if (defined('ENVIRONMENT'))
 		break;
 
 		default:
-			exit('The application environment is not set correctly. Please correct this in index.php (line 63)');
+			exit('The application environment is not set correctly.');
 	}
 }
 

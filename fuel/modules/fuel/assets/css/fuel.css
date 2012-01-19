@@ -71,7 +71,9 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
 .MultiFile-list { float: right; }
 .tDnD_whileDrag { background-color: #ff1 !important; }
-
+.overwrite_field { margin-top: 3px; }
+.overwrite_field input { margin-top: 6px; }
+	
 /* header */
 div#fuel_top { line-height: 28px; }
 div#fuel_top, div#fuel_footer { height: 30px; background-color: #666; color: #fff;padding: 0 15px; color: #fff; text-shadow: #444 0px 1px 0px; }

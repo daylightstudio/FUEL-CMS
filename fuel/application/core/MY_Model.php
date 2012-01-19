@@ -160,7 +160,7 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @return	array
 	 */	
-	public function db()
+	public function &db()
 	{
  		//$this->_check_readonly();
 		return $this->db;

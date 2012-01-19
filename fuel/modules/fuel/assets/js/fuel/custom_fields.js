@@ -470,6 +470,7 @@ fuel.fields.inline_edit_field = function(context){
 	});
 }
 
+// creates a field that will use apply it's value when typed it to another field after passing it through a transformation function
 fuel.fields.linked_field = function(context){
 	
 	var _this = this;
@@ -544,13 +545,6 @@ fuel.fields.linked_field = function(context){
 			bindLinked($(this).attr('id'), eval('(' + linkedInfo + ')'));
 		}
 	});
-	//{"slug":{"name":"url_title"}
-	// if (this.initObj.linked_fields){
-	// 	var linked = this.initObj.linked_fields;
-	// 	for(var n in linked){
-	// 		bindLinked(n, linked[n]);
-	// 	}
-	// }
 }
 
 // create fillin property fields... placeholder value is really all you need though and this may be deprecated
@@ -564,7 +558,8 @@ fuel.fields.fillin_field = function(context){
 // create fillin property fields... placeholder value is really all you need though and this may be deprecated
 fuel.fields.number_field = function(context, options){
 	$('.numeric', context).each(function(i){
-		var o = $.extend(options, {});
+		var o = {decimal: false, negative: false}
+		o = $.extend(o, options);
 		if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes"){
 			o.decimal = '.';
 		} else {
@@ -579,6 +574,7 @@ fuel.fields.number_field = function(context, options){
 	});
 }
 
+// create a repeatable field
 fuel.fields.template_field = function(context, options){
 	$repeatable = $('.repeatable', context).parent();
 	$repeatable.bind('cloned', function(e){
