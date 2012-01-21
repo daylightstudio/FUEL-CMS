@@ -18,7 +18,8 @@ dave@thedaylightstudio.com
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
 			sortableSelector : 'h4',
 			sortable : true,
-			limit : null
+			limit : null,
+			depth : 1
 		}, options || {});
 		
 		var parseTemplate = function(elem, i){
@@ -26,20 +27,20 @@ dave@thedaylightstudio.com
 			$('.index', elem).html(i);
 			$('input,textarea,select', elem).each(function(j){
 				var newName = $(this).attr('name')
-				if (newName.length){
+				if (newName && newName.length){
 					newName = newName.replace(/([-_a-zA-Z0-9]+)\[\d\]/g, '$1[' + i + ']');
 					$(this).attr('name', newName);
 				}
 
 				var newId = $(this).attr('id');
-				if (newId.length){
+				if (newId && newId.length){
 					newId = newId.replace('{index}', i);
 					$(this).attr('id', newId);
 				}
 			})
 		}
 		
-		var addRemove = function(elem, i){
+		var addRemove = function(elem){
 			$(elem).append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 		}
 		
@@ -47,6 +48,14 @@ dave@thedaylightstudio.com
 			$elem.children(options.repeatableSelector).each(function(i){
 				parseTemplate(this, i);
 			});
+		}
+		
+		var checkLimit = function(elem, children){
+			if (options.limit >= children.size()){
+				$(elem).hide();
+			} else {
+				$(elem).show();
+			}
 		}
 		
 		return this.each(function(){
@@ -60,12 +69,11 @@ dave@thedaylightstudio.com
 			
 			// create clone to duplicate later
 			$clone = $this.find(options.repeatableSelector + ':last').clone(false);
-
 			// parse the template
 			var $repeatables = $this.children(options.repeatableSelector);
 			$repeatables.each(function(i){
 				parseTemplate(this, i);
-				addRemove(this, i);
+				addRemove(this);
 			});
 			
 			// add button
@@ -95,31 +103,43 @@ dave@thedaylightstudio.com
 				// create clone of a clean clone
 				$clonecopy = $clone.clone(false);
 				var $children = $this.children(options.repeatableSelector);
+
 				if (options.limit != null && $children.size() >= options.limit){
 					return false;
 				}
 				var index = $children.size();
 				parseTemplate($clonecopy, index);
-				addRemove($clonecopy, index);
+				addRemove($clonecopy);
 				$this.append($clonecopy);
 				
 				// remove values from any form fields
 				$clonecopy.find('input,text,select,textarea').val('');
 				
 				$this.trigger({type: 'cloned', clonedNode: $clonecopy});
+				
+				if (options.limit >= $children.size()){
+					$(this).hide();
+				}
+				
 				return false;
 			});
 
 			// set button handler
-			$('.' + options.removeButtonClass).live('click', function(e){
+			$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 				var $this = $(this).parents(options.repeatableSelector).parent();
+				
 				if (options.warnBeforeDelete == false || confirm(options.warnBeforeDeleteMessage)){
 					$(this).parent().remove();
-
+					
+					var $children = $this.children(options.repeatableSelector);
+					if (options.limit < $children.size()){
+						$this.find('.' + options.addButtonClass).show();
+					}
 					// to reorder the indexes
 					reOrder($this);
 				}
 				$this.trigger('removed');
+				e.stopImmediatePropagation();
 				return false;
 			});
 			return this;

@@ -1,7 +1,8 @@
 <div id="fuel_main_content_inner">
 	<p class="instructions"><?=lang('tester_instructions')?></p>
 
-	<?=$this->form->select('tests[]', $test_list, $this->input->post('tests'), array('multiple' => 'multiple'))?>
+	<?=$form?>
+
 	<div class="clear"></div>
 	
 	<div style="text-align: center; margin: 0 0 30px 280px;" class="buttonbar">
@@ -13,7 +14,7 @@
 	<script type="text/javascript">
 	//<![CDATA[
 		$(function(){
-			$('#tests').supercomboselect();
+			// $('#tests').supercomboselect();
 			$('#run_tests').click(function(){
 				$('.csadd').click();
 				$('#form').submit();

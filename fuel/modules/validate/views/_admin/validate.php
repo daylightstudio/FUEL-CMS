@@ -1,10 +1,8 @@
 <?=js('ValidateController', 'validate')?>
 <div id="fuel_main_content_inner">
 	<p class="instructions"><?=lang('validate_instructions')?></p>
-	<?=$this->form->select('pages[]', $pages_select, $this->input->post('pages'), array('multiple' => 'multiple'))?>
-	<div class="clear"></div>
-	
-	<?=$this->form->textarea('pages_input', (!empty($default_page_input) ? $default_page_input : lang('validate_pages_input')), 'cols="5" rows="100" class="fillin"')?>
+
+	<?=$form?>
 	
 	<div style="text-align: center; margin: 0 0 30px 135px;" class="buttonbar">
 		<ul>

@@ -93,7 +93,8 @@ Class Form_builder {
 	protected $_js; // to be executed once per render
 	protected $_css; // to be executed once per render
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
-
+	protected $CI;
+	
 	/**
 	 * Constructor - Sets Form_builder preferences
 	 *
@@ -101,6 +102,7 @@ Class Form_builder {
 	 */
 	public function __construct($params = array())
 	{
+		$this->CI =& get_instance();
 		$this->initialize($params);
 	}
 
@@ -115,6 +117,7 @@ Class Form_builder {
 	 */
 	public function initialize($params = array())
 	{
+		
 		// clear out any data before initializing
 		$this->reset();
 		$this->set_params($params);
@@ -131,22 +134,21 @@ Class Form_builder {
 		// create form object if not in initialization params
 		if (is_null($this->form))
 		{
-			$CI =& get_instance();
-			$CI->load->library('form');
+			$this->CI->load->library('form');
 			$this->form = new Form();
 			
 			// load localization helper if not already
 			if (!function_exists('lang'))
 			{
-				$CI->load->helper('language');
+				$this->CI->load->helper('language');
 			}
 
 			// CSRF protections
-			if ($CI->config->item('csrf_protection') === TRUE AND empty($this->key_check))
+			if ($this->CI->config->item('csrf_protection') === TRUE AND empty($this->key_check))
 			{
-				$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
-				$this->key_check = $CI->security->csrf_hash;
-				$this->key_check_name = $CI->security->csrf_token_name;
+				$this->CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
+				$this->key_check = $this->CI->security->csrf_hash;
+				$this->key_check_name = $this->CI->security->csrf_token_name;
 			}
 		}
 	}
@@ -818,18 +820,10 @@ Class Form_builder {
 	 * @access	public
 	 * @return	string
 	 */
-	protected function _open_div($create_unique_id = FALSE)
+	protected function _open_div()
 	{
 		$str = '';
-		$str .= "<div class=\"".$this->css_class."\"";
-		
-		// must have an id for javascript to execute on initialization
-		if ($create_unique_id AND empty($this->id))
-		{
-			$this->id = uniqid('form_');
-		}
-		$str .= ' id="'.$this->id.'"';
-		$str .= ">\n";
+		$str .= "<div>\n";
 		return $str;
 	}
 
@@ -841,17 +835,10 @@ Class Form_builder {
 	 * @access	public
 	 * @return	string
 	 */
-	protected function _open_table($create_unique_id = FALSE)
+	protected function _open_table()
 	{
 		$str = '';
-		$str .= "<table class=\"".$this->css_class."\"";
-		if ($create_unique_id AND empty($this->id))
-		{
-			$this->id = uniqid('form_');
-		}
-		$str .= ' id="'.$this->id.'"';
-		$str .= ">\n";
-		
+		$str .= "<table>";
 		$str .= "<tbody>\n";
 		return $str;
 	}
@@ -928,7 +915,19 @@ Class Form_builder {
 		{
 			$this->_html .= $this->form->fieldset_open($this->fieldset);
 		}
-		$this->_html .= $str;
+		
+		// wrapper div to apply ID
+		$wrapper_open_str = "<div class=\"".$this->css_class."\"";
+		if (empty($this->id))
+		{
+			$this->id = uniqid('form_');
+		}
+		$wrapper_open_str .= ' id="'.$this->id.'"';
+		$wrapper_open_str .= ">\n";
+		
+		$wrapper_close_str = "</div>";
+		
+		$this->_html .= $wrapper_open_str.$str.$wrapper_close_str;
 		
 		if (!empty($this->key_check))
 		{
@@ -976,6 +975,7 @@ Class Form_builder {
 			'required' => FALSE,
 			'size' => '',
 			'class' => '',
+			'style' => '',
 			'value' => '',
 			'readonly' => '',
 			'disabled' => '',
@@ -1211,6 +1211,8 @@ Class Form_builder {
 	/**
 	 * Looks at the field type attribute and determines which form field to render
 	 * 
+	 * IMPORTANT! You probably shouldn't call this method from within a custom field type because it may create an infinite loop!
+	 * 
 	 * @access	public
 	 * @param	array fields parameters
 	 * @param	boolean shoud the normalization be ran again?
@@ -1218,11 +1220,11 @@ Class Form_builder {
 	 */
 	public function create_field($params, $normalize = TRUE)
 	{
-		// needed to prevent runaway loops from custom fields
-		if ($this->_rendering)
-		{
-			return FALSE;
-		}
+		// needed to prevent runaway loops from custom fields... actually the template field type wont work with this
+		// if ($this->_rendering)
+		// {
+		// 	return FALSE;
+		// }
 		
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
 
@@ -1407,6 +1409,7 @@ Class Form_builder {
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
+			'style' => $params['style'],
 		);
 		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
 	}
@@ -1414,48 +1417,84 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates a submit button input for the form
+	 * Creates the select input for the form
 	 *
 	 * @access	public
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_submit($params)
+	public function create_select($params)
 	{
-		$params = $this->normalize_params($params);
+		$defaults = array(
+			'options' => array(),
+			'first_option' => '',
+		);
+		
+		$params = $this->normalize_params($params, $defaults);
+	
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
+			'style' => $params['style'],
 		);
-		return $this->form->submit($params['value'], $params['name'], $attrs);
+		$name = $params['name'];
+		if (!empty($params['multiple']))
+		{
+			$attrs['multiple'] = 'multiple';
+			$name = $params['name'].'[]';
+		}
+		
+		if (!empty($params['options']) AND !empty($params['equalize_key_value']))
+		{
+			$options = array();
+			
+			foreach($params['options'] as $key => $val)
+			{
+				$options[$val] = $val;
+			}
+			$params['options'] = $options;
+		}
+		
+		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option']);
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates a basic form button for the form
+	 * Creates the checkbox input for the form
 	 *
 	 * @access	public
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_button($params)
+	public function create_checkbox($params)
 	{
-		$params = $this->normalize_params($params);
+		$defaults = array(
+			'checked' => FALSE // for checkbox/radio
+		);
+		$params = $this->normalize_params($params, $defaults);
+
+		$str = '';
 		$attrs = array(
 			'id' => $params['id'],
-			'class' => $params['class'], 
+			'class' => $params['class'],
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'data' => $params['data'],
+			'style' => $params['style'],
 		);
-		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
-		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
+		if ($params['checked'])
+		{
+			$attrs['checked'] = 'checked';
+		}
+		$str .= $this->form->checkbox($params['name'], $params['value'], $attrs);
+		return $str;
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -1478,6 +1517,7 @@ Class Form_builder {
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
+			'style' => $params['style'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -1506,7 +1546,54 @@ Class Form_builder {
 		}
 		return $this->form->hidden($params['name'], $params['value'], $attrs);
 	}
-	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a submit button input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_submit($params)
+	{
+		$params = $this->normalize_params($params);
+		$attrs = array(
+			'id' => $params['id'],
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
+			'style' => $params['style'],
+		);
+		return $this->form->submit($params['value'], $params['name'], $attrs);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a basic form button for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_button($params)
+	{
+		$params = $this->normalize_params($params);
+		$attrs = array(
+			'id' => $params['id'],
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
+			'style' => $params['style'],
+		);
+		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
+		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -1539,6 +1626,7 @@ Class Form_builder {
 				$attrs = array(
 					'readonly' => $params['readonly'], 
 					'disabled' => $params['disabled'],
+					'style' => $params['style'],
 				);
 				if (($i == 0 AND !$default) OR  ($default == $key))
 				{
@@ -1636,53 +1724,6 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates the select input for the form
-	 *
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	public function create_select($params)
-	{
-		$defaults = array(
-			'options' => array(),
-			'first_option' => '',
-		);
-		
-		$params = $this->normalize_params($params, $defaults);
-	
-		$attrs = array(
-			'id' => $params['id'],
-			'class' => $params['class'], 
-			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? $params['required'] : NULL),
-			'data' => $params['data'],
-		);
-		$name = $params['name'];
-		if (!empty($params['multiple']))
-		{
-			$attrs['multiple'] = 'multiple';
-			$name = $params['name'].'[]';
-		}
-		
-		if (!empty($params['options']) AND !empty($params['equalize_key_value']))
-		{
-			$options = array();
-			
-			foreach($params['options'] as $key => $val)
-			{
-				$options[$val] = $val;
-			}
-			$params['options'] = $options;
-		}
-		
-		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option']);
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
 	 * Creates the file input for the form
 	 *
 	 * @access	public
@@ -1699,6 +1740,7 @@ Class Form_builder {
 			'file_name' => NULL, // for file uploading
 			'encrypt_name' => NULL,
 			'data' => $params['data'],
+			'style' => $params['style'],
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1709,7 +1751,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
-			'accept' => str_replace('|', ',', $params['accept']),
+			'g' => str_replace('|', ',', $params['accept']),
 		);
 		
 		if (is_array($this->form_attrs))
@@ -1769,7 +1811,14 @@ Class Form_builder {
 		$params = $this->normalize_params($params);
 		if (empty($params['date_format']))
 		{
-			$params['date_format'] = $this->date_format;
+			if (empty($params['date_format']))
+			{
+				$params['date_format'] = $this->CI->config->item('date_format');
+			}
+			else
+			{
+				$params['date_format'] = $this->date_format;
+			}
 		}
 		
 		// check date to format it
@@ -1781,10 +1830,22 @@ Class Form_builder {
 		} else {
 			$params['value'] = '';
 		}
-		
-		//$params['class'] = 'datepicker '.$params['class'];
 		$params['maxlength'] = 10;
 		$params['size'] = 10;
+		
+		// create the right format for placeholder display based on the date format
+		$date_arr = preg_split('#-|/#', $params['date_format']);
+		$format = '';
+		
+		// order counts here!
+		$format = str_replace('m', 'mm', $params['date_format']);
+		$format = str_replace('n', 'm', $format);
+		$format = str_replace('d', 'dd', $format);
+		$format = str_replace('j', 'd', $format);
+		$format = str_replace('y', 'yy', $format);
+		$format = str_replace('Y', 'yyyy', $format);
+		
+		$params['placeholder'] = $format;
 		return $this->create_text($params);
 	}
 	
@@ -1810,13 +1871,15 @@ Class Form_builder {
 		$time_params['size'] = 2;
 		$time_params['max_length'] = 2;
 		$time_params['name'] = $params['orig_name'].'_hour';
-		$time_params['class'] = 'fillin datepicker_hh';
+		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
+		$time_params['placeholder'] = 'hh';
 		$str = $this->create_text($this->normalize_params($time_params));
 		$str .= ":";
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00') $time_params['value'] = date('i', strtotime($params['value']));
 		$time_params['name'] = $params['orig_name'].'_min';
-		$time_params['class'] = 'fillin datepicker_mm';
+		$time_params['class'] = 'datepicker_mm';
+		$time_params['placeholder'] = 'mm';
 		$str .= $this->create_text($this->normalize_params($time_params));
 		$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
 		$ampm_params['name'] = $params['orig_name'].'_am_pm';
@@ -1910,38 +1973,6 @@ Class Form_builder {
 		$params['type'] = 'tel';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
 		return $this->create_text($params);
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Creates the checkbox input for the form
-	 *
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	public function create_checkbox($params)
-	{
-		$defaults = array(
-			'checked' => FALSE // for checkbox/radio
-		);
-		$params = $this->normalize_params($params, $defaults);
-
-		$str = '';
-		$attrs = array(
-			'id' => $params['id'],
-			'class' => $params['class'],
-			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled'],
-			'data' => $params['data'],
-		);
-		if ($params['checked'])
-		{
-			$attrs['checked'] = 'checked';
-		}
-		$str .= $this->form->checkbox($params['name'], $params['value'], $attrs);
-		return $str;
 	}
 	
 	// --------------------------------------------------------------------
@@ -2100,8 +2131,8 @@ Class Form_builder {
 	 */
 	public function create_nested($params)
 	{
-		$CI =& get_instance();
-		$CI->load->library('parser');
+		$this->CI =& get_instance();
+		$this->CI->load->library('parser');
 		$fb_class = get_class($this);
 		
 		if (empty($params['fields']) OR !is_array($params['fields']))
@@ -2169,7 +2200,7 @@ Class Form_builder {
 		// if an array, then we will assess the properties of the array and load classes/helpers appropriately
 		if (is_array($custom_field))
 		{
-			$CI =& get_instance();
+			$this->CI =& get_instance();
 			
 			// must have at least a function value otherwise you get nada
 			if (empty($custom_field['function']))
@@ -2206,14 +2237,14 @@ Class Form_builder {
 				{
 					$module = key($custom_field['class']);
 					$library = strtolower(current($custom_field['class']));
-					$CI->load->module_library($module, $library);
+					$this->CI->load->module_library($module, $library);
 				}
 				else
 				{
-					$CI->load->library($custom_field['class']);
+					$this->CI->load->library($custom_field['class']);
 					$library = strtolower($custom_field['class']);
 				}
-				$func = array($CI->$library, $custom_field['function']);
+				$func = array($this->CI->$library, $custom_field['function']);
 			}
 			
 			// if no class parameter is set, then it will assume it's a helper'
@@ -2225,11 +2256,11 @@ Class Form_builder {
 					{
 						$module = key($custom_field['function']);
 						$helper = current($custom_field['function']);
-						$CI->load->module_library($module, $helper, $custom_field);
+						$this->CI->load->module_library($module, $helper, $custom_field);
 					}
 					else 
 					{
-						$CI->load->helper($custom_field['function'], $custom_field);
+						$this->CI->load->helper($custom_field['function'], $custom_field);
 					}
 				}
 				$func = $custom_field['function'];
@@ -2671,26 +2702,14 @@ Class Form_builder {
 	 */
 	protected function _apply_css()
 	{
-		// echo "<pre style=\"text-align: left;\">";
-		// print_r($this->_css);
-		// echo "</pre>";
 		if (empty($this->_css)) return;
-
-		foreach($this->_css as $type => $js)
+		
+		$css = $this->CI->load->get_vars('css');
+		foreach($this->_css as $c)
 		{
-			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
-			// if (is_array($js))
-			// {
-			// 	$j = current($js);
-			// 	
-			// 	// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
-			// 	if (is_array($j))
-			// 	{
-			// 		
-			// 	}
-			// 	$str_files .= js($js);
-			// }
+			$css[] = $c;
 		}
+		$this->CI->load->vars(array('css' => $css));
 	}
 }
 

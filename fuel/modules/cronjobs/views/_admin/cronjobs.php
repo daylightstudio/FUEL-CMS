@@ -33,12 +33,12 @@
 		}
 	 	?>
 			<tr>
-				<td><?=$this->form->text('min['.$newnum.']', lang('cronjobs_min'), 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('hour['.$newnum.']', lang('cronjobs_hour'), 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('month_day['.$newnum.']', lang('cronjobs_month_day'), 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('month_num['.$newnum.']', lang('cronjobs_month_num'), 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('week_day['.$newnum.']', lang('cronjobs_week_day'), 'class="fillin" size="7"')?></td>
-				<td><?=$this->form->text('command['.$newnum.']', lang('cronjobs_command'), 'class="fillin" size="60"')?></td>
+				<td><?=$this->form->text('min['.$newnum.']', '', 'placeholder="'.lang('cronjobs_min').'" size="7"')?></td>
+				<td><?=$this->form->text('hour['.$newnum.']', '', 'placeholder="'.lang('cronjobs_hour').'" size="7"')?></td>
+				<td><?=$this->form->text('month_day['.$newnum.']', '', 'placeholder="'.lang('cronjobs_month_day').'"  size="7"')?></td>
+				<td><?=$this->form->text('month_num['.$newnum.']', '', 'placeholder="'.lang('cronjobs_month_num').'"  size="7"')?></td>
+				<td><?=$this->form->text('week_day['.$newnum.']', '', 'placeholder="'.lang('cronjobs_week_day').'"  size="7"')?></td>
+				<td><?=$this->form->text('command['.$newnum.']', '', 'placeholder="'.lang('cronjobs_command').'"  size="60"')?></td>
 			</tr>
 		</tbody>
 	</table>

@@ -161,8 +161,8 @@ Class Form {
 		{
 			$fieldset_id = " id=\"".$fieldset_id."\"";
 		}
-		$str = "<fieldset".$fieldset_id.">\n";
-		$str .= "<legend".$this->_create_attrs($attrs).">".$legend."</legend>\n";
+		$str = "<fieldset".$fieldset_id." ".$this->_create_attrs($attrs).">\n";
+		$str .= "<legend>".$legend."</legend>\n";
 		return $str;
 	}
 	

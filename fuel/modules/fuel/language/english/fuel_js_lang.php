@@ -4,7 +4,7 @@
 | Misc. For Javascript Files
 |--------------------------------------------------------------------------
 */
-$lang['label_search'] = 'Enter search term...';
+$lang['label_search'] = 'Search...';
 
 $lang['btn_save'] = 'Save';
 $lang['btn_cancel'] = 'Cancel';

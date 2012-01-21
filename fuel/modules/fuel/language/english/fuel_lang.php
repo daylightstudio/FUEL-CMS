@@ -242,6 +242,7 @@ $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
 $lang['form_label_master_dimension'] = 'Master dimension';
 $lang['assets_upload_action'] = 'Upload';
+$lang['assets_select_action'] = 'Select';
 $lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploaded to';
 $lang['assets_comment_filename'] = 'If no name is provided, the filename that already exists will be used.';
 $lang['assets_comment_subfolder'] = 'Will attempt to create a new subfolder to place your asset.';

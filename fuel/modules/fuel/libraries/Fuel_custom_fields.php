@@ -32,27 +32,14 @@ class Fuel_custom_fields {
 	
 
 	protected $CI;
-	public $datetime_js = 'datetime_field';
+	protected $fuel;
 	
 	function __construct()
 	{
 		$this->CI =& get_instance();
+		$this->fuel =& $this->CI->fuel;
 	}
 	
-	// function datetime($params)
-	// {
-	// 	$form_builder =& $params['instance'];
-	// 	$params['class'] = 'datepicker '.$params['class'];
-	// 	$str = $form_builder->create_datetime($params);
-	// 	return $str;
-	// }
-	// 
-	// function multi($params)
-	// {
-	// 	$form_builder =& $params['instance'];
-	// 	return $form_builder->create_multi($params);
-	// }
-	// 
 	function wysiwyg($params)
 	{
 		$form_builder =& $params['instance'];
@@ -72,6 +59,7 @@ class Fuel_custom_fields {
 	function asset($params)
 	{
 		$this->CI->load->helper('file');
+		$this->CI->load->helper('html');
 		
 		$form_builder =& $params['instance'];
 		if (empty($params['folder']))
@@ -86,13 +74,77 @@ class Fuel_custom_fields {
 		$asset_class .= ' '.$params['folder'];
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
 		
-		if (!empty($params['value']) AND is_image_file($params['value']))
+		// set the image preview containing class
+		if (empty($params['img_display_class']))
 		{
-			$img = '<div class="img_display"><img src="'.img_path($params['value']).'" style="float: right;"/></div><div class="clear"></div>';
-			$params['after_html'] = $img;
+			$params['img_container_styles'] = 'overflow: auto; height: 200px; width: 400px; margin-top: 5px;';
+		}
+
+		// set the styles specific to the image
+		if (empty($params['img_styles']))
+		{
+			$params['img_styles'] = 'float: right; width: 100px;';
+		}
+		
+		// folders and intended contents
+		$editable_filetypes = $this->fuel->config('editable_asset_filetypes');
+		
+		if (!empty($params['value']))
+		{
+			$preview = '<br /><div style="'.$params['img_container_styles'].'">';
+			
+			if (is_string($params['value']))
+			{
+				// unserialize if it is a serialized string
+				if (is_serialized_str($params['value']))
+				{
+					$assets = unserialize($params['value']);
+				}
+				else
+				{
+					$assets = preg_split('#\s*,\s*#', $params['value']);
+				}
+				
+				// loop through all the assets and concatenate them
+				foreach($assets as $caption => $asset)
+				{
+					foreach($editable_filetypes as $folder => $regex)
+					{
+						if (!is_http_path($asset))
+						{
+							if (preg_match('#'.$regex.'#i', $asset))
+							{
+								$asset_path = assets_path($folder.'/'.$asset);
+								break;
+							}
+						}
+						else
+						{
+							$asset_path = $asset;
+						}
+					}
+
+					$preview .= '<a href="'.$asset_path.'" target="_blank">';
+						
+					if (is_image_file($asset))
+					{
+						$preview .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+					}
+					else
+					{
+						$preview .= $asset;
+					}
+					$preview .= '</a>';
+				}
+				
+			}
+			$preview .= '</div><div class="clear"></div>';
+			$params['after_html'] = $preview;
 		}
 		$params['type'] = '';
-		return $form_builder->create_text($params);
+		$str = $form_builder->create_text($params);
+		$str .= $params['after_html'];
+		return $str;
 	}
 
 	function inline_edit($params)
@@ -126,7 +178,6 @@ class Fuel_custom_fields {
 		}
 		
 		return $field;
-		
 	}
 
 	function linked($params)
@@ -201,6 +252,8 @@ class Fuel_custom_fields {
 		$fields = array();
 		$i = 0;
 		
+		$params['depth'] = (empty($params['depth'])) ? 0 : $params['depth']++;
+		
 		if (is_serialized_str($params['value']))
 		{
 			$params['value'] = unserialize($params['value']);
@@ -224,19 +277,31 @@ class Fuel_custom_fields {
 			foreach($params['fields'] as $key => $field)
 			{
 				$field['value'] = (!empty($value[$key])) ? $value[$key] : '';
+				
+				// Sorry... field type can't be'another template at the moment... would be cool though
+				if (isset($field['type']) AND $field['type'] == 'template')
+				{
+					continue;
+				}
+				
 				if ($repeatable)
 				{
-					if (!empty($form_builder->name_array))
+					$field_name_key = (!empty($form_builder->name_array)) ? 'name' : 'orig_name';
+					
+					if (isset($field['type']) AND $field['type'] == 'file')
 					{
-						$field['name'] = $params['name'].'['.$i.']['.$key.']';
+						$field['name'] = $params[$field_name_key].'_'.$i.'_'.$key;
 					}
 					else
 					{
-						$field['name'] = $params['orig_name'].'['.$i.']['.$key.']';
+						$field['name'] = $params[$field_name_key].'['.$i.']['.$key.']';
 					}
-					
+
 					$field['id'] = preg_replace('#(.+)\[\d\](.+)#U', '$1[{index}]$2', $field['name']);
 					$field['id'] = Form::create_id($field['id']);
+					
+					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
+					//$field['id'] = FALSE;
 					
 					$fields[$i][$key] = $form_builder->create_field($field);
 					$fields[$i]['index'] = $i;
@@ -252,11 +317,12 @@ class Fuel_custom_fields {
 					{
 						$field['name'] = $params['orig_name'].'['.$key.']';
 					}
+					
 					$fields[$key] = $form_builder->create_field($field);
 				}
 			}
 		}
-
+		
 		if ($repeatable)
 		{
 			$vars['fields'] = $fields;

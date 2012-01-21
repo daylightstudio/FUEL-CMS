@@ -123,6 +123,7 @@ class Pages_model extends Base_module_model {
 		$CI =& get_instance();
 		
 		$fields = parent::form_fields();
+		$fields['location']['placeholder'] = lang('pages_default_location');
 		$fields['date_added']['type'] = 'hidden';
 		$fields['layout']['type'] = 'select';
 		$fields['layout']['options'] = $CI->fuel->layouts->options_list();

@@ -126,8 +126,7 @@ class Fuel_navigation extends Fuel_module {
 					// if parent exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['parent']) AND is_string($p['parent']))
 					{
-						// WARNING... it is possible to have more then one navigation item with the same location so it's best not to location values but instead use ids
-						$parent = $this->model()->find_by_location($p['parent']);
+						$parent = $this->model()->find_by_nav_key($p['parent']);
 						if (!empty($parent['id']))
 						{
 							$p['parent'] = $parent['id'];
@@ -137,8 +136,7 @@ class Fuel_navigation extends Fuel_module {
 					// if active exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['active']) AND is_string($p['active']))
 					{
-						// WARNING... it is possible to have more then one navigation item with the same location so it's best not to location values but instead use ids'
-						$active = $this->model()->find_by_location($p['active'], $p['group_id']);
+						$active = $this->model()->find_by_nav_key($p['active'], $p['group_id']);
 						if (!empty($active['id']))
 						{
 							$p['active'] = $active['id'];
@@ -156,6 +154,7 @@ class Fuel_navigation extends Fuel_module {
 
 		$this->CI->menu->reset();
 		$this->CI->menu->initialize($p);
+		
 
 		$items = (!empty($$p['var'])) ? $$p['var'] : array();
 
@@ -185,6 +184,7 @@ class Fuel_navigation extends Fuel_module {
 		{
 			return $this->CI->menu->normalize_items($items);
 		}
+		
 		return $this->CI->menu->render($items, $p['active'], $p['parent']);
 	}
 	

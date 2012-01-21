@@ -5,7 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
  	<title><?=$page_title?></title>
 
-	<?=css('datepicker, jqmodal, markitup, jquery.tooltip, jquery.supercomboselect, jquery.treeview, fuel', 'fuel')?>
+	<?=css('jqmodal, jquery.tooltip, jquery.treeview, fuel', 'fuel')?>
 
 	<?php foreach($css as $c) : echo css($c); endforeach; ?>
 	

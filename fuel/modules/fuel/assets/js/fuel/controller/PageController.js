@@ -9,7 +9,6 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 	add_edit : function(){
 		var _this = this;
 		// do this first so that the fillin is in the checksaved value
-		$('#location').fillin(_this.localized.pages_default_location);
 
 		fuel.controller.BaseFuelController.prototype.add_edit.call(this, false);
 
@@ -53,7 +52,9 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		$('#layout').change(function(e){
 			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val();
 			$('#layout_vars').load(path, {}, function(){
-				_this.initSpecialFields();
+				var context = $('#fuel_main_content_inner');
+				_this.initSpecialFields(context);
+				//$(this).parents('form').formBuilder().initialize();
 			});
 		});
 		
@@ -100,7 +101,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			$('#layout').change();
 		} else {
 			bindFields();
-			_this.initSpecialFields();
+			var context = $('#fuel_main_content_inner');
+			_this.initSpecialFields(context);
 		}
 		
 	},

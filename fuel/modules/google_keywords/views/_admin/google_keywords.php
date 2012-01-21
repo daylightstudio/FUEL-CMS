@@ -7,7 +7,7 @@
 	<div class="float_left">
 		<label for="keywords" style="padding-left: 20px;"><?=lang('google_keywords_label_keywords')?></label> 
 		<?php if (is_array($keywords)){?>
-			<?=$this->form->select('keywords', $keywords, '')?>
+			<?=$this->form->select('keywords', $keywords)?>
 		<?php } else { ?>
 			<?=$this->form->text('keywords', $keywords, 'size="30"')?>
 		<?php } ?>

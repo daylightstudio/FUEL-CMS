@@ -714,6 +714,11 @@ class Fuel_admin extends Fuel_base_library {
 		return $this->titlebar;
 	}
 	
+	function set_titlebar_icon($icon = '')
+	{
+		$this->titlebar_icon = $icon;
+	}
+	
 	function titlebar_icon()
 	{
 		if (!empty($this->titlebar_icon))

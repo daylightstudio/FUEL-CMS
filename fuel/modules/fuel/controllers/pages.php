@@ -74,6 +74,8 @@ class Pages extends Module {
 
 		if ($this->input->post('id'))
 		{
+			
+			
 			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
 			{
 				unset($_POST['published']);
@@ -172,7 +174,7 @@ class Pages extends Module {
 		//$this->form_builder->hidden = (array) $this->model->key_field();
 		$this->form_builder->question_keys = array();
 		$this->form_builder->use_form_tag = FALSE;
-		//$this->form_builder->auto_execute_js = FALSE;
+		$this->form_builder->auto_execute_js = FALSE;
 		
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
@@ -189,7 +191,7 @@ class Pages extends Module {
 		$this->form_builder->set_field_values($field_values);
 		
 		// set this one to FALSE because the layout selection will execute the js again
-		//$this->form_builder->auto_execute_js = FALSE;
+		$this->form_builder->auto_execute_js = FALSE;
 
 		$vars['form'] = $this->form_builder->render();
 

@@ -167,6 +167,7 @@ class Menu {
 	 *
 	 * @access	protected
 	 * @param	array menu item data
+	 * @param	boolean wether or not to use the nav_key field instead of the array key for the unique ID
 	 * @return	array
 	 */
 	public function normalize_items($items)
@@ -187,12 +188,12 @@ class Menu {
 			foreach($items as $key => $val)
 			{
  				$id = (is_array($val) AND !empty($val['id'])) ? $val['id'] : trim($key);
-				$defaults[$key] = array('id' => $id, 'label' => '', 'location' => $key, 'attributes' => array(), 'active' => NULL, 'parent_id' => $this->root_value, 'hidden' => FALSE);
+				$defaults = array('id' => $id, 'label' => '', 'location' => $key, 'attributes' => array(), 'active' => NULL, 'parent_id' => $this->root_value, 'hidden' => FALSE);
 				if (!is_array($val)) 
 				{
 					$val = array('id' => $key, 'label' => $val);
 				}
-				$return[$id] = array_merge($defaults[$key], $val);
+				$return[$id] = array_merge($defaults, $val);
 				
 				// check to make sure parent_id does not equal id to prevent infinite loops
 				if ($return[$id]['id'] == $return[$id]['parent_id'])

@@ -330,8 +330,8 @@ class Assets_model extends CI_Model {
 	{
 		$CI =& get_instance();
 		$fields = array();
-		$editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel');
-		$accepts = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|jpe|jpeg|gif|png');
+		$editable_asset_types = $CI->fuel->config('editable_asset_filetypes');
+		$accepts = (!empty($editable_asset_types['assets']) ? $editable_asset_types['assets'] : 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css');
 		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
 		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $CI->fuel->assets->dirs(), 'comment' => lang('assets_comment_asset_folder'));
 		$fields['userfile_file_name'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));

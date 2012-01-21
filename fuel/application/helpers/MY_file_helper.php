@@ -179,7 +179,7 @@ function delete_old_files($dir, $older_than, $exclude = array())
  */
 function is_image_file($path)
 {
-	if (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i",$path))
+	if (preg_match("/.+\\.jpg|jpeg|jpe|gif|png/i",$path))
 	{
 		return TRUE;
 	}

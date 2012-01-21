@@ -99,10 +99,6 @@ class Pagevariables_model extends Base_module_model {
 				}
 			}
 		}
-		// echo "<pre style=\"text-align: left;\">";
-		// print_r($fields);
-		// echo "</pre>";
-		// exit('xxx');
 		return $fields;
 	}
 	
@@ -119,6 +115,7 @@ class Pagevariables_model extends Base_module_model {
 	{
 		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
+		$this->db->where(array($this->_tables['pagevars'].'.active' => 'yes'));
 		if ($this->honor_page_status AND !defined('FUEL_ADMIN'))
 		{
 			$this->db->where(array($this->_tables['pages'].'.published' => 'yes'));

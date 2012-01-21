@@ -23,9 +23,22 @@ class Tester extends Fuel_base_controller {
 	
 	function index()
 	{
+		
 		$test_list = $this->fuel->tester->get_tests();
 		$vars['test_list'] = $test_list;
 		$vars['form_action'] = 'tools/tester/run';
+		
+		$fields['tests'] = array('type' => 'multi', 'options' => $test_list, $this->input->post('tests'));
+
+		$this->load->library('form_builder');
+		$this->form_builder->question_keys = array();
+		$this->form_builder->submit_value = null;
+		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		$form = $this->form_builder->render();
+		$vars['form'] = $form;
+		
 		$crumbs = array('tools' => lang('section_tools'), lang('module_tester'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_tester');
 		$this->fuel->admin->render('_admin/tester', $vars, Fuel_admin::DISPLAY_NO_ACTION);

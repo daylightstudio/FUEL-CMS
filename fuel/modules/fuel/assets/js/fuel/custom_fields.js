@@ -16,10 +16,6 @@ fuel.fields.datetime_field = function(context, options){
 	Date.format = o.format;
 	Date.firstDayOfWeek = o.firstDayOfWeek;
 
-	$('.datepicker', context).fillin(o.format);
-	$('.datepicker_hh', context).fillin('hh');
-	$('.datepicker_mm', context).fillin('mm');
-	//$('.datepicker').datePicker();
 	var dpOptions = {startDate: o.endDate, endDate: o.startDate}
 
 	$('.datepicker', context).filter(":not('.dp-applied')").each(function(i){
@@ -64,6 +60,7 @@ fuel.fields.multi_field = function(context){
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
+	
 	$editors = $ckEditor = $('textarea', context).not('.no_editor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
@@ -98,6 +95,7 @@ fuel.fields.wysiwyg_field = function(context){
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
 		}
 		CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
+
 		// add this so that we can set that the page has changed
 		CKEDITOR.instances[ckId].on('instanceReady', function(e){
 			editor = e.editor;
@@ -169,14 +167,16 @@ fuel.fields.wysiwyg_field = function(context){
 				return false;
 			})
 		}
-
-		
 	}
-	
+
 	$editors.each(function(i) {
+		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
-			createCKEditor(this);
+//			createCKEditor(this);
+			setTimeout(function(){
+				createCKEditor(_this);
+			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
 		} else {
 			createMarkItUp(this);
 		}
@@ -192,15 +192,19 @@ fuel.fields.wysiwyg_field = function(context){
 
 // file upload field
 fuel.fields.file_upload_field = function(context){
-	// setup multi-file naming convention
-	$.fn.MultiFile.options.accept = jqx.config.assetsAccept;
-	$multiFile = $('.multifile:file');
 	
-	// get accept types and then remove the attribute from the DOM to prevent issue with Chrome
-	var acceptTypes = $multiFile.attr('accept');
-	$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
-	$multiFile.removeAttr('accept');// for Chrome bug
-	$multiFile.MultiFile({ namePattern: '$name___$i'});
+	// hackalicious... to prevent issues when things get ajaxed in
+	setTimeout(function(){
+		// setup multi-file naming convention
+		$.fn.MultiFile.options.accept = jqx.config.assetsAccept;
+		$multiFile = $('.multifile:file');
+
+		// get accept types and then remove the attribute from the DOM to prevent issue with Chrome
+		var acceptTypes = $multiFile.attr('accept');
+		$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
+		$multiFile.removeAttr('accept');// for Chrome bug
+		$multiFile.MultiFile({ namePattern: '$name___$i'});
+	}, 500)
 	
 }
 
@@ -209,77 +213,67 @@ fuel.fields.asset_field = function(context){
 	
 	var selectedAssetFolder = 'images';
 	var activeField = null;
-	
-	if (!$('#asset_modal').size()){
-		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
-	}
-	
-	// select asset
+
 	var showAssetsSelect = function(){
-		$('#asset_modal').jqm({
-			ajax: jqx.config.fuelPath + '/assets/select_ajax/' + selectedAssetFolder,
-		 	onLoad: function(){
-				$('#asset_select').val($('#' + activeField).val());
-				if (!$('#asset_select').val()) $('#asset_select').val($('#asset_select').children(':first').attr('value'));
-				var isImg = ($('#asset_select').val() && $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/));
-				//if (_this.assetFolder == 'images'){
-				if (isImg){
-					$('#asset_select').change(function(e){
-						$('#asset_preview').html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $('#asset_select').val() + '" />');
-					})
-					$('#asset_select').change();
-				} else {
-					$('#asset_preview').hide();
-				}
-				
-				$('.ico_yes').click(function(){
-					$('#asset_modal').jqmHide();
-					$('#' + activeField).val($('#asset_select').val());
-					return false;
-				});
-				$('.ico_no').click(function(){
-					$('#asset_modal').jqmHide();
-					return false;
-				});
-			}
-		}).jqmShow();
-		return false;
+		var url = jqx.config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
+		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 450px; width: 850px;"></iframe>';
+		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 		
+		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
+		$modal.find('iframe#asset_inline_iframe').bind('load', function(){
+			var iframeContext = this.contentDocument;
+			$assetSelect = $('#asset_select', iframeContext);
+			$assetPreview = $('#asset_preview', iframeContext);
+			$('.modal_close', iframeContext).click(function(){
+				$modal.jqmHide();
+				var assetVal = jQuery.trim($('#' + activeField).val());
+				if (assetVal.length) assetVal += ', ';
+				var selectedVal = $assetSelect.val();
+				assetVal += selectedVal;
+				$('#' + activeField).val(assetVal);
+				return false;
+			});
+		})
+		return false;
 	}
+	
 	
 	var _this = this;
 	$('.asset_select', context).each(function(i){
-		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
-		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
-		var btnLabel = '';
-		switch(assetFolder.split('/')[0].toLowerCase()){
-			case 'pdf':
-				btnLabel = fuel.lang('btn_pdf');
-				break;
-			case 'images': case 'img': case '_img':
-				btnLabel = fuel.lang('btn_image');
-				break;
-			case 'swf': case 'flash':
-				btnLabel = fuel.lang('btn_flash');
-				break;
-			default :
-				btnLabel = fuel.lang('btn_asset');
+		if ($(this).parent().find('.asset_upload_button').size() == 0){
+			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
+			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			var btnLabel = '';
+			switch(assetFolder.split('/')[0].toLowerCase()){
+				case 'pdf':
+					btnLabel = fuel.lang('btn_pdf');
+					break;
+				case 'images': case 'img': case '_img':
+					btnLabel = fuel.lang('btn_image');
+					break;
+				case 'swf': case 'flash':
+					btnLabel = fuel.lang('btn_flash');
+					break;
+				default :
+					btnLabel = fuel.lang('btn_asset');
+			}
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 		}
-		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 	});
 
 	$('.asset_select_button', context).click(function(e){
 		activeField = $(e.target).parent().find('input:first').attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
-		return showAssetsSelect();
+		showAssetsSelect();
+		return false;
 	});
 	
 	
 	// asset upload 
 	var showAssetUpload = function(url){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
-		$modal = fuel.modalWindow(html, 'inline_edit_modal');
+		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
@@ -293,10 +287,12 @@ fuel.fields.asset_field = function(context){
 		return false;
 	}
 	$('.asset_upload', context).each(function(i){
-		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
-		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
-		var btnLabel = fuel.lang('btn_upload_asset');
-		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
+		if ($(this).parent().find('.asset_upload_button').size() == 0){
+			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
+			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			var btnLabel = fuel.lang('btn_upload_asset');
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
+		}
 	});
 	
 	$('.asset_upload_button', context).click(function(e){
@@ -304,43 +300,13 @@ fuel.fields.asset_field = function(context){
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		var url = $(this).attr('href');
-		return showAssetUpload(url);
+		showAssetUpload(url);
+		return false;
+		
 	});
 }
 
-// upload an asset
-fuel.fields.asset_upload = function(context){
-	
-	$('.asset_upload', context).each(function(i){
-		var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
-		var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
-		var btnLabel = '';
-		switch(assetFolder.split('/')[0].toLowerCase()){
-			case 'pdf':
-				btnLabel = fuel.lang('btn_pdf');
-				break;
-			case 'images': case 'img': case '_img':
-				btnLabel = fuel.lang('btn_image');
-				break;
-			case 'swf': case 'flash':
-				btnLabel = fuel.lang('btn_flast');
-				break;
-			default :
-				btnLabel = fuel.lang('btn_asset');
-		}
-		$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
-	});
-	if (!$('#asset_modal').size()){
-		$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
-	}
-	$('.asset_upload_button', context).click(function(e){
-		activeField = $(e.target).prev().attr('id');
-		var assetTypeClasses = $(e.target).attr('class').split(' ');
-		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
-		return showAssetsSelect();
-	});
-}
-
+// inline editing of another module
 fuel.fields.inline_edit_field = function(context){
 
 
@@ -375,7 +341,7 @@ fuel.fields.inline_edit_field = function(context){
 	var selected = null;
 	var editModule = function(url, onLoadCallback, onCloseCallback){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
-		$modal = fuel.modalWindow(html, 'inline_edit_modal', onLoadCallback, onCloseCallback);
+		$modal = fuel.modalWindow(html, true, 'inline_edit_modal', onLoadCallback, onCloseCallback);
 		
 		// bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){

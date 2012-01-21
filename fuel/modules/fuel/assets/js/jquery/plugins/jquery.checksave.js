@@ -13,6 +13,7 @@ jQuery.checksave = function() {
 	// get current values
 	$('input:text, input:checked, textarea, select').each(function(i){
 		var fieldName = $(this).attr('name') + i;  // add i to help with fields that have the same name
+		$(this).attr('data-fieldref', fieldName ) ;
 		if (window._pageVals){
 			if (window._pageVals[fieldName]){
 				if (typeof(window._pageVals[fieldName]) == 'string'){
@@ -51,7 +52,7 @@ jQuery.checkSaveChange = function(){
 		if (window._pageVals){
 			if (typeof(window._pageVals[fieldName]) != 'string'){
 				var cmp = new Array();
-				var selector = 'input:text[name="' + fieldName + '"],input:checked[name="' + fieldName + '"],textarea[name="' + fieldName + '"],select[name="' + fieldName + '"]';
+				var selector = 'input:text[data-fieldref="' + fieldName + '"],input:checked[data-fieldref="' + fieldName + '"],textarea[data-fieldref="' + fieldName + '"],select[data-fieldref="' + fieldName + '"]';
 				$(selector).each(function(i){
 					var val = $(this).val();
 					if (val){
@@ -59,6 +60,8 @@ jQuery.checkSaveChange = function(){
 					}
 				});
 				if (window._pageVals[fieldName] && cmp.toString() != window._pageVals[fieldName].toString()){
+					console.log(cmp)
+					console.log(fieldName + ' :  ' + window._pageVals[fieldName] + ' : ' + cmp.toString());
 					msg = changedMsg;
 					return false;
 				}

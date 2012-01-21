@@ -621,11 +621,11 @@ class Curl {
 	 * Convenience method that returns an array of CURL options provided a specific "type" parameter
 	 *
 	 * @access	protected
-	 * @param	string	An type of CURL request
-	 * @param	array	Additional options to pass to the CURL option (e.g. $_POST or cookie parameters)
+	 * @param	string	A type of CURL request. (optional)
+	 * @param	array	Additional options to pass to the CURL option (e.g. $_POST or cookie parameters)  (optional)
 	 * @return	array
 	 */	
-	protected function _opts($type, $opt_params = NULL)
+	protected function _opts($type = NULL, $opt_params = NULL)
 	{
 		switch($type)
 		{

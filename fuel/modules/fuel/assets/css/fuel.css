@@ -44,6 +44,7 @@ span.required { color:#c30; }
 tr.drag { border: 1px solid #ccc !important; background-color: #ffe !important }
 tr.drag td { cursor: move !important; background-color: #ffe !important; }
 a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
+td.vtop { vertical-align: top; }
 
 /* give body context to overwrite other generic styles like the jqModal background color*/
 body .success { background-color: #6ec461; background-repeat: no-repeat; }
@@ -69,10 +70,12 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
-.MultiFile-list { float: right; }
+/*.MultiFile-list { float: right; }*/
 .tDnD_whileDrag { background-color: #ff1 !important; }
 .overwrite_field { margin-top: 3px; }
 .overwrite_field input { margin-top: 6px; }
+fieldset.tab { display: none; }
+fieldset.collapsible legend { cursor: pointer; }
 	
 /* header */
 div#fuel_top { line-height: 28px; }
@@ -269,10 +272,10 @@ div.nodata { text-align: center; padding: 10px 0 15px 0;}
 span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
-table.form { border: none; border-spacing: 0; }
-table.form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
-table.form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
-table.form td.required { padding-top: 10px; }
+.form { border: none; border-spacing: 0; }
+.form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
+.form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
+.form td.required { padding-top: 10px; }
 div.more_filters { padding-left: 10px; }
 div.more_filters span.label { float: left; padding-top: 2px; }
 div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  }
@@ -299,14 +302,16 @@ div.modal_content { background-color: #fff; width: 100%; /*width: 100%;*/ /*max-
 div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
-div#asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding: 20px; display: none; }
-div#asset_preview { height: 210px; width: 360px; overflow: auto; text-align: center; padding-top: 20px; }
-div#asset_modal table.asset_select { width: 100%; }
-div#asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }
-div#asset_modal #asset_select { max-width: 350px;}
-div#asset_ajax_form td.label { width: auto; }
+/*div.asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding: 20px; display: none; }
+div.asset_modal table.asset_select { width: 100%; }
+div.asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }
+div.asset_modal #asset_select { max-width: 350px;}
+*/
+div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; padding-top: 20px; }
+/*div#asset_ajax_form td.label { width: auto; }
 div#asset_select_actions { margin: 10px 0 0 50px; }
 div#asset_select_actions a { float: left; }
+*/
 div.img_crop { max-width: 400px; max-height: 200px; overflow: auto; }
 div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
@@ -318,11 +323,11 @@ div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -450px; max-heig
 /*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/
 /*div#add_edit_inline_modal { width: 500px; margin-left: -250px; max-height: 400px; overflow: auto; }*/
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
-div#asset_modal .buttonbar, div#__FUEL_modal__ .buttonbar { float: right;}
+/*div#asset_modal .buttonbar, div#__FUEL_modal__ .buttonbar { float: right;}*/
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
 
-div#viewpage_modal { top: 16px; border: 2px solid #666; background-color: #fff; height: 96%; width: 96%; padding: 0; display: none; }
+div.viewpage_modal { top: 16px; border: 2px solid #666; background-color: #fff; height: 96% !important; width: 96% !important; max-width: 96% !important; padding: 0; display: none; }
 div#viewpage_btns { position: absolute; z-index: 1; top: -17px; right: -2px; }
 a.viewpage_btn { float: left; margin-right: 2px; color: #ccc; background-color: #666; padding: 1px 5px; }
 a#viewpage_close { right: 0px; }

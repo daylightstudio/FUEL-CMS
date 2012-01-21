@@ -13,18 +13,18 @@ jqx_config.controllerPath = jqx_config.jsPath + "fuel/controller/";
 jqx_config.pluginPath = jqx_config.jsPath + "jquery/";
 jqx_config.helpersPath = jqx_config.jqxPath + 'helpers/';
 jqx_config.pluginPath = jqx_config.jsPath + 'jquery/plugins/';
-jqx_config.fuelPath = '<?=site_url($this->config->item('fuel_path', 'fuel'))?>';
-jqx_config.cookieDefaultPath = '<?=$this->config->item('fuel_cookie_path', 'fuel')?>';
+jqx_config.fuelPath = '<?=site_url($this->fuel->config('fuel_path'))?>';
+jqx_config.cookieDefaultPath = '<?=$this->fuel->config('fuel_cookie_path')?>';
 <?php if (!empty($keyboard_shortcuts)){ ?>jqx_config.keyboardShortcuts = <?=json_encode($keyboard_shortcuts)?>;<?php } ?> 
-jqx_config.warnIfModified = <?=(int)$this->config->item('warn_if_modified', 'fuel')?>; 
+jqx_config.warnIfModified = <?=(int)$this->fuel->config('warn_if_modified')?>; 
 jqx_config.cacheString = new Date('<?=date('F d, Y H:i:s', strtotime($this->config->item('last_updated'))) ?>').getTime().toString();
-jqx_config.assetsAccept = '<?php $editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel'); echo (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png'); ?>';
+jqx_config.assetsAccept = '<?php $editable_asset_types = $this->fuel->config('editable_asset_filetypes'); echo (!empty($editable_asset_types['all']) ? $editable_asset_types['all'] : 'jpg|jpeg|jpe|gif|png'); ?>';
 <?php if (!empty($js_localized)) :?>
 jqx_config.localized = <?=json_lang($js_localized)?>;
 var __FUEL_LOCALIZED__ = <?=json_lang($js_localized)?>; 
 <?php endif; ?>
-jqx_config.editor = '<?=$this->config->item('text_editor', 'fuel')?>';
-jqx_config.ckeditorConfig = <?=json_encode($this->config->item('ck_editor_settings', 'fuel'))?>;
+jqx_config.editor = '<?=$this->fuel->config('text_editor')?>';
+jqx_config.ckeditorConfig = <?=json_encode($this->fuel->config('ck_editor_settings'))?>;
 
-var __FUEL_PATH__ = '<?=site_url($this->config->item('fuel_path', 'fuel'))?>'; // for preview in markitup settings
+var __FUEL_PATH__ = '<?=site_url($this->fuel->config('fuel_path'))?>'; // for preview in markitup settings
 var CKEDITOR_BASEPATH = '<?=js_path('', 'fuel')?>editors/ckeditor/';

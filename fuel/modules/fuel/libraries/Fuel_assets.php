@@ -39,12 +39,12 @@ class Fuel_assets extends Fuel_base_library {
 	
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->CI->load->helper('directory');
 		$this->CI->load->helper('file');
 		$this->CI->load->library('upload');
 		$this->CI->lang->load('upload'); // loaded here as well so we can use some of the lang messages
-		
+		$this->initialize($params);
 	}
 	
 	function initialize($params)
@@ -83,7 +83,7 @@ class Fuel_assets extends Fuel_base_library {
 		{
 			$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
-		
+
 		// upload the file
 		foreach($_FILES as $key => $file)
 		{
@@ -247,45 +247,22 @@ class Fuel_assets extends Fuel_base_library {
 		}
 		return $this->_data;
 	}
-	
-	// function get_params_from_post($key)
-	// {
-	// 	$valid_params = array(
-	// 							'file_name',
-	// 							'width',
-	// 							'height',
-	// 							'path',
-	// 							'overwrite',
-	// 							'create_thumb',
-	// 							'maintain_raio',
-	// 							'master_dim',
-	// 							'resize_and_crop',
-	// 						);
-	// 	$posted = array();
-	// 	foreach($valid_params as $param)
-	// 	{
-	// 		if (!empty($_POST[$param]))
-	// 		{
-	// 			$posted[$param] = $this->CI->input->post($param);
-	// 		}
-	// 	}
-	// 	return $posted;
-	// 	
-	// }
-	// 
+
 	function normalize_files_array()
 	{
 		$i = 0;
-
-		// normalize the $_FILES array so the Upload class can handle it... in particular multiple files with the same name
 		if (!empty($_FILES))
 		{
 			foreach($_FILES as $key => $file)
 			{
 				if (is_array($file['tmp_name']))
 				{
-					foreach($file as $f)
+					foreach($file as $k => $f)
 					{
+						echo "<pre style=\"text-align: left;\">".$key;
+						print_r($f);
+						echo "</pre>";
+						
 						if (!empty($f['tmp_name']))
 						{
 							$_FILES[$key.'___'.$i]['name'] = $f['name'];
@@ -296,9 +273,37 @@ class Fuel_assets extends Fuel_base_library {
 						}
 						$i++;
 					}
+					
 				}
 			}
 		}
+		
+	}
+	
+	function format_files_array( $files, $name = null, &$new = false, $path = false ){
+	    $names = array( 'name' => 'name', 'type' => 'type', 'tmp_name' => 'tmp_name', 'error' => 'error', 'size' => 'size' );
+
+	    foreach( $files as $key => &$part )
+	    {
+	        $key = ( string ) $key;
+	        if( in_array( $key, $names ) )
+	            $name = $key;
+	        if( !in_array( $key, $names ) )
+	            $path[] = $key;
+	        if( is_array( $part ) )
+	            $part = $this->format_files_array( $part, $name, $new, $path );
+	        elseif( !is_array( $part ) )
+	        {
+	            $current =& $new;
+	            foreach( $path as $p )
+	                $current =& $current[$p];
+	            $current[$name] = $part;
+	            unset( $path );
+	            $name = null;
+	        }
+	    }
+
+	    return $new;
 	}
 	
 	function dir($dir)

@@ -74,6 +74,7 @@ class My_profile extends Fuel_base_controller {
 		
 		// active or publish fields
 		$vars['error'] = $this->users_model->get_errors();
+		$this->fuel->admin->set_titlebar_icon('ico_users');
 		
 		$crumbs = lang('section_my_profile');
 		$this->fuel->admin->set_titlebar($crumbs);

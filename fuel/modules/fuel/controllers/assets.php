@@ -66,6 +66,8 @@ class Assets extends Module {
 			
 			$this->model->on_after_post($posted);
 			
+			$inline = $this->fuel->admin->is_inline();
+			
 			if ($inline === TRUE)
 			{
 				$url = fuel_uri($this->module.'/inline_create/'.$dir);
@@ -102,7 +104,7 @@ class Assets extends Module {
 		$this->create($field, TRUE);
 	}
 	
-	function select_ajax($dir = NULL)
+	function select($dir = NULL)
 	{
 		if (!is_numeric($dir))
 		{
@@ -117,7 +119,20 @@ class Assets extends Module {
 				}
 			}
 		}
-
+		
+		$value = '';
+		if ($this->input->post('selected'))
+		{
+			$value = $this->input->post('selected');
+		}
+		else if ($this->input->get('selected'))
+		{
+			$value = $this->input->get('selected');
+		}
+		
+		$this->js_controller_params['method'] = 'select';
+		$this->js_controller_params['folder'] = $dir;
+	
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
@@ -126,7 +141,7 @@ class Assets extends Module {
 		
 		$preview = '<div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
-		$fields['asset_select'] = array('value' => '', 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview);
+		$fields['asset_select'] = array('value' => $value, 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview, 'display_label' => FALSE);
 		$this->form_builder->css_class = 'asset_select';
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
@@ -134,8 +149,49 @@ class Assets extends Module {
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
 		$vars['form'] = $this->form_builder->render();
-		$this->load->view('assets/assets_select_ajax', $vars);
+		//$this->load->view('assets/assets_select_ajax', $vars);
+		$this->fuel->admin->set_inline(TRUE);
+
+		$crumbs = array('' => $this->module_name, lang('assets_select_action'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		$this->fuel->admin->render('assets/assets_select', $vars);
 	}
+	
+	// function select_ajax($dir = NULL)
+	// 	{
+	// 		if (!is_numeric($dir))
+	// 		{
+	// 			$dir = fuel_uri_string(1, NULL, TRUE);
+	// 			$dirs = $this->fuel->assets->dirs();
+	// 			foreach($dirs as $key => $d)
+	// 			{
+	// 				if ($d == $dir)
+	// 				{
+	// 					$dir = $key;
+	// 					break;
+	// 				}
+	// 			}
+	// 		}
+	// 
+	// 		$this->load->helper('array');
+	// 		$this->load->helper('form');
+	// 		$this->load->library('form_builder');
+	// 		$this->model->add_filters(array('group_id' => $dir));
+	// 		$options = options_list($this->model->list_items(), 'name', 'name');
+	// 		
+	// 		$preview = '<div id="asset_preview"></div>';
+	// 		$field_values['asset_folder']['value'] = $dir;
+	// 		$fields['asset_select'] = array('value' => '', 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview);
+	// 		$this->form_builder->css_class = 'asset_select';
+	// 		$this->form_builder->submit_value = NULL;
+	// 		$this->form_builder->use_form_tag = FALSE;
+	// 		$this->form_builder->set_fields($fields);
+	// 		$this->form_builder->display_errors = FALSE;
+	// 		$this->form_builder->set_field_values($field_values);
+	// 		$vars['form'] = $this->form_builder->render();
+	// 		//$this->load->view('assets/assets_select_ajax', $vars);
+	// 		$this->fuel->admin->render('assets/assets_select_ajax', $vars);
+	// 	}
 	
 	function edit($dir = NULL)
 	{

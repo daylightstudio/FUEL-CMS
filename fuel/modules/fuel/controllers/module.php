@@ -636,7 +636,6 @@ class Module extends Fuel_base_controller {
 		
 		if ($this->input->post($this->model->key_field()))
 		{
-			
 			if ($this->_process_edit($id))
 			{
 				if ($inline === TRUE)
@@ -1005,7 +1004,7 @@ class Module extends Fuel_base_controller {
 			$tmp_key = end(explode('--', $key));
 			$_POST[$tmp_key] = $val;
 		}
-		
+
 		// now loop through and do any substitution
 		foreach($_POST as $key => $val)
 		{
@@ -1502,6 +1501,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
+				
 				// do post processing of updating field values if they changed during upload due to overwrite being FALSE
 				$uploaded_data = $this->fuel->assets->uploaded_data();
 				

@@ -100,6 +100,7 @@
         o.accept = (MultiFile.e.className.match(/\b(accept\-[\w\|]+)\b/gi)) || '';
         o.accept = new String(o.accept).replace(/^(accept|ext)\-/i,'');
        };
+console.log(o.accept)
        
        //===
        

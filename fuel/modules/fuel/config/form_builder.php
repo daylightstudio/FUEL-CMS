@@ -8,7 +8,11 @@ $config['custom_fields'] = array(
 	'datetime' => array(
 		'css_class' => 'datepicker',
 		'css' 		=> array(FUEL_FOLDER => 'datepicker'),
-		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.datePicker'),
+		'js'		=> array(
+							FUEL_FOLDER => array(
+								'jquery/plugins/jquery.datePicker',
+							)
+						),
 		'js_function' => 'fuel.fields.datetime_field',
 		'js_params' => array('format' => 'dd-mm-yyyy'),
 		'represents' => 'datetime|timestamp',
@@ -24,6 +28,7 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.multi_field',
+		'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
 		'represents' => 'array',
 	),
 	
@@ -38,9 +43,9 @@ $config['custom_fields'] = array(
 				'editors/ckeditor/ckeditor.js',
 			)
 		),
+		'css' => array(FUEL_FOLDER => 'markitup'),
 		'js_function' => 'fuel.fields.wysiwyg_field',
 		'represents' => array('text', 'textarea', 'longtext', 'mediumtext'),
-	
 	),
 
 	'file' => array(
@@ -111,7 +116,6 @@ $config['custom_fields'] = array(
 			)
 		),
 		'js_function' => 'fuel.fields.fillin_field',
-
 	),
 	
 	'template' => array(

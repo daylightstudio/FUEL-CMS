@@ -411,7 +411,7 @@ CREATE TABLE `fuel_site_variables` (
 CREATE TABLE `fuel_users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `user_name` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `password` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `password` varchar(64) collate utf8_unicode_ci NOT NULL,
   `email` varchar(100) collate utf8_unicode_ci NOT NULL,
   `first_name` varchar(30) collate utf8_unicode_ci NOT NULL,
   `last_name` varchar(30) collate utf8_unicode_ci NOT NULL,

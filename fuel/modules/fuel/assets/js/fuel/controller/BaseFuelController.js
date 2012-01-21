@@ -165,7 +165,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.rearrangeOn = false;
 		
 		this.notifications();
-		$('#search_term').fillin(this.lang('label_search')).focus();
+		$('#search_term').focus();
 		$('#limit').change(function(e){
 			$('#form').submit();
 		});
@@ -281,8 +281,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		this.notifications();
 		//this._submit();
-		
 		if (initSpecFields) this.initSpecialFields($('#fuel_main_content_inner'));
+		this._initViewPage();
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
@@ -376,8 +376,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				if (confirm('Restoring previous data will overwrite the currently saved data. Are you sure you want to continue?')){
 					var url =  _this.modulePath + '/restore';
 					if (_this.inline) url += '/?inline=' + _this.inline;
-					$('#form').attr('action', url);
-					$('#form').submit();
+					$('#form_actions').attr('action', url);
+					$('#form_actions').submit();
 				}
 			}
 		});
@@ -407,444 +407,17 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (jqx.config.warnIfModified) $.checksave();
 	},
 	
-	_comboOps : function(elem){
-		var comboOpts = {};
-		comboOpts.valuesEmptyString = this.lang('comboselect_values_empty');
-		comboOpts.selectedEmptyString = this.lang('comboselect_selected_empty');
-		comboOpts.defaultSearchBoxString = this.lang('comboselect_filter');
-		var sortingId = $(elem).next().attr('id');
-		if (sortingId && $('#' + sortingId).size()){
-			comboOpts.autoSort = false;
-			comboOpts.isSortable = true;
-			comboOpts.selectedOrdering = eval(unescape($('#' + sortingId).val()));
-		}
-		
-		return comboOpts;
-	},
-	
 	initSpecialFields : function(context){
 		var _this = this;
-	//	this._initRepeatableFields();
-		this._initFormTabs();
-//		$('#form').formBuilder().initialize();
-	//	this._initAssets(context);
-	//	this._initAddEditInline(context);
-	//	this._initDatePicker(context);
-		// this._initEditors(context);
-		this._initViewPage();
-		// this._initLinkedFields(context);
-		
+		this._initFormTabs(context);
+		this._initFormCollapsible(context);
 		$('#form input:first', context).select();
-		
-		// set up supercomboselects
-		// $('select[multiple]', context).not('select[class=no_combo]').each(function(i){
-		// 	var comboOpts = _this._comboOps(this);
-		// 	$(this).supercomboselect(comboOpts);
-		// });
-		// 
-		// // setup multi-file naming convention
-		// $.fn.MultiFile.options.accept = jqx.config.assetsAccept;
-		// $multiFile = $('.multifile:file');
-		// 
-		// // get accept types and then remove the attribute from the DOM to prevent issue with Chrome
-		// var acceptTypes = $multiFile.attr('accept');
-		// $multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
-		// $multiFile.removeAttr('accept');// for Chrome bug
-		// $multiFile.MultiFile({ namePattern: '$name___$i'});
-	},
-	
-	_getjQueryPluginOptions : function(elem){
-		var opts = {};
-		var cssClasses = ($(elem).attr('class') != undefined) ? $(elem).attr('class').split(' ') : '';
-		for(var i = 0; i < cssClasses.length; i++){
-			if (cssClasses[i].substr(0, 7) == 'jqopts='){
-				var jqOptions = cssClasses[i].substr(7);
-				try{
-					eval('opts=' + jqOptions);
-				}catch(e){
-					// fail silently... don't let this be your mantra!
-				}
-			}
-		}
-		return opts;
-	},
-	
-	showAssetsSelect : function(){
-		var _this = this;
-		$('#asset_modal').jqm({
-			ajax: jqx.config.fuelPath + '/assets/select_ajax/' + _this.assetFolder,
-		 	onLoad: function(){
-				$('#asset_select').val($('#' + _this.activeField).val());
-				if (!$('#asset_select').val()) $('#asset_select').val($('#asset_select').children(':first').attr('value'));
-				var isImg = $('#asset_select').val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/);
-				//if (_this.assetFolder == 'images'){
-				if (isImg){
-					$('#asset_select').change(function(e){
-						$('#asset_preview').html('<img src="' + jqx.config.assetsPath + _this.assetFolder + '/' + $('#asset_select').val() + '" />');
-					})
-					$('#asset_select').change();
-				} else {
-					$('#asset_preview').hide();
-				}
-				
-				$('.ico_yes').click(function(){
-					$('#asset_modal').jqmHide();
-					$('#' + _this.activeField).val($('#asset_select').val());
-					return false;
-				});
-				$('.ico_no').click(function(){
-					$('#asset_modal').jqmHide();
-					return false;
-				});
-			}
-		}).jqmShow();
-		return false;
-		
-	},
-	
-	_initAssets : function(context){
-		var _this = this;
-		$('.asset_select', context).each(function(i){
-			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : '';
-			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[1] : 'images';
-			var btnLabel = '';
-			if (assetFolder.split('/')[0] != undefined){
-				switch(assetFolder.split('/')[0].toLowerCase()){
-					case 'pdf':
-						btnLabel = _this.lang('btn_pdf');
-						break;
-					case 'images': case 'img': case '_img':
-						btnLabel = _this.lang('btn_image');
-						break;
-					case 'swf': case 'flash':
-						btnLabel = _this.lang('btn_flash');
-						break;
-					default :
-						btnLabel = _this.lang('btn_asset');
-				}
-			}
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + _this.lang('btn_select') + ' ' + btnLabel + '</a>');
-		});
-		if (!$('#asset_modal').size()){
-			$('body').append('<div id="asset_modal" class="jqmWindow"></div>');
-		}
-		$('.asset_select_button', context).click(function(e){
-			_this.activeField = $(e.target).prev().attr('id');
-			var assetTypeClasses = ($(e.target).attr('class') != undefined) ? $(e.target).attr('class').split(' ') : '';
-			_this.assetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
-			return _this.showAssetsSelect();
-		});
-	},
-	
-	_initDatePicker : function(context){
-		// set up any date fields
-		Date.format = 'mm/dd/yyyy';
-		Date.firstDayOfWeek = 0;
-		
-		$('.datepicker', context).fillin('mm/dd/yyyy');
-		$('.datepicker_hh', context).fillin('hh');
-		$('.datepicker_mm', context).fillin('mm');
-		//$('.datepicker').datePicker();
-		var dpOptions = {startDate: '01/01/2000', endDate: '12/31/2100'}
-		$('.datepicker', context).filter(":not('.dp-applied'),:not(input[disabled='disabled'])").each(function(i){
-			if (!$(this).attr('disabled') && !$(this).attr('readonly')){
-				if ($(this).val() != Date.format){
-					var d = $(this).val();
-					var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
-				} else {
-					var picker = $(this).datePicker(dpOptions);
-				}
-				picker.bind(
-					'dateSelected', 
-					function(e, selectedDates) {
-						$(this).removeClass("fillin");
-					}
-				);
-			}
-		});
-	},
-	
-	_initAddEditInline : function(context){
-		var _this = this;
-
-		$('.add_edit', context).each(function(i){
-			var $field = $(this);
-			var fieldId = $field.attr('id');
-			var className = ($field.attr('class') != undefined) ? $field.attr('class').split(' ') : '';
-			var module = '';
-			if (className.length > 1){
-				module = className[1];
-			} else {
-				module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
-			}
-			var url = jqx.config.fuelPath + '/' + module + '/inline_edit/';
-			$field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + _this.lang('btn_add') + '</a>');
-			$field.after('&nbsp;<a href="' + url + $field.val() + '" class="btn_field edit_inline_button">' + _this.lang('btn_edit') + '</a>');
-			
-			
-			var refreshField = function(html){
-				var refreshUrl = jqx.config.fuelPath + '/' + _this.module + '/refresh_field';
-				var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:html};
-				$.post(refreshUrl, params, function(html){
-					$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
-					_this.notifications();
-					$modalContext.jqmHide();
-					$('#' + fieldId).replaceWith(html);
-					if ($('#' + fieldId + '[multiple]').not('select[class=no_combo]').size()){
-						var comboOpts = _this._comboOps(this);
-						$('#' + fieldId).supercomboselect(comboOpts);
-					}
-					$('#' + fieldId).change(function(){
-						changeField($(this));
-					});
-					changeField($('#' + fieldId));
-				});
-			}
-			
-			var changeField = function($this){
-				if (($this.val() == '' || $this.attr('multiple')) || $this.find('option').size() == 0){
-					if ($this.is('select') && $this.find('option').size() == 0){
-						$this.hide();
-					}
-					if ($this.is('input, select')) $this.next('.btn_field').hide();
-				} else {
-					$this.next('.btn_field').show();
-				}	
-			}
-			
-			
-			if ($('#add_edit_inline_modal').size() == 0){
-				$('body').append('<div id="add_edit_inline_modal" class="jqmWindow"><div class="loader"></div></div>');
-			}
-			var $modalContext = $('#add_edit_inline_modal');
-			
-			$('.add_inline_button', context).click(function(e){
-				_this.editModule($(this).attr('href'), refreshField);
-				return false;
-			});
-
-			$('.edit_inline_button', context).click(function(e){
-				_this.editModule(url + $(this).prev().val(), refreshField);
-				return false;
-			});
-
-			$field.change(function(){
-				changeField($(this));
-			});
-			changeField($field);
-		});
-	},
-	
-	_initEditors : function(context){
-		var _this = this;
-		var selector = 'textarea:not(textarea[class=no_editor])';
-		$editors = $ckEditor = $(selector, context);
-		
-		var createMarkItUp = function(elem){
-			var q = 'module=' + escape(_this.module) + '&field=' + escape($(elem).attr('name'));
-			var markitUpClass = $(elem).attr('class');
-			if (markitUpClass.length){
-				var previewPath = markitUpClass.split(' ');
-				if (previewPath.length && previewPath[0] != 'no_editor'){
-					q += '&preview=' + previewPath[previewPath.length - 1];
-				}
-			}
-			myMarkItUpSettings.previewParserPath = _this.previewPath + '?' + q;
-			$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
-		}
-		
-		// fix ">" within template syntax
-		var fixCKEditorOutput = function(elem){
-			var elemVal = $(elem).val();
-			var re = new RegExp('([=|-])&gt;', 'g');
-			var newVal = elemVal.replace(re, '$1>');
-			$(elem).val(newVal);
-		}
-		
-		var createCKEditor = function(elem){
-
-			var ckId = $(elem).attr('id');
-			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + _this.lang('btn_view_source') + '</a>';
-			// cleanup
-			if (CKEDITOR.instances[ckId]) {
-				CKEDITOR.remove(CKEDITOR.instances[ckId]);
-			}
-			CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
-			
-			// add this so that we can set that the page has changed
-			CKEDITOR.instances[ckId].on('instanceReady', function(e){
-				editor = e.editor;
-				this.document.on('keyup', function(e){
-					editor.updateElement();
-				});
-				
-				// so the formatting doesn't get too crazy from ckeditor
-				this.dataProcessor.writer.setRules( 'p',
-				{
-					indent : false,
-					breakBeforeOpen : true,
-					breakAfterOpen : false,
-					breakBeforeClose : false,
-					breakAfterClose : true
-				});
-			})
-			CKEDITOR.instances[ckId].resetDirty();
-			
-			// needed so it doesn't update the content before submission which we need to clean up... 
-			// our keyup event took care of the update
-			CKEDITOR.config.autoUpdateElement = false;
-			
-			CKEDITOR.instances[ckId].hidden = false; // for toggline
-			
-			$('#' + ckId).parent().append(sourceButton);
-
-			$('#' + ckId + '_viewsource').click(function(){
-				$elem = $(elem);
-				ckInstance = CKEDITOR.instances[ckId];
-
-				//if (!$('#cke_' + ckId).is(':hidden')){
-				if (!CKEDITOR.instances[ckId].hidden){
-					CKEDITOR.instances[ckId].hidden = true;
-					if (!$elem.hasClass('markItUpEditor')){
-						createMarkItUp(elem);
-						$elem.show();
-					}
-					$('#cke_' + ckId).hide();
-					$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-					
-					
-					$('#' + ckId + '_viewsource').text(_this.lang('btn_view_editor'));
-					
-					if (!ckInstance.checkDirty()){
-						$.changeChecksaveValue(ckId, ckInstance.getData())
-					}
-
-					// update the info
-					ckInstance.updateElement();
-					
-					
-				} else {
-					CKEDITOR.instances[ckId].hidden = false;
-					
-					$('#cke_' + ckId).show();
-					
-					$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'}); // used instead of show/hide because of issue with it not showing textarea
-					//$elem.show().closest('.html').hide();
-					$('#' + ckId + '_viewsource').text(_this.lang('btn_view_source'))
-					
-					ckInstance.setData($elem.val());
-				}
-				
-				fixCKEditorOutput(elem);
-				return false;
-			})
-
-			
-		}
-		
-		$editors.each(function(i) {
-			var ckId = $(this).attr('id');
-			if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
-				createCKEditor(this);
-			} else {
-				createMarkItUp(this);
-			}
-			
-			// setup update of element on save just in case
-			$(this).parents('form').submit(function(){
-				if (CKEDITOR && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
-					CKEDITOR.instances[ckId].updateElement();
-				}
-			})
-		});
-		
-	},
-	
-	_initLinkedFields : function(context){
-		var _this = this;
-		
-		// needed for enclosure
-		var bindLinkedKeyup = function(slave, master, func){
-			var slaveId = _this._getFieldId(slave, context);
-			var masterId = _this._getFieldId(master, context);
-			
-			if ($('#' + slaveId).val() == ''){
-				$('#' + masterId).keyup(function(e){
-					
-					// for most common cases
-					if (func){
-						var newVal = func($(this).val());
-						$('#' + slaveId).val(newVal);
-					}
-					
-				});
-			}
-			
-			// setup ajax on blur to do server side processing if no javascript function exists
-			if (!func){
-				$('#' + masterId).blur(function(e){
-					var url = _this.modulePath + '/process_linked';
-					var parameters = {
-						master_field:master, 
-						master_value:$(this).val(), 
-						slave_field:slave
-					};
-					$.post(url, parameters, function(response){
-						$('#' + slaveId).val(response);
-					});
-				});
-			}
-			
-		}
-		
-		// needed for enclosure
-		var bindLinked = function(slave, master, func){
-			if ($('#' + _this._getFieldId(slave, context)).val() == ''){
-				if (typeof(master) == 'string'){
-					bindLinkedKeyup(slave, master, url_title);
-				} else if (typeof(master) == 'object'){
-					
-					for (var o in master){
-						var func = false;
-						var funcName = master[o];
-						var val = $('#' + _this._getFieldId(o, context)).val();
-						if (funcName == 'url_title'){
-							var func = url_title;
-						// check for function scope, first check local function, then class, then global window object
-						} else if (funcName != 'url_title'){
-							if (this[funcName]){
-								var func = this[funcName];
-							} else if (window[funcName]){
-								var func = window[funcName];
-							}
-						}
-						bindLinkedKeyup(n, o, func);
-						break; // stop after first one
-					}
-				}
-			}
-		}
-		if (this.initObj.linked_fields || window['__FUEL_LINKED_FIELDS'] != undefined){
-			var linked = (window['__FUEL_LINKED_FIELDS'] != undefined) ? window['__FUEL_LINKED_FIELDS'] : this.initObj.linked_fields;
-			for(var n in linked){
-				bindLinked(n, linked[n]);
-			}
-		}
-	
-	},
-	
-	_initRepeatableFields : function(context){
-		var _this = this;
-		var repeatableCallback = function(clonedNode){
-			_this.initSpecialFields(clonedNode);
-		}
-		$('.repeatable', context).parent().repeatable({callback: repeatableCallback});
 	},
 	
 	_initFormTabs : function(context){
 		if (!$('#fuel_form_tabs', context).size()){
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
-			$legends = $('legend.tab', context);
+			$legends = $('fieldset.tab legend', context);
 			$legends.each(function(i){
 				if ($(this).parent().attr('id') != '') {
 					$(this).parent().attr('id', 'fieldset' + i);
@@ -863,34 +436,39 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 	},
 	
-	_getFieldId : function(field, context){
-		if ($('.__fuel_module__', context).size()){
-			var val = $('.__fuel_module__', context).attr('id');
-			var prefix = val.split('--')[0];
-			return prefix + '--' + field;
-		}
-		return field;
+	_initFormCollapsible : function(context){
+		$legends = $('fieldset.collapsible legend', context);
+		$legends.toggle(
+			function(i){
+				$(this).next().hide();
+			},
+			function(i){
+				$(this).next().show();
+			}
+		);
 	},
 	
-	_initViewPage : function(context){
+	_initViewPage : function(){
+
 		var _this = this;
 		
 		var resizeViewPageModal = function(){
-			var half = Math.floor($('#viewpage_modal').width()/2);
-			$('#viewpage_modal').css('marginLeft', -half +'px');
+			var half = Math.floor($('#__FUEL_modal__').width()/2);
+			$('#__FUEL_modal__').css('marginLeft', -half +'px');
 		}
-		if (!$('#viewpage_modal').size()){
-			$('body').append('<div id="viewpage_modal" class="jqmWindow"></div>');
-			$('#viewpage_modal').jqm({modal:false,toTop:true});
-		}
-		$('.view_action').click(function(){
-			$('#viewpage_modal').jqmShow();
-			var page = $(this).attr('href');
-			var iframe = '<a href="#" id="viewpage_close" class="modal_close">' + _this.lang('viewpage_close') + '</a><div id="viewpage_btns"><a href="' + page + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a></div><iframe id="viewpage_iframe" src="' + page + '"></iframe>';
-			$('#viewpage_modal').empty().append(iframe);
+		$('.view_action').click(function(e){
+			
+			var url = $(this).attr('href');
+			var html = '<a href="#" id="viewpage_close" class="modal_close">' + _this.lang('viewpage_close') + '</a>';
+			html += '<div id="viewpage_btns"><a href="' + url + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a></div>';
+			html += '<iframe id="viewpage_iframe" src="' + url + '"></iframe>';
+			$modal = fuel.modalWindow(html, 'viewpage_modal', false);
+			$modal.find('iframe#viewpage_iframe').bind('load', function(){
+				var iframeContext = this.contentDocument;
+			})
 			
 			$('#viewpage_close').click(function(){
-				$('#viewpage_modal').jqmHide();
+				$('#__FUEL_modal__').jqmHide();
 				return false;
 			});
 			resizeViewPageModal();
@@ -903,67 +481,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 		);
 		
-	},
-	
-	editModule : function(url, callback){
-		var _this = this;
-		//if ($('#add_edit_inline_modal').size() == 0){
-			$('body').append('<div id="add_edit_inline_modal" class="jqmWindow"><div class="loader"></div></div>');
-		//}
-		var $modalContext = $('#add_edit_inline_modal');
-		$modalContext.jqm({
-			ajax: url,
-		 	onLoad: function(){
-				var $form = $modalContext.find('form');
-				$form.attr('action', url);
-				$form.submit(function(e){
-					if (e.which !== 13)
-					{
-						$('.ico_save', $modalContext).click();
-					}
-					return false;
-				});
-				
-				$('.modal_cancel', $modalContext).click(function(){
-					$modalContext.jqmHide();
-					return false;
-				})
-				$('.ico_save', $modalContext).click(function(){
-					$.removeChecksave();
-					
-					$form.ajaxSubmit({
-						success: function(html){
-							html = $.trim(html);
-							if ($(html).is('error')){
-								_this.displayError($form, html);
-							} else if (callback){
-								callback(html);
-							}
-						}
-					});
-					return false;
-				});
-				$('.delete', $modalContext).click(function(){
-					$.removeChecksave();
-					
-					if (confirm(_this.lang('confirm_delete'))){
-						$form.find('.__fuel_inline_action__').val('delete');
-						$form.ajaxSubmit({
-							success: function(html){
-								html = $.trim(html);
-								if ($(html).is('error')){
-									displayError($form, html);
-								} else if (callback){
-									callback(html);
-								}
-							}
-						});
-					}
-					return false;
-				});
-				_this.initSpecialFields($modalContext);
-			}
-		}).jqmShow();
 	},
 	
 	displayError : function($form, html){
@@ -1047,7 +564,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	redrawTree : function(){
 		$('#tree_loader').show();
-		this.submitForm('#form', '#tree', this.treeAjaxURL, true, this.treeCallback);
+		this.submitForm('#form_actions', '#tree', this.treeAjaxURL, true, this.treeCallback);
 	},
 	
 	redrawTable : function(useAjax, useCache){

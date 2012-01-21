@@ -45,7 +45,7 @@ dave@thedaylightstudio.com
 		
 		initialize: function(context){
 			if (!context){
-				context = $(this).parents('form')[0];
+				context = this;
 			}
 			this.form(context);
 			for(var n in this._funcs){

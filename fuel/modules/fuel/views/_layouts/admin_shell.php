@@ -28,9 +28,6 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 	
 	<div id="fuel_main_panel<?=($no_menu) ? '_compact' : ''?>">
 	
-		<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
-	
-
 		<?php if ($this->fuel->admin->has_panel('titlebar')) : ?>
 		<!-- BREADCRUMB/TITLE BAR PANEL -->
 		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/titlebar')?>
@@ -40,9 +37,12 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		<?php if ($this->fuel->admin->has_panel('actions') AND !empty($actions)) : ?>
 		<!-- ACTION PANEL -->
 		<div id="fuel_actions">
+			<?=$this->form->open('action="'.$form_action.'" method="post" id="form_actions" enctype="multipart/form-data"')?>
 			<?php if (!empty($actions)) : ?>
 			<?=$actions?>
 			<?php endif; ?>
+			<?=$this->form->close()?>
+			
 		</div>
 		<?php endif; ?>
 		
@@ -72,6 +72,9 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		
 		
 		<div id="fuel_main_content<?=($no_menu) ? '_compact' : ''?>"<?=(!empty($main_content_class)) ? ' class="'.$main_content_class.'"' : ''?>>
+			
+			<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
+			
 			<?php if (!empty($warning_window)) : ?>
 				<!-- WARNING WINDOW -->
 				<div class="warning jqmWindow jqmWindowShow" id="warning_window">
@@ -91,11 +94,14 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 			<!-- BODY -->
 			<?=$body?>
+			
+			<?=$this->form->hidden('fuel_inline', (int)$this->fuel->admin->is_inline())?>
+			<?=$this->form->close()?>
 		</div>
-		<?=$this->form->hidden('fuel_inline', (int)$this->fuel->admin->is_inline())?>
-		<?=$this->form->close()?>
 	</div>
 </div>
+
+<div id="fuel_modal" class="jqmWindow"></div>
 
 <?php /* ?>
 <?php if ($this->fuel->admin->has_panel('bottom')) : ?>

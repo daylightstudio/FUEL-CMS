@@ -201,8 +201,7 @@
 				$('#' + leftID).parent().after(searchBoxHTML);
 				searchBox = $('#' + leftID).parent().parent().find('.supercomboselect_search_text');
 				searchBox
-					.fillin(settings.defaultSearchBoxString)
-					.val(settings.defaultSearchBoxString)
+					.attr('placeholder', settings.defaultSearchBoxString)
 					.keyup(function(e){
 						isShiftDown = false; // reset this to prevent issue with not being able to select
 						if (e.shiftKey || e.metaKey || e.altKey || e.ctrlKey || $.inArray(e.keyCode, nonSearchableChars) != -1) return false;

@@ -36,13 +36,23 @@ class Validate extends Fuel_base_controller {
 	
 	function index()
 	{
-		// TODO.... NEED TO FIX THIS METHOD OF GETTING ALL PAGES
 		$pages = $this->fuel->pages->options_list('all', TRUE);
+		
+		$fields['pages'] = array('type' => 'multi', 'options' => $pages, $this->input->post('pages'));
+		
+		$fields['pages_input'] = array('type' => 'textarea', 'value' => $this->fuel->validate->config('default_page_input'), 'class' => 'no_editor', 'cols' => 5, 'rows' => 100, 'placeholder' => lang('validate_pages_input'));
+		$this->load->library('form_builder');
+		$this->form_builder->question_keys = array();
+		$this->form_builder->submit_value = null;
+		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		$form = $this->form_builder->render();
+		$vars['form'] = $form;
+		
 		$vars['form_action'] = 'tools/validate/html';
-		$vars['default_page_input'] = $this->fuel->validate->config('default_page_input');
 		$vars['error'] = (!extension_loaded('curl')) ? lang('error_no_curl_lib') : '';
 		$vars['validation_type'] = lang('validate_type_html');
-		$vars['pages_select'] = $pages;
 		$this->js_controller_params['method'] = 'validate';
 		
 		$crumbs = array('tools' => lang('section_tools'), lang('module_validate'));
@@ -100,7 +110,7 @@ class Validate extends Fuel_base_controller {
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 		
 		// render page
-		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 	function links()
@@ -141,7 +151,7 @@ class Validate extends Fuel_base_controller {
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_validate');
 	
 		// render page
-		$this->fuel->admin->render('run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+		$this->fuel->admin->render('_admin/run', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 	function size_report()
