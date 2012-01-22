@@ -1,4 +1,5 @@
 <?php  if (!empty($page_navs)) : ?>
+
 <div id="page_navs">
 	<h3 class="ico ico_navigation"><?=lang('pages_associated_navigation')?></h3>
 	<ul>

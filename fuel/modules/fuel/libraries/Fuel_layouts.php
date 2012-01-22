@@ -30,12 +30,12 @@
 
 class Fuel_layouts extends Fuel_base_library {
 	
-	public $default_layout = 'main';
-	public $layouts = array();
-	public $layouts_path = '_layouts';
-	public $layout_fields = array();
+	public $default_layout = 'main'; // default layout folder
+	public $layouts_folder = '_layouts'; // layout folder
+	public $layouts = array(); // layout object initialization parametres
+//	public $layout_fields = array();
 
-	protected $_layouts = array();
+	protected $_layouts = array(); // layout objects
 	
 	function __construct($params = array())
 	{
@@ -43,8 +43,11 @@ class Fuel_layouts extends Fuel_base_library {
 		
 		@include(FUEL_PATH.'config/fuel_layouts'.EXT);
 		
+		$this->CI->load->library('form_builder');
+
 		if (!empty($config)) $params = $config;
 		if (empty($params)) show_error('You are missing the fuel_layouts.php config file.');
+
 		$this->initialize($params);
 	}
 	
@@ -70,34 +73,14 @@ class Fuel_layouts extends Fuel_base_library {
 			}
 		}
 		
-		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
-		if ($this->layouts === TRUE OR (is_string($this->layouts) AND strtoupper($this->layouts) == 'AUTO'))
-		{
-			$this->CI->load->helper('file');
-			$layouts = get_filenames(APPPATH.'views/'.$this->layouts_path);
-
-			$this->layouts = array();
-			if (!empty($layouts))
-			{
-				foreach($layouts as $layout)
-				{
-					$layout = substr($layout, 0, -4);
-					$this->layouts[$layout] = $this->layouts_path.$layout;
-				}
-			}
-		}
-		
 		// initialize layout objects
-		foreach($this->layouts as $layout => $path)
+		foreach($this->layouts as $name => $init)
 		{
-			$init = array();
-			$init['name'] = $layout;
-			$init['file'] = $path;
-
-			if (!empty($this->layout_fields[$layout]))
+			$init['name'] = $name;
+			$init['folder'] = $this->layouts_folder;
+			if (!empty($init['fields']))
 			{
-				$this->CI->load->library('form_builder');
-				$fields = $this->layout_fields[$layout];
+				$fields = $init['fields'];
 				$order = 1;
 				foreach($fields as $key => $f)
 				{
@@ -106,13 +89,29 @@ class Fuel_layouts extends Fuel_base_library {
 					unset($fields[$key]['__DEFAULTS__']);
 					$order++;
 				}
+				
 				$init['fields'] = $fields;
+				
+				if (!empty($init['class']))
+				{
+					if (!isset($init['filename']))
+					{
+						$init['filename'] = $init['class'].EXT;
+					}
+
+					if (!isset($init['filepath']))
+					{
+						$init['filepath'] = 'libraries';
+					}
+					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+					require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
+				}
+				else
+				{
+					$init['class'] = 'Fuel_layout';
+				}
+				$this->_layouts[$name] = new $init['class']($init);
 			}
-			if (!empty($this->layout_hooks[$layout]))
-			{
-				$init['hooks'] = $this->layout_hooks[$layout];
-			}
-			$this->_layouts[$layout] = new Fuel_layout($init);
 		}
 	}
 	
@@ -170,6 +169,7 @@ class Fuel_layout extends Fuel_base_library {
 		{
 			$params = array('name' => $params);
 		}
+
 		// setup any intialized variables
 		foreach ($params as $key => $val)
 		{
@@ -177,6 +177,11 @@ class Fuel_layout extends Fuel_base_library {
 			{
 				$this->$key = $val;
 			}
+		}
+		
+		if (empty($this->file))
+		{
+			$this->file = $this->name;
 		}
 	}
 	
@@ -241,11 +246,11 @@ class Fuel_layout extends Fuel_base_library {
 		$this->hooks[$type] = $hook;
 	}
 	
-	function call_hook($hook, $params = array())
+	function call_hook($hook = 'pre_render', $params = array())
 	{
 		// call hooks set in hooks file
 		$hook_name = $hook.'_'.$this->name;
-
+	
 		// run any hooks set on the object
 		if (!empty($this->hooks[$hook]))
 		{
@@ -256,7 +261,7 @@ class Fuel_layout extends Fuel_base_library {
 			$GLOBALS['EXT']->hooks[$hook_name][] = $this->hooks[$hook];
 		}
 		$hook_vars = $GLOBALS['EXT']->_call_hook($hook_name, $params);
-
+	
 		// load variables
 		if (!empty($hook_vars))
 		{

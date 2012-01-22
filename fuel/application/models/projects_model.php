@@ -5,7 +5,7 @@ class Projects_model extends Base_module_model {
 
 	public $filters = array('name');
 	public $required = array('name', 'image_upload');
-	public $linked_fields = array('slug' => array('slug' => 'url_title'), 'client' => array('name' => 'strtoupper'));
+	//public $linked_fields = array('slug' => array('slug' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => array('name' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => 'name', 'client' => 'name');
 	public $boolean_fields = array('boolean_test', 'published');
@@ -31,11 +31,14 @@ class Projects_model extends Base_module_model {
 		$fields = parent::form_fields($values);
 		
 		//$fields['name']['pre_process'] = array('func' => 'url_title', 'params' => array('underscore', TRUE));
-		//$fields['name']['pre_process'] = array('url_title', 'underscore', TRUE);
-		$fields['name']['post_process'] = array('url_title', 'underscore', TRUE);
+		//$fields['name']['pre_process'] = array('url_title', 'dash', TRUE);
+		//$fields['name']['post_process'] = array('url_title', 'underscore', TRUE);
 		
 		// to limit the image folder to just the projects folder for selection
+		// $fields['image']['type'] = 'asset';
 		$fields['image']['class'] = 'asset_select images/projects';
+		$fields['image']['multiple'] = TRUE;
+		$fields['image']['multiline'] = TRUE;
 		//$fields['description']['class'] = 'wysiwyg';
 		
 		// put all project images into a projects subfolder
@@ -68,7 +71,31 @@ class Projects_model extends Base_module_model {
 		$fields['currency'] = array('type' => 'currency', 'negative' => TRUE, 'decimal' => ',');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
 		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE);
-		
+		$fields['state'] = array('type' => 'state');
+		$fields['list_items'] = array('type' => 'list_items');
+		$fields['sections'] = array(
+						'display_label' => FALSE,
+						'type' => 'template', 
+						'label' => 'Page sections', 
+						'fields' => array(
+								'layout' => array('type' => 'select', 'options' => array('img_right' => 'Image Right', 'img_left' => 'Image Left', 'img_right_50' => 'Image Right 50%', 'img_left_50' => 'Image Left 50%')),
+								'title' => '',
+								'action' => '',
+								'content' => array('type' => 'textarea'),
+								'image' => array('type' => 'asset', 'multiple' => FALSE, 'img_styles' => 'float: left; width: 100px;'),
+								'images' => array('type' => 'template', 'repeatable' => TRUE, 'view' => '_admin/fields/images', 'limit' => 3, 'fields' => 
+																		array('image' => array('type' => 'asset', 'multiple' => TRUE))
+																		),
+							),
+
+						'view' => '_admin/fields/section', 
+	//					'post_process' =>  array($custom_fields, 'section_post_process'), 
+						//'js' => array('jquery.repeatable'),
+						'class' => 'repeatable',
+						'add_extra' => FALSE,
+						'repeatable' => TRUE,
+						//'fieldset' => 'Sections',
+						);
 		// temporary
 		unset($fields['_published']);
 		return $fields;

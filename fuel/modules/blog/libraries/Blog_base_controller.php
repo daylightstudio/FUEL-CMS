@@ -5,7 +5,7 @@ class Blog_base_controller extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
-		if (!$this->fuel_auth->accessible_module('blog'))
+		if (!$this->fuel->auth->accessible_module('blog'))
 		{
 			show_404();
 		}
@@ -29,10 +29,9 @@ class Blog_base_controller extends CI_Controller {
 	function _render($view, $vars = array(), $return = FALSE, $layout = '')
 	{
 		if (empty($layout)) $layout = '_layouts/'.$this->fuel->blog->layout();
-		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
 
 		// get any global variables for the headers and footers
-		$_vars = $this->fuel_pagevars->retrieve(uri_path());
+		$_vars = $this->fuel->pagevars->retrieve(uri_path());
 		
 		if (is_array($_vars))
 		{
@@ -40,7 +39,7 @@ class Blog_base_controller extends CI_Controller {
 		}
 		$view_folder = $this->fuel->blog->theme_path();
 		$vars['CI'] =& get_instance();
-		
+
 		$page = $this->fuel->pages->create();
 		
 		if (!empty($layout))

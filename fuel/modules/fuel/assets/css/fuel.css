@@ -64,7 +64,7 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin-bottom: -1px; }
 .repeatable h4 { overflow: hidden; margin: 0 auto 0px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat top center; cursor: move; }
-.repeatable .remove { position: absolute; top: 10px; right: 35px; }
+.repeatable .remove { position: absolute; top: 10px; right: 10px; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
 

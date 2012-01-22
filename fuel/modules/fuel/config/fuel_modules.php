@@ -184,7 +184,7 @@ $config['modules']['users'] = array(
 		if ($cols[\'super_admin\'] != "yes") { 
 			$CI =& get_instance();
 			$link = "";
-			if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+			if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 			{
 				$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";

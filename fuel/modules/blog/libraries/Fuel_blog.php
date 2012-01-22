@@ -866,7 +866,7 @@ class Fuel_blog extends Fuel_advanced_module {
 	function logged_in_user()
 	{
 		$this->CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
-		$valid_user = $this->CI->fuel_auth->valid_user();
+		$valid_user = $this->CI->fuel->auth->valid_user();
 		if (!empty($valid_user))
 		{
 			return $valid_user;
@@ -891,7 +891,7 @@ class Fuel_blog extends Fuel_advanced_module {
 	function is_logged_in()
 	{
 		$this->CI->load->module_library(FUEL_FOLDER, 'fuel_auth');
-		return $this->CI->fuel_auth->is_logged_in();
+		return $this->CI->fuel->auth->is_logged_in();
 	}
 	
 	// --------------------------------------------------------------------

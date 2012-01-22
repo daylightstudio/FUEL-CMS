@@ -182,7 +182,7 @@ class Pages_model extends Base_module_model {
 	function on_before_save($values)
 	{
 		$CI = get_instance();
-		$user = $CI->fuel_auth->user_data();
+		$user = $CI->fuel->auth->user_data();
 		$values['last_modified_by'] = $user['id'];
 		return $values;
 	}

@@ -18,13 +18,13 @@ class Navigation_model extends Base_module_model {
 	function find_by_location($location, $group_id = 1)
 	{
 		$where[$this->_tables['navigation'].'.location'] = $location;
-		return $this->_find_by_array($where);
+		return $this->_find_by_array($where, $group_id);
 	}
 
 	function find_by_nav_key($nav_key, $group_id = 1)
 	{
 		$where[$this->_tables['navigation'].'.nav_key'] = $nav_key;
-		return $this->_find_by_array($where);
+		return $this->_find_by_array($where, $group_id);
 	}
 	
 	protected function _find_by_array($where, $group_id = 1)

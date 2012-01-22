@@ -108,7 +108,7 @@ class Blog_comments_model extends Base_module_model {
 			}
 			$fields['replies'] = array('displayonly' => TRUE, 'value' => implode('<br /><br />', $reply_arr));
 			
-			if (!empty($post) AND $post->author_id == $CI->fuel_auth->user_data('id') OR $CI->fuel_auth->is_super_admin())
+			if (!empty($post) AND $post->author_id == $CI->fuel->auth->user_data('id') OR $CI->fuel->auth->is_super_admin())
 			{
 				$fields['reply'] = array('type' => 'textarea');
 				$notify_options = array('Commentor' => lang('blog_comment_notify_option2'), 'All' => lang('blog_comment_notify_option1'), 'None' => lang('blog_comment_notify_option3'));
@@ -128,9 +128,9 @@ class Blog_comments_model extends Base_module_model {
 		}
 		
 		// set author to current fuel user
-		if (empty($fields['author_id']) AND $CI->fuel_auth->user_data('id'))
+		if (empty($fields['author_id']) AND $CI->fuel->auth->user_data('id'))
 		{
-			$fields['author_id']['value'] = $CI->fuel_auth->user_data('id');
+			$fields['author_id']['value'] = $CI->fuel->auth->user_data('id');
 		}
 		$fields['author_id'] = array('type' => 'hidden');
 
@@ -146,16 +146,16 @@ class Blog_comments_model extends Base_module_model {
 		$CI->load->module_model(BLOG_FOLDER, 'blog_posts_model');
 		$post = $CI->blog_posts_model->find_by_key($posted['post_id']);
 		// must be logged into FUEL, must be the author, must be in the admin pages, must have reply posted and be published
-		if ($CI->fuel_auth->is_logged_in() AND ($post->author_id == $CI->fuel_auth->user_data('id') 
-			OR $CI->fuel_auth->is_super_admin()) AND in_fuel_admin() AND !empty($posted['reply']) 
+		if ($CI->fuel->auth->is_logged_in() AND ($post->author_id == $CI->fuel->auth->user_data('id') 
+			OR $CI->fuel->auth->is_super_admin()) AND in_fuel_admin() AND !empty($posted['reply']) 
 			)
 		{
 			$comment = $this->create();
 			$comment->post_id = $post->id;
 			$comment->parent_id = $values['id'];
-			$comment->author_id = $CI->fuel_auth->user_data('id');
-			$comment->author_name = $CI->fuel_auth->user_data('first_name').' '.$CI->fuel_auth->user_data('last_name');
-			$comment->author_email = $CI->fuel_auth->user_data('email');
+			$comment->author_id = $CI->fuel->auth->user_data('id');
+			$comment->author_name = $CI->fuel->auth->user_data('first_name').' '.$CI->fuel->auth->user_data('last_name');
+			$comment->author_email = $CI->fuel->auth->user_data('email');
 			$comment->author_website = '';
 			$comment->author_ip = $_SERVER['REMOTE_ADDR'];
 			$comment->content = trim($this->input->post('reply', TRUE));
@@ -186,7 +186,7 @@ class Blog_comments_model extends Base_module_model {
 				$CI->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
 				$CI->email->to($to); 
 				$msg = $CI->email->subject(lang('blog_comment_reply_subject', $this->fuel_blog->settings('title')));
-				$msg = lang('blog_comment_reply_msg', $CI->fuel_auth->user_data('email'), $post->title);
+				$msg = lang('blog_comment_reply_msg', $CI->fuel->auth->user_data('email'), $post->title);
 				$msg .= "\n\n".$comment->content;
 				$msg .= "\n\n".$post->url."\n\n";
 

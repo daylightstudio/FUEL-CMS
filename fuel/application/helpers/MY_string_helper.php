@@ -100,6 +100,19 @@ function strip_whitespace($str)
 // --------------------------------------------------------------------
 
 /**
+ * Trims extra whitespace from the end and beginning of a string on multiple lines
+ *
+ * @param 	string
+ * @return	string
+ */
+function trim_multiline($str)
+{
+	return trim(implode("\n", array_map('trim', explode("\n", $str))));
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Converts words to title case and allows for exceptions
  *
  * @param 	string 	string to evaluate

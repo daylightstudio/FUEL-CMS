@@ -34,7 +34,7 @@ class Blog extends Blog_base_controller {
 		{
 			$view_by = 'permalink';
 		}
-		
+
 		// set this to false so that we can use segments for the limit
 		$cache_id = fuel_cache_id();
 		$cache = $this->fuel->blog->get_cache($cache_id);
@@ -92,6 +92,7 @@ class Blog extends Blog_base_controller {
 				$vars['posts'] = $this->fuel->blog->get_posts_by_page($limit, $offset);
 				$vars['pagination'] = $this->pagination->create_links();
 			}
+			
 			// show the index page if the page doesn't have any uri_segment(3)'
 			$view = ($this->uri->rsegment(2) == 'index' OR ($this->uri->rsegment(2) == 'page' AND !$this->uri->segment(3))) ? 'index' : 'posts';
 			$output = $this->_render($view, $vars, TRUE);

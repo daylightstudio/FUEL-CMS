@@ -60,7 +60,7 @@ class Fuel_custom_fields {
 	{
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('html');
-		
+
 		$form_builder =& $params['instance'];
 		if (empty($params['folder']))
 		{
@@ -83,11 +83,24 @@ class Fuel_custom_fields {
 		// set the styles specific to the image
 		if (empty($params['img_styles']))
 		{
-			$params['img_styles'] = 'float: right; width: 100px;';
+			$params['img_styles'] = 'float: left; width: 100px;';
 		}
 		
 		// folders and intended contents
 		$editable_filetypes = $this->fuel->config('editable_asset_filetypes');
+		
+		// set data parameters so that we can use them with the JS
+		
+		// set multiple and separator data attributes so can be used by javascript
+		$multiple = (isset($params['multiple'])) ? (int) $params['multiple'] : 0;
+
+		// set the separator based on if it is multiple lines or just a single line
+		$separator = (isset($params['multiline']) AND $params['multiline'] === TRUE) ? "\n" : ', ';
+
+		$params['data'] = array(
+			'multiple' => $multiple,
+			'separator' => $separator,
+			);
 		
 		if (!empty($params['value']))
 		{
@@ -102,12 +115,24 @@ class Fuel_custom_fields {
 				}
 				else
 				{
-					$assets = preg_split('#\s*,\s*#', $params['value']);
+					// create assoc array with key being the image and the value being either the image name again or the caption
+					$assets = array();
+					$assets_arr = preg_split('#\s*,\s*|\n#', $params['value']);
+					
+					foreach($assets_arr as $a)
+					{
+						$a_arr = preg_split('#\s*:\s*#', $a);
+						$key = $a_arr[0];
+						$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
+						$assets[$key] = trim($value);
+					}
 				}
-				
+
 				// loop through all the assets and concatenate them
-				foreach($assets as $caption => $asset)
+				foreach($assets as $asset => $caption)
 				{
+					$asset_path = '';
+
 					foreach($editable_filetypes as $folder => $regex)
 					{
 						if (!is_http_path($asset))
@@ -123,18 +148,21 @@ class Fuel_custom_fields {
 							$asset_path = $asset;
 						}
 					}
+					
+					if (!empty($asset_path))
+					{
+						$preview .= '<a href="'.$asset_path.'" target="_blank">';
 
-					$preview .= '<a href="'.$asset_path.'" target="_blank">';
-						
-					if (is_image_file($asset))
-					{
-						$preview .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+						if (is_image_file($asset))
+						{
+							$preview .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+						}
+						else
+						{
+							$preview .= $asset;
+						}
+						$preview .= '</a>';
 					}
-					else
-					{
-						$preview .= $asset;
-					}
-					$preview .= '</a>';
 				}
 				
 			}
@@ -142,7 +170,56 @@ class Fuel_custom_fields {
 			$params['after_html'] = $preview;
 		}
 		$params['type'] = '';
-		$str = $form_builder->create_text($params);
+		
+		if (isset($params['multiple']) AND $params['multiple'] === TRUE)
+		{
+			$func_str = '$value = trim($value);
+				$assets = array();
+				$assets_arr = preg_split("#\s*,\s*|\n#", $value);
+				foreach($assets_arr as $a)
+				{
+					$a_arr = preg_split("#\s*:\s*#", $a);
+					$key = $a_arr[0];
+					$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
+					$assets[$key] = trim($value);
+				}
+				return serialize($assets);';
+			$func = create_function('$value', $func_str);
+			
+			$form_builder->set_post_process($params['name'], $func);
+		}
+		
+		// unserialize value if it's serialized
+		if (is_serialized_str($params['value']))
+		{
+			//$params['value'] = implode($separator, $params['value']);
+			$value = unserialize($params['value']);
+			$params['value'] = '';
+			foreach($value as $key => $val)
+			{
+				if ($key !== $val)
+				{
+					$params['value'] .= $key.':'.$val."\n";
+				}
+				else
+				{
+					$params['value'] .= $val."\n";
+				}
+			}
+		}
+		
+		//$params['comment'] = 'Add a caption value to your image by inserting a colon after the image name and then enter your caption like so: my_img.jpg:My caption goes here.';
+		
+		if (!empty($params['multiline']))
+		{
+			$params['class'] = 'no_editor '.$params['class'];
+			$params['style'] = 'float: left;';
+			$str = $form_builder->create_textarea($params);
+		}
+		else
+		{
+			$str = $form_builder->create_text($params);
+		}
 		$str .= $params['after_html'];
 		return $str;
 	}
@@ -213,18 +290,6 @@ class Fuel_custom_fields {
 		return $form_builder->create_text($params);
 	}
 
-	function number($params)
-	{
-		$form_builder =& $params['instance'];
-		return $form_builder->create_number($params);
-	}
-	
-	function email($params)
-	{
-		$form_builder =& $params['instance'];
-		return $form_builder->create_email($params);
-	}
-	
 	function template($params)
 	{
 		$this->CI->load->library('parser');
@@ -254,10 +319,13 @@ class Fuel_custom_fields {
 		
 		$params['depth'] = (empty($params['depth'])) ? 0 : $params['depth']++;
 		
+
+		// set the value
 		if (is_serialized_str($params['value']))
 		{
 			$params['value'] = unserialize($params['value']);
 		}
+		
 		if (!is_array($params['value']))
 		{
 			$params['value'] = array();
@@ -288,6 +356,7 @@ class Fuel_custom_fields {
 				{
 					$field_name_key = (!empty($form_builder->name_array)) ? 'name' : 'orig_name';
 					
+					// set file name field types to not use array syntax for name so they can be processed automagically
 					if (isset($field['type']) AND $field['type'] == 'file')
 					{
 						$field['name'] = $params[$field_name_key].'_'.$i.'_'.$key;
@@ -390,6 +459,65 @@ class Fuel_custom_fields {
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_number($params);
 	}
+	
+	function state($params)
+	{
+		include(APPPATH.'config/states.php');
+		$form_builder =& $params['instance'];
+		
+		$params['options'] = $states;
+		
+		// set data values for jquery plugin to use
+		return $form_builder->create_select($params);
+	}
+	
+	function slug($params)
+	{
+		$form_builder =& $params['instance'];
+		
+		$func= array('url_title', 'dash', TRUE);
+		$form_builder->set_post_process($params['name'], $func);
+		
+		// assume a default is either name or title
+		if (empty($params['linked_to']))
+		{
+			$fields = $form_builder->fields();
+
+			if (isset($fields['title']))
+			{
+				$params['linked_to'] = 'title';
+			}
+			else if (isset($fields['name']))
+			{
+				$params['linked_to'] = 'name';
+			}
+		}
+		
+		// set data values for jquery plugin to use
+		return $this->linked($params);
+	}
+
+	function list_items($params)
+	{
+		$form_builder =& $params['instance'];
+		
+		$func= array('url_title', 'dash', TRUE);
+		
+		// ugly... just strips the whitespace on multilines ... http://stackoverflow.com/questions/1655159/php-how-to-trim-each-line-in-a-heredoc-long-string
+		$params['value'] = trim_multiline(strip_tags($params['value']));
+		
+		$output_class = (!empty($params['output_class'])) ? 'class="'.$params['output_class'].'"' : '';
+		
+		$func_str = '$lis = explode("\n", $value);
+			$lis = array_map("trim", $lis);
+			return ul($lis, "'.$output_class.'");';
+		
+		$func = create_function('$value', $func_str);
+		$form_builder->set_post_process($params['name'], $func);
+		$params['class'] = 'no_editor';
+		return $form_builder->create_textarea($params);
+	}
+
 }
 
 

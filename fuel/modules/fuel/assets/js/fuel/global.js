@@ -76,7 +76,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		$('.cancel, .modal_close', contentDoc).click(function(){
 			$modal.jqmHide();
 		})
-		console.log(autoResize)
+
 		if (autoResize){
 			setTimeout(function(){
 					// if ($('#login', contentDoc).size()){
@@ -100,7 +100,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 					fuel.cascadeIframeWindowSize(iframe.contentWindow, docHeight);
 					//docHeight = docHeight - (fuel.windowLevel() * 50);
 					$(iframe).height(docHeight);
-			}, 200);
+			}, 250);
 		}
 		
 	})

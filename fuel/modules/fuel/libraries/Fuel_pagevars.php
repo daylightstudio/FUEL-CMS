@@ -38,7 +38,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->initialize($params);
 	}
 	

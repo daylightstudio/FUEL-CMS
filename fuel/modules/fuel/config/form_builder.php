@@ -32,6 +32,19 @@ $config['custom_fields'] = array(
 		'represents' => 'array',
 	),
 	
+	'asset' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'asset',
+		'filepath'	=> '',
+		'js'		=> array(
+			FUEL_FOLDER => array(
+				'jquery/plugins/jqModal',
+			)
+		),
+		'js_function' => 'fuel.fields.asset_field',
+		'represents' => array('name' => '.*image$|.*img$'),
+	),
+
 	'wysiwyg' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'wysiwyg',
@@ -60,19 +73,6 @@ $config['custom_fields'] = array(
 		'js_function' => 'fuel.fields.file_upload_field',
 		'represents' => 'blob',
 		
-	),
-
-	'asset' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'asset',
-		'filepath'	=> '',
-		'js'		=> array(
-			FUEL_FOLDER => array(
-				'jquery/plugins/jqModal',
-			)
-		),
-		'js_function' => 'fuel.fields.asset_field',
-		'represents' => array('name' => '.*image$|.*img$'),
 	),
 
 	'inline_edit' => array(
@@ -127,6 +127,13 @@ $config['custom_fields'] = array(
 		'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
 	),
 	
+	'number' => array(
+		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+		'js_function' => 'fuel.fields.number_field',
+		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE) // globally set
+		'represents' => array('int', 'smallint', 'mediumint', 'bigint'),
+	),
+
 	'currency' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'currency',
@@ -134,6 +141,34 @@ $config['custom_fields'] = array(
 		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
 		'js_function' => 'fuel.fields.number_field',
 		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE) // globally set
+	),
+
+	'state' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'state',
+		'filepath'	=> '',
+		'represents' => array('name' => 'state'),
+		
+	),
+
+	'slug' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'slug',
+		'filepath'	=> '',
+		'js'		=> array(
+			FUEL_FOLDER => array(
+				'fuel/linked_field_formatters',
+			)
+		),
+		'js_function' => 'fuel.fields.linked_field',
+		'represents' => array('name' => 'slug|permalink'),
+		
+	),
+
+	'list_items' => array(
+		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+		'function'	=> 'list_items',
+		'filepath'	=> '',
 	),
 
 );

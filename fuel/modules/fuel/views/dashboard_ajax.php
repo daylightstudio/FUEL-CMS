@@ -1,4 +1,4 @@
-<?php if ($this->fuel_auth->has_permission('logs')) : ?>
+<?php if ($this->fuel->auth->has_permission('logs')) : ?>
 <?php if (!empty($latest_activity)) : ?>
 <div class="dashboard_pod" style="width: 400px;">
 
@@ -39,7 +39,7 @@
 <?php endif; ?>
 
 
-<?php if (!empty($docs) AND $this->fuel_auth->has_permission('site_docs')) : ?>
+<?php if (!empty($docs) AND $this->fuel->auth->has_permission('site_docs')) : ?>
 <div class="dashboard_pod" style="width: 230px;">
 
 	<h3><?=lang('dashboard_hdr_site_docs')?></h3>

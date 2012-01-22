@@ -254,7 +254,7 @@ class Assets extends Module {
 	
 	/*function delete($id = NULL, $inline = FALSE)
 	{
-		if (!$this->fuel_auth->has_permission($this->permission, 'delete')) 
+		if (!$this->fuel->auth->has_permission($this->permission, 'delete')) 
 		{
 			show_error(lang('error_no_permissions'));
 		}

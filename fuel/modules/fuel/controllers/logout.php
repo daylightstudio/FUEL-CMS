@@ -15,9 +15,9 @@ class Logout extends CI_Controller {
 		$this->session->sess_destroy();
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		$this->load->helper('cookie');
-		$this->fuel_auth->logout();
+		$this->fuel->auth->logout();
 		$config = array(
-			'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(),
+			'name' => $this->fuel->auth->get_fuel_trigger_cookie_name(),
 			'path' => WEB_PATH
 		);
 		delete_cookie($config);

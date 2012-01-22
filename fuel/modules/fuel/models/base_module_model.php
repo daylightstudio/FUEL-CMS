@@ -301,7 +301,7 @@ class Base_module_model extends MY_Model {
 			return true;
 		}
 		
-		$user = $CI->fuel_auth->user_data();
+		$user = $CI->fuel->auth->user_data();
 		$save['ref_id'] = $ref_id;
 		$save['table_name'] = $this->table_name;
 		$save['archived_user_id'] = $user['id'];

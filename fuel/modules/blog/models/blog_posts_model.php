@@ -74,7 +74,7 @@ class Blog_posts_model extends Base_module_model {
 		$fields['categories'] = array('label' => 'Categories', 'type' => 'array', 'options' => $category_options, 'class' => 'add_edit blog/categories combo', 'value' => $category_values, 'mode' => 'multi');
 		
 		$user_options = $CI->blog_users_model->options_list();
-		$user = $this->fuel_auth->user_data();
+		$user = $this->fuel->auth->user_data();
 		
 		$user_value = (!empty($values['author_id'])) ? $values['author_id'] : $user['id'];
 		$author_comment = $fields['author_id']['comment'];
@@ -121,20 +121,20 @@ class Blog_posts_model extends Base_module_model {
 
 		// create author if it doesn't exists'
 		$CI =& get_instance();
-		$id = (!empty($values['author_id'])) ? $values['author_id'] : $CI->fuel_auth->user_data('id');
+		$id = (!empty($values['author_id'])) ? $values['author_id'] : $CI->fuel->auth->user_data('id');
 		$CI->load->module_model(BLOG_FOLDER, 'blog_users_model');
 		$author = $CI->blog_users_model->find_by_key($id);
 		if (!isset($author->id))
 		{
 			$author = $CI->blog_users_model->create();
-			$author->fuel_user_id = $CI->fuel_auth->user_data('id');
+			$author->fuel_user_id = $CI->fuel->auth->user_data('id');
 
 			// determine a display name if one isn't provided'
 			if (trim($author->display_name) == '')
 			{
-				$display_name = $CI->fuel_auth->user_data('first_name').' '.$this->fuel_auth->user_data('last_name');
-				if (trim($display_name) == '') $display_name = $CI->fuel_auth->user_data('email');
-				if (empty($display_name)) $display_name = $CI->fuel_auth->user_data('user_name');
+				$display_name = $CI->fuel->auth->user_data('first_name').' '.$this->fuel->auth->user_data('last_name');
+				if (trim($display_name) == '') $display_name = $CI->fuel->auth->user_data('email');
+				if (empty($display_name)) $display_name = $CI->fuel->auth->user_data('user_name');
 				$author->display_name = $display_name;
 			}
 

@@ -35,7 +35,7 @@ alter the <dfn>application/config/MY_fuel_layouts.php</dfn> file. You will need 
 </p>
 
 <pre class="brush:php">
-$config['layouts']['main'] = $config['layouts_path'].'main';
+$config['layouts']['main'] = $config['layouts_folder'].'main';
 
 // main layout fields
 $config['layout_fields']['main'] =  array(

@@ -209,7 +209,7 @@ fuel.fields.file_upload_field = function(context){
 }
 
 // asset select field
-fuel.fields.asset_field = function(context){
+fuel.fields.asset_field = function(context, options){
 	
 	var selectedAssetFolder = 'images';
 	var activeField = null;
@@ -221,15 +221,24 @@ fuel.fields.asset_field = function(context){
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#asset_inline_iframe').bind('load', function(){
+
 			var iframeContext = this.contentDocument;
 			$assetSelect = $('#asset_select', iframeContext);
 			$assetPreview = $('#asset_preview', iframeContext);
-			$('.modal_close', iframeContext).click(function(){
+			$('.cancel, .modal_close', iframeContext).click(function(){
 				$modal.jqmHide();
-				var assetVal = jQuery.trim($('#' + activeField).val());
-				if (assetVal.length) assetVal += ', ';
+				var $activeField = $('#' + activeField);
+				var assetVal = jQuery.trim($activeField.val());
 				var selectedVal = $assetSelect.val();
-				assetVal += selectedVal;
+				var separator = $activeField.attr('data-separator');
+				var multiple = parseInt($activeField.attr('data-multiple')) == 1;
+				console.log(multiple)
+				if (multiple){
+					if (assetVal.length) assetVal += separator;
+					assetVal += selectedVal;
+				} else {
+					assetVal = selectedVal;
+				}
 				$('#' + activeField).val(assetVal);
 				return false;
 			});
@@ -262,7 +271,7 @@ fuel.fields.asset_field = function(context){
 	});
 
 	$('.asset_select_button', context).click(function(e){
-		activeField = $(e.target).parent().find('input:first').attr('id');
+		activeField = $(e.target).parent().find('input,textarea:first').attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		showAssetsSelect();
@@ -511,6 +520,7 @@ fuel.fields.linked_field = function(context){
 			bindLinked($(this).attr('id'), eval('(' + linkedInfo + ')'));
 		}
 	});
+	
 }
 
 // create fillin property fields... placeholder value is really all you need though and this may be deprecated

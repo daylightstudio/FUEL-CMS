@@ -11,7 +11,7 @@
 
 	<ul>
 	<?php foreach($nav['modules'] as $key => $val) : ?>
-		<?php if ($this->fuel_auth->has_permission('Manage '.$key)) : ?>
+		<?php if ($this->fuel->auth->has_permission('Manage '.$key)) : ?>
 		<li ><a href="<?=fuel_url($key)?>" class="ico"><?=$val?></a></li>
 		<?php endif; ?>
 	<?php endforeach; ?>

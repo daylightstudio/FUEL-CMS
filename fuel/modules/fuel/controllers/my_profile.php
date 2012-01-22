@@ -12,7 +12,7 @@ class My_profile extends Fuel_base_controller {
 	function edit()
 	{
 		
-		$user = $this->fuel_auth->user_data();
+		$user = $this->fuel->auth->user_data();
 		$id = $user['id'];
 		
 		if (!empty($_POST))

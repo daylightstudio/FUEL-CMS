@@ -20,7 +20,7 @@ class Pages extends Module {
 			$posted = $this->_process();
 			
 			// set publish status to no if you do not have the ability to publish
-			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
 				$posted['published'] = 'no';
 			}
@@ -76,7 +76,7 @@ class Pages extends Module {
 		{
 			
 			
-			if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
 				unset($_POST['published']);
 			}
@@ -104,7 +104,7 @@ class Pages extends Module {
 	{
 		
 		$this->load->library('form_builder');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_model');
+		$this->fuel->load_model('navigation');
 		
 		$this->load->helper('file');
 		$this->js_controller_params['method'] = 'add_edit';
@@ -120,7 +120,7 @@ class Pages extends Module {
 		
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields();
-		if (!$this->fuel_auth->has_permission($this->permission, 'publish'))
+		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			unset($fields['published']);
 		}
@@ -324,7 +324,10 @@ class Pages extends Module {
 		$vars['routes'] = $routes;
 		$vars['uses_controller'] = $uses_controller;
 		$vars['others'] = $this->model->get_others('location', $id);
-		if (!empty($saved['location'])) $vars['page_navs'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+		if (!empty($saved['location'])) 
+		{
+			$vars['page_navs'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+		}
 
 		$actions = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['actions'] = $actions;
@@ -413,7 +416,8 @@ class Pages extends Module {
 			// save to navigation if config allows it
 			if ($this->input->post('navigation_label')) {
 					
-				$this->load->module_model(FUEL_FOLDER, 'navigation_model');
+				$this->fuel->load_model('navigation');
+				
 				$save = array();
 				$save['label'] = $this->input->post('navigation_label');
 				$save['location'] = $this->input->post('location');

@@ -19,7 +19,7 @@
 <div class="buttonbar" id="action_btns">
 
 	<ul>
-	<?php if ($this->fuel_auth->module_has_action('create')) : ?>
+	<?php if ($this->fuel->auth->module_has_action('create')) : ?>
 		<?php 
 		$create_url = (!empty($this->model->filters['group_id'])) ? $this->module_uri.'/create/'.$this->model->filters['group_id'] : $this->module_uri.'/create';
 		if (!empty($tree)) : ?>
@@ -29,7 +29,7 @@
 		<?php else : ?>
 		<li class="end"><a href="<?=fuel_url($create_url)?>" class="ico ico_create" id="create_item"><?=$this->create_action_name?></a></li>
 		<?php endif; ?>
-		<?php if ($this->fuel_auth->module_has_action('delete') && $this->fuel_auth->has_permission($this->permission, 'delete')) : ?>
+		<?php if ($this->fuel->auth->module_has_action('delete') && $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 		<li class="spacer end"><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
 		<?php endif; ?>
 		<li class="spacer end"><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>

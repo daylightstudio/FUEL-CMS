@@ -50,14 +50,6 @@ dave@thedaylightstudio.com
 			});
 		}
 		
-		var checkLimit = function(elem, children){
-			if (options.limit >= children.size()){
-				$(elem).hide();
-			} else {
-				$(elem).show();
-			}
-		}
-		
 		return this.each(function(){
 			var $this = $(this);
 			
@@ -68,7 +60,9 @@ dave@thedaylightstudio.com
 			$this.addClass('__applied__');
 			
 			// create clone to duplicate later
-			$clone = $this.find(options.repeatableSelector + ':last').clone(false);
+			//$clone = $this.find(options.repeatableSelector + ':last').clone(false);
+			$clone = $this.children(':first').clone(false);
+
 			// parse the template
 			var $repeatables = $this.children(options.repeatableSelector);
 			$repeatables.each(function(i){
@@ -99,7 +93,7 @@ dave@thedaylightstudio.com
 			// set button handler
 			$('.' + options.addButtonClass, $this.parent()).click(function(e){
 				var $this = $(this).prev();
-				
+
 				// create clone of a clean clone
 				$clonecopy = $clone.clone(false);
 				var $children = $this.children(options.repeatableSelector);
@@ -109,6 +103,7 @@ dave@thedaylightstudio.com
 				}
 				var index = $children.size();
 				parseTemplate($clonecopy, index);
+				console.log($clone)
 				addRemove($clonecopy);
 				$this.append($clonecopy);
 				

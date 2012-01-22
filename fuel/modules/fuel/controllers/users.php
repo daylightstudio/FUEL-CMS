@@ -22,7 +22,7 @@ class Users extends Module {
 		$user = $this->model->find_by_key($id, 'array');
 		if (!empty($user))
 		{
-			if (!$this->fuel_auth->is_super_admin() && is_true_val($user['super_admin']))
+			if (!$this->fuel->auth->is_super_admin() && is_true_val($user['super_admin']))
 			{
 				show_404();
 			}

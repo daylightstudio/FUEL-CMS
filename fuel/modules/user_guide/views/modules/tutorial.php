@@ -519,7 +519,7 @@ function form_fields($values = array())
     $fields = parent::form_fields($values);
     $CI =& get_instance();
 
-    if ($CI->fuel_auth->has_permission('authors'))
+    if ($CI->fuel->auth->has_permission('authors'))
     {
         $fields['author_id']['class'] = 'add_edit authors';
     }

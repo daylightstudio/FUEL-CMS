@@ -60,7 +60,7 @@ class Articles_model extends Base_module_model {
 		$category_values = (!empty($values['id'])) ? array_keys($CI->categories_to_articles_model->find_all_array_assoc('category_id', array('article_id' => $values['id'], 'categories.published' => 'yes'))) : array();
 		$fields['categories'] = array('label' => 'Categories', 'type' => 'array', 'class' => 'add_edit categories', 'options' => $category_options, 'value' => $category_values, 'mode' => 'multi');
 		
-		if ($CI->fuel_auth->has_permission('authors'))
+		if ($CI->fuel->auth->has_permission('authors'))
 		{
 			$fields['author_id']['class'] = 'add_edit authors';
 		}

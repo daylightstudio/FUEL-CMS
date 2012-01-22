@@ -28,8 +28,8 @@
 
 // --------------------------------------------------------------------
 
-require_once('Fuel_pagevars.php');
-
+// require_once('Fuel_pagevars.php');
+// 
 class Fuel_pages extends Fuel_base_library {
 	
 	protected $_active = NULL;
@@ -339,8 +339,7 @@ class Fuel_page extends Fuel_base_library {
 		
 		$vars_path = $this->views_path.'_variables/';
 		$init_vars = array('location' => $this->location, 'vars_path' => $vars_path);
-		$page_vars = new Fuel_pagevars($init_vars);
-		$vars = $page_vars->retrieve($page_mode);
+		$vars = $this->fuel->pagevars->retrieve($page_mode);
 		$this->add_variables($vars);
 	}
 	
@@ -383,76 +382,18 @@ class Fuel_page extends Fuel_base_library {
 
 		$this->CI->load->library('template');
 		$this->CI->load->library('parser');
-		
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{
-			
-		//	$part_fields = $this->layout->part_field_values($this->layout);
-			// first assign default values for the layout
-		//	$this->CI->template->assign($part_fields);
-		
-			//$this->CI->template->assign($this->layout->field_values());
-			
-			
-			// then assign any variables assigned to the keys
-			//$this->CI->template->assign($this->variables());
-
-
 			$field_values = $this->layout->field_values();
 			
 			$vars = array_merge($field_values, $this->variables());
-			// get master layout files
-			/*$parts = $this->fuel->layouts->parts($this->layout);
-			
-			// assign layouts to the layout object
-			if (is_array($parts))
-			{
-				$this->CI->template->assign_tpl($parts);
-			}
-			else
-			{
-				$this->CI->template->file = $parts;
-			}
 
-			// assign vars to specific parts
-			if (is_array($parts))
-			{
-				foreach($parts as $key => $val)
-				{
-					$part_fields = $this->fuel_layouts->part_field_values($key);
-					
-					// first assign default values for the layout
-					$this->CI->template->assign_to($key, $part_fields);
-					
-					// then assign any variables assigned to the keys
-					$this->CI->template->assign_to($key, $this->variables());
-				}
-			}
-			else
-			{
-				$part_fields = $this->fuel_layouts->part_field_values($this->layout);
-				// first assign default values for the layout
-				$this->CI->template->assign($part_fields);
-				
-				// then assign any variables assigned to the keys
-				$this->CI->template->assign($this->variables());
-			}*/
-			
-			
-			
-//			$this->CI->template->assign_global('CI', $CI);
-			
 			// call layout hooks
 			$this->layout->call_hook('pre_render');
 			
 			// render the content
-			$output = $this->CI->load->view($this->layout->file, $vars, TRUE);
-			// $output = $this->CI->template->render(TRUE);
-			// $vars = array_merge($this->variables(), $this->CI->load->get_vars());
-			// $this->CI->load->vars($vars);
-
-			//unset($vars['CI']);
+			$output = $this->CI->load->view($this->layout->view_path(), $vars, TRUE);
 			
 			// now parse any template like syntax... not good if javascript is used in templates
 			$output = $this->CI->parser->parse_string($output, $vars, TRUE);

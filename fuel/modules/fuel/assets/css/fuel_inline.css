@@ -5,7 +5,7 @@
 @import url(jquery.tooltip.css);
 
 /* generic styles */
-.__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; }
+.__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
 .__fuel__ h2 { font-size: 14px; margin-bottom: 10px; }
 .__fuel__ a { color: #0e3e7e; text-decoration: none; font-weight: normal; }
 .__fuel__ a:hover { text-decoration: underline; }
@@ -26,7 +26,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar li.end { border-right: 1px solid #ccc; }
 .__fuel__ div.buttonbar li.round { -moz-border-radius: 0 0 0 7px; -webkit-border-bottom-left-radius: 7px; border-left: 1px solid #fff;}
 .__fuel__ div.buttonbar label { padding-left: 10px; }
-.__fuel__ div.buttonbar select { margin: 0 10px; }
+.__fuel__ div.buttonbar select { margin: 0 10px; height: auto; max-height: 20px; padding: 0; background: none; }
 .__fuel__ div.buttonbar li.right { float: right; }
 
 .__fuel__ div.buttonbar a.fuel_admin { font-weight: bold; color: #000; }

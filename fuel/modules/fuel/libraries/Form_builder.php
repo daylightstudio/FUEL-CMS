@@ -90,6 +90,8 @@ Class Form_builder {
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
 	protected $_cached; // cached parameters
+	protected $_pre_process; // pre_process functions
+	protected $_post_process; // post_process functions
 	protected $_js; // to be executed once per render
 	protected $_css; // to be executed once per render
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
@@ -1670,36 +1672,40 @@ Class Form_builder {
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
-		if ($mode == 'checkbox' OR ($mode == 'auto' AND count($params['options']) <= 5))
+		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
 			$value = (isset($params['value'])) ? (array)$params['value'] : array();
 
 			$params['name'] = $params['name'].'[]';
 			$i = 1;
-			foreach($params['options'] as $key => $val)
+			
+			if (!empty($params['options']))
 			{
-				$str .= '<span class="multi_field">';
-				$attrs = array(
-					'readonly' => $params['readonly'], 
-					'disabled' => $params['disabled'],
-					'id' => Form::create_id($params['name']).$i,
-					'style' => '' // to overwrite any input width styles
-					
-				);
-				
-				if (in_array($key, $value))
+				foreach($params['options'] as $key => $val)
 				{
-					$attrs['checked'] = 'checked';
-					
+					$str .= '<span class="multi_field">';
+					$attrs = array(
+						'readonly' => $params['readonly'], 
+						'disabled' => $params['disabled'],
+						'id' => Form::create_id($params['name']).$i,
+						'style' => '' // to overwrite any input width styles
+
+					);
+
+					if (in_array($key, $value))
+					{
+						$attrs['checked'] = 'checked';
+
+					}
+					$str .= $this->form->checkbox($params['name'], $key, $attrs);
+
+					$label = ($lang = $this->_label_lang($attrs['id'])) ? $lang : $val;
+					$enum_params = array('label' => $label, 'name' => $attrs['id']);
+					$str .= ' '.$this->create_label($enum_params);
+					$str .= "&nbsp;&nbsp;&nbsp;";
+					$str .= '</span>';
+					$i++;
 				}
-				$str .= $this->form->checkbox($params['name'], $key, $attrs);
-				
-				$label = ($lang = $this->_label_lang($attrs['id'])) ? $lang : $val;
-				$enum_params = array('label' => $label, 'name' => $attrs['id']);
-				$str .= ' '.$this->create_label($enum_params);
-				$str .= "&nbsp;&nbsp;&nbsp;";
-				$str .= '</span>';
-				$i++;
 			}
 		}
 		else
@@ -2374,6 +2380,37 @@ Class Form_builder {
 		$this->html_prepend .= $html;
 	}
 
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Registers a pre process function for a field
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @return	void
+	 */
+	public function set_pre_process($field, $func)
+	{
+		$this->_pre_process[$field] = $func;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Registers a post process function for a field
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @return	void
+	 */
+	public function set_post_process($field, $func)
+	{
+		$this->_post_process[$field] = $func;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -2384,33 +2421,23 @@ Class Form_builder {
 	 */
 	public function pre_process_field_values()
 	{
+		// combine field pre processes with those already set
 		foreach($this->_fields as $key => $field)
 		{
 			if (!empty($field['pre_process']))
 			{
-				$process = $this->_normalize_process_func($field['post_process'], $field['value']);
+				$this->_pre_process[$key] = $field['pre_process'];
+			}
+		}
+		
+		if (is_array($this->_pre_process))
+		{
+			foreach($this->_pre_process as $key => $function)
+			{
+				$process = $this->_normalize_process_func($function, $this->_fields[$key]['value']);
 				$func = $process['func'];
 				$params = $process['params'];
-				if ($func == 'remove' OR $func == 'clear')
-				{
-					$func = create_function('$value, $field', 'return "";');
-				}
-				if (is_array($func) AND isset($func[0]))
-				{
-					$params = $func;
-					
-					// the first parameter is the function name. This will return it and remove it from the array
-					$func = array_shift($params);
-					
-					// now add the current value as the first parameter
-					$func_params[] = $field['value'];
-					$func_params = array_merge($func_params, $params);
-					$this->_fields[$key]['value'] = call_user_func_array($func, $func_params);
-				}
-				else
-				{
-					$this->_fields[$key]['value'] = call_user_func($func, $field['value'], $field);
-				}
+				$this->_fields[$key]['value'] = call_user_func_array($func, $params);
 			}
 		}
 	}
@@ -2425,41 +2452,85 @@ Class Form_builder {
 	 */
 	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
+ 		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
+		$this->render();
+		
 		if (empty($posted)) $posted = $_POST;
+		
+		// combine field post processes with those already set
 		foreach($this->_fields as $key => $field)
 		{
-			if (!empty($field['post_process']) AND isset($posted[$key]))
+			if (!empty($field['post_process']) AND isset($posted[$field['name']]))
 			{
-				$func = $field['post_process'];
-				if ($func == 'remove' OR $func == 'clear')
-				{
-					$func = create_function('$value', 'return "";');
-				}
 				
-				if (is_array($func) AND isset($func[0]))
+				$this->_post_process[$key] = $field['post_process'];
+			}
+		}
+		
+		if (is_array($this->_post_process))
+		{
+			foreach($this->_post_process as $key => $function)
+			{
+				$post_key = $this->_fields[$key]['name'];
+				if (isset($posted[$post_key]))
 				{
-					$params = $func;
+					$process = $this->_normalize_process_func($function, $posted[$post_key]);
+					$func = $process['func'];
+					$params = $process['params'];
+					$posted[$post_key] = call_user_func_array($func, $params);
 					
-					// the first parameter is the function name. This will return it and remove it from the array
-					$func = array_shift($params);
-					
-					// now add the current value as the first parameter
-					$func_params[] = $posted[$key];
-					$func_params = array_merge($func_params, $params);
-					$posted[$key] = call_user_func_array($func, $func_params);
-				}
-				else
-				{
-					$posted[$key] = call_user_func($func, $posted[$key], $field);
-				}
-				
-				if ($set_post)
-				{
-					$_POST[$key] = $posted[$key];
+					if ($set_post)
+					{
+						$_POST[$post_key] = $posted[$post_key];
+					}
 				}
 			}
 		}
 		return $posted;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Normalizes the processing function to be used in post/pre processing of a field
+	 *
+	 * @access	protected
+	 * @return	array
+	 */
+	protected function _normalize_process_func($process, $value)
+	{
+		$params = array($value);
+		if (is_array($process))
+		{
+			if (isset($process['func']))
+			{
+				$func = $process['func'];
+
+				// set any additional parameters
+				if (isset($process['params']))
+				{
+					$params = array_merge($params, $process['params']);
+				}
+			}
+			else
+			{
+				$func = current($process);
+				array_shift($process);
+				$params = array_merge($params, $process);
+			}
+		}
+		else
+		{
+			$func = $process;
+		}
+		
+		// shorthand if the function name is remove or clear, then we return an empty string
+		if ($func == 'remove' OR $func == 'clear')
+		{
+			$func = create_function('$value', 'return "";');
+		}
+		
+		return array('func' => $func, 'params' => $params);
 	}
 
 	// --------------------------------------------------------------------
@@ -2510,50 +2581,6 @@ Class Form_builder {
 			$str = $params;
 		}
 		return $str;
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Normalizes the processing function to be used in post/pre processing of a field
-	 *
-	 * @access	protected
-	 * @return	array
-	 */
-	protected function _normalize_process_func($process, $value)
-	{
-		$params = array($value);
-		if (is_array($process))
-		{
-			if (isset($process['func']))
-			{
-				$func = $process['func'];
-
-				// set any additional parameters
-				if (isset($process['params']))
-				{
-					$params = array_merge($params, $process['params']);
-				}
-			}
-			else
-			{
-				$func = current($process);
-				array_shift($process);
-				$params = array_merge($params, $process);
-			}
-		}
-		else
-		{
-			$func = $process;
-		}
-		
-		// shorthand if the function name is remove or clear, then we return an empty string
-		if ($func == 'remove' OR $func == 'clear')
-		{
-			$func = create_function('$value', 'return "";');
-		}
-		
-		return array('func' => $func, 'params' => $params);
 	}
 	
 	// --------------------------------------------------------------------
