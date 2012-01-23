@@ -55,6 +55,9 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 			<?php if (!empty($notifications)) : ?>
 			<?=$notifications?>
 			<?php endif; ?>
+			<?php if (!empty($pagination)): ?>
+			<div id="pagination"><?=$pagination?></div>
+			<?php endif; ?>
 		</div>
 		<?php endif; ?>
 		
