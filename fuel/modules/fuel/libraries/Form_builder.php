@@ -243,6 +243,7 @@ Class Form_builder {
 				{
 					$fields[$key] = array('name' => $key, 'value' => $val);
 				}
+				$fields[$key]['key'] = $key;
 				if (empty($val['name'])) $fields[$key]['name'] = $key;
 				if (empty($fields[$key]['order'])) $fields[$key]['order'] = $i;
 				$i++;
@@ -967,6 +968,7 @@ Class Form_builder {
 		if (is_object($val)) $val = get_object_vars($val);
 		
 		$defaults = array(
+			'key' => '',
 			'id' => '',
 			'name' => '',
 			'type' => '',
@@ -999,6 +1001,10 @@ Class Form_builder {
 		$params = array_merge($defaults, $val);
 		
 		if (empty($params['orig_name'])) $params['orig_name'] = $params['name']; // for labels in case the name_array is used
+		if (empty($params['key']))
+		{
+			$params['key'] = Form::create_id($params['orig_name']);
+		}
 		if (!isset($val['value']) AND ($params['type'] != 'checkbox' AND !($params['type'] == 'boolean' AND $this->boolean_mode == 'checkbox')))
 		{
 			$params['value'] = $params['default'];
@@ -2454,15 +2460,14 @@ Class Form_builder {
 	{
  		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
 		$this->render();
-		
+
 		if (empty($posted)) $posted = $_POST;
 		
 		// combine field post processes with those already set
 		foreach($this->_fields as $key => $field)
 		{
-			if (!empty($field['post_process']) AND isset($posted[$field['name']]))
+			if (!empty($field['post_process']) AND isset($posted[$key]))
 			{
-				
 				$this->_post_process[$key] = $field['post_process'];
 			}
 		}
@@ -2471,17 +2476,19 @@ Class Form_builder {
 		{
 			foreach($this->_post_process as $key => $function)
 			{
-				$post_key = $this->_fields[$key]['name'];
-				if (isset($posted[$post_key]))
+				if (isset($this->_fields[$key]))
 				{
-					$process = $this->_normalize_process_func($function, $posted[$post_key]);
-					$func = $process['func'];
-					$params = $process['params'];
-					$posted[$post_key] = call_user_func_array($func, $params);
-					
-					if ($set_post)
+					//$post_key = $this->_fields[$key]['name'];
+					if (isset($posted[$key]))
 					{
-						$_POST[$post_key] = $posted[$post_key];
+						$process = $this->_normalize_process_func($function, $posted[$key]);
+						$func = $process['func'];
+						$params = $process['params'];
+						$posted[$key] = call_user_func_array($func, $params);
+						if ($set_post)
+						{
+							$_POST[$key] = $posted[$key];
+						}
 					}
 				}
 			}

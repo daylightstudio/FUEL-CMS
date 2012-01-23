@@ -62,25 +62,25 @@ $config['assets_excluded_dirs'] = array(
 // ckeditor: suitable for clients; shows what the output will look like in the page (http://ckeditor.com/)
 $config['text_editor'] = 'ckeditor';
 
-// ck editor specific settings
-$config['ck_editor_settings'] = array(
-	'toolbar' => array(
-			//array('Source'),
-			array('Bold','Italic','Strike'),
-			array('Format'),
-			array('Image','HorizontalRule'),
-			array('NumberedList','BulletedList'),
-			array('Link','Unlink'),
-			array('Undo','Redo','RemoveFormat'),
-			array('Preview'),
-			array('Maximize'),
-		),
-	'contentsCss' => WEB_PATH.'assets/css/main.css',
-	'htmlEncodeOutput' => FALSE,
-	'entities' => FALSE,
-	'bodyClass' => 'ckeditor',
-	'toolbarCanCollapse' => FALSE,
-);
+// ck editor specific settings... if you use a PHP array, it will use json_encode
+$config['ck_editor_settings'] = "{
+	toolbar:[
+			['Bold','Italic','Strike'],
+			['Format'],
+			['Image','HorizontalRule'],
+			['NumberedList','BulletedList'],
+			['Link','Unlink'],
+			['Undo','Redo','RemoveFormat'],
+			['Preview'],
+			['Maximize']
+		],
+	contentsCss: '".WEB_PATH."assets/css/main.css',
+	htmlEncodeOutput: false,
+	entities: false,
+	bodyClass: 'ckeditor',
+	toolbarCanCollapse: false,
+	protectedSource: [/\{\{[\s\S]*?\}\}/gi, /<\?[\s\S]*?\?>/g]
+	}";
 
 
 /* End of file MY_fuel.php */

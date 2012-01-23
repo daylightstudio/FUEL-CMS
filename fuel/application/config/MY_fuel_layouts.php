@@ -20,7 +20,7 @@ $config['layouts']['main'] = array(
 	
 	'fields'	=> array(
 		'copy' => array('type' => 'copy', 'label' => lang('layout_field_main_copy')),
-		'Sections' => array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'collapsible'),
+		'Sections' => array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'),
 		'sections' => array(
 						'display_label' => FALSE,
 						'type' => 'template', 
@@ -46,11 +46,11 @@ $config['layouts']['main'] = array(
 						'repeatable' => TRUE,
 						//'fieldset' => 'Sections',
 						),
-		'Header' => array('type' => 'fieldset', 'label' => 'Header', 'class' => 'collapsible'),
+		'Header' => array('type' => 'fieldset', 'label' => 'Header', 'class' => 'tab'),
 		'page_title' => array('label' => lang('layout_field_page_title')),
 		'meta_description' => array('label' => lang('layout_field_meta_description')),
 		'meta_keywords' => array('label' => lang('layout_field_meta_keywords')),
-		'Body' => array('type' => 'fieldset', 'label' => 'Body', 'class' => 'collapsible'),
+		'Body' => array('type' => 'fieldset', 'label' => 'Body', 'class' => 'tab'),
 		'body' => array('label' => lang('layout_field_body'), 'type' => 'textarea', 'description' => lang('layout_field_body_description')),
 		'body_class' => array('label' => lang('layout_field_body_class')),
 		// 'nested' => array('type' => 'nested', 'display_label' => FALSE, 'fields' => array(

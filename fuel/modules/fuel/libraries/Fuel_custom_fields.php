@@ -58,6 +58,7 @@ class Fuel_custom_fields {
 
 	function asset($params)
 	{
+
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('html');
 
@@ -173,20 +174,53 @@ class Fuel_custom_fields {
 		
 		if (isset($params['multiple']) AND $params['multiple'] === TRUE)
 		{
-			$func_str = '$value = trim($value);
-				$assets = array();
-				$assets_arr = preg_split("#\s*,\s*|\n#", $value);
-				foreach($assets_arr as $a)
-				{
-					$a_arr = preg_split("#\s*:\s*#", $a);
-					$key = $a_arr[0];
-					$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
-					$assets[$key] = trim($value);
-				}
-				return serialize($assets);';
+			// create an array with tthe key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+			if (isset($params['subkey']))
+			{
+				$func_str = '
+					if (is_array($value))
+					{
+						foreach($value as $key => $val)
+						{
+							if (isset($val["'.$params['subkey'].'"]))
+							{
+								$val = trim($val["'.$params['subkey'].'"]);
+								$assets = array();
+								$assets_arr = preg_split("#\s*,\s*|\n#", $val);
+								foreach($assets_arr as $a)
+								{
+									$a_arr = preg_split("#\s*:\s*#", $a);
+									$k = $a_arr[0];
+									$v = (isset($a_arr[1])) ? $a_arr[1] : $k;
+									$assets[$k] = trim($v);
+									$value[$key]["'.$params['subkey'].'"] = serialize($assets);
+								}
+							}
+						}
+						return $value;
+					}
+					';
+			}
+			else
+			{
+				$func_str = '
+					$value = trim($value);
+					$assets = array();
+					$assets_arr = preg_split("#\s*,\s*|\n#", $value);
+					foreach($assets_arr as $a)
+					{
+						$a_arr = preg_split("#\s*:\s*#", $a);
+						$key = $a_arr[0];
+						$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
+						$assets[$key] = trim($value);
+					}
+					return serialize($assets);
+					';
+			}
+
+				
 			$func = create_function('$value', $func_str);
-			
-			$form_builder->set_post_process($params['name'], $func);
+			$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		// unserialize value if it's serialized
@@ -194,10 +228,11 @@ class Fuel_custom_fields {
 		{
 			//$params['value'] = implode($separator, $params['value']);
 			$value = unserialize($params['value']);
+
 			$params['value'] = '';
 			foreach($value as $key => $val)
 			{
-				if ($key !== $val)
+				if ($key !== $val AND !empty($val))
 				{
 					$params['value'] .= $key.':'.$val."\n";
 				}
@@ -213,7 +248,7 @@ class Fuel_custom_fields {
 		if (!empty($params['multiline']))
 		{
 			$params['class'] = 'no_editor '.$params['class'];
-			$params['style'] = 'float: left;';
+			$params['style'] = 'float: left; width: 250px; height: 60px';
 			$str = $form_builder->create_textarea($params);
 		}
 		else
@@ -365,7 +400,12 @@ class Fuel_custom_fields {
 					{
 						$field['name'] = $params[$field_name_key].'['.$i.']['.$key.']';
 					}
-
+					
+					// set the key to be the same of the parent... so post processing will work
+					$field['key'] = $params['key'];
+					$field['subkey'] = $key;
+					
+					// set placeholders in field names for javascript to translate
 					$field['id'] = preg_replace('#(.+)\[\d\](.+)#U', '$1[{index}]$2', $field['name']);
 					$field['id'] = Form::create_id($field['id']);
 					
@@ -476,7 +516,7 @@ class Fuel_custom_fields {
 		$form_builder =& $params['instance'];
 		
 		$func= array('url_title', 'dash', TRUE);
-		$form_builder->set_post_process($params['name'], $func);
+		$form_builder->set_post_process($params['key'], $func);
 		
 		// assume a default is either name or title
 		if (empty($params['linked_to']))
@@ -513,7 +553,7 @@ class Fuel_custom_fields {
 			return ul($lis, "'.$output_class.'");';
 		
 		$func = create_function('$value', $func_str);
-		$form_builder->set_post_process($params['name'], $func);
+		$form_builder->set_post_process($params['key'], $func);
 		$params['class'] = 'no_editor';
 		return $form_builder->create_textarea($params);
 	}

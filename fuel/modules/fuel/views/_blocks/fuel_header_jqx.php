@@ -4,6 +4,7 @@ jqx_config.basePath =  "<?=(substr(site_url(), -1) != '/') ? site_url().'/' : si
 jqx_config.jsPath = "<?=js_path('', 'fuel')?>";
 jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
 
+jqx_config.uriPath = "<?=uri_path()?>";
 jqx_config.assetsImgPath = "<?=img_path('')?>";
 jqx_config.assetsPath = "<?=assets_path('')?>";
 jqx_config.assetsCssPath = "<?=css_path('')?>";
@@ -24,7 +25,7 @@ jqx_config.localized = <?=json_lang($js_localized)?>;
 var __FUEL_LOCALIZED__ = <?=json_lang($js_localized)?>; 
 <?php endif; ?>
 jqx_config.editor = '<?=$this->fuel->config('text_editor')?>';
-jqx_config.ckeditorConfig = <?=json_encode($this->fuel->config('ck_editor_settings'))?>;
+jqx_config.ckeditorConfig = <?=is_array($this->fuel->config('ck_editor_settings')) ? json_encode($this->fuel->config('ck_editor_settings')) : $this->fuel->config('ck_editor_settings')?>;
 
 var __FUEL_PATH__ = '<?=site_url($this->fuel->config('fuel_path'))?>'; // for preview in markitup settings
 var CKEDITOR_BASEPATH = '<?=js_path('', 'fuel')?>editors/ckeditor/';

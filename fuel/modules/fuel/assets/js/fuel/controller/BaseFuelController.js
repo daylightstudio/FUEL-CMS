@@ -416,6 +416,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	_initFormTabs : function(context){
 		if (!$('#fuel_form_tabs', context).size()){
+			
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
 			$legends = $('fieldset.tab legend', context);
 			$legends.each(function(i){
@@ -431,19 +432,25 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.filter(':first').parent().before(tabs);
 			//$('#form').prepend(tabs);
 			//$('#form').tabs();
-			$('#fuel_form_tabs ul', context).simpleTab();
+			var tabCookieSettings = {group: 'tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.basePath}}
+			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}
 	},
 	
 	_initFormCollapsible : function(context){
+		
+		//var collapsibleCookieSettings = {group: 'collapse', name: 'collapse_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.basePath}}
+		
 		$legends = $('fieldset.collapsible legend', context);
 		$legends.toggle(
 			function(i){
 				$(this).next().hide();
+				return false;
 			},
 			function(i){
 				$(this).next().show();
+				return false;
 			}
 		);
 	},

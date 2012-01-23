@@ -364,6 +364,7 @@ class Pages extends Module {
 		//$vars = $this->input->post('vars');
 		$vars = array();
 
+
 		// process post vars... can't use an array because of file upload complications'
 		foreach($posted as $key => $val)
 		{
@@ -376,8 +377,21 @@ class Pages extends Module {
 
 		if (!empty($vars) && is_array($vars))
 		{
+
+			// run any form field post processing hooks
+
 			$layout = $this->fuel->layouts->get($this->input->post('layout'));
 			$fields = $layout->fields();
+			
+			$this->form_builder->set_fields($fields);
+			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
+
+			// echo "<pre style=\"text-align: left;\">";
+			// print_r($fields);
+			// echo "</pre>";
+
+			// exit('zadfasdfad');
+			
 			$save = array();
 			
 			// clear out all other variables
@@ -385,6 +399,7 @@ class Pages extends Module {
 			$pagevariable_table = $this->db->table_info($this->pagevariables_model->table_name());
 			$var_types = $pagevariable_table['type']['options'];
 			$page_variables_archive = array();
+
 
 			foreach($fields as $key => $val)
 			{

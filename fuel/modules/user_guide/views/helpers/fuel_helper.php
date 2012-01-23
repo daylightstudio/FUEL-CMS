@@ -73,7 +73,7 @@ data structure). The parameter values are very similar to the <a href="<?=user_g
 <p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>
 
 <h2>fuel_set_var(<var>key</var>, <var>val</var>)</h2>
-<p>Sets a variable for all views to use no matter what view it is declared in.</p>
+<p>Sets a variable for all views to use (including layouts) no matter what view it is declared in. Using fuel_set_var in a layout field in the admin, will have no affect (e.g. {fuel_set_var('layout', 'my_layout')}).</p>
 
 <h2>fuel_var_append(<var>key</var>, <var>val</var>)</h2>
 <p>Appends a value to an array variable for all views to use no matter what view it is declared in.</p>

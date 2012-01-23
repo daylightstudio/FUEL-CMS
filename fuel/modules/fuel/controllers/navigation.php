@@ -167,7 +167,7 @@ class Navigation extends Module {
 		$vars['form'] = $this->form_builder->render();
 		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
 
-		$crumbs = array($this->module_uri => $this->module_name, lang('import'));
+		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
 		$this->fuel->admin->set_titlebar($crumbs);
 		
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);

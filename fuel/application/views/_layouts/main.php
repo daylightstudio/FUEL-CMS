@@ -29,12 +29,12 @@
 		<?php echo fuel_edit('sections', 'Sections') ?>
 		<?php if (!empty($sections)) : ?>
 		<?php foreach($sections as $section) : ?>
-		<?php 
-		echo "<pre style=\"text-align: left;\">";
-		print_r($section);
-		echo "</pre>";
-		
-		 ?>
+		// <?php 
+		// echo "<pre style=\"text-align: left;\">";
+		// print_r($section);
+		// echo "</pre>";
+		// 
+		//  ?>
 		<?php endforeach; ?>
 		<?php endif; ?>
 	</div>

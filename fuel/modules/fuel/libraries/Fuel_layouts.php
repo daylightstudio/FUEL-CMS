@@ -33,7 +33,6 @@ class Fuel_layouts extends Fuel_base_library {
 	public $default_layout = 'main'; // default layout folder
 	public $layouts_folder = '_layouts'; // layout folder
 	public $layouts = array(); // layout object initialization parametres
-//	public $layout_fields = array();
 
 	protected $_layouts = array(); // layout objects
 	
@@ -110,7 +109,8 @@ class Fuel_layouts extends Fuel_base_library {
 				{
 					$init['class'] = 'Fuel_layout';
 				}
-				$this->_layouts[$name] = new $init['class']($init);
+				
+				$this->create($name, $init, $init['class']);
 			}
 		}
 	}
@@ -133,6 +133,16 @@ class Fuel_layouts extends Fuel_base_library {
 			$options[$layout->name] = $layout->name;
 		}
 		return $options;
+	}
+	
+	function create($name, $init = array(), $class = 'Fuel_layout')
+	{
+		if (empty($init['name']))
+		{
+			$init['name'] = $name;
+		}
+		$this->_layouts[$name] = new $class($init);
+		return $this->_layouts[$name];
 	}
 }
 
@@ -240,7 +250,6 @@ class Fuel_layout extends Fuel_base_library {
 		return $this->field_value[$key];
 	}
 	
-	
 	function set_hook($type, $hook)
 	{
 		$this->hooks[$type] = $hook;
@@ -267,7 +276,20 @@ class Fuel_layout extends Fuel_base_library {
 		{
 			$CI->load->vars($hook_vars);
 		}
-		
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing variables specific to a layout
+	 *
+	 * @access	public
+	 * @param	array	variables for the view
+	 * @return	array
+	 */	
+	function pre_process($vars)
+	{
+		return $vars;
 	}
 
 }

@@ -345,7 +345,7 @@ class Fuel_page extends Fuel_base_library {
 	
 	function assign_layout($layout)
 	{
-		if (is_string($this->layout))
+		if (!empty($this->layout) AND is_string($this->layout))
 		{
 			$this->layout = $this->fuel->layouts->get($this->layout);
 		}
@@ -355,7 +355,7 @@ class Fuel_page extends Fuel_base_library {
 		}
 		else
 		{
-			$this->layout = new Fuel_layout();
+			$this->layout = $this->fuel->layouts->get('main');
 		}
 	}
 	
@@ -389,24 +389,30 @@ class Fuel_page extends Fuel_base_library {
 			
 			$vars = array_merge($field_values, $this->variables());
 
-			// call layout hooks
-			$this->layout->call_hook('pre_render');
+			// call layout hook
+			$this->layout->call_hook('pre_render', array('vars' => $vars));
+
+			// run the variables through the pre_process method on the layout
+			$vars = $this->layout->pre_process($vars);
 			
-			// render the content
 			$output = $this->CI->load->view($this->layout->view_path(), $vars, TRUE);
-			
+
 			// now parse any template like syntax... not good if javascript is used in templates
 			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
 			
 			// turn on inline editing if they are logged in and cookied
 			if ($fuelify) $output = $this->fuelify($output);
+		
 			if ($return) 
 			{
 				return $output;
 			}
+		
 			$this->CI->output->set_output($output);
 			return TRUE;
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
@@ -538,9 +544,23 @@ class Fuel_page extends Fuel_base_library {
 				$check_file = $this->views_path.$view.$ext;
 			}
 		}
+		
 		// if view file exists, set the appropriate layout 
 		if (file_exists($check_file))
 		{
+			// set layout variable if it isn't set yet'
+			if (!empty($vars['layout']))
+			{
+				$layout = $vars['layout'];
+				$this->layout = $this->fuel->layouts->get($layout);
+			}
+
+			// call layout hook
+			$this->layout->call_hook('pre_render', array('vars' => $vars));
+
+			// run the variables through the pre_process method on the layout
+			// !important ... will reference the layout specified to this point so a layout variable set within the body of the page will not work
+			$vars = $this->layout->pre_process($vars);
 
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
@@ -558,18 +578,16 @@ class Fuel_page extends Fuel_base_library {
 			{
 				$body = $this->CI->load->module_view('app', $view, $vars, TRUE);
 			}
-			
 			// now set $vars to the cached so that we have a fresh set to send to the layout in case any were declared in the view
 			$vars = $this->CI->load->get_vars();
 
-			// set layout variables
-			if (!empty($vars['layout']))
+			// set layout variable again if it's changed'
+			if (!empty($vars['layout']) AND $this->layout->name != $vars['layout'])
 			{
 				$layout = $vars['layout'];
 				$this->layout = $this->fuel->layouts->get($layout);
 			}
 
-			
 			if ($this->layout)
 			{
 				$this->_page_data['layout'] = $layout;
@@ -583,26 +601,13 @@ class Fuel_page extends Fuel_base_library {
 
 			if (!empty($layout))
 			{
-				// removed array of layouts
-				
-				// if (is_array($layout))
-				// {
-				// 	$this->CI->load->library('template');
-				// 	foreach($layout as $key => $val)
-				// 	{
-				// 		if (strncmp($val, '_layouts', 8) !== 0) $val = '_layouts/'.$val;
-				// 		$this->CI->template->assign_tpl($key, $val);
-				// 	}
-				// 	$this->CI->template->assign_to('body', 'body', $body);
-				// 	$output = $this->CI->template->render(TRUE);
-				// }
-				// else
-				// {
-					$vars['body'] = $body;
-					if (strncmp($layout, '_layouts', 8) !== 0) $layout = '_layouts/'.$layout;
-					$output = $this->CI->load->view($layout, $vars, TRUE);
-				// }
-
+				$vars['body'] = $body;
+				$layout_dir = trim($this->fuel->layouts->layouts_folder, '/'); // remove any trailing slash... we'll add it below'
+				if (strncmp($layout, $layout_dir, strlen($layout_dir)) !== 0)
+				{
+					$layout = $layout_dir.'/'.$layout;
+				}
+				$output = $this->CI->load->view($layout, $vars, TRUE);
 			}
 			else
 			{
@@ -653,52 +658,13 @@ class Fuel_page extends Fuel_base_library {
 		$this->CI->asset->assets_path = $this->fuel->config('fuel_assets_path');
 		$this->CI->load->helper('ajax');
 		$this->CI->load->library('form');
-		// $vars['page'] = $this->properties();
-		// $vars['layouts'] = $this->fuel->layouts->options_list();
-		// $vars['tools'] = array(fuel_url('tools/page_analysis/toolbar') => 'Page Analysis');
 		$last_page = uri_path();
 		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);
 
-		//$editable_asset_types = $this->fuel->config('editable_asset_filetypes');
-
-		// add javascript
-		/*
-		
-		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
-		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : '');
-		$vars['init_params']['basePath'] = WEB_PATH;
-		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
-		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
-		$vars['init_params']['jsPath'] = js_path('', 'fuel');
-		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
-		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
-		
-		// load language files
-		$this->CI->load->module_language(FUEL_FOLDER, 'fuel_inline_edit');
-		$this->CI->load->module_language(FUEL_FOLDER, 'fuel_js');
-		
-		
-		// json localization
-		$vars['js_localized'] = json_lang('fuel/fuel_js');
-		//$vars['assetsAccept']['assetsAccept'] = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|gif|png');
-		
-		// database specific... so we must check the fuel mode to see if we actually need to make a call to the database. 
-		// otherwise we get an error when the mode is set to views
-		if ($this->fuel->config('fuel_mode') == 'views')
-		{
-			$vars['others'] = array();
-		}
-		else
-		{
-			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['others'] = $this->CI->pages_model->get_others('location', $this->location, 'location');
-		}
-		*/
-		
 		if (!$this->_fuelified_processed)
 		{
-			//$inline_edit_bar = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
+			// create the inline edit toolbar
 			$inline_edit_bar = $this->fuel->admin->toolbar();
 			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
 			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);

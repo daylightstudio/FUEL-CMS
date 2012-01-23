@@ -160,6 +160,8 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.form',
 	'jquery/plugins/jquery.treeview.min',
 	'jquery/plugins/jquery.cookie',
+	'jquery/plugins/jquery.supercookie',
+	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery-ui-1.8.16.custom.min',

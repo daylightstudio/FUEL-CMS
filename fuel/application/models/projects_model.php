@@ -183,7 +183,14 @@ class Project_model extends Base_module_record {
 
 	function get_image_path()
 	{
-		return img_path('projects/'.$this->image);
+		if (is_array($this->image))
+		{
+			return img_path('projects/'.$this->image[0]);
+		}
+		else
+		{
+			return img_path('projects/'.$this->image);
+		}
 	}
 
 	function get_thumb()

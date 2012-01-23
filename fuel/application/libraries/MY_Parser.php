@@ -108,7 +108,7 @@ class MY_Parser extends CI_Parser {
 			$security->setPhpHandling($this->_parser_allow_php_tags);
 			$security->allowPhpFunction($this->_parser_allowed_php_functions);
 			$dwoo->setSecurityPolicy($security);
-			
+
 			// added by David McReynolds @ Daylight Studio 11/26/11
 			return $dwoo;
 		}
@@ -260,11 +260,15 @@ class MY_Parser extends CI_Parser {
 				// Create the compiler instance
 				$compiler = new Dwoo_Compiler();
 
+				// added by David McReynolds @ Daylight Studio 1/22/12
+				$compiler->setDelimiters($this->l_delim, $this->r_delim);
+
+				
 				//Add a pre-processor to help fix javascript {}
 				// added by David McReynolds @ Daylight Studio 11/04/10
 				$callback = create_function('$compiler', '
 					$string = $compiler->getTemplateSource();
-					$string = preg_replace("#{\s*}#", "{\n}", $string); 
+					$string = preg_replace("#'.$this->l_delim.'\s*'.$this->r_delim.'#", "'.$this->l_delim.'\n'.$this->r_delim.'", $string); 
 					$compiler->setTemplateSource($string);
 					return $string;
 				');

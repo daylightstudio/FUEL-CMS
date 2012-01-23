@@ -23,6 +23,5 @@ CKEDITOR.editorConfig = function( config )
 	config.enterMode = CKEDITOR.ENTER_P;
 	config.shiftEnterMode = CKEDITOR.ENTER_BR;
 	
-	config.protectedSource.push( /\{[\s\S]*?\}/gi );
-	config.protectedSource.push( /<\?[\s\S]*?\?>/g );
+	config.protectedSource = [/\{\{[\s\S]*?\}\}/gi, /<\?[\s\S]*?\?>/g];
 };

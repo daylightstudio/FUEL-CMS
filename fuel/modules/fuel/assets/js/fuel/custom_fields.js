@@ -94,6 +94,7 @@ fuel.fields.wysiwyg_field = function(context){
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
 		}
+		
 		CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
 
 		// add this so that we can set that the page has changed
@@ -168,7 +169,6 @@ fuel.fields.wysiwyg_field = function(context){
 			})
 		}
 	}
-
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
@@ -232,7 +232,6 @@ fuel.fields.asset_field = function(context, options){
 				var selectedVal = $assetSelect.val();
 				var separator = $activeField.attr('data-separator');
 				var multiple = parseInt($activeField.attr('data-multiple')) == 1;
-				console.log(multiple)
 				if (multiple){
 					if (assetVal.length) assetVal += separator;
 					assetVal += selectedVal;
@@ -282,7 +281,7 @@ fuel.fields.asset_field = function(context, options){
 	// asset upload 
 	var showAssetUpload = function(url){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
-		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
+		$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){

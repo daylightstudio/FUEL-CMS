@@ -54,6 +54,7 @@ $config['custom_fields'] = array(
 				'editors/markitup/jquery.markitup',
 				'editors/markitup/jquery.markitup.set',
 				'editors/ckeditor/ckeditor.js',
+				'editors/ckeditor/config.js',
 			)
 		),
 		'css' => array(FUEL_FOLDER => 'markitup'),

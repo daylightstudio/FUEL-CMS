@@ -180,7 +180,7 @@ class Fuel extends Fuel_base_library {
 		if (empty($module)) $module = FUEL_FOLDER;
 		$this->CI->load->module_language($module, $lang);
 	}
-	
+
 	function &__get($var)
 	{
 		if (!isset($this->_attached[$var]))

@@ -191,13 +191,19 @@ function safe_htmlentities($str, $protect_amp = TRUE)
 function php_to_template_syntax($str)
 {
 	// order matters!!!
+	$CI = &get_instance();
+	$CI->load->library('parser');
+	
+	$l_delim = $CI->parser->l_delim;
+	$r_delim = $CI->parser->r_delim;
+	
 	$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<?php echo ', '<?php ', '<?=');
-	$replace = array('$', '$', '{/foreach', '{/if', '{', '{', '{');
+	$replace = array('$', '$', $l_delim.'/foreach', $l_delim.'/if', $l_delim, $l_delim, $l_delim);
 
 	// translate HTML comments NOT! Javascript
 	
 	// close ending php
-	$str = preg_replace('#([:|;])?\s*\?>#U', '}$3', $str);
+	$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', $str);
 
 	$str = str_replace($find, $replace, $str);
 	
@@ -205,20 +211,20 @@ function php_to_template_syntax($str)
 	//$str = preg_replace('#((?<!\{literal\}).*)<script(.+)>(.+)<\/script>.*(?!\{\\\literal\})#Us', "$1\n{literal}\n<script$2>$3</script>\n{\literal}\n", $str);
 	
 	// foreach cleanup
-	$str = preg_replace('#{\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*}#U', '{foreach $1 $2 $4}', $str); // with and without keys
+	$str = preg_replace('#'.$l_delim.'\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*'.$r_delim.'#U', $l_delim.'foreach $1 $2 $4'.$r_delim, $str); // with and without keys
 
 	// remove !empty
 	$callback = create_function('$matches', '
 		if (!empty($matches[2]))
 		{
-			return "{".$matches[1].$matches[3];
+			return "'.$l_delim.'".$matches[1].$matches[3];
 		}
 		else
 		{
-			return "{".$matches[1]."!".$matches[3];
+			return "'.$l_delim.'".$matches[1]."!".$matches[3];
 		}');
 	
-	$str = preg_replace_callback('#{(.+)(!)?empty\((.+)\)#U', $callback, $str);
+	$str = preg_replace_callback('#'.$l_delim.'(.+)(!)?empty\((.+)\)#U', $callback, $str);
 
 	// fix arrays
 	$callback = create_function('$matches', '
