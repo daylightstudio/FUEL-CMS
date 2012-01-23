@@ -268,6 +268,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
+		// automatically set selects to submit
+		$('.more_filters select').change(function(e){
+			$('#form').submit();
+		});
+		
 		
 	},
 	
@@ -370,19 +375,19 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		
-		$('#restore_version').change(function(e){
+		$('#fuel_restore_version').change(function(e){
 			$.removeChecksave();
 			if ($(this).val() != ''){
 				if (confirm('Restoring previous data will overwrite the currently saved data. Are you sure you want to continue?')){
 					var url =  _this.modulePath + '/restore';
 					if (_this.inline) url += '/?inline=' + _this.inline;
-					$('#form_actions').attr('action', url);
-					$('#form_actions').submit();
+					$('#form').attr('action', url);
+					$('#form').submit();
 				}
 			}
 		});
 		
-		$('#others').change(function(e){
+		$('#fuel_other_items').change(function(e){
 			$.removeChecksave();
 			if ($(this).val() != ''){
 				var url =  _this.modulePath + '/edit/' + $(this).val();
@@ -571,7 +576,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	redrawTree : function(){
 		$('#tree_loader').show();
-		this.submitForm('#form_actions', '#tree', this.treeAjaxURL, true, this.treeCallback);
+		this.submitForm('#form', '#tree', this.treeAjaxURL, true, this.treeCallback);
 	},
 	
 	redrawTable : function(useAjax, useCache){

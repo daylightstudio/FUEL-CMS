@@ -234,11 +234,11 @@ class Fuel_custom_fields {
 			{
 				if ($key !== $val AND !empty($val))
 				{
-					$params['value'] .= $key.':'.$val."\n";
+					$params['value'] .= $key.':'.$val.$separator;
 				}
 				else
 				{
-					$params['value'] .= $val."\n";
+					$params['value'] .= $val.$separator;
 				}
 			}
 		}

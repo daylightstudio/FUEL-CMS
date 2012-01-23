@@ -37,8 +37,8 @@ class Projects_model extends Base_module_model {
 		// to limit the image folder to just the projects folder for selection
 		// $fields['image']['type'] = 'asset';
 		$fields['image']['class'] = 'asset_select images/projects';
-		$fields['image']['multiple'] = TRUE;
-		$fields['image']['multiline'] = TRUE;
+		$fields['image']['multiple'] = FALSE;
+		$fields['image']['multiline'] = FALSE;
 		//$fields['description']['class'] = 'wysiwyg';
 		
 		// put all project images into a projects subfolder

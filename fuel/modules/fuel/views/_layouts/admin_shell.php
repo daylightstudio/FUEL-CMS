@@ -33,15 +33,17 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/titlebar')?>
 		<?php endif; ?>
 		
+		<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
 		
 		<?php if ($this->fuel->admin->has_panel('actions') AND !empty($actions)) : ?>
 		<!-- ACTION PANEL -->
 		<div id="fuel_actions">
-			<?=$this->form->open('action="'.$form_action.'" method="post" id="form_actions" enctype="multipart/form-data"')?>
+
+			<?php /* ?><?=$this->form->open('action="'.$form_action.'" method="post" id="form_actions" enctype="multipart/form-data"')?><?php */ ?>
 			<?php if (!empty($actions)) : ?>
 			<?=$actions?>
 			<?php endif; ?>
-			<?=$this->form->close()?>
+			<?php /* ?><?=$this->form->close()?><?php */ ?>
 			
 		</div>
 		<?php endif; ?>
@@ -73,7 +75,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		
 		<div id="fuel_main_content<?=($no_menu) ? '_compact' : ''?>"<?=(!empty($main_content_class)) ? ' class="'.$main_content_class.'"' : ''?>>
 			
-			<?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?>
+			<?php /* ?><?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?><?php */ ?>
 			
 			<?php if (!empty($warning_window)) : ?>
 				<!-- WARNING WINDOW -->
@@ -96,8 +98,9 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 			<?=$body?>
 			
 			<?=$this->form->hidden('fuel_inline', (int)$this->fuel->admin->is_inline())?>
-			<?=$this->form->close()?>
 		</div>
+		<?=$this->form->close()?>
+			
 	</div>
 </div>
 

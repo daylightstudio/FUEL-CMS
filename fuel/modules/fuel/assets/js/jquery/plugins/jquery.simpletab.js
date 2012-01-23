@@ -7,7 +7,6 @@ dave@thedaylightstudio.com
 
 // requires super cookie plugin if cookies is used
 */
-
 ;(function($){
 	jQuery.fn.simpleTab = function(settings) {
 		var s = jQuery.extend({
@@ -34,7 +33,7 @@ dave@thedaylightstudio.com
 			$children.click(function(){
 				$this = $(this);
 				var index = $this.index();
-				
+				if (isNaN(index)) index = 0;
 				// hide active if it isn't active tab
 				if (!activeTab || $this.find('a').attr('href') != activeTab.find('a').attr('href')){
 					if (activeTab) activeTab.removeClass('active');
@@ -52,6 +51,8 @@ dave@thedaylightstudio.com
 					$(this).trigger('tabClicked');
 					if (hasCookie){
 						$.supercookie(s.cookie.group, s.cookie.name, index.toString(), s.cookie.params);
+					} else {
+						s.startIndex = 0;
 					}
 				}
 				
@@ -60,6 +61,7 @@ dave@thedaylightstudio.com
 			
 			if (hasCookie){
 				s.startIndex = parseInt($.supercookie(s.cookie.group, s.cookie.name));
+				if (isNaN(s.startIndex)) s.startIndex = 0;
 			}
 			$(this).children().eq(s.startIndex).click();
 			

@@ -147,7 +147,7 @@ class Module extends Fuel_base_controller {
 		$this->items();
 	}
 	
-	function items($inline = FALSE)
+	function items()
 	{
 		
 		$this->load->library('data_table');
@@ -355,6 +355,8 @@ class Module extends Fuel_base_controller {
 			$vars['form_action'] = $this->module_uri.'/items';
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
+			
+			$inline = $this->input->get('inline');
 			$this->fuel->admin->set_inline($inline);
 			
 			if ($inline === TRUE)
@@ -1222,9 +1224,9 @@ class Module extends Fuel_base_controller {
 	
 	function restore()
 	{
-		if (!empty($_POST['restore_version']) AND !empty($_POST['restore_ref_id']))
+		if (!empty($_POST['fuel_restore_version']) AND !empty($_POST['fuel_restore_ref_id']))
 		{
-			if (!$this->model->restore($this->input->post('restore_ref_id'), $this->input->post('restore_version')))
+			if (!$this->model->restore($this->input->post('fuel_restore_ref_id'), $this->input->post('fuel_restore_version')))
 			{
 				$msg = lang('module_restored', $this->module_name);
 				$this->fuel->logs->write($msg);
@@ -1235,7 +1237,7 @@ class Module extends Fuel_base_controller {
 			{
 				$this->session->set_flashdata('success', lang('module_restored_success'));
 			}
-			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('restore_ref_id')));
+			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
 		}
 		else
 		{

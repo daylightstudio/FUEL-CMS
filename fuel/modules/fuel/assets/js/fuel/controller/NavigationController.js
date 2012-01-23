@@ -4,7 +4,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		this._super(initObj);
 	},
 
-	items : function(){
+	/*items : function(){
 		// call parent
 		fuel.controller.BaseFuelController.prototype.items.call(this);
 		//fuel.controller.BaseFuelController.prototype.items();
@@ -12,7 +12,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		$('#group_id').change(function(e){
 			$('#form_actions').submit();
 		});
-	},
+	},*/
 	
 	add_edit : function(){
 		// call parent
