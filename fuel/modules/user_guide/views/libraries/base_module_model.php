@@ -79,7 +79,7 @@ select statement like so:</p>
 
 <pre class="brush:php">
 ...
-function list_items()
+function list_items($limit=NULL, $offset=NULL, $col = "name", $order = "asc")
 {
 	$this->db->select('id, name', published');
 	parent::list_items($limit, $offset, $col, $order);

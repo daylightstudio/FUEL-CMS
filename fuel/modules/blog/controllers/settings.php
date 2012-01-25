@@ -2,7 +2,8 @@
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Settings extends Fuel_base_controller {
-	var $view_location = 'blog';
+	public $view_location = 'blog';
+	public $nav_selected = 'blog/settings';
 	
 	function __construct()
 	{

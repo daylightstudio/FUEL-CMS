@@ -254,7 +254,7 @@ class Module extends Fuel_base_controller {
 					if (strtoupper($val) != 'VIEW' OR (!empty($this->preview_path) AND strtoupper($val) == 'VIEW'))
 					{
 						$action_name = lang('table_action_'.strtolower($val));
-						if (empty($action_name)) $actino_name = $val;
+						if (empty($action_name)) $action_name = $val;
 						$this->data_table->add_action($action_name, site_url('/'.$this->config->item('fuel_path', 'fuel').$this->module_uri.'/'.strtolower($val).'/{'.$this->model->key_field().'}'), 'url');
 					}
 				}
@@ -1027,9 +1027,18 @@ class Module extends Fuel_base_controller {
 		{
 			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 
-			// use regex to replace {} values in the preview path
-			$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$data['\\2'].'\\3'", $this->preview_path);
-			
+			$url = $this->preview_path;
+		
+			// get the keys from the preview path
+			preg_match_all('#\{(.+)\}#U', $this->preview_path, $matches, PREG_PATTERN_ORDER);
+			if (!empty($matches[1]))
+			{
+				foreach($matches[1] as $match)
+				{
+					$url = str_replace('{'.$match.'}', $data[$match], $url);
+				}
+			}
+
 			// change the last page to be the referrer
 			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
 			$this->_last_page($last_page);
@@ -1402,13 +1411,13 @@ class Module extends Fuel_base_controller {
 						} 
 						
 						// overwrite
-						if (!empty($posted[$file.'_overwrite']))
+						if (isset($posted[$file.'_overwrite']))
 						{
-							$config['overwrite'] = (!empty($posted[$file.'_overwrite']));
+							$config['overwrite'] = (is_true_val($posted[$file.'_overwrite']));
 						}
-						else if (!empty($posted[$multi_root.'_overwrite']))
+						else if (isset($posted[$multi_root.'_overwrite']))
 						{
-							$config['overwrite'] = (!empty($posted[$multi_root.'_overwrite']));
+							$config['overwrite'] = (is_true_val($posted[$multi_root.'_overwrite']));
 						}
 						else
 						{

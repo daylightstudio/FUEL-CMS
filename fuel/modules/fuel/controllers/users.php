@@ -112,7 +112,7 @@ class Users extends Module {
 			}
 			else
 			{
-				add_error(lang('error_sending_email'));
+				add_error(lang('error_sending_email', $this->input->post('email')));
 			}
 		}
 	}
