@@ -87,6 +87,7 @@ class Fuel_modules {
 			'archivable' => TRUE,
 			'table_headers' => array(),
 			'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
+			'table_row_limits' => array('25' => '25', '50' => '50', '100' => '100'),
 			'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
 			'list_actions' => array(),
 			'rows_selectable' => TRUE,

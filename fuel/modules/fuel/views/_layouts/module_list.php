@@ -16,7 +16,7 @@
 					<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state')?>" class="reset"></a></td>
 					<td><?=$this->form->search('search_term', $params['search_term'])?> </td>
 					<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
-					<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
+					<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', $this->table_row_limits, $params['limit'])?></td>
 					<td>
 						<?=$more_filters?>
 					</td>
