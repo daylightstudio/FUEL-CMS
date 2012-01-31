@@ -247,6 +247,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>If set to TRUE, it will hide the module in the admin menu</td>
 		</tr>
+		<tr>
+			<td><strong>table_row_limits</strong></td>
+			<td>array('25' => '25', '50' => '50', '100' => '100')</td>
+			<td>Array</td>
+			<td>This is the list of row limits available in module's record list view in the admin.</td>
+		</tr>
 	</tbody>
 </table>
 
