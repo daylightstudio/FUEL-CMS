@@ -118,9 +118,9 @@ The <dfn>$attrs</dfn> parameter can be either an array or a string(optional).
 </p>
 
 <pre class="brush: php">
-echo $this->form->hidden('passowrd', 'abc134', 'class="txt_field"');
+echo $this->form->password('pwd', 'abc134', 'class="txt_field"');
 // will echo the following
-&lt;input type="passowrd" name="pwd" id="pwd"  value="" class="txt_field" /&gt;
+&lt;input type="password" name="pwd" id="pwd"  value="" class="txt_field" /&gt;
 </pre>
 
 
