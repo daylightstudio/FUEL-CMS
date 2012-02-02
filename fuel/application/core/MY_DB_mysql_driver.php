@@ -263,6 +263,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 		//echo $sql.'<br/><br/>';
 		$return = $this->query($sql);
+		$this->_reset_write();
+		
 		$last_insert = $this->insert_id();
 		if (!empty($last_insert)) return $last_insert;
 		return $return;
