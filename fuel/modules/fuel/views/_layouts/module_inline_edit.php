@@ -10,7 +10,8 @@
 	<div class="notification inline_errors"></div>
 	<?=$form?>
 	
-	<?php if ($action != 'create'){ ?>
+	
+	<?php if ($action != 'create' AND $this->fuel_auth->has_permission($this->permission, 'delete')){ ?>
 	<a href="#" class="delete"><?=lang('btn_delete')?></a>
 	<?php } ?>
 	
