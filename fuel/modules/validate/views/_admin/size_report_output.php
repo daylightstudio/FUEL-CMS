@@ -20,7 +20,7 @@
 <div class="clear"></div>
 
 <h2><?=lang('validate_resources_file_sizes')?></h2>
-<ul>
+<ul class="nobullets">
 	<?php foreach($invalid as $link) : ?>
 	<li><a href="<?=$link?>" target="_blank"><?=$link?></a> <span class="error"><?=lang('validate_invalid')?></span></li>
 	<?php endforeach; ?>

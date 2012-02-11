@@ -44,9 +44,9 @@ Class Form_builder {
 	public $textarea_rows = 10; // number of rows for a textarea
 	public $textarea_cols = 60; // number of columns for a textarea
 	public $text_size_limit = 40; // text size for a text input
-	public $submit_value = "Submit"; // submit value  (what the button says)
-	public $cancel_value = ""; // cancel value (what the button says)
-	public $cancel_action = ""; // what the cancel button does
+	public $submit_value = 'Submit'; // submit value  (what the button says)
+	public $cancel_value = ''; // cancel value (what the button says)
+	public $cancel_action = ''; // what the cancel button does
 	public $reset_value = ''; // reset button value  (what the button says)
 	public $other_actions = ''; // additional actions to be displayed at the bottom of the form
 	public $use_form_tag = TRUE; // include the form opening/closing tags in rendered output
@@ -212,6 +212,10 @@ Class Form_builder {
 	{
 		$this->_fields = array();
 		$this->_html = '';
+		$this->_js = array();
+		$this->_css = array();
+		$this->_pre_process = array();
+		$this->_post_process = array();
 	}
 	
 	// --------------------------------------------------------------------
@@ -339,14 +343,19 @@ Class Form_builder {
 	 * @access	public
 	 * @param	array	fields values... will overwrite anything done with the set_fields method previously
 	 * @param	string	'divs or table
+	 * @param	string	'a view path (only used for the template)
 	 * @return	string
 	 */
-	public function render($fields = NULL, $render_format = NULL)
+	public function render($fields = NULL, $render_format = NULL, $template = NULL)
 	{
 		if (empty($render_format)) $render_format = $this->render_format;
 		if ($render_format == 'divs')
 		{
 			return $this->render_divs($fields);
+		}
+		else if ($render_format == 'template')
+		{
+			return $this->render_template($template, $fields);
 		}
 		else
 		{
@@ -564,6 +573,7 @@ Class Form_builder {
 		
 		return $this->_html;
 	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -818,6 +828,72 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Render the HTML output using a specified template.
+	 * 
+	 * Will provide an array of form fields that can be parsed like so {my_field}
+	 * 
+	 * @access	public
+	 * @param	string the name of the template view file to use
+	 * @param	array fields values... will overwrite anything done with the set_fields method previously
+	 * @return	string
+	 */
+	public function render_template($template, $fields = NULL, $parse = TRUE)
+	{
+		if (!empty($fields)) $this->set_fields($fields);
+
+		// reoarder
+		$this->set_field_order();
+		
+		// pre process field values
+		$this->pre_process_field_values();
+		
+		$this->_html = $this->html_prepend;
+
+		$errors = NULL;
+		if ($this->display_errors)
+		{
+			$func = $this->display_errors_func;
+			if (function_exists($func))
+			{
+				$errors = $func();
+			}
+		}
+		
+		$fields = array();
+		foreach($this->_fields as $key => $field)
+		{
+			$fields[$key]['field'] = $this->create_field($field);
+			$fields[$key]['label'] = $this->create_label($field);
+		}
+		
+		$vars['fields'] = $fields;
+		$vars['errors'] = $errors;
+		
+		if (is_array($template))
+		{
+			$module = key($template);
+			$view = current($template);
+			$str = $this->CI->load->module_view($module, $view, $vars, TRUE);
+		}
+		else
+		{
+			$str = $this->CI->load->view($template, $vars, TRUE);
+		}
+		
+		if ($parse === TRUE)
+		{
+			$str = $this->CI->parser->parse_simple($str, $vars);
+		}
+		$this->_html = $str;
+		
+		$this->_html .= $this->_render_js();
+		$this->_html .= $this->html_append;
+		
+		return $this->_html;
+	}
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the opening div element that contains the form fields
 	 * 
 	 * @access	public
@@ -930,6 +1006,9 @@ Class Form_builder {
 		
 		$wrapper_close_str = "</div>";
 		
+		// apply any CSS first
+		$this->_html .= $this->_apply_css();
+		
 		$this->_html .= $wrapper_open_str.$str.$wrapper_close_str;
 		
 		if (!empty($this->key_check))
@@ -946,10 +1025,9 @@ Class Form_builder {
 			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
 		}
 		$this->_html .= $this->_render_js();
+
 		$this->_html .= $this->html_append;
-		
-		// apply any CSS 
-		$this->_apply_css();
+
 		return $this->_html;
 	}
 	
@@ -1084,13 +1162,13 @@ Class Form_builder {
 		// take out javascript so we execute it only once per render
 		if (!empty($params['js']))
 		{
-			$this->_js[$params['type']] = $params['js'];
+			$this->add_js($params['js']);
 		}
 
 		// take out css so we execute it only once per render
 		if (!empty($params['css']))
 		{
-			$this->_css[$params['type']] = $params['css'];
+			$this->add_css($params['css']);
 		}
 		
 		// says whether this field can represent other field types
@@ -1161,25 +1239,25 @@ Class Form_builder {
 				// take out CSS so we execute it only once per render
 				if (!empty($params['css']))
 				{
-					$this->_css[$params['type']] = $params['css'];
+					$this->add_css($params['css'], $params['type']);
 				}
 
 				// same here... but we are looking for CSS on the object
 				if (!empty($func->css))
 				{
-					$this->_css[$params['type']] = $func->css;
+					$this->add_css($func->css, $params['type']);
 				}
 
 				// take out javascript so we execute it only once per render
 				if (!empty($params['js']))
 				{
-					$this->_js[$params['type']] = $params['js'];
+					$this->add_js($params['js'], $params['type']);
 				}
 
 				// same here... but we are looking for js on the object
 				if (!empty($func->js))
 				{
-					$this->_js[$params['type']] = $func->js;
+					$this->add_js($func->js, $params['type']);
 				}
 				
 				$field = $func->render($params);
@@ -1439,7 +1517,13 @@ Class Form_builder {
 		);
 		
 		$params = $this->normalize_params($params, $defaults);
-	
+		
+		// grab options from a model if a model is specified
+		if (isset($params['model']))
+		{
+			$params['options'] = $this->options_from_model($params['model']);
+		}
+
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
@@ -1623,6 +1707,12 @@ Class Form_builder {
 			);
 		$params = $this->normalize_params($params, $defaults);
 		
+		// grab options from a model if a model is specified
+		if (isset($params['model']))
+		{
+			$params['options'] = $this->options_from_model($params['model']);
+		}
+		
 		$i = 0;
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
@@ -1645,7 +1735,12 @@ Class Form_builder {
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$enum_name = $name.'_'.Form::create_id($key);
 				$label = ($lang = $this->_label_lang($enum_name)) ? $lang : $val;
+				if (!empty($this->name_prefix))
+				{
+					$enum_name = $this->name_prefix.'--'.$enum_name;
+				}
 				$enum_params = array('label' => $label, 'name' => $enum_name);
+				
 				$str .= ' '.$this->create_label($enum_params);
 				$str .= "&nbsp;&nbsp;&nbsp;";
 				$i++;
@@ -1675,6 +1770,12 @@ Class Form_builder {
 			'mode' => NULL
 		);
 		$params = $this->normalize_params($params, $defaults);
+		
+		// grab options from a model if a model is specified
+		if (isset($params['model']))
+		{
+			$params['options'] = $this->options_from_model($params['model']);
+		}
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
@@ -2164,10 +2265,22 @@ Class Form_builder {
 		$form_builder = new $fb_class($params['init']);
 		$form_builder->set_fields($params['fields']);
 		$form_builder->submit_value = '';
+		$form_builder->cancel_value = '';
+		$form_builder->reset_value = '';
+		$form_builder->other_actions = '';
+		
+		$form_builder->name_prefix = $this->name_prefix;
+		$form_builder->name_array = $this->name_array;
+		$form_builder->custom_fields = $this->custom_fields;
 		$form_builder->set_validator($this->form->validator);
 		$form_builder->use_form_tag = FALSE;
 		$form_builder->set_field_values($params['value']);
-		return $form_builder->render();
+		
+		$form_builder->auto_execute_js = FALSE;
+		$form = $form_builder->render();
+		$js = $form_builder->get_js();
+		$this->add_js($js);
+		return $form;
 	}
 
 	// --------------------------------------------------------------------
@@ -2190,7 +2303,7 @@ Class Form_builder {
 		
 		if (!empty($params['js']))
 		{
-			$this->_js[$params['type']] = $params['js'];
+			$this->add_js($params['js'], $params['type']);
 		}
 		
 		// render
@@ -2560,6 +2673,177 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Adds a js file to be rendered with the form a representative for a field type.
+	 * 
+	 * @access	public
+	 * @param	string A js file name
+	 * @param	mixed A key value to associate with the JS file (so it only gets loaded once). Or an associative array of keyed javascript file names
+	 * @return	void
+	 */
+	public function add_js($js = NULL, $key = NULL)
+	{
+		if (is_array($key))
+		{
+			foreach($key as $k => $j)
+			{
+				if (!in_array($j, $this->_js))
+				{
+					$this->_js[$k] = $j;
+				}
+			}
+		}
+		else
+		{
+			if (empty($key))
+			{
+				if (is_array($js))
+				{
+					$this->_js = array_merge($this->_js, $js);
+				}
+				else
+				{
+					$this->_js[] = $js;
+				}
+			}
+			else
+			{
+				$this->_js[$key] = $js;
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the javascript used for the form
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function get_js($js = NULL)
+	{
+		if (!empty($js))
+		{
+			return $this->_js[$js];
+		}
+		return $this->_js;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Adds a CSS file to be rendered with the form a representative for a field type.
+	 * 
+	 * @access	public
+	 * @param	string A CSS file name
+	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed javascript file names
+	 * @return	void
+	 */
+	public function add_css($css = NULL, $key = NULL)
+	{
+		if (is_array($key))
+		{
+			foreach($key as $k => $c)
+			{
+				if (!in_array($c, $this->_css))
+				{
+					$this->_css[$k] = $c;
+				}
+			}
+		}
+		else
+		{
+			if (empty($key))
+			{
+				if (is_array($css))
+				{
+					$this->_css = array_merge($this->_css, $css);
+				}
+				else
+				{
+					$this->_css[] = $js;
+				}
+				
+			}
+			else
+			{
+				$this->_css[$key] = $css;
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the CSS used for the form
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function get_css($css)
+	{
+		if (!empty($css))
+		{
+			return $this->_css[$css];
+		}
+		return $this->_css;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of options if a model is specified
+	 *
+	 * @access	public
+	 * @param	mixed model, model/method or module/model/method
+	 * @return	array
+	 */
+	public function options_from_model($model)
+	{
+		if (is_array($model))
+		{
+			$val = current($model);
+			$module = key($model);
+			// if an array is specified for the value, then we assume the key is the model name and the value is the method
+			if (is_array($val))
+			{
+				$model = key($val);
+				$method = current($val);
+			}
+			else
+			{
+				$model = $val;
+			}
+		}
+		
+		if (!isset($method))
+		{
+			$method = 'options_list'; // default method'
+		}
+		
+		if (substr($model, strlen($model) - 6) != '_model')
+		{
+			$model = $model.'_model';
+		}
+
+		// if the key is a string, then we assume its the modules name and we load it form the module
+		if (isset($module))
+		{
+			$this->CI->load->module_model($module, $model);
+		}
+		// if an indexed array is specified, we assume that it is simply a model from the application folder and we will look for an options_list function
+		else
+		{
+			$this->CI->load->model($model);
+		}
+		
+		$options = $this->CI->$model->$method();
+		return $options;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Looks for value, label, then name as the values
 	 *
 	 * @access	public
@@ -2589,7 +2873,7 @@ Class Form_builder {
 		}
 		return $str;
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -2656,25 +2940,30 @@ Class Form_builder {
 	 */
 	protected function _render_js()
 	{
-		if (empty($this->_js)) return '';
+		$_js = $this->get_js();
+		if (empty($_js)) return '';
 		
 		$str = '';
 		$str_inline = '';
 		$str_files = '';
 		$js_exec = array();
 		$script_regex = '#^<script(.+)src=#U';
-
-		foreach($this->_js as $type => $js)
+		
+		$orig_ignore = $this->CI->asset->ignore_if_loaded;
+		
+		$this->CI->asset->ignore_if_loaded = TRUE;
+		
+		foreach($_js as $type => $js)
 		{
 			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
 			if (is_array($js))
 			{
 				$j = current($js);
-				
+			
 				// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
 				if (is_array($j))
 				{
-					
+				
 				}
 				$str_files .= js($js);
 			}
@@ -2683,19 +2972,27 @@ Class Form_builder {
 			{
 				$str_files .= $js;
 			}
-			
+		
+			// if a string with a slash in it, then we will assume it's just a single file to load'
+			else if (strpos($js, '/') !== FALSE)
+			{
+				$str_files .= js($js);
+			}
+
 			// if it starts with a script tag and DOES have a src attribute
 			else if (!preg_match($script_regex, $js))
 			{
 				$str_inline .= $js;
 			}
+		
+			// else it will simply call a function if it exists
 			else
 			{
 				$str .= "if (".$js." != undefined){\n";
 				$str .= "\t".$js."();\n";
 				$str .= "}\n";
 			}
-			
+		
 			// check if the field type has a js function to call 
 			if (isset($this->custom_fields[$type], $this->custom_fields[$type]->js_function))
 			{
@@ -2703,10 +3000,12 @@ Class Form_builder {
 				$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
 				$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
 				$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
-				
-			}
 			
+			}
 		}
+		
+		// change ignore value on asset back to original
+		$this->CI->asset->ignore_if_loaded = $orig_ignore;
 		
 		// sort the javascript
 		$js_exec = $this->_fields_sorter($js_exec, 'order');
@@ -2718,8 +3017,8 @@ Class Form_builder {
 		$out .= "";
 		$out .= $str."\n";
 		$out .= 'if (jQuery.fn.formBuilder) {';
-		$out .= '$("#'.$this->id.'").formBuilder('.json_encode($js_exec).');';
-		if ($this->auto_execute_js) $out .= '$("#'.$this->id.'").formBuilder().initialize();';
+		$out .= 'jQuery("#'.$this->id.'").formBuilder('.json_encode($js_exec).');';
+		if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
 		$out .= '}';
 		$out .= "\n//]]>\n";
 		$out .= "</script>\n";
@@ -2738,13 +3037,69 @@ Class Form_builder {
 	{
 		if (empty($this->_css)) return;
 		
-		$css = $this->CI->load->get_vars('css');
-		foreach($this->_css as $c)
+		// static way but won't work if the form is ajaxed int'
+		// $css = $this->CI->load->get_vars('css');
+		// foreach($this->_css as $c)
+		// {
+		// 	$css[] = $c;
+		// }
+		//$this->CI->load->vars(array('css' => $css));
+		
+		$out = '';
+		$css_files = array();
+		foreach($this->_css as $css)
 		{
-			$css[] = $c;
+			if (is_array($css))
+			{
+				if (is_string(key($css)))
+				{
+					$module = key($css);
+					
+					$c = current($css);
+					if (is_array($c))
+					{
+						foreach($c as $file)
+						{
+							$css_files[] = css_path($file, $module);
+						}
+					}
+					else
+					{
+						$css_files[] = css_path($c, $module);
+					}
+				}
+			}
+			else
+			{
+				$css_files[] = css_path($css);
+			}
 		}
-		$this->CI->load->vars(array('css' => $css));
+		
+		// must use javascript to do this because forms may get ajaxed in and we need to inject their CSS into the head
+		if (!empty($css_files))
+		{
+			$out .= "<script type=\"text/javascript\">\n";
+			$out .= "//<![CDATA[\n";
+			$out .= '(function($) {
+					var cssFiles = '.json_encode($css_files).';
+					var css = [];
+					$("head link").each(function(i){
+						css.push($(this).attr("href"));
+					});
+					for(var n in cssFiles){
+						if ($.inArray(cssFiles[n], css) == -1){
+							var cssString = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssFiles[n] + "\" />";
+							jQuery("head").append(cssString);
+						}
+					}
+				
+			})(jQuery)';
+			$out .= "\n//]]>\n";
+			$out .= "</script>\n";
+		}
+		return $out;
 	}
+
 }
 
 

@@ -494,8 +494,6 @@ class Fuel_module extends Fuel_base_library {
 				$info['js_controller_path'] = js_path('', FUEL_FOLDER);
 			}
 
-
-
 			if ($create_action_name = lang('module_'.$this->module.'_create'))
 			{
 				$info['create_action_name'] = $create_action_name;

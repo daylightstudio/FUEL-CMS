@@ -24,7 +24,7 @@ is reflected*/
 
 <?php if (count($errors)) : ?>
 <h2><?=lang('validate_errors')?></h2>
-<ul>
+<ul class="nobullets">
 	<?php foreach($errors as $error) : ?>
 	<li><span  class="error"><em><?=lang('validate_line')?> <?=$error['line']?>, <?=lang('validate_column')?> <?=$error['col']?></em>: <strong><?=$error['message']?></strong></span>
 		<pre><code><?=htmlspecialchars($error['explanation'], ENT_NOQUOTES, 'UTF-8', FALSE)?></code></pre>
@@ -35,7 +35,7 @@ is reflected*/
 
 <?php if (count($warnings)) : ?>
 <h2><?=lang('validate_warnings')?></h2>
-<ul>
+<ul class="nobullets">
 	<?php foreach($warnings as $warning) : ?>
 	<li class="error"><em><?=lang('validate_line')?> <?=$warning['line']?>, <?=lang('validate_column')?> <?=$warning['col']?></em>: <strong><?=$warning['message']?></strong>
 		<pre><code><?=htmlspecialchars($warning['explanation'], ENT_NOQUOTES, 'UTF-8', FALSE)?></code></pre>

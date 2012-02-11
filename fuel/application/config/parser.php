@@ -1,6 +1,18 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/*
+|--------------------------------------------------------------------------
+| Parser cache directory
+|--------------------------------------------------------------------------
+|
+| The delimiters to use for the parsing enging. 
+|
+|	default: { } respectively
+|
+*/
+
 $config['l_delim'] = '{{';
 $config['r_delim'] = '}}';
+
 
 /*
 |--------------------------------------------------------------------------

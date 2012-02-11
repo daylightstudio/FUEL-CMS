@@ -875,9 +875,11 @@ class Module extends Fuel_base_controller {
 			if (is_string($field) AND isset($fields[$field]))
 			{
 				$single_field[$field] = $fields[$field];
-				$single_field[$field]['label'] = ' ';
+				//$single_field[$field]['label'] = ' ';
+				$single_field[$field]['display_label'] = FALSE;
 				$single_field[$field]['required'] = FALSE;
 				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
+
 				
 				// set them to hidden... just in case model hooks require the values to be passed on save
 				foreach($fields as $k => $f)
@@ -888,6 +890,7 @@ class Module extends Fuel_base_controller {
 					}
 				}
 				//$fields = $single_field;
+				$fields = array_merge($fields, $single_field);
 			}
 			else
 			{
@@ -1044,7 +1047,7 @@ class Module extends Fuel_base_controller {
 		$this->form_builder->post_process_field_values();// manipulates the $_POST values directly
 	
 		// sanitize input if set in module configuration
-		$posted = $this->_sanitize($_POST);
+		$posted = $this->_sanitize($this->input->post());
 
 		// loop through uploaded files
 		if (!empty($_FILES))

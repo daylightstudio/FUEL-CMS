@@ -23,13 +23,13 @@ $config['search']['indexing_enabled'] = TRUE;
 // the user agent used when indexing
 $config['search']['user_agent'] = 'FUEL';
 
-// value can be either "like" which will do a %word% query OR "match" which will use the MATCH / AGAINST syntax
-// use "like" if you have a small number of records
-$config['search']['query_type'] = 'match';
+// value can be either "like" which will do a %word% query, "match" which will use the MATCH / AGAINST syntax OR "match boolean" 
+// which will do a match against in boolean mode. Use "match boolean" OR "like" if you have a small number of records
+$config['search']['query_type'] = 'match boolean';
 
 // search page content delimiters. used for scraping page content. Can be an HTML node or xpath syntax (e.g. //div[@id="main"])
 $config['search']['delimiters'] = array(
-	'<div id="main_inner">', 
+	'<article id="main">', 
 );
 
 // the URI locations of pages to exclude from the index. 
@@ -45,5 +45,17 @@ $config['search']['index_method'] = 'AUTO';
 // whether to automatically index modules that have a preview_path specified. 
 // Default is TRUE and will automatically do it for all modules. If an array
 // is specified, then it will only index those in the array
-$config['search']['auto_index'] = TRUE;
+$config['search']['index_modules'] = TRUE;
+
+// the number of results to show per page
+$config['search']['pagination_per_page'] = 10;
+
+// number of links to display for pagination
+$config['search']['pagination_num_links'] = 2;
+
+// the view file to use to display the results. An array can be used to point to a different module (e.g. array('my_module' => 'search'))
+$config['search']['view'] = 'search';
+
+// minimum length of the search term
+$config['search']['min_length_search'] = 3;
 

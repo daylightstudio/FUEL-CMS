@@ -43,7 +43,7 @@ dave@thedaylightstudio.com
 					$this.addClass('active');
 
 					// show the contents
-					var id = $(this).find('a').attr('href'); // remove the #
+					var id = $(this).find('a').attr('href');
 					activeContent = $(id);
 					activeContent.show();
 					
@@ -61,8 +61,9 @@ dave@thedaylightstudio.com
 			
 			if (hasCookie){
 				s.startIndex = parseInt($.supercookie(s.cookie.group, s.cookie.name));
-				if (isNaN(s.startIndex)) s.startIndex = 0;
 			}
+
+			if (isNaN(s.startIndex) || ($children.size() -1) < s.startIndex) s.startIndex = 0;
 			$(this).children().eq(s.startIndex).click();
 			
 			return this;

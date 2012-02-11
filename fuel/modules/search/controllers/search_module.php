@@ -17,6 +17,9 @@ class Search_module extends Module {
 	
 	function index_site()
 	{
+		// clear the search index first
+		$this->fuel->search->clear_all();
+		
 		$vars['crawled'] = $this->fuel->search->index();
 		//$vars['log'] = $this->fuel->search->logs();
 		$vars['log_msg'] = $this->fuel->search->display_log('all', 'span', TRUE);

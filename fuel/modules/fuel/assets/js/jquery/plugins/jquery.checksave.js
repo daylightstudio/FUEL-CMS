@@ -60,8 +60,8 @@ jQuery.checkSaveChange = function(){
 					}
 				});
 				if (window._pageVals[fieldName] && cmp.toString() != window._pageVals[fieldName].toString()){
-					console.log(cmp)
-					console.log(fieldName + ' :  ' + window._pageVals[fieldName] + ' : ' + cmp.toString());
+					// console.log(cmp)
+					// console.log(fieldName + ' :  ' + window._pageVals[fieldName] + ' : ' + cmp.toString());
 					msg = changedMsg;
 					return false;
 				}

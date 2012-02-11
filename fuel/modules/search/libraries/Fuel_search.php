@@ -33,6 +33,7 @@ class Fuel_search extends Fuel_advanced_module {
 	public $connect_timeout = 10; // CURL connection timeout
 	public $title_limit = 100; // max character limit of the title of content
 	public $user_agent = 'FUEL'; // the user agent used for indexing
+	public $q = ''; // search term
 	
 	protected $_logs = array(); // log of items indexed
 	
@@ -101,12 +102,36 @@ class Fuel_search extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	string
+	 * @param	int
+	 * @param	int
+	 * @param	int
 	 * @return	array
 	 */	
 	function query($q = '', $limit = 100, $offset = 0, $excerpt_limit = 200)
 	{
 		$results = $this->CI->search_model->find_by_keyword($q, $limit, $offset, $excerpt_limit);
+		//$this->CI->search_model->debug_query();
+		$this->q = $q;
 		return $results;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get the count of the returned rows. If no parameter is passed then it will assume the last query.
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	array
+	 */	
+	function count($q = '')
+	{
+		if (empty($q))
+		{
+			$q = $this->q;
+		}
+		$count = $this->CI->search_model->find_by_keyword_count($q);
+		return $count;
 	}
 	
 	// --------------------------------------------------------------------
@@ -126,7 +151,7 @@ class Fuel_search extends Fuel_advanced_module {
 		if (!$this->config('indexing_enabled')) return;
 		
 		// grab the config values for what should be indexed on save
-		$index_modules = $this->config('auto_index');
+		$index_modules = $this->config('index_modules');
 		$module = $this->CI->module;
 		
 		// check if modules can be indexed. If an array is provided, then we only index those in the array
@@ -318,6 +343,11 @@ class Fuel_search extends Fuel_advanced_module {
 				{
 					foreach($matches[1] as $url)
 					{
+						
+						// remove page anchors
+						$url_arr = explode('#', $url);
+						$url = $url_arr[0];
+						
 						// check if the url is local AND whether it has already been indexed
 						if (!isset($crawled[$url]))
 						{
@@ -561,6 +591,10 @@ class Fuel_search extends Fuel_advanced_module {
 			$this->_add_error($msg);
 			return FALSE;
 		}
+		
+		// remove javascript
+		$output = strip_javascript($output);
+		
 		return $output;
 	}
 

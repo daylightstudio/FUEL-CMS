@@ -747,7 +747,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function clean($values = array(), $run_hook = FALSE)
 	{
-		if (empty($values)) $values = $_POST;
+		$CI =& get_instance();
+		if (empty($values)) $values = $CI->input->post();
 		
 		// run clean hook
 		if ($run_hook)
@@ -786,9 +787,12 @@ class MY_Model extends CI_Model {
 			// make it easier for dates
 			else if ($field['type'] == 'datetime')
 			{
-				
+				$has_time = (count(explode(' ', $values[$key])) > 1);
+
 				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-				if (isset($values[$key.'_hour']))
+				
+				// test if there is an hour field AND that there is NO time values first before looking at other values
+				if (isset($values[$key.'_hour']) AND !$has_time)
 				{
 					if (!empty($values[$key]))
 					{
@@ -810,7 +814,7 @@ class MY_Model extends CI_Model {
 			{
 				
 				$test_date = (isset($values[$key])) ? (int) $values[$key] : 0;
-
+				
 				// if no key field then we assume it is a new save and so we add the date if it's empty'
 				if (!$this->_has_key_field_value($values) AND empty($test_date))
 				{
@@ -947,7 +951,8 @@ class MY_Model extends CI_Model {
 	public function save($record = NULL, $validate = TRUE, $ignore_on_insert = TRUE)
 	{
 		$this->_check_readonly();
-		if (!isset($record)) $record = $_POST;
+		$CI =& get_instance();
+		if (!isset($record)) $record = $CI->input->post();
 		
 		if (is_array($record) AND (is_int(key($record)) AND is_array(current($record))))
 		{
@@ -1969,7 +1974,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function normalize_save_values($record)
 	{
-		if (!isset($record)) $record = $_POST;
+		$CI =& get_instance();
+		if (!isset($record)) $record = $CI->input->post();
 		if (is_object($record))
 		{
 			if (is_a($record, 'Data_record'))

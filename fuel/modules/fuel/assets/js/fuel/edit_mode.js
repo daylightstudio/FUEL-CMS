@@ -83,11 +83,6 @@ if (fuel == undefined) var fuel = {};
 					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
 					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
 					var listTableHeight = $('#data_table_container', contentDoc).outerHeight();
-					console.log($('#fuel_main_content_inner', contentDoc))
-					console.log('LISTTABLEHEIGHT: ' + listTableHeight)
-					console.log('ACTIONS: ' + actionsHeight);
-					console.log('NOTIFICATIONS: ' + notificationsHeight);
-					console.log('MAIN: ' + mainContentHeight);
 					docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
 					
 					//docHeight = 100
@@ -117,7 +112,7 @@ if (fuel == undefined) var fuel = {};
 				var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 				var width2 = $('#fuel_actions', contentDoc).outerWidth();
 				var docWidth = (width1 > width2) ? width1 : width2;
-				
+
 				// check if fuel_actions is there so that we don't make it too wide for single variables being edited
 				if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;
 				$(iframe).height(docHeight);

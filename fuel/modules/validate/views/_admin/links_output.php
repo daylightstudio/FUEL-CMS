@@ -10,7 +10,7 @@
 
 <?php if (count($invalid)) : ?>
 <h2>Invalid Links</h2>
-<ul>
+<ul class="nobullets">
 	<?php foreach($invalid as $link) : ?>
 	<li class="invalid"><a href="<?=$link?>" target="_blank"><?=$link?></a></li>
 	<?php endforeach; ?>

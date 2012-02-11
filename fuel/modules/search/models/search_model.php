@@ -14,19 +14,56 @@ class Search_model extends Base_module_model {
 	}
 	function find_by_keyword($q, $limit = NULL, $offset = NULL, $excerpt_limit = 200)
 	{
+		$this->_find_keyword_where($q);
+
+		$this->db->select($this->_tables['search'].'.location');
+		$this->db->select($this->_tables['search'].'.title');
+		$this->db->select($this->_tables['search'].'.date_added');
+		$this->db->select('SUBSTRING('.$this->_tables['search'].'.content, 1, '.$excerpt_limit.') AS content_excerpt', FALSE);
+		$this->db->limit($limit);
+		
+		if (!empty($offset))
+		{
+			$this->db->offset($offset);
+		}
+		$results = $this->find_all();
+		//$this->debug_query();
+		return $results;
+	}
+	
+	function find_by_keyword_count($q)
+	{
+		$this->_find_keyword_where($q, TRUE);
+		$count = $this->db->count_all_results($this->table_name);
+		return $count;
+	}
+	
+	protected function _find_keyword_where($q, $is_count = FALSE)
+	{
 		$CI =& get_instance();
 		$full_text_fields = array('title', 'content');
 		$full_text_indexed = implode($full_text_fields, ', ');
 	
-		$q = trim($q); // trim the right and left from whitespace
+		$q = trim(strtolower($q)); // trim the right and left from whitespace
 		$q = preg_replace("#([[:space:]]{2,})#",' ',$q); // remove multiple spaces
 		$q_len = strlen($q);
-		$q = $this->db->escape($q);
-		if ($q_len >= 4 AND strtolower($CI->fuel->search->config('query_type')) == 'match')
+		if ($q_len >= 4 AND (strtolower($CI->fuel->search->config('query_type')) == 'match' OR strtolower($CI->fuel->search->config('query_type')) == 'match boolean'))
 		{
-			$this->db->where('MATCH('.$full_text_indexed.') AGAINST ('.$q.')');
-			$this->db->select('match ('.$full_text_indexed.') against ('.$q.')  AS relevance ', FALSE);
-			$this->db->order_by('relevance desc');
+			$q = $this->db->escape($q);
+			
+			if (strtolower($CI->fuel->search->config('query_type')) == 'match boolean')
+			{
+				$this->db->where('MATCH('.$full_text_indexed.') AGAINST ('.$q.' IN BOOLEAN MODE)');
+			}
+			else
+			{
+				$this->db->where('MATCH('.$full_text_indexed.') AGAINST ('.$q.')');
+			}
+			if (!$is_count)
+			{
+				$this->db->select('match ('.$full_text_indexed.') against ('.$q.')  AS relevance ', FALSE);
+				$this->db->order_by('relevance desc');
+			}
 		}
 		else
 		{
@@ -41,20 +78,6 @@ class Search_model extends Base_module_model {
 
 			$this->db->order_by('date_added desc');
 		}
-		
-		$this->db->select($this->_tables['search'].'.location');
-		$this->db->select($this->_tables['search'].'.title');
-		$this->db->select($this->_tables['search'].'.date_added');
-		$this->db->select('SUBSTRING('.$this->_tables['search'].'.content, 1, '.$excerpt_limit.') AS content_excerpt', FALSE);
-		$this->db->limit($limit);
-		
-		if (!empty($offset))
-		{
-			$this->db->offset($offset);
-		}
-		$results = $this->find_all();
-		//$this->debug_query();
-		return $results;
 	}
 	
 	function find_by_location($location)

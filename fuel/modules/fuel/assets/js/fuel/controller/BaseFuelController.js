@@ -423,7 +423,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (!$('#fuel_form_tabs', context).size()){
 			
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
-			$legends = $('fieldset.tab legend', context);
+			
+			// prevent nested fieldsets from showing up with not()
+			$legends = $('fieldset.tab legend', context).not('fieldset.tab fieldset legend', context);
 			$legends.each(function(i){
 				if ($(this).parent().attr('id') != '') {
 					$(this).parent().attr('id', 'fieldset' + i);
@@ -437,7 +439,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.filter(':first').parent().before(tabs);
 			//$('#form').prepend(tabs);
 			//$('#form').tabs();
-			var tabCookieSettings = {group: 'tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.basePath}}
+			var tabCookieSettings = {group: 'tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.cookieDefaultPath}}
 			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}

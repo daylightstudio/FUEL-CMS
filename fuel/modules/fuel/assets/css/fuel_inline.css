@@ -1,8 +1,4 @@
-@import url(markitup.css);
-@import url(datepicker.css);
-@import url(jquery.supercomboselect.css);
 @import url(jqmodal.css);
-@import url(jquery.tooltip.css);
 
 /* generic styles */
 .__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
@@ -105,7 +101,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel_edit_form__ table.inline_form input.fillin { color: #ccc !important; }
 .__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 238px !important; }
 .__fuel_edit_form__ table.inline_form div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
-.__fuel_edit_active__ { z-index: 1001; }
+.__fuel_edit_active__ { z-index: 999999; }
 
 /* fuel edit bar */
 div#__fuel_edit_bar__ { display: none; height: 28px; position: fixed; z-index: 999; top: 0px; right: 0; opacity: .9; -moz-opacity: .9; filter:alpha(opacity=90); font-size: 11px; font-family: Arial; }
@@ -125,7 +121,7 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 .__fuel__ .loader { margin: 30px auto; width: 32px; height: 32px; text-align: center; background: #fff url(../images/spinner.gif) no-repeat center center; /*border: 1px solid #ddd;*/ }
 .__fuel__ .loader_sm { margin: auto; width: 16px; height: 16px; text-align: center; background: #fff url(../images/spinner_sm.gif) no-repeat center center !important; }
 
-div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
 a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }

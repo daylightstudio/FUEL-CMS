@@ -32,7 +32,7 @@ class Fuel_layouts extends Fuel_base_library {
 	
 	public $default_layout = 'main'; // default layout folder
 	public $layouts_folder = '_layouts'; // layout folder
-	public $layouts = array(); // layout object initialization parametres
+	public $layouts = array(); // layout object initialization parameters
 
 	protected $_layouts = array(); // layout objects
 	
@@ -72,15 +72,38 @@ class Fuel_layouts extends Fuel_base_library {
 			}
 		}
 		
+		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
+		$this->CI->load->helper('file');
+		$layouts = get_filenames(APPPATH.'views/'.$this->layouts_folder);
+
+		if (!empty($layouts))
+		{
+			foreach($layouts as $layout)
+			{
+				$layout = substr($layout, 0, -4);
+				
+				// we won't show those that have underscores in front of them'
+				if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+				{
+					$this->layouts[$layout] = array('class' => 'Fuel_layout');
+				}
+			}
+		}
+		
 		// initialize layout objects
 		foreach($this->layouts as $name => $init)
 		{
 			$init['name'] = $name;
 			$init['folder'] = $this->layouts_folder;
+			$init['class'] = 'Fuel_layout';
+			
 			if (!empty($init['fields']))
 			{
 				$fields = $init['fields'];
 				$order = 1;
+				
+				// must reset this first to prevent any initialization of stuff like adding javascript for renderin
+				$this->CI->form_builder->clear();
 				foreach($fields as $key => $f)
 				{
 					$fields[$key] = $this->CI->form_builder->normalize_params($f);
@@ -91,7 +114,7 @@ class Fuel_layouts extends Fuel_base_library {
 				
 				$init['fields'] = $fields;
 				
-				if (!empty($init['class']))
+				if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
 				{
 					if (!isset($init['filename']))
 					{
@@ -105,13 +128,8 @@ class Fuel_layouts extends Fuel_base_library {
 					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
 					require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
 				}
-				else
-				{
-					$init['class'] = 'Fuel_layout';
-				}
-				
-				$this->create($name, $init, $init['class']);
 			}
+			$this->create($name, $init, $init['class']);
 		}
 	}
 	
@@ -140,6 +158,11 @@ class Fuel_layouts extends Fuel_base_library {
 		if (empty($init['name']))
 		{
 			$init['name'] = $name;
+		}
+
+		if (empty($class))
+		{
+			$class = 'Fuel_layout';
 		}
 		$this->_layouts[$name] = new $class($init);
 		return $this->_layouts[$name];

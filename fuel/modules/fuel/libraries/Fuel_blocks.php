@@ -58,6 +58,7 @@ class Fuel_blocks extends Fuel_module {
 						'parse' => 'auto',
 						'vars' => array(),
 						'cache' => FALSE,
+						'only_views' => FALSE,
 						);
 
 		// for convenience
@@ -124,7 +125,7 @@ class Fuel_blocks extends Fuel_module {
 		else if (!empty($p['view']))
 		{
 			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
-			if ($this->CI->fuel->config('fuel_mode') != 'views')
+			if ($this->CI->fuel->config('fuel_mode') != 'views' AND $p['only_views'] === FALSE)
 			{
 				$this->fuel->load_model('blocks');
 

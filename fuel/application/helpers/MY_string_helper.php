@@ -134,6 +134,38 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
 // --------------------------------------------------------------------
 
 /**
+ * Removes "Gremlin" characters 
+ *
+ * (hidden control characters that the remove_invisible_characters function misses)
+ *
+ * @param 	string 	string to evaluate
+ * @return	string
+ */
+function zap_gremlins($str)
+{
+	// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
+	// the remove_invisible_characters doesn't seem to remove this
+	$str = str_replace(' ', ' ', $str);
+	return $str;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Removes javascript from a string
+ *
+ * @param 	string 	string to remove javascript
+ * @return	string
+ */
+function strip_javascript($str)
+{
+	$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
+	return $str;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Safely converts a string's entities without encoding HTML tags and quotes
  *
  * @param 	string 	string to evaluate
@@ -141,6 +173,9 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
  */
 function safe_htmlentities($str, $protect_amp = TRUE)
 {
+	// remove any gremlin characters
+	$str = zap_gremlins($str);
+	
 	// convert all hex single quotes to numeric ... 
 	// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
 	// but was inconsistent across different environments and versions... not sure the issue

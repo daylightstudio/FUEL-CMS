@@ -67,6 +67,7 @@ class Fuel_custom_fields {
 		{
 			$params['folder'] = 'images';
 		}
+		
 		$asset_class = 'asset_select';
 		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
 		{
@@ -76,7 +77,7 @@ class Fuel_custom_fields {
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
 		
 		// set the image preview containing class
-		if (empty($params['img_display_class']))
+		if (empty($params['img_container_styles']))
 		{
 			$params['img_container_styles'] = 'overflow: auto; height: 200px; width: 400px; margin-top: 5px;';
 		}
@@ -102,11 +103,9 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			);
-		
+
 		if (!empty($params['value']))
 		{
-			$preview = '<br /><div style="'.$params['img_container_styles'].'">';
-			
 			if (is_string($params['value']))
 			{
 				// unserialize if it is a serialized string
@@ -128,51 +127,67 @@ class Fuel_custom_fields {
 						$assets[$key] = trim($value);
 					}
 				}
+				$preview_str = '';
 
 				// loop through all the assets and concatenate them
 				foreach($assets as $asset => $caption)
 				{
-					$asset_path = '';
-
-					foreach($editable_filetypes as $folder => $regex)
+					if (!empty($asset))
 					{
-						if (!is_http_path($asset))
+						$asset_path = '';
+
+						foreach($editable_filetypes as $folder => $regex)
 						{
-							if (preg_match('#'.$regex.'#i', $asset))
+							if (!is_http_path($asset))
 							{
-								$asset_path = assets_path($folder.'/'.$asset);
-								break;
+								if (preg_match('#'.$regex.'#i', $asset))
+								{
+									$asset_path = assets_path($folder.'/'.$asset);
+									break;
+								}
+							}
+							else
+							{
+								$asset_path = $asset;
 							}
 						}
-						else
-						{
-							$asset_path = $asset;
-						}
-					}
-					
-					if (!empty($asset_path))
-					{
-						$preview .= '<a href="'.$asset_path.'" target="_blank">';
 
-						if (is_image_file($asset))
+						if (!empty($asset_path))
 						{
-							$preview .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+							$preview_str .= '<a href="'.$asset_path.'" target="_blank">';
+
+							if (is_image_file($asset))
+							{
+								$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+							}
+							else
+							{
+								$preview_str .= $asset;
+							}
+							$preview_str .= '</a>';
 						}
-						else
-						{
-							$preview .= $asset;
-						}
-						$preview .= '</a>';
 					}
 				}
-				
 			}
-			$preview .= '</div><div class="clear"></div>';
+			$preview = '';
+			if (!empty($preview_str))
+			{
+				$img_container_styles = $params['img_container_styles'];
+				if ($multiple == FALSE AND !empty($params['img_styles']))
+				{
+					$img_container_styles = $params['img_styles'];
+				}
+				
+				$preview = '<br /><div class="noclone" style="'.$img_container_styles.'">';
+
+				$preview .= $preview_str;
+				$preview .= '</div><div class="clear"></div>';
+			}
 			$params['after_html'] = $preview;
 		}
 		$params['type'] = '';
 		
-		if (isset($params['multiple']) AND $params['multiple'] === TRUE)
+		if ($multiple)
 		{
 			// create an array with tthe key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
 			if (isset($params['subkey']))
@@ -189,9 +204,11 @@ class Fuel_custom_fields {
 								$assets_arr = preg_split("#\s*,\s*|\n#", $val);
 								foreach($assets_arr as $a)
 								{
-									$a_arr = preg_split("#\s*:\s*#", $a);
-									$k = $a_arr[0];
-									$v = (isset($a_arr[1])) ? $a_arr[1] : $k;
+									preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
+									$k = (isset($a_arr[1])) ? $a_arr[1] : $a;
+									$v = (isset($a_arr[2])) ? $a_arr[2] : $key;
+									$k = zap_gremlins($k);
+									$v = zap_gremlins($v);
 									$assets[$k] = trim($v);
 									$value[$key]["'.$params['subkey'].'"] = serialize($assets);
 								}
@@ -209,9 +226,11 @@ class Fuel_custom_fields {
 					$assets_arr = preg_split("#\s*,\s*|\n#", $value);
 					foreach($assets_arr as $a)
 					{
-						$a_arr = preg_split("#\s*:\s*#", $a);
-						$key = $a_arr[0];
-						$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
+						preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
+						$key = (isset($a_arr[1])) ? $a_arr[1] : $a;
+						$value = (isset($a_arr[2])) ? $a_arr[2] : $key;
+						$key = zap_gremlins($key);
+						$value = zap_gremlins($value);
 						$assets[$key] = trim($value);
 					}
 					return serialize($assets);
@@ -224,31 +243,37 @@ class Fuel_custom_fields {
 		}
 		
 		// unserialize value if it's serialized
-		if (is_serialized_str($params['value']))
-		{
-			//$params['value'] = implode($separator, $params['value']);
-			$value = unserialize($params['value']);
+		$value = (is_serialized_str($params['value'])) ? unserialize($params['value']) : $params['value'];
 
+		if (is_array($value))
+		{
 			$params['value'] = '';
 			foreach($value as $key => $val)
 			{
-				if ($key !== $val AND !empty($val))
+				if (!empty($val))
 				{
-					$params['value'] .= $key.':'.$val.$separator;
-				}
-				else
-				{
-					$params['value'] .= $val.$separator;
+					if ($key !== $val)
+					{
+						$params['value'] .= $key.':"'.$val.'"'.$separator;
+					}
+					else
+					{
+						$params['value'] .= $val.$separator;
+					}
 				}
 			}
 		}
+		$params['value'] = trim($params['value'], ",\n ");
 		
 		//$params['comment'] = 'Add a caption value to your image by inserting a colon after the image name and then enter your caption like so: my_img.jpg:My caption goes here.';
 		
 		if (!empty($params['multiline']))
 		{
 			$params['class'] = 'no_editor '.$params['class'];
-			$params['style'] = 'float: left; width: 250px; height: 60px';
+			if (empty($params['style']))
+			{
+				$params['style'] = 'float: left; width: 400px; height: 60px';
+			}
 			$str = $form_builder->create_textarea($params);
 		}
 		else
@@ -331,20 +356,11 @@ class Fuel_custom_fields {
 		$form_builder =& $params['instance'];
 		
 		$str = '';
-		if (empty($params['fields']) OR (empty($params['template']) AND empty($params['view'])))
+		if (empty($params['fields']))
 		{
 			return $str;
 		}
-		
-		if (empty($params['template']) AND !empty($params['view']))
-		{
-			$str = $this->CI->load->view($params['view'], $params['value'], TRUE);
-		}
-		else
-		{
-			$str = $params['template'];
-		}
-		
+
 		// set the ID to have a placehoder that the js can handle
 		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
 		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
@@ -352,13 +368,27 @@ class Fuel_custom_fields {
 		$fields = array();
 		$i = 0;
 		
-		$params['depth'] = (empty($params['depth'])) ? 0 : $params['depth']++;
-		
+		if (!isset($params['depth']))
+		{
+			$params['depth'] = 0;
+		}
 
 		// set the value
 		if (is_serialized_str($params['value']))
 		{
-			$params['value'] = unserialize($params['value']);
+			$params['value'] = @unserialize($params['value']);
+		}
+		
+		// set maximum limit
+		if (!isset($params['max']))
+		{
+			$params['max'] = NULL;
+		}
+		
+		// set minimum limit
+		if (!isset($params['min']))
+		{
+			$params['min'] = NULL;
 		}
 		
 		if (!is_array($params['value']))
@@ -371,8 +401,16 @@ class Fuel_custom_fields {
 		}
 		
 		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
+		
+		if (isset($params['min']) AND $num < $params['min'])
+		{
+			$num = $params['min'];
+		}
+		
 		if ($num == 0) $num = 1;
-
+		
+		$_f = array();
+		
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
@@ -381,11 +419,12 @@ class Fuel_custom_fields {
 			{
 				$field['value'] = (!empty($value[$key])) ? $value[$key] : '';
 				
-				// Sorry... field type can't be'another template at the moment... would be cool though
-				if (isset($field['type']) AND $field['type'] == 'template')
+				// Sorry... template can only be nested once... which should be all you need
+				if (isset($field['type']) AND $field['type'] == 'template' AND $params['depth'] > 1)
 				{
 					continue;
 				}
+				
 				
 				if ($repeatable)
 				{
@@ -404,17 +443,27 @@ class Fuel_custom_fields {
 					// set the key to be the same of the parent... so post processing will work
 					$field['key'] = $params['key'];
 					$field['subkey'] = $key;
+					$field['depth'] = $params['depth'] + 1;
+					$depth_css_class = ' field_depth_'.$params['depth'];
+					$field['class'] = (!empty($field['class'])) ? $field['class'].' '.$depth_css_class : $depth_css_class;
+					if (!isset($field['label']))
+					{
+						$field['label'] = ucfirst(str_replace('_', ' ', $key));
+					}
 					
-					// set placeholders in field names for javascript to translate
-					$field['id'] = preg_replace('#(.+)\[\d\](.+)#U', '$1[{index}]$2', $field['name']);
+					// set placeholders in field ids for javascript to translate... must be last occurence of the digit
+					$field['id'] = preg_replace('#([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$#U', '$1[{index}]$2', $field['name']);
 					$field['id'] = Form::create_id($field['id']);
+					
 					
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
 					//$field['id'] = FALSE;
-					
+					$_f[$i][$key] = $field;
 					$fields[$i][$key] = $form_builder->create_field($field);
-					$fields[$i]['index'] = $i;
-					$fields[$i]['num'] = $i + 1;
+					$fields[$i]['__index__'] = $i;
+					$fields[$i]['__num__'] = $i + 1;
+					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']])) ? "\"".strip_tags($value[$params['title_field']])."\"" : '';
+					
 				}
 				else
 				{
@@ -426,7 +475,7 @@ class Fuel_custom_fields {
 					{
 						$field['name'] = $params['orig_name'].'['.$key.']';
 					}
-					
+					$_f[$key] = $field;
 					$fields[$key] = $form_builder->create_field($field);
 				}
 			}
@@ -441,6 +490,87 @@ class Fuel_custom_fields {
 			$vars = $fields;
 		}
 		
+		
+		if (!empty($params['serialize']))
+		{
+			// must set $_POST parameter below or else the post_process won't run the serialization'
+			if (!isset($_POST[$params['key']]))
+			{
+				$_POST[$params['key']] = '';
+			}
+
+			$func_str = '$CI =& get_instance();
+			$val = $CI->input->post("'.$params['key'].'");
+			if (isset($_POST["'.$params['key'].'"]) AND is_array($val))
+			{
+				return serialize($val);
+			}
+			else
+			{
+				$_POST["'.$params['key'].'"] = "";
+				return "";
+			}
+			';
+
+			$func = create_function('$value', $func_str);
+			$form_builder->set_post_process($params['key'], $func);
+		}
+		
+		
+		if (empty($params['template']) AND !empty($params['view']))
+		{
+			$str = $this->CI->load->view($params['view'], $vars, TRUE);
+		}
+		else if (!empty($params['template']))
+		{
+			$str = $params['template'];
+		}
+		else
+		{
+			$form_params['init'] = (!empty($params['form_builder_params'])) ? $params['form_builder_params'] : array();
+			
+			// auto fill properties from parent form builder
+			$init = array('name_array', 'name_prefix');
+			foreach($init as $in)
+			{
+				if (!isset($form_params['init'][$in]))
+				{
+					$form_params['init'][$in] = $form_builder->$in;
+				}
+			}
+
+			if ($repeatable)
+			{
+				$css_class = (!empty($params['depth'])) ? ' child':  '';
+				$str .= '<div class="repeatable_container'.$css_class.'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'">';
+				$i = 0;
+				foreach($_f as $k => $f)
+				{
+					$form_params['fields'] = $f;
+					$form = $form_builder->create_nested($form_params);
+					$css_class = ($i > 0) ? ' noclone' : '';
+					if (!empty($params['float']) AND $params['depth'] == 0)
+					{
+						$css_class = ' float_left';
+					}
+					
+					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"><div class="grabber"></div>';
+					$str .= $form;
+					$str .= '</div>';
+					$i++;
+				}
+				$str .= '<div class="clear"></div></div>';
+			}
+			else
+			{
+				$form_params['fields'] = $_f;
+				$form = $form_builder->create_nested($form_params);
+				$str .= $form;
+				$str .= '</div></div>';
+			}
+			return $str;
+		}
+		
 		// parse the string
 		if (!isset($params['parse']) OR $params['parse'] === TRUE)
 		{
@@ -448,36 +578,6 @@ class Fuel_custom_fields {
 		}
 		
 		return $str;
-	}
-	
-	function nested($params)
-	{
-		$this->CI->load->library('parser');
-		$form_builder =& $params['instance'];
-		
-		$fb_class = get_class($form_builder);
-		
-		if (empty($params['fields']) OR !is_array($params['fields']))
-		{
-			return '';
-		}
-		if (empty($params['init']))
-		{
-			$params['init'] = array();
-		}
-		
-		if (empty($params['value']))
-		{
-			$params['value'] = array();
-		}
-		
-		$fb = new $fb_class($params['init']);
-		$fb->set_fields($params['fields']);
-		$fb->submit_value = '';
-		$fb->set_validator($form_builder->form->validator);
-		$fb->use_form_tag = FALSE;
-		$fb->set_field_values($params['value']);
-		return $fb->render();
 	}
 	
 	function currency($params)

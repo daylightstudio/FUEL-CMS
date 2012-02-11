@@ -54,7 +54,7 @@
 <?php endif; ?>
 
 
-<div id="fuel_main_content_inner" style="margin-right: 180px;">
+<div id="fuel_main_content_inner">
 
 	<p class="instructions"><?=$this->instructions?></p>
 

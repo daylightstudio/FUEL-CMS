@@ -59,6 +59,14 @@ configurable parameters:
 			<td>The module assets folder to use</td>
 		</tr>
 		<tr>
+			<td><strong>ignore_if_loaded</strong></td>
+			<td>FALSE</td>
+			<td>TRUE/FALSE (boolean)</td>
+			<td>Will ignore loading css and js files if loaded already</td>
+		</tr>
+		
+		
+		<tr>
 			<td><strong>assets_folders</strong></td>
 			<td><pre>
 array(

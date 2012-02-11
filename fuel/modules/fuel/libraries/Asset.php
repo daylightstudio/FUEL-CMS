@@ -70,6 +70,9 @@ class Asset {
 	// module context for assets
 	public $assets_module = '';
 	
+	// will ignore loading css and js files if loaded already
+	public $ignore_if_loaded = FALSE;
+	
 	// an array of all the css/js files used so we can check as to whether we need to call them again.
 	protected $_used = array();
 	
@@ -523,7 +526,7 @@ class Asset {
 	 * @param	array	additional parameter to include (attrs, ie_conditional, and output)
 	 * @return	string
 	 */	
-	private function _output($type, $module, $open, $close, $path, $options)
+	protected function _output($type, $module, $open, $close, $path, $options)
 	{
 		$attrs = ''; 
 		$ie_conditional = ''; 
@@ -584,6 +587,11 @@ class Asset {
 			$path = (array) $path;
 			foreach($path as $val)
 			{
+				if ($this->ignore_if_loaded AND $this->is_used($type, $val))
+				{
+					continue;
+				}
+				
 				// if (is_array($val))
 				// {
 				// 	$nested .= $this->$type($val, '', $options);
@@ -668,7 +676,7 @@ class Asset {
 			<div id="'.$id.'">
 			</div>';
 		}
-		if (!$this->_is_used('js', 'swfobject') AND !$this->_is_used('js', 'swfobject.js'))
+		if (!$this->is_used('js', 'swfobject') AND !$this->is_used('js', 'swfobject.js'))
 		{
 			$str .= $this->js('swfobject');
 		}
@@ -703,6 +711,21 @@ class Asset {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Check to see whether a css/js file has been used yet
+	 *
+	 * @access	private
+	 * @param	string	type of file (e.g. images, js, css... etc)
+	 * @param	string	file name
+	 * @return	boolean
+	 */	
+	function is_used($type, $file)
+	{
+		return (isset($this->_used[$type]) AND in_array($file, $this->_used[$type]));
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Set and get cache version
 	 *
 	 * @access	private
@@ -712,7 +735,7 @@ class Asset {
 	 * @param	string	type module folder if any
 	 * @return	string
 	 */	
-	private function _check_cache($files, $type, $optimize, $module)
+	protected function _check_cache($files, $type, $optimize, $module)
 	{
 		$CI =& get_instance();
 		$files = (array) $files;
@@ -877,7 +900,7 @@ class Asset {
 	 * @param	mixed	array or string of attribute values
 	 * @return	string
 	 */	
-	private function _array_to_attr($arr)
+	protected function _array_to_attr($arr)
 	{
 		if (is_array($arr))
 		{
@@ -903,7 +926,7 @@ class Asset {
 	 * @param	file	path to the file
 	 * @return	boolean
 	 */	
-	private function _is_local_path($path)
+	protected function _is_local_path($path)
 	{
 		if (strncmp($path, 'http', 4) === 0)
 		{
@@ -922,26 +945,11 @@ class Asset {
 	 * @param	string	file name
 	 * @return	void
 	 */	
-	private function _add_used($type, $file)
+	protected function _add_used($type, $file)
 	{
 		if (!isset($this->_used[$type])) $this->_used[$type] = array();
 		$this->_used[$type][] = $file;
 		
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Check to see whether a css/js file has been used yet
-	 *
-	 * @access	private
-	 * @param	string	type of file (e.g. images, js, css... etc)
-	 * @param	string	file name
-	 * @return	boolean
-	 */	
-	private function _is_used($type, $file)
-	{
-		return (isset($this->_used[$type]) AND in_array($file, $this->_used[$type]));
 	}
 	
 	// --------------------------------------------------------------------
@@ -955,7 +963,7 @@ class Asset {
 	 * @param	string	module module folder if any
 	 * @return	string
 	 */	
-	private function _get_assets_path($module = NULL)
+	protected function _get_assets_path($module = NULL)
 	{
 		if (!isset($module)) $module = $this->assets_module;
 		$assets_path = '';
@@ -1005,7 +1013,7 @@ class Asset {
 	 * @access	private
 	 * @return	object
 	 */	
-	private function _get_assets_config()
+	protected function _get_assets_config()
 	{
 		if (function_exists('get_instance'))
 		{

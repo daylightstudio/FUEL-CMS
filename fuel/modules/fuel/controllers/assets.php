@@ -3,12 +3,11 @@ require_once('module.php');
 
 class Assets extends Module {
 	
-	var $module = '';
+	public $module = '';
 	
 	function __construct()
 	{
 		parent::__construct();
-//		$this->views['create_edit'] = 'assets/assets_create_edit';
 	}
 	
 	function items($inline = FALSE)
@@ -54,7 +53,7 @@ class Assets extends Module {
 				$first_file = current($uploaded_data);
 
 				// set the uploaded file name to the first file
-				$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path(), '', $first_file['full_path']), '/');
+				$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
 
 				$this->session->set_flashdata('uploaded_post', $flashdata);
 				$this->session->set_flashdata('success', lang('data_saved'));

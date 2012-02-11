@@ -38,7 +38,7 @@ $config['custom_fields'] = array(
 		'filepath'	=> '',
 		'js'		=> array(
 			FUEL_FOLDER => array(
-				'jquery/plugins/jqModal',
+				// 'jquery/plugins/jqModal',
 			)
 		),
 		'js_function' => 'fuel.fields.asset_field',
@@ -82,7 +82,7 @@ $config['custom_fields'] = array(
 		'filepath'	=> '',
 		'js'		=> array(
 			FUEL_FOLDER => array(
-				'jquery/plugins/jqModal',
+				// 'jquery/plugins/jqModal',
 				'jquery/plugins/jquery.selso',
 				'jquery/plugins/jquery-ui-1.8.4.custom.min',
 				'jquery/plugins/jquery.disable.text.select.pack',

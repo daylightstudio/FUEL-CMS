@@ -151,31 +151,21 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 }
 
 myMarkItUpSettings.markItUpImageInsert = function (markItUp){
-	var isInline = (jQuery('#__FUEL__asset_modal').size());
-	var path = (isInline) ? __FUEL_PATH__ + '/assets/select_ajax/images' : jqx.config.fuelPath + '/assets/select_ajax/images';
-	var imgPath = (isInline) ? __FUEL_INIT_PARAMS__.assetsImgPath : jqx.config.assetsImgPath;
-	jQuery('#asset_modal, #__FUEL__asset_modal').jqm({
-		ajax: path,
-	 	onLoad: function(){
+	var url = jqx.config.fuelPath + '/assets/select/images/?selected=';
+	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 480px; width: 850px;"></iframe>';
+	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
+	
+	$modal.find('iframe#asset_inline_iframe').bind('load', function(){
+		var iframeContext = this.contentDocument;
+		$assetSelect = jQuery('#asset_select', iframeContext);
+		$assetPreview = jQuery('#asset_preview', iframeContext);
+		jQuery('.cancel', iframeContext).add('.modal_close').click(function(){
+			$modal.jqmHide();
+			var selectedVal = $assetSelect.val();
+			var replace = '<img src="{img_path(\'' + selectedVal + '\')}" alt="" />';
+			jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
+			return false;
+		});
+	});
 
-			jQuery('#asset_select').change(function(e){
-				jQuery('#asset_preview').html('<img src="' + imgPath + jQuery('#asset_select').val() + '" />');
-			})
-			jQuery('#asset_select').change();
-			
-			jQuery('.ico_yes').click(function(){
-				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
-				var replace = '<img src="{img_path(\'' + jQuery('#asset_select').val() + '\')}" alt="" />';
-				jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
-				return false;
-			})
-
-			jQuery('.ico_no').click(function(){
-				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
-				return false;
-			})
-			
-			
-		}
-	}).jqmShow();
 }

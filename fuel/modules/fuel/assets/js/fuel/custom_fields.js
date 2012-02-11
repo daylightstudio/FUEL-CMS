@@ -16,28 +16,15 @@ fuel.fields.datetime_field = function(context, options){
 	Date.format = o.format;
 	Date.firstDayOfWeek = o.firstDayOfWeek;
 
-	var dpOptions = {startDate: o.endDate, endDate: o.startDate}
+	var dpOptions = {startDate: o.startDate, endDate: o.endDate}
+	console.log(dpOptions)
+	$('.datepicker', context).datePicker(dpOptions);
 
-	$('.datepicker', context).filter(":not('.dp-applied')").each(function(i){
-		if ($(this).val() != Date.format){
-			var d = $(this).val();
-			var picker = $(this).datePicker(dpOptions).dpSetSelected(d);
-		} else {
-			var picker = $(this).datePicker(dpOptions);
-		}
-		picker.bind(
-			'dateSelected', 
-			function(e, selectedDates) {
-				$(this).removeClass("fillin");
-			}
-		);
-
-	});
 }
 
 // multi combo box selector
 fuel.fields.multi_field = function(context){
-	
+
 	var comboOptions = function(elem){
 		var comboOpts = {};
 		comboOpts.valuesEmptyString = fuel.lang('comboselect_values_empty');
@@ -216,7 +203,7 @@ fuel.fields.asset_field = function(context, options){
 
 	var showAssetsSelect = function(){
 		var url = jqx.config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
-		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 450px; width: 850px;"></iframe>';
+		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 480px; width: 850px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -225,7 +212,7 @@ fuel.fields.asset_field = function(context, options){
 			var iframeContext = this.contentDocument;
 			$assetSelect = $('#asset_select', iframeContext);
 			$assetPreview = $('#asset_preview', iframeContext);
-			$('.cancel, .modal_close', iframeContext).click(function(){
+			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
 				var $activeField = $('#' + activeField);
 				var assetVal = jQuery.trim($activeField.val());
@@ -551,28 +538,45 @@ fuel.fields.number_field = function(context, options){
 
 // create a repeatable field
 fuel.fields.template_field = function(context, options){
-	$repeatable = $('.repeatable', context).parent();
-	$repeatable.bind('cloned', function(e){
-		$('#form').formBuilder().initialize(e.clonedNode);
-	})
-	var currentCKTexts = {};
-	
-	// hack required for CKEditor so it will allow you to sort and not lose the data 
-	$repeatable.bind('sortStarted', function(e){
-		if (CKEDITOR != undefined){
-			for(var n in CKEDITOR.instances){
-				currentCKTexts[n] = CKEDITOR.instances[n].getData();
-			}
-		}
-	})
+	if (!options) options = {};
 
-	$repeatable.bind('sortStopped', function(e){
-		if (CKEDITOR != undefined){
-			for(var n in CKEDITOR.instances){
-				currentCKTexts[n] = CKEDITOR.instances[n].setData(currentCKTexts[n]);
+	var repeatable = function($repeatable){
+		$repeatable.bind('cloned', function(e){
+			$('#form').formBuilder().initialize(e.clonedNode);
+		})
+		var currentCKTexts = {};
+
+		// hack required for CKEditor so it will allow you to sort and not lose the data 
+		$repeatable.bind('sortStarted', function(e){
+			if (CKEDITOR != undefined){
+				for(var n in CKEDITOR.instances){
+					currentCKTexts[n] = CKEDITOR.instances[n].getData();
+				}
 			}
-		}
-	})
+		})
+
+		$repeatable.bind('sortStopped', function(e){
+			if (CKEDITOR != undefined){
+				for(var n in CKEDITOR.instances){
+					currentCKTexts[n] = CKEDITOR.instances[n].setData(currentCKTexts[n]);
+				}
+			}
+		})
+		
+		// set individual options based on the data-max attribute
+		$repeatable.each(function(i){
+			options.max = $(this).attr('data-max');
+			options.min = $(this).attr('data-min');
+			$(this).repeatable(options);
+		})
+	}
 	
-	$('.repeatable', context).parent().repeatable(options);
+	// get nested ones first
+	$elems = $('.repeatable .repeatable', context).parent();
+	repeatable($elems);
+	
+	// then the parents
+	$elems = $('.repeatable', context).not('.repeatable .repeatable').parent();
+	repeatable($elems);
+
 }

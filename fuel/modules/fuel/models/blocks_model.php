@@ -23,6 +23,25 @@ class Blocks_model extends Base_module_model {
 		return $data;
 	}
 	
+	public function options_list_with_views($where = array(), $order = TRUE)
+	{
+		$CI =& get_instance();
+		$CI->load->helper('file');
+		$blocks_path = APPPATH.'views/_blocks';
+		$block_files = get_filenames($blocks_path, TRUE);
+		
+		$view_blocks = array();
+		foreach($block_files as $block)
+		{
+			$block = trim(str_replace($blocks_path, '', current(explode('.', $block))), '/');
+			$view_blocks[$block] = $block;
+		}
+
+		$blocks = parent::options_list('name', 'name', $where, $order);
+		$blocks = array_merge($view_blocks, $blocks);
+		return $blocks;
+	}
+	
 	public function form_fields()
 	{
 		$fields = parent::form_fields();

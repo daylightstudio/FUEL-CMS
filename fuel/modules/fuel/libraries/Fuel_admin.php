@@ -429,7 +429,7 @@ class Fuel_admin extends Fuel_base_library {
 			// check if there is a css module assets file and load it so it will be ready when the page is ajaxed in
 			if (file_exists(MODULES_PATH.$module.'/assets/css/'.$module.'.css'))
 			{
-				$css[] = array($module => $module);
+				$css[$module][] = $module;
 			}
 		}
 		if ($this->fuel->config('xtra_css'))

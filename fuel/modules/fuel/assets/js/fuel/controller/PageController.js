@@ -54,7 +54,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			$('#layout_vars').load(path, {}, function(){
 				var context = $('#fuel_main_content_inner');
 				_this.initSpecialFields(context);
-				//$(this).parents('form').formBuilder().initialize();
+				$(this).trigger('varsLoaded');
+				$(this).parents('form').formBuilder().initialize();
 			});
 		});
 		
@@ -103,6 +104,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			bindFields();
 			var context = $('#fuel_main_content_inner');
 			_this.initSpecialFields(context);
+			$('#form').formBuilder().initialize();
+			
 		}
 		
 	},

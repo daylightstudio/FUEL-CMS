@@ -12,3 +12,9 @@ $lang['search_instructions'] = 'Here you can edit the contents of the search ind
 $lang['search_log_index_created'] = 'Indexed: %1s';
 $lang['search_log_index_removed'] = 'Index removed: %1s';
 $lang['search_log_index_page_error'] = 'Page Error: %1s';
+
+// for pagination
+$lang['search_prev_page'] = 'Prev';
+$lang['search_next_page'] = 'Next';
+$lang['search_first_link'] = '';
+$lang['search_last_link'] = '';

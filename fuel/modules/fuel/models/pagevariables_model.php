@@ -104,9 +104,17 @@ class Pagevariables_model extends Base_module_model {
 	
 	function on_before_clean($values)
 	{
-		if (isset($values['value']) AND is_array($values['value']))
+		if (isset($values['value']))
 		{
-			$values['value'] = serialize($values['value']);
+			if (is_array($values['value']))
+			{
+				$values['value'] = serialize($values['value']);
+				$values['type'] = 'array';
+			}
+			else if (is_serialized_str($values['value']))
+			{
+				$values['type'] = 'array';
+			}
 		}
 		return $values;
 	}

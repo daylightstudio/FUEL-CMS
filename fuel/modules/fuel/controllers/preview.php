@@ -17,7 +17,7 @@ class Preview extends Fuel_base_controller {
 		
 		// check for posted data
 		$data = $this->input->post('data', TRUE);
-		if (empty($data)) show_error(lang('error_cannot_preview'));
+	//	if (empty($data)) show_error(lang('error_cannot_preview'));
 		
 		// load global variables
 		if (file_exists(APPPATH.'views/_variables/global'.EXT))
@@ -29,7 +29,7 @@ class Preview extends Fuel_base_controller {
 		get query string parameters of module and field name if they exist so we can set those as variables 
 		in the view to be used if they want to customize based on those parameters
 		*/
-		$vars['body'] = $data;
+		$vars['body'] = '<div class="preview_body">'.$data."</div>";
 		$vars['module'] = $this->input->get('module', TRUE);
 		$vars['field'] = $this->input->get('field', TRUE);
 		$vars['preview'] = $this->input->get('preview', TRUE);
@@ -53,9 +53,6 @@ class Preview extends Fuel_base_controller {
 
 		// parse for template syntax
 		$output = $this->parser->parse_string($view, $vars, TRUE);
-		
-		// for safe_mailto issue causing conflict (and maybe other js we haven't found yet)
-		$output = str_replace(array('<script', '</script>'), array('<xscript', '</xscript>'), $output);
 		
 		// render the preview
 		$this->output->set_output($output);

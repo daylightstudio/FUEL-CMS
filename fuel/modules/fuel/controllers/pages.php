@@ -407,6 +407,7 @@ class Pages extends Module {
 				
 				if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
 				{
+					$value = array_map('zap_gremlins', $value);
 					$value = serialize($value);
 					$val['type'] = 'array'; // force the type to be an array
 				}
@@ -583,7 +584,7 @@ class Pages extends Module {
 		$this->output->set_output('error');
 	}
 	
-	function inline_edit($field, $page_id = NULL)
+	/*function inline_edit($field, $page_id = NULL)
 	{
 		// if field is empty then we'll assume it is really the page ID'
 		if (empty($page_id))
@@ -696,7 +697,7 @@ class Pages extends Module {
 				}
 			}
 		}
-	}
+	}*/
 	
 	function upload()
 	{

@@ -55,8 +55,6 @@ class Fuel_assets extends Fuel_base_library {
 		$this->_dirs = list_directories($this->CI->asset->assets_server_path(), $this->CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
 	}
 	
-	
-	
 	function upload($params = array())
 	{
 		$this->CI->load->library('upload');
@@ -144,10 +142,13 @@ class Fuel_assets extends Fuel_base_library {
 					$params['allowed_types'] = 'jpg|jpeg|png|gif';
 					$asset_dir = $default_asset_dir;
 				}
-				$params['remove_spaces'] = TRUE;
 			
 				// set the upload path
-				$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
+				if (empty($params['upload_path']))
+				{
+					$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
+				}
+				$params['remove_spaces'] = TRUE;
 
 				// make directory if it doesn't exist and subfolder creation is allowed'
 				if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))

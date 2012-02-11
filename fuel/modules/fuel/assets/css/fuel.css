@@ -62,9 +62,9 @@ a.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repea
 div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left; list-style: none;  margin: 0;  padding: 0 15px 0 0px; line-height: 27px; }
 .btn input, .btn .button { border: none; background-color: transparent; height: 19px; }
 
-.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin-bottom: -1px; }
-.repeatable h4 { overflow: hidden; margin: 0 auto 0px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat top center; cursor: move; }
-.repeatable .remove { position: absolute; top: 10px; right: 10px; }
+.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; }
+.repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
+.repeatable .remove { position: absolute; top: 15px; right: 15px; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
 
@@ -75,6 +75,7 @@ div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) rep
 .overwrite_field { margin-top: 3px; }
 .overwrite_field input { margin-top: 6px; }
 fieldset.tab { display: none; }
+fieldset.tab fieldset { display: block; }
 fieldset.collapsible legend { cursor: pointer; }
 	
 /* header */
@@ -272,14 +273,13 @@ div.nodata { text-align: center; padding: 10px 0 15px 0;}
 span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
-.form { border: none; border-spacing: 0; }
+.form { border: none; border-spacing: 0; display: table; } /* important to display as table so that the proper width can be determined with inline editing */
 .form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
 .form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
 .form td.required { padding-top: 10px; }
 div.more_filters { padding-left: 10px; }
 div.more_filters span.label { float: left; padding-top: 2px; }
 div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  }
-div#fuel_main_content_inner table.form td.label { min-width: 130px; }
 
 /* tree */
 div#tree_container { padding: 10px 15px; }
@@ -317,7 +317,7 @@ div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -480px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #888; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
 /*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/

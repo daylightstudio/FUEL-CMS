@@ -87,8 +87,10 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 					docHeight = fuel.calcHeight(contentDoc);
 				//	docHeight = iframe.contentDocument.body.scrollHeight;
 					//console.log(iframe.contentWindow.parent.document.title + ' ' + $(iframe.contentWindow.parent.document).height() )
-					if (docHeight > 450) {
-						docHeight = 450;
+					if (docHeight > 480) {
+						docHeight = 480;
+					} else {
+						docHeight += 30;
 					}
 					//console.log(iframe.contentWindow.document.title)
 

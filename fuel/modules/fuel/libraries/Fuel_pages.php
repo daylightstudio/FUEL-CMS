@@ -173,6 +173,7 @@ class Fuel_page extends Fuel_base_library {
 	public $is_cached = TRUE; // is the file cached in the system cache directory
 	public $views_path = ''; // the path to the views folder for rendering. Used with modules
 	public $render_mode = 'views'; // is the page being rendered from the views folder or the DB
+	public $view_module = 'app'; // the module to look for the view file
 	public $markers = array();
 	public static $marker_key = '__FUEL_MARKER__';
 	
@@ -192,6 +193,14 @@ class Fuel_page extends Fuel_base_library {
 	{
 		parent::__construct();
 		$this->CI->load->helper('cookie');
+		
+		// cookie check... would be nice to remove to speed things up a little bit
+		if (is_fuelified())
+		{
+			$this->_fuelified = TRUE;
+			$this->_only_published = FALSE;
+		}
+		
 		if (!empty($params))
 		{
 			$this->initialize($params);
@@ -226,18 +235,11 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
-		// cookie check... would be nice to remove to speed things up a little bit
-		if (is_fuelified())
-		{
-			$this->_fuelified = TRUE;
-			$this->_only_published = FALSE;
-		}
-		
 		// assign the location of the page
 		$this->assign_location($this->location);
 
 		// assign variables to the page
-		$this->assign_variables();
+		$this->assign_variables($this->views_path);
 
 		// assign layout
 		$this->assign_layout($this->layout);
@@ -388,7 +390,9 @@ class Fuel_page extends Fuel_base_library {
 			$field_values = $this->layout->field_values();
 			
 			$vars = array_merge($field_values, $this->variables());
-
+			
+			$this->load_resources($vars);
+			
 			// call layout hook
 			$this->layout->call_hook('pre_render', array('vars' => $vars));
 
@@ -424,74 +428,7 @@ class Fuel_page extends Fuel_base_library {
 
 		$vars = $this->variables();
 		
-		// load helpers
-		if (!empty($vars['helpers']))
-		{
-			if (is_array($vars['helpers']))
-			{
-				foreach($vars['helpers'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_helper($key, $val);
-					}
-					else
-					{
-						$this->CI->load->helper($val);
-					}
-				}
-			}
-			else
-			{
-				$this->CI->load->helpers($vars['helpers']);
-			}
-		}
-			
-		// load libraries
-		if (!empty($vars['libraries']))
-		{
-			if (is_array($vars['libraries']))
-			{
-				foreach($vars['libraries'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_library($key, $val);
-					}
-					else
-					{
-						$this->CI->load->library($val);
-					}
-				}
-			}
-			else
-			{
-				$this->CI->load->library($vars['libraries']);
-			}
-		}
-
-		// load models
-		if (!empty($vars['models']))
-		{
-			if (is_array($vars['models']))
-			{
-				foreach($vars['models'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_model($key, $val);
-					}
-					else
-					{
-						$this->CI->load->model($val);
-					}
-				}
-			}
-			else
-			{
-				$this->CI->load->model($vars['models']);
-			}
-		}
+		$this->load_resources($vars);
 		
 		// for convenience we'll add the $CI object'
 		$vars['CI'] = &$this->CI;
@@ -576,7 +513,7 @@ class Fuel_page extends Fuel_base_library {
 			}
 			else
 			{
-				$body = $this->CI->load->module_view('app', $view, $vars, TRUE);
+				$body = $this->CI->load->module_view($this->view_module, $view, $vars, TRUE);
 			}
 			// now set $vars to the cached so that we have a fresh set to send to the layout in case any were declared in the view
 			$vars = $this->CI->load->get_vars();
@@ -628,6 +565,84 @@ class Fuel_page extends Fuel_base_library {
 			$this->CI->output->set_output($output);
 			return TRUE;
 		}
+	}
+	
+	function load_resources($vars = NULL)
+	{
+		if (empty($vars))
+		{
+			$vars = $this->variables();
+		}
+		
+		// load helpers
+		if (!empty($vars['helpers']))
+		{
+			if (is_array($vars['helpers']))
+			{
+				foreach($vars['helpers'] as $key => $val)
+				{
+					if (!is_numeric($key))
+					{
+						$this->CI->load->module_helper($key, $val);
+					}
+					else
+					{
+						$this->CI->load->helper($val);
+					}
+				}
+			}
+			else
+			{
+				$this->CI->load->helpers($vars['helpers']);
+			}
+		}
+			
+		// load libraries
+		if (!empty($vars['libraries']))
+		{
+			if (is_array($vars['libraries']))
+			{
+				foreach($vars['libraries'] as $key => $val)
+				{
+					if (!is_numeric($key))
+					{
+						$this->CI->load->module_library($key, $val);
+					}
+					else
+					{
+						$this->CI->load->library($val);
+					}
+				}
+			}
+			else
+			{
+				$this->CI->load->library($vars['libraries']);
+			}
+		}
+
+		// load models
+		if (!empty($vars['models']))
+		{
+			if (is_array($vars['models']))
+			{
+				foreach($vars['models'] as $key => $val)
+				{
+					if (!is_numeric($key))
+					{
+						$this->CI->load->module_model($key, $val);
+					}
+					else
+					{
+						$this->CI->load->model($val);
+					}
+				}
+			}
+			else
+			{
+				$this->CI->load->model($vars['models']);
+			}
+		}
+		
 	}
 	
 	function fuelify($output)

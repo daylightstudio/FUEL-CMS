@@ -162,7 +162,7 @@ class Blog extends Blog_base_controller {
 				$vars['comment_form'] = '';
 				$this->session->set_userdata('antispam', $antispam);
 				
-				if (is_true_val($this->fuel->blog->settings('allow_comments')))
+				if ($post->allow_comments)
 				{
 					$this->load->module_model(BLOG_FOLDER, 'blog_comments_model');
 					$this->load->library('form_builder', $blog_config['comment_form']);

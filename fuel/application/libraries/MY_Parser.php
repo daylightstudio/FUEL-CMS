@@ -45,7 +45,6 @@ class MY_Parser extends CI_Parser {
 		{
 			$this->initialize($config);
 		}
-
 		$this->_ci =& get_instance();
 
 		// added by David McReynolds @ Daylight Studio 9/16/10 to prevent problems of axing the entire directory
@@ -69,6 +68,12 @@ class MY_Parser extends CI_Parser {
 		{
 			$this->{'_' . $key} = $val;
 		}
+		
+		// set these manually since inherited from CI_Parser
+		// added by David McReynolds @ Daylight Studio 1/26/12 to set custom delimiters
+		if (isset($config['l_delim'])) $this->l_delim = $config['l_delim'];
+		if (isset($config['r_delim'])) $this->r_delim = $config['r_delim'];
+		
 	}
 	
 	// --------------------------------------------------------------------
@@ -268,7 +273,23 @@ class MY_Parser extends CI_Parser {
 				// added by David McReynolds @ Daylight Studio 11/04/10
 				$callback = create_function('$compiler', '
 					$string = $compiler->getTemplateSource();
-					$string = preg_replace("#'.$this->l_delim.'\s*'.$this->r_delim.'#", "'.$this->l_delim.'\n'.$this->r_delim.'", $string); 
+					
+					$callback = create_function(\'$matches\',
+						\'if (isset($matches[1]))
+						{
+							$str = "<script";
+							$str .= preg_replace("#\\'.$this->l_delim.'([^s])#ms", "'.$this->l_delim.' $1", $matches[1]);
+							$str .= "</script>";
+							return $str;
+						}
+						else
+						{
+							return $matches[0];
+						}
+						\'
+						);
+
+					$string = preg_replace_callback("#<script(.+)</script>#ms", $callback, $string);
 					$compiler->setTemplateSource($string);
 					return $string;
 				');

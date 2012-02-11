@@ -1,14 +1,15 @@
 * { -moz-outline-style: none; }
-body { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
-h1 { font-size: 18px;  margin-bottom: 10px; }
-h2 { font-size: 14px; margin-bottom: 10px; }
-h3 { font-size: 12px; margin: 15px 0 3px 0; }
-a { color: #0e3e7e; text-decoration: none; }
-a:hover { text-decoration: underline; }
-a:visited { color: #4679bd;}
-p { margin: 5px 0 15px 0; }
-ul { margin-bottom: 10px; }
-li { line-height: 20px; }
+.validate_iframe  { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+.validate_iframe h1 { font-size: 18px;  margin-bottom: 10px; }
+.validate_iframe h2 { font-size: 14px; margin-bottom: 10px; }
+#fuel_main_content_inner h2 { font-size: 14px; margin: 10px 0; }
+.validate_iframe h3 { font-size: 12px; margin: 15px 0 3px 0; }
+.validate_iframe a { color: #0e3e7e; text-decoration: none; }
+.validate_iframe a:hover { text-decoration: underline; }
+.validate_iframe a:visited { color: #4679bd;}
+.validate_iframe p { margin: 5px 0 15px 0; }
+.validate_iframe ul { margin-bottom: 10px; }
+.validate_iframe li { line-height: 16px; }
 
 /* tag classes */
 .success { background: #6ec461; }
@@ -23,4 +24,4 @@ span.num { display: none; }
 
 h2#total { float: left; }
 div#edit_url { display: none; }
-div#summary_key { float: right; margin-right: 10px; }
+div#summary_key { float: right; margin: 10px 10px 0 0; }

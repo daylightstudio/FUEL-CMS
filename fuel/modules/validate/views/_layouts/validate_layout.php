@@ -6,7 +6,7 @@
 
 	<?=css('validate_results', 'validate')?>
 </head>
-<body>
+<body class="validate_iframe">
 
 <?=$body?>
 
