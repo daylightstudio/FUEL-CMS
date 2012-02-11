@@ -114,6 +114,24 @@ function is_serialized_str($data)
 // --------------------------------------------------------------------
 
 /**
+ * Boolean check to determine string content is a JSON object string
+ *
+ * @param	mixed	possible serialized string
+ * @return 	boolean
+ */
+function is_json_str($data)
+{
+	if (is_string($data))
+	{
+		$json = json_decode($params['value'], TRUE);
+		return ($json !== NULL);
+	}
+	return NULL;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Print object in human-readible format
  *
  * @param	object	object variable
@@ -168,6 +186,18 @@ function CI() {
 
     $CI =& get_instance();
     return $CI;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns whether the current environment is set for development
+ *
+ * @return 	boolean
+ */
+function is_dev_mode()
+{
+	return (ENVIRONMENT != 'production');
 }
 
 /* End of file utility_helper.php */

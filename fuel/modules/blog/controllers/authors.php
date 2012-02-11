@@ -25,6 +25,11 @@ class Authors extends Blog_base_controller {
 				$author = $this->fuel->blog->get_user($author_id);
 				if (empty($author)) show_404();
 				$where['author_id'] = $author_id;
+				
+				// run before_posts_by_date hook
+				$hook_params = array('author' => $author);
+				$this->fuel->blog->run_hook('before_posts_by_author', $hook_params);
+				
 				$vars['posts'] = $this->fuel->blog->get_posts($where);
 				$vars['page_title'] = lang('blog_author_posts_page_title', $author->name);
 				$output = $this->_render('posts', $vars, TRUE);

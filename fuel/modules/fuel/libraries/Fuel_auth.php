@@ -62,7 +62,6 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		return $this->get_session_namespace();
 	}
-	
 
 	// check any remote host or IP restrictions first
 	function can_access()

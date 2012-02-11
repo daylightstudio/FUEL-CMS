@@ -1,4 +1,4 @@
-<?php $this->load->view('_blocks/header')?>
+<?php $this->load->view('_blocks/_header')?>
 	
 	<div id="right">
 		<?php echo $this->fuel_blog->sidemenu(array('search', 'authors', 'categories', 'links', 'archives'))?>
@@ -10,4 +10,4 @@
 	
 	<div class="clear"></div>
 	
-<?php $this->load->view('_blocks/footer')?>
+<?php $this->load->view('_blocks/_footer')?>

@@ -724,6 +724,7 @@
 				this.numSelected += v ? 1 : -1;
 				var selectorString = 'td.' + (d.getMonth() == this.displayedMonth ? 'current-month' : 'other-month');
 				var $td;
+
 				$(selectorString, this.context).each(
 					function()
 					{
@@ -938,7 +939,7 @@
 			cellRender : function ($td, thisDate, month, year) {
 				var c = this.dpController;
 				var d = new Date(thisDate.getTime());
-				
+
 				// add our click handlers to deal with it when the days are clicked...
 				
 				$td.bind(

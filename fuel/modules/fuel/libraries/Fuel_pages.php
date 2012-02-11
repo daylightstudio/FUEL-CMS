@@ -252,7 +252,7 @@ class Fuel_page extends Fuel_base_library {
 		
 		$default_home = $this->fuel->config('default_home_view');
 
-		if ($this->location == 'page_router') $this->location = $default_home;
+		if (empty($this->location) OR $this->location == 'page_router') $this->location = $default_home;
 		
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout' => NULL, 'location' => NULL);
 		$this->_page_data = $page_data;
@@ -341,6 +341,7 @@ class Fuel_page extends Fuel_base_library {
 		
 		$vars_path = $this->views_path.'_variables/';
 		$init_vars = array('location' => $this->location, 'vars_path' => $vars_path);
+		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($page_mode);
 		$this->add_variables($vars);
 	}
@@ -412,7 +413,14 @@ class Fuel_page extends Fuel_base_library {
 				return $output;
 			}
 		
+			// call layout hook
+			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
+			
+			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
+			$output = $this->layout->post_process($output);
+
 			$this->CI->output->set_output($output);
+			
 			return TRUE;
 		}
 		else
@@ -562,7 +570,15 @@ class Fuel_page extends Fuel_base_library {
 		}
 		else
 		{
+			
+			// call layout hook
+			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
+			
+			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
+			$output = $this->layout->post_process($output);
+
 			$this->CI->output->set_output($output);
+			
 			return TRUE;
 		}
 	}

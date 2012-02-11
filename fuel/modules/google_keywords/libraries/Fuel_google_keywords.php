@@ -42,19 +42,19 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 
 		if (!extension_loaded('curl')) 
 		{
 			$this->_add_error(lang('error_no_curl_lib'));
 		}
 		
-		// initialize object if any parameters
-		if (!empty($params))
+		if (empty($params))
 		{
-			$this->initialize($params);
+			$params['name'] = 'google_keywords';
 		}
-		
+		$this->initialize($params);
+	
 	}
 	
 	// --------------------------------------------------------------------
@@ -73,7 +73,6 @@ class Fuel_google_keywords extends Fuel_advanced_module {
 	{
 		parent::initialize($params);
 		$this->set_params($this->_config);
-		
 	}
 	
 	// returns an array with the keywords being the key and the value being a comma separated value of the rankings

@@ -289,7 +289,7 @@ class MY_Parser extends CI_Parser {
 						\'
 						);
 
-					$string = preg_replace_callback("#<script(.+)</script>#ms", $callback, $string);
+					$string = preg_replace_callback("#<script(.+)</script>#Ums", $callback, $string);
 					$compiler->setTemplateSource($string);
 					return $string;
 				');

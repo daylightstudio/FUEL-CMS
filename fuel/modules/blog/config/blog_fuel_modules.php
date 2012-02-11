@@ -8,7 +8,7 @@ $config['modules']['blog_posts'] = array(
 		'id', 
 		'title', 
 		'author', 
-		'date_added', 
+		'post_date', 
 		'published', 
 	),
 	'display_field' => 'title',
@@ -19,7 +19,7 @@ $config['modules']['blog_posts'] = array(
 	'configuration' => array('blog' => 'blog'),
 	'nav_selected' => 'blog/posts',
 //	'language' => array('blog' => 'blog'),
-	'default_col' => 'date_added',
+	'default_col' => 'post_date',
 	'default_order' => 'desc',
 	'sanitize_input' => array('template','php')
 );
@@ -32,6 +32,7 @@ $config['modules']['blog_categories'] = array(
 	'table_headers' => array(
 		'id', 
 		'name', 
+		'precedence', 
 		'published', 
 	),
 	'display_field' => 'name',

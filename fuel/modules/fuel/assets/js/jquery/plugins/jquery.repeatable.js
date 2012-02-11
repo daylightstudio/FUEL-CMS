@@ -20,8 +20,11 @@ dave@thedaylightstudio.com
 			contentSelector : '.repeatable_content',
 			warnBeforeDelete : true,
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
+			addNewTitle : 'New',
 			sortableSelector : '.grabber',
 			sortable : true,
+			initDisplay : false,
+			dblClickBehavior : 'toggle', // options are false, toggle or accordian
 			max : null,
 			min : null,
 			depth : 1,
@@ -32,12 +35,25 @@ dave@thedaylightstudio.com
 			
 			var $childTemplates = $(elem).find(options.repeatableSelector);
 			var depth = $(elem).parent().attr('data-depth');
+			var titleField = $(elem).parent().attr('data-title_field');
+			var title = $(elem).find('input[name$="[' + titleField + ']"]').val();
+
 			if (!depth) depth = 0;
 			var depthSuffix = (depth > 0) ? '_' + depth : '';
 			$('.num' + depthSuffix, elem).html((i + 1));
 			$('.index' + depthSuffix, elem).html(i);
+			$('.title' + depthSuffix, elem).html(title);
 			
-			$('input.field_depth_' + depth + ',textarea.field_depth_' + depth + ',select.field_depth_' + depth, elem).each(function(j){
+			var parseAttribute = function(elem, attr){
+				var newId = $(elem).attr(attr);
+				if (newId && newId.length){
+					newId = newId.replace(/\{index\}/g, i);
+					newId = newId.replace(/([-_a-zA-Z0-9]+_)\d+(_[-_a-zA-Z0-9]+)$/, '$1' + i + '$2');
+					$(elem).attr(attr, newId);
+				}
+			}
+			
+			$('label,input.field_depth_' + depth + ',textarea.field_depth_' + depth + ',select.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name')
 				if (newName && newName.length){
 					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$/, '$1[' + i + ']$2');
@@ -48,14 +64,15 @@ dave@thedaylightstudio.com
 					
 					$(this).attr('name', newName)
 				}
-
-				var newId = $(this).attr('id');
-				if (newId && newId.length){
-					newId = newId.replace(/\{index\}/g, i);
-					newId = newId.replace(/([-_a-zA-Z0-9]+_)\d+(_[-_a-zA-Z0-9]+)$/, '$1' + i + '$2');
-					$(this).attr('id', newId);
+				
+				if ($(this).is('label')){
+					parseAttribute(this, 'for');
+				} else {
+					parseAttribute(this, 'id');
 				}
 			})
+			
+			
 			
 			var $parentElem = $(elem).has(options.repeatableSelector + ' ' + options.repeatableSelector);
 
@@ -143,8 +160,17 @@ dave@thedaylightstudio.com
 		
 		var createCollapsingContent = function($elem){
 			if (options.allowCollapsingContent){
+		
 				$($elem).find(options.sortableSelector).dblclick(function(e){
-					$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').toggle();
+					$parent = $(this).closest(options.repeatableSelector).parent();
+
+					var dblclick = ($parent.attr('data-dblclick')) ? $parent.attr('data-dblclick') : null;
+					if (dblclick == 'accordian'){
+						$parent.find(options.contentSelector).hide();
+						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').show();
+					} else {
+						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').toggle();
+					}
 				})
 			}
 		}
@@ -163,6 +189,7 @@ dave@thedaylightstudio.com
 				var $prev = $(this).prev();
 				var max = ($prev.attr('data-max')) ? parseInt($prev.attr('data-max')) : null;
 				var min = ($prev.attr('data-min')) ? parseInt($prev.attr('data-min')) : null;
+				var dblclick = ($prev.attr('data-dblclick')) ? $prev.attr('data-dblclick') : null;
 
 				if (!$(e.currentTarget).data('clone')){
 					var $clone = cloneRepeatableNode($prev);
@@ -174,9 +201,16 @@ dave@thedaylightstudio.com
 				var $this = $(this).prev();
 				var $clonecopy = $clone.clone(false);
 
-				
 				// add the noclone class so that it gets removed if nested
 				$clonecopy.addClass('noclone');
+				
+				
+				$clonecopy.find(options.contentSelector + ':first').show();
+				if (dblclick == 'accordian'){
+					$prev.find(options.contentSelector).hide();
+				}
+				
+				createCollapsingContent($clonecopy);
 				
 				var $children = $this.children(options.repeatableSelector);
 
@@ -191,7 +225,7 @@ dave@thedaylightstudio.com
 				$this.append($clonecopy);
 
 				// remove values from any form fields
-				$clonecopy.find('input,text,select,textarea').val('');
+				$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"]').val('');
 				$clonecopy.find('.noclone').remove();
 				
 				$this.trigger({type: 'cloned', clonedNode: $clonecopy});
@@ -234,11 +268,26 @@ dave@thedaylightstudio.com
 			
 			// add max limit attribute to reference later
 			if (options.max){
-				$parent.attr('data-max', options.max); // set it if it's not already
+				$this.attr('data-max', options.max); // set it if it's not already
 			}
 
 			if (options.min){
-				$parent.attr('data-min', options.min); // set it if it's not already
+				$this.attr('data-min', options.min); // set it if it's not already
+			}
+			
+			if (options.dblClickBehavior){
+				$this.attr('data-dblclick', options.dblClickBehavior);
+			}
+
+			if (options.initDisplay){
+				$this.attr('data-init_display', options.init_display);
+				
+				// hide all but the first
+				if (options.initDisplay == 'first'){
+					$repeatables.find('.repeatable_content').not(':first').hide();
+				} else if (options.initDisplay == 'none' || options.initDisplay == 'closed'){
+					$repeatables.find('.repeatable_content').hide();
+				}
 			}
 			
 			if ($parent.find(options.addButtonClass).size() == 0){

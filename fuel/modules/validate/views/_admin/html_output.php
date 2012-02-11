@@ -37,9 +37,7 @@ is reflected*/
 <h2><?=lang('validate_warnings')?></h2>
 <ul class="nobullets">
 	<?php foreach($warnings as $warning) : ?>
-	<li class="error"><em><?=lang('validate_line')?> <?=$warning['line']?>, <?=lang('validate_column')?> <?=$warning['col']?></em>: <strong><?=$warning['message']?></strong>
-		<pre><code><?=htmlspecialchars($warning['explanation'], ENT_NOQUOTES, 'UTF-8', FALSE)?></code></pre>
-	</li>
+	<li><span class="warning"><strong><?=$warning['message']?></strong></span> <br /><br /></li>
 	<?php endforeach; ?>
 </ul>
 <?php endif; ?>

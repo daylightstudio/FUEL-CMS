@@ -7,19 +7,20 @@ fuel.fields = {};
 // date picker field
 fuel.fields.datetime_field = function(context, options){
 	var o = {
-		format : 'mm/dd/yyyy',
-		firstDayOfWeek : 0,
-		startDate : '01/01/2000',
-		endDate : '12/31/2100',
+		dateFormat : 'mm/dd/yy',
+		firstDay : 0,
+		minDate : null,
+		maxDate : null,
+		region : '',
+		showButtonPanel : false,
+		showOn: 'button',
+	    buttonText: 'Click to show the calendar',
+	    buttonImageOnly: true, 
+	    buttonImage: jqx.config.imgPath + 'calendar.png'
 	}
 	o = $.extend(o, options);
-	Date.format = o.format;
-	Date.firstDayOfWeek = o.firstDayOfWeek;
-
-	var dpOptions = {startDate: o.startDate, endDate: o.endDate}
-	console.log(dpOptions)
-	$('.datepicker', context).datePicker(dpOptions);
-
+	$.datepicker.regional[o.region];
+	$('.datepicker', context).datepicker(o);
 }
 
 // multi combo box selector
@@ -30,11 +31,12 @@ fuel.fields.multi_field = function(context){
 		comboOpts.valuesEmptyString = fuel.lang('comboselect_values_empty');
 		comboOpts.selectedEmptyString = fuel.lang('comboselect_selected_empty');
 		comboOpts.defaultSearchBoxString = fuel.lang('comboselect_filter');
-		var sortingId = 'sorting_' + $(elem).attr('id');
-		if ($('#' + sortingId).size()){
+		
+		var $sortingElem = $(elem).parent().find('.sorting');
+		if ($sortingElem.size()){
 			comboOpts.autoSort = false;
 			comboOpts.isSortable = true;
-			comboOpts.selectedOrdering = eval(unescape($('#' + sortingId).val()));
+			comboOpts.selectedOrdering = eval(unescape($sortingElem.val()));
 		}
 		return comboOpts;
 	}
@@ -43,6 +45,8 @@ fuel.fields.multi_field = function(context){
 		var comboOpts = comboOptions(this);
 		$(this).supercomboselect(comboOpts);
 	});
+	
+	fuel.fields.inline_edit_field(context);
 }
 
 // markItUp! and CKeditor field
@@ -63,6 +67,13 @@ fuel.fields.wysiwyg_field = function(context){
 		}
 		myMarkItUpSettings.previewParserPath = _previewPath + '?' + q;
 		$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
+		
+		// set the width of the preview to match the width of the textarea
+		$('.markItUpPreviewFrame', context).each(function(){
+			var width = $(this).parent().find('textarea').width();
+			console.log(width)
+			$(this).width(width);
+		})
 	}
 	
 	// fix ">" within template syntax
@@ -132,7 +143,7 @@ fuel.fields.wysiwyg_field = function(context){
 					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 				
 					if (!ckInstance.checkDirty()){
-						$.changeChecksaveValue(ckId, ckInstance.getData())
+						$.changeChecksaveValue('#' + ckId, ckInstance.getData())
 					}
 
 					// update the info
@@ -214,18 +225,21 @@ fuel.fields.asset_field = function(context, options){
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
-				var $activeField = $('#' + activeField);
-				var assetVal = jQuery.trim($activeField.val());
-				var selectedVal = $assetSelect.val();
-				var separator = $activeField.attr('data-separator');
-				var multiple = parseInt($activeField.attr('data-multiple')) == 1;
-				if (multiple){
-					if (assetVal.length) assetVal += separator;
-					assetVal += selectedVal;
-				} else {
-					assetVal = selectedVal;
+				
+				if ($(this).is('.save')){
+					var $activeField = $('#' + activeField);
+					var assetVal = jQuery.trim($activeField.val());
+					var selectedVal = $assetSelect.val();
+					var separator = $activeField.attr('data-separator');
+					var multiple = parseInt($activeField.attr('data-multiple')) == 1;
+					if (multiple){
+						if (assetVal.length) assetVal += separator;
+						assetVal += selectedVal;
+					} else {
+						assetVal = selectedVal;
+					}
+					$('#' + activeField).val(assetVal);
 				}
-				$('#' + activeField).val(assetVal);
 				return false;
 			});
 		})
@@ -252,7 +266,7 @@ fuel.fields.asset_field = function(context, options){
 				default :
 					btnLabel = fuel.lang('btn_asset');
 			}
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select_ajax/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 		}
 	});
 
@@ -286,7 +300,7 @@ fuel.fields.asset_field = function(context, options){
 			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			var btnLabel = fuel.lang('btn_upload_asset');
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/' + assetFolder + '" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
 		}
 	});
 	
@@ -295,6 +309,7 @@ fuel.fields.asset_field = function(context, options){
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 		var url = $(this).attr('href');
+		url = url + '?asset_folder=' + selectedAssetFolder;
 		showAssetUpload(url);
 		return false;
 		
@@ -304,27 +319,7 @@ fuel.fields.asset_field = function(context, options){
 // inline editing of another module
 fuel.fields.inline_edit_field = function(context){
 
-
-	var comboOptions = function(elem){
-		var comboOpts = {};
-		comboOpts.valuesEmptyString = fuel.lang('comboselect_values_empty');
-		comboOpts.selectedEmptyString = fuel.lang('comboselect_selected_empty');
-		comboOpts.defaultSearchBoxString = fuel.lang('comboselect_filter');
-		var sortingId = 'sorting_' + $(elem).attr('id');
-		if ($('#' + sortingId).size()){
-			comboOpts.autoSort = false;
-			comboOpts.isSortable = true;
-			comboOpts.selectedOrdering = eval(unescape($('#' + sortingId).val()));
-		}
-		return comboOpts;
-	}
-	// set up supercomboselects
-	$('select[multiple]', context).not('.no_combo').each(function(i){
-		var comboOpts = comboOptions(this);
-		$(this).supercomboselect(comboOpts);
-	});
-
-
+	//fuel.fields.multi_field(context);
 
 	var topWindowContext = window.top.document;
 	
@@ -364,8 +359,9 @@ fuel.fields.inline_edit_field = function(context){
 		
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
 		var addCss = 'add_inline_button';
-		$field.after('&nbsp;<a href="' + url + 'create" class="btn_field ' + addCss + '">' + fuel.lang('btn_add') + '</a>');
-		$field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		
+		if (!$field.parent().find('.' + addCss).size()) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field ' + addCss + '">' + fuel.lang('btn_add') + '</a>');
+		if (!$field.parent().find('.edit_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		if (isMulti) addCss += ' float_left';
 		
 		var refreshField = function(){
@@ -541,9 +537,6 @@ fuel.fields.template_field = function(context, options){
 	if (!options) options = {};
 
 	var repeatable = function($repeatable){
-		$repeatable.bind('cloned', function(e){
-			$('#form').formBuilder().initialize(e.clonedNode);
-		})
 		var currentCKTexts = {};
 
 		// hack required for CKEditor so it will allow you to sort and not lose the data 
@@ -567,6 +560,11 @@ fuel.fields.template_field = function(context, options){
 		$repeatable.each(function(i){
 			options.max = $(this).attr('data-max');
 			options.min = $(this).attr('data-min');
+			options.dblClickBehavior = $(this).attr('data-dblclick');
+			options.initDisplay = $(this).attr('data-init_display');
+			options.addButtonText = fuel.lang('btn_add_another');
+			options.removeButtonText = fuel.lang('btn_remove');
+			options.warnBeforeDeleteMessage = fuel.lang('warn_before_delete_msg');
 			$(this).repeatable(options);
 		})
 	}
@@ -578,5 +576,9 @@ fuel.fields.template_field = function(context, options){
 	// then the parents
 	$elems = $('.repeatable', context).not('.repeatable .repeatable').parent();
 	repeatable($elems);
+	
+	('.repeatable', context).live('cloned', function(e){
+		$('#form').formBuilder().initialize(e.clonedNode);
+	})
 
 }

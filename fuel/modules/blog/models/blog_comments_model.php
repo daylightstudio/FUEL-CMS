@@ -64,7 +64,7 @@ class Blog_comments_model extends Base_module_model {
 		
 		$post_title = '';
 
-		$post_options = $CI->blog_posts_model->options_list('id', 'title', array(), 'date_added desc');
+		$post_options = $CI->blog_posts_model->options_list('id', 'title', array(), 'post_date desc');
 		
 		if (empty($post_options))
 		{
@@ -163,7 +163,6 @@ class Blog_comments_model extends Base_module_model {
 			
 			if (!empty($posted['reply_notify']) AND strtolower($posted['reply_notify']) != 'none' AND $comment->validate())
 			{
-				
 				// create comment object
 				$config['wordwrap'] = TRUE;
 				$CI->load->library('email', $config);
@@ -207,7 +206,7 @@ class Blog_comments_model extends Base_module_model {
 	function _common_query()
 	{
 		$this->db->select($this->_tables['blog_comments'].'.*, '.$this->_tables['blog_posts'].'.id as post_id, 
-		'.$this->_tables['blog_posts'].'.title as title, '.$this->_tables['blog_posts'].'.permalink as permalink,
+		'.$this->_tables['blog_posts'].'.title as title, '.$this->_tables['blog_posts'].'.slug as slug,
 		'.$this->_tables['blog_posts'].'.published AS post_published', FALSE);
 		$this->db->join($this->_tables['blog_posts'], $this->_tables['blog_comments'].'.post_id = '.$this->_tables['blog_posts'].'.id', 'inner');
 	}
@@ -217,7 +216,7 @@ class Blog_comments_model extends Base_module_model {
 class Blog_comment_model extends Base_module_record {
 
 	public $title;
-	public $permalink;
+	public $slug;
 
 	// not using filtered fields because we don't want any PHP function translation'
 	function get_content_formatted()
@@ -266,8 +265,7 @@ class Blog_comment_model extends Base_module_record {
 	function get_date_formatted($format = 'M d, Y')
 	{
 		return date($format, strtotime($this->date_added));
-	}
-	
+	}	
 	
 }
 ?>

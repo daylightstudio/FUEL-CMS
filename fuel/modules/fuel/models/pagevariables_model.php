@@ -8,10 +8,16 @@ class Pagevariables_model extends Base_module_model {
 	
 	function __construct()
 	{
-		$CI =& get_instance();
-		$CI->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
-		$this->_tables = $CI->config->item('tables', 'fuel');
-		parent::__construct($this->_tables['pagevars']);
+		parent::__construct('pagevars');
+	}
+	
+	// used for the FUEL admin
+	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc')
+	{
+		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
+		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
+		$data = parent::list_items($limit, $offset, $col, $order);
+		return $data;
 	}
 	
 	function find_one_by_location($location, $name)
@@ -72,7 +78,8 @@ class Pagevariables_model extends Base_module_model {
 				$return = is_true_val($val);
 				break;
 			case 'array': case 'multi':
-				$return = (is_serialized_str($val)) ? unserialize($val) : array();
+				//$return = (is_serialized_str($val)) ? unserialize($val) : array();
+				$return = ($json = json_decode($val, TRUE)) ? $json : array();
 				break;
 			default:
 				$return = $val;
@@ -108,7 +115,8 @@ class Pagevariables_model extends Base_module_model {
 		{
 			if (is_array($values['value']))
 			{
-				$values['value'] = serialize($values['value']);
+				//$values['value'] = serialize($values['value']);
+				$values['value'] = json_encode($values['value']);
 				$values['type'] = 'array';
 			}
 			else if (is_serialized_str($values['value']))

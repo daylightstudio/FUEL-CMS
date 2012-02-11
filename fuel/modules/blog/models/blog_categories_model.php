@@ -5,8 +5,8 @@ class Blog_categories_model extends Base_module_model {
 
 	public $required = array('name');
 	public $record_class = 'Blog_category';
-	public $unique_fields = array('permalink', 'name');
-	public $linked_fields = array('permalink' => array('name' => 'url_title'));
+	public $unique_fields = array('slug', 'name');
+	public $linked_fields = array('slug' => array('name' => 'url_title'));
 	
 	function __construct()
 	{
@@ -17,14 +17,14 @@ class Blog_categories_model extends Base_module_model {
 	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
 	{
 		$this->db->where(array('id !=' => 1)); // Uncategorized category
-		$this->db->select('id, name, published');
+		$this->db->select('id, name, precedence, published');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 	
 	function on_before_clean($values)
 	{
-		if (empty($values['permalink']) && !empty($values['name'])) $values['permalink'] = url_title($values['name'], 'dash', TRUE);
+		if (empty($values['slug']) && !empty($values['name'])) $values['slug'] = url_title($values['name'], 'dash', TRUE);
 		return $values;
 	}
 	
@@ -68,6 +68,8 @@ class Blog_categories_model extends Base_module_model {
 	
 	function _common_query()
 	{
+		parent::_common_query();
+		$this->db->order_by('precedence, name asc');
 	}
 
 }
@@ -99,7 +101,7 @@ class Blog_category_model extends Base_module_record {
 	
 	function get_url($full_path = TRUE)
 	{
-		$url = 'categories/'.$this->permalink;
+		$url = 'categories/'.$this->slug;
 		if ($full_path)
 		{
 			return $this->_CI->fuel_blog->url($url);

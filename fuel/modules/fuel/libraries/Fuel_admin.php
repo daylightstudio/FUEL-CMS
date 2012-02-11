@@ -302,7 +302,7 @@ class Fuel_admin extends Fuel_base_library {
 		$invalid = array(
 			fuel_uri('recent'),
 		);
-		if (!is_ajax() AND empty($_POST) AND !in_array($page, $invalid))
+		if (!is_ajax() AND empty($_POST) AND !in_array($page, $invalid) AND !$this->is_inline())
 		{
 			$this->fuel->auth->set_user_data('last_page', $page);
 		}
@@ -319,7 +319,9 @@ class Fuel_admin extends Fuel_base_library {
 		$this->CI->load->helper('array');
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
-
+		
+		$name = strip_tags($name);
+		
 		if (!isset($user_data['recent'])) $user_data['recent'] = array();
 		$already_included = FALSE;
 		foreach($user_data['recent'] as $key => $pages)
@@ -851,6 +853,9 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
 		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
 		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
+		$last_page = uri_path();
+		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
+		$vars['last_page'] = uri_safe_encode($last_page);
 		
 		$output = $this->CI->load->module_view(FUEL_FOLDER, '_blocks/inline_edit_bar', $vars, TRUE);
 		

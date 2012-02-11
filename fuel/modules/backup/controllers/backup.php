@@ -52,7 +52,6 @@ class Backup extends Fuel_base_controller {
 	{
 		$this->_validate_user('tools/backup');
 		$download_path = $this->fuel->backup->config('backup_path');
-
 		if (!empty($_POST['action']))
 		{
 			
@@ -75,15 +74,12 @@ class Backup extends Fuel_base_controller {
 			}
 
 		}
-		else 
-		{
-			$vars['download_path'] = $download_path;
-			$vars['is_writable'] = is_writable($download_path);
-			
-			$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
-			$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_backup');
-			$this->fuel->admin->render('_admin/backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
-		}
+		$vars['download_path'] = $download_path;
+		$vars['is_writable'] = is_writable($download_path);
+		
+		$crumbs = array('tools' => lang('section_tools'), lang('module_backup'));
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_tools_backup');
+		$this->fuel->admin->render('_admin/backup', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }
 /* End of file backup.php */

@@ -38,10 +38,8 @@ class Fuel_base_library {
 	
 	/**
 	 * Constructor
-	 *
-	 * The constructor can be passed an array of config values
 	 */
-	function __construct($params = array())
+	function __construct()
 	{
 		$this->CI =& get_instance();
 		if (isset($this->CI->fuel))
@@ -83,7 +81,7 @@ class Fuel_base_library {
 	 */
 	function set_params($params)
 	{
-		if (!is_array($params)) return;
+		if (!is_array($params) OR empty($params)) return;
 
 		foreach ($params as $key => $val)
 		{

@@ -880,7 +880,6 @@ class Module extends Fuel_base_controller {
 				$single_field[$field]['required'] = FALSE;
 				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
 
-				
 				// set them to hidden... just in case model hooks require the values to be passed on save
 				foreach($fields as $k => $f)
 				{

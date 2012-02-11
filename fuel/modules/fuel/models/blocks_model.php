@@ -23,17 +23,18 @@ class Blocks_model extends Base_module_model {
 		return $data;
 	}
 	
-	public function options_list_with_views($where = array(), $order = TRUE)
+	public function options_list_with_views($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
 	{
 		$CI =& get_instance();
-		$CI->load->helper('file');
+		$CI->load->helper('directory');
 		$blocks_path = APPPATH.'views/_blocks';
-		$block_files = get_filenames($blocks_path, TRUE);
-		
+
+		// don't display blocks with preceding underscores or .html files'
+		$block_files = directory_to_array($blocks_path, TRUE, '#'.$dir_filter.'#', FALSE, TRUE);
+
 		$view_blocks = array();
 		foreach($block_files as $block)
 		{
-			$block = trim(str_replace($blocks_path, '', current(explode('.', $block))), '/');
 			$view_blocks[$block] = $block;
 		}
 

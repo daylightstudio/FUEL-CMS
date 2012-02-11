@@ -9,7 +9,6 @@ class Pages extends Module {
 	{
 		parent::__construct();
 		$this->config->load('fuel', TRUE);
-		$this->load->module_library(FUEL_FOLDER, 'fuel_layouts');
 		$this->load->module_model(FUEL_FOLDER, 'pagevariables_model');
 	}
 
@@ -136,7 +135,7 @@ class Pages extends Module {
 		}
 		else 
 		{
-			$layout = $this->fuel_layouts->default_layout;
+			$layout = $this->fuel->layouts->default_layout;
 		}
 		
 		// num uri params
@@ -199,7 +198,6 @@ class Pages extends Module {
 		$this->form_builder->cancel_value = lang('btn_cancel');
 		
 		// page variables
-		//$fields = $this->fuel_layouts->fields($layout, empty($id));
 		$layout =  $this->fuel->layouts->get($layout);
 		if (!empty($layout))
 		{
@@ -364,7 +362,6 @@ class Pages extends Module {
 		//$vars = $this->input->post('vars');
 		$vars = array();
 
-
 		// process post vars... can't use an array because of file upload complications'
 		foreach($posted as $key => $val)
 		{
@@ -374,7 +371,7 @@ class Pages extends Module {
 				$vars[$new_key] = $val;
 			}
 		}
-
+		
 		if (!empty($vars) && is_array($vars))
 		{
 
@@ -382,15 +379,9 @@ class Pages extends Module {
 
 			$layout = $this->fuel->layouts->get($this->input->post('layout'));
 			$fields = $layout->fields();
-			
 			$this->form_builder->set_fields($fields);
+			$this->form_builder->set_field_values($vars);
 			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
-
-			// echo "<pre style=\"text-align: left;\">";
-			// print_r($fields);
-			// echo "</pre>";
-
-			// exit('zadfasdfad');
 			
 			$save = array();
 			
@@ -399,29 +390,34 @@ class Pages extends Module {
 			$pagevariable_table = $this->db->table_info($this->pagevariables_model->table_name());
 			$var_types = $pagevariable_table['type']['options'];
 			$page_variables_archive = array();
-
-
+			
+			// fieldtypes that
+			$non_recordable_fields = array('section', 'copy', 'fieldset');
+			
 			foreach($fields as $key => $val)
 			{
-				$value = (!empty($vars[$key])) ? $vars[$key] : NULL;
-				
-				if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
+				if (isset($val['type']) AND !in_array($val['type'], $non_recordable_fields))
 				{
-					$value = array_map('zap_gremlins', $value);
-					$value = serialize($value);
-					$val['type'] = 'array'; // force the type to be an array
-				}
-				
-				if (!in_array($val['type'], $var_types)) $val['type'] = 'string';
-				$save = array('page_id' => $id, 'name' => $key, 'value' => $value, 'type' => $val['type']);
-				$where = (!empty($id)) ? array('page_id' => $id, 'name' => $key) : array();
+					$value = (!empty($vars[$key])) ? $vars[$key] : NULL;
+					if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
+					{
+						//$value = array_map('zap_gremlins', $value);
+						//$value = serialize($value);
+						$val['type'] = 'array'; // force the type to be an array
+					}
 
-				if ($this->pagevariables_model->save($save, $where))
-				{
-					$page_variables_archive[$key] = $this->pagevariables_model->cleaned_data();
+					if (!in_array($val['type'], $var_types)) $val['type'] = 'string';
+					$save = array('page_id' => $id, 'name' => $key, 'value' => $value, 'type' => $val['type']);
+					$where = (!empty($id)) ? array('page_id' => $id, 'name' => $key) : array();
+
+					if ($this->pagevariables_model->save($save, $where))
+					{
+						$page_variables_archive[$key] = $this->pagevariables_model->cleaned_data();
+					}
 				}
 			}
-			
+
+
 			// archive
 			$archive = $this->model->cleaned_data();
 			$archive[$this->model->key_field()] = $id;
@@ -475,6 +471,7 @@ class Pages extends Module {
 		
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout);
+
 		$fields = $layout->fields();
 		
 		$conflict = $this->_has_conflict($fields);
@@ -583,121 +580,7 @@ class Pages extends Module {
 		}
 		$this->output->set_output('error');
 	}
-	
-	/*function inline_edit($field, $page_id = NULL)
-	{
-		// if field is empty then we'll assume it is really the page ID'
-		if (empty($page_id))
-		{
-			$this->_importing = TRUE;
-			parent::inline_edit($field);
-			return;
-		}
-		else
-		{
-			if (is_ajax())
-			{
-				if (!empty($_POST)) {
-					if (!empty($_POST['model']))
-					{
-						$this->load->module_model(FUEL_FOLDER, 'pagevariables_model', 'editor_model');
 
-						$this->_process();
-
-						$save = array();
-						$var_id = $this->input->post('var_id', TRUE);
-						$page_vars = $this->editor_model->find_by_key($var_id, 'array');
-
-
-
-						$save['id'] = $this->input->post('var_id');
-						$save_val = $this->_sanitize($_POST['__fuel_field__pagevar'][$field]);
-
-						if (is_array($save_val))
-						{
-							// serialize to normalize
-							$save_val = serialize($save_val);
-						}
-						else if ($page_vars['type'] == 'array')
-						{
-							// it may be an encoded string in which case we need to unencode and convert to an array
-							$save_val = json_decode(rawurldecode($save_val));
-
-							// serialize to normalize
-							$save_val = serialize($save_val);
-						}
-
-						$save['value'] = $save_val;
-
-						if ($this->editor_model->save($save))
-						{
-							$this->_process_uploads();
-							
-							// run hook
-							$this->_run_hook('inline', $save);
-							
-						}
-						else
-						{
-							$vars['error'] = $this->model->get_errors();
-							$notification = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
-							if (empty($notification))
-							{
-								$notification = lang('error_saving');
-							}
-							$this->output->set_output('<error>'.$notification.'</error>');
-
-						}
-					}
-				}
-				else
-				{
-					$page = $this->model->find_one_array(array('fuel_pages.id' => $page_id));
-					if (!empty($page))
-					{
-						$layout_fields = $this->fuel_layouts->fields($page['layout']);
-						$page_var = $this->pagevariables_model->find_one_array(array('page_id' => $page_id, 'name' => $field));
-
-						$fields = array();
-						$fields[$field] = (isset($layout_fields[$field])) ? $layout_fields[$field] : '';
-						$fields[$field]['label'] = ' ';
-						$fields[$field]['value'] = (!empty($page_var)) ? $this->pagevariables_model->cast($page_var['value'], $page_var['type']) : '';
-
-						$this->load->library('form_builder');
-						$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
-						$this->form_builder->question_keys = array();
-						$this->form_builder->submit_value = NULL;
-						$this->form_builder->use_form_tag = FALSE;
-						$this->form_builder->label_colons = FALSE;
-						$this->form_builder->name_array = '__fuel_field__pagevar';
-						$this->form_builder->set_fields($fields);
-						$this->form_builder->css_class = 'inline_form';
-						$this->form_builder->display_errors = FALSE;
-
-						$vars['form'] = $this->form_builder->render();
-						$vars['description'] = '';
-						$vars['field'] = $field;
-						$vars['page_id'] = $page_id;
-						$vars['var_id'] = (isset($page_var['id'])) ? $page_var['id'] : NULL;
-						if (!empty($fields[$field]['comment']))
-						{
-							$vars['description'] = $fields[$field]['comment'];
-						}
-						else if (!empty($fields[$field]['description']))
-						{
-							$vars['description'] = $fields[$field]['description'];
-						}
-
-						$this->load->view('pages/inline_edit', $vars);
-					}
-					else
-					{
-						$this->output->set_output(lang('error_inline_page_edit'));
-					}
-				}
-			}
-		}
-	}*/
 	
 	function upload()
 	{
@@ -778,7 +661,8 @@ class Pages extends Module {
 		{
 			$layout =  $this->input->post('layout', TRUE);
 			$values = $this->input->post('values', TRUE);
-			$fields = $this->fuel_layouts->fields($layout, empty($values));
+			$layout_obj = $this->fuel->layout->get($layout);
+			$fields = $layout_obj->fields();
 			$field = $this->input->post('field', TRUE);
 			$field_key = end(explode('vars--', $field));
 			if (!isset($fields[$field_key])) return;

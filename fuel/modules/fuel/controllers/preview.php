@@ -42,9 +42,9 @@ class Preview extends Fuel_base_controller {
 		{
 			$view = $this->load->view($vars['preview'], $vars, TRUE);
 		}
-		else if (file_exists(APPPATH.'views/_fuel_preview'.EXT))
+		else if (file_exists(APPPATH.'views/_admin/_fuel_preview'.EXT))
 		{
-			$view = $this->load->view('_fuel_preview', $vars, TRUE);
+			$view = $this->load->view('_admin/_fuel_preview', $vars, TRUE);
 		}
 		else if (file_exists(APPPATH.'views/_layouts/main'.EXT))
 		{

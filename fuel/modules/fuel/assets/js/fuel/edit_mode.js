@@ -1,5 +1,3 @@
-jQuery.noConflict();
-
 // exposed fuel methods
 if (fuel == undefined) var fuel = {};
 (function($) {

@@ -58,7 +58,7 @@ class Page_analysis extends Fuel_base_controller {
 			// get the page analysis report
 			$vars['url'] = $url;
 			$vars['results'] = $this->fuel->page_analysis->report($url);
-			$vars['report'] = $this->load->module_view(PAGE_ANALYSIS_FOLDER, 'report', $vars, TRUE);
+			$vars['report'] = $this->load->module_view(PAGE_ANALYSIS_FOLDER, '_admin/report', $vars, TRUE);
 		} 
 		
 		$this->load->module_model(FUEL_FOLDER, 'pages_model');

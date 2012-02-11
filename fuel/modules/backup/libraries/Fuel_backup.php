@@ -35,6 +35,7 @@ class Fuel_backup extends Fuel_advanced_module {
 	public $zip = TRUE; // ZIP up the file or not
 	public $include_assets = FALSE; // determines whether to backup assets by default
 	public $download = TRUE; // download the file or not from the browser
+	public $must_write_zip_file = FALSE; //specifies whether the zip should be saved to the file system
 	public $days_to_keep = 30; // number of days to hold backups. A value of 0 or FALSE will be forever
 	public $allow_overwrite = FALSE; // allow the backup to overwrite existing
 	public $backup = FALSE; // determines whether to backup assets by default
@@ -55,16 +56,15 @@ class Fuel_backup extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->CI->load->library('zip');
 		$this->CI->load->helper('file');
 		
-		// initialize object if any parameters
-		if (!empty($params))
+		if (empty($params))
 		{
-			$this->initialize($params);
+			$params['name'] = 'backup';
 		}
-		
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
@@ -159,6 +159,7 @@ class Fuel_backup extends Fuel_advanced_module {
 		}
 		else
 		{
+			
 			return $this->write($file_name, $data);
 		}
 	}
@@ -225,7 +226,7 @@ class Fuel_backup extends Fuel_advanced_module {
 		}
 		
 		// check if folder is writable
-		if (!is_really_writable($this->backup_path))
+		if (!is_really_writable($this->backup_path) AND $this->must_write_zip_file)
 		{
 			$this->_add_error(lang('data_backup_folder_not_writable', $this->backup_path));
 			return FALSE;
@@ -237,7 +238,7 @@ class Fuel_backup extends Fuel_advanced_module {
 		// path to download file
 		$full_path = $this->backup_path.$file_name;
 		
-		if (file_exists($full_path) AND !$this->allow_overwrite)
+		if (file_exists($full_path) AND !$this->allow_overwrite AND $this->must_write_zip_file)
 		{
 			$this->_add_error(lang('data_backup_already_exists'));
 			return FALSE;
@@ -246,7 +247,7 @@ class Fuel_backup extends Fuel_advanced_module {
 		// write the zip file to a folder on your server. 
 		$archived = $this->CI->zip->archive($full_path); 
 		
-		if (!$archived) 
+		if (!$archived AND $this->must_write_zip_file) 
 		{
 			$this->_add_error(lang('data_backup_zip_error'));
 			return FALSE;

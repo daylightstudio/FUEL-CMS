@@ -102,7 +102,7 @@ Class Form_builder {
 	 *
 	 * The constructor can be passed an array of config values
 	 */
-	public function __construct($params = array())
+	function __construct($params = array())
 	{
 		$this->CI =& get_instance();
 		$this->initialize($params);
@@ -117,7 +117,7 @@ Class Form_builder {
 	 * @param	array
 	 * @return	void
 	 */
-	public function initialize($params = array())
+	function initialize($params = array())
 	{
 		
 		// clear out any data before initializing
@@ -195,7 +195,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	void
 	 */
-	public function clear()
+	function clear()
 	{
 		$this->reset();
 	}
@@ -208,7 +208,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	void
 	 */
-	public function reset()
+	function reset()
 	{
 		$this->_fields = array();
 		$this->_html = '';
@@ -229,7 +229,7 @@ Class Form_builder {
 	 * @param	array
 	 * @return	void
 	 */
-	public function set_fields($fields)
+	function set_fields($fields)
 	{
 		$i = 1;
 		foreach ($fields as $key => $val)
@@ -264,7 +264,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	array
 	 */
-	public function fields()
+	function fields()
 	{
 		return $this->_fields;
 	}
@@ -280,7 +280,7 @@ Class Form_builder {
 	 * @param	array
 	 * @return	void
 	 */
-	public function set_field_values($values)
+	function set_field_values($values)
 	{
 		// set values for fields that are arrays
 		foreach($values as $key => $val)
@@ -346,7 +346,7 @@ Class Form_builder {
 	 * @param	string	'a view path (only used for the template)
 	 * @return	string
 	 */
-	public function render($fields = NULL, $render_format = NULL, $template = NULL)
+	function render($fields = NULL, $render_format = NULL, $template = NULL)
 	{
 		if (empty($render_format)) $render_format = $this->render_format;
 		if ($render_format == 'divs')
@@ -373,7 +373,7 @@ Class Form_builder {
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	string
 	 */
-	public function render_divs($fields = NULL)
+	function render_divs($fields = NULL)
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
@@ -583,7 +583,7 @@ Class Form_builder {
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	string
 	 */
-	public function render_table($fields = NULL)
+	function render_table($fields = NULL)
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
@@ -837,7 +837,7 @@ Class Form_builder {
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	string
 	 */
-	public function render_template($template, $fields = NULL, $parse = TRUE)
+	function render_template($template, $fields = NULL, $parse = TRUE)
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
@@ -1063,7 +1063,7 @@ Class Form_builder {
 			'disabled' => '',
 			'label_colons' => NULL,
 			'display_label' => TRUE,
-			'order' => 9999,
+			'order' => NULL,
 			'before_html' => '', // for html before the field
 			'after_html' => '', // for html after the field
 			'displayonly' => FALSE,
@@ -1304,7 +1304,7 @@ Class Form_builder {
 	 * @param	boolean shoud the normalization be ran again?
 	 * @return	string
 	 */
-	public function create_field($params, $normalize = TRUE)
+	function create_field($params, $normalize = TRUE)
 	{
 		// needed to prevent runaway loops from custom fields... actually the template field type wont work with this
 		// if ($this->_rendering)
@@ -1376,6 +1376,7 @@ Class Form_builder {
 					}
 					else
 					{
+						$params['type'] = 'text';
 						$str = $this->create_text($params);
 					}
 			}
@@ -1400,7 +1401,7 @@ Class Form_builder {
 	 * @param	boolean shoud the label be displayed?
 	 * @return	string
 	 */
-	public function create_label($params, $use_label = TRUE)
+	function create_label($params, $use_label = TRUE)
 	{
 		if (is_string($params))
 		{
@@ -1463,7 +1464,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_text($params)
+	function create_text($params)
 	{
 		$params = $this->normalize_params($params);
 		
@@ -1509,7 +1510,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_select($params)
+	function create_select($params)
 	{
 		$defaults = array(
 			'options' => array(),
@@ -1563,7 +1564,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_checkbox($params)
+	function create_checkbox($params)
 	{
 		$defaults = array(
 			'checked' => FALSE // for checkbox/radio
@@ -1596,7 +1597,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_textarea($params)
+	function create_textarea($params)
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
@@ -1623,7 +1624,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_hidden($params)
+	function create_hidden($params)
 	{
 		$params = $this->normalize_params($params);
 		
@@ -1648,7 +1649,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_submit($params)
+	function create_submit($params)
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
@@ -1671,7 +1672,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_button($params)
+	function create_button($params)
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
@@ -1698,7 +1699,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_enum($params)
+	function create_enum($params)
 	{
 		$defaults = array(
 			'checked' => FALSE, // for radio
@@ -1722,6 +1723,7 @@ Class Form_builder {
 			foreach($params['options'] as $key => $val)
 			{
 				$attrs = array(
+					'class' => $params['class'],
 					'readonly' => $params['readonly'], 
 					'disabled' => $params['disabled'],
 					'style' => $params['style'],
@@ -1763,12 +1765,13 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_multi($params)
+	function create_multi($params)
 	{
 		$defaults = array(
 			'sorting' => NULL,
 			'mode' => NULL
 		);
+
 		$params = $this->normalize_params($params, $defaults);
 		
 		// grab options from a model if a model is specified
@@ -1821,13 +1824,13 @@ Class Form_builder {
 			$str .= $this->create_select($params);
 			if (!empty($params['sorting']))
 			{
-				if ($params['sorting'] === TRUE && is_array($params['value']))
+				if ($params['sorting'] === TRUE AND is_array($params['value']))
 				{
 					$params['sorting'] = $params['value'];
 				}
 				$sorting_params['name'] = 'sorting_'.$params['orig_name'];
 				$sorting_params['value'] = rawurlencode(json_encode($params['sorting']));
-
+				$sorting_params['class'] = 'sorting';
 				$str .= $this->create_hidden($sorting_params);
 			}
 		}
@@ -1843,7 +1846,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_file($params)
+	function create_file($params)
 	{
 		$defaults = array(
 			'overwrite' => NULL, // for file uploading
@@ -1919,8 +1922,17 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_date($params)
+	function create_date($params)
 	{
+		$defaults = array(
+			'date_format' => '', 
+			'region' => '', 
+			'min_date' => '01/01/2000',
+			'max_date' => '12/31/2100', 
+			'first_day' => 0, 
+		);
+
+		$params = $this->normalize_params($params, $defaults);
 		$params = $this->normalize_params($params);
 		if (empty($params['date_format']))
 		{
@@ -1973,7 +1985,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_time($params)
+	function create_time($params)
 	{
 		$params = $this->normalize_params($params);
 
@@ -2011,7 +2023,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_datetime($params)
+	function create_datetime($params)
 	{
 		$str = $this->create_date($params);
 		$str .= ' ';
@@ -2028,7 +2040,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_number($params)
+	function create_number($params)
 	{
 		$numeric_class = 'numeric';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
@@ -2063,7 +2075,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_email($params)
+	function create_email($params)
 	{
 		$email_class = 'email';
 		$params['type'] = 'email';
@@ -2080,7 +2092,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_phone($params)
+	function create_phone($params)
 	{
 		$email_class = 'phone';
 		$params['type'] = 'tel';
@@ -2100,7 +2112,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_boolean($params)
+	function create_boolean($params)
 	{
 		if ($this->boolean_mode == 'checkbox')
 		{
@@ -2124,10 +2136,10 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_section($params)
+	function create_section($params)
 	{
 		$params = $this->normalize_params($params);
-		$section = $this->_simple_field_value($params);
+		$section = $this->simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
 		return '<'.$tag.'>'.$section.'</'.$tag.'>';
 	}
@@ -2144,10 +2156,10 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_copy($params)
+	function create_copy($params)
 	{
 		$params = $this->normalize_params($params);
-		$copy = $this->_simple_field_value($params);
+		$copy = $this->simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->copy_tag : $params['tag'];
 		return '<'.$tag.'>'.$copy.'</'.$tag.'>';
 	}
@@ -2164,7 +2176,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_tooltip($params)
+	function create_tooltip($params)
 	{
 		$params = $this->normalize_params($params);
 
@@ -2197,7 +2209,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_readonly($params)
+	function create_readonly($params)
 	{
 		$params = $this->normalize_params($params);
 		$str = $params['value']."\n".$this->create_hidden($val);
@@ -2213,14 +2225,14 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_fieldset($params)
+	function create_fieldset($params)
 	{
 		$params = $this->normalize_params($params);
 		$attrs = array(
 			'class' => $params['class'], 
 		);
 		$str = '';
-		$legend = $this->_simple_field_value($params);
+		$legend = $this->simple_field_value($params);
 		$str = "\n";
 		if (isset($params['open']) AND $params['open'] === FALSE)
 		{
@@ -2242,7 +2254,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_nested($params)
+	function create_nested($params, $return_object = FALSE)
 	{
 		$this->CI =& get_instance();
 		$this->CI->load->library('parser');
@@ -2277,10 +2289,16 @@ Class Form_builder {
 		$form_builder->set_field_values($params['value']);
 		
 		$form_builder->auto_execute_js = FALSE;
-		$form = $form_builder->render();
 		$js = $form_builder->get_js();
 		$this->add_js($js);
+
+		if ($return_object)
+		{
+			return $form_builder;
+		}
+		$form = $form_builder->render();
 		return $form;
+		
 	}
 
 	// --------------------------------------------------------------------
@@ -2294,7 +2312,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function create_custom($func, $params)
+	function create_custom($func, $params)
 	{
 		$params = $this->normalize_params($params);
 		
@@ -2320,7 +2338,7 @@ Class Form_builder {
 	 * @param	string function or class/method array to use for rendering
 	 * @return	void
 	 */
-	public function register_custom_field($key, $custom_field)
+	function register_custom_field($key, $custom_field)
 	{
 		// if an array, then we will assess the properties of the array and load classes/helpers appropriately
 		if (is_array($custom_field))
@@ -2429,7 +2447,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function set_validator(&$validator)
+	function set_validator(&$validator)
 	{
 		$this->form->validator = $validator;
 	}
@@ -2445,7 +2463,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function set_field_order($order_arr = array())
+	function set_field_order($order_arr = array())
 	{
 		// normalize
 		foreach($this->_fields as $key => $val)
@@ -2478,7 +2496,7 @@ Class Form_builder {
 	 * @param	string HTML to append
 	 * @return	void
 	 */
-	public function append_html($html)
+	function append_html($html)
 	{
 		$this->html_append .= $html;
 	}
@@ -2494,7 +2512,7 @@ Class Form_builder {
 	 * @param	string HTML to prepend
 	 * @return	void
 	 */
-	public function prepend_html($html)
+	function prepend_html($html)
 	{
 		$this->html_prepend .= $html;
 	}
@@ -2510,7 +2528,7 @@ Class Form_builder {
 	 * @param	array
 	 * @return	void
 	 */
-	public function set_pre_process($field, $func)
+	function set_pre_process($field, $func)
 	{
 		$this->_pre_process[$field] = $func;
 	}
@@ -2525,7 +2543,7 @@ Class Form_builder {
 	 * @param	array
 	 * @return	void
 	 */
-	public function set_post_process($field, $func)
+	function set_post_process($field, $func)
 	{
 		$this->_post_process[$field] = $func;
 	}
@@ -2538,7 +2556,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	void
 	 */
-	public function pre_process_field_values()
+	function pre_process_field_values()
 	{
 		// combine field pre processes with those already set
 		foreach($this->_fields as $key => $field)
@@ -2569,10 +2587,10 @@ Class Form_builder {
 	 * @access	public
 	 * @return	void
 	 */
-	public function post_process_field_values($posted = array(), $set_post = TRUE)
+	function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
  		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
-		$this->render();
+		$form = $this->render();
 
 		if (empty($posted)) $posted = $_POST;
 		
@@ -2584,6 +2602,7 @@ Class Form_builder {
 				$this->_post_process[$key] = $field['post_process'];
 			}
 		}
+		
 		
 		if (is_array($this->_post_process))
 		{
@@ -2597,15 +2616,31 @@ Class Form_builder {
 						$process = $this->_normalize_process_func($function, $posted[$key]);
 						$func = $process['func'];
 						$params = $process['params'];
-						$posted[$key] = call_user_func_array($func, $params);
-						if ($set_post)
-						{
-							$_POST[$key] = $posted[$key];
-						}
+
+						// TODO... fix this... doesn't really recursively process'
+						// if (is_array($params[0]))
+						// {
+						// 	foreach($params[0] as $k => $param)
+						// 	{
+						// 		if (is_int($k))
+						// 		{
+						// 			$this->post_process_field_values($param, $set_post);
+						// 		}
+						// 	}
+						// }
+						// else
+						// {
+							$posted[$key] = call_user_func_array($func, $params);
+							if ($set_post)
+							{
+								$_POST[$key] = $posted[$key];
+							}
+						// }
 					}
 				}
 			}
 		}
+
 		return $posted;
 	}
 
@@ -2665,7 +2700,7 @@ Class Form_builder {
 	 * @param	mixed Either an array or a regex that other fields must match
 	 * @return	void
 	 */
-	public function set_representative($type, $match = '')
+	function set_representative($type, $match = '')
 	{
 		$this->representatives[$type] = $match;
 	}
@@ -2680,7 +2715,7 @@ Class Form_builder {
 	 * @param	mixed A key value to associate with the JS file (so it only gets loaded once). Or an associative array of keyed javascript file names
 	 * @return	void
 	 */
-	public function add_js($js = NULL, $key = NULL)
+	function add_js($js = NULL, $key = NULL)
 	{
 		if (is_array($key))
 		{
@@ -2720,7 +2755,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	array
 	 */
-	public function get_js($js = NULL)
+	function get_js($js = NULL)
 	{
 		if (!empty($js))
 		{
@@ -2739,7 +2774,7 @@ Class Form_builder {
 	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed javascript file names
 	 * @return	void
 	 */
-	public function add_css($css = NULL, $key = NULL)
+	function add_css($css = NULL, $key = NULL)
 	{
 		if (is_array($key))
 		{
@@ -2780,7 +2815,7 @@ Class Form_builder {
 	 * @access	public
 	 * @return	array
 	 */
-	public function get_css($css)
+	function get_css($css)
 	{
 		if (!empty($css))
 		{
@@ -2798,7 +2833,7 @@ Class Form_builder {
 	 * @param	mixed model, model/method or module/model/method
 	 * @return	array
 	 */
-	public function options_from_model($model)
+	function options_from_model($model)
 	{
 		if (is_array($model))
 		{
@@ -2850,7 +2885,7 @@ Class Form_builder {
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	public function _simple_field_value($params)
+	function simple_field_value($params)
 	{
 		if (is_array($params))
 		{
@@ -3137,7 +3172,7 @@ Class Form_builder_field {
 	 *
 	 * The constructor can be passed an array of config values
 	 */
-	public function __construct($params = array())
+	function __construct($params = array())
 	{
 		$this->initialize($params);
 	}
@@ -3151,7 +3186,7 @@ Class Form_builder_field {
 	 * @param	array
 	 * @return	void
 	 */
-	public function initialize($params = array())
+	function initialize($params = array())
 	{
 		foreach ($params as $key => $val)
 		{
@@ -3172,7 +3207,7 @@ Class Form_builder_field {
 	 * @param	array
 	 * @return	void
 	 */
-	public function render($params = array())
+	function render($params = array())
 	{
 		// add the CSS any css class as an additional parameter
 		if (!empty($this->css_class))

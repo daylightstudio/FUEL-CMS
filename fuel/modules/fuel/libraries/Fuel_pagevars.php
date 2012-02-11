@@ -45,9 +45,17 @@ class Fuel_pagevars extends Fuel_base_library {
 	function initialize($params)
 	{
 		parent::initialize($params);
+
 		if (empty($this->location))
 		{
 			$this->location = uri_path();
+		}
+
+		$default_home = $this->fuel->config('default_home_view');
+		
+		if (empty($this->location) OR $this->location == 'page_router')
+		{
+			$this->location = $default_home;
 		}
 	}
 	
@@ -62,7 +70,6 @@ class Fuel_pagevars extends Fuel_base_library {
 	function retrieve($what = '')
 	{
 		
-		$location = $this->location;
 		switch($what)
 		{
 			case self::VARIABLE_TYPE_DB:

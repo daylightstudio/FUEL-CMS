@@ -38,17 +38,16 @@ class Fuel_validate extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 
 		$this->CI->load->library('curl');
 		$this->CI->load->helper('scraper');
 		
-		// initialize object if any parameters
-		if (!empty($params))
+		if (empty($params))
 		{
-			$this->initialize($params);
+			$params['name'] = 'validate';
 		}
-		
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
@@ -283,8 +282,6 @@ class Fuel_validate extends Fuel_advanced_module {
 		// print_r($this->CI->benchmark->elapsed_time('code_start1', 'code_end1'));
 		// echo "</pre>";
 		
-		
-		
 		//$this->CI->benchmark->mark('code_start2');
 		foreach($formatted_links as $link)
 		{
@@ -295,10 +292,13 @@ class Fuel_validate extends Fuel_advanced_module {
 		$this->CI->curl->exec();
 		
 		// since TRUE is passed, it will return the full array of session info with the http_code
-		$codes = $this->CI->curl->info('http_code', TRUE);
+		$infos = $this->CI->curl->info(NULL, TRUE);
 
-		foreach($codes as $code)
+		foreach($infos as $info)
 		{
+			$code = $info['http_code'];
+			$link = $info['url'];
+			
 			$is_valid = ($code < 400);
 			if ($just_invalid)
 			{
@@ -321,6 +321,7 @@ class Fuel_validate extends Fuel_advanced_module {
 			}
 			
 		}
+		
 		// $this->CI->benchmark->mark('code_end2');
 		// echo "<pre style=\"text-align: left;\">";
 		// print_r($this->CI->benchmark->elapsed_time('code_start2', 'code_end2'));
@@ -339,7 +340,11 @@ class Fuel_validate extends Fuel_advanced_module {
 		
 		$html = scrape_dom($url);
 		
-		$xpath = new DOMXPath( $html );
+		if (!$html)
+		{
+			return '';
+		}
+		$xpath = new DOMXPath($html);
 		
 		// get image and extenral css and scripts
 		$imgs = $xpath->query("//img[@src]");
@@ -490,18 +495,6 @@ class Fuel_validate extends Fuel_advanced_module {
 				
 			$this->CI->curl->add_session($link, $opts);
 			$ret = $this->CI->curl->exec_single(); // faster then using a multi-request for some reason
-// 			curl_setopt($ch, CURLOPT_URL, $link);
-// 			curl_setopt($ch, CURLOPT_HEADER, 0);
-// 			curl_setopt($ch, CURLOPT_NOBODY, 1);
-// 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-// 			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-// 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-// 			curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 3600);
-// 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-// //			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-// 			curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
-// //			curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE); // will cause strange behavior if not set to TRUE
-// //			curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); // will cause strange behavior if not set to TRUE
 			
 			
 //			$ret = curl_exec($ch);

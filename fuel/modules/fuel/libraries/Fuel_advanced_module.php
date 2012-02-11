@@ -43,7 +43,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		
 		// initialize object if any parameters
 		if (!empty($params))
@@ -65,15 +65,17 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function initialize($params = array())
 	{
+		parent::initialize($params);
+
 		// need this here instead of the constructor, because this gets executed by 
 		// the parent Fuel_base_library before the rest of the constructor'
-		$this->load_config();
-		$this->_config = $this->CI->config->item($this->name);
 		if ($this->has_lang())
 		{
 			$this->load_language();
 		}
-		parent::initialize($params);
+		
+		$this->load_config();
+		$this->_config = $this->CI->config->item($this->name);
 	}
 	
 	// --------------------------------------------------------------------
@@ -89,7 +91,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		// look for sub modules magically
 		$sub_module_name = $this->name.'_'.$var;
-		
+
 		$sub_module = $this->fuel->modules->get($sub_module_name);
 		if (!empty($sub_module))
 		{

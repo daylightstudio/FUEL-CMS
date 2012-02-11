@@ -70,7 +70,7 @@ $config['max_recent_pages'] = 5;
 
 // the maximum number of pages that page state will be saved before dumping the last one saved. 
 // This is used on the list pages in the admin to save sorting and filtering. Used to save on space needed for session.
-$config['saved_page_state_max'] = 5;
+$config['saved_page_state_max'] = 3;
 
 // provide a cookie path... different from the CI config if you need it (default is same as CI config)
 $config['fuel_cookie_path'] = '/';
@@ -148,7 +148,7 @@ $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
-//	'jquery/plugins/date',
+	// 'jquery/plugins/date',
 	// 'jquery/plugins/jquery.datePicker',
 	//'jquery/plugins/jquery.fillin',
 	'jquery/plugins/jquery.easing',
@@ -164,7 +164,7 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
-	'jquery/plugins/jquery-ui-1.8.16.custom.min',
+	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	
@@ -300,6 +300,14 @@ $config['page_cache_group'] = 'pages';
 
 // maximum number of paramters that can be passed to the page. Used to cut down on queries to the db
 $config['max_page_params'] = 0;
+
+// a list of URI paths that will always pull from the view folder... can use :any, like routes
+// Good to use if you are passing page parameters to your pages controlled in the admin and 
+// you have a page you always want to pull from a view file 
+// (e.g. URI = company/press and you have a page of "company" in the admin with max page params set to 1 or more 
+// it would normally pull the company page if no company/press page existed in the admin and in this case 
+// we want to pull the view file of company/press)
+$config['uri_view_overwrites'] = array();
 
 
 /*

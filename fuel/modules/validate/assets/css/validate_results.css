@@ -9,7 +9,7 @@
 .validate_iframe a:visited { color: #4679bd;}
 .validate_iframe p { margin: 5px 0 15px 0; }
 .validate_iframe ul { margin-bottom: 10px; }
-.validate_iframe li { line-height: 16px; }
+.validate_iframe li { line-height: 20px; }
 
 /* tag classes */
 .success { background: #6ec461; }

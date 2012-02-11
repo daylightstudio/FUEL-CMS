@@ -184,8 +184,6 @@ div.noactions_nonotification { top: 29px !important; }
 div#fuel_main_panel_compact { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #fff; }
 div#fuel_main_content_compact { background-color: #fff; overflow: auto; position: absolute; top: 99px; left: 0px; right: 0px; bottom: 0px; }
 
-
-
 /* notification */
 div#fuel_notification { height: 21px; border-bottom: 1px solid #ccc; background-color: #ecf1f5; text-overflow: ellipsis; overflow: hidden; position: relative; }
 div.notification p, div.notification div, div.notification ul {  margin: 0; min-height: 15px; line-height: 15px; padding: 3px 0 3px 35px; list-style: none; background-repeat: no-repeat; background-position: 15px 3px; list-style: none; }
@@ -205,6 +203,7 @@ div.dashboard_module { float: left; margin-right: 10px; margin-top: 10px; }
 /* filters */
 div#filters { position: absolute; right: 15px; top: 14px; }
 a#multi_delete { display: block; }
+a#rearrange { display: none; }
 
 /* other items */
 div#other_items { float: left; margin: 5px 20px 0px 20px; }

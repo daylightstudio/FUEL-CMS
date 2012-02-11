@@ -48,51 +48,17 @@ class Fuel_search extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 
+		if (empty($params))
+		{
+			$params['name'] = 'search';
+		}
+		$this->initialize($params);
+		
 		$this->load_model('search');
 		$this->CI->load->library('curl');
 
-		$this->initialize($params);
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initialize the object and set object parameters
-	 *
-	 * Accepts an associative array as input, containing object preferences.
-	 * Also will set the values in the parameters array as properties of this object
-	 *
-	 * @access	public
-	 * @param	array	config preferences
-	 * @return	void
-	 */	
-	function initialize($params = array())
-	{
-		parent::initialize($params);
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Set object parameters
-	 *
-	 * @access	public
-	 * @param	array	config preferences
-	 * @return	void
-	 */
-	function set_params($params)
-	{
-		if (!is_array($params)) return;
-
-		foreach ($params as $key => $val)
-		{
-			if (isset($this->$key) AND substr($key, 0, 1) != '_')
-			{
-				$this->$key = $val;
-			}
-		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -110,7 +76,7 @@ class Fuel_search extends Fuel_advanced_module {
 	function query($q = '', $limit = 100, $offset = 0, $excerpt_limit = 200)
 	{
 		$results = $this->CI->search_model->find_by_keyword($q, $limit, $offset, $excerpt_limit);
-		//$this->CI->search_model->debug_query();
+//		$this->CI->search_model->debug_query();
 		$this->q = $q;
 		return $results;
 	}
@@ -157,8 +123,21 @@ class Fuel_search extends Fuel_advanced_module {
 		// check if modules can be indexed. If an array is provided, then we only index those in the array
 		if ($index_modules === TRUE OR (is_array($index_modules) AND isset($index_modules[$module])))
 		{
-			$location = $this->CI->_preview_path($posted);
-			$this->index($location, $module);
+			$module_obj = $this->CI->fuel->modules->get($module);
+			$location = $module_obj->url($posted);
+
+			// now index the page
+			//$this->index($location, $module);
+			
+			// use ajax to speed things up
+			$output = lang('data_saved').'<script type="text/javascript">
+			//<![CDATA[
+				$(function(){
+					$.get("'.fuel_url('tools/search/index_site').'?pages='.$location.'")
+				});
+			//]]>
+			</script>';
+			$this->CI->session->set_flashdata('success', $output);
 		}
 	}	
 
@@ -175,9 +154,33 @@ class Fuel_search extends Fuel_advanced_module {
 	 */	
 	function after_delete_hook($posted)
 	{
-		if (!empty($data['location']))
+		if (empty($posted['location']))
 		{
-			$location = $this->CI->_preview_path($posted);
+			// grab the config values for what should be deleted
+			$index_modules = $this->config('index_modules');
+			$module = $this->CI->module;
+			
+			// check if modules can be indexed. If an array is provided, then we only delete those in the array
+			if ($index_modules === TRUE OR (is_array($index_modules) AND isset($index_modules[$module])))
+			{
+				$module_obj = $this->CI->fuel->modules->get($module);
+				$key_field = $module_obj->model()->key_field();
+				if (is_array($posted))
+				{
+					foreach($posted as $key => $val)
+					{
+						if (is_int($key))
+						{
+							$data = array($key_field => $val);
+							$location = $module_obj->url($data);
+						}
+					}
+				}
+				$this->remove($location);
+			}
+		}
+		else
+		{
 			$this->remove($posted['location']);
 		}
 	}	
@@ -305,6 +308,8 @@ class Fuel_search extends Fuel_advanced_module {
 	 * Crawls the site for locations to be indexed
 	 *
 	 * @access	public
+	 * @param	string
+	 * @param	boolean
 	 * @return	array
 	 */	
 	function crawl_pages($location = 'home', $index_content = TRUE)
@@ -367,9 +372,11 @@ class Fuel_search extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Parses the sitemap.xml file of the site and returns an array of pages to index
+	 * Indexes a single page
 	 *
 	 * @access	public
+	 * @param	string
+	 * @param	string
 	 * @return	array
 	 */	
 	function index_page($location, $html = NULL)
@@ -462,7 +469,8 @@ class Fuel_search extends Fuel_advanced_module {
 	 * Parses the sitemap.xml file of the site and returns an array of pages to index
 	 *
 	 * @access	public
-	 * @return	array
+	 * @param	string
+	 * @return	boolean
 	 */	
 	function check_robots_txt($location)
 	{
@@ -538,7 +546,8 @@ class Fuel_search extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	string
-	 * @return	array
+	 * @param	boolean
+	 * @return	string
 	 */	
 	function scrape_page($url, $just_header = FALSE)
 	{
@@ -605,6 +614,7 @@ class Fuel_search extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	string	page content to search
+	 * @param	string
 	 * @return	array
 	 */	
 	function page_xpath($content, $type = 'html')
@@ -794,7 +804,6 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	mixed	can be a string or an array. If an array, it must contain the other values
 	 * @param	string
 	 * @param	string
-	 * @param	string
 	 * @return	boolean
 	 */	
 	function create($location, $content = NULL, $scope = 'page')
@@ -846,11 +855,15 @@ class Fuel_search extends Fuel_advanced_module {
 	 * @param	string	scope
 	 * @return	boolean
 	 */	
-	function remove($location)
+	function remove($location, $scope = NULL)
 	{
 		$location = $this->get_location($location);
 		
 		$where['location'] = $location;
+		if (!empty($scope))
+		{
+			$where['scope'] = $scope;
+		}
 		$deleted = $this->CI->search_model->delete($where);
 		
 		if ($deleted)
@@ -958,7 +971,8 @@ class Fuel_search extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	object	search record
-	 * @return	boolean
+	 * @param	string
+	 * @return	void
 	 */	
 	function log_message($rec, $type = self::LOG_ERROR)
 	{
@@ -988,8 +1002,10 @@ class Fuel_search extends Fuel_advanced_module {
 	 * Used when printing out the index log informaiton
 	 *
 	 * @access	public
-	 * @param	object	search record
-	 * @return	boolean
+	 * @param	string
+	 * @param	string
+	 * @param	boolean
+	 * @return	string
 	 */	
 	function display_log($type = 'all', $tag = 'span', $return = FALSE)
 	{

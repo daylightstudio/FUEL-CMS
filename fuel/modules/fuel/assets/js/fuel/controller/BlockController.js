@@ -44,7 +44,9 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 					new jqx.Message('Error importing view file');
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+			
+			//$('.jqmWindow').jqm().jqmHide(); // causes error because of multiple modals
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		

@@ -83,7 +83,7 @@ class Fuel_custom_fields {
 		}
 
 		// set the styles specific to the image
-		if (empty($params['img_styles']))
+		if (!isset($params['img_styles']))
 		{
 			$params['img_styles'] = 'float: left; width: 100px;';
 		}
@@ -94,8 +94,8 @@ class Fuel_custom_fields {
 		// set data parameters so that we can use them with the JS
 		
 		// set multiple and separator data attributes so can be used by javascript
-		$multiple = (isset($params['multiple'])) ? (int) $params['multiple'] : 0;
-
+		$multiple = (!empty($params['multiple']) OR strpos($params['value'], ',') !== FALSE) ? 1 : 0;
+		
 		// set the separator based on if it is multiple lines or just a single line
 		$separator = (isset($params['multiline']) AND $params['multiline'] === TRUE) ? "\n" : ', ';
 
@@ -103,34 +103,37 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			);
-
+			
 		if (!empty($params['value']))
 		{
 			if (is_string($params['value']))
 			{
 				// unserialize if it is a serialized string
-				if (is_serialized_str($params['value']))
+				if ($json = json_decode($params['value'], TRUE) AND $json !== NULL)
+				// if (is_serialized_str($params['value']))
 				{
-					$assets = unserialize($params['value']);
+					$assets = $json;
+					//$assets = unserialize($params['value']);
 				}
 				else
 				{
 					// create assoc array with key being the image and the value being either the image name again or the caption
-					$assets = array();
-					$assets_arr = preg_split('#\s*,\s*|\n#', $params['value']);
+					// $assets = array();
+					// $assets_arr = preg_split('#\s*,\s*|\n#', $params['value']);
+					// foreach($assets_arr as $a)
+					// {
+					// 	$a_arr = preg_split('#\s*:\s*#', $a);
+					// 	$key = $a_arr[0];
+					// 	$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
+					// 	$assets[$key] = trim($value);
+					// }
+					$assets = preg_split('#\s*,\s*|\n#', $params['value']);
 					
-					foreach($assets_arr as $a)
-					{
-						$a_arr = preg_split('#\s*:\s*#', $a);
-						$key = $a_arr[0];
-						$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
-						$assets[$key] = trim($value);
-					}
 				}
 				$preview_str = '';
 
 				// loop through all the assets and concatenate them
-				foreach($assets as $asset => $caption)
+				foreach($assets as $asset)
 				{
 					if (!empty($asset))
 					{
@@ -142,7 +145,8 @@ class Fuel_custom_fields {
 							{
 								if (preg_match('#'.$regex.'#i', $asset))
 								{
-									$asset_path = assets_path($folder.'/'.$asset);
+									$path = trim($params['folder'], '/').'/'.$asset;
+									$asset_path = assets_path($path);
 									break;
 								}
 							}
@@ -189,7 +193,7 @@ class Fuel_custom_fields {
 		
 		if ($multiple)
 		{
-			// create an array with tthe key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+			// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
 			if (isset($params['subkey']))
 			{
 				$func_str = '
@@ -202,15 +206,25 @@ class Fuel_custom_fields {
 								$val = trim($val["'.$params['subkey'].'"]);
 								$assets = array();
 								$assets_arr = preg_split("#\s*,\s*|\n#", $val);
-								foreach($assets_arr as $a)
+								
+								// foreach($assets_arr as $a)
+								// 								{
+								// 									preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
+								// 
+								// 									$k = (isset($a_arr[1])) ? $a_arr[1] : $a;
+								// 									$v = (isset($a_arr[2])) ? $a_arr[2] : $k;
+								// 									$assets[$k] = trim($v);
+								// 									//$value[$key]["'.$params['subkey'].'"] = serialize($assets);
+								// 									$value[$key]["'.$params['subkey'].'"] = json_encode($assets);
+								// 								}
+								//$value[$key]["'.$params['subkey'].'"] = json_encode($assets_arr);
+								if (count($assets_arr) > 1)
 								{
-									preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
-									$k = (isset($a_arr[1])) ? $a_arr[1] : $a;
-									$v = (isset($a_arr[2])) ? $a_arr[2] : $key;
-									$k = zap_gremlins($k);
-									$v = zap_gremlins($v);
-									$assets[$k] = trim($v);
-									$value[$key]["'.$params['subkey'].'"] = serialize($assets);
+									$value[$key]["'.$params['subkey'].'"] = json_encode($assets_arr);
+								}
+								else
+								{
+									$value[$key]["'.$params['subkey'].'"] = $val;
 								}
 							}
 						}
@@ -220,30 +234,36 @@ class Fuel_custom_fields {
 			}
 			else
 			{
+				
 				$func_str = '
 					$value = trim($value);
-					$assets = array();
 					$assets_arr = preg_split("#\s*,\s*|\n#", $value);
-					foreach($assets_arr as $a)
+					// foreach($assets_arr as $a)
+					// 					{
+					// 						preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
+					// 						$key = (isset($a_arr[1])) ? $a_arr[1] : $a;
+					// 						$value = (isset($a_arr[2])) ? $a_arr[2] : $key;
+					// 						$assets[$key] = trim($value);
+					// 					}
+					//return json_encode($assets);
+					if (count($assets_arr) > 1)
 					{
-						preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
-						$key = (isset($a_arr[1])) ? $a_arr[1] : $a;
-						$value = (isset($a_arr[2])) ? $a_arr[2] : $key;
-						$key = zap_gremlins($key);
-						$value = zap_gremlins($value);
-						$assets[$key] = trim($value);
+						return json_encode($assets_arr);
 					}
-					return serialize($assets);
+					else
+					{
+						return $value;
+					}
 					';
 			}
 
-				
 			$func = create_function('$value', $func_str);
 			$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		// unserialize value if it's serialized
-		$value = (is_serialized_str($params['value'])) ? unserialize($params['value']) : $params['value'];
+		//$value = (is_serialized_str($params['value'])) ? unserialize($params['value']) : $params['value'];
+		$value = (is_string($params['value']) AND $json = json_decode($params['value'], TRUE) AND $json !== NULL) ? $json : $params['value'];
 
 		if (is_array($value))
 		{
@@ -252,14 +272,14 @@ class Fuel_custom_fields {
 			{
 				if (!empty($val))
 				{
-					if ($key !== $val)
-					{
-						$params['value'] .= $key.':"'.$val.'"'.$separator;
-					}
-					else
-					{
+					// if ($key !== $val)
+					// {
+					// 	$params['value'] .= $key.':"'.$val.'"'.$separator;
+					// }
+					// else
+					// {
 						$params['value'] .= $val.$separator;
-					}
+					// }
 				}
 			}
 		}
@@ -374,9 +394,9 @@ class Fuel_custom_fields {
 		}
 
 		// set the value
-		if (is_serialized_str($params['value']))
+		if (is_string($params['value']) AND $json = json_decode($params['value'], TRUE) AND $json !== NULL)
 		{
-			$params['value'] = @unserialize($params['value']);
+			$params['value'] = $json;
 		}
 		
 		// set maximum limit
@@ -425,6 +445,10 @@ class Fuel_custom_fields {
 					continue;
 				}
 				
+				if (!isset($field['label']))
+				{
+					$field['label'] = ucfirst(str_replace('_', ' ', $key));
+				}
 				
 				if ($repeatable)
 				{
@@ -446,10 +470,6 @@ class Fuel_custom_fields {
 					$field['depth'] = $params['depth'] + 1;
 					$depth_css_class = ' field_depth_'.$params['depth'];
 					$field['class'] = (!empty($field['class'])) ? $field['class'].' '.$depth_css_class : $depth_css_class;
-					if (!isset($field['label']))
-					{
-						$field['label'] = ucfirst(str_replace('_', ' ', $key));
-					}
 					
 					// set placeholders in field ids for javascript to translate... must be last occurence of the digit
 					$field['id'] = preg_replace('#([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$#U', '$1[{index}]$2', $field['name']);
@@ -462,7 +482,7 @@ class Fuel_custom_fields {
 					$fields[$i][$key] = $form_builder->create_field($field);
 					$fields[$i]['__index__'] = $i;
 					$fields[$i]['__num__'] = $i + 1;
-					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']])) ? "\"".strip_tags($value[$params['title_field']])."\"" : '';
+					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']])) ? strip_tags($value[$params['title_field']]) : '';
 					
 				}
 				else
@@ -481,6 +501,8 @@ class Fuel_custom_fields {
 			}
 		}
 		
+		$vars['values'] = $params['value'];
+		$vars['fields_config'] = $params['fields'];
 		if ($repeatable)
 		{
 			$vars['fields'] = $fields;
@@ -493,6 +515,7 @@ class Fuel_custom_fields {
 		
 		if (!empty($params['serialize']))
 		{
+			
 			// must set $_POST parameter below or else the post_process won't run the serialization'
 			if (!isset($_POST[$params['key']]))
 			{
@@ -503,7 +526,12 @@ class Fuel_custom_fields {
 			$val = $CI->input->post("'.$params['key'].'");
 			if (isset($_POST["'.$params['key'].'"]) AND is_array($val))
 			{
-				return serialize($val);
+				//return serialize($val); // issues with multibyte characters
+				// foreach($_POST["'.$params['key'].'"] as $key => $val)
+				// {
+				// 	$CI->form_builder->post_process_field_values($val);
+				// }
+				return json_encode($val);
 			}
 			else
 			{
@@ -513,7 +541,7 @@ class Fuel_custom_fields {
 			';
 
 			$func = create_function('$value', $func_str);
-			$form_builder->set_post_process($params['key'], $func);
+//			$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		
@@ -542,20 +570,45 @@ class Fuel_custom_fields {
 			if ($repeatable)
 			{
 				$css_class = (!empty($params['depth'])) ? ' child':  '';
-				$str .= '<div class="repeatable_container'.$css_class.'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'">';
+				$dblclick = (!empty($params['dblclick'])) ? $params['dblclick'] : 0;
+				$init_display = (!empty($params['init_display'])) ? $params['init_display'] : '';
+				$title_field = (!empty($params['title_field'])) ? $params['title_field'] : '';
+				$str .= '<div class="repeatable_container'.$css_class.'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'">';
 				$i = 0;
+
 				foreach($_f as $k => $f)
 				{
+					foreach($f as $kk => $ff)
+					{
+						if (isset($ff['type']) AND $ff['type'] == 'section')
+						{
+							$value = $form_builder->simple_field_value($ff);
+							$heading = str_replace('{__title__}', $f[$params['title_field']]['value'], $value);
+							unset($f[$kk]);
+							//$f[$kk]['label'] = $heading;
+						}
+					}
 					$form_params['fields'] = $f;
-					$form = $form_builder->create_nested($form_params);
+					$form_obj = $form_builder->create_nested($form_params, TRUE);
+					$form = $form_obj->render();
 					$css_class = ($i > 0) ? ' noclone' : '';
 					if (!empty($params['float']) AND $params['depth'] == 0)
 					{
 						$css_class = ' float_left';
 					}
+
+					$style = (!empty($params['style'])) ? ' style="'.$params['style'].'"' : '';
 					
-					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"><div class="grabber"></div>';
+					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"'.$style.'>';
+					$str .= '<h3 class="grabber" title="'.lang('tooltip_dbl_click_to_open').'">';
+					if (!empty($heading)) 
+					{
+						$str .= '<span class="title"></span>';
+					}
+					$str .= '</h3>';
+					$str .= '<div class="repeatable_content">';
 					$str .= $form;
+					$str .= '</div>';
 					$str .= '</div>';
 					$i++;
 				}
@@ -615,14 +668,36 @@ class Fuel_custom_fields {
 	{
 		$form_builder =& $params['instance'];
 		
-		$func= array('url_title', 'dash', TRUE);
+		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						if (isset($val["'.$params['subkey'].'"]))
+						{
+							$val = url_title($val["'.$params['subkey'].'"], "dash", TRUE);
+							$value[$key]["'.$params['subkey'].'"] = $val;
+						}
+					}
+					return $value;
+				}
+				';
+				$func = create_function('$value', $func_str);
+		}
+		else
+		{
+			$func = array('url_title', 'dash', TRUE);
+		}
+		
 		$form_builder->set_post_process($params['key'], $func);
 		
 		// assume a default is either name or title
 		if (empty($params['linked_to']))
 		{
 			$fields = $form_builder->fields();
-
 			if (isset($fields['title']))
 			{
 				$params['linked_to'] = 'title';
@@ -632,6 +707,10 @@ class Fuel_custom_fields {
 				$params['linked_to'] = 'name';
 			}
 		}
+		else
+		{
+		}
+		$params['linked_to'] = 'title';
 		
 		// set data values for jquery plugin to use
 		return $this->linked($params);
@@ -648,9 +727,33 @@ class Fuel_custom_fields {
 		
 		$output_class = (!empty($params['output_class'])) ? 'class="'.$params['output_class'].'"' : '';
 		
-		$func_str = '$lis = explode("\n", $value);
-			$lis = array_map("trim", $lis);
-			return ul($lis, "'.$output_class.'");';
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						if (isset($val["'.$params['subkey'].'"]))
+						{
+							$lis = explode("\n", $value);
+							$lis = array_map("trim", $lis);
+							$val = ul($lis, "'.$output_class.'");
+							$value[$key]["'.$params['subkey'].'"] = $val;
+						}
+					}
+					return $value;
+				}
+				';
+		}
+		else
+		{
+			$func_str = '$lis = explode("\n", $value);
+				$lis = array_map("trim", $lis);
+				return ul($lis, "'.$output_class.'");';
+		}
+		$func = create_function('$value', $func_str);
+		$form_builder->set_post_process($params['key'], $func);
 		
 		$func = create_function('$value', $func_str);
 		$form_builder->set_post_process($params['key'], $func);

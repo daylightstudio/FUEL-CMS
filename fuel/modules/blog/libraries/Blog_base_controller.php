@@ -4,22 +4,17 @@ class Blog_base_controller extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		if (!$this->fuel->auth->accessible_module('blog'))
 		{
 			show_404();
 		}
-		$this->load->module_helper(FUEL_FOLDER, 'fuel');
-		$this->load->module_config(BLOG_FOLDER, 'blog');
-		//$this->load->module_library(BLOG_FOLDER, 'fuel_blog');
 		$this->load->module_helper(BLOG_FOLDER, 'blog');
 		$this->load->module_helper(BLOG_FOLDER, 'social');
-		$this->load->module_language(BLOG_FOLDER, 'blog');
 	}
 	
 	function _common_vars()
 	{
-		$vars['blog'] =& $this->fuel_blog;
+		$vars['blog'] =& $this->fuel->blog;
 		$vars['is_blog'] = TRUE;
 		$vars['page_title'] = '';
 		//$this->load->vars($vars);

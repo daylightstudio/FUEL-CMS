@@ -6,7 +6,6 @@ class Categories extends Blog_base_controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->config->module_load('blog', 'blog');
 		$this->load->module_helper('blog', 'blog');
 	}
 	
@@ -39,6 +38,11 @@ class Categories extends Blog_base_controller {
 				$category_obj = $this->fuel->blog->get_category($category);
 				if (!isset($category_obj->id)) show_404();
 
+				// run before_posts_by_date hook
+				$hook_params = array('category' => $category_obj, 'category_slug' => $category);
+				$this->fuel->blog->run_hook('before_posts_by_category', $hook_params);
+				
+				$vars = array_merge($vars, $hook_params);
 				$vars['posts'] = $this->fuel->blog->get_category_posts($category);
 				$vars['page_title'] = $this->fuel->blog->page_title(array($category_obj->name, lang('blog_categories_page_title')));
 				$output = $this->_render('posts', $vars, TRUE);

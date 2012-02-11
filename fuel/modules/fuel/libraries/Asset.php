@@ -537,6 +537,11 @@ class Asset {
 		
 		if (empty($path)) return;
 		$CI = $this->_get_assets_config();
+		
+		if (!isset($ignore_if_loaded))
+		{
+			$ignore_if_loaded = $this->ignore_if_loaded;
+		}
 
 		//normalize
 		if (is_string($output))
@@ -585,9 +590,10 @@ class Asset {
 		{
 			// convert to an array if not already 
 			$path = (array) $path;
+			$files_arr = array();
 			foreach($path as $val)
 			{
-				if ($this->ignore_if_loaded AND $this->is_used($type, $val))
+				if ($ignore_if_loaded AND $this->is_used($type, $val))
 				{
 					continue;
 				}
@@ -598,12 +604,12 @@ class Asset {
 				// }
 				// else
 				// {
-					$str .= $open;
+					$file_str = $open;
 					$type_path = $type.'_path';
 					$assets_folders = $this->assets_folders;
 					if (!$this->_is_local_path($val) AND $output !== 'inline')
 					{
-						$str .= $val;
+						$file_str .= $val;
 					}
 					else
 					{
@@ -612,22 +618,27 @@ class Asset {
 							$contents_path = $this->assets_server_path($val, $type, $module).'.'.$type;
 							if (file_exists($contents_path))
 							{
-								$str .= file_get_contents($contents_path);
+								$file_str .= file_get_contents($contents_path);
 							}
 						}
 						else
 						{
-							$str .= $this->$type_path($val, $module);
+							$file_str .= $this->$type_path($val, $module);
 						}
 					}
 
-					$str .= $close;
-					$str .= "\n\t";
+					$file_str .= $close;
+					$files_arr[] = $file_str;
+					//$file_str .= "\n\t";
 					$this->_add_used($type, $val);
 				// }
 
 			}
 		}
+		
+		// use implode so it doesn't add the trailing \n\t'
+		$str = $str.implode("\n\t", $files_arr);
+		
 	//	$str .= $nested;
 		return $str;
 	}

@@ -72,5 +72,14 @@ $lang['markitup_email'] = 'email@address.com';
 $lang['markitup_fullscreen_close'] = 'Close';
 
 
+/*
+|--------------------------------------------------------------------------
+| Repeatable
+|--------------------------------------------------------------------------
+*/
+$lang['warn_before_delete_msg'] = 'Are you sure you want to delete this item?';
+$lang['btn_add_another'] = 'Add Another';
+$lang['btn_remove'] = 'Remove';
+
 /* End of file fuel_js_lang.php */
 /* Location: ./modules/fuel/language/english/fuel_js_lang.php */

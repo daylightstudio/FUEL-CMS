@@ -369,7 +369,7 @@ class Curl {
 	 *
 	 * @access	public
 	 * @param	string	The name of the parameter to return. If no value is proviced, then all values will be returned (optional)
-	 * @param	int	The key value of a CURL session (optional)
+	 * @param	mixed	The key value of a CURL session. If set to TRUE, then it will return all the infos from a mult-session (optional)
 	 * @return	mixed
 	 */	
 	function info($opt = NULL, $key = 0)

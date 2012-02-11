@@ -125,7 +125,9 @@ class Fuel_blocks extends Fuel_module {
 		else if (!empty($p['view']))
 		{
 			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
-			if ($this->CI->fuel->config('fuel_mode') != 'views' AND $p['only_views'] === FALSE)
+			
+			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
+			if ($this->CI->fuel->config('fuel_mode') != 'views' AND $p['only_views'] === FALSE AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('blocks');
 
@@ -156,6 +158,9 @@ class Fuel_blocks extends Fuel_module {
 			}
 			else if (file_exists($view_file))
 			{
+				// pass in reference to global CI object
+				$vars['CI'] =& $this->CI;
+
 				// pass along these since we know them... perhaps the view can use them
 				$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
 			}
@@ -219,7 +224,11 @@ class Fuel_blocks extends Fuel_module {
 		return $output;
 	}
 	
-	
+	function get($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	{
+		$model = $this->model();
+		return $model->options_list_with_views($where, $dir_filter, $order);
+	}
 
 }
 

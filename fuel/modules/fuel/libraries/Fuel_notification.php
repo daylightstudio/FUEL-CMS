@@ -121,7 +121,7 @@ class Fuel_notification extends Fuel_base_library {
 
 	function is_dev_mode()
 	{
-		return $this->use_dev_mode == TRUE AND ($this->CI->config->item('dev_mode') OR ENVIRONMENT != 'production');
+		return $this->use_dev_mode == TRUE AND (is_dev_mode());
 	}
 	
 	function errors()

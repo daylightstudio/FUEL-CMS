@@ -24,7 +24,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 			var path = jqx.config.fuelPath + '/navigation/parents/' + $('#group_id').val() + '/' + parentId + '/' + id;
 			$('#parent_id').parent().load(path, {}, function(){
 				$('#parent_id').val(parentId);
-				$.changeChecksaveValue('parent_id', origParentId);
+				$.changeChecksaveValue('#parent_id', origParentId);
 			});
 		});
 	},

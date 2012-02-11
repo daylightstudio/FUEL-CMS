@@ -56,7 +56,7 @@ class MY_Hooks extends CI_Hooks {
 				
 				if (!empty($params))
 				{
-					if (!isset($val['params']))
+					if (isset($val['params']) AND is_array($params))
 					{
 						$val['params'] = array_merge($val['params'], $params);
 					}

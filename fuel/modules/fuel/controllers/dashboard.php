@@ -26,7 +26,7 @@ class Dashboard extends Fuel_base_controller {
 			
 			$vars['dashboards'] = $dashboards;
 			$crumbs = array('' => 'Dashboard');
-			$this->fuel->admin->set_titlebar($crumbs);
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_dashboard');
 			$this->fuel->admin->render('dashboard', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 

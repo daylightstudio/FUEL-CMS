@@ -7,25 +7,28 @@ $config['representatives'] = array(
 $config['custom_fields'] = array(
 	'datetime' => array(
 		'css_class' => 'datepicker',
-		'css' 		=> array(FUEL_FOLDER => 'datepicker'),
-		'js'		=> array(
-							FUEL_FOLDER => array(
-								'jquery/plugins/jquery.datePicker',
-							)
-						),
+		'css' 		=> array(FUEL_FOLDER => 'fuel-theme/jquery-ui-1.8.17.custom'),
+		'js'		=> array(FUEL_FOLDER => array('jquery/plugins/jquery-ui-1.8.17.custom.min',)),
 		'js_function' => 'fuel.fields.datetime_field',
-		'js_params' => array('format' => 'dd-mm-yyyy'),
+		// 'js_params' => array('format' => 'mm-dd-yyyy'),
 		'represents' => 'datetime|timestamp',
+	),
+
+	'date' => array(
+		'css_class' => 'datepicker',
+		'css' 		=> array(FUEL_FOLDER => 'fuel-theme/jquery-ui-1.8.17.custom'),
+		'js'		=> array(FUEL_FOLDER => array('jquery/plugins/jquery-ui-1.8.17.custom.min',)),
+		'js_function' => 'fuel.fields.datetime_field',
 	),
 
 	'multi' => array(
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				'jquery/plugins/jquery.selso',
-				'jquery/plugins/jquery-ui-1.8.4.custom.min',
-				'jquery/plugins/jquery.disable.text.select.pack',
-				'jquery/plugins/jquery.supercomboselect',
-			)
+							FUEL_FOLDER => array(
+								'jquery/plugins/jquery.selso',
+								'jquery/plugins/jquery-ui-1.8.17.custom.min',
+								'jquery/plugins/jquery.disable.text.select.pack',
+								'jquery/plugins/jquery.supercomboselect',
+							)
 		),
 		'js_function' => 'fuel.fields.multi_field',
 		'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
@@ -37,9 +40,9 @@ $config['custom_fields'] = array(
 		'function'	=> 'asset',
 		'filepath'	=> '',
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				// 'jquery/plugins/jqModal',
-			)
+							FUEL_FOLDER => array(
+								'jquery/plugins/jqModal',
+							)
 		),
 		'js_function' => 'fuel.fields.asset_field',
 		'represents' => array('name' => '.*image$|.*img$'),
@@ -49,13 +52,14 @@ $config['custom_fields'] = array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'wysiwyg',
 		'filepath'	=> '',
+		'css' 		=> array(FUEL_FOLDER => 'markitup'),
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				'editors/markitup/jquery.markitup',
-				'editors/markitup/jquery.markitup.set',
-				'editors/ckeditor/ckeditor.js',
-				'editors/ckeditor/config.js',
-			)
+							FUEL_FOLDER => array(
+								'editors/markitup/jquery.markitup',
+								'editors/markitup/jquery.markitup.set',
+								'editors/ckeditor/ckeditor.js',
+								'editors/ckeditor/config.js',
+							)
 		),
 		'css' => array(FUEL_FOLDER => 'markitup'),
 		'js_function' => 'fuel.fields.wysiwyg_field',
@@ -67,9 +71,9 @@ $config['custom_fields'] = array(
 		'function'	=> 'file',
 		'filepath'	=> '',
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				'jquery/plugins/jquery.MultiFile',
-			)
+							FUEL_FOLDER => array(
+								'jquery/plugins/jquery.MultiFile',
+							)
 		),
 		'js_function' => 'fuel.fields.file_upload_field',
 		'represents' => 'blob',
@@ -81,13 +85,13 @@ $config['custom_fields'] = array(
 		'function'	=> 'inline_edit',
 		'filepath'	=> '',
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				// 'jquery/plugins/jqModal',
-				'jquery/plugins/jquery.selso',
-				'jquery/plugins/jquery-ui-1.8.4.custom.min',
-				'jquery/plugins/jquery.disable.text.select.pack',
-				'jquery/plugins/jquery.supercomboselect',
-			)
+							FUEL_FOLDER => array(
+								'jquery/plugins/jqModal',
+								'jquery/plugins/jquery.selso',
+								'jquery/plugins/jquery-ui-1.8.17.custom.min',
+								'jquery/plugins/jquery.disable.text.select.pack',
+								'jquery/plugins/jquery.supercomboselect',
+							)
 			
 		),
 		'js_function' => 'fuel.fields.inline_edit_field',
@@ -112,9 +116,9 @@ $config['custom_fields'] = array(
 		'function'	=> 'fillin',
 		'filepath'	=> '',
 		'js'		=> array(
-			FUEL_FOLDER => array(
-				'jquery/plugins/jquery.fillin',
-			)
+							FUEL_FOLDER => array(
+								'jquery/plugins/jquery.fillin',
+							)
 		),
 		'js_function' => 'fuel.fields.fillin_field',
 	),
@@ -123,7 +127,10 @@ $config['custom_fields'] = array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'template',
 		'filepath'	=> '',
-		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.repeatable'),
+		'js'		=> array(
+							FUEL_FOLDER => 
+								'jquery/plugins/jquery.repeatable',
+								),
 		'js_function' => 'fuel.fields.template_field',
 		'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
 	),

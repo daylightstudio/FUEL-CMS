@@ -72,6 +72,13 @@ $config['blog']['captcha'] = array(
 $config['blog']['comment_form'] = array();
 $config['blog']['comment_form']['fields'] = array();
 
+// pagination
+$config['blog']['pagination'] = array(
+		'prev_link' => 'Prev',
+		'next_link' => 'Next',
+		'first_link' => '',
+		'last_link' => '',
+	);
 
 
 // tables for blog

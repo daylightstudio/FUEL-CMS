@@ -1,4 +1,6 @@
 <?php if (!empty($edit_url)) : ?><div id="edit_url"><?=$edit_url?></div><?php endif; ?>
+<?php if (isset($total_kb)) : ?>
+
 <div class="summary">
 	<h1><a href="<?=$link?>"><?=$link?></a></h1>
 	<h2 id="total"><?=lang('validate_approx_file_size')?>
@@ -33,3 +35,6 @@
 	<li><a href="<?=$link?>" target="_blank"><?=$link?></a> <span class="success"><?=byte_format($filesize)?></span></li>
 	<?php endforeach; ?>
 </ul>
+<?php else: ?>
+<?=lang('error_calculating_page_weight')?>
+<?php endif; ?>

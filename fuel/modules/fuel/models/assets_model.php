@@ -69,7 +69,7 @@ class Assets_model extends CI_Model {
 		
 		$assets_path = $CI->asset->assets_server_path().$asset_dir.DIRECTORY_SEPARATOR;
 		
-		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE);
+		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->fuel->config('assets_excluded_dirs'), FALSE);
 		
 		$files = get_dir_file_info($assets_path, TRUE);
 
@@ -81,11 +81,11 @@ class Assets_model extends CI_Model {
 		//for ($i = $offset; $i < $cnt - 1; $i++)
 		for ($i = 0; $i < $cnt; $i++)
 		{
-			if (!empty($tmpfiles[$i]) && !empty($files[$tmpfiles[$i]]))
+			if (!empty($tmpfiles[$i]) AND !empty($files[$tmpfiles[$i]]))
 			{
 				$key = $tmpfiles[$i];
 				if (empty($this->filters['name']) || 
-					(!empty($this->filters['name']) && 
+					(!empty($this->filters['name']) AND 
 					(strpos($files[$key]['name'], $this->filters['name']) !== FALSE || strpos($key, $this->filters['name']) !== FALSE)))
 				{
 

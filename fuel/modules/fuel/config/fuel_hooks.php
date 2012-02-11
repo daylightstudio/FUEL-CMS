@@ -4,7 +4,7 @@
 | FUEL HOOKS
 |--------------------------------------------------------------------------
 |
-| The following are hooks used by FUEL specifically. This file is include
+| The following are hooks used by FUEL specifically. This file is included
 | in the fuel/application/config/hooks.php file
 |
 */

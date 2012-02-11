@@ -23,7 +23,6 @@ class Pagevariables extends Module {
 		if (!is_numeric($field))
 		{
 			$var = $this->pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id));
-			
 			if (isset($var->id))
 			{
 				$id = $var->id;
@@ -32,6 +31,13 @@ class Pagevariables extends Module {
 		else
 		{
 			$id = $field;
+		}
+		
+		if (empty($id))
+		{
+			$output = '<div id="fuel_main_content_inner"><p>'.lang('error_inline_page_edit').'</p></div>';
+			$this->output->set_output($output);
+			return;
 		}
 		parent::inline_edit($id, 'value');
 	}

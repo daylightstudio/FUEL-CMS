@@ -1,7 +1,5 @@
 <?php fuel_set_var('layout', 'none'); ?>
 
-<div id="subnav_off_divider"></div>
-
 <div class="sidebar_layout clearfix">
 	<header>
 		<h1>Search Results</h1>

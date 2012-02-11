@@ -14,5 +14,9 @@
 <p class="ico ico_info last_updated">
 	<?=$last_updated?>
 </p>
+<?php elseif ($this->session->flashdata('info')) : ?>
+<p class="ico ico_info">
+	<?=$this->session->flashdata('info');?>
+</p>
 <?php endif; ?>
 

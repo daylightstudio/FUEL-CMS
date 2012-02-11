@@ -73,7 +73,7 @@ class Google_keywords extends Fuel_base_controller {
 		}
 
 		$vars['num_results'] = $this->fuel->google_keywords->config('num_results');
-
+		
 		// process data to get results here after variables are set above
 		if (!empty($_POST))
 		{

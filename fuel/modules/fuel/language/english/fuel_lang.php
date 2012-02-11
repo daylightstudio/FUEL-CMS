@@ -458,7 +458,15 @@ $lang['layout_field_frequency_never'] = 'never';
 
 /*
 |--------------------------------------------------------------------------
-| MISC
+| Tooltips
+|--------------------------------------------------------------------------
+*/
+$lang['tooltip_dbl_click_to_open'] = 'Double click to open';
+
+
+/*
+|--------------------------------------------------------------------------
+| Pagination
 |--------------------------------------------------------------------------
 */
 
@@ -467,10 +475,17 @@ $lang['pagination_next_page'] = '&gt;';
 $lang['pagination_first_link'] = '&lsaquo; First';
 $lang['pagination_last_link'] = 'Last &rsaquo;';
 
+
+/*
+|--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
 $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
 $lang['action_delete'] = 'Delete';
 $lang['action_upload'] = 'Upload';
+
 
 //$lang['import'] = 'Import';
 

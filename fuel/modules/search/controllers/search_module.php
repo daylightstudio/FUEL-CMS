@@ -17,10 +17,21 @@ class Search_module extends Module {
 	
 	function index_site()
 	{
-		// clear the search index first
-		$this->fuel->search->clear_all();
+		$pages = $this->input->get_post('pages');
 		
-		$vars['crawled'] = $this->fuel->search->index();
+		if ($pages)
+		{
+			if (!is_array($pages))
+			{
+				$pages = explode(',', $this->input->get_post('pages'));
+				$vars['crawled'] = $this->fuel->search->index($pages, 'pages', FALSE);
+			}
+		}
+		else
+		{
+			$vars['crawled'] = $this->fuel->search->index(FALSE, 'pages', TRUE);
+		}
+		
 		//$vars['log'] = $this->fuel->search->logs();
 		$vars['log_msg'] = $this->fuel->search->display_log('all', 'span', TRUE);
 		$this->load->module_view(SEARCH_FOLDER, '_admin/index_results', $vars);

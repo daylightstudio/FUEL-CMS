@@ -20,25 +20,26 @@ class Assets extends Module {
 	function create($dir = NULL, $inline = FALSE)
 	{
 		$id = NULL;
+		
+
 		if (!empty($_FILES))
 		{
-
+			
 			$this->model->on_before_post();
 
-			if ($this->input->post('asset_folder')) $dir = $this->input->post('asset_folder');
+			if ($this->input->post('asset_folder')) $dir = $this->input->get_post('asset_folder');
 			if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) show_404();
 			
-			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->post('subfolder')) : ''; // remove any going down the folder structure for protections
+			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder')) : ''; // remove any going down the folder structure for protections
 			$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
-
 			$posted['upload_path'] = $upload_path;
-			$posted['overwrite'] = ($this->input->post('overwrite')) ? TRUE : FALSE;
-			$posted['create_thumb'] = ($this->input->post('create_thumb')) ? TRUE : FALSE;
-			$posted['maintain_ratio'] = ($this->input->post('maintain_ratio')) ? TRUE : FALSE;
-			$posted['width'] = $this->input->post('width');
-			$posted['height'] = $this->input->post('height');
-			$posted['master_dim'] = $this->input->post('master_dim');
-			$posted['file_name'] = $this->input->post('userfile_file_name');
+			$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
+			$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
+			$posted['maintain_ratio'] = ($this->input->get_post('maintain_ratio')) ? TRUE : FALSE;
+			$posted['width'] = $this->input->get_post('width');
+			$posted['height'] = $this->input->get_post('height');
+			$posted['master_dim'] = $this->input->get_post('master_dim');
+			$posted['file_name'] = $this->input->get_post('userfile_file_name');
 			$id = $posted['file_name'];
 			
 			if ($this->fuel->assets->upload($posted))
@@ -77,12 +78,19 @@ class Assets extends Module {
 			}
 			redirect($url);
 		}
-		$vars = $this->_form($dir, $inline);
+		$form_vars = $this->input->get();
+		
+		if (!empty($dir))
+		{
+			$form_vars['asset_folder'] = $dir;
+		}
+		
+		$vars = $this->_form($form_vars, $inline);
 
 		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;
 		$crumbs = array($list_view => $this->module_name, lang('assets_upload_action'));
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->set_inline($inline);
+		$this->fuel->admin->set_inline(($inline === TRUE));
 		
 		if ($inline === TRUE)
 		{
@@ -118,7 +126,7 @@ class Assets extends Module {
 				}
 			}
 		}
-		
+
 		$value = '';
 		if ($this->input->post('selected'))
 		{
@@ -148,7 +156,6 @@ class Assets extends Module {
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
 		$vars['form'] = $this->form_builder->render();
-		//$this->load->view('assets/assets_select_ajax', $vars);
 		$this->fuel->admin->set_inline(TRUE);
 
 		$crumbs = array('' => $this->module_name, lang('assets_select_action'));
@@ -156,49 +163,14 @@ class Assets extends Module {
 		$this->fuel->admin->render('assets/assets_select', $vars);
 	}
 	
-	// function select_ajax($dir = NULL)
-	// 	{
-	// 		if (!is_numeric($dir))
-	// 		{
-	// 			$dir = fuel_uri_string(1, NULL, TRUE);
-	// 			$dirs = $this->fuel->assets->dirs();
-	// 			foreach($dirs as $key => $d)
-	// 			{
-	// 				if ($d == $dir)
-	// 				{
-	// 					$dir = $key;
-	// 					break;
-	// 				}
-	// 			}
-	// 		}
-	// 
-	// 		$this->load->helper('array');
-	// 		$this->load->helper('form');
-	// 		$this->load->library('form_builder');
-	// 		$this->model->add_filters(array('group_id' => $dir));
-	// 		$options = options_list($this->model->list_items(), 'name', 'name');
-	// 		
-	// 		$preview = '<div id="asset_preview"></div>';
-	// 		$field_values['asset_folder']['value'] = $dir;
-	// 		$fields['asset_select'] = array('value' => '', 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview);
-	// 		$this->form_builder->css_class = 'asset_select';
-	// 		$this->form_builder->submit_value = NULL;
-	// 		$this->form_builder->use_form_tag = FALSE;
-	// 		$this->form_builder->set_fields($fields);
-	// 		$this->form_builder->display_errors = FALSE;
-	// 		$this->form_builder->set_field_values($field_values);
-	// 		$vars['form'] = $this->form_builder->render();
-	// 		//$this->load->view('assets/assets_select_ajax', $vars);
-	// 		$this->fuel->admin->render('assets/assets_select_ajax', $vars);
-	// 	}
-	
+	// no editing of images... just creating/overwriting existing
 	function edit($dir = NULL)
 	{
 		redirect(fuel_uri('assets/create/'.$dir));
 	}
 	
 	// seperated to make it easier in subclasses to use the form without rendering the page
-	function _form($dir = NULL, $inline = FALSE)
+	function _form($field_values = NULL, $inline = FALSE)
 	{
 		$this->load->library('form_builder');
 		$this->load->helper('convert');
@@ -213,10 +185,6 @@ class Assets extends Module {
 		if ($this->session->flashdata('uploaded_post'))
 		{
 			$field_values = $this->session->flashdata('uploaded_post');
-		}
-		else
-		{
-			$field_values = array('asset_folder' => $dir);
 		}
 		
 		$this->form_builder->submit_value = 'Save';
@@ -250,125 +218,6 @@ class Assets extends Module {
 
 		return $vars;
 	}
-	
-	/*function delete($id = NULL, $inline = FALSE)
-	{
-		if (!$this->fuel->auth->has_permission($this->permission, 'delete')) 
-		{
-			show_error(lang('error_no_permissions'));
-		}
-		
-		if (!empty($_POST['id']))
-		{
-			$posted = explode('|', $this->input->post('id'));
-		
-			// run before_delete hook
-			$this->_run_hook('before_delete', $posted);
-			
-			// Flags
-			$any_success = $any_failure = FALSE;
-			foreach($posted as $id)
-			{
-				if ($this->model->delete(uri_safe_decode($id)))
-				{
-					$any_success = TRUE;
-				}
-				else
-				{
-					$any_failure = TRUE;
-				}
-			}
-			
-			// run after_delete hook
-			$this->_run_hook('after_delete', $posted);
-			
-			$this->_clear_cache();
-			$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
-			//$this->session->set_flashdata('success', lang('data_deleted'));
-			if ($inline === TRUE)
-			{
-				//$vars['layout'] = FALSE;
-				$this->fuel->admin->render('modules/module_close_modal', $vars);
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
-				$this->fuel->admin->render($this->views['delete'], $vars);
-				
-			}
-			else
-			{
-				
-				// set a success delete message
-				if ($any_success)
-				{
-					$this->session->set_flashdata('success', lang('data_deleted'));
-				}
-
-				// set an error delete message
-				if ($any_failure)
-				{
-					// first try to get an error added in model by $this->add_error('...')
-					$msg = $this->model->get_validation()->get_last_error();
-
-					// if there is none like that, lets use default message
-					if (is_null($msg))
-					{
-						$msg = lang('data_not_deleted');
-					}
-
-					$this->session->set_flashdata('error', $msg);
-				}
-				
-				$url = fuel_uri($this->module_uri);
-				redirect($url);
-			}
-
-
-			redirect(fuel_uri($this->module_uri));
-		}
-		else
-		{
-			$this->js_controller_params['method'] = 'deleteItem';
-			$vars = array();
-			if (!empty($_POST['delete']) AND is_array($_POST['delete'])) 
-			{
-				$data = array();
-				foreach($this->input->post('delete') as $key => $val)
-				{
-					$d = $this->model->find_by_key(uri_safe_decode($key), 'array');
-					if (!empty($d)) $data[] = $d[$this->display_field];
-				}
-				$vars['id'] = implode('|', array_keys($_POST['delete']));
-				$vars['title'] = implode(', ', $data);
-			}
-			else
-			{
-				$data = $this->model->find_by_key(uri_safe_decode($id));
-				$vars['id'] = $id;
-				if (isset($data[$this->display_field])) $vars['title'] = $data[$this->display_field];
-			}
-			if (empty($data) OR (!empty($data['server_path']) AND empty($data['name']))) show_404();
-			$vars['error'] = $this->model->get_errors();
-			
-			if ($inline === TRUE)
-			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
-				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
-			}
-			else
-			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION, TRUE);
-				$vars['back_action '] = fuel_url($this->module_uri);
-			}
-			
-			$this->fuel->admin->render($this->views['delete'], $vars);
-		}
-	}
-	
-	function inline_delete($id)
-	{
-		$this->delete($id, TRUE);
-	}*/
-	
-	
 
 	function view($id = null)
 	{

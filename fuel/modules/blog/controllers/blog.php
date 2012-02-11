@@ -14,25 +14,25 @@ class Blog extends Blog_base_controller {
 		$year = ($this->uri->rsegment(2) != 'index') ? (int) $this->uri->rsegment(2) : NULL;
 		$month = (int) $this->uri->rsegment(3);
 		$day = (int) $this->uri->rsegment(4);
-		$permalink = $this->uri->rsegment(5);
+		$slug = $this->uri->rsegment(5);
 		$limit = (int) $this->fuel->blog->settings('per_page');
 		
 		$view_by = 'page';
 		
 		// we empty out year variable if it is page because we won't be querying on year'
-		if (is_int($year) && !empty($year) && empty($permalink))
+		if (is_int($year) && !empty($year) && empty($slug))
 		{
 			$view_by = 'date';
 		}
 		// if the first segment is id then treat the second segment as the id
 		else if ($this->uri->rsegment(2) === 'id' && $this->uri->rsegment(3))
 		{
-			$view_by = 'permalink';
-			$permalink = (int) $this->uri->rsegment(3);
+			$view_by = 'slug';
+			$slug = (int) $this->uri->rsegment(3);
 		}
-		else if (!empty($permalink))
+		else if (!empty($slug))
 		{
-			$view_by = 'permalink';
+			$view_by = 'slug';
 		}
 
 		// set this to false so that we can use segments for the limit
@@ -47,9 +47,9 @@ class Blog extends Blog_base_controller {
 		{
 			$vars = $this->_common_vars();
 			
-			if ($view_by == 'permalink')
+			if ($view_by == 'slug')
 			{
-				return $this->post($permalink);
+				return $this->post($slug);
 			}
 			else if ($view_by == 'date')
 			{
@@ -58,8 +58,14 @@ class Blog extends Blog_base_controller {
 				if (!empty($day)) $page_title_arr[] = $day;
 				if (!empty($month)) $page_title_arr[] = date('M', strtotime($posts_date));
 				if (!empty($year)) $page_title_arr[] = $year;
+				
+				// run before_posts_by_date hook
+				$hook_params = array('year' => $year, 'month' => $month, 'day' => $day, 'slug' => $slug, 'limit' => $limit);
+				$this->fuel->blog->run_hook('before_posts_by_date', $hook_params);
+				
+				$vars = array_merge($vars, $hook_params);
 				$vars['page_title'] = $page_title_arr;
-				$vars['posts'] = $this->fuel->blog->get_posts_by_date($year, (int) $month, $day, $permalink, $limit);
+				$vars['posts'] = $this->fuel->blog->get_posts_by_date($year, (int) $month, $day, $slug, $limit);
 				$vars['pagination'] = '';
 			}
 			else
@@ -69,16 +75,13 @@ class Blog extends Blog_base_controller {
 				$config['uri_segment'] = 3;
 				$offset = $this->uri->segment($config['uri_segment']);
 				$this->config->set_item('enable_query_strings', FALSE);
+				$config = $this->fuel->blog->config('pagination');
 				$config['base_url'] = $this->fuel->blog->url('page/');
-				$config['total_rows'] = count($this->fuel->blog->get_posts());
+				$config['total_rows'] = $this->fuel->blog->get_posts_count();
 				$config['page_query_string'] = FALSE;
 				$config['per_page'] = $limit;
 				$config['num_links'] = 2;
-				$config['prev_link'] = lang('blog_prev_page');
-				$config['next_link'] = lang('blog_next_page');
-				$config['first_link'] = lang('blog_first_link');
-				$config['last_link'] = lang('blog_last_link');;
-				
+
 				$this->pagination->initialize($config); 
 				
 				if (!empty($offset))
@@ -89,8 +92,16 @@ class Blog extends Blog_base_controller {
 				{
 					$vars['page_title'] = '';
 				}
+				
+				// run before_posts_by_date hook
+				$hook_params = array('offset' => $offset, 'limit' => $limit);
+				$this->fuel->blog->run_hook('before_posts_by_page', $hook_params);
+				
+				$vars = array_merge($vars, $hook_params);
 				$vars['posts'] = $this->fuel->blog->get_posts_by_page($limit, $offset);
+				
 				$vars['pagination'] = $this->pagination->create_links();
+			
 			}
 			
 			// show the index page if the page doesn't have any uri_segment(3)'
@@ -102,23 +113,27 @@ class Blog extends Blog_base_controller {
 		$this->output->set_output($output);
 	}
 	
-	function post($permalink = null)
+	function post($slug = null)
 	{
-		if (empty($permalink)) show_404();
+		if (empty($slug)) show_404();
 		$this->load->library('session');
 		$blog_config = $this->config->item('blog');
 
-		$post = $this->fuel->blog->get_post($permalink);
+		// run before_posts_by_date hook
+		$hook_params = array('slug' => $slug);
+		$this->fuel->blog->run_hook('before_post', $hook_params);
+		
+		$post = $this->fuel->blog->get_post($slug);
 
 		if (isset($post->id))
 		{
-		
 			$vars = $this->_common_vars();
 			$vars['post'] = $post;
 			$vars['user'] = $this->fuel->blog->logged_in_user();
 			$vars['page_title'] = $post->title;
 			$vars['next'] = $this->fuel->blog->get_next_post($post);
 			$vars['prev'] = $this->fuel->blog->get_prev_post($post);
+			$vars['slug'] = $slug;
 			
 			$antispam = md5(random_string('unique'));
 			
@@ -491,5 +506,4 @@ class Blog extends Blog_base_controller {
 		$captcha_md5 = md5(strtoupper($word).$this->config->item('encryption_key'));
 		return $captcha_md5;
 	}
-
 }

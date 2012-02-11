@@ -47,15 +47,18 @@ $config['search']['index_method'] = 'AUTO';
 // is specified, then it will only index those in the array
 $config['search']['index_modules'] = TRUE;
 
-// the number of results to show per page
-$config['search']['pagination_per_page'] = 10;
-
-// number of links to display for pagination
-$config['search']['pagination_num_links'] = 2;
-
 // the view file to use to display the results. An array can be used to point to a different module (e.g. array('my_module' => 'search'))
 $config['search']['view'] = 'search';
 
 // minimum length of the search term
 $config['search']['min_length_search'] = 3;
 
+// pagination
+$config['search']['pagination'] = array(
+		'per_page' => 2,
+		'num_links' => 2,
+		'prev_link' => lang('search_prev_page'),
+		'next_link' => lang('search_next_page'),
+		'first_link' => lang('search_first_link'),
+		'last_link' => lang('search_last_link'),
+	);

@@ -38,17 +38,17 @@ class Fuel_tester extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 
 		$this->CI->load->helper('directory');
 		$this->CI->load->helper('inflector');
 
-		// initialize object if any parameters
-		if (!empty($params))
-		{
-			$this->initialize($params);
-		}
 		
+		if (empty($params))
+		{
+			$params['name'] = 'tester';
+		}
+		$this->initialize($params);
 	}
 
 	function run($tests)

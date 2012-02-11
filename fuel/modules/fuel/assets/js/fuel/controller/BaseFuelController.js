@@ -175,10 +175,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var itemViewsCookie = $.cookie(itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
+				_this._toggleRearrageBtn();
+
 				$('#toggle_tree').parent().addClass('active');
 				if ($('#rearrange').parent().hasClass('active')){
 					$('#rearrange').click();
 				}
+				
 				$('#toggle_list').parent().removeClass('active');
 				$('#list_container').hide();
 				$('#tree_container').show();
@@ -192,6 +195,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 			$('#toggle_list').click(function(e){
+				_this._toggleRearrageBtn();
+
 				$('#fuel_notification .rearrange').show();
 				$('#toggle_list').parent().addClass('active');
 				$('#toggle_tree').parent().removeClass('active');
@@ -252,8 +257,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if (!$('#toggle_list').parent().hasClass('active')){
 				$('#toggle_list').click();
 			}
+			
 			$(this).parent().toggleClass('active');
 			if ($(this).parent().hasClass('active')){
+				// sort the order of the column first
+				$('#col').val(_this.initObj.precedence_col);
+				$('#order').val('asc');
+				_this.redrawTable(true, false);
+				
 				_this.rearrangeOn = true;
 				_this.rearrangeItems();
 				_this.setNotification(_this.lang('rearrange_on'), 'warning', 'rearrange');
@@ -279,11 +290,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	add_edit : function(initSpecFields){
 		if (initSpecFields == null) initSpecFields = true;
 		var _this = this;
-		$('.tooltip').tooltip({
-			delay: 0,
-			showURL: false,
-			id: '__fuel_tooltip__'
-		});
+
 		this.notifications();
 		//this._submit();
 		if (initSpecFields) this.initSpecialFields($('#fuel_main_content_inner'));
@@ -409,14 +416,24 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//$('#form input:first').select();
 		$('#form input:first').focus();
 		
-		if (jqx.config.warnIfModified) $.checksave();
+		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 	},
 	
 	initSpecialFields : function(context){
 		var _this = this;
 		this._initFormTabs(context);
 		this._initFormCollapsible(context);
+		this._initToolTips(context);
 		$('#form input:first', context).select();
+	},
+	
+	_initToolTips : function(context){
+		$('.tooltip', context).tooltip({
+			delay: 0,
+			showURL: false,
+			id: '__fuel_tooltip__'
+		});
+		
 	},
 	
 	_initFormTabs : function(context){
@@ -439,7 +456,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.filter(':first').parent().before(tabs);
 			//$('#form').prepend(tabs);
 			//$('#form').tabs();
-			var tabCookieSettings = {group: 'tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.cookieDefaultPath}}
+			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.cookieDefaultPath}}
 			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}
@@ -497,6 +514,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 	},
 	
+	_toggleRearrageBtn : function(){
+		if ($('#precedence').val() != 1){
+			$('#rearrange').hide();
+		} else {
+			$('#rearrange').show();
+		}
+	},
+	
 	displayError : function($form, html){
 		$form.find('.inline_errors').addClass('notification error ico_error').html(html).animate( { backgroundColor: '#ee6060'}, 1500);
 	},
@@ -506,6 +531,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		var newOrder = ($('#order').val() == 'desc' || col != $('#col').val()) ? 'asc' : 'desc';
 		$("#col").val(col);
 		$("#order").val(newOrder);
+		$('#rearrange').parent().removeClass('active');
+		$('#fuel_notification .rearrange').remove();
+		this.rearrangeOn = false;
 		this.redrawTable();
 	},
 	
@@ -519,6 +547,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		if (!_this.treeLoaded) _this.treeLoaded = true;
 		
+		// setup rearranging precedence
+		$('#rearrange').hide();
 		
 	},
 	
@@ -567,9 +597,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		// setup rearranging precedence
-		if ($('#precedence').val() != 1){
-			$('#rearrange').hide();
-		}
+		_this._toggleRearrageBtn();
+
 		if (_this.rearrangeOn){
 			_this.rearrangeItems();
 		}
@@ -619,8 +648,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				serializeRegexp: /[^data_table_row]*$/,
 				onDrop:function(e){
 					if (_this.rearrangeOn){
-						$('#col').val(_this.initObj.precedence_col);
-						$('#order').val('asc');
+						//$('#col').val(_this.initObj.precedence_col);
+						//$('#order').val('asc');
 						var params = {
 							data: $('#data_table').tableDnDSerialize(),
 							url: _this.precedenceAjaxURL,

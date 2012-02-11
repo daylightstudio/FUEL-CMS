@@ -44,13 +44,13 @@ class Fuel_cronjobs extends Fuel_advanced_module {
 	 */
 	function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		
-		// initialize object if any parameters
-		if (!empty($params))
+		if (empty($params))
 		{
-			$this->initialize($params);
+			$params['name'] = 'cronjobs';
 		}
+		$this->initialize($params);
 	}
 	
 	

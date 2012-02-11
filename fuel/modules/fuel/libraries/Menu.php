@@ -886,14 +886,14 @@ class Menu {
 						$attrs .= ' '.$key2.'="'.$val2.'"';
 					}
 				} else {
-					$attrs .= $val['attributes'];
+					$attrs .= ' '.$val['attributes'];
 				}
 			}
 			if ($this->use_titles AND (empty($attrs) OR strpos($attrs, 'title=') === FALSE))
 			{
 				$attrs .= ' title="'.strip_tags($val['label']).'"';
 			}
-			$str .= '<a href="'.site_url($val['location']).'" '.$attrs.'>'.$label.'</a>';
+			$str .= '<a href="'.site_url($val['location']).'"'.$attrs.'>'.$label.'</a>';
 		}
 		else
 		{

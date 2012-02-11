@@ -43,7 +43,7 @@ dave@thedaylightstudio.com
 					$this.addClass('active');
 
 					// show the contents
-					var id = $(this).find('a').attr('href');
+					var id = $(this).find('a').attr('href'); // remove the #
 					activeContent = $(id);
 					activeContent.show();
 					

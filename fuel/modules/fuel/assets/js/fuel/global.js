@@ -66,6 +66,10 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	var modalWidth = $modal.outerWidth();
 	var centerWidth = -((modalWidth/2));
 	$modal.css('marginLeft', centerWidth + 'px');
+
+	
+	// show it first so we don't get the cancellation error in the console
+	$modal.jqm(jqmOpts).jqmShow();
 	$modal.find('.modal_content').empty().append(html);
 	$modal.find('iframe').load(function(){
 		
@@ -73,7 +77,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
 
-		$('.cancel, .modal_close', contentDoc).click(function(){
+		$('.cancel', contentDoc).add('.modal_close').click(function(){
 			$modal.jqmHide();
 		})
 
@@ -113,7 +117,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	if (onLoadCallback){
 		jqmOpts.onLoad = onLoadCallback;
 	}
-	$modal.jqm(jqmOpts).jqmShow();
+	
 	return $modal;
 }
 

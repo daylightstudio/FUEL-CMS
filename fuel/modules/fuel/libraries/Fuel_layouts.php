@@ -89,47 +89,66 @@ class Fuel_layouts extends Fuel_base_library {
 				}
 			}
 		}
-		
+
 		// initialize layout objects
 		foreach($this->layouts as $name => $init)
 		{
-			$init['name'] = $name;
-			$init['folder'] = $this->layouts_folder;
-			$init['class'] = 'Fuel_layout';
-			
-			if (!empty($init['fields']))
+			if (is_array($init))
 			{
-				$fields = $init['fields'];
-				$order = 1;
-				
-				// must reset this first to prevent any initialization of stuff like adding javascript for renderin
-				$this->CI->form_builder->clear();
-				foreach($fields as $key => $f)
+				$init['name'] = $name;
+				$init['folder'] = $this->layouts_folder;
+				$init['class'] = 'Fuel_layout';
+				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
+
+				if (!empty($init['fields']))
 				{
-					$fields[$key] = $this->CI->form_builder->normalize_params($f);
-					$fields[$key]['order'] = $order;
-					unset($fields[$key]['__DEFAULTS__']);
-					$order++;
-				}
-				
-				$init['fields'] = $fields;
-				
-				if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
-				{
-					if (!isset($init['filename']))
+					$fields = $init['fields'];
+					
+					$order = 1;
+
+					// must reset this first to prevent any initialization of stuff like adding javascript for renderin
+					$this->CI->form_builder->clear();
+					foreach($fields as $key => $f)
 					{
-						$init['filename'] = $init['class'].EXT;
+						$fields[$key] = $this->CI->form_builder->normalize_params($f);
+						if (empty($fields[$key]['name']))
+						{
+							$fields[$key]['name'] = $name;
+						}
+						if (!isset($fields[$key]['order']))
+						{
+							$fields[$key]['order'] = $order;
+						}
+						
+						// must remove this so that the values can be normalized again
+						unset($fields[$key]['__DEFAULTS__']);
+						$order++;
 					}
 
-					if (!isset($init['filepath']))
+					$init['fields'] = $fields;
+
+					if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
 					{
-						$init['filepath'] = 'libraries';
+						if (!isset($init['filename']))
+						{
+							$init['filename'] = $init['class'].EXT;
+						}
+
+						if (!isset($init['filepath']))
+						{
+							$init['filepath'] = 'libraries';
+						}
+						$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+						require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
 					}
-					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
-					require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
 				}
+				$this->create($name, $init, $init['class']);
 			}
-			$this->create($name, $init, $init['class']);
+			else if (is_a($init, 'Fuel_layout'))
+			{
+				$this->_layouts[$name] = $init;
+			}
+
 		}
 	}
 	
@@ -148,7 +167,7 @@ class Fuel_layouts extends Fuel_base_library {
 		$layouts = $this->_layouts;
 		foreach($layouts as $layout)
 		{
-			$options[$layout->name] = $layout->name;
+			$options[$layout->name] = $layout->label;
 		}
 		return $options;
 	}
@@ -173,6 +192,8 @@ class Fuel_layouts extends Fuel_base_library {
 class Fuel_layout extends Fuel_base_library {
 	
 	public $name = '';
+	public $label = '';
+	public $description = '';
 	public $file = '';
 	public $hooks = array();
 	public $fields = array();
@@ -198,6 +219,11 @@ class Fuel_layout extends Fuel_base_library {
 	 */	
 	function initialize($params = array())
 	{
+		if (!isset($this->CI->form_builder))
+		{
+			$this->CI->load->library('form_builder');
+		}
+		
 		if (is_string($params))
 		{
 			$params = array('name' => $params);
@@ -233,9 +259,29 @@ class Fuel_layout extends Fuel_base_library {
 		$this->name = $name;
 	}
 
-	function name($name)
+	function name()
 	{
-		return $name;
+		return $this->name;
+	}
+	
+	function label()
+	{
+		return $this->label;
+	}
+
+	function set_label($label)
+	{
+		$this->label = $label;
+	}
+	
+	function description()
+	{
+		return $this->description;
+	}
+
+	function set_description($description)
+	{
+		$this->description = $description;
 	}
 	
 	function set_fields($fields)
@@ -245,12 +291,33 @@ class Fuel_layout extends Fuel_base_library {
 	
 	function fields()
 	{
-		return $this->fields;
+		$fields = array();
+		if (!empty($this->description))
+		{
+			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
+		}
+		$fields = array_merge($fields, $this->fields);
+		return $fields;
 	}
 	
 	function add_field($key, $val)
 	{
+		$val = $this->CI->form_builder->normalize_params($val);
+		if (!isset($val['name']))
+		{
+			$val['name'] = $key;
+		}
+		$val['key'] = $key;
+		unset($val['__DEFAULTS__']);
 		$this->fields[$key] = $val;
+	}
+
+	function add_fields($fields)
+	{
+		foreach($fields as $key => $val)
+		{
+			$this->add_field($key, $val);
+		}
 	}
 	
 	function set_field_values($values)
@@ -313,6 +380,20 @@ class Fuel_layout extends Fuel_base_library {
 	function pre_process($vars)
 	{
 		return $vars;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing the final output one last time
+	 *
+	 * @access	public
+	 * @param	string	final processed output
+	 * @return	string
+	 */	
+	function post_process($output)
+	{
+		return $output;
 	}
 
 }

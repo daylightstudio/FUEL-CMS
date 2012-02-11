@@ -787,9 +787,16 @@ class MY_Model extends CI_Model {
 			// make it easier for dates
 			else if ($field['type'] == 'datetime')
 			{
-				$has_time = (count(explode(' ', $values[$key])) > 1);
-
-				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
+				if (empty($values[$key]) OR (int)$values[$key] == 0)
+				{
+					
+					$values[$key] = $this->default_date;
+					$has_time = FALSE;
+				}
+				else
+				{
+					$has_time = (count(explode(' ', $values[$key])) > 1);
+				}
 				
 				// test if there is an hour field AND that there is NO time values first before looking at other values
 				if (isset($values[$key.'_hour']) AND !$has_time)
@@ -1804,14 +1811,6 @@ class MY_Model extends CI_Model {
 				$fields[$key]['type'] = 'password';
 			}
 			
-			// get lang value if one exists... check first for model specific then look for a generic model lang key
-			// no longer needed because Form_builder does this
-			// $lang_key = strtolower(get_class($this)).'_'.$key;
-			// $ln = ($lang = lang($lang_key)) ? $lang : lang('form_label_'.$key);
-			// if ($ln)
-			// {
-			// 	$fields[$key]['label'] = $ln;
-			// }
 		}
 		
 		// lookup unique fields and give them a required parameter
@@ -1854,7 +1853,9 @@ class MY_Model extends CI_Model {
 					$lookup_model = $this->load_model($val);
 
 					$options = $CI->$related_model_name->options_list();
-					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]))) : array();
+					
+					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
+					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
