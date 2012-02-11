@@ -29,7 +29,7 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/validator
  */
 
-Class Validator {
+class Validator {
 	
 	public $field_error_delimiter = "\n"; // delimiter for rendering multiple errors for a field
 	public $stack_field_errors = FALSE; // stack multiple field errors if any or just replace with the newest

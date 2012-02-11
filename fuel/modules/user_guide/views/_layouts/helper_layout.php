@@ -9,10 +9,10 @@ foreach($helpers as $function => $function_obj) :
 
 ?>
 
-<?=$this->fuel->user_guide->block('function', array('function' => $method_obj)) ?>
+<?=$this->fuel->user_guide->block('function', array('function' => $function_obj)) ?>
 <p><?=$description?></p>
 
-<?=$this->fuel->user_guide->block('comment_params', array('comment' => $comment)) ?>
+<?=$this->fuel->user_guide->block('params', array('comment' => $comment)) ?>
 
 <?=$this->fuel->user_guide->block('example', array('example' => $example)) ?>
 

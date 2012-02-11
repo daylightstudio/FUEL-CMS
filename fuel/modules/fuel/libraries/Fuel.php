@@ -35,9 +35,8 @@ require_once('Fuel_modules.php');
 
 class Fuel extends Fuel_base_library {
 	
-
-	protected $CI;
-	protected $_attached = array();
+	protected $CI; // the super CI object
+	protected $_attached = array(); // attached objects
 	protected $_auto_attach = array(
 									'admin',
 									'auth',
@@ -55,9 +54,9 @@ class Fuel extends Fuel_base_library {
 									'logs',
 									'notification',
 									'template',
-									);
+									); // objects to automatically attach
 
-	private static $_instance;
+	private static $_instance; // the singleton instance
 	
 	/**
 	 * Constructor
@@ -132,7 +131,7 @@ class Fuel extends Fuel_base_library {
 	 * @access	public
 	 * @param	mixed	Can be a string that references the configuration key or an array of values
 	 * @param	mixed	The value of the key configuration item (only works if $item parameter is not an array)
-	 * @param	string	The module to set the configuration item. Default is 'fuel
+	 * @param	string	The module to set the configuration item. Default is fuel. (optional)
 	 * @return	void
 	 */	
 	function set_config($item, $value, $module = 'fuel')
@@ -152,18 +151,50 @@ class Fuel extends Fuel_base_library {
 		$this->CI->config->set_item($module, $fuel_config);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Convenience method to load helpers from within the fuel module by default.
+	 *
+	 * @access	public
+	 * @param	mixed	Loads helpers
+	 * @param	string	The module folder to load from. Default is fuel. (optional)
+	 * @return	void
+	 */	
 	function load_helper($helper, $module = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
 		$this->CI->load->module_helper($module, $helper);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Convenience method to load library items from within the fuel module by default.
+	 *
+	 * @access	public
+	 * @param	mixed	Loads libraries
+	 * @param	string	The module folder to load from. Default is fuel. (optional)
+	 * @param	array	Initialization parameters to pass to the library class. (optional)
+	 * @return	void
+	 */	
 	function load_library($library, $module = NULL, $init = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
 		$this->CI->load->module_library($module, $library, $init);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Convenience method to load models from within the fuel module by default.
+	 *
+	 * @access	public
+	 * @param	mixed	Loads models
+	 * @param	string	The module folder to load from. Default is fuel. (optional)
+	 * @param	string	The name of the model to assign it upon intialization. (optional)
+	 * @return	void
+	 */	
 	function load_model($model, $module = NULL, $name = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
@@ -175,12 +206,31 @@ class Fuel extends Fuel_base_library {
 		$this->CI->load->module_model($module, $model, $name);
 	}
 
-	function load_language($lang, $module = NULL, $name = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Convenience method to load language from within the fuel module by default.
+	 *
+	 * @access	public
+	 * @param	mixed	loads language file
+	 * @param	string	The module folder to load from. Default is fuel. (optional)
+	 * @return	void
+	 */	
+	function load_language($lang, $module = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
 		$this->CI->load->module_language($module, $lang);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method that will attach and return FUEL library objects
+	 *
+	 * @access	public
+	 * @param	string	The object
+	 * @return	object
+	 */	
 	function &__get($var)
 	{
 		if (!isset($this->_attached[$var]))
@@ -219,6 +269,16 @@ class Fuel extends Fuel_base_library {
 		return $this->_attached[$var];
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method that will call any methods on an attached object that start with "get"
+	 *
+	 * @access	public
+	 * @param	string	The object
+	 * @param	string	An array of arguments
+	 * @return	object
+	 */	
 	function __call($name, $args)
 	{
 		$obj = $this->$name;
@@ -232,6 +292,16 @@ class Fuel extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Attaches an object to the fuel object
+	 *
+	 * @access	public
+	 * @param	string	The name of the object
+	 * @param	object	The object to attach. If none is provided it will look in the fuel module. (optional)
+	 * @return	void
+	 */	
 	function attach($key, $obj = NULL)
 	{
 		if (isset($obj))

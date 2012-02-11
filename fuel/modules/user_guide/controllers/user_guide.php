@@ -99,6 +99,7 @@ class User_guide extends Fuel_base_controller {
 					}
 					
 					$file_path = MODULES_PATH.$module.'/'.$folder.'/'.$file_name.EXT;
+					
 					if (file_exists($file_path))
 					{
 						$body = $this->fuel->user_guide->generate_docs($file_name, array(), $module, $folder);

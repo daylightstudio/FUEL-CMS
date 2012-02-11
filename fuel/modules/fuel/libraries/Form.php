@@ -30,7 +30,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/form.html
  */
-Class Form {
+class Form {
 	
 	public $attrs = 'method="post" action=""'; // form html attributes
 	public $validator; // the validator object

@@ -34,7 +34,7 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/form_builder.html
  */
 
-Class Form_builder {
+class Form_builder {
 
 	public $form; // form object used to create the form fields and associate errors with
 	public $id = ''; // id to be used for the containing table or div
@@ -137,6 +137,7 @@ Class Form_builder {
 		if (is_null($this->form))
 		{
 			$this->CI->load->library('form');
+			
 			$this->form = new Form();
 			
 			// load localization helper if not already

@@ -91,7 +91,7 @@ class Inspection {
 					require_once($this->file);
 					$loaded = TRUE;
 				}
-				$this->_classes[$class] = new Inspection_class($class);
+				$this->_classes[$class] = new Inspection_class($class, $source);
 			}
 		}
 		
@@ -142,7 +142,8 @@ class Inspection {
 		{
 			if ($tokens[$i - 2][0] == T_CLASS
 				AND $tokens[$i - 1][0] == T_WHITESPACE
-				AND $tokens[$i][0] == T_STRING) {
+				AND $tokens[$i][0] == T_STRING)
+			{
 
 				$class_name = $tokens[$i][1];
 				$classes[] = $class_name;
@@ -222,13 +223,15 @@ class Inspection_class extends Inspection_base {
 	
 	protected $_methods;
 	protected $_props;
-
-	function __construct($class)
+	protected $_file; // for further processing for properties
+	
+	function __construct($class, $file = '')
 	{
 		parent::__construct('ReflectionClass', $class);
+		$this->_file = $file;
 	}
 	
-	function properties($types = array())
+	function properties($types = array(), $include_parent = FALSE)
 	{
 		if (!isset($this->_props))
 		{
@@ -236,12 +239,17 @@ class Inspection_class extends Inspection_base {
 			
 			foreach($ref_props as $p)
 			{
-				$prop_obj = new Inspection_property($ref_props);
-				$prop_obj->class = &$this;
+				$prop_obj = new Inspection_property($this->name, $p->name, $this);
 				$this->_props[$p->name] = $prop_obj;
+				
 			}
 		}
 		
+		// get properties area to parse out for comments later on
+		preg_match('#[c|C]lass\s+'.$this->name.'.+\{.+function __construct#Us', $this->_file, $props_match);
+		$props_block = $props_match[0];
+		unset($props_match);
+
 		if (empty($types))
 		{
 			$types = array('public');
@@ -263,6 +271,10 @@ class Inspection_class extends Inspection_base {
 		$props = array();
 		foreach($this->_props as $name => $p)
 		{
+			if (!$include_parent AND ($p->getDeclaringClass()->name != $this->name))
+			{
+				continue;
+			}
 			if (!empty($types))
 			{
 				foreach($types as $type)
@@ -270,7 +282,14 @@ class Inspection_class extends Inspection_base {
 					$type_method = 'is'.ucfirst($type);
 					if (method_exists($p->reflection, $type_method) AND $p->reflection->$type_method())
 					{
+						preg_match('#\s*'.$type.'\s+(\$'.$name.').*;\s*//\s*(.+)#', $props_block, $matches);
+						
+						if (isset($matches[2]) AND !$p->comment->text())
+						{
+							$p->comment->set_text($matches[2]);
+						}
 						$props[$name] = $p;
+						
 					}
 				}
 			}
@@ -279,6 +298,7 @@ class Inspection_class extends Inspection_base {
 				$props[$key] = $p;
 			}
 		}
+		return $props;
 	}
 	
 	function parent()
@@ -382,12 +402,17 @@ class Inspection_method extends Inspection_base {
 }
 
 class Inspection_property extends Inspection_base {
-	
 	public $class;
+	public $value;
 	
-	function __construct($obj, $method)
+	function __construct($obj, $method = NULL)
 	{
 		parent::__construct('ReflectionProperty', $method, $obj);
+		if ($this->is_public())
+		{
+			$class = $this->reflection->class;
+			$this->value = $this->reflection->getValue(new $class());
+		}
 	}
 	
 }
@@ -414,7 +439,6 @@ class Inspection_param extends Inspection_base {
 		if ($this->is_default_value_available())
 		{
 			$val = $this->reflection->getDefaultValue();
-			
 			
 			if ($to_string)
 			{
@@ -605,6 +629,10 @@ class Inspection_comment {
 				// remove code examples since they are handled by the example method
 				$this->_description = preg_replace('#<code>.+</code>#ms', '', $this->_description);
 			}
+			else
+			{
+				$this->_description = $this->_text;
+			}
 		}
 		
 		// break into lines so we can clean up some formatting like periods
@@ -637,6 +665,9 @@ class Inspection_comment {
 		// make any links hot
 		$desc = auto_link($desc);
 		
+		// encode any HTML entities
+		$desc = htmlentities($desc);
+		
 		return trim($desc);
 	}
 	
@@ -654,6 +685,15 @@ class Inspection_comment {
 		return $example;
 	}
 	
+	function text()
+	{
+		return $this->_text;
+	}
+	
+	function set_text($text)
+	{
+		$this->_text = $text;
+	}
 }
 
 
@@ -742,7 +782,6 @@ abstract class Inspection_base {
 		{
 			$name = camelize($name);
 		}
-		
 		if (method_exists($this->reflection, $name))
 		{
 			if (!empty($args))

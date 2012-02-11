@@ -1,6 +1,8 @@
 <h1><?=$class->friendly_name()?> Class</h1>
 <p><?=$class->comment()->description()?></p>
 
+<?=$this->fuel->user_guide->block('properties', array('class' => $class)) ?>
+
 <h1>Function Reference</h1>
 <?php 
 

@@ -14,7 +14,7 @@ if ($num_parameters)
 		$param_str = '<var>';
 		if ($param->is_optional()) : $param_str .= '['; endif;
 		if (!$param->is_default_array()) : $param_str .= '\''; endif;
-		$param_str .= $param->name;
+		$param_str .= '$'.$param->name;
 		if (!$param->is_default_array()) : $param_str .= '\''; endif;
 		if ($param->is_default_value_available()) : $param_str .= '='.$param->default_value(TRUE); endif;
 		if ($param->is_optional()) : $param_str .= ']'; endif;
