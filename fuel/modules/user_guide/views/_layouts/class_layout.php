@@ -1,5 +1,7 @@
+<?php if (!empty($class)) : ?>
+
 <h1><?=$class->friendly_name()?> Class</h1>
-<p><?=$class->comment()->description()?></p>
+<p><?=$class->comment()->description(array('periods', 'one_line', 'eval', 'markdown'))?></p>
 
 <?=$this->fuel->user_guide->block('properties', array('class' => $class)) ?>
 
@@ -11,7 +13,7 @@ foreach($class->methods() as $method => $method_obj) :
 	$comment = $method_obj->comment;
 	$parameters = $method_obj->params();
 	$example = $comment->example();
-	$description = $comment->description();
+	$description = $comment->description(array('periods', 'one_line', 'markdown'));
 	$comment_params = $comment->tags('param');
 	$comment_return = $comment->tags('return');
 ?>	
@@ -28,3 +30,4 @@ foreach($class->methods() as $method => $method_obj) :
 <?php endforeach; ?>
 
 
+<?php endif; ?>

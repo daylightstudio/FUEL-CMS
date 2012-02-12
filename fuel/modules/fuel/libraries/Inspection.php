@@ -34,8 +34,8 @@ class Inspection {
 
 	protected $_classes = array(); // cache of classes found in the file
 	protected $_functions = array(); // cache of functions found in the file
+	protected $_comments = array(); // cache of page comments
 	
-
 	/**
 	 * Constructor - Sets user guide preferences
 	 *
@@ -45,7 +45,12 @@ class Inspection {
 	{
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
-		$this->initialize($file);
+		$CI->load->helper('markdown');
+		
+		if (!empty($file))
+		{
+			$this->initialize($file);
+		}
 	}
 	
 	function initialize($params = NULL)
@@ -68,7 +73,7 @@ class Inspection {
 			}
 		}
 		
-		// testing 
+		// no file... no go
 		if (!file_exists($this->file))
 		{
 			return FALSE;
@@ -111,24 +116,53 @@ class Inspection {
 				$this->_functions[$func] = new Inspection_function($func);
 			}
 		}
+		
+		// get all comments in the file
+		$comments = $this->parse_comments($source);
+		
+		foreach($comments as $comment)
+		{
+			$this->_comments[] = new Inspection_comment($comment);
+		}
 	}
 	
 	function classes($class = NULL)
 	{
-		if (isset($this->_classes[$class]))
+		if (!empty($class))
 		{
-			return $this->_classes[$class];
+			if (isset($this->_classes[$class]))
+			{
+				return $this->_classes[$class];
+			}
+			return FALSE;
 		}
 		return $this->_classes;
 	}
 	
 	function functions($function = NULL)
 	{
-		if (isset($this->_functions[$function]))
+		if (!empty($function))
 		{
-			return $this->_functions[$function];
+			if (isset($this->_functions[$function]))
+			{
+				return $this->_functions[$function];
+			}
+			return FALSE;
 		}
 		return $this->_functions;
+	}
+	
+	function comments($comment = NULL)
+	{
+		if (isset($comment))
+		{
+			if (isset($this->_comments[$comment]))
+			{
+				return $this->_comments[$comment];
+			}
+			return FALSE;
+		}
+		return $this->_comments;
 	}
 	
 	//http://stackoverflow.com/questions/928928/determining-what-classes-are-defined-in-a-php-class-file
@@ -151,7 +185,6 @@ class Inspection {
 		}
 		return $classes;
 	}
-
 
 	//http://stackoverflow.com/questions/2666554/how-to-get-list-of-declared-functions-with-their-data-from-php-file
 	function parse_functions($code, $include_underscore_funcs = FALSE)
@@ -217,6 +250,23 @@ class Inspection {
 		return $functions;
 	}
 	
+	function parse_comments($code)
+	{
+		$comments = array();
+		$tokens = token_get_all($code);
+		
+		foreach($tokens as $token)
+		{
+			switch($token[0])
+			{
+				case T_DOC_COMMENT:
+					$comments[] = $token[1];
+					break;
+		    }
+		}
+		return $comments;
+		
+	}
 }
 
 class Inspection_class extends Inspection_base {
@@ -247,8 +297,15 @@ class Inspection_class extends Inspection_base {
 		
 		// get properties area to parse out for comments later on
 		preg_match('#[c|C]lass\s+'.$this->name.'.+\{.+function __construct#Us', $this->_file, $props_match);
-		$props_block = $props_match[0];
-		unset($props_match);
+		if (isset($props_match[0]))
+		{
+			$props_block = $props_match[0];
+			unset($props_match);
+		}
+		else
+		{
+			$props_block = '';
+		}
 
 		if (empty($types))
 		{
@@ -491,6 +548,7 @@ class Inspection_comment {
 	protected $_description;
 	protected $_example;
 	protected $_tags;
+	protected $_filters = array(); // pre processing functions
 	
 	function __construct($comment)
 	{
@@ -616,15 +674,18 @@ class Inspection_comment {
 		return $value;
 	}
 	
-	function description($long = TRUE, $append_periods = TRUE)
+	function description($format = FALSE)
 	{
 		if (!isset($this->_description))
 		{
 			preg_match('#/\*\*\s*(.+)@#Ums', $this->_text, $matches);
 			if (isset($matches[1]))
 			{
-				// removing preceding *
-				$this->_description = preg_replace('#\*\s+#ms', '', $matches[1]);
+			
+				// removing preceding * and tabs
+				$this->_description = preg_replace('#\*\s+#ms', "", $matches[1]);
+				$this->_description = str_replace(PHP_EOL, PHP_EOL.PHP_EOL, $this->_description);
+				$this->_description = preg_replace("#^\s+#", "", $this->_description);
 				
 				// remove code examples since they are handled by the example method
 				$this->_description = preg_replace('#<code>.+</code>#ms', '', $this->_description);
@@ -634,41 +695,94 @@ class Inspection_comment {
 				$this->_description = $this->_text;
 			}
 		}
-		
-		// break into lines so we can clean up some formatting like periods
-		$desc_lines = explode(PHP_EOL, $this->_description);
-		
-		$desc = '';
-		foreach($desc_lines as $d)
-		{
-			$d = trim($d);
-			if (!empty($d))
-			{
-				if ($append_periods)
-				{
-					if (!preg_match('#.+\.$#', $d))
-					{
-						$d = $d.'.';
-					}
-				}
-				if (!$long)
-				{
-					// make any links hot
-					$d = auto_link($d);
-					return $d;
-				}
 
-				$desc .= $d.' ';
+		$desc = $this->_description;
+		
+		$desc = $this->filter($desc);
+		
+		// apply different formats
+		if ($format)
+		{
+			if (is_string($format))
+			{
+				$format = (array) $format;
+			}
+			foreach($format as $f)
+			{
+				switch(strtolower($f))
+				{
+					case 'markdown':
+						// must escape underscores to prevent <em> tags
+						$desc = str_replace('_', '\_', $desc);
+
+						$desc = markdown($desc);
+
+						// the we replace back any that didn't get processed'(e.g. ones inside links)
+						$desc = str_replace('\_', '_', $desc);
+						
+						break;
+					case 'short':
+						$desc_lines = explode(PHP_EOL, $desc);
+						foreach($desc_lines as $d)
+						{
+							if (!empty($d))
+							{
+								if ($first_line)
+								{
+									$desc = $d;
+									break;
+								}
+							}
+						}
+						break;
+					case 'long':
+						$desc_lines = explode(PHP_EOL, $desc);
+						$first_line = TRUE;
+						foreach($desc_lines as $d)
+						{
+							if (!empty($d))
+							{
+								if ($first_line)
+								{
+									$first_line = FALSE;
+									continue;
+								}
+								$desc = $d;
+								break;
+							}
+						}
+						break;
+					case 'one_line':
+						$desc = str_replace(PHP_EOL, ' ', $desc);
+						break;
+					case 'entities':
+						$desc = htmlentities($desc);
+						break;
+					case 'eval':
+						$desc = eval_string($desc);
+						break;
+					case 'periods':
+						$desc_lines = explode(PHP_EOL, $desc);
+						$lines = '';
+						foreach($desc_lines as $d)
+						{
+							if (!empty($d))
+							{
+								$lines .= preg_replace('#(.+[^\.|>])$#', '$1. ', $d);
+							}
+						}
+						$desc = $lines;
+				}
 			}
 		}
 		
-		// make any links hot
+		// auto link
 		$desc = auto_link($desc);
 		
-		// encode any HTML entities
-		$desc = htmlentities($desc);
+		// trim white space
+		$desc = trim($desc);
 		
-		return trim($desc);
+		return $desc;
 	}
 	
 	function example($opening = '', $closing = '')
@@ -694,6 +808,34 @@ class Inspection_comment {
 	{
 		$this->_text = $text;
 	}
+	
+	
+	function add_filter($func, $key = NULL)
+	{
+		if (empty($key))
+		{
+			$this->_filters[] = $func;
+		}
+		else
+		{
+			$this->_filters[$key] = $func;
+		}
+	}
+	
+	function remove_filter($key)
+	{
+		unset($this->_filters[$key]);
+	}
+	
+	protected function filter($source)
+	{
+		foreach($this->_filters as $func)
+		{
+			$source = call_user_func($func, $source);
+		}
+		return $source;
+	}
+	
 }
 
 
@@ -754,7 +896,7 @@ abstract class Inspection_base {
 	
 	function param($index)
 	{
-		if ($this->params[$index])
+		if (isset($this->params[$index]))
 		{
 			$index = (int) $index;
 			return $this->params[$index];

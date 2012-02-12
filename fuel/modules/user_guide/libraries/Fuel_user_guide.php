@@ -209,28 +209,36 @@ class Fuel_user_guide extends Fuel_advanced_module {
 	function generate_docs($file, $vars = array(), $module = 'fuel', $folder = 'libraries')
 	{
 		$class_path = MODULES_PATH.$module.'/'.$folder.'/'.$file.'.php';
-		$this->CI->load->module_library(FUEL_FOLDER, 'inspection', array('file' => $class_path));
+		$this->CI->load->library('inspection');
 		$vars['module'] = $module;
 		$vars['folder'] = $folder;
+		
+		$vars['user_guide_links_func'] = create_function('$source', '
+			$source = str_replace(array("[user_guide_url]", "<user_guide_url>"), "'.user_guide_url().'/", $source);
+			$source = preg_replace("#<\?=user_guide_url\([\'\"](.+)[\'\"]\)\?>#U", "'.user_guide_url().'/$1", $source);
+			return $source;
+		');
+		$this->CI->inspection->initialize(array('file' => $class_path));
+		
 		switch($folder)
 		{
 			case 'helpers':
 				$layout = 'helper_layout';
 				$vars['helper'] = humanize($file);
-				$vars['helpers'] = $this->CI->inspection->functions($file);
+				$vars['helpers'] = $this->CI->inspection->functions();
+				$vars['comments'] = $this->CI->inspection->comments();
 				break;
 			default:
 				$layout = 'class_layout';
 				$vars['class'] = $this->CI->inspection->classes($file);
 		}
-		
-		return $this->CI->load->module_view(USER_GUIDE_FOLDER, '_layouts/'.$layout, $vars, TRUE);
+		return $this->load_view('_layouts/'.$layout, $vars, TRUE);
 	}
 	
 	
 	function block($block, $vars, $return = TRUE)
 	{
-		$output = $this->CI->load->module_view(USER_GUIDE_FOLDER, '_blocks/'.$block, $vars, $return);
+		$output = $this->load_view('_blocks/'.$block, $vars, $return);
 		
 		if ($return)
 		{

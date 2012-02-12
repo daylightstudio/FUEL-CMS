@@ -18,6 +18,8 @@
 
 /**
  * FUEL Helper
+ * 
+ * Contains FUEL specific functions. This helper is automatically loaded with the autoload config.
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -40,6 +42,13 @@ function &fuel_instance()
 	return Fuel::get_instance();
 }
 
+/**
+ * Returns the instance of the FUEL object just like fuel_instance but with a similar syntax to the CI() function which returns the CI object.
+ * 
+ * @access	public
+ * @param	mixed
+ * @return	string
+ */
 function &FUEL()
 {
 	$f = & fuel_instance();
@@ -49,7 +58,29 @@ function &FUEL()
 // --------------------------------------------------------------------
 
 /**
- * Allows you to load a view and pass data to it
+ * Allows you to load a view and pass data to it.
+ *
+ * The <dfn>params</dfn> parameter can either be string value (in which case it will assume it is the name of the block view file) or an associative array that can have the following values:
+
+<ul>
+	<li><strong>view</strong> - a view file located in the <dfn>views/_blocks</dfn></li>
+	<li><strong>view_string</strong> - a string value to be used for the view</li>
+	<li><strong>model</strong> - the model to load and be available for the view</li>
+	<li><strong>find</strong> - the find method on the model to use (e.g. 'one', 'all' or 'key')</li>
+	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
+	<li><strong>where</strong> - the where condition on the model to be used in the find query</li>
+	<li><strong>order</strong> - order the data results returned from the model and sort them</li>
+	<li><strong>limit</strong> - limit the number of data results returned by the model</li>
+	<li><strong>offset</strong> - offset the data results returned by the model</li>
+	<li><strong>return_method</strong> - the return method to use which can be an object or an array</li>
+	<li><strong>assoc_key</strong> - the field to be used as an associative key for the data results</li>
+	<li><strong>data</strong> - data to be passed to the view if a model isn't provided. This information can be accessed in the block from the variable <dfn>$data</dfn></li>
+	<li><strong>editable</strong> - insert in inline editing</li>
+	<li><strong>parse</strong> - parse the contents of the page. Default is set to 'auto' which will NOT try and parse if your <dfn>fuel_mode</dfn> value in the fuel config file is set to "views".</li>
+	<li><strong>vars</strong> - additional variables to pass to the block</li>
+	<li><strong>cache</strong> - will cache the block</li>
+	<li><strong>only_views</strong> - will only look in the views/_blocks folder and will not look in the database for a corresponding block</li>
+</ul>
  *
  * @access	public
  * @param	mixed
@@ -65,6 +96,24 @@ function fuel_block($params)
 
 /**
  * Creates a menu structure
+ * 
+ * The <dfn>params</dfn> parameter is an array of options to be used with the <a href="[user_guide_url]libraries/menu">Menu class</a>.
+ * If FUEL's configuration mode is set to either <dfn>auto</dfn> or <dfn>cms</dfn>, then it will first look for data from the FUEL navigation module. 
+ * Otherwise it will by default look for the file <dfn>views/_variables/nav.php</dfn> (you can change the name of the file it looks for in the <dfn>file</dfn> parameter passed). That file should contain an array of menu information (see <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a> for more information on the required data structure). 
+ * The parameter values are very similar to the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>, with a few additions shown below:
+
+<ul>
+	<li><strong>file</strong> - the name of the file containing the navigation information</li>
+	<li><strong>var</strong> - the variable name in the file to use</li>
+	<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
+	<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
+	<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
+	<li><strong>exclude</strong> - nav items to exclude from the menu</li>
+	<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
+	<li><strong>append</strong> - adds additional menu items to the current list</li>
+</ul>
+
+<p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>
  *
  * @access	public
  * @param	mixed
@@ -134,8 +183,22 @@ function fuel_form($fields, $values = array(), $params = array())
 // --------------------------------------------------------------------
 
 /**
- * Loads a module model and creates a variable in the view that you can use to merge data 
+ * Loads a module model and creates a variable in the view that you can use to merge data. 
  *
+ * The <dfn>params</dfn> parameter is an associative array that can have the following values:
+ *
+<ul>
+	<li><strong>find</strong> - the find method to use on the module model. Options are "one", "key", "all" or any method name on the model that begins with "find_" (excluding "find_" from the value)</li>
+	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
+	<li><strong>where</strong> - the where condition to be used in the find query</li>
+	<li><strong>order</strong> - order the data results and sort them </li>
+	<li><strong>limit</strong> - limit the number of data results returned</li>
+	<li><strong>offset</strong> - offset the data results</li>
+	<li><strong>return_method</strong> - the return method to use which can be an object or an array</li>
+	<li><strong>assoc_key</strong> - the field to be used as an associative key for the data results</li>
+	<li><strong>var</strong> - the variable name to assign the data returned from the module model query</li>
+	<li><strong>module</strong> - specifies the module folder name to find the model</li>
+</ul>
  * @access	public
  * @param	string
  * @param	mixed
@@ -150,7 +213,9 @@ function fuel_model($module, $params = array())
 // --------------------------------------------------------------------
 
 /**
- * Sets a variable for all views to use no matter what view it is declared in
+ * Sets a variable for all views to use (including layouts) no matter what view it is declared in. 
+ * 
+ * Using fuel_set_var in a layout field in the admin, will have no affect (e.g. {fuel_set_var('layout', 'my_layout')}).
  *
  * @access	public
  * @param	string
@@ -174,8 +239,27 @@ function fuel_set_var($key, $val = NULL)
 // --------------------------------------------------------------------
 
 /**
- * Appends a value to an array variable
+ * Appends a value to an array variable for all views to use no matter what view it is declared in.
  *
+<code>
+	// EXAMPLE HEADER FILE
+	...
+	&lt;?php echo css(&#x27;main&#x27;); ?&gt;
+	&lt;?php echo css($css); ?&gt;
+
+	&lt;?php echo js(&#x27;jquery, main&#x27;); ?&gt;
+	&lt;?php echo js($js); ?&gt;
+	...
+
+	// Then in your view file
+	...
+	&lt;php
+	fuel_var_append('css', 'my_css_file.css');
+	fuel_var_append('js', 'my_js_file.js');
+	?&gt;
+	<h1>About our company</h1>
+	...
+ </code>
  * @access	public
  * @param	string
  * @param	mixed
@@ -202,10 +286,24 @@ function fuel_var_append($key, $value)
 // --------------------------------------------------------------------
 
 /**
- * Returns a variable and allows for a default value
+ * Returns a variable and allows for a default value.
+ * Also creates inline editing marker.
+ * The <dfn>default</dfn> parameter will be used if the variable does not exist.
+ * The <dfn>edit_module</dfn> parameter specifies the module to include for inline editing.
+ * The <dfn>evaluate</dfn> parameter specifies whether to evaluate any php in the variables.
  *
+<p class="important">You should not use this function inside of another function because you may get unexepected results. This is
+because it returns inline editing markers that later get parsed out by FUEL. For example:</p>
+
+<code>
+// NO
+&lt;a href="&lt;?=site_url(fuel_var('my_url'))?&gt;"&gt;my link&lt;/a&gt;
+
+// YES
+&lt;?=fuel_edit('my_url', 'Edit Link')?&gt; &lt;a href="&lt;?=site_url($my_url)?&gt;"&gt;my link&lt;/a&gt;
+</code>
+
  * @access	public
- * @param	string
  * @param	string
  * @param	string
  * @param	boolean
@@ -268,7 +366,12 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 // --------------------------------------------------------------------
 
 /**
- * Sets a variable marker in a layout which can be used in editing mode
+ * Sets a variable marker (pencil icon) in a page which can be used for inline editing.
+ * 
+ * The <dfn>id</dfn> parameter is the unique id that will be used to query the module. You can also pass an id value
+ * and a field like so <dfn>id|field</dfn>. This will display only a certain field instead of the entire module form.
+ * The <dfn>label</dfn> parameter specifies the label to display next to the pencil icon.
+ * The <dfn>xOffset</dfn> and <dfn>yOffset</dfn> are pixel values to offset the pencil icon.
  *
  * @access	public
  * @param	mixed
@@ -304,7 +407,9 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
 // --------------------------------------------------------------------
 
 /**
- * Creates the cache ID for the FUEL page based on the URI
+ * 	Creates the cache ID for the fuel page based on the URI. 
+ * 
+ * If no <dfn>location</dfn> value is passed, it will default to the current <a href="<?=user_guide_url('my_url_helper')?>">uri_path</a>.
  *
  * @access	public
  * @param	string

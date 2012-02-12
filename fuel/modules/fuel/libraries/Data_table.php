@@ -122,8 +122,7 @@ class Data_table {
 	/**
 	 * Assign data to the table to be rendered
 	 * 
-	 * If headers is empty, the table will automatically create them from
-	 * the data array
+	 * If headers is empty, the table will automatically create them from the data array.
 	 *
 	 * @access	public
 	 * @param	array table data

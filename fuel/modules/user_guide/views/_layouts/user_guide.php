@@ -79,7 +79,7 @@
 <?php endif; ?>
 
 <script language="javascript">
-SyntaxHighlighter.config['clipboardSwf'] = '<?=js_path('clipboard.swf', 'user_guide')?>';
+SyntaxHighlighter.config['clipboardSwf'] = '<?=js_path('', 'user_guide')?>clipboard.swf';
 SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 </script>
