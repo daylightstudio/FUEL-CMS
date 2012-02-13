@@ -2703,7 +2703,7 @@ Class Data_record {
 		$key_field = (array) $this->_parent_model->key_field();
 		foreach($key_field as $key)
 		{
-			$where[$key] = $values;
+			$where[$key] = $this->$key;
 		}
 		
 		$data = $this->_parent_model->find_one($where, NULL, 'array');
