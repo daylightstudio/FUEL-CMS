@@ -301,14 +301,15 @@ array('blog', 'tools')
 			<td><strong>nav</strong></td>
 			<td>
 <pre>
-// Dashboard will always be there
+
+// site... Dashboard will always be there
 $config['nav']['site'] = array(
-	'dashboard' => lang('nav_dashboard'),
-	'pages' => lang('nav_pages'),
-	'blocks' => lang('nav_blocks'),
-	'navigation' => lang('nav_navigation'),
-	'assets' => lang('nav_assets'),
-	'sitevariables' => lang('nav_sitevariables')
+	'dashboard' => lang('module_dashboard'),
+	'pages' => lang('module_pages'),
+	'blocks' => lang('module_blocks'),
+	'navigation' => lang('module_navigation'),
+	'assets' => lang('module_assets'),
+	'sitevariables' => lang('module_sitevariables')
 	);
 
 // if set to auto, then it will automatically include all in MY_fuel_modules.php
