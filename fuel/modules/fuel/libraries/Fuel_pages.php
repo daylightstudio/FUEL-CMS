@@ -153,6 +153,7 @@ class Fuel_pages extends Fuel_base_library {
 	{
 		// TODO: cant have this be called within another page or will cause and infinite loop
 		$params['location'] = $location;
+		
 		$page = new Fuel_page($params);
 		$page->add_variables($vars);
 		$output = $page->render($return);
@@ -293,7 +294,8 @@ class Fuel_page extends Fuel_base_library {
 		{
 			// if $location = xxx/yyy/zzz/, check first to see if /xxx/yyy/zzz exists in the DB, then reduce segments to xxx/yyy,
 			// xxx... until one is found in the DB. If only xxx is found in the database yyy and zzz will be treated as parameters
-			while(count($segments) >= 1){
+			while(count($segments) >= 1)
+			{
 				if (count($this->_segments) > $this->fuel->config('max_page_params')) break;
 				$location = implode('/', $segments);
 				
@@ -358,7 +360,8 @@ class Fuel_page extends Fuel_base_library {
 		}
 		else
 		{
-			$this->layout = $this->fuel->layouts->get('main');
+			//$this->layout = $this->fuel->layouts->get('main');
+			$this->layout = '';
 		}
 	}
 	
@@ -405,6 +408,13 @@ class Fuel_page extends Fuel_base_library {
 			// now parse any template like syntax... not good if javascript is used in templates
 			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
 			
+
+			// call layout hook
+			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
+			
+			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
+			$output = $this->layout->post_process($output);
+
 			// turn on inline editing if they are logged in and cookied
 			if ($fuelify) $output = $this->fuelify($output);
 		
@@ -413,12 +423,6 @@ class Fuel_page extends Fuel_base_library {
 				return $output;
 			}
 		
-			// call layout hook
-			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
-			
-			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
-			$output = $this->layout->post_process($output);
-
 			$this->CI->output->set_output($output);
 			
 			return TRUE;
@@ -523,11 +527,12 @@ class Fuel_page extends Fuel_base_library {
 			{
 				$body = $this->CI->load->module_view($this->view_module, $view, $vars, TRUE);
 			}
+
 			// now set $vars to the cached so that we have a fresh set to send to the layout in case any were declared in the view
 			$vars = $this->CI->load->get_vars();
 
 			// set layout variable again if it's changed'
-			if (!empty($vars['layout']) AND $this->layout->name != $vars['layout'])
+			if (isset($vars['layout']) AND $this->layout->name != $vars['layout'])
 			{
 				$layout = $vars['layout'];
 				$this->layout = $this->fuel->layouts->get($layout);
@@ -562,6 +567,16 @@ class Fuel_page extends Fuel_base_library {
 		
 		if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
 		
+
+		// call layout hook
+		if ($layout)
+		{
+			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
+
+			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
+			$output = $this->layout->post_process($output);
+		}
+
 		if ($fuelify) $output = $this->fuelify($output);
 
 		if ($return)
@@ -570,13 +585,6 @@ class Fuel_page extends Fuel_base_library {
 		}
 		else
 		{
-			
-			// call layout hook
-			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
-			
-			// run the post_process layout method... good for appending to the output (e.g. google analytics code)
-			$output = $this->layout->post_process($output);
-
 			$this->CI->output->set_output($output);
 			
 			return TRUE;
@@ -697,7 +705,7 @@ class Fuel_page extends Fuel_base_library {
 		{
 			// create the inline edit toolbar
 			$inline_edit_bar = $this->fuel->admin->toolbar();
-			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel')."\n$1", $output);
+			$output = preg_replace('#(</head>)#i', css('fuel_inline', 'fuel', array('output' => $this->fuel->config('fuel_assets_output')))."\n$1", $output);
 			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
 			$this->CI->config->set_item('assets_path', $this->CI->config->item('assets_path'));
 		}

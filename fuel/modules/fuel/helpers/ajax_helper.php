@@ -39,5 +39,24 @@ function is_ajax(){
 	return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']=="XMLHttpRequest");
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Sets the HTTP headers for 
+ *
+ * @access	public
+ * @param	boolean	Sets the no cache headers
+ * @return	boolean
+ */	
+function json_headers($no_cache = TRUE)
+{
+	if ($no_cache)
+	{
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	}
+	header('Content-type: application/json');
+}
+
 /* End of file ajax_helper.php */
 /* Location: ./application/helpers/ajax_helper.php */

@@ -10,8 +10,8 @@
 |
 */
 
-$config['l_delim'] = '{{';
-$config['r_delim'] = '}}';
+$config['l_delim'] = '{';
+$config['r_delim'] = '}';
 
 
 /*
@@ -92,7 +92,7 @@ $config['parser_allowed_php_functions'] = array(
 	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
 	'quote', 'safe_mailto', // HTML/URL specific
 	'session_flashdata', 'session_userdata', // Session specific
-	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment' // CI specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment', 'auto_typography' // CI specific
 );
 
 

@@ -48,14 +48,6 @@ class Blog_users_model extends Base_module_model {
 		$upload_image_path = assets_server_path($CI->fuel_blog->settings('asset_upload_path'));
 		$fields['fuel_user_id'] = array('label' => 'User', 'type' => 'select', 'options' => $options);
 
-		// put all project images into a projects suboflder.
-		$fields['avatar_image_upload']['upload_path'] = assets_server_path($CI->fuel_blog->settings('asset_upload_path'));
-
-		// fix the preview by adding projects in front of the image path since we are saving it in a subfolder
-		if (!empty($values['avatar_image']))
-		{
-			$fields['avatar_image_upload']['before_html'] = '<img src="'.assets_path($CI->fuel_blog->settings('asset_upload_path').$values['avatar_image']).'" style="float: right;"/>';
-		}
 		return $fields;
 	}
 	

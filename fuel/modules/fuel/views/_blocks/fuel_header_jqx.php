@@ -19,7 +19,7 @@ jqx_config.cookieDefaultPath = '<?=$this->fuel->config('fuel_cookie_path')?>';
 <?php if (!empty($keyboard_shortcuts)){ ?>jqx_config.keyboardShortcuts = <?=json_encode($keyboard_shortcuts)?>;<?php } ?> 
 jqx_config.warnIfModified = <?=(int)$this->fuel->config('warn_if_modified')?>; 
 jqx_config.cacheString = new Date('<?=date('F d, Y H:i:s', strtotime($this->config->item('last_updated'))) ?>').getTime().toString();
-jqx_config.assetsAccept = '<?php $editable_asset_types = $this->fuel->config('editable_asset_filetypes'); echo (!empty($editable_asset_types['all']) ? $editable_asset_types['all'] : 'jpg|jpeg|jpe|gif|png'); ?>';
+jqx_config.assetsAccept = '<?php $editable_asset_types = $this->fuel->config('editable_asset_filetypes'); echo (!empty($editable_asset_types['assets']) ? $editable_asset_types['assets'] : 'jpg|jpeg|jpe|gif|png'); ?>';
 <?php if (!empty($js_localized)) :?>
 jqx_config.localized = <?=json_lang($js_localized)?>;
 var __FUEL_LOCALIZED__ = <?=json_lang($js_localized)?>; 

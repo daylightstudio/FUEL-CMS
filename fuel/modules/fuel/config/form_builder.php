@@ -2,6 +2,7 @@
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');
 $config['representatives'] = array(
 	'number' => array('int', 'smallint', 'mediumint', 'bigint'),
+	'password' => array('pwd', 'passwd'),
 	);
 	
 $config['custom_fields'] = array(

@@ -30,7 +30,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/form.html
  */
-class Form {
+Class Form {
 	
 	public $attrs = 'method="post" action=""'; // form html attributes
 	public $validator; // the validator object
@@ -44,10 +44,7 @@ class Form {
 	 */
 	public function __construct($params = array())
 	{
-		if (count($params) > 0)
-		{
-			$this->initialize($params);
-		}
+		$this->initialize($params);
     }
 
 	// --------------------------------------------------------------------
@@ -69,7 +66,14 @@ class Form {
 				{
 					$this->$key = $val;
 				}
-			}		
+			}
+		}
+
+		// automatically set the validator object to the $CI-validator object if it is load as a default
+		$CI =& get_instance();
+		if (isset($CI->validator))
+		{
+			$this->validator =& $CI->validator;
 		}
 	}
 
@@ -381,6 +385,10 @@ class Form {
 	{
 		if ($use_input_type)
 		{
+			if (empty($name))
+			{
+				$name = Form::create_id($value);
+			}
 			$elem = $this->input($name, 'button', $value, $attrs);
 		}
 		else
@@ -908,10 +916,10 @@ Class Form_button {
 	public function render()
 	{
 		$id = '';
+
 		if (strpos($this->attrs, 'id="') === FALSE)
 		{
 			$name = Form::create_id($this->name);
-			$id = ($this->type == 'radio') ? ' id="'.$name.'_'.str_replace(' ', '_', $this->value).'"' : ' id="'.$name.'"';
 		}
 		$this->attrs = str_replace('id=""', '', $this->attrs);
 		

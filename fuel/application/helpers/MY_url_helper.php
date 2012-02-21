@@ -123,20 +123,21 @@ function uri_path($rerouted = TRUE, $start_index = 0)
  *
  * @access	public
  * @param	int	the segment number
+ * @param	string	the default value if the segment doesn't exist
  * @param	boolean	whether to use the rerouted uri
  * @return	string
  */
-function uri_segment($n, $rerouted = TRUE)
+function uri_segment($n, $default = NULL, $rerouted = TRUE)
 {
 	$CI =& get_instance();
 
 	if ($rerouted)
 	{
-		return $CI->uri->segment($n);
+		return $CI->uri->segment($n, $default);
 	}
 	else
 	{
-		return $CI->uri->rsegment($n);
+		return $CI->uri->rsegment($n, $default);
 
 	}
 }
@@ -147,8 +148,7 @@ function uri_segment($n, $rerouted = TRUE)
  * Helper function to determine if it is a local path
  *
  * @access	public
- * @param	boolean	use the rerouted URI string?
- * @param	boolean	the start index to build the uri path
+ * @param	string	URL
  * @return	string
  */
 function is_http_path($path)
@@ -169,6 +169,25 @@ function is_home()
 	$uri_path = uri_path(FALSE);
 	return ($uri_path == 'home' OR $uri_path == '');
 }
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns the HTML link target attribute based on the link value
+ *
+ * @access	public
+ * @param	string	URL
+ * @return	boolean
+ */
+function link_target($link)
+{
+	if (is_http_path($link))
+	{
+		return ' target="_blank"';
+	}
+	return '';
+}
+
 
 /* End of file MY_url_helper.php */
 /* Location: ./application/helpers/MY_url_helper.php */

@@ -77,12 +77,12 @@ class Blog extends Blog_base_controller {
 				$this->config->set_item('enable_query_strings', FALSE);
 				$config = $this->fuel->blog->config('pagination');
 				$config['base_url'] = $this->fuel->blog->url('page/');
-				$config['total_rows'] = $this->fuel->blog->get_posts_count();
+				//$config['total_rows'] = $this->fuel->blog->get_posts_count();
 				$config['page_query_string'] = FALSE;
 				$config['per_page'] = $limit;
 				$config['num_links'] = 2;
 
-				$this->pagination->initialize($config); 
+				//$this->pagination->initialize($config); 
 				
 				if (!empty($offset))
 				{
@@ -94,14 +94,22 @@ class Blog extends Blog_base_controller {
 				}
 				
 				// run before_posts_by_date hook
-				$hook_params = array('offset' => $offset, 'limit' => $limit);
+				$hook_params = array('offset' => $offset, 'limit' => $limit, 'type' => 'posts');
 				$this->fuel->blog->run_hook('before_posts_by_page', $hook_params);
-				
-				$vars = array_merge($vars, $hook_params);
+
+				$vars['offset'] = $offset;
+				$vars['limit'] = $limit;
 				$vars['posts'] = $this->fuel->blog->get_posts_by_page($limit, $offset);
+
+				// run hook again to get the proper count
+				$hook_params['type'] = 'count';
+				$this->fuel->blog->run_hook('before_posts_by_page', $hook_params);
+				//$config['total_rows'] = count($this->fuel->blog->get_posts_by_page());
+				$config['total_rows'] = $this->fuel->blog->get_posts_count();
 				
+				// create pagination
+				$this->pagination->initialize($config); 
 				$vars['pagination'] = $this->pagination->create_links();
-			
 			}
 			
 			// show the index page if the page doesn't have any uri_segment(3)'

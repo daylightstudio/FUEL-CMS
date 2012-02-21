@@ -109,10 +109,10 @@ class Fuel_custom_fields {
 			if (is_string($params['value']))
 			{
 				// unserialize if it is a serialized string
-				if ($json = json_decode($params['value'], TRUE) AND $json !== NULL)
+				if (is_json_str($params['value']))
 				// if (is_serialized_str($params['value']))
 				{
-					$assets = $json;
+					$assets = json_decode($params['value'], TRUE);
 					//$assets = unserialize($params['value']);
 				}
 				else
@@ -263,7 +263,7 @@ class Fuel_custom_fields {
 		
 		// unserialize value if it's serialized
 		//$value = (is_serialized_str($params['value'])) ? unserialize($params['value']) : $params['value'];
-		$value = (is_string($params['value']) AND $json = json_decode($params['value'], TRUE) AND $json !== NULL) ? $json : $params['value'];
+		$value = (is_string($params['value']) AND is_json_str($params['value'])) ? json_decode($params['value'], TRUE) : $params['value'];
 
 		if (is_array($value))
 		{
@@ -394,9 +394,9 @@ class Fuel_custom_fields {
 		}
 
 		// set the value
-		if (is_string($params['value']) AND $json = json_decode($params['value'], TRUE) AND $json !== NULL)
+		if (is_string($params['value']) AND is_json_str($params['value']))
 		{
-			$params['value'] = $json;
+			$params['value'] = json_decode($params['value'], TRUE);
 		}
 		
 		// set maximum limit
@@ -583,7 +583,10 @@ class Fuel_custom_fields {
 						if (isset($ff['type']) AND $ff['type'] == 'section')
 						{
 							$value = $form_builder->simple_field_value($ff);
-							$heading = str_replace('{__title__}', $f[$params['title_field']]['value'], $value);
+							if (isset($params['title_field'], $f[$params['title_field']]))
+							{
+								$heading = str_replace('{__title__}', $f[$params['title_field']]['value'], $value);
+							}
 							unset($f[$kk]);
 							//$f[$kk]['label'] = $heading;
 						}

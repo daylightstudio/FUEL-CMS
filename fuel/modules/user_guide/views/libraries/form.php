@@ -12,7 +12,7 @@
 
 
 <h2>Why a Form Class?</h2>
-<p>CodeIgniter has it's own <a href=http://codeigniter.com/user_guide/helpers/form_helper.html" target="_blank">Form helper</a>. There are a couple reasons why FUEL uses the <dfn>Form</dfn> class instead of the <dfn>CI Form helper</dfn>:</p>
+<p>CodeIgniter has it's own <a href="http://codeigniter.com/user_guide/helpers/form_helper.html" target="_blank">Form helper</a>. There are a couple reasons why FUEL uses the <dfn>Form</dfn> class instead of the <dfn>CI Form helper</dfn>:</p>
 <ol>
 	<li>The Form class is used in combination with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> and <a href="<?=user_guide_url('libraries/validator')?>">Validator</a> classes and so code control is important</li>
 	<li>The integration with other classes made it crucial to be bundled up as an object that could be shared</li>

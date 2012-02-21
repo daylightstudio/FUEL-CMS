@@ -93,7 +93,7 @@ class Asset {
 		if (!defined('WEB_PATH')) define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 		if (count($params) > 0)
 		{
-			$this->initialize($params);		
+			$this->initialize($params);
 		}
 	}
 	
@@ -634,10 +634,11 @@ class Asset {
 				// }
 
 			}
+			// use implode so it doesn't add the trailing \n\t'
+			$str = $str.implode("\n\t", $files_arr);
+
+			
 		}
-		
-		// use implode so it doesn't add the trailing \n\t'
-		$str = $str.implode("\n\t", $files_arr);
 		
 	//	$str .= $nested;
 		return $str;
@@ -746,7 +747,7 @@ class Asset {
 	 * @param	string	type module folder if any
 	 * @return	string
 	 */	
-	protected function _check_cache($files, $type, $optimize, $module)
+	private function _check_cache($files, $type, $optimize, $module)
 	{
 		$CI =& get_instance();
 		$files = (array) $files;
@@ -780,7 +781,7 @@ class Asset {
 		$ext = ($optimize === TRUE OR $optimize == 'gzip') ? 'php' : $type;
 		$cache_file_name = $cache_file_name_md5.'_'.strtotime($this->assets_last_updated).'.'.$ext;
 		$cache_file = $cache_dir.$cache_file_name;
-	
+
 		// create cache file if it doesn't exist'
 		if (!file_exists($cache_file))
 		{
@@ -818,22 +819,22 @@ class Asset {
 			{
 		
 				// now include all import files as well ... only 1 deep though
-				preg_match_all('/@import url\((.+)\);/U', $output, $imports);
-				if (!empty($imports[1][0]))
+				preg_match_all('/@import url\(([\'|"])*(.+)\\1\);/U', $output, $imports);
+				if (!empty($imports[2][0]))
 				{
-					foreach($imports[1] as $import)
+					foreach($imports[2] as $import)
 					{
-					
 						$import_file_path = $this->assets_server_path($import, $type, $module);
 						if (file_exists($import_file_path))
 						{
 							$import_files[$import] = file_get_contents($import_file_path);
 						}
 					}
+					
 					// remove calls to the import since they are combined into the same css
 					if (!empty($import_files))
 					{
-						$output = preg_replace('/@import url\(([^)]+)\);/Ue', "\$import_files[('\\1')]", $output);
+						$output = preg_replace('/@import url\(([\'|"])*(.+)\\1\);/Ue', "\$import_files[('\\2')]", $output);
 					}
 				}
 			
@@ -850,7 +851,7 @@ class Asset {
 				$mime = 'text/css';
 			
 			}
-
+			
 			// gzip if enabled in config and the server
 			if (($optimize === TRUE OR $optimize == 'gzip') AND extension_loaded('zlib'))
 			{

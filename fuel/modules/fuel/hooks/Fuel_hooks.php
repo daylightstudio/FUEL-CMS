@@ -55,7 +55,7 @@ class Fuel_hooks
 	function dev_password()
 	{
 		$CI =& get_instance();
-		if ($CI->config->item('dev_password', 'fuel') AND (!isset($CI->fuel->auth) OR !$CI->fuel->auth->is_logged_in() AND !preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		if ($CI->fuel->config('dev_password') AND (!$CI->fuel->auth->is_logged_in() AND !preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 		{
 			$CI->load->library('session');
 			if (!$CI->session->userdata('dev_password'))

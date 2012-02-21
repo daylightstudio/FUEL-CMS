@@ -6,9 +6,9 @@ class Module extends Fuel_base_controller {
 	public $module_obj;
 	public $module = '';
 	
-	function __construct()
+	function __construct($validate = TRUE)
 	{
-		parent::__construct();
+		parent::__construct($validate);
 
 		$this->load->module_model(FUEL_FOLDER, 'archives_model');
 		if (empty($this->module))
@@ -137,7 +137,10 @@ class Module extends Fuel_base_controller {
 		
 		$this->fuel->admin->load_js_localized($params['js_localized']);
 
-		if (!empty($this->permission)) $this->_validate_user($this->permission);
+		if (!empty($this->permission) AND $validate)
+		{
+			$this->_validate_user($this->permission);
+		}
 		
 		
 	}
@@ -200,8 +203,24 @@ class Module extends Fuel_base_controller {
 		$config['prev_link'] = lang('pagination_prev_page');
 		$config['next_link'] = lang('pagination_next_page');
 		$config['first_link'] = lang('pagination_first_link');
-		$config['last_link'] = lang('pagination_last_link');;
+		$config['last_link'] = lang('pagination_last_link');
 		
+		// must reset these in case a config file has something different
+		$config['full_tag_open'] = NULL;
+		$config['full_tag_close'] = NULL;
+		$config['full_tag_close'] = NULL;
+		$config['num_tag_open'] = '&nbsp;';
+		$config['num_tag_close'] = NULL;
+		$config['cur_tag_open'] = '&nbsp;<strong>';
+		$config['cur_tag_close'] = '</strong>';
+		$config['next_tag_open'] = '&nbsp;';
+		$config['next_tag_close'] = '&nbsp;';
+		$config['prev_tag_open'] = '&nbsp;';
+		$config['prev_tag_close'] = NULL;
+		$config['first_tag_open'] = '&nbsp;';
+		$config['first_tag_close'] = '&nbsp;';
+		$config['last_tag_open'] = NULL;
+		$config['last_tag_close'] = NULL;
 		$this->pagination->initialize($config);
 
 		if (method_exists($this->model, 'tree'))

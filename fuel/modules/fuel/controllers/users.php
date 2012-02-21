@@ -13,7 +13,7 @@ class Users extends Module {
 	function create()
 	{
 		$redirect = !isset($_POST['send_email']);
-		$id = parent::create(NULL, FALSE, $redirect);
+		$id = parent::create(NULL, $redirect);
 		$this->_send_email($id);
 	}
 
@@ -28,7 +28,7 @@ class Users extends Module {
 			}
 		}
 		$redirect = !isset($_POST['send_email']);
-		parent::edit($id, NULL, FALSE, $redirect);
+		parent::edit($id, NULL, $redirect);
 		$this->_send_email($id);
 	}
 

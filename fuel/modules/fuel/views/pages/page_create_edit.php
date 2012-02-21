@@ -58,15 +58,11 @@
 
 	<p class="instructions"><?=$this->instructions?></p>
 
-	<form method="post" action="<?=fuel_url('pages/'.$action.'/'.$id)?>" enctype="multipart/form-data" id="form">
-
 		<div id="tab_page_variables">
 			<h3><?=lang('page_information')?></h3>
 			<?=$form?>
 
 			<h3><?=lang('page_layout_vars')?></h3>
-			<div id="layout_vars"><?=$layout_fields?></div>
+			<div id="layout_vars"><?=$layout_fields?><div class="loader"></div></div>
 		</div>
-
-	</form>
 </div>

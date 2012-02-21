@@ -71,7 +71,6 @@ fuel.fields.wysiwyg_field = function(context){
 		// set the width of the preview to match the width of the textarea
 		$('.markItUpPreviewFrame', context).each(function(){
 			var width = $(this).parent().find('textarea').width();
-			console.log(width)
 			$(this).width(width);
 		})
 	}

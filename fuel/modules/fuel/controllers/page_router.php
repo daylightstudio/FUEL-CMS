@@ -137,7 +137,8 @@ class Page_router extends CI_Controller {
 	* specific configuration variables if they exist
 	* ------------------------------------------------------
 	*/
-	function _remap_variables($page){
+	function _remap_variables($page)
+	{
 		
 		// set up cache info 
 		$cache_group = $this->fuel->config('page_cache_group');

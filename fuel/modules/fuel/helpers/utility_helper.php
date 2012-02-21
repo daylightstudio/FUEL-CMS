@@ -123,8 +123,8 @@ function is_json_str($data)
 {
 	if (is_string($data))
 	{
-		$json = json_decode($params['value'], TRUE);
-		return ($json !== NULL);
+		$json = json_decode($data, TRUE);
+		return ($json !== NULL AND $data != $json);
 	}
 	return NULL;
 }

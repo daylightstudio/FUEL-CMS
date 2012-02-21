@@ -179,6 +179,7 @@ class Pages extends Module {
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
 		$this->form_builder->displayonly = $this->displayonly;
+		
 		// create page form fields
 		$this->form_builder->form->validator = &$this->page->validator;
 		$this->form_builder->submit_value = NULL;
@@ -287,8 +288,10 @@ class Pages extends Module {
 			}
 		}
 		
+		$this->form_builder->id = 'layout_fields';
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
+		
 		$page_vars = array();
 		if (!empty($id))
 		{

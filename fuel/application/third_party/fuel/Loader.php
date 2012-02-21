@@ -196,11 +196,19 @@ class Fuel_Loader extends MX_Loader
 		($_alias = strtolower($object_name)) OR $_alias = strtolower($class);
 		list($path, $_library) = Modules::find($library, $module, 'libraries/');
 		
-		/* load library config file as 	 */
+		/* load library config file	 */
 		if ($params == NULL) {
 			list($path2, $file) = Modules::find($_alias, $module, 'config/');	
 			($path2) AND $params = Modules::load_file($file, $path2, 'config');
-		}	
+
+			// FUEL check application directory
+			if ($params == NULL AND file_exists(APPPATH.'/config/'.$file.EXT))
+			{
+				$path3 = APPPATH.'/config/';
+				$params = Modules::load_file($file, $path3, 'config');
+			}
+		}
+		
 			
 		if ($path === FALSE) {
 			$this->_ci_load_class($library, $params, $object_name);

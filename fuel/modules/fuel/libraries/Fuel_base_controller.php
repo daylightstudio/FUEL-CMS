@@ -44,6 +44,11 @@ class Fuel_base_controller extends CI_Controller {
 	{
 		parent::__construct();
 		$this->fuel->admin->initialize(array('validate' => $validate));
+		
+		if (method_exists($this, '_init'))
+		{
+			$this->_init();
+		}
 	}
 
 	protected function _validate_user($permission, $type = 'edit', $show_error = TRUE)

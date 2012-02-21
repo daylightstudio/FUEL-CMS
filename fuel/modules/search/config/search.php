@@ -40,7 +40,7 @@ $config['search']['exclude'] = array();
 // crawl, will scan the site for local links to index
 // sitemap will use the sitemap if it exists
 // AUTO will first check the sitemap (because it's faster), then will default to the crawl
-$config['search']['index_method'] = 'AUTO';
+$config['search']['index_method'] = 'crawl';
 
 // whether to automatically index modules that have a preview_path specified. 
 // Default is TRUE and will automatically do it for all modules. If an array
@@ -55,7 +55,7 @@ $config['search']['min_length_search'] = 3;
 
 // pagination
 $config['search']['pagination'] = array(
-		'per_page' => 2,
+		'per_page' => 10,
 		'num_links' => 2,
 		'prev_link' => lang('search_prev_page'),
 		'next_link' => lang('search_next_page'),

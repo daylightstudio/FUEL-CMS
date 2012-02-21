@@ -10,6 +10,7 @@ class Preview extends Fuel_base_controller {
 	function index()
 	{
 		$this->load->helper('string');
+		$this->load->helper('typography');
 		$this->load->library('parser');
 		
 		// don't want to fuelify'

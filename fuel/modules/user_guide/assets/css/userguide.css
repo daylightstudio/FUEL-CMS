@@ -1,6 +1,8 @@
 /* BASE CI STYLES */
 body { margin: 0; padding: 0; font-family: Lucida Grande, Verdana, Geneva, Sans-serif; font-size: 14px; color: #333; background-color: #fff; }
-a { color: #0134c5; background-color: transparent; text-decoration: none; font-weight: normal; } a:visited { color: #0134c5; background-color: transparent; text-decoration: none; } a:hover { color: #000; text-decoration: none; background-color: transparent; }
+a { color: #0134c5; background-color: transparent; text-decoration: none; } 
+a:visited { color: #0134c5; background-color: transparent; text-decoration: none; } 
+a:hover { color: #000; text-decoration: none; background-color: transparent; }
 #breadcrumb { float: left; background-color: transparent; margin: 10px 0 0 42px; padding: 0; font-size: 10px; color: #666; }
 #breadcrumb_right { float: right; width: 175px; background-color: transparent; padding: 8px 8px 3px 0; text-align: right; font-size: 10px; color: #666; }
 #nav { background-color: #494949; margin: 0; padding: 0; } 

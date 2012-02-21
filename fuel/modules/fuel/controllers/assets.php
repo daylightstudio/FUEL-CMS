@@ -84,7 +84,7 @@ class Assets extends Module {
 		{
 			$form_vars['asset_folder'] = $dir;
 		}
-		
+		$form_vars['asset_folder'] = trim($form_vars['asset_folder'], '/');
 		$vars = $this->_form($form_vars, $inline);
 
 		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;

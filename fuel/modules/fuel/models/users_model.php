@@ -105,13 +105,16 @@ class Users_model extends Base_module_model {
 			$val = 'CONCAT(first_name, " ", last_name) as name';
 			$order = 'name';
 		}
+		else
+		{
+			$order = $val;
+		}
 
 		if (!$CI->fuel->auth->is_super_admin())
 		{
 			$this->db->where(array('super_admin' => 'no'));
 		}
-		$order = $val;
-		$return = parent::options_list($key, $val, $where , $order);
+		$return = parent::options_list($key, $val, $where, $order);
 		return $return;
 	}
 	
@@ -240,10 +243,17 @@ class Users_model extends Base_module_model {
 	
 	function on_before_clean($values)
 	{
-		if (empty($values['salt'])) $values['salt'] = $this->salt();
-		if (!empty($values['password'])) $values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
-		if (!empty($values['new_password'])) $values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
-		
+		$has_pwd = FALSE;
+		if (!empty($values['password'])) 
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
+		}
+		if (!empty($values['new_password']))
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+		}
 		return $values;
 	}
 	

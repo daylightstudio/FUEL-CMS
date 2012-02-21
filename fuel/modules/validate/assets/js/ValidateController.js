@@ -300,7 +300,6 @@ ValidateController = jqx.createController(fuel.controller.BaseFuelController, {
 				var doc = _this.createResultsIframe(i, html);
 				var summary = '<span class="uri">' + u + '</span> &nbsp; ';
 				var invalid_text = $('#total_invalid', doc).text();
-				console.log(invalid_text)
 				var invalid_num = parseInt($('#total_invalid_num', doc).text());
 
 				if (invalid_num > 0){

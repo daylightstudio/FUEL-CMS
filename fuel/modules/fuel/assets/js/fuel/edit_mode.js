@@ -107,9 +107,18 @@ if (fuel == undefined) var fuel = {};
 				var MIN_WIDTH = 850;
 				var contentDoc = iframe.contentDocument;
 				var docHeight = fuel.calcHeight(contentDoc);
-				var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
-				var width2 = $('#fuel_actions', contentDoc).outerWidth();
-				var docWidth = (width1 > width2) ? width1 : width2;
+				
+				if ($('#fuel_main_content_inner .form, #fuel_actions').size()){
+					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
+					var width2 = $('#fuel_actions', contentDoc).outerWidth();
+					var docWidth = (width1 > width2) ? width1 : width2;
+				} else {
+					docWidth = $(contentDoc).width();
+				}
+				
+				if (docHeight == 0){
+					docHeight = $(contentDoc).height();
+				}
 
 				// check if fuel_actions is there so that we don't make it too wide for single variables being edited
 				if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;

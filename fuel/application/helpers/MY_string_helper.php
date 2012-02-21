@@ -260,7 +260,12 @@ function php_to_template_syntax($str)
 		}');
 	
 	$str = preg_replace_callback('#'.$l_delim.'(.+)(!)?empty\((.+)\)#U', $callback, $str);
-
+	
+	// remove paranthesis from within if conditional
+	$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
+	
+	$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
+	
 	// fix arrays
 	$callback = create_function('$matches', '
 		return $matches[1].str_replace("=>", "=", $matches[2]).$matches[3];

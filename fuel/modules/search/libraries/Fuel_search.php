@@ -325,7 +325,7 @@ class Fuel_search extends Fuel_advanced_module {
 		$html = '';
 		
 		// grab the HTML of the page to get all the links
-		if ($this->is_local_url($location))
+		if ($this->is_local_url($location) AND $this->is_indexable($location))
 		{
 			$html = $this->scrape_page($location);
 		}
@@ -450,8 +450,10 @@ class Fuel_search extends Fuel_advanced_module {
 		$dom = new DOMDocument; 
 		$dom->preserveWhiteSpace = FALSE;
 		
+		// remove the opening xml tag to prevent parsing issues
 		$sitemap_xml = preg_replace('#<\?xml.+\?>#U', '', $sitemap_xml);
-		$dom->loadXML($sitemap_xml); 
+
+		@$dom->loadXML($sitemap_xml); 
 		$locs = $dom->getElementsByTagName('loc');
 		
 		$site_url = site_url();
@@ -959,7 +961,12 @@ class Fuel_search extends Fuel_advanced_module {
 	 */	
 	function get_location($url)
 	{
-		return str_replace(site_url(), '', $url);
+		$url = str_replace(site_url(), '', $url);
+		if ($url .= '/')
+		{
+			$url = trim($url, '/');
+		}
+		return $url;
 	}
 	
 	// --------------------------------------------------------------------

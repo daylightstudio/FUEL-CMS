@@ -51,6 +51,7 @@ $config['modules']['pagevariables'] = array(
 	),
 	'default_col' => 'page_id',
 	'default_order' => 'asc',
+	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
 	'hidden' => TRUE
 );
 
@@ -234,7 +235,7 @@ $config['modules']['logs'] = array(
 	'default_order' => 'desc',
 	'display_field' => 'message',
 	'preview_path' => '',
-	'permission' => 'permissions',
+	'permission' => 'logs',
 	'instructions' => lang('permissions_instructions'),
 	'archivable' => FALSE,
 	'item_actions' => array(),

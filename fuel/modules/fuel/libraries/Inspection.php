@@ -46,6 +46,7 @@ class Inspection {
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
 		$CI->load->helper('markdown');
+		$CI->load->helper('security');
 		
 		if (!empty($file))
 		{
@@ -781,6 +782,10 @@ class Inspection_comment {
 		
 		// trim white space
 		$desc = trim($desc);
+		
+		// clean
+		$desc = xss_clean($desc);
+		$desc = strip_image_tags($desc);
 		
 		return $desc;
 	}

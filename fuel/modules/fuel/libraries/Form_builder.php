@@ -34,7 +34,7 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/form_builder.html
  */
 
-class Form_builder {
+Class Form_builder {
 
 	public $form; // form object used to create the form fields and associate errors with
 	public $id = ''; // id to be used for the containing table or div
@@ -137,7 +137,6 @@ class Form_builder {
 		if (is_null($this->form))
 		{
 			$this->CI->load->library('form');
-			
 			$this->form = new Form();
 			
 			// load localization helper if not already
@@ -1434,7 +1433,16 @@ class Form_builder {
 		}
 		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
 		{
-			$str .= "<label for=\"".Form::create_id($params['orig_name'])."\" id=\"label_".Form::create_id($params['orig_name'])."\">";
+			if (!empty($this->name_prefix))
+			{
+				$id_name = $this->name_prefix.'--'.end(explode($this->name_prefix.'--', $params['name'])); // ugly... bug needed for nested repeatable fields
+			}
+			else
+			{
+				$id_name = $params['orig_name'];
+			}
+			
+			$str .= "<label for=\"".Form::create_id($id_name)."\" id=\"label_".Form::create_id($id_name)."\">";
 		}
 		if ($this->tooltip_labels)
 		{
@@ -1492,7 +1500,6 @@ class Form_builder {
 			'size' => $size, 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'type' => (!empty($params['type']) ? $params['type'] : NULL), 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
@@ -1500,6 +1507,21 @@ class Form_builder {
 			'style' => $params['style'],
 		);
 		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the password input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function create_password($params)
+	{
+		$params['type'] = 'password';
+		return $this->create_text($params);
 	}
 
 	// --------------------------------------------------------------------

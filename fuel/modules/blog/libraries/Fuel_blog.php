@@ -430,14 +430,14 @@ class Fuel_blog extends Fuel_advanced_module {
 	 * @param	string
 	 * @return	object
 	 */
-	function &model($model)
+	function model($model)
 	{
 		$model_name = 'blog_'.strtolower($model).'_model';
-		if (isset($this->CI->$model_name))
+		if (!isset($this->CI->$model))
 		{
-			return $this->CI->$model_name;
+			$this->load_model($model_name);
 		}
-		return FALSE;
+		return $this->CI->$model_name;
 	}
 	
 	// --------------------------------------------------------------------
@@ -783,7 +783,7 @@ class Fuel_blog extends Fuel_advanced_module {
 		$tables = $this->CI->config->item('tables');
 		$where[$tables['blog_categories'].'.published'] = 'yes';
 		$where[$tables['blog_posts'].'.published'] = 'yes';
-		$where = $this->_publish_status('blog_posts');
+		$where = $this->_publish_status('blog_posts', $where);
 		$this->CI->blog_posts_to_categories_model->db()->group_by('category_id');
 		$posts_to_categories = $this->CI->blog_posts_to_categories_model->find_all($where, $order_by, $limit, $offset, $return_method, $assoc_key);
 		return $posts_to_categories;

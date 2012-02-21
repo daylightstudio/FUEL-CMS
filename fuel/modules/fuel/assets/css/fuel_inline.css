@@ -109,7 +109,7 @@ div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; backgro
 div#__fuel_edit_bar__ li { display: block; }
 div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 30px !important; background-position: center center !important; }
 div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
-
+div#__fuel_edit_bar__ select { appearance: menu !important; -moz-appearance: menu !important; -webkit-appearance: menu !important; border: none !important; background: none !important; color: #000 !important; display: inline !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important;
 
 .__fuel__ .inline_iframe { border: none; height: 0px; width: 100%; min-width: 350px;}
 .__fuel_edit_marker_close__ { position: absolute; right: 5px; z-index: 1; }
@@ -124,4 +124,4 @@ div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
-a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }
+div#__FUEL_modal__ a.modal_close { position: absolute !important; left: -11px !important; top: -11px !important; z-index: 10 !important; background: transparent url(../images/x_close.png) no-repeat center center !important; width: 23px !important; height: 23px !important; text-indent: -10000px !important; overflow:hidden !important; }
