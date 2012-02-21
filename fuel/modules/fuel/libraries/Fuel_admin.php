@@ -109,7 +109,10 @@ class Fuel_admin extends Fuel_base_library {
 		// set asset output settings
 		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
 
-		if ($this->validate) $this->check_login();
+		if ($this->validate) 
+		{
+			$this->check_login();
+		}
 		
 		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
 		
@@ -762,7 +765,7 @@ class Fuel_admin extends Fuel_base_library {
 				foreach($modules as $module)
 				{
 					// check if there is a dashboard controller for each module
-					if ($this->fuel->auth->has_permission($module) AND $module->had_dashboard())
+					if ($this->fuel->auth->has_permission($module) AND $module->has_dashboard())
 					{
 						$dashboards[] = $module;
 					}
@@ -772,7 +775,7 @@ class Fuel_admin extends Fuel_base_library {
 			{
 				foreach($dashboards_config as $module)
 				{
-					if ($this->fuel->auth->has_permission($module))
+					if ($module == 'fuel' OR $this->fuel->auth->has_permission($module))
 					{
 						$dashboards[] = $module;
 					}

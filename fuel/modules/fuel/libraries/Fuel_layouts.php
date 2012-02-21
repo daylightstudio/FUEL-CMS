@@ -113,7 +113,7 @@ class Fuel_layouts extends Fuel_base_library {
 						$fields[$key] = $this->CI->form_builder->normalize_params($f);
 						if (empty($fields[$key]['name']))
 						{
-							$fields[$key]['name'] = $name;
+							$fields[$key]['name'] = $key;
 						}
 						if (!isset($fields[$key]['order']))
 						{

@@ -13,39 +13,12 @@ $config['layouts_folder'] = '_layouts';
 
 $config['layouts']['main'] = array(
 	//'file' 		=> $config['layouts_path'].'main',
-	'class'		=> 'Main_layout',
-	'filepath' => 'libraries',
-	'filename' => 'Main_layout.php',
+	// 'class'		=> 'Main_layout',
+	// 'filepath' => 'libraries',
+	// 'filename' => 'Main_layout.php',
 	
 	
 	'fields'	=> array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_main_copy')),
-		'Sections' => array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'),
-		'sections' => array(
-						'display_label' => FALSE,
-						'type' => 'template', 
-						'label' => 'Page sections', 
-						'fields' => array(
-								'layout' => array('type' => 'select', 'options' => array('img_right' => 'Image Right', 'img_left' => 'Image Left', 'img_right_50' => 'Image Right 50%', 'img_left_50' => 'Image Left 50%')),
-								'title' => '',
-								'action' => '',
-								'multi' => array('type' => 'array', 'options' => array('test1' => 'test1', 'test2' => 'test2', 'test3' => 'test3', 'test4' => 'test4', 'test5' => 'test5', 'test6' => 'test6')),
-
-								'content' => array('type' => 'textarea'),
-								'image' => array('type' => 'asset', 'multiple' => TRUE, 'multiline' => TRUE, 'img_styles' => 'float: left; width: 100px;'),
-								// 'images' => array('type' => 'template', 'repeatable' => TRUE, 'view' => '_admin/fields/images', 'limit' => 3, 'fields' => 
-								// 										array('image' => array('type' => 'asset', 'multiple' => TRUE))
-								// 										),
-							),
-
-						'view' => '_admin/fields/section', 
-	//					'post_process' =>  array($custom_fields, 'section_post_process'), 
-						//'js' => array('jquery.repeatable'),
-						'class' => 'repeatable',
-						'add_extra' => FALSE,
-						'repeatable' => TRUE,
-						//'fieldset' => 'Sections',
-						),
 		'Header' => array('type' => 'fieldset', 'label' => 'Header', 'class' => 'tab'),
 		'page_title' => array('label' => lang('layout_field_page_title')),
 		'meta_description' => array('label' => lang('layout_field_meta_description')),
