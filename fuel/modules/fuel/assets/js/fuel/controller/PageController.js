@@ -49,6 +49,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		
 		var _this = this;
 		$('#layout').change(function(e){
+			$('#layout_vars .loader').show();
 			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val();
 			$('#layout_vars').load(path, {}, function(){
 				var context = $('#fuel_main_content_inner');
@@ -95,7 +96,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					new jqx.Message(_this.lang('error_importing_ajax'));
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+			//$('.jqmWindow').jqm().jqmHide();
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		

@@ -880,7 +880,6 @@ class Module extends Fuel_base_controller {
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
 		$this->load->library('form_builder');
-
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$action = (!empty($values[$this->model->key_field()])) ? 'edit' : 'create';
@@ -1060,9 +1059,12 @@ class Module extends Fuel_base_controller {
 
 		// run any form field post processing hooks
 		$this->load->library('form_builder');
+		
+		// use a new instance to prevent problems when duplicating
+		$fb = new Form_builder();
 		$fields = $this->model->form_fields($_POST);
-		$this->form_builder->set_fields($fields);
-		$this->form_builder->post_process_field_values();// manipulates the $_POST values directly
+		$fb->set_fields($fields);
+		$fb->post_process_field_values();// manipulates the $_POST values directly
 	
 		// sanitize input if set in module configuration
 		$posted = $this->_sanitize($this->input->post());

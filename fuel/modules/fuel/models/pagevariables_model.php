@@ -79,7 +79,7 @@ class Pagevariables_model extends Base_module_model {
 				break;
 			case 'array': case 'multi':
 				//$return = (is_serialized_str($val)) ? unserialize($val) : array();
-				$return = ($json = json_decode($val, TRUE)) ? $json : array();
+				$return = (is_string($val) AND $json = json_decode($val, TRUE)) ? $json : array();
 				break;
 			default:
 				$return = $val;

@@ -49,6 +49,7 @@ $config['modules']['pagevariables'] = array(
 		'value',
 		'type'
 	),
+	'sanitize_input' => array('template','php'),
 	'default_col' => 'page_id',
 	'default_order' => 'asc',
 	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),

@@ -444,33 +444,6 @@ class Base_module_model extends MY_Model {
 		foreach($fields as $key => $field)
 		{
 			$fields[$key]['order'] = $order;
-			
-// 			// get field names that end with _image
-// 			if ($fields[$key]['type'] == 'string' AND substr($key, -5) == 'image' OR substr($key, -3) == 'img')
-// 			{
-// 				// $img = '';
-// 				// if (!empty($values['id']))
-// 				// {
-// 				// 	if (!empty($values[$key])) $img = '<div class="img_display"><img src="'.img_path($values[$key]).'" style="float: right;"/></div>';
-// 				// }
-// 			//	$fields[$key]['type'] = 'asset';
-// //				$fields[$key]['class'] = 'asset_select';
-// 				$order++;
-// //				$fields[$key.'_upload'] = array('order' => $order, 'before_html' => $img, 'label' => '... OR upload an image', 'upload_path' => $upload_path, 'type' => 'file', 'overwrite' => TRUE);
-// 			}
-			
-			// specific to email
-			// if ($key == 'email' OR $key == 'email_address')
-			// {
-			// 	$fields[$key]['type'] = 'email';
-			// }
-			// 
-			// // specific to phone
-			// if ($key == 'phone' OR $key == 'telephone')
-			// {
-			// 	$fields[$key]['type'] = 'phone';
-			// }
-			
 			$order++;
 		}
 		
@@ -496,34 +469,49 @@ class Base_module_model extends MY_Model {
 	 * Common query that will automatically hide non-published/active items from view on the front end
 	 *
 	 * @access	public
+	 * @param	boolean	whether to display unpublished content in the front end if logged in
 	 * @return	string
 	 */	
-	function _common_query()
+	function _common_query($display_unpublished_if_logged_in = FALSE)
 	{
-		if (!defined('FUEL_ADMIN'))
+		if ((!defined('FUEL_ADMIN') AND $display_unpublished_if_logged_in === FALSE) OR ($display_unpublished_if_logged_in AND !is_fuelified()))
 		{
-			$fields = $this->fields();
-			if (in_array('published', $fields))
+			$this->_publish_status();
+		}
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Used for displaying content that is published
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function _publish_status()
+	{
+		$fields = $this->fields();
+		if (in_array('published', $fields))
+		{
+			if (in_array('published', $this->boolean_fields))
 			{
-				if (in_array('published', $this->boolean_fields))
-				{
-					$this->db->where(array($this->table_name.'.published' => 1));
-				}
-				else
-				{
-					$this->db->where(array($this->table_name.'.published' => 'yes'));
-				}
+				$this->db->where(array($this->table_name.'.published' => 1));
 			}
-			if (in_array('active', $fields))
+			else
 			{
-				if (in_array('active', $this->boolean_fields))
-				{
-					$this->db->where(array($this->table_name.'.active' => 1));
-				}
-				else
-				{
-					$this->db->where(array($this->table_name.'.active' => 'yes'));
-				}
+				$this->db->where(array($this->table_name.'.published' => 'yes'));
+			}
+		}
+		if (in_array('active', $fields))
+		{
+			if (in_array('active', $this->boolean_fields))
+			{
+				$this->db->where(array($this->table_name.'.active' => 1));
+			}
+			else
+			{
+				$this->db->where(array($this->table_name.'.active' => 'yes'));
 			}
 		}
 	}

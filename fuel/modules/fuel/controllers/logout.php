@@ -31,6 +31,10 @@ class Logout extends CI_Controller {
 			// else
 			// {
 				$redirect = uri_safe_decode($segment);
+				if ($segment == 'page_router')
+				{
+					$segment = $this->fuel->config('default_home_view');
+				}
 			//}
 		}
 		redirect($redirect);

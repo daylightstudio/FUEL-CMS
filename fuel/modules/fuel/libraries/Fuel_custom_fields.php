@@ -714,6 +714,7 @@ class Fuel_custom_fields {
 		{
 		}
 		$params['linked_to'] = 'title';
+		$params['type'] = 'text';
 		
 		// set data values for jquery plugin to use
 		return $this->linked($params);

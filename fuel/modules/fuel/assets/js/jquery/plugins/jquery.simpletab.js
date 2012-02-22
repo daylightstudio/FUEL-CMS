@@ -12,7 +12,7 @@ dave@thedaylightstudio.com
 		var s = jQuery.extend({
 			startIndex: 0,
 			childrenSelector: null,
-			cookie: false,
+			cookie: false
 			 }, 
 		settings);
 		

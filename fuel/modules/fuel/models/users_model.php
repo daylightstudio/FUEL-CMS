@@ -262,7 +262,10 @@ class Users_model extends Base_module_model {
 		$CI =& get_instance();
 		
 		$data = (!empty($this->normalized_save_data['permissions'])) ? $this->normalized_save_data['permissions'] : array();
-		$this->save_related(array(FUEL_FOLDER => 'user_to_permissions_model'), array('user_id' => $values['id']), array('permission_id' => $data));
+		if (isset($this->normalized_save_data['permissions']))
+		{
+			$this->save_related(array(FUEL_FOLDER => 'user_to_permissions_model'), array('user_id' => $values['id']), array('permission_id' => $data));
+		}
 
 		$user = $CI->fuel->auth->user_data();
 

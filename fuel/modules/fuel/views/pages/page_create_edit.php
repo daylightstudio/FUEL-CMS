@@ -63,6 +63,6 @@
 			<?=$form?>
 
 			<h3><?=lang('page_layout_vars')?></h3>
-			<div id="layout_vars"><?=$layout_fields?><div class="loader"></div></div>
+			<div id="layout_vars"><?=$layout_fields?><div class="loader hidden"></div></div>
 		</div>
 </div>

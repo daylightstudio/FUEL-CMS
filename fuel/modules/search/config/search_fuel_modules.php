@@ -20,8 +20,8 @@ $config['modules']['search'] = array(
 	'nav_selected' => 'tools/search',
 	'list_actions' => array('tools/search/reindex' => 'Re-index'),
 //	'language' => array('blog' => 'blog'),
-	'default_col' => 'date_added',
-	'default_order' => 'desc',
+	'default_col' => 'location',
+	'default_order' => 'asc',
 	'sanitize_input' => array('template','php'),
 	'folder' => 'search',
 	'view_location' => 'fuel'

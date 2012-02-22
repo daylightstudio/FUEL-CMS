@@ -19,6 +19,7 @@ class Search_model extends Base_module_model {
 		$this->db->select($this->_tables['search'].'.location');
 		$this->db->select($this->_tables['search'].'.title');
 		$this->db->select($this->_tables['search'].'.date_added');
+		$this->db->select($this->_tables['search'].'.content');
 		$this->db->select('SUBSTRING('.$this->_tables['search'].'.content, 1, '.$excerpt_limit.') AS content_excerpt', FALSE);
 		$this->db->limit($limit);
 		

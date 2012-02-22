@@ -267,6 +267,7 @@ class Fuel_search extends Fuel_advanced_module {
 		$auto_ignore = array(
 			'sitemap.xml',
 			'robots.txt',
+			'search',
 		);
 		
 		if (in_array($location, $auto_ignore) OR !$this->is_local_url($location))
@@ -343,7 +344,6 @@ class Fuel_search extends Fuel_advanced_module {
 			{
 				// grab all the page links
 				preg_match_all("/<a(?:[^>]*)href=\"([^\"]*)\"(?:[^>]*)>(?:[^<]*)<\/a>/is", $html, $matches);
-
 				if (!empty($matches[1]))
 				{
 					foreach($matches[1] as $url)
@@ -351,7 +351,7 @@ class Fuel_search extends Fuel_advanced_module {
 						
 						// remove page anchors
 						$url_arr = explode('#', $url);
-						$url = $url_arr[0];
+						$url = $this->get_location($url_arr[0]);
 						
 						// check if the url is local AND whether it has already been indexed
 						if (!isset($crawled[$url]))
