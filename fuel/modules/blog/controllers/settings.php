@@ -57,6 +57,8 @@ class Settings extends Fuel_base_controller {
 		$fields['cache_ttl'] = array('value' => 3600, 'size' => 5);
 		$fields['asset_upload_path'] = array('default' => 'images/blog/');
 		$fields['per_page'] = array('value' => 1, 'size' => 3);
+		$fields['page_title_separator'] = array('value' => '&laquo;', 'size' => 10);
+		
 
 
 	//	$this->form_builder->id = 'form';

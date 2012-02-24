@@ -1078,9 +1078,13 @@ class Fuel_blog extends Fuel_advanced_module {
 	 * @param	string
 	 * @return	string
 	 */
-	function page_title($title = '', $sep = '&laquo;', $order = 'right')
+	function page_title($title = '', $sep = NULL, $order = 'right')
 	{
 		$title_arr = array();
+		if (!isset($sep))
+		{
+			$sep = $this->settings('page_title_separator');
+		}
 		if ($order == 'left') $title_arr[] = $this->settings('title');
 		if (is_array($title))
 		{

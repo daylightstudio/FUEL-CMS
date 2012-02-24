@@ -26,7 +26,9 @@ class Blog_base_controller extends CI_Controller {
 		if (empty($layout)) $layout = '_layouts/'.$this->fuel->blog->layout();
 
 		// get any global variables for the headers and footers
-		$_vars = $this->fuel->pagevars->retrieve(uri_path());
+		$uri_path = trim($this->fuel->blog->settings('uri'), '/');
+		
+		$_vars = $this->fuel->pagevars->retrieve($uri_path);
 		
 		if (is_array($_vars))
 		{

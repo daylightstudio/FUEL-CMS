@@ -20,7 +20,7 @@ class Blog extends Blog_base_controller {
 		$view_by = 'page';
 		
 		// we empty out year variable if it is page because we won't be querying on year'
-		if (is_int($year) && !empty($year) && empty($slug))
+		if (preg_match('#\d+#', $year) && !empty($year) && empty($slug))
 		{
 			$view_by = 'date';
 		}

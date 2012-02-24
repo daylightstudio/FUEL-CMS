@@ -3032,7 +3032,7 @@ Class Form_builder {
 			}
 		
 			// if a string with a slash in it, then we will assume it's just a single file to load'
-			else if (strpos($js, '/') !== FALSE)
+			else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') == FALSE)
 			{
 				$str_files .= js($js);
 			}
@@ -3074,10 +3074,12 @@ Class Form_builder {
 		$out .= "//<![CDATA[\n";
 		$out .= "";
 		$out .= $str."\n";
+		$out .= 'jQuery(function(){';
 		$out .= 'if (jQuery.fn.formBuilder) {';
 		$out .= 'jQuery("#'.$this->id.'").formBuilder('.json_encode($js_exec).');';
 		if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
 		$out .= '}';
+		$out .= '})';
 		$out .= "\n//]]>\n";
 		$out .= "</script>\n";
 		return $out;
@@ -3146,8 +3148,15 @@ Class Form_builder {
 					});
 					for(var n in cssFiles){
 						if ($.inArray(cssFiles[n], css) == -1){
-							var cssString = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssFiles[n] + "\" />";
-							jQuery("head").append(cssString);
+							// for IE 8
+							if (document.createStyleSheet){
+								var stylesheet = document.createStyleSheet(cssFiles[n])
+							}
+							else
+							{
+								var stylesheet = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssFiles[n] + "\" />";
+							}
+							jQuery("head").append(stylesheet);
 						}
 					}
 				

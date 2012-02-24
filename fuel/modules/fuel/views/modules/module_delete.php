@@ -6,7 +6,6 @@
 	<?php else : ?>
 	
 	<p class="instructions"><?=lang('delete_item_message')?><br/> <span class="delete"><?=$title?></span></p>
-	<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
 	<?=$this->form->hidden('id', $id)?>
 
 	<div class="buttonbar clearfix">
@@ -15,8 +14,6 @@
 			<li class="end spacer"><a href="#" class="ico ico_yes" id="submit"><?=lang('btn_yes_dont_delete')?></a></li>
 		</ul>
 	</div>
-
-	<?=$this->form->close()?>
 
 	<?php endif; ?>
 </div>

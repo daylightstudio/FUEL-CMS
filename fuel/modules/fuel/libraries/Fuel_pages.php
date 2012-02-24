@@ -342,9 +342,9 @@ class Fuel_page extends Fuel_base_library {
 		$page_mode = (empty($page_mode)) ? $this->fuel->config('fuel_mode') : $page_mode;
 		
 		$vars_path = $this->views_path.'_variables/';
-		$init_vars = array('location' => $this->location, 'vars_path' => $vars_path);
+		$init_vars = array('vars_path' => $vars_path);
 		$this->fuel->pagevars->initialize($init_vars);
-		$vars = $this->fuel->pagevars->retrieve($page_mode);
+		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
 		$this->add_variables($vars);
 	}
 	

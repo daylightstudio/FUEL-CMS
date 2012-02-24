@@ -34,7 +34,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	public $vars_path = ''; // the path to the _variables folder
 	
 	const VARIABLE_TYPE_DB = 'db';
-	const VARIABLE_TYPE_VIEW = 'view';
+	const VARIABLE_TYPE_VIEW = 'views';
 	
 	function __construct($params = array())
 	{
@@ -67,9 +67,13 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function retrieve($what = '')
+	function retrieve($location = NULL, $what = '')
 	{
-		
+		if (isset($location))
+		{
+			$this->location = $location;
+		}
+
 		switch($what)
 		{
 			case self::VARIABLE_TYPE_DB:

@@ -372,6 +372,7 @@ $lang['btn_activate'] = 'Activate';
 $lang['btn_deactivate'] = 'Deactivate';
 $lang['btn_delete'] = 'Delete';
 $lang['btn_duplicate'] = 'Duplicate';
+$lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
 

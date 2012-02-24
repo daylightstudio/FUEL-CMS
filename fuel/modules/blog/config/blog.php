@@ -40,11 +40,11 @@ $config['blog']['comments_time_limit'] = '';
 $config['blog']['theme_module'] = 'blog';
 $config['blog']['multiple_comment_submission_time_limit'] = 30;
 $config['blog']['asset_upload_path'] = 'images/blog/';
+$config['blog']['page_title_separator'] = '&laquo;';
 
 
 // the cache folder to hold blog cache files
 $config['blog_cache_group'] = 'blog';
-
 
 /*
 |--------------------------------------------------------------------------

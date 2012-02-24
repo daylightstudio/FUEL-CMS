@@ -230,22 +230,55 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->CI->config->set_item($item, $val, $this->name);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Return the path to the config file
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function config_path()
 	{
 		return $this->server_path().'config/'.strtolower($this->name).'.php';
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines if a config file exists for the advanced module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_config()
 	{
 		return (file_exists($this->config_path()));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a URL specific to the advanced module (e.g. http://localhost/fuel/{advanced_module}/create)
+	 *
+	 * @access	public
+	 * @param	string	The URI path relative to the advanced module (optional)
+	 * @return	string
+	 */
 	function fuel_url($uri = '')
 	{
 		$uri = trim($uri, '/');
 		return fuel_url($this->uri_path().'/'.$uri);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the URI path specific to the advanced module (e.g. fuel/{advanced_module})
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function uri_path()
 	{
 		static $routes;
@@ -263,21 +296,56 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->uri_path;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the URI path for the advanced module
+	 *
+	 * @access	public
+	 * @param	string	The URI path relative to the advanced module
+	 * @return	string
+	 */
 	function set_uri_path($uri_path)
 	{
 		$this->uri_path = $uri_path;
 	}
 
-	function server_path($full = TRUE)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the advanced module (e.g. /vars/www/httpdocs/fuel/modules/{advanced_module}/)
+	 *
+	 * @access	public
+	 * @param	string The path to the file relative to the advanced modules directory (optional)
+	 * @return	string
+	 */
+	function server_path($path = '')
 	{
-		return MODULES_PATH.$this->name.'/';
+		return MODULES_PATH.$this->name.'/',$path;
 	}
 
-	function web_path($full = TRUE)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the web path to the advanced module (e.g. /{advanced_module})
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function web_path()
 	{
 		return WEB_ROOT.$this->folder();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the advanced modules main class name (e.g. Fuel_my_module)
+	 *
+	 * @access	public
+	 * @param	boolean Whether to return the name lowercased or not (optional)
+	 * @return	string
+	 */
 	function lib_class_name($lowercase = FALSE)
 	{
 		$class = 'Fuel_'.$this->name;
@@ -288,17 +356,43 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $class;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the advanced modules main class name (e.g. /vars/www/httpdocs/fuel/modules/{advanced_module}/Fuel_my_module)
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function lib_class_path()
 	{
 		return $this->server_path().'libraries/'.$this->lib_class_name().'.php';
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the whether a main library class exists or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_lib_class()
 	{
 		$lib_class_path = $this->lib_class_path();
 		return (file_exists($lib_class_path));
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the language file
+	 *
+	 * @access	public
+	 * @param	string The language folder to pull from. Default is 'english (optional)
+	 * @param	string The language file name. Default is the modules name. (optional)
+	 * @return	string
+	 */
 	function lang_path($lang = 'english', $file = NULL)
 	{
 		if (empty($file))
@@ -308,11 +402,29 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->server_path().'language/'.$lang.'/'.$file.'_lang.php';
 	}
 	
-	function has_lang()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the language file exists
+	 *
+	 * @access	public
+	 * @param	string The language folder to pull from. Default is 'english (optional)
+	 * @param	string The language file name. Default is the modules name. (optional)
+	 * @return	boolean
+	 */
+	function has_lang($lang = 'english', $file = NULL)
 	{
 		return (file_exists($this->lang_path()));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The routes array specific to the advance module
+	 *
+	 * @access	public
+	 * @return	array
+	 */
 	function routes()
 	{
 		if ($this->has_routes())
@@ -322,26 +434,66 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the advanced module's route file
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function routes_path()
 	{
 		return $this->server_path().'config/'.strtolower($this->name).'_routes.php';
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether a routes file exists for the advanced module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_routes()
 	{
 		return (file_exists($this->routes_path()));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the web path to the advanced modules CSS file
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function css_path()
 	{
 		$this->web_path().'assets/'.strtolower($this->name).'.css';
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the CSS file exists
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_css()
 	{
 		return (file_exists($this->css_path()));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the navigaiton items for the advanced module
+	 *
+	 * @access	public
+	 * @return	mixed (returns an array of navigation menu items or FALSE if none)
+	 */
 	function nav()
 	{
 		if ($this->has_config())
@@ -355,31 +507,113 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return FALSE;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the contents of the documentation view file found in the advanced modules view/_docs/index
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function docs()
 	{
 		return $this->CI->load->module_view($this->folder(), '_docs/index', array(), TRUE);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the advanced modules documentation
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function docs_path()
 	{
 		return $this->server_path().'views/_docs/index.php';
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether documenation exists for the advanced module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_docs()
 	{
 		return (file_exists($this->docs_path()));
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether documenation exists for the advanced module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function tests()
+	{
+		$dir_path = $this->server_path().'tests/'r;
+		$tests = array();
+		
+		// if a directory, grab all the tests in it
+		if (is_dir($dir_path))
+		{
+			$tests = directory_to_array($dir_path);
+		}
+		return $tests;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the advanced module has tests or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function has_tests()
+	{
+		return (!empty($this->tests()));
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the advanced module has a dashboard or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_dashboard()
 	{
 		return (file_exists($this->server_path().'controllers/dashboard'.EXT));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the advanced module has a tools or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_tools()
 	{
 		return ($this->config('toolbar') !== FALSE);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the tools available from the advance module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function tools()
 	{
 		$toolbar = $this->config('toolbar');
@@ -397,6 +631,15 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $tools;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the advanced modules config file
+	 *
+	 * @access	public
+	 * @param	string Name of config file. Default is the name of the advanced module (optional)
+	 * @return	boolean
+	 */
 	function load_config($config = NULL)
 	{
 		if (empty($config))
@@ -408,16 +651,46 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the advanced modules config file
+	 *
+	 * @access	public
+	 * @param	string Name of config file. Default is the name of the advanced module (optional)
+	 * @return	boolean
+	 */
 	function load_helper($helper)
 	{
 		$this->CI->load->module_helper($this->folder(), $helper);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads an advanced modules library file
+	 *
+	 * @access	public
+	 * @param	string Name of the library file
+	 * @param	string Name you want to assign to the loaded library (optional)
+	 * @return	boolean
+	 */
 	function load_library($library, $name = NULL)
 	{
 		$this->CI->load->module_library($this->folder(), $library, $name);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads an advanced modules view file
+	 *
+	 * @access	public
+	 * @param	string Name of the view file file
+	 * @param	array Variables to pass to the view file (optional)
+	 * @param	boolean Whether to return the contents as a string or send it to the output for display
+	 * @return	boolean
+	 */
 	function load_view($view, $vars = array(), $return = FALSE)
 	{
 		if ($return)
@@ -428,6 +701,16 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$this->CI->load->module_view($this->folder(), $view, $vars);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the advanced modules model file
+	 *
+	 * @access	public
+	 * @param	string Name of the model file.
+	 * @param	string Name you want to assign to the loaded model (optional)
+	 * @return	boolean
+	 */
 	function load_model($model, $name = NULL)
 	{
 		if (substr($model, strlen($model) - 6) !='_model')
@@ -438,6 +721,16 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$this->CI->load->module_model($this->folder(), $model, $name);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the advanced modules language file
+	 *
+	 * @access	public
+	 * @param	string Name of a language file. Default is the name of the advanced module (optional)
+	 * @param	string Name of a language file folder. Default is "english" (optional)
+	 * @return	boolean
+	 */
 	function load_language($file = '', $lang = '')
 	{
 		if (empty($file))

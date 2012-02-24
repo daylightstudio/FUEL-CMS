@@ -58,25 +58,27 @@ class Assets extends Module {
 
 				$this->session->set_flashdata('uploaded_post', $flashdata);
 				$this->session->set_flashdata('success', lang('data_saved'));
+				
+				$this->model->on_after_post($posted);
+
+				$inline = $this->fuel->admin->is_inline();
+
+				if ($inline === TRUE)
+				{
+					$url = fuel_uri($this->module.'/inline_create/'.$dir);
+				}
+				else
+				{
+					$url = fuel_uri($this->module.'/create/'.$dir);
+				}
+				redirect($url);
+				
 			}
 			else
 			{
 				add_errors($this->fuel->assets->errors());
 			}
 			
-			$this->model->on_after_post($posted);
-			
-			$inline = $this->fuel->admin->is_inline();
-			
-			if ($inline === TRUE)
-			{
-				$url = fuel_uri($this->module.'/inline_create/'.$dir);
-			}
-			else
-			{
-				$url = fuel_uri($this->module.'/create/'.$dir);
-			}
-			redirect($url);
 		}
 		$form_vars = $this->input->get();
 		
