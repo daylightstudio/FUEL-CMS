@@ -321,7 +321,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function server_path($path = '')
 	{
-		return MODULES_PATH.$this->name.'/',$path;
+		return MODULES_PATH.$this->name.'/'.$path;
 	}
 
 	// --------------------------------------------------------------------
@@ -556,7 +556,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function tests()
 	{
-		$dir_path = $this->server_path().'tests/'r;
+		$dir_path = $this->server_path().'tests/';
 		$tests = array();
 		
 		// if a directory, grab all the tests in it
@@ -577,7 +577,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function has_tests()
 	{
-		return (!empty($this->tests()));
+		$tests = $this->tests();
+		return ( ! empty($tests));
 	}
 
 	// --------------------------------------------------------------------
