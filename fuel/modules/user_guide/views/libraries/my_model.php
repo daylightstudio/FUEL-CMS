@@ -144,6 +144,12 @@ The class is abstract, meaning that it needs to be extended to work.</p>
 			<td>TRUE/FALSE (boolean)</td>
 			<td>Sets the model to readonly mode and will not allow inserts, updates and deletes</td>
 		</tr>
+		<tr>
+			<td><strong>related_sort_field</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>This refers to a sort field in your table is used in the save_related() method and supercombo select to store the sorting order of related data</td>
+		</tr>
 	</tbody>
 </table>
 
