@@ -19,3 +19,6 @@
 	<li><a href="<?=user_guide_url('modules/fuel/cache')?>">Clear Cache</a></li>
 	<li><a href="<?=user_guide_url('modules/fuel/logs')?>">Logs</a></li>
 </ul>
+
+
+<?=generate_toc();?>

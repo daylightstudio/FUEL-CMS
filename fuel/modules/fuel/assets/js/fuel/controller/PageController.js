@@ -109,6 +109,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			var context = $('#fuel_main_content_inner');
 			_this.initSpecialFields(context);
 			$('#form').formBuilder().initialize();
+			$('#layout_vars').trigger('varsLoaded');
+			
 			
 		}
 		

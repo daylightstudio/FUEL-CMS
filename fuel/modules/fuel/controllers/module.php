@@ -537,7 +537,10 @@ class Module extends Fuel_base_controller {
 				}
 				if ($redirect)
 				{
-					$this->session->set_flashdata('success', lang('data_saved'));
+					if (!$this->session->flashdata('success'))
+					{
+						$this->session->set_flashdata('success', lang('data_saved'));
+					}
 					redirect($url);
 				}
 			}
@@ -670,7 +673,10 @@ class Module extends Fuel_base_controller {
 				
 				if ($redirect)
 				{
-					$this->session->set_flashdata('success', lang('data_saved'));
+					if (!$this->session->flashdata('success'))
+					{
+						$this->session->set_flashdata('success', lang('data_saved'));
+					}
 					redirect($url);
 				}
 			}
@@ -1072,40 +1078,40 @@ class Module extends Fuel_base_controller {
 		// loop through uploaded files
 		if (!empty($_FILES))
 		{
-			foreach($_FILES as $file => $file_info)
+			foreach ($_FILES as $file => $file_info)
 			{
 				if ($file_info['error'] == 0)
 				{
 					$posted[$file] = $file_info['name'];
 					
 					$file_tmp = current(explode('___', $file));
+					$field_name = $file_tmp;
 
 					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
-					{
+					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') {
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-
-						if (isset($posted[$file_tmp.'_file_name']))
-						{
-							// get file extension
-							$path_info = pathinfo($file_info['name']);
-							$field_value = $posted[$file_tmp.'_file_name'].'.'.$path_info['extension'];
-						}
-						else
-						{
-							$field_value = $file_info['name'];
-						}
-
-						if (strpos($field_value, '{') !== FALSE )
-						{
-							$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
-						}
-
-						// set both values for the namespaced and non-namespaced... make them underscored and lower cased
-						$tmp_field_name = end(explode('--', $field_name));
-						$posted[$tmp_field_name] = url_title($field_value, 'underscore', TRUE);
-						$posted[$field_name] = url_title($field_value, 'underscore', TRUE);
 					}
+
+					if (isset($posted[$file_tmp.'_filename']))
+					{
+						// get file extension
+						$path_info = pathinfo($file_info['name']);
+						$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
+					}
+					else
+					{
+						$field_value = $file_info['name'];
+					}
+					
+					if (strpos($field_value, '{') !== FALSE )
+					{
+						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+					}
+
+					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
+					$tmp_field_name = end(explode('--', $field_name));
+					$posted[$tmp_field_name] = url_title($field_value, 'underscore', TRUE);
+					$posted[$field_name] = url_title($field_value, 'underscore', TRUE);
 				}
 			}
 		}
@@ -1165,7 +1171,10 @@ class Module extends Fuel_base_controller {
 				// set a success delete message
 				if ($any_success)
 				{
-					$this->session->set_flashdata('success', lang('data_deleted'));
+					if (!$this->session->flashdata('success'))
+					{
+						$this->session->set_flashdata('success', lang('data_deleted'));
+					}
 				}
 
 				// set an error delete message
@@ -1258,7 +1267,10 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$this->session->set_flashdata('success', lang('module_restored_success'));
+				if (!$this->session->flashdata('success'))
+				{
+					$this->session->set_flashdata('success', lang('module_restored_success'));
+				}
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
 		}

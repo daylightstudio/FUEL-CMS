@@ -212,14 +212,23 @@ fuel.fields.asset_field = function(context, options){
 	var activeField = null;
 
 	var showAssetsSelect = function(){
+		var winHeight = 450;
 		var url = jqx.config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
-		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 480px; width: 850px;"></iframe>';
+		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
-		$modal.find('iframe#asset_inline_iframe').bind('load', function(){
-
+		var $iframe = $modal.find('iframe#asset_inline_iframe');
+		$iframe.bind('load', function(){
 			var iframeContext = this.contentDocument;
+			
+			if (this.contentWindow.parent){
+				var parentWindowHeight = $(this.contentWindow.parent.document).height();
+				if (parentWindowHeight < winHeight){
+					$iframe.height(parentWindowHeight - (parseInt($('#__FUEL_modal__').css('top')) + 20));
+				}
+			}
+
 			$assetSelect = $('#asset_select', iframeContext);
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){

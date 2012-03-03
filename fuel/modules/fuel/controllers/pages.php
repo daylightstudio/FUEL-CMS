@@ -415,7 +415,7 @@ class Pages extends Module {
 
 					if ($this->pagevariables_model->save($save, $where))
 					{
-						$page_variables_archive[$key] = $this->pagevariables_model->cleaned_data();
+						$page_variables_archive[] = $this->pagevariables_model->cleaned_data();
 					}
 				}
 			}

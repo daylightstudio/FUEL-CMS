@@ -108,10 +108,15 @@ if (fuel == undefined) var fuel = {};
 				var contentDoc = iframe.contentDocument;
 				var docHeight = fuel.calcHeight(contentDoc);
 				
-				if ($('#fuel_main_content_inner .form, #fuel_actions').size()){
+				if ($('#fuel_main_content_inner .form, #fuel_actions', contentDoc).size()){
 					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
 					var width2 = $('#fuel_actions', contentDoc).outerWidth();
 					var docWidth = (width1 > width2) ? width1 : width2;
+
+					// check if fuel_actions is there so that we don't make it too wide for single variables being edited
+					if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;
+				} else if ($('#login', contentDoc).size()){
+					docWidth = $('#login', contentDoc).width();
 				} else {
 					docWidth = $(contentDoc).width();
 				}
@@ -120,12 +125,9 @@ if (fuel == undefined) var fuel = {};
 					docHeight = $(contentDoc).height();
 				}
 
-				// check if fuel_actions is there so that we don't make it too wide for single variables being edited
-				if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;
 				$(iframe).height(docHeight);
 				$(iframe).width(docWidth);
 			}
-			
 			
 		}
 		
@@ -144,6 +146,7 @@ if (fuel == undefined) var fuel = {};
 						var coords = getMarkerPosition($this);
 						var varName = $this.attr('title');
 						var newClass = ($this.attr('data-rel') == 'create') ? ' __fuel_edit_marker_new__' : '';
+						var publishedClass = ($this.attr('data-published') == '0') ? ' __fuel_edit_marker_unpublished__' : '';
 						var html = '<div id="__fuel_edit__' + i + '" style="left:' + coords.x + 'px; top:' + coords.y + 'px;" class="__fuel__ __fuel_edit__" title="' + varName + '" data-module="' + module + '">';
 						var dataHref = $this.attr('data-href').replace(/\|/, '/');
 						
@@ -152,7 +155,7 @@ if (fuel == undefined) var fuel = {};
 						//	dataHref = dataHref + '/' + pageId;
 						}
 						
-						html += '<a href="' + dataHref + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass +'">';
+						html += '<a href="' + dataHref + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass + publishedClass + '">';
 						html += '<span class="__fuel_edit_marker_inner__">' + varName + '</span>';
 						html += '</a>';
 						html += '<div class="__fuel_edit_form__" style="display: none;"><img src="' + imgPath + 'spinner_sm.gif" width="16" height="16" alt="loading"></div>';

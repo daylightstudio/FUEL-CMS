@@ -181,7 +181,7 @@ class Curl {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Adds a CURL options to a particular session.
+	 * Adds a CURL option to a particular session.
 	 *
 	 * @access	public
 	 * @param	array	An array of CURL options (http://www.php.net/manual/en/function.curl-setopt.php). Can be short syntax of 'get', 'post', 'head', 'none 'cookie'

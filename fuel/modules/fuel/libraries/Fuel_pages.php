@@ -758,9 +758,9 @@ class Fuel_page extends Fuel_base_library {
 			}
 
 			// must use span tags because nesting anchors can cause issues;
-			
+			$published = (is_true_val($marker['published'])) ? '1' : '0';
 			$edit_method = (empty($id) OR $id == 'create') ? 'inline_create' : 'inline_edit';
-			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/'.$edit_method.'/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'"';
+			$output = '<span class="__fuel_marker__" data-href="'.fuel_url($module).'/'.$edit_method.'/" data-rel="'.$id.'" title="'.$label.'" data-module="'.$module.'" data-published="'.$published.'"';
 			if (isset($xoffset) OR isset($yoffset))
 			{
 				$output .= ' style="';

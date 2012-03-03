@@ -370,6 +370,8 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
  * 
  * The <dfn>id</dfn> parameter is the unique id that will be used to query the module. You can also pass an id value
  * and a field like so <dfn>id|field</dfn>. This will display only a certain field instead of the entire module form.
+ * Alternatively, you can now also just pass the entire object and it will generate the id, label, module and published values automatically.
+ * The <dfn>is_published</dfn> parameter specifies whether to indicate with the pencil icon that the item is active/published
  * The <dfn>label</dfn> parameter specifies the label to display next to the pencil icon.
  * The <dfn>xOffset</dfn> and <dfn>yOffset</dfn> are pixel values to offset the pencil icon.
  *
@@ -377,11 +379,12 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
  * @param	mixed
  * @param	string
  * @param	string
+ * @param	boolean
  * @param	int
  * @param	int
  * @return	string
  */
-function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NULL, $yoffset = NULL)
+function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published = TRUE, $xoffset = NULL, $yoffset = NULL)
 {
 	$CI =& get_instance();
 	$page = $CI->fuel->pages->active();
@@ -391,9 +394,48 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $xoffset = NUL
 	}
 	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE))
 	{
-		$marker['id'] = $id;
+		
+		if (is_object($id) AND is_a($id, 'Data_record') AND isset($id->id))
+		{
+			$ref_id = $id->id;
+			
+			if (empty($module) OR $module == 'pagevariables')
+			{
+				$module = $id->parent_model()->table_name();
+			}
+			
+			if (empty($label))
+			{
+				$label = lang('action_edit').': ';
+
+				if (isset($id->title))
+				{
+					$label .= $id->title;
+				}
+				else if ($id->name)
+				{
+					$label .= $id->name;
+				}
+			}
+			
+			if (isset($id->published))
+			{
+				$is_published = is_true_val($id->published);
+			}
+			else if (isset($id->active))
+			{
+				$is_published = is_true_val($id->active);
+			}
+		}
+		else
+		{
+			$ref_id = $id;
+		}
+		
+		$marker['id'] = $ref_id;
 		$marker['label'] = $label;
 		$marker['module'] = $module;
+		$marker['published'] = $is_published;
 		$marker['xoffset'] = $xoffset;
 		$marker['yoffset'] = $yoffset;
 

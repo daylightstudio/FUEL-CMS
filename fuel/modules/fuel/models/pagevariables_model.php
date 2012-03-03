@@ -4,7 +4,7 @@ require_once('base_module_model.php');
 class Pagevariables_model extends Base_module_model {
 
 	public $page_id;
-	public $honor_page_status = TRUE; // will look at the pages published status as well
+	public $honor_page_status = FALSE; // will look at the pages published status as well
 	
 	function __construct()
 	{
@@ -20,6 +20,14 @@ class Pagevariables_model extends Base_module_model {
 		return $data;
 	}
 	
+	/* OVERWRITE */
+	function find_one_array($where, $order_by = NULL)
+	{
+		$data = parent::find_one_array($where, $order_by);
+		$data['value'] = $this->_process_casting($data);
+		return $data;
+	}
+
 	function find_one_by_location($location, $name)
 	{
 		$data = $this->find_one_array(array($this->_tables['pages'].'.location' => $location, 'name' => $name));

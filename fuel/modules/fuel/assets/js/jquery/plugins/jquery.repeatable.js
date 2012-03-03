@@ -146,6 +146,7 @@ dave@thedaylightstudio.com
 			$children = $elem.children(options.repeatableSelector);
 			
 			// must grab first in case they are nested
+			min = parseInt(min);
 			if (min && $children.size() != 0 && $children.size() <= min){
 				$children.find('.' + options.removeButtonClass + ':first').hide();
 			} else {
@@ -310,9 +311,9 @@ dave@thedaylightstudio.com
 			
 			createAddButton($this);
 
-			checkMax($this, options.max);
-			checkMin($this, options.min);
-			
+			if ($this.attr('data-max')) checkMax($this, options.max);
+			if ($this.attr('data-min')) checkMin($this, options.min);
+
 			createCollapsingContent($this);
 			
 			index++;

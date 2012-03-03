@@ -15,6 +15,7 @@ ul { margin-bottom: 10px; }
 optgroup option { padding-left: 10px; }
 fieldset { border-top: 5px solid #f6f6f6; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
 legend { padding: 5px 30px 5px 5px; font-size: 12px; background-color: #f6f6f6; font-weight: bold; text-align: left; }
+iframe { border: none; }
 
 /* generic classes */
 p.instructions { font-size: 14px; line-height: 18px; }
@@ -127,6 +128,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_logs { background-image: url(../images/ico_book_open.png); }
 .ico_save { background-image: url(../images/ico_disk.png); }
 .ico_duplicate { background-image: url(../images/ico_page_copy.png); }
+.ico_replace { background-image: url(../images/ico_page_refresh.png); }
 .ico_view { background-image: url(../images/ico_layout_content.png); }
 .ico_publish { background-image: url(../images/ico_page_green.png); }
 .ico_unpublish { background-image: url(../images/ico_page_red.png); }
@@ -309,7 +311,7 @@ div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -480px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
 /*div#__FUEL_modal__  { border: 1px solid #888; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
 
 /*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/

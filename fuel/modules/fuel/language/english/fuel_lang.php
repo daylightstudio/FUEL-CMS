@@ -34,7 +34,7 @@ $lang['error_exporting_to_directory'] = 'There was an error writing to one or mo
 $lang['error_cache_folder_not_writable'] = 'You must make the cache folder %1s writable.';
 $lang['error_exporting_view'] = 'There was an error in creating the associated view file for the location %1s because the variable with the name <strong><em>%2s</em></strong> does not exist.';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';
-$lang['error_inline_page_edit'] = 'This variable must be edited in the associated views/_variables file.';
+$lang['error_inline_page_edit'] = 'This variable must either be saved in the admin or edited in the associated views/_variables file.';
 $lang['error_saving'] = 'There was an error saving.';
 $lang['error_cannot_preview'] = 'There was an error in trying to preview this page.';
 $lang['error_cannot_make_api_call'] = 'There was an error making the API call to %1s.';
@@ -372,7 +372,6 @@ $lang['btn_activate'] = 'Activate';
 $lang['btn_deactivate'] = 'Deactivate';
 $lang['btn_delete'] = 'Delete';
 $lang['btn_duplicate'] = 'Duplicate';
-$lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
 

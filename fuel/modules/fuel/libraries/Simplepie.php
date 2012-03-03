@@ -413,7 +413,7 @@ define('SIMPLEPIE_FILE_SOURCE_FILE_GET_CONTENTS', 16);
  *
  * @package SimplePie
  */
-class SimplePie
+class Simplepie
 {
 	/**
 	 * @var array Raw data

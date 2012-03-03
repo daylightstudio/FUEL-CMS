@@ -578,7 +578,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	function has_tests()
 	{
 		$tests = $this->tests();
-		return ( ! empty($tests));
+		return (!empty($tests));
 	}
 
 	// --------------------------------------------------------------------

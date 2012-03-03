@@ -34,6 +34,7 @@ class Base_module_model extends MY_Model {
 	public $filter_join = 'or'; // how to combine the filters in the query (and or or)
 	public $parsed_fields = array(); // fields to automatically parse
 	public $upload_data = array(); // data about all uploaded files
+	public $display_unpublished_if_logged_in = FALSE;
 	protected $_tables = array(); // fuel tables
 	
 	/**
@@ -474,6 +475,10 @@ class Base_module_model extends MY_Model {
 	 */	
 	function _common_query($display_unpublished_if_logged_in = FALSE)
 	{
+		if (!isset($display_unpublished_if_logged_in))
+		{
+			$display_unpublished_if_logged_in = $this->display_unpublished_if_logged_in;
+		}
 		if ((!defined('FUEL_ADMIN') AND $display_unpublished_if_logged_in === FALSE) OR ($display_unpublished_if_logged_in AND !is_fuelified()))
 		{
 			$this->_publish_status();

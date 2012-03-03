@@ -114,7 +114,11 @@ class Inspection {
 					require_once($this->file);
 					$loaded = TRUE;
 				}
-				$this->_functions[$func] = new Inspection_function($func);
+				
+				if (function_exists($func))
+				{
+					$this->_functions[$func] = new Inspection_function($func);
+				}
 			}
 		}
 		
@@ -405,7 +409,6 @@ class Inspection_class extends Inspection_base {
 
 		// static, public, protected, private, abstract, final
 		$methods = array();
-
 		foreach($this->_methods as $name => $m)
 		{
 			// filter out contstructors
@@ -767,9 +770,10 @@ class Inspection_comment {
 						$lines = '';
 						foreach($desc_lines as $d)
 						{
+							$d = trim($d);
 							if (!empty($d))
 							{
-								$lines .= preg_replace('#(.+[^\.|>])$#', '$1. ', $d);
+								$lines .= preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', $d);
 							}
 						}
 						$desc = $lines;

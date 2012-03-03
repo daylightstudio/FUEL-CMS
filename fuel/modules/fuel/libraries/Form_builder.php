@@ -3025,20 +3025,19 @@ Class Form_builder {
 				}
 				$str_files .= js($js);
 			}
+			// if a string with a slash in it, then we will assume it's just a single file to load'
+			else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') === FALSE)
+			{
+				$str_files .= js($js);
+			}
 			// if it starts with a script tag and does NOT have a src attribute
 			else if (preg_match($script_regex, $js))
 			{
 				$str_files .= $js;
 			}
 		
-			// if a string with a slash in it, then we will assume it's just a single file to load'
-			else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') == FALSE)
-			{
-				$str_files .= js($js);
-			}
-
 			// if it starts with a script tag and DOES have a src attribute
-			else if (!preg_match($script_regex, $js))
+			else if (strpos($js, '<script') !== FALSE)
 			{
 				$str_inline .= $js;
 			}
