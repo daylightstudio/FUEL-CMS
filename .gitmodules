@@ -1,3 +1,24 @@
 [submodule "fuel/modules/backup"]
 	path = fuel/modules/backup
 	url = git@daylightstudio.beanstalkapp.com:/fuel_module_backup.git
+[submodule "fuel/modules/blog"]
+	path = fuel/modules/blog
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_blog.git
+[submodule "fuel/modules/validate"]
+	path = fuel/modules/validate
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_validate.git
+[submodule "fuel/modules/tester"]
+	path = fuel/modules/tester
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_tester.git
+[submodule "fuel/modules/cronjobs"]
+	path = fuel/modules/cronjobs
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_cronjobs.git
+[submodule "fuel/modules/page_analysis"]
+	path = fuel/modules/page_analysis
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_page_analysis.git
+[submodule "fuel/module/google_keywords"]
+	path = fuel/module/google_keywords
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_google_keywords.git
+[submodule "fuel/modules/user_guide"]
+	path = fuel/modules/user_guide
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_user_guide.git
