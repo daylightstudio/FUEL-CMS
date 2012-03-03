@@ -1,3 +1,0 @@
-{rows}{item}: {result}
-{/rows}
-
