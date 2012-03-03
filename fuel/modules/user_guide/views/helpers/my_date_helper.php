@@ -97,6 +97,21 @@ date_range_string('2010-08-01', '2010-08-05');
 // returns <?=date_range_string((time() - (24*60*60)), time())?>
 </pre>
 
+<h2>date_range_array(<var>start_date</var>, <var>end_date</var>, <var>[output_format]</var>, <var>[increment]</var>)</h2>
+<p>Creates a date range array (e.g. array('2011-01-01', '2011-02-01', '2011-03-01', ...)).</p>
+
+<h3>Example #1 date_range_array() example without extra params set</h3>
+<pre class="brush: php">
+date_range_array('2011-01-01', '2011-04-01');
+// returns array('2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01')
+</pre>
+
+<h3>Example #2 date_range_array() example with all params set</h3>
+<pre class="brush: php">
+date_range_array('2005-01-01', '2008-01-01', 'M Y', '+1 year');
+// returns array('Jan 2005', 'Jan 2006', 'Jan 2007', 'Jan 2008')
+</pre>
+
 
 <h2>pretty_date(<var>timestamp</var>, <var>use_gmt</var>)</h2>
 <p>Creates a string based on how long from the current time the date provided.</p>

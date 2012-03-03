@@ -672,46 +672,46 @@ class Module extends Fuel_base_controller {
 		// loop through uploaded files
 		if (!empty($_FILES))
 		{
-			foreach($_FILES as $file => $file_info)
+			foreach ($_FILES as $file => $file_info)
 			{
 				if ($file_info['error'] == 0)
 				{
 					$posted[$file] = $file_info['name'];
 					
 					$file_tmp = current(explode('___', $file));
+					$field_name = $file_tmp;
 
 					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
-					{
+					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') {
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-
-						if (isset($posted[$file_tmp.'_filename']))
-						{
-							// get file extension
-							$path_info = pathinfo($file_info['name']);
-							$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
-						}
-						else
-						{
-							$field_value = $file_info['name'];
-						}
-						// FIX ME....
-						// foreach($_POST as $key => $val)
-						// {
-						// 	$tmp_key = end(explode('--', $key));
-						// 	$_POST[$tmp_key] = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$_POST['\\2'].'\\3'", $val);
-						// }
-						
-						if (strpos($field_value, '{') !== FALSE )
-						{
-							$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
-						}
-
-						// set both values for the namespaced and non-namespaced... make them underscored and lower cased
-						$tmp_field_name = end(explode('--', $field_name));
-						$posted[$tmp_field_name] = url_title($field_value, 'underscore', TRUE);
-						$posted[$field_name] = url_title($field_value, 'underscore', TRUE);
 					}
+
+					if (isset($posted[$file_tmp.'_filename']))
+					{
+						// get file extension
+						$path_info = pathinfo($file_info['name']);
+						$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
+					}
+					else
+					{
+						$field_value = $file_info['name'];
+					}
+					// FIX ME....
+					// foreach($_POST as $key => $val)
+					// {
+					// 	$tmp_key = end(explode('--', $key));
+					// 	$_POST[$tmp_key] = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$_POST['\\2'].'\\3'", $val);
+					// }
+					
+					if (strpos($field_value, '{') !== FALSE )
+					{
+						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+					}
+
+					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
+					$tmp_field_name = end(explode('--', $field_name));
+					$posted[$tmp_field_name] = url_title($field_value, 'underscore', TRUE);
+					$posted[$field_name] = url_title($field_value, 'underscore', TRUE);
 				}
 			}
 		}
