@@ -21,15 +21,12 @@ $config['layouts']['main'] = array(
 	'fields'	=> array(
 		'Header' => array('type' => 'fieldset', 'label' => 'Header', 'class' => 'tab'),
 		'page_title' => array('label' => lang('layout_field_page_title')),
+		'heading' => array('label' => 'heading'),
 		'meta_description' => array('label' => lang('layout_field_meta_description')),
 		'meta_keywords' => array('label' => lang('layout_field_meta_keywords')),
 		'Body' => array('type' => 'fieldset', 'label' => 'Body', 'class' => 'tab'),
 		'body' => array('label' => lang('layout_field_body'), 'type' => 'textarea', 'description' => lang('layout_field_body_description')),
 		'body_class' => array('label' => lang('layout_field_body_class')),
-		// 'nested' => array('type' => 'nested', 'display_label' => FALSE, 'fields' => array(
-		// 													'test1' => array('type' => 'textarea'),
-		// 													'test2' => array('type' => 'enum', ''),
-		// 												)),
 	)
 );
 

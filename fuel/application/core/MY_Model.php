@@ -749,7 +749,7 @@ class MY_Model extends CI_Model {
 	{
 		$CI =& get_instance();
 		if (empty($values)) $values = $CI->input->post();
-		
+
 		// run clean hook
 		if ($run_hook)
 		{
@@ -832,6 +832,7 @@ class MY_Model extends CI_Model {
 			{
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
+			
 			if (isset($values[$key]))
 			{
 				
@@ -960,8 +961,8 @@ class MY_Model extends CI_Model {
 		$this->_check_readonly();
 		$CI =& get_instance();
 		if (!isset($record)) $record = $CI->input->post();
-		
 		if (is_array($record) AND (is_int(key($record)) AND is_array(current($record))))
+//		if (is_array($record) AND is_array(current($record)))
 		{
 			$saved = TRUE;
 			foreach($record as $rec)
@@ -986,6 +987,7 @@ class MY_Model extends CI_Model {
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
 			$values = $this->on_before_validate($values);
+			
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
@@ -2852,6 +2854,19 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns the parent model object
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function parent_model()
+	{
+		return $this->_parent_model;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Determine if a proprty (field) exists
 	 *
 	 * @access	public
@@ -3133,6 +3148,14 @@ Class Data_record {
 				$output = date($this->_date_format.' '.$this->_time_format, strtotime($this->_fields[$field]));
 				break;
 			case 'date':
+				if (empty($this->_date_format))
+				{
+					$this->_date_format = $this->_CI->config->item('date_format');
+				}
+				if (empty($this->_date_format))
+				{
+					$this->_date_format = 'm/d/Y';
+				}
 				$output = date($this->_date_format, strtotime($this->_fields[$field]));
 				break;
 		}
