@@ -2,7 +2,7 @@ Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /daylight/FUEL/v.9.4/
+	RewriteBase /
 
 	<Files .*>
 		Order Deny,Allow
