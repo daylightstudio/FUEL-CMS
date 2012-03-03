@@ -1121,7 +1121,6 @@ class MY_Model extends CI_Model {
 
 		$id = current($key_field);
 		$key_field = key($key_field);
-		$related_sort_field = (isset($CI->$model->related_sort_field)) ? $CI->$model->related_sort_field : FALSE;
 
 		$other_field = key($data);
 		$data = current($data);
@@ -1131,14 +1130,11 @@ class MY_Model extends CI_Model {
 		
 		// then readd them
 		$return = TRUE;
-		foreach ($data as $i => $val)
-		{	
+		foreach($data as $val)
+		{
 			$d = $CI->$model->create();
 			$d->$key_field = $id;
 			$d->$other_field = $val;
-			if ( ! empty($related_sort_field)) {
-				$d->$related_sort_field = $i;
-			}
 			if ($d->save())
 			{
 				$return = FALSE;
