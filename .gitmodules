@@ -16,9 +16,12 @@
 [submodule "fuel/modules/page_analysis"]
 	path = fuel/modules/page_analysis
 	url = git@daylightstudio.beanstalkapp.com:/fuel_module_page_analysis.git
-[submodule "fuel/module/google_keywords"]
-	path = fuel/module/google_keywords
-	url = git@daylightstudio.beanstalkapp.com:/fuel_module_google_keywords.git
 [submodule "fuel/modules/user_guide"]
 	path = fuel/modules/user_guide
 	url = git@daylightstudio.beanstalkapp.com:/fuel_module_user_guide.git
+[submodule "fuel/modules/google_keywords"]
+	path = fuel/modules/google_keywords
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_google_keywords.git
+[submodule "fuel/modules/search"]
+	path = fuel/modules/search
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_search.git
