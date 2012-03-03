@@ -1,0 +1,3 @@
+[submodule "fuel/modules/backup"]
+	path = fuel/modules/backup
+	url = git@daylightstudio.beanstalkapp.com:/fuel_module_backup.git
