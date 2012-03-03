@@ -311,6 +311,34 @@ function date_range_string($date1, $date2)
 }
 
 
+// --------------------------------------------------------------------
+
+/**
+ * Creates an array containing a date range
+ *
+ * @access public
+ * @param string $start, any format that strtotime accepts
+ * @param string $end, any format that strtotime accepts
+ * @param string $increments, any format that strtotime accepts
+ * @param string $output_format, default output format is YYYY-MM-DD
+ * @return array
+ */
+function date_range_array($start = 'now', $end = '+1 year', $output_format = 'Y-m-d', $increments = '+1 month')
+{
+	if (isset($start, $end, $output_format, $increments))
+	{
+		$current = strtotime($start);
+		$end = strtotime($end);
+		$date_range_array = array();
+		while ($current <= $end)
+		{
+			$date_range_array[] = date($output_format, $current);
+			$current = strtotime($increments, $current);
+		}
+		return $date_range_array;
+	}
+}
+
 
 // --------------------------------------------------------------------
 
