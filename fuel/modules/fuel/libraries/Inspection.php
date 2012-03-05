@@ -768,14 +768,23 @@ class Inspection_comment {
 					case 'periods':
 						$desc_lines = explode(PHP_EOL, $desc);
 						$lines = '';
+						$past_first = FALSE;
 						foreach($desc_lines as $d)
 						{
 							$d = trim($d);
 							if (!empty($d))
 							{
-								$lines .= preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', $d);
+								if (!$past_first)
+								{
+									$d = preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', $d);
+								}
+								$lines .= $d.' ';
+								$past_first = TRUE;
 							}
 						}
+						
+						$lines = preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', trim($lines));
+						
 						$desc = $lines;
 				}
 			}

@@ -31,7 +31,7 @@
 class Fuel_layouts extends Fuel_base_library {
 	
 	public $default_layout = 'main'; // default layout folder
-	public $layouts_folder = '_layouts'; // layout folder
+	public $layouts_folder = '_layouts'; // layout folder 
 	public $layouts = array(); // layout object initialization parameters
 
 	protected $_layouts = array(); // layout objects
