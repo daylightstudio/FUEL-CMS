@@ -186,7 +186,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="{text}"> tag
+	 * Creates &lt;input type="{text}"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -206,7 +206,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="text"> tag
+	 * Creates &lt;input type="text"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -222,7 +222,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="password"> tag
+	 * Creates &lt;input type="password"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -238,7 +238,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="search"> tag
+	 * Creates &lt;input type="search"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -254,7 +254,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="hidden"> tag
+	 * Creates &lt;input type="hidden"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -270,7 +270,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="radio"> tag
+	 * Creates &lt;input type="radio"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -286,7 +286,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="checkbox"> tag
+	 * Creates &lt;input type="checkbox"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -301,7 +301,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="file"> tag
+	 * Creates &lt;input type="file"&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element
@@ -317,7 +317,7 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <select> tag
+	 * Creates &lt;select&gt; tag
 	 * 
 	 * @access public
 	 * @param string name of the input element

@@ -798,6 +798,7 @@ class Inspection_comment {
 		
 		// clean
 		$desc = xss_clean($desc);
+		
 		$desc = strip_image_tags($desc);
 		
 		return $desc;

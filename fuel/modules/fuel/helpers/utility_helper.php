@@ -32,6 +32,20 @@
 // --------------------------------------------------------------------
 
 /**
+ * Returns the global CI object
+ *
+ * @return 	object
+ */
+function CI() {
+    if (!function_exists('get_instance')) return FALSE;
+
+    $CI =& get_instance();
+    return $CI;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Capture content via an output buffer
  *
  * @param	boolean	turn on output buffering
@@ -172,20 +186,6 @@ function print_obj($obj, $return = false)
  */
 function log_error($error) {
 	log_message('error', $error);
-}
-
-// --------------------------------------------------------------------
-
-/**
- * Returns the global CI object
- *
- * @return 	object
- */
-function CI() {
-    if (!function_exists('get_instance')) return FALSE;
-
-    $CI =& get_instance();
-    return $CI;
 }
 
 // --------------------------------------------------------------------
