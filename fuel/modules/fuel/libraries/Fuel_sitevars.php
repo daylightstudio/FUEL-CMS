@@ -28,9 +28,18 @@
 
 // --------------------------------------------------------------------
 
-class Fuel_sitevariables extends Fuel_base_library {
+class Fuel_sitevars extends Fuel_base_library {
 	
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of site variables pertaining to a given URI path
+	 *
+	 * @access	public
+	 * @param	string	A URI path
+	 * @return	array
+	 */	
 	function get($location = NULL)
 	{
 		if (is_null($location))
@@ -61,5 +70,5 @@ class Fuel_sitevariables extends Fuel_base_library {
 	
 }
 
-/* End of file Fuel_sitevariables.php */
-/* Location: ./modules/fuel/libraries/Fuel_sitevariables.php */
+/* End of file Fuel_sitevars.php */
+/* Location: ./modules/fuel/libraries/Fuel_sitevars.php */

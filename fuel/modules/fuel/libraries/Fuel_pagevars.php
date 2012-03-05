@@ -108,35 +108,20 @@ class Fuel_pagevars extends Fuel_base_library {
 	{
 		$location = $this->location;
 
+		$site_vars = $this->fuel->sitevars->get($location);
+		
 		$this->fuel->load_model('pagevariables_model');
-		$this->fuel->load_model('sitevariables_model');
-		
-		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
-		$vars = array();
-		
-		// Loop through the pages array looking for wild-cards
-		foreach ($site_vars as $site_var){
-			
-			// Convert wild-cards to RegEx
-			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
-
-			// Does the RegEx match?
-			if (empty($key) OR preg_match('#^'.$key.'$#', $location))
-			{
-				$vars[$site_var['name']] = $site_var['value'];
-			}
-		}
 		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
+		$vars = array_merge($site_vars, $page_vars);
 
 		if ($parse)
 		{
 			$this->CI->load->library('parser');
-			foreach($page_vars as $key => $val)
+			foreach($vars as $key => $val)
 			{
-				$page_vars[$key] = $this->CI->parser->parse_string($val, $page_vars, TRUE);
+				$vars[$key] = $this->CI->parser->parse_string($val, $vars, TRUE);
 			}
 		}
-		$vars = array_merge($vars, $page_vars);
 		return $vars;
 	}
 	

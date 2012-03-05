@@ -344,11 +344,22 @@ class Inspection_class extends Inspection_base {
 					$type_method = 'is'.ucfirst($type);
 					if (method_exists($p->reflection, $type_method) AND $p->reflection->$type_method())
 					{
-						preg_match('#\s*'.$type.'\s+(\$'.$name.').*;\s*//\s*(.+)#', $props_block, $matches);
-						
+						// look for comments on the right of the property
+						preg_match('#\s*'.$type.'\s+(\$'.$name.').*; *//\s*(.+)#', $props_block, $matches);
 						if (isset($matches[2]) AND !$p->comment->text())
 						{
 							$p->comment->set_text($matches[2]);
+						}
+						else
+						{
+							// if not found on the right, then we look to the direct top
+							preg_match('#//\s*(.+)\s*\n\s+'.$type.'\s+(\$'.$name.').*;#U', $props_block, $matches);
+							
+							if (isset($matches[1]) AND !$p->comment->text())
+							{
+								$p->comment->set_text($matches[1]);
+							}
+							
 						}
 						$props[$name] = $p;
 						
