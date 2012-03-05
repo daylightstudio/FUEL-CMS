@@ -727,12 +727,14 @@ class Inspection_comment {
 						break;
 					case 'short':
 						$desc_lines = explode(PHP_EOL, $desc);
+						$first_line = TRUE;
 						foreach($desc_lines as $d)
 						{
 							if (!empty($d))
 							{
 								if ($first_line)
 								{
+									$first_line = FALSE;
 									$desc = $d;
 									break;
 								}
@@ -741,6 +743,7 @@ class Inspection_comment {
 						break;
 					case 'long':
 						$desc_lines = explode(PHP_EOL, $desc);
+						$new_desc = '';
 						$first_line = TRUE;
 						foreach($desc_lines as $d)
 						{
@@ -751,10 +754,13 @@ class Inspection_comment {
 									$first_line = FALSE;
 									continue;
 								}
-								$desc = $d;
-								break;
+								else
+								{
+									$new_desc .= $d;
+								}
 							}
 						}
+						$desc = $new_desc;
 						break;
 					case 'one_line':
 						$desc = str_replace(PHP_EOL, ' ', $desc);

@@ -22,7 +22,7 @@
  * array values. For a list of what those field values can be, look at the
  * normalize_params method. It works well with the MY_Model form_fields
  * method which returns table meta information regarding the fields of a 
- * table
+ * table.
  *
  * The Form.php class is required if a form object is not passed in the 
  * initialization process.
