@@ -19,6 +19,8 @@
 /**
  * FUEL Ajax Helper
  *
+ * Helper function for AJAX requests.
+ *
  * @package		FUEL CMS
  * @subpackage	Helpers
  * @category	Helpers
