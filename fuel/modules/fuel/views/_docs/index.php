@@ -21,4 +21,4 @@
 </ul>
 
 
-<?=generate_toc();?>
+<?=generate_toc('fuel');?>

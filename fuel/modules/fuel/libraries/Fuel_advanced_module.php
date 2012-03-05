@@ -610,10 +610,10 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the tools available from the advance module
+	 * Returns the tools available from the advance module as an array or FALSE if none exist
 	 *
 	 * @access	public
-	 * @return	boolean
+	 * @return	array
 	 */
 	function tools()
 	{
@@ -639,7 +639,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string Name of config file. Default is the name of the advanced module (optional)
-	 * @return	boolean
+	 * @return	void
 	 */
 	function load_config($config = NULL)
 	{
@@ -659,7 +659,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string Name of config file. Default is the name of the advanced module (optional)
-	 * @return	boolean
+	 * @return	void
 	 */
 	function load_helper($helper)
 	{
@@ -674,7 +674,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @param	string Name of the library file
 	 * @param	string Name you want to assign to the loaded library (optional)
-	 * @return	boolean
+	 * @return	void
 	 */
 	function load_library($library, $name = NULL)
 	{
@@ -690,7 +690,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name of the view file file
 	 * @param	array Variables to pass to the view file (optional)
 	 * @param	boolean Whether to return the contents as a string or send it to the output for display
-	 * @return	boolean
+	 * @return	mixed	string if $return equals TRUE and void if $return equals FALSE
 	 */
 	function load_view($view, $vars = array(), $return = FALSE)
 	{
@@ -698,7 +698,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			return $this->CI->load->module_view($this->folder(), $view, $vars, TRUE);
 		}
-
 		$this->CI->load->module_view($this->folder(), $view, $vars);
 	}
 
@@ -710,7 +709,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @param	string Name of the model file.
 	 * @param	string Name you want to assign to the loaded model (optional)
-	 * @return	boolean
+	 * @return	void
 	 */
 	function load_model($model, $name = NULL)
 	{
@@ -730,7 +729,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @param	string Name of a language file. Default is the name of the advanced module (optional)
 	 * @param	string Name of a language file folder. Default is "english" (optional)
-	 * @return	boolean
+	 * @return	void
 	 */
 	function load_language($file = '', $lang = '')
 	{
