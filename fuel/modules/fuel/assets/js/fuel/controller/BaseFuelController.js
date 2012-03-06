@@ -360,6 +360,31 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
+		$('.replace_action').click(function(e){
+			var url = $(this).attr('href');
+			html = '<iframe id="replace_iframe" src="' + url + '"></iframe>';
+			$modal = fuel.modalWindow(html, 'replace_modal', true);
+			
+			$modal.find('iframe#replace_iframe').bind('load', function(){
+				var iframeContext = this.contentDocument;
+				var replacedId = $('#new_fuel_replace_id', iframeContext).val();
+				
+				$('#form', iframeContext).submit(function(){
+					if (confirm(fuel.lang('replace_warning'))){
+						return true;
+					}
+					return false;
+				})
+				
+				if (replacedId && replacedId.length){
+					$modal.jqmHide();
+					var url =  _this.modulePath + '/edit/' + replacedId;
+					top.window.location = url;
+				}
+			})
+			return false;
+		});
+		
 		$('.delete_action').click(function(e){
 			$.removeChecksave();
 		});

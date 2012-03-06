@@ -8,7 +8,8 @@ class Navigation_model extends Base_module_model {
 	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
 	public $filter_join = 'and';
 	public $record_class = 'Navigation_item';
-	
+	public $ignore_replacement = array('nav_key');
+		
 	function __construct()
 	{
 		parent::__construct('navigation');

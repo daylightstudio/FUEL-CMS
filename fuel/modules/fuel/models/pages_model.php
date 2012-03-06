@@ -7,6 +7,7 @@ class Pages_model extends Base_module_model {
 	public $id;
 	public $required = array('location');
 	public $hidden_fields = array('last_modified', 'last_modified_by');
+	public $ignore_replacement = array('location');
 	
 	function __construct()
 	{

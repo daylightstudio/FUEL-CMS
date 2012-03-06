@@ -1256,6 +1256,11 @@ class Module extends Fuel_base_controller {
 	
 	function restore()
 	{
+		if (!$this->fuel->auth->has_permission($this->permission, 'edit')) 
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
 		if (!empty($_POST['fuel_restore_version']) AND !empty($_POST['fuel_restore_ref_id']))
 		{
 			if (!$this->model->restore($this->input->post('fuel_restore_ref_id'), $this->input->post('fuel_restore_version')))
@@ -1278,6 +1283,67 @@ class Module extends Fuel_base_controller {
 		{
 			show_404();
 		}
+	}
+	
+	function replace($id = NULL)
+	{
+		if (empty($id))
+		{
+			show_404();
+		}
+		
+		if (!$this->fuel->auth->has_permission($this->permission, 'edit') OR !$this->fuel->auth->has_permission($this->permission, 'delete')) 
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
+		$success = FALSE;
+		if (!empty($_POST))
+		{
+			if (!empty($_POST['fuel_replace_id']))
+			{
+				$replace_id = $this->input->post('fuel_replace_id');
+				//$delete = is_true_val($this->input->post('fuel_delete_replacement'));
+				$delete = TRUE;
+				if (!$this->model->replace($replace_id, $id, $delete))
+				{
+					add_error($this->model->get_validation()->get_last_error());
+				}
+				else
+				{
+					$this->session->set_flashdata('success', lang('module_replaced_success'));
+					$success = TRUE;
+				}
+			}
+			else
+			{
+				add_error(lang('error_select_replacement'));
+			}
+			//redirect(fuel_uri($this->module_uri.'/edit/'.$id));
+		}
+		$this->load->library('form_builder');
+		
+		$fields = array();
+		$other_options = $this->model->get_others($this->display_field, $id);
+		$fields['fuel_replace_id'] = array('label' => 'Replace record:', 'type' => 'select', 'options' => $other_options, 'first_option' => 'Select record to replace...', 'style' => 'max-width: 400px');
+		//$fields['fuel_delete_replacement'] = array('label' => 'Delete replacement', 'type' => 'checkbox', 'value' => 'yes');
+		if ($success)
+		{
+			$fields['new_fuel_replace_id'] = array('type' => 'hidden', 'value' => $replace_id);
+		}
+		
+		//$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		//$this->form_builder->submit_value = NULL;
+		
+		$vars['form'] = $this->form_builder->render();
+		$this->fuel->admin->set_inline(TRUE);
+
+		$crumbs = array('' => $this->module_name, lang('action_replace'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		$this->fuel->admin->render('modules/module_replace', $vars);
+		
 	}
 	
 	function view($id = NULL)

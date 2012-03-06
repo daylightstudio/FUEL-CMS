@@ -427,7 +427,7 @@ class Fuel_module extends Fuel_base_library {
 				'archivable' => TRUE,
 				'table_headers' => array(),
 				'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
-				'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'create'),
+				'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'replace', 'create'),
 				'list_actions' => array(),
 				'rows_selectable' => TRUE,
 				'precedence_col' => 'precedence',

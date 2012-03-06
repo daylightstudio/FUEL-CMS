@@ -37,6 +37,8 @@ $lang['viewpage_new_window'] = 'New Window';
 
 $lang['rearrange_on'] = 'You can change the precedence order by selecting and dragging the data rows below.';
 
+$lang['replace_warning'] = 'Are you sure you want to replace the contents of this record?';
+
 /*
 |--------------------------------------------------------------------------
 | MarkItUp

@@ -33,8 +33,7 @@ $config['modules']['pages'] = array(
 	'archivable' => TRUE,
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('pages/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
-	
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
 );
 
 // page module init values
@@ -73,7 +72,7 @@ $config['modules']['blocks'] = array(
 	'js_controller' => 'BlockController',
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('blocks/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
 );
 
 // navigation module init values

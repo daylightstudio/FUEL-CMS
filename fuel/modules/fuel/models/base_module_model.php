@@ -34,7 +34,7 @@ class Base_module_model extends MY_Model {
 	public $filter_join = 'or'; // how to combine the filters in the query (and or or)
 	public $parsed_fields = array(); // fields to automatically parse
 	public $upload_data = array(); // data about all uploaded files
-	public $display_unpublished_if_logged_in = FALSE;
+	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	protected $_tables = array(); // fuel tables
 	
 	/**
@@ -426,6 +426,58 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Replaces an existing record with another record
+	 *
+	 * @access	public
+	 * @param	int
+	 * @param	int
+	 * @param	boolean
+	 * @return	boolean
+	 */	
+	function replace($replace_id, $id, $delete = TRUE)
+	{
+		$replace_values = $this->find_by_key($replace_id, 'array');
+		$new_values = $this->find_by_key($id, 'array');
+
+		// set values to save based on the new $id
+		$values = $new_values;
+		
+		if (!empty($this->ignore_replacement))
+		{
+			// remove any key field values
+			foreach($this->ignore_replacement as $field)
+			{
+				if (isset($values[$field]))
+				{
+					unset($values[$field]);
+				}
+			}
+		}
+		
+		// set the id to be that of the old replace_id
+		$values[$this->key_field()] = $replace_id;
+		
+		// must delete before saving to prevent errors
+		if ($delete)
+		{
+			$where[$this->key_field()] = $id;
+			$this->delete($where);
+		}
+		
+		
+		// save va;ies
+		$saved = $this->save($values);
+
+		// archive values saving
+		$this->archive($replace_id, $values);
+		
+		return $saved;
+		
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Add FUEL specific changes to the form_fields method
 	 *
 	 * @access	public
@@ -475,10 +527,6 @@ class Base_module_model extends MY_Model {
 	 */	
 	function _common_query($display_unpublished_if_logged_in = FALSE)
 	{
-		if (!isset($display_unpublished_if_logged_in))
-		{
-			$display_unpublished_if_logged_in = $this->display_unpublished_if_logged_in;
-		}
 		if ((!defined('FUEL_ADMIN') AND $display_unpublished_if_logged_in === FALSE) OR ($display_unpublished_if_logged_in AND !is_fuelified()))
 		{
 			$this->_publish_status();

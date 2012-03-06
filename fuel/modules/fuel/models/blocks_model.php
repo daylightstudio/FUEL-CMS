@@ -6,7 +6,8 @@ class Blocks_model extends Base_module_model {
 	
 	public $required = array('name');
 	public $filters = array('description');
-	
+	public $ignore_replacement = array('name');
+		
 	public function __construct()
 	{
 		parent::__construct('blocks');

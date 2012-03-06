@@ -111,7 +111,6 @@ $lang['pwd_reset_subject_success'] = "FUEL admin password reset success";
 $lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
 $lang['pwd_reset_success'] = 'Your password was successfully reset and an email has been sent to you with the new password.';
 $lang['cache_cleared'] = "Site cache cleared explicitly";
-$lang['module_restored_success'] = 'Previous version successfully restored.';
 
 
 /*
@@ -149,6 +148,8 @@ $lang['module_deleted'] = "%1s item for <em>%2s</em> deleted";
 $lang['module_multiple_deleted'] = 'Multiple items <em>%1s</em> deleted';
 $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
+$lang['module_restored_success'] = 'Previous version successfully restored.';
+$lang['module_replaced_success'] = 'The contents of this record were successfully replaced.';
 
 $lang['cannot_determine_module'] = "Cannot determine module.";
 $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";
@@ -158,6 +159,7 @@ $lang['data_not_deleted'] = 'Some or all data couldn\'t be deleted.';
 $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
+$lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
 
 
 /*
@@ -372,6 +374,7 @@ $lang['btn_activate'] = 'Activate';
 $lang['btn_deactivate'] = 'Deactivate';
 $lang['btn_delete'] = 'Delete';
 $lang['btn_duplicate'] = 'Duplicate';
+$lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
 
@@ -485,7 +488,7 @@ $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
 $lang['action_delete'] = 'Delete';
 $lang['action_upload'] = 'Upload';
-
+$lang['action_replace'] = 'Replace';
 
 //$lang['import'] = 'Import';
 
