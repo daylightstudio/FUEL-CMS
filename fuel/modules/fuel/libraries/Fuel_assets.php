@@ -174,7 +174,7 @@ class Fuel_assets extends Fuel_base_library {
 				// set overwrite
 				$params['overwrite'] = (is_true_val($params['overwrite']));
 
-				if (!empty($params['xss_clean']))
+				if (is_image_file($params['file_name']) AND !empty($params['xss_clean']))
 				{
 					$tmp_file = file_get_contents($file['tmp_name']);
 					if (xss_clean($tmp_file, TRUE) === FALSE)

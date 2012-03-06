@@ -830,6 +830,7 @@ class Inspection_comment {
 				$this->_example = preg_replace('#\*\s+#ms', '', $matches[1]);
 			}
 		}
+		$this->_example = htmlentities($this->_example, ENT_NOQUOTES, 'UTF-8', FALSE);
 		$example = $opening.$this->_example.$closing;
 		return $example;
 	}
