@@ -89,12 +89,12 @@ class Fuel extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Static method that returns the instance of the FUEL object.
+	 * Initialize the FUEL object
 	 *
-	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
+	 * Accepts an associative array as input containing the FUEL config parameters to set
 	 *
 	 * @access	public
-	 * @param	array	Array of configuration parameters parameters  (optional)
+	 * @param	array	Config preferences
 	 * @return	void
 	 */	
 	function initialize($config = array())
@@ -104,7 +104,7 @@ class Fuel extends Fuel_base_library {
 		
 		if (!empty($config))
 		{
-			
+			$this->set_config($config);
 		}
 	}
 	

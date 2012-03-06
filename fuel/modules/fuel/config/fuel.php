@@ -81,7 +81,7 @@ $config['xtra_css'] = '';
 
 // the main layout file to be used for the interface.
 // By default, it will pull from the fuel module folder however, if an array is specified, the key will be the module and the value will be the view file.
-$config['main_layout'] = 'admin_shell';
+$config['main_layout'] = 'admin_main';
 
 // keyboard shortcuts
 $config['keyboard_shortcuts'] = array(

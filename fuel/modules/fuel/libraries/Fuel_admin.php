@@ -18,6 +18,8 @@
 
 /**
  * FUEL master admin object
+ * 
+ * The class is in charge of rendering the admin views.
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -30,36 +32,46 @@
 
 class Fuel_admin extends Fuel_base_library {
 	
-	protected $main_layout = 'admin_shell';
-	protected $validate = TRUE;
-	protected $is_inline = FALSE;
-	protected $last_page = '';
+	protected $main_layout = 'admin_main'; // The main layout file for the FUEL admin
+	protected $validate = TRUE; // Whether to check that the user is logged in or not before rendering page
+	protected $is_inline = FALSE; // Determines whether the page being displayed is the inline view or now.
+	protected $last_page = ''; // The last page rendered by the admin
 	protected $panels = array(
-		'top' => TRUE,
-		'nav' => TRUE,
-		'titlebar' => TRUE,
-		'actions' => TRUE,
-		'notification' => TRUE,
-		'bottom' => TRUE,
-	);
-	protected $display_mode = NULL;
-	protected $_display_modes = array();
-	protected $titlebar = array();
-	protected $titlebar_icon = '';
+								'top' => TRUE,
+								'nav' => TRUE,
+								'titlebar' => TRUE,
+								'actions' => TRUE,
+								'notification' => TRUE,
+								'bottom' => TRUE,
+							); // The names of panels displayed in the admin
+	protected $display_mode = NULL; // The name of the currently set display mode
+	protected $_display_modes = array(); // An array of available display modes
+	protected $titlebar = array(); // The title bar breadcrumb area in the admin
+	protected $titlebar_icon = ''; // The title bar icon to display
 	
 	
-	const DISPLAY_NO_ACTION = 'no_action';
-	const DISPLAY_COMPACT = 'compact';
-	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action';
-	const DISPLAY_COMPACT_TITLEBAR = 'compact_titlebar';
-	const DISPLAY_INLINE = 'compact';
-	const DISPLAY_DEFAULT = 'default';
+	const DISPLAY_NO_ACTION = 'no_action'; // Display mode that has no action panel (panel with all the buttons)
+	const DISPLAY_COMPACT = 'compact'; // Display mode that has no left menu, or top
+	const DISPLAY_COMPACT_NO_ACTION = 'compact_no_action'; // Display mode that has no left menu, action panel or top
+	const DISPLAY_COMPACT_TITLEBAR = 'compact_titlebar'; // Display mode that has no left menu, action panel or top but does have the titlebar
+	const DISPLAY_DEFAULT = 'default'; // Default display mode that shows all panels
 
-	const NOTIFICATION_SUCCESS = 'success';
-	const NOTIFICATION_ERROR = 'error';
-	const NOTIFICATION_WARNING = 'warning';
-	const NOTIFICATION_INFO = 'info';
+	const NOTIFICATION_SUCCESS = 'success'; // Success notification
+	const NOTIFICATION_ERROR = 'error'; // Error notification
+	const NOTIFICATION_WARNING = 'warning'; // Warning notification
+	const NOTIFICATION_INFO = 'info'; // Info notification
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the user preferences
+	 *
+	 * Accepts an associative array as input, containing preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -77,6 +89,17 @@ class Fuel_admin extends Fuel_base_library {
 		$this->fuel->load_helper('fuel');
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the FUEL admin object
+	 *
+	 * Accepts an associative array as input for setting properties
+	 *
+	 * @access	public
+	 * @param	array	Config preferences (optional)
+	 * @return	void
+	 */	
 	function initialize($params = array())
 	{
 		parent::initialize($params);
@@ -159,6 +182,18 @@ class Fuel_admin extends Fuel_base_library {
 		$this->init_display_modes();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a page in the admin
+	 *
+	 * @access	public
+	 * @param	string	The name of the view file to display
+	 * @param	array	Variables to pass to the view file (optional)
+	 * @param	string	The display mode to use (can be the class constant Fuel_admin::DISPLAY_NO_ACTION, DISPLAY_COMPACT, DISPLAY_COMPACT_NO_ACTION, DISPLAY_COMPACT_TITLEBAR, DISPLAY_DEFAULT) (optional)
+	 * @param	array	The module to pull the view file from (optional)
+	 * @return	void
+	 */	
 	function render($view, $vars = array(), $mode = '', $module = NULL)
 	{
 		// set the active state of the menu
@@ -244,16 +279,14 @@ class Fuel_admin extends Fuel_base_library {
 		
 	}
 	
-	function get_model_errors()
-	{
-		if (isset($this->CI->model) AND is_a($this->CI->model, 'MY_Model'))
-		{
-			return $this->CI->model->get_errors();
-		}
-		return FALSE;
-	}
+	// --------------------------------------------------------------------
 	
-	
+	/**
+	 * Checks that the user is logged in to FUEL and if not will redirect to the login
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function check_login()
 	{
 		// set no cache headers to prevent back button problems in FF
@@ -282,6 +315,17 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Will validate that the user has the proper permission
+	 *
+	 * @access	public
+	 * @param	string	Permission name
+	 * @param	string	Type of permission (edit, publish, delete... etc)  (optional)
+	 * @param	boolean	Whether to display the error page or simply exit the script (optional)
+	 * @return	void
+	 */	
 	function validate_user($permission, $type = 'edit', $show_error = TRUE)
 	{
 		if (!$this->fuel->auth->has_permission($permission, $type))
@@ -297,9 +341,34 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of the errors from a module's model
+	 *
+	 * @access	public
+	 * @return	array	Will return FALSE if no errors
+	 */	
+	function get_model_errors()
+	{
+		if (isset($this->CI->model) AND is_a($this->CI->model, 'MY_Model'))
+		{
+			return $this->CI->model->get_errors();
+		}
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the last page that was visited in the admin
+	 *
+	 * @access	public
+	 * @param	string	The URI path of a page (optional)
+	 * @return	void
+	 */	
 	function set_last_page($page = NULL)
 	{
-		//if ($this->is_inline()) return;
 		if (!isset($page)) $page = uri_path(FALSE);
 		
 		$invalid = array(
@@ -309,14 +378,32 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			$this->fuel->auth->set_user_data('last_page', $page);
 		}
-		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the last page that was visited in the admin
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function last_page()
 	{
 		return $this->last_page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds to the recent page array
+	 *
+	 * @access	public
+	 * @param	string	The URI path of a page
+	 * @param	string	The name to display
+	 * @param	string	The type of page
+	 * @return	void
+	 */	
 	function add_recent_page($link, $name, $type)
 	{
 		$this->CI->load->helper('array');
@@ -349,9 +436,17 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		$user_data['recent'] = array_sorter($user_data['recent'], 'last_visited', 'desc', TRUE);
 		$this->CI->session->set_userdata($session_key, $user_data);
-		
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The left menu navigation array
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function nav()
 	{
 		$nav = $this->fuel->config('nav');
@@ -399,6 +494,14 @@ class Fuel_admin extends Fuel_base_library {
 		return $nav;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the selected navigation
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function nav_selected()
 	{
 		if (empty($this->CI->nav_selected))
@@ -424,6 +527,14 @@ class Fuel_admin extends Fuel_base_library {
 		return $nav_selected;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of CSS files for the admin including FUEL "xtra_css" parameter
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function load_css()
 	{
 		$modules = $this->fuel->config('modules_allowed');
@@ -445,6 +556,14 @@ class Fuel_admin extends Fuel_base_library {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the language files from the allowed modules
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function load_languages()
 	{
 		$modules = $this->fuel->config('modules_allowed');
@@ -458,6 +577,16 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the localized language files used for javascript (e.g. markItUp!)
+	 *
+	 * @access	public
+	 * @param	array 	An array of javascript languange files (optional)
+	 * @param	boolean	"Private" parameter so that the file will only be loaded once (optional)
+	 * @return	array
+	 */	
 	function load_js_localized($js_localized = array(), $load = TRUE)
 	{
 		static $localized;
@@ -473,6 +602,16 @@ class Fuel_admin extends Fuel_base_library {
 		return $localized;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the language files from the allowed modules
+	 *
+	 * @access	public
+	 * @param	array 	An array of page segments to be parsed into a cookie crumb type page title
+	 * @param	boolean Whether to run the humanize inflector helper function for the page title
+	 * @return	string
+	 */	
 	function page_title($segs = array(), $humanize = TRUE)
 	{
 		$segs = (array) $segs;
@@ -496,6 +635,14 @@ class Fuel_admin extends Fuel_base_library {
 		return $page_title;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Resets the page state of a list view page (e.g. searching/sorting )
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function reset_page_state()
 	{
 		$state_key = $this->get_state_key();
@@ -509,6 +656,15 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Saves the page state
+	 *
+	 * @access	public
+	 * @param	array 	An array of page state variables
+	 * @return	void
+	 */	
 	function save_page_state($vars)
 	{
 		$state_key = $this->get_state_key();
@@ -531,6 +687,15 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the page state of either the specified page. If  or current page
+	 *
+	 * @access	public
+	 * @param	string 	The key to associate with page state (optional)
+	 * @return	array
+	 */	
 	function get_page_state($state_key = NULL)
 	{
 		if (empty($state_key))
@@ -545,6 +710,15 @@ class Fuel_admin extends Fuel_base_library {
 		return array();
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the state key
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function get_state_key()
 	{
 		if (!empty($this->CI->module))
@@ -558,6 +732,14 @@ class Fuel_admin extends Fuel_base_library {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the no cache header
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function no_cache()
 	{
 		header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -565,17 +747,28 @@ class Fuel_admin extends Fuel_base_library {
 		header('Pragma: no-cache');
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the page is in inline editing mode
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_inline()
 	{
 		return (bool) $this->is_inline;
-
-		//if ($this->is_inline OR (!empty($this->display_mode) AND $this->display_mode != self::DISPLAY_DEFAULT))
-		// {
-		// 	return TRUE;
-		// }
-		// return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets whether the page is in inline editing mode or not
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	void
+	 */	
 	function set_inline($inline)
 	{
 		$this->is_inline = (bool) $inline;
@@ -585,20 +778,45 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			$this->set_panel_display('top', FALSE);
 			$this->set_panel_display('nav', FALSE);
-			//$this->set_panel_display('bottom', FALSE);
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the main layout for the admin
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	void
+	 */	
 	function set_main_layout($layout)
 	{
 		$this->main_layout = (string) $layout;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the main layout for the admin
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function main_layout()
 	{
 		return $this->main_layout;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether a panel is displayed or not
+	 *
+	 * @access	public
+	 * @param	string	The panels name
+	 * @return	void
+	 */	
 	function panel_display($key)
 	{
 		if (isset($this->panels))
@@ -607,16 +825,43 @@ class Fuel_admin extends Fuel_base_library {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether a panel is displayed or not
+	 *
+	 * @access	public
+	 * @param	string	The panels name
+	 * @param	boolean	Whether to display the panel or not
+	 * @return	void
+	 */	
 	function set_panel_display($key, $value)
 	{
 		$this->panels[$key] = (bool) $value;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether a panel exists or not in the admin
+	 *
+	 * @access	public
+	 * @param	string The panel name you want to determine exists in the admin
+	 * @return	boolean
+	 */	
 	function has_panel($key)
 	{
 		return $this->panels[$key];
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes different display modes
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function init_display_modes()
 	{
 		// no_action
@@ -643,7 +888,6 @@ class Fuel_admin extends Fuel_base_library {
 						);
 		$this->register_display_mode(self::DISPLAY_COMPACT_NO_ACTION, $panels);
 
-
 		// compact_titlebar
 		$panels = array(
 						'top' => FALSE,
@@ -665,17 +909,45 @@ class Fuel_admin extends Fuel_base_library {
 		$this->register_display_mode(self::DISPLAY_DEFAULT, $panels);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Registers a display mode with the admin
+	 *
+	 * @access	public
+	 * @param	string A name to associate with the display mode
+	 * @param	array An array of panels to associate with the display mode
+	 * @return	void
+	 */	
 	function register_display_mode($name, $panels = array())
 	{
 		$this->_display_modes[$name] = $panels;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the different registered display modes
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */	
 	function display_mode()
 	{
 		return $this->display_mode;
 	}
 
-	function set_display_mode($mode, $set_get = FALSE)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the display mode for the admin
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	void
+	 */	
+	function set_display_mode($mode)
 	{
 		if (is_string($mode))
 		{
@@ -690,16 +962,22 @@ class Fuel_admin extends Fuel_base_library {
 
 		$this->display_mode = $mode;
 		
-		// set $_GET parameter explicitly so fuel_url can properly render the URL
-		//if ($set_get )
-		
 		if ($this->is_inline())
 		{
-			//$_GET['display_mode'] = $this->display_mode;
 			$_GET['inline'] = (int)$this->is_inline;
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the top titlebar (breadcrumb/icon area)
+	 *
+	 * @access	public
+	 * @param	string	The text to display in the titlebar
+	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
+	 * @return	void
+	 */	
 	function set_titlebar($title, $icon = '')
 	{
 		if (empty($icon))
@@ -714,16 +992,41 @@ class Fuel_admin extends Fuel_base_library {
 		$this->titlebar = $title;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the text for the title bar (breadcrumb/icon area)
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function titlebar()
 	{
 		return $this->titlebar;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the title bar icon
+	 *
+	 * @access	public
+	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
+	 * @return	void
+	 */	
 	function set_titlebar_icon($icon = '')
 	{
 		$this->titlebar_icon = $icon;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the title bar icon
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function titlebar_icon()
 	{
 		if (!empty($this->titlebar_icon))
@@ -744,19 +1047,36 @@ class Fuel_admin extends Fuel_base_library {
 		return $this->titlebar_icon;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the nofication flash message to display
+	 *
+	 * @access	public
+	 * @param	string	Notification message to display
+	 * @param	type	The type of message to display. Options are error, success and info. (optional)
+	 * @return	string
+	 */	
 	function set_notification($msg, $type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
 		$this->CI->session->set_flashdata($type, $msg);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of advanced module names that have dashboards to display (dashboard controllers) on the dashboard page
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function dashboards()
 	{
 		$dashboards = array();
 		$dashboards_config = $this->fuel->config('dashboards');
 		if (!empty($dashboards_config))
 		{
-			
 			if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
 			{
 				$modules = $this->fuel->modules->advanced();
@@ -785,6 +1105,15 @@ class Fuel_admin extends Fuel_base_library {
 		return $dashboards;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds a dashboard to the FUEL configuration settings which will be displayed on the dashboard page
+	 *
+	 * @access	public
+	 * @access	string	The name of the module that has the dashboard you want to add
+	 * @return	void
+	 */	
 	function add_dashboard($dashboard)
 	{
 		$dashboards = $this->fuel->config('dashboards');
@@ -808,7 +1137,14 @@ class Fuel_admin extends Fuel_base_library {
 		$this->fuel->set_config('dashboards', $dashboards);
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns an array of toolbar tools to display in hte toolbar
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function toolbar_tools()
 	{
 		$tools = array();
@@ -828,6 +1164,14 @@ class Fuel_admin extends Fuel_base_library {
 		return $tools;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the inline editing toolbar HTML
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function toolbar()
 	{
 		$this->fuel->load_language('fuel_inline_edit');
