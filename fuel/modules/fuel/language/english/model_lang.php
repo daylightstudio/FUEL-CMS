@@ -8,6 +8,7 @@ $lang['error_in_readonly_mode'] = 'The %1s is in readonly mode and can\'t modify
 $lang['error_valid_email'] = 'Please enter in a valid email address.';
 $lang['error_valid_phone'] = 'Please enter in a valid phone number.';
 $lang['error_method_does_not_exist'] = "Method %1s does not exist.";
+$lang['error_class_does_not_exist'] = "Class %1s does not exist.";
 
 $lang['error_value_exceeds_length'] = 'Value exceeds required length for %1s.';
 $lang['error_not_number'] = 'Value needs to be a number for %1s.';

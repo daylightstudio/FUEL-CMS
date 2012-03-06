@@ -1,33 +1,79 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+// ------------------------------------------------------------------------
 
-//http://codeigniter.com/forums/viewthread/57117/
+/**
+ * FUEL Cache Class
+ *
+ * A generic file based caching class originally <a href="http://codeigniter.com/forums/viewthread/57117/">found on the CI Forums</a>.
+ * 
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @link		http://www.getfuelcms.com/user_guide/libraries/cache
+ */
+
 class Cache
 {
 	
-	public $options = array(
-						'cache_postfix' => '.cache',	//Prefix to all cache filenames
-						'expiry_postfix' => '.exp',		//Expiry file prefix
-						'group_postfix' => '.group', 	//Group directory prefix
-						'default_ttl' => 3600  			//Default time to live = 3600 seconds (One hour).
-					);
+	public $cache_postfix = '.cache'; //Prefix to all cache filenames
+	public $expiry_postfix = '.exp'; //Expiry file prefix
+	public $group_postfix = '.group'; //Group directory prefix
+	public $default_ttl = 3600; //Default time to live = 3600 seconds (One hour).
+	
 	
 	/**
-	 * 	Constructor
-	 * 
-	 * 	@param	Options to override defaults
+	 * Constructor
 	 */
-	function __construct($options = NULL)
+	function __construct($params = array())
 	{
-		
-		if ($options != NULL) $this->options = array_merge($this->options, $options);
-		
+		$this->initialize($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 * Also will set the values in the parameters array as properties of this object
+	 *
+	 * @access	public
+	 * @param	array	Config preferences
+	 * @return	void
+	 */	
+	function initialize($params = array())
+	{
+		$this->set_params($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set object parameters
+	 *
+	 * @access	public
+	 * @param	array	Config preferences
+	 * @return	void
+	 */
+	function set_params($params)
+	{
+		if (!is_array($params) OR empty($params)) return;
+
+		foreach ($params as $key => $val)
+		{
+			if (isset($this->$key))
+			{
+				$this->$key = $val;
+			}
+		}
 	}
 	
 	/**
 	 * 	Check if a item has a (valid) cache
 	 * 
-	 * 	@param	Cache id
-	 * 	@param	Cache group id (optional)
+	 * 	@param	Cache ID
+	 * 	@param	Cache group ID (optional)
 	 * 	@return Boolean indicating if cache available
 	 */
 	function is_cached($cache_id, $cache_group = NULL)
@@ -44,10 +90,11 @@ class Cache
 	/**
 	 * 	Save an item to the cache
 	 * 
-	 * 	@param	Cache id
+	 * 	@param	Cache ID
 	 * 	@param	Data object
-	 * 	@param	Cache group id (optional)
-	 * 	@param	Time to live for this item
+	 * 	@param	Cache group ID (optional)
+	 * 	@param	Time to live for this item (optional)
+	 * 	@return void
 	 */
 	function save($cache_id, $data, $cache_group = NULL, $ttl = NULL)
 	{
@@ -62,10 +109,10 @@ class Cache
 		}
 
 		$file = $this->_file($cache_id, $cache_group);
-		$cache_file = $file.$this->options['cache_postfix'];
-		$expiry_file = $file.$this->options['expiry_postfix'];
+		$cache_file = $file.$this->cache_postfix;
+		$expiry_file = $file.$this->expiry_postfix;
 		
-		if ($ttl === NULL) $ttl = $this->options['default_ttl'];
+		if ($ttl === NULL) $ttl = $this->default_ttl;
 
 		//
 		//	Ok, so setting ttl = 0 is not quite forever, but 1000 years
@@ -95,9 +142,9 @@ class Cache
 	/**
 	 * 	Get and return an item from the cache
 	 * 
-	 * 	@param	Cache Id
-	 * 	@param	Cache group Id
-	 * 	@param	Should I check the expiry time?
+	 * 	@param	Cache ID
+	 * 	@param	Cache group ID (optional)
+	 * 	@param	Should I check the expiry time? (optional)
 	 * 	@return The object or NULL if not available
 	 */
 	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
@@ -105,7 +152,7 @@ class Cache
 		
 		if (!$skip_checking && !$this->is_cached($cache_id, $cache_group)) return NULL;
 
-		$cache_file = $this->_file($cache_id, $cache_group).$this->options['cache_postfix'];
+		$cache_file = $this->_file($cache_id, $cache_group).$this->cache_postfix;
 		
 		if (!is_file($cache_file)) return NULL;
 
@@ -116,15 +163,16 @@ class Cache
 	/**
 	 * 	Remove an item from the cache
 	 * 
-	 * 	@param	Cache Id
-	 * 	@param 	Cache group Id
+	 * 	@param	Cache ID
+	 * 	@param 	Cache group ID (optional)
+	 * 	@return void
 	 */
 	function remove($cache_id, $cache_group = NULL)
 	{
 		
 		$file = $this->_file($cache_id, $cache_group);
-		$cache_file = $file.$this->options['cache_postfix'];
-		$expiry_file = $file.$this->options['expiry_postfix'];
+		$cache_file = $file.$this->cache_postfix;
+		$expiry_file = $file.$this->expiry_postfix;
 		
 		@unlink($cache_file);
 		@unlink($expiry_file);
@@ -134,7 +182,7 @@ class Cache
 	/**
 	 * 	Remove an entire group
 	 * 
-	 * 	@param	Cache group Id
+	 * 	@param	Cache group ID
 	 */
 	function remove_group($cache_group)
 	{
@@ -155,9 +203,7 @@ class Cache
 		
 		closedir($dh);
 		
-		//
 		//	Delete the dir for tidyness
-		//
 		@rmdir($group_dir);
 		
 	}
@@ -165,17 +211,15 @@ class Cache
 	/**
 	 * 	Remove an array of cached items
 	 * 
-	 * 	@param	Array of cache ids
-	 * 	@param	Cache group Id
+	 * 	@param	Array of cache IDs
+	 * 	@param	Cache group ID
 	 */
 	function remove_ids($cache_ids, $cache_group = NULL)
 	{
 
 		if (!is_array($cache_ids)) $cache_ids = array($cache_ids);
 
-		//
-		//	Hash all ids
-		//
+		//	Hash all IDs
 		$hashes = array();
 		
 		foreach($cache_ids as $cache_id)
@@ -187,9 +231,7 @@ class Cache
 
 		$group_dir = $this->_group_dir($cache_group);
 		
-		//
 		//	Delete matching files
-		//
 		if(!$dh = @opendir($group_dir)) return;
 		
 		$filecount = 0;
@@ -223,36 +265,57 @@ class Cache
 		
 	}
 	
-	//
-	//	Private methods
-	//
+	//	Protected methods
 	
-	private function _get_expiry($cache_id, $cache_group = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * 	Returns the cache expiration time of a file
+	 * 
+	 * 	@param	Cache ID
+	 * 	@param 	Cache group ID (optional)
+	 * 	@return void
+	 */
+	protected function _get_expiry($cache_id, $cache_group = NULL)
 	{
-		
-		$file = $this->_file($cache_id, $cache_group).$this->options['expiry_postfix'];
-	
+		$file = $this->_file($cache_id, $cache_group).$this->expiry_postfix;
 		if (!is_file($file)) return 0;
-		
 		return intval(file_get_contents($file));
-		
 	}
 	
-	function _file($cache_id, $cache_group = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * 	Retrieves a file path to an cached item
+	 * 
+	 * 	@param	Cache ID
+	 * 	@param 	Cache group ID (optional)
+	 * 	@return void
+	 */
+	protected function _file($cache_id, $cache_group = NULL)
 	{
-		
 		return $this->_group_dir($cache_group).'/'.md5($cache_id);
-		
 	}
 	
-	private function _group_dir($cache_group)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * 	Returns the directory to a cached group
+	 * 
+	 * 	@param 	Cache group ID (optional)
+	 * 	@return string
+	 */
+	protected function _group_dir($cache_group)
 	{
 		$CI =& get_instance();
-		$dir = ($cache_group != NULL) ? md5($cache_group).$this->options['group_postfix'] : '';
+		$dir = ($cache_group != NULL) ? md5($cache_group).$this->group_postfix : '';
 		$cache_path = ($CI->config->item('cache_path') != '') ?  $CI->config->item('cache_path') : APPPATH.'cache/';
 		return $cache_path.$dir;
 		
 	}
 	
 }
-?>
+
+
+/* End of file Cache.php */
+/* Location: ./application/libraries/Cache.php */

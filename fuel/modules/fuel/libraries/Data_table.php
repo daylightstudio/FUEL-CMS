@@ -123,6 +123,34 @@ class Data_table {
 	 * Assign data to the table to be rendered
 	 * 
 	 * If headers is empty, the table will automatically create them from the data array.
+	<code>
+	$data[] = array(
+		'name' => 'Darth Vader',
+		'weapon' => 'light saber',
+		'darkside' => TRUE,
+		'active' => 'yes'
+	);
+	$data[] = array(
+		'name' => 'Luke Skywalker',
+		'weapon' => 'light saber',
+		'darkside' => FALSE,
+		'active' => 'yes'
+	);
+
+	$data[] = array(
+		'name' => 'Han Solo',
+		'weapon' => 'blaster',
+		'darkside' => FALSE,
+		'active' => 'yes',
+		'__field__' => array('name' => array('class' => 'highlight'))
+	);
+
+	$this->data_table->assign_data($data);
+	</code>
+	
+	<p class="important">Note the <dfn>'__field__'</dfn> field in the example below (that's 2 underscores on each side). 
+	This is a special field that allows you to add attributes to the parent &lt;td&gt; tag. In the above example, the CSS class of "highlight" 
+	is applied to the Han Solo named column.</p>
 	 *
 	 * @access	public
 	 * @param	array table data
@@ -481,6 +509,33 @@ class Data_table {
 	/**
 	 * Add actions to each row
 	 * 
+	The <dfn>type</dfn> attribute can be either <dfn>url</dfn> or <dfn>func</dfn>.
+	Type <dfn>url</dfn> is a string value that can have placeholder with <dfn>{}</dfn> surrounding column values that need to be substituted in.
+	Type <dfn>func</dfn> is a string value of a function that will have the rows field values passed to it as the only parameter. 
+
+	The default is <dfn>url</dfn>.
+
+	<code>
+	// with just a url
+	$action = array('EDIT' => 'example/edit/{id}');
+	$this->data_table->add_action($field, $action);
+	</pre>
+
+	<pre class="brush: php">
+	// with a function
+	$delete_func = '
+	$CI =& get_instance();
+	$link = "";
+	if ($CI->auth->has_permission("delete"))
+	{
+		$url = site_url("example/delete/".$cols["id"]);
+		$link = "<a href=\"".$url."\">DELETE</a>";
+	}
+	return $link;';
+
+	$delete_func = create_function('$cols', $delete_func);
+	$this->data_table->add_action($field, $action);
+	</code>
 	 * @access	public
 	 * @param	string text label to display for the action
 	 * @param	a link path or a function
@@ -497,6 +552,17 @@ class Data_table {
 
 	/**
 	 * Add a formatter to a column
+
+	<p>The formatter should be a function that accepts an array of field values.</p>
+
+	<code>
+	function is_darkside($fields)
+	{
+		return ($fields['darkside']) ? 'yes' : 'no';
+	}
+
+	$this->data_table->add_field_formatter('darkside', 'is_darkside'); // will echo out either yes or no for the field value
+	</code>
 	 * 
 	 * @access	public
 	 * @param	string text label to display for the action
@@ -587,6 +653,12 @@ class Data_table {
 
 	/**
 	 * Add a single header to the table
+
+	The <dfn>$sorting_param</dfn> is the column to sort on if it is different then the $key.
+
+	<code>
+	$this->data_table->add_header('name', 'Name', 'name', '', 1);
+	</code>
 	 * 
 	 * @access	public
 	 * @param	string the column key value to associate to the row data
@@ -609,6 +681,17 @@ class Data_table {
 	/**
 	 * Add multiple headers to the table using an array instead of a Data_table_header object
 	 * 
+	<code>
+	$headers = array(
+		'name' => 'Name',
+		'weapon' => 'Weapon',
+		'active' => 'Active'
+	);
+	$sorting_cols = array('name', 'weapon', 'active');
+
+	$this->data_table->add_headers($headers, $sorting_cols, '');
+	</code>
+
 	 * @access	public
 	 * @param	array key/values of column and display names for headers
 	 * @param	array sorting parameters
@@ -658,6 +741,18 @@ class Data_table {
 
 	/**
 	 * Add a single row to the table
+	
+	<code>
+	$row = array(
+		'id' => 1,
+		'name' => 'Luke Skywalker',
+		'weapon' => 'light saber',
+		'active' => 'yes'
+	);
+	$action = array('EDIT' => 'example/edit/{id}');
+
+	$this->data_table->add_row($row, '', 1, $action);
+	</code>
 	 * 
 	 * @access	public
 	 * @param	array columns data
@@ -719,6 +814,24 @@ class Data_table {
 	/**
 	 * Add multiple headers to the table using an array instead of a Data_table_header object
 	 * 
+	<code>
+	$rows[] = array(
+		'id' => 1,
+		'name' => 'Luke Skywalker',
+		'weapon' => 'light saber',
+		'active' => 'yes'
+	);
+
+	$rows[] = array(
+		'id' => 2,
+		'name' => 'Han Solo',
+		'weapon' => 'blaster',
+		'active' => 'yes'
+	);
+	$action = array('EDIT' => 'example/edit/{id}');
+
+	$this->data_table->add_rows($rows, '', $action);
+	</code>
 	 * @access	public
 	 * @param	array row data
 	 * @param	array row attributes

@@ -353,14 +353,15 @@ class Inspection_class extends Inspection_base {
 						else
 						{
 							// if not found on the right, then we look to the direct top
-							preg_match('#//\s*(.+)\s*\n\s+'.$type.'\s+(\$'.$name.').*;#U', $props_block, $matches);
-							
+							preg_match('#//\s*(.+)\s*\n\s+'.$type.'\s+(\$'.$name.').*#Um', $props_block, $matches);
 							if (isset($matches[1]) AND !$p->comment->text())
 							{
 								$p->comment->set_text($matches[1]);
 							}
 							
 						}
+						
+						
 						$props[$name] = $p;
 						
 					}
@@ -495,7 +496,6 @@ class Inspection_param extends Inspection_base {
 	
 	function __construct($method, $obj = NULL)
 	{
-		//array('Some_Class', 'someMethod'), 4
 		if (isset($obj))
 		{
 			parent::__construct('ReflectionParameter', $method, $obj);
@@ -602,11 +602,11 @@ class Inspection_comment {
 				$value = $matches[2][$key];
 				if ($tag == 'param')
 				{
-					$params[] = trim($value);
+					$params[] = trim(str_replace("\t", ' ', $value));
 				}
 				else if (empty($this->_tags[$tag]))
 				{
-					$this->_tags[$tag] = trim($value);
+					$this->_tags[$tag] = trim(str_replace("\t", ' ', $value));
 				}
 			}
 			$this->_tags['param'] = $params;
@@ -693,10 +693,9 @@ class Inspection_comment {
 	{
 		if (!isset($this->_description))
 		{
-			preg_match('#/\*\*\s*(.+)@#Ums', $this->_text, $matches);
+			preg_match('#/\*\*\s*(.+ )(@|\*\/)#Ums', $this->_text, $matches);
 			if (isset($matches[1]))
 			{
-			
 				// removing preceding * and tabs
 				$this->_description = preg_replace('#\*\s+#ms', "", $matches[1]);
 				$this->_description = str_replace(PHP_EOL, PHP_EOL.PHP_EOL, $this->_description);

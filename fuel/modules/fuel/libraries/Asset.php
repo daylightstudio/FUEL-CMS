@@ -20,8 +20,13 @@
  * FUEL Asset Class
  *
  * This class allows you to output css, js links and/or files as well as
- * allows you to compress and cache them. Also has convenience methods for 
- * paths to assets
+ * allows you to compress and cache them. It also has convenience methods for 
+ * paths to different assets like images, pdfs, javascript css etc.
+ * 
+ * Additionally, you can use the <a href="[user_guide_url]helpers/asset">asset helper</a>
+ * which provides a shortcut for many of the methods of the Asset class. 
+ * 
+ * This class is auto-loaded.
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -55,7 +60,18 @@ class Asset {
 	// appends timestamp of last updated after file name
 	public $asset_append_cache_timestamp = array('js', 'css');
 	
-	// optimize/cache assets
+	/**
+	 * Optimize and/or cache assets. Options are:
+	 *
+	<ul>
+		<li><strong>FALSE</strong> - no optimization</li>
+		<li><strong>TRUE</strong> - will combine files, strip whitespace, and gzip</li>
+		<li><strong>inline</strong> - will render the files inline</li>
+		<li><strong>gzip</strong> - will combine files (if multiple) and gzip without stripping whitespace</li>
+		<li><strong>whitespace</strong> - will combine files (if multiple) and strip out whitespace without gzipping</li>
+		<li><strong>combine</strong> - will combine files (if multiple) but will not strip out whitespace or gzip</li>
+	</ul>
+	 */
 	public $assets_output = FALSE;
 
 	// cache folder relative to the application folder... must be writable directory (default is the application/assets/cache folder)
@@ -124,6 +140,23 @@ class Asset {
 	/**
 	 * Returns an image asset path
 	 *
+	<code>
+	echo $this->asset->img_path('banner.jpg');
+	// /assets/images/banner.jpg
+
+	echo $this->asset->img_path('banner.jpg', 'my_module');
+	// /fuel/modules/my_module/assets/images/banner.jpg (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->img_path('banner.jpg', NULL, TRUE);
+	// http://www.mysite.com/assets/images/banner.jpg (if the "assets_module" Asset class property is empty)
+	// http://www.mysite.com/fuel/modules/my_module/assets/images/banner.jpg (if the "assets_module" Asset class property is my_module)
+
+	echo $this->asset->img_path('banner.jpg', '', TRUE);
+	// http://www.mysite.com/assets/images/banner.jpg (and empty string for the module parameter will properly ignore anything in the assets_module Asset class property)
+
+	</code>
+	<p class="important">File extension <strong>must</strong> be included.</p>
+	
 	 * @access	public
 	 * @param	string	image file name including extension
 	 * @param	string	module folder if any
@@ -140,6 +173,20 @@ class Asset {
 	/**
 	 * Returns a css asset path
 	 *
+	<code>
+	echo $this->asset->css_path('main');
+	// /assets/css/main.css
+
+	echo $this->asset->css_path('main', 'my_module');
+	// /fuel/modules/my_module/assets/css/main.css (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->css_path('main', NULL, TRUE);
+	// http://www.mysite.com/assets/css/main.css
+	</pre>
+
+	</code>
+	<p class="important">The <kbd>.css</kbd> file extension will automatically be added if it is not found in the file name (first parameter).</p>
+
 	 * @access	public
 	 * @param	string	css file name (extension not required)
 	 * @param	string	module folder if any
@@ -162,6 +209,18 @@ class Asset {
 	
 	/**
 	 * Returns a js asset path
+	<code>
+	echo $this->asset->js_path('main');
+	// /assets/js/main.js
+
+	echo $this->asset->js_path('main', 'my_module');
+	// /fuel/modules/my_module/assets/js/main.js (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->js_path('main', NULL, TRUE);
+	// http://www.mysite.com/assets/js/main.js
+	</code>
+
+	<p class="important">The <kbd>.js</kbd> file extension will automatically be added if it is not found in the file name (first parameter).</p>
 	 *
 	 * @access	public
 	 * @param	string	javascript file name (extension not required)
@@ -186,6 +245,19 @@ class Asset {
 	/**
 	 * Returns a swf asset path
 	 *
+	<code>
+	echo $this->asset->swf_path('main');
+	// /assets/swf/home.swf
+
+	echo $this->asset->swf_path('main', 'my_module');
+	// /fuel/modules/my_module/assets/swf/home.swf (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->swf_path('main', NULL, TRUE);
+	// http://www.mysite.com/assets/swf/home.swf
+	</code>
+
+	<p class="important">The <kbd>.swf</kbd> file extension will automatically be added if it is not found in the file name (first parameter).</p>
+	
 	 * @access	public
 	 * @param	string	swf file name (extension not required)
 	 * @param	string	module folder if any
@@ -209,6 +281,19 @@ class Asset {
 	/**
 	 * Returns a pdf asset path
 	 *
+	<code>
+	echo $this->asset->pdf_path('newsletter');
+	// /assets/swf/newsletter.pdf
+
+	echo $this->asset->pdf_path('main', 'my_module');
+	// /fuel/modules/my_module/assets/pdf/newsletter.pdf (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->pdf_path('main', NULL, TRUE);	
+	// http://www.mysite.com/assets/pdf/newsletter.pdf
+	</code>
+
+	<p class="important">The <kbd>.pdf</kbd> file extension will automatically be added if it is not found in the file name (first parameter).</p>
+	
 	 * @access	public
 	 * @param	string	pdf file name (extension not required)
 	 * @param	string	module folder if any
@@ -231,6 +316,18 @@ class Asset {
 	
 	/**
 	 * Returns a media asset path (e.g. quicktime .mov)
+	<code>
+	echo $this->asset->media_path('mymovie.mov');
+	// /assets/media/mymovie.mov
+
+	echo $this->asset->media_path('mymovie.mov', 'my_module');
+	// /fuel/modules/my_module/assets/media/nmymovie.mov (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->media_path('mymovie.mov', NULL, TRUE);
+	// http://www.mysite.com/assets/media/mymovie.mov
+	</code>
+
+	<p class="important">File extensions <strong>must</strong> be included.</p>
 	 *
 	 * @access	public
 	 * @param	string	pdf file name including extension
@@ -248,6 +345,19 @@ class Asset {
 	/**
 	 * Returns a document asset path (e.g. doc, docx)
 	 *
+	<code>
+	echo $this->asset->docs_path('mydoc.doc');
+	// /assets/docs/mydoc.doc
+
+	echo $this->asset->docs_path('mydoc.doc', 'my_module');
+	// /fuel/modules/my_module/assets/docs/mydoc.doc (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->media_path('mydoc.doc', NULL, TRUE);
+	// http://www.mysite.com/assets/docs/mydoc.doc
+	</code>
+
+	<p class="important">File extensions <strong>must</strong> be included.</p>
+
 	 * @access	public
 	 * @param	string	doc file name including extension
 	 * @param	string	module folder if any
@@ -264,6 +374,20 @@ class Asset {
 	/**
 	 * Returns a cache asset path
 	 *
+	<code>
+	echo $this->asset->cache_path('3c38643da81c3cee289feac34465c353_943948800.php');
+	// /assets/cache/3c38643da81c3cee289feac34465c353_943948800.php
+
+	echo $this->asset->cache_path('3c38643da81c3cee289feac34465c353_943948800.php', 'my_module');
+	// /fuel/modules/my_module/assets/cache/3c38643da81c3cee289feac34465c353_943948800.php (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->cache_path('3c38643da81c3cee289feac34465c353_943948800.php', NULL, TRUE);
+	// http://www.mysite.com/assets/cache/3c38643da81c3cee289feac34465c353_943948800.php
+	</code>
+
+	<p class="important">File extensions <strong>must</strong> be included. 
+	Modules should include a <strong>writable</strong> asset cache folder (e.g. assets/cache) if asset optimizing is used
+	</p>
 	 * @access	public
 	 * @param	string	cached file name including extension
 	 * @param	string	module folder if any
@@ -280,6 +404,17 @@ class Asset {
 	/**
 	 * Returns a captcha image path
 	 *
+	<code>
+	echo $this->asset->captcha_path('123456_captcha.jpg');
+	// /assets/captcha/123456_captcha.jpg
+
+	echo $this->asset->captcha_path('123456_captcha.jpg', 'my_module');
+	// /fuel/modules/my_module/assets/captcha/123456_captcha.jpg (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->captcha_path('123456_captcha.jpg', NULL, TRUE);
+	// http://www.mysite.com/assets/captcha/123456_captcha.jpg
+	</code>
+	
 	 * @access	public
 	 * @param	string	captcha file name including extension
 	 * @param	string	module folder if any
@@ -296,6 +431,22 @@ class Asset {
 	/**
 	 * Returns an asset path and is what the others above use
 	 *
+	<code>
+	echo $this->asset->assets_path();
+	// /assets/
+
+	echo $this->asset->assets_path('banner.jpg', 'images');
+	// /assets/images/banner.jpg
+
+	echo $this->asset->assets_path('banner.jpg', 'images', 'my_module');
+	// /fuel/modules/my_module/assets/images/banner.jpg (assuming /fuel/modules is where the module folder is located)
+
+	echo $this->asset->assets_path('banner.jpg', 'images', NULL, TRUE);
+	// http://www.mysite.com/assets/images/banner.jpg
+	</code>
+
+	<p class="important">File extensions <strong>must</strong> be included. This folder must be <strong>writable</strong>.</p>
+
 	 * @access	public
 	 * @param	string	asset file name including extension
 	 * @param	string	subfolder to asset file (e.g. images, js, css... etc)
@@ -340,6 +491,19 @@ class Asset {
 	/**
 	 * Get the server path
 	 *
+	<code>
+	echo $this->asset->assets_server_path();
+	// /Library/WebServer/Documents/assets/
+
+	echo $this->asset->assets_path('banner.jpg', 'images');
+	// /Library/WebServer/Documents/assets/images/banner.jpg
+
+	echo $this->asset->assets_path('banner.jpg', 'images', 'my_module');
+	// /Library/WebServer/Documents/fuel/modules/my_module/assets/images/banner.jpg (assuming /fuel/modules is where the module folder is located)
+	</code>
+
+	<p class="important">File extensions <strong>must</strong> be included. This folder must be <strong>writable</strong>.</p>
+
 	 * @access	public
 	 * @param	string	asset file name including extension
 	 * @param	string	subfolder to asset file (e.g. images, js, css... etc)
@@ -364,6 +528,11 @@ class Asset {
 	/**
 	 * Convert a server path to a web path
 	 *
+	<code>
+	$file_server_path = '/Library/WebServer/Documents/assets/images/my_img.jpg';
+	echo $this->asset->assets_server_to_web_path($file_server_path);
+	// /assets/images/my_img.jpg
+	</code>
 	 * @access	public
 	 * @param	string	server path to asset file
 	 * @return	string
@@ -388,10 +557,46 @@ class Asset {
 	/**
 	 * Inserts <script ...></script> tags based on configuration settings for js file path
 	 *
+	<p>The third parameter is an <kbd>array</kbd> of additional attributes to pass. Those attributes can be the following</p>
+	<ul>
+		<li><strong>attrs</strong> - additional attributes to pass to the <kbd>&lt;script&gt;</kbd> tag. Can be a string or an array</li>
+		<li><strong>output</strong> - the output method to be applied to the contents of the file. Can be any of the <kbd>assets_output</kbd></li>
+		<li><strong>ie_conditional</strong> - applies an IE specific conditional comment around the <kbd>&lt;script&gt;</kbd> tag</li>
+	</ul>
+
+	<p>Additionally, if the asset configuration of <strong>asset_append_cache_timestamp</strong> includes <strong>js</strong>,
+	then the caching timestamp will be appended as a query string parameter at the end just like if you were to use
+	<kbd>$this->asset->js_path().</kbd>
+	Examples:
+	</p>
+
+	<code>
+	echo $this->asset->js('main');
+	// &lt;script src="/assets/js/main.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+
+	echo $this->asset->js('jquery, main');
+	// &lt;script src="/assets/js/jquery.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+	// &lt;script src="/assets/js/main.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+
+	echo $this->asset->js(array('jquery', 'main'));
+	// &lt;script src="/assets/js/jquery.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+	// &lt;script src="/assets/js/main.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+
+	echo $this->asset->js('main', 'my_module');
+	// &lt;script src="/fuel/modules/my_module/assets/js/jquery.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+
+	echo $this->asset->js('main', NULL, array('output' => TRUE, 'attrs' => 'onload=myOnloadFunc()', 'ie_conditional' => 'lte IE 6'));
+	// &lt;!--[if lte IE 6]&gt;
+	// &lt;script src="/assets/cache/3c38643da81c3cee289feac34465c353_943948800.php" type="text/javascript" charset="utf-8" onload="myOnloadFunc"&gt;&lt;/script&gt;
+	// &lt;![endif]--&gt;
+	</code>
+
+	<p class="important"><strong>Important</strong> - All path references in the javascript file (e.g. paths to image files), should be changed to absolute if the script is printed <strong>inline</strong>.</p>
+	
 	 * @access	public
 	 * @param	string	file name of the swf file including extension
 	 * @param	string	module module folder if any
-	 * @param	array	additional parameter to include (attrs, ie_conditional, and output)
+	 * @param	array	additional parameter to include (attrs, ie_conditional, and output... Can be any of the <strong>assets_output</strong>)
 	 * @return	string
 	 */	
 	public function js($path, $module = '', $options = array())
@@ -455,6 +660,41 @@ class Asset {
 	/**
 	 * Inserts <link ... /> tags based on configuration settings for css file path
 	 *
+	<p>The third parameter is an <kbd>array</kbd> of additional attributes to pass. Those attributes can be the following</p>
+	<ul>
+		<li><strong>attrs</strong> - additional attributes to pass to the <kbd>&lt;script&gt;</kbd> tag. Can be a string or an array</li>
+		<li><strong>output</strong> - the output method to be applied to the contents of the file. Can be any of the <kbd>assets_output</kbd></li>
+		<li><strong>ie_conditional</strong> - applies an IE specific conditional comment around the <kbd>&lt;script&gt;</kbd> tag</li>
+	</ul>
+	
+	<p>Additionally, if the asset configuration of <strong>asset_append_cache_timestamp</strong> includes <strong>js</strong>,
+	then the caching timestamp will be appended as a query string parameter at the end just like if you were to use
+	<kbd>$this->asset->js_path().</kbd>
+	Examples:
+	</p>
+
+	<code>
+	echo $this->asset->css('main');
+	// &lt;link href="/assets/css/main.css" media="all" rel="stylesheet"/&gt;
+
+	echo $this->asset->css('main, home');
+	// &lt;link href="/assets/css/main.css" media="all" rel="stylesheet"/&gt;
+	// &lt;link href="/assets/css/home.css" media="all" rel="stylesheet"/&gt;
+
+	echo $this->asset->js(array('main', 'home'));
+	// &lt;link href="/assets/css/main.css" media="all" rel="stylesheet"/&gt;
+	// &lt;link href="/assets/css/home.css" media="all" rel="stylesheet"/&gt;
+
+	echo $this->asset->css('main', 'my_module');
+	// &lt;link href="fuel/modules/my_module/assets/css/main.css" media="all" rel="stylesheet"/&gt;
+
+	echo $this->asset->css('main', NULL, array('output' => TRUE, 'attrs' => 'media="print"', 'ie_conditional' => 'lte IE 6'));
+	// &lt;!--[if lte IE 6]&gt;
+	// &lt;link href="/assets/css/main.css" media="print" rel="stylesheet"/&gt;
+	// &lt;![endif]--&gt;
+	</code>
+
+	<p class="important"><strong>Important</strong> - All path references in the css file (e.g. paths to background image files), should be changed to absolute if the script is printed <strong>inline</strong></p>
 	 * @access	public
 	 * @param	string	file name of the swf file including extension
 	 * @param	string	module module folder if any
@@ -649,6 +889,28 @@ class Asset {
 	/**
 	 * Embeds a flash file using swfobject
 	 *
+	<p>The fourth parameter is a catch all for additional parameter that can be passed which include:</p>
+	<ul>
+		<li><strong>vars</strong> - FlashVar variables to pass to the swf file</li>
+		<li><strong>version</strong> - the Flash Player version to detect for. Default is Flash Player 9</li>
+		<li><strong>color</strong> - the background color to be used. May be seen briefly before the swf file runs.</li>
+		<li><strong>params</strong> - additional parameters to be passed to the swf file. For information on the additional parameters, visit the <a href="http://http://code.google.com/p/swfobject/wiki/documentation">swfobject documentation</a></li>
+	</ul>
+	<code>
+	echo swf('home', 'home_flash', 800, 300, array('color' => '#000000', 'version' => 9));
+
+	// &lt;script src="/assets/js/swfobject.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+	// &lt;script type="text/javascript"&gt;
+	// //&lt;![CDATA[
+	//     var so = new SWFObject("/assets/swf/home.swf", "flash_swf", "800", "300", "9", "#000000");
+	//     so.write("flash");
+	// // ]]&gt;
+	// &lt;/script&gt;
+
+	</code>
+
+	<p class="important"><strong>Important</strong> - Requires the <kbd>swfobject.js</kbd> to be located in the javascript assets folder. The swfoject being used is an older version (1.5)</p>
+	
 	 * @access	public
 	 * @param	string	file name of the swf file including extension
 	 * @param	string	html id that the flash will replace with swfobject

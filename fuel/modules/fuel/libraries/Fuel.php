@@ -19,6 +19,8 @@
 /**
  * FUEL master object
  *
+ * The master FUEL object that other objects attach to
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries

@@ -96,6 +96,12 @@ Class Form {
 	/**
 	 * Creates the opening form element
 	 * 
+	<code>
+	$validator = new Validator();
+	echo $this->form->open('id="my_form"', $validator); 
+	// will echo the following
+	&lt;form action="" method="post" id="my_form"&gt;
+	</code>
 	 * @access public
 	 * @param mixed attrs if array then create string
 	 * @param object validator object
@@ -113,6 +119,12 @@ Class Form {
 	/**
 	 * Creates the opening form element as a multipart
 	 * 
+	<code>
+	$validator = new Validator();
+	echo $this->form->open_multipart('id="my_form"', $validator); 
+	// will echo the following
+	&lt;form action="" method="post" id="my_form"&gt;
+	</code>
 	 * @access public
 	 * @param mixed attrs if array then create string
 	 * @param object validator object
@@ -129,6 +141,11 @@ Class Form {
 	/**
 	 * Creates the close form element as a multipart
 	 * 
+	<close>
+	echo $this->form->close('<!--END OF FORM-->');
+	// will echo the following
+	<<!--END OF FORM-->&lt;/form&gt;
+	</close>
 	 * @access public
 	 * @param string html to use before the closing form tag
 	 * @param string whether to include the csrf field before the closing tag
@@ -154,6 +171,12 @@ Class Form {
 	/**
 	 * Creates the opening fieldset element 
 	 * 
+	<code>
+	echo $this->form->fieldset_open('MY Form Legend', 'id="my_legend"');
+	// will echo the following
+	<fieldset>
+	&lt;legend id="my_legend"&gt;MY Form Legend&lt;/legend&gt;
+	</code>
 	 * @access public
 	 * @param string legend name
 	 * @param mixed attrs if array then create string
@@ -175,6 +198,11 @@ Class Form {
 	/**
 	 * Creates the close fieldset element 
 	 * 
+	<code>
+	echo $this->form->fieldset_close();
+	// will echo the following
+	&lt;/fieldset&gt;
+	</code>
 	 * @access public
 	 * @return string
 	 */
@@ -188,6 +216,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="{text}"&gt; tag
 	 * 
+	<code>
+	// will echo the following
+	echo $this->form->input('email','text', 'dvader@deathstar.com', 'class="txt_field"');
+	&lt;input type="text" name="email" id="email" value="dvader@deathstar.com" class="txt_field" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string type of input element
@@ -208,6 +241,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="text"&gt; tag
 	 * 
+	<code>
+	echo $this->form->text('email', 'dvader@deathstar.com', 'class="txt_field"');
+	// will echo the following
+	&lt;input type="text" name="email" id="email" value="dvader@deathstar.com" class="txt_field" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -224,6 +262,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="password"&gt; tag
 	 * 
+	<code>
+	echo $this->form->hidden('passowrd', 'abc134', 'class="txt_field"');
+	// will echo the following
+	&lt;input type="passowrd" name="pwd" id="pwd"  value="" class="txt_field" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -240,6 +283,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="search"&gt; tag
 	 * 
+	<code>
+	echo $this->form->search('searh', 'Search...', 'class="txt_field"');
+	// will echo the following
+	&lt;input type="searh" name="searh" id="searh" value="Search..." class="txt_field" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -256,6 +304,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="hidden"&gt; tag
 	 * 
+	<code>
+	echo $this->form->hidden('id', '1', 'class="txt_field"');
+	// will echo the following
+	&lt;input type="hidden" name="id" id="id" value="1" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -272,6 +325,14 @@ Class Form {
 	/**
 	 * Creates &lt;input type="radio"&gt; tag
 	 * 
+	<code>
+	echo $this->form->radio('yesno', 'yes', '');
+	echo $this->form->radio('eitheror', 'no', '');
+
+	// will echo the following
+	&lt;input type="radio" name="yesno" id="eitheror" value="yes" /&gt;
+	&lt;input type="radio" name="yesno" id="eitheror" value="no" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -288,6 +349,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="checkbox"&gt; tag
 	 * 
+	<code>
+	echo $this->form->checkbox('yesno', 'yes', '');
+	// will echo the following
+	&lt;input type="checbock" name="yesno" id="yesno" value="yes" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -303,6 +369,11 @@ Class Form {
 	/**
 	 * Creates &lt;input type="file"&gt; tag
 	 * 
+	<code>
+	echo $this->form->file('myfile', 'class="file_class"');
+	// will echo the following
+	&lt;input type="file" name="myfile" id="myfile" value="" class="file_class" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -319,7 +390,21 @@ Class Form {
 	/**
 	 * Creates &lt;select&gt; tag
 	 * 
-	 * @access public
+	<code>
+	$options = array();
+	$options['a'] = 'Option A';
+	$options['b'] = 'Option B';
+	$options['c'] = 'Option C';
+	echo $this->form->select('my_options', $options, 'b', 'class="select_class"', 'Select one of these...');
+	// will echo the following
+	&lt;select name="my_options" id="my_options" class="select_class"&gt;
+		&lt;option value="" label="Select one of these..."&gt;Select one of these...&lt;/option&gt;
+		&lt;option value="a" label="A"&gt;A&lt;/option&gt;
+		&lt;option value="b" label="B" selected="selected"&gt;B&lt;/option&gt;
+		&lt;option value="b" label="C"&gt;C&lt;/option&gt;
+	&lt;/select&gt;
+	</code>
+	* @access public
 	 * @param string name of the input element
 	 * @param array options for the form element
 	 * @param string value for the input element
@@ -339,8 +424,15 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <textarea> tag
+	 * Creates &lt;textarea&gt; tag
 	 * 
+	<code>
+	echo $this->form->textarea('mytextfield', 'My text goes here.', 'class="txt_field"');
+	// will echo the following
+	&lt;textarea name="mytextfield" id="mytextfield" class="txt_field"&gt;
+	My text goes here.
+	&lt;/textarea&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -357,8 +449,13 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="submit"> tag
+	 * Creates &lt;input type="submit"&gt; tag
 	 * 
+	<code>
+	echo $this->form->submit('Submit', 'submit', 'class="submit"');
+	// will echo the following
+	&lt;input type="submit" name="submit" id="submit" value="Submit" class="submit" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -373,8 +470,18 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="button"> tag
+	 * Creates &lt;input type="button"&gt; tag
 	 * 
+	<code>
+	echo $this->form->button('mybutton', 'Click Me', 'class="btn"', FALSE);
+	// will echo the following
+	&lt;button type="button" name="mybutton" id="mybutton" value="Click Me" class="btn" /&gt;mybutton&lt;/button&gt;
+
+	// with the last parameter as TRUE
+	echo $this->form->button('mybutton', 'Click Me', 'class="btn"', TRUE);
+	// will echo the following
+	&lt;input type="button" name="mybutton" id="mybutton" value="Click Me" class="btn" /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -401,8 +508,13 @@ Class Form {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates <input type="reset"> tag
+	 * Creates &lt;input type="reset"&gt; tag
 	 * 
+	<code>
+	echo $this->form->reset('Reset', 'reset', 'class="reset_field"');
+	// will echo the following
+	&lt;input type="reset" name="reset" id="reset" value="Reset" 'class="reset_field"' /&gt;
+	</code>
 	 * @access public
 	 * @param string name of the input element
 	 * @param string value for the input element
@@ -419,6 +531,11 @@ Class Form {
 	/**
 	 * Creates <input type="image"> tag
 	 * 
+	<code>
+	echo $this->form->image('assets/images/my_img.jpg', 'go_button', 'go', 'class="img_field"');
+	// will echo the following
+	&lt;input type="image" src="assets/images/my_img.jpg" name="go_button" value="go" id="go_button" 'class="img_field"' /&gt;
+	</code>
 	 * @access public
 	 * @param string src of the input element
 	 * @param string value for the input element
@@ -437,6 +554,11 @@ Class Form {
 	/**
 	 * A helper method to prepare string for textarea... taken from Kohana
 	 * 
+	<code>
+	echo Form::prep('This will safely prep the form field text with entities like &amp;amp; in it');
+	// will echo the following
+	This will safely prep the form field text with entities like &amp;amp; in it
+	</code>
 	 * @access public
 	 * @param string elements value
 	 * @return string
@@ -477,6 +599,12 @@ Class Form {
 	/**
 	 * Checks a checkbox or radio
 	 * 
+	<code>
+	$myval = (!empty($_POST['myval'])) ? $_POST['myval'] : '';
+	echo $this->form->checkbox('mycheckbox', 'yes', Form::do_checked($myval=='yes'));
+	// will echo the following
+	&lt;input type="checbock" name="mycheckbox" id="mycheckbox" value="yes" checked="checked" /&gt;
+	</code>
 	 * @access public
 	 * @param string elements value
 	 * @return string
@@ -494,6 +622,12 @@ Class Form {
 	/**
 	 * Sets disabled attribute of a form element
 	 * 
+	<code>
+	$myval = (!empty($_POST['myval'])) ? $_POST['myval'] : '';
+	echo $this->form->text('mytext', '', Form::do_disabled($myval==''));
+	// will echo the following
+	&lt;input type="text" name="mytext" id="mytext" value="" disabled="disabled" /&gt;
+	</code>
 	 * @access public
 	 * @param string elements value
 	 * @return string
@@ -511,6 +645,12 @@ Class Form {
 	/**
 	 * Sets read only attribute of a form element
 	 * 
+	<code>
+	$myval = (!empty($_POST['myval'])) ? $_POST['myval'] : '';
+	echo $this->form->text('mytext', '', Form::do_read_only($myval==''));
+	// will echo the following
+	&lt;input type="text" name="mytext" id="mytext" value="" readonly="readonly" /&gt;
+	</code>
 	 * @access public
 	 * @param string elements value
 	 * @return string
@@ -528,6 +668,11 @@ Class Form {
 	/**
 	 * Creates the id attribute for the field and label
 	 *
+	<code>
+	echo Form::create_id('my_array_field[1]');
+	// will echo the following
+	my_array_field_1
+	</code>
 	 * @access	public
 	 * @param	string name of the field
 	 * @return	string
@@ -693,7 +838,7 @@ Class Form_select {
 	public $options; // value of the select form field
 	public $attrs; // attributes of the select form field
 	public $default; // default value of the select form field
-	public $first_option;
+	public $first_option; // the first option to display (e.g. Select one...)
 	protected $_selected_already = FALSE; // Used to keep track if something has been selected already
 
 	/**
