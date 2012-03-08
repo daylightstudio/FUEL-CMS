@@ -263,7 +263,7 @@ Class Form {
 	 * Creates <input type="password"> tag
 	 * 
 	<code>
-	echo $this->form->hidden('passowrd', 'abc134', 'class="txt_field"');
+	echo $this->form->hidden('password', 'abc134', 'class="txt_field"');
 	// will echo the following
 	<input type="passowrd" name="pwd" id="pwd"  value="" class="txt_field" />
 	</code>

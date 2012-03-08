@@ -2,6 +2,7 @@
 <?php 
 // This is a default setup. Feel free to change as see fit.
 
+define('IS_404', TRUE);
 define('USE_FUEL_MARKERS', FALSE);
 include(APPPATH.'views/_variables/global.php');
 extract($vars);
