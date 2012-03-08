@@ -19,7 +19,7 @@
 /**
  * FUEL URL Helper
  *
- * Extends CI's URL helper
+ * Contains functions to be used with urls. Extends CI's url helper and is autoloaded.
  *
  * @package		FUEL CMS
  * @subpackage	Helpers
@@ -168,6 +168,33 @@ function is_home()
 {
 	$uri_path = uri_path(FALSE);
 	return ($uri_path == 'home' OR $uri_path == '');
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns the last page you visited
+ *
+ * @access	public
+ * @param	string	Default value if no last page exists
+ * @param	boolean	Whether to return only the URI part of the the URL
+ * @return	boolean
+ */
+function last_url($default = FALSE, $only_uri = FALSE)
+{
+	$back_url = (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != current_url()) ? $_SERVER['HTTP_REFERER'] : $defalt;
+	
+	if ($back_url)
+	{
+		$back_url = site_url($back_url);
+
+		if ($only_uri)
+		{
+			$back_url = str_replace(site_url(), '', $back_url);
+		}
+	}
+	
+	return $back_url;
 }
 
 // --------------------------------------------------------------------
