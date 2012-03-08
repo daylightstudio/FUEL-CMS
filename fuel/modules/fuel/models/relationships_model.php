@@ -6,7 +6,7 @@ class Relationships_model extends Base_module_model {
 
 	function __construct()
 	{
-		parent::__construct('relationships');
+		parent::__construct('fuel_relationships');
 	}
 
 }

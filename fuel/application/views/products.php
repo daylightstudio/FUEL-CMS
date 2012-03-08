@@ -4,17 +4,21 @@
 
 <?php if ( ! empty($products)) : ?>
 <?php foreach ($products as $product) : ?>
-	
+
 	<div class="product">
 		<h2><?php echo $product->name; ?></h2>
 		
-		<?php if ( ! empty($product->description)): ?>
+		<?php if ( ! empty($product->description)) : ?>
 		<div class="product_description">
 			<?php echo $product->description; ?>
 		</div>
 		<?php endif; ?>
 		
 		<h3>Product Widgets</h3>
+		
+		<div class="product_widgets">
+			<?php echo $product->widgets; ?>
+		</div>
 	</div>
 
 <?php endforeach; ?>

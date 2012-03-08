@@ -1179,6 +1179,17 @@ class MY_Model extends CI_Model {
 	
 	// --------------------------------------------------------------------
 	
+// !@todo Update with docs and to be able to use an alternative relationship table
+	public function get_related($values, $foreign_table)
+	{
+		$CI =& get_instance();
+		$rel_model = $CI->load->module_model('fuel', 'relationships_model');
+		$related_vals = array_keys($rel_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->table_name(), 'candidate_key' => $values['id'], 'foreign_table' => $foreign_table)));
+		return $related_vals;
+	}
+	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Insert data
 	 *
@@ -1869,14 +1880,13 @@ class MY_Model extends CI_Model {
 		// attach relationship fields if they exist
 		if ( ! empty($this->has_many))
 		{
-			foreach ($this->has_many as $rel_field => $related_model)
+			foreach ($this->has_many as $related_field => $related_model_name)
 			{
-				$related_model_name = "{$related_model}_model";
-				$related_model = $this->load_model($related_model_name);
-				$rel_options = $CI->$related_model->options_list();
+				$related_model = $this->load_model("{$related_model_name}_model");
+				$related_options = $CI->$related_model->options_list();
 // !@todo Update this to pull from the relationships table
-				$rel_vals = ( ! empty($values['id'])) ? array() : array();
-				$fields[$rel_field] = array('label' => ucfirst($rel_field), 'type' => 'array', 'options' => $rel_options, 'value' => $rel_vals, 'mode' => 'multi');
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related($values, $related_model_name) : array();
+				$fields[$related_field] = array('label' => ucfirst($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
 			}
 		}
 
@@ -2174,6 +2184,22 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_after_save($values)
 	{
+// !@todo Try to use save_related here rather than manually doing it here
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model_name)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$CI =& get_instance();
+					$rel_model = $CI->load->module_model('fuel', 'relationships_model');
+					$rel_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id']));
+					foreach ($this->normalized_save_data[$related_field] as $foreign_id) {
+						$rel_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id'], 'foreign_table' => $related_model_name, 'foreign_key' => $foreign_id));
+					}
+				}
+			}
+		}
 		return $values;
 	}
 	
@@ -2188,6 +2214,7 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_before_delete($where)
 	{
+// !@todo Add has_many to this hook so that it deletes any related records
 	}
 
 	// --------------------------------------------------------------------
@@ -3097,7 +3124,8 @@ Class Data_record {
 	 * @param	string	field name
 	 * @return	mixed
 	 */	
-	public function __get($var){
+	public function __get($var)
+	{
 		$output = NULL;
 		$foreign_keys = $this->_parent_model->foreign_keys;
 		
@@ -3119,7 +3147,13 @@ Class Data_record {
 			$model = $foreign_keys[$var_key];
 			$output = $this->lazy_load($var_key, $model);
 		}
-
+// !@todo Update to check for has_many
+else if ( ! empty($this->_parent_model->has_many) AND array_key_exists($var, $this->_parent_model->has_many))
+{
+		$rel_model = $this->_CI->load->module_model('fuel', 'relationships_model');
+		$related_vals = array_keys($rel_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->_parent_model->table_name(), 'candidate_key' => $this->id, 'foreign_table' => $this->_parent_model->has_many[$var])));
+		$output = ( ! empty($related_vals)) ? implode('/', $related_vals) : '';
+}
 		// finally check values from the database
 		else if (array_key_exists($var, $this->_fields))
 		{
