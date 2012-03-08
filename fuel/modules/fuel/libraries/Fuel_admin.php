@@ -178,7 +178,7 @@ class Fuel_admin extends Fuel_base_library {
 		$this->set_inline($this->CI->input->get('inline'));
 		
 		// set last page
-		$this->last_page = $this->fuel->auth->user_data('last_page');
+		$this->last_page = $this->fuel->auth->user_data('fuel_last_page');
 		$this->init_display_modes();
 	}
 	
@@ -376,7 +376,7 @@ class Fuel_admin extends Fuel_base_library {
 		);
 		if (!is_ajax() AND empty($_POST) AND !in_array($page, $invalid) AND !$this->is_inline())
 		{
-			$this->fuel->auth->set_user_data('last_page', $page);
+			$this->fuel->auth->set_user_data('fuel_last_page', $page);
 		}
 	}
 	
