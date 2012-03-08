@@ -55,6 +55,8 @@ class MY_Model extends CI_Model {
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
+// !@todo add docs for $has_many
+	public $has_many = array();
 	
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
@@ -1860,6 +1862,21 @@ class MY_Model extends CI_Model {
 					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
+			}
+		}
+
+// !@todo Update this to work with the above since this is just a ripped-off version :(
+		// attach relationship fields if they exist
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $rel_field => $related_model)
+			{
+				$related_model_name = "{$related_model}_model";
+				$related_model = $this->load_model($related_model_name);
+				$rel_options = $CI->$related_model->options_list();
+// !@todo Update this to pull from the relationships table
+				$rel_vals = ( ! empty($values['id'])) ? array() : array();
+				$fields[$rel_field] = array('label' => ucfirst($rel_field), 'type' => 'array', 'options' => $rel_options, 'value' => $rel_vals, 'mode' => 'multi');
 			}
 		}
 

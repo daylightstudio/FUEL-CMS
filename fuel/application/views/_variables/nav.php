@@ -1,6 +1,7 @@
 <?php 
 $nav['about'] = 'About';
 $nav['showcase'] = array('label' => 'Showcase', 'active' => 'showcase$|showcase/:any');
+$nav['products'] = 'Products';
 $nav['blog'] = array('label' => 'Blog', 'active' => 'blog$|blog/:any');
 $nav['contact'] = 'Contact';
 
