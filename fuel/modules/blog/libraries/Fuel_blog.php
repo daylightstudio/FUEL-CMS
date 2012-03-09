@@ -423,6 +423,7 @@ class Fuel_blog {
 		{
 			$where[$tables['blog_posts'].'.published'] = 'yes';
 			$where[$tables['blog_categories'].'.name'] = $category;
+			$this->_CI->blog_posts_model->_common_query();
 			$cnt = $this->_CI->blog_posts_model->record_count($where);
 		}
 		else
