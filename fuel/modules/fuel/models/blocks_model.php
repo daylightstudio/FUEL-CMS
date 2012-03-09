@@ -47,9 +47,6 @@ class Blocks_model extends Base_module_model {
 	public function form_fields()
 	{
 		$fields = parent::form_fields();
-		$CI =& get_instance();
-		$CI->load->helper('directory');
-		$CI->load->helper('file');
 		return $fields;
 	}
 

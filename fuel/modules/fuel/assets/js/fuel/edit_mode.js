@@ -98,9 +98,13 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			fuel.refreshIframeSize = function(iframe){
-				setTimeout(function(){
+				var i = 0;
+				// polling
+				var interval = setInterval(function(){
 					fuel.setIframeSize(iframe);
-				}, 200);
+					if (i > 20) clearInterval(interval);
+					i++;
+				}, 100);
 			}
 			
 			fuel.setIframeSize = function(iframe){
@@ -120,7 +124,7 @@ if (fuel == undefined) var fuel = {};
 				} else {
 					docWidth = $(contentDoc).width();
 				}
-				
+
 				if (docHeight == 0){
 					docHeight = $(contentDoc).height();
 				}
