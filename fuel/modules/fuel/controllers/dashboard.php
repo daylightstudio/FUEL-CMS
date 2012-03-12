@@ -92,11 +92,9 @@ class Dashboard extends Fuel_base_controller {
 			
 			$feed_data = array();
 			$feed_data['items'] = $this->simplepie->get_items(0, $limit);
-$latest_fuel_version = '1.0';
-			/* $latest_fuel_version = $this->simplepie->get_channel_tags('', 'latestFuelVersion'); */
+			$latest_fuel_version = $this->simplepie->get_channel_tags('', 'latestFuelVersion');
 			if ( ! is_null($latest_fuel_version)) {
-$feed_data['latest_fuel_version'] = $latest_fuel_version;
-				/* $feed_data['latest_fuel_version'] = $latest_fuel_version[0]['data']; */
+				$feed_data['latest_fuel_version'] = $latest_fuel_version[0]['data'];
 			}
 			return $feed_data;
 		}
