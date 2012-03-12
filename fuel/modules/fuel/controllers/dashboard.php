@@ -66,7 +66,11 @@ class Dashboard extends Fuel_base_controller {
 			{
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
 			}
-			$vars['feed'] = $this->_feed();
+			$feed_data = $this->_feed();
+			if (array_key_exists('latest_fuel_version', $feed_data) AND ($feed_data['latest_fuel_version'] > FUEL_VERSION)) {
+				$vars['latest_fuel_version'] = $feed_data['latest_fuel_version'];
+			}
+			$vars['feed'] = $feed_data['items'];
 			$this->load->view('dashboard_ajax', $vars);
 		}
 	}
@@ -86,7 +90,15 @@ class Dashboard extends Fuel_base_controller {
 			@$this->simplepie->init();
 			$this->simplepie->handle_content_type();
 			
-			return $this->simplepie->get_items(0, $limit);
+			$feed_data = array();
+			$feed_data['items'] = $this->simplepie->get_items(0, $limit);
+$latest_fuel_version = '1.0';
+			/* $latest_fuel_version = $this->simplepie->get_channel_tags('', 'latestFuelVersion'); */
+			if ( ! is_null($latest_fuel_version)) {
+$feed_data['latest_fuel_version'] = $latest_fuel_version;
+				/* $feed_data['latest_fuel_version'] = $latest_fuel_version[0]['data']; */
+			}
+			return $feed_data;
 		}
 	}
 	
