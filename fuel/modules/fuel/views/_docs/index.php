@@ -21,4 +21,4 @@
 </ul>
 
 
-<?=generate_toc('fuel');?>
+<?=generate_toc('libraries');?>

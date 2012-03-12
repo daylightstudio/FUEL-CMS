@@ -197,7 +197,7 @@ function safe_htmlentities($str, $protect_amp = TRUE)
 	if (version_compare(PHP_VERSION, '5.2.3', '>='))
 	{
 		//$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
-		$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8', FALSE);
+		$str = htmlentities($str, ENT_NOQUOTES, config_item('charset'), FALSE);
 	}
 	else
 	{
@@ -282,16 +282,17 @@ function php_to_template_syntax($str)
  *
  * @param 	string 	string to evaluate
  * @param 	array 	variables to parse with string
+ * @param 	string 	the cache ID
  * @return	string
  */
-function parse_template_syntax($str, $vars = array())
+function parse_template_syntax($str, $vars = array(), $cache_id = NULL)
 {
 	$CI =& get_instance();
 	if (!isset($CI->parser))
 	{
 		$CI->load->library('parser');
 	}
-	return $CI->parser->parse_string($str, $vars, TRUE);
+	return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);
 }
 
 /* End of file MY_string_helper.php */

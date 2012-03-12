@@ -132,14 +132,14 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @param	array
 	 * @param	bool
-	 * @param	bool
+	 * @param	string
 	 * @return	string
 	 */
-	function parse($template, $data = array(), $return = FALSE, $compile = NULL)
+	function parse($template, $data = array(), $return = FALSE, $cache_id = NULL)
 	{
 		$string = $this->_ci->load->view($template, $data, TRUE);
 
-		return $this->_parse_compiled($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $cache_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -154,22 +154,22 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @param	array
 	 * @param	bool
-	 * @param	bool
+	 * @param	strin
 	 * @return	string
 	 */
 	
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
-	function string_parse($string, $data = array(), $return = TRUE, $compile = NULL)
+	function string_parse($string, $data = array(), $return = TRUE, $cache_id = NULL)
 	{
-		return $this->_parse_compiled($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $cache_id);
 	}
 
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
-	function parse_string($string, $data = array(), $return = TRUE, $compile = NULL)
+	function parse_string($string, $data = array(), $return = TRUE, $cache_id = NULL)
 	{
-		return $this->_parse_compiled($string, $data, $return, $compile);
+		return $this->_parse_compiled($string, $data, $return, $cache_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -226,9 +226,10 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @param	array
 	 * @param	bool
+	 * @param	string
 	 * @return	string
 	 */
-	function _parse_compiled($string, $data, $return = FALSE)
+	function _parse_compiled($string, $data, $return = FALSE, $cache_id = NULL)
 	{
 		// Start benchmark
 		$this->_ci->benchmark->mark('dwoo_parse_start');
@@ -254,7 +255,7 @@ class MY_Parser extends CI_Parser {
 		try
 		{
 			// Object of the template
-			$tpl = new Dwoo_Template_String($string);
+			$tpl = new Dwoo_Template_String($string, NULL, $cache_id, NULL);
 
 			$dwoo = !isset($this->_dwoo) ? self::spawn() : $this->_dwoo;
 			

@@ -111,7 +111,7 @@ class Fuel extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets a configuration value for FUEL.
+	 * Returns a configuration value for FUEL.
 	 *
 	 * @access	public
 	 * @param	string	The configuration items key
@@ -126,7 +126,7 @@ class Fuel extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Static method that returns the instance of the FUEL object.
+	 * Sets a configuration value for FUEL
 	 *
 	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
 	 *
