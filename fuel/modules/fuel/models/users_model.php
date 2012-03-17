@@ -289,7 +289,7 @@ class Users_model extends Base_module_model {
 	{
 		//prevent the deletion of the super admins
 		$where['super_admin'] = 'no';
-		parent::delete($where);
+		return parent::delete($where);
 	}
 
 	 // cleanup navigation items if group is deleted
