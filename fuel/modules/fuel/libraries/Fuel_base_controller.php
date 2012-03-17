@@ -222,12 +222,32 @@ class Fuel_base_controller extends CI_Controller {
 		$modules = array('fuel');
 		$modules = array_merge($modules, $this->config->item('modules_allowed', 'fuel'));
 		
+		@include(APPPATH.'config/MY_fuel_modules.php');
+		
 		foreach($modules as $module)
 		{
 			$nav_path = MODULES_PATH.$module.'/config/'.$module.'.php';
 			if (file_exists($nav_path))
 			{
 				include($nav_path);
+				if (array_key_exists('module_overwrites', $config) AND ! empty($config['module_overwrites']))
+				{
+					foreach ($config['nav'] as $section => $fuel_modules)
+					{
+						if (is_array($fuel_modules) AND ! empty($fuel_modules))
+						{
+							foreach ($fuel_modules as $fuel_module => $fuel_module_title)
+							{
+								if (array_key_exists($fuel_module, $config['module_overwrites'])
+											AND array_key_exists('hidden', $config['module_overwrites'][$fuel_module])
+											AND $config['module_overwrites'][$fuel_module]['hidden'])
+								{
+									unset($config['nav'][$section][$fuel_module]);
+								}
+							}
+						}
+					}
+				}
 				$nav = array_merge($nav, $config['nav']);
 			}
 		}
@@ -235,8 +255,6 @@ class Fuel_base_controller extends CI_Controller {
 		// automatically include modules if set to AUTO
 		if (is_string($nav['modules']) AND strtoupper($nav['modules']) == 'AUTO')
 		{
-			@include(APPPATH.'config/MY_fuel_modules.php');
-			
 			$nav['modules'] = array();
 			
 			if (!empty($config['modules']))
