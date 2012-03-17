@@ -855,7 +855,8 @@ class Menu {
 			{
 				$attrs .= ' title="'.strip_tags($val['label']).'"';
 			}
-			$str .= '<a href="'.site_url($val['location']).'" '.$attrs.'>'.$label.'</a>';
+			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : site_url($val['location']);
+			$str .= '<a href="'.$location.'"'.$attrs.'>'.$label.'</a>';
 		}
 		else
 		{
