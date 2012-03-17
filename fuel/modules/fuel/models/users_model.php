@@ -288,7 +288,7 @@ class Users_model extends Base_module_model {
 		parent::delete($where);
 		$CI =& get_instance();
 		$CI->load->module_model('fuel','user_to_permissions_model');
-		$CI->user_to_permissions_model->delete(array('user_id' => $where['id']));
+		return $CI->user_to_permissions_model->delete(array('user_id' => $where['id']));
 	}
 	
 	function is_new_email($email)
