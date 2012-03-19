@@ -21,7 +21,7 @@ echo $this->fuel->blocks->render(array('view' => 'my_block', 'only_views' => TRU
 </pre>
 
 
-<h2>Static vs. Editable Blocks</h2>
+<h2>Static vs. CMS Blocks</h2>
 <p>Similar to pages, blocks can exist statically or be maintained in the CMS. Static blocks are located in the <span class="file">application/views/_blocks/</span> folder and operate like a normal view file. 
 Static blocks can be uploaded into the CMS to be editable. The upload process will "try" and translate any PHP syntax into the <a href="<?=user_guide_url('general/template-parsing')?>">templating syntax</a>. 
 </p>

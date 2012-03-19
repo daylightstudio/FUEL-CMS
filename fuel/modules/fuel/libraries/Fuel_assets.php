@@ -166,9 +166,13 @@ class Fuel_assets extends Fuel_base_library {
 				} 
 			
 				// set file name
-				if (empty($params['file_name']))
+				if (empty($params['file_name']) AND !empty($params[$field_name.'_filename']))
 				{
-					$params['file_name'] = (!empty($params[$field_name.'_filename'])) ? $params[$field_name.'_filename'] : url_title($file['name'], 'underscore', TRUE);
+					$params['file_name'] = $params[$field_name.'_filename'];
+				}
+				else
+				{
+					$params['file_name'] = url_title($file['name'], 'underscore', TRUE);
 				}
 			
 				// set overwrite
@@ -202,7 +206,7 @@ class Fuel_assets extends Fuel_base_library {
 				
 			}
 		}
-		
+
 		// now loop through the uploaded files to do any further image processing
 		foreach($this->_data as $file)
 		{
