@@ -192,7 +192,7 @@ class Page_router extends CI_Controller {
 						$val = preg_replace('#^'.$key.'$#', $val, $uri);
 					}
 					$url = site_url($val);
-					redirect($url, 301);
+					redirect($url, 'location', 301);
 				}
 			}
 		}
