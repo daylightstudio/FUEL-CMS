@@ -215,6 +215,19 @@ function link_target($link)
 	return '';
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Checks the redirects before showing a 404
+ *
+ * @access	public
+ * @return	void
+ */
+function redirect_404()
+{
+	$CI =& get_instance();
+	$CI->fuel->redirects->execute();
+}
 
 /* End of file MY_url_helper.php */
 /* Location: ./application/helpers/MY_url_helper.php */
