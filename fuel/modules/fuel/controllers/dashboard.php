@@ -46,8 +46,16 @@ class Dashboard extends Fuel_base_controller {
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
 			}
 			$feed = $this->fuel->config('dashboard_rss');
+			
 			$limit = 3;
-			$vars['feed'] = simplepie($feed, $limit);
+			$feed_data = simplepie($feed, $limit);
+			
+			// check for latest version
+			if (array_key_exists('latest_fuel_version', $feed_data) AND ((float)$feed_data['latest_fuel_version'] > FUEL_VERSION))
+			{
+				$vars['latest_fuel_version'] = $feed_data['latest_fuel_version'];
+			}
+			$vars['feed'] = $feed_data;
 			$this->load->view('dashboard_ajax', $vars);
 		}
 	}

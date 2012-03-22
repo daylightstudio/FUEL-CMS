@@ -19,12 +19,7 @@
 	<h3><?=lang('dashboard_hdr_latest_news')?></h3>
 	
 	<?php if (isset($latest_fuel_version) AND ! empty($latest_fuel_version)) : ?>
-		<style type="text/css">
-			#fuel-update-notice { background: #FFFBCC; border: 1px solid #E6DB55; margin-bottom: 10px; padding: 4px 5px; }
-			#fuel-update-notice a { font-style: italic; text-decoration: underline; }
-			#fuel-update-notice a:hover { text-decoration: none; }
-		</style>
-		<div id="fuel-update-notice">
+		<div class="update_notice">
 			<a href="http://www.getfuelcms.com" target="_blank">FUEL CMS <?php echo $latest_fuel_version; ?></a> is available!<br />
 			You are on version <em><?php echo FUEL_VERSION; ?></em><br />
 			Please update now.

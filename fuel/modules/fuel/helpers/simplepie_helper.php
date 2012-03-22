@@ -31,10 +31,10 @@ function simplepie($feed, $limit = 5, $params = array())
 	@$CI->simplepie->init();
 	$CI->simplepie->handle_content_type();
 	$feed_data = $CI->simplepie->get_items(0, $limit);
-	$latest_fuel_version = (float)$CI->simplepie->get_channel_tags('', 'latestFuelVersion');
-	if ( ! is_null($latest_fuel_version))
+	$latest_fuel_version = $CI->simplepie->get_channel_tags('', 'latestFuelVersion');
+	if ( ! is_null($latest_fuel_version[0]))
 	{
-		$feed_data['latest_fuel_version'] = $latest_fuel_version;
+		$feed_data['latest_fuel_version'] = $latest_fuel_version[0]['data'];
 	}
 	return $feed_data;
 }
