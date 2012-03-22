@@ -72,7 +72,6 @@ class Login extends CI_Controller {
 				{
 					if ($this->fuel->auth->login($this->input->post('user_name'), $this->input->post('password')))
 					{
-
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
 						// set the cookie for viewing the live site with added FUEL capabilities
@@ -144,8 +143,19 @@ class Login extends CI_Controller {
 		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
 		$vars['form'] = $this->form_builder->render();
 		
+		// set any errors that 
+		if ($this->session->flashdata('error'))
+		{
+			$errors = array($this->session->flashdata('error'));
+		}
+		else
+		{
+			$errors =  $this->users_model->get_errors();
+		}
+		
+		$vars['error'] = $errors;
+
 		// notifications template
-		$vars['error'] = $this->users_model->get_errors();
 		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
 		$vars['display_forgotten_pwd'] = $this->fuel->config('allow_forgotten_password');
@@ -160,7 +170,8 @@ class Login extends CI_Controller {
 
 		if (!empty($_POST))
 		{
-			if ($this->input->post('email')){
+			if ($this->input->post('email'))
+			{
 				$user = $this->users_model->find_one_array(array('email' => $this->input->post('email')));
 				if (!empty($user['email']))
 				{
@@ -168,8 +179,8 @@ class Login extends CI_Controller {
 					
 					$new_pwd = $this->fuel->users->reset_password($user['email']);
 					
-					if ($new_pwd !== FALSE) {
-						
+					if ($new_pwd !== FALSE)
+					{
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
 						$msg = lang('pwd_reset_email', fuel_url($url));
 						
@@ -197,7 +208,6 @@ class Login extends CI_Controller {
 				{
 					$this->users_model->add_error(lang('error_invalid_email'));
 				}
-
 			}
 			else
 			{

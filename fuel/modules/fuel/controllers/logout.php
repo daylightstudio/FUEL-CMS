@@ -24,18 +24,11 @@ class Logout extends CI_Controller {
 		{
 			$this->load->helper('convert');
 			
-			// if ($segment == 'index')
-			// {
-			// 	$redirect = fuel_uri('login');
-			// }
-			// else
-			// {
-				$redirect = uri_safe_decode($segment);
-				if ($segment == 'page_router')
-				{
-					$segment = $this->fuel->config('default_home_view');
-				}
-			//}
+			$redirect = uri_safe_decode($segment);
+			if ($segment == 'page_router')
+			{
+				$segment = $this->fuel->config('default_home_view');
+			}
 		}
 		redirect($redirect);
 	}
