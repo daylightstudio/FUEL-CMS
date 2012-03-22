@@ -308,7 +308,7 @@ fuel.fields.asset_field = function(context, options){
 			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			var btnLabel = fuel.lang('btn_upload_asset');
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '">' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
 		}
 	});
 	
@@ -316,8 +316,8 @@ fuel.fields.asset_field = function(context, options){
 		activeField = $(e.target).parent().find('input:first').attr('id');
 		var assetTypeClasses = $(e.target).attr('class').split(' ');
 		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
-		var url = $(this).attr('href');
-		url = url + '?asset_folder=' + selectedAssetFolder;
+		var params = $(this).attr('data-params');
+		var url = $(this).attr('href') + '?' + params;
 		showAssetUpload(url);
 		return false;
 		

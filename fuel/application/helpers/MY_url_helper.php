@@ -221,12 +221,13 @@ function link_target($link)
  * Checks the redirects before showing a 404
  *
  * @access	public
+ * @param	boolean	Whether to redirect or not
  * @return	void
  */
-function redirect_404()
+function redirect_404($redirect = TRUE)
 {
 	$CI =& get_instance();
-	$CI->fuel->redirects->execute();
+	$CI->fuel->redirects->execute($redirect);
 }
 
 /* End of file MY_url_helper.php */

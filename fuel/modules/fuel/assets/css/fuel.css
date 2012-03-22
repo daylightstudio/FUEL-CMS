@@ -20,6 +20,7 @@ iframe { border: none; }
 /* generic classes */
 p.instructions { font-size: 14px; line-height: 18px; }
 ul.nobullets { list-style: none; }
+ul.nobullets li { margin-bottom: 2px; }
 .tooltip { cursor: help; text-decoration: none; border-bottom: 1px dotted #0e3e7e;}
 .fillin { color: #aaa; }
 .clear { clear: both; height: 0; font-size: 0px; line-height: 0px; }
@@ -62,6 +63,10 @@ a.delete { color: #c30; display: block; float: left; margin-top: 10px; border: 1
 a.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; height: 27px; line-height: 27px; display: block; padding: 0 15px 0 15px; float: left; }
 div.btn { border: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left; list-style: none;  margin: 0;  padding: 0 15px 0 0px; line-height: 27px; }
 .btn input, .btn .button { border: none; background-color: transparent; height: 19px; }
+
+.update_notice { background: #FFFBCC; border: 1px solid #E6DB55; margin-bottom: 10px; padding: 4px 5px; }
+.update_notice a { font-style: italic; text-decoration: underline; }
+.update_notice a:hover { text-decoration: none; }
 
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
