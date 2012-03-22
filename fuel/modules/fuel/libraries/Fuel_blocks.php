@@ -58,7 +58,7 @@ class Fuel_blocks extends Fuel_module {
 						'parse' => 'auto',
 						'vars' => array(),
 						'cache' => FALSE,
-						'only_views' => FALSE,
+						'mode' => 'AUTO',
 						);
 
 		// for convenience
@@ -126,8 +126,10 @@ class Fuel_blocks extends Fuel_module {
 		{
 			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
 			
+			$p['mode'] = strtolower($p['mode']);
+			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ($this->CI->fuel->config('fuel_mode') != 'views' AND $p['only_views'] === FALSE AND substr($p['view'], 0, 1) != '_')
+			if ((($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('blocks');
 
