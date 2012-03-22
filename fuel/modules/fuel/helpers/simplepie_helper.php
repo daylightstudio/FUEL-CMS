@@ -30,6 +30,11 @@ function simplepie($feed, $limit = 5, $params = array())
 	$CI->simplepie->set_cache_location($p['cache_location']);
 	@$CI->simplepie->init();
 	$CI->simplepie->handle_content_type();
-
-	return $CI->simplepie->get_items(0, $limit);
+	$feed_data = $CI->simplepie->get_items(0, $limit);
+	$latest_fuel_version = (float)$CI->simplepie->get_channel_tags('', 'latestFuelVersion');
+	if ( ! is_null($latest_fuel_version))
+	{
+		$feed_data['latest_fuel_version'] = $latest_fuel_version;
+	}
+	return $feed_data;
 }
