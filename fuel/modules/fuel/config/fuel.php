@@ -135,7 +135,13 @@ $config['assets_excluded_dirs'] = array('js', 'css', 'cache', 'swf', 'captchas')
 $config['assets_allow_subfolder_creation'] = TRUE;
 
 // specifies what filetype extensions can be included in the folders
-$config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 'pdf' => 'pdf', 'media' => 'mov|mp3|aiff|mpeg', 'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css');
+$config['editable_asset_filetypes'] = array(
+										'images' => 
+										'jpg|jpeg|jpe|gif|png', 
+										'pdf' => 'pdf', 
+										'media' => 'mov|mp3|aiff|mpeg', 
+										'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'
+										);
 
 // max upload files size for assets
 $config['assets_upload_max_size']	= '1000';
@@ -148,9 +154,6 @@ $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
-	// 'jquery/plugins/date',
-	// 'jquery/plugins/jquery.datePicker',
-	//'jquery/plugins/jquery.fillin',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',
@@ -167,19 +170,6 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
-	
-	/* needed for field types 
-	'jquery/plugins/jquery.selso',
-	'jquery/plugins/jquery.disable.text.select.pack',
-	'jquery/plugins/jquery.supercomboselect',
-	'jquery/plugins/jquery.MultiFile',
-	'jquery/plugins/jquery.repeatable.js',
-	*/
-	
-	// 'editors/markitup/jquery.markitup.pack',
-	// 'editors/markitup/jquery.markitup.set',
-//	'editors/ckeditor/ckeditor.js',
-	//'fuel/linked_field_formatters.js',
 	'fuel/custom_fields.js',
 	'jquery/plugins/jquery.formbuilder',
 	'fuel/global',

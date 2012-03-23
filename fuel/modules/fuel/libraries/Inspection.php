@@ -274,6 +274,15 @@ class Inspection {
 	}
 }
 
+/**
+ * Inspection class ... class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_class extends Inspection_base {
 	
 	protected $_methods;
@@ -459,6 +468,16 @@ class Inspection_class extends Inspection_base {
 	}
 }
 
+
+/**
+ * Inspection function class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_function extends Inspection_base {
 	
 	function __construct($function)
@@ -467,6 +486,16 @@ class Inspection_function extends Inspection_base {
 	}
 }
 
+
+/**
+ * Inspection method class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_method extends Inspection_base {
 	
 	protected $_params;
@@ -478,6 +507,16 @@ class Inspection_method extends Inspection_base {
 
 }
 
+
+/**
+ * Inspection class object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_property extends Inspection_base {
 	public $class;
 	public $value;
@@ -494,6 +533,16 @@ class Inspection_property extends Inspection_base {
 	
 }
 
+
+/**
+ * Inspection param class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_param extends Inspection_base {
 	
 	public $function;
@@ -561,6 +610,16 @@ class Inspection_param extends Inspection_base {
 	}
 }
 
+
+/**
+ * Inspection comment class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Inspection_comment {
 	
 	protected $_text = '';
@@ -879,6 +938,16 @@ class Inspection_comment {
 }
 
 
+
+/**
+ * Inspection class object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 abstract class Inspection_base {
 	
 	public $reflection; // Reflection object
@@ -887,7 +956,15 @@ abstract class Inspection_base {
 	public $obj; // the object (if any)
 	public $params; // the parameters of the object (if any)
 	
-	function __construct($ref_class, $method, $obj = NULL)
+	function __construct($ref_class = NULL, $method = NULL, $obj = NULL)
+	{
+		if (!empty($ref_class) AND !empty($method))
+		{
+			$this->initialize($ref_class, $method, $obj);
+		}
+	}
+	
+	function initialize($ref_class, $method, $obj = NULL)
 	{
 		if (is_object($method) AND strncasecmp(get_class($method), 'Reflection', 10) === 0)
 		{
@@ -923,6 +1000,7 @@ abstract class Inspection_base {
 			}
 		}
 	}
+	
 	
 	function friendly_name()
 	{

@@ -11,19 +11,19 @@
  * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
- * @filesource
  */
 
 // ------------------------------------------------------------------------
 
 /**
- * FUEL master admin object
+ * FUEL custom fields object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ * @autodoc		FALSE
  */
 
 // --------------------------------------------------------------------
@@ -757,5 +757,5 @@ class Fuel_custom_fields {
 
 
 
-/* End of file Fuel.php */
-/* Location: ./modules/fuel/libraries/Fuel.php */
+/* End of file Fuel_custom_fields.php */
+/* Location: ./modules/fuel/libraries/Fuel_custom_fields.php */
