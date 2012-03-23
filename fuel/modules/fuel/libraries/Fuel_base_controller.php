@@ -30,8 +30,6 @@
 
 define('FUEL_ADMIN', TRUE);
 
-require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/Fuel.php');
-
 class Fuel_base_controller extends CI_Controller {
 	
 	public $js_controller = 'fuel.controller.BaseFuelController';

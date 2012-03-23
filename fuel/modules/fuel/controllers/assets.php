@@ -81,12 +81,11 @@ class Assets extends Module {
 			
 		}
 		$form_vars = $this->input->get();
-		
 		if (!empty($dir))
 		{
 			$form_vars['asset_folder'] = $dir;
 		}
-		$form_vars['asset_folder'] = trim($form_vars['asset_folder'], '/');
+		$form_vars['asset_folder'] = (!empty($form_vars['asset_folder'])) ? trim($form_vars['asset_folder'], '/') : '';
 		$vars = $this->_form($form_vars, $inline);
 
 		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;
@@ -181,8 +180,21 @@ class Assets extends Module {
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		
-		
 		$fields = $this->model->form_fields();
+		
+		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
+		{
+			$hide_field['userfile'] = $fields['userfile'];
+			$fields = $hide_field;
+		}
+		else if (!empty($field_values['hide_image_options']) AND is_true_val($field_values['hide_image_options']))
+		{
+			$hide_field['userfile'] = $fields['userfile'];
+			$hide_field['subfolder'] = $fields['subfolder'];
+			$hide_field['userfile_file_name'] = $fields['userfile_file_name'];
+			$hide_field['overwrite'] = $fields['overwrite'];
+			$fields = $hide_field;
+		}
 		
 		if ($this->session->flashdata('uploaded_post'))
 		{

@@ -1,4 +1,15 @@
 <h1>Javascript</h1>
+
+<h2>FUEL Configuration</h2>
+
+<h2>In Forms</h2>
+
+<h3>Custome Field</h3>
+
+<h3>The "js" Form_builder parameter</h3>
+
+<h3>Ajax on the Model</h3>
+
 <h2>jQX Framework</h2>
 <p><a href="<?=site_url('fuel/modules/'.FUEL_FOLDER.'/assets/js/jqx/jqx.js')?>">jQX</a> is a small javascript MVC framework.
 Some of the benefits of using JQX instead of simply including javascript files:</p>

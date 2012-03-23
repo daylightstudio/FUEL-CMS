@@ -37,7 +37,6 @@ require_once('Fuel_modules.php');
 
 class Fuel extends Fuel_base_library {
 	
-	protected $CI; // the super CI object
 	protected $_attached = array(); // attached objects
 	protected $_auto_attach = array(
 									'admin',
@@ -53,6 +52,7 @@ class Fuel extends Fuel_base_library {
 									'pages',
 									'pagevars',
 									'permissions',
+									'redirects',
 									'sitevars',
 									'users',
 									); // objects to automatically attach

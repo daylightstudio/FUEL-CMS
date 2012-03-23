@@ -34,9 +34,9 @@ class MY_Image_lib extends CI_Image_lib {
 	protected $_create_thumb = FALSE;
 	protected $_save_props = array('width', 'height', 'thumb_marker', 'create_thumb');
 	
-	public function __construct()
+	public function __construct($props = array())
 	{
-        parent::__construct();
+        parent::__construct($props);
     }
 
 	// --------------------------------------------------------------------

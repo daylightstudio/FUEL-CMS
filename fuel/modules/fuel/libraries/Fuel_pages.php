@@ -386,8 +386,8 @@ class Fuel_page extends Fuel_base_library {
 	
 	function cms_render($return = FALSE, $fuelify = FALSE){
 
-		$this->CI->load->library('template');
 		$this->CI->load->library('parser');
+
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{

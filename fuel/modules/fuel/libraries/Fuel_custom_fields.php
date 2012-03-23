@@ -118,15 +118,6 @@ class Fuel_custom_fields {
 				else
 				{
 					// create assoc array with key being the image and the value being either the image name again or the caption
-					// $assets = array();
-					// $assets_arr = preg_split('#\s*,\s*|\n#', $params['value']);
-					// foreach($assets_arr as $a)
-					// {
-					// 	$a_arr = preg_split('#\s*:\s*#', $a);
-					// 	$key = $a_arr[0];
-					// 	$value = (isset($a_arr[1])) ? $a_arr[1] : $key;
-					// 	$assets[$key] = trim($value);
-					// }
 					$assets = preg_split('#\s*,\s*|\n#', $params['value']);
 					
 				}
@@ -206,18 +197,6 @@ class Fuel_custom_fields {
 								$val = trim($val["'.$params['subkey'].'"]);
 								$assets = array();
 								$assets_arr = preg_split("#\s*,\s*|\n#", $val);
-								
-								// foreach($assets_arr as $a)
-								// 								{
-								// 									preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
-								// 
-								// 									$k = (isset($a_arr[1])) ? $a_arr[1] : $a;
-								// 									$v = (isset($a_arr[2])) ? $a_arr[2] : $k;
-								// 									$assets[$k] = trim($v);
-								// 									//$value[$key]["'.$params['subkey'].'"] = serialize($assets);
-								// 									$value[$key]["'.$params['subkey'].'"] = json_encode($assets);
-								// 								}
-								//$value[$key]["'.$params['subkey'].'"] = json_encode($assets_arr);
 								if (count($assets_arr) > 1)
 								{
 									$value[$key]["'.$params['subkey'].'"] = json_encode($assets_arr);
@@ -238,14 +217,6 @@ class Fuel_custom_fields {
 				$func_str = '
 					$value = trim($value);
 					$assets_arr = preg_split("#\s*,\s*|\n#", $value);
-					// foreach($assets_arr as $a)
-					// 					{
-					// 						preg_match("#(.+)\s*:\s*\"([^\"]+)\"*#", $a, $a_arr);
-					// 						$key = (isset($a_arr[1])) ? $a_arr[1] : $a;
-					// 						$value = (isset($a_arr[2])) ? $a_arr[2] : $key;
-					// 						$assets[$key] = trim($value);
-					// 					}
-					//return json_encode($assets);
 					if (count($assets_arr) > 1)
 					{
 						return json_encode($assets_arr);
@@ -272,20 +243,37 @@ class Fuel_custom_fields {
 			{
 				if (!empty($val))
 				{
-					// if ($key !== $val)
-					// {
-					// 	$params['value'] .= $key.':"'.$val.'"'.$separator;
-					// }
-					// else
-					// {
-						$params['value'] .= $val.$separator;
-					// }
+					$params['value'] .= $val.$separator;
 				}
 			}
 		}
 		$params['value'] = trim($params['value'], ",\n ");
 		
 		//$params['comment'] = 'Add a caption value to your image by inserting a colon after the image name and then enter your caption like so: my_img.jpg:My caption goes here.';
+		
+		
+		// data params
+		$data_params['asset_folder'] = $params['folder'];
+		$data_params['subfolder'] = (isset($params['subfolder'])) ? $params['subfolder'] : '';
+		$data_params['userfile_file_name'] = (isset($params['file_name'])) ? $params['file_name'] : '';
+		$data_params['subfolder'] = (isset($params['subfolder'])) ? $params['subfolder'] : '';
+		$data_params['overwrite'] = (isset($params['overwrite'])) ? (bool)$params['overwrite'] : TRUE;
+		$data_params['create_thumb'] = (isset($params['create_thumb'])) ? (bool)$params['create_thumb'] : FALSE;
+		$data_params['maintain_ratio'] = (isset($params['maintain_ratio'])) ? (bool)$params['maintain_ratio'] : FALSE;
+		$data_params['width'] = (isset($params['width'])) ? (int)$params['width'] : '';
+		$data_params['height'] = (isset($params['height'])) ? (int)$params['height'] : '';
+		$data_params['master_dimension'] = (isset($params['master_dimension'])) ? $params['master_dimension'] : '';
+		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
+		if (isset($params['hide_image_options']))
+		{
+			$data_params['hide_image_options'] = (isset($params['hide_image_options'])) ? (bool)$params['hide_image_options'] : FALSE;
+		}
+		else if (!isset($params['hide_image_options']) AND preg_match('#^images#', $params['folder']))
+		{
+			$data_params['hide_image_options'] = TRUE;
+		}
+
+		$params['data']['params'] = http_build_query($data_params);
 		
 		if (!empty($params['multiline']))
 		{

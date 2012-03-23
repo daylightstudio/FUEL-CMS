@@ -363,40 +363,4 @@ class Assets_model extends CI_Model {
 	function on_after_post($values)
 	{
 	}
-
-	
-	/*function on_after_post($values)
-	{
-		if (empty($values['userfile_path'])) return;
-
-		// process any uploaded images files that have been specified
-		foreach($_FILES as $file)
-		{
-			if (is_image_file($file['name']) AND 
-					(!empty($values['userfile_create_thumb']) OR 
-					!empty($values['userfile_maintain_ratio']) OR 
-					!empty($values['userfile_width']) OR 
-					!empty($values['userfile_height'])))
-			{
-	
-				$CI =& get_instance();
-				$CI->load->library('image_lib');
-
-				$config['source_image']	= $values['userfile_path'].$file['name'];
-				$config['create_thumb'] = $values['userfile_create_thumb'];
-				$config['maintain_ratio'] = $values['userfile_maintain_ratio'];
-				if (!empty($values['userfile_width'])) $config['width'] = $values['userfile_width'];
-				if (!empty($values['userfile_height'])) $config['height'] = $values['userfile_height'];
-				if (!empty($values['userfile_master_dim'])) $config['master_dim'] = $values['userfile_master_dim'];
-				
-				$this->image_lib->initialize($config); 
-
-				if ( ! $CI->image_lib->resize())
-				{
-					$error = $CI->image_lib->display_errors();
-					$CI->validator->catch_error($error);
-				}
-			}
-		}
-	}*/
 }

@@ -9,7 +9,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 	
 		<ul>
 			<li><strong>$this->fuel->admin</strong> (<a href="<?=user_guide_url('libraries/fuel_admin')?>">Fuel_admin</a>)</li>
-			<li><strong>$this->fuel->assets</strong> (<a href="<?=user_guide_url('libraries/fuel_assets')?>">Fuel_</a>)</li>
+			<li><strong>$this->fuel->assets</strong> (<a href="<?=user_guide_url('libraries/fuel_assets')?>">Fuel_assets</a>)</li>
 			<li><strong>$this->fuel->auth</strong> (<a href="<?=user_guide_url('libraries/fuel_auth')?>">Fuel_auth</a>)</li>
 			<li><strong>$this->fuel->blocks</strong> (<a href="<?=user_guide_url('libraries/fuel_blocks')?>">Fuel_blocks</a>)</li>
 			<li><strong>$this->fuel->cache</strong> (<a href="<?=user_guide_url('libraries/fuel_cache')?>">Fuel_cache</a>)</li>
@@ -21,6 +21,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 			<li><strong>$this->fuel->pages</strong> (<a href="<?=user_guide_url('libraries/fuel_pages')?>">Fuel_pages</a>)</li>
 			<li><strong>$this->fuel->pagevars</strong> (<a href="<?=user_guide_url('libraries/fuel_pagevars')?>">Fuel_pagevars</a>)</li>
 			<li><strong>$this->fuel->permissions</strong> (<a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel_permissions</a>)</li>
+			<li><strong>$this->fuel->redirects</strong> (<a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a>)</li>
 			<li><strong>$this->fuel->sitevars</strong> (<a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel_sitevars</a>)</li>
 			<li><strong>$this->fuel->users</strong> (<a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel_users</a>)</li>
 		</ul>
@@ -36,7 +37,8 @@ $this->fuel->assets->upload();
 </pre>
 
 <p class="important">All the above classes inherit from the <a href="<?=user_guide_url('libraries/fuel_base_library')?>">Fuel_base_library</a> class.</p>
-<br />
+
+<h2>Advanced Module Objects</h2>
 <p>Additionally, you have access to advanced module objects if a class exists in the advanced module's libraries folder
 with a naming convention of <span class="file">Fuel_{module}.php</span>. The following examples assume you have the advanced modules installed:</p>
 

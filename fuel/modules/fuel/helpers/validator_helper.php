@@ -721,6 +721,11 @@ function display_errors($ERRORS = NULL, $class = 'error')
 		}
 	}
 	
+	if (!empty($ERRORS) AND is_string($ERRORS))
+	{
+		$ERRORS = (array) $ERRORS;
+	}
+	
 	if (is_array($ERRORS) AND count($ERRORS)) {
 		$str .= "<ul class=\"".$class."\">\n";
 		foreach($ERRORS as $key => $value)

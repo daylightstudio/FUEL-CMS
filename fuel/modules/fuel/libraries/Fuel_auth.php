@@ -53,7 +53,7 @@ class Fuel_auth extends Fuel_base_library {
 	
 	function get_session_namespace()
 	{
-		$key = 'fuel_'.md5($this->CI->config->item('site_name', 'fuel'));
+		$key = 'fuel_'.md5($this->CI->fuel->config('site_name'));
 		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
 		return $key;
 	}
@@ -109,6 +109,7 @@ class Fuel_auth extends Fuel_base_library {
 	
 	function is_logged_in()
 	{
+		
 		$user = $this->valid_user();
 		return (!empty($user) AND !empty($user['user_name']));
 	}

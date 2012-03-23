@@ -147,12 +147,87 @@ function is_json_str($data)
 
 /**
  * Print object in human-readible format
+ * 
+ * Inspired by  here: http://php.net/manual/en/function.print-r.php
  *
- * @param	object	object variable
- * @param	boolean	return as string if true
+ * @param	mixed	The variable to dump
+ * @param	int	Maximum recursion level
+ * @param	boolean	Return as nicely stacked
  * @return 	string
  */
-function print_obj($obj, $return = false)
+/*function dump($elem, $max_level = 10, $print_nice_stack = array())
+{
+	if(is_array($elem) || is_object($elem))
+	{ 
+		if(in_array(&$elem, $print_nice_stack, TRUE))
+		{ 
+			echo "<font color=red>RECURSION</font>"; 
+			return; 
+		} 
+		
+		$print_nice_stack[] =& $elem; 
+		if($max_level<1)
+		{ 
+			echo "<font color=red>nivel maximo alcanzado</font>"; 
+			return; 
+		} 
+		$max_level--; 
+		echo "<table border=1 cellspacing=0 cellpadding=3 width=100%>"; 
+		if(is_array($elem))
+		{ 
+			echo '<tr><td colspan=2 style="background-color:#333333;"><strong><font color=white>ARRAY</font></strong></td></tr>'; 
+		}
+		else
+		{ 
+			echo '<tr><td colspan=2 style="background-color:#333333;"><strong>'; 
+			echo '<font color=white>OBJECT Type: '.get_class($elem).'</font></strong></td></tr>'; 
+		} 
+		$color = 0; 
+		foreach($elem as $k => $v)
+		{ 
+			if($max_level%2)
+			{
+				$rgb = ($color++%2)?"#888888":"#BBBBBB"; 
+			}
+			else
+			{ 
+				$rgb=($color++%2)?"#8888BB":"#BBBBFF"; 
+			} 
+			echo '<tr><td valign="top" style="width:40px;background-color:'.$rgb.';">'; 
+			echo '<strong>'.$k."</strong></td><td>"; 
+			dump($v, $max_level, $print_nice_stack); 
+			echo "</td></tr>"; 
+		} 
+		echo "</table>"; 
+		return; 
+	}
+	
+	if($elem === NULL)
+	{
+		echo "<font color=\"green\">NULL</font>"; 
+	}
+	else if($elem === 0)
+	{ 
+		echo "0"; 
+	}
+	else if($elem === TRUE)
+	{
+		echo "<font color=\"green\">TRUE</font>"; 
+	}
+	else if($elem === FALSE)
+	{
+		echo "<font color=\"green\">FALSE</font>"; 
+	}
+	elseif($elem === "")
+	{
+		echo "<font color=\"green\">EMPTY STRING</font>"; 
+	}
+	else
+	{ 
+		echo str_replace("\n","<strong><font color=\"red\">*</font></strong><br>\n",$elem); 
+	} 
+}*/
+function print_obj($obj, $return = FALSE)
 {
 	$str = "<pre>";
 	if (is_array($obj))
@@ -168,7 +243,18 @@ function print_obj($obj, $return = false)
 		}
 		else
 		{
-			$str .= print_r($obj, true);
+			$str .= print_r($obj, TRUE);
+		}
+	}
+	else
+	{
+		if (is_a($obj, 'Data_record'))
+		{
+			$str .= $obj;
+		}
+		else
+		{
+			$str .= print_r($obj, TRUE);
 		}
 	}
 	$str .= "</pre>";
