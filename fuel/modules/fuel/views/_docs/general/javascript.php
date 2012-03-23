@@ -1,10 +1,11 @@
 <h1>Javascript</h1>
-
+<p>FUEL CMS provides several ways for you to insert javascript functionality for various aspects of the CMS. jQuery is automatically loaded as is most of the jQuery UI libraries for you to take advantage of.
+By default, </p>
 <h2>FUEL Configuration</h2>
 
 <h2>In Forms</h2>
 
-<h3>Custome Field</h3>
+<h3>Custom Field</h3>
 
 <h3>The "js" Form_builder parameter</h3>
 

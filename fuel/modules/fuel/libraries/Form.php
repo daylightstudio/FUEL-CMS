@@ -30,7 +30,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/form.html
  */
-Class Form {
+class Form {
 	
 	public $attrs = 'method="post" action=""'; // form html attributes
 	public $validator; // the validator object
@@ -772,8 +772,9 @@ Class Form {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
-Class Form_input {
+class Form_input {
 	public $type; // type of the input form field
 	public $name; // name of the input form field
 	public $value; // value of the input form field
@@ -830,8 +831,9 @@ Class Form_input {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
-Class Form_select {
+class Form_select {
 
 	public $name; // name of the select form field
 	public $value; // select value(s) of the select form field
@@ -966,8 +968,9 @@ Class Form_select {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
-Class Form_textarea {
+class Form_textarea {
 	public $name; // name of the textarea form field
 	public $value; // value of the textarea form field
 	public $attrs; // attributes of the textarea form field
@@ -1020,14 +1023,15 @@ Class Form_textarea {
 // ------------------------------------------------------------------------
 
 /**
- * A form input object
+ * A form button object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
-Class Form_button {
+class Form_button {
 	public $type; // type of the input form field
 	public $name; // name of the input form field
 	public $value; // value of the input form field

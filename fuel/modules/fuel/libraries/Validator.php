@@ -378,6 +378,7 @@ class Validator {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
 Class Validator_Rule {
 	public $func; // function to execute that will return TRUE/FALSE

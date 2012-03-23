@@ -913,6 +913,17 @@ class Data_table {
 	
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * A Data table body element
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
+ */
 class Data_table_body {
 	public $rows = array();
 	public $attrs = array();
@@ -934,6 +945,7 @@ class Data_table_body {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
 class Data_table_row {
 	public $fields = array();
@@ -968,6 +980,7 @@ class Data_table_row {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
 class Data_table_header {
 	public $col_key = '';
@@ -994,6 +1007,7 @@ class Data_table_header {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @autodoc		FALSE
  */
 class Data_table_field {
 	public $heading = '';

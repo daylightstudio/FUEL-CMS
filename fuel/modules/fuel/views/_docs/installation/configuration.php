@@ -1,7 +1,8 @@
 <h1>Configuring FUEL CMS</h1>
 <p>The following are the main configuration options that you can set for FUEL. 
 They can be overwritten in the <dfn>application/config/MY_fuel.ph</dfn>p file:</p>
-
+<?=generate_config_info('fuel');?>
+<?php /* ?>
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
 	<tbody>
 		<tr>
@@ -409,3 +410,4 @@ array(
 		</tr>
 	</tbody>
 </table>
+<?php */ ?>

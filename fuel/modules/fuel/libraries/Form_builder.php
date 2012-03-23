@@ -3182,6 +3182,7 @@ Class Form_builder {
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/form_builder.html
+ * @autodoc		FALSE
  */
 
 Class Form_builder_field {
