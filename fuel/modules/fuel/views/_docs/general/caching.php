@@ -1,5 +1,5 @@
 <h1>Caching</h1>
-<p>CodeIgniter, is well-known for it's fast performance as a framework. However, there are some instances where it makes sense to cache a page or file to prevent 
+<p>CodeIgniter, is well-known for it's fast performance as a framework. However, there are some instances where you may want to cache a page or file to prevent 
 excessive database queries and HTTP requests for javascript and CSS. To help with this, FUEL provides several method to cache resources and thus speed up page speed.</p>
 
 <p>Programmatically, you can access the FUEL's cache methods through the instantiated <a href="<?=user_guide_url('libraries/fuel_layouts')?>">Fuel_cache</a> object like so:</p>
@@ -9,8 +9,34 @@ $this->fuel->cache->save('my_cache_id', $data);
 </pre>
 
 <h2>Page Caching</h2>
-<p></p>
+<p>FUEL provides several options for caching your pages. The default setting, which can be altered in your <span class="file">fuel/application/config/MY_fuel.php</span> 
+file by changing the <a href="<?=user_guide_url('installation/configuring')?>">$config['use_page_cache']</a> parameter, 
+is to cache all the pages created in the CMS. In some cases, you may not want to cache the page (e.g. you have a section that you want to be random on each page),
+and in those cases you can set the page's CMS <dfn>cache</dfn> setting to no.</p>
 
 <h2>Block Caching</h2>
+<p>Similarly, <a href="<?=user_guide_url('libraries/fuel_blocks')?>">blocks</a> can also be cached as shown in the example below:</p>
+<pre class="brush:php">
+echo fuel_block(array('view' => 'my_block', 'cache' => TRUE));
+</pre>
+
+<h2>Template Compiling</h2>
+<p>Both pages and blocks can take advantage of the <a href="<?=user_guide_url('general/template-parsing')?>">template parsing library</a> to allow users to safely
+use limited PHP funcationality. These template files get compiled and are stored in the <span class="file">fuel/application/cache/dwoo/compiled</span> folder.</p>
 
 <h2>Asset Optimization Caching</h2>
+<p>The <a href="<?=user_guide_url('libraries/asset')?>">Asset class</a> provides several options to speed up your CSS and javascript files of your pages by changing the <dfn>assets_output</dfn>
+property which has the following options:</p>
+
+<ul>
+	<li><strong>FALSE</strong> - no optimization</li>
+	<li><strong>TRUE</strong> - will combine files, strip whitespace, and gzip</li>
+	<li><strong>inline</strong> - will render the files inline</li>
+	<li><strong>gzip</strong> - will combine files (if multiple) and gzip without stripping whitespace</li>
+	<li><strong>whitespace</strong> - will combine files (if multiple) and strip out whitespace without gzipping</li>
+	<li><strong>combine</strong> - will combine files (if multiple) but will not strip out whitespace or gzip</li>
+</ul>
+
+<p class="important">A writable <span class="file">assets/cache</span> folder must exist for asset caching to work. Also, cached asset files must be deleted either manually or by the CMS's <dfn>Clear Cache</dfn> utility.</p>
+
+

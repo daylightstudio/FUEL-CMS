@@ -22,7 +22,30 @@ an FTP client to manage the assets as well.</p>
 <h3>Incorporating Into Your Own Module</h3>
 <p>You can incorporate assets into your own modules by specifying a field type of <a href="#">asset</a> in your model's <dfn>form_fields</dfn> method.
 This will actually open up the assets module in a window for you to upload one or more files.
-This field type provides a couple parameters to control things like which asset folder to upload.</p>
+This field type provides a couple parameters to control things including:</p>
+<ul>
+	<li><strong>folder</strong>: The asset folder to upload to</li>
+	<li><strong>file_name</strong>: The file name you want to assign to the uploaded file. The default is it's current name</li>
+	<li><strong>subfolder</strong>: A subfolder name within the selected asset folder to upload to. It will automatically create the folder if it doesn't exist</li>
+	<li><strong>overwrite</strong>: Determines whether to overwrite an image or create a new one</li>
+	<li><strong>create_thumb</strong>: Creates a thumbnail of the uploaded image (Image Specific)</li>
+	<li><strong>maintain_ratio</strong>: Determines whether to maintain the aspect ratio of the image if resized (Image Specific)</li>
+	<li><strong>width</strong>: The thumbnails width (Image Specific)</li>
+	<li><strong>height</strong>: The thumbnails height (Image Specific)</li>
+	<li><strong>master_dimension</strong>: The master dimension to use when creating the thumbnail (Image Specific)</li>
+</ul>
+
+<pre class="brush:php">
+function form_fields($values = array(), $related = array())
+{
+	$fields = parent::form_fields($values, $related);
+	$fields['image_field'] = array('type' => 'asset', 'folder' => 'my_folder', 'overwrite' => FALSE);
+	return $fields;
+}
+</pre>
+
+<p class="important">Field names that end with "img" or "image" will automatically be assigned a field type of <dfn>asset</dfn>.</p>
+
 
 <h2>Using Assets in Pages</h2>
 <p>To incorporate assets in your pages, use one of the <a href="<?=user_guide_url('helpers/asset_helper')?>">asset_helper</a> functions like
