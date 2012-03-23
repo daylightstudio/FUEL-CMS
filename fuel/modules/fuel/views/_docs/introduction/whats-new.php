@@ -7,6 +7,12 @@
 	<li>Separated out all modules except the fuel module into their own development repos</li>
 </ul>
 
+<h2>Libraries</h2>
+<ul>
+	<li>Curl</li>
+	<li>Inspection</li>
+</ul>
+
 <h2>Other modules</h2>
 <ul>
 	<li>Updated backup module</li>
