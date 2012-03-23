@@ -21,7 +21,7 @@
  *
  * This helper allows you to output css, js links and/or files as well as 
  * allows you to compress and cache them. Also has convenience methods for 
- * paths to assets. It is essentially an alias to the Asset Class
+ * paths to assets. It is essentially an alias to the Asset Class.
  *
  * @package		FUEL CMS
  * @subpackage	Helpers

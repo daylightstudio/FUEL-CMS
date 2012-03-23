@@ -181,7 +181,7 @@ class Page_router extends CI_Controller {
 	/*
 	* ------------------------------------------------------
 	* Looks for any redirects to perform. 
-	* Used before showing
+	* Used before showing output
 	* ------------------------------------------------------
 	*/
 	function _redirects()

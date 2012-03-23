@@ -188,6 +188,12 @@ class Fuel_navigation extends Fuel_module {
 		return $this->CI->menu->render($items, $p['active'], $p['parent']);
 	}
 	
+	function basic($params)
+	{
+		$params['render_type'] = 'basic';
+		return $this->render($params);
+	}
+
 	function breadcrumb($params)
 	{
 		$params['render_type'] = 'breadcrumb';

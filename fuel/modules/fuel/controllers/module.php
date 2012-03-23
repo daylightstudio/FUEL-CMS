@@ -896,28 +896,35 @@ class Module extends Fuel_base_controller {
 		// if field parameter is set, then we just display a single field
 		if (!empty($field))
 		{
-			if (is_string($field) AND isset($fields[$field]))
+			
+			// added per pierlo in Forum (http://www.getfuelcms.com/forums/discussion/673/fuel_helper-fuel_edit-markers)
+			$columns = explode(',', $column);
+			
+			foreach($columns as $field)
 			{
-				$single_field[$field] = $fields[$field];
-				//$single_field[$field]['label'] = ' ';
-				$single_field[$field]['display_label'] = FALSE;
-				$single_field[$field]['required'] = FALSE;
-				$single_field['id'] = array('type' => 'hidden', 'value' => $id);
-
-				// set them to hidden... just in case model hooks require the values to be passed on save
-				foreach($fields as $k => $f)
+				if (is_string($field) AND isset($fields[$field]))
 				{
-					if ($k != $field)
+					$single_field[$field] = $fields[$field];
+					//$single_field[$field]['label'] = ' ';
+					$single_field[$field]['display_label'] = FALSE;
+					$single_field[$field]['required'] = FALSE;
+					$single_field['id'] = array('type' => 'hidden', 'value' => $id);
+
+					// set them to hidden... just in case model hooks require the values to be passed on save
+					foreach($fields as $k => $f)
 					{
-						$fields[$k]['type'] = 'hidden';
+						if ($k != $field)
+						{
+							$fields[$k]['type'] = 'hidden';
+						}
 					}
+					//$fields = $single_field;
+					$fields = array_merge($fields, $single_field);
 				}
-				//$fields = $single_field;
-				$fields = array_merge($fields, $single_field);
-			}
-			else
-			{
-				$fields = NULL;
+				else
+				{
+					$fields = NULL;
+				}
 			}
 		}
 		

@@ -17,7 +17,9 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL base library object that many other FUEL objects inherit from
+ * FUEL base library
+ * 
+ * This class is the base class that many other FUEL objects inherit from.
  *
  * @package		FUEL CMS
  * @subpackage	Libraries

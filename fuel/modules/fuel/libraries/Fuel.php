@@ -41,21 +41,20 @@ class Fuel extends Fuel_base_library {
 	protected $_attached = array(); // attached objects
 	protected $_auto_attach = array(
 									'admin',
+									'assets',
 									'auth',
+									'blocks',
+									'cache',
 									'layouts',
+									'logs',
+									'modules',
+									'navigation',
+									'notification',
 									'pages',
 									'pagevars',
-									'blocks',
-									'assets',
-									'navigation',
-									'modules',
+									'permissions',
 									'sitevars',
 									'users',
-									'permissions',
-									'cache',
-									'logs',
-									'notification',
-									'template',
 									); // objects to automatically attach
 
 	private static $_instance; // the singleton instance
@@ -111,7 +110,7 @@ class Fuel extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets a configuration value for FUEL.
+	 * Returns a configuration value for FUEL.
 	 *
 	 * @access	public
 	 * @param	string	The configuration items key
@@ -126,9 +125,7 @@ class Fuel extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Static method that returns the instance of the FUEL object.
-	 *
-	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
+	 * Sets a configuration value for FUEL
 	 *
 	 * @access	public
 	 * @param	mixed	Can be a string that references the configuration key or an array of values

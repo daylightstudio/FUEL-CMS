@@ -90,7 +90,7 @@ $config['keyboard_shortcuts'] = array(
 	'view' => 'Ctrl+Shift+p');
 
 // dashboard modules to include
-$config['dashboards'] = array('fuel', 'backup');
+$config['dashboards'] = array('fuel');
 
 // dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';

@@ -155,7 +155,7 @@ fuel.windowLevel = function(){
 fuel.calcHeight = function(context){
 	var height = 0;
 	if ($('#login', context).size()){
-		var elems = '#login'; // bottom margin is added... not sure from what though
+		var elems = '#login'; 
 	} else {
 		var elems = '#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions';
 	}

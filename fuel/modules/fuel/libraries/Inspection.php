@@ -377,7 +377,11 @@ class Inspection_class extends Inspection_base {
 	
 	function parent()
 	{
-		$this->reflection->getParentClass()->name;
+		$parent = $this->reflection->getParentClass();
+		if ($parent)
+		{
+			return $parent->name;
+		}
 	}
 	
 	function method($method)

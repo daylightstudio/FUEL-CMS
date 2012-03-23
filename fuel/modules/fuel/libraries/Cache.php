@@ -5,7 +5,7 @@
  * FUEL Cache Class
  *
  * A generic file based caching class originally <a href="http://codeigniter.com/forums/viewthread/57117/">found on the CI Forums</a>.
- * 
+ * This class is the basis for the more FUEL specific <a href="[user_guide_url]modules/fuel/fuel_cache">Fuel_cache class</a>.
  *
  * @package		FUEL CMS
  * @subpackage	Libraries

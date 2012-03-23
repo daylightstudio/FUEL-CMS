@@ -573,7 +573,7 @@ Class Form {
 
 		if ($double_encode === TRUE)
 		{
-			$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+			$str = htmlspecialchars($str, ENT_QUOTES, config_item('charset'));
 		}
 		else
 		{
@@ -581,7 +581,7 @@ Class Form {
 			// From PHP 5.2.3 this functionality is built-in, otherwise use a regex
 			if (version_compare(PHP_VERSION, '5.2.3', '>='))
 			{
-				$str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8', FALSE);
+				$str = htmlspecialchars($str, ENT_QUOTES, config_item('charset'), FALSE);
 			}
 			else
 			{

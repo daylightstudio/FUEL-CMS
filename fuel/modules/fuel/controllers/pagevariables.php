@@ -35,7 +35,7 @@ class Pagevariables extends Module {
 		
 		if (empty($id))
 		{
-			$output = '<div id="fuel_main_content_inner"><p>'.lang('error_inline_page_edit').'</p></div>';
+			$output = '<div id="fuel_main_content_inner"><p style="font-size: 12px; width: 400px; height: 50px;">'.lang('error_inline_page_edit').'</p></div>';
 			$this->output->set_output($output);
 			return;
 		}
