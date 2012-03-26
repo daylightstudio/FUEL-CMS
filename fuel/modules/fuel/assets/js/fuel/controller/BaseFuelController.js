@@ -1,30 +1,3 @@
-/*
-These are no longer needed because they've been extracted out into the page header to 
-allow for optimization
-jqx.load('plugin', 'date');
-jqx.load('plugin', 'jquery.datePicker');
-jqx.load('plugin', 'jquery.fillin');
-jqx.load('plugin', 'jquery.markitup.pack');
-jqx.load('plugin', 'jquery.markitup.set');
-jqx.load('plugin', 'jquery.easing');
-//jqx.load('plugin', 'jquery.dimensions');
-jqx.load('plugin', 'jquery.bgiframe');
-jqx.load('plugin', 'jquery.tooltip');
-jqx.load('plugin', 'jquery.scrollTo-min');
-jqx.load('plugin', 'jqModal');
-jqx.load('plugin', 'jquery.checksave');
-jqx.load('plugin', 'jquery.form');
-jqx.load('plugin', 'jquery.treeview.min');
-jqx.load('plugin', 'jquery.cookie');
-jqx.load('plugin', 'jquery.hotkeys');
-
-jqx.load('plugin', 'jquery-ui-1.8.4.custom.min');
-jqx.load('plugin', 'jquery.disable.text.select.pack');
-jqx.load('plugin', 'jquery.selso');
-jqx.load('plugin', 'jquery.fillin');
-jqx.load('plugin', 'jquery.supercomboselect');
-*/
-
 fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	init : function(initObj){
@@ -449,6 +422,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this._initFormTabs(context);
 		this._initFormCollapsible(context);
 		this._initToolTips(context);
+		$('input, textarea').placeholder();
 		$('#form input:first', context).select();
 	},
 	

@@ -513,25 +513,17 @@ fuel.fields.linked_field = function(context){
 	
 }
 
-// create fillin property fields... placeholder value is really all you need though and this may be deprecated
-fuel.fields.fillin_field = function(context){
-	$('.fillin', context).each(function(i){
-		var placeholder = unescape($(this).attr('placeholder'));
-		$(this).fillin(placeholder);
-	});
-}
-
-// create fillin property fields... placeholder value is really all you need though and this may be deprecated
+// create number field
 fuel.fields.number_field = function(context, options){
 	$('.numeric', context).each(function(i){
 		var o = {decimal: false, negative: false}
 		o = $.extend(o, options);
-		if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes"){
+		if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes" || $(this).attr('data-decimal').toLowerCase() == "true"){
 			o.decimal = '.';
 		} else {
 			o.decimal = false;
 		}
-		if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes"){
+		if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true"){
 			o.negative = true;
 		} else {
 			o.negative = false;
@@ -540,6 +532,30 @@ fuel.fields.number_field = function(context, options){
 	});
 }
 
+// create currency field
+fuel.fields.currency_field = function(context, options){
+	$('.currency', context).each(function(i){
+		var o = {aSep: ',', aDec: '.',  dGroup: 3, vMin: 0.00, vMax: 999999999.99}
+		o = $.extend(o, options);
+		if ($(this).attr('data-separator')){
+			o.aSep = $(this).attr('data-separator');
+		}
+		if ($(this).attr('data-decimal')){
+			o.aDec = $(this).attr('data-decimal');
+		}
+		if ($(this).attr('data-grouping')){
+			o.dGroup = $(this).attr('data-grouping');
+		}
+		if ($(this).attr('data-min')){
+			o.vMin = $(this).attr('data-min');
+		}
+		if ($(this).attr('data-max')){
+			o.vMax = $(this).attr('data-max');
+		}
+		console.log(o)
+		$(this).autoNumeric(o);
+	});
+}
 // create a repeatable field
 fuel.fields.template_field = function(context, options){
 	if (!options) options = {};

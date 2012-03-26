@@ -43,6 +43,22 @@ class Fuel_custom_fields {
 	function wysiwyg($params)
 	{
 		$form_builder =& $params['instance'];
+		if (isset($params['editor']))
+		{
+			if ($params['editor'] === FALSE)
+			{
+				$params['class'] = 'no_editor';
+			}
+			else if (strtolower($params['editor']) == 'ckeditor')
+			{
+				$params['class'] = 'ckeditor '.$params['class'];
+			}
+			else if (strtolower($params['editor']) == 'markitup')
+			{
+				$params['class'] = 'markitup '.$params['class'];
+				
+			}
+		}
 		return $form_builder->create_textarea($params);
 	}
 	
@@ -341,23 +357,6 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
-	function fillin($params)
-	{
-		$form_builder =& $params['instance'];
-		
-		$fillin_class = 'fillin';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$fillin_class : $fillin_class;
-		
-		$placeholder = (!empty($params['placeholder'])) ? $params['placeholder'] : $params['default'];
-		if (!empty($placeholder))
-		{
-			$params['placeholder'] = rawurlencode($placeholder);
-		}
-		
-		// requires placeholder value to be set to trigger
-		return $form_builder->create_text($params);
-	}
-
 	function template($params)
 	{
 		$this->CI->load->library('parser');
@@ -630,18 +629,30 @@ class Fuel_custom_fields {
 		
 		if (empty($params['size']))
 		{
-			$params['size'] = 7;
+			$params['size'] = 10;
 		}
 
 		if (empty($params['max_length']))
 		{
-			$params['max_length'] = 7;
+			$params['max_length'] = 10;
 		}
 		
 		$currency = (isset($params['currency'])) ? $params['currency'] : '$';
 		
+		$data_vals = array('separator', 'decimal', 'grouping', 'min', 'max');
+		$params['data'] = array();
+		foreach($data_vals as $val)
+		{
+			if (isset($params[$val]))
+			{
+				$params['data'][$val] = $params[$val];
+			}
+		}
+		
+		$params['class'] = (!empty($params['class'])) ? 'currency '.$params['class'] : 'currency';
+		
 		// set data values for jquery plugin to use
-		return $currency.' '.$form_builder->create_number($params);
+		return $currency.' '.$form_builder->create_text($params);
 	}
 	
 	function state($params)

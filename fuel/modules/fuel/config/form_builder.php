@@ -2,7 +2,7 @@
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');
 $config['representatives'] = array(
 	'number' => array('int', 'smallint', 'mediumint', 'bigint'),
-	'password' => array('pwd', 'passwd'),
+	'password' => array('name' => array('pwd', 'passwd')),
 	);
 	
 $config['custom_fields'] = array(
@@ -112,18 +112,6 @@ $config['custom_fields'] = array(
 
 	),
 
-	'fillin' => array(
-		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-		'function'	=> 'fillin',
-		'filepath'	=> '',
-		'js'		=> array(
-							FUEL_FOLDER => array(
-								'jquery/plugins/jquery.fillin',
-							)
-		),
-		'js_function' => 'fuel.fields.fillin_field',
-	),
-	
 	'template' => array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'template',
@@ -147,9 +135,8 @@ $config['custom_fields'] = array(
 		'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 		'function'	=> 'currency',
 		'filepath'	=> '',
-		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
-		'js_function' => 'fuel.fields.number_field',
-		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE) // globally set
+		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.autoNumeric'),
+		'js_function' => 'fuel.fields.currency_field',
 	),
 
 	'state' => array(
