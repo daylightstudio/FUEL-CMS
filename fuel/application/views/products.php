@@ -4,6 +4,7 @@
 
 <?php if ( ! empty($products)) : ?>
 <?php foreach ($products as $product) : ?>
+	<?php $product_widgets = $product->widgets; ?>
 
 	<div class="product">
 		<h2><?php echo $product->name; ?></h2>
@@ -14,11 +15,15 @@
 		</div>
 		<?php endif; ?>
 		
+		<?php if ( ! empty($product_widgets)) : ?>
 		<h3>Product Widgets</h3>
 		
-		<div class="product_widgets">
-			<?php echo $product->widgets; ?>
-		</div>
+		<ul class="product_widgets">
+			<?php foreach ($product_widgets as $widget) : ?>
+			<li><?php echo $widget->name_formatted; ?> <sup><?php echo $widget->id; ?></sup></li>
+			<?php endforeach; ?>
+		</ul>
+		<?php endif; ?>
 	</div>
 
 <?php endforeach; ?>

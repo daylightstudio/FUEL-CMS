@@ -513,25 +513,25 @@ class MY_Model extends CI_Model {
 		if (is_array($params)){
 
 			$defaults = array(
-				'select' => $this->table_name.'.*',
-				//'select' => '*',
-				'from' => $this->table_name,
-				'join' => array(),
-				'where' => array(),
-				'or_where' => array(),
-				'where_in' => array(),
-				'or_where_in' => array(),
-				'where_not_in' => array(),
+				'select'          => $this->table_name.'.*',
+				//'select'        => '*',
+				'from'            => $this->table_name,
+				'join'            => array(),
+				'where'           => array(),
+				'or_where'        => array(),
+				'where_in'        => array(),
+				'or_where_in'     => array(),
+				'where_not_in'    => array(),
 				'or_where_not_in' => array(),
-				'like' => array(),
-				'or_like' => array(),
-				'not_like' => array(),
-				'or_not_like' => array(),
-				'group_by' => NULL,
-				'order_by' => NULL,
-				'limit' => NULL,
-				'offset' => NULL
-			);
+				'like'            => array(),
+				'or_like'         => array(),
+				'not_like'        => array(),
+				'or_not_like'     => array(),
+				'group_by'        => NULL,
+				'order_by'        => NULL,
+				'limit'           => NULL,
+				'offset'          => NULL
+				);
 
 			$defaults2 = array(
 				'join',
@@ -557,7 +557,8 @@ class MY_Model extends CI_Model {
 				$join_select = '';
 				if (is_array($params['join'][0]))
 				{
-					foreach($params['join'] as $join){
+					foreach($params['join'] as $join)
+					{
 						$this->db->join($join[0], $join[1], $join[2]);
 						if ($join[3]) $join_select .= ', '.$this->db->safe_select($join[0]);
 					}
@@ -632,8 +633,12 @@ class MY_Model extends CI_Model {
 				$this->_common_query();
 			}
 			
-			$this->db->limit($params['limit']);
-			$this->db->offset($params['offset']);
+			if ( ! empty($params['limit'])) {
+				$this->db->limit($params['limit']);
+			}
+			if ( ! empty($params['offset'])) {
+				$this->db->offset($params['offset']);
+			}
 			$results = $this->get();
 		} 
 		else 
@@ -3147,13 +3152,31 @@ Class Data_record {
 			$model = $foreign_keys[$var_key];
 			$output = $this->lazy_load($var_key, $model);
 		}
-// !@todo Update to check for has_many
-else if ( ! empty($this->_parent_model->has_many) AND array_key_exists($var, $this->_parent_model->has_many))
-{
-		$rel_model = $this->_CI->load->module_model('fuel', 'relationships_model');
-		$related_vals = array_keys($rel_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->_parent_model->table_name(), 'candidate_key' => $this->id, 'foreign_table' => $this->_parent_model->has_many[$var])));
-		$output = ( ! empty($related_vals)) ? implode('/', $related_vals) : '';
-}
+		// check if field is for related data via has_many
+		else if ( ! empty($this->_parent_model->has_many) AND array_key_exists($var, $this->_parent_model->has_many))
+		{
+			// first check in the relationships table to see if they exist
+			$rel_model = $this->_parent_model->load_model(array('fuel' => 'relationships_model'));
+			$rel_where = array(
+				'candidate_table' => $this->_parent_model->table_name(),
+				'candidate_key'   => $this->id,
+				'foreign_table'   => $this->_parent_model->has_many[$var],
+				);
+			$rel_ids = array_keys($this->_CI->$rel_model->find_all_array_assoc('foreign_key', $rel_where));
+/* xdebug_var_dump($rel_where);exit; */
+			if ( ! empty($rel_ids))
+			{
+				// now grab the actual data
+				$foreign_model = $this->_parent_model->load_model($rel_where['foreign_table'] . '_model');
+				$foreign_query_params = array('where_in' => array("{$rel_where['foreign_table']}.id" => $rel_ids));
+				$foreign_query = $this->_CI->$foreign_model->query($foreign_query_params);
+				$foreign_data = $foreign_query->result();
+/* xdebug_var_dump($foreign_model, $rel_ids, $foreign_data, $this->_CI->$foreign_model->debug_query(), $foreign_query_params);exit; */
+				if ( ! empty($foreign_data)) {
+					$output = $foreign_data;
+				}
+			}
+		}
 		// finally check values from the database
 		else if (array_key_exists($var, $this->_fields))
 		{

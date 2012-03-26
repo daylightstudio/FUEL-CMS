@@ -20,5 +20,13 @@ class Product_widgets_model extends Base_module_model {
 
 }
 
-class Product_widget_model extends Base_module_record {	
+class Product_widget_model extends Base_module_record {
+
+	function get_name_formatted()
+	{
+		$CI =& get_instance();
+		$CI->load->helper('inflector');
+		return 'N: ' . humanize($this->name);
+	}
+
 }
