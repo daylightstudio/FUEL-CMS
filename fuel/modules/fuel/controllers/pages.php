@@ -436,9 +436,13 @@ class Pages extends Module {
 				$save = array();
 				$save['label'] = $this->input->post('navigation_label');
 				$save['location'] = $this->input->post('location');
-				$save['group_id'] = $this->config->item('auto_page_navigation_group_id', 'fuel');
+				$save['group_id'] = $this->fuel->config('auto_page_navigation_group_id');
 				$save['parent_id'] = 0;
-				
+				$save['published'] = $this->input->post('published');
+				if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+				{
+				     $save['published'] = 'no';
+				}
 				// reset $where and create where clause to try and find an existing navigation item
 				$where = array();
 				$where['location'] = $save['location'];

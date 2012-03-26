@@ -754,18 +754,21 @@ class Inspection_comment {
 	
 	function description($format = FALSE)
 	{
+
 		if (!isset($this->_description))
 		{
 			preg_match('#/\*\*\s*(.+ )(@|\*\/)#Ums', $this->_text, $matches);
 			if (isset($matches[1]))
 			{
+				$this->_description = $matches[1];
+				
 				// removing preceding * and tabs
-				$this->_description = preg_replace('#\*\s+#ms', "", $matches[1]);
-				$this->_description = str_replace(PHP_EOL, PHP_EOL.PHP_EOL, $this->_description);
-				$this->_description = preg_replace("#^\s+#", "", $this->_description);
+				$this->_description = preg_replace('#\* *#m', "", $matches[1]);
+				$this->_description = preg_replace("#^ +#m", "", $this->_description);
 				
 				// remove code examples since they are handled by the example method
 				$this->_description = preg_replace('#<code>.+</code>#ms', '', $this->_description);
+				$this->_description = trim($this->_description);
 			}
 			else
 			{
@@ -816,6 +819,7 @@ class Inspection_comment {
 						break;
 					case 'long':
 						$desc_lines = explode(PHP_EOL, $desc);
+
 						$new_desc = '';
 						$first_line = TRUE;
 						foreach($desc_lines as $d)
@@ -831,6 +835,10 @@ class Inspection_comment {
 								{
 									$new_desc .= $d;
 								}
+							}
+							else if (!$first_line)
+							{
+								$new_desc .= "\n\n";
 							}
 						}
 						$desc = $new_desc;
@@ -859,6 +867,10 @@ class Inspection_comment {
 								}
 								$lines .= $d.' ';
 								$past_first = TRUE;
+							}
+							else if ($past_first)
+							{
+								$lines .= "\n\n";
 							}
 						}
 						

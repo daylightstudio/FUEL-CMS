@@ -18,15 +18,21 @@
 /**
  * A form creation class
  *
- * This class allows you to create forms by passing in configurable
- * array values. For a list of what those field values can be, look at the
- * normalize_params method. It works well with the MY_Model form_fields
+ * The Form_builder class allows you to create forms by passing in configurable 
+ * array values. Each field has a base set of parameters that can be set 
+ * for it. Other fields have additional parameters you can pass to it 
+ * (e.g. the date field). This class works with the 
+ * <a href="[user_guide_url]libraries/my_model/table_class_functions#form_fields">MY_Model form_fields</a> 
  * method which returns table meta information regarding the fields of a 
  * table.
  *
- * The Form.php class is required if a form object is not passed in the 
- * initialization process.
+ * The <a href="[user_guide_url]libraries/form">Form.php</a> class is required if a 
+ * form object is not passed in the initialization process.
  * 
+ * Custom form fields can be configured in the <span class="file">fuel/application/config/form_builder.php</span> file.
+ *
+ * <p class="important">Additional information about <a href="[user_guide_url]general/forms">creating forms using Form_builder can be found in the General Topics area</a>.
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
@@ -1046,33 +1052,33 @@ Class Form_builder {
 		if (is_object($val)) $val = get_object_vars($val);
 		
 		$defaults = array(
-			'key' => '',
-			'id' => '',
-			'name' => '',
-			'type' => '',
-			'default' => '',
-			'max_length' => 0,
-			'comment' => '',
-			'label' => '',
-			'required' => FALSE,
-			'size' => '',
-			'class' => '',
-			'style' => '',
-			'value' => '',
-			'readonly' => '',
-			'disabled' => '',
-			'label_colons' => NULL,
-			'display_label' => TRUE,
-			'order' => NULL,
+			'key' => '', // a unique identifier of the field... by default, will be the id. Used mostly for post processing of a field
+			'id' => '', // the id of the field... will be auto generated if not provided. Set to FALSE if you don't want an ID value'
+			'name' => '', // the name of the field
+			'type' => '', // the field type (e.g. text, select, password, etc.)
+			'default' => '', // the default value of the field
+			'max_length' => 0, // the maxlenth parameter to associate with the field
+			'comment' => '', // a comment to assicate with the field's label'
+			'label' => '', // the label to associate with the field
+			'required' => FALSE, // puts a required flag next to field label
+			'size' => '', // the size attribute of the field
+			'class' => '', // the CSS class attribute to associate with the field
+			'style' => '', // inline style 
+			'value' => '', // the value of the field
+			'readonly' => '', // sets readonly attribute on field
+			'disabled' => '', // sets disabled attribute on the field
+			'label_colons' => NULL, // whether to display the label colons
+			'display_label' => TRUE, // whether to display the label
+			'order' => NULL, // the display order value to associate with the field
 			'before_html' => '', // for html before the field
 			'after_html' => '', // for html after the field
-			'displayonly' => FALSE,
-			'pre_process' => NULL,
-			'post_process' => NULL,
-			'js' => '',
-			'css' => '',
-			'represents' => '',
-			'data' => array(),
+			'displayonly' => FALSE, // only displays the value (no field)
+			'pre_process' => NULL, // a pre process function
+			'post_process' => NULL, // a post process function run on post
+			'js' => '', // js file or script using <script> tag
+			'css' => '', // css to associate with the field
+			'represents' => '', // specifies what other types of fields that this field should represent
+			'data' => array(), // data attributes
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
 		
@@ -3189,11 +3195,11 @@ Class Form_builder_field {
 	
 	public $type = ''; // the type value of the field (e.g. textare, enum, datetime)
 	public $render_func = array();
-	public $js_class = ''; // the CSS class used by the javascript to execute any javascript on the field
-	public $js_params = array(); // parameter to pass to the javascript function
-	public $js_exec_order = 1; // the order in which the javascript should be executed in relation to other fields... lower the sooner
 	public $html = ''; // html output for form field
-	public $js = array(); // the name of javascript file(s) to laod
+	public $js = array(); // the name of javascript file(s) to load
+	public $js_class = ''; // the CSS class used by the javascript to execute any javascript on the field
+	public $js_params = array(); // parameters to pass to the javascript function
+	public $js_exec_order = 1; // the order in which the javascript should be executed in relation to other fields... lower the sooner
 	public $js_function = ''; // the name of the javascript function to execute for the form field
 	public $represents = ''; // the field types this form field will represent  (e.g. 'number'=>'bigint|smallint|tinyint|int')
 	public $css = ''; // a CSS file to load for this form field

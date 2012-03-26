@@ -24,6 +24,7 @@
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ * @autodoc		FALSE
  */
 
 // --------------------------------------------------------------------
@@ -41,6 +42,7 @@ class Fuel_base_controller extends CI_Controller {
 	function __construct($validate = TRUE)
 	{
 		parent::__construct();
+		
 		$this->fuel->admin->initialize(array('validate' => $validate));
 		
 		if (method_exists($this, '_init'))

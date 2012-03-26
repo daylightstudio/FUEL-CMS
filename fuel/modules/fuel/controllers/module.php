@@ -249,6 +249,19 @@ class Module extends Fuel_base_controller {
 			}
 			
 			// set data table actions... look first for item_actions set in the fuel_modules
+			$delete_func = '
+			$CI =& get_instance();
+			$link = "";
+			if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+			{
+				$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
+				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+				$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+			}
+			return $link;';
+			
+			$delete_func = create_function('$cols', $delete_func);
+			
 			foreach($this->table_actions as $key => $val)
 			{
 				if (!is_int($key)) 
@@ -264,18 +277,7 @@ class Module extends Fuel_base_controller {
 				}
 				else if (strtoupper($val) == 'DELETE')
 				{
-					$delete_func = '
-					$CI =& get_instance();
-					$link = "";
-					if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
-					{
-						$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
-						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
-						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
-					}
-					return $link;';
 					
-					$delete_func = create_function('$cols', $delete_func);
 					$this->data_table->add_action($val, $delete_func, 'func');
 				}
 				else

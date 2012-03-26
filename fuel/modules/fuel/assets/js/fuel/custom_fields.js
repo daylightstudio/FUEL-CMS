@@ -552,7 +552,6 @@ fuel.fields.currency_field = function(context, options){
 		if ($(this).attr('data-max')){
 			o.vMax = $(this).attr('data-max');
 		}
-		console.log(o)
 		$(this).autoNumeric(o);
 	});
 }

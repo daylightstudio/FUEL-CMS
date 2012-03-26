@@ -2,6 +2,8 @@
 <p>FUEL CMS has several security options you can change and they are listed below. In addition, cookie information is encrypted by default and you can specify your own encryption key in the configuration settings like any other
 CI application.</p>
 
+<p class="important">FUEL CMS 1.0 improved the security hashing used for storing passwords in the database. Thus, existing users may need to reset their password in order to regain access to the CMS.</p>
+
 <h2>FUEL Configuration Security Settings</h2>
 <p>The <a href="<?=user_guide_url('general/configuration')?>">FUEL config</a> provides several security settings to:</p>
 <ul>

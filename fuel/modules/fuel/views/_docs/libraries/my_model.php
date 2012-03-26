@@ -1,7 +1,6 @@
-<h1>MY_Model Abstract Class</h1>
-<p>MY_Model extends the Model class to provide <a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.</p>
-<p>It was developed to augment the CodeIgniter active record class and <strong>DOES NOT</strong> change any of those methods. 
-The class is abstract, meaning that it needs to be extended to work.</p>
+<h1>MY_Model Class</h1>
+<p>MY_Model extends the <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.</p>
+<p>It was developed to augment the <a href="http://codeigniter.com/user_guide/database/active_record.html" target="_blank">CodeIgniter active record</a> class and <strong>DOES NOT</strong> change any of those methods. </p>
 
 <p class="important">MY_Model may require the following classes and helpers (depending on class preferences):</p>
 <ul>

@@ -723,8 +723,6 @@ class Fuel_custom_fields {
 	{
 		$form_builder =& $params['instance'];
 		
-		$func= array('url_title', 'dash', TRUE);
-		
 		// ugly... just strips the whitespace on multilines ... http://stackoverflow.com/questions/1655159/php-how-to-trim-each-line-in-a-heredoc-long-string
 		$params['value'] = trim_multiline(strip_tags($params['value']));
 		

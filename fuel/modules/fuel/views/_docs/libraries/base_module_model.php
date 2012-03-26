@@ -1,5 +1,5 @@
-<h1>Base_module_model</h1>
-<p>The <strong>Base_module_model</strong> is the base abstract class that should be extended when creating modules. The class should be required at the top of your module like so:</p>
+<h1>Base_module_model Class</h1>
+<p>The <strong>Base_module_model</strong> is the base class that should be extended when creating modules. The class inherits from the <a href="<?=user_guide_url('libraries/base_module_model')?>">MY_Model class</a>. The class should be required at the top of your module like so:</p>
 
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');

@@ -172,6 +172,7 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.tablednd.js',
 	'fuel/custom_fields.js',
 	'jquery/plugins/jquery.formbuilder',
+	'jquery/plugins/jquery.placeholder',
 	'fuel/global',
 );
 

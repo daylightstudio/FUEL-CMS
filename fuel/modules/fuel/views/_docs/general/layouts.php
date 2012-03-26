@@ -80,7 +80,6 @@ $main_layout->add_field('sections', array('display_label' => FALSE, 'add_extra' 
 											'fields' => array(
 												'sections' => array('type' => 'section', 'label' => '{__title__}'),
 												'title' => array('style' => 'width: 800px'),
-												'slug' => array('style' => 'width: 800px', 'link_to' => 'sections_{index}_slug'),
 												'content' => array('type' => 'textarea', 'style' => 'width: 800px; height: 500px;'),
 											)));
 $main_layout->add_fields($common_misc);

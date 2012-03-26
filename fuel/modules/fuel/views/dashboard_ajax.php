@@ -24,7 +24,7 @@
 			You are on version <em><?php echo FUEL_VERSION; ?></em><br />
 			Please update now.
 		</div>
-		<?php endif; ?>
+	<?php endif; ?>
 	
 	<ul class="nobullets">
 		<?php foreach($feed as $item) : ?>
