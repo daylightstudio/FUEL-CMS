@@ -4,8 +4,6 @@
 
 <?php if ( ! empty($products)) : ?>
 <?php foreach ($products as $product) : ?>
-	<?php $product_widgets = $product->widgets; ?>
-
 	<div class="product">
 		<h2><?php echo $product->name; ?></h2>
 		
@@ -15,6 +13,7 @@
 		</div>
 		<?php endif; ?>
 		
+		<?php $product_widgets = $product->widgets; ?>
 		<?php if ( ! empty($product_widgets)) : ?>
 		<h3>Product Widgets</h3>
 		
