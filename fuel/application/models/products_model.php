@@ -17,6 +17,7 @@ class Products_model extends Base_module_model {
 	{
 		$fields = parent::form_fields($values);
 		$fields['description']['class'] = 'no_editor';
+		$fields['widgets']['class'] = 'add_edit product_widgets';
 		return $fields;
 	}
 

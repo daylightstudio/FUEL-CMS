@@ -26,7 +26,7 @@ class Product_widget_model extends Base_module_record {
 	{
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
-		return 'N: ' . humanize($this->name);
+		return 'NXasdfasdfasdfasfd: ' . humanize($this->name);
 	}
 
 }
