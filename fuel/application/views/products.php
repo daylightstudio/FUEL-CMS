@@ -19,7 +19,17 @@
 		
 		<ul class="product_widgets">
 			<?php foreach ($product_widgets as $widget) : ?>
-			<li><?php echo $widget->name_formatted; ?> <sup><?php echo $widget->id; ?></sup></li>
+			<?php $widget_armaments = $widget->armaments; ?>
+			<li>
+				<?php echo $widget->name_formatted; ?> <sup><?php echo $widget->id; ?></sup>
+				<?php if ( ! empty($widget_armaments)) : ?>
+				<ul>
+					<?php foreach ($widget_armaments as $armament) : ?>
+					<li><?php echo $armament->name_formatted; ?> <sup><?php echo $armament->id; ?></sup></li>
+					<?php endforeach; ?>
+				</ul>
+				<?php endif; ?>
+			</li>
 			<?php endforeach; ?>
 		</ul>
 		<?php endif; ?>

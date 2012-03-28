@@ -23,6 +23,7 @@ $config['modules']['projects'] = array(
 
 $config['modules']['products'] = array();
 $config['modules']['product_widgets'] = array();
+$config['modules']['product_widget_armaments'] = array();
 
 $config['modules']['projects'] = array(
 	'preview_path' => 'showcase/project/{slug}',

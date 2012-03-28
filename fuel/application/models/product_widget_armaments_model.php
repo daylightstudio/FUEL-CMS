@@ -2,15 +2,14 @@
 
 require_once(FUEL_PATH . 'models/base_module_model.php');
 
-class Product_widgets_model extends Base_module_model {
+class Product_widget_armaments_model extends Base_module_model {
 
 	public $required = array('name');
 	public $unique_fields = array('name');
-	public $has_many = array('armaments' => 'product_widget_armaments');
 
 	function __construct()
 	{
-		parent::__construct('product_widgets'); // table name
+		parent::__construct('product_widget_armaments'); // table name
 	}
 
 	function form_fields($values = array())
@@ -21,13 +20,13 @@ class Product_widgets_model extends Base_module_model {
 
 }
 
-class Product_widget_model extends Base_module_record {
+class Product_widget_armament_model extends Base_module_record {
 
 	function get_name_formatted()
 	{
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
-		return 'N: ' . humanize($this->name);
+		return 'A: ' . humanize($this->name);
 	}
 
 }
