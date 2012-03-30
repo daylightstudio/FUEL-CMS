@@ -7,6 +7,7 @@ class Product_widgets_model extends Base_module_model {
 	public $required = array('name');
 	public $unique_fields = array('name');
 	public $has_many = array('armaments' => 'product_widget_armaments');
+	public $belongs_to = array('products' => 'products');
 
 	function __construct()
 	{

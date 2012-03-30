@@ -57,6 +57,7 @@ class MY_Model extends CI_Model {
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
 // !@todo add docs for $has_many
 	public $has_many = array();
+	public $belongs_to = array();
 	
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
@@ -1184,11 +1185,27 @@ class MY_Model extends CI_Model {
 	
 	// --------------------------------------------------------------------
 	
-	public function get_related($values, $related_model)
+	/**
+	 * Handles grabbing of the related data's keys
+	 *
+	 * @access public
+	 * @param array $values
+	 * @param string $related_model
+	 * @param string $mode, has_many or belongs_to
+	 * @return array
+	 */
+	public function get_related_keys($values, $related_model, $mode = 'has_many')
 	{
 		$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
-		$related_vals = array_keys($this->$relationships_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->table_name(), 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name)));
-		return $related_vals;
+		if ($mode == 'belongs_to')
+		{
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('candidate_key', array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name(), 'foreign_key' => $values['id'])));
+		}
+		else
+		{
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->table_name(), 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name)));
+		}
+		return $related_keys;
 	}
 	
 	// --------------------------------------------------------------------
@@ -1815,12 +1832,12 @@ class MY_Model extends CI_Model {
 					$fields[$key]['options'] = array_combine($val['options'], $val['options']);
 				}
 			}
-                        
+			
 			// create boolean checkboxes
 			if(in_array($val['name'], $this->boolean_fields) AND ($val['type'] === 'tinyint'))
 			{
 				$fields[$key]['type'] = 'checkbox';
-				$fields[$key]['value'] = 1;                            
+				$fields[$key]['value'] = 1;
 			}
 			
 			// set password fields
@@ -1886,8 +1903,19 @@ class MY_Model extends CI_Model {
 			{
 				$related_model = $this->load_related_model($related_model);
 				$related_options = $this->$related_model->options_list();
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related($values, $related_model) : array();
-				$fields[$related_field] = array('label' => ucfirst($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model) : array();
+				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+			}
+		}
+
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$related_options = $this->$related_model->options_list();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to') : array();
+				$fields[$related_field] = array('label' => 'Belongs to<br />' . humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
 			}
 		}
 
@@ -2185,7 +2213,7 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_after_save($values)
 	{
-		// clear out any pre-existing relationships and save
+		// handle has_many relationships
 		if ( ! empty($this->has_many))
 		{
 			foreach ($this->has_many as $related_field => $related_model)
@@ -2199,6 +2227,24 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id) {
 						$this->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name, 'foreign_key' => $foreign_id));
+					}
+				}
+			}
+		}
+		// handle belongs_to relationships
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+					// remove pre-existing relationships
+					$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $values['id']));
+					// create relationships
+					foreach ($this->normalized_save_data[$related_field] as $candidate_id) {
+						$this->$relationships_model->save(array('foreign_table' => $this->table_name, 'foreign_key' => $values['id'], 'candidate_table' => $this->$related_model->table_name, 'candidate_key' => $candidate_id));
 					}
 				}
 			}
@@ -2220,10 +2266,19 @@ class MY_Model extends CI_Model {
 		// clear out any relationships
 		if ( ! empty($this->has_many))
 		{
-			foreach ($this->has_many as $related_field => $related_model_name)
+			foreach ($this->has_many as $related_field => $related_model)
 			{
 				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
 				$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $where['id']));
+			}
+		}
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+				$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $where['id']));
 			}
 		}
 	}
