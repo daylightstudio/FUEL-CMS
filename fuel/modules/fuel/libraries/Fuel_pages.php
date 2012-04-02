@@ -294,11 +294,44 @@ class Fuel_page extends Fuel_base_library {
 		{
 			// if $location = xxx/yyy/zzz/, check first to see if /xxx/yyy/zzz exists in the DB, then reduce segments to xxx/yyy,
 			// xxx... until one is found in the DB. If only xxx is found in the database yyy and zzz will be treated as parameters
+			
+			
+			// determine max page params
+			$max_page_params = 0;
+			if (is_array($this->fuel->config('max_page_params')))
+			{
+				$location = implode('/', $this->CI->uri->rsegment_array());
+				foreach($this->fuel->config('max_page_params') as $key => $val)
+				{
+					// add any match to the end of the key in case it doesn't exist (no problems if it already does)'
+					$key .= ':any';
+					
+					// convert wild-cards to RegEx
+					$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
+
+					// does the RegEx match?
+					if (preg_match('#^'.$key.'$#', $location))
+					{
+						$max_page_params = $val;
+						break;
+					}
+				}
+			}
+			else
+			{
+				$max_page_params = (int)$this->fuel->config('max_page_params');
+			}
+			
+			$matched = FALSE;
 			while(count($segments) >= 1)
 			{
-				if (count($this->_segments) > $this->fuel->config('max_page_params')) break;
-				$location = implode('/', $segments);
+				if (count($this->_segments) > (int)$max_page_params)
+				{
+					break;
+				}
 				
+				$location = implode('/', $segments);
+
 				// if a prefix for the location is provided in the config, change the location value accordingly so we can find it
 				$prefix = $this->fuel->config('page_uri_prefix');
 				if ($prefix)
@@ -314,7 +347,8 @@ class Fuel_page extends Fuel_base_library {
 					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
 				}
 				
-				if (!empty($page_data)){
+				if (!empty($page_data))
+				{
 					break;
 				}
 				$this->_segments[] = array_pop($segments);
