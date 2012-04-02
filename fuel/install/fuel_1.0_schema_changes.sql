@@ -10,7 +10,8 @@ ALTER TABLE `fuel_blog_posts` ADD `thumb_image` VARCHAR(100)  NOT NULL  DEFAULT 
 ALTER TABLE `fuel_page_variables` CHANGE `value` `value` LONGTEXT  NOT NULL;
 
 
-UPDATE TABLE `fuel_users` SET password = '$2a$08$yKAF.NFIqdcshoOrBx1OW.O1LStir0B1/zjByw0FwWO3iZ0PC9mMq' WHERE user_id = 1;
+UPDATE TABLE `fuel_users` SET password = 'f4c99eae874755b97610d650be565f1ac42019d1' WHERE user_id = 1;
+UPDATE TABLE `fuel_users` SET salt = '429c6e14342dd7a63c510007a1858c26' WHERE user_id = 1;
 UPDATE TABLE `fuel_users` SET first_name = 'admin' WHERE user_id = 1;
 UPDATE TABLE `fuel_users` SET last_name = 'admin' WHERE user_id = 1;
 
