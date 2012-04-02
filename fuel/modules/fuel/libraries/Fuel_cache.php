@@ -19,6 +19,9 @@
 /**
  * FUEL cache object
  *
+ * This class is used for managing the different kinds of cached files used
+ * with FUEL including pages, compiled templates and asset files.
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
@@ -30,7 +33,9 @@
 
 class Fuel_cache extends Fuel_base_library {
 	
-	public $ignore = '#^(\..+)|(index\.html)#'; // files to exclude from clearing like .gitignore and .htaccess
+	public $ignore = '#^(\..+)|(index\.html)#'; // Regular expression of files to exclude from clearing like .gitignore and .htaccess
+	public $cache_path = ''; // The cache path. If no path is provided it will use the cache path value found in the main CI config file.
+	public $compiled_path = ''; // The path to the compiled template files. If none is provided it will be the $this->cache_path.'dwoo/compiled'
 	
 	protected $_cache; // the Cache object used for saving, retrieving and deleting cached files
 	protected $_types = array(
@@ -66,8 +71,48 @@ class Fuel_cache extends Fuel_base_library {
 	{
 		parent::initialize($params);
 		
+		// set the cache path to the configs cache path if left empty
+		if (empty($this->cache_path))
+		{
+			$this->set_cache_path($this->CI->config->item('cache_path'));
+		}
+		
+		// set the compile templates path
+		if (empty($this->compiled_path))
+		{
+			$this->set_compiled_path($this->cache_path,'dwoo/compiled/');
+		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the cache path
+	 *
+	 * @access	public
+	 * @param	string	The path to the cache folder
+	 * @return	void
+	 */	
+	function set_cache_path($path)
+	{
+		$this->cache_path = $path;
+		$this->_cache->set_cache_path($this->cache_path);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the compiled templates path
+	 *
+	 * @access	public
+	 * @param	string	The path to the compiled templates folder
+	 * @return	void
+	 */	
+	function set_compiled_path($path)
+	{
+		$this->compiled_path = $path;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -232,7 +277,7 @@ class Fuel_cache extends Fuel_base_library {
 		
 		// also delete DWOO compiled files
 		$this->CI->load->helper('file');
-		$dwoo_path = $this->CI->config->item('cache_path').'dwoo/compiled/';
+		$dwoo_path = $this->compiled_path;
 		
 		if (is_dir($dwoo_path) AND is_writable($dwoo_path))
 		{
@@ -366,12 +411,55 @@ class Fuel_cache extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Clears the cache folder for a particular module
+	 * 
+	 * <code>
+	 * $module = 'my_module';
+	 * $this->fuel->cache->clear_module($module);
+	 * </code>
+	 * 
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	void
+	 */
+	function clear_module($module)
+	{
+		$module_path = MODULES_PATH.$module.'/cache';
+		if (file_exists($module_path))
+		{
+			$this->_delete_files($module_path);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears all the allowed modules cache folders
+	 * 
+	 * <code>
+	 * $this->fuel->cache->clear_all_modules();
+	 * </code>
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
+	function clear_all_modules()
+	{
+		$modules = $this->CI->fuel->config('modules_allowed');
+		foreach($modules as $module)
+		{
+			$this->clear_module($module);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Clears all cache types
 	 * 
 	 * Will remove page, compiled, and cached asset files
 	 * 
 	 * <code>
-	 * $group = 'pages';
 	 * $this->fuel->cache->clear_all();
 	 * </code>
 	 *
@@ -383,7 +471,8 @@ class Fuel_cache extends Fuel_base_library {
 		$this->clear_pages();
 		$this->clear_compiled();
 		$this->clear_assets();
-		$this->_delete_files($this->CI->config->item('cache_path'));
+		$this->clear_all_modules();
+		$this->_delete_files($this->cache_path);
 	}
 	
 	// --------------------------------------------------------------------
@@ -391,10 +480,6 @@ class Fuel_cache extends Fuel_base_library {
 	/**
 	 * Deletes cached files from specified path
 	 * 
-	 * <code>
-	 * $this->fuel->cache->clear_all();
-	 * </code>
-	 *
 	 * @access	protected
 	 * @param	string	path to file
 	 * @return	void
