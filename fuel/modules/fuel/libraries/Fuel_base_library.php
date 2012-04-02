@@ -84,10 +84,13 @@ class Fuel_base_library {
 	function set_params($params)
 	{
 		if (!is_array($params) OR empty($params)) return;
-
+		
+		// set invalid base properties that can be set
+		$invalid_props = array('CI', 'fuel');
+		
 		foreach ($params as $key => $val)
 		{
-			if (isset($this->$key) AND substr($key, 0, 1) != '_')
+			if (!in_array($key, $invalid_props) AND isset($this->$key) AND substr($key, 0, 1) != '_')
 			{
 				$this->$key = $val;
 			}
