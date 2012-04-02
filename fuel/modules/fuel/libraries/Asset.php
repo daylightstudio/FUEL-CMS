@@ -681,7 +681,7 @@ class Asset {
 	// &lt;link href="/assets/css/main.css" media="all" rel="stylesheet"/&gt;
 	// &lt;link href="/assets/css/home.css" media="all" rel="stylesheet"/&gt;
 
-	echo $this->asset->js(array('main', 'home'));
+	echo $this->asset->css(array('main', 'home'));
 	// &lt;link href="/assets/css/main.css" media="all" rel="stylesheet"/&gt;
 	// &lt;link href="/assets/css/home.css" media="all" rel="stylesheet"/&gt;
 
