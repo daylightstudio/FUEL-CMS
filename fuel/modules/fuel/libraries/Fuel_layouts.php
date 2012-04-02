@@ -106,11 +106,15 @@ class Fuel_layouts extends Fuel_base_library {
 					
 					$order = 1;
 
-					// must reset this first to prevent any initialization of stuff like adding javascript for renderin
-					$this->CI->form_builder->clear();
+					// must reset this first to prevent any initialization of stuff like adding javascript for rendering
+					//	$this->CI->form_builder->clear();
+					
+					// create a new object so we don't conflict with the main form_builder object on CI'
+					$fb = new Form_builder();
+					
 					foreach($fields as $key => $f)
 					{
-						$fields[$key] = $this->CI->form_builder->normalize_params($f);
+						$fields[$key] = $fb->normalize_params($f);
 						if (empty($fields[$key]['name']))
 						{
 							$fields[$key]['name'] = $key;
