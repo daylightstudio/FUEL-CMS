@@ -7,7 +7,9 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 	items : function(){
 
 		// call parent
-		fuel.controller.BaseFuelController.prototype.items.call(this);
+		//fuel.controller.BaseFuelController.prototype.items.call(this);
+		this._super();
+		
 		var _this = this;
 		$('#group_id').change(function(e){
 			$('#form_actions').submit();

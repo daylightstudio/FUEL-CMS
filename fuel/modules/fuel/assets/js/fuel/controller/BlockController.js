@@ -9,8 +9,9 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 	add_edit : function(){
 
 		// call parent
-		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
-	
+		//fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		this._super();
+		
 		$('#no_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view_cancel/';
 			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){

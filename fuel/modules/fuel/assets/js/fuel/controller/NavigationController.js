@@ -16,7 +16,9 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 	
 	add_edit : function(){
 		// call parent
-		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		//fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		this._super();
+		//this._super.
 		var origParentId = $('#parent_id').val();
 		var id = $('#id').val();
 		$('#group_id').change(function(e){
