@@ -13,6 +13,12 @@
 	<li>Inspection</li>
 </ul>
 
+<h2>MY_Model</h2>
+<ul>
+	<li>Added the is_{property} method for all boolean type properties (e.g. $my_rec->is_published())</li>
+	<li></li>
+</ul>
+
 <h2>Other modules</h2>
 <ul>
 	<li>Updated backup module</li>
@@ -20,6 +26,8 @@
 	<li>Updated the validate module so that you can run validation in your own controllers $this->fuel->validate->html('my_page');</li>
 	<li>Broke out Google Keywords and Page Analysis into their own modules (was "seo" module);</li>
 </ul>
+
+
 
 
 User Guide:

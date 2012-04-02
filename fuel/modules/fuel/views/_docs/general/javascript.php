@@ -108,7 +108,9 @@ Some of the benefits of using JQX instead of simply including javascript files:<
 	<li><strong>js_localized</strong>: an array of localized string keys to be accessible via the <dfn>fuel.lang()</dfn> function</li>
 </ul>
 
-<p></p>
+<p>The initialization parameter <dfn>method</dfn> has special meaning and should be the name of a method on your controller (e.g. myMethod).
+Additionally, you can access the controller object after the window has been completely loaded (so $(window).load... not $().ready()) through the <dfn>window.page</dfn> variable.
+</p>
 <pre class="brush:php">
 jqx.load('plugin', 'date');
 

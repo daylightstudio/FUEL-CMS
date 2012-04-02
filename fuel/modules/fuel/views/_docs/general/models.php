@@ -1,7 +1,7 @@
 <h1>Models</h1>
 <p>There are two main classes FUEL provides for creating models. The first, <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>, is an extension of the 
 <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CodeIgniter model</a> class that wraps logic around your table models.
-The second, <a href="<?=user_guide_url('libraries/my_model')?>">Base_module_model</a>, extends <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a> and provides 
+The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a>, extends <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a> and provides 
 <a href="<?=user_guide_url('modules/simple')?>">simple module</a> specific methods and is the class you will most likely want to extend for your models. </p>
 
 <p>Both classes allow you to create simple to complex form interfaces with the model's <dfn>MY_Model::form_fields()</dfn>

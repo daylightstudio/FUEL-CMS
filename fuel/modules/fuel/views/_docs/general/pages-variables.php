@@ -18,7 +18,7 @@
 
 <p>For this tutorial we will make the <dfn>about</dfn> page a static view file. To do that, create the following file at <dfn>application/views/about.php</dfn>: </p>
 
-<pre class="brush: php">
+<pre class="brush: xml">
 <h1>Hello World</h1>
 <p>This is our about page</p>
 </pre>
@@ -119,7 +119,7 @@ This requires the following:</p>
 
 <h3>SQL Database Table</h3>
 <p>Run the following SQL statement to create the news table.</p>
-<pre class="brush: php">
+<pre class="brush: sql">
 CREATE TABLE `news` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `headline` varchar(255) collate utf8_unicode_ci NOT NULL,

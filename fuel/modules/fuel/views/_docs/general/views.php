@@ -8,7 +8,7 @@ if you are using the <a href="<?=user_guide_url('introduction/opt-in-controllers
 layout or block view file (in the _layouts and _blocks folder respectively), will prevent it from showing up in the selection dropdown list in the CMS.</p>
 
 <h2>Special View Folders</h2>
-<p>There are several view folders that have special purpose within your view folders:</p>
+<p>There are several folders that have special purpose within your views folders:</p>
 <ul>
 	<li><strong>_admin</strong>: contains CMS admin specific views. The application folder uses this folder to hold the <dfn>_fuel_preview.php</dfn> 
 	file which is used for previewing content from the markItUp! editor. You may need to customize to fit your preview needs</li>

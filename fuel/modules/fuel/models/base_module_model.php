@@ -17,6 +17,18 @@
 
 /**
  * Extends MY_Model to be specific to FUEL modules
+ *
+ * <strong>Base_module_model</strong> is the base class that should be extended when creating modules. 
+ * The class should be required at the top of your module like so:
+ *
+ * 	<code>
+ * 	&lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+ * 	
+ * 	require_once(FUEL_PATH.'models/base_module_model.php');
+ * 	
+ * 	class My_super_model extends Base_module_model {
+ * 	...
+ * 	</code>
  * 
  * @package		FUEL CMS
  * @subpackage	Models
@@ -45,7 +57,7 @@ class Base_module_model extends MY_Model {
 	 * @param	string	the module name to 
 	 * @return	void
 	 */
-	function __construct($table, $params = NULL)
+	function __construct($table = NULL, $params = NULL)
 	{
 		$CI = & get_instance();
 		

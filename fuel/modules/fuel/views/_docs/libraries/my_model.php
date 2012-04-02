@@ -354,7 +354,7 @@ $foo->save();
 <h2>Magic Methods</h2>
 <p>MY_Model uses PHP's magic methods extensively. This allows for dynamically creating methods that aren't originally defined by the class. 
 Magic methods are used both in the table and custom record classes. In custom record classes, any method prefixed with <dfn>get_</dfn>
-can also be syntactically written to look like an instance property:
+can also be syntactically written to look like an instance property:</p>
 
 <pre class="brush: php">
 $record->get_content()
@@ -363,7 +363,19 @@ $record->get_content()
 $record->content
 </pre>
 
-In the table class, magic methods are used to find records in interesting ways. For example, you can do something like this (where <var>{}</var> enclose areas where the developer should change to a proper field name):</p>
+<p>Additionally, you can use <dfn>is_{property})()</dfn> on any property that is a boolean type value or an enum value with 2 options.</p>
+<pre class="brush: php">
+if ($record->is_published())
+{
+	echo 'Published';
+}
+else
+{
+	echo 'Not Published';
+}
+</pre>
+
+<p>In the table class, magic methods are used to find records in interesting ways. For example, you can do something like this (where <var>{}</var> enclose areas where the developer should change to a proper field name):</p>
 <pre class="brush: php">
 // to find multiple items 
 $this->examples_model->find_all_by_{column1}_and_{column2}('column1_val', 'column2_val');
