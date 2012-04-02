@@ -1,7 +1,7 @@
 <div class="repeatable_container" data-depth="1">
 	{fields}
 		<div class="repeatable" style="margin: 0 10px 10px 0;">
-		<h4 class="grabber"><u>Section <span class="num">{num}</span></u></h4><br />
+		<h4 class="grabber"><u>Section <span class="num">{__num__}</span></u></h4><br />
 		
 		<table class="form">
 			<tbody>
