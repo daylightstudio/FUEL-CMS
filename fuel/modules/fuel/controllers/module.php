@@ -1077,6 +1077,7 @@ class Module extends Fuel_base_controller {
 		
 		// use a new instance to prevent problems when duplicating
 		$fb = new Form_builder();
+		$fb->custom_fields = $this->form_builder->custom_fields;
 		$fields = $this->model->form_fields($_POST);
 		$fb->set_fields($fields);
 		$fb->post_process_field_values();// manipulates the $_POST values directly
