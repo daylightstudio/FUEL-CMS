@@ -92,14 +92,14 @@ Class Form_builder {
 	public $html_prepend = ''; // prepended HTML to the form HINT: Can include JS script tags
 	public $html_append = ''; // appended HTML to the form HINT: Can include JS script tags
 	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
+	public $js; // javascript files to associate with the form fields to be executed once per render
+	public $css; // CSS files to associate with the form fields to be executed once per render
 	
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
 	protected $_cached; // cached parameters
 	protected $_pre_process; // pre_process functions
 	protected $_post_process; // post_process functions
-	protected $_js; // to be executed once per render
-	protected $_css; // to be executed once per render
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	protected $CI;
 	
@@ -218,8 +218,8 @@ Class Form_builder {
 	{
 		$this->_fields = array();
 		$this->_html = '';
-		$this->_js = array();
-		$this->_css = array();
+		$this->js = array();
+		$this->css = array();
 		$this->_pre_process = array();
 		$this->_post_process = array();
 	}
@@ -238,28 +238,82 @@ Class Form_builder {
 	function set_fields($fields)
 	{
 		$i = 1;
+
+		// clear it out first
+		$this->_fields = array();
 		foreach ($fields as $key => $val)
 		{
-			
-			// __FORM_BUILDER__ allows you to set properties on the class
-			// convenient for models setting values
-			if (strtoupper($key) == '__FORM_BUILDER__')
+			$this->add_field($key, $val, $i);
+			$i++;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set the fields for the form
+	 * 
+	 * Check the normalize_params method for possible values
+	 *
+	 * @access	public
+	 * @param	string	The key to associate with the field
+	 * @param	array	The field parameters
+	 * @param	int		The order value of the parameter
+	 * @return	void
+	 */
+	function add_field($key, $val, $order = NULL)
+	{
+		// __FORM_BUILDER__ allows you to set properties on the class
+		// convenient for models setting values
+		if (strtoupper($key) == '__FORM_BUILDER__')
+		{
+			$this->set_params($val);
+		}
+		else
+		{
+			if (is_string($val))
 			{
-				$this->set_params($val);
+				$this->_fields[$key] = array('name' => $key, 'value' => $val);
 			}
 			else
 			{
-				if (is_string($val))
-				{
-					$fields[$key] = array('name' => $key, 'value' => $val);
-				}
-				$fields[$key]['key'] = $key;
-				if (empty($val['name'])) $fields[$key]['name'] = $key;
-				if (empty($fields[$key]['order'])) $fields[$key]['order'] = $i;
-				$i++;
+				$this->_fields[$key] = $val;
+			}
+			
+			// set the key value
+			$this->_fields[$key]['key'] = $key;
+			if (empty($val['name']))
+			{
+				$this->_fields[$key]['name'] = $key;
+			}
+			
+			// set the order of the field
+			if (isset($order) AND empty($val['order']))
+			{
+				$this->_fields[$key]['order'] = $order;
+			}
+			if (empty($this->_fields[$key]['order']))
+			{
+				$this->_fields[$key]['order'] = count($this->_fields);
 			}
 		}
-		$this->_fields = $fields;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Removes a field before rendering
+	 * 
+	 * @access	public
+	 * @param	string
+	 * @return	void
+	 */
+	function remove_field($key)
+	{
+		if (isset($this->_fields[$key]))
+		{
+			unset($this->_fields[$key]);
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -1052,12 +1106,12 @@ Class Form_builder {
 		if (is_object($val)) $val = get_object_vars($val);
 		
 		$defaults = array(
-			'key' => '', // a unique identifier of the field... by default, will be the id. Used mostly for post processing of a field
-			'id' => '', // the id of the field... will be auto generated if not provided. Set to FALSE if you don't want an ID value'
-			'name' => '', // the name of the field
-			'type' => '', // the field type (e.g. text, select, password, etc.)
+			'key' => '', // a unique identifier for the field. By default, it will be the the same as the ID. This parameter is used mostly for post processing of a field
+			'id' => '', // the ID attribute of the field. This value will be auto generated if not provided. Set to FALSE if you don't want an ID value
+			'name' => '', // the name attribute of the field
+			'type' => '', // the type attribute of the field (e.g. text, select, password, etc.)
 			'default' => '', // the default value of the field
-			'max_length' => 0, // the maxlenth parameter to associate with the field
+			'max_length' => 0, // the maxlength parameter to associate with the field
 			'comment' => '', // a comment to assicate with the field's label'
 			'label' => '', // the label to associate with the field
 			'required' => FALSE, // puts a required flag next to field label
@@ -1070,8 +1124,8 @@ Class Form_builder {
 			'label_colons' => NULL, // whether to display the label colons
 			'display_label' => TRUE, // whether to display the label
 			'order' => NULL, // the display order value to associate with the field
-			'before_html' => '', // for html before the field
-			'after_html' => '', // for html after the field
+			'before_html' => '', // for HTML before the field
+			'after_html' => '', // for HTML after the field
 			'displayonly' => FALSE, // only displays the value (no field)
 			'pre_process' => NULL, // a pre process function
 			'post_process' => NULL, // a post process function run on post
@@ -1512,6 +1566,11 @@ Class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
+		
+		if (isset($params['attrs']))
+		{
+			$attrs = array_merge($attrs, $params['attrs']);
+		}
 		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
 	}
 
@@ -1632,8 +1691,8 @@ Class Form_builder {
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
-			'rows' => $this->textarea_rows, 
-			'cols' => $this->textarea_cols, 
+			'rows' => (!empty($params['rows'])) ? $params['rows'] : $this->textarea_rows, 
+			'cols' => (!empty($params['cols'])) ? $params['cols'] : $this->textarea_cols, 
 			'readonly' => $params['readonly'], 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
@@ -1661,11 +1720,8 @@ Class Form_builder {
 		$attrs = array(
 			'id' => $params['id'],
 			'data' => $params['data'],
+			'class' => $params['class'],
 		);
-		if (!empty($params['class']))
-		{
-			$attrs['class'] = $params['class'];
-		}
 		return $this->form->hidden($params['name'], $params['value'], $attrs);
 	}
 
@@ -1712,7 +1768,7 @@ Class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
-		$use_input_type = (!empty($params['use_input'])) ? TRUE : FALSE ;
+		$use_input_type = (isset($params['use_input']) AND $params['use_input'] === FALSE) ? FALSE : TRUE;
 		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
 	}
 
@@ -1733,7 +1789,8 @@ Class Form_builder {
 		$defaults = array(
 			'checked' => FALSE, // for radio
 			'options' => array(),
-			'mode' => NULL
+			'mode' => NULL,
+			'model' => NULL,
 			);
 		$params = $this->normalize_params($params, $defaults);
 		
@@ -1798,7 +1855,9 @@ Class Form_builder {
 	{
 		$defaults = array(
 			'sorting' => NULL,
-			'mode' => NULL
+			'options' => array(),
+			'mode' => NULL,
+			'model' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1878,14 +1937,12 @@ Class Form_builder {
 	function create_file($params)
 	{
 		$defaults = array(
-			'overwrite' => NULL, // for file uploading
+			'overwrite' => NULL, // sets a paramter to either overwrite or create a new file if one already exists on the server
 			'display_overwrite' => TRUE, // displays the overwrite checkbox
-			'accept' => 'gif|jpg|jpeg|png', // for file uploading
-			'upload_path' => NULL, // for file uploading
+			'accept' => 'gif|jpg|jpeg|png', // specifies which files are acceptable to upload
+			'upload_path' => NULL, // the server path to upload the file to
 			'file_name' => NULL, // for file uploading
-			'encrypt_name' => NULL,
-			'data' => $params['data'],
-			'style' => $params['style'],
+			'encrypt_name' => NULL, // determines whether to encrypt the uploaded file name to give it a unique value
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1896,7 +1953,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
-			'g' => str_replace('|', ',', $params['accept']),
+			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
 		if (is_array($this->form_attrs))
@@ -1953,16 +2010,6 @@ Class Form_builder {
 	 */
 	function create_date($params)
 	{
-		$defaults = array(
-			'date_format' => '', 
-			'region' => '', 
-			'min_date' => '01/01/2000',
-			'max_date' => '12/31/2100', 
-			'first_day' => 0, 
-		);
-
-		$params = $this->normalize_params($params, $defaults);
-		$params = $this->normalize_params($params);
 		if (empty($params['date_format']))
 		{
 			if (empty($params['date_format']))
@@ -1974,6 +2021,17 @@ Class Form_builder {
 				$params['date_format'] = $this->date_format;
 			}
 		}
+		
+		$defaults = array(
+			'date_format' => '', 
+			'region' => '', 
+			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
+			'max_date' =>  date($params['date_format'], strtotime('12/31/2100')),
+			'first_day' => 0, 
+		);
+
+		$params = $this->normalize_params($params, $defaults);
+		
 		
 		// check date to format it
 		if ((!empty($params['value']) AND (int) $params['value'] != 0)
@@ -1999,6 +2057,19 @@ Class Form_builder {
 		$format = str_replace('y', 'yy', $format);
 		$format = str_replace('Y', 'yyyy', $format);
 		
+		// set data parameters to be used by javascript
+		$params['data'] = array();
+		if (empty($params['region']))
+		{
+			$params['data']['date_format'] = str_replace('yyyy', 'yy', $format);
+		}
+		else
+		{
+			$params['data']['region'] = $params['region'];
+		}
+		$params['data']['min_date'] = $params['min_date'];
+		$params['data']['max_date'] = $params['max_date'];
+		$params['data']['first_day'] = $params['first_day'];
 		$params['placeholder'] = $format;
 		return $this->create_text($params);
 	}
@@ -2076,6 +2147,9 @@ Class Form_builder {
 		$params['type'] = 'number';
 		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
 		$negative = (!empty($params['negative'])) ? 1 : 0;
+		$params['min'] = (isset($params['min'])) ? $params['min'] : NULL;
+		$params['max'] = (isset($params['max'])) ? $params['max'] : NULL;
+		$params['step'] = (isset($params['step'])) ? $params['step'] : NULL;
 		
 		if (empty($params['size']))
 		{
@@ -2115,16 +2189,19 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates an telphone field for the form... supported by modern browsers
+	 * Creates a range field for the form... supported by modern browsers
 	 *
 	 * @access	public
 	 * @param	array fields parameters
 	 * @return	string
 	 */
-	function create_phone($params)
+	function create_range($params)
 	{
-		$email_class = 'phone';
-		$params['type'] = 'tel';
+		$email_class = 'range';
+		$params['type'] = 'range';
+		$params['attrs'] = array();
+		$params['attrs']['min'] = (isset($params['min'])) ? $params['min'] : 0;
+		$params['attrs']['max'] = (isset($params['max'])) ? $params['max'] : 10;
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
 		return $this->create_text($params);
 	}
@@ -2143,7 +2220,9 @@ Class Form_builder {
 	 */
 	function create_boolean($params)
 	{
-		if ($this->boolean_mode == 'checkbox')
+		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->boolean_mode;
+		
+		if ($mode == 'checkbox')
 		{
 			return $this->create_checkbox($params);
 		}
@@ -2632,7 +2711,6 @@ Class Form_builder {
 			}
 		}
 		
-		
 		if (is_array($this->_post_process))
 		{
 			foreach($this->_post_process as $key => $function)
@@ -2750,9 +2828,9 @@ Class Form_builder {
 		{
 			foreach($key as $k => $j)
 			{
-				if (!in_array($j, $this->_js))
+				if (!in_array($j, $this->js))
 				{
-					$this->_js[$k] = $j;
+					$this->js[$k] = $j;
 				}
 			}
 		}
@@ -2762,16 +2840,16 @@ Class Form_builder {
 			{
 				if (is_array($js))
 				{
-					$this->_js = array_merge($this->_js, $js);
+					$this->js = array_merge($this->js, $js);
 				}
 				else
 				{
-					$this->_js[] = $js;
+					$this->js[] = $js;
 				}
 			}
 			else
 			{
-				$this->_js[$key] = $js;
+				$this->js[$key] = $js;
 			}
 		}
 	}
@@ -2788,9 +2866,9 @@ Class Form_builder {
 	{
 		if (!empty($js))
 		{
-			return $this->_js[$js];
+			return $this->js[$js];
 		}
-		return $this->_js;
+		return $this->js;
 	}
 
 	// --------------------------------------------------------------------
@@ -2809,9 +2887,9 @@ Class Form_builder {
 		{
 			foreach($key as $k => $c)
 			{
-				if (!in_array($c, $this->_css))
+				if (!in_array($c, $this->css))
 				{
-					$this->_css[$k] = $c;
+					$this->css[$k] = $c;
 				}
 			}
 		}
@@ -2821,17 +2899,17 @@ Class Form_builder {
 			{
 				if (is_array($css))
 				{
-					$this->_css = array_merge($this->_css, $css);
+					$this->css = array_merge($this->css, $css);
 				}
 				else
 				{
-					$this->_css[] = $js;
+					$this->css[] = $js;
 				}
 				
 			}
 			else
 			{
-				$this->_css[$key] = $css;
+				$this->css[$key] = $css;
 			}
 		}
 	}
@@ -2848,9 +2926,9 @@ Class Form_builder {
 	{
 		if (!empty($css))
 		{
-			return $this->_css[$css];
+			return $this->css[$css];
 		}
-		return $this->_css;
+		return $this->css;
 	}
 
 	// --------------------------------------------------------------------
@@ -3016,9 +3094,10 @@ Class Form_builder {
 		$orig_ignore = $this->CI->asset->ignore_if_loaded;
 		
 		$this->CI->asset->ignore_if_loaded = TRUE;
-		
+
 		foreach($_js as $type => $js)
 		{
+			
 			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
 			if (is_array($js))
 			{
@@ -3100,11 +3179,11 @@ Class Form_builder {
 	 */
 	protected function _apply_css()
 	{
-		if (empty($this->_css)) return;
+		if (empty($this->css)) return;
 		
 		// static way but won't work if the form is ajaxed int'
 		// $css = $this->CI->load->get_vars('css');
-		// foreach($this->_css as $c)
+		// foreach($this->css as $c)
 		// {
 		// 	$css[] = $c;
 		// }
@@ -3112,7 +3191,7 @@ Class Form_builder {
 		
 		$out = '';
 		$css_files = array();
-		foreach($this->_css as $css)
+		foreach($this->css as $css)
 		{
 			if (is_array($css))
 			{
