@@ -203,7 +203,6 @@ div.dashboard_module { float: left; margin-right: 10px; margin-top: 10px; }
 /* filters */
 div#filters { position: absolute; right: 15px; top: 14px; }
 a#multi_delete { display: block; }
-a#rearrange { display: none; }
 
 /* other items */
 div#other_items { float: left; margin: 5px 20px 0px 20px; }
