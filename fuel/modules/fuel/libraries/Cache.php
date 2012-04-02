@@ -20,7 +20,7 @@ class Cache
 	public $expiry_postfix = '.exp'; //Expiry file prefix
 	public $group_postfix = '.group'; //Group directory prefix
 	public $default_ttl = 3600; //Default time to live = 3600 seconds (One hour).
-	
+	public $cache_path = ''; // The cache path. If no path is provided it will use the cache path value found in the main CI config file.
 	
 	/**
 	 * Constructor
@@ -45,8 +45,29 @@ class Cache
 	function initialize($params = array())
 	{
 		$this->set_params($params);
+		
+		// the cache path
+		if (empty($this->cache_path))
+		{
+			$CI =& get_instance();
+			$this->cache_path = $CI->config->item('cache_path');
+		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the cache path
+	 *
+	 * @access	public
+	 * @param	string	The path to the cache folder
+	 * @return	void
+	 */	
+	function set_cache_path($path)
+	{
+		$this->cache_path = $path;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -309,8 +330,7 @@ class Cache
 	{
 		$CI =& get_instance();
 		$dir = ($cache_group != NULL) ? md5($cache_group).$this->group_postfix : '';
-		$cache_path = ($CI->config->item('cache_path') != '') ?  $CI->config->item('cache_path') : APPPATH.'cache/';
-		return $cache_path.$dir;
+		return $this->cache_path.$dir;
 		
 	}
 	
