@@ -127,14 +127,14 @@ $this->load->view('page', $vars);
 <h2 id="form_field_types">Form Field Types</h2>
 <p>FUEL CMS 1.0 has added several new field types as well as made it easier to create custom form fields.
 In previous versions, to create a custom field type, you needed to create a custom function or class method 
-and use the '<a href="#custom">custom</a>' field type to render it. In 1.0, you can register those custom 
+and use the '<a href="#custom">custom</a>' field type to render it. In FUEL CMS 1.0, you can register those custom 
 field types which means you don't need to make those associations for every form. It also allows you to 
-associate them with their own javavascript files and functions to execute upon rendering. 
+associate them with their own <a href="<?=user_guide_url('general/javascript#forms')?>">javavascript</a> files and functions to execute upon rendering. 
 In addition, you can overwrite or augment existing field types, by adding field type associations in the 
 <span class="file">fuel/application/config/form_builder.php</span>. For example, we use this method to 
-associate the the datetime field type with the jquery UI datepicker javascript.
+associate the the datetime field type with the jquery UI datepicker.
 
-<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file.</p>
+<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file (<a href="#association_parameters">this file is explained below</a>).</p>
 	
 <p>By default, FUEL CMS 1.0 provides several custom field types which are defined in the <span class="file">fuel/modules/fuel/libraries/Fuel_custom_fields.php</span> class.</p>
 
@@ -893,28 +893,41 @@ associate the the datetime field type with the jquery UI datepicker javascript.
 
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
-'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-'function'	=> 'template',
-'filepath'	=> '',
+<p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/form_builder.php</span>
+to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:
+</p>
+<ul>
+	<li><strong>class</strong>: key is the module, and the value is the class</li>
+	<li><strong>function</strong>: the method to execute. If no class is specified, then it will call it like a normal function</li>
+	<li><strong>filepath</strong>: the path to the class or function. If no file path is provided, it will look in libraries folder</li>
+	<li><strong>js</strong>: the javascript file to include. Can be a string or an array (uses the assets <a href="<?=user_guide_url('helpers/asset_helper#js')?>">js()</a> function)</li>
+	<li><strong>js_function</strong>: the name of the javascript function to execute upon rendering of the form</li>
+	<li><strong>js_exec_order</strong>: the execution order of the javascript function</li>
+	<li><strong>css</strong>: the CSS file to include. Can be a string or an array (uses the assets <a href="<?=user_guide_url('helpers/asset_helper#css')?>">css()</a> function)</li>
+</ul>
+
+<h3>Example</h3>
+<pre class="brush:php">
+'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'), // key is the module, and the value is the class
+'function'	=> 'template', // the method to execute. If no class is specified, then it will call it like a normal function
+'filepath'	=> '', // if no file path is provided, it will look in libraries folder
 'js'		=> array(
-					FUEL_FOLDER => 
-						'jquery/plugins/jquery.repeatable',
+					FUEL_FOLDER => // the module in which assets/js folder to look in 
+						'jquery/plugins/jquery.repeatable', // the path to the javascript file relative to the assets/js folder
 						),
-'js_function' => 'fuel.fields.template_field',
-'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
+'js_function' => 'fuel.fields.template_field', // the name of the javascript function to execute upon rendering of the form
+'js_exec_order' => 0, // the execution order of the javascript function
+'css' => '', // the path to the css file relative to the assets/css folder
+</pre>
 
-
-<p class="important">The <span class="file">fuel/application/config/form_builder.php</span> file is included by the <span class="file">fuel/modules/fuel/config/form_builder.php</span> file.</p>
-
-
-
+<p class="important">The <span class="file">fuel/modules/fuel/config/form_builder.php</span> file is included by default in the <span class="file">fuel/application/config/form_builder.php</span> file.</p>
 
 
 <h2 id="representatives">Representatives</h2>
 <p>Also new to the <a href="<?=user_guide_url('libraries/form_builder')?>"> Form_builder</a> class is the concept of <dfn>representatives</dfn>.
 Representatives allow you to assign a field with certain attributes (e.g. type, name, etc) to a specific field type. 
-For example, FUEL will automatically set a field with a name of "pwd" or "passwd" to be the password type field. 
-Or, if you have a field of type "int", "smallint", "mediumint", "bigint", it will be assigned the "number" field type. When assigning
+For example, FUEL will automatically set a field with a name of 'pwd' or 'passwd' to be the 'password' type field. 
+Or, if you have a field of type 'int', 'smallint', 'mediumint', 'bigint', it will be assigned the 'number' field type. When assigning
 a representative, the key is the field type to be the representative and the value is either an array or string/regular expression to match for fields to represent.</p>
 
 <p>There are several ways to assign representatives to a field type:</p>
@@ -930,7 +943,7 @@ $config['representatives']['my_field'] =  => array('int', 'smallint', 'mediumint
 $config['representatives']['my_field'] =  => array('name' => array('pwd', 'passwd'));
 </pre>
 <br />
-<p>The second way is to assign them using the 'represents' attribute when making a custom fiel type association. For example, both the <dfn>datetime</dfn> and <dfn>wysiwyg</dfn> use this method by default as shown below:</p>
+<p>The second way is to assign them using the 'represents' attribute when making a custom field type association. For example, both the <dfn>datetime</dfn> and <dfn>wysiwyg</dfn> use this method by default as shown below:</p>
 
 <pre class="brush:php">
 $config['custom_fields'] = array(
@@ -973,7 +986,3 @@ $fields['my_field'] = array('type' => 'my_field', 'represents' => 'blob');
 <pre class="brush:php">
 $this->form_builder->set_representative('my_field', array('blob'))
 </pre>
-
-<h2 id="pre_post_processing">Pre &amp; Post Processing Fields</h2>
-
-

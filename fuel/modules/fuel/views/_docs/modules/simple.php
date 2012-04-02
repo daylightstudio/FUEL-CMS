@@ -290,8 +290,8 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 <h2 id="views">The Views</h2>
 <p>Simple modules are made up of several views:</p>
 <ul>
-	<li><a href="<?=user_guide_url('general/interface#list_view')?>"><strong>List view</strong></a> - where you can filter and select from a list and edit, delete or preview.</li>
-	<li><a href="<?=user_guide_url('general/interface#edit_view')?>"><strong>Form view</strong></a> - the form view that allows you to edit or input new records for the module</li>
+	<li><a href="<?=user_guide_url('introduction/interface#list_view')?>"><strong>List view</strong></a> - where you can filter and select from a list and edit, delete or preview.</li>
+	<li><a href="<?=user_guide_url('introduction/interface#edit_view')?>"><strong>Form view</strong></a> - the form view that allows you to edit or input new records for the module</li>
 	<li><strong>Tree view (optional)</strong> - provides a tree like hierarchical structure. Requires a tree method on the module's model that follows the hierarchical <dfn>Menu</dfn> structure</li>
 	<li><strong>Preview view (optional)</strong> - the URO to the website to preview the module</li>
 </ul>
