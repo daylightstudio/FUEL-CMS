@@ -819,7 +819,6 @@ class Inspection_comment {
 						break;
 					case 'long':
 						$desc_lines = explode(PHP_EOL, $desc);
-
 						$new_desc = '';
 						$first_line = TRUE;
 						foreach($desc_lines as $d)
@@ -833,7 +832,7 @@ class Inspection_comment {
 								}
 								else
 								{
-									$new_desc .= $d;
+									$new_desc .= $d.' ';
 								}
 							}
 							else if (!$first_line)
