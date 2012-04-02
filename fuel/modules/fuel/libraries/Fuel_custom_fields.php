@@ -49,9 +49,9 @@ class Fuel_custom_fields {
 			{
 				$params['class'] = 'no_editor';
 			}
-			else if (strtolower($params['editor']) == 'ckeditor')
+			else if (strtolower($params['editor']) == 'ckeditor' OR strtolower($params['editor']) == 'wysiwyg')
 			{
-				$params['class'] = 'ckeditor '.$params['class'];
+				$params['class'] = 'wysiwyg '.$params['class'];
 			}
 			else if (strtolower($params['editor']) == 'markitup')
 			{
@@ -318,7 +318,7 @@ class Fuel_custom_fields {
 			{
 				$CI =& get_instance();
 				$module = $CI->fuel->modules->get($params['module']);
-				$uri = $module->info('module_uri');
+				$uri = (!empty($module)) ? $module->info('module_uri') : '';
 			}
 			else
 			{
@@ -709,10 +709,6 @@ class Fuel_custom_fields {
 				$params['linked_to'] = 'name';
 			}
 		}
-		else
-		{
-		}
-		$params['linked_to'] = 'title';
 		$params['type'] = 'text';
 		
 		// set data values for jquery plugin to use
@@ -753,8 +749,6 @@ class Fuel_custom_fields {
 				$lis = array_map("trim", $lis);
 				return ul($lis, "'.$output_class.'");';
 		}
-		$func = create_function('$value', $func_str);
-		$form_builder->set_post_process($params['key'], $func);
 		
 		$func = create_function('$value', $func_str);
 		$form_builder->set_post_process($params['key'], $func);
