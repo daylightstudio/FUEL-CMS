@@ -83,7 +83,7 @@ $config['modules']['navigation'] = array(
 	'table_headers' => array(
 		'id', 
 		'label', 
-		'nav_key',
+		'location',
 		'precedence',
 		'published',
 	),
