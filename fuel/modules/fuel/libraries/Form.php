@@ -500,7 +500,9 @@ class Form {
 		}
 		else
 		{
-			$elem = new Form_button('button', $name, $value, $attrs);
+			$attrs = $this->_create_attrs($attrs);
+			$btn = new Form_button('button', $name, $value, $attrs);
+			$elem = $btn->render();
 		}
 		return $elem;
 	}
