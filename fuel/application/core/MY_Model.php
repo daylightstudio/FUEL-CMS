@@ -629,10 +629,6 @@ class MY_Model extends CI_Model {
 					$this->db->order_by($params['order_by']);
 				}
 			}
-			if (method_exists($this, '_common_query'))
-			{
-				$this->_common_query();
-			}
 			
 			if ( ! empty($params['limit'])) {
 				$this->db->limit($params['limit']);
@@ -644,10 +640,6 @@ class MY_Model extends CI_Model {
 		} 
 		else 
 		{
-			if (method_exists($this, '_common_query'))
-			{
-				$this->_common_query();
-			}
 			$results = $this->get();
 		}
 		return $results;
@@ -1197,13 +1189,24 @@ class MY_Model extends CI_Model {
 	public function get_related_keys($values, $related_model, $mode = 'has_many')
 	{
 		$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+		if (is_array($related_model)) {
+			$related_model = $this->load_related_model($related_model);
+		}
 		if ($mode == 'belongs_to')
 		{
-			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('candidate_key', array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name(), 'foreign_key' => $values['id'])));
+			$assoc_where = array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name());
+			if ( ! empty($values) AND array_key_exists('id', $values)) {
+				$assoc_where['foreign_key'] = $values['id'];
+			}
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('candidate_key', $assoc_where));
 		}
 		else
 		{
-			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('foreign_key', array('candidate_table' => $this->table_name(), 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name)));
+			$assoc_where = array('candidate_table' => $this->table_name(), 'foreign_table' => $this->$related_model->table_name);
+			if ( ! empty($values) AND array_key_exists('id', $values)) {
+				$assoc_where['candidate_key'] = $values['id'];
+			}
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('foreign_key', $assoc_where));
 		}
 		return $related_keys;
 	}
