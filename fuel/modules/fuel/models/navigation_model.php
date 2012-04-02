@@ -16,6 +16,14 @@ class Navigation_model extends Base_module_model {
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 
+	// used for the FUEL admin
+	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc')
+	{
+		$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, published', FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order);
+		return $data;
+	}
+	
 	function find_by_location($location, $group_id = 1)
 	{
 		$where[$this->_tables['navigation'].'.location'] = $location;
@@ -137,7 +145,7 @@ class Navigation_model extends Base_module_model {
 		$group_options = $CI->navigation_groups_model->options_list();
 		$group_values = array_keys($group_options);
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
-
+		
 		$fields['group_id'] = array(
 		'type' => 'inline_edit', 
 		'module' => 'navigation_group',
@@ -174,6 +182,28 @@ class Navigation_model extends Base_module_model {
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['hidden']['options'] = array('yes' => $yes, 'no' => $no);
+		
+		// set order
+		$fields['general_tab'] = array('type' => 'fieldset', 'label' => 'General', 'class' => 'tab', 'order' => 1);
+		$fields['advanced_tab'] = array('type' => 'fieldset', 'label' => 'Advanced', 'class' => 'tab', 'order' => 5);
+
+		$order = array(	'general_tab', 
+						'group_id', 
+						'location', 
+						'label', 
+						'parent_id', 
+						'published', 
+						'advanced_tab', 
+						'nav_key', 
+						'precedence', 
+						'attributes', 
+						'selected', 
+						'hidden'
+						);
+		foreach($order as $key => $val)
+		{
+			$fields[$val]['order'] = $key + 1;
+		}
 		
 		return $fields;
 	}
