@@ -167,11 +167,10 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
-	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'fuel/custom_fields.js',
-	'jquery/plugins/jquery.formbuilder',
+	//'jquery/plugins/jquery.formbuilder',
 	'jquery/plugins/jquery.placeholder',
 	'fuel/global',
 );
@@ -289,7 +288,9 @@ $config['page_cache_ttl'] = 0;
 // the name of the group the cache is associated with (so you can just remove the group)
 $config['page_cache_group'] = 'pages';
 
-// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db
+// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
+// If it is an array, then it will loop through the array using the keys to match against a regular expression:
+// $config['max_page_params'] = array('about/news/' => 1);
 $config['max_page_params'] = 0;
 
 // a list of URI paths that will always pull from the view folder... can use :any, like routes

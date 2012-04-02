@@ -1,4 +1,10 @@
 <?php 
+$config['js'][] = array(FUEL_FOLDER => array(
+								'jquery/plugins/jquery.formbuilder',
+								'fuel/custom_fields.js',
+								'jquery/plugins/jquery-ui-1.8.17.custom.min'
+								)
+						);
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');
 $config['representatives'] = array(
 	'number' => array('int', 'smallint', 'mediumint', 'bigint'),
@@ -96,6 +102,7 @@ $config['custom_fields'] = array(
 			
 		),
 		'js_function' => 'fuel.fields.inline_edit_field',
+		'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
 	
 	),
 
@@ -127,7 +134,6 @@ $config['custom_fields'] = array(
 	'number' => array(
 		'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
 		'js_function' => 'fuel.fields.number_field',
-		//'js_params' => array('decimal' => FALSE, 'negative' => FALSE) // globally set
 		'represents' => array('int', 'smallint', 'mediumint', 'bigint'),
 	),
 
@@ -169,13 +175,6 @@ $config['custom_fields'] = array(
 
 );
 
-
-//$config['custom_fields']['array'] = $config['custom_fields']['multi'];
-//$config['custom_fields']['text'] = $config['custom_fields']['wysiwyg'];
-//$config['custom_fields']['textarea'] = $config['custom_fields']['wysiwyg'];
-
-// include from main application directory
-@include(APPPATH.'config/form_builder.php');
 
 /* End of file form_builder.php */
 /* Location: ./application/config/form_builder.php */

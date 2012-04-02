@@ -5,7 +5,7 @@ if (fuel == undefined){
 fuel.fields = {};
 
 // date picker field
-fuel.fields.datetime_field = function(context, options){
+fuel.fields.datetime_field = function(context){
 	var o = {
 		dateFormat : 'mm/dd/yy',
 		firstDay : 0,
@@ -18,13 +18,22 @@ fuel.fields.datetime_field = function(context, options){
 	    buttonImageOnly: true, 
 	    buttonImage: jqx.config.imgPath + 'calendar.png'
 	}
-	o = $.extend(o, options);
-	$.datepicker.regional[o.region];
-	$('.datepicker', context).datepicker(o);
+	$('.datepicker', context).each(function(i){
+		var options = {
+			dateFormat : $(this).attr('data-date_format'),
+			region : $(this).attr('data-region'),
+			minDate : $(this).attr('data-min_date'),
+			maxDate : $(this).attr('data-max_date'),
+			firstDay : $(this).attr('data-first_day')
+		};
+		var opts = $.extend(o, options);
+		$.datepicker.regional[o.region];
+		$(this).datepicker(opts);
+	})
 }
 
 // multi combo box selector
-fuel.fields.multi_field = function(context){
+fuel.fields.multi_field = function(context, inline_edit){
 
 	var comboOptions = function(elem){
 		var comboOpts = {};
@@ -46,12 +55,13 @@ fuel.fields.multi_field = function(context){
 		$(this).supercomboselect(comboOpts);
 	});
 	
-	fuel.fields.inline_edit_field(context);
+	if (inline_edit !== false){
+		fuel.fields.inline_edit_field(context);
+	}
 }
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
-	
 	$editors = $ckEditor = $('textarea', context).not('.no_editor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
@@ -74,7 +84,7 @@ fuel.fields.wysiwyg_field = function(context){
 			$(this).width(width);
 		})
 	}
-	
+
 	// fix ">" within template syntax
 	var fixCKEditorOutput = function(elem){
 		var elemVal = $(elem).val();
@@ -123,8 +133,7 @@ fuel.fields.wysiwyg_field = function(context){
 			
 			$('#' + ckId).parent().append(sourceButton);
 
-			$('#' + ckId + '_viewsource').click(function(){
-
+			$('#' + ckId + '_viewsource').click(function(e){
 				$elem = $(elem);
 				ckInstance = CKEDITOR.instances[ckId];
 
@@ -141,7 +150,7 @@ fuel.fields.wysiwyg_field = function(context){
 				
 					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 				
-					if (!ckInstance.checkDirty()){
+					if (!ckInstance.checkDirty() && $.changeChecksaveValue){
 						$.changeChecksaveValue('#' + ckId, ckInstance.getData())
 					}
 
@@ -169,7 +178,7 @@ fuel.fields.wysiwyg_field = function(context){
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
-		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && $(this).is('textarea[class!="markitup"]')) || $(this).hasClass('wysiwyg')){
+		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
 //			createCKEditor(this);
 			setTimeout(function(){
 				createCKEditor(_this);
@@ -327,7 +336,7 @@ fuel.fields.asset_field = function(context, options){
 // inline editing of another module
 fuel.fields.inline_edit_field = function(context){
 
-	//fuel.fields.multi_field(context);
+	fuel.fields.multi_field(context, false);
 
 	var topWindowContext = window.top.document;
 	
@@ -366,11 +375,9 @@ fuel.fields.inline_edit_field = function(context){
 		var parentModule = fuel.getModuleURI(context);
 		
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
-		var addCss = 'add_inline_button';
 		
-		if (!$field.parent().find('.' + addCss).size()) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field ' + addCss + '">' + fuel.lang('btn_add') + '</a>');
+		if (!$field.parent().find('.add_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
 		if (!$field.parent().find('.edit_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-		if (isMulti) addCss += ' float_left';
 		
 		var refreshField = function(){
 			
@@ -406,7 +413,7 @@ fuel.fields.inline_edit_field = function(context){
 		}
 		
 		var changeField = function($this){
-			if (($this.val() == '' || $this.attr('multiple')) || $this.find('option').size() == 0){
+			if (($this.val() == '' || $this.attr('xmultiple')) || $this.find('option').size() == 0){
 				if ($this.is('select') && $this.find('option').size() == 0){
 					$this.hide();
 				}
@@ -423,8 +430,14 @@ fuel.fields.inline_edit_field = function(context){
 		});
 
 		$('.edit_inline_button', context).click(function(e){
-			var url = $(this).attr('href') + $(this).prev().val();
-			editModule(url, null, refreshField);
+			var editIds = $(this).prev().val().toString().split(',');
+			
+			if (editIds.length > 1) {
+				alert(fuel.lang('edit_multi_select_warning'));
+			} else {
+				var url = $(this).attr('href') + editIds[0];
+				editModule(url, null, refreshField);
+			}
 			return false;
 		});
 
@@ -447,7 +460,6 @@ fuel.fields.linked_field = function(context){
 		var masterId = fuel.getFieldId(master, context);
 		if ($('#' + slaveId).val() == ''){
 			$('#' + masterId).keyup(function(e){
-
 				// for most common cases
 				if (func){
 					var newVal = func($(this).val());
@@ -476,12 +488,10 @@ fuel.fields.linked_field = function(context){
 
 	// needed for enclosure
 	var bindLinked = function(slave, master, func){
-
 		if ($('#' + fuel.getFieldId(slave, context)).val() == ''){
 			if (typeof(master) == 'string'){
 				bindLinkedKeyup(slave, master, url_title);
 			} else if (typeof(master) == 'object'){
-
 				for (var o in master){
 					var func = false;
 					var funcName = master[o];
