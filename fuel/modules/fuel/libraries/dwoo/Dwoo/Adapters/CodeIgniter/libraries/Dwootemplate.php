@@ -19,7 +19,7 @@ require "dwoo/dwooAutoload.php";
  *
  * @uses the dwoo package from http://dwoo.org
  */
-class Dwootemplate extends Dwoo_Core {
+class Dwootemplate extends Dwoo {
     protected $dwoo_data = array();
 
     /**

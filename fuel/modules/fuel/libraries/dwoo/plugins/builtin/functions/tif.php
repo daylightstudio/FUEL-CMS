@@ -18,7 +18,7 @@
  * @date       2008-10-23
  * @package    Dwoo
  */
-function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $tokens)
+function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 {
 	// load if plugin
 	if (!class_exists('Dwoo_Plugin_if', false)) {
@@ -32,7 +32,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $to
 	if (count($rest) == 1) {
 		return $rest[0];
 	}
-
+	
 	// fetch false result and remove the ":" if it was present
 	$falseResult = array_pop($rest);
 
@@ -68,7 +68,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $to
 	}
 
 	// parse condition
-	$condition = Dwoo_Plugin_if::replaceKeywords($rest, $tokens, $compiler);
+	$condition = Dwoo_Plugin_if::replaceKeywords($rest, $compiler);
 
 	return '(('.implode(' ', $condition).') ? '.($trueResult===true ? implode(' ', $condition) : $trueResult).' : '.$falseResult.')';
 }

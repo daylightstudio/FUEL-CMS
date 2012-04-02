@@ -48,7 +48,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		$this->cacheDir = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		// include class paths or rebuild paths if the cache file isn't there
-		$cacheFile = $this->cacheDir.'classpath.cache.d'.Dwoo_Core::RELEASE_TAG.'.php';
+		$cacheFile = $this->cacheDir.'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php';
 		if (file_exists($cacheFile)) {
 			$classpath = file_get_contents($cacheFile);
 			$this->classPath = unserialize($classpath) + $this->classPath;
@@ -102,7 +102,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		// a new class was added or the include failed so we rebuild the cache
 		if (!isset($this->classPath[$class]) || !(include $this->classPath[$class])) {
 			if ($forceRehash) {
-				$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.d'.Dwoo_Core::RELEASE_TAG.'.php');
+				$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php');
 				foreach ($this->paths as $path=>$file) {
 					$this->rebuildClassPathCache($path, $file);
 				}
@@ -135,7 +135,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		if (!$pluginDir) {
 			throw new Dwoo_Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
 		}
-		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Dwoo_Core::RELEASE_TAG.'.php';
+		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Dwoo::RELEASE_TAG.'.php';
 		$this->paths[$pluginDir] = $cacheFile;
 		if (file_exists($cacheFile)) {
 			$classpath = file_get_contents($cacheFile);

@@ -22,7 +22,7 @@
  * @date       2009-07-18
  * @package    Dwoo
  */
-function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
+function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
 	if ($file === '') {
 		return;
@@ -39,6 +39,9 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 	}
 
 	try {
+		if (!is_numeric($cache_time)) {
+			$cache_time = null;
+		}
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (Dwoo_Security_Exception $e) {
 		return $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
@@ -52,28 +55,23 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 		return $dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
 	}
 
-	if (is_string($data)) {
-		$vars = $dwoo->readVar($data);
-	} else {
+	if ($dwoo->isArray($data)) {
 		$vars = $data;
+	} elseif ($dwoo->isArray($cache_time)) {
+		$vars = $cache_time;
+	} else {
+		$vars = $dwoo->readVar($data);
 	}
 
 	if (count($rest)) {
 		$vars = $rest + $vars;
 	}
 
-	$clone = clone $dwoo;
-	$out = $clone->get($include, $vars);
+	$out = $dwoo->get($include, $vars);
 
 	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);
-	}
-
-	foreach ($clone->getReturnValues() as $name => $value) {
-		$dwoo->assignInScope($value, $name);
-	}
-
-	if ($assign === null) {
+	} else {
 		return $out;
 	}
 }

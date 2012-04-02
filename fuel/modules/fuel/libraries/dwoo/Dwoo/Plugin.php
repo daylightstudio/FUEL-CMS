@@ -30,9 +30,9 @@ abstract class Dwoo_Plugin
 	 * constructor, if you override it, call parent::__construct($dwoo); or assign
 	 * the dwoo instance yourself if you need it
 	 *
-	 * @param Dwoo_Core $dwoo the dwoo instance that runs this plugin
+	 * @param Dwoo $dwoo the dwoo instance that runs this plugin
 	 */
-	public function __construct(Dwoo_Core $dwoo)
+	public function __construct(Dwoo $dwoo)
 	{
 		$this->dwoo = $dwoo;
 	}

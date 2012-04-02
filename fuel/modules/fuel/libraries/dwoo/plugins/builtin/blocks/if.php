@@ -33,7 +33,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 	{
 	}
 
-	public static function replaceKeywords(array $params, array $tokens, Dwoo_Compiler $compiler)
+	public static function replaceKeywords(array $params, Dwoo_Compiler $compiler)
 	{
 		$p = array();
 
@@ -48,108 +48,53 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 			switch($vmod) {
 
 			case 'and':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '&&';
-				} else {
-					$p[] = $v;
-				}
+				$p[] = '&&';
 				break;
 			case 'or':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '||';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'eq':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '==';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'ne':
-			case 'neq':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '!=';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'gte':
-			case 'ge':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '>=';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'lte':
-			case 'le':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '<=';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'gt':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '>';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'lt':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '<';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'mod':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '%';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case 'not':
-				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = '!';
-				} else {
-					$p[] = $v;
-				}
-				break;
-			case '<>':
-				$p[] = '!=';
+				$p[] = '||';
 				break;
 			case '==':
+			case 'eq':
+				$p[] = '==';
+				break;
+			case '<>':
 			case '!=':
+			case 'ne':
+			case 'neq':
+				$p[] = '!=';
+				break;
 			case '>=':
+			case 'gte':
+			case 'ge':
+				$p[] = '>=';
+				break;
 			case '<=':
+			case 'lte':
+			case 'le':
+				$p[] = '<=';
+				break;
 			case '>':
+			case 'gt':
+				$p[] = '>';
+				break;
 			case '<':
+			case 'lt':
+				$p[] = '<';
+				break;
 			case '===':
+				$p[] = '===';
+				break;
 			case '!==':
-			case '%':
-			case '!':
-				$p[] = $vmod;
+				$p[] = '!==';
 				break;
 			case 'is':
-				if ($tokens[$k] !== Dwoo_Compiler::T_UNQUOTED_STRING) {
-					$p[] = $v;
-					break;
-				}
-				if (isset($params[$k+1]) && strtolower(trim($params[$k+1], '"\'')) === 'not' && $tokens[$k+1] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+				if (isset($params[$k+1]) && strtolower(trim($params[$k+1], '"\'')) === 'not') {
 					$negate = true;
 					next($params);
 				} else {
 					$negate = false;
 				}
 				$ptr = 1+(int)$negate;
-				if ($tokens[$k+$ptr] !== Dwoo_Compiler::T_UNQUOTED_STRING) {
-					break;
-				}
 				if (!isset($params[$k+$ptr])) {
 					$params[$k+$ptr] = '';
 				} else {
@@ -196,6 +141,14 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 				}
 				break;
+			case '%':
+			case 'mod':
+				$p[] = '%';
+				break;
+			case '!':
+			case 'not':
+				$p[] = '!';
+				break;
 			default:
 				$p[] = $v;
 
@@ -212,9 +165,9 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		$tokens = $compiler->getParamTokens($params);
 		$params = $compiler->getCompiledParams($params);
-		$pre = Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+
+		$pre = Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
 
 		$post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
