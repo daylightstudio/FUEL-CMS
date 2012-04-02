@@ -39,6 +39,8 @@ $lang['rearrange_on'] = 'You can change the precedence order by selecting and dr
 
 $lang['replace_warning'] = 'Are you sure you want to replace the contents of this record?';
 
+$lang['edit_multi_select_warning'] = 'You can only have one option selected to edit.';
+
 /*
 |--------------------------------------------------------------------------
 | MarkItUp
