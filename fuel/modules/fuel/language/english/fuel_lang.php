@@ -26,12 +26,13 @@ $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
 $lang['error_invalid_email'] = 'The email address provided was not in the system.';
 $lang['error_invalid_password_match'] = 'The passwords don\'t match.';
 $lang['error_empty_email'] = 'Please enter in an email address.';
+$lang['error_folder_not_writable'] = 'You must make the  %1s folder writable.';
+$lang['error_invalid_folder'] = 'Invalid folder %1s';
+$lang['error_file_already_exists'] = 'File %1s already exists.';
+$lang['error_zip'] = 'There was an error creating the zipped file.';
 $lang['error_no_permissions'] = 'You do not have permissions to complete this action.';
 $lang['error_no_lib_permissions'] = 'You do not have permission to execute methods on the %1s class.';
 $lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it either doesn\'t exist or contains one or more of the following reserved words: %1s';
-$lang['error_invalid_export_dir'] = 'The directory %1s is not a valid export directory. Make sure it is writable.';
-$lang['error_exporting_to_directory'] = 'There was an error writing to one or more directories. View the output below for more information.';
-$lang['error_cache_folder_not_writable'] = 'You must make the cache folder %1s writable.';
 $lang['error_exporting_view'] = 'There was an error in creating the associated view file for the location %1s because the variable with the name <strong><em>%2s</em></strong> does not exist.';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';
 $lang['error_inline_page_edit'] = 'This variable must either be saved in the admin or edited in the associated views/_variables file.';
@@ -243,6 +244,7 @@ $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
 $lang['form_label_master_dimension'] = 'Master dimension';
+$lang['form_label_unzip'] = 'Unzip zip files';
 $lang['assets_upload_action'] = 'Upload';
 $lang['assets_select_action'] = 'Select';
 $lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploaded to';
@@ -255,6 +257,7 @@ $lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image i
 $lang['assets_comment_width'] = 'Will change the width of an image to the desired amount.';
 $lang['assets_comment_height'] = 'Will change the height of an image to the desired amount.';
 $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
+$lang['assets_comment_unzip'] = 'Unzips a zip file';
 
 /*
 |--------------------------------------------------------------------------
