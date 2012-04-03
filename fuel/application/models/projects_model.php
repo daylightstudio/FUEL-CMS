@@ -39,6 +39,16 @@ class Projects_model extends Base_module_model {
 		$fields['image']['class'] = 'asset_select images/projects';
 		$fields['image']['multiple'] = FALSE;
 		$fields['image']['multiline'] = FALSE;
+		$fields['image']['folder'] = 'images/blog';
+		$fields['image']['overwrite'] = TRUE;
+		$fields['image']['file_name'] = 'xxx';
+		$fields['image']['height'] = '100';
+		$fields['image']['width'] = '200';
+		$fields['image']['master_dimension'] = 'width';
+		//$fields['image']['hide_options'] = '1';
+		$fields['image']['create_thumb'] = 'width';
+		$fields['image']['subfolder'] = 'test';
+		$fields['image']['maintain_ratio'] = TRUE;
 		//$fields['description']['class'] = 'wysiwyg';
 		
 		// put all project images into a projects subfolder
@@ -51,7 +61,6 @@ class Projects_model extends Base_module_model {
 		}
 		$fields['image_upload']['overwrite'] = TRUE;
 		
-		
 		//test
 		//$fields = array();
 		//$fields['image'] = array('type' => 'asset');
@@ -60,15 +69,16 @@ class Projects_model extends Base_module_model {
 		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		$category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], 'fuel_blog_categories.published' => 'yes'))) : array();
 		
-		$fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'projects', 'options' => $category_options);
+		$fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'projects', 'options' => $category_options, 'multiple' => TRUE);
 
 		//$fields['name'] = array();
 		$fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
+		$fields['datetime'] = array('type' => 'datetime', 'first_day' => 2, 'min_date' => '01-01-2012', 'max_date' => '31-12-2012');
 		
 		$fields['test_image'] = array('upload' => TRUE);
-		$fields['numeric'] = array('type' => 'number', 'represents' => 'int|smallint|mediumint|bigint');
-		$fields['currency'] = array('type' => 'currency', 'negative' => TRUE, 'decimal' => ',');
+		$fields['numeric'] = array('type' => 'number', 'represents' => 'int|smallint|mediumint|bigint', 'negative' => TRUE, 'decimal' => TRUE);
+		$fields['currency'] = array('type' => 'currency', 'negative' => TRUE, 'decimal' => '.');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
 		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE);
 		$fields['state'] = array('type' => 'state');
