@@ -82,7 +82,7 @@ fuel helper function <dfn>fuel_set_var</dfn>. By setting the varialbe this way, 
 passed to the layout file containing the view file.
 </p>
 
-<pre class="brush:php">
+<pre class="brush:html">
 &lt;?php fuel_set_var('page_title', 'About : My Website'); ?&gt;
 
 &lt;h1&gt;About My Website&lt;/h1&gt;
