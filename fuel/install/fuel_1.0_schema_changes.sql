@@ -15,3 +15,12 @@ UPDATE TABLE `fuel_users` SET salt = '429c6e14342dd7a63c510007a1858c26' WHERE us
 UPDATE TABLE `fuel_users` SET first_name = 'admin' WHERE user_id = 1;
 UPDATE TABLE `fuel_users` SET last_name = 'admin' WHERE user_id = 1;
 
+
+CREATE TABLE `fuel_relationships` (
+`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+`candidate_table` varchar(100) DEFAULT '',
+`candidate_key` int(11) NOT NULL,
+`foreign_table` varchar(100) DEFAULT NULL,
+`foreign_key` int(11) NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8;
