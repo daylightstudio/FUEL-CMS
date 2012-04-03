@@ -3,21 +3,24 @@
 // not pulling from the database so just extend the normal model
 require_once(FUEL_PATH.'libraries/Validator.php');
 
-
 class Assets_model extends CI_Model {
 	
-	public $filters = array('group_id' => 'images');
-	public $filter_value = null;
-	public $key_field = 'id';
-	public $boolean_fields = array();
-	public $default_file_types = 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css';
+	public $filters = array('group_id' => 'images'); // the default list view group value for filtering
+	public $filter_value = null; // the default filter value
+	public $key_field = 'id'; // placed here to prevent errors since we are not extended Base_module_model
+	public $boolean_fields = array(); // placed here to prevent errors since we are not extended Base_module_model
+	public $default_file_types = 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'; // default file types to associate to folders without associations
 	
-	protected $_dirs = array('images', 'pdf');
-	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf');
+	protected $_dirs = array('images', 'pdf'); // default asset directories that can be managed
+	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf'); // default directory file types
 	protected $validator = NULL; // the validator object
 
 	private $_encoded = FALSE;
 
+	/**
+	 * Constructor
+	 *
+	 */
 	function __construct()
 	{
 		parent::__construct();
@@ -35,6 +38,15 @@ class Assets_model extends CI_Model {
 		
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Adds search filters
+	 *
+	 * @access	public
+	 * @param	array	Search filters
+	 * @return	void
+	 */	
 	function add_filters($filters)
 	{
 		if (empty($this->filters))
@@ -47,6 +59,18 @@ class Assets_model extends CI_Model {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of data used for the CMS's list view
+	 *
+	 * @access	public
+	 * @param	int		limit
+	 * @param	string	offset
+	 * @param	string	column
+	 * @param	string	order
+	 * @return	array
+	 */	
 	function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc')
 	{
 		$CI =& get_instance();
@@ -126,52 +150,29 @@ class Assets_model extends CI_Model {
 		return $return;
 	}
 	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the number of asset files
+	 *
+	 * @access	public
+	 * @return	int
+	 */	
 	function list_items_total()
 	{
 		return count($this->list_items());
 	}
-	
-	/*function get_dir($dir)
-	{
-		$dirs = (array) $this->get_dirs();
-		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->get_image_dir();
-	}
-	
-	function get_dirs()
-	{	
-		$dirs = array();
-		if (!empty($this->_dirs))
-		{
-			$dirs = array_combine($this->_dirs, $this->_dirs);
-		}
-		ksort($dirs);
-		return $dirs;
-	}
-	function get_image_dir()
-	{
-		$CI =& get_instance();
-		$editable_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
-		foreach($editable_filetypes as $folder => $types)
-		{
-			if (preg_match('#(jp(e){0,1}g|gif|png)#i', $types))
-			{
-				return $folder;
-			}
-		}
-		return key(reset($editable_filetypes));
-		
-	}
 
-	function get_dir_filetypes()
-	{
-		return $this->_dir_filetypes;
-	}
+	// --------------------------------------------------------------------
 
-	function get_dir_filetype($filetype)
-	{
-		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
-	}*/
-	
+	/**
+	 * Returns an array of information about a particular asset file
+	 *
+	 * @access	public
+	 * @param	string	An asset file
+	 * @return	array
+	 */	
 	function find_by_key($file)
 	{
 		$file = $this->get_file($file);
@@ -182,6 +183,15 @@ class Assets_model extends CI_Model {
 		return get_file_info($asset_path);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the name of the file and will decode it if necessary
+	 *
+	 * @access	public
+	 * @param	string	An asset file
+	 * @return	string
+	 */	
 	function get_file($file)
 	{
 		// if no extension is provided, then we determine that it needs to be decoded
@@ -192,6 +202,15 @@ class Assets_model extends CI_Model {
 		return $file;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the number of assets in a given folder 
+	 *
+	 * @access	public
+	 * @param	string	An asset folder
+	 * @return	int
+	 */	
 	function record_count($dir = 'images')
 	{
 		$CI =& get_instance();
@@ -200,11 +219,19 @@ class Assets_model extends CI_Model {
 		return count($files);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Deletes an asset
+	 *
+	 * @access	public
+	 * @param	string	An asset file to delete
+	 * @return	string
+	 */	
 	function delete($file)
 	{
 		$CI =& get_instance();
 
-		
 		if (is_array($file))
 		{
 			$valid = TRUE;
@@ -221,9 +248,17 @@ class Assets_model extends CI_Model {
 		{
 			return $this->_delete($file);
 		}
-
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Deletes an asset and will perform any necessary folder cleanup
+	 *
+	 * @access	protected
+	 * @param	string	An asset file to delete
+	 * @return	string
+	 */	
 	protected function _delete($file)
 	{
 		$CI =& get_instance();
@@ -275,27 +310,15 @@ class Assets_model extends CI_Model {
 		if ($max_depth == $i) $end = TRUE;
 		return $deleted;
 	}
-/*	private function _get_excluded_asset_server_folders()
-	{
-		$CI =& get_instance();
-		$excluded = array_merge($CI->config->item('assets_excluded_dirs', 'fuel'), $CI->asset->assets_folders);
-		$return = array();
-		foreach($excluded as $folder)
-		{
-			$folder_path = assets_server_path($folder);
-			if (substr($folder_path, -1, 1) != '/')
-			{
-				$folder_path = $folder_path.'/';
-			}
-			
-			if (!in_array($folder_path, $return))
-			{
-				$return[] = $folder_path;
-			}
-		}
-		return $return;
-	}*/
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the field to be used as the key for a record
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function key_field()
 	{
 		return $this->key_field;
@@ -327,6 +350,16 @@ class Assets_model extends CI_Model {
 		return $this->validator->get_errors();
 	}
 	
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of form field parameters that can be used by Form_builder
+	 *
+	 * @access	public
+	 * @param	array 	An array of values to be passed to the form fields
+	 * @return	array
+	 */	
 	function form_fields($values = array())
 	{
 		$CI =& get_instance();

@@ -19,6 +19,8 @@
 /**
  * FUEL assets object
  *
+ * Ths class is used to help manage asset files
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
@@ -37,6 +39,10 @@ class Fuel_assets extends Fuel_base_library {
 										'pdf' => 'pdf'
 									);
 	
+	/**
+	 * Constructor
+	 *
+	 */
 	function __construct($params = array())
 	{
 		parent::__construct();
@@ -44,9 +50,22 @@ class Fuel_assets extends Fuel_base_library {
 		$this->CI->load->helper('file');
 		$this->CI->load->library('upload');
 		$this->CI->lang->load('upload'); // loaded here as well so we can use some of the lang messages
+		$this->CI->fuel->load_model('assets');
 		$this->initialize($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 * Also will set the values in the parameters array as properties of this object
+	 *
+	 * @access	public
+	 * @param	array	Config preferences
+	 * @return	void
+	 */	
 	function initialize($params)
 	{
 		parent::initialize($params);
@@ -55,6 +74,33 @@ class Fuel_assets extends Fuel_base_library {
 		$this->_dirs = list_directories($this->CI->asset->assets_server_path(), $this->CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uploads the files in the $_FILES array
+	 *
+	 * Accepts an associative array as which can have the following parameters:
+	 *
+		<ul>
+		 	<li><strong>upload_path</strong>: the server path to upload the file</li>
+		 	<li><strong>override_post_params</strong>: determines whether post parameters (e.g. {$_FILES_key}_{param}) take precedence over parameters passed to the method</li>
+		 	<li><strong>file_name</strong>: the name of the file to change to</li>
+		 	<li><strong>overwrite</strong>: boolean value that determines whether to overwrite the file or create a new file which will append a number at the end</li>
+		 	<li><strong>xss_clean</strong>: boolean value that determines whether to try and run the xss_clean function on any images that are uploaded</li>
+		 	<li><strong>encrypt_name</strong>: boolean value that determines whether to encrypt the file name and make it unique</li>
+		 	<li><strong>create_thumb</strong>: image specific boolean value that determines whether to create a thumbnail image based on the original uploaded image</li>
+		 	<li><strong>maintain_ratio</strong>:image specific boolean value that determines whether to maintain the aspect ratio of the image upon resize</li>
+		 	<li><strong>master_dim</strong>: image specific boolean value that determines which dimension should be used when resizing and maintaining the aspect ratio. Options are height, width, auto</li>
+		 	<li><strong>width</strong>: sets the width of the uploaded image</li>
+		 	<li><strong>height</strong>: sets the height of the uploaded image</li>
+		 	<li><strong>resize_and_crop</strong>: image specific boolean value that determines whether to both resize and crop the image to the specified height and width</li>
+		 </ul>
+	 *
+	 * @access	public
+	 * @param	array	upload parameters (optional)
+	 * @return	boolean
+	 */	
 	function upload($params = array())
 	{
 		$this->CI->load->library('upload');
@@ -247,6 +293,15 @@ class Fuel_assets extends Fuel_base_library {
 		return TRUE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
+	 *
+	 * @access	public
+	 * @param	string	The uploaded $_FILE key value (optional)
+	 * @return	array
+	 */	
 	function uploaded_data($key = NULL)
 	{
 		if (isset($key))
@@ -256,6 +311,14 @@ class Fuel_assets extends Fuel_base_library {
 		return $this->_data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Normalizes the $_FILES array so that the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function normalize_files_array()
 	{
 		$i = 0;
@@ -267,10 +330,6 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					foreach($file as $k => $f)
 					{
-						echo "<pre style=\"text-align: left;\">".$key;
-						print_r($f);
-						echo "</pre>";
-						
 						if (!empty($f['tmp_name']))
 						{
 							$_FILES[$key.'___'.$i]['name'] = $f['name'];
@@ -285,41 +344,72 @@ class Fuel_assets extends Fuel_base_library {
 				}
 			}
 		}
-		
 	}
 	
-	function format_files_array( $files, $name = null, &$new = false, $path = false ){
-	    $names = array( 'name' => 'name', 'type' => 'type', 'tmp_name' => 'tmp_name', 'error' => 'error', 'size' => 'size' );
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Alias to the model's find_by_key method
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	object
+	 */	
+	function file_info($file)
+	{
+		return $this->CI->assets_model->find_by_key($file);
+	}
 
-	    foreach( $files as $key => &$part )
-	    {
-	        $key = ( string ) $key;
-	        if( in_array( $key, $names ) )
-	            $name = $key;
-	        if( !in_array( $key, $names ) )
-	            $path[] = $key;
-	        if( is_array( $part ) )
-	            $part = $this->format_files_array( $part, $name, $new, $path );
-	        elseif( !is_array( $part ) )
-	        {
-	            $current =& $new;
-	            foreach( $path as $p )
-	                $current =& $current[$p];
-	            $current[$name] = $part;
-	            unset( $path );
-	            $name = null;
-	        }
-	    }
-
-	    return $new;
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Alias to the model's delete method
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	object
+	 */	
+	function delete($file)
+	{
+		return $this->CI->assets_model->delete($file);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the asset model
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	function &model()
+	{
+		return $this->CI->assets_model;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an asset folder name
+	 *
+	 * @access	public
+	 * @param	string	The key associated with the asset folder (usually the same as the asset folder's name)
+	 * @return	string
+	 */	
 	function dir($dir)
 	{
 		$dirs = (array) $this->dirs();
 		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->image_dir();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of all the asset folders
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function dirs()
 	{	
 		$dirs = array();
@@ -330,6 +420,15 @@ class Fuel_assets extends Fuel_base_library {
 		ksort($dirs);
 		return $dirs;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the image asset folder name
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function image_dir()
 	{
 		$editable_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
@@ -344,16 +443,41 @@ class Fuel_assets extends Fuel_base_library {
 		
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of pipe delimited file types associated with assets
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function dir_filetypes()
 	{
 		return $this->_dir_filetypes;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a pipe delimited list of file types that are allowed for a particular folder
+	 *
+	 * @access	public
+	 * @param	string	folder name
+	 * @return	array
+	 */	
 	function dir_filetype($filetype)
 	{
 		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * An array of folders excluded from being viewed
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function excluded_asset_server_folders()
 	{
 		$excluded = array_merge($this->CI->fuel->config('assets_excluded_dirs'), $this->CI->asset->assets_folders);
