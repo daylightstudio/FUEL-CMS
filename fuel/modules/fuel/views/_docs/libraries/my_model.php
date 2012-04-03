@@ -10,7 +10,7 @@
 	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html">Security Helper</a></li>
 </ul>
 
-<h2>Table, Result and Record Classes</h2>
+<h2 id="table_result_record">Table, Result and Record Classes</h2>
 <p>MY_Model is actually made up of 2-3 classes:</p>
 <ul>
 	<li><a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
@@ -26,7 +26,7 @@
 <pre class="brush: php">$this->load->model('examples_model');</pre>
 <p>Once loaded, the MY_Model object will be available using: <dfn>$this->examples_model</dfn>.</p>
 
-<h2>Configuring MY_Model Information</h2>
+<h2 id="configuring">Configuring MY_Model Information</h2>
 
 <h3>Public Properties</h3>
 <table border="0" cellspacing="1" cellpadding="0" class="tableborder">
@@ -236,7 +236,7 @@
 	</tbody>
 </table>
 
-<h2>Extending MY_Model</h2>
+<h2 id="extending">Extending MY_Model</h2>
 <p>When extending MY_Model, it is recommended to use a plural version of the objects name, in
 this example <strong>Examples</strong>, with the suffix of <strong>_model</strong> (e.g.<kbd>Examples_model</kbd>). 
 The plural version is recommended because the singular version is often used for the custom record class (see below for more). 
@@ -272,7 +272,7 @@ class Examples_model extends MY_Model {
 }
 </pre>
 
-<h2>Custom Record Objects</h2>
+<h2 id="custom_records">Custom Record Objects</h2>
 <p>MY_Model adds another layer of control for your models by allowing you to define custom return objects from active record. 
 This gives you more flexibility at the record level for your models. With custom record objects you can:</p>
 <ul>
@@ -351,7 +351,7 @@ $foo->save();
 <p class="important"><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">Click here to view the function reference for custom record objects</a></p>
 
 
-<h2>Magic Methods</h2>
+<h2 id="magic_methods">Magic Methods</h2>
 <p>MY_Model uses PHP's magic methods extensively. This allows for dynamically creating methods that aren't originally defined by the class. 
 Magic methods are used both in the table and custom record classes. In custom record classes, any method prefixed with <dfn>get_</dfn>
 can also be syntactically written to look like an instance property:</p>
@@ -396,8 +396,7 @@ $this->db->find_all(array('published' => 'yes'))
 
 </pre>
 
-<a name="hooks"></a>
-<h2>Hooks</h2>
+<h2 id="hooks">Hooks</h2>
 <p>MY_Model provides hooks that you can overwrite with your own custom code to extend the functionality of your model.</p>
 <p>Table class hooks</p>
 <ul>
@@ -424,6 +423,7 @@ $this->db->find_all(array('published' => 'yes'))
 	<li><strong>on_init</strong> - executed upon initialization</li>
 </ul>
 
+<h2 id="relationships">Model Relationships</h2>
 
 
 
