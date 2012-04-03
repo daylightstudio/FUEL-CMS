@@ -1386,6 +1386,10 @@ class MY_Model extends CI_Model {
 			if (is_int($key))
 			{
 				$field = $val;
+				if (empty($this->default_required_message))
+				{
+					$this->default_required_message = lang('error_required_fields');
+				}
 				$msg = sprintf($this->default_required_message, str_replace('_', ' ', $val));
 			}
 			else
