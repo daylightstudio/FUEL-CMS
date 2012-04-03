@@ -55,6 +55,9 @@ class MY_Model extends CI_Model {
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
+// !@todo add docs for $has_many
+	public $has_many = array();
+	public $belongs_to = array();
 	
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
@@ -108,7 +111,7 @@ class MY_Model extends CI_Model {
 		} 
 		else 
 		{
-	        $this->table_name = strtolower(get_class($this));
+			$this->table_name = strtolower(get_class($this));
 		}
 		
 		if (!empty($params))
@@ -511,25 +514,25 @@ class MY_Model extends CI_Model {
 		if (is_array($params)){
 
 			$defaults = array(
-				'select' => $this->table_name.'.*',
-				//'select' => '*',
-				'from' => $this->table_name,
-				'join' => array(),
-				'where' => array(),
-				'or_where' => array(),
-				'where_in' => array(),
-				'or_where_in' => array(),
-				'where_not_in' => array(),
+				'select'          => $this->table_name.'.*',
+				//'select'        => '*',
+				'from'            => $this->table_name,
+				'join'            => array(),
+				'where'           => array(),
+				'or_where'        => array(),
+				'where_in'        => array(),
+				'or_where_in'     => array(),
+				'where_not_in'    => array(),
 				'or_where_not_in' => array(),
-				'like' => array(),
-				'or_like' => array(),
-				'not_like' => array(),
-				'or_not_like' => array(),
-				'group_by' => NULL,
-				'order_by' => NULL,
-				'limit' => NULL,
-				'offset' => NULL
-			);
+				'like'            => array(),
+				'or_like'         => array(),
+				'not_like'        => array(),
+				'or_not_like'     => array(),
+				'group_by'        => NULL,
+				'order_by'        => NULL,
+				'limit'           => NULL,
+				'offset'          => NULL
+				);
 
 			$defaults2 = array(
 				'join',
@@ -555,7 +558,8 @@ class MY_Model extends CI_Model {
 				$join_select = '';
 				if (is_array($params['join'][0]))
 				{
-					foreach($params['join'] as $join){
+					foreach($params['join'] as $join)
+					{
 						$this->db->join($join[0], $join[1], $join[2]);
 						if ($join[3]) $join_select .= ', '.$this->db->safe_select($join[0]);
 					}
@@ -625,21 +629,17 @@ class MY_Model extends CI_Model {
 					$this->db->order_by($params['order_by']);
 				}
 			}
-			if (method_exists($this, '_common_query'))
-			{
-				$this->_common_query();
-			}
 			
-			$this->db->limit($params['limit']);
-			$this->db->offset($params['offset']);
+			if ( ! empty($params['limit'])) {
+				$this->db->limit($params['limit']);
+			}
+			if ( ! empty($params['offset'])) {
+				$this->db->offset($params['offset']);
+			}
 			$results = $this->get();
 		} 
 		else 
 		{
-			if (method_exists($this, '_common_query'))
-			{
-				$this->_common_query();
-			}
 			$results = $this->get();
 		}
 		return $results;
@@ -1173,6 +1173,42 @@ class MY_Model extends CI_Model {
 			}
 		}
 		return $return;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Handles grabbing of the related data's keys
+	 *
+	 * @access public
+	 * @param array $values
+	 * @param string $related_model
+	 * @param string $mode, has_many or belongs_to
+	 * @return array
+	 */
+	public function get_related_keys($values, $related_model, $mode = 'has_many')
+	{
+		$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+		if (is_array($related_model)) {
+			$related_model = $this->load_related_model($related_model);
+		}
+		if ($mode == 'belongs_to')
+		{
+			$assoc_where = array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name());
+			if ( ! empty($values) AND array_key_exists('id', $values)) {
+				$assoc_where['foreign_key'] = $values['id'];
+			}
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('candidate_key', $assoc_where));
+		}
+		else
+		{
+			$assoc_where = array('candidate_table' => $this->table_name(), 'foreign_table' => $this->$related_model->table_name);
+			if ( ! empty($values) AND array_key_exists('id', $values)) {
+				$assoc_where['candidate_key'] = $values['id'];
+			}
+			$related_keys = array_keys($this->$relationships_model->find_all_array_assoc('foreign_key', $assoc_where));
+		}
+		return $related_keys;
 	}
 	
 	// --------------------------------------------------------------------
@@ -1803,12 +1839,12 @@ class MY_Model extends CI_Model {
 					$fields[$key]['options'] = array_combine($val['options'], $val['options']);
 				}
 			}
-                        
+			
 			// create boolean checkboxes
 			if(in_array($val['name'], $this->boolean_fields) AND ($val['type'] === 'tinyint'))
 			{
 				$fields[$key]['type'] = 'checkbox';
-				$fields[$key]['value'] = 1;                            
+				$fields[$key]['value'] = 1;
 			}
 			
 			// set password fields
@@ -1864,6 +1900,29 @@ class MY_Model extends CI_Model {
 					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'class' => 'add_edit '.$key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
+			}
+		}
+
+		// attach relationship fields if they exist
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$related_options = $this->$related_model->options_list();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model) : array();
+				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+			}
+		}
+
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$related_options = $this->$related_model->options_list();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to') : array();
+				$fields[$related_field] = array('label' => 'Belongs to<br />' . humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
 			}
 		}
 
@@ -2161,6 +2220,42 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_after_save($values)
 	{
+		// handle has_many relationships
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+					// remove pre-existing relationships
+					$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id']));
+					// create relationships
+					foreach ($this->normalized_save_data[$related_field] as $foreign_id) {
+						$this->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name, 'foreign_key' => $foreign_id));
+					}
+				}
+			}
+		}
+		// handle belongs_to relationships
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+					// remove pre-existing relationships
+					$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $values['id']));
+					// create relationships
+					foreach ($this->normalized_save_data[$related_field] as $candidate_id) {
+						$this->$relationships_model->save(array('foreign_table' => $this->table_name, 'foreign_key' => $values['id'], 'candidate_table' => $this->$related_model->table_name, 'candidate_key' => $candidate_id));
+					}
+				}
+			}
+		}
 		return $values;
 	}
 	
@@ -2175,6 +2270,24 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_before_delete($where)
 	{
+		// clear out any relationships
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model)
+			{
+				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+				$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $where['id']));
+			}
+		}
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+				$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $where['id']));
+			}
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -2243,6 +2356,19 @@ class MY_Model extends CI_Model {
 			$CI->load->model($model);
 			return $model;
 		}
+	}
+	
+	public function load_related_model($related_model)
+	{
+		if (is_array($related_model))
+		{
+			$related_model = $this->load_model(array($related_model['module'] => $related_model['model'] . '_model'));
+		}
+		else
+		{
+			$related_model = $this->load_model("{$related_model}_model");
+		}
+		return $related_model;
 	}
 	
 	// --------------------------------------------------------------------
@@ -3084,7 +3210,8 @@ Class Data_record {
 	 * @param	string	field name
 	 * @return	mixed
 	 */	
-	public function __get($var){
+	public function __get($var)
+	{
 		$output = NULL;
 		$foreign_keys = $this->_parent_model->foreign_keys;
 		
@@ -3106,7 +3233,32 @@ Class Data_record {
 			$model = $foreign_keys[$var_key];
 			$output = $this->lazy_load($var_key, $model);
 		}
-
+		// check if field is for related data via has_many
+		else if ( ! empty($this->_parent_model->has_many) AND array_key_exists($var, $this->_parent_model->has_many) AND ! empty($this->_parent_model->has_many[$var]))
+		{
+			// first check in the relationships table to see if they exist
+			$relationships_model = $this->_parent_model->load_model(array('fuel' => 'relationships_model'));
+			$has_many = $this->_parent_model->has_many[$var];
+			$foreign_model = (is_array($has_many)) ? array($has_many['module'] => $has_many['model'] . '_model') : $has_many . '_model';
+			$foreign_model = $this->_parent_model->load_model($foreign_model);
+			$rel_where = array(
+				'candidate_table' => $this->_parent_model->table_name(),
+				'candidate_key'   => $this->id,
+				'foreign_table'   => $this->_CI->$foreign_model->table_name(),
+				);
+			$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where));
+			if ( ! empty($rel_ids))
+			{
+				// now grab the actual data
+// !@todo Update to support additional query params like sorting, etc.
+				$foreign_query_params = array('where_in' => array("{$rel_where['foreign_table']}.id" => $rel_ids));
+				$foreign_query = $this->_CI->$foreign_model->query($foreign_query_params);
+				$foreign_data = $foreign_query->result();
+				if ( ! empty($foreign_data)) {
+					$output = $foreign_data;
+				}
+			}
+		}
 		// finally check values from the database
 		else if (array_key_exists($var, $this->_fields))
 		{
