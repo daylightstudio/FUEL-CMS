@@ -62,11 +62,17 @@ class Data_table {
 	protected $_render_row_index = 0;
 	
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Data_table preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	public function __construct($params = array())
 	{
 		$this->initialize($params);

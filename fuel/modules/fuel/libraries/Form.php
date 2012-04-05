@@ -37,11 +37,17 @@ class Form {
 	public $focus_highlight_cssclass = "field_highlight"; // the focus css class
 	public $error_highlight_cssclass = "error_highlight"; // the error highlight class
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Form preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	public function __construct($params = array())
 	{
 		$this->initialize($params);

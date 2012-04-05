@@ -34,6 +34,17 @@ class Fuel_custom_fields {
 	protected $CI;
 	protected $fuel;
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		$this->CI =& get_instance();

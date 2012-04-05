@@ -39,10 +39,17 @@ class Fuel_assets extends Fuel_base_library {
 										'pdf' => 'pdf'
 									);
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();

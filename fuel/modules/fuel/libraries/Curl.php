@@ -44,11 +44,17 @@ class Curl {
 	protected $_error; // CURL Session errors
 	protected $_output; // Executed CURL output
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		if (!$this->is_enabled())

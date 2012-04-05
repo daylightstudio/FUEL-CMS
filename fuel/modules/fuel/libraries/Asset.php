@@ -98,11 +98,17 @@ class Asset {
 	// has assets configuration been loaded?
 	protected $_asset_config_loaded = FALSE;
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Asset preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	public function __construct($params = array())
 	{
 		if (!defined('WEB_ROOT')) define('WEB_ROOT', str_replace(SELF, '', FCPATH));

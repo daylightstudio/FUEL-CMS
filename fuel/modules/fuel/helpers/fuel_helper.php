@@ -100,7 +100,7 @@ function fuel_block($params)
  * The <dfn>params</dfn> parameter is an array of options to be used with the <a href="[user_guide_url]libraries/menu">Menu class</a>.
  * If FUEL's configuration mode is set to either <dfn>auto</dfn> or <dfn>cms</dfn>, then it will first look for data from the FUEL navigation module. 
  * Otherwise it will by default look for the file <dfn>views/_variables/nav.php</dfn> (you can change the name of the file it looks for in the <dfn>file</dfn> parameter passed). That file should contain an array of menu information (see <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a> for more information on the required data structure). 
- * The parameter values are very similar to the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>, with a few additions shown below:
+ * The parameter values are very similar to the <a href="[user_guide_url]libraries/menu">Menu class</a>, with a few additions shown below:
 
 <ul>
 	<li><strong>file</strong> - the name of the file containing the navigation information</li>

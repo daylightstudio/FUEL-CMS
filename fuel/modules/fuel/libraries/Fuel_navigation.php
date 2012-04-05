@@ -30,13 +30,69 @@
 
 class Fuel_navigation extends Fuel_module {
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function initialize($params = array())
 	{
 		parent::initialize($params);
-		$this->fuel->load_model('navigation_groups');
-		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a navigation structure using the <a href="[user_guide_url]libraries/menu">Menu class</a>.
+	 *
+	 * The <a href="[user_guide_url]helpers/fuel_helper">fuel_nav helper</a> function is an alias to this method.
+	 *
+	<ul>
+		<li><strong>file</strong> - the name of the file containing the navigation information</li>
+		<li><strong>var</strong> - the variable name in the file to use</li>
+		<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
+		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
+		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
+		<li><strong>exclude</strong> - nav items to exclude from the menu</li>
+		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
+
+		<li><strong>append</strong> - adds additional menu items to the current list</li>
+		<li><strong>render_type</strong>: options are basic, breadcrumb, page_title, collapsible, delimited, array. Default is 'basic'</li>
+		<li><strong>active_class</strong>: the active css class. Default is 'active'</li>
+		<li><strong>active</strong>: the active menu item</li>
+		<li><strong>styles</strong>: css class styles to apply to menu items... can be a nested array</li>
+		<li><strong>first_class</strong>: the css class for the first menu item. Default is first</li>
+		<li><strong>last_class</strong>: the css class for the last menu item. Default is last</li>
+		<li><strong>depth</strong>: the depth of the menu to render at</li>
+		<li><strong>use_titles</strong>: use the title attribute in the links. Default is FALSE</li>
+		<li><strong>container_tag</strong>: the html tag for the container of a set of menu items. Default is ul</li>
+		<li><strong>container_tag_attrs</strong>: html attributes for the container tag</li>
+		<li><strong>container_tag_id</strong>: html container id</li>
+		<li><strong>container_tag_class</strong>: html container class</li>
+		<li><strong>cascade_selected</strong>: cascade the selected items. Default is TRUE</li>
+		<li><strong>include_hidden</strong>: include menu items with the hidden attribute. Default is FALSE</li>
+		<li><strong>item_tag</strong>: the html list item element. Default is 'li'</li>
+		<li><strong>item_id_prefix</strong>: the prefix to the item id</li>
+		<li><strong>item_id_key</strong>: either id or location. Default is 'id'</li>
+		<li><strong>pre_render_func</strong>: function to apply to menu labels before rendering</li>
+		<li><strong>delimiter</strong>: the html element between the links </li>
+		<li><strong>arrow_class</strong>: the class for the arrows used in breadcrumb type menus</li>
+		<li><strong>display_current</strong>: determines whether to display the current active breadcrumb item</li>
+		<li><strong>home_link</strong>: the root home link</li>
+		<li><strong>order</strong>: the order to display... for page_title ONLY</li>
+	</ul>
+		
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function render($params = array())
 	{
 		$this->CI->load->library('menu');
@@ -112,9 +168,9 @@ class Fuel_navigation extends Fuel_module {
 						include(APPPATH.'views/_variables/'.$p['file'].'.php');
 					}
 				}
-				// now load from FUEL and overwrite
-				$this->CI->load->module_model(FUEL_FOLDER, 'navigation_model');
-
+				// now load the models
+				$this->fuel->load_model('navigation');
+				
 				// grab all menu items by group
 				$menu_items = $this->model()->find_all_by_group($p['group_id']);
 
@@ -157,7 +213,13 @@ class Fuel_navigation extends Fuel_module {
 		
 
 		$items = (!empty($$p['var'])) ? $$p['var'] : array();
-
+		
+		// append additional values
+		if (!empty($p['append']))
+		{
+			$items = array_merge($items, $p['append']);
+		}
+		
 		// exclude any items
 		if (!empty($p['exclude']))
 		{
@@ -188,42 +250,105 @@ class Fuel_navigation extends Fuel_module {
 		return $this->CI->menu->render($items, $p['active'], $p['parent']);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a basic unordered list navigation menu
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function basic($params)
 	{
 		$params['render_type'] = 'basic';
 		return $this->render($params);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a breadcrumb navigation menu
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function breadcrumb($params)
 	{
 		$params['render_type'] = 'breadcrumb';
 		return $this->render($params);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a collapsible navigation menu
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function collapsible($params)
 	{
 		$params['render_type'] = 'collapsible';
 		return $this->render($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a page title using the navigation structure
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function page_title($params)
 	{
 		$params['render_type'] = 'page_title';
 		return $this->render($params);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a delimited menu (e.g. Home | About | Products | Contact)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function delimited($params)
 	{
 		$params['render_type'] = 'delimited';
 		return $this->render($params);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a nested array representing the navigation structure
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	string
+	 */	
 	function data($params)
 	{
 		$params['render_type'] = 'array';
 		return $this->render($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uploads a static'navigation structure which is most like the <span class="file">fuel/application/views/_variables/nav.php</span> file
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	boolean
+	 */	
 	function upload($params)
 	{
 		$this->CI->load->library('form_builder');
@@ -357,13 +482,32 @@ class Fuel_navigation extends Fuel_module {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the menu groups as an array of objects
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function groups()
 	{
+		$this->_load_nav_group_model();
 		return $this->CI->navigation_groups_model->find_all();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a specific menu group object
+	 *
+	 * @access	public
+	 * @param	mixed	Can be a groups name or ID value
+	 * @return	object
+	 */	
 	function group($group)
 	{
+		$this->_load_nav_group_model();
 		if (is_int($group))
 		{
 			return $this->CI->navigation_groups_model->find_by_key($grou);
@@ -371,6 +515,23 @@ class Fuel_navigation extends Fuel_module {
 		else
 		{
 			return $this->CI->navigation_groups_model->find_one(array('name' => $group));
+		}
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads the group model
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _load_nav_group_model()
+	{
+		if (!isset($this->CI->navigation_groups_model))
+		{
+			$this->fuel->load_model('navigation_groups');
 		}
 	}
 }

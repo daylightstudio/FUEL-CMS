@@ -64,9 +64,9 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initialize the user preferences
+	 * Constructor
 	 *
-	 * Accepts an associative array as input, containing preferences
+	 * Accepts an associative array as input, containing preferences (optional)
 	 *
 	 * @access	public
 	 * @param	array	config preferences

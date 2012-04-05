@@ -22,9 +22,17 @@ class Cache
 	public $default_ttl = 3600; //Default time to live = 3600 seconds (One hour).
 	public $cache_path = ''; // The cache path. If no path is provided it will use the cache path value found in the main CI config file.
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
-	 */
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		$this->initialize($params);
