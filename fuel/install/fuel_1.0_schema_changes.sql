@@ -23,4 +23,4 @@ CREATE TABLE `fuel_relationships` (
 `foreign_table` varchar(100) DEFAULT NULL,
 `foreign_key` int(11) NOT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
