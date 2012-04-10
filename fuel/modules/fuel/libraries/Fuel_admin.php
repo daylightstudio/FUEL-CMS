@@ -104,16 +104,6 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		parent::initialize($params);
 
-		
-		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
-		$language = $this->fuel->auth->user_data('language');
-
-		// in case the language field doesn't exist... due to older fersions'
-		if (empty($language) OR !is_string($language)) $language = $this->CI->config->item('language');
-		
-		// load this language file first because fuel_modules needs it
-		$this->CI->load->module_language(FUEL_FOLDER, 'fuel', $language);
-
 		// now load the other languages
 		$this->load_languages();
 		
@@ -574,6 +564,41 @@ class Fuel_admin extends Fuel_base_library {
 		return $css;
 		
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the logged in users display language
+	 *
+	 * @access	public
+	 * @param	string	The language folder to set 
+	 * @return	void
+	 */	
+	function set_language($language)
+	{
+		$this->CI->config->set_item('language', $language);
+		$this->CI->fuel->auth->set_user_data('language', $language);
+	}
+	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returs the logged in users display language
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function language()
+	{
+		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
+		$language = $this->fuel->auth->user_data('language');
+		
+		// in case the language field doesn't exist... due to older fersions'
+		if (empty($language) OR !is_string($language)) $language = $this->CI->config->item('language');
+		
+		return $language;
+	}
 	
 	// --------------------------------------------------------------------
 	
@@ -585,10 +610,17 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	function load_languages()
 	{
+		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
+		$language = $this->language();
+		
+		// set the usrers language
+		$this->set_language($language);
+
+		// load this language file first because fuel_modules needs it
+		$this->CI->load->module_language(FUEL_FOLDER, 'fuel', $language);
 		$modules = $this->fuel->config('modules_allowed');
 		foreach($modules as $module)
 		{
-			$language = $this->fuel->auth->user_lang();
 			if (file_exists(MODULES_PATH.$module.'/language/'.$language.'/'.$module.'_lang'.EXT))
 			{
 				$this->CI->load->module_language($module, $module);
