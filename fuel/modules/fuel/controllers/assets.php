@@ -40,6 +40,8 @@ class Assets extends Module {
 			$posted['height'] = $this->input->get_post('height');
 			$posted['master_dim'] = $this->input->get_post('master_dim');
 			$posted['file_name'] = $this->input->get_post('userfile_file_name');
+			$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
+			
 			$id = $posted['file_name'];
 			
 			if ($this->fuel->assets->upload($posted))

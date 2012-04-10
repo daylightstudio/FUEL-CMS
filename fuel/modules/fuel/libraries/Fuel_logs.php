@@ -32,11 +32,17 @@ class Fuel_logs extends Fuel_base_library {
 	
 	public $location = 'db';
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -99,5 +105,5 @@ class Fuel_logs extends Fuel_base_library {
 	
 }
 
-/* End of file fuel_logs.php */
-/* Location: ./modules/fuel/libraries/fuel_logs.php */
+/* End of file Fuel_logs.php */
+/* Location: ./modules/fuel/libraries/Fuel_logs.php */

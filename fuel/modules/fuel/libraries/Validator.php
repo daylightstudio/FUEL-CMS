@@ -38,11 +38,17 @@ class Validator {
 	protected $_fields = array(); // fields to validate
 	protected $_errors = array(); // errors after running validation
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Validator preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	public function __construct ($params = array()) {
 		if (!defined('GLOBAL_ERRORS'))
 		{

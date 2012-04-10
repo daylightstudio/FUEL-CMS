@@ -73,11 +73,17 @@ class Menu {
 	protected $_reset_params = array(); // reset params
 	
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Menu preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	public function __construct($params = array())
 	{
 		$CI =& get_instance();

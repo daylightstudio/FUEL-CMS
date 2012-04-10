@@ -30,6 +30,17 @@
 
 class Fuel_auth extends Fuel_base_library {
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array()){
 		parent::__construct($params);
 

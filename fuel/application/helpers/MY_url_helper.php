@@ -182,7 +182,7 @@ function is_home()
  */
 function last_url($default = FALSE, $only_uri = FALSE)
 {
-	$back_url = (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != current_url()) ? $_SERVER['HTTP_REFERER'] : $defalt;
+	$back_url = (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != current_url()) ? $_SERVER['HTTP_REFERER'] : $default;
 	
 	if ($back_url)
 	{
@@ -200,7 +200,7 @@ function last_url($default = FALSE, $only_uri = FALSE)
 // --------------------------------------------------------------------
 
 /**
- * Returns the HTML link target attribute based on the link value
+ * Will return a target="_blank" if the link is not from the same domain.
  *
  * @access	public
  * @param	string	URL
@@ -208,7 +208,25 @@ function last_url($default = FALSE, $only_uri = FALSE)
  */
 function link_target($link)
 {
-	if (is_http_path($link))
+	$url_parts = parse_url($link);
+	
+	$test_domain = $_SERVER['SERVER_NAME'];
+	$domain = '';
+	if (isset($url_parts['host']))
+	{
+		$host_parts = explode('.', $url_parts['host']);
+		$index = count($host_parts) - 1;
+		
+		if (isset($host_parts[$index]))
+		{
+			$domain = $host_parts[$index - 1];
+			$domain .='.';
+			$domain .= $host_parts[$index];
+		}
+	}
+	
+	// check if an http path and that it is from a different domain
+	if (is_http_path($link) AND $test_domain != $domain)
 	{
 		return ' target="_blank"';
 	}

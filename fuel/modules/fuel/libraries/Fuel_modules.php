@@ -35,11 +35,17 @@ class Fuel_modules extends Fuel_base_library {
 	protected $_modules_grouped = array();
 	protected $_overwrites;
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();

@@ -39,10 +39,17 @@ class Fuel_assets extends Fuel_base_library {
 										'pdf' => 'pdf'
 									);
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();
@@ -112,6 +119,7 @@ class Fuel_assets extends Fuel_base_library {
 						'overwrite' => FALSE,
 						'xss_clean' => FALSE,
 						'encrypt_name' => FALSE,
+						'unzip' => FALSE,
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
 						'create_thumb' => NULL,
@@ -283,6 +291,16 @@ class Fuel_assets extends Fuel_base_library {
 					$this->_add_error($this->CI->image_lib->display_errors());
 				}
 			}
+			
+			// unzip any zip files
+			else if ($params['unzip'] === TRUE AND $file['file_ext'] == '.zip')
+			{
+				// unzip the contents
+				$this->unzip($file['full_path']);
+				
+				// then delete the zip file
+				$this->delete($file['full_path']);
+			}
 		}
 		
 		if ($this->has_errors())
@@ -449,25 +467,46 @@ class Fuel_assets extends Fuel_base_library {
 	 * Returns an array of pipe delimited file types associated with assets
 	 *
 	 * @access	public
-	 * @return	array
+	 * @param	boolean	returns an array instead of the pipe delimited list. Default is FALSE
+	 * @return	mixed
 	 */	
-	function dir_filetypes()
+	function dir_filetypes($return_array = FALSE)
 	{
+		if ($return_array)
+		{
+			$return = array();
+			foreach($this->_dir_filetypes as $key => $filetype)
+			{
+				$return[$key] = $this->dir_filetype($file_type, TRUE);
+			}
+			return $return;
+		}
 		return $this->_dir_filetypes;
 	}
 
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns a pipe delimited list of file types that are allowed for a particular folder
+	 * Returns a list of file types that are allowed for a particular folder
 	 *
 	 * @access	public
 	 * @param	string	folder name
-	 * @return	array
+	 * @param	boolean	returns an array instead of the pipe delimited list. Default is FALSE
+	 * @return	mixed
 	 */	
-	function dir_filetype($filetype)
+	function dir_filetype($filetype, $return_array = FALSE)
 	{
-		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
+		if (!isset($this->_dir_filetypes[$filetype]))
+		{
+			return FALSE;
+		}
+		
+		$filetypes = $this->_dir_filetypes[$filetype];
+		if ($return_array)
+		{
+			return explode('|', $filetypes);
+		}
+		return $filetypes;
 	}
 	
 	// --------------------------------------------------------------------
@@ -498,8 +537,145 @@ class Fuel_assets extends Fuel_base_library {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Zips up an asset folder
+	 *
+	 * @access	public
+	 * @param	mixed	If a string, it should be the folder path. If an array, it will be extracted and must at least contain a key of "dir" that specifies the folder path
+	 * @param	string	File name
+	 * @param	boolean	Determines whether to send download headers to the browser
+	 * @param	boolean	Allow a file with the same name as the zip to be overwritten
+	 * @return	string
+	 */	
+	function zip($dir, $file_name = NULL, $download = FALSE, $allow_overwrite = TRUE)
+	{
+		$this->CI->load->library('zip');
+
+		// first we clear out any of the data
+		$this->CI->zip->clear_data();
+		
+		// if you decide to pass the parameters as an array instead
+		if (is_array($dir))
+		{
+			extract($dir);
+		}
+		
+		if (is_string($dir))
+		{
+			// if string is a directory path, then we read the directory... 
+			// may be too presumptious but it's convenient'
+			if (is_dir($dir))
+			{
+				$this->CI->zip->read_dir($dir);
+			}
+			else
+			{
+				$this->_add_error(lang('error_folder_not_writable', $dir));
+				return FALSE;
+			}
+		}
+		else
+		{
+			$this->_add_error(lang('error_folder_not_writable', $dir));
+			return FALSE;
+		}
+		
+		// check if folder is writable
+		if (!is_really_writable($dir))
+		{
+			$this->_add_error(lang('error_folder_not_writable', $dir));
+			return FALSE;
+		}
+		
+		// the assets server path
+		$assets_dir = assets_server_path();
+		
+		// normalize dir path
+		$dir = trim(str_replace($assets_dir, '', $dir), '/');
+		
+		// add .zip extension so file_name is correct
+		if (empty($file_name))
+		{
+			$file_name = end(explode('/', rtrim($dir, '/')));
+		}
+		
+		$file_name = $file_name.'.zip';
+		
+		// path to download file
+		$full_path = $assets_dir.$dir.'/'.$file_name;
+		
+		if (file_exists($full_path) AND !$allow_overwrite)
+		{
+			$this->_add_error(lang('error_file_already_exists', $full_path));
+			return FALSE;
+		}
+		
+		// write the zip file to a folder on your server. 
+		$archived = $this->CI->zip->archive($full_path); 
+		if (!$archived) 
+		{
+			$this->_add_error(lang('error_zip'));
+			return FALSE;
+		}
+	
+		// download the file to your desktop. 
+		if ($download)
+		{
+			$this->CI->zip->download($file_name);
+		}
+		
+		return $full_path;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Unzips a zip file
+	 *
+	 * @access	public
+	 * @param	string	The path to the zip file to unzip relative to the assets folder
+	 * @param	string	The destination path
+	 * @return	array 	An array of unzipped file names
+	 */	
+	function unzip($zip_file, $destination = NULL)
+	{
+		$this->CI->load->library('unzip');
+
+		// the assets server path
+		$assets_dir = assets_server_path();
+
+		//Only take out these files, anything else is ignored
+		$path_parts = pathinfo($zip_file);
+		$filetype_folder = rtrim(str_replace($assets_dir, '', $path_parts['dirname']), '/');
+		$allowed = $this->dir_filetype($filetype_folder);
+		
+		if (!$allowed)
+		{
+			$this->_add_error(lang('error_invalid_folder'));
+			return FALSE;
+		}
+		
+		// normalize file path
+		$zip_file = rtrim(str_replace($assets_dir, '', $zip_file), '/');
+		
+		$this->CI->unzip->allow($allowed);
+		
+		$zip_file = $assets_dir.$zip_file;
+		
+		// or specify a destination directory
+		$unzipped = $this->CI->unzip->extract($zip_file, $destination);
+		$errors = $this->CI->unzip->error_string('', '');
+		if (!$unzipped OR !empty($errors))
+		{
+			$this->_add_error($this->CI->unzip->error_string('', ' '));
+			return FALSE;
+		}
+		return $unzipped;
+	}
 }
+
 
 /* End of file Fuel_assets.php */
 /* Location: ./modules/fuel/libraries/Fuel_assets.php */

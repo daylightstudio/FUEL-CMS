@@ -36,6 +36,17 @@ class Fuel_layouts extends Fuel_base_library {
 
 	protected $_layouts = array(); // layout objects
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
@@ -156,6 +167,16 @@ class Fuel_layouts extends Fuel_base_library {
 		}
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	object
+	 */	
 	function get($layout)
 	{
 		if (!empty($this->_layouts[$layout]))
@@ -165,6 +186,14 @@ class Fuel_layouts extends Fuel_base_library {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a key/value array good for creating form select options
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function options_list()
 	{
 		$options = array();
@@ -176,6 +205,17 @@ class Fuel_layouts extends Fuel_base_library {
 		return $options;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates a new layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @param	array	Layout object initialization parameters (optional)
+	 * @param	string	The name of an alternative class to use for the layout (must extend the Fuel_layout class... optional)
+	 * @return	object
+	 */	
 	function create($name, $init = array(), $class = 'Fuel_layout')
 	{
 		if (empty($init['name']))
@@ -195,15 +235,26 @@ class Fuel_layouts extends Fuel_base_library {
 
 class Fuel_layout extends Fuel_base_library {
 	
-	public $name = '';
-	public $label = '';
-	public $description = '';
-	public $file = '';
-	public $hooks = array();
-	public $fields = array();
-	public $field_values = array();
-	public $folder = '_layouts';
+	public $name = ''; // The name of the layout
+	public $label = ''; // The label to display with the layout in the select list as seen in the CMS
+	public $description = ''; // A description of the layout which will be rendered as a copy field in the form
+	public $file = ''; // The layout view file name
+	public $hooks = array(); // Hooks to run before and after the rendering of a page. Options are "pre_render" and "post_render"
+	public $fields = array(); // The fields to associate with the layout. Must be in the Form_builder array format
+	public $field_values = array(); // The values to assign to the fields
+	public $folder = '_layouts'; // The folder to look in for the layout view files
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();
@@ -248,51 +299,136 @@ class Fuel_layout extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout view file. Do not include the '_layout' folder with the name
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout view file
+	 * @return	void
+	 */	
 	function set_file($layout)
 	{
 		$this->file = $layout;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the view file path to the layout
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function view_path()
 	{
 		return $this->folder.'/'.$this->file;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout name. Usually the same as the layout view file.
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout.
+	 * @return	void
+	 */	
 	function set_name($name)
 	{
 		$this->name = $name;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout name.
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function name()
 	{
 		return $this->name;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Sets the layout label which is usually a friendlier version of the name (e.g. if the layout's name is "main", the layout may be "Main")
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout.
+	 * @return	void
+	 */	
+	function set_label($label)
+	{
+		$this->label = $label;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout label
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function label()
 	{
 		return $this->label;
 	}
 
-	function set_label($label)
-	{
-		$this->label = $label;
-	}
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Sets the layouts description which will be displayed when editing a page in the CMS
+	 *
+	 * @access	public
+	 * @param	string	The layout's description
+	 * @return	void
+	 */	
+	function set_description($description)
+	{
+		$this->description = $description;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layouts description
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function description()
 	{
 		return $this->description;
 	}
 
-	function set_description($description)
-	{
-		$this->description = $description;
-	}
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Sets the layout's fields
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	void
+	 */	
 	function set_fields($fields)
 	{
 		$this->fields = $fields;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns the layout's fields
+	 *
+	 * @access	public
+	 * @return	array
+	 */
 	function fields()
 	{
 		$fields = array();
@@ -303,7 +439,17 @@ class Fuel_layout extends Fuel_base_library {
 		$fields = array_merge($fields, $this->fields);
 		return $fields;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Adds a single field to the layout (See the <a href="[user_guide_url]libraries/form_builder">Form_builder</a>) class for more info
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout field
+	 * @param	string	The array of field configuration values
+	 * @return	void
+	 */
 	function add_field($key, $val)
 	{
 		$val = $this->CI->form_builder->normalize_params($val);
@@ -316,6 +462,16 @@ class Fuel_layout extends Fuel_base_library {
 		$this->fields[$key] = $val;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds multiple form fields to the layout (See the <a href="[user_guide_url]libraries/form_builder">Form_builder</a>) class for more info
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout field
+	 * @param	string	The array of field configuration values
+	 * @return	void
+	 */
 	function add_fields($fields)
 	{
 		foreach($fields as $key => $val)
@@ -323,32 +479,88 @@ class Fuel_layout extends Fuel_base_library {
 			$this->add_field($key, $val);
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Sets the field values for the fields
+	 *
+	 * @access	public
+	 * @param	array	A key/value array of field values
+	 * @return	void
+	 */
 	function set_field_values($values)
 	{
 		$this->field_values = $values;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a field value
+	 *
+	 * @access	public
+	 * @param	key		The name of the field
+	 * @param	array	The value of the field
+	 * @return	void
+	 */
 	function set_field_value($key, $value)
 	{
 		$this->field_values[$key] = $value;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns layout's field values
+	 *
+	 * @access	public
+	 * @return	array
+	 */
 	function field_values()
 	{
 		return $this->field_values;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a single field value
+	 *
+	 * @access	public
+	 * @param	key		The name of the field
+	 * @return	void
+	 */
 	function field_value($key)
 	{
 		return $this->field_value[$key];
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a callback hook to be run via "pre" or "post" rendering of the page
+	 *
+	 * @access	public
+	 * @param	key		The type of hook (e.g. "pre_render" or "post_render")
+	 * @param	array	An array of hook information including the class/callback function. <a href="http://codeigniter.com/user_guide/general/hooks.html" target="blank">More here</a>
+	 * @return	void
+	 */
 	function set_hook($type, $hook)
 	{
 		$this->hooks[$type] = $hook;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Calls a specified hook to be run
+	 *
+	 * @access	public
+	 * @param	hook	The type of hook (e.g. "pre_render" or "post_render")
+	 * @param	array	An array of additional parameters to pass to the hook method/function
+	 * @return	void
+	 */
 	function call_hook($hook = 'pre_render', $params = array())
 	{
 		// call hooks set in hooks file

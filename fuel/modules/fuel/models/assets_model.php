@@ -178,7 +178,12 @@ class Assets_model extends CI_Model {
 		$file = $this->get_file($file);
 
 		$CI =& get_instance();
-		$asset_path = WEB_ROOT.$CI->config->item('assets_path').$file;
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		
+		// normalize file path
+		$file = trim(str_replace($assets_folder, '', $file), '/');
+		
+		$asset_path = $assets_folder.$file;
 		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
 		return get_file_info($asset_path);
 	}
@@ -195,7 +200,7 @@ class Assets_model extends CI_Model {
 	function get_file($file)
 	{
 		// if no extension is provided, then we determine that it needs to be decoded
-		if (strpos('.', $file) === FALSE)
+		if (strpos($file, '.') === FALSE)
 		{
 			$file = uri_safe_decode($file);
 		}
@@ -265,14 +270,16 @@ class Assets_model extends CI_Model {
 
 		$file = $this->get_file($file);
 
-		// cleanup beginning slashes
-		if (substr($file, 0, 1) == '/')
-		{
-			$file = substr($file, 1);
-		}
-		$filepath = WEB_ROOT.$CI->config->item('assets_path').$file;
+		$deleted = FALSE;
 		
+		// cleanup beginning slashes
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		$file = trim(str_replace($assets_folder, '', $file), '/');
+		
+		// normalize file path
+		$filepath = $assets_folder.$file;
 		$parent_folder = dirname($filepath).'/';
+
 		if (file_exists($filepath))
 		{
 			$deleted = unlink($filepath);
@@ -381,6 +388,7 @@ class Assets_model extends CI_Model {
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
+		$fields['unzip'] = array('type' => 'checkbox', 'label' => lang('form_label_unzip'), 'comment' => lang('assets_comment_unzip'), 'value' => 1);
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		
 		return $fields;

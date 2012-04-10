@@ -155,7 +155,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_view_all { background-image: none; line-height: 22px; padding-left: 5px; }
 .ico_refresh { background-image: url(../images/ico_arrow_refresh.png); }
 .ico_users_send_email { background-image: url(../images/ico_email_go.png); }
-.ico_precedence { background-image: url(../images/table_row_insert.png); }
+.ico_precedence { background-image: url(../images/ico_table_row_insert.png); }
 .ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload { background-image: url(../images/ico_page_white_get.png); }
 
 

@@ -36,11 +36,17 @@ class Inspection {
 	protected $_functions = array(); // cache of functions found in the file
 	protected $_comments = array(); // cache of page comments
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets user guide preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($file = NULL)
 	{
 		$CI =& get_instance();

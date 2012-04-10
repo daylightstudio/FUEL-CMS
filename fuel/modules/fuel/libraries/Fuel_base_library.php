@@ -38,9 +38,17 @@ class Fuel_base_library {
 	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
-	 */
+	 *
+	 * Accepts an associative array as input, containing preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		$this->CI =& get_instance();

@@ -37,6 +37,17 @@ class Fuel_notification extends Fuel_base_library {
 	public $attachments = array();
 	public $use_dev_mode = TRUE;
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct($params);

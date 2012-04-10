@@ -103,11 +103,17 @@ Class Form_builder {
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	protected $CI;
 	
+	// --------------------------------------------------------------------
+	
 	/**
-	 * Constructor - Sets Form_builder preferences
+	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		$this->CI =& get_instance();

@@ -28,8 +28,6 @@
 
 // --------------------------------------------------------------------
 
-// require_once('Fuel_pagevars.php');
-// 
 class Fuel_pages extends Fuel_base_library {
 	
 	protected $_active = NULL;
@@ -64,13 +62,6 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
-	// function variables($location, $vars_path = NULL)
-	// {
-	// 	$init_vars = array('location' => $location, 'vars_path' => $vars_path);
-	// 	$page_vars = new Fuel_pagevars($init_vars);
-	// 	return $page_vars;
-	// }
-	// 
 	function &active()
 	{
 		return $this->_active;
@@ -185,11 +176,17 @@ class Fuel_page extends Fuel_base_library {
 	protected $_only_published = TRUE; // view only published pages is used if the person viewing page is not logged in
 	protected $_fuelified_processed = FALSE; // if fuelify has already been called	
 
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();

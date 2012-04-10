@@ -36,11 +36,17 @@ class Fuel_advanced_module extends Fuel_base_library {
 	protected $_attached = array(); // attached objects to the advanced module
 	protected $_config = array(); // the config information for the advanced module
 	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Constructor
 	 *
-	 * The constructor can be passed an array of config values
-	 */
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct();
