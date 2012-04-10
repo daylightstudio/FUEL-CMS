@@ -136,10 +136,10 @@ $config['assets_allow_subfolder_creation'] = TRUE;
 
 // specifies what filetype extensions can be included in the folders
 $config['editable_asset_filetypes'] = array(
-										'images' => 'jpg|jpeg|jpe|gif|png', 
-										'pdf' => 'pdf', 
-										'media' => 'mov|mp3|aiff|mpeg', 
-										'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'
+										'images' => 'jpg|jpeg|jpe|gif|png|zip', 
+										'pdf' => 'pdf|zip', 
+										'media' => 'mov|mp3|aiff|mpeg|zip', 
+										'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css|zip'
 										);
 
 // max upload files size for assets
