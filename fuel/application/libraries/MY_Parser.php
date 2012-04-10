@@ -304,7 +304,7 @@ class MY_Parser extends CI_Parser {
 				// load FUEL language file because it has the proper error
 				// added by David McReynolds @ Daylight Studio 1/20/11
 				$this->_ci->load->module_language(FUEL_FOLDER, 'fuel');
-				throw(new Exception(lang('error_cache_folder_not_writable', $this->_ci->config->item('cache_path'))));
+				throw(new Exception(lang('error_folder_not_writable', $this->_ci->config->item('cache_path'))));
 			}
 		}
 
