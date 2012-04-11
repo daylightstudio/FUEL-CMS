@@ -2,15 +2,15 @@
 	<table border="0" cellspacing="0" cellpadding="0">
 		<tbody>
 			<tr>
-				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state')?>" class="reset"></a></td>
-				<td><?=$this->form->search('search_term', $params['search_term'], 'placeholder="'.lang('label_search').'"')?> </td>
-				<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
-				<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
 				<td>
 					<?php if (!empty($more_filters)) : ?>
 					<?=$more_filters?>
 					<?php endif; ?>
 				</td>
+				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state')?>" class="reset"></a></td>
+				<td><?=$this->form->search('search_term', $params['search_term'], 'placeholder="'.lang('label_search').'"')?> </td>
+				<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
+				<td class="show"><?=lang('label_show')?> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
 			</tr>
 		</tbody>
 	</table>
