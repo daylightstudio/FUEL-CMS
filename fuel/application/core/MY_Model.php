@@ -3259,6 +3259,32 @@ Class Data_record {
 				}
 			}
 		}
+		// check if field is for related data via belongs_to
+		else if ( ! empty($this->_parent_model->belongs_to) AND array_key_exists($var, $this->_parent_model->belongs_to) AND ! empty($this->_parent_model->belongs_to[$var]))
+		{
+			// first check in the relationships table to see if they exist
+			$relationships_model = $this->_parent_model->load_model(array('fuel' => 'relationships_model'));
+			$belongs_to = $this->_parent_model->belongs_to[$var];
+			$foreign_model = (is_array($belongs_to)) ? array($belongs_to['module'] => $belongs_to['model'] . '_model') : $belongs_to . '_model';
+			$foreign_model = $this->_parent_model->load_model($foreign_model);
+			$rel_where = array(
+				'candidate_table' => $this->_CI->$foreign_model->table_name(),
+				'foreign_table'   => $this->_parent_model->table_name(),
+				'foreign_key'     => $this->id,
+				);
+			$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where));
+			if ( ! empty($rel_ids))
+			{
+				// now grab the actual data
+// !@todo Update to support additional query params like sorting, etc.
+				$foreign_query_params = array('where_in' => array("{$rel_where['candidate_table']}.id" => $rel_ids));
+				$foreign_query = $this->_CI->$foreign_model->query($foreign_query_params);
+				$foreign_data = $foreign_query->result();
+				if ( ! empty($foreign_data)) {
+					$output = $foreign_data;
+				}
+			}
+		}
 		// finally check values from the database
 		else if (array_key_exists($var, $this->_fields))
 		{
