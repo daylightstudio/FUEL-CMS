@@ -53,6 +53,8 @@ class MY_Model extends CI_Model {
 	public $hidden_fields = array(); // fields to hide when creating a form
 	public $unique_fields = array(); // fields that are not IDs but are unique
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
+	public $serialized_fields = array(); // fields that are contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
+	public $default_serialization_method = 'json'; // the default serialization method. Options are 'json' and 'serialize'
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
 // !@todo add docs for $has_many
@@ -402,7 +404,15 @@ class MY_Model extends CI_Model {
 		$this->db->limit(1);
 		$query = $this->get(FALSE, $return_method);
 		if ($return_method == 'query') return $query;
-		return $query->result();
+		
+		$data = $query->result();
+		
+		// unserialize any data
+		if ($return_method == 'array')
+		{
+			$data = $this->unserialize_field_values($data);
+		}
+		return $data;
 	}
 	
 	// --------------------------------------------------------------------
@@ -444,7 +454,15 @@ class MY_Model extends CI_Model {
 		}
 		$query = $this->get(TRUE, $return_method, $assoc_key);
 		if ($return_method == 'query') return $query;
-		return $query->result();
+		
+		$data = $query->result();
+
+		// unserialize any data if the return method is an array. If it is a custom object, then we let the object take care of it
+		if ($return_method == 'array')
+		{
+			$data = $this->unserialize_field_values($data);
+		}
+		return $data;
 	}
 	
 	// --------------------------------------------------------------------
@@ -961,8 +979,7 @@ class MY_Model extends CI_Model {
 		$this->_check_readonly();
 		$CI =& get_instance();
 		if (!isset($record)) $record = $CI->input->post();
-		if (is_array($record) AND (is_int(key($record)) AND is_array(current($record))))
-//		if (is_array($record) AND is_array(current($record)))
+		if ($this->_is_nested_array($record))
 		{
 			$saved = TRUE;
 			foreach($record as $rec)
@@ -1001,6 +1018,10 @@ class MY_Model extends CI_Model {
 				{
 					// execute on_before_insert/update hook methods
 					$values = $this->on_before_save($values);
+					
+					// process serialized values
+					$values = $this->serialize_field_values($values);
+					
 					if (!$this->_has_key_field_value($values))
 					{
 						$values = $this->on_before_insert($values);
@@ -1009,8 +1030,8 @@ class MY_Model extends CI_Model {
 					{
 						$values = $this->on_before_update($values);
 					}
-
 					$insert_key = ($this->has_auto_increment) ? $this->key_field : NULL;
+					
 					$this->db->insert_ignore($this->table_name, $values, $insert_key);
 
 					// execute on_insert/update hook methods
@@ -1045,6 +1066,10 @@ class MY_Model extends CI_Model {
 					// execute on_before_insert/update hook methods
 					$values = $this->on_before_save($values);
 					$values = $this->on_before_insert($values);
+					
+					// process serialized values
+					$values = $this->serialize_field_values($values);
+					
 					$this->db->insert($this->table_name, $values);
 					if (is_string($this->key_field))
 					{
@@ -1066,6 +1091,10 @@ class MY_Model extends CI_Model {
 					
 					$values = $this->on_before_save($values);
 					$values = $this->on_before_update($values);
+					
+					// process serialized values
+					$values = $this->serialize_field_values($values);
+					
 					$this->db->update($this->table_name, $values);
 					$this->on_after_update($values);
 					if (is_a($record, 'Data_record'))
@@ -1224,6 +1253,7 @@ class MY_Model extends CI_Model {
 	{
 		$this->_check_readonly();
 		$values = $this->on_before_insert($values);
+		$values = $this->serialize_field_values($values);
 		$return = $this->db->insert($this->table_name, $values);
 		if (is_string($this->key_field))
 		{
@@ -1247,6 +1277,7 @@ class MY_Model extends CI_Model {
 	{
 		$this->_check_readonly();
 		$values = $this->on_before_update($values);
+		$values = $this->serialize_field_values($values);
 		$this->db->where($where);
 		$return = $this->db->update($this->table_name, $values);
 		$this->on_after_update($values);
@@ -2112,6 +2143,91 @@ class MY_Model extends CI_Model {
 	}
 
 	// --------------------------------------------------------------------
+
+	/**
+	 * Process relationships
+	 *
+	 * @access	public
+	 * @param	array	values to be saved
+	 * @return	array
+	 */	
+	public function process_relationships($id)
+	{
+		// handle has_many relationships
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+					// remove pre-existing relationships
+					$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $id));
+					
+					// create relationships
+					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
+					{
+						$this->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $id, 'foreign_table' => $this->$related_model->table_name, 'foreign_key' => $foreign_id));
+					}
+				}
+			}
+		}
+		// handle belongs_to relationships
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				if ( ! empty($this->normalized_save_data[$related_field]))
+				{
+					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+					// remove pre-existing relationships
+					$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $id));
+					
+					// create relationships
+					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
+					{
+						$this->$relationships_model->save(array('foreign_table' => $this->table_name, 'foreign_key' => $id, 'candidate_table' => $this->$related_model->table_name, 'candidate_key' => $candidate_id));
+					}
+				}
+			}
+		}
+		return $values;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Process relationships before delete
+	 *
+	 * @access	public
+	 * @param	array	where condition for deleting
+	 * @return	void
+	 */	
+	public function process_relationships_delete($id)
+	{
+		// clear out any relationships
+		if ( ! empty($this->has_many))
+		{
+			foreach ($this->has_many as $related_field => $related_model)
+			{
+				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+				$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $id));
+			}
+		}
+		if ( ! empty($this->belongs_to))
+		{
+			foreach ($this->belongs_to as $related_field => $related_model)
+			{
+				$related_model = $this->load_related_model($related_model);
+				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
+				$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $id));
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
 	
 	/**
 	 * Placeholder hook - right before cleaning of data
@@ -2198,7 +2314,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Placeholder hook - right before saving of data
+	 * Hook - right before saving of data
 	 *
 	 * @access	public
 	 * @param	array	values to be saved
@@ -2212,7 +2328,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Placeholder hook - right after saving of data
+	 * Hook - right after saving of data
 	 *
 	 * @access	public
 	 * @param	array	values to be saved
@@ -2220,42 +2336,9 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_after_save($values)
 	{
-		// handle has_many relationships
-		if ( ! empty($this->has_many))
-		{
-			foreach ($this->has_many as $related_field => $related_model)
-			{
-				if ( ! empty($this->normalized_save_data[$related_field]))
-				{
-					$related_model = $this->load_related_model($related_model);
-					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
-					// remove pre-existing relationships
-					$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id']));
-					// create relationships
-					foreach ($this->normalized_save_data[$related_field] as $foreign_id) {
-						$this->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $values['id'], 'foreign_table' => $this->$related_model->table_name, 'foreign_key' => $foreign_id));
-					}
-				}
-			}
-		}
-		// handle belongs_to relationships
-		if ( ! empty($this->belongs_to))
-		{
-			foreach ($this->belongs_to as $related_field => $related_model)
-			{
-				if ( ! empty($this->normalized_save_data[$related_field]))
-				{
-					$related_model = $this->load_related_model($related_model);
-					$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
-					// remove pre-existing relationships
-					$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $values['id']));
-					// create relationships
-					foreach ($this->normalized_save_data[$related_field] as $candidate_id) {
-						$this->$relationships_model->save(array('foreign_table' => $this->table_name, 'foreign_key' => $values['id'], 'candidate_table' => $this->$related_model->table_name, 'candidate_key' => $candidate_id));
-					}
-				}
-			}
-		}
+		// process relationship values
+		$id = $this->_determine_key_field_value($values);
+		$values = $this->process_relationships($id);
 		return $values;
 	}
 	
@@ -2270,24 +2353,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function on_before_delete($where)
 	{
-		// clear out any relationships
-		if ( ! empty($this->has_many))
-		{
-			foreach ($this->has_many as $related_field => $related_model)
-			{
-				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
-				$this->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $where['id']));
-			}
-		}
-		if ( ! empty($this->belongs_to))
-		{
-			foreach ($this->belongs_to as $related_field => $related_model)
-			{
-				$related_model = $this->load_related_model($related_model);
-				$relationships_model = $this->load_model(array('fuel' => 'relationships_model'));
-				$this->$relationships_model->delete(array('candidate_table' => $this->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $where['id']));
-			}
-		}
+		$id = $this->_determine_key_field_value($where);
+		$this->process_relationships_delete($id);
 	}
 
 	// --------------------------------------------------------------------
@@ -2371,6 +2438,169 @@ class MY_Model extends CI_Model {
 		return $related_model;
 	}
 	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Serializes a field's value
+	 *
+	 * @access	protected
+	 * @param	string	the field name to unserialize
+	 * @param	string	the data to unserialize
+	 * @return	string
+	 */	
+	public function serialize_field_values($data)
+	{
+		// unserialize any data
+		if (!empty($this->serialized_fields) AND is_array($data))
+		{
+			if ($this->_is_nested_array($data))
+			{
+				foreach($data as $key => $val)
+				{
+					$data[$key] = $this->unserialize_field_values($val);
+				}
+			}
+			
+			$method = NULL;
+			foreach($this->serialized_fields as $method => $field)
+			{
+				if (!is_numeric($method))
+				{
+					$method = ($method != 'json') ? 'serialize' : 'json';
+				}
+
+				if (isset($data[$field]))
+				{
+					$data[$field] = $this->serialize_value($data[$field], $method);
+				}
+			}
+		}
+		return $data;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Create safe where query parameters to avoid column name conflicts in queries
+	 *
+	 * @access	public
+	 * @param	string	the array value to unserialize
+	 * @param	string	the unserialization method. If none is specified it will default to the default setting of the model which is 'json' 
+	 * @return	array
+	 */	
+	public function serialize_value($val, $method = NULL)
+	{
+		if (empty($method))
+		{
+			$method = $this->default_serialization_method;
+		}
+		
+		if ($method == 'serialize')
+		{
+			$val = serialize($val);
+		}
+		else
+		{
+			$val = json_encode($val);
+		}
+		return $val;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Unserialize a field's value
+	 *
+	 * @access	public
+	 * @param	mixed	the data to unserialize. Can be an array of arrays too
+	 * @return	array
+	 */	
+	public function unserialize_field_values($data)
+	{
+		// unserialize any data
+		if (!empty($this->serialized_fields))
+		{
+			if ($this->_is_nested_array($data))
+			{
+				foreach($data as $key => $val)
+				{
+					$data[$key] = $this->unserialize_field_values($val);
+				}
+			}
+			else
+			{
+				$method = NULL;
+				foreach($this->serialized_fields as $method => $field)
+				{
+					if (!is_numeric($method))
+					{
+						$method = ($method != 'json') ? 'serialize' : 'json';
+					}
+
+					if (isset($data[$field]))
+					{
+						$data[$field] = $this->unserialize_value($data[$field], $method);
+					}
+				}
+			}
+		}
+		return $data;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Create safe where query parameters to avoid column name conflicts in queries
+	 *
+	 * @access	public
+	 * @param	string	the array value to unserialize
+	 * @param	string	the unserialization method. If none is specified it will default to the default setting of the model which is 'json' 
+	 * @return	array
+	 */	
+	public function unserialize_value($val, $method = NULL)
+	{
+		// if not a valid field name, then we look for a key value with that name in the serialized_fields array
+		$invalid_field_names = array('json', 'serialize');
+		if (!in_array($method, $invalid_field_names))
+		{
+			if (!in_array($method, $this->serialized_fields))
+			{
+				return $val;
+			}
+
+			foreach($this->serialized_fields as $m => $field)
+			{
+				if ($field == $method)
+				{
+					$method = $m;
+					break;
+				}
+			}
+		}
+
+		if (empty($method))
+		{
+			$method = $this->default_serialization_method;
+		}
+		
+		if ($method == 'serialize')
+		{
+			if (is_serialized_str($val))
+			{
+				$val = unserialize($val);
+			}
+		}
+		else
+		{
+			if (is_json_str($val))
+			{
+				$val = json_decode($val, TRUE);
+			}
+		}
+		return $val;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -2463,7 +2693,20 @@ class MY_Model extends CI_Model {
 		}
 		return $id;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Determins if the value is an array of arrays
+	 *
+	 * @access	protected
+	 * @param	mixed
+	 * @return	boolean
+	 */	
+	protected function _is_nested_array($record)
+	{
+		return (is_array($record) AND (is_int(key($record)) AND is_array(current($record))));
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -3250,11 +3493,12 @@ Class Data_record {
 			if ( ! empty($rel_ids))
 			{
 				// now grab the actual data
-// !@todo Update to support additional query params like sorting, etc.
+				// !@todo Update to support additional query params like sorting, etc.
 				$foreign_query_params = array('where_in' => array("{$rel_where['foreign_table']}.id" => $rel_ids));
 				$foreign_query = $this->_CI->$foreign_model->query($foreign_query_params);
 				$foreign_data = $foreign_query->result();
-				if ( ! empty($foreign_data)) {
+				if ( ! empty($foreign_data))
+				{
 					$output = $foreign_data;
 				}
 			}
@@ -3270,6 +3514,13 @@ Class Data_record {
 			$field = substr($var, 0, -10);
 			$output = $this->_get_formatted($field);
 		}
+		
+		// unserialize any data
+		if (!empty($this->_parent_model->serialized_fields))
+		{
+			$output = $this->_parent_model->unserialize_value($output, $var);
+		}
+		
 		$output = $this->after_get($output, $var);
 		return $output;
 	}
