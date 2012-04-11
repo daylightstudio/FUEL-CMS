@@ -13,8 +13,8 @@ option { margin: 0 2px; }
 input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
 ul { margin-bottom: 10px; }
 optgroup option { padding-left: 10px; }
-fieldset { border-top: 5px solid #f6f6f6; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
-legend { padding: 5px 30px 5px 5px; font-size: 12px; background-color: #f6f6f6; font-weight: bold; text-align: left; }
+fieldset { border-top: 5px solid #eee; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
+legend { padding: 5px 30px 5px 5px; font-size: 12px; background-color: #eee; font-weight: bold; text-align: left; }
 iframe { border: none; }
 
 /* generic classes */
@@ -223,8 +223,8 @@ div.save_cancel { height: 35px;  }
 div.save_cancel li { margin: 5px 3px; }
 
 /* form tabs */
-div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border: 1px solid #f6f6f6; text-align: center; float: left; font-weight: bold; background-color: #ffffff; }
-div.form_tabs li.active { background-color: #f6f6f6; }
+div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border: 1px solid #eee; text-align: center; float: left; font-weight: bold; background-color: #ffffff; }
+div.form_tabs li.active { background-color: #eee; }
 div.form_tabs li.active a { color: #333; }
 
 /* box buttons use for manage */
@@ -278,6 +278,7 @@ span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 div.more_filters { padding-left: 10px; }
 div.more_filters span.label { float: left; padding-top: 2px; }
 div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  }
+div.more_filters div div { float: left; margin-right: 10px; }
 
 /* tree */
 div#tree_container { padding: 10px 15px; }

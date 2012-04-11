@@ -493,9 +493,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			html += '<div id="viewpage_btns"><a href="' + url + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a></div>';
 			html += '<iframe id="viewpage_iframe" src="' + url + '"></iframe>';
 			$modal = fuel.modalWindow(html, 'viewpage_modal', false);
-			$modal.find('iframe#viewpage_iframe').bind('load', function(){
-				var iframeContext = this.contentDocument;
-			})
 			
 			$('#viewpage_close').click(function(){
 				$('#__FUEL_modal__').jqmHide();
