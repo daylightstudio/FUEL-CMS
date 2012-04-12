@@ -24,3 +24,12 @@ CREATE TABLE `fuel_relationships` (
 `foreign_key` int(11) NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `fuel_settings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `module` varchar(255) NOT NULL DEFAULT '',
+  `key` varchar(255) NOT NULL DEFAULT '',
+  `value` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

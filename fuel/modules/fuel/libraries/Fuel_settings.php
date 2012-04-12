@@ -1,0 +1,74 @@
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL settings object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_sitevariables
+ */
+
+// --------------------------------------------------------------------
+
+class Fuel_settings extends Fuel_base_library {
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of site variables pertaining to a given URI path
+	 *
+	 * @access	public
+	 * @param	string	A URI path
+	 * @return	array
+	 */
+	function get($location = NULL)
+	{
+		if (is_null($location))
+		{
+			$location = uri_path();
+		}
+		
+		$this->fuel->load_model('sitevariables');
+		
+		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		
+		$vars = array();
+		
+		// Loop through the pages array looking for wild-cards
+		foreach ($site_vars as $site_var){
+			
+			// Convert wild-cards to RegEx
+			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $site_var['scope']));
+
+			// Does the RegEx match?
+			if (empty($key) OR preg_match('#^'.$key.'$#', $location))
+			{
+				$vars[$site_var['name']] = $site_var['value'];
+			}
+		}
+		return $vars;
+	}
+	
+}
+
+/* End of file Fuel_settings.php */
+/* Location: ./modules/fuel/libraries/Fuel_settings.php */
