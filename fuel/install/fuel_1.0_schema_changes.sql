@@ -30,6 +30,5 @@ CREATE TABLE `fuel_settings` (
   `module` varchar(255) NOT NULL DEFAULT '',
   `key` varchar(255) NOT NULL DEFAULT '',
   `value` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`key`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
