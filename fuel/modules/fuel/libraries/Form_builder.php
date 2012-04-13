@@ -348,6 +348,10 @@ Class Form_builder {
 	 */
 	function set_field_values($values)
 	{
+		if (!is_array($values))
+		{
+			return FALSE;
+		}
 		// set values for fields that are arrays
 		foreach($values as $key => $val)
 		{
@@ -1614,7 +1618,7 @@ Class Form_builder {
 		$params = $this->normalize_params($params, $defaults);
 		
 		// grab options from a model if a model is specified
-		if (isset($params['model']))
+		if (!empty($params['model']))
 		{
 			$params['options'] = $this->options_from_model($params['model']);
 		}
@@ -1801,7 +1805,7 @@ Class Form_builder {
 		$params = $this->normalize_params($params, $defaults);
 		
 		// grab options from a model if a model is specified
-		if (isset($params['model']))
+		if (!empty($params['model']))
 		{
 			$params['options'] = $this->options_from_model($params['model']);
 		}
@@ -1864,16 +1868,17 @@ Class Form_builder {
 			'options' => array(),
 			'mode' => NULL,
 			'model' => NULL,
+			'wrapper_tag' => 'span',// for checkboxes
+			'wrapper_class' => 'multi_field'
 		);
 
 		$params = $this->normalize_params($params, $defaults);
 		
 		// grab options from a model if a model is specified
-		if (isset($params['model']))
+		if (!empty($params['model']))
 		{
 			$params['options'] = $this->options_from_model($params['model']);
 		}
-		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
@@ -1887,7 +1892,7 @@ Class Form_builder {
 			{
 				foreach($params['options'] as $key => $val)
 				{
-					$str .= '<span class="multi_field">';
+					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
 						'readonly' => $params['readonly'], 
 						'disabled' => $params['disabled'],
@@ -1907,7 +1912,7 @@ Class Form_builder {
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
 					$str .= ' '.$this->create_label($enum_params);
 					$str .= "&nbsp;&nbsp;&nbsp;";
-					$str .= '</span>';
+					$str .= '</'.$params['wrapper_tag'].'>';
 					$i++;
 				}
 			}
@@ -1928,6 +1933,7 @@ Class Form_builder {
 				$str .= $this->create_hidden($sorting_params);
 			}
 		}
+		
 		return $str;
 	}
 	

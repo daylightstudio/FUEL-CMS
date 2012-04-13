@@ -149,15 +149,10 @@ if (fuel == undefined) var fuel = {};
 						$this.attr('id', '__fuel_marker__' + i);
 						var coords = getMarkerPosition($this);
 						var varName = $this.attr('title');
-						var newClass = ($this.attr('data-rel') == 'create') ? ' __fuel_edit_marker_new__' : '';
+						var newClass = ($this.attr('data-rel').substr(0, 6) == 'create') ? ' __fuel_edit_marker_new__' : '';
 						var publishedClass = ($this.attr('data-published') == '0') ? ' __fuel_edit_marker_unpublished__' : '';
 						var html = '<div id="__fuel_edit__' + i + '" style="left:' + coords.x + 'px; top:' + coords.y + 'px;" class="__fuel__ __fuel_edit__" title="' + varName + '" data-module="' + module + '">';
 						var dataHref = $this.attr('data-href').replace(/\|/, '/');
-						
-						// handle the pagevariables module different because we use the pagevariables name and the page_id to get the value to edit
-						if (module == 'pagevariables'){
-						//	dataHref = dataHref + '/' + pageId;
-						}
 						
 						html += '<a href="' + dataHref + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass + publishedClass + '">';
 						html += '<span class="__fuel_edit_marker_inner__">' + varName + '</span>';
@@ -297,17 +292,13 @@ if (fuel == undefined) var fuel = {};
 				return false;
 			});
 			$('.__fuel_edit__ .delete').live('click', function(){
-				if (confirm('Are you sure you want to delete this?')){
+				if (confirm(lang('confirm_delete'))){
 					$form = $(this).parents('.__fuel_edit_form__').find('form');
 					$form.find('.__fuel_inline_action__').val('delete');
 					ajaxSubmit($form);
 				}
 				return false;
 			});
-			
-			
-			// $('body').append('<div id="__FUEL__asset_modal" class="__fuel__ __fuel_modal__ __fuel_edit_form__ jqmWindow"></div>');
-			// $('body').append('<div id="__FUEL__add_edit_modal" class="__fuel__  __fuel_modal__ __fuel_edit_form__ jqmWindow"></div>');
 			
 			editors.each(function(i){
 				var $this = $(this);
@@ -334,17 +325,17 @@ if (fuel == undefined) var fuel = {};
 							
 							var relArr = $(this).attr('rel').split('|');
 							var param1 = relArr[0];
-							if (module == 'pagevariables')
-							{
+							if (module == 'pagevariables'){
 								var param2 = pageId;
-							}
-							else
-							{
+							} else {
 								var param2 = (relArr.length >= 2) ? relArr[1] : '';
-								
 							}
-							var url = $(this).attr('href') + param1 + '/' + param2;
-
+							if (param1 == 'create'){
+								var url = $(this).attr('href') + '?' + param2;
+							} else {
+								var url = $(this).attr('href') + param1 + '/' + param2;
+							}
+							console.log(url)
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');

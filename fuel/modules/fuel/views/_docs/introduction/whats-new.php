@@ -27,6 +27,12 @@
 	<li>Broke out Google Keywords and Page Analysis into their own modules (was "seo" module);</li>
 </ul>
 
+INLINE EDITNG:
+<ul>
+	<li>Ability to add more then one field to display to edit separating by a ":"</li>
+	<li>Ability to pass additional parameters (e.g. foriegn key values) when creating a new record</li>
+	<li>Allow for displaying unpublished content on the front end if you are logged in. Will display a slightly different icon if unpublished or not active (display_unpublished_if_logged_in propert on model)</li>
+</ul>
 
 
 
@@ -58,6 +64,13 @@ Added Helpers
 	<li>scraper helper</li>
 	<li>simplepie helper</li>
 	<li>session helper</li>
+</ul>
+
+MY_url_helper
+<ul>
+	<li>link_target</li>
+	<li>last_url</li>
+	<li>redirect_404</li>
 </ul>
 
 Form_builder

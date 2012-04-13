@@ -131,6 +131,18 @@
 			<td>Fields that are are linked. Key is the field, value is a function name to transform it.</td>
 		</tr>
 		<tr>
+			<td><strong>serialized_fields</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>Fields that are contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving.</td>
+		</tr>
+		<tr>
+			<td><strong>default_serialization_method</strong></td>
+			<td>json</td>
+			<td>json/serialize</td>
+			<td>The default serialization method. Options are 'json' and 'serialize'.</td>
+		</tr>
+		<tr>
 			<td><strong>foreign_keys</strong></td>
 			<td>None</td>
 			<td>Array of column names with keys being the column and the value being the model. If the model exists

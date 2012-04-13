@@ -453,9 +453,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
 			$legends.filter(':first').parent().before(tabs);
-			//$('#form').prepend(tabs);
-			//$('#form').tabs();
-			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.cookieDefaultPath}}
+			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/[\/|:]/g, '_'), params: {path: jqx.config.cookieDefaultPath}}
 			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}
@@ -493,9 +491,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			html += '<div id="viewpage_btns"><a href="' + url + '" id="viewpage_new_page" class="viewpage_btn" target="_blank">' + _this.lang('viewpage_new_window') + '</a></div>';
 			html += '<iframe id="viewpage_iframe" src="' + url + '"></iframe>';
 			$modal = fuel.modalWindow(html, 'viewpage_modal', false);
-			$modal.find('iframe#viewpage_iframe').bind('load', function(){
-				var iframeContext = this.contentDocument;
-			})
 			
 			$('#viewpage_close').click(function(){
 				$('#__FUEL_modal__').jqmHide();
