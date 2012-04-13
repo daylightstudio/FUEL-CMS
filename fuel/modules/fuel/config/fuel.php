@@ -262,11 +262,12 @@ $config['nav']['tools'] = array();
 
 // manage
 $config['nav']['manage'] = array(
-	'users' => lang('module_users'), 
-	'permissions' => lang('module_permissions'),
-	'manage/cache' => lang('module_manage_cache'), 
-	//'manage/activity' => lang('module_manage_activity')
-	'logs' => lang('module_manage_activity')
+	'users'             => lang('module_users'), 
+	'permissions'       => lang('module_permissions'),
+	'manage/cache'      => lang('module_manage_cache'), 
+	//'manage/activity' => lang('module_manage_activity'),
+	'logs'              => lang('module_manage_activity'),
+	'settings'          => lang('module_manage_settings'),
 	);
 
 /*
@@ -309,17 +310,18 @@ $config['uri_view_overwrites'] = array();
 
 // the FUEL specific database tables
 $config['tables'] = array(
-	'archives' => 'fuel_archives',
-	'logs' => 'fuel_logs',
-	'navigation' => 'fuel_navigation',
-	'navigation_groups' => 'fuel_navigation_groups',
-	'pagevars' => 'fuel_page_variables',
-	'pages' => 'fuel_pages',
-	'blocks' => 'fuel_blocks',
-	'permissions' => 'fuel_permissions',
+	'archives'            => 'fuel_archives',
+	'blocks'              => 'fuel_blocks',
+	'logs'                => 'fuel_logs',
+	'navigation'          => 'fuel_navigation',
+	'navigation_groups'   => 'fuel_navigation_groups',
+	'pages'               => 'fuel_pages',
+	'pagevars'            => 'fuel_page_variables',
+	'permissions'         => 'fuel_permissions',
+	'settings'            => 'fuel_settings',
+	'users'               => 'fuel_users',
 	'user_to_permissions' => 'fuel_user_to_permissions',
-	'users' => 'fuel_users'
-);
+	);
 
 /*
 |--------------------------------------------------------------------------

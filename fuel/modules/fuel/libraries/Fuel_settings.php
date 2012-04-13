@@ -84,9 +84,11 @@ class Fuel_settings extends Fuel_base_library {
 				else
 				{
 					$new_value = trim($new_settings[$key]);
+/*
 					if (empty($new_value)) {
 						continue;
 					}
+*/
 				}
 				$save[] = array(
 					'module' => $module,
