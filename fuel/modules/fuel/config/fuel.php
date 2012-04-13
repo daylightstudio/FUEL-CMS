@@ -318,9 +318,9 @@ $config['tables'] = array(
 	'pages'               => 'fuel_pages',
 	'pagevars'            => 'fuel_page_variables',
 	'permissions'         => 'fuel_permissions',
+	'relationships'       => 'fuel_relationships',
 	'settings'            => 'fuel_settings',
 	'users'               => 'fuel_users',
-	'user_to_permissions' => 'fuel_user_to_permissions',
 	);
 
 /*
