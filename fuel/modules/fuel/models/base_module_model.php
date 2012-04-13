@@ -47,7 +47,8 @@ class Base_module_model extends MY_Model {
 	public $parsed_fields = array(); // fields to automatically parse
 	public $upload_data = array(); // data about all uploaded files
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
-	protected $_tables = array(); // fuel tables
+	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
+	public $relationships_model = array('fuel' => 'relationships_model'); // the model to use to save relationships
 	
 	/**
 	 * Constructor
@@ -106,39 +107,20 @@ class Base_module_model extends MY_Model {
 		}
 		
 		// create master list of tables
-		$this->_tables = array_merge($config_tables, $module_tables, $fuel_tables);
+		$tables = array_merge($config_tables, $module_tables, $fuel_tables);
+		
+		$this->set_tables($tables);
 		
 		// set the table to the configuration mapping if it is in array
-		if (isset($this->_tables[$table])) 
+		if ($this->tables($table)) 
 		{
-			$table = $this->_tables[$table];
+			$table = $this->tables($table);
 		}
-		
-		$CI->load->module_library(FUEL_FOLDER, 'fuel_auth'); // must do this for the cron job
 		
 		// if no configuration mapping is found then we will assume it is just the straight up table name
 		parent::__construct($table, $params); // table name and params
 	}
 	
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Gets the table name based on the configuration
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */	
-	function get_table($table)
-	{
-		if (isset($this->_tables[$table]))
-		{
-			return $this->_tables[$table];
-		}
-		return NULL;
-	}
-
 	// --------------------------------------------------------------------
 	
 	/**
@@ -319,7 +301,7 @@ class Base_module_model extends MY_Model {
 		$save['table_name'] = $this->table_name;
 		$save['archived_user_id'] = $user['id'];
 		$save['version'] = $last_archive_version + 1;
-		$save['data'] = serialize($data);
+		$save['data'] = json_encode($data);
 		if ($saved = $this->archives_model->save($save))
 		{
 			$num_versions = $this->archives_model->record_count(array('table_name' => $this->table_name, 'ref_id' => $ref_id));
@@ -350,7 +332,7 @@ class Base_module_model extends MY_Model {
 		$archive = $this->archives_model->find_one_array(array('table_name' => $this->table_name, 'ref_id' => $ref_id), 'version_timestamp desc');
 		if (!empty($archive['data']))
 		{
-			$archive['data'] = unserialize($archive['data']);
+			$archive['data'] = json_decode($archive['data'], TRUE);
 			return ($all_data) ? $archive : $archive['data'];
 		}
 		return array();
@@ -380,7 +362,8 @@ class Base_module_model extends MY_Model {
 		$return['data'] = array();
 		if (!empty($archive))
 		{
-			$data = unserialize($archive['data']);
+			// check for serialization for backwards compatibility
+			$data = (is_serialized_str($archive['data'])) ? unserialize($archive['data']) : json_decode($archive['data'], TRUE);
 			foreach($data as $key => $val)
 			{
 				// reformat dates
@@ -476,8 +459,7 @@ class Base_module_model extends MY_Model {
 			$this->delete($where);
 		}
 		
-		
-		// save va;ies
+		// save values
 		$saved = $this->save($values);
 
 		// archive values saving
@@ -537,8 +519,13 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean	whether to display unpublished content in the front end if logged in
 	 * @return	string
 	 */	
-	function _common_query($display_unpublished_if_logged_in = FALSE)
+	function _common_query($display_unpublished_if_logged_in = NULL)
 	{
+		if (!isset($display_unpublished_if_logged_in))
+		{
+			$display_unpublished_if_logged_in = $this->display_unpublished_if_logged_in;
+		}
+		
 		if ((!defined('FUEL_ADMIN') AND $display_unpublished_if_logged_in === FALSE) OR ($display_unpublished_if_logged_in AND !is_fuelified()))
 		{
 			$this->_publish_status();

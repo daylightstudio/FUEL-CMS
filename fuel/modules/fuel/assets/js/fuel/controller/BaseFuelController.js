@@ -453,9 +453,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
 			$legends.filter(':first').parent().before(tabs);
-			//$('#form').prepend(tabs);
-			//$('#form').tabs();
-			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/\//g, '_'), params: {path: jqx.config.cookieDefaultPath}}
+			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/[\/|:]/g, '_'), params: {path: jqx.config.cookieDefaultPath}}
 			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}

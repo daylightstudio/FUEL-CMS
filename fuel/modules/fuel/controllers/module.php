@@ -549,7 +549,9 @@ class Module extends Fuel_base_controller {
 		}
 		
 		$shell_vars = $this->_shell_vars($id);
-		$form_vars = $this->_form_vars($id, array(), FALSE, $inline);
+		
+		$passed_init_vars = ($this->input->get()) ? $this->input->get() : array();
+		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
 		
@@ -666,11 +668,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field);
 				}
 				
 				if ($redirect)
@@ -900,32 +902,26 @@ class Module extends Fuel_base_controller {
 		{
 			
 			// added per pierlo in Forum (http://www.getfuelcms.com/forums/discussion/673/fuel_helper-fuel_edit-markers)
-			$columns = explode(',', $column);
+			$columns = explode(':', $field);
 			
-			foreach($columns as $field)
+			// special case if you use the word required
+			if (in_array('required', $columns))
 			{
-				if (is_string($field) AND isset($fields[$field]))
+				$columns = array_merge($columns, $this->model->required);
+			}
+			
+			// set them to hidden... just in case model hooks require the values to be passed on save
+			foreach($fields as $k => $f)
+			{
+				if (!in_array($k, $columns))
 				{
-					$single_field[$field] = $fields[$field];
-					//$single_field[$field]['label'] = ' ';
-					$single_field[$field]['display_label'] = FALSE;
-					$single_field[$field]['required'] = FALSE;
-					$single_field['id'] = array('type' => 'hidden', 'value' => $id);
-
-					// set them to hidden... just in case model hooks require the values to be passed on save
-					foreach($fields as $k => $f)
-					{
-						if ($k != $field)
-						{
-							$fields[$k]['type'] = 'hidden';
-						}
-					}
-					//$fields = $single_field;
-					$fields = array_merge($fields, $single_field);
+					$fields[$k]['type'] = 'hidden';
 				}
-				else
+				
+				if (count($columns) <= 1)
 				{
-					$fields = NULL;
+					$fields[$k]['display_label'] = FALSE;
+					$fields[$k]['required'] = FALSE;
 				}
 			}
 		}
@@ -954,8 +950,6 @@ class Module extends Fuel_base_controller {
 				}
 			}
 
-
-			//$this->form_builder->form->validator = &$this->model->get_validation();
 			$this->form_builder->set_validator($this->model->get_validation());
 
 			// add hidden field with the module name for convenience
@@ -970,8 +964,6 @@ class Module extends Fuel_base_controller {
 			$fields['__fuel_inline__']['value'] = ($inline) ? 1 : 0;
 			
 			
-			$form_action = ($inline) ? $this->module_uri.'/inline_'.$action.'/'.$id : $this->module_uri.'/'.$action.'/'.$id;
-			//$this->form_builder->form_attrs = 'method="post" action="'.$form_action.'" enctype="multipart/form-data" id="form"';
 			$this->form_builder->submit_value = lang('btn_save');
 			$this->form_builder->question_keys = array();
 			$this->form_builder->use_form_tag = FALSE;
@@ -1001,14 +993,10 @@ class Module extends Fuel_base_controller {
 				
 			}
 			
-			// position the field to be on top
-			if (!empty($field))
-			{
-				$this->form_builder->label_layout = 'top';
-			}
 			$form = $this->form_builder->render();
 		}
-		$vars['form_action'] = $form_action;
+		$action_uri = $action.'/'.$id.'/'.$field;
+		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
 		$vars['form'] = $form;
 		$vars['data'] = $values;
 		$vars['error'] = $this->model->get_errors();
