@@ -7,6 +7,7 @@ class Users_model extends Base_module_model {
 	public $required = array('user_name', 'email', 'first_name', 'last_name');
 	public $filters = array('first_name', 'last_name', 'user_name');
 	public $unique_fields = array('user_name');
+	public $has_many = array('permissions' => array('model' =>'permissions_model', 'module' => 'fuel'));
 	
 	function __construct()
 	{
@@ -118,12 +119,12 @@ class Users_model extends Base_module_model {
 		return $return;
 	}
 	
-	function form_fields($values = null)
+	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		
 		unset($fields['super_admin']);
 		
@@ -180,36 +181,40 @@ class Users_model extends Base_module_model {
 			OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions'))
 		)
 		{
-			$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-			$selected_perms = $CI->user_to_permissions_model->get_permissions($user_id, FALSE);
+			//$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
+			//$selected_perms = $CI->user_to_permissions_model->get_permissions($user_id, FALSE);
 
 			// if (!empty($selected_perms)) 
 			// {
 				$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 //			}
-			
-			$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
-			$perms = $CI->permissions_model->find_all_array(array('active' => 'yes'), 'name asc');
-			
-			$order = 11;
-			foreach($perms as $val)
-			{
-				$perm_field = 'permissions['.$val['id'].']';
-				$perm_fields[$perm_field]['type'] = 'checkbox';
-				$perm_fields[$perm_field]['value'] = $val['id'];
-				$perm_fields[$perm_field]['order'] = $order;
-				$label = lang('perm_'.$val['name']);
-				if (empty($label))
-				{
-					$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
-				}
-				$perm_fields[$perm_field]['label'] = $label;
-				if (!empty($selected_perms[$val['id']])) $perm_fields[$perm_field]['checked'] = TRUE;
-				$order++;
-			}
+			// 
+			// $CI->load->module_model(FUEL_FOLDER, 'permissions_model');
+			// $perms = $CI->permissions_model->find_all_array(array('active' => 'yes'), 'name asc');
+			// 
+			// $order = 11;
+			// foreach($perms as $val)
+			// {
+			// 	$perm_field = 'permissions['.$val['id'].']';
+			// 	$perm_fields[$perm_field]['type'] = 'checkbox';
+			// 	$perm_fields[$perm_field]['value'] = $val['id'];
+			// 	$perm_fields[$perm_field]['order'] = $order;
+			// 	$label = lang('perm_'.$val['name']);
+			// 	if (empty($label))
+			// 	{
+			// 		$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
+			// 	}
+			// 	$perm_fields[$perm_field]['label'] = $label;
+			// 	if (!empty($selected_perms[$val['id']])) $perm_fields[$perm_field]['checked'] = TRUE;
+			// 	$order++;
+			// }
 		}
-		$fields = array_merge($fields, $perm_fields);
+		$fields['permissions']['mode'] = 'checkbox';
+		$fields['permissions']['display_label'] = FALSE;
+		$fields['permissions']['wrapper_tag'] = 'div';
+		//$fields = array_merge($fields, $perm_fields);
 		unset($fields['reset_key'], $fields['salt']);
+		
 		return $fields;
 	}
 	
@@ -259,13 +264,8 @@ class Users_model extends Base_module_model {
 	
 	function on_after_save($values)
 	{
+		parent::on_after_save($values);
 		$CI =& get_instance();
-		
-		$data = (!empty($this->normalized_save_data['permissions'])) ? $this->normalized_save_data['permissions'] : array();
-		if (isset($this->normalized_save_data['permissions']))
-		{
-			$this->save_related(array(FUEL_FOLDER => 'user_to_permissions_model'), array('user_id' => $values['id']), array('permission_id' => $data));
-		}
 
 		$user = $CI->fuel->auth->user_data();
 
@@ -292,12 +292,6 @@ class Users_model extends Base_module_model {
 		return parent::delete($where);
 	}
 
-	 // cleanup navigation items if group is deleted
-	 function on_after_delete($where)
-	 {
-		$this->delete_related(array(FUEL_FOLDER => 'user_to_permissions_model'), 'user_id', $where);
-	 }
-	
 	function is_new_email($email)
 	{
 		if (empty($email)) return FALSE;
@@ -321,6 +315,6 @@ class Users_model extends Base_module_model {
 }
 
 class User_model extends Base_module_record {
+
 	
-	public $permissions = array();
 }

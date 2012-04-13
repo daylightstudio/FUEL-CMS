@@ -2,7 +2,7 @@
 
 class Permissions_model extends Base_module_model {
 	
-	public $required = array('name');
+	public $required = array('name', 'description');
 	public $unique_fields = array('name');
 	
 	function __construct()
