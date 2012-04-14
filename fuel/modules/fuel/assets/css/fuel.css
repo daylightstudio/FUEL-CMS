@@ -128,6 +128,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_delete { background-image: url(../images/ico_page_delete.png); }
 .ico_duplicate { background-image: url(../images/ico_page_copy.png); }
 .ico_error {  background-image: url(../images/ico_cancel.png); }
+.ico_export { background-image: url(../images/ico_page_excel.png); }
 .ico_info {  background-image: url(../images/ico_information.png); }
 .ico_logs { background-image: url(../images/ico_book_open.png); }
 .ico_manage_cache { background-image: url(../images/ico_page_lightning.png); }

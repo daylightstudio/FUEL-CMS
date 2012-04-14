@@ -2225,7 +2225,7 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
 					{
-						$CI->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $id, 'foreign_table' => $this->$related_model->table_name, 'foreign_key' => $foreign_id));
+						$CI->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $id, 'foreign_table' => $CI->$related_model->table_name, 'foreign_key' => $foreign_id));
 					}
 				}
 			}
