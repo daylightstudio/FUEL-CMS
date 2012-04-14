@@ -229,6 +229,10 @@ class Module extends Fuel_base_controller {
 			$vars['tree'] = "\n<ul></ul>\n";
 		}
 		
+		// display the export button if there is an export method
+		$vars['export_data'] = method_exists($this->model, 'export_data') ? TRUE : FALSE;
+		
+		
 		// set vars
 		$vars['params'] = $params;
 		
@@ -1344,6 +1348,7 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	// displays the module's designated view'
 	function view($id = NULL)
 	{
 		if (!empty($this->preview_path) AND !empty($id))
@@ -1363,6 +1368,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
+	// refreshes a single field
 	function refresh_field()
 	{
 		if (!empty($_POST))
@@ -1398,6 +1404,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
+	// processes linked fields
 	function process_linked()
 	{
 		if (!empty($_POST))
@@ -1418,6 +1425,7 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	// automatically calls ajax methods on the model
 	function ajax($method = NULL)
 	{
 		// must not be empty and must start with find_ (... don't want to access methods like delete)
@@ -1451,8 +1459,29 @@ class Module extends Fuel_base_controller {
 			
 		}
 	}
+	
+	// exports data to CSV
+	function export()
+	{
+		if (!method_exists($this->model, 'export_data'))
+		{
+			show_404();
+		}
+		
+		if (!$this->fuel->auth->has_permission($this->permission, 'export'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
+		// load dbutils for convenience to use in custom methods on model
+		$this->load->dbutil();
+		$this->load->helper('download');
 
-
+		$filename = $this->module.'_'.'_'.date('Y-m-d').'.csv';
+		$data = $this->model->export_data();
+		force_download($filename, $data);
+	}
+	
 	// used in list view to quickly unpublish (if they have permisison)
 	function toggle_on($id = NULL, $field = 'published')
 	{

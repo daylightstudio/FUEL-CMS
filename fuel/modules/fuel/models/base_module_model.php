@@ -468,6 +468,24 @@ class Base_module_model extends MY_Model {
 		return $saved;
 		
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns data that will be downloaded automatically
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	/* Placeholder example
+	function export_data()
+	{
+		$CI =& get_instance();
+		$query = $this->db->query("SELECT * FROM ".$this->table_name);
+		$data = $CI->dbutil->csv_from_result($query);
+		return $data;
+	}
+	*/
 
 	// --------------------------------------------------------------------
 	

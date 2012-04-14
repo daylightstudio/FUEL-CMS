@@ -33,7 +33,6 @@ $lang['error_zip'] = 'There was an error creating the zipped file.';
 $lang['error_no_permissions'] = 'You do not have permissions to complete this action.';
 $lang['error_no_lib_permissions'] = 'You do not have permission to execute methods on the %1s class.';
 $lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it either doesn\'t exist or contains one or more of the following reserved words: %1s';
-$lang['error_exporting_view'] = 'There was an error in creating the associated view file for the location %1s because the variable with the name <strong><em>%2s</em></strong> does not exist.';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';
 $lang['error_inline_page_edit'] = 'This variable must either be saved in the admin or edited in the associated views/_variables file.';
 $lang['error_saving'] = 'There was an error saving.';
@@ -380,6 +379,7 @@ $lang['btn_duplicate'] = 'Duplicate';
 $lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
+$lang['btn_export_data'] = 'Export Data';
 
 $lang['btn_no'] = 'No';
 $lang['btn_yes'] = 'Yes';
