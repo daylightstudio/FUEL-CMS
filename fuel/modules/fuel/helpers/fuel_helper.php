@@ -640,3 +640,9 @@ function fuel_user_lang()
 	}
 	return $cookie_val['language'];
 }
+
+function fuel_settings($module, $key = '')
+{
+	$CI =& get_instance();
+	return $CI->fuel->settings->get($module, $key);
+}

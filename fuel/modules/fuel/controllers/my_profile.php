@@ -36,29 +36,39 @@ class My_profile extends Fuel_base_controller {
 		$this->js_controller_params['method'] = 'add_edit';
 		
 		// create fields... start with the table info and go from there
-		$fields = $this->users_model->form_fields($id);
+		$values = array('id' => $id);
+		$fields = $this->users_model->form_fields($values);
+		
+		// remove permissions
+		unset($fields['permissions']);
 		
 		// get saved data
 		$saved = array();
-		if (!empty($id)) $saved = $this->users_model->user_info($id);
+		if (!empty($id))
+		{
+			$saved = $this->users_model->user_info($id);
+		}
 
 		// set active to hidden since setting this is an buttton/action instead of a form field
 		// $fields['active']['type'] = 'hidden';
 		unset($fields['active']);
 		
-		if (!empty($_POST)){
+		if (!empty($_POST))
+		{
 			$field_values = $this->users_model->clean();
-		} else {
+		}
+		else
+		{
 			$field_values = $saved;
 		}
-		
-		if (!empty($saved['permissions']))
-		{
-			foreach($saved['permissions'] as $key => $val)
-			{
-				$field_values['permissions['.$val['perm_id'].']'] = true;
-			}
-		}
+		// 
+		// if (!empty($saved['permissions']))
+		// {
+		// 	foreach($saved['permissions'] as $key => $val)
+		// 	{
+		// 		$field_values['permissions['.$val['perm_id'].']'] = true;
+		// 	}
+		// }
 		
 		$this->form_builder->form->validator = &$this->users_model->get_validation();
 		$this->form_builder->submit_value = lang('btn_save');

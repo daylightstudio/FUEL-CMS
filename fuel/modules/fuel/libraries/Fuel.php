@@ -53,6 +53,7 @@ class Fuel extends Fuel_base_library {
 									'pagevars',
 									'permissions',
 									'redirects',
+									'settings',
 									'sitevars',
 									'users',
 									); // objects to automatically attach

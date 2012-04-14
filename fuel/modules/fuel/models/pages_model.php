@@ -208,6 +208,46 @@ class Pages_model extends Base_module_model {
 		return ($pages_saved && $page_variables_saved);
 	}
 	
+	// overwrite parent to replace page variables
+	function replace($replace_id, $id, $delete = TRUE)
+	{
+		$CI =& get_instance();
+		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		
+		// start a transaction in case there are any errors
+		$CI->pagevariables_model->db()->trans_begin();
+
+		// retrieve new variables
+		$new_values = $CI->pagevariables_model->find_all_array(array('page_id' => $id));
+
+		// delete old variables
+		$CI->pagevariables_model->delete(array('page_id' => $replace_id));
+		$saved = TRUE;
+		foreach($new_values as $var)
+		{
+			$var['page_id'] = $replace_id;
+			if (!$CI->pagevariables_model->save($var))
+			{
+				$saved = FALSE;
+			}
+		}
+		
+		// check if there are any errors and if so we rollem back...
+		if ($CI->pagevariables_model->db()->trans_status() === FALSE)
+		{
+			$saved = FALSE;
+		    $CI->pagevariables_model->db()->trans_rollback();
+		}
+		else
+		{
+		    $CI->pagevariables_model->db()->trans_commit();
+		}
+		
+		$saved = parent::replace($replace_id, $id, $delete);
+		
+		return $saved;
+	}
+	
 	function _common_query()
 	{
 		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['pages'].'.last_modified_by', 'left');

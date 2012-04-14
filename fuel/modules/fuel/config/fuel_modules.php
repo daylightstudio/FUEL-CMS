@@ -178,7 +178,7 @@ $config['modules']['users'] = array(
 	'display_field' => 'email',
 	'preview_path' => '',
 	'permission' => 'users',
-	'edit_method' => 'user_info',
+	//'edit_method' => 'user_info',
 	'instructions' => lang('users_instructions'),
 	'archivable' => FALSE,
 	'table_actions' => array('EDIT', 'DELETE' => array('func' => create_function('$cols', '
@@ -204,8 +204,8 @@ $config['modules']['permissions'] = array(
 	'model_location' => 'fuel',
 	'table_headers' => array(
 		'id', 
-		'name', 
 		'description', 
+		'name', 
 		'active', 
 	),
 	

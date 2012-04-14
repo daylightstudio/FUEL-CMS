@@ -361,6 +361,9 @@ associate the the datetime field type with the jquery UI datepicker.
 		the name of the model and the value is the method (see below). The '_model' suffix is
 		not required when specifying the name of the model.
 		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more.</li>
+		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag.</li>
+		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
+		
 	</ul>
 	
 	<h4>Representations</h4>

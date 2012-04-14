@@ -131,7 +131,6 @@ class Fuel_auth extends Fuel_base_library {
 
 		// get the users permissions
 		$user_perms = $this->get_permissions();
-
 		if (!empty($user_perms))
 		{
 			if (is_array($permission))
@@ -171,8 +170,11 @@ class Fuel_auth extends Fuel_base_library {
 		
 		// get the users permissions
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-		$user_perms = $CI->user_to_permissions_model->get_permissions($valid_user['id']);
+		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
+		$where = array('id' => $valid_user['id'], 'active' => 'yes');
+		$user = $CI->users_model->find_one($where);
+		
+		$user_perms = $user->get_permissions(TRUE, 'name', 'array');
 		if (!empty($user_perms))
 		{
 			return $user_perms;
