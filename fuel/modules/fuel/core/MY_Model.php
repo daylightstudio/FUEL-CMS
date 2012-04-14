@@ -2498,15 +2498,27 @@ class MY_Model extends CI_Model {
 	{
 		if (is_array($related_model))
 		{
-			$related_model = $this->load_model(array($related_model['module'] => $this->_format_model_name($related_model['model'])));
+			$related_model = $this->load_model(array($related_model['module'] => $this->format_model_name($related_model['model'])));
 		}
 		else
 		{
-			$related_model = $this->load_model($this->_format_model_name($related_model));
+			$related_model = $this->load_model($this->format_model_name($related_model));
 		}
 		return $related_model;
 	}
 	
+
+	// --------------------------------------------------------------------
+
+	public function format_model_name($model)
+	{
+		$model_name = $model;
+		if (substr($model_name, -strlen($this->suffix)) != $this->suffix)
+		{
+			$model_name .= $this->suffix;
+		}
+		return $model_name;
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -3602,11 +3614,11 @@ Class Data_record {
 		
 		if (is_array($has_many) AND isset($has_many['module']))
 		{
-			$foreign_model = array($has_many['module'] => $this->_format_model_name($has_many['model']));
+			$foreign_model = array($has_many['module'] => $this->_parent_model->format_model_name($has_many['model']));
 		}
 		else
 		{
-			$foreign_model = $this->_format_model_name($has_many);
+			$foreign_model = $this->_parent_model->format_model_name($has_many);
 		}
 		
 		$id_field = $this->_parent_model->key_field();
@@ -3666,11 +3678,11 @@ Class Data_record {
 		
 		if (is_array($belongs_to) AND isset($belongs_to['module']))
 		{
-			$foreign_model = array($belongs_to['module'] => $this->_format_model_name($belongs_to['model']));
+			$foreign_model = array($belongs_to['module'] => $this->_parent_model->format_model_name($belongs_to['model']));
 		}
 		else
 		{
-			$foreign_model = $this->_format_model_name($belongs_to);
+			$foreign_model = $this->_parent_model->format_model_name($belongs_to);
 		}
 		
 		$id_field = $this->_parent_model->key_field();
@@ -3786,18 +3798,6 @@ Class Data_record {
 		return $output;
 	}
 
-	// --------------------------------------------------------------------
-	
-	protected function _format_model_name($model)
-	{
-		$model_name = $model;
-		if (substr($model_name, -strlen($this->_parent_model->suffix)) != $this->_parent_model->suffix)
-		{
-			$model_name .= $this->_parent_model->suffix;
-		}
-		return $model_name;
-	}
-	
 	// --------------------------------------------------------------------
 	
 	/**
