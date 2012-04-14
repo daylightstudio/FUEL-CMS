@@ -2498,23 +2498,27 @@ class MY_Model extends CI_Model {
 	{
 		if (is_array($related_model))
 		{
-			if (!preg_match('#\w+'.preg_quote($this->suffix).'$#', $related_model['model']))
-			{
-				$related_model['model'] = $related_model['model'] . $this->suffix;
-			}
-			$related_model = $this->load_model(array($related_model['module'] => $related_model['model']));
+			$related_model = $this->load_model(array($related_model['module'] => $this->format_model_name($related_model['model'])));
 		}
 		else
 		{
-			if (!preg_match('#\w+'.preg_quote($this->suffix).'$#', $related_model))
-			{
-				$related_model = $related_model . $this->suffix;
-			}
-			$related_model = $this->load_model($related_model);
+			$related_model = $this->load_model($this->format_model_name($related_model));
 		}
 		return $related_model;
 	}
 	
+
+	// --------------------------------------------------------------------
+
+	public function format_model_name($model)
+	{
+		$model_name = $model;
+		if (substr($model_name, -strlen($this->suffix)) != $this->suffix)
+		{
+			$model_name .= $this->suffix;
+		}
+		return $model_name;
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -3473,12 +3477,12 @@ Class Data_record {
 			{
 				return $this->_fields[$found[1]];
 			}
-			else if ($this->_is_has_many_property($found[1]))
+			else if ($this->_is_relationship_property($found[1]))
 			{
 				$assoc = (isset($args[0])) ? $args[0] : FALSE;
 				$key_field = (isset($args[1])) ? $args[1] : NULL;
 				$array = (isset($args[2])) ? $args[2] : NULL;
-				return $this->_get_relationship($found[1], $assoc, $key_field, $array);
+				return $this->_get_has_many_relationship($found[1], $assoc, $key_field, $array);
 			}
 		}
 		else if (preg_match("/is_(.*)/", $method, $found))
@@ -3561,9 +3565,14 @@ Class Data_record {
 			$output = $this->lazy_load($var_key, $model);
 		}
 		// check if field is for related data via has_many
-		else if ($this->_is_has_many_property($var))
+		else if ($this->_is_relationship_property($var))
 		{
-			$output = $this->_get_relationship($var);
+			$output = $this->_get_has_many_relationship($var);
+		}
+		// check if field is for related data via belongs_to
+		else if ($this->_is_relationship_property($var, 'belongs_to'))
+		{
+			$output = $this->_get_belongs_to_relationship($var);
 		}
 		// finally check values from the database
 		else if (array_key_exists($var, $this->_fields))
@@ -3597,7 +3606,7 @@ Class Data_record {
 	 * @param	boolean	whether to use foriegn key for an associative array
 	 * @return	array
 	 */	
-	protected function _get_relationship($var, $assoc = FALSE, $key_field = NULL, $return_method = NULL)
+	protected function _get_has_many_relationship($var, $assoc = FALSE, $key_field = NULL, $return_method = NULL)
 	{
 		// first check in the relationships table to see if they exist
 		$relationships_model = $this->_parent_model->load_model($this->_parent_model->relationships_model);
@@ -3605,20 +3614,11 @@ Class Data_record {
 		
 		if (is_array($has_many) AND isset($has_many['module']))
 		{
-			if (!preg_match('#\w+'.preg_quote($this->suffix).'$#', $has_many['model']))
-			{
-				$has_many['model'] .= $this->_parent_model->suffix;
-			}
-			$foreign_model = array($has_many['module'] => $has_many['model']);
+			$foreign_model = array($has_many['module'] => $this->_parent_model->format_model_name($has_many['model']));
 		}
 		else
 		{
-			$foreign_model = $has_many;
-			if (!preg_match('#\w+'.preg_quote($this->suffix).'$#', $has_many))
-			{
-				$foreign_model .= $this->_parent_model->suffix;
-			}
-			
+			$foreign_model = $this->_parent_model->format_model_name($has_many);
 		}
 		
 		$id_field = $this->_parent_model->key_field();
@@ -3670,16 +3670,88 @@ Class Data_record {
 	
 	// --------------------------------------------------------------------
 	
+	protected function _get_belongs_to_relationship($var, $assoc = FALSE, $key_field = NULL, $return_method = NULL)
+	{
+		// first check in the relationships table to see if they exist
+		$relationships_model = $this->_parent_model->load_model(array('fuel' => 'relationships_model'));
+		$belongs_to = $this->_parent_model->belongs_to[$var];
+		
+		if (is_array($belongs_to) AND isset($belongs_to['module']))
+		{
+			$foreign_model = array($belongs_to['module'] => $this->_parent_model->format_model_name($belongs_to['model']));
+		}
+		else
+		{
+			$foreign_model = $this->_parent_model->format_model_name($belongs_to);
+		}
+		
+		$id_field = $this->_parent_model->key_field();
+		$foreign_model = $this->_parent_model->load_model($foreign_model);
+		$rel_where = array(
+			'candidate_table' => $this->_CI->$foreign_model->table_name(),
+			'foreign_table'   => $this->_parent_model->table_name(),
+			'foreign_key'     => $this->id,
+			);
+		$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where));
+		$output = array();
+		if ( ! empty($rel_ids))
+		{
+			
+			// construct the method name
+			$method = 'find_all';
+			if ($return_method == 'array')
+			{
+				$method .= '_array';
+			}
+
+			if ($assoc)
+			{
+				$method .= '_assoc';
+			}
+
+			// now grab the actual data
+			$this->_CI->$foreign_model->db()->where_in("{$rel_where['candidate_table']}.".$id_field, $rel_ids);
+
+			if ($assoc)
+			{
+				if (is_null($key_field))
+				{
+					$key_field = $this->_parent_model->key_field();
+				}
+				$foreign_data = $this->_CI->$foreign_model->$method($key_field);
+			}
+			else
+			{
+				$foreign_data = $this->_CI->$foreign_model->$method();
+			}
+			if ( ! empty($foreign_data))
+			{
+				$output = $foreign_data;
+			}
+		}
+		return $output;
+	}
+	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Returns whether the property name represents a relationship property
 	 *
 	 * @access	protected
 	 * @param	string	field name
+	 * @param	string	relationship type
 	 * @return	boolean
 	 */	
-	protected function _is_has_many_property($var)
+	protected function _is_relationship_property($var, $type = 'has_many')
 	{
-		return (! empty($this->_parent_model->has_many) AND array_key_exists($var, $this->_parent_model->has_many) AND ! empty($this->_parent_model->has_many[$var]));
+		if ( ! empty($this->_parent_model->$type) AND array_key_exists($var, $this->_parent_model->$type))
+		{
+			$rel = $this->_parent_model->$type;
+			if ( ! empty($rel[$var])) {
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
@@ -3725,7 +3797,7 @@ Class Data_record {
 		}
 		return $output;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**

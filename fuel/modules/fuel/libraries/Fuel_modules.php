@@ -159,6 +159,27 @@ class Fuel_modules extends Fuel_base_library {
 	
 	// --------------------------------------------------------------------
 	
+	function get_advanced_module_settings($advanced_module)
+	{
+		$file_path = MODULES_PATH.$advanced_module.'/config/'.$advanced_module.'.php';
+		
+		if (file_exists($file_path))
+		{
+			include($file_path);
+			
+			if ( ! empty($config[$advanced_module]['settings']))
+			{
+				return $config[$advanced_module]['settings'];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Add a module 
 	 *

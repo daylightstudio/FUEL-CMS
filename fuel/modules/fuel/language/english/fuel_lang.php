@@ -129,6 +129,7 @@ $lang['module_users'] = 'Users';
 $lang['module_permissions'] = 'Permissions';
 $lang['module_manage_cache'] = 'Page Cache';
 $lang['module_manage_activity'] = 'Activity Log';
+$lang['module_manage_settings'] = 'Settings';
 
 $lang['section_site'] = 'Site';
 $lang['section_blog'] = 'Blog';
@@ -136,6 +137,7 @@ $lang['section_modules'] = 'Modules';
 $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
 $lang['section_recently_viewed'] = 'Recently Viewed';
+$lang['section_settings'] = 'Settings';
 
 /*
 |--------------------------------------------------------------------------
