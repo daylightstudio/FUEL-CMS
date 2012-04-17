@@ -24,17 +24,17 @@
 		$create_url = (!empty($this->model->filters['group_id'])) ? $this->module_uri.'/create/'.$this->model->filters['group_id'] : $this->module_uri.'/create';
 		if (!empty($tree)) : ?>
 		<li class="active"><a href="#" id="toggle_list" class="ico ico_table" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_list')?></a></li>
-		<li class="end"><a href="#" id="toggle_tree" class="ico ico_tree" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_tree')?></a></li>
-		<li class="spacer end"><a href="<?=fuel_url($create_url)?>" class="ico ico_create"><?=$this->create_action_name?></a></li>
+		<li><a href="#" id="toggle_tree" class="ico ico_tree" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_tree')?></a></li>
+		<li><a href="<?=fuel_url($create_url)?>" class="ico ico_create"><?=$this->create_action_name?></a></li>
 		<?php else : ?>
-		<li class="end"><a href="<?=fuel_url($create_url)?>" class="ico ico_create" id="create_item"><?=$this->create_action_name?></a></li>
+		<li><a href="<?=fuel_url($create_url)?>" class="ico ico_create" id="create_item"><?=$this->create_action_name?></a></li>
 		<?php endif; ?>
 		<?php if ($this->fuel->auth->module_has_action('delete') && $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
-		<li class="spacer end"><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
+		<li><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
 		<?php endif; ?>
-		<li class="spacer end"><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
-		<?php if (!empty($export_data) AND $this->fuel->auth->has_permission($this->permission, 'export')) : ?>
-			<li class="spacer end"><a href="<?=fuel_url($this->module_uri.'/export')?>" class="ico ico_export" id="export_data"><?=lang('btn_export_data')?></a></li>
+		<li><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
+		<?php if ($this->exportable AND $this->fuel->auth->has_permission($this->permission, 'export')) : ?>
+			<li><a href="<?=fuel_url($this->module_uri.'/export')?>" class="ico ico_export" id="export_data"><?=lang('btn_export_data')?></a></li>
 		<?php endif; ?>
 	<?php endif; ?>
 	<?php if (!empty($this->list_actions)) : ?>
@@ -42,7 +42,7 @@
 		foreach($this->list_actions as $action => $label) : 
 		$lang_key = str_replace('/', '_', $action);
 		?>
-		<li class="spacer end"><?=anchor(fuel_url($action), $label, array('class' => 'ico ico_'.$lang_key))?></li>
+		<li><?=anchor(fuel_url($action), $label, array('class' => 'ico ico_'.$lang_key))?></li>
 		<?php endforeach; ?>
 	<?php endif; ?>
 	</ul>

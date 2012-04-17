@@ -40,7 +40,7 @@ class Data_table {
 	public $header_desc_class = 'desc'; // table header desc class
 	public $row_alt_class = 'alt'; // row alternating class
 	public $sort_js_func = "alert('you must assign a javascript function to the \$sort_js_func attribute of the Data_table instance'); return false;"; // javascript sorting function
-	public $body_attrs = array(); // tbody attributes
+	public $body_attrs = array(); // the tbody attributes
 	public $action_delimiter = '|'; // the text delimiter between each action
 	public $actions_field = 'first'; // which column the actions are in, first or last
 	public $auto_sort = TRUE; // should sorting be done automatically?
@@ -59,7 +59,7 @@ class Data_table {
 	protected $_field = NULL; // sorted column
 	protected $_field_formatters = array(); // an array of function to format columns
 	protected $_actions = array(); // table row actions
-	protected $_render_row_index = 0;
+	protected $_render_row_index = 0; // internal pointer to the row index
 	
 	
 	// --------------------------------------------------------------------

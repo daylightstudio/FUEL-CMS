@@ -17,13 +17,27 @@
 // ------------------------------------------------------------------------
 
 /**
- * User guide library
+ * Inspection class
+ *
+ * This class can be used to inspect other files and will return objects that can be 
+ * further used to generate for example, this page and many of the other pages found in this User Guide.
+ * It is essentially a wrapper around many of the convenient objects and methods of the <a href="http://php.net/manual/en/class.reflectionclass.php" target="_blank">PHP Refelction class</a>
+ * but provides extra functionality for parsing out comment information. Below is a list of related classes used by the Inspection class:
+ <ul>
+ 	<li><a href="#inspection_class">Inspection_class</a></li>
+ 	<li><a href="#inspection_function">Inspection_function</a></li>
+ 	<li><a href="#inspection_method">Inspection_method</a></li>
+ 	<li><a href="#inspection_param">Inspection_param</a></li>
+ 	<li><a href="#inspection_param">Inspection_property</a></li>
+ 	<li><a href="#inspection_comment">Inspection_comment</a></li>
+ 	<li><a href="#inspection_base">Inspection_base</a></li>
+ </ul>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/modules/page_analysis
+ * @link		http://www.getfuelcms.com/user_guide/libraries/inspection
  */
 
 // --------------------------------------------------------------------
@@ -60,6 +74,17 @@ class Inspection {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes the object by grabbing the contents of a file for inspection
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function initialize($params = NULL)
 	{
 		if (!empty($params))
@@ -137,6 +162,15 @@ class Inspection {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the classes found in a file as an Inspection_class object
+	 *
+	 * @access	public
+	 * @param	string	The name of a class. If not provided, then an array of all the classes will be returned (optional)
+	 * @return	void
+	 */	
 	function classes($class = NULL)
 	{
 		if (!empty($class))
@@ -150,6 +184,15 @@ class Inspection {
 		return $this->_classes;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the functions found in a file as an Inspection_function object
+	 *
+	 * @access	public
+	 * @param	array	The name of a function. If not provided, then an array of all the functions will be returned (optional)
+	 * @return	void
+	 */	
 	function functions($function = NULL)
 	{
 		if (!empty($function))
@@ -163,6 +206,15 @@ class Inspection {
 		return $this->_functions;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the main comment blocks found in a file as an <a href="#inspection_comment">Inspection_comment</a> object
+	 *
+	 * @access	public
+	 * @param	array	The name of a function. If not provided, then an array of all the functions will be returned (optional)
+	 * @return	void
+	 */	
 	function comments($comment = NULL)
 	{
 		if (isset($comment))
@@ -176,7 +228,15 @@ class Inspection {
 		return $this->_comments;
 	}
 	
-	//http://stackoverflow.com/questions/928928/determining-what-classes-are-defined-in-a-php-class-file
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Parses and returns the name of the classes found in the string. Originally found here: http://stackoverflow.com/questions/928928/determining-what-classes-are-defined-in-a-php-class-file
+	 *
+	 * @access	public
+	 * @param	string	The code to parse
+	 * @return	void
+	 */	
 	function parse_classes($code)
 	{
 		$classes = array();
@@ -197,7 +257,16 @@ class Inspection {
 		return $classes;
 	}
 
-	//http://stackoverflow.com/questions/2666554/how-to-get-list-of-declared-functions-with-their-data-from-php-file
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Parses and returns the name of the function found in a string. Originally found here: http://stackoverflow.com/questions/2666554/how-to-get-list-of-declared-functions-with-their-data-from-php-file
+	 *
+	 * @access	public
+	 * @param	string	The code to parse
+	 * @param	boolean	Determines whether to include functions that begin with an underscore
+	 * @return	void
+	 */	
 	function parse_functions($code, $include_underscore_funcs = FALSE)
 	{
 		$functions = array();
@@ -261,6 +330,15 @@ class Inspection {
 		return $functions;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Parses and returns an array of comments found in a string
+	 *
+	 * @access	public
+	 * @param	string	The code to parse
+	 * @return	array
+	 */	
 	function parse_comments($code)
 	{
 		$comments = array();
@@ -281,42 +359,58 @@ class Inspection {
 }
 
 /**
- * Inspection class ... class
+ * Inspection class ... class. A wrapper around the <a href="http://php.net/manual/en/class.reflectionclass.php" target="_blank">PHP ReflectionClass</a>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_class extends Inspection_base {
 	
-	protected $_methods;
-	protected $_props;
-	protected $_file; // for further processing for properties
+	protected $_methods = NULL; // the method objects of the class
+	protected $_file = NULL; // for further processing for properties
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the class
+	 * @param	string	the name of the file the class belongs to (optional)
+	 * @return	void
+	 */	
 	function __construct($class, $file = '')
 	{
 		parent::__construct('ReflectionClass', $class);
 		$this->_file = $file;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Properties of the class
+	 *
+	 * @access	public
+	 * @param	array	The type of properties to include. Options are 'public', 'protected', and 'private. Default will only show public'(optional)
+	 * @param	boolean	Determines whether to include any parent properties. Default is FALSE (optional)
+	 * @return	array 	An array of Inspection_property objects
+	 */	
 	function properties($types = array(), $include_parent = FALSE)
 	{
-		if (!isset($this->_props))
+		$ref_props = $this->reflection->getProperties();
+		
+		foreach($ref_props as $p)
 		{
-			$ref_props = $this->reflection->getProperties();
+			$prop_obj = new Inspection_property($this->name, $p->name);
+			$this->_props[$p->name] = $prop_obj;
 			
-			foreach($ref_props as $p)
-			{
-				$prop_obj = new Inspection_property($this->name, $p->name, $this);
-				$this->_props[$p->name] = $prop_obj;
-				
-			}
 		}
 		
 		// get properties area to parse out for comments later on
-		preg_match('#[c|C]lass\s+'.$this->name.'.+\{.+function __construct#Us', $this->_file, $props_match);
+		preg_match('#[c|C]lass\s+'.$this->name.'\s+.*\{.+function __construct#Us', $this->_file, $props_match);
 		if (isset($props_match[0]))
 		{
 			$props_block = $props_match[0];
@@ -357,28 +451,27 @@ class Inspection_class extends Inspection_base {
 				foreach($types as $type)
 				{
 					$type_method = 'is'.ucfirst($type);
+					$matches = array();
 					if (method_exists($p->reflection, $type_method) AND $p->reflection->$type_method())
 					{
 						// look for comments on the right of the property
-						preg_match('#\s*'.$type.'\s+(\$'.$name.').*; *//\s*(.+)#', $props_block, $matches);
-						if (isset($matches[2]) AND !$p->comment->text())
+						preg_match('#\s*'.$type.'\s+((static|const)*\s+)*(\$'.$name.')\s+.*; *//\s*(.+)#', $props_block, $matches);
+						if (isset($matches[4]) AND !$p->comment->text())
 						{
-							$p->comment->set_text($matches[2]);
+							$p->comment->set_text($matches[4]);
 						}
 						else
 						{
 							// if not found on the right, then we look to the direct top
-							preg_match('#//\s*(.+)\s*\n\s+'.$type.'\s+(\$'.$name.').*#Um', $props_block, $matches);
+							preg_match('#$\s+//\s*(.+)\s*\n\s+'.$type.'\s+(\$'.$name.')\s+.*#Um', $props_block, $matches);
+							
 							if (isset($matches[1]) AND !$p->comment->text())
 							{
 								$p->comment->set_text($matches[1]);
 							}
 							
 						}
-						
-						
 						$props[$name] = $p;
-						
 					}
 				}
 			}
@@ -390,6 +483,14 @@ class Inspection_class extends Inspection_base {
 		return $props;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The name of the parent class if it exists
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function parent()
 	{
 		$parent = $this->reflection->getParentClass();
@@ -399,6 +500,15 @@ class Inspection_class extends Inspection_base {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an <a href="#inspection_method">Inspection_method</a>
+	 *
+	 * @access	public
+	 * @param	string	The name of the method to return
+	 * @return	object
+	 */	
 	function method($method)
 	{
 		$methods = $this->methods();
@@ -409,6 +519,17 @@ class Inspection_class extends Inspection_base {
 		return FALSE;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of all the class methods. The array contains <a href="#inspection_method">Inspection_method</a> objects
+	 *
+	 * @access	public
+	 * @param	array	The type of properties to include. Options are 'public', 'protected', and 'private. Default will only show public'(optional)
+	 * @param	boolean	Determines whether to include any parent properties. Default is FALSE (optional)
+	 * @param	boolean	Determines whether to include the contstructor method. Default is FALSE (optional)
+	 * @return	array
+	 */	
 	function methods($types = array(), $include_parent = FALSE, $include_constructor = FALSE)
 	{
 		if (!isset($this->_methods))
@@ -476,16 +597,25 @@ class Inspection_class extends Inspection_base {
 
 
 /**
- * Inspection function class
+ * Inspection function class. A wrapper around the <a href="http://www.php.net/manual/en/class.reflectionfunction.php" target="_blank">PHP ReflectionFunction</a>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_function extends Inspection_base {
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the function
+	 * @return	void
+	 */	
 	function __construct($function)
 	{
 		parent::__construct('ReflectionFunction', $function);
@@ -494,18 +624,28 @@ class Inspection_function extends Inspection_base {
 
 
 /**
- * Inspection method class
+ * Inspection method class. A wrapper around the <a href="http://www.php.net/manual/en/class.reflectionmethod.php" target="_blank">PHP ReflectionMethod</a>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_method extends Inspection_base {
 	
-	protected $_params;
+	protected $_params = NULL; // the parameters objects of the method
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the method
+	 * @param	string	the corresponding object of the method
+	 * @return	void
+	 */	
 	function __construct($method, $obj)
 	{
 		parent::__construct('ReflectionMethod', $method, $obj);
@@ -515,21 +655,32 @@ class Inspection_method extends Inspection_base {
 
 
 /**
- * Inspection class object
+ * Inspection class object. A wrapper around the <a href="http://www.php.net/manual/en/class.reflectionproperty.php" target="_blank">PHP ReflectionProperty</a>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_property extends Inspection_base {
-	public $class;
-	public $value;
 	
-	function __construct($obj, $method = NULL)
+	public $class = NULL; // the name of the class the property belongs to
+	public $value = NULL; // the value of the class property
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the property
+	 * @param	string	the class name the property belongs to (optional)
+	 * @return	void
+	 */	
+	function __construct($property = NULL, $class = NULL)
 	{
-		parent::__construct('ReflectionProperty', $method, $obj);
+		parent::__construct('ReflectionProperty', $class, $property);
 		if ($this->is_public())
 		{
 			$class = $this->reflection->class;
@@ -539,21 +690,28 @@ class Inspection_property extends Inspection_base {
 	
 }
 
-
 /**
- * Inspection param class
+ * Inspection param class. A wrapper around the <a href="http://www.php.net/manual/en/class.reflectionparameter.php" target="_blank">PHP ReflectionParameter</a>
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_param extends Inspection_base {
 	
-	public $function;
+	// --------------------------------------------------------------------
 	
-	function __construct($method, $obj = NULL)
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the method
+	 * @param	string	the class name the property belongs to (optional)
+	 * @return	void
+	 */	
+	function __construct($method = NULL, $obj = NULL)
 	{
 		if (isset($obj))
 		{
@@ -564,7 +722,16 @@ class Inspection_param extends Inspection_base {
 			parent::__construct('ReflectionParameter', $method);
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns the default value of a parameter
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether you want the default value as a string or as an object
+	 * @return	array
+	 */	
 	function default_value($to_string = FALSE)
 	{
 		if ($this->is_default_value_available())
@@ -597,7 +764,15 @@ class Inspection_param extends Inspection_base {
 		
 		return FALSE;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns whether the function parameter is an array or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_default_array()
 	{
 		if ($this->is_array())
@@ -618,27 +793,45 @@ class Inspection_param extends Inspection_base {
 
 
 /**
- * Inspection comment class
+ * Inspection comment class. Convenient for dissecting a comment block further
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
 class Inspection_comment {
 	
-	protected $_text = '';
-	protected $_description;
-	protected $_example;
-	protected $_tags;
+	protected $_text = ''; // the comment raw text
+	protected $_description = NULL; // the description part of the comment
+	protected $_example = NULL; // examples found in the comment
+	protected $_tags = NULL; // tags found in the comment
 	protected $_filters = array(); // pre processing functions
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the comment raw text
+	 * @return	void
+	 */	
 	function __construct($comment)
 	{
 		$this->initialize($comment);
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Initializes the comment
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	void
+	 */	
 	function initialize($comment)
 	{
 		$this->_text = (string)$comment;
@@ -657,7 +850,9 @@ class Inspection_comment {
 			"see"		=>	'',
 			"since"		=>	'',
 			"tutorial"	=>	'',
-			"version"	=>	''
+			"version"	=>	'',
+			"prefix"	=>	'', // specific to FUEL documentation
+			"autodoc"	=>	'', // specific to FUEL documentation
 		);
 		$this->tags = $tags;
 		
@@ -683,6 +878,15 @@ class Inspection_comment {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a comment "tag" (e.g. param, return, access... etc). If no value is passed, an array of tags will be returned
+	 *
+	 * @access	public
+	 * @param	string The name of the tag (optional)
+	 * @return	mixed
+	 */	
 	function tags($type = 'param')
 	{
 		if (!empty($type))
@@ -696,6 +900,16 @@ class Inspection_comment {
 		return $this->_tags;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a parameter tag
+	 *
+	 * @access	public
+	 * @param	int		The index (order) of the parameter to retrieve
+	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
+	 * @return	boolean
+	 */	
 	function param($index, $type = NULL)
 	{
 		if (!isset($this->_tags['param']))
@@ -728,7 +942,17 @@ class Inspection_comment {
 		
 		return $value;
 	}
-
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a parameter tag
+	 *
+	 * @access	public
+	 * @param	int		The index (order) of the parameter to retrieve
+	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
+	 * @return	boolean
+	 */	
 	function return_value($type = NULL)
 	{
 		if (!isset($this->_tags['return']))
@@ -758,6 +982,27 @@ class Inspection_comment {
 		return $value;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the comment description. You can pass it an array of formatting parameters which include:
+	<ul>
+		<li><strong>markdown:</strong> applies the <a href="[user_guide_url]helpers/markdown_helper">markdown</a> function </li>
+		<li><strong>short:</strong> filters just the first paragraphs of the description if multiple paragraphs </li>
+		<li><strong>long:</strong> returns the entire description</li>
+		<li><strong>one_line:</strong> filters the description to appear on one line by removing returns</li>
+		<li><strong>entities:</strong> converts html entities</li>
+		<li><strong>eval:</strong> evaluates php code</li>
+		<li><strong>periods:</strong> adds periods at the end of lines that don't have them</li>
+		<li><strong>ucfirst:</strong> uppercases the first word</li>
+	</ul>
+	 *
+	 * @access	public
+	 * @param	int		The index (order) of the parameter to retrieve
+	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
+	 * @return	boolean
+	 */	
 	function description($format = FALSE)
 	{
 
@@ -882,6 +1127,10 @@ class Inspection_comment {
 						$lines = preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', trim($lines));
 						
 						$desc = $lines;
+					case 'ucfirst':
+						$desc = ucfirst($desc);
+						break;
+
 				}
 			}
 		}
@@ -900,6 +1149,16 @@ class Inspection_comment {
 		return $desc;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a code example. Must be wrapped in a "code" HTML tag
+	 *
+	 * @access	public
+	 * @param	string	The opening tag to wrap the example in
+	 * @param	string	The closing tag to wrap the example in
+	 * @return	string
+	 */	
 	function example($opening = '', $closing = '')
 	{
 		if (!isset($this->_example))
@@ -915,17 +1174,43 @@ class Inspection_comment {
 		return $example;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the raw text of the description
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function text()
 	{
 		return $this->_text;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the comment text
+	 *
+	 * @access	public
+	 * @param	string	The comment text
+	 * @return	boolean
+	 */	
 	function set_text($text)
 	{
 		$this->_text = $text;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Adds a filter to be used for processing comments (e.g. the [ user_guide_url ] is rendered using a filter)
+	 *
+	 * @access	public
+	 * @param	string	The name of the function or a lamda
+	 * @param	string	A key value to assign to the filter which can be used in removing filters later
+	 * @return	boolean
+	 */	
 	function add_filter($func, $key = NULL)
 	{
 		if (empty($key))
@@ -938,11 +1223,29 @@ class Inspection_comment {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes a filter from the comment
+	 *
+	 * @access	public
+	 * @param	string	The key value of the filter you want to remove
+	 * @return	boolean
+	 */	
 	function remove_filter($key)
 	{
 		unset($this->_filters[$key]);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Executes the filter on a source (e.g. the comment)
+	 *
+	 * @access	public
+	 * @param	string	The comment text
+	 * @return	boolean
+	 */	
 	protected function filter($source)
 	{
 		foreach($this->_filters as $func)
@@ -954,25 +1257,34 @@ class Inspection_comment {
 	
 }
 
-
-
 /**
- * Inspection class object
+ * Inspection base class object... should be abstract object but causes issue if trying to generate documentation
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @autodoc		FALSE
+ * @autodoc		TRUE
  */
-abstract class Inspection_base {
+class Inspection_base {
 	
-	public $reflection; // Reflection object
-	public $comment; // Fuel_documentizer_comment
-	public $name; // basic name value
-	public $obj; // the object (if any)
-	public $params; // the parameters of the object (if any)
+	public $reflection = NULL; // Reflection object
+	public $comment = NULL; // Inspection_comment
+	public $name = NULL; // basic name value
+	public $obj = NULL; // the object (if any)
+	public $params = NULL; // the parameters of the object (if any)
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	string	the name of the Reflection class to use
+	 * @param	string	the method name on the object
+	 * @param	string	the class name of the object
+	 * @return	void
+	 */	
 	function __construct($ref_class = NULL, $method = NULL, $obj = NULL)
 	{
 		if (!empty($ref_class) AND !empty($method))
@@ -981,6 +1293,15 @@ abstract class Inspection_base {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Executes the filter on a source (e.g. the comment)
+	 *
+	 * @access	public
+	 * @param	string	The comment text
+	 * @return	void
+	 */	
 	function initialize($ref_class, $method, $obj = NULL)
 	{
 		if (is_object($method) AND strncasecmp(get_class($method), 'Reflection', 10) === 0)
@@ -1018,17 +1339,41 @@ abstract class Inspection_base {
 		}
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * The friendly name of the object
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function friendly_name()
 	{
 		return humanize($this->name);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The comment object
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function comment()
 	{
 		return $this->comment;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a method or function Inspection_parameter object
+	 *
+	 * @access	public
+	 * @param	int	The index number of the parameter you want to retrieve
+	 * @return	object
+	 */	
 	function param($index)
 	{
 		if (isset($this->params[$index]))
@@ -1042,12 +1387,30 @@ abstract class Inspection_base {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of method or function Inspection_parameters
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function params()
 	{
 		return $this->params;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Magic method that will automatically look on the <a href="http://php.net/manual/en/class.reflectionclass.php" target="_blank">Reflection class object</a>
+	 *  for a camelized version of the method name
+	 *
+	 * @access	public
+	 * @param	string	The method name
+	 * @param	array	An array of arguments to pass to the Reflection class method being called
+	 * @return	boolean
+	 */	
 	function __call($name, $args)
 	{
 		if (!preg_match('#^get|is|set#', $name))
@@ -1072,9 +1435,10 @@ abstract class Inspection_base {
 		}
 		else
 		{
-			throw new Exception(lang('error_method_does_not_exist', $name));
+			//throw new Exception(lang('error_method_does_not_exist', $name));
+			return FALSE;
 		}
 	}
 }
-/* End of file Fuel_user_guide.php */
-/* Location: ./modules/fuel/libraries/Fuel_user_guide.php */
+/* End of file Inspection.php */
+/* Location: ./modules/fuel/libraries/Inspection.php */

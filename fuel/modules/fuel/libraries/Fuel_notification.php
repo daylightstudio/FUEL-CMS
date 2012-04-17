@@ -29,23 +29,23 @@
 
 class Fuel_notification extends Fuel_base_library {
 
-	public $to = '';
-	public $from = '';
-	public $from_name = '';
-	public $subject = '';
-	public $message = '';
-	public $attachments = array();
-	public $use_dev_mode = TRUE;
+	public $to = ''; // the to address to send the notification
+	public $from = ''; // the from address of the sender
+	public $from_name = ''; // the from name of the sender
+	public $subject = ''; // the subject line of the notification
+	public $message = ''; // the message
+	public $attachments = array(); // attachments
+	public $use_dev_mode = TRUE; // whether to use dev mode or not which means it will send to the dev_email address in the config
 
 	// --------------------------------------------------------------------
 	
 	/**
 	 * Constructor
 	 *
-	 * Accepts an associative array as input, containing preferences (optional)
+	 * Accepts an associative array as input, containing preferences
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	Config preferences (optional)
 	 * @return	void
 	 */	
 	function __construct($params = array())
@@ -53,6 +53,15 @@ class Fuel_notification extends Fuel_base_library {
 		parent::__construct($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sends an email message
+	 *
+	 * @access	public
+	 * @param	array	Email preferences (optional)
+	 * @return	boolean
+	 */	
 	function send($params = array())
 	{
 		// set defaults for from and from name
@@ -109,6 +118,18 @@ class Fuel_notification extends Fuel_base_library {
 		
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Converts an array of data (e.g. $_POST) into a key value message format
+	 *
+	 * Used for form submissions
+	 *
+	 * @access	public
+	 * @param	array	An array of data to humanize and turn into a message
+	 * @param	string	An intro message to place before the data (optional)
+	 * @return	string
+	 */	
 	function data_message($data, $intro = '')
 	{
 		$msg = $intro."\n\n";
@@ -126,18 +147,41 @@ class Fuel_notification extends Fuel_base_library {
 		}
 		return $msg;
 	}
-	
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines if the site is in dev mode and whether "use_dev_mode" is specified as TRUE on the object
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_dev_mode()
 	{
 		return $this->use_dev_mode == TRUE AND (is_dev_mode());
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of error messages if any were set
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function errors()
 	{
 		return $this->_errors;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines whether there are any errors on the object
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function has_errors()
 	{
 		return (count($this->_errors) > 0);

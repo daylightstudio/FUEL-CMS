@@ -65,13 +65,15 @@ class Fuel_permissions extends Fuel_base_library {
 	 * Assigns a permission to a user
 	 *
 	 * @access	public
-	 * @param	mixed
-	 * @return	string
+	 * @param	int
+	 * @param	int
+	 * @return	boolean
 	 */
-	function assign_to_user($user_id, $perm_id)
+/*	function assign_to_user($user_id, $perm_id)
 	{
 		$this->fuel->load_model('permissions');
 		$user = $this->get($user_id);
+		
 		if (!isset($user->id)) return FALSE;
 
 		$permission = $this->fuel->permissions->get($perm_id);
@@ -81,7 +83,7 @@ class Fuel_permissions extends Fuel_base_library {
 		$perm_to_user->permission_id = $user->id;
 		$perm_to_user->user_id = $user->id;
 		return $perm_to_user->save();
-	}
+	}*/
 
 	
 

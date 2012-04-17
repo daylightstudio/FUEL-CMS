@@ -11,8 +11,6 @@ class Assets_model extends CI_Model {
 	public $boolean_fields = array(); // placed here to prevent errors since we are not extended Base_module_model
 	public $default_file_types = 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'; // default file types to associate to folders without associations
 	
-	protected $_dirs = array('images', 'pdf'); // default asset directories that can be managed
-	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf'); // default directory file types
 	protected $validator = NULL; // the validator object
 
 	private $_encoded = FALSE;
@@ -27,9 +25,6 @@ class Assets_model extends CI_Model {
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		
-		$this->_dirs = list_directories($CI->asset->assets_server_path(), $CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
-		
-		$this->_dir_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
 		$CI->load->helper('directory');
 		$CI->load->helper('file');
 		

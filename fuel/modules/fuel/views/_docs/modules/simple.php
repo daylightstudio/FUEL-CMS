@@ -265,6 +265,13 @@ on the key value specified in the config (e.g. example):</p>
 			<td>None</td>
 			<td>The advanced module folder in which it lives in</td>
 		</tr>
+		<tr>
+			<td><strong>exportable</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>Will display an "Export" button on the list view page that will allow users to export the currently filtered list data</td>
+		</tr>
+		
 	</tbody>
 </table>
 

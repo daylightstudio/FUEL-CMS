@@ -1,5 +1,5 @@
 <h1>Module Tools</h1>
-<p>New to FUEL CMS 1.0 is the ability to create advance module tools that can be used accessed from the <a href="<?=user_guide_url('general/inline-editing')?>">inline editing toolbar</a> to perform certain actions.
+<p>New to FUEL CMS 1.0 is the ability to create advanced module tools that can be accessed from the <a href="<?=user_guide_url('general/inline-editing')?>">inline editing toolbar</a> to perform certain actions.
 For example, the <dfn>pag_analysis</dfn> and <dfn>validate</dfn> modules both provide tools to analyze and validate the contents of the currently viewed page.</p>
 
 <p>To add a toolbar tool, you can simply add a 'toolbar', parameter in your advanced modules configuration. The value should be an array with the 

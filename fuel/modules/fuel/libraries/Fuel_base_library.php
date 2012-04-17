@@ -32,8 +32,8 @@
 
 class Fuel_base_library {
 	
-	protected $CI; // reference to the CI super object
-	protected $fuel; // reference to the fuel object
+	protected $CI = NULL; // reference to the CI super object
+	protected $fuel = NULL; // reference to the fuel object
 	protected $permission = ''; // permission required to run
 	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors

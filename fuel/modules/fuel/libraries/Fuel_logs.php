@@ -30,7 +30,7 @@
 
 class Fuel_logs extends Fuel_base_library {
 	
-	public $location = 'db';
+	public $location = 'db'; // the location to write the log. The default is the database. Otherwise it will write to applications logs folder
 	
 	// --------------------------------------------------------------------
 	
@@ -91,9 +91,7 @@ class Fuel_logs extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initialize the object and set module initialization parameters
-	 *
-	 * Accepts an associative array as input, containing module initialization preferences.
+	 * Returns the FUEL logs_model object
 	 *
 	 * @access	public
 	 * @return	object

@@ -37,7 +37,10 @@ require_once('Fuel_modules.php');
 
 class Fuel extends Fuel_base_library {
 	
-	protected $_attached = array(); // attached objects
+	 // attached objects
+	protected $_attached = array();
+	
+	 // objects to automatically attach
 	protected $_auto_attach = array(
 									'admin',
 									'assets',
@@ -56,9 +59,10 @@ class Fuel extends Fuel_base_library {
 									'settings',
 									'sitevars',
 									'users',
-									); // objects to automatically attach
+									);
 
-	private static $_instance; // the singleton instance
+	// the singleton instance
+	private static $_instance;
 	
 	/**
 	 * Constructor

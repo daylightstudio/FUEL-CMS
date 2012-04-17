@@ -28,6 +28,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 	</li>
 </ul>
 
+<h3>Basic Examples</h3>
 <pre class="brush:php">
 // EXAMPLES if used in your controller
 $page = $this->fuel->pages->create();
@@ -42,6 +43,7 @@ $this->fuel->assets->upload();
 <p>Additionally, you have access to advanced module objects if a class exists in the advanced module's libraries folder
 with a naming convention of <span class="file">Fuel_{module}.php</span>. The following examples assume you have the advanced modules installed:</p>
 
+<h3>Advanced Module Examples</h3>
 <pre class="brush:php">
 $posts = $this->fuel->blog->get_posts();
 $this->fuel->backup->do_backup();
@@ -49,7 +51,7 @@ $this->fuel->validate->html('mypage');
 $this->fuel->tester->run();
 </pre>
 
-<p class="important">Review the Specific Module Reference in this user guide for a list of methods available for your installed advanced modules.</p>
+<p class="important">Review the Advanced Module Reference in this user guide for a list of methods available for your installed advanced modules.</p>
 
 <p class="important">The above advanced module classes inherit from the <a href="<?=user_guide_url('libraries/fuel_advanced_module')?>">Fuel_advanced_module</a> class (which itself inherits from the <a href="<?=user_guide_url('libraries/fuel_base_library')?>">Fuel_base_library</a> class).</p>
 <br />

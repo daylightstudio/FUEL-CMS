@@ -39,7 +39,7 @@ class Fuel_users extends Fuel_module {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns a user
+	 * Returns a user provided a user ID
 	 *
 	 * @access	public
 	 * @param	mixed
@@ -68,7 +68,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function assign_permissions_to_user($perms, $user_id)
+/*	function assign_permissions_to_user($perms, $user_id)
 	{
 		foreach($perms as $perm)
 		{
@@ -78,7 +78,7 @@ class Fuel_users extends Fuel_module {
 			}
 		}
 		return $this->has_errors();
-	}
+	}*/
 
 	// --------------------------------------------------------------------
 
@@ -89,10 +89,13 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function assign_permission_to_user($perm_id, $user_id)
+/*	function assign_permission_to_user($perm_id, $user_id)
 	{
 		$this->fuel->load_model('permissions');
 		$user = $this->get($user_id);
+		$permissions = array();
+		$user->permissions = $permissions;
+		$user->save();
 		if (!isset($user->id)) return FALSE;
 
 		$permission = $this->fuel->permissions->get($perm_id);
@@ -102,7 +105,7 @@ class Fuel_users extends Fuel_module {
 		$perm_to_user->permission_id = $user->id;
 		$perm_to_user->user_id = $user->id;
 		return $perm_to_user->save();
-	}
+	}*/
 
 	// --------------------------------------------------------------------
 

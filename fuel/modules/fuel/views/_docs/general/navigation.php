@@ -45,7 +45,7 @@ By default, the <dfn>fuel_nav()</dfn> function will first check to see if there 
 <span class="file">nav.php</span> file.</p>
 
 <p class="important">Although FUEL provides a way for you to create a navigation item when creating a page, 
-It's important to note that navigation in FUEL is not directly associated with pages which can give you greater flexibility in your structures.</p>
+it's important to note that navigation in FUEL is not directly associated with pages which can give you greater flexibility in your structures.</p>
 
 <h2>Usage Examples</h2>
 <p>The most common way to render a navigation structure is to use the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_nav')?>">fuel_nav()</a> function which is a wrapper around the 

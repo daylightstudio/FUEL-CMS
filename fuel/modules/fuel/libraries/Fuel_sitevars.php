@@ -37,7 +37,7 @@ class Fuel_sitevars extends Fuel_base_library {
 	 * Returns an array of site variables pertaining to a given URI path
 	 *
 	 * @access	public
-	 * @param	string	A URI path
+	 * @param	string	A URI path. If left blank, the current URI path will be used (optional)
 	 * @return	array
 	 */	
 	function get($location = NULL)

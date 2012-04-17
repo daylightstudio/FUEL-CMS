@@ -20,7 +20,7 @@
 	<li><strong>BASE_URL</strong>: The web path in which all site urls are based. Is also used as the <dfn>$config['base_url']</dfn> value in the <span class="file">fuel/application/config/config.php</span> file</li>
 </ul>
 
-<h2>Constants for Advanced Modules.</h2>
+<h2>Constants for Advanced Modules</h2>
 <p>When creating an advanced module, you should also create a constants file at <span class="file">/fuel/modules/{module}/config/{module}_constnats.php</span> 
 with at least the following constants:</p>
 <pre class="brush:php">

@@ -32,12 +32,9 @@
 
 class Fuel_assets extends Fuel_base_library {
 	
+	public $dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf'); // the default file types to associate with asset different asset folders
 	protected $_data = array(); // holds uploaded file data
-	protected $_dirs = array('images', 'pdf');
-	protected $_dir_filetypes = array(
-										'images' => 'jpg|jpe|jpeg|png|gif',
-										'pdf' => 'pdf'
-									);
+	protected $_dirs = array('images', 'pdf'); // the directories the CMS has access to upload files
 	
 	// --------------------------------------------------------------------
 	
@@ -77,7 +74,7 @@ class Fuel_assets extends Fuel_base_library {
 	{
 		parent::initialize($params);
 		$this->normalize_files_array();
-		$this->_dir_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
+		$this->dir_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
 		$this->_dirs = list_directories($this->CI->asset->assets_server_path(), $this->CI->fuel->config('assets_excluded_dirs'), FALSE, TRUE);
 	}
 	
@@ -475,13 +472,13 @@ class Fuel_assets extends Fuel_base_library {
 		if ($return_array)
 		{
 			$return = array();
-			foreach($this->_dir_filetypes as $key => $filetype)
+			foreach($this->dir_filetypes as $key => $filetype)
 			{
 				$return[$key] = $this->dir_filetype($file_type, TRUE);
 			}
 			return $return;
 		}
-		return $this->_dir_filetypes;
+		return $this->dir_filetypes;
 	}
 
 	// --------------------------------------------------------------------
@@ -496,12 +493,12 @@ class Fuel_assets extends Fuel_base_library {
 	 */	
 	function dir_filetype($filetype, $return_array = FALSE)
 	{
-		if (!isset($this->_dir_filetypes[$filetype]))
+		if (!isset($this->dir_filetypes[$filetype]))
 		{
 			return FALSE;
 		}
 		
-		$filetypes = $this->_dir_filetypes[$filetype];
+		$filetypes = $this->dir_filetypes[$filetype];
 		if ($return_array)
 		{
 			return explode('|', $filetypes);

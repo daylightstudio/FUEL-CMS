@@ -1,13 +1,34 @@
+<?php 
+$CI->load->library('inspection');
+$CI->inspection->initialize(array('file' => FUEL_PATH.'core/MY_Model.php'));
+$classes = $CI->inspection->classes();
+$my_model = $classes['MY_Model'];
+?>
+
 <h1>Models</h1>
-<p>There are two main classes FUEL provides for creating models. The first, <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>, is an extension of the 
-<a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CodeIgniter model</a> class that wraps logic around your table models.
+<p>There are two main classes FUEL provides for creating models. The first, <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>, 
+extends the <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.
+It was developed to augment the <a href="http://codeigniter.com/user_guide/database/active_record.html" target="_blank">CodeIgniter active record</a> class and <strong>DOES NOT</strong> change any of those methods.
 The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a>, extends <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a> and provides 
 <a href="<?=user_guide_url('modules/simple')?>">simple module</a> specific methods and is the class you will most likely want to extend for your models. </p>
 
-<p>Both classes allow you to create simple to complex form interfaces with the model's <dfn>MY_Model::form_fields()</dfn>
+<p>Both classes allow you to create <a href="<?=user_guide_url('general/forms')?>">simple to complex form interfaces</a> with the model's <dfn>MY_Model::form_fields()</dfn>
 method, which gets passed to the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> object to generate the forms in the CMS.</p>
 
-<h2>Example</h2>
+<p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record">API documentation for both table and record model classes</a> (explained below).</p>
+<ul>
+	<li><a href="#example">Example</a></li>
+	<li><a href="#table_result_record">Table, Result and Record Classes</a></li>
+	<li><a href="#initializing">Initializing</a></li>
+	<li><a href="#extending">Extending</a></li>
+	<li><a href="#custom_records">Custom Record Objects</a></li>
+	<li><a href="#magic_methods">Magic Methods</a></li>
+	<li><a href="#active_record">Working with Active Record</a></li>
+	<li><a href="#hooks">Hooks</a></li>
+	<li><a href="#relationships">Relationships</a></li>
+</ul>
+
+<h2 id="example">Example</h2>
 <p>Below is an example of a quotes model (a simple module in the CMS), and the SQL for the table to house the quotes data.</p>
 
 <pre class="brush:sql">
@@ -61,4 +82,255 @@ class Quote_model extends Base_module_record {
 </pre>
 
 <p class="important">For a tutorial on creating simple modules, <a href="<?=user_guide_url('modules/tutorial')?>">click here</a>.</p>
+
+
+<p class="important">MY_Model requires the following classes and helpers:</p>
+<ul>
+	<li><a href="<?=user_guide_url('libraries/validator')?>">Validator Class</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_string_helper')?>">String Helper</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper')?>">Date Helper</a></li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html">Security Helper</a></li>
+</ul>
+
+<h2 id="table_result_record">Table, Result and Record Classes</h2>
+<p>Models are actually made up of 2-3 classes:</p>
+<ul>
+	<li><a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model/data_set_class_functions')?>"><strong>Data Set Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attibutes of the table</a></li>
+</ul>
+
+
+<h2 id="initializing">Initializing the Class</h2>
+
+<p>The Model class is initialized using the <dfn>$this->load->model</dfn> function:</p>
+
+<pre class="brush: php">$this->load->model('examples_model');</pre>
+<p>Once loaded, the Model object will be available using: <dfn>$this->examples_model</dfn>.</p>
+
+<h2 id="configuring">Configuring Model Information</h2>
+<?php 
+$vars['class'] = $my_model;
+echo user_guide_block('properties', $vars);
+?>
+
+
+<h2 id="extending">Extending Your Model</h2>
+<p>When extending MY_Model or Base_module_model, it is recommended to use a plural version of the objects name, in
+this example <strong>Examples</strong>, with the suffix of <strong>_model</strong> (e.g.<dfn>Examples_model</dfn>). 
+The plural version is recommended because the singular version is often used for the custom record class (see below for more). 
+</p>
+
+<p>The <strong>__construct</strong> method can be passed the name of the table to map to as the first argument and then you can optionally
+set other properties in the second constructor argument (see above for additional properties).
+</p>
+<pre class="brush: php">
+class Examples_model extends MY_Model {
+
+    function __construct()
+    {
+        parent::__construct('example', array('required' => 'name')); // table name, initialization params
+    }
+}
+</pre>
+<p class="important">Most modules in FUEL extend the <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a> class,
+a child of <dfn>MY_Model</dfn>, but has some extended functionality needed for modules.</p>
+
+
+<p>You can also define any of the class properties listed above like so:</p>
+<pre class="brush: php">
+class Examples_model extends MY_Model {
+
+    public $required = array('name');
+    public $record_class = 'Example_record';
+
+    function __construct()
+    {
+        parent::__construct('example'); //table name
+    }
+}
+</pre>
+
+<h2 id="custom_records">Custom Record Objects</h2>
+<p>MY_Model adds another layer of control for your models by allowing you to define custom return objects from active record. 
+This gives you more flexibility at the record level for your models. With custom record objects you can:</p>
+<ul>
+	<li><strong>Create Derived Attributes</strong></li>
+	<li><strong>Lazy Load Other Objects</strong></li>
+	<li><strong>Manipulate and Save at the Record Level</strong></li>
+</ul>
+<p>When creating a custom record class, it is recommended to use the singular version of the parent model class (so parent models should be plural).</p>
+
+<pre class="brush: php">
+class Examples_model extends MY_Model {
+
+    public $required = array('name');
+
+    function __construct()
+    {
+        parent::__construct('example'); //table name
+    }
+}
+
+
+class Example_model extends MY_Model {
+
+    Custom record model methods go here....
+
+}
+</pre>
+<p class="important">Custom record objects are not required. MY_Model will intelligently try and figure out the class name if one is not defined in the parent table model.
+If the class is not found it will return an <strong>array of arrays</strong> or an <strong>array of standard objects</strong> depending on the <dfn>return_method</dfn> property of the parent model class.
+<kbd>Custom record objects must be defined in the same file that the parent table model is defined.</kbd>
+</p>
+
+
+
+
+<h3>Create Derived Attributes</h3>
+<p>With a custom record object, you can derive attributes which means you can create new values from the existing fields or even
+other models. For example, you have a table with a text field named <dfn>content</dfn> that you need to filter and encode html entities 
+and sometimes strip images before displaying on your webpage. Instead of applying the <dfn>htmlentities</dfn> and <dfn>strip_image_tags</dfn> 
+function each time it is displayed, you can create a new derived attribute on your custom record object like so:
+</p>
+<pre class="brush: php">
+function get_content_formatted($strip_images = FALSE)
+{
+    $CI =& get_instance();
+    if ($strip_images)
+    {
+        $CI->load->helper('security');
+        $content = strip_image_tags($this->content);
+    }
+    $content = htmlentities($this->content);
+    return $content;
+}
+</pre>
+
+<h3>Lazy Load Other Objects</h3>
+<p>Lazy loading of object is used when you don't want the overhead of queries to generate sub objects. For example, if you have a book, model
+which has a foreign key to an author model, you could create a method on the record class to lazy load that object like this:</p>
+
+<pre class="brush: php">
+function get_spaceship()
+{
+    $ship = $this->lazy_load(array('email' => 'hsolo@milleniumfalcon.com'), 'spacehips_model', FALSE);
+    return $ship;
+}
+</pre>
+
+<h3>Manipulate and Save at the Record Level</h3>
+<p>With custom record objects, you can update attributes and save the record object like so:</p>
+<pre class="brush: php">
+$foo = $this->examples_model->find_by_key(1);
+$foo->bar = 'This is a test';
+$foo->save();
+</pre>
+
+<h3>Automatically Parsing Field Values</h3>
+<p>In some cases, you may be saving text data that you want to parse the <a href="<?=user_guide_url('general/template-parsing')?>">templating syntax</a> upon retrieval. 
+This can be done automatically by setting the <dfn>$parsed_fields</dfn> array property on the table class like so:</p>
+
+<pre class="brush:php">
+&lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+require_once(FUEL_PATH.'models/base_module_model.php');
+
+class Quotes_model extends Base_module_model {
+
+	public $required = array('content');
+	public $parsed_fields = array('content', 'content_formatted');
+	
+	function __construct()
+	{
+		parent::__construct('quotes'); // table name
+	}
+
+</pre>
+<p class="important">Note that both "content" and "content_formatted" were added to the $parsed_fields array. This is because they are treated as 2 separate fields even though the latter is 
+magic method property.</p>
+
+<p class="important"><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">Click here to view the function reference for custom record objects</a></p>
+
+
+<h2 id="magic_methods">Magic Methods</h2>
+<p>MY_Model uses PHP's magic methods extensively. This allows for dynamically creating methods that aren't originally defined by the class. 
+Magic methods are used both in the table and custom record classes. In custom record classes, any method prefixed with <dfn>get_</dfn>
+can also be syntactically written to look like an instance property:</p>
+
+<pre class="brush: php">
+$record->get_content()
+
+// can also be written as...
+$record->content
+</pre>
+
+<p>Additionally, you can use <dfn>is_{property})()</dfn> on any property that is a boolean type value or an enum value with 2 options.</p>
+<pre class="brush: php">
+if ($record->is_published())
+{
+	echo 'Published';
+}
+else
+{
+	echo 'Not Published';
+}
+</pre>
+
+<p>In the table class, magic methods are used to find records in interesting ways. For example, you can do something like this (where <var>{}</var> enclose areas where the developer should change to a proper field name):</p>
+<pre class="brush: php">
+// to find multiple items 
+$this->examples_model->find_all_by_{column1}_and_{column2}('column1_val', 'column2_val');
+
+// to find one item 
+$this->examples_model->find_one_by_{column1}_or_{column2}('column1_val', 'column2_val');
+</pre>
+
+<h2 id="active_record">Working with Active Record</h2>
+<p>MY_Model works alongside active record like so:</p>
+<pre class="brush: php">
+...
+$this->db->where(array('published' => 'yes'))
+$this->db->find_all()
+
+// Is the same as...
+$this->db->find_all(array('published' => 'yes'))
+
+</pre>
+
+<h2 id="hooks">Hooks</h2>
+<p>MY_Model provides hooks that you can overwrite with your own custom code to extend the functionality of your model.</p>
+<p>Table class hooks</p>
+<ul>
+	<li><strong>on_before_clean</strong> - executed right before cleaning of values</li>
+	<li><strong>on_before_validate</strong> - executed right before validate of values</li>
+	<li><strong>on_before_insert</strong> - executed before inserting values</li>
+	<li><strong>on_after_insert</strong> - executed after insertion</li>
+	<li><strong>on_before_update</strong> - executed before updating</li>
+	<li><strong>on_after_update</strong> - executed after updating</li>
+	<li><strong>on_before_save</strong> - executed before saving</li>
+	<li><strong>on_after_save</strong> - executed after saving</li>
+	<li><strong>on_before_delete</strong> - executed before deleting</li>
+	<li><strong>on_after_delete</strong> - executed after deleting</li>
+	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data.</li>
+	<li><strong>on_after_post</strong> - to be called from within your own code after posting data.</li>
+</ul>
+
+<p>Record class hooks</p>
+<ul>
+	<li><strong>before_set</strong> - executed before setting a value</li>
+	<li><strong>after_get</strong> - executed after setting a value</li>
+	<li><strong>on_insert</strong> - executed after inserting</li>
+	<li><strong>on_update</strong> - executed after updating</li>
+	<li><strong>on_init</strong> - executed upon initialization</li>
+</ul>
+
+<h2 id="relationships">Model Relationships</h2>
+
+
+
+
+
+
+
+
 

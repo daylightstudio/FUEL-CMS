@@ -16,7 +16,7 @@
 <h2>MY_Model</h2>
 <ul>
 	<li>Added the is_{property} method for all boolean type properties (e.g. $my_rec->is_published())</li>
-	<li></li>
+	<li>Added where_in if the value of the where parameter is a nested array to the find_all method</li>
 </ul>
 
 <h2>Other modules</h2>
@@ -90,6 +90,7 @@ MISC
 <ul>
 	<li>Added jquery UI to the backend</li>
 	<li>Added ability to pass more then one field to edit inline</li>
+	<li>Added ability to export data from module by adding an "export_data" method to your model</li>
 </ul>
 
 WARNINGS

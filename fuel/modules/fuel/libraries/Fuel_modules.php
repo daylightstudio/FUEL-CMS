@@ -471,6 +471,7 @@ class Fuel_module extends Fuel_base_library {
 				'hidden' => FALSE,
 				'icon_class' => '',
 				'folder' => '',
+				'exportable' => FALSE,
 				);
 			$info = array();
 

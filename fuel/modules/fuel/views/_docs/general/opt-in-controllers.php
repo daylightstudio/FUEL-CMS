@@ -7,7 +7,7 @@ will cascade to all subviews of the page. You can even load in a library, model 
 This method also allows for deeper website structures without the need for special routing to controllers.
 </p>
 
-<h2>How it works</h2>
+<h2>How it Works</h2>
 <p>The CodeIgniter Router is modified to route all requests that don't map to a controller method to a default controller 
 named <dfn>page_router</dfn>. This controller will do one of two things, depending on the <dfn>fuel_mode</dfn> value set in the FUEL config file:
 </p>
@@ -17,7 +17,7 @@ named <dfn>page_router</dfn>. This controller will do one of two things, dependi
 	<li>find a corresponding view file to the uri requested and map variables to the view file found the <dfn>views/_variables</dfn> folder</li>
 </ol>
 
-<h2>What is a variables file?</h2>
+<h2>What is a Variables File?</h2>
 <p>A variables file is an array of variables that get passed to pages. The files are located in the <dfn>views/_variables</dfn> folder</p>
 
 <p>There are three levels of variables:</p>
@@ -41,7 +41,7 @@ $vars['meta_keywords'] = '';
 $vars['meta_description'] = '';
 $vars['js'] = '';
 $vars['css'] = '';
-$vars['body_class'] = $CI->uri->segment(1).' '.$CI->uri->segment(2);
+$vars['body_class'] = uri_segment(1).' '.uri_segment(2);
 </pre>
 
 <h2>Controller Variables</h2>
@@ -108,10 +108,9 @@ class About extends CI_Controller {
 
 		//... form code goes here
 		
-		// load the fuel_page library class and pass it the view file you want to load
-		$this->load->module_library(FUEL_FOLDER, 'fuel_page', array('location' => 'about/contact'));
-		$this->fuel_page->add_variables($vars);
-		$this->fuel_page->render();
+		// use Fuel_page to render so it will grab all opt-in variables and do any necessary parsing
+		$this->fuel->pages->render('about/contact', $vars);
+		
 		
 	}
 </pre>

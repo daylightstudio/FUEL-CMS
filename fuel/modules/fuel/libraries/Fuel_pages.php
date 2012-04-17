@@ -19,6 +19,8 @@
 /**
  * FUEL pages 
  *
+ * This class is used to find and create <a href="#fuel_page">Fuel_page</a> objects.
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
@@ -30,13 +32,34 @@
 
 class Fuel_pages extends Fuel_base_library {
 	
-	protected $_active = NULL;
+	protected $_active = NULL; // the currently active page
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences
+	 *
+	 * @access	public
+	 * @param	array	Config preferences (optional)
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates a Fuel_page
+	 *
+	 * @access	public
+	 * @param	array	Page initialization preferences
+	 * @param	boolean	Sets the page as the currently active
+	 * @return	object
+	 */	
 	function create($init = array(), $set_active = TRUE)
 	{
 		$page = new Fuel_page($init);
@@ -47,6 +70,15 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a page as the currently active page
+	 *
+	 * @access	public
+	 * @param	object	The page to set as active
+	 * @return	void
+	 */	
 	function set_active(&$page)
 	{
 		// for backwards compatability
@@ -55,6 +87,15 @@ class Fuel_pages extends Fuel_base_library {
 		$this->_active = $page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a Fuel_page object given a provided location
+	 *
+	 * @access	public
+	 * @param	string	The page to set as active
+	 * @return	object
+	 */	
 	function get($location)
 	{
 		$init['location'] = $location;
@@ -62,11 +103,30 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the active page
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
 	function &active()
 	{
 		return $this->_active;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an associative array of pages used for form option lists
+	 *
+	 * @access	public
+	 * @param	string	The types of pages to include in the array. Options are cms, modules, views (optional)
+	 * @param	boolean	Determines whether to use the URI location as the key (optional)
+	 * @param	boolean	Applies the site_url() to the keys of the returned array (optional)
+	 * @return	array
+	 */	
 	function options_list($include = 'all', $paths_as_keys = FALSE, $apply_site_url = TRUE)
 	{
 		$valid_include = array('cms', 'modules', 'views');
@@ -104,16 +164,31 @@ class Fuel_pages extends Fuel_base_library {
 		
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of view files pages used with opt-in controller method
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function views()
 	{
 		$this->CI->load->helper('directory');
-		// get valid view files that may show up
 		$views_path = APPPATH.'views/';
 		$view_pages = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
 		return $view_pages;
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of pages created in the CMS
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function cms()
 	{
 		$this->fuel->load_model('pages');
@@ -121,11 +196,28 @@ class Fuel_pages extends Fuel_base_library {
 		return $cms_pages;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of pages created by a module. The module must have a prevew path
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function modules()
 	{
 		return $this->fuel->modules->pages();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds a Fuel_page object based on either a location or ID value
+	 *
+	 * @access	public
+	 * @param	mixed	Either the pages location or ID value (CMS only)
+	 * @return	object
+	 */	
 	function find($id)
 	{
 		$this->fuel->load_model('pages');
@@ -140,6 +232,18 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a Fuel_page which includes any inline editing markers
+	 *
+	 * @access	public
+	 * @access	string	The location value of the page
+	 * @access	array	Variables to pass to the page
+	 * @access	array	Additional initialization parameters to pass to the page
+	 * @access	boolean	Return the result or echo it out
+	 * @return	string
+	 */	
 	function render($location, $vars = array(), $params = array(), $return = FALSE)
 	{
 		// TODO: cant have this be called within another page or will cause and infinite loop
@@ -166,8 +270,8 @@ class Fuel_page extends Fuel_base_library {
 	public $views_path = ''; // the path to the views folder for rendering. Used with modules
 	public $render_mode = 'views'; // is the page being rendered from the views folder or the DB
 	public $view_module = 'app'; // the module to look for the view file
-	public $markers = array();
-	public static $marker_key = '__FUEL_MARKER__';
+	public $markers = array(); // the inline editing markers for the page
+	public static $marker_key = '__FUEL_MARKER__'; // used for placing inline editing content in the output
 	
 	protected $_variables = array(); // variables applied to the page
 	protected $_segments = array(); // uri segments to pass to the page
@@ -244,6 +348,15 @@ class Fuel_page extends Fuel_base_library {
 
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Assigns the location value of the page
+	 *
+	 * @access	public
+	 * @param	string	location to assign to the page
+	 * @return	void
+	 */	
 	function assign_location($location)
 	{
 		$this->location = $location;
@@ -367,6 +480,17 @@ class Fuel_page extends Fuel_base_library {
 		$this->_segments = array_reverse($this->_segments);
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Assigns variables to the page
+	 *
+	 * @access	public
+	 * @param	string	The server path to the views file (optional)
+	 * @param	string	Determines whether to assign variables from the CMS as well as variables from the _variables folder (optional)
+	 * @return	void
+	 */	
 	function assign_variables($views_path = NULL, $page_mode = NULL)
 	{
 		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
@@ -379,6 +503,15 @@ class Fuel_page extends Fuel_base_library {
 		$this->add_variables($vars);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Assigns the layout of the page
+	 *
+	 * @access	public
+	 * @param	mixed	Can be either a name of the layout or a Fuel_layout object
+	 * @return	void
+	 */	
 	function assign_layout($layout)
 	{
 		if (!empty($this->layout) AND is_string($this->layout))
@@ -396,6 +529,16 @@ class Fuel_page extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders the page either from the CMS or via the "opt-in controller" method. Pages in the CMS take precedence
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to return the value or to echo it out (optional)
+	 * @param	boolean	Determines whether to render any inline editing (optional)
+	 * @return	string
+	 */	
 	function render($return = FALSE, $fuelify = TRUE)
 	{
 		// set this config item so we can use it in the fuel_helper later for marking editable areas
@@ -415,6 +558,16 @@ class Fuel_page extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a CMS page
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to return the value or to echo it out
+	 * @param	boolean	Determines whether to render any inline editing
+	 * @return	string
+	 */
 	function cms_render($return = FALSE, $fuelify = FALSE){
 
 		$this->CI->load->library('parser');
@@ -464,6 +617,16 @@ class Fuel_page extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a static view page that is using the "opt-in controller" method
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to return the value or to echo it out (optional)
+	 * @param	boolean	Determines whether to render any inline editing (optional)
+	 * @return	string
+	 */
 	function variables_render($return = FALSE, $fuelify = FALSE)
 	{
 		// get the location and load page vars
@@ -622,6 +785,15 @@ class Fuel_page extends Fuel_base_library {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads any resources by checking for a "library", "helpers", or "models" variable assigned to the page
+	 *
+	 * @access	public
+	 * @param	array	An array of variables to check for resources
+	 * @return	void
+	 */
 	function load_resources($vars = NULL)
 	{
 		if (empty($vars))
@@ -700,6 +872,15 @@ class Fuel_page extends Fuel_base_library {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders the inline editing markers before final output
+	 *
+	 * @access	public
+	 * @param	string	The output to be rendered
+	 * @return	string
+	 */
 	function fuelify($output)
 	{
 		// if not logged in then we remove the markers
@@ -744,6 +925,15 @@ class Fuel_page extends Fuel_base_library {
 		return $output;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds marker code to the page for inline editing areas and returns a unique key value to identify it during the final rendering process
+	 *
+	 * @access	public
+	 * @param	array	An array of marker values which includes, id, label, module, published, xoffset, and yoffset values
+	 * @return	string
+	 */
 	function add_marker($marker)
 	{
 		$key = $this->get_marker_prefix().count($this->markers);
@@ -751,11 +941,27 @@ class Fuel_page extends Fuel_base_library {
 		return $key;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the marker prefix used for adding markers
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function get_marker_prefix()
 	{
 		return Fuel_page::$marker_key;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the regular expression needed to find markers on the page
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function get_marker_regex()
 	{
 		$marker_prefix = $this->get_marker_prefix();
@@ -763,6 +969,15 @@ class Fuel_page extends Fuel_base_library {
 		return $marker_reg_ex;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a marker on the page which is used on the front end to create the inline editng pencil icons with some javascript
+	 *
+	 * @access	public
+	 * @param	string	The markers key value used to identify it on the apge
+	 * @return	string
+	 */
 	function render_marker($key)
 	{
 		if (!isset($this->markers[$key])) return '';
@@ -806,6 +1021,15 @@ class Fuel_page extends Fuel_base_library {
 		return '';
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds all the markers in the output and renders them
+	 *
+	 * @access	public
+	 * @param	string	The output of the page
+	 * @return	string
+	 */
 	function render_all_markers($output)
 	{
 		// get the marker regex
@@ -868,15 +1092,32 @@ class Fuel_page extends Fuel_base_library {
 		return $output;
 	}
 	
-	protected function _render_markers_callback($matches)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds all the markers in the output and renders them
+	 *
+	 * @access	protected
+	 * @param	string	The output of the page
+	 * @return	string
+	 */	protected function _render_markers_callback($matches)
 	{
 		return $this->render_marker($matches[1]);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds all the markers in the output and renders them
+	 *
+	 * @access	public
+	 * @param	string	The output of the page
+	 * @return	string
+	 */
 	function remove_markers($output)
 	{
 		// if no markers, then we simply return the output to speed up processing
-//		if (empty($this->markers)) return $output; // needs to run all the time in case it's cached'
+		// if (empty($this->markers)) return $output; // needs to run all the time in case it's cached'
 		
 		// get the marker regex and replace it with nothing
 		$marker_reg_ex = $this->get_marker_regex();
@@ -884,40 +1125,107 @@ class Fuel_page extends Fuel_base_library {
 		return $output;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the Fuel_page properties which includes location, layout, published and cached values
+	 *
+	 * @access	public
+	 * @param	string	The output of the page (optional)
+	 * @return	string
+	 */
 	function properties($prop = NULL)
 	{
 		if (is_string($prop) AND isset($this->_page_data[$prop])) return $this->_page_data[$prop];
 		return $this->_page_data;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns all the variables currently assigned to the page for rendering
+	 *
+	 * @access	public
+	 * @param	string	The output of the page
+	 * @return	string
+	 */
 	function variables($key = NULL)
 	{
 		if (is_string($key) AND isset($this->_variables[$key])) return $this->_variables[$key];
 		return $this->_variables;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds variables to the page for rendering
+	 *
+	 * @access	public
+	 * @param	array	An array of variables to assign to the page for rendering
+	 * @return	void
+	 */
 	function add_variables($vars = array())
 	{
 		$vars = (array) $vars;
 		$this->_variables = array_merge($this->_variables, $vars);
 	}
 	
-	function segment($n)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns segment value(s) passed to a CMS page. 
+	 *
+	 * For example, a page with a location of "projects" in the CMS can have segment parameters passed to it (e.g. <dfn>projects/123456</dfn>).
+	 * The FUEL config value of "max_page_params" must have a value greater then 0 (which is the default) for parameters to be passed. 
+	 * If no segment number is specified, all segments will be returned.
+	 *
+	 *
+	 * @access	public
+	 * @param	string	The segment number to return (optional)
+	 * @return	string
+	 */	
+	function segment($n = NULL)
 	{
 		if (is_int($n) AND isset($this->_segments[$n])) return $this->_segments[$n];
 		return $this->_segments;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the page is from the CMS or not
+	 *
+	 * @access	public
+	 * @param	string	The output of the page
+	 * @return	string
+	 */
 	function has_cms_data()
 	{
 		return !empty($this->_page_data['location']);
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns whether the page should be cached
+	 *
+	 * @access	public
+	 * @param	string	The output of the page
+	 * @return	boolean
+	 */	
 	function is_cached()
 	{
 		return is_true_val($this->is_cached);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Saves a page to the CMS
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function save()
 	{
 		$this->fuel->load_model('pages');
@@ -980,6 +1288,14 @@ class Fuel_page extends Fuel_base_library {
 		return $valid;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Deletes a page from the CMS
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function delete()
 	{
 		// remove cached files
@@ -994,6 +1310,15 @@ class Fuel_page extends Fuel_base_library {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uses the assigned "location" value to scan the views directory for a corresponding view file. The Fuel configuration value of "auto_search_views" must be set to TRUE (it is FALSE by default).
+	 *
+	 * @access	public
+	 * @param	string	The original location value.
+	 * @return	string
+	 */
 	function find_view_file($view)
 	{
 		if (!$this->fuel->config('auto_search_views')) return NULL;

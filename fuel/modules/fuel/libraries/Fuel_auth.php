@@ -51,36 +51,17 @@ class Fuel_auth extends Fuel_base_library {
 		$this->CI->config->module_load('fuel', 'fuel', TRUE);
 	}
 	
-	function valid_user()
-	{
-		return ($this->CI->session->userdata($this->get_session_namespace())) ? $this->CI->session->userdata($this->get_session_namespace()) : NULL;
-	}
 	
-	function set_valid_user($valid_user)
-	{
-		$this->CI->load->helper('string');
-		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
-	}
+	// --------------------------------------------------------------------
 	
-	function get_session_namespace()
-	{
-		$key = 'fuel_'.md5($this->CI->fuel->config('site_name'));
-		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
-		return $key;
-	}
-	
-	function get_fuel_trigger_cookie_name()
-	{
-		return $this->get_session_namespace();
-	}
-
-	// check any remote host or IP restrictions first
-	function can_access()
-	{
-		return ($this->fuel->config('admin_enabled') AND 
-					(!$this->fuel->config('restrict_to_remote_ip') OR !in_array($_SERVER['REMOTE_ADDR'], $this->fuel->config('restrict_to_remote_ip'))));
-	}
-	
+	/**
+	 * Logs a user into the CMS
+	 *
+	 * @access	public
+	 * @param	string	User name
+	 * @param	string	Password
+	 * @return	boolean
+	 */	
 	function login($user, $pwd)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
@@ -94,7 +75,46 @@ class Fuel_auth extends Fuel_base_library {
 		}
 		return FALSE;
 	}
+
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the valid user to the session (used by login method as well)
+	 *
+	 * @access	public
+	 * @param	array	User data to save to the session
+	 * @return	void
+	 */	
+	function set_valid_user($valid_user)
+	{
+		$this->CI->load->helper('string');
+		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of user information for the current logged in user
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function valid_user()
+	{
+		return ($this->CI->session->userdata($this->get_session_namespace())) ? $this->CI->session->userdata($this->get_session_namespace()) : NULL;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets session data for the currently logged in user
+	 *
+	 * @access	public
+	 * @access	string	The array key to associate the session data
+	 * @access	mixed	The session data to save
+	 * @return	void
+	 */	
 	function set_user_data($key, $value)
 	{
 		$session_key = $this->fuel->auth->get_session_namespace();
@@ -103,6 +123,15 @@ class Fuel_auth extends Fuel_base_library {
 		$this->CI->session->set_userdata($session_key, $user_data);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns either an array of the logged in users session data or a single value of the data if a $key parameter is passed
+	 *
+	 * @access	public
+	 * @param	string	The session key value you want access to (optional)
+	 * @return	mixed
+	 */	
 	function user_data($key = NULL)
 	{
 		$valid_user = $this->valid_user();
@@ -117,7 +146,57 @@ class Fuel_auth extends Fuel_base_library {
 		}
 		return FALSE;
 	}
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns the sessions namespace which helps distinguish it from other FUEL installs (it's based on the site_name config parameter)
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function get_session_namespace()
+	{
+		$key = 'fuel_'.md5($this->CI->fuel->config('site_name'));
+		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
+		return $key;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the cookie name used on the front end to trigger the inline editing toolbar
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function get_fuel_trigger_cookie_name()
+	{
+		return $this->get_session_namespace();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Checks the FUEL configuration for any IP restrictions
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function can_access()
+	{
+		return ($this->fuel->config('admin_enabled') AND 
+					(!$this->fuel->config('restrict_to_remote_ip') OR !in_array($_SERVER['REMOTE_ADDR'], $this->fuel->config('restrict_to_remote_ip'))));
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Checks if the current user is logged in
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_logged_in()
 	{
 		
@@ -125,6 +204,16 @@ class Fuel_auth extends Fuel_base_library {
 		return (!empty($user) AND !empty($user['user_name']));
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Checks the users permissions for a particular permission
+	 *
+	 * @access	public
+	 * @param	string	The name of the permission (usually the module's name)
+	 * @param	string	The type of permission (e.g. 'edit', 'delete'). A user that just has the permission (e.g. my_module) without the type (e.g. my_module_edit) will be given access (optional)
+	 * @return	boolean
+	 */	
 	function has_permission($permission, $type = 'edit')
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
@@ -156,13 +245,31 @@ class Fuel_auth extends Fuel_base_library {
 		return FALSE;
 	}
 	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines if a user can access a certain module
+	 *
+	 * @access	public
+	 * @param	string	The name of the module
+	 * @return	boolean
+	 */	
 	function accessible_module($module)
 	{
 		$this->CI->load->module_config('fuel', 'fuel', TRUE);
 		$allowed = (array) $this->CI->config->item('modules_allowed', 'fuel');
 		return in_array($module, $allowed);
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns an array of permissions values for the currently logged in user
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function get_permissions()
 	{
 		$valid_user = $this->valid_user();
@@ -182,6 +289,15 @@ class Fuel_auth extends Fuel_base_library {
 		return NULL;
 	}
 	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines if the currently logged in user is a 'super admin'
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_super_admin()
 	{
 		$valid_user = $this->valid_user();
@@ -191,18 +307,44 @@ class Fuel_auth extends Fuel_base_library {
 		}
 		return NULL;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Checks that a module has a specific type of action (e.g. edit, delete)
+	 *
+	 * @access	public
+	 * @param	string	The name of the action
+	 * @return	boolean
+	 */	
 	function module_has_action($action)
 	{
 		if (empty($this->CI->item_actions)) return FALSE;
 		return (isset($this->CI->item_actions[$action]) OR in_array($action, $this->CI->item_actions));
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Determines if a user is logged in and can make inline editing changes
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
 	function is_fuelified()
 	{
 		return (get_cookie($this->get_fuel_trigger_cookie_name()));
 	}
 	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the currently logged in users language preference
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function user_lang()
 	{
 		$default_lang = $this->CI->config->item('language');
@@ -222,6 +364,14 @@ class Fuel_auth extends Fuel_base_library {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Logs a user out of the CMS
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function logout()
 	{
 		$this->CI->load->library('session');

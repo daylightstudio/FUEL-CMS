@@ -36,6 +36,8 @@ class Fuel_admin extends Fuel_base_library {
 	protected $validate = TRUE; // Whether to check that the user is logged in or not before rendering page
 	protected $is_inline = FALSE; // Determines whether the page being displayed is the inline view or now.
 	protected $last_page = ''; // The last page rendered by the admin
+	
+	// The names of panels displayed in the admin
 	protected $panels = array(
 								'top' => TRUE,
 								'nav' => TRUE,
@@ -43,7 +45,7 @@ class Fuel_admin extends Fuel_base_library {
 								'actions' => TRUE,
 								'notification' => TRUE,
 								'bottom' => TRUE,
-							); // The names of panels displayed in the admin
+							); 
 	protected $display_mode = NULL; // The name of the currently set display mode
 	protected $_display_modes = array(); // An array of available display modes
 	protected $titlebar = array(); // The title bar breadcrumb area in the admin
