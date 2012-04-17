@@ -543,7 +543,7 @@ span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 .form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
 .form td.required { padding-top: 10px; }
 div.more_filters { padding-left: 10px; }
-div.more_filters span.label { float: left; padding-top: 2px; }
+div.more_filters span.label { float: left; padding-top: 6px; }
 div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  }
 div.more_filters div div { float: left; margin-right: 10px; }
 
