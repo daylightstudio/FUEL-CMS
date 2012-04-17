@@ -11,11 +11,168 @@ a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 option { margin: 0 2px; }
 input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
+textarea { min-height: 40px; overflow: auto; resize: vertical; width: 100%; }
+
+
 ul { margin-bottom: 10px; }
+optgroup { color: #000; font-style: normal; font-weight: normal; }
 optgroup option { padding-left: 10px; }
 fieldset { border-top: 5px solid #eee; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
 legend { padding: 5px 30px 5px 5px; font-size: 12px; background-color: #eee; font-weight: bold; text-align: left; }
 iframe { border: none; }
+
+/*********** form elements  ***********/
+::-moz-focus-inner {  border: 0; padding: 0; }
+input[type="search"]::-webkit-search-decoration { display: none; }
+input, button, select, textarea { margin: 0; vertical-align: middle; }
+input[type="radio"], input[type="checkbox"] { position: relative; vertical-align: top; top: 3px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
+
+button,
+input[type="reset"],
+input[type="submit"],
+input[type="button"] {
+  -webkit-appearance: none;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+  background: #ddd url(../images/button.png) repeat-x;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
+  background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+  border: 1px solid;
+  border-color: #ddd #bbb #999;
+  cursor: pointer;
+  color: #333;
+  /*
+    Helvetica Neue present, because it works better
+    for line-height on buttons than Arial, on OS X.
+  */
+  font-weight: bold;
+  outline: 0;
+  overflow: visible;
+  padding: 3px 10px;
+  text-shadow: #fff 0 1px 1px;
+  width: auto;
+
+  /* IE7 */
+  *padding-top: 2px;
+  *padding-bottom: 0px;
+}
+
+button { /* IE7 */ *padding-top: 1px; *padding-bottom: 1px; }
+
+textarea,
+select,
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"] {
+  -webkit-appearance: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+  background-color: #fff;
+  border: 1px solid;
+  border-color: #aaa #c1c1c1 #e1e1e1;
+  outline: 0;
+  padding: 5px 3px 4px 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+
+  /* IE7 */
+  *padding-top: 2px;
+  *padding-bottom: 1px;
+  *height: auto;
+  
+ -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);  
+  
+}
+
+select { height: 25px; line-height: 16px;}
+
+/*
+  Separate rule for Firefox.
+  Separate rule for IE, too.
+  Cannot stack with WebKit's.
+*/
+::-webkit-input-placeholder { color: #888; }
+input:-moz-placeholder, textarea:-moz-placeholder { color: #888; }
+input.placeholder_text, textarea.placeholder_text { color: #888; }
+
+:invalid {
+  /*
+    Suppress red glow that Firefox
+    adds to form fields by default,
+    even when user is still typing.
+  */
+  -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none;
+}
+
+button:focus,
+button:active,
+input:focus,
+input:active,
+select:focus,
+select:active,
+textarea:focus,
+textarea:active { outline: 0; border-color: rgba(82, 168, 236, 0.8); -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6); -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6); box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6); /* for Opera */ z-index: 1; }
+
+input[type="file"]:focus,
+input[type="file"]:active,
+input[type="radio"]:focus,
+input[type="radio"]:active,
+input[type="checkbox"]:focus,
+input[type="checkbox"]:active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+select[disabled],
+textarea[disabled],
+input[type="date"][disabled],
+input[type="datetime"][disabled],
+input[type="datetime-local"][disabled],
+input[type="email"][disabled],
+input[type="month"][disabled],
+input[type="number"][disabled],
+input[type="password"][disabled],
+input[type="search"][disabled],
+input[type="tel"][disabled],
+input[type="text"][disabled],
+input[type="time"][disabled],
+input[type="url"][disabled],
+input[type="week"][disabled] { background-color: #eee; }
+
+button[disabled],
+input[disabled],
+select[disabled],
+select[disabled] option,
+select[disabled] optgroup,
+textarea[disabled] { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; color: #888; cursor: default; }
+textarea, select[size], select[multiple] { height: auto; }
+
 
 /* generic classes */
 p.instructions { font-size: 14px; line-height: 18px; }
@@ -203,11 +360,11 @@ div.dashboard_pod { float: left; margin-right: 10px }
 div.dashboard_module { float: left; margin-right: 10px; margin-top: 10px; }
 
 /* filters */
-div#filters { position: absolute; right: 15px; top: 14px; }
+div#filters { position: absolute; right: 15px; top: 12px; }
 a#multi_delete { display: block; }
 
 /* other items */
-div#other_items { float: left; margin: 5px 20px 0px 20px; }
+div#other_items { float: left; margin: 3px 20px 0px 20px; }
 div#other_items select{  max-width: 300px;}
 
 /* button bar*/
@@ -219,13 +376,15 @@ div.buttonbar li.active { background-image: url(../images/btn.png); background-p
 div.buttonbar li.active a { color: #000; }
 div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
 div.buttonbar li.spacer { margin-left: 10px;}
-div.buttonbar li.end {  border-right: 1px solid #ccc; }
+div.buttonbar li.end, div.buttonbar li:last-child {  border-right: 1px solid #ccc;  }
+div.buttonbar li:first-child { -webkit-border-top-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-topleft: 4px; -moz-border-radius-bottomleft: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+div.buttonbar li:last-child { -webkit-border-top-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-topright: 4px; -moz-border-radius-bottomright: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
 div.buttonbar li.start { border-left: 1px solid #ccc; }
 div.save_cancel { height: 35px;  }
 div.save_cancel li { margin: 5px 3px; }
 
 /* form tabs */
-div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border: 1px solid #eee; text-align: center; float: left; font-weight: bold; background-color: #ffffff; }
+div.form_tabs li { padding: 5px 15px; list-style: none; margin: 0 3px 0 0; border-left: 1px solid #eee; border-right: 1px solid #eee; border-top: 1px solid #eee; text-align: center; float: left; font-weight: bold; background-color: #ffffff; -webkit-border-top-left-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topleft: 4px; -moz-border-radius-topright: 4px; border-top-left-radius: 4px; border-top-right-radius: 4px; }
 div.form_tabs li.active { background-color: #eee; }
 div.form_tabs li.active a { color: #333; }
 
@@ -303,28 +462,14 @@ div.modal_content { background-color: #fff; width: 100%; height: 100%;/*max-heig
 div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
-/*div.asset_modal { border: 2px solid #666; background-color: #fff; height: 300px; padding: 20px; display: none; }
-div.asset_modal table.asset_select { width: 100%; }
-div.asset_modal table.asset_select td { padding: 0 4px 0 0; vertical-align: top; }
-div.asset_modal #asset_select { max-width: 350px;}
-*/
 div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; padding-top: 20px; }
-/*div#asset_ajax_form td.label { width: auto; }
-div#asset_select_actions { margin: 10px 0 0 50px; }
-div#asset_select_actions a { float: left; }
-*/
 div.img_crop { max-width: 400px; max-height: 200px; overflow: auto; }
 div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; /*overflow: auto;*/ }
-/*div#__FUEL_modal__  { border: 1px solid #888; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }*/
-
-/*div#__FUEL_modal__ { width: 100%; max-width: 900px; margin-left: -450px; max-height: 450px; background-color: #fff; /*overflow: auto;*/ }*/
-/*div#add_edit_inline_modal { width: 500px; margin-left: -250px; max-height: 400px; overflow: auto; }*/
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; }
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
-/*div#asset_modal .buttonbar, div#__FUEL_modal__ .buttonbar { float: right;}*/
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
 
@@ -339,7 +484,7 @@ iframe#viewpage_iframe { border: none; width: 100%; height: 100%; }
 input#Save, input.submit { margin-top: 10px; width: 150px; text-align: center; }
 input#Cancel, input.cancel { margin-top: 10px; margin-right: 10px; width: 60px; text-align: center; }
 div#tooltip h3 { font-size: 11px; font-weight: normal; }
-a.btn_field { background-image: url(../images/btn.png); line-height: 12px; border: 1px solid #ccc; padding: 2px 5px 2px 5px; }
+a.btn_field { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; background-image: url(../images/btn.png); line-height: 12px; border: 1px solid #ccc; padding: 3px 5px 3px 5px; }
 a.btn_field:hover { background-position: 0 -27px; }
 a#back_to { margin-bottom: 20px; display: block; }
 .hidden_form { visibility:hidden; height: 0px; overflow: hidden; }
