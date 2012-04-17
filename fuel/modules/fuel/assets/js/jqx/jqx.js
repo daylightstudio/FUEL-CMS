@@ -324,7 +324,6 @@ jqx.config.imgPath = jqx.config.basePath + "image/";
 jqx.config.cssPath = jqx.config.basePath + "css/";
 jqx.config.htmlPath = jqx.config.basePath;
 jqx.config.pluginPath = jqx.config.jsPath + "jquery/plugins/";
-jqx.config.helpersPath = jqx.config.jqxPath + "helpers/";
 jqx.config.controllerPath =  jqx.config.jsPath + "controller/";
 jqx.config.preload = ["jqx.lib.Class", "jqx.lib.BaseController"];
 jqx.config.cookieDefaultLifetime = 30;

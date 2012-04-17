@@ -1,6 +1,6 @@
 
 var jqx_config = {};
-jqx_config.basePath =  "<?=(substr(site_url(), -1) != '/') ? site_url().'/' : site_url();?>";
+jqx_config.basePath =  "<?=(trim(site_url(), '/').'/');?>";
 jqx_config.jsPath = "<?=js_path('', 'fuel')?>";
 jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
 
@@ -11,8 +11,6 @@ jqx_config.assetsCssPath = "<?=css_path('')?>";
 jqx_config.controllerName = 'fuel';
 jqx_config.jqxPath = jqx_config.jsPath + "jqx/";
 jqx_config.controllerPath = jqx_config.jsPath + "fuel/controller/";
-jqx_config.pluginPath = jqx_config.jsPath + "jquery/";
-jqx_config.helpersPath = jqx_config.jqxPath + 'helpers/';
 jqx_config.pluginPath = jqx_config.jsPath + 'jquery/plugins/';
 jqx_config.fuelPath = '<?=site_url($this->fuel->config('fuel_path'))?>';
 jqx_config.cookieDefaultPath = '<?=$this->fuel->config('fuel_cookie_path')?>';
