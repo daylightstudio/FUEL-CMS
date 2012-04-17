@@ -170,4 +170,4 @@ function parse_string_to_array($str)
 }
 
 /* End of file MY_array_helper.php */
-/* Location: ./application/helpers/MY_array_helper.php */
+/* Location: ./modules/fuel/helpers/MY_array_helper.php */

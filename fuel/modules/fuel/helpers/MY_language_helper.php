@@ -120,4 +120,4 @@ function json_lang($js_localized = array(), $return_json = TRUE)
 
 
 /* End of file MY_language_helper.php */
-/* Location: ./application/helpers/MY_language_helper.php */
+/* Location: ./modules/fuel/helpers/MY_language_helper.php */

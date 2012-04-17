@@ -187,4 +187,4 @@ function is_image_file($path)
 }
 
 /* End of file MY_file_helper.php */
-/* Location: ./application/helpers/MY_file_helper.php */
+/* Location: ./modules/fuel/helpers/MY_file_helper.php */

@@ -235,4 +235,4 @@ function list_directories($directory, $exclude = array(), $full_path = TRUE, $is
 }
 
 /* End of file MY_directory_helper.php */
-/* Location: ./application/helpers/MY_directory_helper.php */
+/* Location: ./modules/fuel/helpers/MY_directory_helper.php */

@@ -249,4 +249,4 @@ function redirect_404($redirect = TRUE)
 }
 
 /* End of file MY_url_helper.php */
-/* Location: ./application/helpers/MY_url_helper.php */
+/* Location: ./modules/fuel/helpers/MY_url_helper.php */

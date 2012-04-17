@@ -145,4 +145,4 @@ function html_attrs($attrs)
 }
 
 /* End of file MY_html_helper.php */
-/* Location: ./application/helpers/MY_html_helper.php */
+/* Location: ./modules/fuel/helpers/MY_html_helper.php */

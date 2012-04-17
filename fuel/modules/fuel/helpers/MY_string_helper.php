@@ -296,4 +296,4 @@ function parse_template_syntax($str, $vars = array(), $cache_id = NULL)
 }
 
 /* End of file MY_string_helper.php */
-/* Location: ./application/helpers/MY_string_helper.php */
+/* Location: ./modules/fuel/helpers/MY_string_helper.php */

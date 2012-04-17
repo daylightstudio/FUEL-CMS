@@ -11,13 +11,14 @@
  * @copyright	Copyright (c) 2011, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
- * @filesource
  */
 
 // ------------------------------------------------------------------------
 
 /**
- * Extends CI's array helper functions
+ * Compatibility Helper
+ *
+ * Compatibility functions helpful for slightly older versions of PHP.
  *
  * @package		FUEL CMS
  * @subpackage	Helpers
@@ -137,7 +138,7 @@ if ( !function_exists('json_decode')){
 	}  
 }
 
-// --------------------------------------------------------------------
+// ------------------------------------------------------------------------
 
 /**
  * Used for older versions of PHP that don't support str_getcsv.
@@ -199,4 +200,4 @@ if(!function_exists('str_putcsv'))
 }
 
 /* End of file compatibility_helper.php */
-/* Location: ./application/helpers/compatibility_helper.php */
+/* Location: ./modules/fuel/helpers/compatibility_helper.php */
