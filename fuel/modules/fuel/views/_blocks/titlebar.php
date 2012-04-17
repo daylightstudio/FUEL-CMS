@@ -6,13 +6,21 @@
 		foreach($titlebar as $url => $crumb) : ?>
 			<?php if (!$this->fuel->admin->is_inline()) : ?><a href="<?=fuel_url($url)?>"><?php endif; ?><?=$crumb?><?php if (!$this->fuel->admin->is_inline()) : ?></a><?php endif; ?> &gt;
 		<?php endforeach; ?>
-		<em><?=$last_key?></em>
+		<?=$last_key?>
 		<?php else: ?>
-		<em><?=$titlebar?></em>
+		<?=$titlebar?>
 	<?php endif; ?>
 	<?php endif; ?>
 	</h2>
-	
+	<?php if (!$this->fuel->admin->is_inline()) : ?>
+	<div id="fuel_login_logout">
+		<?=lang('logged_in_as')?>
+		<a href="<?=fuel_url('my_profile/edit/')?>"><strong><?=$user['user_name']?></strong></a>
+		&nbsp;&nbsp;|&nbsp;&nbsp;
+		<a href="<?=fuel_url('logout')?>"><?=lang('logout')?></a>
+	</div>
+	<?php endif; ?>
+
 </div>
 
 <div class="clear"></div>

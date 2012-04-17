@@ -4,8 +4,8 @@
 		<p><?=lang('warn_change_default_pwd', $this->config->item('default_pwd', 'fuel'))?></p>
 		<div class="buttonbar" id="yes_no_modal" style="width: 364px;">
 			<ul>
-				<li class="end"><a href="#" class="ico ico_no jqmClose" id="change_pwd_cancel"><?=lang('dashboard_change_pwd_later')?></a></li>
-				<li class="end"><a href="<?=fuel_url('my_profile/edit/')?>" class="ico ico_yes" id="change_pwd_go"><?=lang('dashboard_change_pwd')?></a></li>
+				<li class="unattached"><a href="#" class="ico ico_no jqmClose" id="change_pwd_cancel"><?=lang('dashboard_change_pwd_later')?></a></li>
+				<li class="unattached"><a href="<?=fuel_url('my_profile/edit/')?>" class="ico ico_yes" id="change_pwd_go"><?=lang('dashboard_change_pwd')?></a></li>
 			</ul>
 		</div>
 		<div class="clear"></div>

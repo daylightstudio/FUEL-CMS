@@ -5,8 +5,8 @@
 
 <div class="buttonbar">
 	<ul>
-		<li class="end"><a href="<?=fuel_url('manage/')?>" class="ico ico_no"><?=lang('cache_no_clear')?></a></li>
-		<li class="end"><a href="#" class="ico ico_yes" id="submit"><?=lang('cache_yes_clear')?></a></li>
+		<li class="unattached"><a href="<?=fuel_url('manage/')?>" class="ico ico_no"><?=lang('cache_no_clear')?></a></li>
+		<li class="unattached"><a href="#" class="ico ico_yes" id="submit"><?=lang('cache_yes_clear')?></a></li>
 	</ul>
 </div>
 

@@ -11,14 +11,15 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 <body>
 
 
-<?php if ($this->fuel->admin->has_panel('top')) : ?>
-<!-- TOP MENU PANEL -->
-<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_top'); ?>
-<?php endif; ?>
 
 
 <div id="fuel_body">
 
+
+	<?php if ($this->fuel->admin->has_panel('top')) : ?>
+	<!-- TOP MENU PANEL -->
+	<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_top'); ?>
+	<?php endif; ?>
 
 	<?php if ($this->fuel->admin->has_panel('nav')) : ?>
 	<!-- LEFT MENU PANEL -->

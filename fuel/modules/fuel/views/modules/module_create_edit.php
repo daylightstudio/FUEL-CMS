@@ -13,8 +13,8 @@
 	
 		<div class="buttonbar" id="yes_no_modal">
 			<ul>
-				<li class="end"><a href="#" class="ico ico_no" id="no_modal"><?=lang('btn_no')?></a></li>
-				<li class="end"><a href="#" class="ico ico_yes" id="yes_modal"><?=lang('btn_yes')?></a></li>
+				<li class="unattached"><a href="#" class="ico ico_no" id="no_modal"><?=lang('btn_no')?></a></li>
+				<li class="unattached"><a href="#" class="ico ico_yes" id="yes_modal"><?=lang('btn_yes')?></a></li>
 			</ul>
 		</div>
 		<div class="clear"></div>
