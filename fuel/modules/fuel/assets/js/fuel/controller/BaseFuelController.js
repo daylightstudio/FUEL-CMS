@@ -257,6 +257,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').submit();
 		});
 		
+		// automatically set selects to submit
+		$('#export_data').click(function(e){
+			$('#form').attr('action', _this.modulePath + '/export').submit();
+			return false;
+		});
 		
 	},
 	
@@ -328,8 +333,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.duplicate_action').click(function(e){
 			$('#id').val('dup');
-			$('#form').attr('action', _this.modulePath + '/create');
-			$('#form').submit();
+			$('#form').attr('action', _this.modulePath + '/create').submit();
 			return false;
 		});
 		
@@ -386,8 +390,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				if (confirm('Restoring previous data will overwrite the currently saved data. Are you sure you want to continue?')){
 					var url =  _this.modulePath + '/restore';
 					if (_this.inline) url += '/?inline=' + _this.inline;
-					$('#form').attr('action', url);
-					$('#form').submit();
+					$('#form').attr('action', url).submit();
 				}
 			}
 		});

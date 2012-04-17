@@ -475,17 +475,25 @@ class Base_module_model extends MY_Model {
 	 * Returns data that will be downloaded automatically
 	 *
 	 * @access	public
+	 * @param	array
 	 * @return	string
 	 */	
-	/* Placeholder example
-	function export_data()
+	function export_data($params = array())
 	{
-		$CI =& get_instance();
-		$query = $this->db->query("SELECT * FROM ".$this->table_name);
-		$data = $CI->dbutil->csv_from_result($query);
+		// normalize parameters
+		$valid_params = array('col', 'order');
+		foreach($valid_params as $p)
+		{
+			if (!isset($params[$p]))
+			{
+				$params[$p] = NULL;
+			}
+		}
+		
+		$items = $this->list_items(NULL, NULL, $params['col'], $params['order']);
+		$data = $this->csv($items);
 		return $data;
 	}
-	*/
 
 	// --------------------------------------------------------------------
 	

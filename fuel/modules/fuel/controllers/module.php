@@ -229,10 +229,6 @@ class Module extends Fuel_base_controller {
 			$vars['tree'] = "\n<ul></ul>\n";
 		}
 		
-		// display the export button if there is an export method
-		$vars['export_data'] = method_exists($this->model, 'export_data') ? TRUE : FALSE;
-		
-		
 		// set vars
 		$vars['params'] = $params;
 		
@@ -1434,7 +1430,7 @@ class Module extends Fuel_base_controller {
 			// append ajax to the method name... to prevent any conflicts with default methods
 			$method = 'ajax_'.$method;
 
-			$params = $_GET;
+			$params = $this->input->get_post(NULL, TRUE);
 			
 			if (!method_exists($this->model, $method))
 			{
@@ -1463,7 +1459,7 @@ class Module extends Fuel_base_controller {
 	// exports data to CSV
 	function export()
 	{
-		if (!method_exists($this->model, 'export_data'))
+		if (empty($this->exportable))
 		{
 			show_404();
 		}
@@ -1472,14 +1468,17 @@ class Module extends Fuel_base_controller {
 		{
 			show_error(lang('error_no_permissions'));
 		}
-		
-		// load dbutils for convenience to use in custom methods on model
-		$this->load->dbutil();
-		$this->load->helper('download');
-
-		$filename = $this->module.'_'.'_'.date('Y-m-d').'.csv';
-		$data = $this->model->export_data();
-		force_download($filename, $data);
+		if (!empty($_POST))
+		{
+			// load dbutils for convenience to use in custom methods on model
+			$this->load->dbutil();
+			$this->load->helper('download');
+			
+			$filename = $this->module.'_'.date('Y-m-d').'.csv';
+			$params = $this->_list_process();
+			$data = $this->model->export_data($params);
+			force_download($filename, $data);
+		}
 	}
 	
 	// used in list view to quickly unpublish (if they have permisison)
