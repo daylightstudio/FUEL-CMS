@@ -45,8 +45,11 @@ class Fuel_hooks
 		if ((isset($class_methods) AND !in_array($method, $class_methods) AND !in_array('_remap', $class_methods))  AND !empty($RTR->default_controller))
 		{
 			$fuel_path = explode('/', $RTR->routes['404_override']);
-			require_once(FUEL_PATH.'/controllers/'.$fuel_path[1].'.php');
-			$class = $fuel_path[1];
+			if (!empty($fuel_path[1]))
+			{
+				require_once(FUEL_PATH.'/controllers/'.$fuel_path[1].'.php');
+				$class = $fuel_path[1];
+			}
 		}
 	}
 
