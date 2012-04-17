@@ -16,8 +16,10 @@
 // ------------------------------------------------------------------------
 
 /**
- * An extension of the Model class to map data operations to a table
- * Depends upon the Validator library, date helper and the string helper
+ * MY_Model class
+ * 
+ * An extension of the Model class to map data operations to a table.
+ * Depends upon the Validator library, date helper and the string helper.
  * 
  * Inspired from this post here Developer13:
  * http://codeigniter.com/forums/viewthread/88769/
@@ -27,6 +29,7 @@
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @prefix		$this->example_model->
  */
 
 
@@ -36,10 +39,12 @@ class MY_Model extends CI_Model {
 	
 	public $auto_validate = TRUE; // use auto-validation before saving
 	public $return_method = 'auto'; // object, array, query, auto
+	
+	 // fields to auto validate
 	public $auto_validate_fields = array(
 		'email|email_address' => 'valid_email',
 		'phone|phone_number' => 'valid_phone'
-		); // fields to auto validate
+		);
 	public $required = array(); // required fields
 	public $default_required_message = "Please fill out the required field '%1s'"; // the default required validator message
 	public $auto_date_add = array('date_added', 'entry_date'); // field names to automatically set the date when the value is NULL
@@ -165,6 +170,10 @@ class MY_Model extends CI_Model {
 	/**
 	 * Returns the database object
 	 *
+	 <code>
+	$db = $this->examples_model->db(); 
+	</code>
+	 *
 	 * @access	public
 	 * @return	array
 	 */	
@@ -179,7 +188,14 @@ class MY_Model extends CI_Model {
 	/**
 	 * Gets the short name minus the suffix
 	 *
+	 <code>
+	echo $this->examples_model->short_name(TRUE); 
+	// examples
+	</code>
+	 *
 	 * @access	public
+	 * @param	boolean	lower case the name (optional)
+	 * @param	boolean return the record clas name (optional)
 	 * @return	array
 	 */	
 	public function short_name($lower = FALSE, $record_class = FALSE)
@@ -202,6 +218,11 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the table name
 	 *
+	 <code>
+	echo $this->examples_model->table_name(); 
+	// examples
+	</code>
+	 *
 	 * @access	public
 	 * @return	array
 	 */	
@@ -213,7 +234,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets the table(s) that you can use in your queries
+	 * Sets the aliases to table(s) that you can use in your queries
+	 *
+	 <code>
+	$my_tables = array('mytable' => 'my_table');
+	$this->examples_model->set_tables($my_tables); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	array	an array of tables
@@ -228,6 +254,10 @@ class MY_Model extends CI_Model {
 	
 	/**
 	 * Gets the table(s) name based on the configuration
+	 *
+	 <code>
+	$table_name = $this->examples_model->tables('my_table'); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	the table name (optional)
@@ -258,6 +288,14 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the key field(s)
 	 *
+	 <code>
+	$fields = $this->examples_model->fields(); 
+	foreach($fields as $field)
+	{
+		echo $field; // field name
+	}
+	</code>
+	 *
 	 * @access	public
 	 * @return	array
 	 */	
@@ -270,6 +308,9 @@ class MY_Model extends CI_Model {
 	
 	/**
 	 * Get the fields of the table
+	 *
+	 <code>
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -285,10 +326,26 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of the query
 	 *
+	 <code>
+	$rows = $this->examples_model->get(TRUE, 'object', FALSE); 
+	foreach($rows->result() as $row)
+	{
+	    echo $row->name;
+	}
+	
+	// The third parameter is the column name to be used as the array key value (if <dfn>$force_array</dfn> is set to <dfn>TRUE</dfn>)
+	$rows = $this->examples_model->get(TRUE, 'object', 'id'); 
+	foreach($rows->result() as $id => $row)
+	{
+	    echo $id;
+	}
+	</code>
+	 *
 	 * @access	public
-	 * @param	boolean	return multiple records
-	 * @param	string	method return type (object, array, query, auto)
-	 * @param	string	the column to use for an associative key array
+	 * @param	boolean	return multiple records (optional)
+	 * @param	string	method return type (object, array, query, auto) (optional)
+	 * @param	string	the column to use for an associative key array (optional)
+	 * @param	boolean	determine whether to use the _common_query method in the query (optional)
 	 * @return	array
 	 */	
 	public function get($force_array = TRUE, $return_method = NULL, $assoc_key = NULL, $use_common_query = NULL){
@@ -346,9 +403,19 @@ class MY_Model extends CI_Model {
 	/**
 	 * Maps a query result object to an array of record objects
 	 *
+	 <code>
+	...
+	$query = $this->db->query('SELECT * FROM USERS');
+	$users = $this->examples_model->map_query_records($query, 'id');
+	foreach($users as $id => $user)
+	{
+	    echo $user->name;
+	}
+	</code>
+	 *
 	 * @access	public
 	 * @param	object	the query object
-	 * @param	string	the field name to be used the key value
+	 * @param	string	the field name to be used the key value (optional)
 	 * @return	array
 	 */	
 	function map_query_records($query, $assoc_key = NULL)
@@ -376,9 +443,17 @@ class MY_Model extends CI_Model {
 	/**
 	 * Maps an associative record array to a record object
 	 *
+	 <code>
+	$my_user['id'] = 1;
+	$my_user['name'] = 'Darth Vader';
+	$my_user['email'] = 'darth@deathstar.com';
+	$my_custom_record = $this->examples_model->map_to_record_class($my_user); 
+	echo $my_custom_record->name;
+	</code>
+	 *
 	 * @access	public
 	 * @param	array	field values
-	 * @param	array	all the fields available for the object
+	 * @param	array	all the fields available for the object (optional)
 	 * @return	array
 	 */	
 	function map_to_record_class($row, $fields = NULL)
@@ -397,11 +472,16 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get one record result
+	 * Get one record result based on the key value
+	 *
+	 <code>
+	$id = 1;
+	$example = $this->examples_model->find_by_key($id, 'object'); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	the key value to find a single record
-	 * @param	mixed	return type (object, array, query, auto)
+	 * @param	mixed	return type (object, array, query, auto) (optional)
 	 * @return	array
 	 */	
 	public function find_by_key($key_val, $return_method = NULL)
@@ -436,10 +516,14 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get one record result
 	 *
+	 <code>
+	$example = $this->examples_model->find_one(array('published' => 'yes'), ''asc'); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
-	 * @param	string	return type (object, array, query, auto)
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query (optional)
+	 * @param	string	return type (object, array, query, auto) (optional)
 	 * @return	array
 	 */	
 	public function find_one($where = array(), $order_by = NULL, $return_method = NULL)
@@ -466,9 +550,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get one record result as an array
 	 *
+	 <code>
+	$examples = $this->examples_model->find_one_array(array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
 	 * @access	public
 	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
+	 * @param	string	the order by of the query (optional)
 	 * @return	array
 	 */	
 	public function find_one_array($where, $order_by = NULL)
@@ -481,19 +569,41 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of the query
 	 *
+	 <code>
+	$examples = $this->examples_model->find_all(array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
-	 * @param	int		the number of records to limit in the results
-	 * @param	int		the offset value for the results
-	 * @param	string	return type (object, array, query, auto)
-	 * @param	string	the column to use for an associative key array
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
+	 * @param	string	return type (object, array, query, auto) (optional)
+	 * @param	string	the column to use for an associative key array (optional)
 	 * @return	array
 	 */	
 	public function find_all($where = array(), $order_by = NULL, $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
 	{
 		$where = $this->_safe_where($where);
-		$params = array('where', 'order_by', 'limit', 'offset');
+		
+		if (!empty($where)) 
+		{
+			if (is_array($where))
+			{
+				foreach($where as $key => $val)
+				{
+					// check for nested array values to use for wherein
+					$method = (is_array($val)) ? 'where_in' : 'where';
+					$this->db->$method($key, $val);
+				}
+			}
+			else
+			{
+				$this->db->where($where);
+			}
+		}
+		
+		$params = array('order_by', 'limit', 'offset');
 		foreach($params as $method)
 		{
 			if (!empty($$method)) $this->db->$method($$method);
@@ -516,11 +626,15 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of the query as an array
 	 *
+	 <code>
+	$examples = $this->examples_model->find_all_array(array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
-	 * @param	int		the number of records to limit in the results
-	 * @param	int		the offset value for the results
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
 	 * @return	array
 	 */	
 	public function find_all_array($where = array(), $order_by = NULL, $limit = NULL, $offset = NULL)
@@ -533,12 +647,16 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of the query returned as a keyed array of objects
 	 *
+	 <code>
+	$examples = $this->examples_model->find_all_assoc(array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	string	the column to use for an associative key array
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
-	 * @param	int		the number of records to limit in the results
-	 * @param	int		the offset value for the results
+	 * @param	string	the column to use for an associative key array (optional)
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
 	 * @return	array
 	 */	
 	public function find_all_assoc($assoc_key = 'id', $where = array(), $order_by = NULL, $limit = NULL, $offset = NULL)
@@ -551,12 +669,16 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of the query returned as a keyed array of arrays
 	 *
+	 <code>
+	$examples = $this->examples_model->find_all_assoc(array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	string	the column to use for an associative key array
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query
-	 * @param	int		the number of records to limit in the results
-	 * @param	int		the offset value for the results
+	 * @param	string	the column to use for an associative key array (optional)
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
 	 * @return	array
 	 */	
 	public function find_all_array_assoc($assoc_key = 'id', $where = array(), $order_by = NULL, $limit = NULL, $offset = NULL)
@@ -567,10 +689,42 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Basic query method. For more advanced, use CI Active Record
+	 * This method takes an associative array with the key values that map to CodeIgniter active record methods and returns a query result object.
+	 * 
+	 * For more advanced, use CI Active Record. Below are the key values you can pass:
+	<ul>
+		<li><strong>select</strong></li>
+		<li><strong>from</strong></li>
+		<li><strong>join</strong></li>
+		<li><strong>where</strong></li>
+		<li><strong>or_where</strong></li>
+		<li><strong>where_in</strong></li>
+		<li><strong>or_where_in</strong></li>
+		<li><strong>where_not_in</strong></li>
+		<li><strong>or_where_not_in</strong></li>
+		<li><strong>like</strong></li>
+		<li><strong>or_like</strong></li>
+		<li><strong>not_like</strong></li>
+		<li><strong>or_not_like</strong></li>
+		<li><strong>group_by</strong></li>
+		<li><strong>order_by</strong></li>
+		<li><strong>limit</strong></li>
+		<li><strong>offset</strong></li>
+	</ul>
+	
+	 *
+	 <code>
+	$where['select'] = 'id, name, published';
+	$where['where'] = array('published' => 'yes');
+	$where['order_by'] = 'name asc';
+	$where['limit'] = 10;
+
+	$query = $this->examples_model->query($where); 
+	$results = $query->result(); 
+	</code>
 	 *
 	 * @access	public
-	 * @param	array	an array of parameters to create a query
+	 * @param	array	an array of parameters to create a query (optional)
 	 * @return	array
 	 */	
 	public function query($params = array())
@@ -713,11 +867,17 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the results of a query as an associative array... good for form option lists
 	 *
+	 <code>
+	$where['published'] = 'yes'; 
+	$order = 'name, desc'; 
+	$examples_list = $this->examples_model->options_list('id', 'name', $where, $order); 
+	</code>
+	 *
 	 * @access	public
-	 * @param	string	the column to use for the value
-	 * @param	string	the column to use for the label
-	 * @param	mixed	an array or string containg the where paramters of a query
-	 * @param	string	the order by of the query. defaults to $val asc
+	 * @param	string	the column to use for the value (optional)
+	 * @param	string	the column to use for the label (optional)
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	string	the order by of the query. defaults to $val asc (optional)
 	 * @return	array
 	 */	
 	public function options_list($key = NULL, $val = NULL, $where = array(), $order = TRUE)
@@ -764,6 +924,14 @@ class MY_Model extends CI_Model {
 	/**
 	 * Determine if a record exists in the database
 	 *
+	 <code>
+	$where['type'] = 'A'; 
+	if ($this->examples_model->record_exists($where))
+	{
+		echo 'record exists';
+	} 
+	</code>
+	 *
 	 * @access	public
 	 * @param	mixed	an array or string containg the where paramters of a query
 	 * @return	boolean
@@ -779,8 +947,12 @@ class MY_Model extends CI_Model {
 	/**
 	 * Create a new record if a custom record object exists
 	 *
+	 <code>
+	$example = $this->examples_model->create($_POST); // Be sure to always clean your $_POST variables before using them
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	the record oject associated with this class
+	 * @param	mixed	the record oject associated with this class (optional)
 	 * @return	boolean
 	 */	
 	public function create($values = array())
@@ -804,9 +976,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Clean the data before saving
 	 *
+	 <code>
+	$cleaned_data = $this->examples_model->clean($_POST); // Be sure to always clean your $_POST variables before using them
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	an array of values to be saved
-	 * @param	boolean	run on_before_clean hook or not
+	 * @param	mixed	an array of values to be saved (optional)
+	 * @param	boolean	run on_before_clean hook or not (optional)
 	 * @return	array
 	 */	
 	public function clean($values = array(), $run_hook = FALSE)
@@ -955,6 +1131,10 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get the cleaned data 
 	 *
+	 <code>
+	$cleaned_data = $this->examples_model->cleaned_data();
+	</code>
+	 *
 	 * @access	public
 	 * @return	array
 	 */	
@@ -968,8 +1148,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Returns number of query results
 	 *
+	 <code>
+	$where['published'] = 'yes'; 
+	echo $this->examples_model->record_count($where); // dislays the number of records
+	</code>
+	 *
 	 * @access	public
-	 * @param	mixed	where condition
+	 * @param	mixed	where condition (optional)
 	 * @return	int
 	 */	
 	public function record_count($where = array())
@@ -984,6 +1169,10 @@ class MY_Model extends CI_Model {
 	/**
 	 * Returns number of records in the table
 	 *
+	 <code>
+	$total_count = $this->examples_model->total_record_count();
+	</code>
+	 *
 	 * @access	public
 	 * @return	int
 	 */	
@@ -995,7 +1184,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns query results
+	 * Returns a an array of records based on the limit (<strong>$per_page</strong>) and <var>'offset'</var> parameters of the method.
+	 *
+	 <code>
+	$data = $this->examples_model->paginate(20, 0);
+	</code>
 	 *
 	 * @access	public
 	 * @param	int	limit part of query
@@ -1012,7 +1205,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Save the data
+	 * Saves record object, or array of data to the database
+	 *
+	 <code>
+	$this->examples_model->save($_POST, TRUE, TRUE); // Be sure to always clean your $_POST variables before using them
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	an array or object to save to the database
@@ -1211,7 +1408,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Save related data to a many to many table
+	 * Save related data to a many to many table. To be used in on_after_save hook
+	 *
+	 <code>
+	$this->examples_model->save_related('examples_to_categories', array('example_id' => $obj->id), array('categories_id' => $_POST['categories']));
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	an array or object to save to the database
@@ -1255,10 +1456,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Handles grabbing of the related data's keys
 	 *
+	 <code>
+	</code>
+	 *
 	 * @access public
 	 * @param array $values
 	 * @param string $related_model
-	 * @param string $mode, has_many or belongs_to
+	 * @param string $mode, has_many or belongs_to (optional)
 	 * @return array
 	 */
 	public function get_related_keys($values, $related_model, $mode = 'has_many')
@@ -1296,7 +1500,13 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Insert data
+	 * Performs a simple insert to the database record. 
+	 *
+	 <code>
+	$values['name'] = 'Darth Vader'; 
+	$values['email'] = 'dvader@deathstar.com'; 
+	$this->examples_model->insert($values);
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	an array or object to save to the database
@@ -1319,7 +1529,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Update data
+	 * Performs a simple update to the database record based on the <dfn>$where</dfn> condition passed. 
+	 *
+	 <code>
+	$where['id'] = 1;
+	$this->examples_model->update($_POST, $where); // Be sure to always clean your $_POST variables before using them
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	an array or object to save to the database
@@ -1341,7 +1556,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Delete data
+	 * Deletes database record(s) based on the <dfn>$where</dfn> condition passed. Does execute <dfn>before</dfn> and <dfn>after</dfn> delete hooks.
+	 *
+	 <code>
+	$where['id'] = 1; 
+	$this->examples_model->delete($where);
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	where condition
@@ -1377,7 +1597,14 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Delete related data... to be used in on_before/on_after delete hooks
+	 * Delete related data. To be used in on_before/on_after delete hooks.
+	 *
+	 <code>
+	$obj = $this->examples_model->create();
+	$obj->name = 'Darth Vader';
+	$obj->save();
+	$this->examples_model->delete_related('examples_to_categories', 'example_id', $obj);
+	</code>
 	 *
 	 * @access	public
 	 * @param	string
@@ -1403,7 +1630,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Truncates the table
+	 * Truncates the data in the table
+	 *
+	 <code>
+	$this->examples_model->truncate();
+	</code>
 	 *
 	 * @access	public
 	 * @return	void
@@ -1417,7 +1648,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Checks if a value is actually new
+	 * Creates a where condition and queries the model's table to see if the column (<dfn>$key</dfn>) already contains the <dfn>$val</dfn> value.
+	 * Usually used for validation to check if a unique key already exists.
+	 *
+	 <code>
+	$this->examples_model->is_new('location', 'id');
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	value to be checked
@@ -1435,7 +1671,23 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Checks if a value is editable
+	 * 	Creates a where condition and queries the model's table to see if the column (<dfn>$key</dfn>) already contains the <dfn>$val</dfn> value but compares it to the tables key column with the <dfn>$id</dfn> value.
+	 * Usually used for validation. The example below uses this method to validate on the model before saving. The <dfn>is_new</dfn> and <dfn>is_editable</dfn> methods are usually used during the models validation process as shown in the example.
+	 *
+	 <code>
+	function on_before_validate($values) 
+	{ 
+	    if (!empty($values['id'])) 
+	    { 
+	        $this->add_validation('location', array(&$this, 'is_editable'), 'The location value already exists.' , array('location', $values['id'])); 
+	    } 
+	    else 
+	    { 
+	        $this->add_validation('location', array(&$this, 'is_new'), 'The location value already exists.', 'location'); 
+	    } 
+	    return $values; 
+	} 
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	value to be checked
@@ -1461,11 +1713,32 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Validate the data before saving
+	 * Validate the data before saving. Can pass either a custom record object or an associative array of table column values.
+	 * Will run all validation rules, including required and autovalidation (if auto_validation is set on the model)
+	 * and return <dfn>TRUE</dfn> if it passes validation and <dfn>FALSE</dfn> if it fails. The <dfn>run_hook</dfn> parameter
+	 * will run the model's on_before_validate hook if set to TRUE (default is FALSE);
+	 *
+	 <code>
+	// Using an array of values
+	$values['name'] = 'Mr. Jones';
+	$values['email'] = 'jones@example.com';
+	$values['active'] = 'yes';
+	$this->examples_model->validate($values);
+	
+	// Using a custom record
+	$example = $this->examples_model->create();
+	$example->name = 'Mr. Jones';
+	$example->email = 'jones@example.com';
+	$example->active = 'yes';
+	$this->examples_model->validate($example);
+	
+	// you can also just call the validate method on the custom record object
+	$example->validate();
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	object or array of values
-	 * @param	boolean	run on_before_validate hook or not
+	 * @param	boolean	run on_before_validate hook or not (optional)
 	 * @return	array
 	 */	
 	public function validate($record, $run_hook = FALSE)
@@ -1608,7 +1881,12 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the generic type of string, number, date, datetime, time, blob, enum
+	 * 	Returns a field type of <dfn>string</dfn>, <dfn>number</dfn>, <dfn>date</dfn>, <dfn>datetime</dfn>, <dfn>time</dfn>, <dfn>blob</dfn>, <dfn>enum</dfn>
+	 *
+	 <code>
+	$type = $this->examples_model->field_type('email');
+	echo $type; // string
+	</code>
 	 *
 	 * @access	private
 	 * @param	string	field
@@ -1703,11 +1981,21 @@ class MY_Model extends CI_Model {
 		}
 	}
 	
-	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Is the data valid for saving
+	 * Returns a boolean value if all validation rules that have been run have passed.
+	 *
+	 <code>
+	$values['name'] = 'Mr. Jones';
+	$values['email'] = 'jones@example.com';
+	$values['active'] = 'yes';
+	$this->examples_model->validate($values);
+	if ($this->examples_model->is_valid($values))
+	{
+	    echo 'We are valid!';
+	}
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -1721,6 +2009,10 @@ class MY_Model extends CI_Model {
 
 	/**
 	 * Add a validation rule
+	 *
+	 <code>
+	$this->examples_model->add_validation('email', 'valid_email', 'The email is invalid.', 'jones@example.com'); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	field name
@@ -1739,9 +2031,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Add an error to the validation to prevent saving
 	 *
+	 <code>
+	$this->examples_model->add_error('There was an error in processing the data.', 'my_key'); 
+	</code>
+	 *
 	 * @access	public
 	 * @param	string	error message
-	 * @param	string	key value of error message
+	 * @param	string	key value of error message (optional)
 	 * @return	void
 	 */	
 	public function add_error($msg, $key = NULL)
@@ -1752,7 +2048,14 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns whether there are validation erros
+	 * Returns a <dfn>TRUE</dfn> if the model has any errors associated with it and <dfn>FALSE</dfn> otherwise.
+	 *
+	 <code>
+	if ($this->examples_model->has_error())
+	{
+		return FALSE;
+	}
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -1767,9 +2070,13 @@ class MY_Model extends CI_Model {
 	/**
 	 * Remove a validation rule from the validator object
 	 *
+	 <code>
+	$this->examples_model->remove_validation('my_field', 'my_func');
+	</code>
+	 *
 	 * @access	public
 	 * @param	string	field name
-	 * @param	string	function name
+	 * @param	string	function name (optional)
 	 * @return	array
 	 */	
 	public function remove_validation($field, $rule = NULL)
@@ -1783,6 +2090,10 @@ class MY_Model extends CI_Model {
 
 	/**
 	 * Add a required field
+	 *
+	 <code>
+	$this->examples_model->add_required('my_field'); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	field name
@@ -1806,7 +2117,15 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get the validation object
+	 * Gets the validation object
+	 *
+	 <code>
+	$validation = $this->examples_model->get_validation(); 
+	if ($validation->is_valid())
+	{
+	    echo 'YEAH!'; 
+	}
+	</code>
 	 *
 	 * @access	public
 	 * @return	object
@@ -1821,6 +2140,19 @@ class MY_Model extends CI_Model {
 	/**
 	 * Sets the validation to register to the global scope
 	 *
+	 <code>
+	$this->examples_model->register_to_global_errors(TRUE); 
+
+	...// code goes here
+
+	$errors = get_errors(); // validator_helper function to get global errors
+	foreach($errors as $error) 
+	{ 
+	    echo $error; 
+	    // There was an error in processing your data 
+	} 
+	</code>
+	 *
 	 * @access	public
 	 * @return	object
 	 */	
@@ -1832,7 +2164,17 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Return validation errors
+	 * Returns the errors found in the validator object
+	 *
+	 <code>
+	$errors = $this->examples_model->get_errors(); 
+
+	foreach($errors as $error) 
+	{ 
+	    echo $error; 
+	    // There was an error in processing your data 
+	} 
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -1847,6 +2189,10 @@ class MY_Model extends CI_Model {
 	/**
 	 * Removes all the validation
 	 *
+	 <code>
+	$this->examples_model->remove_all_validation();
+	</code>
+	 *
 	 * @access	public
 	 * @return	void
 	 */	
@@ -1859,7 +2205,26 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns an array of information about a field
+	 * Returns an associative array of a specific field's meta information which includes the following:
+	 *
+	<ul>
+		<li><strong>name</strong> - the name of the field</li>
+		<li><strong>type</strong> - the type of field (e.g. int, varchar, datetime... etc)</li>
+		<li><strong>default</strong> - the default value of the field</li>
+		<li><strong>options/max_length</strong> - if it is an enum field, then the enum options will be displayed. Otherwise, it will show the max length of the field which may not be relevant for some field types.</li>
+		<li><strong>primary_key</strong> - the primary key column</li>
+		<li><strong>comment</strong> - the comment</li>
+		<li><strong>collation</strong> - the collation method</li>
+		<li><strong>extra</strong> - extra field meta information like auto_increment</li>
+		<li><strong>null</strong> - a boolean value if the field is <dfn>NULL</dfn> or not </li>
+	</ul>
+
+	 <code>
+	$field_meta = $this->examples_model->field_info('email'); 
+
+	echo $field_meta['name']; // email 
+	echo $field_meta['type']; // varchar 
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -1872,7 +2237,19 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns an array of table information that has column names as keys
+	 * Returns an associative array of table field meta information with each key representing a table field.
+	 *
+	 <code>
+	$table_meta = $this->examples_model->table_info(); 
+
+	echo $table_meta['id']['type']; // int 
+	echo $table_meta['id']['primary_key']; // 1 (TRUE) 
+	echo $table_meta['email']['type']; // varchar 
+	echo $table_meta['first_name']['type']; // varchar 
+	echo $table_meta['description']['type']; // text 
+	echo $table_meta['active']['type']; // enum 
+	print_r($table_meta['active']['options']); // array('yes', 'no') 
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -1885,7 +2262,23 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns an array of information that can be used for building a form (e.g. Form_builder)
+	 * Returns an array of information that can be used for building a form (e.g. Form_builder). 
+	 *
+	 * Somewhat similar to the table_info method with difference being that the returned array has information for creating a form.
+	 * The related parameter is used to conveniently map other model information with this form to create a many to many multi-select form element.
+	 * This method is usally used with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class.
+	 *
+	 <code>
+	$form_info = $this->examples_model->form_fields(); 
+
+	echo $form_fields['id']['type']; // hidden 
+	echo $table_meta['email']['type']; // text 
+	echo $table_meta['email']['required']; // 1 (TRUE) 
+	echo $table_meta['first_name']['type']; // text 
+	echo $table_meta['description']['type']; // textfield 
+	echo $table_meta['active']['type']; // select or enum 
+	echo $table_meta['date_added']['type']; // datetime (a special field type in the form_builder class) 
+	</code>
 	 *
 	 * @access	public
 	 * @param	array	array of values to pass to the form fields
@@ -2021,10 +2414,81 @@ class MY_Model extends CI_Model {
 		return $fields;
 	}
 	
+	/**
+	 * Outputs the data passed to in into a comma separated value (CSV)
+	 *
+	 <code>
+	$items = $this->find_all();
+	$data = $this->csv($items);
+	</code>
+	 *
+	 * @access	public
+	 * @param	boolean	Display headers?
+	 * @param	string	The delimiter - comma by default
+	 * @param	string	The newline character - \n by default
+	 * @param	string	The enclosure - double quote by default
+	 * @return	string
+	 */	
+	public function csv($data = NULL, $display_headers = TRUE, $delim = ",", $newline = "\n", $enclosure = '"')
+	{
+		// borrowed from CI DBUtil class
+		$out = '';
+		
+		if (is_null($data))
+		{
+			$data = $this->find_all_array();
+		}
+
+		// First generate the headings from the table column names
+		if ($display_headers !== FALSE)
+		{
+			// check if it is a query object first
+			if (is_object($data) AND method_exists($data, 'list_fields'))
+			{
+				$headers = $query->list_fields();
+				$data = $query->result_array();
+			}
+
+			// then check to see if it is just a data array
+			else if ($this->_is_nested_array($data))
+			{
+				$record = current($data);
+				$headers = array_keys($this->normalize_data($record));
+			}
+		
+			foreach ($headers as $name)
+			{
+				$out .= $enclosure.str_replace($enclosure, $enclosure.$enclosure, $name).$enclosure.$delim;
+			}
+		}
+
+		$out = rtrim($out);
+		$out .= $newline;
+
+		// Next blast through the result array and build out the rows
+		foreach ($data as $row)
+		{
+			// normalize the row data
+			$row = $this->normalize_data($row);
+
+			foreach ($row as $item)
+			{
+				$out .= $enclosure.str_replace($enclosure, $enclosure.$enclosure, $item).$enclosure.$delim;
+			}
+			$out = rtrim($out);
+			$out .= $newline;
+		}
+
+		return $out;
+		
+	}
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the record class name
+	 * 	Returns the custom record class name if it exists. 
+	 * 
+	 * If a name does not exist, it will try to intelligently find a class with a singular version 
+	 * of the parent table model's name (e.g. <dfn>examples_model</dfn> = <dfn>example_model</dfn>)
 	 *
 	 * @access	private
 	 * @param	string	the table class name (not the record class)
@@ -2057,7 +2521,17 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Set the default return type
+	 * Set's the default return method for methods like <dfn>get()</dfn>, <dfn>find_one</dfn> and <dfn>find_all</dfn>.
+	 * 
+	 * Values can be <dfn>object</dfn>, <dfn>array</dfn>, <dfn>query</dfn>, <dfn>auto</dfn>
+	 *
+	 <code>
+	$this->examples_model->set_return_method('object'); 
+	$examples = $this->examples_model->find_all(); // an array of custom objects (if a custom object is defined. If not, a standard object will be used) 
+
+	$this->examples_model->set_return_method('array'); 
+	$examples = $this->examples_model->find_all(); // an array of associative arrays is returned and will ignore any custom object
+	</code>
 	 *
 	 * @access	public
 	 * @param	string	return type (object, array, query, auto)
@@ -2071,7 +2545,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get the default return type
+	 * Returns the return method used for querying (<dfn>object</dfn>, <dfn>array</dfn>, <dfn>query</dfn>, <dfn>auto</dfn>)
+	 *
+	 <code>
+	$return_method = $this->examples_model->get_return_method(); // object 
+	</code>
 	 *
 	 * @access	public
 	 * @return	mixed
@@ -2084,7 +2562,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Print out the last data set result
+	 * Prints out to the screen the last query results ran by the model.
+	 *
+	 <code>
+	$this->examples_model->debug_data(); // prints out an array of information to the screen
+	</code>
 	 *
 	 * @access	public
 	 * @return	mixed
@@ -2104,7 +2586,11 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Debug the last query
+	 * Prints out to the screen the last query SQL ran by the model.
+	 *
+	 <code>
+	$this->examples_model->debug_query(); // prints out the last query run by the model
+	</code>
 	 *
 	 * @access	public
 	 * @return	void
@@ -2117,7 +2603,15 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Normailze the data to be saved so that it becomes an array
+	 * Normalize the data to be saved so that it becomes an array and can be referenced by the 'normalized_save_data' property
+	 *
+	 <code>
+	$record = $this->examples_model->create(); 
+	$record->name = 'John Smith'; 
+
+	$values = $this->examples_model->normalize_save_values($record); 
+	echo $values['name'] = 'John Smith';
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	array of values to be saved
@@ -2127,29 +2621,53 @@ class MY_Model extends CI_Model {
 	{
 		$CI =& get_instance();
 		if (!isset($record)) $record = $CI->input->post();
-		if (is_object($record))
+		$values = $this->normalize_data($record);
+		$this->normalized_save_data = $values;
+		return $values;
+	}
+	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Normailzes the data passed to it so that it becomes an array (used by the normalize_save_values)
+	 *
+	 <code>
+	$record = $this->examples_model->create(); 
+	$record->name = 'John Smith'; 
+
+	$values = $this->examples_model->normalize_data($record); 
+	echo $values['name'] = 'John Smith';
+	</code>
+	 *
+	 * @access	public
+	 * @param	mixed	array of values
+	 * @return	array
+	 */	
+	public function normalize_data($data)
+	{
+		if (is_object($data))
 		{
-			if (is_a($record, 'Data_record'))
+			if (is_a($data, 'Data_record'))
 			{
-				$values = $record->values();
+				$values = $data->values();
 			}
 			else
 			{
-				$values = get_object_vars($record);
+				$values = get_object_vars($data);
 			}
 		}
 		else
 		{
-			$values = (array) $record;
+			$values = (array) $data;
 		}
-		$this->normalized_save_data = $values;
 		return $values;
 	}
 	
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Process linked fields
+	 * Processes $linked_fields and will convert any empty values with their corresponding linked field function
 	 *
 	 * @access	public
 	 * @param	array	values to be saved
@@ -2464,8 +2982,16 @@ class MY_Model extends CI_Model {
 	/**
 	 * Load another model
 	 *
+	 <code>
+	// load model from application directory
+	$this->load_model('my_model');
+	
+	// load model from another module
+	$this->load_model(array('my_module' => 'my_model'));
+	</code>
+	 *
 	 * @access	public
-	 * @param	string	the name of the model
+	 * @param	mixed	the name of the model. If an array, the key is the module and the name is the model
 	 * @return	string
 	 */	
 	public function load_model($model)
@@ -2488,7 +3014,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Load related model
+	 * Load a related model
 	 *
 	 * @access	public
 	 * @param	string	the name of the model
@@ -2510,6 +3036,13 @@ class MY_Model extends CI_Model {
 
 	// --------------------------------------------------------------------
 
+	/**
+	 * Format a model's name
+	 *
+	 * @access	public
+	 * @param	string	the name of the model
+	 * @return	boolean
+	 */	
 	public function format_model_name($model)
 	{
 		$model_name = $model;
@@ -2523,23 +3056,22 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Serializes a field's value
+	 * Serializes field values specified in the $serialized_fields property
 	 *
-	 * @access	protected
+	 * @access	public
 	 * @param	string	the field name to unserialize
-	 * @param	string	the data to unserialize
-	 * @return	string
+	 * @return	array
 	 */	
 	public function serialize_field_values($data)
 	{
-		// unserialize any data
+		// serialize any data
 		if (!empty($this->serialized_fields) AND is_array($data))
 		{
 			if ($this->_is_nested_array($data))
 			{
 				foreach($data as $key => $val)
 				{
-					$data[$key] = $this->unserialize_field_values($val);
+					$data[$key] = $this->serialize_field_values($val);
 				}
 			}
 			
@@ -2563,7 +3095,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Create safe where query parameters to avoid column name conflicts in queries
+	 * Serialize a value to be saved
 	 *
 	 * @access	public
 	 * @param	string	the array value to unserialize
@@ -2632,7 +3164,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Create safe where query parameters to avoid column name conflicts in queries
+	 * Unserialize a saved value
 	 *
 	 * @access	public
 	 * @param	string	the array value to unserialize
@@ -2681,7 +3213,7 @@ class MY_Model extends CI_Model {
 		}
 		return $val;
 	}
-
+		
 	// --------------------------------------------------------------------
 	
 	/**
@@ -2794,6 +3326,9 @@ class MY_Model extends CI_Model {
 	/**
 	 * What to print when echoing out this object
 	 *
+	 <code>
+	</code>
+	 *
 	 * @access	public
 	 * @return	string
 	 */	
@@ -2851,13 +3386,38 @@ class MY_Model extends CI_Model {
 }
 
 
-
 // --------------------------------------------------------------------
 
 /**
- * This class is a wrapper around the query results returned by the MY_Model class
+ * FUEL CMS
+ * http://www.getfuelcms.com
  *
- */	
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * This class is a wrapper around the query results returned by the MY_Model class
+ * 
+ * This class is instantiated by the Table Class (MY_Model) when a result set is needed.
+ * The Data_set class has a few methods to retrieve information about the data set.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @prefix		$data_set->
+ */
+
 Class Data_set {
 	
 	private $results; // the results array
@@ -2879,6 +3439,19 @@ Class Data_set {
 	/**
 	 * Returns the results of the query
 	 *
+	 <code>
+	$single_result_set = $this->examples_model->get(FALSE); 
+	$example = $single_result_set->result(); 
+	echo $example->name; 
+	
+	// If multiple result sets are needed, then the result method will return multiple result objects/arrays like so:
+	$multiple_result_set = $this->examples_model->get(TRUE); 
+	foreach($multiple_result_set as $example) 
+	{ 
+	    echo $example->name; 
+	} 
+	</code>
+	 *
 	 * @access	public
 	 * @param	array	values to be saved
 	 * @return	array
@@ -2896,6 +3469,11 @@ Class Data_set {
 	/**
 	 * Determines if there is a key field value in the array of values
 	 *
+	 <code>
+	$multiple_result_set = $this->examples_model->get(TRUE); 
+	echo $multiple_result_set->num_records();
+	</code>
+	 *
 	 * @access	public
 	 * @param	array	values to be saved
 	 * @return	boolean
@@ -2912,6 +3490,11 @@ Class Data_set {
 	
 	/**
 	 * Debug data sets
+	 *
+	 <code>
+	$multiple_result_set = $this->examples_model->get(TRUE); 
+	$multiple_result_set->debug();
+	</code>
 	 *
 	 * @access	public
 	 * @return	void
@@ -2941,6 +3524,9 @@ Class Data_set {
 	/**
 	 * Debug data sets
 	 *
+	 <code>
+	</code>
+	 *
 	 * @access	public
 	 * @return	void
 	 */	
@@ -2954,22 +3540,50 @@ Class Data_set {
 	
 }
 
-
-
 // --------------------------------------------------------------------
 
 /**
- * This class can be extended to return custom record objects for MY_Model
+ * FUEL CMS
+ * http://www.getfuelcms.com
  *
- */	
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * This class can be extended to return custom record objects for MY_Model
+ * 
+ * The Data_record class is used to create custom record objects for a Table class (MY_Model). 
+ * Data_record objects provides a greater level of flexibility with your models by allowing you to create not only
+ * methods on your model to retreive records from your datasource, but also the ability to create
+ * derived attributes and lazy load other objects with each record returned.
+ * This class is <strong>optional</strong>. If it it doesn't exist, then the Table Class parent model
+ * will use either a standard generic class or an array depending on the return method specified.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @prefix		$record->
+ */
+
 Class Data_record {
 
-	protected $_CI; // global CI object
-	protected $_db; // database object
+	protected $_CI = NULL; // global CI object
+	protected $_db = NULL; // database object
 	protected $_fields = array(); // fields of the record
 	protected $_objs = array(); // nested objects
-	protected $_parent_model; // the name of the parent model
-	protected $_inited = FALSE;
+	protected $_parent_model = NULL; // the name of the parent model
+	protected $_inited = FALSE; // Returns whether the object has been initiated or not
 	protected $_date_format = ''; // datetime method format... will first look in config and then will default to m/d/Y
 	protected $_time_format = 'h:i:s a'; // datetime method format
 	protected $_format_suffix = '_formatted'; // datetime method format
@@ -3026,7 +3640,12 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Is this class initialized yet?
+	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the record class has been properly intialized.
+	 *
+	 <code>
+	$record = $this->examples_model->create(); 
+	$record->is_initialized(); // Returns TRUE
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -3040,6 +3659,11 @@ Class Data_record {
 	
 	/**
 	 * Sets the fields of the oject ignoring those fields prefixed with an underscore
+	 *
+	 <code>
+	$fields = array('id', 'name', 'email');
+	$record = $this->examples_model->set_fields($fields); 
+	</code>
 	 *
 	 * @access	public
 	 * @param	array	field names
@@ -3063,6 +3687,10 @@ Class Data_record {
 	/**
 	 * Returns the id field name
 	 *
+	 <code>
+	$record->id(); // Returns id
+	</code>
+	 *
 	 * @access	public
 	 * @param	array	field values
 	 * @return	void
@@ -3076,6 +3704,11 @@ Class Data_record {
 	
 	/**
 	 * Sets the values of the fields
+	 *
+	 <code>
+	$record = $this->examples_model->create(); 
+	$record->fill($_POST);  // Be sure to always clean your $_POST variables before using them
+	</code>
 	 *
 	 * @access	public
 	 * @param	array	field values
@@ -3093,7 +3726,13 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the field values
+	 * Returns an array of the record's values. 
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$values = $record->values()
+	echo $values['email']; // vader@deathstar.com 
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -3130,7 +3769,13 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Duplicates the object
+	 * Duplicates the record with all it's current values
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$duplicate_record = $record->duplicate()
+	echo $duplicate_record->email; // vader@deathstar.com 
+	</code>
 	 *
 	 * @access	public
 	 * @return	object
@@ -3152,7 +3797,13 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the results of the query
+	 * Saves all the properties of the object. 
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->email = 'hsolo@milleniumfalcon.com';
+	$record->save();
+	</code>
 	 *
 	 * @access	public
 	 * @param	boolean	validate before saving?
@@ -3167,7 +3818,20 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Validates the values
+	 * Validates the values of the object to makes sure they are valid to be saved.
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
+	if ($record->validate()) 
+	{ 
+	    echo 'VALID'; 
+	} 
+	else 
+	{ 
+	    echo 'Please fill out a valid email address'; 
+	} 
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -3180,7 +3844,25 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Is the data in the fields valid?
+	 * Returns <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if validation has been run and is valid.
+	 *
+ 	<p class="important">The validate <strong>method</strong> must be called before calling <strong>is_valid</strong>.</p>
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
+	$record->validate();
+
+	... other code ...
+
+	if ($record->is_valid()) 
+	{ 
+	    echo 'VALID'; 
+	} 
+	else 
+	{ 
+	    echo 'Please fill out a valid email address'; 
+	} 
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -3193,7 +3875,20 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns an array of errors if they exist
+	 * Returns an array of error messages if there were any found after validating. 
+	 * This is commonly called after saving because validation will occur automatically on save.
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
+	if (!$record->save())
+	{ 
+	    foreach($record->errors as $error)
+	    {
+	        echo $error;	
+	    }
+	} 
+	</code>
 	 *
 	 * @access	public
 	 * @return	array
@@ -3206,7 +3901,12 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Deletes this object
+	 * Deletes the record. Similar to the save method, it will call the parent model's delete method passing itself as the where condition to delete
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->delete(); // note the invalid email address
+	</code>
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -3219,7 +3919,14 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Refreshes the data in this object from data in the database
+	 * Refreshes the object from the data source.
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->email = 'hsolo@milleniumfalcon.com';
+	$record->refresh();
+	echo $record->email; // dvader@deathstar.com
+	</code>
 	 *
 	 * @access	public
 	 * @return	void
@@ -3239,7 +3946,15 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the results of the query
+	 * Will load another model's record object and is often used in custom derived attributes.
+	 *
+	 <code>
+	function get_spaceship()
+	{
+	    $ship = $this->lazy_load(array('email' => 'hsolo@milleniumfalcon.com'), 'spacehips_model', FALSE);
+	    return $ship;
+	}
+	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	where conditions
@@ -3310,6 +4025,13 @@ Class Data_record {
 	/**
 	 * Returns the parent model object
 	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+
+	// Same as above
+	$record->parent_model()->find_one(array('email' => 'dvader@deathstar.com');
+	</code>
+	 *
 	 * @access	public
 	 * @return	object
 	 */	
@@ -3321,7 +4043,15 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Determine if a proprty (field) exists
+	 * Tests whether a property exists on the record
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	if ($record->prop_exists('email')))
+	{
+	    echo $record->email;
+	}
+	</code>
 	 *
 	 * @access	public
 	 * @param	key	field names
@@ -3335,7 +4065,12 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Echos out the last query run by the parent model
+	 * Prints to the screen the last query run by the parent model. An alias to the parent model's debug_query method.
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->debug_query()))
+	</code>
 	 *
 	 * @access	public
 	 * @param	object	parent model object
@@ -3350,7 +4085,12 @@ Class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Echos out the data of this object
+	 * Prints to the screen the property values of the of the object.
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->debug_data()))
+	</code>
 	 *
 	 * @access	public
 	 * @return	void
