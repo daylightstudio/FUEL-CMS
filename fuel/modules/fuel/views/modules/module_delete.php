@@ -10,8 +10,8 @@
 
 	<div class="buttonbar clearfix">
 		<ul>
-			<li class="end"><a href="<?=$back_action?>" class="ico ico_no"><?=lang('btn_no_dont_delete')?></a></li>
-			<li class="end spacer"><a href="#" class="ico ico_yes" id="submit"><?=lang('btn_yes_dont_delete')?></a></li>
+			<li class="unattached"><a href="<?=$back_action?>" class="ico ico_no"><?=lang('btn_no_dont_delete')?></a></li>
+			<li class="unattached"><a href="#" class="ico ico_yes" id="submit"><?=lang('btn_yes_dont_delete')?></a></li>
 		</ul>
 	</div>
 

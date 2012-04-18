@@ -32,18 +32,18 @@
 			<?php if ($this->fuel->auth->module_has_action('replace') AND !empty($others) AND $this->fuel->auth->has_permission($this->permission, 'edit') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 				<li><a href="<?=fuel_url($this->module_uri.'/replace/'.$id)?>" class="ico ico_replace replace_action"><?=lang('btn_replace')?></a></li>
 			<?php endif; ?>
-			<?php if ($this->fuel->auth->module_has_action('create')) : ?>
-				<li class="end"><a href="<?=fuel_url($this->module_uri.'/create')?>" class="ico ico_create"><?=lang('btn_create')?></a></li>
-			<?php endif; ?>
-			
 			<?php if ($this->fuel->auth->module_has_action('others')) : ?>
 			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
 				$ico_key = str_replace('/', '_', $other_action);
 				$lang_key = url_title($label, 'underscore', TRUE);
 				if ($new_label = lang('btn_'.$lang_key)) $label = $new_label;
 			?>
-				<li class="spacer end"><?=anchor(fuel_url($other_action), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
+				<li><?=anchor(fuel_url($other_action), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
 			<?php endforeach; ?>
+			<?php if ($this->fuel->auth->module_has_action('create')) : ?>
+				<li class="end"><a href="<?=fuel_url($this->module_uri.'/create')?>" class="ico ico_create"><?=lang('btn_create')?></a></li>
+			<?php endif; ?>
+			
 			<?php endif; ?>
 			
 		<?php elseif ($action == 'create' AND $this->fuel->auth->module_has_action('save')) : ?>

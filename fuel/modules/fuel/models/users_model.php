@@ -44,12 +44,11 @@ class Users_model extends Base_module_model {
 	
 	function user_info($user_id)
 	{
-		$user_data = $this->find_one_array(array('id' => $user_id));
+		$user = $this->find_one(array('id' => $user_id));
+		$user_data = $user->values();
 		
 		// load user permisisons
-		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-		$user_data['permissions'] = $CI->user_to_permissions_model->get_permissions($user_id);
+		$user_data['permissions'] = $user->permissions;
 		return $user_data;
 	}
 	

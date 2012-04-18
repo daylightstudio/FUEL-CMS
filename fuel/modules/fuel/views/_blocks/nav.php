@@ -1,6 +1,5 @@
 	<div id="fuel_left_panel">
 		<div id="fuel_left_panel_inner">
-			
 <?php 
 	// // Get all modules
 	$modules = $this->fuel->modules->get();
