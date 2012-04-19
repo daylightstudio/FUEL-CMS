@@ -4264,6 +4264,10 @@ Class Data_record {
 		{
 			$this->_fields[$var] = $val;
 		}
+		else if ($this->_is_relationship_property($var, 'has_many'))
+		{
+			$this->_fields[$var] = $val;
+		}
 		else
 		{
 			throw new Exception('property '.$var.' does not exist.');
@@ -4341,7 +4345,8 @@ Class Data_record {
 	 *
 	 * @access	protected
 	 * @param	string	field name
-	 * @param	boolean	whether to use foriegn key for an associative array
+	 * @param	boolean	whether return the related object or just the data (optional)
+	 * @param	string	options are 'has_many' and 'belongs_to'(optional)
 	 * @return	array
 	 */	
 	protected function _get_relationship($var, $return_object = FALSE, $relationship_type = 'has_many')
@@ -4393,13 +4398,15 @@ Class Data_record {
 		{
 			
 			// construct the method name
-			// now grab the actual data
 			$this->_CI->$foreign_model->db()->where_in("{$rel_where['foreign_table']}.".$id_field, $rel_ids);
-
+			
+			// if return object is set to TRUE, then do just that  with the where_in already applied
 			if ($return_object)
 			{
 				return $this->_CI->$foreign_model;
 			}
+			
+			// other wise we do a find all with the where_in already applied
 			else
 			{
 				$foreign_data = $this->_CI->$foreign_model->find_all();
@@ -4411,142 +4418,6 @@ Class Data_record {
 		}
 		return $output;
 	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns an array of relationship data
-	 *
-	 * @access	protected
-	 * @param	string	field name
-	 * @param	boolean	whether to use foriegn key for an associative array
-	 * @return	array
-	 */	
-	/*protected function _get_has_many_relationship($var, $assoc = FALSE, $key_field = NULL, $return_method = NULL)
-	{
-		// first check in the relationships table to see if they exist
-		$relationships_model = $this->_parent_model->load_model($this->_parent_model->relationships_model);
-		$has_many = $this->_parent_model->has_many[$var];
-		
-		if (is_array($has_many) AND isset($has_many['module']))
-		{
-			$foreign_model = array($has_many['module'] => $this->_parent_model->format_model_name($has_many['model']));
-		}
-		else
-		{
-			$foreign_model = $this->_parent_model->format_model_name($has_many);
-		}
-		
-		$id_field = $this->_parent_model->key_field();
-		$foreign_model = $this->_parent_model->load_model($foreign_model);
-		$rel_where = array(
-			'candidate_table' => $this->_parent_model->table_name(),
-			'candidate_key'   => $this->$id_field,
-			'foreign_table'   => $this->_CI->$foreign_model->table_name(),
-			);
-		$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where));
-		$output = array();
-		if ( ! empty($rel_ids))
-		{
-			
-			// construct the method name
-			$method = 'find_all';
-			if ($return_method == 'array')
-			{
-				$method .= '_array';
-			}
-
-			if ($assoc)
-			{
-				$method .= '_assoc';
-			}
-
-			// now grab the actual data
-			$this->_CI->$foreign_model->db()->where_in("{$rel_where['foreign_table']}.".$id_field, $rel_ids);
-
-			if ($assoc)
-			{
-				if (is_null($key_field))
-				{
-					$key_field = $this->_parent_model->key_field();
-				}
-				$foreign_data = $this->_CI->$foreign_model->$method($key_field);
-			}
-			else
-			{
-				$foreign_data = $this->_CI->$foreign_model->$method();
-			}
-			if ( ! empty($foreign_data))
-			{
-				$output = $foreign_data;
-			}
-		}
-		return $output;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	protected function _get_belongs_to_relationship($var, $assoc = FALSE, $key_field = NULL, $return_method = NULL)
-	{
-		// first check in the relationships table to see if they exist
-		$relationships_model = $this->_parent_model->load_model(array('fuel' => 'relationships_model'));
-		$belongs_to = $this->_parent_model->belongs_to[$var];
-		
-		if (is_array($belongs_to) AND isset($belongs_to['module']))
-		{
-			$foreign_model = array($belongs_to['module'] => $this->_parent_model->format_model_name($belongs_to['model']));
-		}
-		else
-		{
-			$foreign_model = $this->_parent_model->format_model_name($belongs_to);
-		}
-		
-		$id_field = $this->_parent_model->key_field();
-		$foreign_model = $this->_parent_model->load_model($foreign_model);
-		$rel_where = array(
-			'candidate_table' => $this->_CI->$foreign_model->table_name(),
-			'foreign_table'   => $this->_parent_model->table_name(),
-			'foreign_key'     => $this->id,
-			);
-		$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where));
-		$output = array();
-		if ( ! empty($rel_ids))
-		{
-			
-			// construct the method name
-			$method = 'find_all';
-			if ($return_method == 'array')
-			{
-				$method .= '_array';
-			}
-
-			if ($assoc)
-			{
-				$method .= '_assoc';
-			}
-
-			// now grab the actual data
-			$this->_CI->$foreign_model->db()->where_in("{$rel_where['candidate_table']}.".$id_field, $rel_ids);
-
-			if ($assoc)
-			{
-				if (is_null($key_field))
-				{
-					$key_field = $this->_parent_model->key_field();
-				}
-				$foreign_data = $this->_CI->$foreign_model->$method($key_field);
-			}
-			else
-			{
-				$foreign_data = $this->_CI->$foreign_model->$method();
-			}
-			if ( ! empty($foreign_data))
-			{
-				$output = $foreign_data;
-			}
-		}
-		return $output;
-	}*/
 	
 	// --------------------------------------------------------------------
 	
