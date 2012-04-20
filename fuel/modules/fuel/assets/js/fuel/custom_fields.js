@@ -111,15 +111,49 @@ fuel.fields.wysiwyg_field = function(context){
 				editor.updateElement();
 			});
 			
-			// so the formatting doesn't get too crazy from ckeditor
-			this.dataProcessor.writer.setRules( 'p',
+			// set processors
+			// http://docs.cksource.com/CKEditor_3.x/Howto/FCKeditor_HTML_Output
+			var writer = this.dataProcessor.writer; 
+			
+			// The character sequence to use for every indentation step.
+			writer.indentationChars = '    ';
+
+			var dtd = CKEDITOR.dtd;
+			// Elements taken as an example are: block-level elements (div or p), list items (li, dd), and table elements (td, tbody).
+			for ( var e in CKEDITOR.tools.extend( {}, dtd.$block, dtd.$listItem, dtd.$tableContent ) )
 			{
-				indent : false,
-				breakBeforeOpen : true,
-				breakAfterOpen : false,
-				breakBeforeClose : false,
-				breakAfterClose : true
+				editor.dataProcessor.writer.setRules( e, {
+					// Indicates that an element creates indentation on line breaks that it contains.
+					indent : false,
+					// Inserts a line break before a tag.
+					breakBeforeOpen : true,
+					// Inserts a line break after a tag.
+					breakAfterOpen : false,
+					// Inserts a line break before the closing tag.
+					breakBeforeClose : false,
+					// Inserts a line break after the closing tag.
+					breakAfterClose : true
+				});
+			}
+
+			for ( var e in CKEDITOR.tools.extend( {}, dtd.$list, dtd.$listItem, dtd.$tableContent ) )
+			{
+				this.dataProcessor.writer.setRules( e, {			
+					indent : true,
+				});
+			}
+
+			// You can also apply the rules to a single element.
+			this.dataProcessor.writer.setRules( 'table',
+			{ 		
+				indent : true
+			});	
+
+			this.dataProcessor.writer.setRules( 'form',
+			{ 		
+				indent : true
 			});
+			
 		})
 		CKEDITOR.instances[ckId].resetDirty();
 		

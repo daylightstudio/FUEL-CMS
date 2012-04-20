@@ -36,6 +36,11 @@ $config['modules_allowed'] = array(
 // whether the admin backend is enabled or not
 $config['admin_enabled'] = TRUE;
 
+// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
+// If it is an array, then it will loop through the array using the keys to match against a regular expression:
+// $config['max_page_params'] = array('about/news/' => 1);
+$config['max_page_params'] = 0;
+
 // will auto search view files. 
 // If the URI is about/history and the about/history view 
 // does not exist but about does, it will render the about page
@@ -79,7 +84,7 @@ $config['ck_editor_settings'] = "{
 	entities: false,
 	bodyClass: 'ckeditor',
 	toolbarCanCollapse: false,
-	protectedSource: [/\{\{[\s\S]*?\}\}/gi, /<\?[\s\S]*?\?>/g]
+	protectedSource: [/\{[\s\S]*?\}/gi, /<\?[\s\S]*?\?>/g]
 	}";
 
 
