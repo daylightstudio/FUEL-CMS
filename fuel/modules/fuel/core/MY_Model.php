@@ -66,7 +66,7 @@ class MY_Model extends CI_Model {
 	public $suffix = '_model'; // the suffix used for the data record class
 	
 // !@todo add docs for $has_many
-	public $has_many = array();
+	public $has_many = array(); // keys are model => key => ', module, relationships_model, foreign_key, candidate_key 
 	public $belongs_to = array();
 	
 	protected $db; // CI database object
@@ -2384,12 +2384,17 @@ class MY_Model extends CI_Model {
 		// attach relationship fields if they exist
 		if ( ! empty($this->has_many))
 		{
-			foreach ($this->has_many as $related_field => $related_model)
+			foreach ($this->has_many as $related_field => $related)
 			{
-				$related_model = $this->load_related_model($related_model);
+				$related_model = $this->load_related_model($related);
 				$related_options = $this->$related_model->options_list();
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+				if (isset($related['relationships_model']) AND $related['relationships_model'] === FALSE)
+				{
+					$fields[$related_field]['type'] = 'select';
+					$fields[$related_field]['first_option'] = lang('label_select_one');
+				}
 			}
 		}
 
@@ -2400,7 +2405,12 @@ class MY_Model extends CI_Model {
 				$related_model = $this->load_related_model($related_model);
 				$related_options = $this->$related_model->options_list();
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to') : array();
-				$fields[$related_field] = array('label' => 'Belongs to<br />' . humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
+				if (isset($related['relationships_model']) AND $related['relationships_model'] === FALSE)
+				{
+					$fields[$related_field]['type'] = 'select';
+					$fields[$related_field]['first_option'] = lang('label_select_one');
+				}
 			}
 		}
 
@@ -3001,6 +3011,8 @@ class MY_Model extends CI_Model {
 		{
 			$module = key($model);
 			$m = current($model);
+			
+			// TODO .... DECIDE IF WE SHOULD PASS THROUGH to format_model_name... the suffix may be different if configured
 			$CI->load->module_model($module, $m);
 			return $m;
 		}
@@ -3024,7 +3036,14 @@ class MY_Model extends CI_Model {
 	{
 		if (is_array($related_model))
 		{
-			$related_model = $this->load_model(array($related_model['module'] => $this->format_model_name($related_model['model'])));
+			if (is_array($related_model['model']))
+			{
+				$related_model = $this->load_model($related_model['model']);
+			}
+			else if (isset($related_model['module']) AND isset($related_model['model']))
+			{
+				$related_model = $this->load_model(array($related_model['module'] => $this->format_model_name($related_model['model'])));
+			}
 		}
 		else
 		{

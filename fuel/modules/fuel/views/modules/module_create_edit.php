@@ -1,3 +1,19 @@
+<?php /* TODO... and for related items ?>
+<?php  if (!empty($related_items)) : ?>
+<div id="related_items">
+	<h3 class="ico ico_navigation"><?=lang('pages_associated_navigation')?></h3>
+	<ul>
+		<?php foreach($page_navs as $nav) : ?>
+		<li><a href="<?=fuel_url('navigation/edit/'.$nav['id'])?>"><?=$nav['label']?> 
+		<?php if (!empty($nav['group_name'])){ ?>(<?=$nav['group_name']?>)<?php } ?></a>
+		</li>
+		<?php endforeach; ?>
+	</ul>
+</div>
+<?php endif; ?>
+<?php */ ?>
+
+
 <!-- NOTIFICATION EXTRA -->
 <div id="notification_extra" class="notification">
 	<?php if (isset($data['published']) && !is_true_val($data['published'])) {?>

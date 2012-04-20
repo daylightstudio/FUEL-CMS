@@ -603,9 +603,9 @@ div.sticky_inner h1 { padding-top: 10px; font-family: 'Comic Sans MS', cursive; 
 div.sticky_bot { background: transparent url(../images/sticky_bot.png) no-repeat; height: 26px;  }
 
 /* pages */
-div#page_navs { float: right; width: 180px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 0px 10px; }
-div#page_navs h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
-div#page_navs li { list-style: none; padding-left: 5px; margin: 5px 0; }
+div#related_items { float: right; width: 180px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 0px 10px; }
+div#related_items h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
+div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 
 a.reset { display: block; width: 16px; height: 16px; background: transparent url(../images/ico_arrow_refresh.png) no-repeat; margin-right: 5px; }
 

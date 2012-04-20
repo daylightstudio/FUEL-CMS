@@ -1,11 +1,11 @@
-<?php  if (!empty($page_navs)) : ?>
+<?php  if (!empty($related_items)) : ?>
 
-<div id="page_navs">
+<div id="related_items">
 	<h3 class="ico ico_navigation"><?=lang('pages_associated_navigation')?></h3>
 	<ul>
-		<?php foreach($page_navs as $nav) : ?>
-		<li><a href="<?=fuel_url('navigation/edit/'.$nav['id'])?>"><?=$nav['label']?> 
-		<?php if (!empty($nav['group_name'])){ ?>(<?=$nav['group_name']?>)<?php } ?></a>
+		<?php foreach($related_items as $item) : ?>
+		<li><a href="<?=fuel_url('navigation/edit/'.$item['id'])?>"><?=$item['label']?> 
+		<?php if (!empty($item['group_name'])){ ?>(<?=$item['group_name']?>)<?php } ?></a>
 		</li>
 		<?php endforeach; ?>
 	</ul>

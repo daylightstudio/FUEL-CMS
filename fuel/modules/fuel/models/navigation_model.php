@@ -305,22 +305,46 @@ class Navigation_model extends Base_module_model {
 		$this->db->order_by('precedence, location asc');
 	}
 	
+	
+	// overwritten so we can group items
+	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE)
+	{
+		if (!empty($order) AND is_bool($order))
+		{
+			$this->db->order_by($val, 'asc');
+		} 
+		else if (!empty($order) AND is_string($order))
+		{
+			if (strpos($order, ' ') === FALSE) $order .= ' asc';
+			$this->db->order_by($order);
+		}
+		$data = $this->find_all_array_assoc($key, $where);
+		return $this->_group_options($data, $key, $val);
+	}
+	
+	
 	// used to get nested groups
 	function get_others($display_field, $id, $val_field = NULL)
 	{
-		if (empty($val_field)) $val_field = $this->key_field;
-		$data = $this->find_all_array_assoc('id');
-		unset($data[$id]);
-		$others = array();
-		foreach($data as $d)
-		{
-			if (!isset($others[$d['group_name']])) $others[$d['group_name']] = array();
-			$others[$d['group_name']][$d['id']] = $d['label'];
-		}
+		$others = $this->find_all_array_assoc('id');
+		if (isset($others[$id])) unset($others[$id]);
+		$others = $this->_group_options($others);
 		if (isset($others[$id])) unset($others[$id]);
 		return $others;
 	}
 	
+	// group the options together
+	protected function _group_options($data, $key = 'id', $val = 'label')
+	{
+		$options = array();
+		foreach($data as $d)
+		{
+			if (!isset($options[$d['group_name']])) $options[$d['group_name']] = array();
+			$options[$d['group_name']][$d[$key]] = $d[$val];
+		}
+		unset($data);
+		return $options;
+	}
 }
 
 class Navigation_item_model extends Base_module_record {

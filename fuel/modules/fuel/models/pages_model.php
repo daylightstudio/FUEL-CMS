@@ -8,10 +8,22 @@ class Pages_model extends Base_module_model {
 	public $required = array('location');
 	public $hidden_fields = array('last_modified', 'last_modified_by');
 	public $ignore_replacement = array('location');
+	public $has_many = array('navigation' => array(
+												'model' => array(FUEL_FOLDER => 'navigation_model'), 
+												'foreign_key' => 'page_id', 
+												'relationships_model' => FALSE)
+												);
 	
 	function __construct()
 	{
 		parent::__construct('pages');
+	}
+	
+	function related_items($values = array())
+	{
+		
+		$vars['related_items'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+		
 	}
 	
 	function tree($just_published = FALSE)
