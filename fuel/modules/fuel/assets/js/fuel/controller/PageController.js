@@ -24,23 +24,6 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		
 		var bindFields = function(){
 			
-			/* don't want to automatically fill out a navigation item if nav isn't being used
-			if ($('#vars--page_title').size()){
-				$('#navigation_label').live('keyup', function(){
-					if (!blurred) $('#vars--page_title').val($('#navigation_label').val());
-				}).blur(function(e){
-					blurred = true;
-				});
-			}
-
-			if ($('#vars--page_title').size()){
-				$('#navigation_label').live('keyup', function(){
-					if (!blurred) $('#navigation_label').val($('#vars--page_title').val());
-				}).blur(function(e){
-					blurred = true;
-				});
-			}*/
-			
 			if ($('#vars--page_title').size()){
 				$('#navigation_label').keyup(function(){
 					$('#vars--page_title').val($('#navigation_label').val());
@@ -49,9 +32,9 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		}
 		
 		var _this = this;
-		$('#layout').change(function(e){
+		var retreiveLayoutVars = function(){
 			$('#layout_vars .loader').show();
-			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val();
+			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val() + '/' + $('#language').val();
 			$('#layout_vars').load(path, {}, function(){
 				var context = $('#fuel_main_content_inner');
 				_this.initSpecialFields(context);
@@ -59,7 +42,17 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 				if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 				//$(this).parents('form').formBuilder().initialize();
 			});
+			
+		}
+		
+		$('#layout').change(function(e){
+			retreiveLayoutVars();
 		});
+		
+		$('#language').change(function(e){
+			$.changeChecksaveValue('#language', $(this).val());
+			window.location = jqx.config.fuelPath + '/pages/edit/' +  $('#id').val() + '?lang=' + $('#language').val();
+		})
 		
 		$('#view_twin_cancel').click(function(){
 			var path = jqx.config.fuelPath + '/pages/import_view_cancel/';

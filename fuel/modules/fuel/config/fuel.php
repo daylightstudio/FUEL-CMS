@@ -118,6 +118,12 @@ $config['ck_editor_settings'] = array(
 	'toolbarCanCollapse' => FALSE,
 );
 
+// languages for pages. The key is saved to the page variables
+$config['languages'] = array(
+						'english' => 'English',
+						);
+
+
 
 /*
 |--------------------------------------------------------------------------

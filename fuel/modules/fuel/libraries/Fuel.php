@@ -47,6 +47,7 @@ class Fuel extends Fuel_base_library {
 									'auth',
 									'blocks',
 									'cache',
+									'language',
 									'layouts',
 									'logs',
 									'modules',

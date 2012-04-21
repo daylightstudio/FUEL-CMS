@@ -31,6 +31,7 @@
 class Fuel_pagevars extends Fuel_base_library {
 	
 	public $location = ''; // the default location used for grabbing variables
+	public $lang = 'english'; // the language
 	public $vars_path = ''; // the path to the _variables folder
 	
 	const VARIABLE_TYPE_DB = 'db';
@@ -111,7 +112,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		$site_vars = $this->fuel->sitevars->get($location);
 		
 		$this->fuel->load_model('pagevariables_model');
-		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location);
+		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location, $this->lang);
 		$vars = array_merge($site_vars, $page_vars);
 
 		if ($parse)
