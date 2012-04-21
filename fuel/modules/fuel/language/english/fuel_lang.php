@@ -358,7 +358,8 @@ $lang['table_action_view'] = 'VIEW';
 $lang['label_show'] = 'Show:';
 $lang['label_restore_from_prev'] = 'Restore from previous version...';
 $lang['label_select_another'] = 'Select another...';
-
+$lang['label_select_one'] = 'Select one...';
+$lang['label_belongs_to'] = 'Belongs to';
 
 /*
 |--------------------------------------------------------------------------

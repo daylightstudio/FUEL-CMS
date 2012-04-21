@@ -91,7 +91,7 @@ class Assets_model extends CI_Model {
 		
 		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->fuel->config('assets_excluded_dirs'), FALSE);
 		
-		$files = get_dir_file_info($assets_path, TRUE);
+		$files = get_dir_file_info($assets_path, FALSE, TRUE);
 
 		$cnt = count($tmpfiles);
 		$return = array();

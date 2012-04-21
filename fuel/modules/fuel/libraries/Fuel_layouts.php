@@ -85,18 +85,41 @@ class Fuel_layouts extends Fuel_base_library {
 		
 		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
 		$this->CI->load->helper('file');
-		$layouts = get_filenames(APPPATH.'views/'.$this->layouts_folder);
+		$this->CI->load->helper('directory');
+		$layout_path = APPPATH.'views/'.$this->layouts_folder;
+		$layouts = get_filenames($layout_path);
+		
+		$layout_files = directory_to_array($layout_path, TRUE);
 
-		if (!empty($layouts))
+		if (!empty($layout_files))
 		{
-			foreach($layouts as $layout)
+			foreach($layout_files as $file)
 			{
+				$layout = end(explode('/', $file));
 				$layout = substr($layout, 0, -4);
+				$file_dir = dirname($file);
+				
+				if ($file_dir != $layout_path)
+				{
+					$group = end(explode('/', $file_dir));
+				}
+				else
+				{
+					$group = '';
+				}
+				
 				
 				// we won't show those that have underscores in front of them'
-				if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+				if (substr($group, 0, 1) != '_')
 				{
-					$this->layouts[$layout] = array('class' => 'Fuel_layout');
+					if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+					{
+						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
+					}
+					else if (empty($this->layouts[$layout]['group']))
+					{
+						$this->layouts[$layout]['group'] = $group;
+					}
 				}
 			}
 		}
@@ -110,7 +133,8 @@ class Fuel_layouts extends Fuel_base_library {
 				$init['folder'] = $this->layouts_folder;
 				$init['class'] = 'Fuel_layout';
 				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
-
+				$init['group'] = (isset($init['group'])) ? $init['group'] : '';
+				
 				if (!empty($init['fields']))
 				{
 					$fields = $init['fields'];
@@ -198,9 +222,32 @@ class Fuel_layouts extends Fuel_base_library {
 	{
 		$options = array();
 		$layouts = $this->_layouts;
-		foreach($layouts as $layout)
+		
+		// add all layouts without a group first
+		foreach($layouts as $k => $layout)
 		{
-			$options[$layout->name] = $layout->label;
+			if (empty($layout->group))
+			{
+				$options[$layout->name] = $layout->label;
+				// reduce array down
+				unset($layouts[$k]);
+			}
+		}
+
+		ksort($options);
+
+		// create groups first
+		foreach($layouts as $k => $layout)
+		{
+			if (!empty($layout->group))
+			{
+				if (!isset($options[$layout->group]))
+				{
+					$options[$layout->group] = array();
+				}
+				$options[$layout->group][$layout->name] = $layout->label;
+				unset($layouts[$k]);
+			}
 		}
 		return $options;
 	}
@@ -243,6 +290,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $fields = array(); // The fields to associate with the layout. Must be in the Form_builder array format
 	public $field_values = array(); // The values to assign to the fields
 	public $folder = '_layouts'; // The folder to look in for the layout view files
+	public $group = ''; // The group name to associate with the layout
 	
 	// --------------------------------------------------------------------
 	
@@ -440,6 +488,60 @@ class Fuel_layout extends Fuel_base_library {
 		return $fields;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the views folder the layout exists in. Default is the views/_layotus folder
+	 *
+	 * @access	public
+	 * @param	string	The name of the folder
+	 * @return	void
+	 */	
+	function set_folder($folder)
+	{
+		$this->folder = $folder;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the views folder the layout exists in
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function folder()
+	{
+		return $this->folder;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the group the layout belongs to
+	 *
+	 * @access	public
+	 * @param	string	The name of the folder
+	 * @return	void
+	 */	
+	function set_group($group)
+	{
+		$this->group = $group;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the group the layout is associated with
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function group()
+	{
+		return $this->group;
+	}
+	
 	// --------------------------------------------------------------------
 	
 	/**

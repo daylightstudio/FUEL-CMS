@@ -66,8 +66,6 @@ $config['default_layout'] = 'main';
 
 
 // initialize layout fields 
-// $config['layout_fields'] = array();
-// 
 $config['layouts']['301_redirect'] = array(
 	'fields' => array(
 	'	copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),

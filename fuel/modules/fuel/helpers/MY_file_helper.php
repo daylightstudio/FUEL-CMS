@@ -41,7 +41,7 @@
  * @param 	boolean
  * @return	array
  */
-function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FALSE)
+function get_dir_file_info($source_dir, $top_level_only = TRUE, $include_path = FALSE, $_recursion = FALSE)
 {
 	static $_filedata = array();
 	static $orig_directory;
@@ -60,9 +60,9 @@ function get_dir_file_info($source_dir, $include_path = FALSE, $_recursion = FAL
 
 		while (FALSE !== ($file = readdir($fp)))
 		{
-			if (@is_dir($source_dir.$file) && strncmp($file, '.', 1) !== 0)
+			if (@is_dir($source_dir.$file) && strncmp($file, '.', 1) !== 0 AND $top_level_only === FALSE)
 			{
-				 get_dir_file_info($source_dir.$file.DIRECTORY_SEPARATOR, $include_path, TRUE);
+				 get_dir_file_info($source_dir.$file.DIRECTORY_SEPARATOR, $top_level_only, $include_path, TRUE);
 			}
 			elseif (strncmp($file, '.', 1) !== 0)
 			{
