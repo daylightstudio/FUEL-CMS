@@ -118,6 +118,21 @@ function json_lang($js_localized = array(), $return_json = TRUE)
 	return $vars;
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Detects any specified language settings
+ *
+ * @param 	array
+ * @param 	boolean	Determines whether to set the "langauge" config property
+ * @return	string
+ */
+// 
+function detect_lang($set_config = FALSE)
+{
+	$CI =& get_instance();
+	return $CI->fuel->language->detect($set_config);
+}
 
 /* End of file MY_language_helper.php */
 /* Location: ./modules/fuel/helpers/MY_language_helper.php */

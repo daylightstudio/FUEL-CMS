@@ -496,8 +496,9 @@ class Fuel_page extends Fuel_base_library {
 		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
 		$page_mode = (empty($page_mode)) ? $this->fuel->config('fuel_mode') : $page_mode;
 		
+		$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : NULL;
 		$vars_path = $this->views_path.'_variables/';
-		$init_vars = array('vars_path' => $vars_path);
+		$init_vars = array('vars_path' => $vars_path, 'lang' => $lang);
 		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
 		$this->add_variables($vars);
@@ -1259,7 +1260,7 @@ class Fuel_page extends Fuel_base_library {
 			$page_props->cache = 'yes';
 		}
 		
-		if (!$id = $page_props->save())
+		if (!($id = $page_props->save()))
 		{
 			return FALSE;
 		}

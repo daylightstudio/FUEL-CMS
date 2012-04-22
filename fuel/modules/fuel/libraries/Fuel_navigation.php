@@ -351,7 +351,6 @@ class Fuel_navigation extends Fuel_module {
 	 */	
 	function upload($params)
 	{
-		$this->CI->load->library('form_builder');
 		$this->CI->load->library('menu');
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('security');
@@ -374,6 +373,9 @@ class Fuel_navigation extends Fuel_module {
 		{
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
+		
+		// no longer needed
+		unset($params);
 		
 		// extract out params to make it easier below
 		extract($p);
@@ -480,6 +482,8 @@ class Fuel_navigation extends Fuel_module {
 		{
 			$error = TRUE;
 		}
+		
+		return !$error;
 	}
 	
 	// --------------------------------------------------------------------
@@ -508,14 +512,15 @@ class Fuel_navigation extends Fuel_module {
 	function group($group)
 	{
 		$this->_load_nav_group_model();
-		if (is_int($group))
+		if (is_numeric($group))
 		{
-			return $this->CI->navigation_groups_model->find_by_key($grou);
+			$group = $this->CI->navigation_groups_model->find_by_key($group);
 		}
 		else
 		{
-			return $this->CI->navigation_groups_model->find_one(array('name' => $group));
+			$group = $this->CI->navigation_groups_model->find_one(array('name' => $group));
 		}
+		return $group;
 	}
 	
 	

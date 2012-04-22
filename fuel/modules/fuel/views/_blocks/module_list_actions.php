@@ -7,10 +7,10 @@
 					<?=$more_filters?>
 					<?php endif; ?>
 				</td>
-				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state')?>" class="reset"></a></td>
+				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>" class="reset"></a></td>
 				<td><?=$this->form->search('search_term', $params['search_term'], 'placeholder="'.lang('label_search').'"')?> </td>
 				<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
-				<td class="show"><label for="limit"><?=lang('label_show')?></label> <?=$this->form->select('limit', array('25' => '25', '50' => '50', '100' => '100'), $params['limit'])?></td>
+				<td class="show"><label for="limit"><?=lang('label_show')?></label> <?=$this->form->select('limit', $this->limit_options, $params['limit'])?></td>
 			</tr>
 		</tbody>
 	</table>
@@ -35,6 +35,9 @@
 			<?php endforeach; ?>
 		<?php endif; ?>
 		<li><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
+
+		<li><a href="#" class="ico ico_select_all"><?=lang('btn_select_all')?></a></li>
+
 		<?php if ($this->exportable AND $this->fuel->auth->has_permission($this->permission, 'export')) : ?>
 			<li><a href="<?=fuel_url($this->module_uri.'/export')?>" class="ico ico_export" id="export_data"><?=lang('btn_export_data')?></a></li>
 		<?php endif; ?>

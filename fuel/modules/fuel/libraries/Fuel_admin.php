@@ -130,7 +130,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
-		
+
 		// set variables
 		$load_vars = array(
 			'js' => array(), 
@@ -598,7 +598,7 @@ class Fuel_admin extends Fuel_base_library {
 		
 		// in case the language field doesn't exist... due to older fersions'
 		if (empty($language) OR !is_string($language)) $language = $this->CI->config->item('language');
-		
+
 		return $language;
 	}
 	
@@ -720,6 +720,10 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	function save_page_state($vars)
 	{
+		if ($this->fuel->config('saved_page_state_max') == 0)
+		{
+			return FALSE;
+		}
 		$state_key = $this->get_state_key();
 		if (!empty($state_key))
 		{
@@ -751,6 +755,11 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	function get_page_state($state_key = NULL)
 	{
+		if ($this->fuel->config('saved_page_state_max') == 0)
+		{
+			return array();
+		}
+		
 		if (empty($state_key))
 		{
 			$state_key = $this->get_state_key();
@@ -1133,7 +1142,6 @@ class Fuel_admin extends Fuel_base_library {
 			if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
 			{
 				$modules = $this->fuel->modules->advanced();
-				//$modules = $this->fuel->config('modules_allowed');
 
 				foreach($modules as $module)
 				{
@@ -1227,13 +1235,13 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	function toolbar()
 	{
-		$this->fuel->load_language('fuel_inline_edit');
-		$this->fuel->load_language('fuel_js');
+		$this->fuel->load_language('fuel_inline_edit', $this->fuel->auth->user_lang());
+		$this->fuel->load_language('fuel_js', $this->fuel->auth->user_lang());
 	
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
 		$vars['tools'] = $this->toolbar_tools();
-		$vars['js_localized'] = json_lang('fuel/fuel_js');
+		$vars['js_localized'] = json_lang('fuel/fuel_js', $this->fuel->auth->user_lang());
 
 		if ($this->fuel->config('fuel_mode') == 'views')
 		{
@@ -1241,6 +1249,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		else
 		{
+			
 			$location = uri_path();
 			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
 			$vars['others'] = $this->CI->pages_model->get_others('location', $location, 'location');

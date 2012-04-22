@@ -53,7 +53,12 @@ class Pages extends Module {
 				if (!empty($data))
 				{
 					$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
-					redirect(fuel_uri('pages/edit/'.$id));
+					$url = fuel_uri('pages/edit/'.$id);
+					if ($this->input->post('language'))
+					{
+						$url .= '?lang='.$this->input->post('language');
+					}
+					redirect($url);
 				}
 			}
 			
@@ -92,7 +97,12 @@ class Pages extends Module {
 				
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 				$this->fuel->logs->write($msg);
-				redirect(fuel_uri('pages/edit/'.$id));
+				$url = fuel_uri('pages/edit/'.$id);
+				if ($this->input->post('language'))
+				{
+					$url .= '?lang='.$this->input->post('language');
+				}
+				redirect($url);
 			}
 		}
 		$vars = $this->_form($id);
@@ -110,15 +120,22 @@ class Pages extends Module {
 
 		// get saved data
 		$saved = array();
-		if (!empty($id)) {
+		if (!empty($id))
+		{
 			$saved = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-			if (empty($saved)) show_404();
+			if (empty($saved))
+			{
+				show_404();
+			}
+			if ($this->input->get('lang'))
+			{
+				$saved['language'] = $this->input->get('lang');
+			}
 		}
-		
 		//$this->model->add_required('location');
 		
 		// create fields... start with the table info and go from there
-		$fields = $this->model->form_fields();
+		$fields = $this->model->form_fields($saved);
 		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			unset($fields['published']);
@@ -388,8 +405,16 @@ class Pages extends Module {
 			
 			$save = array();
 			
+			$lang = $this->input->post('language');
+			
 			// clear out all other variables
-			$this->pagevariables_model->delete(array('page_id' => $id));
+			$delete = array('page_id' => $id);
+			if ($this->input->post('language'))
+			{
+				$delete['language'] = $this->input->post('language');
+			}
+			
+			$this->pagevariables_model->delete($delete);
 			$pagevariable_table = $this->db->table_info($this->pagevariables_model->table_name());
 			$var_types = $pagevariable_table['type']['options'];
 			$page_variables_archive = array();
@@ -410,9 +435,15 @@ class Pages extends Module {
 					}
 
 					if (!in_array($val['type'], $var_types)) $val['type'] = 'string';
+					
 					$save = array('page_id' => $id, 'name' => $key, 'value' => $value, 'type' => $val['type']);
-					$where = (!empty($id)) ? array('page_id' => $id, 'name' => $key) : array();
-
+					$where = array('page_id' => $id, 'name' => $key, 'language' => $lang);
+					if ($lang)
+					{
+						$save['language'] = $lang;
+						$where['language'] = $lang;
+					}
+					$where = (!empty($id)) ? $where : array();
 					if ($this->pagevariables_model->save($save, $where))
 					{
 						$page_variables_archive[] = $this->pagevariables_model->cleaned_data();
@@ -473,7 +504,7 @@ class Pages extends Module {
 		}
 	}
 
-	function layout_fields($layout, $id = NULL)
+	function layout_fields($layout, $id = NULL, $lang = NULL)
 	{
 		
 		// check to make sure there is no conflict between page columns and layout vars
@@ -499,7 +530,7 @@ class Pages extends Module {
 		
 		if (!empty($id))
 		{
-			$page_vars = $this->pagevariables_model->find_all_by_page_id($id);
+			$page_vars = $this->pagevariables_model->find_all_by_page_id($id, $lang);
 			$this->form_builder->set_field_values($page_vars);
 		}
 		$form = $this->form_builder->render();

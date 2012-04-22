@@ -8,11 +8,11 @@ class Pages_model extends Base_module_model {
 	public $required = array('location');
 	public $hidden_fields = array('last_modified', 'last_modified_by');
 	public $ignore_replacement = array('location');
-	public $has_many = array('navigation' => array(
-												'model' => array(FUEL_FOLDER => 'navigation_model'), 
-												'foreign_key' => 'page_id', 
-												'relationships_model' => FALSE)
-												);
+	// public $has_many = array('navigation' => array(
+	// 											'model' => array(FUEL_FOLDER => 'navigation_model'), 
+	// 											'foreign_key' => 'page_id', 
+	// 											'relationships_model' => FALSE)
+	// 											);
 	
 	function __construct()
 	{
@@ -71,40 +71,6 @@ class Pages_model extends Base_module_model {
 		return array_keys($this->pages_model->options_list('location', 'location', $where));
 	}
 
-	// include id if set to true will screw up Menu class
-	function export($export_unpublished = FALSE)
-	{
-		$CI =& get_instance();
-		$CI->load->helper('array');
-		$return = array();
-		
-		$sql['select'] = $this->_tables['pages'].'.*';
-		$where = array();
-		if (!$export_unpublished) $where = array('published' => 'yes');
-		$pages = $this->find_all_array_assoc('location', $where, 'location asc');
-		
-		foreach($pages as $key => $val){
-			$parts = explode('/', $val['location']);
-			$parent = implode('/', $parts);
-			
-			if (!empty($pages[$parent]) || strrpos($val['location'], '/') === FALSE)
-			{
-				$pages[$key]['parent_id'] = $parent;
-			}
-			else
-			{
-				// if orphaned... then put them in the _orphans folder
-				if (empty($return['_orphans']))
-				{
-					$pages['_orphans'] = array('parent_id' => null, 'location' => '_orphans');
-				}
-				$pages[$key]['parent_id'] = '_orphans';
-			}
-		}
-		$pages = array_sorter($pages, 'location');
-		return $pages;
-	}
-	
 	function get_root_pages()
 	{
 		$return = array();
@@ -131,11 +97,10 @@ class Pages_model extends Base_module_model {
 		return $data;
 	}
 
-	function form_fields()
+	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
-		
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		$fields['location']['placeholder'] = lang('pages_default_location');
 		$fields['date_added']['type'] = 'hidden';
 		$fields['layout']['type'] = 'select';
@@ -144,23 +109,18 @@ class Pages_model extends Base_module_model {
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['cache']['options'] = array('yes' => $yes, 'no' => $no);
-		return $fields;
-	}
-	
-	function clean($values = array())
-	{
-		$cleaned = parent::clean($values);
-		if (!empty($cleaned['location']))
+		
+		// set language field
+		if ($this->fuel->language->has_multiple())
 		{
-			$segments = explode('/', $cleaned['location']);
-			$cleaned_segments = array();
-			foreach($segments as $val)
-			{
-				if (!empty($val)) $cleaned_segments[] = $val;
-			}
-			$cleaned['location'] = implode('/', $cleaned_segments);
+			$lang_options = $CI->fuel->language->options();
+			$fields['language'] = array('type' => 'select', 'options' => $lang_options);
 		}
-		return $cleaned;
+		else
+		{
+			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
+		}
+		return $fields;
 	}
 	
 	function on_before_clean($values)
@@ -175,6 +135,10 @@ class Pages_model extends Base_module_model {
 			$values['location'] = str_replace('/', '___', $values['location']);
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace('___', '/', $values['location']);
+			
+			$segments = array_filter(explode('/', $values['location']));
+			$values['location'] = implode('/', $segments);
+			
 		}
 		return $values;
 	}
@@ -206,18 +170,21 @@ class Pages_model extends Base_module_model {
 	}
 	
 	// overwrite parent
-	function restore($ref_id, $version = null)
+	function restore($ref_id, $version = NULL)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
 		$archive = $this->get_archive($ref_id, $version);
-		if (empty($archive)) return true;
+		if (empty($archive))
+		{
+			return TRUE;
+		}
 		$pages_saved = $this->save($archive, array('id' => $ref_id));
 		
 		// delete page variables before saving
 		$CI->pagevariables_model->delete(array('page_id' => $ref_id));
 		$page_variables_saved = $CI->pagevariables_model->save($archive['variables']);
-		return ($pages_saved && $page_variables_saved);
+		return ($pages_saved AND page_variables_saved);
 	}
 	
 	// overwrite parent to replace page variables

@@ -356,10 +356,13 @@ $lang['table_action_view'] = 'VIEW';
 |--------------------------------------------------------------------------
 */
 $lang['label_show'] = 'Show:';
+$lang['label_language'] = 'Language:';
 $lang['label_restore_from_prev'] = 'Restore from previous version...';
 $lang['label_select_another'] = 'Select another...';
 $lang['label_select_one'] = 'Select one...';
 $lang['label_belongs_to'] = 'Belongs to';
+$lang['label_select_a_language'] = 'Select a language...';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -383,6 +386,7 @@ $lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
 $lang['btn_export_data'] = 'Export Data';
+
 
 $lang['btn_no'] = 'No';
 $lang['btn_yes'] = 'Yes';

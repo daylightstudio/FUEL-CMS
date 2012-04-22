@@ -188,6 +188,8 @@ class Base_module_model extends MY_Model {
 		
 		if (is_array($this->filters))
 		{
+			$where_or = array();
+			$where_and = array();
 			foreach($this->filters as $key => $val)
 			{
 				if (is_int($key))
@@ -195,49 +197,69 @@ class Base_module_model extends MY_Model {
 					$key = $val;
 					$val = $this->filter_value;
 				}
-
-				if (!empty($val)) 
+				
+				$joiner = $this->filter_join;
+				
+				if (is_array($joiner))
 				{
-					if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
-					
-					if (strtolower($this->filter_join) == 'and') 
+					if (isset($joiner[$key]))
 					{
-						// do a direct match if the values are integers and have _id in them
-						if (preg_match('#_id$#', $key) AND is_numeric($val))
-						{
-							$this->db->where(array($key => $val));
-						}
-						
-						// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
-						else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
-						{
-							$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
-							$this->db->where(array($key => $val));
-						}
-						else
-						{
-							$this->db->like('LOWER('.$key.')', strtolower($val), 'both');
-						}
+						$joiner = $joiner[$key];
 					}
 					else
 					{
-						// do a direct match if the values are integers and have _id in them
-						if (preg_match('#_id$#', $key) AND is_numeric($val))
-						{
-							$this->db->or_where(array($key => $val));
-						}
-						else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
-						{
-							$key = strtr($key,array('_from'=>' >','_fromequal'=>' >=','_to'=>' <','_toequal'=>' <='));
-							$this->db->or_where(array($key => $val));
-						}
-						else
-						{
-							$this->db->or_like('LOWER('.$key.')', strtolower($val), 'both');
-						}
+						$joiner = 'or';
+					}
+				}
+
+				if (!empty($val)) 
+				{
+					$joiner_arr = 'where_'.$joiner;
+					
+					if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
+					
+					//$method = ($joiner == 'or') ? 'or_where' : 'where';
+					
+					// do a direct match if the values are integers and have _id in them
+					if (preg_match('#_id$#', $key) AND is_numeric($val))
+					{
+						//$this->db->where(array($key => $val));
+						array_push($$joiner_arr, $key.'='.$val);
+					}
+					
+					// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
+					else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
+					{
+						$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
+						//$this->db->where(array($key => $val));
+						//$where_or[] = $key.'='.$this->db->escape($val);
+						array_push($$joiner_arr, $key.'='.$val);
+						
+					}
+					else
+					{
+						//$method = ($joiner == 'or') ? 'or_like' : 'like';
+						//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
+						array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.$val.'%"');
 					}
 				}
 			}
+		}
+		
+		// here we will group the AND and OR separately which should handle most cases me thinks... but if not, you can always overwrite
+		$where = array();
+		if (!empty($where_or))
+		{
+			$where[] = '('.implode(' OR ', $where_or).')';
+		}
+		if (!empty($where_and))
+		{
+			$where[] = '('.implode(' AND ', $where_and).')';
+		}
+		if (!empty($where))
+		{
+			$where_sql = implode(' AND ', $where);
+			$this->db->where($where_sql);
 		}
 		
 		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
@@ -245,6 +267,7 @@ class Base_module_model extends MY_Model {
 		$this->db->offset($offset);
 		$query = $this->db->get($this->table_name);
 		$data = $query->result_array();
+		//$this->debug_query();
 		return $data;
 	}
 	
@@ -416,6 +439,37 @@ class Base_module_model extends MY_Model {
 		$others = $this->options_list($val_field, $display_field);
 		if (isset($others[$id])) unset($others[$id]);
 		return $others;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get other listed module items excluding the currently displayed
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	int
+	 * @return	boolean
+	 */	
+	function get_languages($field = NULL)
+	{
+		if (empty($field))
+		{
+			$field = 'language';
+		}
+		$fields = $this->fields();
+		
+		if (!in_array($field, $fields))
+		{
+			return array();
+		}
+		else
+		{
+			$this->db->distinct($field);
+		}
+		
+		$options = $this->options_list($field, $field);
+		return $options;
 	}
 	
 	// --------------------------------------------------------------------

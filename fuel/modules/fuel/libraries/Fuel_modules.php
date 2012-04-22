@@ -468,10 +468,12 @@ class Fuel_module extends Fuel_base_library {
 				'sanitize_files' => FALSE,
 				'displayonly' => FALSE,
 				'language' => '',
+				'language_col' => 'language',
 				'hidden' => FALSE,
 				'icon_class' => '',
 				'folder' => '',
 				'exportable' => FALSE,
+				'limit_options' => array('25' => '25', '50' => '50', '100' => '100'),
 				);
 			$info = array();
 

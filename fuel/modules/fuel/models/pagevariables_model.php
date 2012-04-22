@@ -28,29 +28,51 @@ class Pagevariables_model extends Base_module_model {
 		return $data;
 	}
 
-	function find_one_by_location($location, $name)
+	function find_one_by_location($location, $name, $lang = NULL)
 	{
-		$data = $this->find_one_array(array($this->_tables['pages'].'.location' => $location, 'name' => $name));
+		$where = array($this->_tables['pages'].'.location' => $location, 'name' => $name);
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
+		$data = $this->find_one_array($where);
 		return  $this->_process_casting($data);
 	}
 	
-	function find_all_by_location($location)
+	function find_all_by_location($location, $lang = NULL)
 	{
-		$data = $this->find_all_array(array($this->_tables['pages'].'.location' => $location));
+		$where = array($this->_tables['pages'].'.location' => $location);
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
+		$data = $this->find_all_array($where);
 		return $this->_process_casting($data);
 	}
 	
-	function find_one_by_page_id($page_id, $name)
+	function find_one_by_page_id($page_id, $name, $lang = NULL)
 	{
 		$this->page_id = $page_id;
+		$where = array('page_id' => $page_id, 'name' => $name);
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
+		
 		$data = $this->find_one_array(array('page_id' => $page_id, 'name' => $name));
 		return $this->_process_casting($data);
 	}
 	
-	function find_all_by_page_id($page_id)
+	function find_all_by_page_id($page_id, $lang = NULL)
 	{
 		$this->page_id = $page_id;
-		$data = $this->find_all_array(array('page_id' => $page_id));
+		$where = array('page_id' => $page_id);
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
+		
+		$data = $this->find_all_array($where);
 		return $this->_process_casting($data);
 	}
 	
@@ -153,6 +175,9 @@ class Pagevariables_model extends Base_module_model {
 	
 	function _common_query()
 	{
+		$CI =& get_instance();
+		$lang_options = $CI->fuel->config('languages');
+		
 		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
 		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
 		$this->db->where(array($this->_tables['pagevars'].'.active' => 'yes'));
@@ -160,6 +185,8 @@ class Pagevariables_model extends Base_module_model {
 		{
 			$this->db->where(array($this->_tables['pages'].'.published' => 'yes'));
 		}
+		
+		
 	}
 
 }
