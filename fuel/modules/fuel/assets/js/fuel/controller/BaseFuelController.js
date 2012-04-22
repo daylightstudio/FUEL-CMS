@@ -263,6 +263,18 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
+		// select all
+		$('a.ico_select_all').toggle(function(e){
+				e.preventDefault();
+				$('a.ico_select_all').html(fuel.lang('btn_deselect_all'));
+				$('#multi_delete').parent().show();
+				$('#data_table .multi_delete').attr('checked', true);
+			},
+			function(){
+				$('a.ico_select_all').html(fuel.lang('btn_select_all'));
+				$('#multi_delete').parent().hide();
+				$('#data_table .multi_delete').attr('checked', false);
+			});
 	},
 	
 	add_edit : function(initSpecFields){

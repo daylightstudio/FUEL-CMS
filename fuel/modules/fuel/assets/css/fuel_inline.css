@@ -12,7 +12,7 @@
 div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar { float: right; }
 .__fuel__ div.buttonbar ul { float: right; color: #000; }
-.__fuel__ div.buttonbar li { line-height: 27px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left;list-style: none; margin: 0; }
+.__fuel__ div.buttonbar li { padding-right: 3px; line-height: 27px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; background: #e6e6e6 url(../images/btn.png) repeat-x; float: left;list-style: none; margin: 0; }
 .__fuel__ div.buttonbar li:hover { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -27px; }
 .__fuel__ div.buttonbar li.active { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -54px; }
 .__fuel__ div.buttonbar li.active a { color: #000; }

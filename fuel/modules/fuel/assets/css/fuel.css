@@ -387,7 +387,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_no {  background-image: url(../images/ico_cancel.png); }
 .ico_notes { background-image: url(../images/ico_note.png); }
 .ico_other { background-image: url(../images/ico_cog.png); }
-.ico_pages { background-image: url(../images/ico_page_white_stack.png); }
+.ico_pages { background-image: url(../images/ico_layout.png); }
 .ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload { background-image: url(../images/ico_page_white_get.png); }
 .ico_permissions { background-image: url(../images/ico_key.png); }
 .ico_precedence { background-image: url(../images/ico_table_row_insert.png); }
@@ -396,6 +396,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_remove_line { background-image: url(../images/ico_cancel.png); float: right;  }
 .ico_replace { background-image: url(../images/ico_page_refresh.png); }
 .ico_save { background-image: url(../images/ico_disk.png); }
+.ico_select_all { background-image: url(../images/ico_page_white_stack.png); }
 .ico_settings { background-image: url(../images/ico_table_gear.png); }
 .ico_sitevariables { background-image: url(../images/ico_page_white_code.png); }
 .ico_success {  background-image: url(../images/ico_accept.png); }
