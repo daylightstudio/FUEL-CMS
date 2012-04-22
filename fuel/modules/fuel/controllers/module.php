@@ -70,7 +70,7 @@ class Module extends Fuel_base_controller {
 
 				// now check to see if we need to load the language file or not... 
 				// we load the main language file automatically with the Fuel_base_controller.php
-				$this->load->module_language($lang_module, $lang_file);
+				$this->load->module_language($lang_module, $lang_file, $this->fuel->auth->user_lang());
 			}
 			else
 			{
@@ -145,15 +145,45 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the list (table) view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function index()
 	{
 		$this->items();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the list (table) view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function items()
 	{
 		
 		$this->load->library('data_table');
+	
+	
+		// set the language dropdown if there is a language column
+		if (!empty($this->language_col) AND method_exists($this->model, 'get_languages'))
+		{
+			$languages = $this->model->get_languages($this->language_col);
+			if (!empty($languages))
+			{
+				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
+				$this->filters[$this->language_col] = $lang_filter;
+				$this->model->filter_join[$this->language_col] = 'and';
+			}
+		}
+		
 		$params = $this->_list_process();
 		
 		// save in case we need to pass more variables in the URI
@@ -164,42 +194,54 @@ class Module extends Fuel_base_controller {
 		// save page state
 		$this->fuel->admin->save_page_state($params);
 		
-		if (!is_ajax() AND !empty($_POST))
-		{
-			//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-			$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
-			redirect($uri);
-		}
+		// if (!is_ajax() AND !empty($_POST))
+		// {
+		// 	//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
+		// 	$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
+		// 	redirect($uri);
+		// }
 		
 		
 		// create search filter
 		$filters[$this->display_field] = $params['search_term'];
 		
-		//$filters = array();
-		
 		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
 		$this->model->filter_value = $params['search_term'];
-			
 		foreach($this->filters as $key => $val)
 		{
 			$filters[$key] = $params[$key];
+			if (!empty($val['filter_join']))
+			{
+				if (!is_array($this->model->filter_join[$key]))
+				{
+					settype($this->model->filter_join, 'array');
+				}
+				$this->model->filter_join[$key] = $val['filter_join'];
+			}
 		}
-		
+
 		// set model filters before pagination and setting table data
 		if (method_exists($this->model, 'add_filters'))
 		{
 			$this->model->add_filters($filters);
 		}
+		
 		$this->config->set_item('enable_query_strings', FALSE);
 		
 		// pagination
-		$config['base_url'] = fuel_url($this->module_uri).'/items/offset/';
+		$query_str_arr = $this->input->get();
+		unset($query_str_arr['offset']);
+		$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
+		
+		$config['base_url'] = fuel_url($this->module_uri).'/items/?'.$query_str;
 		$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
 		$config['total_rows'] = $this->model->list_items_total();
 		$config['uri_segment'] = fuel_uri_index($uri_segment);
 		$config['per_page'] = (int) $params['limit'];
-		$config['page_query_string'] = FALSE;
+		$config['query_string_segment'] = 'offset';
+		$config['page_query_string'] = TRUE;
 		$config['num_links'] = 5;
+		
 		$config['prev_link'] = lang('pagination_prev_page');
 		$config['next_link'] = lang('pagination_next_page');
 		$config['first_link'] = lang('pagination_first_link');
@@ -346,6 +388,7 @@ class Module extends Fuel_base_controller {
 			
 			$vars['table'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_table', $vars, TRUE);
 			$vars['pagination'] = $this->pagination->create_links();
+			
 
 			// for extra module 'filters'
 			$field_values = array();
@@ -374,6 +417,8 @@ class Module extends Fuel_base_controller {
 			$vars['more_filters'] = $this->form_builder->render_divs();
 			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_list_actions', $vars, TRUE);
 			$vars['form_action'] = $this->module_uri.'/items';
+			$vars['form_method'] = 'get';
+			$vars['query_string'] = $query_str;
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
 			
@@ -388,11 +433,27 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the list (table) view but inline without the left menu
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function inline_items()
 	{
 		$this->items(TRUE);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Processes the list view filters and returns an array of parameters
+	 *
+	 * @access	protected
+	 * @return	array
+	 */	
 	protected function _list_process()
 	{
 		$this->load->library('pagination');
@@ -408,11 +469,12 @@ class Module extends Fuel_base_controller {
 		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
 		$defaults['order'] = (!empty($this->default_order)) ? $this->default_order : 'asc';
 		$defaults['offset'] = 0;
-		$defaults['limit'] = 25;
+		$defaults['limit'] = key($this->limit_options);
 		$defaults['search_term'] = '';
 		$defaults['view_type'] = 'list';
 		$defaults['extra_filters'] = array();
 		$defaults['precedence'] = 0;
+		//$defaults['language'] = '';
 		
 		// custom module filters defaults
 		foreach($this->filters as $key => $val)
@@ -420,30 +482,26 @@ class Module extends Fuel_base_controller {
 			$defaults[$key] = (isset($val['default'])) ? $val['default'] : NULL;
 		}
 		
-		$mod_segs = explode('/',$this->module_uri);
-		$mod_offset_index = count($mod_segs) + 3;
-		$uri_params = uri_safe_batch_decode(fuel_uri_segment($mod_offset_index), '|', TRUE);
-		$uri_params['offset'] = (fuel_uri_segment($mod_offset_index)) ? (int) fuel_uri_segment($mod_offset_index) : 0;
-		
 		$posted = array();
-		if (!empty($_POST))
+		if (!empty($_POST) OR !empty($_GET))
 		{
 
-			$posted['search_term'] = $this->input->post('search_term');
+			$posted['search_term'] = $this->input->get_post('search_term');
 			$posted_vars = array('col', 'order', 'limit', 'offset', 'precedence', 'view_type');
 			foreach($posted_vars as $val)
 			{
-				if ($this->input->post($val)) $posted[$val] = $this->input->post($val, TRUE);
+				if ($this->input->get_post($val)) $posted[$val] = $this->input->get_post($val, TRUE);
 			}
 			
 			// custom module filters
 			$extra_filters = array();
 			
+			
 			foreach($this->filters as $key => $val)
 			{
-				if (isset($_POST[$key]))
+				if (isset($_POST[$key]) OR isset($_GET[$key]))
 				{
-					$posted[$key] = $this->input->post($key, TRUE);
+					$posted[$key] = $this->input->get_post($key, TRUE);
 					$this->filters[$key]['value'] = $posted[$key];
 					$extra_filters[$key] = $posted[$key];
 				}
@@ -451,9 +509,8 @@ class Module extends Fuel_base_controller {
 			$posted['extra_filters'] = $extra_filters;
 			
 		}
-		
-		//$params = array_merge($defaults, $page_state, $uri_params, $posted);
-		$params = array_merge($defaults, $page_state, $uri_params, $posted);
+		$params = array_merge($defaults, $page_state, $posted);
+		//$params = array_merge($defaults, $uri_params, $posted);
 		
 		// reset offset if you apply a filter (via POST and not ajax)
 		if (!empty($_POST) and !is_ajax())
@@ -467,6 +524,14 @@ class Module extends Fuel_base_controller {
 		return $params;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the tree view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function items_tree()
 	{
 		// tree
@@ -494,6 +559,14 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Saves the precedence of fields
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function items_precedence()
 	{
 		if (is_ajax() AND !empty($_POST['data_table']) AND !empty($this->precedence_col))
@@ -515,6 +588,14 @@ class Module extends Fuel_base_controller {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the list (table) view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function create($field = NULL, $redirect = TRUE)
 	{
 		$id = NULL;

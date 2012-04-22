@@ -54,6 +54,7 @@ class Fuel_language extends Fuel_base_library {
 	{
 		parent::__construct($params);
 		$this->CI->load->helper('cookie');
+		$this->CI->load->library('user_agent');
 		$this->initialize($params);
 	}
 	
@@ -136,15 +137,21 @@ class Fuel_language extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The selected language 
+	 * @param	boolean	Set the config language value (optional)
 	 * @return	boolean
 	 */	
-	function set_selected($selected)
+	function set_selected($selected, $set_config = FALSE)
 	{
 		if ($this->has_language($selected))
 		{
-			//$this->CI->config->set_item('language', $selected);
 			$this->set_cookie($selected);
+			$this->set_query_str($selected);
 			$this->selected = $selected;
+
+			if ($set_config)
+			{
+				$this->CI->config->set_item('language', $selected);
+			}
 		}
 	}
 	
@@ -178,6 +185,14 @@ class Fuel_language extends Fuel_base_library {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The default language option
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function default_option()
 	{
 		if (is_array($this->options))
@@ -191,7 +206,16 @@ class Fuel_language extends Fuel_base_library {
 		}
 	}
 	
-	function detect($set_selected = TRUE)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Detects which language should be used 
+	 *
+	 * @access	public
+	 * @param	boolean	Whether to set the selected value to the detected or not (optional)
+	 * @return	string
+	 */	
+	function detect($set_config = FALSE)
 	{
 		// obtain language code from query string if available
 		$language = $this->query_str_value();
@@ -205,28 +229,13 @@ class Fuel_language extends Fuel_base_library {
 			// again... if that language doesn't exist in the query string or cookie, then we'll check the HTTP_ACCEPT_LANGUAGE value
 			if (!$this->has_language($language))
 			{
-				$accept_langs = $this->CI->input->server('HTTP_ACCEPT_LANGUAGE');
-				if ($accept_langs !== FALSE)
+				// check all of them
+				foreach ($this->CI->agent->languages() as $lang)
 				{
-					//explode languages into array
-					$accept_langs = strtolower($accept_langs);
-					$accept_langs = explode(",", $accept_langs);
-
-					// check all of them
-					foreach ($accept_langs as $lang)
+					if ($this->has_language($lang))
 					{
-						// remove all after ';'
-						$pos = strpos($lang,';');
-						if ($pos !== false)
-						{
-							$lang = substr($lang, 0, $pos); 
-						}
-						
-						if ($this->has_language($lang))
-						{
-							$language = $lang;
-							break;
-						}
+						$language = $lang;
+						break;
 					}
 				}
 			}
@@ -237,13 +246,20 @@ class Fuel_language extends Fuel_base_library {
 		{
 			$language = $this->default_option();
 		}
-		if ($set_selected)
-		{
-			$this->set_selected($language);
-		}
+
+		$this->set_selected($language, $set_config);
 		return $language;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the language cookie
+	 *
+	 * @access	public
+	 * @param	string	The selected language 
+	 * @return	void
+	 */	
 	function set_cookie($lang)
 	{
 		if (!$this->has_language($lang))
@@ -259,11 +275,29 @@ class Fuel_language extends Fuel_base_library {
 		set_cookie($config);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the language cookie value from the cookie
+	 *
+	 * @access	public
+	 * @param	string	The selected language 
+	 * @return	string
+	 */	
 	function cookie_value()
 	{
 		return get_cookie($this->cookie_name);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the query string to the selected language language from the query string
+	 *
+	 * @access	public
+	 * @param	string	The selected language 
+	 * @return	void
+	 */	
 	function set_query_str($lang)
 	{
 		if (!$this->has_language($lang))
@@ -273,6 +307,15 @@ class Fuel_language extends Fuel_base_library {
 		$_GET[$this->query_str_param] = $lang;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the selected language from the query string
+	 *
+	 * @access	public
+	 * @param	string	The selected language 
+	 * @return	boolean
+	 */	
 	function query_str_value()
 	{
 		if ($this->CI->input->get($this->query_str_param))

@@ -248,6 +248,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Additional language files to load</td>
 		</tr>
 		<tr>
+			<td><strong>language_col</strong></td>
+			<td>language</td>
+			<td>None</td>
+			<td>The column name that contains the language key value</td>
+		</tr>
+		<tr>
 			<td><strong>hidden</strong></td>
 			<td>FALSE</td>
 			<td>Boolean Value TRUE/FALSE</td>
@@ -270,6 +276,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>FALSE</td>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>Will display an "Export" button on the list view page that will allow users to export the currently filtered list data</td>
+		</tr>
+		<tr>
+			<td><strong>limit_options</strong></td>
+			<td>array('25' => '25', '50' => '50', '100' => '100')</td>
+			<td>array</td>
+			<td>The "Show" options displayed in the list view</td>
 		</tr>
 		
 	</tbody>

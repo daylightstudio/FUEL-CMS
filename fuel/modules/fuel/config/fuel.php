@@ -70,7 +70,7 @@ $config['max_recent_pages'] = 5;
 
 // the maximum number of pages that page state will be saved before dumping the last one saved. 
 // This is used on the list pages in the admin to save sorting and filtering. Used to save on space needed for session.
-$config['saved_page_state_max'] = 3;
+$config['saved_page_state_max'] = 0;
 
 // provide a cookie path... different from the CI config if you need it (default is same as CI config)
 $config['fuel_cookie_path'] = '/';
@@ -121,6 +121,7 @@ $config['ck_editor_settings'] = array(
 // languages for pages. The key is saved to the page variables
 $config['languages'] = array(
 						'english' => 'English',
+						'spanish' => 'Spanish'
 						);
 
 

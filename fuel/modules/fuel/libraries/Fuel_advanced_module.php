@@ -77,7 +77,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 		// the parent Fuel_base_library before the rest of the constructor'
 		if ($this->has_lang())
 		{
-			$this->load_language();
+			$lang = (defined('FUEL_ADMIN')) ? $this->fuel->auth->user_lang() : NULL;
+			$this->load_language($this->name, $lang);
 		}
 		
 		$this->load_config();

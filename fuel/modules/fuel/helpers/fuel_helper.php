@@ -473,7 +473,7 @@ function fuel_cache_id($location = NULL)
  * @param	boolean
  * @return	string
  */
-function fuel_url($uri = '', $query_string = TRUE)
+function fuel_url($uri = '', $query_string = FALSE)
 {
 	$CI =& get_instance();
 	$uri = fuel_uri($uri, $query_string);

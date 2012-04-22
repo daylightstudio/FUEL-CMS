@@ -221,10 +221,10 @@ class Fuel extends Fuel_base_library {
 	 * @param	string	The module folder to load from. Default is fuel. (optional)
 	 * @return	void
 	 */	
-	function load_language($lang, $module = NULL)
+	function load_language($langfile, $lang = NULL, $module = NULL)
 	{
 		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_language($module, $lang);
+		$this->CI->load->module_language($module, $langfile, $lang);
 	}
 
 	// --------------------------------------------------------------------

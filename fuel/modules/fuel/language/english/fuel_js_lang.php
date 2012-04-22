@@ -20,6 +20,8 @@ $lang['btn_flash'] = 'Flash';
 $lang['btn_upload_asset'] = 'Upload Asset';
 $lang['btn_view_source'] = 'View Source';
 $lang['btn_view_editor'] = 'View Editor';
+$lang['btn_select_all'] = 'Select All';
+$lang['btn_deselect_all'] = 'Deselect All';
 
 $lang['comboselect_values_empty'] = 'There are no more values to select';
 $lang['comboselect_selected_empty'] = 'Select from the values on the left';
