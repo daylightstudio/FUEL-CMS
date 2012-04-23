@@ -67,15 +67,9 @@ fuel.fields.wysiwyg_field = function(context){
 	var _previewPath = myMarkItUpSettings.previewParserPath;
 
 	var createMarkItUp = function(elem){
-		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name'));
-		var markitUpClass = $(elem).attr('class');
-		if (markitUpClass.length){
-			var previewPath = markitUpClass.split(' ');
-			if (previewPath.length && previewPath[0] != 'no_editor'){
-				q += '&preview=' + previewPath[previewPath.length - 1];
-			}
-		}
+		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name')) + '&preview=' + escape($(elem).attr('data-preview'));
 		myMarkItUpSettings.previewParserPath = _previewPath + '?' + q;
+		console.log(myMarkItUpSettings.previewParserPath)
 		$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
 		
 		// set the width of the preview to match the width of the textarea

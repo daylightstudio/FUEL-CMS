@@ -67,9 +67,14 @@ class Fuel_custom_fields {
 			else if (strtolower($params['editor']) == 'markitup')
 			{
 				$params['class'] = 'markitup '.$params['class'];
-				
 			}
 		}
+		
+		if (isset($params['preview']))
+		{
+			$params['data'] = array('preview' => $params['preview']);
+		}
+		
 		return $form_builder->create_textarea($params);
 	}
 	

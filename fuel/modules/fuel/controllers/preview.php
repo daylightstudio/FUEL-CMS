@@ -18,7 +18,7 @@ class Preview extends Fuel_base_controller {
 		
 		// check for posted data
 		$data = $this->input->post('data', TRUE);
-	//	if (empty($data)) show_error(lang('error_cannot_preview'));
+		if (empty($data)) show_error(lang('error_cannot_preview'));
 		
 		// load global variables
 		if (file_exists(APPPATH.'views/_variables/global'.EXT))
@@ -39,9 +39,10 @@ class Preview extends Fuel_base_controller {
 		
 		$this->asset->assets_path = $this->config->item('assets_path');
 		$view = '';
-		if (file_exists(APPPATH.'views/'.$vars['preview'].EXT))
+		
+		if (file_exists(APPPATH.'views/_admin/'.$vars['preview'].EXT))
 		{
-			$view = $this->load->view($vars['preview'], $vars, TRUE);
+			$view = $this->load->view('_admin/'.$vars['preview'], $vars, TRUE);
 		}
 		else if (file_exists(APPPATH.'views/_admin/_fuel_preview'.EXT))
 		{

@@ -22,9 +22,9 @@ class Manage extends Fuel_base_controller {
 	
 	function cache()
 	{
-		$this->_validate_user('manage/cache');
+		$this->_validate_user('cache');
 		
-		$this->nav_selected = 'manage/cache';
+		$this->fuel->admin->set_nav_selected('manage/cache');
 		
 		if ($post = $this->input->post('action'))
 		{
