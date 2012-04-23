@@ -344,27 +344,7 @@ $config['page_uri_prefix'] = '';
 
 $config['settings'] = array();
 $config['settings']['site_name'] = array();
-
-$config['auto_attach'] = array(
-							'admin',
-							'assets',
-							'auth',
-							'blocks',
-							'cache',
-							'language',
-							'layouts',
-							'logs',
-							'modules',
-							'navigation',
-							'notification',
-							'pages',
-							'pagevars',
-							'permissions',
-							'redirects',
-							'settings',
-							'sitevars',
-							'users',
-						);
+$config['settings']['languages'] = array('type' => 'multi', 'options' => $config['languages']);
 
 @include(APPPATH.'config/MY_fuel.php');
 

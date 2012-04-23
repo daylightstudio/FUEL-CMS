@@ -5,6 +5,7 @@ require_once('base_module_model.php');
 class Settings_model extends Base_module_model
 {
 	public $required = array('key');
+	public $serialized_fields = array('value');
 	
 	function __construct()
 	{

@@ -108,7 +108,6 @@ class Pagevariables_model extends Base_module_model {
 				$return = is_true_val($val);
 				break;
 			case 'array': case 'multi':
-				//$return = (is_serialized_str($val)) ? unserialize($val) : array();
 				if (is_string($val))
 				{
 					// for legacy versions

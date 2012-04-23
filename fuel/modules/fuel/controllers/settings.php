@@ -45,6 +45,8 @@ class Settings extends Fuel_base_controller {
 			redirect('fuel/settings');
 		}
 		
+		$this->js_controller_params['method'] = 'add_edit';
+		
 		$mod = $this->fuel->modules->get($module);
 
 		$settings = $this->fuel->modules->get($module)->settings_fields();

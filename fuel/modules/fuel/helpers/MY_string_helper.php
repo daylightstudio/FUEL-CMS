@@ -145,7 +145,7 @@ function zap_gremlins($str)
 {
 	// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
 	// the remove_invisible_characters doesn't seem to remove this
-	$str = str_replace(' ', ' ', $str);
+	$str = preg_replace('/[^\x0A\x0D\x20-\x7E]/','', $str);
 	return $str;
 }
 

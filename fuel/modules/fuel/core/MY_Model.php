@@ -1005,7 +1005,7 @@ class MY_Model extends CI_Model {
 		{
 			if (isset($values[$key]))
 			{
-				$values[$key] = ($this->auto_trim) ? trim($values[$key]) : $values[$key];
+				$values[$key] = ($this->auto_trim AND is_string($values[$key])) ? trim($values[$key]) : $values[$key];
 			}
 		}
 
@@ -1096,25 +1096,28 @@ class MY_Model extends CI_Model {
 				}
 				
 				// safe_htmlspecialchars is buggy for unserialize so we use the cleanup_ms_word
-				if ($this->auto_encode_entities)
+				if (is_string($values[$key]))
 				{
-					if ((is_array($this->auto_encode_entities) AND in_array($key, $this->auto_encode_entities))
-						OR (is_string($this->auto_encode_entities) AND $key == $this->auto_encode_entities)
-						OR ($this->auto_encode_entities === TRUE)
-					)
+					if ($this->auto_encode_entities)
 					{
-						$values[$key] = safe_htmlentities($values[$key]);
+						if ((is_array($this->auto_encode_entities) AND in_array($key, $this->auto_encode_entities))
+							OR (is_string($this->auto_encode_entities) AND $key == $this->auto_encode_entities)
+							OR ($this->auto_encode_entities === TRUE)
+						)
+						{
+							$values[$key] = safe_htmlentities($values[$key]);
+						}
 					}
-				}
-				
-				if ($this->xss_clean)
-				{
-					if ((is_array($this->xss_clean) AND in_array($key, $this->xss_clean))
-						OR (is_string($this->xss_clean) AND $key == $this->xss_clean)
-						OR ($this->xss_clean === TRUE)
-					)
+
+					if ($this->xss_clean)
 					{
-						$values[$key] = xss_clean(($values[$key]));
+						if ((is_array($this->xss_clean) AND in_array($key, $this->xss_clean))
+							OR (is_string($this->xss_clean) AND $key == $this->xss_clean)
+							OR ($this->xss_clean === TRUE)
+						)
+						{
+							$values[$key] = xss_clean(($values[$key]));
+						}
 					}
 				}
 
@@ -3128,13 +3131,16 @@ class MY_Model extends CI_Model {
 			$method = $this->default_serialization_method;
 		}
 		
-		if ($method == 'serialize')
+		if (is_array($val))
 		{
-			$val = serialize($val);
-		}
-		else
-		{
-			$val = json_encode($val);
+			if ($method == 'serialize')
+			{
+				$val = serialize($val);
+			}
+			else
+			{
+				$val = json_encode($val);
+			}
 		}
 		return $val;
 	}
@@ -3196,11 +3202,6 @@ class MY_Model extends CI_Model {
 		$invalid_field_names = array('json', 'serialize');
 		if (!in_array($method, $invalid_field_names))
 		{
-			if (!in_array($method, $this->serialized_fields))
-			{
-				return $val;
-			}
-
 			foreach($this->serialized_fields as $m => $field)
 			{
 				if ($field == $method)
@@ -3215,6 +3216,7 @@ class MY_Model extends CI_Model {
 		{
 			$method = $this->default_serialization_method;
 		}
+
 		
 		if ($method == 'serialize')
 		{

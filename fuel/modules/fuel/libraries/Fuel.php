@@ -116,8 +116,6 @@ class Fuel extends Fuel_advanced_module {
 		}
 		
 		$this->_config = $this->CI->config->config['fuel'];
-		
-		$this->_auto_attach = $this->_config['auto_attach'];
 	}
 
 	// --------------------------------------------------------------------

@@ -36,7 +36,6 @@ class Fuel_settings extends Fuel_base_library {
 	{
 		parent::__construct($params);
 		$this->fuel->load_model('settings', 'fuel_settings_model');
-		// $this->CI->load->module_model('fuel', 'settings_model', 'fuel_settings_model');
 	}
 
 	// --------------------------------------------------------------------
@@ -54,6 +53,12 @@ class Fuel_settings extends Fuel_base_library {
 		if ( ! array_key_exists($module, $this->settings))
 		{
 			$this->settings[$module] = $this->CI->fuel_settings_model->options_list('fuel_settings.key', 'fuel_settings.value', array('module' => $module), 'key');
+			foreach($this->settings[$module] as $k => $v)
+			{
+				$this->settings[$module][$k] = $this->CI->fuel_settings_model->unserialize_value($this->settings[$module][$k]);
+			}
+
+			//$this->settings[$module] = $this->CI->fuel_settings_model->fin_all_array_assoc('fuel_settings.key', array('module' => $module), 'key');
 		}
 		if ( ! empty($key) AND array_key_exists($key, $this->settings[$module]))
 		{
@@ -95,10 +100,12 @@ class Fuel_settings extends Fuel_base_library {
 				{
 					$new_value = 0;
 				}
-				else
+				else if (isset($new_settings[$key]))
 				{
-					$new_value = trim($new_settings[$key]);
-					if ($skip_empty_vals AND empty($new_value)) {
+					//$new_value = trim($new_settings[$key]);
+					$new_value = $new_settings[$key];
+					if ($skip_empty_vals AND empty($new_value))
+					{
 						continue;
 					}
 				}
