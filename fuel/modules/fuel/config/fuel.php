@@ -272,7 +272,6 @@ $config['nav']['manage'] = array(
 	'users'             => lang('module_users'), 
 	'permissions'       => lang('module_permissions'),
 	'manage/cache'      => lang('module_manage_cache'), 
-	//'manage/activity' => lang('module_manage_activity'),
 	'logs'              => lang('module_manage_activity'),
 	'settings'          => lang('module_manage_settings'),
 	);
@@ -342,6 +341,30 @@ $config['auto_page_navigation_group_id'] = 1;
 // automatically removes the following path from the location
 $config['page_uri_prefix'] = '';
 
+
+$config['settings'] = array();
+$config['settings']['site_name'] = array();
+
+$config['auto_attach'] = array(
+							'admin',
+							'assets',
+							'auth',
+							'blocks',
+							'cache',
+							'language',
+							'layouts',
+							'logs',
+							'modules',
+							'navigation',
+							'notification',
+							'pages',
+							'pagevars',
+							'permissions',
+							'redirects',
+							'settings',
+							'sitevars',
+							'users',
+						);
 
 @include(APPPATH.'config/MY_fuel.php');
 

@@ -35,7 +35,9 @@ require_once('Fuel_base_library.php');
 require_once('Fuel_advanced_module.php');
 require_once('Fuel_modules.php');
 
-class Fuel extends Fuel_base_library {
+class Fuel extends Fuel_advanced_module {
+	protected $name = 'FUEL'; // name of the advanced module... usually the same as the folder name
+	protected $folder = 'fuel'; // name of the folder for the advanced module
 	
 	 // attached objects
 	protected $_attached = array();
@@ -73,6 +75,7 @@ class Fuel extends Fuel_base_library {
 	{
 		parent::__construct();
 		self::$_instance =& $this;
+		$this->fuel =& self::$_instance; // for compatibility
 		$this->initialize();
 	}
 	
@@ -106,26 +109,15 @@ class Fuel extends Fuel_base_library {
 	{
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
-		
+
 		if (!empty($config))
 		{
 			$this->set_config($config);
 		}
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns a configuration value for FUEL.
-	 *
-	 * @access	public
-	 * @param	string	The configuration items key
-	 * @param	string	The module to set the configuration item. Default is 'fuel
-	 * @return	void
-	 */	
-	function config($item, $module = 'fuel')
-	{
-		return $this->CI->config->item($item, $module);
+		
+		$this->_config = $this->CI->config->config['fuel'];
+		
+		$this->_auto_attach = $this->_config['auto_attach'];
 	}
 
 	// --------------------------------------------------------------------
@@ -155,77 +147,6 @@ class Fuel extends Fuel_base_library {
 		}
 		$this->CI->config->set_item($module, $fuel_config);
 	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Convenience method to load helpers from within the fuel module by default.
-	 *
-	 * @access	public
-	 * @param	mixed	Loads helpers
-	 * @param	string	The module folder to load from. Default is fuel. (optional)
-	 * @return	void
-	 */	
-	function load_helper($helper, $module = NULL)
-	{
-		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_helper($module, $helper);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Convenience method to load library items from within the fuel module by default.
-	 *
-	 * @access	public
-	 * @param	mixed	Loads libraries
-	 * @param	string	The module folder to load from. Default is fuel. (optional)
-	 * @param	array	Initialization parameters to pass to the library class. (optional)
-	 * @return	void
-	 */	
-	function load_library($library, $module = NULL, $init = NULL)
-	{
-		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_library($module, $library, $init);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Convenience method to load models from within the fuel module by default.
-	 *
-	 * @access	public
-	 * @param	mixed	Loads models
-	 * @param	string	The module folder to load from. Default is fuel. (optional)
-	 * @param	string	The name of the model to assign it upon intialization. (optional)
-	 * @return	void
-	 */	
-	function load_model($model, $module = NULL, $name = NULL)
-	{
-		if (empty($module)) $module = FUEL_FOLDER;
-		if (substr($model, strlen($model) - 6) != '_model')
-		{
-			$model = $model.'_model';
-			if (empty($name)) $name = $model;
-		}
-		$this->CI->load->module_model($module, $model, $name);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Convenience method to load language from within the fuel module by default.
-	 *
-	 * @access	public
-	 * @param	mixed	loads language file
-	 * @param	string	The module folder to load from. Default is fuel. (optional)
-	 * @return	void
-	 */	
-	function load_language($langfile, $lang = NULL, $module = NULL)
-	{
-		if (empty($module)) $module = FUEL_FOLDER;
-		$this->CI->load->module_language($module, $langfile, $lang);
-	}
 
 	// --------------------------------------------------------------------
 	
@@ -254,7 +175,7 @@ class Fuel extends Fuel_base_library {
 					$lib_class = strtolower($fuel_class);
 					if (!isset($this->CI->$lib_class))
 					{
-						$this->load_library($lib_class, $var, $init);
+						$this->CI->load->module_library($var, $lib_class, $init);
 					}
 					return $this->CI->$lib_class;
 				}
@@ -297,29 +218,6 @@ class Fuel extends Fuel_base_library {
 		}
 	}
 	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Attaches an object to the fuel object
-	 *
-	 * @access	public
-	 * @param	string	The name of the object
-	 * @param	object	The object to attach. If none is provided it will look in the fuel module. (optional)
-	 * @return	void
-	 */	
-	function attach($key, $obj = NULL)
-	{
-		if (isset($obj))
-		{
-			$this->_attached[$key] =& $obj;
-		}
-		else
-		{
-			$init = array('name' => $key);
-			$this->load_library('fuel_'.$key, FUEL_FOLDER, $init);
-			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
-		}
-	}
 }
 
 

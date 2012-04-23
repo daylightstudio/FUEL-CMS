@@ -16,19 +16,42 @@ class Settings extends Fuel_base_controller {
 
 	function index()
 	{
-		$this->fuel->admin->render('settings');
+		$this->_validate_user('settings');
+		
+		$settings = array();
+		$modules = $this->fuel->modules->advanced(TRUE);
+		foreach ($modules as $key => $module)
+		{
+			if ($module->has_settings())
+			{
+				$settings[$module->name()] = $module;
+			}
+		}
+		$vars['settings'] = $settings;
+		
+		
+		$crumbs = array(lang('section_settings'));
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_settings');
+		
+		$this->fuel->admin->render('settings', $vars);
 	}
 
 	function manage($module = '')
 	{
-		if (empty($module)) {
+		$this->_validate_user($module.'_settings');
+		
+		if (empty($module))
+		{
 			redirect('fuel/settings');
 		}
 		
-		$settings = $this->fuel->modules->get_advanced_module_settings($module);
+		$mod = $this->fuel->modules->get($module);
+
+		$settings = $this->fuel->modules->get($module)->settings_fields();
 		
-		if (empty($settings)) {
-			show_error("There was a problem with the settings for the advanced module: {$module}.<br />Check that {$module}/config/{$module}.php config is configured to handle settings.");
+		if (empty($settings)) 
+		{
+			show_error(lang('settings_problem', $module, $module, $module));
 		}
 		
 		$new_settings = $this->input->post('settings', TRUE);
@@ -57,6 +80,10 @@ class Settings extends Fuel_base_controller {
 		$vars = array();
 		$vars['module'] = $module;
 		$vars['form'] = $this->form_builder->render();
+		
+		$this->_validate_user('manage');
+		$crumbs = array('settings' => lang('section_settings'), $mod->friendly_name());
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_settings');
 		
 		$this->fuel->admin->render('manage/settings', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}

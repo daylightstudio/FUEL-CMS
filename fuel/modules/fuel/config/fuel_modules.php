@@ -93,7 +93,7 @@ $config['modules']['navigation'] = array(
 	'preview_path' => '',
 	'permission' => 'navigation',
 	'instructions' => lang('navigation_instructions'),
-	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select')),
+	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model')),
 	'archivable' => TRUE,
 	'list_actions' => array('navigation/upload' => lang('btn_upload'))
 );

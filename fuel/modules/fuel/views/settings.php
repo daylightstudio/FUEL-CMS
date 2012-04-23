@@ -1,26 +1,15 @@
-<?php
-
-$settings = array();
-$modules = $this->fuel->config('modules_allowed');
-foreach ($modules as $module)
-{
-	$module_settings = $this->fuel->modules->get_advanced_module_settings($module);
-	if ($module_settings) {
-		$settings[$module] = $module_settings;
-	}
-}
-
-?>
 <div id="fuel_main_content_inner">
 <?php if (empty($settings)) : ?>
-	<p>There are no settings for any advanced modules to manage.</p>
+	<p class="instructions"><?=lang('settings_none')?></p>
 <?php else : ?>
-	<p class="instructions">Manage the settings for the following advanced modules:<p>
+	<p class="instructions"><?=lang('settings_manage')?><p>
 	
-	<ul>
-		<?php foreach ($settings as $module => $module_settings) : ?>
-		<li><a href="<?=site_url("fuel/settings/manage/{$module}")?>"><?=humanize($module)?></a></li>
-		<?php endforeach; ?>
-	</ul>
+	<div class="boxbuttons">
+		<ul>
+			<?php foreach ($settings as $key => $module) : ?>
+			<li><a href="<?=site_url("fuel/settings/manage/{$module->folder()}")?>" class="<?=$module->icon()?>"><?=$module->friendly_name()?></a></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
 <?php endif; ?>
 </div>

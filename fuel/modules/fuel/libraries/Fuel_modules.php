@@ -159,27 +159,6 @@ class Fuel_modules extends Fuel_base_library {
 	
 	// --------------------------------------------------------------------
 	
-	function get_advanced_module_settings($advanced_module)
-	{
-		$file_path = MODULES_PATH.$advanced_module.'/config/'.$advanced_module.'.php';
-		
-		if (file_exists($file_path))
-		{
-			include($file_path);
-			
-			if ( ! empty($config[$advanced_module]['settings']))
-			{
-				return $config[$advanced_module]['settings'];
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-	}
-	
-	// --------------------------------------------------------------------
-	
 	/**
 	 * Add a module 
 	 *
@@ -231,6 +210,10 @@ class Fuel_modules extends Fuel_base_library {
 	{
 		if (!empty($module))
 		{
+			if ($module == 'fuel')
+			{
+				return $this->fuel;
+			}
 	 		if (!empty($this->_modules[$module]))
 			{
 				return $this->_modules[$module];
@@ -321,9 +304,13 @@ class Fuel_modules extends Fuel_base_library {
 	 * @access	public
 	 * @return	array	An array of Fuel_advanced_module objects
 	 */	
-	function advanced()
+	function advanced($include_fuel = FALSE)
 	{
 		$advanced = array();
+		if ($include_fuel)
+		{
+			$advanced['fuel'] =& $this->fuel;
+		}
 		foreach($this->fuel->config('modules_allowed') as $module)
 		{
 			$advanced[$module] =& $this->fuel->$module;
@@ -342,7 +329,9 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function allowed($module)
 	{
-		return (in_array($module, $this->fuel->config('modules_allowed')));
+		$allowed = $this->fuel->config('modules_allowed');
+		$allowed[] = 'fuel';
+		return (in_array($module, $allowed));
 	}
 	
 	

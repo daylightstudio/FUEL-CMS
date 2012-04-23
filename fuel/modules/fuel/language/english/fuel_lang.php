@@ -136,6 +136,7 @@ $lang['section_blog'] = 'Blog';
 $lang['section_modules'] = 'Modules';
 $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
+$lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
 $lang['section_settings'] = 'Settings';
 
@@ -339,6 +340,15 @@ $lang['cache_instructions'] = 'You are about to clear the page cache of the site
 $lang['cache_no_clear'] = 'No, don\'t clear cache';
 $lang['cache_yes_clear'] = 'Yes, clear cache';
 
+
+/*
+|--------------------------------------------------------------------------
+| Settings
+|--------------------------------------------------------------------------
+*/
+$lang['settings_none'] = 'There are no settings for any advanced modules to manage.';
+$lang['settings_manage'] = 'Manage the settings for the following advanced modules:';
+$lang['settings_problem'] = 'There was a problem with the settings for the advanced module <strong>%1s</strong>. <br />Check that <strong>/fuel/modules/%1s/config/%1s.php</strong> config is configured to handle settings.';
 
 /*
 |--------------------------------------------------------------------------

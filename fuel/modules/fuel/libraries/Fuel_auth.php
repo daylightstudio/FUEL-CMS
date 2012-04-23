@@ -156,7 +156,7 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function get_session_namespace()
 	{
-		$key = 'fuel_'.md5($this->CI->fuel->config('site_name'));
+		$key = 'fuel_'.md5(FCPATH); // unique to the site installation
 		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
 		return $key;
 	}

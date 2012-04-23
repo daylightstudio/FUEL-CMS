@@ -30,12 +30,13 @@
 
 class Fuel_settings extends Fuel_base_library {
 
-	protected $settings = array();
+	protected $settings = array(); // Settings array
 	
 	function __construct($params = array())
 	{
 		parent::__construct($params);
-		$this->CI->fuel->load_model('settings', '', 'fuel_settings_model');
+		$this->fuel->load_model('settings', 'fuel_settings_model');
+		// $this->CI->load->module_model('fuel', 'settings_model', 'fuel_settings_model');
 	}
 
 	// --------------------------------------------------------------------
@@ -50,7 +51,8 @@ class Fuel_settings extends Fuel_base_library {
 	 */
 	function get($module, $key = '')
 	{
-		if ( ! array_key_exists($module, $this->settings)) {
+		if ( ! array_key_exists($module, $this->settings))
+		{
 			$this->settings[$module] = $this->CI->fuel_settings_model->options_list('fuel_settings.key', 'fuel_settings.value', array('module' => $module), 'key');
 		}
 		if ( ! empty($key) AND array_key_exists($key, $this->settings[$module]))

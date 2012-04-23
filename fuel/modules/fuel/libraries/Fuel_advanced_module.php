@@ -35,6 +35,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	protected $uri_path = ''; // the uri_path to the module
 	protected $_attached = array(); // attached objects to the advanced module
 	protected $_config = array(); // the config information for the advanced module
+	protected $_settings = NULL; // the settings information for the advanced module
 	
 	// --------------------------------------------------------------------
 	
@@ -110,7 +111,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 	}
 	
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -124,7 +124,19 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->name;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * The name of the module (usually the folder name)
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function friendly_name()
+	{
+		return ucwords(str_replace('_', ' ', $this->name));
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -142,7 +154,19 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->folder;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * The name of the module (usually the folder name)
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function icon()
+	{
+		return strtolower('ico_'.$this->name);
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -184,7 +208,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $models;
 	}
 	
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -199,7 +222,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (isset($obj))
 		{
-			$this->_attached[$key] = $obj;
+			$this->_attached[$key] =& $obj;
 		}
 		else
 		{
@@ -215,11 +238,35 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The key name for the config item
+	 * @param	boolean	Determines whether or not to also look into the settings (optional)
 	 * @return	mixed
 	 */	
-	function config($item)
+	function config($item = NULL, $look_in_settings = TRUE)
 	{
-		return (isset($this->_config[$item])) ? $this->_config[$item] : FALSE;
+		if (!empty($item))
+		{
+			if ($look_in_settings AND $this->has_settings())
+			{
+				// if a setting exists then we return that... otherwise we continue on to the config
+				if ($this->settings($item))
+				{
+					return $this->settings($item);
+				}
+			}
+			
+			return (isset($this->_config[$item])) ? $this->_config[$item] : FALSE;
+		}
+		else
+		{
+			if ($look_in_settings)
+			{
+				return array_merge($this->_config, $this->_settings);
+			}
+			else
+			{
+				return $this->_config;
+			}
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -262,7 +309,79 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		return (file_exists($this->config_path()));
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * An alias to the config method
+	 *
+	 * @access	public
+	 * @param	string	The key name for the config item (optional)
+	 * @return	mixed
+	 */	
+	function settings($item = NULL)
+	{
+		if (is_null($this->_settings))
+		{
+			$this->_settings = $this->fuel->settings->get($this->folder());
+		}
+		
+		if (!empty($item))
+		{
+			if (isset($this->_settings[$item]))
+			{
+				return $this->_settings[$item];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		return $this->_settings;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines whether or not CMS configurable settings exist
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function has_settings()
+	{
+		return !empty($this->_config['settings']);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the settings array from the config file which can be used in the CMS
+	 *
+	 * @access	public
+	 * @param	string	The setting key. If left blank, then all the settings are returned (optional)
+	 * @return	array
+	 */	
+	function settings_fields($setting = NULL)
+	{
+		$settings = $this->config('settings');
+		if (!empty($setting))
+		{
+			if (isset($settings[$setting]))
+			{
+				return $settings[$setting];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return $settings;
+		}
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -680,12 +799,13 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string Name of the library file
+	 * @param	array Initialization parameters (optional)
 	 * @param	string Name you want to assign to the loaded library (optional)
 	 * @return	void
 	 */
-	function load_library($library, $name = NULL)
+	function load_library($library, $init_params = array(), $name = NULL)
 	{
-		$this->CI->load->module_library($this->folder(), $library, $name);
+		$this->CI->load->module_library($this->folder(), $library, $init_params, $name);
 	}
 
 	// --------------------------------------------------------------------
