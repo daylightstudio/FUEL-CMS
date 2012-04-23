@@ -164,7 +164,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function icon()
 	{
-		return strtolower('ico_'.$this->name);
+		return 'ico_'.url_title(str_replace('/', '_', $this->uri_path()),'_', TRUE);
 	}
 
 	// --------------------------------------------------------------------
@@ -671,7 +671,133 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		return (file_exists($this->docs_path()));
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the contents of the documentation view file found in the advanced modules view/_docs/index
+	 *
+	 * @access	public
+	 * @param	string	module
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID
+	 * @param	mixed	Data to save to the cache  (optional)
+	 * @param	int	Time to live in seconds for cache  (optional)
+	 * @return	void
+	 */
+	function save_cache($cache_id, $data, $group = NULL, $ttl = NULL)
+	{
+		$orig_cache_path = $this->_tmp_set_cache_path();
+		
+		$this->_cache->save($cache_id, $data, $group, $ttl);
+		
+		// reset it back to what it was
+		$this->fuel->cache->set_cache_path($orig_cache_path);
+	}
 
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get and return an item from the module's cache
+	 * 
+	 * @access	public
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID (optional)
+	 * @param	boolean	Skip checking if it is in the cache or not (optional)
+	 * @return	string
+	 */
+	function get_cache($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	{
+		$orig_cache_path = $this->_tmp_set_cache_path();
+
+		$cached =  $this->fuel->cache->get($cache_id, $cache_group, $skip_checking);
+
+		// reset it back to what it was
+		$this->fuel->cache->set_cache_path($orig_cache_path);
+		return $cached;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clears the cache folder
+	 * 
+	 * @access	public
+	 * @return	void
+	 */
+	function clear_cache()
+	{
+		return $this->fuel->cache->clear_module($this->folder());
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Checks if the file is cached based on the cache_id passed
+	 * 
+	 * @access	public
+	 * @param	string	Cache ID
+	 * @param	string	Cache group ID (optional)
+	 * @return	boolean
+	 */
+	function is_cached($cache_id, $group = NULL)
+	{
+		$orig_cache_path = $this->_tmp_set_cache_path();
+		
+		$is_cached = $this->fuel->cache->is_cached($cache_id, $group);
+	
+		// reset it back to what it was
+		$this->fuel->cache->set_cache_path($orig_cache_path);
+		return $is_cached;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the server path to the advanced modules documentation
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function cache_path()
+	{
+		return $this->server_path().'views/cache/';
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Temporarily sets the cache path to the module and returns the original path
+	 *
+	 * @access	protected
+	 * @return	string
+	 */
+	protected function _tmp_set_cache_path()
+	{
+		$orig_cache_path = $this->fuel->cache->cache_path;
+		$module_cache_path = $this->cache_path();
+		if (!file_exists($module_cache_path))
+		{
+			return FALSE;
+		}
+		// temporarily set the cache path to the module path
+		$this->set_cache_path($module_cache_path);
+		return $orig_cache_path;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether documenation exists for the advanced module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function has_cache()
+	{
+		return (file_exists($this->cache_path()) AND is_writable($this->cache_path()));
+	}
 	// --------------------------------------------------------------------
 	
 	/**

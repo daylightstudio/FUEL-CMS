@@ -52,7 +52,8 @@ $this->fuel->validate->html('mypage');
 $this->fuel->tester->run();
 </pre>
 
-<p class="important">Review the Advanced Module Reference in this user guide for a list of methods available for your installed advanced modules.</p>
+
+<p class="important">The main <strong>fuel</strong> object is an Advanced Module object. Review the Advanced Module Reference in this user guide for a list of methods available for your installed advanced modules.</p>
 
 <p class="important">The above advanced module classes inherit from the <a href="<?=user_guide_url('libraries/fuel_advanced_module')?>">Fuel_advanced_module</a> class (which itself inherits from the <a href="<?=user_guide_url('libraries/fuel_base_library')?>">Fuel_base_library</a> class).</p>
 <br />

@@ -173,11 +173,11 @@ $lang['replace_item_message'] = 'Select a record from the list below that you wo
 
 $lang['page_route_warning'] = 'The location specified has the following routes already specified in the routes file (%1s):';
 $lang['page_controller_assigned'] = 'There is a controller method already assigned to this page.';
-$lang['page_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to import it into the body of your page (if available)?';
+$lang['page_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to upload it into the body of your page (if available)?';
 $lang['page_not_published'] = 'This page is not published.';
 
-$lang['page_no_import'] = 'No, don\'t import';
-$lang['page_yes_import'] = 'Yes, import';
+$lang['page_no_upload'] = 'No, don\'t upload';
+$lang['page_yes_upload'] = 'Yes, upload';
 $lang['page_information'] = 'Page Information';
 $lang['page_layout_vars'] = 'Layout Variables';
 

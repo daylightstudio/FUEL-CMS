@@ -43,8 +43,8 @@
 	
 			<div class="buttonbar" id="yes_no_modal">
 				<ul>
-					<li class="end"><a href="#" class="ico ico_no" id="view_twin_cancel"><?=lang('page_no_import')?></a></li>
-					<li class="end"><a href="#" class="ico ico_yes" id="view_twin_import"><?=lang('page_yes_import')?></a></li>
+					<li class="end"><a href="#" class="ico ico_no" id="view_twin_cancel"><?=lang('page_no_upload')?></a></li>
+					<li class="end"><a href="#" class="ico ico_yes" id="view_twin_import"><?=lang('page_yes_upload')?></a></li>
 				</ul>
 			</div>
 			<div class="clear"></div>

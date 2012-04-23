@@ -214,13 +214,16 @@ class Fuel_modules extends Fuel_base_library {
 			{
 				return $this->fuel;
 			}
-	 		if (!empty($this->_modules[$module]))
-			{
-				return $this->_modules[$module];
-			}
-			else if ($this->allowed($module) AND $include_advanced)
+			
+			// must check advanced modules first in case there is a submodule with the same name... 
+			// the advanced module has access to the submodule so it is more convenient
+			if ($this->allowed($module) AND $include_advanced)
 			{
 				return $this->fuel->$module;
+			}
+			else if (!empty($this->_modules[$module]))
+			{
+				return $this->_modules[$module];
 			}
 			return FALSE;
 		}

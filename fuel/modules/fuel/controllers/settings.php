@@ -59,9 +59,7 @@ class Settings extends Fuel_base_controller {
 		$new_settings = $this->input->post('settings', TRUE);
 		if ($this->fuel->settings->process($module, $settings, $new_settings))
 		{
-			if ($module == 'blog') {
-				$this->fuel->blog->remove_cache();
-			}
+			$this->fuel->cache->clear_module($module);
 			$this->session->set_flashdata('success', lang('data_saved'));
 			redirect($this->uri->uri_string());
 		}

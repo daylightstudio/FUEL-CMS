@@ -121,7 +121,7 @@ class Fuel extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets a configuration value for FUEL
+	 * Sets a configuration value for FUEL (overwrites Fuel_advanced_module)
 	 *
 	 * @access	public
 	 * @param	mixed	Can be a string that references the configuration key or an array of values

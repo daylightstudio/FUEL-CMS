@@ -24,7 +24,7 @@ class Module extends Fuel_base_controller {
 		$params = array();
 		if ($this->fuel->modules->exists($this->module, FALSE))
 		{
-			$this->module_obj = $this->fuel->modules->get($this->module);
+			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 			$params = $this->module_obj->info();
 			
 		}
@@ -34,7 +34,7 @@ class Module extends Fuel_base_controller {
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
 			if ($this->fuel->modules->exists($this->module, FALSE))
 			{
-				$this->module_obj = $this->fuel->modules->get($this->module);
+				$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 				$params = $this->module_obj->info();
 			}
 		}

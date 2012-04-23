@@ -39,3 +39,4 @@ CREATE TABLE `fuel_settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+INSERT INTO `fuel_permissions` (`id`, `description`, `name`, `active`) VALUES (NULL, 'Settings', 'settings', 'yes');
