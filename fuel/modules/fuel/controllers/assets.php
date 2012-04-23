@@ -27,8 +27,14 @@ class Assets extends Module {
 			
 			$this->model->on_before_post();
 
-			if ($this->input->post('asset_folder')) $dir = $this->input->get_post('asset_folder');
-			if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) show_404();
+			if ($this->input->post('asset_folder')) 
+			{
+				$dir = $this->input->get_post('asset_folder');
+				if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) 
+				{
+					show_404();
+				}
+			}
 			
 			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder')) : ''; // remove any going down the folder structure for protections
 			$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
@@ -65,13 +71,16 @@ class Assets extends Module {
 
 				$inline = $this->fuel->admin->is_inline();
 
+				$query_str_arr = $this->input->get_post();
+				$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
+
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module.'/inline_create/'.$dir);
+					$url = fuel_uri($this->module.'/inline_create/?'.$query_str, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module.'/create/'.$dir);
+					$url = fuel_uri($this->module.'/create/?'.$query_str, TRUE);
 				}
 				redirect($url);
 				

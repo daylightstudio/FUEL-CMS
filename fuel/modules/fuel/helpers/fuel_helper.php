@@ -489,7 +489,7 @@ function fuel_url($uri = '', $query_string = FALSE)
  * @param	string
  * @return	string
  */
-function fuel_uri($uri = '', $query_string = TRUE)
+function fuel_uri($uri = '', $query_string = FALSE)
 {
 	$CI =& get_instance();
 	if (is_bool($query_string) AND $query_string !== FALSE)

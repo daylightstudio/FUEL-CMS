@@ -213,7 +213,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('#multi_delete').click(function(){
 			$('#toggle_list').unbind('click');
 			var deleteUrl = _this.modulePath + '/delete/';
-			$('#form').attr('action', deleteUrl).submit();
+			$('#form').attr('action', deleteUrl).attr('method', 'post').submit();
 			return false;
 		});
 		
@@ -259,7 +259,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// automatically set selects to submit
 		$('#export_data').click(function(e){
-			$('#form').attr('action', _this.modulePath + '/export').submit();
+			$('#form').attr('action', _this.modulePath + '/export').attr('method', 'post').submit();
 			return false;
 		});
 		
