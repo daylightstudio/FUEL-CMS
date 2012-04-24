@@ -180,33 +180,7 @@ class Users_model extends Base_module_model {
 			OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions'))
 		)
 		{
-			//$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-			//$selected_perms = $CI->user_to_permissions_model->get_permissions($user_id, FALSE);
-
-			// if (!empty($selected_perms)) 
-			// {
-				$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
-//			}
-			// 
-			// $CI->load->module_model(FUEL_FOLDER, 'permissions_model');
-			// $perms = $CI->permissions_model->find_all_array(array('active' => 'yes'), 'name asc');
-			// 
-			// $order = 11;
-			// foreach($perms as $val)
-			// {
-			// 	$perm_field = 'permissions['.$val['id'].']';
-			// 	$perm_fields[$perm_field]['type'] = 'checkbox';
-			// 	$perm_fields[$perm_field]['value'] = $val['id'];
-			// 	$perm_fields[$perm_field]['order'] = $order;
-			// 	$label = lang('perm_'.$val['name']);
-			// 	if (empty($label))
-			// 	{
-			// 		$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
-			// 	}
-			// 	$perm_fields[$perm_field]['label'] = $label;
-			// 	if (!empty($selected_perms[$val['id']])) $perm_fields[$perm_field]['checked'] = TRUE;
-			// 	$order++;
-			// }
+			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 		}
 		$fields['permissions']['mode'] = 'checkbox';
 		$fields['permissions']['display_label'] = FALSE;

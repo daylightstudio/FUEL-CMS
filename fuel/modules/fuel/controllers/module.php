@@ -1430,12 +1430,12 @@ class Module extends Fuel_base_controller {
 	{
 		if (!empty($this->preview_path) AND !empty($id))
 		{
-			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+			$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 
 			$url = $this->module_obj->url($data);
 
 			// change the last page to be the referrer
-			$last_page = substr($_SERVER['HTTP_REFERER'], strlen(site_url()));
+			$last_page = (isset($_SERVER['HTTP_REFERER'])) ? substr($_SERVER['HTTP_REFERER'], strlen(site_url())) : NULL;
 			$this->fuel->admin->set_last_page($last_page);
 			redirect($url);
 		}

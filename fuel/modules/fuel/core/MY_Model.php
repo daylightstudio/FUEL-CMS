@@ -593,7 +593,7 @@ class MY_Model extends CI_Model {
 				foreach($where as $key => $val)
 				{
 					// check for nested array values to use for wherein
-					$method = (is_array($val)) ? 'where_in' : 'where';
+					$method = (!empty($val) AND is_array($val)) ? 'where_in' : 'where';
 					$this->db->$method($key, $val);
 				}
 			}
