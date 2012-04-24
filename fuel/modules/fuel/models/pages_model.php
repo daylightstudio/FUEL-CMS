@@ -8,22 +8,33 @@ class Pages_model extends Base_module_model {
 	public $required = array('location');
 	public $hidden_fields = array('last_modified', 'last_modified_by');
 	public $ignore_replacement = array('location');
-	// public $has_many = array('navigation' => array(
-	// 											'model' => array(FUEL_FOLDER => 'navigation_model'), 
-	// 											'foreign_key' => 'page_id', 
-	// 											'relationships_model' => FALSE)
-	// 											);
 	
 	function __construct()
 	{
 		parent::__construct('pages');
 	}
 	
+	// displays related items on the right side
 	function related_items($values = array())
 	{
+		$CI =& get_instance();
+		$CI->load->model(FUEL_FOLDER, 'navigation_model');
+		$where['location'] = $values['location'];
+		$related_items = $CI->navigation_model->find_all_array($where);
 		
-		$vars['related_items'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+		$return = array();
+		$return['navigation'] = array();
+		foreach($related_items as $key => $item)
+		{
+			$label = $item['label'];
+			if (!empty($item['group_name']))
+			{
+				$label .= ' ('.$item['group_name'].')';
+			}
+			$return['navigation'][$key] = $label;
+		}
 		
+		return $return;
 	}
 	
 	function tree($just_published = FALSE)

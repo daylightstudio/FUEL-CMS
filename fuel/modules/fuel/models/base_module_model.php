@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -533,6 +533,32 @@ class Base_module_model extends MY_Model {
 	 * @return	string
 	 */	
 	function export_data($params = array())
+	{
+		// normalize parameters
+		$valid_params = array('col', 'order');
+		foreach($valid_params as $p)
+		{
+			if (!isset($params[$p]))
+			{
+				$params[$p] = NULL;
+			}
+		}
+		
+		$items = $this->list_items(NULL, NULL, $params['col'], $params['order']);
+		$data = $this->csv($items);
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns data that will be downloaded automatically
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	string
+	 */	
+	function related_items($params = array())
 	{
 		// normalize parameters
 		$valid_params = array('col', 'order');

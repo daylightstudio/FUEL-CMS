@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -344,7 +344,6 @@ $config['page_uri_prefix'] = '';
 
 $config['settings'] = array();
 $config['settings']['site_name'] = array();
-$config['settings']['languages'] = array('type' => 'multi', 'options' => $config['languages']);
 
 @include(APPPATH.'config/MY_fuel.php');
 

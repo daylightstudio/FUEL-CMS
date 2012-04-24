@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -1471,7 +1471,7 @@ class MY_Model extends CI_Model {
 	public function get_related_keys($values, $related_model, $mode = 'has_many', $rel_config = '')
 	{
 		$CI =& get_instance();
-		$use_rel_pivot_tbl = $this->is_using_rel_pivot_tbl($rel_config);
+		$use_rel_pivot_tbl = $this->is_using_relationship_table($rel_config);
 		if (is_array($related_model))
 		{
 			$related_model = $this->load_related_model($related_model);
@@ -3119,7 +3119,7 @@ class MY_Model extends CI_Model {
 	/**
 	 * Returns whether the relationship is using a pivot table
 	 */
-	public function is_using_rel_pivot_tbl($rel_config)
+	public function is_using_relationship_table($rel_config)
 	{
 		if (is_array($rel_config) AND array_key_exists('relationships_model', $rel_config) AND ($rel_config['relationships_model'] == FALSE)
 				AND array_key_exists('foreign_key', $rel_config) AND ! empty($rel_config['foreign_key'])
@@ -3476,7 +3476,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -3630,7 +3630,7 @@ Class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4438,7 +4438,7 @@ Class Data_record {
 		
 		$rel = $this->_parent_model->$relationship_type;
 		$rel_config = $rel[$var];
-		$use_rel_pivot_tbl = $this->_parent_model->is_using_rel_pivot_tbl($rel_config);
+		$use_rel_pivot_tbl = $this->_parent_model->is_using_relationship_table($rel_config);
 		$output = array();
 		
 		// load the necessary models

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -183,6 +183,12 @@ function is_home()
 function last_url($default = FALSE, $only_uri = FALSE)
 {
 	$back_url = (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != current_url()) ? $_SERVER['HTTP_REFERER'] : $default;
+	
+	// check to make sure the last URL was from the same site
+	if (!preg_match('#^'.site_url().'#', $back_url))
+	{
+		$back_url = $default;
+	}
 	
 	if ($back_url)
 	{

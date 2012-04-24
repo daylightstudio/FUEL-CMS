@@ -344,7 +344,8 @@ class Pages extends Module {
 		$vars['others'] = $this->model->get_others('location', $id);
 		if (!empty($saved['location'])) 
 		{
-			$vars['related_items'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+			//$vars['related_items'] = $this->navigation_model->find_by_location($saved['location'], FALSE);
+			$vars['related_items'] = $this->model->related_items($saved);
 		}
 
 		$actions = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);

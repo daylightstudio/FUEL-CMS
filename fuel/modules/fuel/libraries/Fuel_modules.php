@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -297,6 +297,20 @@ class Fuel_modules extends Fuel_base_library {
 	{
 		$module = $this->get($module, $include_advanced);
 		return $module !== FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether a module is advanced or not
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	boolean
+	 */	
+	function is_advanced($module)
+	{
+		return is_a($module, 'Fuel_advanced_module');
 	}
 	
 	// --------------------------------------------------------------------

@@ -11,7 +11,7 @@ ALTER TABLE `fuel_page_variables` CHANGE `value` `value` LONGTEXT  NOT NULL;
 ALTER TABLE `fuel_blog_posts` DROP `image`;
 ALTER TABLE `fuel_blog_posts` ADD `main_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `author_id`;
 ALTER TABLE `fuel_blog_posts` ADD `list_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `main_image`;
-ALTER TABLE `fuel_blog_posts` ADD `thumb_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `list_image`;
+ALTER TABLE `fuel_blog_posts` ADD `thumbnail_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `list_image`;
 
 ALTER TABLE `fuel_permissions` MODIFY COLUMN `name` VARCHAR(50) NOT NULL COMMENT 'Permissions beginning with \'Manage \' will allow items to appear on the left menu' AFTER `description`;
 ALTER TABLE `fuel_permissions` CHANGE `name` `name` VARCHAR(50)  NOT NULL  DEFAULT ''  COMMENT 'In most cases, this should be the name of the module (e.g. news)';

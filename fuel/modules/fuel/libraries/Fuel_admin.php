@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -221,6 +221,7 @@ class Fuel_admin extends Fuel_base_library {
 			$this->set_display_mode($mode);
 		}
 		
+		// set inline
 		if (!empty($_POST['fuel_inline']) OR (int)$this->CI->input->get('inline') != 0)
 		{
 			if (!empty($_POST['fuel_inline']) AND $_POST['fuel_inline'] != 0)
@@ -538,6 +539,21 @@ class Fuel_admin extends Fuel_base_library {
 		return $nav_selected;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the selected navigation
+	 *
+	 * @access	public
+	 * @param	string	The name of the selected nav item
+	 * @return	void
+	 */	
+	function set_nav_selected($selected)
+	{
+		$this->CI->nav_selected = $selected;
+	}
+	
+
 	// --------------------------------------------------------------------
 	
 	/**

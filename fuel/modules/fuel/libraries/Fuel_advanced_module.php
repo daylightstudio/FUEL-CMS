@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -157,7 +157,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * The name of the module (usually the folder name)
+	 * Returns the icon for the module
 	 *
 	 * @access	public
 	 * @return	string
@@ -413,10 +413,13 @@ class Fuel_advanced_module extends Fuel_base_library {
 		if (empty($this->uri_path))
 		{
 			$routes_file = $this->server_path().'config/'.$this->folder().'_routes.php';
-			@include($routes_file);
-			if (isset($route))
+			if (file_exists($routes_file))
 			{
-				$this->uri_path = str_replace(FUEL_ROUTE, '', key($route));
+				@include($routes_file);
+				if (isset($route))
+				{
+					$this->uri_path = str_replace(FUEL_ROUTE, '', key($route));
+				}
 			}
 		}
 		return $this->uri_path;
