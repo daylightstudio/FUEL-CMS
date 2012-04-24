@@ -174,4 +174,4 @@ function uri_safe_batch_decode($str, $delimiter = '|', $hexify = TRUE)
 }
 
 /* End of file convert_helper.php */
-/* Location: ./application/helpers/convert_helper.php */
+/* Location: ./modules/fuel/helpers/convert_helper.php */

@@ -28,7 +28,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/form.html
+ * @link		http://www.getfuelcms.com/user_guide/libraries/form
  */
 class Form {
 	
@@ -1086,4 +1086,4 @@ class Form_button {
 
 }
 /* End of file Form.php */
-/* Location: ./application/libraries/Form.php */
+/* Location: ./modules/fuel/libraries/Form.php */

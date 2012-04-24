@@ -287,4 +287,4 @@ function is_dev_mode()
 }
 
 /* End of file utility_helper.php */
-/* Location: ./application/helpers/utility_helper.php */
+/* Location: ./modules/fuel/helpers/utility_helper.php */

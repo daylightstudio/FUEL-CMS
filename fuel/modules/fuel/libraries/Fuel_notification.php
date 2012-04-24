@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL notification library object
+ * FUEL notification object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -188,3 +188,7 @@ class Fuel_notification extends Fuel_base_library {
 	}
 
 }
+
+
+/* End of file Fuel_notification.php */
+/* Location: ./modules/fuel/libraries/Fuel_notification.php */

@@ -26,7 +26,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/modules/fuel/fuel_language
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_language
  */
 
 // --------------------------------------------------------------------

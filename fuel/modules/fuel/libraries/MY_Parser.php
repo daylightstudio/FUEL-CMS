@@ -353,4 +353,4 @@ class MY_Security_Policy extends Dwoo_Security_Policy {
 // END MY_Parser Class
 
 /* End of file MY_Parser.php */
-/* Location: ./application/libraries/MY_Parser.php */
+/* Location: ./modules/fuel/libraries/MY_Parser.php */

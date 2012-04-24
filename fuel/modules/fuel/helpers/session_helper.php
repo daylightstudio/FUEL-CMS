@@ -56,4 +56,4 @@ function session_flashdata($key){
 }
 
 /* End of file session_helper.php */
-/* Location: ./application/helpers/session_helper.php */
+/* Location: ./modules/fuel/helpers/session_helper.php */

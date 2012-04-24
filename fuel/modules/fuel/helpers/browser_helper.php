@@ -59,4 +59,4 @@ function browser_info($agent = NULL)
 }
 
 /* End of file browser_helper.php */
-/* Location: ./application/helpers/browser_helper.php */
+/* Location: ./modules/fuel/helpers/browser_helper.php */

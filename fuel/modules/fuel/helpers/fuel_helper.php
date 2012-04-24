@@ -1,4 +1,4 @@
-<?php 
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -646,3 +646,6 @@ function fuel_settings($module, $key = '')
 	$CI =& get_instance();
 	return $CI->fuel->settings->get($module, $key);
 }
+
+/* End of file fuel_helper.php */
+/* Location: ./modules/fuel/helpers/fuel_helper.php */

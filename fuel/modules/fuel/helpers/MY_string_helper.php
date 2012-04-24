@@ -173,9 +173,6 @@ function strip_javascript($str)
  */
 function safe_htmlentities($str, $protect_amp = TRUE)
 {
-	// remove any gremlin characters
-	$str = zap_gremlins($str);
-	
 	// convert all hex single quotes to numeric ... 
 	// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
 	// but was inconsistent across different environments and versions... not sure the issue

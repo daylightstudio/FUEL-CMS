@@ -61,4 +61,4 @@ function json_headers($no_cache = TRUE)
 }
 
 /* End of file ajax_helper.php */
-/* Location: ./application/helpers/ajax_helper.php */
+/* Location: ./modules/fuel/helpers/ajax_helper.php */

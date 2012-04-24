@@ -725,4 +725,4 @@ class Curl {
 }
 
 /* End of file Curl.php */
-/* Location: ./application/libraries/curl.php */
+/* Location: ./modules/fuel/libraries/curl.php */

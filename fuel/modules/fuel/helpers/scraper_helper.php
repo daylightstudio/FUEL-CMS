@@ -1,5 +1,43 @@
-<?php 
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Scraper Helper
+ *
+ * @package		FUEL CMS
+ * @subpackage	Helpers
+ * @category	Helpers
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/helpers/scraper_helper
+ */
+
+
+// --------------------------------------------------------------------
+
+/**
+ * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to scrape the contents of a URL
+ *
+ * @access	public
+ * @param	string	URL of page to scrape contents
+ * @param	array	POST parameters to pass along in the request
+ * @param	array	An additional set of CURL options
+ * @return	string
+ */	
 function scrape_html($url, $post = array(), $opts = array())
 {
 	$CI =& get_instance();
@@ -25,6 +63,16 @@ function scrape_html($url, $post = array(), $opts = array())
 	return $CI->curl->exec();
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Returns a DOM object of a page or a result object if an XPath query was passed
+ *
+ * @access	public
+ * @param	string	URL of page to scrape contents
+ * @param	string	an XPath query to pass
+ * @return	object
+ */	
 function scrape_dom($url, $xpath_query = NULL)
 {
 	if (is_http_path($url))
@@ -59,9 +107,21 @@ function scrape_dom($url, $xpath_query = NULL)
 	return $dom;
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to determine if a page exists or not
+ *
+ * @access	public
+ * @param	string	URL of page to check
+ * @return	boolean
+ */	
 function is_valid_page($url)
 {
 	$CI =& get_instance();
 	$CI->load->library('curl');
 	return $CI->curl->is_valid($url);
 }
+
+/* End of file scraper_helper.php */
+/* Location: ./modules/fuel/helpers/scraper_helper.php */

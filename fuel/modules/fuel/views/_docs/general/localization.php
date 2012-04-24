@@ -1,4 +1,10 @@
 <h1>Localization</h1>
+<p>FUEL CMS 1.0 now provides basic multi-language support through the CMS for pages and modules. You can configure the number of 
+supported languages to display for your pages in <a href="<?=user_guid_url('installation/configuration')?>">FUEL config</a>.
+Additionally, if you have a simple module has a field named "language", This field name can be configured by specifying
+the  <a href="<?=user_guide_url('modules/simple')?>">simple module's</a> <dfn>language_col</dfn> parameter.
+</p>
+
 <p>The default installation of FUEL CMS currently only comes with the English langauge. 
 However, localization efforts are underway on the <a href="https://github.com/daylightstudio/FUEL-CMS-Languages" target="_blank">FUEL CMS Languages GitHub repo</a>.
 </p>
@@ -20,3 +26,5 @@ However, localization efforts are underway on the <a href="https://github.com/da
 
 <h2>The js_localized Module Property</h2>
 <p>The <a href="http://www.getfuelcms.com/user_guide/modules/simple" target="_blank">js_localized</a> property can be added to your modules if you have have javascript that needs to use some localized text. You can provide it an array of language key values and it will be added to the list of language keys that get translated into a JSON object for your javascript files to consume. If you are using a <a href="http://www.getfuelcms.com/user_guide/javascript/jqx" target="_blank">jqx</a> type controller that extends the BaseFuelController.js, there will be a <var>localized property</var> and a lang() method on the controller that provides access to the JSON language object.</p>
+
+

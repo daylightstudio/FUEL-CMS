@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_sitevariables
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_settings
  */
 
 // --------------------------------------------------------------------

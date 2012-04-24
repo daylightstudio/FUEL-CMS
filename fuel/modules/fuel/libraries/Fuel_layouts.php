@@ -17,13 +17,13 @@
 // ------------------------------------------------------------------------
 
 /**
- * FUEL cache object
+ * FUEL layouts object
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_console
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_layouts
  */
 
 // --------------------------------------------------------------------

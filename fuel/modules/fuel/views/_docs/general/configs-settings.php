@@ -1,6 +1,33 @@
-<h1>Config Files</h1>
+<h1>Configs &amp; Settings</h1>
+<p>There are various ways to configure FUEL CMS. Configuration files provide the most common way to make configurations. However, 
+new in FUEL CMS 1.0 is the ability to create and manage your custom config settings in the CMS for <a href="<?=user_guide_url('modules/advanced')?>">Advanced Modules</a>.
+</p>
 
-<h2>FUEL Specific Application Config Files</h2>
+<h2 id="difference">What's the Difference Between Configs and Settings?</h2>
+<p>An Advanced Module (including the FUEL Advanced Module) normally contains a single config file that is the same name as the Advanced Module
+(e.g. <span class="file">fuel/modules/{module}/config/{module}.php</span>).
+This config file works just like the main CodeIgniter config file but is specific to Advanced Module's and contains an array of values you can 
+change to affect the module's behavior. The config values can be accessed from the Advanced Module's object like so:
+</p>
+<pre class="brush:php">
+...
+echo $this->fuel->config('site_name');
+</pre>
+
+<p><strong>Config values are not editable in the CMS.</strong> To fix this issue, we've implemented <a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a> which
+allows you to create settings forms in the CMS to manage  configuration aspects of your Advanced Modules. To do so, you add a <dfn>settings</dfn> key in the Advanced Modules config 
+with <a href="<?=user_guide_url('general/forms')?>">Form_builder fields</a> with keys that correspond to config values. This gives you the flexibility to expose as much or little of the configuration
+to CMS users. If no settings values are set, then they default to the static config values.</p>
+
+<pre class="brush:php">
+$config['my_module']['settings'] = array();
+$config['my_module']['settings']['my_config'] = array();
+</pre>
+
+<p class="important">Note that Advance Module config settings use their {module} as a key for namespacing purposes to prevent potential conflicts.</p>
+
+<h2 id="fuel_specific">FUEL Specific Application Config Files</h2>
+<p>The following are configuration files specific to FUEL CMS (and not editable in the CMS):</p>
 <ul>
 	<li><strong>asset:</strong> configuration parameters for the asset class</li>
 	<li><strong>form_builder:</strong> used by FUEL's <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder class</a> to set initialization preferences, 
@@ -16,7 +43,8 @@
 	<li><strong>states:</strong> a configuration containing states. Can be used by forms mostly and in particular the custom field type <a href="<?=user_guide_url('general/forms#state')?>">states</a></li>
 </ul>
 
-<h2>CodeIgniter Specific Application Config Files</h2>
+<h2 id="codeigniter_specific">CodeIgniter Specific Application Config Files</h2>
+<p>The following are configuration files specific to CodeIgniter (and not editable in the CMS):</p>
 <ul>
 	<li><strong>autoload:</strong> sets the packages, libraries, helpers, configs, languages and model files. 
 		FUEL automatically includes the <span class="file">fuel/modules/fuel</span> folder as a package path which allows 
@@ -35,3 +63,5 @@
 	<li><strong>routes:</strong> the <a href="http://codeigniter.com/user_guide/general/routing.html" target="_blank">CodeIgniter Routing</a> configuration</li>
 	<li><strong>smileys:</strong> the <a href="http://codeigniter.com/user_guide/helpers/smiley_helper.html" target="_blank">Smiley helper function</a> configuration</li>
 </ul>
+
+

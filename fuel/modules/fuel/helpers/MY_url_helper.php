@@ -1,4 +1,4 @@
-<?php
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FUEL CMS
  * http://www.getfuelcms.com

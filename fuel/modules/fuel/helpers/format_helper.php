@@ -51,4 +51,4 @@ function dollar($value, $include_cents = TRUE)
 }
 
 /* End of file format_helper.php */
-/* Location: ./application/helpers/format_helper.php */
+/* Location: ./modules/fuel/helpers/format_helper.php */

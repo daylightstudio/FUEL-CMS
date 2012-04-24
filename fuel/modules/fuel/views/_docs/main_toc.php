@@ -68,7 +68,7 @@
 					<li><a href="<?=user_guide_url('general/security')?>">Security</a></li>
 					<li><a href="<?=user_guide_url('general/localization')?>">Localization</a></li>
 					<li><a href="<?=user_guide_url('general/constants')?>">FUEL Constants</a></li>
-					<li><a href="<?=user_guide_url('general/configs')?>">Config files</a></li>
+					<li><a href="<?=user_guide_url('general/configs-settings')?>">Configs &amp; Settings</a></li>
 					<li><a href="<?=user_guide_url('general/extending')?>">Extending FUEL</a></li>
 				</ul>
 			</td>
@@ -85,6 +85,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_blocks')?>">Fuel Blocks Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_cache')?>">Fuel Cache Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_layouts')?>">Fuel Layouts Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_language')?>">Fuel Language Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_logs')?>">Fuel Logs Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_modules')?>">Fuel Modules Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_navigation')?>">Fuel Navigation Class</a></li>
@@ -152,6 +153,9 @@
 					<li><a href="<?=user_guide_url('helpers/convert_helper')?>">Convert helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/format_helper')?>">Format helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/google_helper')?>">Google helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/scraper_helper')?>">Scraper helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/session_helper')?>">Session helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/simplepie_helper')?>">Simplepie helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/utility_helper')?>">Utility helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/validator_helper')?>">Validator helper</a></li>
 				</ul>

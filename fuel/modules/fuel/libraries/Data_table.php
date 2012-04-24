@@ -28,6 +28,7 @@
  * @author		David McReynolds @ Daylight Studio
  * @link		http://www.getfuelcms.com/user_guide/libraries/data_table
  */
+// ------------------------------------------------------------------------
 
 class Data_table {
 	
@@ -1031,4 +1032,4 @@ class Data_table_field {
 }
 
 /* End of file Data_table.php */
-/* Location: ./application/libraries/Data_table.php */
+/* Location: ./modules/fuel/libraries/Data_table.php */

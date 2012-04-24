@@ -1,16 +1,4 @@
-<?php  if (!empty($related_items)) : ?>
-
-<div id="related_items">
-	<h3 class="ico ico_navigation"><?=lang('pages_associated_navigation')?></h3>
-	<ul>
-		<?php foreach($related_items as $item) : ?>
-		<li><a href="<?=fuel_url('navigation/edit/'.$item['id'])?>"><?=$item['label']?> 
-		<?php if (!empty($item['group_name'])){ ?>(<?=$item['group_name']?>)<?php } ?></a>
-		</li>
-		<?php endforeach; ?>
-	</ul>
-</div>
-<?php endif; ?>
+<?php $this->load->view('_blocks/related_items'); ?>
 
 <div id="notification_extra" class="notification">
 	<?php if (!empty($data['published']) && !is_true_val($data['published'])) : ?>

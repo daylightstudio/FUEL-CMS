@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_page_variables
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_pagevars
  */
 
 // --------------------------------------------------------------------
@@ -188,3 +188,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		return $vars;
 	}
 }
+
+
+/* End of file Fuel_pagevars.php */
+/* Location: ./modules/fuel/libraries/fuel/Fuel_pagevars.php */

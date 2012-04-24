@@ -121,7 +121,6 @@ $config['ck_editor_settings'] = array(
 // languages for pages. The key is saved to the page variables
 $config['languages'] = array(
 						'english' => 'English',
-						'spanish' => 'Spanish'
 						);
 
 
@@ -342,10 +341,12 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 
+@include(APPPATH.'config/MY_fuel.php');
+
 $config['settings'] = array();
 $config['settings']['site_name'] = array();
+$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => $config['modules_allowed']);
 
-@include(APPPATH.'config/MY_fuel.php');
 
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */

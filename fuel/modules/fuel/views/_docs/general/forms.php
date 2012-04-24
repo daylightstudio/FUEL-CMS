@@ -744,6 +744,7 @@ associate the the datetime field type with the jquery UI datepicker.
 	<ul>
 		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn></li>
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
+		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
 	</ul>
 	
 	<h4>Example</h4>

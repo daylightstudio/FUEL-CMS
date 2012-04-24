@@ -305,4 +305,4 @@ function _get_assets()
 }
 
 /* End of file ajax_helper.php */
-/* Location: ./application/helpers/asset_helper.php */
+/* Location: ./modules/fuel/helpers/asset_helper.php */

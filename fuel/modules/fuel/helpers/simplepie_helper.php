@@ -1,5 +1,43 @@
-<?php 
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2010, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Simplepie Helper
+ *
+ * @package		FUEL CMS
+ * @subpackage	Helpers
+ * @category	Helpers
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/helpers/simplepie
+ */
+
+
+// --------------------------------------------------------------------
+
+/**
+ * Uses <a href="[user_guide_url]libraries/simplepie">SimplePie</a> class to retrieve an RSS Feed
+ *
+ * @access	public
+ * @param	string	Feed URL
+ * @param	string	The number of results to return
+ * @param	string	Additional parameters which include, cache_duration, enable_order_by_date, enable_cache and cache_location
+ * @return	object
+ */
 function simplepie($feed, $limit = 5, $params = array())
 {
 	$CI =& get_instance();
@@ -38,3 +76,7 @@ function simplepie($feed, $limit = 5, $params = array())
 	}
 	return $feed_data;
 }
+
+
+/* End of file simplepie_helper.php */
+/* Location: ./modules/fuel/helpers/simplepie_helper.php */

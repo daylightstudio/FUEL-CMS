@@ -1310,4 +1310,4 @@ class Asset {
 }
 
 /* End of file Asset.php */
-/* Location: ./application/libraries/Asset.php */
+/* Location: ./modules/fuel/libraries/Asset.php */

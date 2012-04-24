@@ -70,4 +70,4 @@ function google_analytics($uacct = '')
     
 }
 /* End of file google_helper.php */
-/* Location: ./application/helpers/google_helper.php */
+/* Location: ./modules/fuel/helpers/google_helper.php */

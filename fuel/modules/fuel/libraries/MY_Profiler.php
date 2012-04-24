@@ -135,4 +135,4 @@ class MY_Profiler extends CI_Profiler {
 // END MY_Profiler class
 
 /* End of file MY_Profiler.php */
-/* Location: ./application/libraries/MY_Profiler.php */
+/* Location: ./modules/fuel/libraries/MY_Profiler.php */
