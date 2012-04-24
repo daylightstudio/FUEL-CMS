@@ -89,16 +89,25 @@ class Fuel_settings extends Fuel_base_library {
 		{
 			// backup old settings
 			$this->CI->fuel_settings_model->update(array('module' => "{$module}_backup"), array('module' => $module));
-			
+//			$this->CI->fuel_settings_model->debug_query();
+
+
 			// format data for saving
 			$save = array();
 			foreach ($settings as $key => $field_config)
 			{
 				$new_value = '';
 				// set checkbox settings to 0 by default if unchecked
-				if (array_key_exists('type', $field_config) AND ($field_config['type'] == 'checkbox') AND ! array_key_exists($key, $new_settings))
-				{
-					$new_value = 0;
+				if (array_key_exists('type', $field_config) AND  ! array_key_exists($key, $new_settings))
+				{	
+					if ($field_config['type'] == 'checkbox')
+					{
+						$new_value = 0;
+					}
+					else
+					{
+						$new_value = array();
+					}
 				}
 				else if (isset($new_settings[$key]))
 				{

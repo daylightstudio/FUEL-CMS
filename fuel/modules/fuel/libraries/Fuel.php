@@ -196,7 +196,7 @@ class Fuel extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Magic method that will call any methods on an attached object that start with "get"
+	 * Magic method that will call any methods on an attached object that are "get"
 	 *
 	 * @access	public
 	 * @param	string	The object

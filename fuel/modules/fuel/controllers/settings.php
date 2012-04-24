@@ -57,6 +57,7 @@ class Settings extends Fuel_base_controller {
 		}
 		
 		$new_settings = $this->input->post('settings', TRUE);
+		
 		if ($this->fuel->settings->process($module, $settings, $new_settings))
 		{
 			$this->fuel->cache->clear_module($module);

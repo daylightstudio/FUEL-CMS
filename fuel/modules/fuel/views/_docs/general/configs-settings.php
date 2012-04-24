@@ -17,7 +17,8 @@ echo $this->fuel->config('site_name');
 <p><strong>Config values are not editable in the CMS.</strong> To fix this issue, we've implemented <a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a> which
 allows you to create settings forms in the CMS to manage  configuration aspects of your Advanced Modules. To do so, you add a <dfn>settings</dfn> key in the Advanced Modules config 
 with <a href="<?=user_guide_url('general/forms')?>">Form_builder fields</a> with keys that correspond to config values. This gives you the flexibility to expose as much or little of the configuration
-to CMS users. If no settings values are set, then they default to the static config values.</p>
+to CMS users. If no settings values are set, then they default to the static config values. A either be a "super" admin user or be subscribed to the
+<dfn>{module}_settings</dfn> permission to have access to an Advanced Module's settings in the CMS.</p>
 
 <pre class="brush:php">
 $config['my_module']['settings'] = array();
@@ -25,6 +26,7 @@ $config['my_module']['settings']['my_config'] = array();
 </pre>
 
 <p class="important">Note that Advance Module config settings use their {module} as a key for namespacing purposes to prevent potential conflicts.</p>
+
 
 <h2 id="fuel_specific">FUEL Specific Application Config Files</h2>
 <p>The following are configuration files specific to FUEL CMS (and not editable in the CMS):</p>

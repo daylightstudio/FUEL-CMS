@@ -248,7 +248,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 			if ($look_in_settings AND $this->has_settings())
 			{
 				// if a setting exists then we return that... otherwise we continue on to the config
-				if ($this->settings($item))
+				if ($this->settings($item) !== FALSE)
 				{
 					return $this->settings($item);
 				}

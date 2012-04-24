@@ -29,7 +29,7 @@ Inspired by Zero Design http://www.getfuelcms.com/forums/discussion/470/updated-
 ::-moz-focus-inner { border: 0; padding: 0; }
 input[type="search"]::-webkit-search-decoration { display: none; }
 input, button, select, textarea { margin: 0; }
-input[type="radio"], input[type="checkbox"] { vertical-align: top; top: 3px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
+input[type="radio"], input[type="checkbox"] { top: 3px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
 
 button,
 input[type="reset"],
