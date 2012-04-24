@@ -25,6 +25,7 @@
 				<ul>
 					<li><a href="<?=user_guide_url('installation/installing')?>">Installing FUEL CMS</a></li>
 					<li><a href="<?=user_guide_url('installation/requirements')?>">Server Requirements</a></li>
+					<li><a href="<?=user_guide_url('installation/db-setup')?>">Database Setup</a></li>
 					<li><a href="<?=user_guide_url('installation/troubleshooting')?>">Troubleshooting</a></li>
 					<li><a href="<?=user_guide_url('installation/configuration')?>">Configuring FUEL CMS</a></li>
 				</ul>

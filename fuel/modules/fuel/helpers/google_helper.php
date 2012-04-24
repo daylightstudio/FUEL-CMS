@@ -37,11 +37,10 @@ http://codeigniter.com/forums/viewthread/56515/
 * If both values do not exist, nothing will be inserted.
 *
 * @access    public
-* @param    string
+* @param    string	The google account number
 * @return    string
 */
-function google_analytics($uacct = '')
-{
+function google_analytics($uacct = '') {
 	$CI =& get_instance();
 	$CI->load->config('google');
 	
@@ -67,7 +66,7 @@ function google_analytics($uacct = '')
 	{
 		return FALSE;
 	}
-    
 }
+
 /* End of file google_helper.php */
 /* Location: ./modules/fuel/helpers/google_helper.php */
