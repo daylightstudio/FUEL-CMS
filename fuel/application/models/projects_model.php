@@ -3,12 +3,19 @@ require_once(FUEL_PATH.'models/base_module_model.php');
 
 class Projects_model extends Base_module_model {
 
-	public $filters = array('name');
+	//public $filters = array('name');
 	public $required = array('name', 'image_upload');
 	//public $linked_fields = array('slug' => array('slug' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => array('name' => 'url_title'), 'client' => array('name' => 'strtoupper'));
 	//public $linked_fields = array('slug' => 'name', 'client' => 'name');
 	public $boolean_fields = array('published');
+	public $belongs_to = array('relationships' => 'relationships_test');
+	public $serialized_fields = array('serialized_test');
+	public $default_serialization_method = 'json';
+	public $filter_join = array(
+								'name' => 'and',
+								'language' => 'and',
+								);
 	
 	function __construct()
 	{
@@ -26,7 +33,7 @@ class Projects_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(BLOG_FOLDER, 'blog_categories_model');
-		$CI->load->module_model(BLOG_FOLDER, 'blog_posts_to_categories_model');
+	//	$CI->load->module_model(BLOG_FOLDER, 'blog_posts_to_categories_model');
 		
 		$fields = parent::form_fields($values);
 		
@@ -49,7 +56,9 @@ class Projects_model extends Base_module_model {
 		$fields['image']['create_thumb'] = 'width';
 		$fields['image']['subfolder'] = 'test';
 		$fields['image']['maintain_ratio'] = TRUE;
-		//$fields['description']['class'] = 'wysiwyg';
+		$fields['description']['class'] = 'wysiwyg';
+		$fields['fieldset1'] = array('type' => 'fieldset', 'order' => 1, 'value' => 'Tab 1', 'class' => 'tab');
+		$fields['fieldset2'] = array('type' => 'fieldset', 'order' => 10, 'value' => 'Tab 2', 'class' => 'tab');
 		
 		// put all project images into a projects subfolder
 		$fields['image_upload']['upload_path'] = assets_server_path('projects', 'images');
@@ -66,21 +75,22 @@ class Projects_model extends Base_module_model {
 		//$fields['image'] = array('type' => 'asset');
 		unset($fields['image_upload']);
 		
-		$category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
-		$category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], 'fuel_blog_categories.published' => 'yes'))) : array();
-		
-		$fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'projects', 'options' => $category_options, 'multiple' => TRUE);
+		// $category_options = $CI->blog_categories_model->options_list('id', 'name', array('published' => 'yes'), 'name');
+		// $category_values = (!empty($values['id'])) ? array_keys($CI->blog_posts_to_categories_model->find_all_array_assoc('category_id', array('post_id' => $values['id'], 'fuel_blog_categories.published' => 'yes'))) : array();
+		// 
+		// $fields['inline_edit'] = array('type' => 'inline_edit', 'module' => 'projects', 'options' => $category_options, 'multiple' => TRUE);
 
 		//$fields['name'] = array();
 		$fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 		$fields['fillin'] = array('type' => 'fillin', 'placeholder' => 'yo');
 		$fields['datetime'] = array('type' => 'datetime', 'first_day' => 2, 'min_date' => '01-01-2012', 'max_date' => '31-12-2012');
+		//$fields['time'] = array('type' => 'time');
 		
 		$fields['test_image'] = array('upload' => TRUE);
 		$fields['numeric'] = array('type' => 'number', 'represents' => 'int|smallint|mediumint|bigint', 'negative' => TRUE, 'decimal' => TRUE);
 		$fields['currency'] = array('type' => 'currency', 'negative' => TRUE, 'decimal' => '.');
 		$fields['phone'] = array('type' => 'phone', 'required' => TRUE);
-		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE);
+		$fields['file_test'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => TRUE);
 		$fields['state'] = array('type' => 'state');
 		$fields['list_items'] = array('type' => 'list_items');
 		$fields['sections'] = array(
@@ -108,6 +118,12 @@ class Projects_model extends Base_module_model {
 						);
 		// temporary
 		unset($fields['_published']);
+		
+		
+		if (isset($values['id']))
+		{
+			$serialized_test = $this->find_by_key($values['id']);
+		}
 		return $fields;
 	}
 	
@@ -181,7 +197,18 @@ class Projects_model extends Base_module_model {
 	{
 		return preg_replace('#(.+)(\.jpg|\.png)#U', '$1_thumb$2', $image);
 	}
-
+	
+	function on_before_save($values)
+	{
+		$values['serialized_test'] = array('This is a test', 'This is a #2');
+		return $values;
+	}
+	
+	function _common_query($display_unpublished_if_logged_in = FALSE)
+	{
+		parent::_common_query(TRUE);
+	}
+	
 }
 
 class Project_model extends Base_module_record {
