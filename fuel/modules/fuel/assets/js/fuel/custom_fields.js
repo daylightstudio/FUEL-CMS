@@ -148,6 +148,9 @@ fuel.fields.wysiwyg_field = function(context){
 				indent : true
 			});
 			
+			// need so the warning doesn't pop up if you duplicate a value
+			$.changeChecksaveValue('#' + ckId, editor.getData())
+			
 		})
 		CKEDITOR.instances[ckId].resetDirty();
 		

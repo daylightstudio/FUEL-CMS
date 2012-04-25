@@ -16,7 +16,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		if ($('#id').val() == ''){
 			$.changeChecksaveValue('#location', _this.localized.pages_default_location);
 		} else {
-			$.changeChecksaveValue('#location', $('#location').val());
+			$.refreshChecksaveValue('#location');
 		}
 
 		// correspond page title to navigation label for convenience
