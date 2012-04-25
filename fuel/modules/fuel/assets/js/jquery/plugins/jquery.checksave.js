@@ -16,12 +16,13 @@ jQuery.checksave = function(context) {
 	$elems.each(function(i){
 		jQuery(this).data('startValue', jQuery(this).val());
 	});
-
+	
+	var oldChecksave = window.onbeforeunload;
 	window.onbeforeunload = function(e){
 		var msg = null;
 		var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
 	    $elems.each(function(i){
-			if (jQuery(this).data('startValue') && jQuery(this).data('startValue').toString() != jQuery(this).val().toString()){
+			if (jQuery(this).data('checksaveStartValue') && jQuery(this).data('checksaveStartValue').toString() != jQuery(this).val().toString()){
 				//console.log(jQuery(this).data('startValue').toString()  + ' --  ' + jQuery(this).val().toString() + ' -- ' + jQuery(this).attr('name'))
 				msg = changedMsg;
 				return changedMsg;
@@ -36,7 +37,12 @@ jQuery.removeChecksave = function(){
 };
 
 jQuery.changeChecksaveValue = function(elem, val){
-	jQuery(elem).data('startValue', val);
+	jQuery(elem).data('checksaveStartValue', val);
+};
+
+jQuery.refreshChecksaveValue = function(elem){
+	var val = jQuery(elem).val();
+	jQuery.changeChecksaveValue(elem, val);
 };
 
 ;(function($){
