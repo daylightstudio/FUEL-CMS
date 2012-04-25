@@ -1025,7 +1025,7 @@ class Module extends Fuel_base_controller {
 	{
 		if (!empty($this->preview_path))
 		{
-			$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+			$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 
 			$url = $this->preview_path;
 		
