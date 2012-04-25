@@ -266,11 +266,17 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		// select all
 		$('a.ico_select_all').toggle(function(e){
 				e.preventDefault();
+				if (!$('#toggle_list').parent().hasClass('active')){
+					$('#toggle_list').click();
+				}
 				$('a.ico_select_all').html(fuel.lang('btn_deselect_all'));
 				$('#multi_delete').parent().show();
 				$('#data_table .multi_delete').attr('checked', true);
 			},
 			function(){
+				if (!$('#toggle_list').parent().hasClass('active')){
+					$('#toggle_list').click();
+				}
 				$('a.ico_select_all').html(fuel.lang('btn_select_all'));
 				$('#multi_delete').parent().hide();
 				$('#data_table .multi_delete').attr('checked', false);
