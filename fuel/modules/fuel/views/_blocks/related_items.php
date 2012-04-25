@@ -1,4 +1,4 @@
-<?php  if (!empty($related_items)) : ?>
+<?php  if (!empty($related_items) AND is_array($related_items)) : ?>
 
 <div id="related_items">
 	<?php foreach($related_items as $group => $group_related) : ?>
