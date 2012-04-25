@@ -551,7 +551,7 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns data that will be downloaded automatically
+	 * Placeholder for return data that appears in the right side when editing a record (e.g. Related Navigation in pages module )
 	 *
 	 * @access	public
 	 * @param	array
@@ -559,19 +559,7 @@ class Base_module_model extends MY_Model {
 	 */	
 	function related_items($params = array())
 	{
-		// normalize parameters
-		$valid_params = array('col', 'order');
-		foreach($valid_params as $p)
-		{
-			if (!isset($params[$p]))
-			{
-				$params[$p] = NULL;
-			}
-		}
-		
-		$items = $this->list_items(NULL, NULL, $params['col'], $params['order']);
-		$data = $this->csv($items);
-		return $data;
+		return array();
 	}
 
 	// --------------------------------------------------------------------
