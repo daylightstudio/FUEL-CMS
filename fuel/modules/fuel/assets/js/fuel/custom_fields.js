@@ -408,7 +408,7 @@ fuel.fields.inline_edit_field = function(context){
 		if (!$field.parent().find('.edit_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		
 		var refreshField = function(){
-			
+
 			// if no value added,then no need to refresh
 			if (!selected) return;
 			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
@@ -451,15 +451,16 @@ fuel.fields.inline_edit_field = function(context){
 			}	
 		}
 		
-		$('.add_inline_button', context).click(function(e){
+		$('.add_inline_button', context).unbind().click(function(e){
 			editModule($(this).attr('href'), null, refreshField);
 			$(context).scrollTo('body', 800);
 			return false;
 		});
 
-		$('.edit_inline_button', context).click(function(e){
-			var $elem = $(this).prev();
+		$('.edit_inline_button', context).unbind().click(function(e){
+			var $elem = $(this).parent().find('select');
 			var val = $elem.val();
+			console.log($elem)
 			if (!val){
 				alert(fuel.lang('edit_multi_select_warning'));
 				return false;

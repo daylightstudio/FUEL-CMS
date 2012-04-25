@@ -44,6 +44,7 @@ fuel.getModule = function(context){
 
 
 fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseCallback){
+
 	var modalId = '__FUEL_modal__';
 	if (!cssClass) cssClass = '';
 	var $context = $('body', window.document);
@@ -52,6 +53,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	} else {
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
+	
 	
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
@@ -69,10 +71,16 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 
 	
 	// show it first so we don't get the cancellation error in the console
+	
+	// set jqm window options
+	var jqmOpts = { onHide: modalOnHide, toTop:true };
+	if (onLoadCallback){
+		jqmOpts.onLoad = onLoadCallback;
+	}
+	
 	$modal.jqm(jqmOpts).jqmShow();
 	$modal.find('.modal_content').empty().append(html);
 	$modal.find('iframe').load(function(){
-		
 		$('.jqmWindow .loader', $context).hide();
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
@@ -110,13 +118,6 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		}
 		
 	})
-	
-	// set jqm window options
-	var jqmOpts = { onHide: modalOnHide, toTop:true };
-	
-	if (onLoadCallback){
-		jqmOpts.onLoad = onLoadCallback;
-	}
 	
 	return $modal;
 }
