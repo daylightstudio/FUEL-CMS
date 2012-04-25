@@ -18,7 +18,7 @@ class Pages_model extends Base_module_model {
 	function related_items($values = array())
 	{
 		$CI =& get_instance();
-		$CI->load->model(FUEL_FOLDER, 'navigation_model');
+		$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
 		$where['location'] = $values['location'];
 		$related_items = $CI->navigation_model->find_all_array($where);
 		

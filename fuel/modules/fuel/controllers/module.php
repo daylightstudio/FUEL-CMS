@@ -780,6 +780,7 @@ class Module extends Fuel_base_controller {
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['data'] = $data;
 		$vars['action'] = $action;
+		$vars['related_items'] = $this->model->related_items($data);
 		
 		
 		// active or publish fields
