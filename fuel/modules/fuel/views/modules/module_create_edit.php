@@ -1,8 +1,5 @@
-<?php /* TODO... and for related items ?>
+<!-- RELATED ITEMS -->
 <?php $this->load->view('_blocks/related_items'); ?>
-<?php */ ?>
-
-
 
 <!-- NOTIFICATION EXTRA -->
 <?php $this->load->view('_blocks/notification_extra'); ?>
