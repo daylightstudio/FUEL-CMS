@@ -821,8 +821,13 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
-	function inline_edit($id, $field = NULL)
+	function inline_edit($id = NULL, $field = NULL)
 	{
+		if (empty($id))
+		{
+			show_404();
+		}
+		
 		$this->fuel->admin->set_inline(TRUE);
 		$this->edit($id, $field);
 	}
@@ -1210,7 +1215,7 @@ class Module extends Fuel_base_controller {
 		{
 			show_error(lang('error_no_permissions'));
 		}
-		
+
 		if (!empty($_POST['id']))
 		{
 			$posted = explode('|', $this->input->post('id'));
@@ -1221,15 +1226,18 @@ class Module extends Fuel_base_controller {
 			
 			// Flags
 			$any_success = $any_failure = FALSE;
+			
 			foreach ($posted as $id)
 			{
 				if ($this->model->delete(array($this->model->key_field() => $id)))
 				{
 					$any_success = TRUE;
+					
 				}
 				else
 				{
 					$any_failure = TRUE;
+					
 				}
 			}
 			
@@ -1241,6 +1249,7 @@ class Module extends Fuel_base_controller {
 			
 			if ($this->fuel->admin->is_inline())
 			{
+				
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
 				$this->fuel->admin->render($this->views['delete'], $vars);

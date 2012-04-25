@@ -48,7 +48,6 @@ class Base_module_model extends MY_Model {
 	public $upload_data = array(); // data about all uploaded files
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
-	public $relationships_model = array('fuel' => 'relationships_model'); // the model to use to save relationships
 	
 	/**
 	 * Constructor

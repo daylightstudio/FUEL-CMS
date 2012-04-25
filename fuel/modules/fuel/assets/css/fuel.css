@@ -420,7 +420,7 @@ div#fuel_main_panel { position: absolute; top: 0px; left: 201px; right: 0px; bot
 
 /* bread nav */
 div#fuel_main_top_panel { height: 29px; font-size: 13px; color: #fff; background-color: #e7e7e7; border-bottom: 1px solid #ccc; overflow: hidden; }
-div#fuel_main_top_panel h2 { color: #333; text-shadow: #fff 0px 1px 0px; line-height: 30px; margin-left: 15px; }
+div#fuel_main_top_panel h2 { color: #333; text-shadow: #fff 0px 1px 0px; line-height: 30px; margin-left: 11px; }
 div#fuel_main_top_panel h2 a { color: #0E3E7E; }
 div#fuel_main_top_panel li { float: left; display: block; list-style: none; line-height: 29px; font-weight: bold; border-right: 1px solid #6e6e6e;}
 div#fuel_main_top_panel li a { display: block; color: #fff; text-shadow: #555 0px 1px 0px; background: #6d6d6d url(../images/tab.png) repeat-x;  padding: 0 15px; }
@@ -577,7 +577,7 @@ div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff; }
+div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 864px; margin-left: -425px; max-height: 488px; background-color: #fff; }
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 

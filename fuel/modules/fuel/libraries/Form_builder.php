@@ -1869,7 +1869,8 @@ Class Form_builder {
 			'mode' => NULL,
 			'model' => NULL,
 			'wrapper_tag' => 'span',// for checkboxes
-			'wrapper_class' => 'multi_field'
+			'wrapper_class' => 'multi_field',
+			'module' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1879,6 +1880,13 @@ Class Form_builder {
 		{
 			$params['options'] = $this->options_from_model($params['model']);
 		}
+		
+		if (!empty($params['module']))
+		{
+			$inline_class = 'add_edit '.str_replace('_', '/', $params['module']);
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+		}
+		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))

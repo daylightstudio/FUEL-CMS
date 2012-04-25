@@ -62,7 +62,6 @@ class MY_Model extends CI_Model {
 	public $default_serialization_method = 'json'; // the default serialization method. Options are 'json' and 'serialize'
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
-	public $relationships_model = 'relationships_model'; // the model to use for relationships
 	public $suffix = '_model'; // the suffix used for the data record class
 	
 // !@todo add docs for $has_many
@@ -1471,38 +1470,40 @@ class MY_Model extends CI_Model {
 	public function get_related_keys($values, $related_model, $mode = 'has_many', $rel_config = '')
 	{
 		$CI =& get_instance();
-		$use_rel_pivot_tbl = $this->is_using_relationship_table($rel_config);
+		$use_rel_tbl = $this->is_using_relationship_table($rel_config);
+		$fields = $this->relationship_field_names($mode);
+		
 		if (is_array($related_model))
 		{
 			$related_model = $this->load_related_model($related_model);
 		}
 		
-		if ($use_rel_pivot_tbl == FALSE)
+		if ($use_rel_tbl == FALSE)
 		{
 			$assoc_where = array($rel_config['foreign_key'] => $values['id']);
 			$related_keys = array_keys($CI->$related_model->find_all_array_assoc($CI->$related_model->key_field(), $assoc_where));
 		}
 		else
 		{
-			$relationships_model = $this->load_model($this->relationships_model);
+			$relationships_model = $this->load_model($fields['relationships_model']);
 			
 			if ($mode == 'belongs_to')
 			{
-				$assoc_where = array('candidate_table' => $CI->$related_model->table_name, 'foreign_table' => $this->table_name());
+				$assoc_where = array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name());
 				if ( ! empty($values) AND array_key_exists('id', $values))
 				{
-					$assoc_where['foreign_key'] = $values['id'];
+					$assoc_where[$fields['foreign_key']] = $values['id'];
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc('candidate_key', $assoc_where));
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $assoc_where));
 			}
 			else
 			{
-				$assoc_where = array('candidate_table' => $this->table_name(), 'foreign_table' => $CI->$related_model->table_name);
+				$assoc_where = array($fields['candidate_table'] => $this->table_name(), $fields['foreign_table'] => $CI->$related_model->table_name);
 				if ( ! empty($values) AND array_key_exists('id', $values))
 				{
-					$assoc_where['candidate_key'] = $values['id'];
+					$assoc_where[$fields['candidate_key']] = $values['id'];
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc('foreign_key', $assoc_where));
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $assoc_where));
 			}
 		}
 		
@@ -2399,14 +2400,9 @@ class MY_Model extends CI_Model {
 			foreach ($this->has_many as $related_field => $rel_config)
 			{
 				$related_model = $this->load_related_model($rel_config);
-				$related_options = $this->$related_model->options_list();
+				$related_options = $CI->$related_model->options_list();
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
-				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
-				if (isset($related['relationships_model']) AND $related['relationships_model'] === FALSE)
-				{
-					$fields[$related_field]['type'] = 'select';
-					$fields[$related_field]['first_option'] = lang('label_select_one');
-				}
+				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
 			}
 		}
 
@@ -2426,17 +2422,12 @@ class MY_Model extends CI_Model {
 
 		if ( ! empty($this->belongs_to))
 		{
-			foreach ($this->belongs_to as $related_field => $related_model)
+			foreach ($this->belongs_to as $related_field => $rel_config)
 			{
-				$related_model = $this->load_related_model($related_model);
-				$related_options = $this->$related_model->options_list();
+				$related_model = $this->load_related_model($rel_config);
+				$related_options = $CI->$related_model->options_list();
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
-				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'array', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi');
-				if (isset($related['relationships_model']) AND $related['relationships_model'] === FALSE)
-				{
-					$fields[$related_field]['type'] = 'select';
-					$fields[$related_field]['first_option'] = lang('label_select_one');
-				}
+				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
 			}
 		}
 
@@ -2766,20 +2757,21 @@ class MY_Model extends CI_Model {
 		// handle has_many relationships
 		if ( ! empty($this->has_many))
 		{
+			$fields = $this->relationship_field_names('has_many');
 			foreach ($this->has_many as $related_field => $related_model)
 			{
 				if ( ! empty($this->normalized_save_data[$related_field]))
 				{
 					$related_model = $this->load_related_model($related_model);
-					$relationships_model = $this->load_model($this->relationships_model);
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					
 					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $id));
+					$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
 					
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
 					{
-						$CI->$relationships_model->save(array('candidate_table' => $this->table_name, 'candidate_key' => $id, 'foreign_table' => $CI->$related_model->table_name, 'foreign_key' => $foreign_id));
+						$CI->$relationships_model->save(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id, $fields['foreign_table'] => $CI->$related_model->table_name, $fields['foreign_key'] => $foreign_id));
 					}
 				}
 			}
@@ -2788,19 +2780,20 @@ class MY_Model extends CI_Model {
 		// handle belongs_to relationships
 		if ( ! empty($this->belongs_to))
 		{
+			$fields = $this->relationship_field_names('belongs_to');
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
 				if ( ! empty($this->normalized_save_data[$related_field]))
 				{
 					$related_model = $this->load_related_model($related_model);
-					$relationships_model = $this->load_model($this->relationships_model);
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array('candidate_table' => $CI->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $id));
+					$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
 					
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
 					{
-						$CI->$relationships_model->save(array('foreign_table' => $this->table_name, 'foreign_key' => $id, 'candidate_table' => $CI->$related_model->table_name, 'candidate_key' => $candidate_id));
+						$CI->$relationships_model->save(array($fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id, $fields['candidate_table'] => $CI->$related_model->table_name, $fields['candidate_key'] => $candidate_id));
 					}
 				}
 			}
@@ -2823,19 +2816,22 @@ class MY_Model extends CI_Model {
 		// clear out any relationships
 		if ( ! empty($this->has_many))
 		{
+			$fields = $this->relationship_field_names('has_many');
+
 			foreach ($this->has_many as $related_field => $related_model)
 			{
-				$relationships_model = $this->load_model($this->relationships_model);
-				$CI->$relationships_model->delete(array('candidate_table' => $this->table_name, 'candidate_key' => $id));
+				$relationships_model = $this->load_model($fields['relationships_model']);
+				$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
 			}
 		}
 		if ( ! empty($this->belongs_to))
 		{
+			$fields = $this->relationship_field_names('belongs_to');
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
 				$related_model = $this->load_related_model($related_model);
-				$relationships_model = $this->load_model($this->relationships_model);
-				$CI->$relationships_model->delete(array('candidate_table' => $CI->$related_model->table_name, 'foreign_table' => $this->table_name, 'foreign_key' => $id));
+				$relationships_model = $this->load_model($fields['relationships_model']);
+				$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
 			}
 		}
 	}
@@ -3094,7 +3090,51 @@ class MY_Model extends CI_Model {
 		}
 		return $related_model;
 	}
-	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of the relationship field names to be used
+	 *
+	 * @access	public
+	 * @param	string	relationship type
+	 * @return	array
+	 */	
+	public function relationship_field_names($relationship_type)
+	{
+		$valid_rel_types = array('has_many', 'belongs_to');
+		if ( ! in_array($relationship_type, $valid_rel_types))
+		{
+			return FALSE;
+		}
+		
+		if (empty($this->$relationship_type))
+		{
+			return FALSE;
+		}
+		
+		$rel_config = $this->$relationship_type;
+		$fields = array(
+			'candidate_table'	=> 'candidate_table',
+			'foreign_table'		=> 'foreign_table',
+			'foreign_key'		=> 'foreign_key',
+			'candidate_key'		=> 'candidate_key',
+			'relationships_model'=> array('fuel' => 'relationships_model'),
+			);
+			
+		if (is_array($rel_config))
+		{
+			// loop
+			foreach($fields as $key => $val)
+			{
+				if (isset($rel_config[$key]))
+				{
+					$fields[$key] = $rel_config[$key];
+				}
+			}
+		}
+		return $fields;
+	}
 
 	// --------------------------------------------------------------------
 
@@ -4437,20 +4477,30 @@ Class Data_record {
 		}
 		
 		$rel = $this->_parent_model->$relationship_type;
+		$fields = $this->_parent_model->relationship_field_names($relationship_type);
+		
 		$rel_config = $rel[$var];
-		$use_rel_pivot_tbl = $this->_parent_model->is_using_relationship_table($rel_config);
+
+		$use_rel_tbl = $this->_parent_model->is_using_relationship_table($rel_config);
+		
 		$output = array();
 		
 		// load the necessary models
 		$foreign_model = $this->_parent_model->load_related_model($rel_config);
-		if ($use_rel_pivot_tbl)
+		if ($use_rel_tbl)
 		{
-			$relationships_model = $this->_parent_model->load_model($this->_parent_model->relationships_model);
+			$relationships_model = $this->_parent_model->load_model($fields['relationships_model']);
 			$id_field = $this->_parent_model->key_field();
 			$related_table_name = $this->_CI->$foreign_model->table_name();
 		}
 		
-		if ($use_rel_pivot_tbl == FALSE)
+		// check that the id field is not an array
+		if (!is_string($id_field))
+		{
+			return FALSE;
+		}
+		
+		if ($use_rel_tbl == FALSE)
 		{
 			// Using alternative relationship table
 			$this->_CI->$foreign_model->db()->where($rel_config['foreign_key'], $this->id);
@@ -4461,18 +4511,18 @@ Class Data_record {
 			if (strtolower($relationship_type) == 'belongs_to')
 			{
 				$rel_where = array(
-					'candidate_table' => $related_table_name,
-					'foreign_table'   => $this->_parent_model->table_name(),
-					'foreign_key'     => $this->id,
+					$fields['candidate_table'] => $related_table_name,
+					$fields['foreign_table']   => $this->_parent_model->table_name(),
+					$fields['foreign_key']     => $this->$id_field,
 					);
 				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where));
 			}
 			else
 			{
 				$rel_where = array(
-					'candidate_table' => $this->_parent_model->table_name(),
-					'candidate_key'   => $this->$id_field,
-					'foreign_table'   => $related_table_name,
+					$fields['candidate_table'] => $this->_parent_model->table_name(),
+					$fields['candidate_key']   => $this->$id_field,
+					$fields['foreign_table']   => $related_table_name,
 					);
 				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where));
 			}

@@ -22,16 +22,18 @@
 			<?php endif; ?>
 
 		
-			<?php if ($this->fuel->auth->module_has_action('delete') AND $this->fuel->auth->has_permission($this->permission, 'delete')) :?>
+			<?php if ($this->fuel->auth->module_has_action('delete') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 				<li><a href="<?=fuel_url($this->module_uri.'/delete/'.$id, TRUE)?>" class="ico ico_delete delete_action"><?=lang('btn_delete')?></a></li>
 			<?php endif; ?>
 			
 			<?php if ($this->fuel->auth->module_has_action('duplicate')) : ?>
 				<li><a href="<?=fuel_url($this->module_uri.'/create', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
 			<?php endif; ?>
+			
 			<?php if ($this->fuel->auth->module_has_action('replace') AND !empty($others) AND $this->fuel->auth->has_permission($this->permission, 'edit') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 				<li><a href="<?=fuel_url($this->module_uri.'/replace/'.$id, TRUE)?>" class="ico ico_replace replace_action"><?=lang('btn_replace')?></a></li>
 			<?php endif; ?>
+			
 			<?php if ($this->fuel->auth->module_has_action('others')) : ?>
 			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
 				$ico_key = str_replace('/', '_', $other_action);
@@ -40,11 +42,11 @@
 			?>
 				<li><?=anchor(fuel_url($other_action, TRUE), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
 			<?php endforeach; ?>
+			<?php endif; ?>
 			<?php if ($this->fuel->auth->module_has_action('create')) : ?>
 				<li class="end"><a href="<?=fuel_url($this->module_uri.'/create', TRUE)?>" class="ico ico_create"><?=lang('btn_create')?></a></li>
 			<?php endif; ?>
 			
-			<?php endif; ?>
 			
 		<?php elseif ($action == 'create' AND $this->fuel->auth->module_has_action('save')) : ?>
 			<li class="end"><a href="#" class="ico ico_save save" title="<?=$keyboard_shortcuts['save']?> to save"><?=lang('btn_save')?></a></li>

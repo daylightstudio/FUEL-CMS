@@ -155,7 +155,6 @@ class Fuel_admin extends Fuel_base_library {
 		$this->load_js_localized();
 		
 		// set asset paths
-		//$this->CI->asset->assets_module = FUEL_FOLDER;
 		$this->CI->asset->assets_folders = array(
 				'images' => 'images/',
 				'css' => 'css/',
@@ -163,6 +162,7 @@ class Fuel_admin extends Fuel_base_library {
 				'pdf' => 'pdf/',
 				'media' => 'media/',
 				'swf' => 'swf/',
+				'docs' => 'docs/',
 			);
 		
 		$this->main_layout = $this->fuel->config('main_layout');
