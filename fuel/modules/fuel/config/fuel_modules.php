@@ -128,7 +128,7 @@ $config['modules']['assets'] = array(
 	'preview_path' => '',
 	'permission' => 'assets',
 	'instructions' => lang('assets_instructions'),
-	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'))),
+	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'), 'default' => 'images')),
 	'archivable' => FALSE,
 	'table_actions' => array('DELETE'),
 	'rows_selectable' => FALSE,
