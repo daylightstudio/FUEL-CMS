@@ -30,7 +30,7 @@
 
 class Fuel_settings extends Fuel_base_library {
 
-	protected $settings = array(); // Settings array
+	protected $settings = array(); // Settings array of Form_builder form fields
 	
 	function __construct($params = array())
 	{

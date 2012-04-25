@@ -23,6 +23,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 			<li><strong>$this->fuel->pagevars</strong> (<a href="<?=user_guide_url('libraries/fuel_pagevars')?>">Fuel_pagevars</a>)</li>
 			<li><strong>$this->fuel->permissions</strong> (<a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel_permissions</a>)</li>
 			<li><strong>$this->fuel->redirects</strong> (<a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a>)</li>
+			<li><strong>$this->fuel->settings</strong> (<a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a>)</li>
 			<li><strong>$this->fuel->sitevars</strong> (<a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel_sitevars</a>)</li>
 			<li><strong>$this->fuel->users</strong> (<a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel_users</a>)</li>
 		</ul>
