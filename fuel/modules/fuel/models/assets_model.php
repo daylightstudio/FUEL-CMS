@@ -89,7 +89,9 @@ class Assets_model extends CI_Model {
 		
 		$assets_path = $CI->asset->assets_server_path().$asset_dir.DIRECTORY_SEPARATOR;
 		
-		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->fuel->config('assets_excluded_dirs'), FALSE);
+		$exclude = $CI->fuel->config('assets_excluded_dirs');
+		$exclude[] = 'index.html';
+		$tmpfiles = directory_to_array($assets_path, TRUE, $exclude, FALSE);
 		
 		$files = get_dir_file_info($assets_path, FALSE, TRUE);
 
