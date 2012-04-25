@@ -658,25 +658,6 @@ class Module extends Fuel_base_controller {
 	
 	protected function _process_create()
 	{
-		$this->model->on_before_post();
-	
-		$posted = $this->_process();
-
-		// set publish status to no if you do not have the ability to publish
-		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
-		{
-			$posted['published'] = 'no';
-			$posted['active'] = 'no';
-		}
-		
-		$model = $this->model;
-
-		// run before_create hook
-		$this->_run_hook('before_create', $posted);
-		
-		// run before_save hook
-		$this->_run_hook('before_save', $posted);
-		
 		// reset dup id
 		if ($_POST[$this->model->key_field()] == 'dup')
 		{
@@ -684,6 +665,25 @@ class Module extends Fuel_base_controller {
 		}
 		else if ($id = $this->model->save($posted))
 		{
+			$this->model->on_before_post();
+
+			$posted = $this->_process();
+
+			// set publish status to no if you do not have the ability to publish
+			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+			{
+				$posted['published'] = 'no';
+				$posted['active'] = 'no';
+			}
+
+			$model = $this->model;
+
+			// run before_create hook
+			$this->_run_hook('before_create', $posted);
+
+			// run before_save hook
+			$this->_run_hook('before_save', $posted);
+
 			if (empty($id))
 			{
 				add_error(lang('error_invalid_id'));
