@@ -429,9 +429,11 @@ div#fuel_main_top_panel li.active a { background: #e7e7e7 url(../images/tab.png)
 div#fuel_login_logout { position: absolute; top: 8px; right: 15px; font-size: 11px; color: #333; background-color: #e7e7e7; height: 21px;text-shadow: #fff 0px 1px 0px;  }
 
 div#fuel_actions { height: 46px; border-bottom: 1px solid #ccc; position: relative; min-width: 680px;
-background: url(../images/btn.png); 
+background: #eee; 
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f6f6f6), color-stop(1, #ddd));
-background: -moz-linear-gradient(top center, #f6f6f6 0%, #ddd 100%); }
+background: -moz-linear-gradient(top center, #f6f6f6 0%, #ddd 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#dddddd');
+ }
 
 /* main content */
 div#fuel_main_content { overflow: auto; position: absolute; top: 99px; left: 0px; right: 0px; bottom: 0px; }
@@ -472,19 +474,23 @@ div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #ccc; bord
 	background: #e6e6e6 url(../images/btn.png) repeat-x; 
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
 	background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd');
  }
 div.buttonbar li:hover { background-position: 0 -27px; 
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #eee));
 	background: -moz-linear-gradient(top center, #fff 0%, #eee 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee');
 	}
 div.buttonbar li.active { background-position: 0 -54px; 
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ddd), color-stop(1, #fff));
 	background: -moz-linear-gradient(top center, #ddd 0%, #fff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff');
 }
 div.buttonbar li.active a { color: #000; }
 div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
 div.buttonbar li.spacer, li.unattached { margin-left: 10px;}
-div.buttonbar li.end, div.buttonbar li:last-child, li.unattached {  border-right: 1px solid #ccc;  }
+div.buttonbar li:last-child, li.unattached { border-right: 1px solid #ccc; }
+div.buttonbar li.end { border-right: 1px solid #ccc; } /* on own line so it will work in IE 8 */
 div.buttonbar li:first-child, div.buttonbar li.unattached { -webkit-border-top-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-topleft: 4px; -moz-border-radius-bottomleft: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
 div.buttonbar li:last-child, div.buttonbar li.unattached { -webkit-border-top-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-topright: 4px; -moz-border-radius-bottomright: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
 div.buttonbar li.start { border-left: 1px solid #ccc; }
