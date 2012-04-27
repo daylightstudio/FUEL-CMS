@@ -12,6 +12,8 @@
 	<meta name="keywords" content="<?php echo fuel_var('meta_keywords')?>" />
 	<meta name="description" content="<?php echo fuel_var('meta_description')?>" />
 
+	<?php echo js('jquery'); ?>
+	
 	<?php echo css('main'); ?>
 	<?php echo css($css); ?>
 	

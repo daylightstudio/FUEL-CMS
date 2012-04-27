@@ -133,6 +133,7 @@ class Login extends CI_Controller {
 		}
 		
 		// build form
+		
 		$this->form_builder->set_validator($this->users_model->get_validation());
 		$fields['user_name'] = array('size' => 25);
 		$fields['password'] = array('type' => 'password', 'size' => 25);
@@ -140,6 +141,7 @@ class Login extends CI_Controller {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = lang('login_btn');
 		$this->form_builder->set_fields($fields);
+		$this->form_builder->remove_js();
 		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
 		$vars['form'] = $this->form_builder->render();
 		
