@@ -4,7 +4,7 @@
 	</div>
 </div>
 
-<?php echo js('jquery, main'); ?>
+<?php echo js('main'); ?>
 <?php echo js($js); ?>
 
 </body>

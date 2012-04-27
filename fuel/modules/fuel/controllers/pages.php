@@ -113,6 +113,9 @@ class Pages extends Module {
 	{
 		
 		$this->load->library('form_builder');
+		
+		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+		
 		$this->fuel->load_model('navigation');
 		
 		$this->load->helper('file');

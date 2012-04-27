@@ -139,10 +139,7 @@ Class Form_builder {
 		// setup custom fields
 		if (!empty($this->custom_fields))
 		{
-			foreach($this->custom_fields as $type => $custom)
-			{
-				$this->register_custom_field($type, $custom);
-			}
+			$this->load_custom_fields($this->custom_fields);
 		}
 		
 		// create form object if not in initialization params
@@ -2455,6 +2452,39 @@ Class Form_builder {
 		// render
 		return call_user_func($func, $params);
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Adds multiple custom fields
+	 *
+	 * @access	public
+	 * @param	array Array of custom fields to load
+	 * @return	void
+	 */
+	function load_custom_fields($fields)
+	{
+		if (is_string($fields))
+		{
+			if (file_exists($fields))
+			{
+				include($fields);
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		if (is_array($fields))
+		{
+			// setup custom fields
+			foreach($fields as $type => $custom)
+			{
+				$this->register_custom_field($type, $custom);
+			}
+		}
+	}
 	
 	// --------------------------------------------------------------------
 
@@ -2877,6 +2907,37 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Removes a javascript file
+	 * 
+	 * @access	public
+	 * @param	string A js file name or an array of file names
+	 * @return	void
+	 */
+	function remove_js($key = NULL)
+	{
+		if (is_null($key))
+		{
+			$this->js = array();
+		}
+		else if (is_array($key))
+		{
+			foreach($key as $k)
+			{
+				if (in_array($k, $this->js))
+				{
+					unset($this->js[$k]);
+				}
+			}
+		}
+		else if (isset($this->js[$k]))
+		{
+			unset($this->js[$k]);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Returns the javascript used for the form
 	 *
 	 * @access	public
@@ -2949,6 +3010,38 @@ Class Form_builder {
 			return $this->css[$css];
 		}
 		return $this->css;
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Removes a css file
+	 * 
+	 * @access	public
+	 * @param	string A css file name or an array of file names
+	 * @return	void
+	 */
+	function remove_css($key = NULL)
+	{
+		if (is_null($key))
+		{
+			$this->css = array();
+		}
+		else if (is_array($key))
+		{
+			foreach($key as $k)
+			{
+				if (in_array($k, $this->css))
+				{
+					unset($this->css[$k]);
+				}
+			}
+		}
+		else if (isset($this->css[$k]))
+		{
+			unset($this->css[$k]);
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -3178,12 +3271,12 @@ Class Form_builder {
 		$out .= "//<![CDATA[\n";
 		$out .= "";
 		$out .= $str."\n";
-		$out .= 'jQuery(function(){';
+		$out .= 'if (jQuery){ jQuery(function(){';
 		$out .= 'if (jQuery.fn.formBuilder) {';
 		$out .= 'jQuery("#'.$this->id.'").formBuilder('.json_encode($js_exec).');';
 		if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
 		$out .= '}';
-		$out .= '})';
+		$out .= '})}';
 		$out .= "\n//]]>\n";
 		$out .= "</script>\n";
 		return $out;
@@ -3244,7 +3337,7 @@ Class Form_builder {
 		{
 			$out .= "<script type=\"text/javascript\">\n";
 			$out .= "//<![CDATA[\n";
-			$out .= '(function($) {
+			$out .= 'if (jQuery){ (function($) {
 					var cssFiles = '.json_encode($css_files).';
 					var css = [];
 					$("head link").each(function(i){
@@ -3264,7 +3357,7 @@ Class Form_builder {
 						}
 					}
 				
-			})(jQuery)';
+			})(jQuery)}';
 			$out .= "\n//]]>\n";
 			$out .= "</script>\n";
 		}

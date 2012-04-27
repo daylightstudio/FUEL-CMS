@@ -1,11 +1,11 @@
 <!-- RELATED ITEMS -->
-<?php $this->load->view('_blocks/related_items'); ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/related_items'); ?>
 
 <!-- NOTIFICATION EXTRA -->
-<?php $this->load->view('_blocks/notification_extra'); ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/notification_extra'); ?>
 
 <!-- WARNING WINDOW -->
-<?php $this->load->view('_blocks/warning_window'); ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/warning_window'); ?>
 
 
 <div id="fuel_main_content_inner">

@@ -219,58 +219,62 @@ class Module extends Fuel_base_controller {
 				$this->model->filter_join[$key] = $val['filter_join'];
 			}
 		}
-
-		// set model filters before pagination and setting table data
-		if (method_exists($this->model, 'add_filters'))
+		
+		
+		// to prevent it from being called unecessarility with ajax
+		if (!is_ajax())
 		{
-			$this->model->add_filters($filters);
-		}
+			// set model filters before pagination and setting table data
+			if (method_exists($this->model, 'add_filters'))
+			{
+				$this->model->add_filters($filters);
+			}
 		
-		$this->config->set_item('enable_query_strings', FALSE);
+			$this->config->set_item('enable_query_strings', FALSE);
 		
-		// pagination
-		$query_str_arr = $this->input->get();
-		unset($query_str_arr['offset']);
-		$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
+			// pagination
+			$query_str_arr = $this->input->get();
+			unset($query_str_arr['offset']);
+			$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
 		
-		$config['base_url'] = fuel_url($this->module_uri).'/items/?'.$query_str;
-		$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
-		$config['total_rows'] = $this->model->list_items_total();
-		$config['uri_segment'] = fuel_uri_index($uri_segment);
-		$config['per_page'] = (int) $params['limit'];
-		$config['query_string_segment'] = 'offset';
-		$config['page_query_string'] = TRUE;
-		$config['num_links'] = 5;
+			$config['base_url'] = fuel_url($this->module_uri).'/items/?'.$query_str;
+			$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
+			$config['total_rows'] = $this->model->list_items_total();
+			$config['uri_segment'] = fuel_uri_index($uri_segment);
+			$config['per_page'] = (int) $params['limit'];
+			$config['query_string_segment'] = 'offset';
+			$config['page_query_string'] = TRUE;
+			$config['num_links'] = 5;
 		
-		$config['prev_link'] = lang('pagination_prev_page');
-		$config['next_link'] = lang('pagination_next_page');
-		$config['first_link'] = lang('pagination_first_link');
-		$config['last_link'] = lang('pagination_last_link');
+			$config['prev_link'] = lang('pagination_prev_page');
+			$config['next_link'] = lang('pagination_next_page');
+			$config['first_link'] = lang('pagination_first_link');
+			$config['last_link'] = lang('pagination_last_link');
 		
-		// must reset these in case a config file has something different
-		$config['full_tag_open'] = NULL;
-		$config['full_tag_close'] = NULL;
-		$config['full_tag_close'] = NULL;
-		$config['num_tag_open'] = '&nbsp;';
-		$config['num_tag_close'] = NULL;
-		$config['cur_tag_open'] = '&nbsp;<strong>';
-		$config['cur_tag_close'] = '</strong>';
-		$config['next_tag_open'] = '&nbsp;';
-		$config['next_tag_close'] = '&nbsp;';
-		$config['prev_tag_open'] = '&nbsp;';
-		$config['prev_tag_close'] = NULL;
-		$config['first_tag_open'] = '&nbsp;';
-		$config['first_tag_close'] = '&nbsp;';
-		$config['last_tag_open'] = NULL;
-		$config['last_tag_close'] = NULL;
-		$this->pagination->initialize($config);
+			// must reset these in case a config file has something different
+			$config['full_tag_open'] = NULL;
+			$config['full_tag_close'] = NULL;
+			$config['full_tag_close'] = NULL;
+			$config['num_tag_open'] = '&nbsp;';
+			$config['num_tag_close'] = NULL;
+			$config['cur_tag_open'] = '&nbsp;<strong>';
+			$config['cur_tag_close'] = '</strong>';
+			$config['next_tag_open'] = '&nbsp;';
+			$config['next_tag_close'] = '&nbsp;';
+			$config['prev_tag_open'] = '&nbsp;';
+			$config['prev_tag_close'] = NULL;
+			$config['first_tag_open'] = '&nbsp;';
+			$config['first_tag_close'] = '&nbsp;';
+			$config['last_tag_open'] = NULL;
+			$config['last_tag_close'] = NULL;
+			$this->pagination->initialize($config);
 
-		if (method_exists($this->model, 'tree'))
-		{
-			//$vars['tree'] = "Loading...\n<ul></ul>\n";
-			$vars['tree'] = "\n<ul></ul>\n";
+			if (method_exists($this->model, 'tree'))
+			{
+				//$vars['tree'] = "Loading...\n<ul></ul>\n";
+				$vars['tree'] = "\n<ul></ul>\n";
+			}
 		}
-		
 		// set vars
 		$vars['params'] = $params;
 		
@@ -977,6 +981,9 @@ class Module extends Fuel_base_controller {
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
 		$this->load->library('form_builder');
+		
+		// load custom fields
+		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$action = (!empty($values[$this->model->key_field()])) ? 'edit' : 'create';
