@@ -49,6 +49,8 @@ class Base_module_model extends MY_Model {
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
 	
+	protected $_list_items_total = FALSE; // used to determine whether to do a list items total or a normal select... used to help when there are a lot of records
+	
 	/**
 	 * Constructor
 	 *
@@ -261,10 +263,20 @@ class Base_module_model extends MY_Model {
 			$this->db->where($where_sql);
 		}
 		
+		// set the table here so that items total will work
+		$this->db->from($this->table_name);
+
+		if ($this->_list_items_total)
+		{
+			$this->db->ar_select = array();
+			return $this->db->count_all_results();
+			return;
+		}
+		
 		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
-		$query = $this->db->get($this->table_name);
+		$query = $this->db->get();
 		$data = $query->result_array();
 		//$this->debug_query();
 		return $data;
@@ -280,7 +292,14 @@ class Base_module_model extends MY_Model {
 	 */	
 	function list_items_total()
 	{
-		return count($this->list_items());
+		$this->_list_items_total = TRUE;
+		return $this->list_items();
+		// $items = $this->list_items();
+		// if (isset($items[0]['list_items_total']))
+		// {
+		// 	return $items[0]['list_items_total'];
+		// }
+		//return count($this->list_items());
 	}
 	
 	// --------------------------------------------------------------------
