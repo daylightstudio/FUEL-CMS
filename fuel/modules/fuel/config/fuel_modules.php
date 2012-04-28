@@ -27,7 +27,7 @@ $config['modules']['pages'] = array(
 	'js_controller_params' => array('import_view_key' => 'vars--body'),
 	'js_localized' => array('pages_default_location'),
 	'preview_path' => '{location}',
-	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
+	'permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create', 'publish', 'delete'),
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
@@ -51,7 +51,7 @@ $config['modules']['pagevariables'] = array(
 	'sanitize_input' => array('template','php'),
 	'default_col' => 'page_id',
 	'default_order' => 'asc',
-	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
+	'permission' => array('edit' => 'pages', 'publish' => 'pages/publish', 'delete' => 'pages/delete'),
 	'hidden' => TRUE
 );
 
@@ -67,6 +67,7 @@ $config['modules']['blocks'] = array(
 		'view', 
 		'published',
 	),
+	'permission' => array('blocks', 'create', 'edit', 'blocks/upload' => 'blocks/create', 'publish', 'delete'),
 	'default_col' => 'name',
 	'default_order' => 'asc',
 	'js_controller' => 'BlockController',
@@ -91,7 +92,7 @@ $config['modules']['navigation'] = array(
 	'default_order' => 'asc',
 	'js_controller' => 'NavigationController',
 	'preview_path' => '',
-	'permission' => 'navigation',
+	'permission' => array('navigation', 'create', 'edit', 'navigation/upload' => 'navigation/create', 'publish', 'delete'),
 	'instructions' => lang('navigation_instructions'),
 	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model')),
 	'archivable' => TRUE,

@@ -15,6 +15,7 @@ textarea { min-height: 40px; overflow: auto; resize: vertical; width: 100%; }
 
 
 ul { margin-bottom: 10px; }
+ul ul { margin: 10px; }
 optgroup { color: #000; font-style: normal; font-weight: normal; }
 optgroup option { padding-left: 10px; }
 fieldset { border-top: 5px solid #eee; border-left: none; border-right: none; border-bottom: none; margin: 0; padding: 20px 0 10px 0; }
@@ -556,7 +557,7 @@ div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  
 div.more_filters div div { float: left; margin-right: 10px; }
 
 /* tree */
-div#tree_container { padding: 10px 15px; }
+div#tree_container { padding: 16px 15px; text-align: center; }
 div#tree_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}
 
 /* #login */
@@ -616,6 +617,13 @@ div#related_items h3 { background-color: transparent; padding-left: 24px; margin
 div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 
 a.reset { display: block; width: 16px; height: 16px; background: transparent url(../images/ico_arrow_refresh.png) no-repeat; margin-right: 5px; }
+
+/* users */
+div.perms_list ul ul { margin: 10px; }
+div.perms_list ul li { margin: 8px 0 8px; list-style: none; display: block; }
+div.perms_list ul li input { margin-right: 2px; }
+div.perms_list ul ul li { margin: 8px 0 8px 10px; }
+div.perms_list label { font-weight: bold; }
 
 /* tags */
 .match_class { display: block; position: absolute; z-index: 10; margin-bottom: 0px; min-height: 30px;}

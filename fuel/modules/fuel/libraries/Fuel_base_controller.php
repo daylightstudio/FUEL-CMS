@@ -96,7 +96,7 @@ class Fuel_base_controller extends CI_Controller {
 	 * @param	boolean Determines whether to show a 404 error or to just exit. Default is to show a 404 error(optional)
 	 * @return	void
 	 */	
-	protected function _validate_user($permission, $type = 'edit', $show_error = TRUE)
+	protected function _validate_user($permission, $type = '', $show_error = TRUE)
 	{
 		if (!$this->fuel->auth->has_permission($permission, $type))
 		{

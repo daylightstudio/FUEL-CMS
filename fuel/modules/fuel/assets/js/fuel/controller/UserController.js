@@ -36,7 +36,7 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 		    $perms.attr('checked',$(this).is(':checked')); 
 		 });
 		
-		var togglePerms = function(){
+		var toggleAllPerms = function(){
 			if ($perms.size() != $perms.filter(':checked').size()){
 				$('#toggle_perms').removeAttr('checked'); 
 			} else {
@@ -45,9 +45,31 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 		}
 		
 		$perms.click(function(i){
-			togglePerms();
+			toggleAllPerms();
 		})
-		togglePerms();
+		toggleAllPerms();
+		
+		
+		
+		
+		$('.perms_list li input').click(function(e){
+			$ul = $(this).parent().find('ul');
+			if ($ul.length){
+				if ($ul.css('display') == 'none'){
+					$ul.slideDown('fast');
+					$inputs = $ul.find('input');
+					if (!$(':checked', $inputs).length){
+						$inputs.prop('checked', true);
+					}
+				} else {
+					$ul.slideUp('fast');
+					$ul.find('input').prop('checked', false);
+				}
+			}
+		});
+		
+		$('.perms_list li input').not(':checked').parent().find('ul').hide();
+	
 	}
 	
 });

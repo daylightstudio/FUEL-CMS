@@ -181,7 +181,9 @@ class Users_model extends Base_module_model {
 		)
 		{
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
+			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
 		}
+		
 		$fields['permissions']['mode'] = 'checkbox';
 		$fields['permissions']['display_label'] = FALSE;
 		$fields['permissions']['wrapper_tag'] = 'div';
@@ -190,6 +192,67 @@ class Users_model extends Base_module_model {
 		
 		return $fields;
 	}
+	
+	function _create_permission_fields($params = array())
+	{
+		$CI =& get_instance();
+		
+		
+		// first get the permissions
+		$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
+		$perms_list = $CI->permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
+
+		// next get the saved permissions for the user
+		$user_perms = array();
+		$user = $this->find_by_key($params['user_id']);
+		if (isset($user))
+		{
+			$user_perms_obj = $user->get_permissions(TRUE);
+			$user_perms = $user_perms_obj->find_all_array_assoc('name');
+		}
+
+		$perms = array();
+		foreach($perms_list as $perm => $perm_val)
+		{
+			$sub = explode('/', $perm);
+			if (!isset($perms[$sub[0]]))
+			{
+				$perms[$sub[0]] = array();
+			}
+			
+			if (!isset($sub[1]))
+			{
+				$perms[$sub[0]] = $perm_val;
+				$perms[$sub[0]]['permissions'] = array();
+			}
+			else
+			{
+				$perms[$sub[0]]['permissions'][$perm] = $perm_val;
+			}
+		}
+		
+		$str = "<div class=\"perms_list\">\n";
+		$str .= "<ul>\n";
+		foreach($perms as $key => $val)
+		{
+			$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$val['description']."</label>";
+			
+			if (!empty($val['permissions']))
+			{
+				$str .= "<ul>\n";
+				foreach($val['permissions'] as $k => $v)
+				{
+					$str .= "\t<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$v["id"]."\" id=\"permission".$v["id"]."\" ".(isset($user_perms[$v['name']]) ? 'checked="checked"' : '')." /><label for=\"permission".$v["id"]."\"> ".$v['description']."</label></li>";
+				}
+				$str .= "</ul>\n";
+			}
+			$str .= "</li>\n";
+		}
+		$str .= "</ul>\n";
+		$str .= "</div>\n";
+		return $str;
+	}
+	
 	
 	function on_before_validate($values)
 	{

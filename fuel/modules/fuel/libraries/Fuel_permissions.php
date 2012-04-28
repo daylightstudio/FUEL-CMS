@@ -28,12 +28,71 @@
 
 // --------------------------------------------------------------------
 
-class Fuel_permissions extends Fuel_base_library {
-
+class Fuel_permissions extends Fuel_module {
+	
+	protected $_perms = array();
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
+	function __construct($params = array())
+	{
+		parent::__construct($params);
+		$this->initialize($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
+	 *
+	 * @access	public
+	 * @param	array	Array of initalization parameters  (optional)
+	 * @return	void
+	 */	
 	function initialize($params = array())
 	{
 		parent::initialize($params);
-		$this->fuel->load_model('user_to_permissions');
+		
+		$this->_perms = $this->model()->find_all_array_assoc('name');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether a permission exists or not
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */
+	function exists($perm)
+	{
+		return (isset($this->_perms[$perm]));
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns all permissions
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function list_all()
+	{
+		return $this->_perms;
 	}
 	
 	// --------------------------------------------------------------------
@@ -58,6 +117,8 @@ class Fuel_permissions extends Fuel_base_library {
 		}
 		return $perm;
 	}
+	
+	
 	
 	// --------------------------------------------------------------------
 

@@ -168,7 +168,6 @@ class Module extends Fuel_base_controller {
 	 */	
 	function items()
 	{
-		
 		$this->load->library('data_table');
 	
 	
@@ -186,20 +185,8 @@ class Module extends Fuel_base_controller {
 		
 		$params = $this->_list_process();
 		
-		// save in case we need to pass more variables in the URI
-		// $seg_params = $params;
-		// unset($seg_params['offset']);
-		// $seg_params = uri_safe_batch_encode($seg_params, '|', TRUE);
-		
 		// save page state
 		$this->fuel->admin->save_page_state($params);
-		
-		// if (!is_ajax() AND !empty($_POST))
-		// {
-		// 	//$uri = $this->config->item('fuel_path', 'fuel').$this->module.'/items/params/'.$seg_params.'/offset/'.$params['offset'];
-		// 	$uri = fuel_url($this->module_uri.'/items/offset/'.$params['offset']);
-		// 	redirect($uri);
-		// }
 		
 		
 		// create search filter
@@ -556,7 +543,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$output = '<div style="text-align: center">'.lang('no_data').'</div>';
+				$output = '<div>'.lang('no_data').'</div>';
 			}
 			$this->output->set_output($output);
 		}
@@ -595,17 +582,27 @@ class Module extends Fuel_base_controller {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Displays the list (table) view
+	 * Displays the fields to create a record (form view)
 	 *
 	 * @access	public
+	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
 	function create($field = NULL, $redirect = TRUE)
 	{
 		$id = NULL;
-		if (!$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
+		
+		// check that the action even exists and if not, show a 404
+		if (!$this->fuel->auth->module_has_action('save'))
 		{
 			show_404();
+		}
+		
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
 		}
 		
 		$inline = $this->fuel->admin->is_inline();
@@ -654,6 +651,16 @@ class Module extends Fuel_base_controller {
 		return $id;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The same as the create method but does not show the left menu
+	 *
+	 * @access	public
+	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	Determines whether to redirect the page after save or not
+	 * @return	void
+	 */	
 	function inline_create($field = NULL)
 	{
 		$this->fuel->admin->set_inline(TRUE);
@@ -738,12 +745,31 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays the fields to edit a record (form view)
+	 *
+	 * @access	public
+	 * @param	int		The ID value of the record to edit
+	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	Determines whether to redirect the page after save or not
+	 * @return	void
+	 */	
 	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
-		if (empty($id) OR !$this->fuel->auth->module_has_action('save') OR !$this->fuel->auth->has_permission($this->module_obj->permission))
+		// check that the action even exists and if not, show a 404
+		if (!$this->fuel->auth->module_has_action('save'))
 		{
 			show_404();
 		}
+
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
 
 		$inline = $this->fuel->admin->is_inline();
 		
@@ -826,6 +852,16 @@ class Module extends Fuel_base_controller {
 		
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The same as the edit method but does not show the left menu
+	 *
+	 * @access	public
+	 * @param	int		The ID value of the record to edit
+	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @return	void
+	 */	
 	function inline_edit($id = NULL, $field = NULL)
 	{
 		if (empty($id))
@@ -837,6 +873,16 @@ class Module extends Fuel_base_controller {
 		$this->edit($id, $field);
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Processes the form data to save
+	 *
+	 * @access	protected
+	 * @param	int		The ID value of the record to edit
+	 * @return	boolean
+	 */	
 	protected function _process_edit($id)
 	{
 		$this->model->on_before_post();
@@ -885,6 +931,15 @@ class Module extends Fuel_base_controller {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sanitizes the input based on the module's settings
+	 *
+	 * @access	protected
+	 * @param	array	The array of posted data to sanitize
+	 * @return	array
+	 */	
 	protected function _sanitize($data)
 	{
 		$posted = $data;
@@ -943,6 +998,16 @@ class Module extends Fuel_base_controller {
 		return $posted;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of shell variables to apply to the main area of the page
+	 *
+	 * @access	protected
+	 * @param	int		The ID value of the record to edit
+	 * @param	string	The name of the action to apply to the main form element
+	 * @return	array
+	 */	
 	protected function _shell_vars($id = NULL, $action = 'create')
 	{
 		$model = $this->model;
@@ -961,6 +1026,16 @@ class Module extends Fuel_base_controller {
 		return $vars;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of saved data based on the id value passed
+	 *
+	 * @access	protected
+	 * @param	int		The ID value of the record to edit
+	 * @return	array
+	 */	
 	protected function _saved_data($id)
 	{
 		if (empty($id)) return array();
@@ -1219,6 +1294,12 @@ class Module extends Fuel_base_controller {
 
 	function delete($id = NULL)
 	{
+		// check that the action even exists and if not, show a 404
+		if (!$this->fuel->auth->module_has_action('delete'))
+		{
+			show_404();
+		}
+		
 		if (!$this->fuel->auth->has_permission($this->permission, 'delete')) 
 		{
 			show_error(lang('error_no_permissions'));

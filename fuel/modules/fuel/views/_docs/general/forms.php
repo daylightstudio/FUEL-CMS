@@ -53,6 +53,9 @@ The main engine behind this feature is the <a href="<?=user_guide_url('libraries
 // load Form_builder;
 $this->load->library('form_builder');
 
+// load the custom form fields
+$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+
 // create fields
 $fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
 $fields['datetime'] = array('type' => 'datetime', 'first_day' => 2, 'date_format' => 'dd-mm-yyyy', 'min_date' => '01-01-2012', 'max_date' => '31-12-2012');
@@ -134,7 +137,16 @@ In addition, you can overwrite or augment existing field types, by adding field 
 <span class="file">fuel/application/config/form_builder.php</span>. For example, we use this method to 
 associate the the datetime field type with the jquery UI datepicker.
 
-<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file (<a href="#association_parameters">this file is explained below</a>).</p>
+<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file (<a href="#association_parameters">this file is explained below</a>). 
+Custom field types are not automatically load but can be done so by one of the following ways:
+</p>
+<pre class="brush:php">
+// loads from a config file
+$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+
+// registers a single custom field
+$this->form_builder->register_custom_field($key, $custom_field);
+</pre>
 	
 <p>By default, FUEL CMS 1.0 provides several custom field types which are defined in the <span class="file">fuel/modules/fuel/libraries/Fuel_custom_fields.php</span> class.</p>
 

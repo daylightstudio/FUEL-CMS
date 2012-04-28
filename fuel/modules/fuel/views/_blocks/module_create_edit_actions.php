@@ -36,14 +36,16 @@
 			
 			<?php if ($this->fuel->auth->module_has_action('others')) : ?>
 			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
+				if ($this->fuel->auth->has_permission($this->permission, $other_action)) :
 				$ico_key = str_replace('/', '_', $other_action);
 				$lang_key = url_title($label, 'underscore', TRUE);
 				if ($new_label = lang('btn_'.$lang_key)) $label = $new_label;
 			?>
 				<li><?=anchor(fuel_url($other_action, TRUE), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
+			<?php endif; ?>
 			<?php endforeach; ?>
 			<?php endif; ?>
-			<?php if ($this->fuel->auth->module_has_action('create')) : ?>
+			<?php if ($this->fuel->auth->module_has_action('create') AND $this->fuel->auth->has_permission($this->permission, 'create')) : ?>
 				<li class="end"><a href="<?=fuel_url($this->module_uri.'/create', TRUE)?>" class="ico ico_create"><?=lang('btn_create')?></a></li>
 			<?php endif; ?>
 			

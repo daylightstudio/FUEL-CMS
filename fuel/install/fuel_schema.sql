@@ -86,6 +86,9 @@ CREATE TABLE `fuel_navigation` (
   UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`)
+VALUES
+	(1, 'main', 'yes');
 
 
 # Dump of table fuel_navigation_groups
@@ -157,19 +160,29 @@ LOCK TABLES `fuel_permissions` WRITE;
 
 INSERT INTO `fuel_permissions` (`id`, `description`, `name`, `active`)
 VALUES
-	(1,'Pages: Edit','pages','yes'),
-	(2,'Pages: Publish','pages_publish','yes'),
-	(3,'Pages: Delete','pages_delete','yes'),
-	(4,'Manage Blocks','blocks','yes'),
-	(5,'Navigation','navigation','yes'),
-	(6,'Site Variables','sitevariables','yes'),
-	(7,'Assets','assets','yes'),
-	(8,'Site Documentation','site_docs','yes'),
-	(9,'Users','users','yes'),
-	(10,'Permissions','permissions','yes'),
-	(11,'Cache','cache','yes'),
-	(12,'Logs','logs','yes'),
-	(13,'Settings','settings','yes');
+	(NULL,'Pages','pages','yes'),
+	(NULL,'Pages: Create','pages/create','yes'),
+	(NULL,'Pages: Edit','pages/edit','yes'),
+	(NULL,'Pages: Publish','pages/publish','yes'),
+	(NULL,'Pages: Delete','pages/delete','yes'),
+	(NULL,'Blocks','blocks','yes'),
+	(NULL,'Blocks: Create','blocks/create','yes'),
+	(NULL,'Blocks: Edit','blocks/edit','yes'),
+	(NULL,'Blocks: Publish','blocks/publish','yes'),
+	(NULL,'Blocks: Delete','blocks/delete','yes'),
+	(NULL,'Navigation','navigation','yes'),
+	(NULL,'Navigation: Create','navigation/create','yes'),
+	(NULL,'Navigation: Edit','navigation/edit','yes'),
+	(NULL,'Navigation: Publish','navigation/publish','yes'),
+	(NULL,'Navigation: Delete','navigation/delete','yes'),
+	(NULL,'Site Variables','sitevariables','yes'),
+	(NULL,'Assets','assets','yes'),
+	(NULL,'Site Documentation','site_docs','yes'),
+	(NULL,'Users','users','yes'),
+	(NULL,'Permissions','permissions','yes'),
+	(NULL,'Cache','cache','yes'),
+	(NULL,'Logs','logs','yes'),
+	(NULL,'Settings','settings','yes');
 
 /*!40000 ALTER TABLE `fuel_permissions` ENABLE KEYS */;
 UNLOCK TABLES;

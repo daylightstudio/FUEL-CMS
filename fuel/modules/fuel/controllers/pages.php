@@ -14,6 +14,19 @@ class Pages extends Module {
 
 	function create()
 	{
+		
+		// check that the action even exists and if not, show a 404
+		if (!$this->fuel->auth->module_has_action('save'))
+		{
+			show_404();
+		}
+		
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
 		if (isset($_POST['id'])) // check for dupes
 		{
 			$posted = $this->_process();
@@ -72,7 +85,17 @@ class Pages extends Module {
 
 	function edit($id = NULL)
 	{
-		if (empty($id)) show_404();
+		if (!$this->fuel->auth->module_has_action('save'))
+		{
+			show_404();
+		}
+
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
 
 		$posted = $this->_process();
 
