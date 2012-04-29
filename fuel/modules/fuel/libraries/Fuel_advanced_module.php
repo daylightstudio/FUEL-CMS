@@ -226,7 +226,9 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		else
 		{
-			$this->load_library('fuel_'.$key);
+			// this was added to prevent the loading of config files auotmatically
+			$init = array('name' => $key);
+			$this->load_library('fuel_'.$key, $init);
 			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
 		}
 	}

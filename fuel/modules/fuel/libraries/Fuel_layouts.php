@@ -718,5 +718,142 @@ class Fuel_layout extends Fuel_base_library {
 
 
 
+class Fuel_module_layout extends Fuel_layout {
+	
+	public $model; // the model to use for retrieving data
+	public $list_block; // the block name to use for the list view
+	public $item_block; // the block name for the detailed item view
+	public $key_field = 'slug'; // the key field to use for querying a single record
+	public $segment = 3; // the segment to use as the parameter to query
+	public $item_where = array(); // additional item query where parameters 
+	public $list_where = array(); // additional list query where parameters
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a model value
+	 *
+	 * @access	public
+	 * @param	string	The model
+	 * @return	void
+	 */
+	function set_model($model)
+	{
+		$this->model = $model;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the list block
+	 *
+	 * @access	public
+	 * @param	string	The list block
+	 * @return	void
+	 */
+	function set_list_block($block)
+	{
+		$this->list_block = $block;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the item block
+	 *
+	 * @access	public
+	 * @param	string	The item block
+	 * @return	void
+	 */
+	function set_item_block($block)
+	{
+		$this->item_block = $block;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the key field for querying
+	 *
+	 * @access	public
+	 * @param	string	The key field for querying (e.g. 'slug')
+	 * @return	void
+	 */
+	function set_key_field($field)
+	{
+		$this->key_field = $field;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the segment index that will contain the URI slug value
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_segment($segment)
+	{
+	
+		$this->segment = (int) $segment;
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets additional item query where parameters 
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_item_where($where)
+	{
+	
+		$this->item_where = $where;
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets additional list query where parameters 
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_list_where($where)
+	{
+	
+		$this->list_hwere = $where;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing variables specific to a layout
+	 *
+	 * @access	public
+	 * @param	array	variables for the view
+	 * @return	array
+	 */	
+	function pre_process($vars)
+	{
+		$vars['model'] = $this->model;
+		$vars['list_block'] = $this->list_block;
+		$vars['item_block'] = $this->item_block;
+		$vars['key_field'] = $this->key_field;
+		$vars['segment'] = $this->segment;
+		$vars['item_where'] = $this->item_where;
+		$vars['list_where'] = $this->list_where;
+		return $vars;
+	}
+	
+}
+
 /* End of file Fuel_layouts.php */
-/* Location: ./application/libraries/fuel/Fuel_layouts.php */
+/* Location: ./modules/fuel/libraries/Fuel_layouts.php */

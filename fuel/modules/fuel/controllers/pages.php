@@ -95,13 +95,10 @@ class Pages extends Module {
 		{
 			show_error(lang('error_no_permissions'));
 		}
-		
-
-		$posted = $this->_process();
 
 		if ($this->input->post('id'))
 		{
-			
+			$posted = $this->_process();
 			
 			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
@@ -128,6 +125,7 @@ class Pages extends Module {
 				redirect($url);
 			}
 		}
+		
 		$vars = $this->_form($id);
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
@@ -136,7 +134,7 @@ class Pages extends Module {
 	{
 		
 		$this->load->library('form_builder');
-		
+
 		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
 		
 		$this->fuel->load_model('navigation');

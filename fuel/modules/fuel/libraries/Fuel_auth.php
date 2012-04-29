@@ -306,6 +306,11 @@ class Fuel_auth extends Fuel_base_library {
 		$where = array('id' => $valid_user['id'], 'active' => 'yes');
 		$user = $CI->users_model->find_one($where);
 		
+		if (empty($user))
+		{
+			return NULL;
+		}
+		
 		//$user_perms = $user->get_permissions(TRUE, 'name', 'array');
 		$this->_user_perms = $user->get_permissions(TRUE)->find_all_array_assoc('name');
 		
