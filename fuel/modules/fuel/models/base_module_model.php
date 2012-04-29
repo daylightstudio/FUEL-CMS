@@ -178,13 +178,32 @@ class Base_module_model extends MY_Model {
 	 */	
 	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc')
 	{
+		$this->_list_items_query();
+		
 		if (empty($this->db->ar_select))
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
 		
-		$data = array();
-		
+		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
+		if (!empty($limit)) $this->db->limit($limit);
+		$this->db->offset($offset);
+		$query = $this->db->get();
+		$data = $query->result_array();
+		//$this->debug_query();
+		return $data;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates the query logic for the list view. Separated out so that the count can use this method as well.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	protected function _list_items_query()
+	{
 		if (is_array($this->filters))
 		{
 			$where_or = array();
@@ -261,13 +280,8 @@ class Base_module_model extends MY_Model {
 			$this->db->where($where_sql);
 		}
 		
-		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
-		if (!empty($limit)) $this->db->limit($limit);
-		$this->db->offset($offset);
-		$query = $this->db->get($this->table_name);
-		$data = $query->result_array();
-		//$this->debug_query();
-		return $data;
+		// set the table here so that items total will work
+		$this->db->from($this->table_name);
 	}
 	
 	// --------------------------------------------------------------------
@@ -280,7 +294,13 @@ class Base_module_model extends MY_Model {
 	 */	
 	function list_items_total()
 	{
-		return count($this->list_items());
+		$this->_list_items_query(TRUE);
+		$cnt = $this->db->count_all_results();
+		if (is_array($cnt))
+		{
+			return count($cnt);
+		}
+		return $cnt;
 	}
 	
 	// --------------------------------------------------------------------

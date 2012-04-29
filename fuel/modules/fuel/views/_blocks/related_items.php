@@ -20,6 +20,7 @@
 		$url = fuel_url($mod->info('module_uri').'/edit/'.$id);
 	}
 	
+	if (!empty($group_related)) :
 	?>
 	<h3 class="ico <?=$icon?>"><?=$name?></h3>
 	<ul>
@@ -27,6 +28,7 @@
 		<li><a href="<?=$url?>"><?=$label?></a></li>
 		<?php endforeach; ?>
 	</ul>
+	<?php endif; ?>
 	<?php endif; ?>
 	<?php endforeach; ?>
 	

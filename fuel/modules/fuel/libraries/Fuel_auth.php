@@ -30,6 +30,8 @@
 
 class Fuel_auth extends Fuel_base_library {
 	
+	protected $_user_perms = array(); // cached values of user permissions
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -41,7 +43,8 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array()){
+	function __construct($params = array())
+	{
 		parent::__construct($params);
 
 		$this->CI->load->library('session');
@@ -214,12 +217,13 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	The type of permission (e.g. 'edit', 'delete'). A user that just has the permission (e.g. my_module) without the type (e.g. my_module_edit) will be given access (optional)
 	 * @return	boolean
 	 */	
-	function has_permission($permission, $type = 'edit')
+	function has_permission($permission, $type = '')
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
 
 		// get the users permissions
 		$user_perms = $this->get_permissions();
+
 		if (!empty($user_perms))
 		{
 			if (is_array($permission))
@@ -228,12 +232,29 @@ class Fuel_auth extends Fuel_base_library {
 				{
 					if (is_int($key) && !empty($this->CI->module))
 					{
-						$permission[$val] = $this->CI->module.'_'.$val;
+						if ($val != $this->CI->module)
+						{
+							$permission[$val] = $this->CI->module.'/'.$val;
+						}
+						else
+						{
+							$permission[$val] = $val;
+							if (empty($type))
+							{
+								$type = $val;
+							}
+						}
+						unset($permission[$key]);
 					}
 				}
+				
 				if (!empty($permission[$type]))
 				{
 					$permission = $permission[$type];
+				}
+				else if (empty($type))
+				{
+					$permission = reset($permission);
 				}
 				else
 				{
@@ -276,17 +297,26 @@ class Fuel_auth extends Fuel_base_library {
 		if (empty($valid_user['id'])) return FALSE;
 		
 		// get the users permissions
+		if (!empty($this->_user_perms))
+		{
+			return $this->_user_perms;
+		}
 		$CI =& get_instance();
 		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
 		$where = array('id' => $valid_user['id'], 'active' => 'yes');
 		$user = $CI->users_model->find_one($where);
 		
-		//$user_perms = $user->get_permissions(TRUE, 'name', 'array');
-		$user_perms = $user->get_permissions(TRUE)->find_all_array_assoc('name');
-		
-		if (!empty($user_perms))
+		if (empty($user))
 		{
-			return $user_perms;
+			return NULL;
+		}
+		
+		//$user_perms = $user->get_permissions(TRUE, 'name', 'array');
+		$this->_user_perms = $user->get_permissions(TRUE)->find_all_array_assoc('name');
+		
+		if (!empty($this->_user_perms))
+		{
+			return $this->_user_perms;
 		}
 		return NULL;
 	}

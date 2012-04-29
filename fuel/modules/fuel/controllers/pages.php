@@ -14,6 +14,19 @@ class Pages extends Module {
 
 	function create()
 	{
+		
+		// check that the action even exists and if not, show a 404
+		if (!$this->fuel->auth->module_has_action('save'))
+		{
+			show_404();
+		}
+		
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
+		
 		if (isset($_POST['id'])) // check for dupes
 		{
 			$posted = $this->_process();
@@ -72,13 +85,20 @@ class Pages extends Module {
 
 	function edit($id = NULL)
 	{
-		if (empty($id)) show_404();
+		if (!$this->fuel->auth->module_has_action('save'))
+		{
+			show_404();
+		}
 
-		$posted = $this->_process();
+		// check permissions
+		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		{
+			show_error(lang('error_no_permissions'));
+		}
 
 		if ($this->input->post('id'))
 		{
-			
+			$posted = $this->_process();
 			
 			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
@@ -105,6 +125,7 @@ class Pages extends Module {
 				redirect($url);
 			}
 		}
+		
 		$vars = $this->_form($id);
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
@@ -113,7 +134,7 @@ class Pages extends Module {
 	{
 		
 		$this->load->library('form_builder');
-		
+
 		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
 		
 		$this->fuel->load_model('navigation');
