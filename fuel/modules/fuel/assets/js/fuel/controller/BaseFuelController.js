@@ -271,7 +271,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 				$('a.ico_select_all').html(fuel.lang('btn_deselect_all'));
 				$('#multi_delete').parent().show();
-				$('#data_table .multi_delete').attr('checked', true);
+				$('#data_table_container .data .multi_delete').attr('checked', true);
 			},
 			function(){
 				if (!$('#toggle_list').parent().hasClass('active')){
@@ -279,7 +279,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 				$('a.ico_select_all').html(fuel.lang('btn_select_all'));
 				$('#multi_delete').parent().hide();
-				$('#data_table .multi_delete').attr('checked', false);
+				$('#data_table_container table.data .multi_delete').attr('checked', false);
 			});
 	},
 	
