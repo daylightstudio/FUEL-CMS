@@ -341,6 +341,33 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 
+/*
+|--------------------------------------------------------------------------
+| Generate settings
+|--------------------------------------------------------------------------
+*/
+
+// the files/folders to generate with the CLI generate command
+$config['generate'] = array('advanced' => array(
+										'assets/css/{module}.css',
+										'assets/images/',
+										'assets/js/',
+										'config/{module}.php',
+										'config/{module}_routes.php',
+										'controllers/{module}.php',
+										'helpers/{module}_helper.php',
+										'libraries/Fuel_{module}.php',
+										'models/{module}_model.php',
+										'tests/sql/',
+										'views/_admin/',
+										'views/_blocks/',
+										'views/_docs/',
+										'views/_layouts/',
+							)
+						);
+							
+							
+							
 @include(APPPATH.'config/MY_fuel.php');
 
 $config['settings'] = array();
