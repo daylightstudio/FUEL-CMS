@@ -183,7 +183,9 @@ VALUES
 	(NULL,'Permissions','permissions','yes'),
 	(NULL,'Cache','cache','yes'),
 	(NULL,'Logs','logs','yes'),
-	(NULL,'Settings','settings','yes');
+	(NULL,'Settings','settings','yes'),
+	(NULL,'Generate Code','generate','yes');
+	
 
 /*!40000 ALTER TABLE `fuel_permissions` ENABLE KEYS */;
 UNLOCK TABLES;

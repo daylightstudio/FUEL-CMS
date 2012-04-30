@@ -187,6 +187,7 @@
 					<li><a href="<?=user_guide_url('modules/tutorial')?>">Creating Modules</a></li>
 					<li><a href="<?=user_guide_url('modules/hooks')?>">Module Hooks</a></li>
 					<li><a href="<?=user_guide_url('modules/tools')?>">Module Tools</a></li>
+					<li><a href="<?=user_guide_url('modules/generate')?>">Generate Module Files</a></li>
 				</ul>
 
 				<?php if (!empty($modules)) : ?>
