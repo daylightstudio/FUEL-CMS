@@ -47,6 +47,9 @@ $lang['error_invalid_method'] = 'Invalid method name';
 $lang['error_curl_page'] = 'Error loading page with CURL';
 $lang['error_class_property_does_not_exist'] = 'Class property %1s does not exist';
 $lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
+$lang['error_could_not_create_folder'] = 'Could not create folder %1s';
+$lang['error_could_not_create_file'] = 'Could not create file %1s';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +133,8 @@ $lang['module_permissions'] = 'Permissions';
 $lang['module_manage_cache'] = 'Page Cache';
 $lang['module_manage_activity'] = 'Activity Log';
 $lang['module_manage_settings'] = 'Settings';
+$lang['module_generate'] = 'Generated';
+
 
 $lang['section_site'] = 'Site';
 $lang['section_blog'] = 'Blog';
@@ -349,6 +354,16 @@ $lang['cache_yes_clear'] = 'Yes, clear cache';
 $lang['settings_none'] = 'There are no settings for any advanced modules to manage.';
 $lang['settings_manage'] = 'Manage the settings for the following advanced modules:';
 $lang['settings_problem'] = 'There was a problem with the settings for the advanced module <strong>%1s</strong>. <br />Check that <strong>/fuel/modules/%1s/config/%1s.php</strong> config is configured to handle settings.';
+
+
+/*
+|--------------------------------------------------------------------------
+| Generate
+|--------------------------------------------------------------------------
+*/
+$lang['error_not_cli_request'] = 'This is not a CLI request.';
+$lang['error_not_in_dev_mode'] = 'This will only run in dev mode.';
+
 
 /*
 |--------------------------------------------------------------------------
