@@ -319,6 +319,7 @@ class Fuel_modules extends Fuel_base_library {
 	 * Returns an array of all the advanced module objects
 	 *
 	 * @access	public
+	 * @param	boolean	Determines whether to include the "fuel" module with the return value
 	 * @return	array	An array of Fuel_advanced_module objects
 	 */	
 	function advanced($include_fuel = FALSE)

@@ -363,7 +363,10 @@ $config['generate'] = array('advanced' => array(
 										'views/_blocks/',
 										'views/_docs/',
 										'views/_layouts/',
-							)
+							),
+							'simple' => array(
+										'models/{module}_model.php'
+								)
 						);
 							
 							

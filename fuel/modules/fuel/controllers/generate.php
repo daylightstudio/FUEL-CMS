@@ -14,6 +14,12 @@ class Generate extends Fuel_base_controller {
 			show_error(lang('error_not_in_dev_mode'));
 		}
 		
+		// validate user has permission
+		if ($validate)
+		{
+			$this->_validate_user('generate');
+		}
+		
 		$this->load->helper('file');
 		$this->load->library('parser');
 		
@@ -84,7 +90,8 @@ class Generate extends Fuel_base_controller {
 					$vars = array();
 					$vars['module'] = $module;
 					$vars['module_name'] = ucwords(humanize($module));
-
+					$vars['model_name'] = ucfirst($module);
+					
 
 					$content = $this->_parse_template($val, $vars, 'advanced');
 					
@@ -105,9 +112,62 @@ class Generate extends Fuel_base_controller {
 		$this->_load_results($vars);
 	}	
 	
-	function simple()
+	function simple($module = NULL)
 	{
+		if (empty($module))
+		{
+			show_error(lang('error_missing_params'));
+		}
+		$fuel_config = $this->fuel->config('generate');
+		$config = $fuel_config['simple'];
+
+		$created = array();
+		$errors = array();
+
+		foreach($config as $val)
+		{
+			$substituted = str_replace('{module}', $module, $val);
+			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
+			$file = APPPATH . $substituted;
+
+			// create file if it doesn't exits'
+			if (!file_exists($file))
+			{
+				// create variables for parsed files
+				$vars = array();
+				$vars['module'] = $module;
+				$vars['module_name'] = ucwords(humanize($module));
+				$vars['model_name'] = ucfirst($module);
+
+				$content = $this->_parse_template($val, $vars, 'simple');
+				
+				if (!$content)
+				{
+					$errors[] = lang('error_could_not_create_file', $dir)."\n";
+				}
+				write_file($file, $content);
+				$created[] = $file;
+			}
+		}
 		
+		
+		// add to MY_fuel_modules if it doesn't exist'
+		$my_fuel_modules_path = APPPATH.'config/MY_fuel_modules.php';
+		@include(APPPATH.'config/MY_fuel_modules.php');
+		
+		if (!isset($config['modules'][$module]))
+		{
+			$str = "\n\n\$config['modules']['".$module."'] = array(
+	'preview_path' => '',
+);";
+			write_file($my_fuel_modules_path, $str, FOPEN_WRITE_CREATE);
+		}
+		
+		
+		$vars['created'] = $created;
+		$vars['errors'] = $errors;
+		
+		$this->_load_results($vars);
 	}
 	
 	protected function _load_results($vars)

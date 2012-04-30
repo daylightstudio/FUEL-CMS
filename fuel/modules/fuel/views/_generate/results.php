@@ -13,9 +13,9 @@
 
 <?php if (!empty($errors)) : ?>
 <h3>Errors</h3>
-<ul>
+<ul class="nobullets error">
 <?php foreach($errors as $val) : ?>
-<li class="error"><?=$val?></li>
+<li><?=$val?></li>
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>
