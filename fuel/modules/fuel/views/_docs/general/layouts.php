@@ -82,9 +82,6 @@ $main_layout->add_field('sections', array('display_label' => FALSE, 'add_extra' 
 												'title' => array('style' => 'width: 800px'),
 												'content' => array('type' => 'textarea', 'style' => 'width: 800px; height: 500px;'),
 											)));
-$main_layout->add_fields($common_misc);
-
-
 // !!! IMPORTANT ... NOW ASSIGN THIS TO THE MAIN "layouts"
 $config['layouts']['main'] = $main_layout;
 </pre>
