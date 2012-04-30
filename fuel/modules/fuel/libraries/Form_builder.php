@@ -2462,20 +2462,24 @@ Class Form_builder {
 	 * @param	array Array of custom fields to load
 	 * @return	void
 	 */
-	function load_custom_fields($fields)
+	function load_custom_fields($file)
 	{
-		if (is_string($fields))
+		if (is_string($file))
 		{
-			if (file_exists($fields))
+			if (file_exists($file))
 			{
-				include($fields);
+				include($file);
 			}
 			else
 			{
 				return FALSE;
 			}
 		}
-		
+		else if (is_array($file))
+		{
+			$fields = $file;
+		}
+
 		if (is_array($fields))
 		{
 			// setup custom fields

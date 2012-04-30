@@ -1059,6 +1059,7 @@ class Module extends Fuel_base_controller {
 		
 		// load custom fields
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$action = (!empty($values[$this->model->key_field()])) ? 'edit' : 'create';
