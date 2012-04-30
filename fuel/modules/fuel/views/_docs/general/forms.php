@@ -54,7 +54,7 @@ The main engine behind this feature is the <a href="<?=user_guide_url('libraries
 $this->load->library('form_builder');
 
 // load the custom form fields
-$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
 // create fields
 $fields['linked'] = array('type' => 'linked', 'linked_to' => array('name' => 'url_title'));
@@ -142,7 +142,7 @@ Custom field types are not automatically load but can be done so by one of the f
 </p>
 <pre class="brush:php">
 // loads from a config file
-$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
 // registers a single custom field
 $this->form_builder->register_custom_field($key, $custom_field);
@@ -909,7 +909,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
-<p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/form_builder.php</span>
+<p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
 to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:
 </p>
 <ul>
@@ -936,9 +936,6 @@ to the <dfn>$config['custom_fields']</dfn> initialization parameter. The followi
 'css' => '', // the path to the css file relative to the assets/css folder
 </pre>
 
-<p class="important">The <span class="file">fuel/modules/fuel/config/form_builder.php</span> file is included by default in the <span class="file">fuel/application/config/form_builder.php</span> file.</p>
-
-
 <h2 id="representatives">Representatives</h2>
 <p>Also new to the <a href="<?=user_guide_url('libraries/form_builder')?>"> Form_builder</a> class is the concept of <dfn>representatives</dfn>.
 Representatives allow you to assign a field with certain attributes (e.g. type, name, etc) to a specific field type. 
@@ -948,7 +945,7 @@ a representative, the key is the field type to be the representative and the val
 
 <p>There are several ways to assign representatives to a field type:</p>
 
-<p>The first is to add them to the $config['representatives'] array in the <span class="file">fuel/application/config/form_builder.php</span>:</p>
+<p>The first is to add them to the $config['representatives'] array in the <span class="file">fuel/application/config/custom_fields.php</span>:</p>
 
 <pre class="brush:php">
 // will assign any field of type 'int', 'smallint', 'mediumint' or 'bigint' to be represented by the 'my_field' type

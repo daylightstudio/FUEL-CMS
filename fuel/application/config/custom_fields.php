@@ -9,7 +9,9 @@
 */
 $config['my_custom_field'] = array();
 
-include(FUEL_PATH.'config/form_builder.php');
+
+
+include(FUEL_PATH.'config/custom_fields.php');
 
 /* End of file form_builder.php */
 /* Location: ./application/config/form_builder.php */

@@ -135,7 +135,7 @@ class Pages extends Module {
 		
 		$this->load->library('form_builder');
 
-		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
 		$this->fuel->load_model('navigation');
 		
@@ -543,7 +543,7 @@ class Pages extends Module {
 			return;
 		}
 		$this->load->library('form_builder');
-		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
 		$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
 		$this->form_builder->question_keys = array();
