@@ -17,4 +17,6 @@ layout or block view file (in the _layouts and _blocks folder respectively), wil
 	can be viewed from the CMS dashboard</li>
 	<li><strong>_layouts</strong>: contains <a href="<?=user_guide_url('general/layouts')?>">layout files</a></li>
 	<li><strong>_variables</strong>: contains <a href="<?=user_guide_url('introduction/opt-in-controllers')?>">variables files</a></li>
+	<li><strong>_generate</strong>: contains template files that override the defaults used for generating things like advanced modules. This folder is not there by default and the generate
+	functionality will work without it.</li>
 </ul>
