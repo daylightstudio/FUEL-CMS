@@ -10,9 +10,6 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 <body>
 
-
-
-
 <div id="fuel_body">
 
 

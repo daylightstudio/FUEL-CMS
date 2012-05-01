@@ -3209,9 +3209,11 @@ Class Form_builder {
 		$script_regex = '#^<script(.+)src=#U';
 		
 		$orig_ignore = $this->CI->asset->ignore_if_loaded;
-		
 		$this->CI->asset->ignore_if_loaded = TRUE;
-
+		
+		$orig_asset_output = $this->CI->asset->assets_output;
+		$this->CI->asset->assets_output = FALSE;
+		
 		foreach($_js as $type => $js)
 		{
 			
@@ -3265,6 +3267,7 @@ Class Form_builder {
 		
 		// change ignore value on asset back to original
 		$this->CI->asset->ignore_if_loaded = $orig_ignore;
+		$this->CI->asset->assets_output = $orig_asset_output;
 		
 		// sort the javascript
 		$js_exec = $this->_fields_sorter($js_exec, 'order');

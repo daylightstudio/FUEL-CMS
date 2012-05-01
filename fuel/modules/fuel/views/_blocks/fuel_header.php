@@ -8,13 +8,12 @@
 	<?=css('jqmodal, jquery.tooltip, jquery.treeview, fuel', 'fuel')?>
 
 	<?php foreach($css as $m => $c) : echo css(array($m => $c))."\n\t"; endforeach; ?>
-	
 	<script type="text/javascript">
 		<?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), TRUE)?>
 	</script>
 	<?=js('jquery/jquery', 'fuel')?>
 	<?=js('jqx/jqx', 'fuel')?>
-	<?=js($this->config->item('fuel_javascript', 'fuel'), 'fuel')?>
+	<?=js($this->fuel->config('fuel_javascript'), 'fuel')?>
 	<?php foreach($js as $m => $j) : echo js(array($m => $j))."\n\t"; endforeach; ?>
 
 	<?php if (!empty($this->js_controller)) : ?> 

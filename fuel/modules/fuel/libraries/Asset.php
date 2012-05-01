@@ -764,11 +764,14 @@ class Asset {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns an swf asset path
+	 * Convenience method that returns the HTML for the css() and js() methods
 	 *
-	 * @access	private
-	 * @param	string	file name of the swf file including extension
-	 * @param	string	module module folder if any
+	 * @access	protected
+	 * @param	string	the type of file to output. Options are js or css
+	 * @param	string	module folder if any
+	 * @param	string	the opening html
+	 * @param	string	the closing html
+	 * @param	string	the path to the asset
 	 * @param	array	additional parameter to include (attrs, ie_conditional, and output)
 	 * @return	string
 	 */	
@@ -837,19 +840,23 @@ class Asset {
 			// convert to an array if not already 
 			$path = (array) $path;
 			$files_arr = array();
-			foreach($path as $val)
+			$default_module = $module;
+			
+			foreach($path as $key => $val)
 			{
 				if ($ignore_if_loaded AND $this->is_used($type, $val))
 				{
 					continue;
 				}
 				
-				// if (is_array($val))
-				// {
-				// 	$nested .= $this->$type($val, '', $options);
-				// }
-				// else
-				// {
+				$module = (is_string($key)) ? $key : $default_module;
+
+				if (is_array($val))
+				{
+					$nested .= $this->$type($val, $module, $options);
+				}
+				else
+				{
 					$file_str = $open;
 					$type_path = $type.'_path';
 					$assets_folders = $this->assets_folders;
@@ -877,7 +884,7 @@ class Asset {
 					$files_arr[] = $file_str;
 					//$file_str .= "\n\t";
 					$this->_add_used($type, $val);
-				// }
+				}
 
 			}
 			// use implode so it doesn't add the trailing \n\t'
@@ -886,7 +893,7 @@ class Asset {
 			
 		}
 		
-	//	$str .= $nested;
+		$str .= $nested;
 		return $str;
 	}
 
@@ -1061,8 +1068,13 @@ class Asset {
 			$output = '';
 			foreach($cacheable_files as $file)
 			{
+				// check for extension... if not there, add it
+				if (!preg_match('#(\.'.$type.'|\.php)(\?.+)?$#', $file))
+				{
+					$file = $file.'.'.$type;
+				}
 				// replace backslashes with hyphens
-				$file_path = $asset_folder.$file.'.'.$type;
+				$file_path = $asset_folder.$file;
 
 				if (file_exists($file_path))
 				{

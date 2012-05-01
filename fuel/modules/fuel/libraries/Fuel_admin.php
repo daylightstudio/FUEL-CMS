@@ -122,7 +122,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		// set asset output settings
-		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
+		$this->CI->asset->assets_output = $this->fuel->config('fuel_assets_output');
 
 		if ($this->validate) 
 		{
