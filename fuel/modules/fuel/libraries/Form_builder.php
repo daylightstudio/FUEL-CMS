@@ -1956,7 +1956,7 @@ Class Form_builder {
 		$defaults = array(
 			'overwrite' => NULL, // sets a paramter to either overwrite or create a new file if one already exists on the server
 			'display_overwrite' => TRUE, // displays the overwrite checkbox
-			'accept' => 'gif|jpg|jpeg|png', // specifies which files are acceptable to upload
+			'accept' => 'gif|jpg|jpeg|png|pdf', // specifies which files are acceptable to upload
 			'upload_path' => NULL, // the server path to upload the file to
 			'file_name' => NULL, // for file uploading
 			'encrypt_name' => NULL, // determines whether to encrypt the uploaded file name to give it a unique value

@@ -23,7 +23,7 @@ jQuery.checksave = function(context) {
 		var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
 	    $elems.each(function(i){
 			if (jQuery(this).data('checksaveStartValue') && jQuery(this).data('checksaveStartValue').toString() != jQuery(this).val().toString()){
-				//console.log(jQuery(this).data('startValue').toString()  + ' --  ' + jQuery(this).val().toString() + ' -- ' + jQuery(this).attr('name'))
+				//console.log('"' + jQuery(this).data('checksaveStartValue').toString()  + '" --  "' + jQuery(this).val().toString() + '" -- ' + jQuery(this).attr('name'))
 				msg = changedMsg;
 				return changedMsg;
 			}

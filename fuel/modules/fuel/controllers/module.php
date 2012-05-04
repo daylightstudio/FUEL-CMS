@@ -170,6 +170,12 @@ class Module extends Fuel_base_controller {
 	{
 		$this->load->library('data_table');
 	
+		// check the model for a filters method as well and merge it with the property value
+		// added per http://www.getfuelcms.com/forums/discussion/760/filter-dropdown/#Item_2
+		if (method_exists($this->model, 'filters'))
+		{
+			$this->filters = array_merge($this->filters, $this->model->filters($this->filters));
+		}
 	
 		// set the language dropdown if there is a language column
 		if (!empty($this->language_col) AND method_exists($this->model, 'get_languages'))
