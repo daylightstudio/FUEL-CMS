@@ -4478,6 +4478,7 @@ Class Data_record {
 		
 		$rel = $this->_parent_model->$relationship_type;
 		$fields = $this->_parent_model->relationship_field_names($relationship_type);
+		$id_field = '';
 		
 		$rel_config = $rel[$var];
 
