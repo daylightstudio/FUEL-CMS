@@ -149,7 +149,7 @@ fuel.fields.wysiwyg_field = function(context){
 			});
 			
 			// need so the warning doesn't pop up if you duplicate a value
-			$.changeChecksaveValue('#' + ckId, editor.getData())
+			$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
 			
 		})
 		CKEDITOR.instances[ckId].resetDirty();
