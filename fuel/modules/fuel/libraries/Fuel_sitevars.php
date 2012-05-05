@@ -28,9 +28,10 @@
 
 // --------------------------------------------------------------------
 
-class Fuel_sitevars extends Fuel_base_library {
+class Fuel_sitevars extends Fuel_module {
 	
-	
+	protected $module = 'sitevariables';
+		
 	// --------------------------------------------------------------------
 	
 	/**

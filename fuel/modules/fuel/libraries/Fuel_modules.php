@@ -32,8 +32,10 @@ class Fuel_modules extends Fuel_base_library {
 
 	protected $_modules = array();
 	protected $_advanced = array();
-	protected $_modules_grouped = array();
-	protected $_overwrites;
+	protected $_inited = FALSE;
+	static protected $_module_init = array();
+	static protected $_modules_grouped = array();
+	static protected $_overwrites = NULL;
 	
 	// --------------------------------------------------------------------
 	
@@ -63,19 +65,41 @@ class Fuel_modules extends Fuel_base_library {
 	 * @param	array	Array of additional module initialiation parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	function initialize($params = array(), $add = TRUE)
+	{
+		if ($this->is_inited())
+		{
+			return;
+		}
+		$module_init = self::get_all_module_configs();
+		self::$_module_init = $module_init;
+		
+		if ($add)
+		{
+			foreach($module_init as $mod => $init)
+			{
+				$this->add($mod, $init);
+			}
+		}
+		
+		$this->_inited = TRUE;
+		
+	}
+	
+	static function get_all_module_configs()
 	{
 		// get simple module init values. Must use require here because of the construct
 		//require_once(MODULES_PATH.FUEL_FOLDER.'/libraries/fuel_modules.php');
-		$allowed = $this->fuel->config('modules_allowed');
+		$FUEL = FUEL();
+		$allowed = $FUEL->config('modules_allowed');
 		$module_init = array();
 		
 		// load the application modules first
-		$my_module_init = (array)$this->get_module_config('app');
-		$this->_modules_grouped['app'] = $my_module_init;
+		$my_module_init = (array)self::get_module_config('app');
+		self::$_modules_grouped['app'] = $my_module_init;
 
-		$fuel_module_init = (array)$this->get_module_config('fuel');
-		$this->_modules_grouped['fuel'] = $module_init;
+		$fuel_module_init = (array)self::get_module_config('fuel');
+		self::$_modules_grouped['fuel'] = $module_init;
 		$module_init = array_merge($my_module_init, $fuel_module_init);
 		
 		// no longer need these so we get rid of them
@@ -84,17 +108,17 @@ class Fuel_modules extends Fuel_base_library {
 		// then get the allowed modules initialization information
 		foreach($allowed as $mod)
 		{
-			$mod_config = $this->get_module_config($mod);
+			$mod_config = self::get_module_config($mod);
 			
 			if (!empty($mod_config))
 			{
-				$this->_modules_grouped[$mod] = $mod_config;
+				self::$_modules_grouped[$mod] = $mod_config;
 				$module_init = array_merge($module_init, $mod_config);
 			}
 		}
 
 		// now must loop through the array and overwrite any values... array_merge_recursive won't work'
-		$overwrites = $this->overwrites();
+		$overwrites = self::overwrites();
 		if (!empty($overwrites) AND is_array($overwrites))
 		{
 			foreach($overwrites as $module => $val)
@@ -102,12 +126,7 @@ class Fuel_modules extends Fuel_base_library {
 				$module_init[$module] = array_merge($module_init[$module], $val);
 			}
 		}
-		
-		// create module objects based on init values
-		foreach($module_init as $mod => $init)
-		{
-			$this->add($mod, $init);
-		}
+		return $module_init;
 	}
 	
 	// --------------------------------------------------------------------
@@ -119,7 +138,7 @@ class Fuel_modules extends Fuel_base_library {
 	 * @param	string	Advanced module folder name
 	 * @return	array
 	 */	
-	function get_module_config($module)
+	static function get_module_config($module)
 	{
 		switch($module)
 		{
@@ -245,22 +264,22 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function overwrites()
 	{
-		if (isset($this->_overwrites))
+		if (isset(self::$_overwrites))
 		{
-			return $this->_overwrites;
+			return self::$_overwrites;
 		}
 		
 		@include(APPPATH.'config/MY_fuel_modules.php');
 		
 		if (isset($config['module_overwrites']))
 		{
-			$this->_overwrites = $config['module_overwrites'];
+			self::$_overwrites = $config['module_overwrites'];
 		}
 		else
 		{
-			$this->_overwrites = array();
+			self::$_overwrites = array();
 		}
-		return $this->_overwrites;
+		return self::$_overwrites;
 	}
 	
 	// --------------------------------------------------------------------
@@ -352,7 +371,62 @@ class Fuel_modules extends Fuel_base_library {
 		return (in_array($module, $allowed));
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns the initialization parameters for a module if the module parameter is passed. No parameter passed then all initialization parameters are returned
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	array
+	 */	
+	function module_init($module = array())
+	{
+		if (!empty($module))
+		{
+			if (isset(self::$_module_init[$module]))
+			{
+				return self::$_module_init[$module];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return self::$_module_init;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the initialization parameters for a module if the module parameter is passed. No parameter passed then all initialization parameters are returned
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	array
+	 */	
+	function module_grouped_init($adv_module = array())
+	{
+		if (!empty($adv_module))
+		{
+			if (isset(self::$_modules_grouped[$adv_module]))
+			{
+				return self::$_modules_grouped[$adv_module];
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			return $this->_modules_grouped;
+		}
+	}
+
 }
 
 
@@ -419,7 +493,6 @@ class Fuel_module extends Fuel_base_library {
 		
 	}
 	
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -430,7 +503,15 @@ class Fuel_module extends Fuel_base_library {
 	 * @return	array
 	 */	
 	function info($prop = NULL)
-	{
+	{	
+		if (empty($this->_init))
+		{
+ 			$inits = Fuel_modules::get_all_module_configs();
+			if (isset($inits[$this->module]))
+			{
+				$this->_init = $inits[$this->module];
+			}
+		}
 		
 		if (empty($this->_info))
 		{
@@ -602,6 +683,11 @@ class Fuel_module extends Fuel_base_library {
 		$pages = array();
 		$info = $this->info();
 
+		// if no preview path, then just ignore
+		if (empty($info['preview_path']))
+		{
+			return array();
+		}
 		if (!empty($info['model_location']))
 		{
 			$this->CI->load->module_model($info['model_location'], $info['model_name']);
@@ -682,7 +768,7 @@ class Fuel_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	static function module_path()
+	function module_path()
 	{
 		return MODULES_PATH.$this->module.'/';
 	}
@@ -698,8 +784,8 @@ class Fuel_module extends Fuel_base_library {
 	function &model()
 	{
 		$model = $this->info('model_name');
-		$module = $this->info('folder');
-		if (!isset($this->CI->$model))
+		$module = $this->info('model_location');
+		if (!isset($this->CI->$model) AND !empty($module))
 		{
 			$this->CI->load->module_model($module, $model);
 		}

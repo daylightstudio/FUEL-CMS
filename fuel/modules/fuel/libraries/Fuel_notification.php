@@ -40,22 +40,6 @@ class Fuel_notification extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor
-	 *
-	 * Accepts an associative array as input, containing preferences
-	 *
-	 * @access	public
-	 * @param	array	Config preferences (optional)
-	 * @return	void
-	 */	
-	function __construct($params = array())
-	{
-		parent::__construct($params);
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Sends an email message
 	 *
 	 * @access	public

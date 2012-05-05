@@ -3,8 +3,15 @@ CREATED
 <?php foreach($created as $val) : ?>
 * <?=$val?> 
 <?php endforeach; ?>
-<?php else: ?> 
+<?php else: ?>
 There were no files created.
+<?php endif; ?>
+
+<?php if (!empty($modifed)) : ?>
+MODIFIED 
+<?php foreach($modified as $val) : ?>
+* <?=$val?> 
+<?php endforeach; ?>
 <?php endif; ?>
 
 <?php if (!empty($errors)) : ?>

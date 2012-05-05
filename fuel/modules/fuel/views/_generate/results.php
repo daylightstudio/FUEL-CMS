@@ -11,6 +11,15 @@
 <p>There were no files created.</p>
 <?php endif; ?>
 
+<?php if (!empty($modifed)) : ?>
+MODIFIED 
+<ul class="nobullets">
+<?php foreach($created as $val) : ?>
+<li><?=$val?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
 <?php if (!empty($errors)) : ?>
 <h3>Errors</h3>
 <ul class="nobullets error">

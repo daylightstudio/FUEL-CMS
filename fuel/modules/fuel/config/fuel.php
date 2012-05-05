@@ -365,10 +365,12 @@ $config['generate'] = array('advanced' => array(
 										'views/_docs/',
 										'views/_layouts/',
 							),
-							'simple' => array(
-										'models/{module}_model.php'
-								)
-						);
+							'simple' => 'MY_fuel_modules.php',
+							'model'  => array(
+											'{model}_model.php',
+											'table.sql',
+											),
+										);
 							
 							
 							

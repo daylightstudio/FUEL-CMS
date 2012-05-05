@@ -363,6 +363,7 @@ $lang['settings_problem'] = 'There was a problem with the settings for the advan
 */
 $lang['error_not_cli_request'] = 'This is not a CLI request.';
 $lang['error_not_in_dev_mode'] = 'This will only run in dev mode.';
+$lang['error_missing_generation_files'] = 'There are no generation files to create for %1s.';
 
 
 /*

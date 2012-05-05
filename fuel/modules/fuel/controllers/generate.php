@@ -3,6 +3,10 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Generate extends Fuel_base_controller {
 	
+	public $created = array();
+	public $errors = array();
+	public $modified = array();
+	
 	function __construct()
 	{
 		$validate = (php_sapi_name() == 'cli' or defined('STDIN')) ? FALSE : TRUE;
@@ -25,149 +29,231 @@ class Generate extends Fuel_base_controller {
 		
 	}
 	
-	function advanced($module = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Generates the folders and files for an advanced module
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	void
+	 */	
+	function advanced($name = NULL)
 	{
-		if (empty($module))
+		if (empty($name))
 		{
 			show_error(lang('error_missing_params'));
 		}
 		$fuel_config = $this->fuel->config('generate');
-		$config = $fuel_config['advanced'];
-		$module_path = MODULES_PATH.$module.'/';
-		
-		$created = array();
-		$errors = array();
-		if (!file_exists($module_path))
+
+		// check that the configuration to map to files to generate exists
+		if (!isset($fuel_config['advanced']))
 		{
-			if (!mkdir($module_path, DIR_READ_MODE, TRUE))
+			show_error(lang('error_missing_generation_files', 'advanced'));
+		}
+
+		$config = (array)$fuel_config['advanced'];
+		$name_path = MODULES_PATH.$name.'/';
+
+		if (!file_exists($name_path))
+		{
+			if (!mkdir($name_path, DIR_READ_MODE, TRUE))
 			{
-				$errors[] = lang('error_could_not_create_folder', $module_path)."\n";
+				$this->errors[] = lang('error_could_not_create_folder', $name_path)."\n";
 			}
 			else
 			{
-				$created[] = $module_path;
+				$this->created[] = $name_path;
 			}
 		}
-		
+
+		// create variables for parsed files
+		$vars = $this->_common_vars($name);
+
 		foreach($config as $val)
 		{
-			$substituted = str_replace('{module}', $module, $val);
+			$substituted = str_replace('{module}', $name, $val);
 			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
-			$file = $module_path . $substituted;
-			
+			$file = $name_path . $substituted;
+
 			if (empty($ext))
 			{
 				if (!file_exists($file))
 				{
 					if (!mkdir($file, DIR_READ_MODE, TRUE))
 					{
-						$errors[] = lang('error_could_not_create_folder', $file)."\n";
+						$this->errors[] = lang('error_could_not_create_folder', $file)."\n";
 					}
 					else
 					{
-						$created[] = $file;
+						$this->created[] = $file;
 					}
 				}
 			}
 			else
 			{
 				$dir =  dirname($file);
-				
+
 				// create parent directory if it doesn't exist already'
 				if (!file_exists($dir))
 				{
 					if (!mkdir($dir, DIR_READ_MODE, TRUE))
 					{
-						$errors[] = lang('error_could_not_create_folder', $dir)."\n";
+						$this->errors[] = lang('error_could_not_create_folder', $dir)."\n";
 					}
 				}
-				
+
 				// create file if it doesn't exits'
 				if (!file_exists($file))
 				{
-					
-					// create variables for parsed files
-					$vars = array();
-					$vars['module'] = $module;
-					$vars['module_name'] = ucwords(humanize($module));
-					$vars['model_name'] = ucfirst($module);
-					
 
 					$content = $this->_parse_template($val, $vars, 'advanced');
-					
+
 					if (!$content)
 					{
 						$errors[] = lang('error_could_not_create_file', $dir)."\n";
 					}
 					write_file($file, $content);
-					$created[] = $file;
+					$this->created[] = $file;
 				}
-				
+
 			}
 		}
-		
-		$vars['created'] = $created;
-		$vars['errors'] = $errors;
-		
+
+		$vars['created'] = $this->created;
+		$vars['errors'] = $this->errors;
+
 		$this->_load_results($vars);
 	}	
+
+	// --------------------------------------------------------------------
 	
-	function simple($module = NULL)
+	/**
+	 * Generates the table, model, permissions and adds to MY_fuel_modules
+	 *
+	 * @access	public
+	 * @param	string	Model name
+	 * @param	string	Module name (optional)
+	 * @return	void
+	 */	
+	function simple($name = NULL, $module = '')
 	{
-		if (empty($module))
+		if (empty($name))
 		{
 			show_error(lang('error_missing_params'));
 		}
+		
+		// create the model
+		$this->model($name, $module, FALSE);
+
+
 		$fuel_config = $this->fuel->config('generate');
-		$config = $fuel_config['simple'];
 
-		$created = array();
-		$errors = array();
-
-		foreach($config as $val)
+		// check that the configuration to map to files to generate exists
+		if (!isset($fuel_config['simple']))
 		{
-			$substituted = str_replace('{module}', $module, $val);
-			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
-			$file = APPPATH . $substituted;
-
-			// create file if it doesn't exits'
-			if (!file_exists($file))
-			{
-				// create variables for parsed files
-				$vars = array();
-				$vars['module'] = $module;
-				$vars['module_name'] = ucwords(humanize($module));
-				$vars['model_name'] = ucfirst($module);
-
-				$content = $this->_parse_template($val, $vars, 'simple');
-				
-				if (!$content)
-				{
-					$errors[] = lang('error_could_not_create_file', $dir)."\n";
-				}
-				write_file($file, $content);
-				$created[] = $file;
-			}
+			show_error(lang('error_missing_generation_files', 'simple'));
 		}
+		
+		$config = (array)$fuel_config['simple'];
+
+		$basepath = (!empty($module)) ? MODULES_PATH.$module.'/' : APPPATH;
 		
 		
 		// add to MY_fuel_modules if it doesn't exist'
 		$my_fuel_modules_path = APPPATH.'config/MY_fuel_modules.php';
-		@include(APPPATH.'config/MY_fuel_modules.php');
-		
-		if (!isset($config['modules'][$module]))
+		if (file_exists($my_fuel_modules_path))
 		{
-			$str = "\n\n\$config['modules']['".$module."'] = array(
-	'preview_path' => '',
-);";
-			write_file($my_fuel_modules_path, $str, FOPEN_WRITE_CREATE);
+			@include(APPPATH.'config/MY_fuel_modules.php');
+			if (!isset($config['modules'][$name]))
+			{
+				// create variables for parsed files
+				$vars = $this->_common_vars($name);
+				$file = current($config);
+				$content = "\n".$this->_parse_template($file, $vars, 'simple');
+
+				write_file($my_fuel_modules_path, $content, FOPEN_WRITE_CREATE);
+				$this->modified[] = $file;
+			}
+		}
+
+		// now create permissions
+		$this->fuel->permissions->create_simple_module_permissions($name);
+		$vars['created'] = $this->created;
+		$vars['errors'] = $this->errors;
+
+		$this->_load_results($vars);
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Generates the table and model
+	 *
+	 * @access	public
+	 * @param	string	Model name
+	 * @param	string	Module name (optional)
+	 * @return	void
+	 */	
+	function model($model, $module = '', $display_results = TRUE)
+	{
+		if (empty($model))
+		{
+			show_error(lang('error_missing_params'));
+		}
+		$fuel_config = $this->fuel->config('generate');
+
+		// check that the configuration to map to files to generate exists
+		if (!isset($fuel_config['model']))
+		{
+			show_error(lang('error_missing_generation_files', 'model'));
 		}
 		
+		$config = (array)$fuel_config['model'];
+
+		// create variables for parsed files
+		$vars = $this->_common_vars($model);
 		
-		$vars['created'] = $created;
-		$vars['errors'] = $errors;
+		// create model file
+		$basepath = (!empty($module)) ? MODULES_PATH.$module.'/' : APPPATH;
+		foreach($config as $val)
+		{
+			$substituted = str_replace('{model}', $model, $val);
+			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
+			$file = $basepath .'models/'. $substituted;
+
+			// create file if it doesn't exits'
+			if (!file_exists($file))
+			{
+				$content = $this->_parse_template($val, $vars, 'model');
+				
+				if (!$content)
+				{
+					$this->errors[] = lang('error_could_not_create_file', $dir)."\n";
+				}
+				
+				// if SQL file extension, then we try and load the SQL
+				if (preg_match('#\.sql$#', $file))
+				{
+					$this->_load_sql($content);
+				}
+				else
+				{
+					write_file($file, $content);
+					$this->created[] = $file;
+				}
+			}
+		}
 		
-		$this->_load_results($vars);
+		if ($display_results)
+		{
+			$vars['created'] = $this->created;
+			$vars['errors'] = $this->errors;
+			$vars['modified'] = $this->modified;
+
+			$this->_load_results($vars);
+		}
 	}
 	
 	protected function _load_results($vars)
@@ -205,6 +291,53 @@ class Generate extends Fuel_base_controller {
 		// parse
 		$contents = $this->parser->parse_simple($contents, $vars);
 		return $contents;
+	}
+	
+	protected function _common_vars($name)
+	{
+		$vars = array();
+		$vars['module'] = $name;
+		$vars['table'] = $name;
+		$vars['module_name'] = ucwords(humanize($name));
+		$vars['model_name'] = ucfirst($name);
+		$vars['model_record'] = ucfirst(trim($name, 's'));
+		
+		if ($vars['model_name'] == $vars['model_record'])
+		{
+			$vars['model_record'] = $vars['model_record'].'_item';
+		}
+		return $vars;
+	}
+	
+	protected function _load_sql($sql)
+	{
+		$sql = preg_replace('#^/\*(.+)\*/$#U', '', $sql);
+		$sql = preg_replace('/^#(.+)$/U', '', $sql);
+		
+		// load database config
+		include(APPPATH.'config/database.php');
+		$this->load->database();
+	
+		// select the database
+		$db = $db[$active_group]['database'];
+		
+		$use_sql = 'USE '.$db;
+		
+		$this->db->query($use_sql);
+		$sql_arr = explode(";\n", $sql);
+		foreach($sql_arr as $s)
+		{
+			$s = trim($s);
+			if (!empty($s))
+			{
+				$this->db->query($s);
+			}
+		}
+	}	
+	
+	protected function _create_permissions($module)
+	{
+		$this->fuel->permissions();
 	}
 	
 }

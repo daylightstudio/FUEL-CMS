@@ -30,6 +30,7 @@
 
 class Fuel_permissions extends Fuel_module {
 	
+	protected $module = 'permissions';
 	protected $_perms = array();
 	
 	// --------------------------------------------------------------------
@@ -64,6 +65,7 @@ class Fuel_permissions extends Fuel_module {
 	{
 		parent::initialize($params);
 		
+		// can't use because contstructor hasn't initialized
 		$this->_perms = $this->model()->find_all_array_assoc('name');
 	}
 
@@ -116,6 +118,39 @@ class Fuel_permissions extends Fuel_module {
 			$perm = $this->model()->find_one('name = "'.$perm_id.'"', $return_type);
 		}
 		return $perm;
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns a user
+	 *
+	 * @access	public
+	 * @param	string	The name of the module to create permissions
+	 * @param	array	An array of type of permissions to save with the module. If set to False then no extra permission types will be created
+	 * @return	array
+	 */
+	function create_simple_module_permissions($module, $types = array('create', 'edit', 'publish', 'delete'))
+	{
+		$save = array();
+		
+		$save[] = array('name' => $module, 'description' => humanize($module));
+		
+		if (is_array($types))
+		{
+			foreach($types as $type)
+			{
+				$save[] = array('name' => $module.'/'.$type, 
+								'description' => humanize($module).': '.ucfirst($type)
+								);
+			}
+		}
+		if (!$this->model()->save($save))
+		{
+			return FALSE;
+		}
+		return $save;
 	}
 	
 	

@@ -8,16 +8,22 @@ to the folder (e.g. using "cd") where the main bootstrap index.php file exists. 
 is either "advanced" or "simple". You can overwrite these defaults by creating a <span class="file">fuel/application/views/_generated/{type}</span> 
 folder with files that correspond to the files specified in the <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the "generated" parameter.</p>
 
-<h2>Simple Modules</h2>
-<p>The following will create a model of "test_model.php" and will add it to the <span class="file">fuel/application/config/MY_fuel_modules.php</span>:</p>
+<h2>Models</h2>
+<p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify):</p>
 <pre class="brush:php">
-php index.php fuel/generate/simple/ test
+php index.php fuel/generate/model/ examples
+</pre>
+
+<h2>Simple Modules</h2>
+<p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify), add the permisions to manage it in the CMS,  and will add it to the <span class="file">fuel/application/config/MY_fuel_modules.php</span>:</p>
+<pre class="brush:php">
+php index.php fuel/generate/simple/ examples
 </pre>
 
 <h2>Advanced Modules</h2>
 <p>The following will create a directory named "test" in the <span class="file">fuel/modules/</span> folder and will generate by default the files specified in the 
 <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the "generated" parameter:</p>
 <pre class="brush:php">
-php index.php fuel/generate/advanced/ test
+php index.php fuel/generate/advanced/ examples
 </pre>
 

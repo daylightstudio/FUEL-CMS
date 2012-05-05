@@ -2,17 +2,21 @@
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
-class {model_name}s_model extends Base_module_model {
+class {model_name}_model extends Base_module_model {
 
+	public $record_class = '{model_record}';
 	public $filters = array();
 	public $required = array();
+	public $linked_fields = array();
 	public $boolean_fields = array();
-	public $belongs_to = array('relationships' => 'relationships_test');
-	public $serialized_fields = array('serialized_test');
+	public $belongs_to = array();
+	public $has_many = array();
+	public $serialized_fields = array();
+	
 	
 	function __construct()
 	{
-		parent::__construct('projects'); // table name
+		parent::__construct('{table}'); // table name
 	}
 
 	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
@@ -33,7 +37,7 @@ class {model_name}s_model extends Base_module_model {
 	}
 }
 
-class {model_name}_model extends Base_module_record {
+class {model_record}_model extends Base_module_record {
 	
 	// put your record model code here
 }

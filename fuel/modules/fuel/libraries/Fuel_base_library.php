@@ -37,6 +37,7 @@ class Fuel_base_library {
 	protected $permission = ''; // permission required to run
 	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors
+	protected $_inited = FALSE;
 	
 	// --------------------------------------------------------------------
 	
@@ -78,8 +79,22 @@ class Fuel_base_library {
 		}
 		
 		$this->set_params($params);
+		$this->_inited = TRUE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a boolean value depending on if the class's initialize method has been run
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function is_inited()
+	{
+		return $this->_inited;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
