@@ -60,9 +60,13 @@ class Fuel_settings extends Fuel_base_library {
 
 			//$this->settings[$module] = $this->CI->fuel_settings_model->fin_all_array_assoc('fuel_settings.key', array('module' => $module), 'key');
 		}
-		if ( ! empty($key) AND array_key_exists($key, $this->settings[$module]))
+		if ( ! empty($key))
 		{
-			return $this->settings[$module][$key];
+			if (array_key_exists($key, $this->settings[$module]))
+			{
+				return $this->settings[$module][$key];
+			}
+			return FALSE;
 		}
 		else
 		{
@@ -88,7 +92,7 @@ class Fuel_settings extends Fuel_base_library {
 		if ( ! empty($new_settings) AND ! empty($module) AND ! empty($settings))
 		{
 			// backup old settings
-			$this->CI->fuel_settings_model->update(array('module' => "{$module}_backup"), array('module' => $module));
+			$this->model()->update(array('module' => "{$module}_backup"), array('module' => $module));
 //			$this->CI->fuel_settings_model->debug_query();
 
 
@@ -126,10 +130,10 @@ class Fuel_settings extends Fuel_base_library {
 			}
 			if ( ! empty($save))
 			{
-				$this->CI->fuel_settings_model->save($save);
+				$this->save($save);
 				
 				// clear out old settings
-				$this->CI->fuel_settings_model->delete(array('module' => "{$module}_backup"));
+				$this->delete(array('module' => "{$module}_backup"));
 			
 				return TRUE;
 			}
@@ -138,13 +142,77 @@ class Fuel_settings extends Fuel_base_library {
 	}
 
 	// --------------------------------------------------------------------
-
+	
+	/**
+	 * Returns the fuel_settings_model's validation
+	 *
+	 * @access	public
+	 * @return	object
+	 */
 	function get_validation()
 	{
 		$validation = &$this->CI->fuel_settings_model->get_validation();
 		return $validation;
 	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the FUEL logs_model object
+	 *
+	 * @access	public
+	 * @return	object
+	 */
+	function &model()
+	{
+		return $this->CI->fuel_settings_model;
+	}
 
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Saves settings to the database
+	 *
+	 * @access	public
+	 * @param	mixed 	Either an array of data to save or a string value of the module to associate with this setting (must pass additional parameters if a string)
+	 * @param	string 	The key setting value (required if first parameter is a string)
+	 * @param	mixed 	The value of the setting (required if first parameter is a string)
+	 * @return	boolean
+	 */
+	function save($module, $key = NULL, $value = NULL)
+	{
+		if (is_string($module))
+		{
+			$save = array(
+				'module' => $module,
+				'key'    => $key,
+				'value'  => $value,
+				);
+		}
+		else
+		{
+			$save = $module;
+		}
+		return $this->model()->save($save);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Deletes settings to the database
+	 *
+	 * @access	public
+	 * @param	array 	Array of where conditions to delete
+	 * @return	boolean
+	 */
+	function delete($where)
+	{
+		return $this->model()->delete($where);
+	}
+	
+	
 }
 
 /* End of file Fuel_settings.php */

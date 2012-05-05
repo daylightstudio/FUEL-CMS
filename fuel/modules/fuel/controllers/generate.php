@@ -119,10 +119,33 @@ class Generate extends Fuel_base_controller {
 
 			}
 		}
+		
+		// add to modules_allowed to MY_fuel and to the database
+		if (!in_array($name, $this->fuel->config('modules_allowed')))
+		{
+			// add to advanced module config
+			$my_fuel_path = APPPATH.'config/MY_fuel.php';
+
+			$content = file_get_contents($my_fuel_path);
+			$append = "\n\$config['modules_allowed'][] = '".$name."';";
+
+			// create variables for parsed files
+			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', '$1'.$append, $content);
+			write_file($my_fuel_path, $content);
+			$this->modified[] = $my_fuel_path;
+			
+			// save to database
+			$modules_allowed = $this->fuel->config('modules_allowed');
+			$modules_allowed[] = $name;
+			$this->fuel->settings->save(FUEL_FOLDER, 'modules_allowed', $modules_allowed);
+		}
 
 		$vars['created'] = $this->created;
 		$vars['errors'] = $this->errors;
 
+		// create a generic permission for the advanced module
+		$this->fuel->permissions->create($name);
+		
 		$this->_load_results($vars);
 	}	
 

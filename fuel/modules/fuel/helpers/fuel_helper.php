@@ -645,6 +645,16 @@ function fuel_user_lang()
 	return $cookie_val['language'];
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Returns the setting(s) for a particular module
+ *
+ * @access	public
+ * @param	string	Module name
+ * @param	string	Settings key (optional)
+ * @return	mixed
+ */
 function fuel_settings($module, $key = '')
 {
 	$CI =& get_instance();

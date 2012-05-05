@@ -100,7 +100,7 @@ class Fuel_permissions extends Fuel_module {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns a user
+	 * Returns a permission
 	 *
 	 * @access	public
 	 * @param	mixed
@@ -120,11 +120,35 @@ class Fuel_permissions extends Fuel_module {
 		return $perm;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a permission
+	 *
+	 * @access	public
+	 * @param	string	The name of the permission
+	 * @param	array	The description of the permission
+	 * @return	boolean
+	 */
+	function create($name, $description = NULL)
+	{
+		$save = array();
+		if (empty($description))
+		{
+			$description = humanize($name);
+		}
+		$save = array('name' => $name, 'description' => $description);
+		if (!$this->model()->save($save))
+		{
+			return FALSE;
+		}
+		return $save;
+	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns a user
+	 * Creates permission(s) for a simple module
 	 *
 	 * @access	public
 	 * @param	string	The name of the module to create permissions
