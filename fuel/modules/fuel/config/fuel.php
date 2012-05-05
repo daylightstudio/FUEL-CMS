@@ -358,7 +358,7 @@ $config['generate'] = array('advanced' => array(
 										'controllers/{module}.php',
 										'helpers/{module}_helper.php',
 										'libraries/Fuel_{module}.php',
-										'models/{module}_model.php',
+										'models/',
 										'tests/sql/',
 										'views/_admin/',
 										'views/_blocks/',
