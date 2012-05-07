@@ -1482,7 +1482,7 @@ Class Form_builder {
 		
 		if (empty($params['label']))
 		{
-			if ($lang = $this->_label_lang($params['orig_name']))
+			if ($lang = $this->label_lang($params['orig_name']))
 			{
 				$params['label'] = $lang;
 			}
@@ -1829,7 +1829,7 @@ Class Form_builder {
 				$name = Form::create_id($params['orig_name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$enum_name = $name.'_'.Form::create_id($key);
-				$label = ($lang = $this->_label_lang($enum_name)) ? $lang : $val;
+				$label = ($lang = $this->label_lang($enum_name)) ? $lang : $val;
 				if (!empty($this->name_prefix))
 				{
 					$enum_name = $this->name_prefix.'--'.$enum_name;
@@ -1852,7 +1852,7 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates the multi select input for the form
+	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionaltity)
 	 *
 	 * @access	public
 	 * @param	array fields parameters
@@ -1861,28 +1861,13 @@ Class Form_builder {
 	function create_multi($params)
 	{
 		$defaults = array(
-			'sorting' => NULL,
 			'options' => array(),
 			'mode' => NULL,
-			'model' => NULL,
 			'wrapper_tag' => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
-			'module' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
-		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$params['options'] = $this->options_from_model($params['model']);
-		}
-		
-		if (!empty($params['module']))
-		{
-			$inline_class = 'add_edit '.str_replace('_', '/', $params['module']);
-			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-		}
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
@@ -1913,7 +1898,7 @@ Class Form_builder {
 					}
 					$str .= $this->form->checkbox($params['name'], $key, $attrs);
 
-					$label = ($lang = $this->_label_lang($attrs['id'])) ? $lang : $val;
+					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
 					$str .= ' '.$this->create_label($enum_params);
 					$str .= "&nbsp;&nbsp;&nbsp;";
@@ -1926,17 +1911,6 @@ Class Form_builder {
 		{
 			$params['multiple'] = TRUE;
 			$str .= $this->create_select($params);
-			if (!empty($params['sorting']))
-			{
-				if ($params['sorting'] === TRUE AND is_array($params['value']))
-				{
-					$params['sorting'] = $params['value'];
-				}
-				$sorting_params['name'] = 'sorting_'.$params['orig_name'];
-				$sorting_params['value'] = rawurlencode(json_encode($params['sorting']));
-				$sorting_params['class'] = 'sorting';
-				$str .= $this->create_hidden($sorting_params);
-			}
 		}
 		
 		return $str;
@@ -1989,7 +1963,7 @@ Class Form_builder {
 			if (!empty($params['display_overwrite']))
 			{
 				$file .= ' &nbsp; <span class="overwrite_field">'.$this->form->checkbox($params['name'].'_overwrite', 1, Form::do_checked($overwrite));
-				$file .= ' '. $this->create_label($this->_label_lang('overwrite')).'</span>';
+				$file .= ' '. $this->create_label($this->label_lang('overwrite')).'</span>';
 			}
 			else
 			{
@@ -3136,6 +3110,24 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Helper method that returns the language key value if it exist, otherwise it returns FALSE
+	 * 
+	 * @access	protected
+	 * @param	string
+	 * @return	string
+	 */
+	function label_lang($key)
+	{
+		if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$key))
+		{
+			return $lang;
+		}
+		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Sorts the fields for the form
 	 *
 	 * Same as the MY_array_helper array_sorter function
@@ -3169,24 +3161,6 @@ Class Form_builder {
 			return $sorted;
 		}
 		return $array;
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns the language key value if it exist, otherwise it returns FALSE
-	 * 
-	 * @access	protected
-	 * @param	string
-	 * @return	string
-	 */
-	protected function _label_lang($key)
-	{
-		if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$key))
-		{
-			return $lang;
-		}
-		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------

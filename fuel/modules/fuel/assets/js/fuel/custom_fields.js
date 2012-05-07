@@ -67,9 +67,11 @@ fuel.fields.wysiwyg_field = function(context){
 	var _previewPath = myMarkItUpSettings.previewParserPath;
 
 	var createMarkItUp = function(elem){
-		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name')) + '&preview=' + escape($(elem).attr('data-preview'));
+		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name'));
+		if ($(elem).attr('data-preview')){
+			q += '&preview=' + escape($(elem).attr('data-preview'));
+		}
 		myMarkItUpSettings.previewParserPath = _previewPath + '?' + q;
-		console.log(myMarkItUpSettings.previewParserPath)
 		$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
 		
 		// set the width of the preview to match the width of the textarea
@@ -149,7 +151,9 @@ fuel.fields.wysiwyg_field = function(context){
 			});
 			
 			// need so the warning doesn't pop up if you duplicate a value
-			$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
+			if ($.changeChecksaveValue){
+				$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
+			}
 			
 		})
 		CKEDITOR.instances[ckId].resetDirty();

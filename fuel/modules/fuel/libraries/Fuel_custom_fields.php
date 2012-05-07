@@ -340,8 +340,12 @@ class Fuel_custom_fields {
 			{
 				$uri = $params['module'];
 			}
-			$inline_class = 'add_edit '.$uri;
-			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+			
+			if ($this->fuel->auth->has_permission($uri))
+			{
+				$inline_class = 'add_edit '.$uri;
+				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+			}
 		}
 		
 		if (!empty($params['multiple']))
@@ -770,6 +774,101 @@ class Fuel_custom_fields {
 		$form_builder->set_post_process($params['key'], $func);
 		$params['class'] = 'no_editor';
 		return $form_builder->create_textarea($params);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the multi select input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function multi($params)
+	{
+		$form_builder =& $params['instance'];
+		
+		$defaults = array(
+			'sorting' => NULL,
+			'options' => array(),
+			'mode' => NULL,
+			'model' => NULL,
+			'wrapper_tag' => 'span',// for checkboxes
+			'wrapper_class' => 'multi_field',
+			'module' => NULL,
+		);
+
+		$params = $form_builder->normalize_params($params, $defaults);
+		
+		// grab options from a model if a model is specified
+		if (!empty($params['model']))
+		{
+			$params['options'] = $form_builder->options_from_model($params['model']);
+		}
+		
+		if (!empty($params['module']) AND $this->fuel->auth->has_permission($params['module']))
+		{
+			$inline_class = 'add_edit '.str_replace('_', '/', $params['module']);
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+		}
+		
+		$str = '';
+		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;
+		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
+		{
+			$value = (isset($params['value'])) ? (array)$params['value'] : array();
+
+			$params['name'] = $params['name'].'[]';
+			$i = 1;
+			
+			if (!empty($params['options']))
+			{
+				foreach($params['options'] as $key => $val)
+				{
+					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
+					$attrs = array(
+											'readonly' => $params['readonly'], 
+											'disabled' => $params['disabled'],
+											'id' => Form::create_id($params['name']).$i,
+											'style' => '' // to overwrite any input width styles
+					
+										);
+					
+										if (in_array($key, $value))
+										{
+											$attrs['checked'] = 'checked';
+					
+										}
+										$str .= $form_builder->form->checkbox($params['name'], $key, $attrs);
+
+					$label = ($lang = $form_builder->label_lang($attrs['id'])) ? $lang : $val;
+					$enum_params = array('label' => $label, 'name' => $attrs['id']);
+					$str .= ' '.$form_builder->create_label($enum_params);
+					$str .= "&nbsp;&nbsp;&nbsp;";
+					$str .= '</'.$params['wrapper_tag'].'>';
+					$i++;
+				}
+			}
+		}
+		else
+		{
+			$params['multiple'] = TRUE;
+			$str .= $form_builder->create_select($params);
+			if (!empty($params['sorting']))
+			{
+				if ($params['sorting'] === TRUE AND is_array($params['value']))
+				{
+					$params['sorting'] = $params['value'];
+				}
+				$sorting_params['name'] = 'sorting_'.$params['orig_name'];
+				$sorting_params['value'] = rawurlencode(json_encode($params['sorting']));
+				$sorting_params['class'] = 'sorting';
+				$str .= $form_builder->create_hidden($sorting_params);
+			}
+		}
+		
+		return $str;
 	}
 
 }

@@ -19,7 +19,10 @@ $fields['date'] = array(
 );
 
 // multi field
-$fields['multi'] = array('js'		=> array(
+$fields['multi'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'multi',
+	'js'		=> array(
 						FUEL_FOLDER => array(
 							'jquery/plugins/jquery.selso',
 							'jquery/plugins/jquery-ui-1.8.17.custom.min',
@@ -166,6 +169,7 @@ $fields['list_items'] = array(
 	'function'	=> 'list_items',
 	'filepath'	=> '',
 );
+
 
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */
