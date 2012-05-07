@@ -4,6 +4,8 @@ class Permissions_model extends Base_module_model {
 	
 	public $required = array('name', 'description');
 	public $unique_fields = array('name');
+	public $belongs_to = array('users' => 'users');
+	
 	
 	function __construct()
 	{
@@ -15,6 +17,12 @@ class Permissions_model extends Base_module_model {
 		$this->db->select('id, name, description, active');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
+	}
+	
+	function form_fields($values = array(), $related = array())
+	{
+		$fields = parent::form_fields($values, $related);
+		return $fields;
 	}
 	
 }
