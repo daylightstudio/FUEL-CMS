@@ -557,7 +557,7 @@ div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  
 div.more_filters div div { float: left; margin-right: 10px; }
 
 /* tree */
-div#tree_container { padding: 16px 15px; text-align: center; }
+div#tree_container { padding: 16px 15px; }
 div#tree_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}
 
 /* #login */
