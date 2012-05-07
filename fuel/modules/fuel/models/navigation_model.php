@@ -147,11 +147,12 @@ class Navigation_model extends Base_module_model {
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 		
 		$fields['group_id'] = array(
-		'type' => 'inline_edit', 
-		'module' => 'navigation_group',
-		'options' => $group_options,
-//		'class' => 'add_edit navigation_group', 
-		'comment' => 'The grouping of items you want to associate this navigation item to'
+			'type' => 'inline_edit', 
+			'module' => 'navigation_group',
+			'options' => $group_options,
+			'type' => 'select',
+	//		'class' => 'add_edit navigation_group', 
+			'comment' => 'The grouping of items you want to associate this navigation item to'
 		);
 		
 		if (count($group_options) == 0)
