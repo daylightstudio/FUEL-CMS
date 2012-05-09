@@ -89,7 +89,7 @@ class Base_module_model extends MY_Model {
 		$fuel_tables = $CI->config->item('tables', 'fuel');
 		
 		// load in the module configuration file
-		if (!empty($module) && $module != FUEL_FOLDER)
+		if (!empty($module) AND $module != FUEL_FOLDER)
 		{
 			// fail gracefully is last parameter
 			$CI->config->module_load($module, $module, FALSE, TRUE);
@@ -176,18 +176,24 @@ class Base_module_model extends MY_Model {
 	 * @param	string
 	 * @return	void
 	 */	
-	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc')
+	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
 		$this->_list_items_query();
 		
+		if ($just_count)
+		{
+			return $this->db->count_all_results();
+		}
+
 		if (empty($this->db->ar_select))
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
 		
-		if (!empty($col) && !empty($order)) $this->db->order_by($col, $order);
+		if (!empty($col) AND !empty($order)) $this->db->order_by($col, $order);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
+		
 		$query = $this->db->get();
 		$data = $query->result_array();
 		//$this->debug_query();
@@ -294,8 +300,7 @@ class Base_module_model extends MY_Model {
 	 */	
 	function list_items_total()
 	{
-		$this->_list_items_query(TRUE);
-		$cnt = $this->db->count_all_results();
+		$cnt = $this->list_items(NULL, NULL, NULL, NULL, TRUE);
 		if (is_array($cnt))
 		{
 			return count($cnt);
@@ -334,7 +339,7 @@ class Base_module_model extends MY_Model {
 			if (!empty($tmp_data[$val])) unset($tmp_data[$val]);
 		}
 		
-		if (!empty($last_archive_data) && $last_archive_data == $tmp_data) {
+		if (!empty($last_archive_data) AND $last_archive_data == $tmp_data) {
 			return true;
 		}
 		
@@ -752,7 +757,7 @@ class Base_module_record extends Data_record {
 		{
 			$parsed_fields = $this->get_parsed_fields();
 			if ($parsed_fields === TRUE OR 
-				(is_array($parsed_fields) && in_array($var, $parsed_fields)))
+				(is_array($parsed_fields) AND in_array($var, $parsed_fields)))
 			{
 				$output = $this->_parse($output);
 			}
