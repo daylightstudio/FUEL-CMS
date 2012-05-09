@@ -510,7 +510,7 @@ class Module extends Fuel_base_controller {
 		//$params = array_merge($defaults, $uri_params, $posted);
 		
 		// reset offset if you apply a filter (via POST and not ajax)
-		if (!empty($_POST) and !is_ajax())
+		if (!empty($_GET['offset']) OR !empty($_POST['offset']) and !is_ajax())
 		{
 			$params['offset'] = 0;
 		}
