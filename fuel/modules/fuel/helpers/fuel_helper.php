@@ -80,6 +80,7 @@ function &FUEL()
 	<li><strong>vars</strong> - additional variables to pass to the block</li>
 	<li><strong>cache</strong> - will cache the block</li>
 	<li><strong>mode</strong> - determines whether to pull from the cms or the views folder. Options are "views" or "cms"</li>
+	<li><strong>module</strong> - the advanced module that the block will load from</li>
 </ul>
  *
  * @access	public
