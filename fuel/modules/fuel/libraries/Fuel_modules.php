@@ -856,6 +856,10 @@ class Fuel_module extends Fuel_base_library {
 	{
 		$model = $this->info('model_name');
 		$module = $this->info('model_location');
+		if (empty($module))
+		{
+			$module = 'app';
+		}
 		if (!isset($this->CI->$model) AND !empty($module))
 		{
 			$this->CI->load->module_model($module, $model);
