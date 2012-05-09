@@ -266,6 +266,14 @@ class Module extends Fuel_base_controller {
 				//$vars['tree'] = "Loading...\n<ul></ul>\n";
 				$vars['tree'] = "\n<ul></ul>\n";
 			}
+			
+			// reset offset if total rows is less then limit
+			if ($config['total_rows'] < $params['limit'])
+			{
+				$params['offset'] = 0;
+			}
+
+			
 		}
 		// set vars
 		$vars['params'] = $params;
@@ -285,6 +293,8 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
+			
+			
 			
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$delete_func = '
@@ -506,12 +516,6 @@ class Module extends Fuel_base_controller {
 		}
 		$params = array_merge($defaults, $page_state, $posted);
 		//$params = array_merge($defaults, $uri_params, $posted);
-		
-		// reset offset if you apply a filter (via POST and not ajax)
-		if (!empty($_GET['offset']) OR !empty($_POST['offset']) and !is_ajax())
-		{
-			$params['offset'] = 0;
-		}
 		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
