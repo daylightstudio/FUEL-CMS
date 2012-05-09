@@ -997,6 +997,33 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		$this->CI->load->module_language($this->folder(), $file, $lang);
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Installs the modules
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function install()
+	{
+		return $this->fuel->install->activate($this->name());
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uninstalls the modules
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function uninstall()
+	{
+		return $this->fuel->install->deactivate($this->name());
+	}
 }
 
 /* End of file Fuel_advanced_module.php */
