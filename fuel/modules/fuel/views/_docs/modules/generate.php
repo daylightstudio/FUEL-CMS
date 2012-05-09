@@ -21,7 +21,8 @@ php index.php fuel/generate/simple/ examples
 </pre>
 
 <h2>Advanced Modules</h2>
-<p>The following will create a directory named "test" in the <span class="file">fuel/modules/</span> folder and will generate by default the files specified in the 
+<p>The following will create a directory named "test" in the <span class="file">fuel/modules/</span> folder, as well as create a permission and add it to the "modules_allowed" FUEL configuration.
+It will generate by default the files specified in the
 <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the "generated" parameter:</p>
 <pre class="brush:php">
 php index.php fuel/generate/advanced/ examples

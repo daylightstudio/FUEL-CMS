@@ -20,7 +20,6 @@
 		if (is_array($nav_items))
 		{
 			$header_written = FALSE;
-			
 			foreach($nav_items as $key => $val)
 			{
 				$segments = explode('/', $key);
@@ -52,6 +51,11 @@
 				} 
 			}
 		}
+		else
+		{
+			$header_written = FALSE;
+		}
+		
 		if  ($header_written)
 		{
 			echo "\t</ul>\n";

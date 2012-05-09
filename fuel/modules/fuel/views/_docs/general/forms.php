@@ -4,7 +4,9 @@
 <?=js('jqx/jqx', 'fuel')?>
 <?=js('fuel/global', 'fuel')?>
 <?php 
-$this->load->library('form_builder');
+$CI->load->library('form_builder');
+$CI->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
 //echo js('fuel/custom_fields.js', 'fuel');
 //echo js('jquery/plugins/jquery-ui-1.8.17.custom.min', 'fuel');
 
@@ -191,6 +193,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
+		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 	</ul>
 </div>
 <div class="clear"></div>

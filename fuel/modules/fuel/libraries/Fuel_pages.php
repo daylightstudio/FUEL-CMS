@@ -542,18 +542,14 @@ class Fuel_page extends Fuel_base_library {
 	 */	
 	function render($return = FALSE, $fuelify = TRUE)
 	{
-		// set this config item so we can use it in the fuel_helper later for marking editable areas
+		// check the _page_data to see if it even exists in the CMS
 		if (!isset($this->_page_data['id']))
 		{
-			// can't use set item when setting for a section'
-			//$this->CI->config->config['fuel']['fuel_mode'] = 'views';
 			$this->render_mode = 'views';
 			return $this->variables_render($return, $fuelify);
 		}
 		else
 		{
-			// can't use set item when setting for a section'
-			//$this->CI->config->config['fuel']['fuel_mode'] = 'cms';
 			$this->render_mode = 'cms';
 			return $this->cms_render($return, $fuelify);
 		}

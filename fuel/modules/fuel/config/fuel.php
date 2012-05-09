@@ -350,8 +350,8 @@ $config['page_uri_prefix'] = '';
 // the files/folders to generate with the CLI generate command
 $config['generate'] = array('advanced' => array(
 										'assets/css/{module}.css',
-										'assets/images/',
-										'assets/js/',
+										'assets/images/ico_cog.png',
+										'assets/js/{ModuleName}Controller.js',
 										'assets/cache/',
 										'config/{module}.php',
 										'config/{module}_routes.php',

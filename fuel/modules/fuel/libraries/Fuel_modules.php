@@ -28,6 +28,8 @@
 
 // --------------------------------------------------------------------
 
+require_once('Fuel_install.php');
+
 class Fuel_modules extends Fuel_base_library {
 
 	protected $_modules = array();
@@ -426,6 +428,62 @@ class Fuel_modules extends Fuel_base_library {
 			return $this->_modules_grouped;
 		}
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Installs a module
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	boolean
+	 */
+	function install($module)
+	{
+		if (is_string($module))
+		{
+			$module = $this->get($module);
+		}
+		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		
+		$installed = $this->fuel->settings->get($module->name(), $key);
+		if (empty($installed))
+		{
+			$installed = array();
+		}
+		$installed[$module->name()] = TRUE;
+		$this->fuel->settings->save($module->name(), $key, $installed);
+	//	$this->CI->fuel_settings_model->debug_query();
+		//$this->fuel->modules->install($module);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uninstalls a module
+	 *
+	 * @access	public
+	 * @param	string	Module name
+	 * @return	boolean
+	 */
+	function uninstall($module)
+	{
+		if (is_string($module))
+		{
+			$module = $this->get($module);
+		}
+		
+		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		$installed = $this->fuel->settings->get($module->name(), $key);
+		if (empty($installed))
+		{
+			$installed = array();
+		}
+		$installed[$module] = TRUE;
+		$this->fuel->settings->save($module->name(), $key, $installed);
+		
+	}
+
 
 }
 
@@ -491,6 +549,19 @@ class Fuel_module extends Fuel_base_library {
 			$this->_init = $init;
 		}
 		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the name of the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function name()
+	{
+		return $this->module;
 	}
 	
 	// --------------------------------------------------------------------

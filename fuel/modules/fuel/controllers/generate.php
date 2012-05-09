@@ -69,10 +69,16 @@ class Generate extends Fuel_base_controller {
 
 		// create variables for parsed files
 		$vars = $this->_common_vars($name);
-
+		$find_arr = array_keys($vars);
+		$find = array();
+		foreach($find_arr as $f)
+		{
+			$find[] = '{'.$f.'}';
+		}
+		$replace = array_values($vars);
 		foreach($config as $val)
 		{
-			$substituted = str_replace('{module}', $name, $val);
+			$substituted = str_replace($find, $replace, $val);
 			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
 			$file = $name_path . $substituted;
 
@@ -134,10 +140,16 @@ class Generate extends Fuel_base_controller {
 			write_file($my_fuel_path, $content);
 			$this->modified[] = $my_fuel_path;
 			
-			// save to database
+			// save to database if the settings is there
 			$modules_allowed = $this->fuel->config('modules_allowed');
 			$modules_allowed[] = $name;
-			$this->fuel->settings->save(FUEL_FOLDER, 'modules_allowed', $modules_allowed);
+			
+			$settings = $this->fuel->modules->get($module)->settings_fields();
+			
+			if (isset($settings['modules_allowed']))
+			{
+				$this->fuel->settings->save(FUEL_FOLDER, 'modules_allowed', $modules_allowed);
+			}
 		}
 
 		$vars['created'] = $this->created;
@@ -238,11 +250,19 @@ class Generate extends Fuel_base_controller {
 		// create variables for parsed files
 		$vars = $this->_common_vars($model);
 		
+		$find_arr = array_keys($vars);
+		$find = array();
+		foreach($find_arr as $f)
+		{
+			$find[] = '{'.$f.'}';
+		}
+		
+		$replace = array_values($vars);
 		// create model file
 		$basepath = (!empty($module)) ? MODULES_PATH.$module.'/' : APPPATH;
 		foreach($config as $val)
 		{
-			$substituted = str_replace('{model}', $model, $val);
+			$substituted = str_replace($find, $replace, $val);
 			$ext = pathinfo($substituted, PATHINFO_EXTENSION);
 			$file = $basepath .'models/'. $substituted;
 
@@ -259,7 +279,7 @@ class Generate extends Fuel_base_controller {
 				// if SQL file extension, then we try and load the SQL
 				if (preg_match('#\.sql$#', $file))
 				{
-					$this->_load_sql($content);
+					$this->db->load_sql($content, FALSE);
 				}
 				else
 				{
@@ -320,43 +340,18 @@ class Generate extends Fuel_base_controller {
 	{
 		$vars = array();
 		$vars['module'] = $name;
+		$vars['model'] = $name;
 		$vars['table'] = $name;
 		$vars['module_name'] = ucwords(humanize($name));
 		$vars['model_name'] = ucfirst($name);
 		$vars['model_record'] = ucfirst(trim($name, 's'));
-		
+		$vars['ModuleName'] = ucfirst(camelize($name));
 		if ($vars['model_name'] == $vars['model_record'])
 		{
 			$vars['model_record'] = $vars['model_record'].'_item';
 		}
 		return $vars;
 	}
-	
-	protected function _load_sql($sql)
-	{
-		$sql = preg_replace('#^/\*(.+)\*/$#U', '', $sql);
-		$sql = preg_replace('/^#(.+)$/U', '', $sql);
-		
-		// load database config
-		include(APPPATH.'config/database.php');
-		$this->load->database();
-	
-		// select the database
-		$db = $db[$active_group]['database'];
-		
-		$use_sql = 'USE '.$db;
-		
-		$this->db->query($use_sql);
-		$sql_arr = explode(";\n", $sql);
-		foreach($sql_arr as $s)
-		{
-			$s = trim($s);
-			if (!empty($s))
-			{
-				$this->db->query($s);
-			}
-		}
-	}	
 	
 	protected function _create_permissions($module)
 	{

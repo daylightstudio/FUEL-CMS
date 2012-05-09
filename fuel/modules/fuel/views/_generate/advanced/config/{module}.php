@@ -4,7 +4,9 @@
 | FUEL NAVIGATION: An array of navigation items for the left menu
 |--------------------------------------------------------------------------
 */
-$config['nav']['{module}'] = '{module_name}';
+$config['nav']['{module}'] = array(
+		'{module}' => '{module_name}',
+	);
 
 
 /*

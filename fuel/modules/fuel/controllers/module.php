@@ -680,7 +680,7 @@ class Module extends Fuel_base_controller {
 		{
 			$_POST[$this->model->key_field()] = '';
 		}
-		else if ($id = $this->model->save($posted))
+		else
 		{
 			$this->model->on_before_post();
 
@@ -700,7 +700,10 @@ class Module extends Fuel_base_controller {
 
 			// run before_save hook
 			$this->_run_hook('before_save', $posted);
-
+			
+			// save the data
+			$id = $this->model->save($posted);
+			
 			if (empty($id))
 			{
 				add_error(lang('error_invalid_id'));
