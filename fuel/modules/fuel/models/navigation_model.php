@@ -6,9 +6,10 @@ class Navigation_model extends Base_module_model {
 	
 	public $group_id = 1;
 	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
-	public $filter_join = 'and';
+	public $filter_join = array('label' => 'or', 'location' => 'or', 'group_id' => 'and');
 	public $record_class = 'Navigation_item';
 	public $ignore_replacement = array('nav_key');
+	public $filters = array('label', 'location');
 		
 	function __construct()
 	{

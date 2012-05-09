@@ -642,7 +642,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$(loadId).html(this.cache.get(cache_key));
 				callback(_this);
 			} else {
-				$(loadId).load(path, params, function(html){
+				//$(loadId).load(path, params, function(html){ // uses POST
+				$.get(path, params, function(html){
+					$(loadId).html(html);
 					callback(_this);
 					_this.cache.add(cache_key, html); // cache data
 				});

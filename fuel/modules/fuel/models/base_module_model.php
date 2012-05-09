@@ -210,62 +210,60 @@ class Base_module_model extends MY_Model {
 	 */	
 	protected function _list_items_query()
 	{
-		if (is_array($this->filters))
+		$this->filters = (array) $this->filters;
+		$where_or = array();
+		$where_and = array();
+		foreach($this->filters as $key => $val)
 		{
-			$where_or = array();
-			$where_and = array();
-			foreach($this->filters as $key => $val)
+			if (is_int($key))
 			{
-				if (is_int($key))
+				$key = $val;
+				$val = $this->filter_value;
+			}
+			
+			$joiner = $this->filter_join;
+			
+			if (is_array($joiner))
+			{
+				if (isset($joiner[$key]))
 				{
-					$key = $val;
-					$val = $this->filter_value;
+					$joiner = $joiner[$key];
 				}
-				
-				$joiner = $this->filter_join;
-				
-				if (is_array($joiner))
+				else
 				{
-					if (isset($joiner[$key]))
-					{
-						$joiner = $joiner[$key];
-					}
-					else
-					{
-						$joiner = 'or';
-					}
+					$joiner = 'or';
 				}
+			}
 
-				if (!empty($val)) 
+			if (!empty($val)) 
+			{
+				$joiner_arr = 'where_'.$joiner;
+				
+				if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
+				
+				//$method = ($joiner == 'or') ? 'or_where' : 'where';
+				
+				// do a direct match if the values are integers and have _id in them
+				if (preg_match('#_id$#', $key) AND is_numeric($val))
 				{
-					$joiner_arr = 'where_'.$joiner;
+					//$this->db->where(array($key => $val));
+					array_push($$joiner_arr, $key.'='.$val);
+				}
+				
+				// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
+				else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
+				{
+					$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
+					//$this->db->where(array($key => $val));
+					//$where_or[] = $key.'='.$this->db->escape($val);
+					array_push($$joiner_arr, $key.'='.$val);
 					
-					if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
-					
-					//$method = ($joiner == 'or') ? 'or_where' : 'where';
-					
-					// do a direct match if the values are integers and have _id in them
-					if (preg_match('#_id$#', $key) AND is_numeric($val))
-					{
-						//$this->db->where(array($key => $val));
-						array_push($$joiner_arr, $key.'='.$val);
-					}
-					
-					// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
-					else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
-					{
-						$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
-						//$this->db->where(array($key => $val));
-						//$where_or[] = $key.'='.$this->db->escape($val);
-						array_push($$joiner_arr, $key.'='.$val);
-						
-					}
-					else
-					{
-						//$method = ($joiner == 'or') ? 'or_like' : 'like';
-						//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
-						array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.$val.'%"');
-					}
+				}
+				else
+				{
+					//$method = ($joiner == 'or') ? 'or_like' : 'like';
+					//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
+					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.$val.'%"');
 				}
 			}
 		}
@@ -285,6 +283,7 @@ class Base_module_model extends MY_Model {
 			$where_sql = implode(' AND ', $where);
 			$this->db->where($where_sql);
 		}
+		
 		
 		// set the table here so that items total will work
 		$this->db->from($this->table_name);

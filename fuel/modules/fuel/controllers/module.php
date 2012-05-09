@@ -213,16 +213,15 @@ class Module extends Fuel_base_controller {
 			}
 		}
 		
-		
+		// set model filters before pagination and setting table data
+		if (method_exists($this->model, 'add_filters'))
+		{
+			$this->model->add_filters($filters);
+		}
+	
 		// to prevent it from being called unecessarility with ajax
 		if (!is_ajax())
 		{
-			// set model filters before pagination and setting table data
-			if (method_exists($this->model, 'add_filters'))
-			{
-				$this->model->add_filters($filters);
-			}
-		
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
@@ -504,7 +503,6 @@ class Module extends Fuel_base_controller {
 				}
 			}
 			$posted['extra_filters'] = $extra_filters;
-			
 		}
 		$params = array_merge($defaults, $page_state, $posted);
 		//$params = array_merge($defaults, $uri_params, $posted);
@@ -517,7 +515,6 @@ class Module extends Fuel_base_controller {
 		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
-		
 		return $params;
 	}
 	
