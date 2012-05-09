@@ -61,6 +61,7 @@ class Fuel_blocks extends Fuel_module {
 						'vars' => array(),
 						'cache' => FALSE,
 						'mode' => 'AUTO',
+						'module' => '',
 						);
 
 		// for convenience
@@ -126,7 +127,9 @@ class Fuel_blocks extends Fuel_module {
 		}
 		else if (!empty($p['view']))
 		{
-			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
+			$view_path = 'views/_blocks/';
+			$view_path = ( ! empty($p['module']) AND defined('MODULES_PATH')) ? MODULES_PATH.$p['module'].'/'.$view_path : APPPATH.$view_path;
+			$view_file = $view_path.$p['view'].EXT;
 			
 			$p['mode'] = strtolower($p['mode']);
 			
