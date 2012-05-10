@@ -127,8 +127,17 @@ class Fuel_blocks extends Fuel_module {
 		}
 		else if (!empty($p['view']))
 		{
+			$is_module_block = FALSE;
 			$view_path = 'views/_blocks/';
-			$view_path = ( ! empty($p['module']) AND defined('MODULES_PATH')) ? MODULES_PATH.$p['module'].'/'.$view_path : APPPATH.$view_path;
+			if ( ! empty($p['module']) AND defined('MODULES_PATH'))
+			{
+				$view_path = MODULES_PATH.$p['module'].'/'.$view_path;
+				$is_module_block = TRUE;
+			}
+			else
+			{
+				$view_path = APPPATH.$view_path;
+			}
 			$view_file = $view_path.$p['view'].EXT;
 			
 			$p['mode'] = strtolower($p['mode']);
@@ -154,13 +163,13 @@ class Fuel_blocks extends Fuel_module {
 						$view = fuel_edit($block->id, 'Edit Block: '.$block->name, 'blocks').$view;
 					}
 				}
-				else if (file_exists(APPPATH.'views/_blocks/'.$p['view'].EXT))
+				else if (file_exists($view_file))
 				{
 					// pass in reference to global CI object
 					$vars['CI'] =& $this->CI;
 
 					// pass along these since we know them... perhaps the view can use them
-					$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
 				}
 			}
 			else if (file_exists($view_file))
@@ -169,7 +178,7 @@ class Fuel_blocks extends Fuel_module {
 				$vars['CI'] =& $this->CI;
 
 				// pass along these since we know them... perhaps the view can use them
-				$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
 			}
 		}
 
