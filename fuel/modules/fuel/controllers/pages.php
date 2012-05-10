@@ -423,10 +423,14 @@ class Pages extends Module {
 
 			$layout = $this->fuel->layouts->get($this->input->post('layout'));
 			$fields = $layout->fields();
+			
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+			
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->set_field_values($vars);
-			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
 			
+			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
+
 			$save = array();
 			
 			$lang = $this->input->post('language');
