@@ -45,13 +45,46 @@ class Generate extends Fuel_base_controller {
 			show_error(lang('error_missing_params'));
 		}
 		$fuel_config = $this->fuel->config('generate');
+		
+		$names = $this->_get_module_names($name);
+		foreach($names as $name)
+		{
+			$this->_advanced($name);
+		}
 
+		$vars['created'] = $this->created;
+		$vars['errors'] = $this->errors;
+
+		// create a generic permission for the advanced module
+		$this->fuel->permissions->create($name);
+		
+		$this->_load_results($vars);
+	}	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method to that generates the folders and files for an advanced module
+	 *
+	 * @access	protected
+	 * @param	string	Module name
+	 * @return	void
+	 */	
+	protected function _advanced($name = NULL)
+	{
+		if (empty($name))
+		{
+			show_error(lang('error_missing_params'));
+		}
+		$fuel_config = $this->fuel->config('generate');
+		
+		
 		// check that the configuration to map to files to generate exists
 		if (!isset($fuel_config['advanced']))
 		{
 			show_error(lang('error_missing_generation_files', 'advanced'));
 		}
-
+		
 		$config = (array)$fuel_config['advanced'];
 		$name_path = MODULES_PATH.$name.'/';
 
@@ -159,7 +192,7 @@ class Generate extends Fuel_base_controller {
 		$this->fuel->permissions->create($name);
 		
 		$this->_load_results($vars);
-	}	
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -178,9 +211,34 @@ class Generate extends Fuel_base_controller {
 			show_error(lang('error_missing_params'));
 		}
 		
+		$names = $this->_get_module_names($name);
+		foreach($names as $name)
+		{
+			$this->_simple($name, $module);
+		}
+		
+		// now create permissions
+		$this->fuel->permissions->create_simple_module_permissions($name);
+		$vars['created'] = $this->created;
+		$vars['errors'] = $this->errors;
+
+		$this->_load_results($vars);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that generates the table, model, permissions and adds to MY_fuel_modules
+	 *
+	 * @access	public
+	 * @param	string	Model name
+	 * @param	string	Module name (optional)
+	 * @return	void
+	 */	
+	protected function _simple($name = NULL, $module = '')
+	{
 		// create the model
 		$this->model($name, $module, FALSE);
-
 
 		$fuel_config = $this->fuel->config('generate');
 
@@ -220,7 +278,6 @@ class Generate extends Fuel_base_controller {
 		$this->_load_results($vars);
 	}
 	
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -244,6 +301,36 @@ class Generate extends Fuel_base_controller {
 		{
 			show_error(lang('error_missing_generation_files', 'model'));
 		}
+		
+		$names = $this->_get_module_names($model);
+		foreach($names as $name)
+		{
+			$this->_model($name, $module);
+		}
+		
+		if ($display_results)
+		{
+			$vars['created'] = $this->created;
+			$vars['errors'] = $this->errors;
+			$vars['modified'] = $this->modified;
+
+			$this->_load_results($vars);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that generates the table and model
+	 *
+	 * @access	public
+	 * @param	string	Model name
+	 * @param	string	Module name (optional)
+	 * @return	void
+	 */	
+	function _model($model, $module = '')
+	{
+		$fuel_config = $this->fuel->config('generate');
 		
 		$config = (array)$fuel_config['model'];
 
@@ -269,8 +356,9 @@ class Generate extends Fuel_base_controller {
 			// create file if it doesn't exits'
 			if (!file_exists($file))
 			{
-				$content = $this->_parse_template($val, $vars, 'model');
-				
+				$file_arr = array($substituted, $val);
+				$content = $this->_parse_template($file_arr, $vars, 'model');
+
 				if (!$content)
 				{
 					$this->errors[] = lang('error_could_not_create_file', $dir)."\n";
@@ -288,15 +376,11 @@ class Generate extends Fuel_base_controller {
 				}
 			}
 		}
-		
-		if ($display_results)
-		{
-			$vars['created'] = $this->created;
-			$vars['errors'] = $this->errors;
-			$vars['modified'] = $this->modified;
-
-			$this->_load_results($vars);
-		}
+	}
+	
+	protected function _get_module_names($names)
+	{
+		return explode(':', $names);
 	}
 	
 	protected function _load_results($vars)
@@ -313,22 +397,35 @@ class Generate extends Fuel_base_controller {
 		}
 	}
 	
+	protected function _find_template($file, $vars, $type = 'advanced')
+	{
+		$fuel_config = $this->fuel->config('generate');
+		
+		$search = (array)$fuel_config['search'];
+		
+		$file = (array)$file;
+		
+		$found = FALSE;
+		foreach($file as $f)
+		{
+			foreach($search as $module)
+			{
+				$file_path = ($module == 'app' OR $module == 'application') ? APPPATH : MODULES_PATH.$module.'/';
+				// first check APPPATH for template files
+				$template_path = rtrim($file_path.'views/_generate/'.$type.'/'.$f, '/');
+				if (file_exists($template_path))
+				{
+					$found = TRUE;
+					break 2;
+				}
+			}
+		}
+		return $template_path;
+	}
+	
 	protected function _parse_template($file, $vars, $type = 'advanced')
 	{
-		
-		// first check APPPATH for template files
-		$template_path = rtrim(APPPATH.'views/_generate/'.$type.'/'.$file, '/');
-		if (!file_exists($template_path))
-		{
-			$template_path = rtrim(FUEL_PATH.'views/_generate/'.$type.'/'.$file, '/');
-		}
-		
-		// grab the contents of the templates
-		if (!file_exists($template_path))
-		{
-			return FALSE;
-		}
-		
+		$template_path = $this->_find_template($file, $vars, $type);
 		$contents = file_get_contents($template_path);
 		
 		// parse

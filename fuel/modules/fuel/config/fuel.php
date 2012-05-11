@@ -348,7 +348,9 @@ $config['page_uri_prefix'] = '';
 */
 
 // the files/folders to generate with the CLI generate command
-$config['generate'] = array('advanced' => array(
+$config['generate'] = array(
+							'search'   => array('app', 'fuel'),
+							'advanced' => array(
 										'assets/css/{module}.css',
 										'assets/images/ico_cog.png',
 										'assets/js/{ModuleName}Controller.js',
@@ -368,7 +370,7 @@ $config['generate'] = array('advanced' => array(
 							'simple' => 'MY_fuel_modules.php',
 							'model'  => array(
 											'{model}_model.php',
-											'table.sql',
+											'sql/{table}.sql',
 											),
 										);
 							
