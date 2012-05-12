@@ -218,7 +218,7 @@ class Generate extends Fuel_base_controller {
 		
 		$vars['created'] = $this->created;
 		$vars['errors'] = $this->errors;
-		$vars['errors'] = $this->modified;
+		$vars['modified'] = $this->modified;
 
 		$this->_load_results($vars);
 	}
