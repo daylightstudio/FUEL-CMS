@@ -14,6 +14,17 @@ $module_folder = MODULES_PATH.'/';
 // config isn't loaded yet so do it manually'
 include(FUEL_PATH.'config/fuel.php');
 
+// load any public routes for advanced modules
+foreach ($config['modules_allowed'] as $module)
+{
+	$routes_path = $module_folder.$module.'/config/'.$module.'_routes.php';
+	
+	if (file_exists($routes_path))
+	{
+		include($routes_path);
+	}
+}
+
 // to prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants
 if (USE_FUEL_ROUTES)
 {
@@ -28,18 +39,10 @@ if (USE_FUEL_ROUTES)
 	$modules = array_keys($config['modules']);
 	$modules = array_merge($config['modules_allowed'], $modules);
 
-	foreach($modules as $module){
-		
-		// grab any routes in the module specific folder
-		$routes_path = $module_folder . $module . '/config/' . $module . '_routes.php';
-		
-		if (file_exists($routes_path))
-		{
-			include($routes_path);
-		}
-		
+	foreach($modules as $module)
+	{
 		// check FUEL folder for controller first... if not there then we use the default module to map to
-		else if (!file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
+		if (!file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
 				AND !file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT) 
 				)
 		{
@@ -65,16 +68,6 @@ if (USE_FUEL_ROUTES)
 	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
 }
 
-// load any public routes for advanced modules
-foreach ($config['modules_allowed'] as $module)
-{
-	$routes_path = $module_folder.$module.'/config/'.$module.'_public_routes.php';
-	
-	if (file_exists($routes_path))
-	{
-		include($routes_path);
-	}
-}
 
 /* End of file fuel_routes.php */
 /* Location: ./modules/fuel/config/fuel_routes.php */
