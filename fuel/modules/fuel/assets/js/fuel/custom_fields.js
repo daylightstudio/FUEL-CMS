@@ -660,7 +660,7 @@ fuel.fields.template_field = function(context, options){
 	$elems = $('.repeatable', context).not('.repeatable .repeatable').parent();
 	repeatable($elems);
 	
-	('.repeatable', context).live('cloned', function(e){
+	$('.repeatable_container', context).live('cloned', function(e){
 		$('#form').formBuilder().initialize(e.clonedNode);
 	})
 
