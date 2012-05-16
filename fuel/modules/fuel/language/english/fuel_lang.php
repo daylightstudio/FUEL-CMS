@@ -349,6 +349,7 @@ $lang['perm_users'] = 'Manage users';
 | Manage Cache
 |--------------------------------------------------------------------------
 */
+$lang['cache_cleared'] = 'The cache has been cleared.';
 $lang['cache_instructions'] = 'You are about to clear the page cache of the site.';
 $lang['cache_no_clear'] = 'No, don\'t clear cache';
 $lang['cache_yes_clear'] = 'Yes, clear cache';

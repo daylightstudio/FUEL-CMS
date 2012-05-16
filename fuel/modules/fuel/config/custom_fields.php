@@ -3,8 +3,6 @@
 // datetime field
 $fields['datetime'] = array(
 	'css_class' => 'datepicker',
-	'css' 		=> array(FUEL_FOLDER => 'fuel-theme/jquery-ui-1.8.17.custom'),
-	'js'		=> array(FUEL_FOLDER => array('jquery/plugins/jquery-ui-1.8.17.custom.min',)),
 	'js_function' => 'fuel.fields.datetime_field',
 	// 'js_params' => array('format' => 'mm-dd-yyyy'),
 	'represents' => 'datetime|timestamp',
@@ -13,8 +11,6 @@ $fields['datetime'] = array(
 // date field
 $fields['date'] = array(
 	'css_class' => 'datepicker',
-	'css' 		=> array(FUEL_FOLDER => 'fuel-theme/jquery-ui-1.8.17.custom'),
-	'js'		=> array(FUEL_FOLDER => array('jquery/plugins/jquery-ui-1.8.17.custom.min',)),
 	'js_function' => 'fuel.fields.datetime_field',
 );
 
@@ -25,7 +21,6 @@ $fields['multi'] = array(
 	'js'		=> array(
 						FUEL_FOLDER => array(
 							'jquery/plugins/jquery.selso',
-							'jquery/plugins/jquery-ui-1.8.17.custom.min',
 							'jquery/plugins/jquery.disable.text.select.pack',
 							'jquery/plugins/jquery.supercomboselect',
 						)

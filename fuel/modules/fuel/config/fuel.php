@@ -159,6 +159,7 @@ $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
+	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',

@@ -523,7 +523,7 @@ class Pages extends Module {
 				}
 			}
 		}
-		$this->session->set_flashdata('success', lang('data_saved'));
+		$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 		
 		// reset cache for that page only
 		if ($this->input->post('location'))
@@ -690,7 +690,8 @@ class Pages extends Module {
 				if (!has_errors())
 				{
 					// change list view page state to show the selected group id
-					$this->session->set_flashdata('success', lang('pages_success_upload'));
+					$this->fuel->admin->set_notification(lang('pages_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
 					redirect(fuel_url('pages/edit/'.$id));
 				}
 				

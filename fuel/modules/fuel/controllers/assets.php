@@ -65,7 +65,7 @@ class Assets extends Module {
 				$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
 
 				$this->session->set_flashdata('uploaded_post', $flashdata);
-				$this->session->set_flashdata('success', lang('data_saved'));
+				$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 				
 				$this->model->on_after_post($posted);
 

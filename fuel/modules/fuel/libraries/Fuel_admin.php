@@ -50,7 +50,7 @@ class Fuel_admin extends Fuel_base_library {
 	protected $_display_modes = array(); // An array of available display modes
 	protected $titlebar = array(); // The title bar breadcrumb area in the admin
 	protected $titlebar_icon = ''; // The title bar icon to display
-	
+	protected $_notifications = array(); // Stores notifications messages to be displayed
 	
 	const DISPLAY_NO_ACTION = 'no_action'; // Display mode that has no action panel (panel with all the buttons)
 	const DISPLAY_COMPACT = 'compact'; // Display mode that has no left menu, or top
@@ -1125,6 +1125,22 @@ class Fuel_admin extends Fuel_base_library {
 		return $this->titlebar_icon;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a nofication flash message to display
+	 *
+	 * @access	public
+	 * @param	type	The type of message to display. Options are error, success and info. (optional)
+	 * @return	string
+	 */	
+	function notification($type = '')
+	{
+		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		return $this->_notifications[$type];
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1138,7 +1154,23 @@ class Fuel_admin extends Fuel_base_library {
 	function set_notification($msg, $type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		$this->_notifications[$type] = $msg;
 		$this->CI->session->set_flashdata($type, $msg);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a boolean value based on if a notification has been set per a given type
+	 *
+	 * @access	public
+	 * @param	type	The type of message to display. Options are error, success and info. (optional)
+	 * @return	boolean
+	 */	
+	function has_notification($type = '')
+	{
+		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		return isset($this->_notifications[$type]);
 	}
 	
 	// --------------------------------------------------------------------

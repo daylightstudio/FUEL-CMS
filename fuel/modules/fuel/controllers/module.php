@@ -628,9 +628,9 @@ class Module extends Fuel_base_controller {
 				}
 				if ($redirect)
 				{
-					if (!$this->session->flashdata('success'))
+					if (!$this->fuel->admin->has_notification(Fuel_admin::NOTIFICATION_SUCCESS))
 					{
-						$this->session->set_flashdata('success', lang('data_saved'));
+						$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 					redirect($url);
 				}
@@ -798,9 +798,9 @@ class Module extends Fuel_base_controller {
 				
 				if ($redirect)
 				{
-					if (!$this->session->flashdata('success'))
+					if (!$this->fuel->admin->has_notification(Fuel_admin::NOTIFICATION_SUCCESS))
 					{
-						$this->session->set_flashdata('success', lang('data_saved'));
+						$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 					redirect($url);
 				}
@@ -1361,7 +1361,7 @@ class Module extends Fuel_base_controller {
 				{
 					if (!$this->session->flashdata('success'))
 					{
-						$this->session->set_flashdata('success', lang('data_deleted'));
+						$this->fuel->admin->set_notification(lang('data_deleted'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 				}
 
@@ -1376,8 +1376,7 @@ class Module extends Fuel_base_controller {
 					{
 						$msg = lang('data_not_deleted');
 					}
-
-					$this->session->set_flashdata('error', $msg);
+					$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_ERROR);
 				}
 				
 				$url = fuel_uri($this->module_uri);
@@ -1456,13 +1455,14 @@ class Module extends Fuel_base_controller {
 				$msg = lang('module_restored', $this->module_name);
 				$this->fuel->logs->write($msg);
 				
-				$this->session->set_flashdata('error', $this->model->get_validation()->get_last_error());
+				$this->fuel->admin->set_notification($this->model->get_validation()->get_last_error(), Fuel_admin::NOTIFICATION_ERROR);
+				
 			}
 			else
 			{
 				if (!$this->session->flashdata('success'))
 				{
-					$this->session->set_flashdata('success', lang('module_restored_success'));
+					$this->fuel->admin->set_notification(lang('module_restored_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 				}
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
@@ -1499,7 +1499,7 @@ class Module extends Fuel_base_controller {
 				}
 				else
 				{
-					$this->session->set_flashdata('success', lang('module_replaced_success'));
+					$this->fuel->admin->set_notification(lang('module_replaced_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 					$success = TRUE;
 				}
 			}
@@ -1817,7 +1817,7 @@ class Module extends Fuel_base_controller {
 				$errors = TRUE;
 				$msg = $this->fuel->assets->last_error();
 				add_error($msg);
-				$this->session->set_flashdata('error', $msg);
+				$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_ERROR);
 			}
 			else
 			{

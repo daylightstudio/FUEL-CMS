@@ -5,7 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
  	<title><?=$page_title?></title>
 
-	<?=css('jqmodal, jquery.tooltip, jquery.treeview, fuel', 'fuel')?>
+	<?=css('jqmodal, jquery.tooltip, jquery.treeview, fuel-theme/jquery-ui-1.8.17.custom, fuel', 'fuel')?>
 
 	<?php foreach($css as $m => $c) : echo css(array($m => $c))."\n\t"; endforeach; ?>
 	<script type="text/javascript">
