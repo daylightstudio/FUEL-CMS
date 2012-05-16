@@ -815,6 +815,11 @@ class Fuel_module extends Fuel_base_library {
 	{
 		$preview_path = $this->info('preview_path');
 		
+		if (empty($preview_path))
+		{
+			return FALSE;
+		}
+		
 		// substitute data values into preview path
 		preg_match_all('#\{(.+)\}+#U', $preview_path, $matches);
 		
