@@ -43,35 +43,48 @@ class Pages extends Module {
 				$_POST['id'] = '';
 				$_POST['location'] = '';
 			}
-			else if ($id = $this->model->save($posted))
+			else
 			{
-				if (empty($id))
+				// run before_create hook
+				$this->_run_hook('before_create', $posted);
+
+				// run before_save hook
+				$this->_run_hook('before_save', $posted);
+
+				if ($id = $this->model->save($posted))
 				{
-					show_error(lang('error_saving'));
-				}
-				
-				$this->_process_uploads();
-				
-				if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
-				{
-					unset($_POST['published']);
-				}
-				
-				$this->_save_page_vars($id, $posted);
-				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
-				// run hook
-				$this->_run_hook('create', $data);
-				
-				if (!empty($data))
-				{
-					$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
-					$url = fuel_uri('pages/edit/'.$id);
-					if ($this->input->post('language'))
+					if (empty($id))
 					{
-						$url .= '?lang='.$this->input->post('language');
+						show_error(lang('error_saving'));
 					}
-					redirect($url);
+				
+					$this->_process_uploads();
+				
+					if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+					{
+						unset($_POST['published']);
+					}
+				
+					$this->_save_page_vars($id, $posted);
+					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+				
+
+					// run after_create hook
+					$this->_run_hook('after_create', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+				
+					if (!empty($data))
+					{
+						$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
+						$url = fuel_uri('pages/edit/'.$id);
+						if ($this->input->post('language'))
+						{
+							$url .= '?lang='.$this->input->post('language');
+						}
+						redirect($url);
+					}
 				}
 			}
 			
@@ -105,6 +118,12 @@ class Pages extends Module {
 				unset($_POST['published']);
 			}
 			
+			// run before_edit hook
+			$this->_run_hook('before_edit', $posted);
+
+			// run before_save hook
+			$this->_run_hook('before_save', $posted);
+
 			if ($this->model->save($posted))
 			{
 				$this->_process_uploads();
@@ -112,8 +131,12 @@ class Pages extends Module {
 				$this->_save_page_vars($id, $posted);
 				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 				
-				// run hook
-				$this->_run_hook('edit', $data);
+				// run after_edit hook
+				$this->_run_hook('after_edit', $data);
+
+				// run after_save hook
+				$this->_run_hook('after_save', $data);
+
 				
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 				$this->fuel->logs->write($msg);
