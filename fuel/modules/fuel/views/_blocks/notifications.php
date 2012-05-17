@@ -1,5 +1,5 @@
 <?php if (!empty($error)) :
-	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>')); // convert script tags
+	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $error); // convert script tags
 	echo display_errors($error, 'error ico_error');
 ?>
 <?php elseif ($this->session->flashdata('error') AND $this->session->flashdata('error') !== TRUE AND $this->session->flashdata('success') !== '1') : 
