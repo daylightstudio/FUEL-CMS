@@ -109,9 +109,9 @@ class Fuel_layouts extends Fuel_base_library {
 				}
 				
 				// we won't show those that have underscores in front of them'
-				if (substr($group, 0, 1) != '_')
+				if (substr($group, 0, 1) != '_' AND empty($this->layouts[$layout]))
 				{
-					if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+					if (substr($layout, 0, 1) != '_')
 					{
 						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
 					}
