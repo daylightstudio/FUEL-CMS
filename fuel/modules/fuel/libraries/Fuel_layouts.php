@@ -117,7 +117,7 @@ class Fuel_layouts extends Fuel_base_library {
 					}
 					else if (!empty($this->layouts[$layout]))
 					{
-						if (!is_object($this->layouts[$layout])) AND empty($this->layouts[$layout]['group']))
+						if (!is_object($this->layouts[$layout]) AND empty($this->layouts[$layout]['group']))
 						{
 							$this->layouts[$layout]['group'] = $group;
 						}
