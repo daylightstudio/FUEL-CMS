@@ -115,9 +115,12 @@ class Fuel_layouts extends Fuel_base_library {
 					{
 						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
 					}
-					else if ((!empty($this->layouts[$layout]) AND empty($this->layouts[$layout]['group'])) AND !is_object($this->layouts[$layout]))
+					else if (!empty($this->layouts[$layout]))
 					{
-						$this->layouts[$layout]['group'] = $group;
+						if (!is_object($this->layouts[$layout])) AND empty($this->layouts[$layout]['group']))
+						{
+							$this->layouts[$layout]['group'] = $group;
+						}
 					}
 				}
 			}
