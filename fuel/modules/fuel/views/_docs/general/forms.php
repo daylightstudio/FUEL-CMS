@@ -965,8 +965,6 @@ $config['representatives']['my_field'] =  => array('name' => array('pwd', 'passw
 $config['custom_fields'] = array(
 	'datetime' => array(
 		'css_class' => 'datepicker',
-		'css' 		=> array(FUEL_FOLDER => 'fuel-theme/jquery-ui-1.8.17.custom'),
-		'js'		=> array(FUEL_FOLDER => array('jquery/plugins/jquery-ui-1.8.17.custom.min',)),
 		'js_function' => 'fuel.fields.datetime_field',
 		// 'js_params' => array('format' => 'mm-dd-yyyy'),
 		'represents' => 'datetime|timestamp',

@@ -146,17 +146,24 @@ class Generate extends Fuel_base_controller {
 				// create file if it doesn't exits'
 				if (!file_exists($file))
 				{
-
 					$content = $this->_parse_template($val, $vars, 'advanced');
 
 					if (!$content)
 					{
-						$errors[] = lang('error_could_not_create_file', $dir)."\n";
+						$this->errors[] = lang('error_could_not_create_file', $file)."\n";
 					}
-					write_file($file, $content);
-					$this->created[] = $file;
+					else
+					{
+						if (!write_file($file, $content))
+						{
+							$this->errors[] = lang('error_could_not_create_file', $file)."\n";
+						}
+						else
+						{
+							$this->created[] = $file;
+						}
+					}
 				}
-
 			}
 		}
 		
@@ -171,18 +178,25 @@ class Generate extends Fuel_base_controller {
 
 			// create variables for parsed files
 			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', '$1'.$append, $content);
-			write_file($my_fuel_path, $content);
+
+			if (!write_file($my_fuel_path, $content))
+			{
+				$this->errors[] = lang('error_could_not_create_file', $my_fuel_path)."\n";
+			}
 			$this->modified[] = $my_fuel_path;
 			
 			// save to database if the settings is there
 			$modules_allowed = $this->fuel->config('modules_allowed');
 			$modules_allowed[] = $name;
 			
-			$settings = $this->fuel->modules->get($module)->settings_fields();
-			
-			if (isset($settings['modules_allowed']))
+			$module_obj = $this->fuel->modules->get($name);
+			if (!empty($module_obj))
 			{
-				$this->fuel->settings->save(FUEL_FOLDER, 'modules_allowed', $modules_allowed);
+				$settings = $module_obj->settings_fields();
+				if (isset($settings['modules_allowed']))
+				{
+					$this->fuel->settings->save(FUEL_FOLDER, 'modules_allowed', $modules_allowed);
+				}
 			}
 		}
 
@@ -252,18 +266,38 @@ class Generate extends Fuel_base_controller {
 		
 		
 		// add to MY_fuel_modules if it doesn't exist'
-		$my_fuel_modules_path = APPPATH.'config/MY_fuel_modules.php';
-		if (file_exists($my_fuel_modules_path))
+		$module_path = (!empty($module)) ? $basepath.'config/'.$module.'_fuel_modules.php' : $basepath.'config/MY_fuel_modules.php';
+		
+		if (file_exists($module_path))
 		{
-			@include(APPPATH.'config/MY_fuel_modules.php');
-			if (!isset($config['modules'][$name]))
+			@include($module_path);
+		}
+		else
+		{
+			$content = "<?php \n";
+			if (!write_file($module_path, $content, FOPEN_WRITE_CREATE))
 			{
-				// create variables for parsed files
-				$vars = $this->_common_vars($name);
-				$file = current($config);
-				$content = "\n".$this->_parse_template($file, $vars, 'simple');
+				$this->errors[] = lang('error_could_not_create_file', $module_path)."\n";
+			}
+			else
+			{
+				$this->created[] = $module_path;
+			}
+		}
+		
+		if (!isset($config['modules'][$name]))
+		{
+			// create variables for parsed files
+			$vars = $this->_common_vars($name);
+			$file = current($config);
+			$content = "\n".$this->_parse_template($file, $vars, 'simple');
 
-				write_file($my_fuel_modules_path, $content, FOPEN_WRITE_CREATE);
+			if (!write_file($module_path, $content, FOPEN_WRITE_CREATE))
+			{
+				$this->errors[] = lang('error_could_not_create_file', $module_path)."\n";
+			}
+			else
+			{
 				$this->modified[] = $file;
 			}
 		}
@@ -365,7 +399,10 @@ class Generate extends Fuel_base_controller {
 				}
 				else
 				{
-					write_file($file, $content);
+					if (!write_file($file, $content))
+					{
+						$this->errors[] = lang('error_could_not_create_file', $file)."\n";
+					}
 					$this->created[] = $file;
 				}
 			}
@@ -420,11 +457,16 @@ class Generate extends Fuel_base_controller {
 	protected function _parse_template($file, $vars, $type = 'advanced')
 	{
 		$template_path = $this->_find_template($file, $vars, $type);
-		$contents = file_get_contents($template_path);
+		if (file_exists($template_path))
+		{
+			$contents = file_get_contents($template_path);
 		
-		// parse
-		$contents = $this->parser->parse_simple($contents, $vars);
-		return $contents;
+			// parse
+			$contents = $this->parser->parse_simple($contents, $vars);
+			return $contents;
+		}
+		$this->errors[] = lang('error_could_not_create_file', $file)."\n";
+		return '';
 	}
 	
 	protected function _common_vars($name)

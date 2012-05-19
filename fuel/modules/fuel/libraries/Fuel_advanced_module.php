@@ -89,7 +89,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Magic method that will return any sub modules attached to the object
+	 * Magic method that will return any attached objects or sub modules attached to the object
 	 *
 	 * @access	public
 	 * @param	string	sub module name
@@ -97,10 +97,24 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function __get($var)
 	{
-		// look for sub modules magically
-		$sub_module_name = $this->name.'_'.$var;
+		// first check the attached
+		if (isset($this->_attached[$var]))
+		{
+			return $this->_attached[$var];
+		}
 
-		$sub_module = $this->fuel->modules->get($sub_module_name);
+		// look for sub modules magically
+		if ($var == $this->name)
+		{
+			$sub_module_name = $this->name;
+		}
+		else
+		{
+			// look for sub modules magically
+			$sub_module_name = $this->name.'_'.$var;
+		}
+		
+		$sub_module = $this->fuel->modules->get($sub_module_name, FALSE);
 		if (!empty($sub_module))
 		{
 			return $sub_module;
@@ -926,7 +940,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads an advanced modules library file
+	 * Loads an advanced modules library file and attaches it to the object
 	 *
 	 * @access	public
 	 * @param	string Name of the library file
@@ -937,6 +951,11 @@ class Fuel_advanced_module extends Fuel_base_library {
 	function load_library($library, $init_params = array(), $name = NULL)
 	{
 		$this->CI->load->module_library($this->folder(), $library, $init_params, $name);
+		if (empty($name))
+		{
+			$name = $library;
+		}
+		$this->attach($name, $this->CI->$name);
 	}
 
 	// --------------------------------------------------------------------
@@ -962,7 +981,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads the advanced modules model file
+	 * Loads the advanced modules model file and attaches it to the object
 	 *
 	 * @access	public
 	 * @param	string Name of the model file.
@@ -973,10 +992,14 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (substr($model, strlen($model) - 6) !='_model')
 		{
-			//$name = $model;
 			$model = $model.'_model';
 		}
+		if (empty($name))
+		{
+			$name = $model;
+		}
 		$this->CI->load->module_model($this->folder(), $model, $name);
+		$this->attach($name, $this->CI->$name);
 	}
 
 	// --------------------------------------------------------------------

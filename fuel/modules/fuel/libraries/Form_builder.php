@@ -101,6 +101,7 @@ Class Form_builder {
 	protected $_pre_process; // pre_process functions
 	protected $_post_process; // post_process functions
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
+	protected $_rendered_field_types = array(); // holds all the fields types rendered
 	protected $CI;
 	
 	// --------------------------------------------------------------------
@@ -1448,6 +1449,9 @@ Class Form_builder {
 					}
 			}
 		}
+
+		// cache the field types being rendered
+		$this->_rendered_field_types[$params['type']] = $params['type'];
 		
 		// add before/after html 
 		$str = $params['before_html'].$str.$params['after_html'];
@@ -3188,6 +3192,7 @@ Class Form_builder {
 		$orig_asset_output = $this->CI->asset->assets_output;
 		$this->CI->asset->assets_output = FALSE;
 		
+		// loop through to generate javascript
 		foreach($_js as $type => $js)
 		{
 			
@@ -3227,17 +3232,25 @@ Class Form_builder {
 				$str .= "\t".$js."();\n";
 				$str .= "}\n";
 			}
+		}
 		
-			// check if the field type has a js function to call 
-			if (isset($this->custom_fields[$type], $this->custom_fields[$type]->js_function))
+		// loop through custom fields to generate any js function calls
+		foreach($this->_rendered_field_types as $type => $cs_field)
+		{
+			if (isset($this->custom_fields[$type]))
 			{
 				$cs_field = $this->custom_fields[$type];
-				$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
-				$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
-				$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
-			
+
+				// check if the field type has a js function to call 
+				if (!empty($cs_field->js_function))
+				{
+					$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
+					$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
+					$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
+				}
 			}
 		}
+		
 		
 		// change ignore value on asset back to original
 		$this->CI->asset->ignore_if_loaded = $orig_ignore;
