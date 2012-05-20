@@ -208,9 +208,10 @@ function fuel_form($fields, $values = array(), $params = array())
 function fuel_model($module, $params = array())
 {
 	$CI =& get_instance();
-	if (!$CI->fuel->modules->is_advanced($module))
+	$module = $CI->fuel->modules->get($module, FALSE);
+	if ($module)
 	{
-		return $CI->fuel->modules($module)->find($params);
+		return $module->find($params);
 	}
 	return FALSE;
 }
