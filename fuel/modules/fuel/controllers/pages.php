@@ -205,10 +205,6 @@ class Pages extends Module {
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
 		
-		// easy add for navigation
-		if (empty($id)) $fields['navigation_label'] = array('comment' => 'This field lets you quickly add a navigation item for this page. 
-		It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the
-		\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.');
 		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
