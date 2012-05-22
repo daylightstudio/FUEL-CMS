@@ -1345,7 +1345,15 @@ class Module extends Fuel_base_controller {
 			$this->_run_hook('after_delete', $posted);
 			
 			$this->_clear_cache();
-			$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
+			
+			if (count($posted) > 1)
+			{
+				$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
+			}
+			else
+			{
+				$this->fuel->logs->write(lang('module_deleted', $this->module));
+			}
 			
 			if ($this->fuel->admin->is_inline())
 			{
