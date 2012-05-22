@@ -93,6 +93,7 @@ fuel.fields.wysiwyg_field = function(context){
 		//window.CKEDITOR_BASEPATH = jqx.config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
+		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
@@ -164,6 +165,7 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
 		
+		// add view source
 		if ($('#' + ckId).parent().find('.editor_viewsource').size() == 0){
 			
 			$('#' + ckId).parent().append(sourceButton);
@@ -210,6 +212,50 @@ fuel.fields.wysiwyg_field = function(context){
 			})
 		}
 	}
+	
+	
+	
+	var createPreview = function(id){
+		$textarea = $('#' + id);
+		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
+	
+		// add preview to make it noticable and consistent
+		if ($textarea.parent().find('.editor_preview').size() == 0){
+		
+			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
+			if ($previewBtn){
+				$textarea.parent().append(previewButton);
+		
+				$('#' + id + '_preview').click(function(e){
+				
+					var previewWindow = window.open('', 'preview', myMarkItUpSettings.previewInWindow);
+					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
+					$.ajax( {
+						type: 'POST',
+						url: myMarkItUpSettings.previewParserPath,
+						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val),
+						success: function(data) {
+							writeInPreview(data); 
+						}
+					});
+
+					function writeInPreview(data) {
+						if (previewWindow.document) {			
+							try {
+								sp = previewWindow.document.documentElement.scrollTop
+							} catch(e) {
+								sp = 0;
+							}	
+							previewWindow.document.open();
+							previewWindow.document.write(data);
+							previewWindow.document.close();
+							previewWindow.document.documentElement.scrollTop = sp;
+						}
+					}
+				});
+			}
+		}
+	}
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
@@ -228,7 +274,14 @@ fuel.fields.wysiwyg_field = function(context){
 				CKEDITOR.instances[ckId].updateElement();
 			}
 		})
+		
+		createPreview(ckId);
+		
+		
 	});
+	
+
+	
 }
 
 // file upload field

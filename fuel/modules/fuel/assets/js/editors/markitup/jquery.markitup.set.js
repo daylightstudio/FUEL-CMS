@@ -26,6 +26,8 @@ myMarkItUpSettings = {
 	root: 'skins/simple/',
 	nameSpace:           "html", // Useful to prevent multi-instances CSS conflict
     previewParserPath:   __FUEL_PATH__ + "/preview",
+	previewInWindow: true,
+	previewParserVar: 'data',
 	onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},
 	onCtrlEnter:  	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
 	onTab:    		{keepDefault:false, replaceWith:'    '},
@@ -57,9 +59,9 @@ myMarkItUpSettings = {
 		
 		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto(', closeWith:')}', placeHolder:markitupLanguage('placeholder_email') },
 		{name:markitupLanguage('php'), className:'fuel_var', key:'', openWith:'{$[![' + markitupLanguage('php') + ':!:]!]', closeWith:'}', placeHolder:'' },
-		{separator:'---------------' },
 		{name:markitupLanguage('clean'), className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },		
-		{name:markitupLanguage('preview'), className:'preview',  call:'preview'},
+		{separator:'---------------' },
+		//{name:markitupLanguage('preview'), className:'preview',  call:'preview'},
 		{name: markitupLanguage('fullscreen'), className: 'maximize', key: 'F', replaceWith: 
 			function(marketItup){ 
 				myMarkItUpSettings.markItUpFullScreen(marketItup); 
@@ -69,7 +71,7 @@ myMarkItUpSettings = {
 	]
 }
 
-myMarkItUpSettings.markItUpFullScreen = function (markItUp){
+myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 	
 	var origTextarea = jQuery(markItUp.textarea);
 	var val = origTextarea.val();
@@ -95,7 +97,7 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 		textarea.show();
 
 		//var fsSetting = myMarkItUpSettings.markupSet[myMarkItUpSettings.markupSet.length - 1];
-		var fsSetting = myMarkItUpSettings.markupSet[23];
+		var fsSetting = myMarkItUpSettings.markupSet[22];
 		fsSetting.className = 'minimize';
 		textarea.markItUp(myMarkItUpSettings);
 
@@ -117,22 +119,25 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 
 		jQuery.scrollTo('body', 800);
 
-		var previewOn = false;
+		var previewOn = $.data(textarea, false);
 		var resizeHandlerBgImg = $('.markItUpResizeHandle', container).css('background');
-
-		$('.preview', container).click(function(){
-			previewOn = (previewOn) ? false : true;
-			var previewFrame = jQuery('.markItUpPreviewFrame', container);
-			previewFrame.css(previewFrameCSS);
-			if (previewOn){
-				// can't use hide because of FF errors
-				textarea.css({ height: '0%'});
-				previewFrame.css({ height: '98%', visibility: 'visible'});
-			} else {
-				textarea.css({ height: '98%'});
-				previewFrame.css({ height: '0%', visibility: 'hidden'});
-			}
-		});
+		
+		if (!myMarkItUpSettings.previewInWindow){
+			$('.preview', container).click(function(){
+				previewOn = ($.data(textarea)) ? false : true;
+				var previewFrame = jQuery('.markItUpPreviewFrame', container);
+				previewFrame.css(previewFrameCSS);
+				if (previewOn){
+					// can't use hide because of FF errors
+					textarea.css({ height: '0%', minHeight: '0%'});
+					previewFrame.css({ height: '98%', visibility: 'visible'});
+				} else {
+					textarea.css({ height: '98%'});
+					previewFrame.css({ height: '0%', visibility: 'hidden'});
+				}
+				$.data(textarea, previewOn)
+			});
+		}
 
 		// toggle maximize to minimize
 		jQuery('.minimize', container).click(function(){

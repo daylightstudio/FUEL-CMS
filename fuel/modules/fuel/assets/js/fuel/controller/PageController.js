@@ -89,7 +89,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		});
 		
 		// only change for those that already exist
-		if ($('#id').val().length){
+		if ($('#id').val() && $('#id').val().length){
 			$('#layout').change();
 		} else {
 			bindFields();
