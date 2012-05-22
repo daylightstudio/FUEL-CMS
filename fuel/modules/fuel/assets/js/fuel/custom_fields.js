@@ -216,7 +216,7 @@ fuel.fields.wysiwyg_field = function(context){
 	
 	
 	var createPreview = function(id){
-		$textarea = $('#' + id);
+		var $textarea = $('#' + id);
 		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
 	
 		// add preview to make it noticable and consistent
@@ -225,9 +225,8 @@ fuel.fields.wysiwyg_field = function(context){
 			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
 			if ($previewBtn){
 				$textarea.parent().append(previewButton);
-		
+
 				$('#' + id + '_preview').click(function(e){
-				
 					var previewWindow = window.open('', 'preview', myMarkItUpSettings.previewInWindow);
 					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
 					$.ajax( {
