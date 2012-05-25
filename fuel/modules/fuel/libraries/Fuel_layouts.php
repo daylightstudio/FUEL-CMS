@@ -493,7 +493,7 @@ class Fuel_layout extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets the views folder the layout exists in. Default is the views/_layotus folder
+	 * Sets the views folder the layout exists in. Default is the views/_layouts folder
 	 *
 	 * @access	public
 	 * @param	string	The name of the folder
