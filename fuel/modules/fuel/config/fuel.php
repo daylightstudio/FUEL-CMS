@@ -123,7 +123,8 @@ $config['languages'] = array(
 						'english' => 'English',
 						);
 
-
+// an associative array of objects to attach to the fuel object
+$config['attach'] = array();
 
 /*
 |--------------------------------------------------------------------------

@@ -236,14 +236,76 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (isset($obj))
 		{
-			$this->_attached[$key] =& $obj;
+			// check if it is a straight up object and if so attach
+			if (is_object($obj))
+			{
+				$this->_attached[$key] =& $obj;
+			}
+			
+			// if it's an array, then we use the key as the module value if it is a string and the value is the library to laod
+			else if (is_array($obj))
+			{
+				$module = key($obj);
+				$library = strtolower(current($obj));
+				
+				if (is_string($module))
+				{
+					$this->CI->load->module_library($module, $library);
+				}
+				else
+				{
+					$this->CI->load->library($library);
+				}
+				$this->_attached[$key] = $this->CI->$library;
+			}
 		}
 		else
 		{
-			// this was added to prevent the loading of config files auotmatically
-			$init = array('name' => $key);
-			$this->load_library('fuel_'.$key, $init);
-			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+			if (is_array($key))
+			{
+				
+				// if an array, then we loop through it to load
+				foreach($key as $k => $v)
+				{
+					
+					// check nested arrays
+					if (is_array($v))
+					{
+						$module = key($v);
+						$library = strtolower(current($v));
+
+						if (is_string($module))
+						{
+							$this->CI->load->module_library($module, $library);
+						}
+						else
+						{
+							$this->CI->load->library($library);
+						}
+						$this->_attached[$key] = $this->CI->$library;
+					}
+					else
+					{
+						if (is_string($k))
+						{
+							$this->CI->load->module_library($k, $v);
+						}
+						else
+						{
+							$this->CI->load->library($v);
+						}
+						
+						$this->_attached[$v] = $this->CI->$v;
+					}
+				}
+			}
+			else
+			{
+				// this was added to prevent the loading of config files auotmatically
+				$init = array('name' => $key);
+				$this->load_library('fuel_'.$key, $init);
+				$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+			}
 		}
 	}
 
