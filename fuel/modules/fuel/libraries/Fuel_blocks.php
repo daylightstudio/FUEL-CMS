@@ -37,10 +37,11 @@ class Fuel_blocks extends Fuel_module {
 	 * Allows you to load a view and pass data to it
 	 *
 	 * @access	public
-	 * @param	mixed
+	 * @param	mixed	Array of parameters
+	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
 	 * @return	string
 	 */
-	function render($params)
+	function render($params, $check_db = TRUE)
 	{
 		$this->CI->load->library('parser');
 
@@ -143,7 +144,7 @@ class Fuel_blocks extends Fuel_module {
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ((($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
+			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('blocks');
 
@@ -199,8 +200,8 @@ class Fuel_blocks extends Fuel_module {
 	 * Uploads a block view file into the database
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	boolean
+	 * @param	string	The name of the block file to upload to the CMS
+	 * @param	boolean	Determines whether to sanitize the block by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
 	function upload($block, $sanitize = TRUE)
@@ -240,12 +241,23 @@ class Fuel_blocks extends Fuel_module {
 		return $output;
 	}
 	
-	function get($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an associative array of all blocks with from both the CMS and static views in the views/_blocks/ folder
+	 *
+	 * @access	public
+	 * @param	array 	Where condition to apply to blocks in the CMS (optional)
+	 * @param	string	Filter condition for those blocks found in the views/_blocks folder (optional)
+	 * @param	mixed	The ordering condition to apply for the views (applies to those fond in the CMS... optional)
+	 * @return	array
+	 */
+	function options_list($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
 	{
 		$model = $this->model();
 		return $model->options_list_with_views($where, $dir_filter, $order);
 	}
-
+	
 }
 
 /* End of file Fuel_blocks.php */
