@@ -5,6 +5,7 @@ require_once(FUEL_PATH.'models/base_module_model.php');
 class Events_model extends Base_module_model {
 
 	public $required = array('name');
+	public $parsed_fields = array('description', 'description_formatted', 'excerpt', 'excerpt_formatted');
 	
 	function __construct()
 	{
@@ -15,13 +16,6 @@ class Events_model extends Base_module_model {
 	{
 		$this->db->select('id, name, start_date, end_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
-		
-		// need to sort outside of MySQL so that it will sort the dates correctly
-		foreach($data as $key => $val)
-		{
-			$data[$key]['start_date'] = english_date($data[$key]['start_date'], TRUE);
-			$data[$key]['end_date'] = english_date($data[$key]['end_date'], TRUE);
-		}
 		return $data;
 	}
 	
