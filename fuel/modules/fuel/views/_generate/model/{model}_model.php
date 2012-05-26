@@ -25,9 +25,9 @@ class {model_name}_model extends Base_module_model {
 		return $data;
 	}
 
-	function form_fields($values = array())
-	{
-		$CI =& get_instance();
+	function form_fields($values = array(), $related = array())
+	{	
+		$fields = parent::form_fields($values, $related);
 		return $fields;
 	}
 	

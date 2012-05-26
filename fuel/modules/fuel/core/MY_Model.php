@@ -2528,6 +2528,9 @@ class MY_Model extends CI_Model {
  		{
 			$class_name = $this->short_name();
 			$record_class = substr(ucfirst($class_name), 0, -1).$this->suffix;
+			
+			// common change
+			$record_class = preg_replace('#ie$#', 'y', $record_class);
  		}
  		else
  		{

@@ -256,14 +256,14 @@ class Fuel_advanced_module extends Fuel_base_library {
 				{
 					$this->CI->load->library($library);
 				}
-				$this->_attached[$key] = $this->CI->$library;
+				$this->_attached[$key] =& $this->CI->$library;
 			}
 		}
 		else
 		{
 			if (is_array($key))
 			{
-				
+
 				// if an array, then we loop through it to load
 				foreach($key as $k => $v)
 				{
@@ -282,7 +282,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 						{
 							$this->CI->load->library($library);
 						}
-						$this->_attached[$key] = $this->CI->$library;
+						$this->_attached[$key] =& $this->CI->$library;
 					}
 					else
 					{
@@ -295,16 +295,27 @@ class Fuel_advanced_module extends Fuel_base_library {
 							$this->CI->load->library($v);
 						}
 						
-						$this->_attached[$v] = $this->CI->$v;
+						$this->_attached[$v] =& $this->CI->$v;
 					}
 				}
 			}
 			else
 			{
-				// this was added to prevent the loading of config files auotmatically
-				$init = array('name' => $key);
-				$this->load_library('fuel_'.$key, $init);
-				$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+				// first look for a Fuel_$key library in the module's folder'
+				if (file_exists($this->server_path('libraries/Fuel_'.$key.'.php')))
+				{
+					// this was added to prevent the loading of config files auotmatically
+					$init = array('name' => $key);
+					$this->load_library('fuel_'.$key, $init);
+					$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+				}
+				
+				// else just try and do a simple load
+				else
+				{
+					$this->CI->load->library($key);
+					$this->_attached[$key] =& $this->CI->$key;
+				}
 			}
 		}
 	}

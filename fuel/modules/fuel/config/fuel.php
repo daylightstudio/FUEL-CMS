@@ -263,7 +263,7 @@ $config['nav']['shop'] = array();
 $config['nav']['blog'] = array();
 
 // my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
-$config['nav']['modules'] = 'AUTO';
+$config['nav']['modules'] = array();
 
 // tools
 $config['nav']['tools'] = array();

@@ -28,7 +28,7 @@ class Events_model extends Base_module_model {
 		return $values;
 	}
 	
-	function form_fields()
+	function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields();
 		return $fields;

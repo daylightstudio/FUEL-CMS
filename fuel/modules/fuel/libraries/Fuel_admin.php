@@ -443,6 +443,9 @@ class Fuel_admin extends Fuel_base_library {
 	function nav()
 	{
 		$nav = $this->fuel->config('nav');
+		
+		$nav_orig = $nav;
+		
 		$modules = array('fuel');
 		$modules = array_merge($modules, $this->fuel->config('modules_allowed'));
 		
@@ -473,15 +476,14 @@ class Fuel_admin extends Fuel_base_library {
 						}
 					}
 				}
+
 				$nav = array_merge($nav, $config['nav']);
 			}
 		}
 		
-		// automatically include modules if set to AUTO
-		if (is_string($nav['modules']) AND strtoupper($nav['modules']) == 'AUTO')
+		// automatically include modules if set to blank array
+		if ($nav_orig['modules'] === array())
 		{
-			$nav['modules'] = array();
-			
 			if (!empty($config['modules']))
 			{
 				foreach($config['modules'] as $key => $module)
@@ -500,7 +502,6 @@ class Fuel_admin extends Fuel_base_library {
 						$nav['modules'][$key] = humanize($key);
 					}
 				}
-				
 			}
 		}
 		return $nav;
@@ -1320,5 +1321,5 @@ class Fuel_admin extends Fuel_base_library {
 	}
 }
 
-/* End of file Fuel_admn.php */
-/* Location: ./modules/fuel/libraries/Fuel_admn.php */
+/* End of file Fuel_admin.php */
+/* Location: ./modules/fuel/libraries/Fuel_admin.php */

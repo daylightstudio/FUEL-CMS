@@ -52,7 +52,7 @@ class News_model extends Base_module_model {
 		$this->db->order_by('date_added desc');
 	}
 	
-	function form_fields()
+	function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields();
 		$fields['date_added']['type'] = 'datetime';

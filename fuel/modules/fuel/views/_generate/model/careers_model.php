@@ -27,8 +27,8 @@ class Careers_model extends Base_module_model {
 		return $values;
 	}
 	
-	function form_fields()
-	{
+	function form_fields($values = array(), $related = array())
+	{	
 		$fields = parent::form_fields();
 		$fields['post_date']['comment'] = 'If blank, will default to current date/time'; 
 		$fields['post_date']['value'] = datetime_now(); 

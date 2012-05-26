@@ -38,10 +38,11 @@ class Fuel_blocks extends Fuel_module {
 	 *
 	 * @access	public
 	 * @param	mixed	Array of parameters
+	 * @param	array	Array of variables
 	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
 	 * @return	string
 	 */
-	function render($params, $check_db = TRUE)
+	function render($params, $vars = array(), $check_db = TRUE)
 	{
 		$this->CI->load->library('parser');
 
@@ -86,7 +87,7 @@ class Fuel_blocks extends Fuel_module {
 		{
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
-
+		
 		// pull from cache if cache is TRUE and it exists
 		if ($p['cache'] === TRUE)
 		{
@@ -102,7 +103,9 @@ class Fuel_blocks extends Fuel_module {
 		}
 
 		// load the model and data
-		$vars = (array) $p['vars'];
+		$p['vars'] = (array) $p['vars'];
+		$vars = array_merge($p['vars'], $vars);
+		
 		if (!empty($p['model']))
 		{
 			$data = fuel_model($p['model'], $p);
