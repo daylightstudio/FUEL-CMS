@@ -3540,7 +3540,7 @@ class MY_Model extends CI_Model {
  * @prefix		$data_set->
  */
 
-Class Data_set {
+class Data_set {
 	
 	private $results; // the results array
 	private $force_array; // return one or many
@@ -3698,7 +3698,7 @@ Class Data_set {
  * @prefix		$record->
  */
 
-Class Data_record {
+class Data_record {
 
 	protected $_CI = NULL; // global CI object
 	protected $_db = NULL; // database object
