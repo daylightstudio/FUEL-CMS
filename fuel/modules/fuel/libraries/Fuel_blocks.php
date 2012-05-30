@@ -104,7 +104,7 @@ class Fuel_blocks extends Fuel_module {
 
 		// load the model and data
 		$p['vars'] = (array) $p['vars'];
-		$vars = array_merge($p['vars'], $vars);
+		$vars = (is_array($vars) AND ! empty($vars)) ? array_merge($p['vars'], $vars) : $p['vars'];
 		
 		if (!empty($p['model']))
 		{
