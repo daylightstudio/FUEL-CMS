@@ -1,9 +1,15 @@
-<?php  if (!empty($related_items) AND is_array($related_items)) : ?>
+<?php  if (!empty($related_items)) : ?>
 
 <div id="related_items">
+
+	<?php if (is_array($related_items)) : ?>
+
 	<?php foreach($related_items as $group => $group_related) : ?>
 
-	<?php if (is_array($group_related)) : 
+	<?php 
+	if (!is_array($group_related)) : 
+	$group_related = array($group_related);
+	endif;
 	
 	$mod = $this->fuel->modules->get($group);
 	
@@ -29,8 +35,11 @@
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
-	<?php endif; ?>
 	<?php endforeach; ?>
+	
+	<?php elseif (is_string($related_items)) : ?>
+		<?=$related_items?>
+	<?php endif; ?>
 	
 </div>
 <?php endif; ?>

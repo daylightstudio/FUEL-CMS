@@ -302,6 +302,55 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	{
 	   $this->_reset_select();
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Loads a SQL string and executes it... good for bigger data dumps
+	 *
+	 * @access	public
+	 * @param	string	The path to a SQL file
+	 * @param	boolean	If the contents being passed in parameter 1 is a path or a SQL string
+	 * @return	void
+	 */
+	function load_sql($sql_path, $is_path = TRUE)
+	{
+		$CI =& get_instance();
+		// check first to see if it is a path to a file
+		if (file_exists($sql_path) AND $is_path)
+		{
+			$sql = file_get_contents($sql_path);
+		}
+		
+		// if not, assume it is a string
+		else
+		{
+			$sql = $sql_path;
+		}
+		
+		$sql = preg_replace('#^/\*(.+)\*/$#U', '', $sql);
+		$sql = preg_replace('/^#(.+)$/U', '', $sql);
+		
+		// load database config
+		include(APPPATH.'config/database.php');
+		$CI->load->database();
+	
+		// select the database
+		$db = $db[$active_group]['database'];
+		
+		$use_sql = 'USE '.$db;
+		
+		$CI->db->query($use_sql);
+		$sql_arr = explode(";\n", $sql);
+		foreach($sql_arr as $s)
+		{
+			$s = trim($s);
+			if (!empty($s))
+			{
+				$CI->db->query($s);
+			}
+		}
+	}
 }
 /* End of file MY_DB_mysql_driver.php */
 /* Location: ./application/libraries/MY_DB_mysql_driver.php */

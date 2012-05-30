@@ -101,6 +101,7 @@ Class Form_builder {
 	protected $_pre_process; // pre_process functions
 	protected $_post_process; // post_process functions
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
+	protected $_rendered_field_types = array(); // holds all the fields types rendered
 	protected $CI;
 	
 	// --------------------------------------------------------------------
@@ -1448,6 +1449,9 @@ Class Form_builder {
 					}
 			}
 		}
+
+		// cache the field types being rendered
+		$this->_rendered_field_types[$params['type']] = $params['type'];
 		
 		// add before/after html 
 		$str = $params['before_html'].$str.$params['after_html'];
@@ -1482,7 +1486,7 @@ Class Form_builder {
 		
 		if (empty($params['label']))
 		{
-			if ($lang = $this->_label_lang($params['orig_name']))
+			if ($lang = $this->label_lang($params['orig_name']))
 			{
 				$params['label'] = $lang;
 			}
@@ -1829,7 +1833,7 @@ Class Form_builder {
 				$name = Form::create_id($params['orig_name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$enum_name = $name.'_'.Form::create_id($key);
-				$label = ($lang = $this->_label_lang($enum_name)) ? $lang : $val;
+				$label = ($lang = $this->label_lang($enum_name)) ? $lang : $val;
 				if (!empty($this->name_prefix))
 				{
 					$enum_name = $this->name_prefix.'--'.$enum_name;
@@ -1852,7 +1856,7 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates the multi select input for the form
+	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionaltity)
 	 *
 	 * @access	public
 	 * @param	array fields parameters
@@ -1861,28 +1865,13 @@ Class Form_builder {
 	function create_multi($params)
 	{
 		$defaults = array(
-			'sorting' => NULL,
 			'options' => array(),
 			'mode' => NULL,
-			'model' => NULL,
 			'wrapper_tag' => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
-			'module' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
-		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$params['options'] = $this->options_from_model($params['model']);
-		}
-		
-		if (!empty($params['module']))
-		{
-			$inline_class = 'add_edit '.str_replace('_', '/', $params['module']);
-			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-		}
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->multi_select_mode;
@@ -1913,7 +1902,7 @@ Class Form_builder {
 					}
 					$str .= $this->form->checkbox($params['name'], $key, $attrs);
 
-					$label = ($lang = $this->_label_lang($attrs['id'])) ? $lang : $val;
+					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
 					$str .= ' '.$this->create_label($enum_params);
 					$str .= "&nbsp;&nbsp;&nbsp;";
@@ -1926,17 +1915,6 @@ Class Form_builder {
 		{
 			$params['multiple'] = TRUE;
 			$str .= $this->create_select($params);
-			if (!empty($params['sorting']))
-			{
-				if ($params['sorting'] === TRUE AND is_array($params['value']))
-				{
-					$params['sorting'] = $params['value'];
-				}
-				$sorting_params['name'] = 'sorting_'.$params['orig_name'];
-				$sorting_params['value'] = rawurlencode(json_encode($params['sorting']));
-				$sorting_params['class'] = 'sorting';
-				$str .= $this->create_hidden($sorting_params);
-			}
 		}
 		
 		return $str;
@@ -1956,7 +1934,7 @@ Class Form_builder {
 		$defaults = array(
 			'overwrite' => NULL, // sets a paramter to either overwrite or create a new file if one already exists on the server
 			'display_overwrite' => TRUE, // displays the overwrite checkbox
-			'accept' => 'gif|jpg|jpeg|png', // specifies which files are acceptable to upload
+			'accept' => 'gif|jpg|jpeg|png|pdf', // specifies which files are acceptable to upload
 			'upload_path' => NULL, // the server path to upload the file to
 			'file_name' => NULL, // for file uploading
 			'encrypt_name' => NULL, // determines whether to encrypt the uploaded file name to give it a unique value
@@ -1989,7 +1967,7 @@ Class Form_builder {
 			if (!empty($params['display_overwrite']))
 			{
 				$file .= ' &nbsp; <span class="overwrite_field">'.$this->form->checkbox($params['name'].'_overwrite', 1, Form::do_checked($overwrite));
-				$file .= ' '. $this->create_label($this->_label_lang('overwrite')).'</span>';
+				$file .= ' '. $this->create_label($this->label_lang('overwrite')).'</span>';
 			}
 			else
 			{
@@ -2462,20 +2440,24 @@ Class Form_builder {
 	 * @param	array Array of custom fields to load
 	 * @return	void
 	 */
-	function load_custom_fields($fields)
+	function load_custom_fields($file)
 	{
-		if (is_string($fields))
+		if (is_string($file))
 		{
-			if (file_exists($fields))
+			if (file_exists($file))
 			{
-				include($fields);
+				include($file);
 			}
 			else
 			{
 				return FALSE;
 			}
 		}
-		
+		else if (is_array($file))
+		{
+			$fields = $file;
+		}
+
 		if (is_array($fields))
 		{
 			// setup custom fields
@@ -3132,6 +3114,24 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Helper method that returns the language key value if it exist, otherwise it returns FALSE
+	 * 
+	 * @access	protected
+	 * @param	string
+	 * @return	string
+	 */
+	function label_lang($key)
+	{
+		if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$key))
+		{
+			return $lang;
+		}
+		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Sorts the fields for the form
 	 *
 	 * Same as the MY_array_helper array_sorter function
@@ -3170,24 +3170,6 @@ Class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the language key value if it exist, otherwise it returns FALSE
-	 * 
-	 * @access	protected
-	 * @param	string
-	 * @return	string
-	 */
-	protected function _label_lang($key)
-	{
-		if (isset($this->lang_prefix) AND function_exists('lang') AND $lang = lang($this->lang_prefix.$key))
-		{
-			return $lang;
-		}
-		return FALSE;
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
 	 * Renders the javascript for fields (only once)
 	 * 
 	 * @access	protected
@@ -3205,9 +3187,12 @@ Class Form_builder {
 		$script_regex = '#^<script(.+)src=#U';
 		
 		$orig_ignore = $this->CI->asset->ignore_if_loaded;
-		
 		$this->CI->asset->ignore_if_loaded = TRUE;
-
+		
+		$orig_asset_output = $this->CI->asset->assets_output;
+		$this->CI->asset->assets_output = FALSE;
+		
+		// loop through to generate javascript
 		foreach($_js as $type => $js)
 		{
 			
@@ -3247,20 +3232,29 @@ Class Form_builder {
 				$str .= "\t".$js."();\n";
 				$str .= "}\n";
 			}
+		}
 		
-			// check if the field type has a js function to call 
-			if (isset($this->custom_fields[$type], $this->custom_fields[$type]->js_function))
+		// loop through custom fields to generate any js function calls
+		foreach($this->_rendered_field_types as $type => $cs_field)
+		{
+			if (isset($this->custom_fields[$type]))
 			{
 				$cs_field = $this->custom_fields[$type];
-				$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
-				$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
-				$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
-			
+
+				// check if the field type has a js function to call 
+				if (!empty($cs_field->js_function))
+				{
+					$js_options = (!empty($cs_field->js_params)) ? $cs_field->js_params : NULL;
+					$js_exec_order = (!empty($cs_field->js_exec_order)) ? $cs_field->js_exec_order : 0;
+					$js_exec[$type] = array('func' => $cs_field->js_function, 'options' => $js_options, 'order' => $js_exec_order);
+				}
 			}
 		}
 		
+		
 		// change ignore value on asset back to original
 		$this->CI->asset->ignore_if_loaded = $orig_ignore;
+		$this->CI->asset->assets_output = $orig_asset_output;
 		
 		// sort the javascript
 		$js_exec = $this->_fields_sorter($js_exec, 'order');

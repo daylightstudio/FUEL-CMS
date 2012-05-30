@@ -97,9 +97,9 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				$layout = end(explode('/', $file));
 				$layout = substr($layout, 0, -4);
-				$file_dir = dirname($file);
+				$file_dir = ltrim(dirname($file), '/');
 				
-				if ($file_dir != $layout_path)
+				if ($file_dir != ltrim($layout_path, '/'))
 				{
 					$group = end(explode('/', $file_dir));
 				}
@@ -108,7 +108,6 @@ class Fuel_layouts extends Fuel_base_library {
 					$group = '';
 				}
 				
-				
 				// we won't show those that have underscores in front of them'
 				if (substr($group, 0, 1) != '_')
 				{
@@ -116,9 +115,12 @@ class Fuel_layouts extends Fuel_base_library {
 					{
 						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
 					}
-					else if (empty($this->layouts[$layout]['group']))
+					else if (!empty($this->layouts[$layout]))
 					{
-						$this->layouts[$layout]['group'] = $group;
+						if (!is_object($this->layouts[$layout]) AND empty($this->layouts[$layout]['group']))
+						{
+							$this->layouts[$layout]['group'] = $group;
+						}
 					}
 				}
 			}
@@ -491,7 +493,7 @@ class Fuel_layout extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets the views folder the layout exists in. Default is the views/_layotus folder
+	 * Sets the views folder the layout exists in. Default is the views/_layouts folder
 	 *
 	 * @access	public
 	 * @param	string	The name of the folder

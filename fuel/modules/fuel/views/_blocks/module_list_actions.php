@@ -37,12 +37,12 @@
 		<?php endif; ?>
 		<li><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
 
+		<li><a href="#" class="ico ico_select_all"><?=lang('btn_select_all')?></a></li>
+
 		<?php if ($this->fuel->auth->module_has_action('delete') && $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 		<li><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>
 		<?php endif; ?>
 		
-		<li><a href="#" class="ico ico_select_all"><?=lang('btn_select_all')?></a></li>
-
 		<?php if ($this->exportable AND $this->fuel->auth->has_permission($this->permission, 'export')) : ?>
 			<li><a href="<?=fuel_url($this->module_uri.'/export')?>" class="ico ico_export" id="export_data"><?=lang('btn_export_data')?></a></li>
 		<?php endif; ?>

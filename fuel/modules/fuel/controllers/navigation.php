@@ -37,7 +37,8 @@ class Navigation extends Module {
 				else
 				{
 					// change list view page state to show the selected group id
-					$this->session->set_flashdata('success', lang('navigation_success_upload'));
+					$this->fuel->admin->set_notification(lang('navigation_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
 					redirect(fuel_url('navigation?group_id='.$params['group_id']));
 				}
 				

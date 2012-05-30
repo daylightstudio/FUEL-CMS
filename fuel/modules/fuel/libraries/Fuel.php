@@ -49,6 +49,7 @@ class Fuel extends Fuel_advanced_module {
 									'auth',
 									'blocks',
 									'cache',
+									'install',
 									'language',
 									'layouts',
 									'logs',
@@ -116,6 +117,9 @@ class Fuel extends Fuel_advanced_module {
 		}
 		
 		$this->_config = $this->CI->config->config['fuel'];
+		
+		// merge in any "attach" objects to include on the FUEL object
+		$this->_auto_attach = array_merge($this->_auto_attach, $this->_config['attach']);
 	}
 
 	// --------------------------------------------------------------------

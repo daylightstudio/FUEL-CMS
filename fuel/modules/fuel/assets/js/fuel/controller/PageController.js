@@ -12,13 +12,6 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		//fuel.controller.BaseFuelController.prototype.add_edit.call(this, false);
 		this._super();
 		
-		// if new, then we use default fillin value... else set to actual value
-		if ($('#id').val() == ''){
-			$.changeChecksaveValue('#location', _this.localized.pages_default_location);
-		} else {
-			$.refreshChecksaveValue('#location');
-		}
-
 		// correspond page title to navigation label for convenience
 		var blurred = false;
 		
@@ -96,7 +89,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		});
 		
 		// only change for those that already exist
-		if ($('#id').val().length){
+		if ($('#id').val() && $('#id').val().length){
 			$('#layout').change();
 		} else {
 			bindFields();

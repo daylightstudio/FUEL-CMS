@@ -34,10 +34,11 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `fuel_settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `module` varchar(255) NOT NULL DEFAULT '',
-  `key` varchar(255) NOT NULL DEFAULT '',
+  `module` varchar(50) NOT NULL DEFAULT '',
+  `key` varchar(50) NOT NULL DEFAULT '',
   `value` longtext,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `module` (`module`,`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

@@ -86,9 +86,6 @@ CREATE TABLE `fuel_navigation` (
   UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`)
-VALUES
-	(1, 'main', 'yes');
 
 
 # Dump of table fuel_navigation_groups
@@ -101,6 +98,10 @@ CREATE TABLE `fuel_navigation_groups` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`)
+VALUES
+	(1, 'main', 'yes');
 
 
 
@@ -182,7 +183,9 @@ VALUES
 	(NULL,'Permissions','permissions','yes'),
 	(NULL,'Cache','cache','yes'),
 	(NULL,'Logs','logs','yes'),
-	(NULL,'Settings','settings','yes');
+	(NULL,'Settings','settings','yes'),
+	(NULL,'Generate Code','generate','yes');
+	
 
 /*!40000 ALTER TABLE `fuel_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -207,11 +210,12 @@ CREATE TABLE `fuel_relationships` (
 
 CREATE TABLE `fuel_settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `module` varchar(255) NOT NULL DEFAULT '',
-  `key` varchar(255) NOT NULL DEFAULT '',
+  `module` varchar(50) NOT NULL DEFAULT '',
+  `key` varchar(50) NOT NULL DEFAULT '',
   `value` longtext,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `module` (`module`,`key`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 

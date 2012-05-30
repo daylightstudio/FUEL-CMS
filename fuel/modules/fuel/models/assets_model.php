@@ -370,6 +370,7 @@ class Assets_model extends CI_Model {
 		$fields = array();
 		$editable_asset_types = $CI->fuel->config('editable_asset_filetypes');
 		$accepts = (!empty($editable_asset_types['assets']) ? $editable_asset_types['assets'] : $this->default_file_types);
+		$fields[lang('assets_heading_general')] = array('type' => 'fieldset', 'class' => 'tab');
 		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
 		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $CI->fuel->assets->dirs(), 'comment' => lang('assets_comment_asset_folder'));
 		$fields['userfile_file_name'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
@@ -378,14 +379,14 @@ class Assets_model extends CI_Model {
 			$fields['subfolder'] = array('label' => lang('form_label_subfolder'), 'comment' => lang('assets_comment_filename'));
 		}
 		$fields['overwrite'] = array('label' => lang('form_label_overwrite'), 'type' => 'checkbox', 'comment' => lang('assets_comment_overwrite'), 'checked' => true, 'value' => '1');
+		$fields['unzip'] = array('type' => 'checkbox', 'label' => lang('form_label_unzip'), 'comment' => lang('assets_comment_unzip'), 'value' => 1);
 
-		$fields[lang('assets_heading_image_specific')] = array('type' => 'section');
+		$fields[lang('assets_heading_image_specific')] = array('type' => 'fieldset', 'class' => 'tab');
 		$fields['create_thumb'] = array('label' => lang('form_label_create_thumb'), 'type' => 'checkbox', 'comment' => lang('assets_comment_thumb'), 'value' => '1');
 		$fields['maintain_ratio'] = array('label' => lang('form_label_maintain_ratio'), 'type' => 'checkbox', 'comment' => lang('assets_comment_aspect_ratio'), 'value' => '1');
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
-		$fields['unzip'] = array('type' => 'checkbox', 'label' => lang('form_label_unzip'), 'comment' => lang('assets_comment_unzip'), 'value' => 1);
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		
 		return $fields;

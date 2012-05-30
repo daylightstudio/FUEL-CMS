@@ -80,16 +80,17 @@ function &FUEL()
 	<li><strong>vars</strong> - additional variables to pass to the block</li>
 	<li><strong>cache</strong> - will cache the block</li>
 	<li><strong>mode</strong> - determines whether to pull from the cms or the views folder. Options are "views" or "cms"</li>
+	<li><strong>module</strong> - the advanced module that the block will load from</li>
 </ul>
  *
  * @access	public
  * @param	mixed
  * @return	string
  */
-function fuel_block($params)
+function fuel_block($params, $vars = array(), $check_db = TRUE)
 {
 	$CI =& get_instance();
-	return $CI->fuel->blocks->render($params);
+	return $CI->fuel->blocks->render($params, $vars, $check_db);
 }
 
 // --------------------------------------------------------------------
@@ -204,10 +205,15 @@ function fuel_form($fields, $values = array(), $params = array())
  * @param	mixed
  * @return	string
  */
-function fuel_model($module, $params = array())
+function fuel_model($module, $params = array(), $where = array())
 {
 	$CI =& get_instance();
-	return $CI->fuel->modules($module)->find($params);
+	$module = $CI->fuel->modules->get($module, FALSE);
+	if ($module)
+	{
+		return $module->find($params, $where);
+	}
+	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -641,6 +647,16 @@ function fuel_user_lang()
 	return $cookie_val['language'];
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Returns the setting(s) for a particular module
+ *
+ * @access	public
+ * @param	string	Module name
+ * @param	string	Settings key (optional)
+ * @return	mixed
+ */
 function fuel_settings($module, $key = '')
 {
 	$CI =& get_instance();

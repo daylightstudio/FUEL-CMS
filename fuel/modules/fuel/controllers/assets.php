@@ -20,7 +20,13 @@ class Assets extends Module {
 	function create($dir = NULL, $inline = FALSE)
 	{
 		$id = NULL;
+
+		if ($inline)
+		{
+			$this->fuel->admin->set_inline(TRUE);
+		}
 		
+		$inline = $this->fuel->admin->is_inline();
 
 		if (!empty($_FILES))
 		{
@@ -65,7 +71,7 @@ class Assets extends Module {
 				$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
 
 				$this->session->set_flashdata('uploaded_post', $flashdata);
-				$this->session->set_flashdata('success', lang('data_saved'));
+				$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 				
 				$this->model->on_after_post($posted);
 
@@ -192,19 +198,26 @@ class Assets extends Module {
 		$this->js_controller_params['method'] = 'add_edit';
 		
 		$fields = $this->model->form_fields();
-		
+		$not_hidden = array();
 		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
 		{
-			$hide_field['userfile'] = $fields['userfile'];
-			$fields = $hide_field;
+			$not_hidden = array('userfile');
 		}
 		else if (!empty($field_values['hide_image_options']) AND is_true_val($field_values['hide_image_options']))
 		{
-			$hide_field['userfile'] = $fields['userfile'];
-			$hide_field['subfolder'] = $fields['subfolder'];
-			$hide_field['userfile_file_name'] = $fields['userfile_file_name'];
-			$hide_field['overwrite'] = $fields['overwrite'];
-			$fields = $hide_field;
+			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite');
+		}
+		
+		// hide certain fields if params were passed
+		if (!empty($not_hidden))
+		{
+			foreach($fields as $key => $field)
+			{
+				if (!in_array($key, $not_hidden))
+				{
+					$fields[$key]['type'] = 'hidden';
+				}
+			}
 		}
 		
 		if ($this->session->flashdata('uploaded_post'))
@@ -212,6 +225,9 @@ class Assets extends Module {
 			$field_values = $this->session->flashdata('uploaded_post');
 		}
 		
+		// load custom fields
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
 		$this->form_builder->submit_value = 'Save';
 		$this->form_builder->use_form_tag = false;
 		$this->form_builder->set_fields($fields);

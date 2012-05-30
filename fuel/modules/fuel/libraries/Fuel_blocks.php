@@ -29,16 +29,20 @@
 // --------------------------------------------------------------------
 class Fuel_blocks extends Fuel_module {
 	
+	protected $module = 'blocks';
+	
 	// --------------------------------------------------------------------
 
 	/**
 	 * Allows you to load a view and pass data to it
 	 *
 	 * @access	public
-	 * @param	mixed
+	 * @param	mixed	Array of parameters
+	 * @param	array	Array of variables
+	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
 	 * @return	string
 	 */
-	function render($params)
+	function render($params, $vars = array(), $check_db = TRUE)
 	{
 		$this->CI->load->library('parser');
 
@@ -59,6 +63,7 @@ class Fuel_blocks extends Fuel_module {
 						'vars' => array(),
 						'cache' => FALSE,
 						'mode' => 'AUTO',
+						'module' => '',
 						);
 
 		// for convenience
@@ -82,7 +87,7 @@ class Fuel_blocks extends Fuel_module {
 		{
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
-
+		
 		// pull from cache if cache is TRUE and it exists
 		if ($p['cache'] === TRUE)
 		{
@@ -98,7 +103,9 @@ class Fuel_blocks extends Fuel_module {
 		}
 
 		// load the model and data
-		$vars = (array) $p['vars'];
+		$p['vars'] = (array) $p['vars'];
+		$vars = (is_array($vars) AND ! empty($vars)) ? array_merge($p['vars'], $vars) : $p['vars'];
+		
 		if (!empty($p['model']))
 		{
 			$data = fuel_model($p['model'], $p);
@@ -124,12 +131,23 @@ class Fuel_blocks extends Fuel_module {
 		}
 		else if (!empty($p['view']))
 		{
-			$view_file = APPPATH.'views/_blocks/'.$p['view'].EXT;
+			$is_module_block = FALSE;
+			$view_path = 'views/_blocks/';
+			if ( ! empty($p['module']) AND defined('MODULES_PATH'))
+			{
+				$view_path = MODULES_PATH.$p['module'].'/'.$view_path;
+				$is_module_block = TRUE;
+			}
+			else
+			{
+				$view_path = APPPATH.$view_path;
+			}
+			$view_file = $view_path.$p['view'].EXT;
 			
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ((($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
+			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('blocks');
 
@@ -149,13 +167,13 @@ class Fuel_blocks extends Fuel_module {
 						$view = fuel_edit($block->id, 'Edit Block: '.$block->name, 'blocks').$view;
 					}
 				}
-				else if (file_exists(APPPATH.'views/_blocks/'.$p['view'].EXT))
+				else if (file_exists($view_file))
 				{
 					// pass in reference to global CI object
 					$vars['CI'] =& $this->CI;
 
 					// pass along these since we know them... perhaps the view can use them
-					$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
 				}
 			}
 			else if (file_exists($view_file))
@@ -164,7 +182,7 @@ class Fuel_blocks extends Fuel_module {
 				$vars['CI'] =& $this->CI;
 
 				// pass along these since we know them... perhaps the view can use them
-				$view = $this->CI->load->view("_blocks/".$p['view'], $vars, TRUE);
+				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
 			}
 		}
 
@@ -185,8 +203,8 @@ class Fuel_blocks extends Fuel_module {
 	 * Uploads a block view file into the database
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	boolean
+	 * @param	string	The name of the block file to upload to the CMS
+	 * @param	boolean	Determines whether to sanitize the block by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
 	function upload($block, $sanitize = TRUE)
@@ -226,12 +244,23 @@ class Fuel_blocks extends Fuel_module {
 		return $output;
 	}
 	
-	function get($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an associative array of all blocks with from both the CMS and static views in the views/_blocks/ folder
+	 *
+	 * @access	public
+	 * @param	array 	Where condition to apply to blocks in the CMS (optional)
+	 * @param	string	Filter condition for those blocks found in the views/_blocks folder (optional)
+	 * @param	mixed	The ordering condition to apply for the views (applies to those fond in the CMS... optional)
+	 * @return	array
+	 */
+	function options_list($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
 	{
 		$model = $this->model();
 		return $model->options_list_with_views($where, $dir_filter, $order);
 	}
-
+	
 }
 
 /* End of file Fuel_blocks.php */

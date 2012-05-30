@@ -217,7 +217,7 @@ class Articles_model extends Base_module_model {
     function form_fields($values = array())
     {
         $fields = parent::form_fields($values);
-		// ******************* ADD CUSOM FORM STUFF HERE ******************* 
+		// ******************* ADD CUSTOM FORM STUFF HERE ******************* 
         return $fields;
     }
 }

@@ -29,23 +29,8 @@
 // --------------------------------------------------------------------
 
 class Fuel_navigation extends Fuel_module {
-	
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initialize the object and set object parameters
-	 *
-	 * Accepts an associative array as input, containing object preferences.
-	 *
-	 * @access	public
-	 * @param	array	config preferences
-	 * @return	void
-	 */	
-	function initialize($params = array())
-	{
-		parent::initialize($params);
-	}
+
+	protected $module = 'navigation';
 	
 	// --------------------------------------------------------------------
 	

@@ -53,7 +53,7 @@ dave@thedaylightstudio.com
 				}
 			}
 			
-			$('label,input.field_depth_' + depth + ',textarea.field_depth_' + depth + ',select.field_depth_' + depth, elem).each(function(j){
+			$('label,.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name')
 				if (newName && newName.length){
 					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$/, '$1[' + i + ']$2');
@@ -226,7 +226,7 @@ dave@thedaylightstudio.com
 				$this.append($clonecopy);
 
 				// remove values from any form fields
-				$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"]').val('');
+				$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"]').val('');
 				$clonecopy.find('.noclone').remove();
 				
 				$this.trigger({type: 'cloned', clonedNode: $clonecopy});

@@ -98,7 +98,8 @@ class Blocks extends Module {
 				else
 				{
 					// change list view page state to show the selected group id
-					$this->session->set_flashdata('success', lang('blocks_success_upload'));
+					$this->fuel->admin->set_notification(lang('blocks_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
 					redirect(fuel_url('blocks/edit/'.$id));
 				}
 				

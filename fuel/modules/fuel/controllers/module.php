@@ -170,6 +170,12 @@ class Module extends Fuel_base_controller {
 	{
 		$this->load->library('data_table');
 	
+		// check the model for a filters method as well and merge it with the property value
+		// added per http://www.getfuelcms.com/forums/discussion/760/filter-dropdown/#Item_2
+		if (method_exists($this->model, 'filters'))
+		{
+			$this->filters = array_merge($this->filters, $this->model->filters($this->filters));
+		}
 	
 		// set the language dropdown if there is a language column
 		if (!empty($this->language_col) AND method_exists($this->model, 'get_languages'))
@@ -207,16 +213,15 @@ class Module extends Fuel_base_controller {
 			}
 		}
 		
-		
+		// set model filters before pagination and setting table data
+		if (method_exists($this->model, 'add_filters'))
+		{
+			$this->model->add_filters($filters);
+		}
+	
 		// to prevent it from being called unecessarility with ajax
 		if (!is_ajax())
 		{
-			// set model filters before pagination and setting table data
-			if (method_exists($this->model, 'add_filters'))
-			{
-				$this->model->add_filters($filters);
-			}
-		
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
@@ -261,6 +266,14 @@ class Module extends Fuel_base_controller {
 				//$vars['tree'] = "Loading...\n<ul></ul>\n";
 				$vars['tree'] = "\n<ul></ul>\n";
 			}
+			
+			// reset offset if total rows is less then limit
+			if ($config['total_rows'] < $params['limit'])
+			{
+				$params['offset'] = 0;
+			}
+
+			
 		}
 		// set vars
 		$vars['params'] = $params;
@@ -280,6 +293,8 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
+			
+			
 			
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$delete_func = '
@@ -498,20 +513,12 @@ class Module extends Fuel_base_controller {
 				}
 			}
 			$posted['extra_filters'] = $extra_filters;
-			
 		}
 		$params = array_merge($defaults, $page_state, $posted);
 		//$params = array_merge($defaults, $uri_params, $posted);
 		
-		// reset offset if you apply a filter (via POST and not ajax)
-		if (!empty($_POST) and !is_ajax())
-		{
-			$params['offset'] = 0;
-		}
-		
 		if ($params['search_term'] == lang('label_search')) $params['search_term'] = NULL;
 		/* PROCESS PARAMS END */
-		
 		return $params;
 	}
 	
@@ -621,9 +628,9 @@ class Module extends Fuel_base_controller {
 				}
 				if ($redirect)
 				{
-					if (!$this->session->flashdata('success'))
+					if (!$this->fuel->admin->has_notification(Fuel_admin::NOTIFICATION_SUCCESS))
 					{
-						$this->session->set_flashdata('success', lang('data_saved'));
+						$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 					redirect($url);
 				}
@@ -674,7 +681,7 @@ class Module extends Fuel_base_controller {
 		{
 			$_POST[$this->model->key_field()] = '';
 		}
-		else if ($id = $this->model->save($posted))
+		else
 		{
 			$this->model->on_before_post();
 
@@ -694,7 +701,10 @@ class Module extends Fuel_base_controller {
 
 			// run before_save hook
 			$this->_run_hook('before_save', $posted);
-
+			
+			// save the data
+			$id = $this->model->save($posted);
+			
 			if (empty($id))
 			{
 				add_error(lang('error_invalid_id'));
@@ -788,9 +798,9 @@ class Module extends Fuel_base_controller {
 				
 				if ($redirect)
 				{
-					if (!$this->session->flashdata('success'))
+					if (!$this->fuel->admin->has_notification(Fuel_admin::NOTIFICATION_SUCCESS))
 					{
-						$this->session->set_flashdata('success', lang('data_saved'));
+						$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 					redirect($url);
 				}
@@ -1058,7 +1068,8 @@ class Module extends Fuel_base_controller {
 		$this->load->library('form_builder');
 		
 		// load custom fields
-		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$action = (!empty($values[$this->model->key_field()])) ? 'edit' : 'create';
@@ -1334,7 +1345,15 @@ class Module extends Fuel_base_controller {
 			$this->_run_hook('after_delete', $posted);
 			
 			$this->_clear_cache();
-			$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
+			
+			if (count($posted) > 1)
+			{
+				$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
+			}
+			else
+			{
+				$this->fuel->logs->write(lang('module_deleted', $this->module));
+			}
 			
 			if ($this->fuel->admin->is_inline())
 			{
@@ -1350,7 +1369,7 @@ class Module extends Fuel_base_controller {
 				{
 					if (!$this->session->flashdata('success'))
 					{
-						$this->session->set_flashdata('success', lang('data_deleted'));
+						$this->fuel->admin->set_notification(lang('data_deleted'), Fuel_admin::NOTIFICATION_SUCCESS);
 					}
 				}
 
@@ -1365,8 +1384,7 @@ class Module extends Fuel_base_controller {
 					{
 						$msg = lang('data_not_deleted');
 					}
-
-					$this->session->set_flashdata('error', $msg);
+					$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_ERROR);
 				}
 				
 				$url = fuel_uri($this->module_uri);
@@ -1445,13 +1463,14 @@ class Module extends Fuel_base_controller {
 				$msg = lang('module_restored', $this->module_name);
 				$this->fuel->logs->write($msg);
 				
-				$this->session->set_flashdata('error', $this->model->get_validation()->get_last_error());
+				$this->fuel->admin->set_notification($this->model->get_validation()->get_last_error(), Fuel_admin::NOTIFICATION_ERROR);
+				
 			}
 			else
 			{
 				if (!$this->session->flashdata('success'))
 				{
-					$this->session->set_flashdata('success', lang('module_restored_success'));
+					$this->fuel->admin->set_notification(lang('module_restored_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 				}
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
@@ -1488,7 +1507,7 @@ class Module extends Fuel_base_controller {
 				}
 				else
 				{
-					$this->session->set_flashdata('success', lang('module_replaced_success'));
+					$this->fuel->admin->set_notification(lang('module_replaced_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 					$success = TRUE;
 				}
 			}
@@ -1557,6 +1576,7 @@ class Module extends Fuel_base_controller {
 			$selected = $this->input->post('selected', TRUE);
 			
 			$this->load->library('form_builder');
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 			
 			// for multi select
 			if (is_array($values))
@@ -1805,7 +1825,7 @@ class Module extends Fuel_base_controller {
 				$errors = TRUE;
 				$msg = $this->fuel->assets->last_error();
 				add_error($msg);
-				$this->session->set_flashdata('error', $msg);
+				$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_ERROR);
 			}
 			else
 			{

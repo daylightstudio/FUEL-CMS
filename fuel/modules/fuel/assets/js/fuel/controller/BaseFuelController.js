@@ -271,7 +271,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 				$('a.ico_select_all').html(fuel.lang('btn_deselect_all'));
 				$('#multi_delete').parent().show();
-				$('#data_table .multi_delete').attr('checked', true);
+				$('.multi_delete', '#fuel_main_content').attr('checked', true);
 			},
 			function(){
 				if (!$('#toggle_list').parent().hasClass('active')){
@@ -279,7 +279,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				}
 				$('a.ico_select_all').html(fuel.lang('btn_select_all'));
 				$('#multi_delete').parent().hide();
-				$('#data_table .multi_delete').attr('checked', false);
+				$('.multi_delete', '#fuel_main_content').attr('checked', false);
 			});
 	},
 	
@@ -642,7 +642,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$(loadId).html(this.cache.get(cache_key));
 				callback(_this);
 			} else {
-				$(loadId).load(path, params, function(html){
+				//$(loadId).load(path, params, function(html){ // uses POST
+				$.get(path, params, function(html){
+					$(loadId).html(html);
 					callback(_this);
 					_this.cache.add(cache_key, html); // cache data
 				});

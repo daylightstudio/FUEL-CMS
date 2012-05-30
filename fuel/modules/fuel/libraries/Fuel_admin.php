@@ -50,7 +50,7 @@ class Fuel_admin extends Fuel_base_library {
 	protected $_display_modes = array(); // An array of available display modes
 	protected $titlebar = array(); // The title bar breadcrumb area in the admin
 	protected $titlebar_icon = ''; // The title bar icon to display
-	
+	protected $_notifications = array(); // Stores notifications messages to be displayed
 	
 	const DISPLAY_NO_ACTION = 'no_action'; // Display mode that has no action panel (panel with all the buttons)
 	const DISPLAY_COMPACT = 'compact'; // Display mode that has no left menu, or top
@@ -122,7 +122,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		// set asset output settings
-		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
+		$this->CI->asset->assets_output = $this->fuel->config('fuel_assets_output');
 
 		if ($this->validate) 
 		{
@@ -443,6 +443,9 @@ class Fuel_admin extends Fuel_base_library {
 	function nav()
 	{
 		$nav = $this->fuel->config('nav');
+		
+		$nav_orig = $nav;
+		
 		$modules = array('fuel');
 		$modules = array_merge($modules, $this->fuel->config('modules_allowed'));
 		
@@ -473,15 +476,14 @@ class Fuel_admin extends Fuel_base_library {
 						}
 					}
 				}
+
 				$nav = array_merge($nav, $config['nav']);
 			}
 		}
 		
-		// automatically include modules if set to AUTO
-		if (is_string($nav['modules']) AND strtoupper($nav['modules']) == 'AUTO')
+		// automatically include modules if set to blank array
+		if ($nav_orig['modules'] === array())
 		{
-			$nav['modules'] = array();
-			
 			if (!empty($config['modules']))
 			{
 				foreach($config['modules'] as $key => $module)
@@ -500,7 +502,6 @@ class Fuel_admin extends Fuel_base_library {
 						$nav['modules'][$key] = humanize($key);
 					}
 				}
-				
 			}
 		}
 		return $nav;
@@ -1125,6 +1126,22 @@ class Fuel_admin extends Fuel_base_library {
 		return $this->titlebar_icon;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a nofication flash message to display
+	 *
+	 * @access	public
+	 * @param	type	The type of message to display. Options are error, success and info. (optional)
+	 * @return	string
+	 */	
+	function notification($type = '')
+	{
+		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		return $this->_notifications[$type];
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1138,7 +1155,23 @@ class Fuel_admin extends Fuel_base_library {
 	function set_notification($msg, $type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		$this->_notifications[$type] = $msg;
 		$this->CI->session->set_flashdata($type, $msg);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a boolean value based on if a notification has been set per a given type
+	 *
+	 * @access	public
+	 * @param	type	The type of message to display. Options are error, success and info. (optional)
+	 * @return	boolean
+	 */	
+	function has_notification($type = '')
+	{
+		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
+		return isset($this->_notifications[$type]);
 	}
 	
 	// --------------------------------------------------------------------
@@ -1288,5 +1321,5 @@ class Fuel_admin extends Fuel_base_library {
 	}
 }
 
-/* End of file Fuel_admn.php */
-/* Location: ./modules/fuel/libraries/Fuel_admn.php */
+/* End of file Fuel_admin.php */
+/* Location: ./modules/fuel/libraries/Fuel_admin.php */

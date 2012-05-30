@@ -283,7 +283,7 @@ span.required { color:#c30; }
 .tiny { font-size: 9px; }
 tr.drag { border: 1px solid #ccc !important; background-color: #ffe !important }
 tr.drag td { cursor: move !important; background-color: #ffe !important; }
-a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
+a.editor_viewsource, a.editor_preview { margin: 4px 4px 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
 td.vtop { vertical-align: top; }
 
 /* give body context to overwrite other generic styles like the jqModal background color*/
@@ -557,7 +557,7 @@ div.more_filters span.field { float: left; display: block; padding: 0 0 0 5px;  
 div.more_filters div div { float: left; margin-right: 10px; }
 
 /* tree */
-div#tree_container { padding: 16px 15px; text-align: center; }
+div#tree_container { padding: 16px 15px; }
 div#tree_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}
 
 /* #login */

@@ -29,11 +29,12 @@
 // --------------------------------------------------------------------
 
 class Fuel_users extends Fuel_module {
-	
+
+	protected $module = 'users';
+
 	function initialize($params = array())
 	{
 		parent::initialize($params);
-		$this->fuel->load_model('user_to_permissions');
 	}
 	
 	// --------------------------------------------------------------------

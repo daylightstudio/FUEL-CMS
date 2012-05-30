@@ -43,35 +43,48 @@ class Pages extends Module {
 				$_POST['id'] = '';
 				$_POST['location'] = '';
 			}
-			else if ($id = $this->model->save($posted))
+			else
 			{
-				if (empty($id))
+				// run before_create hook
+				$this->_run_hook('before_create', $posted);
+
+				// run before_save hook
+				$this->_run_hook('before_save', $posted);
+
+				if ($id = $this->model->save($posted))
 				{
-					show_error(lang('error_saving'));
-				}
-				
-				$this->_process_uploads();
-				
-				if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
-				{
-					unset($_POST['published']);
-				}
-				
-				$this->_save_page_vars($id, $posted);
-				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
-				// run hook
-				$this->_run_hook('create', $data);
-				
-				if (!empty($data))
-				{
-					$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
-					$url = fuel_uri('pages/edit/'.$id);
-					if ($this->input->post('language'))
+					if (empty($id))
 					{
-						$url .= '?lang='.$this->input->post('language');
+						show_error(lang('error_saving'));
 					}
-					redirect($url);
+				
+					$this->_process_uploads();
+				
+					if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+					{
+						unset($_POST['published']);
+					}
+				
+					$this->_save_page_vars($id, $posted);
+					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+				
+
+					// run after_create hook
+					$this->_run_hook('after_create', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+				
+					if (!empty($data))
+					{
+						$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
+						$url = fuel_uri('pages/edit/'.$id);
+						if ($this->input->post('language'))
+						{
+							$url .= '?lang='.$this->input->post('language');
+						}
+						redirect($url);
+					}
 				}
 			}
 			
@@ -105,6 +118,12 @@ class Pages extends Module {
 				unset($_POST['published']);
 			}
 			
+			// run before_edit hook
+			$this->_run_hook('before_edit', $posted);
+
+			// run before_save hook
+			$this->_run_hook('before_save', $posted);
+
 			if ($this->model->save($posted))
 			{
 				$this->_process_uploads();
@@ -112,8 +131,12 @@ class Pages extends Module {
 				$this->_save_page_vars($id, $posted);
 				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 				
-				// run hook
-				$this->_run_hook('edit', $data);
+				// run after_edit hook
+				$this->_run_hook('after_edit', $data);
+
+				// run after_save hook
+				$this->_run_hook('after_save', $data);
+
 				
 				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 				$this->fuel->logs->write($msg);
@@ -135,7 +158,7 @@ class Pages extends Module {
 		
 		$this->load->library('form_builder');
 
-		$this->form_builder->load_custom_fields(FUEL_PATH.'config/custom_fields.php');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
 		$this->fuel->load_model('navigation');
 		
@@ -182,10 +205,6 @@ class Pages extends Module {
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
 		
-		// easy add for navigation
-		if (empty($id)) $fields['navigation_label'] = array('comment' => 'This field lets you quickly add a navigation item for this page. 
-		It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the
-		\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.');
 		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
@@ -423,10 +442,14 @@ class Pages extends Module {
 
 			$layout = $this->fuel->layouts->get($this->input->post('layout'));
 			$fields = $layout->fields();
+			
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+			
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->set_field_values($vars);
-			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
 			
+			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
+
 			$save = array();
 			
 			$lang = $this->input->post('language');
@@ -519,7 +542,7 @@ class Pages extends Module {
 				}
 			}
 		}
-		$this->session->set_flashdata('success', lang('data_saved'));
+		$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 		
 		// reset cache for that page only
 		if ($this->input->post('location'))
@@ -543,6 +566,8 @@ class Pages extends Module {
 			return;
 		}
 		$this->load->library('form_builder');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+		
 		$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = lang('btn_save');
@@ -684,7 +709,8 @@ class Pages extends Module {
 				if (!has_errors())
 				{
 					// change list view page state to show the selected group id
-					$this->session->set_flashdata('success', lang('pages_success_upload'));
+					$this->fuel->admin->set_notification(lang('pages_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
 					redirect(fuel_url('pages/edit/'.$id));
 				}
 				

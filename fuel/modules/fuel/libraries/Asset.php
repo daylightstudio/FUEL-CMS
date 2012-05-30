@@ -98,6 +98,9 @@ class Asset {
 	// has assets configuration been loaded?
 	protected $_asset_config_loaded = FALSE;
 	
+	// the collection of files to cache
+	protected $_cacheable_files = array();
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -764,11 +767,14 @@ class Asset {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns an swf asset path
+	 * Convenience method that returns the HTML for the css() and js() methods
 	 *
-	 * @access	private
-	 * @param	string	file name of the swf file including extension
-	 * @param	string	module module folder if any
+	 * @access	protected
+	 * @param	string	the type of file to output. Options are js or css
+	 * @param	string	module folder if any
+	 * @param	string	the opening html
+	 * @param	string	the closing html
+	 * @param	string	the path to the asset
 	 * @param	array	additional parameter to include (attrs, ie_conditional, and output)
 	 * @return	string
 	 */	
@@ -826,6 +832,9 @@ class Asset {
 		
 		if ($use_cache AND $output !== 'inline')
 		{
+			// reset cacheable files array
+			$this->_cacheable_files = array();
+			
 			$cache_file = $this->_check_cache($path, $type, $output, $module);
 			$str .= $open;
 			$str .= $cache_file;
@@ -837,19 +846,23 @@ class Asset {
 			// convert to an array if not already 
 			$path = (array) $path;
 			$files_arr = array();
-			foreach($path as $val)
+			$default_module = $module;
+			
+			foreach($path as $key => $val)
 			{
 				if ($ignore_if_loaded AND $this->is_used($type, $val))
 				{
 					continue;
 				}
 				
-				// if (is_array($val))
-				// {
-				// 	$nested .= $this->$type($val, '', $options);
-				// }
-				// else
-				// {
+				$module = (is_string($key)) ? $key : $default_module;
+
+				if (is_array($val))
+				{
+					$nested .= $this->$type($val, $module, $options);
+				}
+				else
+				{
 					$file_str = $open;
 					$type_path = $type.'_path';
 					$assets_folders = $this->assets_folders;
@@ -877,7 +890,7 @@ class Asset {
 					$files_arr[] = $file_str;
 					//$file_str .= "\n\t";
 					$this->_add_used($type, $val);
-				// }
+				}
 
 			}
 			// use implode so it doesn't add the trailing \n\t'
@@ -886,7 +899,7 @@ class Asset {
 			
 		}
 		
-	//	$str .= $nested;
+		$str .= "\n\t".$nested;
 		return $str;
 	}
 
@@ -993,7 +1006,7 @@ class Asset {
 	/**
 	 * Check to see whether a css/js file has been used yet
 	 *
-	 * @access	private
+	 * @access	public
 	 * @param	string	type of file (e.g. images, js, css... etc)
 	 * @param	string	file name
 	 * @return	boolean
@@ -1008,43 +1021,58 @@ class Asset {
 	/**
 	 * Set and get cache version
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	string	file name of the swf file including extension
 	 * @param	string	type of file (e.g. images, js, css... etc)
 	 * @param	string	additional parameter to include (attrs, ie_conditional, and output)
 	 * @param	string	type module folder if any
 	 * @return	string
 	 */	
-	private function _check_cache($files, $type, $optimize, $module)
+	protected function _check_cache($files, $type, $optimize, $module)
 	{
 		$CI =& get_instance();
 		$files = (array) $files;
 		$cache_file_name = '';
 		$cache_dir = $this->assets_server_path($this->assets_cache_folder, 'cache', $module);
 		
-		$cacheable_files = array();
 		$return = array();
+	
+		$default_module = $module;
 	
 		// first create file name
 		foreach($files as $file)
 		{
-			if ($this->_is_local_path($file))
+			if (is_array($file))
 			{
-				if (substr($file, -(strlen($type)), (strlen($type) + 1)) == '.'.$type)
+				foreach($file as $key => $f)
 				{
-					//$file = $file.'.'.$type;
-					$file = substr($file, -(strlen($type)), (strlen($type) + 1));
+					$mod = (is_string($key)) ? $key : $default_module;
+					$this->_cacheable_files[] = array($mod => $f);
+					$cache_file_name .= $mod.'/'.$f.'|';
 				}
-
-				$cacheable_files[] = trim($file);
-
-				// replace backslashes with hyphens
-				$file = str_replace('/', '_', $file);
-				$cache_file_name .= $file.'|';
 			}
+			else
+			{
+				if ($this->_is_local_path($file))
+				{
+					if (substr($file, -(strlen($type)), (strlen($type) + 1)) == '.'.$type)
+					{
+						//$file = $file.'.'.$type;
+						$file = substr($file, -(strlen($type)), (strlen($type) + 1));
+					}
+
+					$this->_cacheable_files[] = array($module => trim($file));
+
+					// replace backslashes with hyphens
+					$file = str_replace('/', '_', $file);
+					$cache_file_name .= $module.'/'.$file.'|';
+				}
+			}
+			
 		}
+
 		$cache_file_name = $cache_file_name.'.'.$type;
-	
+
 		$cache_file_name_md5 = md5($cache_file_name);
 		$ext = ($optimize === TRUE OR $optimize == 'gzip') ? 'php' : $type;
 		$cache_file_name = $cache_file_name_md5.'_'.strtotime($this->assets_last_updated).'.'.$ext;
@@ -1056,14 +1084,21 @@ class Asset {
 			$CI->load->helper('file');
 			$assets_folders = $this->assets_folders;
 			//$asset_folder = WEB_ROOT.'/'.$this->assets_path.$assets_folders[$type];
-			$asset_folder = $this->assets_server_path('', $type, $module);
 			
 			$output = '';
-			foreach($cacheable_files as $file)
+			foreach($this->_cacheable_files as $mod_file)
 			{
+				$file = current($mod_file);
+				$mod = key($mod_file);
+				
+				// check for extension... if not there, add it
+				if (!preg_match('#(\.'.$type.'|\.php)(\?.+)?$#', $file))
+				{
+					$file = $file.'.'.$type;
+				}
 				// replace backslashes with hyphens
-				$file_path = $asset_folder.$file.'.'.$type;
-
+				$asset_folder = $this->assets_server_path('', $type, $mod);
+				$file_path = $asset_folder.$file;
 				if (file_exists($file_path))
 				{
 					$output .= file_get_contents($file_path).PHP_EOL;
@@ -1176,7 +1211,7 @@ class Asset {
 	/**
 	 * Creates attributes for a tag
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	mixed	array or string of attribute values
 	 * @return	string
 	 */	
@@ -1202,7 +1237,7 @@ class Asset {
 	/**
 	 * Helper function to determine if it is a local path
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	file	path to the file
 	 * @return	boolean
 	 */	
@@ -1220,7 +1255,7 @@ class Asset {
 	/**
 	 * Add to the used array
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	string	type of file (e.g. images, js, css... etc)
 	 * @param	string	file name
 	 * @return	void
@@ -1239,7 +1274,7 @@ class Asset {
 	 *
 	 * if a module is provided, we look in the modules folder or whatever it states in the {module}_assets_path config value
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	string	module module folder if any
 	 * @return	string
 	 */	
@@ -1290,7 +1325,7 @@ class Asset {
 	/**
 	 * Loads the asset config and returns the CI super global object
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @return	object
 	 */	
 	protected function _get_assets_config()

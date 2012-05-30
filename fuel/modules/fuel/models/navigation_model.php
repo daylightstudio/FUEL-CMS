@@ -6,9 +6,10 @@ class Navigation_model extends Base_module_model {
 	
 	public $group_id = 1;
 	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
-	public $filter_join = 'and';
+	public $filter_join = array('label' => 'or', 'location' => 'or', 'group_id' => 'and');
 	public $record_class = 'Navigation_item';
 	public $ignore_replacement = array('nav_key');
+	public $filters = array('label', 'location');
 		
 	function __construct()
 	{
@@ -147,11 +148,12 @@ class Navigation_model extends Base_module_model {
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 		
 		$fields['group_id'] = array(
-		'type' => 'inline_edit', 
-		'module' => 'navigation_group',
-		'options' => $group_options,
-//		'class' => 'add_edit navigation_group', 
-		'comment' => 'The grouping of items you want to associate this navigation item to'
+			'type' => 'inline_edit', 
+			'module' => 'navigation_group',
+			'options' => $group_options,
+			'type' => 'select',
+	//		'class' => 'add_edit navigation_group', 
+			'comment' => 'The grouping of items you want to associate this navigation item to'
 		);
 		
 		if (count($group_options) == 0)

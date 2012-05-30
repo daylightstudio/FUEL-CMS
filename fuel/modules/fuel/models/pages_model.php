@@ -131,6 +131,15 @@ class Pages_model extends Base_module_model {
 		{
 			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
 		}
+		
+		// easy add for navigation
+		if (empty($values['id']))
+		{
+			$fields['navigation_label'] = array('comment' => 'This field lets you quickly add a navigation item for this page. 
+			It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the
+			\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.');
+		}
+		
 		return $fields;
 	}
 	

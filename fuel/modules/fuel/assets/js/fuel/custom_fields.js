@@ -67,9 +67,11 @@ fuel.fields.wysiwyg_field = function(context){
 	var _previewPath = myMarkItUpSettings.previewParserPath;
 
 	var createMarkItUp = function(elem){
-		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name')) + '&preview=' + escape($(elem).attr('data-preview'));
+		var q = 'module=' + escape(module) + '&field=' + escape($(elem).attr('name'));
+		if ($(elem).attr('data-preview')){
+			q += '&preview=' + escape($(elem).attr('data-preview'));
+		}
 		myMarkItUpSettings.previewParserPath = _previewPath + '?' + q;
-		console.log(myMarkItUpSettings.previewParserPath)
 		$(elem).not('.markItUpEditor').markItUp(myMarkItUpSettings);
 		
 		// set the width of the preview to match the width of the textarea
@@ -91,6 +93,7 @@ fuel.fields.wysiwyg_field = function(context){
 		//window.CKEDITOR_BASEPATH = jqx.config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
+		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
@@ -149,7 +152,9 @@ fuel.fields.wysiwyg_field = function(context){
 			});
 			
 			// need so the warning doesn't pop up if you duplicate a value
-			$.changeChecksaveValue('#' + ckId, editor.getData())
+			if ($.changeChecksaveValue){
+				$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
+			}
 			
 		})
 		CKEDITOR.instances[ckId].resetDirty();
@@ -160,6 +165,7 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
 		
+		// add view source
 		if ($('#' + ckId).parent().find('.editor_viewsource').size() == 0){
 			
 			$('#' + ckId).parent().append(sourceButton);
@@ -206,6 +212,49 @@ fuel.fields.wysiwyg_field = function(context){
 			})
 		}
 	}
+	
+	
+	
+	var createPreview = function(id){
+		var $textarea = $('#' + id);
+		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
+	
+		// add preview to make it noticable and consistent
+		if ($textarea.parent().find('.editor_preview').size() == 0){
+		
+			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
+			if ($previewBtn){
+				$textarea.parent().append(previewButton);
+
+				$('#' + id + '_preview').click(function(e){
+					var previewWindow = window.open('', 'preview', myMarkItUpSettings.previewInWindow);
+					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
+					$.ajax( {
+						type: 'POST',
+						url: myMarkItUpSettings.previewParserPath,
+						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val),
+						success: function(data) {
+							writeInPreview(data); 
+						}
+					});
+
+					function writeInPreview(data) {
+						if (previewWindow.document) {			
+							try {
+								sp = previewWindow.document.documentElement.scrollTop
+							} catch(e) {
+								sp = 0;
+							}	
+							previewWindow.document.open();
+							previewWindow.document.write(data);
+							previewWindow.document.close();
+							previewWindow.document.documentElement.scrollTop = sp;
+						}
+					}
+				});
+			}
+		}
+	}
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
@@ -224,7 +273,14 @@ fuel.fields.wysiwyg_field = function(context){
 				CKEDITOR.instances[ckId].updateElement();
 			}
 		})
+		
+		createPreview(ckId);
+		
+		
 	});
+	
+
+	
 }
 
 // file upload field
@@ -656,7 +712,7 @@ fuel.fields.template_field = function(context, options){
 	$elems = $('.repeatable', context).not('.repeatable .repeatable').parent();
 	repeatable($elems);
 	
-	('.repeatable', context).live('cloned', function(e){
+	$('.repeatable_container', context).live('cloned', function(e){
 		$('#form').formBuilder().initialize(e.clonedNode);
 	})
 

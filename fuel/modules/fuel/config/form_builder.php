@@ -2,7 +2,7 @@
 $config['js'][] = array(FUEL_FOLDER => array(
 								'jquery/plugins/jquery.formbuilder',
 								'fuel/custom_fields.js',
-								'jquery/plugins/jquery-ui-1.8.17.custom.min'
+//								'jquery/plugins/jquery-ui-1.8.17.custom.min'
 								)
 						);
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');

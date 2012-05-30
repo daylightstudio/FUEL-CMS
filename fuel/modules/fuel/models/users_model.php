@@ -205,7 +205,7 @@ class Users_model extends Base_module_model {
 		// next get the saved permissions for the user
 		$user_perms = array();
 		$user = $this->find_by_key($params['user_id']);
-		if (isset($user))
+		if (isset($user->id))
 		{
 			$user_perms_obj = $user->get_permissions(TRUE);
 			$user_perms = $user_perms_obj->find_all_array_assoc('name');

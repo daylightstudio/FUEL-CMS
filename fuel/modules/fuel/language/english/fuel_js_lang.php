@@ -18,8 +18,9 @@ $lang['btn_image'] = 'Image';
 $lang['btn_pdf'] = 'PDF';
 $lang['btn_flash'] = 'Flash';
 $lang['btn_upload_asset'] = 'Upload Asset';
-$lang['btn_view_source'] = 'View Source';
-$lang['btn_view_editor'] = 'View Editor';
+$lang['btn_view_source'] = 'Source';
+$lang['btn_view_editor'] = 'Editor';
+$lang['btn_preview'] = 'Preview';
 $lang['btn_select_all'] = 'Select All';
 $lang['btn_deselect_all'] = 'Deselect All';
 

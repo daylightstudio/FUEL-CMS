@@ -47,6 +47,9 @@ $lang['error_invalid_method'] = 'Invalid method name';
 $lang['error_curl_page'] = 'Error loading page with CURL';
 $lang['error_class_property_does_not_exist'] = 'Class property %1s does not exist';
 $lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
+$lang['error_could_not_create_folder'] = 'Could not create folder %1s';
+$lang['error_could_not_create_file'] = 'Could not create file %1s';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +103,14 @@ $lang['profile_instructions'] = 'Change your profile information below:';
 
 /*
 |--------------------------------------------------------------------------
+| My Modules
+|--------------------------------------------------------------------------
+*/
+$lang['section_my_modules'] = 'My Modules';
+
+
+/*
+|--------------------------------------------------------------------------
 | Login/Password Reset
 |--------------------------------------------------------------------------
 */
@@ -130,6 +141,8 @@ $lang['module_permissions'] = 'Permissions';
 $lang['module_manage_cache'] = 'Page Cache';
 $lang['module_manage_activity'] = 'Activity Log';
 $lang['module_manage_settings'] = 'Settings';
+$lang['module_generate'] = 'Generated';
+
 
 $lang['section_site'] = 'Site';
 $lang['section_blog'] = 'Blog';
@@ -148,7 +161,7 @@ $lang['section_settings'] = 'Settings';
 $lang['module_created']= "%1s item <em>%2s</em> created";
 $lang['module_edited'] = "%1s item <em>%2s</em> edited";
 $lang['module_deleted'] = "%1s item for <em>%2s</em> deleted";
-$lang['module_multiple_deleted'] = 'Multiple items <em>%1s</em> deleted';
+$lang['module_multiple_deleted'] = "Multiple <em>%1s</em> deleted";
 $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
 $lang['module_restored_success'] = 'Previous version successfully restored.';
@@ -253,6 +266,7 @@ $lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploade
 $lang['assets_comment_filename'] = 'If no name is provided, the filename that already exists will be used.';
 $lang['assets_comment_subfolder'] = 'Will attempt to create a new subfolder to place your asset.';
 $lang['assets_comment_overwrite'] = 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.';
+$lang['assets_heading_general'] = 'General';
 $lang['assets_heading_image_specific'] = 'Image Specific';
 $lang['assets_comment_thumb'] = 'Create a thumbnail of the image.';
 $lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image if resized.';
@@ -336,6 +350,7 @@ $lang['perm_users'] = 'Manage users';
 | Manage Cache
 |--------------------------------------------------------------------------
 */
+$lang['cache_cleared'] = 'The cache has been cleared.';
 $lang['cache_instructions'] = 'You are about to clear the page cache of the site.';
 $lang['cache_no_clear'] = 'No, don\'t clear cache';
 $lang['cache_yes_clear'] = 'Yes, clear cache';
@@ -349,6 +364,17 @@ $lang['cache_yes_clear'] = 'Yes, clear cache';
 $lang['settings_none'] = 'There are no settings for any advanced modules to manage.';
 $lang['settings_manage'] = 'Manage the settings for the following advanced modules:';
 $lang['settings_problem'] = 'There was a problem with the settings for the advanced module <strong>%1s</strong>. <br />Check that <strong>/fuel/modules/%1s/config/%1s.php</strong> config is configured to handle settings.';
+
+
+/*
+|--------------------------------------------------------------------------
+| Generate
+|--------------------------------------------------------------------------
+*/
+$lang['error_not_cli_request'] = 'This is not a CLI request.';
+$lang['error_not_in_dev_mode'] = 'This will only run in dev mode.';
+$lang['error_missing_generation_files'] = 'There are no generation files to create for %1s.';
+
 
 /*
 |--------------------------------------------------------------------------

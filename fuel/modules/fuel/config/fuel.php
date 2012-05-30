@@ -123,7 +123,8 @@ $config['languages'] = array(
 						'english' => 'English',
 						);
 
-
+// an associative array of objects to attach to the fuel object
+$config['attach'] = array();
 
 /*
 |--------------------------------------------------------------------------
@@ -159,6 +160,7 @@ $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
+	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',
@@ -167,9 +169,9 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
 	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.supercookie',
-	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.simpletab.js',
@@ -261,7 +263,7 @@ $config['nav']['shop'] = array();
 $config['nav']['blog'] = array();
 
 // my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
-$config['nav']['modules'] = 'AUTO';
+$config['nav']['modules'] = array();
 
 // tools
 $config['nav']['tools'] = array();
@@ -341,6 +343,41 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 
+/*
+|--------------------------------------------------------------------------
+| Generate settings
+|--------------------------------------------------------------------------
+*/
+
+// the files/folders to generate with the CLI generate command
+$config['generate'] = array(
+							'search'   => array('app', 'fuel'),
+							'advanced' => array(
+										'assets/css/{module}.css',
+										'assets/images/ico_cog.png',
+										'assets/js/{ModuleName}Controller.js',
+										'assets/cache/',
+										'config/{module}.php',
+										'config/{module}_routes.php',
+										'controllers/{module}.php',
+										'helpers/{module}_helper.php',
+										'libraries/Fuel_{module}.php',
+										'models/',
+										'tests/sql/',
+										'views/_admin/',
+										'views/_blocks/',
+										'views/_docs/',
+										'views/_layouts/',
+							),
+							'simple' => 'MY_fuel_modules.php',
+							'model'  => array(
+											'{model}_model.php',
+											'sql/{table}.sql',
+											),
+										);
+							
+							
+							
 @include(APPPATH.'config/MY_fuel.php');
 
 $config['settings'] = array();

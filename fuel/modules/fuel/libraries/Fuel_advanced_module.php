@@ -89,7 +89,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Magic method that will return any sub modules attached to the object
+	 * Magic method that will return any attached objects or sub modules attached to the object
 	 *
 	 * @access	public
 	 * @param	string	sub module name
@@ -97,10 +97,24 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function __get($var)
 	{
-		// look for sub modules magically
-		$sub_module_name = $this->name.'_'.$var;
+		// first check the attached
+		if (isset($this->_attached[$var]))
+		{
+			return $this->_attached[$var];
+		}
 
-		$sub_module = $this->fuel->modules->get($sub_module_name);
+		// look for sub modules magically
+		if ($var == $this->name)
+		{
+			$sub_module_name = $this->name;
+		}
+		else
+		{
+			// look for sub modules magically
+			$sub_module_name = $this->name.'_'.$var;
+		}
+		
+		$sub_module = $this->fuel->modules->get($sub_module_name, FALSE);
 		if (!empty($sub_module))
 		{
 			return $sub_module;
@@ -222,14 +236,87 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (isset($obj))
 		{
-			$this->_attached[$key] =& $obj;
+			// check if it is a straight up object and if so attach
+			if (is_object($obj))
+			{
+				$this->_attached[$key] =& $obj;
+			}
+			
+			// if it's an array, then we use the key as the module value if it is a string and the value is the library to laod
+			else if (is_array($obj))
+			{
+				$module = key($obj);
+				$library = strtolower(current($obj));
+				
+				if (is_string($module))
+				{
+					$this->CI->load->module_library($module, $library);
+				}
+				else
+				{
+					$this->CI->load->library($library);
+				}
+				$this->_attached[$key] =& $this->CI->$library;
+			}
 		}
 		else
 		{
-			// this was added to prevent the loading of config files auotmatically
-			$init = array('name' => $key);
-			$this->load_library('fuel_'.$key, $init);
-			$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+			if (is_array($key))
+			{
+
+				// if an array, then we loop through it to load
+				foreach($key as $k => $v)
+				{
+					
+					// check nested arrays
+					if (is_array($v))
+					{
+						$module = key($v);
+						$library = strtolower(current($v));
+
+						if (is_string($module))
+						{
+							$this->CI->load->module_library($module, $library);
+						}
+						else
+						{
+							$this->CI->load->library($library);
+						}
+						$this->_attached[$key] =& $this->CI->$library;
+					}
+					else
+					{
+						if (is_string($k))
+						{
+							$this->CI->load->module_library($k, $v);
+						}
+						else
+						{
+							$this->CI->load->library($v);
+						}
+						
+						$this->_attached[$v] =& $this->CI->$v;
+					}
+				}
+			}
+			else
+			{
+				// first look for a Fuel_$key library in the module's folder'
+				if (file_exists($this->server_path('libraries/Fuel_'.$key.'.php')))
+				{
+					// this was added to prevent the loading of config files auotmatically
+					$init = array('name' => $key);
+					$this->load_library('fuel_'.$key, $init);
+					$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
+				}
+				
+				// else just try and do a simple load
+				else
+				{
+					$this->CI->load->library($key);
+					$this->_attached[$key] =& $this->CI->$key;
+				}
+			}
 		}
 	}
 
@@ -452,7 +539,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function server_path($path = '')
 	{
-		return MODULES_PATH.$this->name.'/'.$path;
+		return MODULES_PATH.$this->folder().'/'.$path;
 	}
 
 	// --------------------------------------------------------------------
@@ -926,7 +1013,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads an advanced modules library file
+	 * Loads an advanced modules library file and attaches it to the object
 	 *
 	 * @access	public
 	 * @param	string Name of the library file
@@ -937,6 +1024,11 @@ class Fuel_advanced_module extends Fuel_base_library {
 	function load_library($library, $init_params = array(), $name = NULL)
 	{
 		$this->CI->load->module_library($this->folder(), $library, $init_params, $name);
+		if (empty($name))
+		{
+			$name = $library;
+		}
+		$this->attach($name, $this->CI->$name);
 	}
 
 	// --------------------------------------------------------------------
@@ -962,7 +1054,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads the advanced modules model file
+	 * Loads the advanced modules model file and attaches it to the object
 	 *
 	 * @access	public
 	 * @param	string Name of the model file.
@@ -973,10 +1065,14 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		if (substr($model, strlen($model) - 6) !='_model')
 		{
-			//$name = $model;
 			$model = $model.'_model';
 		}
+		if (empty($name))
+		{
+			$name = $model;
+		}
 		$this->CI->load->module_model($this->folder(), $model, $name);
+		$this->attach($name, $this->CI->$name);
 	}
 
 	// --------------------------------------------------------------------
@@ -996,6 +1092,33 @@ class Fuel_advanced_module extends Fuel_base_library {
 			$file = strtolower($this->name);
 		}
 		$this->CI->load->module_language($this->folder(), $file, $lang);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Installs the modules
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function install()
+	{
+		return $this->fuel->install->activate($this->name());
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Uninstalls the modules
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	function uninstall()
+	{
+		return $this->fuel->install->deactivate($this->name());
 	}
 }
 
