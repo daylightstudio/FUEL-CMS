@@ -266,6 +266,7 @@ $lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploade
 $lang['assets_comment_filename'] = 'If no name is provided, the filename that already exists will be used.';
 $lang['assets_comment_subfolder'] = 'Will attempt to create a new subfolder to place your asset.';
 $lang['assets_comment_overwrite'] = 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.';
+$lang['assets_heading_general'] = 'General';
 $lang['assets_heading_image_specific'] = 'Image Specific';
 $lang['assets_comment_thumb'] = 'Create a thumbnail of the image.';
 $lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image if resized.';

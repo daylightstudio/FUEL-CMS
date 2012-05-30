@@ -296,11 +296,12 @@ class Fuel_custom_fields {
 		$data_params['height'] = (isset($params['height'])) ? (int)$params['height'] : '';
 		$data_params['master_dimension'] = (isset($params['master_dimension'])) ? $params['master_dimension'] : '';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
+		
 		if (isset($params['hide_image_options']))
 		{
 			$data_params['hide_image_options'] = (isset($params['hide_image_options'])) ? (bool)$params['hide_image_options'] : FALSE;
 		}
-		else if (!isset($params['hide_image_options']) AND preg_match('#^images#', $params['folder']))
+		else if (!isset($params['hide_image_options']) AND !preg_match('#^images#', $params['folder']))
 		{
 			$data_params['hide_image_options'] = TRUE;
 		}

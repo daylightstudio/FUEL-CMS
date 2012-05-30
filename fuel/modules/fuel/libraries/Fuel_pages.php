@@ -248,8 +248,7 @@ class Fuel_pages extends Fuel_base_library {
 	{
 		// TODO: cant have this be called within another page or will cause and infinite loop
 		$params['location'] = $location;
-		
-		$page = new Fuel_page($params);
+		$page = $this->create($params);
 		$page->add_variables($vars);
 		$output = $page->render($return);
 		if ($output)

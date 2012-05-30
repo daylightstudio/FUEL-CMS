@@ -87,10 +87,10 @@ function &FUEL()
  * @param	mixed
  * @return	string
  */
-function fuel_block($params, $check_db = TRUE, $vars = array())
+function fuel_block($params, $vars = array(), $check_db = TRUE)
 {
 	$CI =& get_instance();
-	return $CI->fuel->blocks->render($params, $check_db, $vars);
+	return $CI->fuel->blocks->render($params, $vars, $check_db);
 }
 
 // --------------------------------------------------------------------
@@ -205,13 +205,13 @@ function fuel_form($fields, $values = array(), $params = array())
  * @param	mixed
  * @return	string
  */
-function fuel_model($module, $params = array())
+function fuel_model($module, $params = array(), $where = array())
 {
 	$CI =& get_instance();
 	$module = $CI->fuel->modules->get($module, FALSE);
 	if ($module)
 	{
-		return $module->find($params);
+		return $module->find($params, $where);
 	}
 	return FALSE;
 }

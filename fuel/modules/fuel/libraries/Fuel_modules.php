@@ -881,7 +881,7 @@ class Fuel_module extends Fuel_base_library {
 	 * @param	array  (optional)
 	 * @return	string
 	 */
-	function find($params = array())
+	function find($params = array(), $where = NULL)
 	{
 		$valid = array( 'find' => 'all',
 						'select' => NULL,
@@ -895,13 +895,23 @@ class Fuel_module extends Fuel_base_library {
 						'module' => '',
 						'params' => array(),
 						);
-
-		if (!is_array($params))
+		
+		if (is_string($params))
 		{
-			$this->CI->load->helper('array');
-			$params = parse_string_to_array($params);
+			if (preg_match('#^(all|one|key|find)#', $params))
+			{
+				$find = $params;
+				$params = array();
+				$params['find'] = $find;
+				$params['where'] = $where;
+			}
+			else
+			{
+				$this->CI->load->helper('array');
+				$params = parse_string_to_array($params);
+			}
 		}
-
+		
 		foreach($valid as $p => $default)
 		{
 			$$p = (isset($params[$p])) ? $params[$p] : $default;
@@ -931,6 +941,11 @@ class Fuel_module extends Fuel_base_library {
 		else if ($find === 'one')
 		{
 			$data = $model->find_one($where, $order, $return_method);
+			$var = $model->short_name(TRUE, TRUE);
+		}
+		else if ($find === 'options')
+		{
+			$data = $model->options_list(NULL, NULL, $where, $order);
 			$var = $model->short_name(TRUE, TRUE);
 		}
 		else

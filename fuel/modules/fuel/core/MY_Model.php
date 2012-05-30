@@ -906,7 +906,13 @@ class MY_Model extends CI_Model {
 			$this->db->order_by($order);
 		}
 		$this->db->select($key.', '.$val, FALSE);
-		$query = $this->db->get_where($this->table_name, $where);
+		
+		if (!empty($where))
+		{
+			$this->db->where($where);
+		}
+		
+		$query = $this->db->get($this->table_name);
 		
 		$key_arr = explode('.', $key);
 		$clean_key = $key_arr[(count($key_arr) - 1)];
@@ -2950,7 +2956,7 @@ class MY_Model extends CI_Model {
 	{
 		// process relationship values
 		$id = $this->_determine_key_field_value($values);
-		$values = $this->process_relationships($id);
+		$this->process_relationships($id);
 		return $values;
 	}
 	
@@ -4339,10 +4345,15 @@ Class Data_record {
 			{
 				return $this->_fields[$found[1]];
 			}
-			else if ($this->_is_relationship_property($found[1]))
+			else if ($this->_is_relationship_property($found[1], 'has_many'))
 			{
 				$return_object = (isset($args[0])) ? $args[0] : FALSE;
 				return $this->_get_relationship($found[1], $return_object,'has_many');
+			}
+			else if ($this->_is_relationship_property($found[1], 'belongs_to'))
+			{
+				$return_object = (isset($args[0])) ? $args[0] : FALSE;
+				return $this->_get_relationship($found[1], $return_object,'belongs_to');
 			}
 		}
 		else if (preg_match("/is_(.*)/", $method, $found))
@@ -4534,6 +4545,10 @@ Class Data_record {
 			{
 				// construct the method name
 				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
+			}
+			else
+			{
+				return array();
 			}
 		}
 		

@@ -539,7 +539,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function server_path($path = '')
 	{
-		return MODULES_PATH.$this->name.'/'.$path;
+		return MODULES_PATH.$this->folder().'/'.$path;
 	}
 
 	// --------------------------------------------------------------------
