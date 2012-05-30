@@ -17,6 +17,7 @@ class Projects_model extends Base_module_model {
 								'language' => 'and',
 								);
 	
+	
 	function __construct()
 	{
 		parent::__construct('projects'); // table name
@@ -28,7 +29,7 @@ class Projects_model extends Base_module_model {
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
-	
+
 	function form_fields($values = array())
 	{
 		$CI =& get_instance();
@@ -43,6 +44,7 @@ class Projects_model extends Base_module_model {
 		
 		// to limit the image folder to just the projects folder for selection
 		// $fields['image']['type'] = 'asset';
+		$fields['multi'] = array('type'=> 'multi', 'sorting' => TRUE, 'options' => array('opt1' => 'opt1', 'opt2' => 'opt2'), 'mode' => 'select');
 		$fields['image']['class'] = 'asset_select images/projects';
 		$fields['image']['multiple'] = FALSE;
 		$fields['image']['multiline'] = FALSE;
@@ -182,13 +184,16 @@ class Projects_model extends Base_module_model {
 	{
 		$id = $this->_determine_key_field_value($where);
 		$data = $this->find_by_key($id);
-		$files[] = assets_server_path('projects/'.$data->image, 'images');
-		$files[] = assets_server_path('projects/'.$this->thumb_name($data->image), 'images');
-		foreach($files as $file)
+		if (!empty($data))
 		{
-			if (file_exists($file))
+			$files[] = assets_server_path('projects/'.$data->image, 'images');
+			$files[] = assets_server_path('projects/'.$this->thumb_name($data->image), 'images');
+			foreach($files as $file)
 			{
-				@unlink($file);
+				if (file_exists($file))
+				{
+					@unlink($file);
+				}
 			}
 		}
 	}
