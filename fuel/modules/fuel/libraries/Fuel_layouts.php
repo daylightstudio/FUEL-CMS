@@ -67,7 +67,7 @@ class Fuel_layouts {
 			foreach($this->layouts as $key => $val)
 			{
 				// check if builtin is set in the fuel_layouts.php for the layout
-				if (!is_array($val)) $val = array($val, $val['builtin'] => FALSE);
+				if (!is_array($val)) $val = array($val, 'builtin' => FALSE);
 				if (!$no_builtin || !isset($val['builtin']) || ($no_builtin && !$val['builtin']))
 				{
 					$layouts[$key] = $key;
