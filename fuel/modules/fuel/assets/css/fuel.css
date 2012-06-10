@@ -403,6 +403,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_sitevariables { background-image: url(../images/ico_page_white_code.png); }
 .ico_success {  background-image: url(../images/ico_accept.png); }
 .ico_table {  background-image: url(../images/ico_table.png); }
+.ico_tags {  background-image: url(../images/ico_tag_blue.png); }
 .ico_tools { background-image: url(../images/ico_wrench.png); }
 .ico_tree {  background-image: url(../images/ico_vert_tree.png); }
 .ico_unpublish { background-image: url(../images/ico_page_red.png); }

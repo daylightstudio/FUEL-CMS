@@ -104,16 +104,18 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 
 		// look for sub modules magically
-		if ($var == $this->name)
+		$sub_module_name = $var;
+
+		// if there is a submodule with the name $var, then we return it
+		$sub_module = $this->fuel->modules->get($sub_module_name, FALSE);
+		if (!empty($sub_module))
 		{
-			$sub_module_name = $this->name;
+			return $sub_module;
 		}
-		else
-		{
-			// look for sub modules magically
-			$sub_module_name = $this->name.'_'.$var;
-		}
-		
+
+		// if there is a submodule with the name {module}_$var, then we return it
+		$sub_module_name = $this->name.'_'.$var;
+
 		$sub_module = $this->fuel->modules->get($sub_module_name, FALSE);
 		if (!empty($sub_module))
 		{
@@ -208,18 +210,45 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * The models you can load for this advanced module
 	 *
 	 * @access	public
+	 * @param	boolean Removes the '_model' suffix
 	 * @return	array
 	 */	
-	function models()
+	function models($remove_suffix = FALSE)
 	{
 		$this->CI->load->helper('file');
 		$model_files = get_filenames($this->path().'models/');
 		$models = array();
-		foreach($model_files as $m)
+		foreach($model_files as $key => $m)
 		{
-			$models[] = substr(strtolower($m), 0 -4);
+			$models[$key] = substr(strtolower($m), 0, -4);
+
+			// removes '_model'... must have this suffix to work!!!
+			if ($remove_suffix)
+			{
+				$models[$key] = substr($models[$key], 0, -6);
+			}
 		}
 		return $models;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the model of an advanced module that assumes it's the same name
+	 *
+	 * @access	public
+	 * @param	string 	The name of a model. If no name is provided, it will assume a model's name the same as the advanced module's (optional)
+	 * @return	array
+	 */	
+	function &model($model = NULL)
+	{
+		$models = $this->models(TRUE);
+		if (empty($model))
+		{
+			$model = $this->name;
+		}
+		$this->load_model($model);
+		return $this->_attached[$model.'_model'];
 	}
 	
 	// --------------------------------------------------------------------
@@ -1063,10 +1092,11 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function load_model($model, $name = NULL)
 	{
-		if (substr($model, strlen($model) - 6) !='_model')
+		if (substr($model, strlen($model) - 6) != '_model')
 		{
 			$model = $model.'_model';
 		}
+
 		if (empty($name))
 		{
 			$name = $model;

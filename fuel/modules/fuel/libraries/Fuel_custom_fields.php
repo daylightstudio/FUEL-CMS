@@ -328,20 +328,19 @@ class Fuel_custom_fields {
 	function inline_edit($params)
 	{
 		$form_builder =& $params['instance'];
-		
 		if (!empty($params['module']))
 		{
 			if (strpos($params['module'], '/') === FALSE)
 			{
 				$CI =& get_instance();
-				$module = $CI->fuel->modules->get($params['module']);
+				$module = $CI->fuel->modules->get($params['module'], FALSE);
 				$uri = (!empty($module)) ? $module->info('module_uri') : '';
 			}
 			else
 			{
 				$uri = $params['module'];
 			}
-			
+
 			if ($this->fuel->auth->has_permission($uri))
 			{
 				$inline_class = 'add_edit '.$uri;
@@ -672,6 +671,8 @@ class Fuel_custom_fields {
 		
 		$params['class'] = (!empty($params['class'])) ? 'currency '.$params['class'] : 'currency';
 		
+		$params['type'] = 'text';
+
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_text($params);
 	}
@@ -808,11 +809,22 @@ class Fuel_custom_fields {
 			$params['options'] = $form_builder->options_from_model($params['model']);
 		}
 		
-		if (!empty($params['module']) AND $this->fuel->auth->has_permission($params['module']))
+		if (strpos($params['module'], '/') === FALSE)
 		{
-			$inline_class = 'add_edit '.str_replace('_', '/', $params['module']);
+			$CI =& get_instance();
+			$module = $CI->fuel->modules->get($params['module'], FALSE);
+			$uri = (!empty($module)) ? $module->info('module_uri') : '';
+		}
+		else
+		{
+			$uri = $params['module'];
+		}
+		if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
+		{
+			$inline_class = 'add_edit '.$uri;
 			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 		}
+
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;

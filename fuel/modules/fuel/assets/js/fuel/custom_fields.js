@@ -519,7 +519,6 @@ fuel.fields.inline_edit_field = function(context){
 		$('.edit_inline_button', context).unbind().click(function(e){
 			var $elem = $(this).parent().find('select');
 			var val = $elem.val();
-			console.log($elem)
 			if (!val){
 				alert(fuel.lang('edit_multi_select_warning'));
 				return false;

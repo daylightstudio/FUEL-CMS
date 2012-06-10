@@ -237,6 +237,22 @@ function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 // --------------------------------------------------------------------
 
 /**
+ * Creates javascript code that first tries to pull in jquery from the Google CDN, and if it doesn't exist, goes to the local backup version
+ *
+ * @access	public
+ * @param	string	jQuery version number for Google CDN
+ * @param	string	local asset path to default version
+ * @return	string
+ */	
+function jquery($version = '1.7.1', $default = 'jquery')
+{
+	$CI = _get_assets();
+	return $CI->asset->jquery($version, $default);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Inserts <script ...></script> tags based on configuration settings for js file path
  *
  * @access	public

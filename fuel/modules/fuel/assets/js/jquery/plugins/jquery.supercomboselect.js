@@ -4,7 +4,7 @@
 	jQuery.fn.supercomboselect = function(settings){
 		settings = jQuery.extend({
 			addButton: ' &rarr; ',	// text of the "add" button
-			removeButton: ' &larr;',	// text of the "remove" button
+			removeButton: ' &larr; ',	// text of the "remove" button
 			optionsIdPrefix : 'auto', // used to prevent id name collision
 			wrapperId : 'auto', // id used to wrap the combo boxes
 			selectedClass : 'selected', // name for the selected class for the lis

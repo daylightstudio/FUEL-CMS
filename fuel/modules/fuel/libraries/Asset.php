@@ -561,6 +561,24 @@ class Asset {
 		return str_replace('//', '/', $this->assets_path($assets_path));
 	}
 
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates javascript code that first tries to pull in jquery from the Google CDN, and if it doesn't exist, goes to the local backup version
+	 *
+	 * @access	public
+	 * @param	string	jQuery version number for Google CDN
+	 * @param	string	local asset path to default version
+	 * @return	string
+	 */	
+	function jquery($version = '1.7.1', $default = 'jquery')
+	{
+		$js = '<script src="//ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery.min.js"></script>';
+		$js .= '<script>window.jQuery || document.write(\'<script src="'.js_path($default).'"><\/script>\');</script>';
+		return $js;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

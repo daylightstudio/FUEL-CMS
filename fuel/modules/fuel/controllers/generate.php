@@ -177,7 +177,7 @@ class Generate extends Fuel_base_controller {
 			$append = "\n\$config['modules_allowed'][] = '".$name."';";
 
 			// create variables for parsed files
-			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', '$1'.$append, $content);
+			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', '$1'.$append, $content, 1);
 
 			if (!write_file($my_fuel_path, $content))
 			{
@@ -190,7 +190,7 @@ class Generate extends Fuel_base_controller {
 			$modules_allowed[] = $name;
 			
 			$module_obj = $this->fuel->modules->get($name);
-			if (!empty($module_obj))
+			if (!empty($module_obj) AND $this->fuel->modules->is_advanced($module_obj))
 			{
 				$settings = $module_obj->settings_fields();
 				if (isset($settings['modules_allowed']))
@@ -424,7 +424,7 @@ class Generate extends Fuel_base_controller {
 		{
 			$crumbs = array(lang('module_generate'));
 			$this->fuel->admin->set_titlebar($crumbs);
-			$this->fuel->admin->render('_generate/results', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+			$this->fuel->admin->render('_generate/results', $vFuears, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 	}
 	
@@ -477,8 +477,9 @@ class Generate extends Fuel_base_controller {
 		$vars['table'] = $name;
 		$vars['module_name'] = ucwords(humanize($name));
 		$vars['model_name'] = ucfirst($name);
-		$vars['model_record'] = ucfirst(trim($name, 's'));
+		$vars['model_record'] = ucfirst(preg_replace('#ie$#', 'y', trim($name, 's')));
 		$vars['ModuleName'] = ucfirst(camelize($name));
+		$vars['MODULE_NAME'] = strtoupper($name);
 		if ($vars['model_name'] == $vars['model_record'])
 		{
 			$vars['model_record'] = $vars['model_record'].'_item';

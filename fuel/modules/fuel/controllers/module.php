@@ -26,9 +26,8 @@ class Module extends Fuel_base_controller {
 		{
 			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 			$params = $this->module_obj->info();
-			
 		}
-		else
+		else if ($this->fuel->modules->exists($this->module.'_'.fuel_uri_segment(2), FALSE))
 		{
 			// if it is a module with multiple controllers, then we'll check first and second FUEL segment with an underscore'
 			$this->module = $this->module.'_'.fuel_uri_segment(2);
@@ -37,6 +36,12 @@ class Module extends Fuel_base_controller {
 				$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 				$params = $this->module_obj->info();
 			}
+		}
+		else if ($this->fuel->modules->exists(fuel_uri_segment(2), FALSE))
+		{
+			$this->module = fuel_uri_segment(2);
+			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
+			$params = $this->module_obj->info();
 		}
 
 		foreach($params as $key => $val)
@@ -87,6 +92,7 @@ class Module extends Fuel_base_controller {
 		{
 			$this->load->model($this->model_name);
 		}
+		
 		
 		if (empty($this->display_field))
 		{
@@ -1352,7 +1358,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$this->fuel->logs->write(lang('module_deleted', $this->module));
+				$this->fuel->logs->write(lang('module_deleted', count($posted), $this->module));
 			}
 			
 			if ($this->fuel->admin->is_inline())

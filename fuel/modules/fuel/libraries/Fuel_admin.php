@@ -482,7 +482,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 		// automatically include modules if set to blank array
-		if ($nav_orig['modules'] === array())
+		if (isset($nav_orig['modules']) AND $nav_orig['modules'] === array())
 		{
 			if (!empty($config['modules']))
 			{
@@ -504,7 +504,29 @@ class Fuel_admin extends Fuel_base_library {
 				}
 			}
 		}
-		return $nav;
+
+
+		if ($this->fuel->config('nav_auto_arrange'))
+		{
+			// rearrange
+			$orig_nav = $nav;
+			unset($nav['site'], $nav['tools'], $nav['manage'], $nav['modules']);
+
+			$arranged_nav = array();
+			$arranged_nav['site'] = $orig_nav['site'];
+			foreach($nav as $key => $val)
+			{
+				$arranged_nav[$key] = $val;
+			}
+			$arranged_nav['modules'] = $orig_nav['modules'];
+			$arranged_nav['tools'] = $orig_nav['tools'];
+			$arranged_nav['manage'] = $orig_nav['manage'];
+			return $arranged_nav;
+		}
+		else
+		{
+			return $nav;
+		}
 	}
 	
 	// --------------------------------------------------------------------

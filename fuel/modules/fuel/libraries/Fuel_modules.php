@@ -932,52 +932,20 @@ class Fuel_module extends Fuel_base_library {
 		}
 
 		// retrieve data based on the method
-		$data = array();
-		if ($find === 'key')
+		$data = $model->find($find, $where, $order, $offset, $limit, $return_method, $assoc_key);
+
+		if ($data !== FALSE)
 		{
-			$data = $model->find_by_key($where, $return_method);
-			$var = $model->short_name(TRUE, TRUE);
-		}
-		else if ($find === 'one')
-		{
-			$data = $model->find_one($where, $order, $return_method);
-			$var = $model->short_name(TRUE, TRUE);
-		}
-		else if ($find === 'options')
-		{
-			$data = $model->options_list(NULL, NULL, $where, $order);
-			$var = $model->short_name(TRUE, TRUE);
-		}
-		else
-		{
-			if (empty($find) OR $find == 'all')
+			if (is_array($data) AND key($data) === 0)
 			{
-				$data = $model->find_all($where, $order, $limit, $offset, $return_method, $assoc_key);
 				$var = $model->short_name(TRUE, FALSE);
 			}
 			else
 			{
-				$method = 'find_'.$find;
-				if (is_callable(array($model, $method)))
-				{
-					if (!empty($where)) $model->db()->where($where);
-					if (!empty($order)) $model->db()->order_by($order);
-					if (!empty($offset)) $model->db()->offset($offset);
-					
-					$data = call_user_func_array(array($model, $method), $params);
-					//$data = $model->$method($where, $order, $limit, $offset);
-					if (is_array($data) AND key($data) === 0)
-					{
-						$var = $model->short_name(TRUE, FALSE);
-					}
-					else
-					{
-						$var = $model->short_name(TRUE, TRUE);
-					}
-				}
-
+				$var = $model->short_name(TRUE, TRUE);
 			}
 		}
+	
 		$vars[$var] = $data;
 
 		// load the variable for the view to use

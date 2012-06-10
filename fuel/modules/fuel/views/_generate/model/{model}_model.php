@@ -7,11 +7,14 @@ class {model_name}_model extends Base_module_model {
 	public $record_class = '{model_record}';
 	public $filters = array();
 	public $required = array();
+	public $foreign_keys = array();
 	public $linked_fields = array();
 	public $boolean_fields = array();
+	public $unique_fields = array();
+	public $parsed_fields = array();
+	public $serialized_fields = array();
 	public $belongs_to = array();
 	public $has_many = array();
-	public $serialized_fields = array();
 	
 	
 	function __construct()
@@ -19,7 +22,7 @@ class {model_name}_model extends Base_module_model {
 		parent::__construct('{table}'); // table name
 	}
 
-	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
 	{
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
@@ -33,6 +36,7 @@ class {model_name}_model extends Base_module_model {
 	
 	function on_after_save($values)
 	{
+		parent::on_after_save($values);
 		return $values;
 	}
 }

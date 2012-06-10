@@ -35,9 +35,10 @@
 			<?php endif; ?>
 			<?php endforeach; ?>
 		<?php endif; ?>
-		<li><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
 
 		<li><a href="#" class="ico ico_select_all"><?=lang('btn_select_all')?></a></li>
+
+		<li><a href="#" class="ico ico_precedence" id="rearrange"><?=lang('btn_rearrange')?></a></li>
 
 		<?php if ($this->fuel->auth->module_has_action('delete') && $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 		<li><a href="#" class="ico ico_delete" id="multi_delete"><?=lang('btn_delete_multiple')?></a></li>

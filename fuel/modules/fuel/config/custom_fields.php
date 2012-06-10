@@ -81,15 +81,9 @@ $fields['file'] = array(
 // inline edit filed
 $fields['inline_edit'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-	'function'	=> 'linked',
-	'filepath'	=> '',
-	'js'		=> array(
-		FUEL_FOLDER => array(
-			'fuel/linked_field_formatters',
-		)
-	),
-	'js_function' => 'fuel.fields.linked_field',
-
+	'function'	=> 'inline_edit',
+	'js_function' => 'fuel.fields.inline_edit_field',
+	'represents' => array('select'),
 );
 
 // linked field
@@ -133,6 +127,7 @@ $fields['currency'] = array(
 	'filepath'	=> '',
 	'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.autoNumeric'),
 	'js_function' => 'fuel.fields.currency_field',
+	'represents' => array('name' => 'price')
 );
 
 // state field

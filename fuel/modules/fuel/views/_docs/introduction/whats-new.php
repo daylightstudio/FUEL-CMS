@@ -113,6 +113,6 @@
 	<li>Added jquery UI to the backend</li>
 	<li>Added ability to pass more then one field to edit inline</li>
 	<li>Added ability to export data from module by adding an "export_data" method to your model</li>
-	<li>Added test_connection method on Mysql driver</li>
+	<!--<li>Added test_connection method on Mysql driver</li>-->
 </ul>
 

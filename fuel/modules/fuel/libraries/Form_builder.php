@@ -50,6 +50,7 @@ Class Form_builder {
 	public $textarea_rows = 10; // number of rows for a textarea
 	public $textarea_cols = 60; // number of columns for a textarea
 	public $text_size_limit = 40; // text size for a text input
+	public $submit_name = '';   // submit id and name values
 	public $submit_value = 'Submit'; // submit value  (what the button says)
 	public $cancel_value = ''; // cancel value (what the button says)
 	public $cancel_action = ''; // what the cancel button does
@@ -616,8 +617,9 @@ Class Form_builder {
 			else
 			{
 				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$this->submit_value : $this->submit_value;
-				$submit_id = $this->submit_value;
+				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
+				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
+				$submit_id = $submit_name;
 				if (!empty($this->name_prefix))
 				{
 					$submit_id = $this->name_prefix.'--'.$submit_id;
@@ -868,8 +870,9 @@ Class Form_builder {
 			else
 			{
 				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$this->submit_value : $this->submit_value;
-				$submit_id = $this->submit_value;
+				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
+				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
+				$submit_id = $submit_name;
 				if (!empty($this->name_prefix))
 				{
 					$submit_id = $this->name_prefix.'--'.$submit_id;

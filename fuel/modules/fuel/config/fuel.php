@@ -256,13 +256,7 @@ $config['nav']['site'] = array(
 	'sitevariables' => lang('module_sitevariables')
 	);
 
-// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
-$config['nav']['shop'] = array();
-
-// blog placeholder if it exists
-$config['nav']['blog'] = array();
-
-// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
+// my modules... if set to empty array, then it will automatically include all in MY_fuel_modules.php
 $config['nav']['modules'] = array();
 
 // tools
@@ -277,6 +271,8 @@ $config['nav']['manage'] = array(
 	'settings'          => lang('module_manage_settings'),
 	);
 
+// will auto arrange the navigation into the normal order
+$config['nav_auto_arrange'] = TRUE;
 /*
 |--------------------------------------------------------------------------
 | Fuel Router settings
@@ -319,6 +315,7 @@ $config['uri_view_overwrites'] = array();
 $config['tables'] = array(
 	'archives'            => 'fuel_archives',
 	'blocks'              => 'fuel_blocks',
+	'categories'          => 'fuel_categories',
 	'logs'                => 'fuel_logs',
 	'navigation'          => 'fuel_navigation',
 	'navigation_groups'   => 'fuel_navigation_groups',
@@ -327,6 +324,7 @@ $config['tables'] = array(
 	'permissions'         => 'fuel_permissions',
 	'relationships'       => 'fuel_relationships',
 	'settings'            => 'fuel_settings',
+	'tags'          	  => 'fuel_tags',
 	'users'               => 'fuel_users',
 	);
 
@@ -358,6 +356,7 @@ $config['generate'] = array(
 										'assets/js/{ModuleName}Controller.js',
 										'assets/cache/',
 										'config/{module}.php',
+										'config/{module}_constants.php',
 										'config/{module}_routes.php',
 										'controllers/{module}.php',
 										'helpers/{module}_helper.php',
