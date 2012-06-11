@@ -9,6 +9,7 @@ $lang['inline_edit_toggle_editable'] = 'Toggle editable areas';
 $lang['inline_edit_toggle_publish'] = 'Toggle the pages publish status';
 $lang['inline_edit_toggle_cache'] = 'Toggle page cache settings';
 
+$lang['inline_edit_tools'] = 'Tools...';
 $lang['inline_edit_other_pages'] = 'Other pages...';
 $lang['inline_edit_layout'] = 'Layout';
 

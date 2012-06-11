@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -70,7 +70,7 @@ $config['max_recent_pages'] = 5;
 
 // the maximum number of pages that page state will be saved before dumping the last one saved. 
 // This is used on the list pages in the admin to save sorting and filtering. Used to save on space needed for session.
-$config['saved_page_state_max'] = 5;
+$config['saved_page_state_max'] = 0;
 
 // provide a cookie path... different from the CI config if you need it (default is same as CI config)
 $config['fuel_cookie_path'] = '/';
@@ -79,6 +79,10 @@ $config['fuel_cookie_path'] = '/';
 // must exist in the assets/css file and not the fuel/assets/css folder
 $config['xtra_css'] = '';
 
+// the main layout file to be used for the interface.
+// By default, it will pull from the fuel module folder however, if an array is specified, the key will be the module and the value will be the view file.
+$config['main_layout'] = 'admin_main';
+
 // keyboard shortcuts
 $config['keyboard_shortcuts'] = array(
 	'toggle_view' => 'Ctrl+Shift+m', 
@@ -86,7 +90,7 @@ $config['keyboard_shortcuts'] = array(
 	'view' => 'Ctrl+Shift+p');
 
 // dashboard modules to include
-$config['dashboards'] = array('fuel', 'backup');
+$config['dashboards'] = array('fuel');
 
 // dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
@@ -114,6 +118,13 @@ $config['ck_editor_settings'] = array(
 	'toolbarCanCollapse' => FALSE,
 );
 
+// languages for pages. The key is saved to the page variables
+$config['languages'] = array(
+						'english' => 'English',
+						);
+
+// an associative array of objects to attach to the fuel object
+$config['attach'] = array();
 
 /*
 |--------------------------------------------------------------------------
@@ -131,7 +142,12 @@ $config['assets_excluded_dirs'] = array('js', 'css', 'cache', 'swf', 'captchas')
 $config['assets_allow_subfolder_creation'] = TRUE;
 
 // specifies what filetype extensions can be included in the folders
-$config['editable_asset_filetypes'] = array('images' => 'jpg|jpeg|jpe|gif|png', 'pdf' => 'pdf', 'media' => 'jpg|jpeg|jpe|png|gif|mov|mp3|aiff|pdf|css');
+$config['editable_asset_filetypes'] = array(
+										'images' => 'jpg|jpeg|jpe|gif|png|zip', 
+										'pdf' => 'pdf|zip', 
+										'media' => 'mov|mp3|aiff|mpeg|zip', 
+										'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css|zip'
+										);
 
 // max upload files size for assets
 $config['assets_upload_max_size']	= '1000';
@@ -144,9 +160,7 @@ $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
-	'jquery/plugins/date',
-	'jquery/plugins/jquery.datePicker',
-	'jquery/plugins/jquery.fillin',
+	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',
@@ -155,20 +169,19 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
 	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.serialize',
+	'jquery/plugins/jquery.cookie',
+	'jquery/plugins/jquery.supercookie',
 	'jquery/plugins/jquery.hotkeys',
 	'jquery/plugins/jquery.cookie',
-	'jquery/plugins/jquery.fillin',
-	'jquery/plugins/jquery.selso',
-	'jquery/plugins/jquery-ui-1.8.4.custom.min',
-	'jquery/plugins/jquery.disable.text.select.pack',
-	'jquery/plugins/jquery.supercomboselect',
-	'jquery/plugins/jquery.MultiFile',
+	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
-	'editors/markitup/jquery.markitup.pack',
-	'editors/markitup/jquery.markitup.set',
-	'editors/ckeditor/ckeditor.js',
-	'fuel/linked_field_formatters.js',
+	'fuel/custom_fields.js',
+	//'jquery/plugins/jquery.formbuilder',
+	'jquery/plugins/jquery.placeholder',
+	'fuel/global',
 );
+
 
 // css other then the fuel.css file which automatically gets loaded
 $config['fuel_css'] = array();
@@ -222,7 +235,16 @@ $config['module_sanitize_funcs'] = array(
 */
 
 // specifies which modules are allowed to be used in the FUEL admin
-$config['modules_allowed'] = array('blog', 'tools');
+$config['modules_allowed'] = array(
+	'user_guide',
+	'blog',
+	'backup',
+	'page_analysis',
+	'google_keywords',
+	'validate',
+	'tester',
+	'cronjobs'
+);
 
 // site... Dashboard will always be there
 $config['nav']['site'] = array(
@@ -234,26 +256,23 @@ $config['nav']['site'] = array(
 	'sitevariables' => lang('module_sitevariables')
 	);
 
-// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
-$config['nav']['shop'] = array();
-
-// blog placeholder if it exists
-$config['nav']['blog'] = array();
-
-// my modules... if set to auto, then it will automatically include all in MY_fuel_modules.php
-$config['nav']['modules'] = 'AUTO';
+// my modules... if set to empty array, then it will automatically include all in MY_fuel_modules.php
+$config['nav']['modules'] = array();
 
 // tools
 $config['nav']['tools'] = array();
 
 // manage
 $config['nav']['manage'] = array(
-	'users' => lang('module_users'), 
-	'permissions' => lang('module_permissions'),
-	'manage/cache' => lang('module_manage_cache'), 
-	'manage/activity' => lang('module_manage_activity')
+	'users'             => lang('module_users'), 
+	'permissions'       => lang('module_permissions'),
+	'manage/cache'      => lang('module_manage_cache'), 
+	'logs'              => lang('module_manage_activity'),
+	'settings'          => lang('module_manage_settings'),
 	);
 
+// will auto arrange the navigation into the normal order
+$config['nav_auto_arrange'] = TRUE;
 /*
 |--------------------------------------------------------------------------
 | Fuel Router settings
@@ -272,8 +291,18 @@ $config['page_cache_ttl'] = 0;
 // the name of the group the cache is associated with (so you can just remove the group)
 $config['page_cache_group'] = 'pages';
 
-// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db
+// maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
+// If it is an array, then it will loop through the array using the keys to match against a regular expression:
+// $config['max_page_params'] = array('about/news/' => 1);
 $config['max_page_params'] = 0;
+
+// a list of URI paths that will always pull from the view folder... can use :any, like routes
+// Good to use if you are passing page parameters to your pages controlled in the admin and 
+// you have a page you always want to pull from a view file 
+// (e.g. URI = company/press and you have a page of "company" in the admin with max page params set to 1 or more 
+// it would normally pull the company page if no company/press page existed in the admin and in this case 
+// we want to pull the view file of company/press)
+$config['uri_view_overwrites'] = array();
 
 
 /*
@@ -284,17 +313,20 @@ $config['max_page_params'] = 0;
 
 // the FUEL specific database tables
 $config['tables'] = array(
-	'archives' => 'fuel_archives',
-	'logs' => 'fuel_logs',
-	'navigation' => 'fuel_navigation',
-	'navigation_groups' => 'fuel_navigation_groups',
-	'pagevars' => 'fuel_page_variables',
-	'pages' => 'fuel_pages',
-	'blocks' => 'fuel_blocks',
-	'permissions' => 'fuel_permissions',
-	'user_to_permissions' => 'fuel_user_to_permissions',
-	'users' => 'fuel_users'
-);
+	'archives'            => 'fuel_archives',
+	'blocks'              => 'fuel_blocks',
+	'categories'          => 'fuel_categories',
+	'logs'                => 'fuel_logs',
+	'navigation'          => 'fuel_navigation',
+	'navigation_groups'   => 'fuel_navigation_groups',
+	'pages'               => 'fuel_pages',
+	'pagevars'            => 'fuel_page_variables',
+	'permissions'         => 'fuel_permissions',
+	'relationships'       => 'fuel_relationships',
+	'settings'            => 'fuel_settings',
+	'tags'          	  => 'fuel_tags',
+	'users'               => 'fuel_users',
+	);
 
 /*
 |--------------------------------------------------------------------------
@@ -309,7 +341,48 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 
+/*
+|--------------------------------------------------------------------------
+| Generate settings
+|--------------------------------------------------------------------------
+*/
+
+// the files/folders to generate with the CLI generate command
+$config['generate'] = array(
+							'search'   => array('app', 'fuel'),
+							'advanced' => array(
+										'assets/css/{module}.css',
+										'assets/images/ico_cog.png',
+										'assets/js/{ModuleName}Controller.js',
+										'assets/cache/',
+										'config/{module}.php',
+										'config/{module}_constants.php',
+										'config/{module}_routes.php',
+										'controllers/{module}.php',
+										'helpers/{module}_helper.php',
+										'libraries/Fuel_{module}.php',
+										'models/',
+										'tests/sql/',
+										'views/_admin/',
+										'views/_blocks/',
+										'views/_docs/',
+										'views/_layouts/',
+							),
+							'simple' => 'MY_fuel_modules.php',
+							'model'  => array(
+											'{model}_model.php',
+											'sql/{table}.sql',
+											),
+										);
+							
+							
+							
 @include(APPPATH.'config/MY_fuel.php');
+
+$config['settings'] = array();
+$config['settings']['site_name'] = array();
+$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+
 
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */

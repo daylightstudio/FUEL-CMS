@@ -7,6 +7,7 @@ class Users_model extends Base_module_model {
 	public $required = array('user_name', 'email', 'first_name', 'last_name');
 	public $filters = array('first_name', 'last_name', 'user_name');
 	public $unique_fields = array('user_name');
+	public $has_many = array('permissions' => array('model' =>'permissions_model', 'module' => 'fuel'));
 	
 	function __construct()
 	{
@@ -15,15 +16,24 @@ class Users_model extends Base_module_model {
 	
 	function valid_user($user, $pwd)
 	{
-		$where = array('user_name' => $user, 'password' => md5($pwd), 'active' => 'yes');
-		return $this->find_one_array($where);
+		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
+		$where = array('user_name' => $user, 'active' => 'yes');
+		$user = $this->find_one_array($where);
+
+		if (empty($user['salt'])) return FALSE;
+
+		if ($user['password'] == $this->salted_password_hash($pwd, $user['salt']))
+		{
+			return $user;
+		}
+		return FALSE;
 	}
 	
 	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc')
 	{
 		$CI =& get_instance();
-		$user = $CI->fuel_auth->user_data();
-		if (!$CI->fuel_auth->is_super_admin())
+		$user = $CI->fuel->auth->user_data();
+		if (!$CI->fuel->auth->is_super_admin())
 		{
 			$this->db->where(array('super_admin' => 'no'));
 		}
@@ -34,12 +44,11 @@ class Users_model extends Base_module_model {
 	
 	function user_info($user_id)
 	{
-		$user_data = $this->find_one_array(array('id' => $user_id));
+		$user = $this->find_one(array('id' => $user_id));
+		$user_data = $user->values();
 		
 		// load user permisisons
-		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-		$user_data['permissions'] = $CI->user_to_permissions_model->get_permissions($user_id);
+		$user_data['permissions'] = $user->permissions;
 		return $user_data;
 	}
 	
@@ -73,6 +82,16 @@ class Users_model extends Base_module_model {
 		return $this->record_exists(array('email' => $email));
 	}
 	
+	function salt()
+	{
+		return md5(uniqid(rand(), TRUE));
+	}
+	
+	function salted_password_hash($password, $salt)
+	{
+		return sha1($password.$salt);
+	}
+	
 	/* overwrite */
 	function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
 	{
@@ -84,22 +103,27 @@ class Users_model extends Base_module_model {
 		if ($val == 'name')
 		{
 			$val = 'CONCAT(first_name, " ", last_name) as name';
+			$order = 'name';
 		}
-		if (!$CI->fuel_auth->is_super_admin())
+		else
+		{
+			$order = $val;
+		}
+
+		if (!$CI->fuel->auth->is_super_admin())
 		{
 			$this->db->where(array('super_admin' => 'no'));
 		}
-		
-		$return = parent::options_list($key, $val, $where , $order);
+		$return = parent::options_list($key, $val, $where, $order);
 		return $return;
 	}
 	
-	function form_fields($values = null)
+	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		
 		unset($fields['super_admin']);
 		
@@ -145,50 +169,90 @@ class Users_model extends Base_module_model {
 		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
 		
 		$fields['active']['order'] = 8;
-		
-		
+
 		// get permissions
 		$CI =& get_instance();
 		$perm_fields = array();
-		$user = $CI->fuel_auth->user_data();
+		$user = $CI->fuel->auth->user_data();
 		
-		//if (($CI->fuel_auth->is_super_admin() AND ($user['id'] != $user_id)) AND (!empty($values['super_admin']) AND $values['super_admin'] != 'yes'))
-		if (($CI->fuel_auth->is_super_admin() AND ($user['id'] != $user_id))
-			OR (!$CI->fuel_auth->is_super_admin() AND $CI->fuel_auth->has_permission('permissions'))
+		//if (($CI->fuel->auth->is_super_admin() AND ($user['id'] != $user_id)) AND (!empty($values['super_admin']) AND $values['super_admin'] != 'yes'))
+		if (($CI->fuel->auth->is_super_admin() AND ($user['id'] != $user_id))
+			OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions'))
 		)
 		{
-			$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-			$selected_perms = $CI->user_to_permissions_model->get_permissions($user_id, FALSE);
-
-			// if (!empty($selected_perms)) 
-			// {
-				$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
-//			}
-			
-			$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
-			$perms = $CI->permissions_model->find_all_array(array('active' => 'yes'), 'name asc');
-			
-			$order = 11;
-			foreach($perms as $val)
-			{
-				$perm_field = 'permissions_'.$val['id'];
-				$perm_fields[$perm_field]['type'] = 'checkbox';
-				$perm_fields[$perm_field]['value'] = $val['id'];
-				$perm_fields[$perm_field]['order'] = $order;
-				$label = lang('perm_'.$val['name']);
-				if (empty($label))
-				{
-					$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
-				}
-				$perm_fields[$perm_field]['label'] = $label;
-				if (!empty($selected_perms[$val['id']])) $perm_fields[$perm_field]['checked'] = TRUE;
-				$order++;
-			}
+			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
+			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
 		}
-		$fields = array_merge($fields, $perm_fields);
-		unset($fields['reset_key']);
+		
+		$fields['permissions']['mode'] = 'checkbox';
+		$fields['permissions']['display_label'] = FALSE;
+		$fields['permissions']['wrapper_tag'] = 'div';
+		//$fields = array_merge($fields, $perm_fields);
+		unset($fields['reset_key'], $fields['salt']);
+		
 		return $fields;
 	}
+	
+	function _create_permission_fields($params = array())
+	{
+		$CI =& get_instance();
+		
+		
+		// first get the permissions
+		$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
+		$perms_list = $CI->permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
+
+		// next get the saved permissions for the user
+		$user_perms = array();
+		$user = $this->find_by_key($params['user_id']);
+		if (isset($user->id))
+		{
+			$user_perms_obj = $user->get_permissions(TRUE);
+			$user_perms = $user_perms_obj->find_all_array_assoc('name');
+		}
+
+		$perms = array();
+		foreach($perms_list as $perm => $perm_val)
+		{
+			$sub = explode('/', $perm);
+			if (!isset($perms[$sub[0]]))
+			{
+				$perms[$sub[0]] = array();
+			}
+			
+			if (!isset($sub[1]))
+			{
+				$perms[$sub[0]] = $perm_val;
+				$perms[$sub[0]]['permissions'] = array();
+			}
+			else
+			{
+				$perms[$sub[0]]['permissions'][$perm] = $perm_val;
+			}
+		}
+		
+		$str = "<div class=\"perms_list\">\n";
+		$str .= "<ul>\n";
+		foreach($perms as $key => $val)
+		{
+			$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$val['description']."</label>";
+			
+			if (!empty($val['permissions']))
+			{
+				$str .= "<ul>\n";
+				foreach($val['permissions'] as $k => $v)
+				{
+					$str .= "\t<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$v["id"]."\" id=\"permission".$v["id"]."\" ".(isset($user_perms[$v['name']]) ? 'checked="checked"' : '')." /><label for=\"permission".$v["id"]."\"> ".$v['description']."</label></li>";
+				}
+				$str .= "</ul>\n";
+			}
+			$str .= "</li>\n";
+		}
+		$str .= "</ul>\n";
+		$str .= "</div>\n";
+		return $str;
+	}
+	
 	
 	function on_before_validate($values)
 	{
@@ -214,83 +278,56 @@ class Users_model extends Base_module_model {
 				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
 		}
+		unset($values['super_admin']); // can't save from UI as security precaution'
 		return $values;
 	}
 	
 	function on_before_clean($values)
 	{
-		//if (empty($values['id']) AND !empty($values['password'])) $values['password'] = md5($values['password']);
-		if (!empty($values['password'])) $values['password'] = md5($values['password']);
-		if (!empty($values['new_password'])) $values['password'] = md5($values['new_password']);
-		unset($values['super_admin']); // can't save from UI as security precaution'
+		$has_pwd = FALSE;
+		if (!empty($values['password'])) 
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
+		}
+		if (!empty($values['new_password']))
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+		}
 		return $values;
 	}
 	
 	function on_after_save($values)
 	{
+		parent::on_after_save($values);
 		$CI =& get_instance();
-		
-		// delete all permissions first to start clean
-		$CI->load->module_model(FUEL_FOLDER, 'user_to_permissions_model');
-		
-		$has_permission_change = FALSE;
-		foreach($this->normalized_save_data as $key => $val)
-		{
-			if (strncmp($key, 'permissions_', 12) === 0)
-			{
-				$has_permission_change = TRUE;
-				break;
-			}
-		}
-		
-		if ($has_permission_change AND !empty($values['id']))
-		{
-			$CI->user_to_permissions_model->delete(array('user_id' => $values['id']));
-		}
-		
-		foreach($this->normalized_save_data as $key => $val)
-		{
-			if (strncmp($key, 'permissions_', 12) === 0)
-			{
-				$perm_values['permission_id'] = str_replace('permissions_', '', $key);
-				$perm_values['user_id'] = $values['id'];
-				$user_to_perm_saved = $CI->user_to_permissions_model->save($perm_values);
-				if (!$user_to_perm_saved) return;
-			}
-		}
 
-		$user = $CI->fuel_auth->user_data();
+		$user = $CI->fuel->auth->user_data();
 
 		// reset session information... 
-		//if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
 		if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
 		{
 			if (!empty($values['password']))
 			{
-				$CI->fuel_auth->set_valid_user_property('password', $values['password']);
+				$CI->fuel->auth->set_user_data('password', $values['password']);
 			}
 
 			if (!empty($values['language']))
 			{
-				$CI->fuel_auth->set_valid_user_property('language', $values['language']);
+				$CI->fuel->auth->set_user_data('language', $values['language']);
 			}
 			
-			//$CI->fuel_auth->set_valid_user($values);
-			
 		}
-		
 	}
 	
 	function delete($where)
 	{
 		//prevent the deletion of the super admins
 		$where['super_admin'] = 'no';
-		parent::delete($where);
-		$CI =& get_instance();
-		$CI->load->module_model('fuel','user_to_permissions_model');
-		return $CI->user_to_permissions_model->delete(array('user_id' => $where['id']));
+		return parent::delete($where);
 	}
-	
+
 	function is_new_email($email)
 	{
 		if (empty($email)) return FALSE;
@@ -304,7 +341,16 @@ class Users_model extends Base_module_model {
 		if (empty($data) || (!empty($data) AND $data['id'] == $id)) return TRUE;
 		return FALSE;
 	}
+	
+	
+	// used to clear out parent base_module_model common query
+	function _common_query()
+	{
+		
+	}
 }
 
 class User_model extends Base_module_record {
+
+	
 }

@@ -11,30 +11,24 @@ class Logout extends CI_Controller {
 	
 	function _remap($segment)
 	{
-		$this->load->library('session');
-		$this->session->sess_destroy();
-		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
-		$this->load->helper('cookie');
-		$this->fuel_auth->logout();
+		$this->load->helper('convert');
+		$this->fuel->auth->logout();
 		$config = array(
-			'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(),
+			'name' => $this->fuel->auth->get_fuel_trigger_cookie_name(),
 			'path' => WEB_PATH
 		);
 		delete_cookie($config);
 		
-		$redirect = $this->config->item('logout_redirect', 'fuel');
+		$redirect = $this->fuel->config('logout_redirect');
 		if ($redirect == ':last')
 		{
 			$this->load->helper('convert');
 			
-			// if ($segment == 'index')
-			// {
-			// 	$redirect = fuel_uri('login');
-			// }
-			// else
-			// {
-				$redirect = uri_safe_decode($segment);
-			//}
+			$redirect = uri_safe_decode($segment);
+			if ($segment == 'page_router')
+			{
+				$segment = $this->fuel->config('default_home_view');
+			}
 		}
 		redirect($redirect);
 	}

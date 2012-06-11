@@ -61,17 +61,60 @@ class MX_Loader extends CI_Loader
 		$this->_module = CI::$APP->router->fetch_module();
 	}
 	
-	/** Initialize the module **/
-	public function _init() {
-		
-		/* set the module name for Modular Extensions */
+	/** Initialize the loader variables **/
+	public function initialize($controller = NULL) {
+
+		parent::__construct();
+		if (is_a($controller, 'MX_Controller')) {	
+
+			/* reference to the module controller */
+			$this->controller = $controller;
+
+			/* references to ci loader variables */
+			foreach (get_class_vars('CI_Loader') as $var => $val) {
+				if ($var != '_ci_ob_level') {
+					$this->$var =& CI::$APP->load->$var;
+				}
+			}
+
+		} else {
+			parent::initialize();
+		}
+	
+		/* set the module name */
 		$this->_module = CI::$APP->router->fetch_module();
-		
-		/* references to ci loader variables */
-		foreach (get_class_vars('CI_Loader') as $var => $val) {
-			$this->$var =& CI::$APP->load->$var;
- 		}
+
+		/* add this module path to the loader variables */
+		$this->_add_module_paths($this->_module);
 	}
+	
+	
+	/** Add a module path loader variables **/
+	public function _add_module_paths($module = '') {
+		
+		if (empty($module)) return;
+		
+		foreach (Modules::$locations as $location => $offset) {
+			
+			/* only add a module path if it exists */
+			if (is_dir($module_path = $location.$module.'/') && ! in_array($module_path, $this->_ci_model_paths)) 
+			{
+				array_unshift($this->_ci_model_paths, $module_path);
+			}
+		}
+	}	
+
+	// /** Initialize the module **/
+	// public function _init() {
+	// 	
+	// 	/* set the module name for Modular Extensions */
+	// 	$this->_module = CI::$APP->router->fetch_module();
+	// 	
+	// 	/* references to ci loader variables */
+	// 	foreach (get_class_vars('CI_Loader') as $var => $val) {
+	// 		$this->$var =& CI::$APP->load->$var;
+	//  		}
+	// }
 	
 	/** Load a module config file **/
 	public function config($file = '', $use_sections = FALSE, $fail_gracefully = FALSE) {

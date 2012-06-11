@@ -4,7 +4,7 @@
 	jQuery.fn.supercomboselect = function(settings){
 		settings = jQuery.extend({
 			addButton: ' &rarr; ',	// text of the "add" button
-			removeButton: ' &larr;',	// text of the "remove" button
+			removeButton: ' &larr; ',	// text of the "remove" button
 			optionsIdPrefix : 'auto', // used to prevent id name collision
 			wrapperId : 'auto', // id used to wrap the combo boxes
 			selectedClass : 'selected', // name for the selected class for the lis
@@ -20,7 +20,7 @@
 		}, settings);
 		
 		this.each(function(i){
-			
+
 			/**********************************************************************
 			SET UP VARIABLES
 			**********************************************************************/
@@ -112,6 +112,9 @@
 			/**********************************************************************
 			BIND EVENTS
 			**********************************************************************/
+			$('#' + leftID + ' li').die();
+			$('#' + rightID + ' li').die();
+			
 			$('#' + leftID + ' li').live('dblclick', function(e){
 				addSelectedToRight();
 			});
@@ -157,7 +160,7 @@
 			});
 			
 			$('#' + settings.wrapperId + ' .csadd').click(function(){
-				addSelectedToRight(true);
+				addSelectedToRight();
 			});
 
 			$('#' + settings.wrapperId + ' .csremove').click(function(){
@@ -198,8 +201,7 @@
 				$('#' + leftID).parent().after(searchBoxHTML);
 				searchBox = $('#' + leftID).parent().parent().find('.supercomboselect_search_text');
 				searchBox
-					.fillin(settings.defaultSearchBoxString)
-					.val(settings.defaultSearchBoxString)
+					.attr('placeholder', settings.defaultSearchBoxString)
 					.keyup(function(e){
 						isShiftDown = false; // reset this to prevent issue with not being able to select
 						if (e.shiftKey || e.metaKey || e.altKey || e.ctrlKey || $.inArray(e.keyCode, nonSearchableChars) != -1) return false;
@@ -322,7 +324,7 @@
 				
 			}
 			
-			function addSelectedToRight(highlight){
+			function addSelectedToRight(){
 				$selectedOpts = $('#' + leftID + ' li[class=' + settings.selectedClass + ']');
 				var selected = new Array();
 				$selectedOpts.each(function(i){

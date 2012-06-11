@@ -17,38 +17,17 @@ class Dashboard extends Fuel_base_controller {
 		}
 		else
 		{
-			$user = $this->fuel_auth->user_data();
-			$vars['change_pwd'] = ($user['password'] == md5($this->config->item('default_pwd', 'fuel')));
+			$this->fuel->load_model('users');
+			$auth_user = $this->fuel->auth->user_data();
+			$user = $this->users_model->find_by_key($auth_user['id'], 'array');
+			$vars['change_pwd'] = ($user['password'] == $this->users_model->salted_password_hash($this->config->item('default_pwd', 'fuel'), $user['salt']));
 
-			$dashboards = array();
-			$dashboards_config = $this->config->item('dashboards', 'fuel');
-			if (!empty($dashboards_config))
-			{
-				
-				if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
-				{
-					$modules = $this->config->item('modules_allowed', 'fuel');
-
-					foreach($modules as $module)
-					{
-						// check if there is a dashboard controller for each module
-						if ($this->fuel_auth->has_permission($module) AND 
-							file_exists(MODULES_PATH.$module.'/controllers/dashboard.php'))
-						{
-							$dashboards[] = $module;
-						}
-					}
-				}
-				else if(is_array($dashboards_config))
-				{
-					foreach($dashboards_config as $module)
-					{
-						$dashboards[] = $module;
-					}
-				}
-			}
+			$dashboards = $this->fuel->admin->dashboards();
+			
 			$vars['dashboards'] = $dashboards;
-			$this->_render('dashboard', $vars);
+			$crumbs = array('' => 'Dashboard');
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_dashboard');
+			$this->fuel->admin->render('dashboard', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 
 	}
@@ -58,35 +37,27 @@ class Dashboard extends Fuel_base_controller {
 	{
 		if (is_ajax())
 		{
+			$this->load->helper('simplepie');
 			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-
-			$vars['recently_modifed_pages'] = $this->pages_model->recently_updated();
+			$vars['recently_modifed_pages'] = $this->pages_model->find_all_array(array(), 'last_modified desc', 10);
 			$vars['latest_activity'] = $this->logs_model->list_items(10);
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
 			}
-			$vars['feed'] = $this->_feed();
-			$this->load->view('dashboard_ajax', $vars);
-		}
-	}
-	
-	function _feed()
-	{
-		$feed = $this->config->item('dashboard_rss', 'fuel');
-		$limit = 3;
-		if (!empty($feed))
-		{
-			$this->load->library('simplepie');
-			$this->simplepie->set_feed_url($feed);
-			$this->simplepie->set_cache_duration(600);
-			$this->simplepie->enable_order_by_date(TRUE);
-			$this->simplepie->enable_cache(TRUE);
-			$this->simplepie->set_cache_location($this->config->item('cache_path'));
-			@$this->simplepie->init();
-			$this->simplepie->handle_content_type();
+			$feed = $this->fuel->config('dashboard_rss');
 			
-			return $this->simplepie->get_items(0, $limit);
+			$limit = 3;
+			$feed_data = simplepie($feed, $limit);
+			
+			// check for latest version
+			if (array_key_exists('latest_fuel_version', $feed_data) AND ((float)$feed_data['latest_fuel_version'] > FUEL_VERSION))
+			{
+				$vars['latest_fuel_version'] = $feed_data['latest_fuel_version'];
+			}
+			unset($feed_data['latest_fuel_version']);
+			$vars['feed'] = $feed_data;
+			$this->load->view('dashboard_ajax', $vars);
 		}
 	}
 	

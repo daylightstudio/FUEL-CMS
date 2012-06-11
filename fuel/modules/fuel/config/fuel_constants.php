@@ -1,9 +1,10 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '0.9.3');
+define('FUEL_VERSION', '1.0');
 define('MODULES_FOLDER', '../modules');
 define('FUEL_FOLDER', 'fuel');
 define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
+define('MODULES_FROM_APPCONTROLLERS', '../'.MODULES_FOLDER.'/');
 define('FUEL_PATH', MODULES_PATH.FUEL_FOLDER.'/');
 define('WEB_ROOT', str_replace('\\', '/', realpath(dirname(SELF)).DIRECTORY_SEPARATOR)); // replace \ with / for windows
 
@@ -14,26 +15,9 @@ define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SC
 // change slashes for some Windows platforms
 $_FUEL_SEGS = explode('/', str_replace("\\", '/', $_SERVER['SCRIPT_FILENAME']));
 
-define('WEB_FOLDER', $_FUEL_SEGS[count($_FUEL_SEGS)-2]);
+define('WEB_FOLDER', (count($_FUEL_SEGS) > 1) ? $_FUEL_SEGS[count($_FUEL_SEGS)-2] : '/');
 define('MODULES_WEB_PATH', FUEL_FOLDER.'/modules/');
 
-if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
-{
-	$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
-	
-	if ($_SERVER['SERVER_PORT'] == '443')
-	{
-		define('BASE_URL', "https://".$_base_path);
-	}
-	else
-	{
-		define('BASE_URL', "http://".$_base_path);
-	}
-}
-else
-{
-	define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
-}	
 
 // must include language helper if you want to use lang function
 include(APPPATH.'helpers/MY_language_helper.php');
@@ -46,7 +30,7 @@ if (defined('STDIN'))
 	$_SERVER['REQUEST_URI'] = $args ? implode('/', $args) : '';
 }
 
-define('IN_FUEL_ADMIN', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
+define('USE_FUEL_ROUTES', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
 define('FUEL_ROUTE', $config['fuel_path']);
 
 foreach($config['modules_allowed'] as $module)
@@ -55,6 +39,27 @@ foreach($config['modules_allowed'] as $module)
 	if (file_exists($constants_path))
 	{
 		require_once($constants_path);
+	}
+}
+
+if (!defined('BASE_URL'))
+{
+	if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
+	{
+		$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+
+		if ($_SERVER['SERVER_PORT'] == '443')
+		{
+			define('BASE_URL', "https://".$_base_path);
+		}
+		else
+		{
+			define('BASE_URL', "http://".$_base_path);
+		}
+	}
+	else
+	{
+		define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 	}
 }
 

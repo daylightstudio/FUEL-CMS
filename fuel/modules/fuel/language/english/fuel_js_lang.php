@@ -4,7 +4,7 @@
 | Misc. For Javascript Files
 |--------------------------------------------------------------------------
 */
-$lang['label_search'] = 'Enter search term...';
+$lang['label_search'] = 'Search...';
 
 $lang['btn_save'] = 'Save';
 $lang['btn_cancel'] = 'Cancel';
@@ -17,8 +17,12 @@ $lang['btn_asset'] = 'Asset';
 $lang['btn_image'] = 'Image';
 $lang['btn_pdf'] = 'PDF';
 $lang['btn_flash'] = 'Flash';
-$lang['btn_view_source'] = 'View Source';
-$lang['btn_view_editor'] = 'View Editor';
+$lang['btn_upload_asset'] = 'Upload Asset';
+$lang['btn_view_source'] = 'Source';
+$lang['btn_view_editor'] = 'Editor';
+$lang['btn_preview'] = 'Preview';
+$lang['btn_select_all'] = 'Select All';
+$lang['btn_deselect_all'] = 'Deselect All';
 
 $lang['comboselect_values_empty'] = 'There are no more values to select';
 $lang['comboselect_selected_empty'] = 'Select from the values on the left';
@@ -35,6 +39,10 @@ $lang['viewpage_close'] = 'Close';
 $lang['viewpage_new_window'] = 'New Window';
 
 $lang['rearrange_on'] = 'You can change the precedence order by selecting and dragging the data rows below.';
+
+$lang['replace_warning'] = 'Are you sure you want to replace the contents of this record?';
+
+$lang['edit_multi_select_warning'] = 'You must have only have one option selected to edit.';
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +78,15 @@ $lang['markitup_placeholder_link'] = 'Your text to link...';
 $lang['markitup_email'] = 'email@address.com';
 $lang['markitup_fullscreen_close'] = 'Close';
 
+
+/*
+|--------------------------------------------------------------------------
+| Repeatable
+|--------------------------------------------------------------------------
+*/
+$lang['warn_before_delete_msg'] = 'Are you sure you want to delete this item?';
+$lang['btn_add_another'] = 'Add Another';
+$lang['btn_remove'] = 'Remove';
 
 /* End of file fuel_js_lang.php */
 /* Location: ./modules/fuel/language/english/fuel_js_lang.php */

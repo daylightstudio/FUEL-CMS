@@ -7,7 +7,7 @@
 | The subdirectory in the views folder where the layouts files are stored
 |
 */
-$config['layouts_path'] = '_layouts/';
+$config['layouts_folder'] = '_layouts';
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ $config['default_layout'] = 'main';
 | gets executed before the rendering of the layout. If set to the keyword
 | "AUTO", then layouts will be read in from the views/_layouts directory
 */
-$config['layouts'] = 'AUTO';
+//$config['layouts'] = 'AUTO';
 
 
 /*
@@ -66,34 +66,37 @@ $config['layouts'] = 'AUTO';
 
 
 // initialize layout fields 
-$config['layout_fields'] = array();
-
-$config['layout_fields']['301_redirect'] = array(
-	'copy' => array('copy' => lang('layout_field_301_redirect_copy')),
-	'redirect_to' => array('label' => lang('layout_field_redirect_to')),
+$config['layouts']['301_redirect'] = array(
+	'fields' => array(
+	'	copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
+		'redirect_to' => array('label' => lang('layout_field_redirect_to')),
+	)
 );
 
-
-$config['layout_fields']['sitemap_xml'] = array(
-	'copy' => array('copy' => lang('layout_field_sitemap_xml_copy')),
-	'frequency' => array(
-		'type' => 'select',
-		'options' => array(
-			'always' => lang('layout_field_frequency_always'),
-			'hourly' => lang('layout_field_frequency_hourly'),
-			'daily' => lang('layout_field_frequency_daily'),
-			'weekly' => lang('layout_field_frequency_weekly'),
-			'monthly' => lang('layout_field_frequency_monthly'),
-			'yearly' => lang('layout_field_frequency_yearly'),
-			'never' => lang('layout_field_frequency_never'),
-		),
-		'value' => 'always',
-		'label' => lang('layout_field_frequency'))
+$config['layouts']['sitemap_xml'] = array(
+	'fields' => array(
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_sitemap_xml_copy')),
+		'frequency' => array(
+			'type' => 'select',
+			'options' => array(
+				'always' => lang('layout_field_frequency_always'),
+				'hourly' => lang('layout_field_frequency_hourly'),
+				'daily' => lang('layout_field_frequency_daily'),
+				'weekly' => lang('layout_field_frequency_weekly'),
+				'monthly' => lang('layout_field_frequency_monthly'),
+				'yearly' => lang('layout_field_frequency_yearly'),
+				'never' => lang('layout_field_frequency_never'),
+			),
+			'value' => 'always',
+			'label' => lang('layout_field_frequency')),
+	)
 );
 
-$config['layout_fields']['none'] = array(
-	'copy' => array('copy' => lang('layout_field_none_copy')),
-	'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
+$config['layouts']['none'] = array(
+	'fields' => array(
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_none_copy')),
+		'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
+	)
 );
 
 @include(APPPATH.'config/MY_fuel_layouts.php');

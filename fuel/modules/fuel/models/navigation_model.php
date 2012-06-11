@@ -6,19 +6,39 @@ class Navigation_model extends Base_module_model {
 	
 	public $group_id = 1;
 	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
-	public $filter_join = 'and';
+	public $filter_join = array('label' => 'or', 'location' => 'or', 'group_id' => 'and');
 	public $record_class = 'Navigation_item';
-	
+	public $ignore_replacement = array('nav_key');
+	public $filters = array('label', 'location');
+		
 	function __construct()
 	{
 		parent::__construct('navigation');
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 
+	// used for the FUEL admin
+	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc')
+	{
+		$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, published', FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order);
+		return $data;
+	}
+	
 	function find_by_location($location, $group_id = 1)
 	{
-		$where = array();
 		$where[$this->_tables['navigation'].'.location'] = $location;
+		return $this->_find_by_array($where, $group_id);
+	}
+
+	function find_by_nav_key($nav_key, $group_id = 1)
+	{
+		$where[$this->_tables['navigation'].'.nav_key'] = $nav_key;
+		return $this->_find_by_array($where, $group_id);
+	}
+	
+	protected function _find_by_array($where, $group_id = 1)
+	{
 		if (!empty($group_id))
 		{
 			if (is_string($group_id))
@@ -105,31 +125,6 @@ class Navigation_model extends Base_module_model {
 		return $data;
 	}
 
-	function children($parent, $group_id = 1)
-	{
-		$parent = $this->find_one_array(array('location' => $parent));
-		
-		$data = array();
-		if (!empty($parent))
-		{
-			$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
-			$where['published'] = 'yes';
-			$where['parent_id'] = $parent['id'];
-			$data = $this->find_all_array($where);
-		}
-		return $data;
-	}
-	
-	function root($group_id = 1)
-	{
-		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
-		$where['published'] = 'yes';
-		$where['parent_id'] = 0;
-		$data = $this->find_all_array($where);
-		$data = $this->find_all_array($where);
-		return $data;
-	} 
-	
 	function max_id()
 	{
 		$this->db->select_max('id');
@@ -148,15 +143,17 @@ class Navigation_model extends Base_module_model {
 		}
 		$CI->load->helper('array');
 		
-		$group_options = options_list($CI->navigation_groups_model->find_all_array());
+		$group_options = $CI->navigation_groups_model->options_list();
 		$group_values = array_keys($group_options);
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
-
+		
 		$fields['group_id'] = array(
-		'type' => 'select', 
-		'options' => $group_options,
-		'class' => 'add_edit navigation_group', 
-		'comment' => 'The grouping of items you want to associate this navigation item to'
+			'type' => 'inline_edit', 
+			'module' => 'navigation_group',
+			'options' => $group_options,
+			'type' => 'select',
+	//		'class' => 'add_edit navigation_group', 
+			'comment' => 'The grouping of items you want to associate this navigation item to'
 		);
 		
 		if (count($group_options) == 0)
@@ -187,6 +184,28 @@ class Navigation_model extends Base_module_model {
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['hidden']['options'] = array('yes' => $yes, 'no' => $no);
+		
+		// set order
+		$fields['general_tab'] = array('type' => 'fieldset', 'label' => 'General', 'class' => 'tab', 'order' => 1);
+		$fields['advanced_tab'] = array('type' => 'fieldset', 'label' => 'Advanced', 'class' => 'tab', 'order' => 5);
+
+		$order = array(	'general_tab', 
+						'group_id', 
+						'location', 
+						'label', 
+						'parent_id', 
+						'published', 
+						'advanced_tab', 
+						'nav_key', 
+						'precedence', 
+						'attributes', 
+						'selected', 
+						'hidden'
+						);
+		foreach($order as $key => $val)
+		{
+			$fields[$val]['order'] = $key + 1;
+		}
 		
 		return $fields;
 	}
@@ -288,22 +307,46 @@ class Navigation_model extends Base_module_model {
 		$this->db->order_by('precedence, location asc');
 	}
 	
+	
+	// overwritten so we can group items
+	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE)
+	{
+		if (!empty($order) AND is_bool($order))
+		{
+			$this->db->order_by($val, 'asc');
+		} 
+		else if (!empty($order) AND is_string($order))
+		{
+			if (strpos($order, ' ') === FALSE) $order .= ' asc';
+			$this->db->order_by($order);
+		}
+		$data = $this->find_all_array_assoc($key, $where);
+		return $this->_group_options($data, $key, $val);
+	}
+	
+	
 	// used to get nested groups
 	function get_others($display_field, $id, $val_field = NULL)
 	{
-		if (empty($val_field)) $val_field = $this->key_field;
-		$data = $this->find_all_array_assoc('id');
-		unset($data[$id]);
-		$others = array();
-		foreach($data as $d)
-		{
-			if (!isset($others[$d['group_name']])) $others[$d['group_name']] = array();
-			$others[$d['group_name']][$d['id']] = $d['label'];
-		}
+		$others = $this->find_all_array_assoc('id');
+		if (isset($others[$id])) unset($others[$id]);
+		$others = $this->_group_options($others);
 		if (isset($others[$id])) unset($others[$id]);
 		return $others;
 	}
 	
+	// group the options together
+	protected function _group_options($data, $key = 'id', $val = 'label')
+	{
+		$options = array();
+		foreach($data as $d)
+		{
+			if (!isset($options[$d['group_name']])) $options[$d['group_name']] = array();
+			$options[$d['group_name']][$d[$key]] = $d[$val];
+		}
+		unset($data);
+		return $options;
+	}
 }
 
 class Navigation_item_model extends Base_module_record {

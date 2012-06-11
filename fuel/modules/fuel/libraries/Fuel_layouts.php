@@ -1,19 +1,63 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
-class Fuel_layouts {
-	
-	public $default_layout = 'main';
-	public $layouts = array();
-	public $layout_fields = array();
+// ------------------------------------------------------------------------
 
-	public $layouts_path = '_layouts';
+/**
+ * FUEL layouts object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_layouts
+ */
+
+// --------------------------------------------------------------------
+
+class Fuel_layouts extends Fuel_base_library {
 	
+	public $default_layout = 'main'; // default layout folder
+	public $layouts_folder = '_layouts'; // layout folder 
+	public $layouts = array(); // layout object initialization parameters
+
+	protected $_layouts = array(); // layout objects
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
 	function __construct($params = array())
 	{
+		parent::__construct($params);
+		
 		@include(FUEL_PATH.'config/fuel_layouts'.EXT);
 		
+		$this->CI->load->library('form_builder');
+
 		if (!empty($config)) $params = $config;
 		if (empty($params)) show_error('You are missing the fuel_layouts.php config file.');
+
 		$this->initialize($params);
 	}
 	
@@ -30,8 +74,6 @@ class Fuel_layouts {
 	 */	
 	function initialize($config = array())
 	{
-		$CI =& get_instance();
-		
 		// setup any intialized variables
 		foreach ($config as $key => $val)
 		{
@@ -42,140 +84,778 @@ class Fuel_layouts {
 		}
 		
 		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
-		if ($this->layouts === TRUE OR (is_string($this->layouts) AND strtoupper($this->layouts) == 'AUTO'))
-		{
-			$CI->load->helper('file');
-			$layouts = get_filenames(APPPATH.'views/'.$this->layouts_path);
+		$this->CI->load->helper('file');
+		$this->CI->load->helper('directory');
+		$layout_path = APPPATH.'views/'.$this->layouts_folder;
+		$layouts = get_filenames($layout_path);
+		
+		$layout_files = directory_to_array($layout_path, TRUE);
 
-			$this->layouts = array();
-			if (!empty($layouts))
+		if (!empty($layout_files))
+		{
+			foreach($layout_files as $file)
 			{
-				foreach($layouts as $layout)
+				$layout = end(explode('/', $file));
+				$layout = substr($layout, 0, -4);
+				$file_dir = ltrim(dirname($file), '/');
+				
+				if ($file_dir != ltrim($layout_path, '/'))
 				{
-					$layout = substr($layout, 0, -4);
-					$this->layouts[$layout] = $this->layouts_path.$layout;
+					$group = end(explode('/', $file_dir));
+				}
+				else
+				{
+					$group = '';
+				}
+				
+				// we won't show those that have underscores in front of them'
+				if (substr($group, 0, 1) != '_')
+				{
+					if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+					{
+						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
+					}
+					else if (!empty($this->layouts[$layout]))
+					{
+						if (!is_object($this->layouts[$layout]) AND empty($this->layouts[$layout]['group']))
+						{
+							$this->layouts[$layout]['group'] = $group;
+						}
+					}
 				}
 			}
 		}
-	}
 
-	function layouts_list($no_builtin = FALSE)
-	{
-		$layouts = array();
-		if (!empty($this->layouts) AND is_array($this->layouts))
+		// initialize layout objects
+		foreach($this->layouts as $name => $init)
 		{
-			foreach($this->layouts as $key => $val)
+			if (is_array($init))
 			{
-				// check if builtin is set in the fuel_layouts.php for the layout
-				if (!is_array($val)) $val = array($val, 'builtin' => FALSE);
-				if (!$no_builtin || !isset($val['builtin']) || ($no_builtin && !$val['builtin']))
+				$init['name'] = $name;
+				$init['folder'] = $this->layouts_folder;
+				$init['class'] = 'Fuel_layout';
+				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
+				$init['group'] = (isset($init['group'])) ? $init['group'] : '';
+				
+				if (!empty($init['fields']))
 				{
-					$layouts[$key] = $key;
+					$fields = $init['fields'];
+					
+					$order = 1;
+
+					// must reset this first to prevent any initialization of stuff like adding javascript for rendering
+					//	$this->CI->form_builder->clear();
+					
+					// create a new object so we don't conflict with the main form_builder object on CI'
+					$fb = new Form_builder();
+					
+					foreach($fields as $key => $f)
+					{
+						$fields[$key] = $fb->normalize_params($f);
+						if (empty($fields[$key]['name']))
+						{
+							$fields[$key]['name'] = $key;
+						}
+						if (!isset($fields[$key]['order']))
+						{
+							$fields[$key]['order'] = $order;
+						}
+						
+						// must remove this so that the values can be normalized again
+						unset($fields[$key]['__DEFAULTS__']);
+						$order++;
+					}
+
+					$init['fields'] = $fields;
+
+					if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
+					{
+						if (!isset($init['filename']))
+						{
+							$init['filename'] = $init['class'].EXT;
+						}
+
+						if (!isset($init['filepath']))
+						{
+							$init['filepath'] = 'libraries';
+						}
+						$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+						require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
+					}
 				}
+				$this->create($name, $init, $init['class']);
 			}
+			else if (is_a($init, 'Fuel_layout'))
+			{
+				$this->_layouts[$name] = $init;
+			}
+
 		}
-		return $layouts;
 	}
 	
-	function fields($layout, $include_value = TRUE)
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	object
+	 */	
+	function get($layout)
 	{
-		$vars = array();
-		$parts = $this->parts($layout);
-		if (is_array($parts))
+		if (!empty($this->_layouts[$layout]))
 		{
-			foreach($parts as $key => $val)
+			return $this->_layouts[$layout];
+		}
+		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a key/value array good for creating form select options
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function options_list()
+	{
+		$options = array();
+		$layouts = $this->_layouts;
+		
+		// add all layouts without a group first
+		foreach($layouts as $k => $layout)
+		{
+			if (empty($layout->group))
 			{
-				if (!empty($this->layout_fields[$key])) 
-				{
-					$part_fields = $this->part_fields($key, $include_value);
-					if (is_array($part_fields)) $vars = array_merge($vars, $part_fields);
-				}
+				$options[$layout->name] = $layout->label;
+				// reduce array down
+				unset($layouts[$k]);
 			}
 		}
-		else if (!empty($this->layout_fields[$layout])) 
+
+		ksort($options);
+
+		// create groups first
+		foreach($layouts as $k => $layout)
 		{
-			$vars = $this->part_fields($layout, $include_value);
+			if (!empty($layout->group))
+			{
+				if (!isset($options[$layout->group]))
+				{
+					$options[$layout->group] = array();
+				}
+				$options[$layout->group][$layout->name] = $layout->label;
+				unset($layouts[$k]);
+			}
 		}
+		return $options;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates a new layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @param	array	Layout object initialization parameters (optional)
+	 * @param	string	The name of an alternative class to use for the layout (must extend the Fuel_layout class... optional)
+	 * @return	object
+	 */	
+	function create($name, $init = array(), $class = 'Fuel_layout')
+	{
+		if (empty($init['name']))
+		{
+			$init['name'] = $name;
+		}
+
+		if (empty($class))
+		{
+			$class = 'Fuel_layout';
+		}
+		$this->_layouts[$name] = new $class($init);
+		return $this->_layouts[$name];
+	}
+}
+
+
+class Fuel_layout extends Fuel_base_library {
+	
+	public $name = ''; // The name of the layout
+	public $label = ''; // The label to display with the layout in the select list as seen in the CMS
+	public $description = ''; // A description of the layout which will be rendered as a copy field in the form
+	public $file = ''; // The layout view file name
+	public $hooks = array(); // Hooks to run before and after the rendering of a page. Options are "pre_render" and "post_render"
+	public $fields = array(); // The fields to associate with the layout. Must be in the Form_builder array format
+	public $field_values = array(); // The values to assign to the fields
+	public $folder = '_layouts'; // The folder to look in for the layout view files
+	public $group = ''; // The group name to associate with the layout
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor
+	 *
+	 * Accepts an associative array as input, containing preferences (optional)
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
+	function __construct($params = array())
+	{
+		parent::__construct();
+		$this->initialize($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize the user preferences
+	 *
+	 * Accepts an associative array as input, containing display preferences
+	 *
+	 * @access	public
+	 * @param	array	config preferences
+	 * @return	void
+	 */	
+	function initialize($params = array())
+	{
+		if (!isset($this->CI->form_builder))
+		{
+			$this->CI->load->library('form_builder');
+		}
+		
+		if (is_string($params))
+		{
+			$params = array('name' => $params);
+		}
+
+		// setup any intialized variables
+		foreach ($params as $key => $val)
+		{
+			if (isset($this->$key))
+			{
+				$this->$key = $val;
+			}
+		}
+		
+		if (empty($this->file))
+		{
+			$this->file = $this->name;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout view file. Do not include the '_layout' folder with the name
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout view file
+	 * @return	void
+	 */	
+	function set_file($layout)
+	{
+		$this->file = $layout;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the view file path to the layout
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function view_path()
+	{
+		return $this->folder.'/'.$this->file;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout name. Usually the same as the layout view file.
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout.
+	 * @return	void
+	 */	
+	function set_name($name)
+	{
+		$this->name = $name;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout name.
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function name()
+	{
+		return $this->name;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout label which is usually a friendlier version of the name (e.g. if the layout's name is "main", the layout may be "Main")
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout.
+	 * @return	void
+	 */	
+	function set_label($label)
+	{
+		$this->label = $label;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout label
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function label()
+	{
+		return $this->label;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layouts description which will be displayed when editing a page in the CMS
+	 *
+	 * @access	public
+	 * @param	string	The layout's description
+	 * @return	void
+	 */	
+	function set_description($description)
+	{
+		$this->description = $description;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layouts description
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function description()
+	{
+		return $this->description;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the layout's fields
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	void
+	 */	
+	function set_fields($fields)
+	{
+		$this->fields = $fields;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout's fields
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function fields()
+	{
+		$fields = array();
+		if (!empty($this->description))
+		{
+			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
+		}
+		$fields = array_merge($fields, $this->fields);
+		return $fields;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the views folder the layout exists in. Default is the views/_layouts folder
+	 *
+	 * @access	public
+	 * @param	string	The name of the folder
+	 * @return	void
+	 */	
+	function set_folder($folder)
+	{
+		$this->folder = $folder;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the views folder the layout exists in
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function folder()
+	{
+		return $this->folder;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the group the layout belongs to
+	 *
+	 * @access	public
+	 * @param	string	The name of the folder
+	 * @return	void
+	 */	
+	function set_group($group)
+	{
+		$this->group = $group;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the group the layout is associated with
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function group()
+	{
+		return $this->group;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds a single field to the layout (See the <a href="[user_guide_url]libraries/form_builder">Form_builder</a>) class for more info
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout field
+	 * @param	string	The array of field configuration values
+	 * @return	void
+	 */
+	function add_field($key, $val)
+	{
+		$val = $this->CI->form_builder->normalize_params($val);
+		if (!isset($val['name']))
+		{
+			$val['name'] = $key;
+		}
+		$val['key'] = $key;
+		unset($val['__DEFAULTS__']);
+		$this->fields[$key] = $val;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds multiple form fields to the layout (See the <a href="[user_guide_url]libraries/form_builder">Form_builder</a>) class for more info
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout field
+	 * @param	string	The array of field configuration values
+	 * @return	void
+	 */
+	function add_fields($fields)
+	{
+		foreach($fields as $key => $val)
+		{
+			$this->add_field($key, $val);
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the field values for the fields
+	 *
+	 * @access	public
+	 * @param	array	A key/value array of field values
+	 * @return	void
+	 */
+	function set_field_values($values)
+	{
+		$this->field_values = $values;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a field value
+	 *
+	 * @access	public
+	 * @param	key		The name of the field
+	 * @param	array	The value of the field
+	 * @return	void
+	 */
+	function set_field_value($key, $value)
+	{
+		$this->field_values[$key] = $value;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns layout's field values
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function field_values()
+	{
+		return $this->field_values;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a single field value
+	 *
+	 * @access	public
+	 * @param	key		The name of the field
+	 * @return	void
+	 */
+	function field_value($key)
+	{
+		return $this->field_value[$key];
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a callback hook to be run via "pre" or "post" rendering of the page
+	 *
+	 * @access	public
+	 * @param	key		The type of hook (e.g. "pre_render" or "post_render")
+	 * @param	array	An array of hook information including the class/callback function. <a href="http://codeigniter.com/user_guide/general/hooks.html" target="blank">More here</a>
+	 * @return	void
+	 */
+	function set_hook($type, $hook)
+	{
+		$this->hooks[$type] = $hook;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Calls a specified hook to be run
+	 *
+	 * @access	public
+	 * @param	hook	The type of hook (e.g. "pre_render" or "post_render")
+	 * @param	array	An array of additional parameters to pass to the hook method/function
+	 * @return	void
+	 */
+	function call_hook($hook = 'pre_render', $params = array())
+	{
+		// call hooks set in hooks file
+		$hook_name = $hook.'_'.$this->name;
+	
+		// run any hooks set on the object
+		if (!empty($this->hooks[$hook]))
+		{
+			if (!is_array($GLOBALS['EXT']->hooks[$hook_name]))
+			{
+				$GLOBALS['EXT']->hooks[$hook_name] = array($GLOBALS['EXT']->hooks[$hook_name]);
+			}
+			$GLOBALS['EXT']->hooks[$hook_name][] = $this->hooks[$hook];
+		}
+		$hook_vars = $GLOBALS['EXT']->_call_hook($hook_name, $params);
+	
+		// load variables
+		if (!empty($hook_vars))
+		{
+			$CI->load->vars($hook_vars);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing variables specific to a layout
+	 *
+	 * @access	public
+	 * @param	array	variables for the view
+	 * @return	array
+	 */	
+	function pre_process($vars)
+	{
 		return $vars;
 	}
 
-	function parts($layout)
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing the final output one last time
+	 *
+	 * @access	public
+	 * @param	string	final processed output
+	 * @return	string
+	 */	
+	function post_process($output)
 	{
-		if (!empty($this->layouts[$layout]))
-		{
-			if (is_string($this->layouts[$layout]))
-			{
-				return $this->layouts[$layout];
-			}
-			else
-			{
-				return $this->layouts[$layout]['parts'];
-			}
-		}
-		return null;
-	}
-	
-	function hooks($layout)
-	{
-		return (is_array($this->layouts[$layout]) && !empty($this->layouts[$layout]['hooks'])) ? $this->layouts[$layout]['hooks'] : array();
-	}
-	
-	function part_fields($layout_part, $include_value = TRUE)
-	{
-		$return = array();
-		if (!empty($this->layout_fields[$layout_part])){
-			foreach($this->layout_fields[$layout_part] as $key => $val)
-			{
-				$return[$key] = $this->layout_field($val, $include_value);
-			}
-		}
-		return $return;
+		return $output;
 	}
 
-	function part_field_values($layout_part, $include_value = TRUE){
-		$return = array();
-		
-		if (!empty($this->layout_fields[$layout_part])){
-			foreach($this->layout_fields[$layout_part] as $key => $val)
-			{
-				$field_data = $this->layout_field($val, $include_value);
-				$return[$key] = $field_data['value'];
-			}
-		}
-		return $return;
-	}
-	
-	function layout_field($value, $include_value = TRUE)
-	{
-		$defaults = array('value' => '', 'type' => 'string');
-		if (is_string($value))
-		{
-			$value = array('value' => $value);
-		}
-		$return = array_merge($defaults, $value);
-		if (!$include_value && ($return['type'] != 'boolean' && $return['type'] != 'checkbox')) unset($return['value']); // need values still 
-		return $return;
-	}
-	
-	function call_hook($layout, $hook = 'pre_render', $vars = array())
-	{
-		$CI =& get_instance();
-		$ok_hooks = array('pre_render', 'post_render');
-		
-		if (!in_array($hook, $ok_hooks)) return;
-		
-		// execute pre layout hooks
-		$hooks = $this->hooks($layout);
-		if (!empty($hooks) && !empty($hooks[$hook]))
-		{
-			$hook_class = strtolower($hooks[$hook][0]);
-			$hook_method = $hooks[$hook][1];
-			$CI->load->library($hook_class);
-			$hook_vars = $CI->$hook_class->$hook_method($vars);
-			$CI->load->library('template');
-			$CI->template->assign_global($hook_vars);
-		}
-	}
 }
-/* End of file Fuel_layout.php */
-/* Location: ./application/libraries/fuel/Fuel_layout.php */
+
+
+
+class Fuel_module_layout extends Fuel_layout {
+	
+	public $model; // the model to use for retrieving data
+	public $list_block; // the block name to use for the list view
+	public $item_block; // the block name for the detailed item view
+	public $key_field = 'slug'; // the key field to use for querying a single record
+	public $segment = 3; // the segment to use as the parameter to query
+	public $item_where = array(); // additional item query where parameters 
+	public $list_where = array(); // additional list query where parameters
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a model value
+	 *
+	 * @access	public
+	 * @param	string	The model
+	 * @return	void
+	 */
+	function set_model($model)
+	{
+		$this->model = $model;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the list block
+	 *
+	 * @access	public
+	 * @param	string	The list block
+	 * @return	void
+	 */
+	function set_list_block($block)
+	{
+		$this->list_block = $block;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the item block
+	 *
+	 * @access	public
+	 * @param	string	The item block
+	 * @return	void
+	 */
+	function set_item_block($block)
+	{
+		$this->item_block = $block;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the key field for querying
+	 *
+	 * @access	public
+	 * @param	string	The key field for querying (e.g. 'slug')
+	 * @return	void
+	 */
+	function set_key_field($field)
+	{
+		$this->key_field = $field;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the segment index that will contain the URI slug value
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_segment($segment)
+	{
+	
+		$this->segment = (int) $segment;
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets additional item query where parameters 
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_item_where($where)
+	{
+	
+		$this->item_where = $where;
+	}
+	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets additional list query where parameters 
+	 *
+	 * @access	public
+	 * @param	int	The index that will contain the slug value
+	 * @return	void
+	 */
+	function set_list_where($where)
+	{
+	
+		$this->list_hwere = $where;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing variables specific to a layout
+	 *
+	 * @access	public
+	 * @param	array	variables for the view
+	 * @return	array
+	 */	
+	function pre_process($vars)
+	{
+		$vars['model'] = $this->model;
+		$vars['list_block'] = $this->list_block;
+		$vars['item_block'] = $this->item_block;
+		$vars['key_field'] = $this->key_field;
+		$vars['segment'] = $this->segment;
+		$vars['item_where'] = $this->item_where;
+		$vars['list_where'] = $this->list_where;
+		return $vars;
+	}
+	
+}
+
+/* End of file Fuel_layouts.php */
+/* Location: ./modules/fuel/libraries/Fuel_layouts.php */

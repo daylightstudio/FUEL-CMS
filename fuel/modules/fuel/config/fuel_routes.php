@@ -9,34 +9,40 @@
 */
 $route[substr(FUEL_ROUTE, 0, -1)] = "fuel/dashboard";
 
+$module_folder = MODULES_PATH.'/';
 
-// to prevent the overhead of this on every request, we do a quick check of the path... IN_FUEL_ADMIN is defined in a presystem hook
-if (IN_FUEL_ADMIN)
+// config isn't loaded yet so do it manually'
+include(FUEL_PATH.'config/fuel.php');
+
+// load any public routes for advanced modules
+foreach ($config['modules_allowed'] as $module)
+{
+	$routes_path = $module_folder.$module.'/config/'.$module.'_routes.php';
+	
+	if (file_exists($routes_path))
+	{
+		include($routes_path);
+	}
+}
+
+// to prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants
+if (USE_FUEL_ROUTES)
 {
 
 	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
 	
-	$module_folder = MODULES_PATH.'/';
+	$module_folder = MODULES_PATH;
 
-	// config isn't loaded yet so do it manually'
-	include($module_folder.FUEL_FOLDER.'/config/fuel.php');
-	include($module_folder.FUEL_FOLDER.'/config/fuel_modules.php');
-
+	include(FUEL_PATH.'config/fuel_modules.php');
+	@include(APPPATH.'/config/MY_fuel_modules.php');
+	
 	$modules = array_keys($config['modules']);
 	$modules = array_merge($config['modules_allowed'], $modules);
 
-	foreach($modules as $module){
-		
-		// grab any routes in the module specific folder
-		$routes_path = $module_folder . $module . '/config/' . $module . '_routes.php';
-		
-		if (file_exists($routes_path))
-		{
-			include($routes_path);
-		}
-		
+	foreach($modules as $module)
+	{
 		// check FUEL folder for controller first... if not there then we use the default module to map to
-		else if (!file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
+		if (!file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
 				AND !file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT) 
 				)
 		{
@@ -60,8 +66,8 @@ if (IN_FUEL_ADMIN)
 	}
 	// catch all
 	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
-	
 }
+
 
 /* End of file fuel_routes.php */
 /* Location: ./modules/fuel/config/fuel_routes.php */

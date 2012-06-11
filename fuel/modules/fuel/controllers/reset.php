@@ -27,18 +27,12 @@ class Reset extends CI_Controller {
 			$user->reset_key = '';
 			if ($user->save())
 			{
-				$this->load->library('email');
-
-				$config['wordwrap'] = TRUE;
-				$this->email->initialize($config);
-
-				$this->email->from($this->config->item('from_email', 'fuel'), $this->config->item('site_name', 'fuel'));
-				$this->email->to($user->email);
-				$this->email->subject(lang('pwd_reset_subject_success'));
-				$msg = lang('pwd_reset_email_success', $new_pwd);
-
-				$this->email->message($msg);
-				if ($this->email->send())
+				$params['to'] = $user->email;
+				$params['subject'] = lang('pwd_reset_subject_success');
+				$params['message'] = lang('pwd_reset_email_success', $new_pwd);
+				$params['use_dev_mode'] = FALSE;
+				
+				if ($this->fuel->notification->send($params))
 				{
 					$this->session->set_flashdata('success', lang('pwd_reset_success'));
 				}

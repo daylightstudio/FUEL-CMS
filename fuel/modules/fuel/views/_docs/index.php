@@ -1,21 +1,18 @@
-<h1>FUEL Documentation</h1>
-<p>The FUEL module is <kbd>required</kbd> to run FUEL. It comes with several built-in sub-modules.</p>
+<a href="http://www.getfuelcms.com" target="_blank"><img src="<?=img_path('fuel_logo.png', 'user_guide')?>" id="fuel_logo" title="Visit getfuelcms.com" alt="FUEL CMS" /></a>
 
-<h2>Sub-Modules</h2>
-<ul>
-	<li><a href="<?=user_guide_url('modules/fuel/dashboard')?>">Dashboard</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/pages')?>">Pages</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/blocks')?>">Blocks</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/navigation')?>">Navigation</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/assets')?>">Assets</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/site_variables')?>">Site Variables</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/layouts')?>">Layouts</a></li>
-	
-</ul>
+<h1>Welcome FUEL CMS</h1>
+<p>At it's core, FUEL CMS is a modular based, CodeIgniter development platform for 
+creating web applications. You can create your models, views and controllers 
+like normal and only use the CMS part when and if you need it. It's a hybrid of 
+a framework and a CMS.</p>
 
-<h2>Administration</h2>
-<ul>
-	<li><a href="<?=user_guide_url('modules/fuel/users')?>">Users</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/cache')?>">Clear Cache</a></li>
-	<li><a href="<?=user_guide_url('modules/fuel/logs')?>">Logs</a></li>
-</ul>
+<p>FUEL CMS evolved out of the need for having a development platform that
+was a Framework first and a CMS second. CodeIgniter fit the bill as a 
+lightweight PHP framework that didn't try and do too much behind the scenes.
+It allowed us to cleanly structure our code and use MVC principles (when needed).
+</p>
+
+<p>We developed it so it could be easily integrated into your existing projects 
+allowing you to select where and how you want to use the CMS. The interface
+is highly customizable and easily extensible with modules.</p>
+

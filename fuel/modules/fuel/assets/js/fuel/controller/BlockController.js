@@ -9,8 +9,9 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 	add_edit : function(){
 
 		// call parent
-		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
-	
+		//fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		this._super();
+		
 		$('#no_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view_cancel/';
 			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){
@@ -44,15 +45,17 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 					new jqx.Message('Error importing view file');
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+			
+			//$('.jqmWindow').jqm().jqmHide(); // causes error because of multiple modals
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		
 	},
 	
 	upload : function(){
-		this._notifications();
-		this._initAddEditInline($('#form'));
+		this.notifications();
+//		this._initAddEditInline($('#form'));
 	}
 		
 });

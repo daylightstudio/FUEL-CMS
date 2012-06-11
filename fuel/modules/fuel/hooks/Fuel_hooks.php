@@ -9,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -44,9 +44,12 @@ class Fuel_hooks
 		// for pages without methods defined
 		if ((isset($class_methods) AND !in_array($method, $class_methods) AND !in_array('_remap', $class_methods))  AND !empty($RTR->default_controller))
 		{
-			$fuel_path = explode('/', $RTR->default_controller);
-			require_once(FUEL_PATH.'/controllers/'.$fuel_path[1].'.php');
-			$class = $fuel_path[1];
+			$fuel_path = explode('/', $RTR->routes['404_override']);
+			if (!empty($fuel_path[1]))
+			{
+				require_once(FUEL_PATH.'/controllers/'.$fuel_path[1].'.php');
+				$class = $fuel_path[1];
+			}
 		}
 	}
 
@@ -55,7 +58,7 @@ class Fuel_hooks
 	function dev_password()
 	{
 		$CI =& get_instance();
-		if ($CI->config->item('dev_password', 'fuel') AND (!isset($CI->fuel_auth) OR !$CI->fuel_auth->is_logged_in() AND !preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		if ($CI->fuel->config('dev_password') AND (!$CI->fuel->auth->is_logged_in() AND !preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 		{
 			$CI->load->library('session');
 			if (!$CI->session->userdata('dev_password'))

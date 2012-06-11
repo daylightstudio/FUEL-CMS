@@ -6,7 +6,8 @@ class Blocks_model extends Base_module_model {
 	
 	public $required = array('name');
 	public $filters = array('description');
-	
+	public $ignore_replacement = array('name');
+		
 	public function __construct()
 	{
 		parent::__construct('blocks');
@@ -23,39 +24,30 @@ class Blocks_model extends Base_module_model {
 		return $data;
 	}
 	
+	public function options_list_with_views($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	{
+		$CI =& get_instance();
+		$CI->load->helper('directory');
+		$blocks_path = APPPATH.'views/_blocks';
+
+		// don't display blocks with preceding underscores or .html files'
+		$block_files = directory_to_array($blocks_path, TRUE, '#'.$dir_filter.'#', FALSE, TRUE);
+
+		$view_blocks = array();
+		foreach($block_files as $block)
+		{
+			$view_blocks[$block] = $block;
+		}
+
+		$blocks = parent::options_list('name', 'name', $where, $order);
+		$blocks = array_merge($view_blocks, $blocks);
+		return $blocks;
+	}
+	
 	public function form_fields()
 	{
 		$fields = parent::form_fields();
-		$CI =& get_instance();
-		$CI->load->helper('directory');
-		$CI->load->helper('file');
 		return $fields;
-	}
-
-	public function get_available_models()
-	{
-		$CI =& get_instance();
-		$CI->load->helper('directory');
-		$CI->load->helper('file');
-		
-		$all_models = array();
-		$exclude = array('index.html');
-		$models = directory_to_array(APPPATH.'models/', TRUE, $exclude, FALSE, TRUE);
-		$all_models['application'] = array_combine($models, $models);
-		
-		// loop through allowed modules and get models
-		$modules_allowed = $CI->config->item('modules_allowed', 'fuel');
-		foreach($modules_allowed as $module)
-		{
-			$module_path = MODULES_PATH.$module.'/models/';
-			if (file_exists($module_path))
-			{
-				$models = directory_to_array($module_path, TRUE, $exclude, FALSE, TRUE);
-				$all_models[$module] = array_combine($models, $models);
-			}
-		}
-		
-		return $all_models;
 	}
 
 }

@@ -2,8 +2,10 @@
 
 class Permissions_model extends Base_module_model {
 	
-	public $required = array('name');
+	public $required = array('name', 'description');
 	public $unique_fields = array('name');
+	public $belongs_to = array('users' => 'users');
+	
 	
 	function __construct()
 	{
@@ -17,8 +19,14 @@ class Permissions_model extends Base_module_model {
 		return $data;
 	}
 	
+	function form_fields($values = array(), $related = array())
+	{
+		$fields = parent::form_fields($values, $related);
+		return $fields;
+	}
+	
 }
 
 
-class Permission_model extends Base_module_record {
+class Permission_model extends Data_record {
 }

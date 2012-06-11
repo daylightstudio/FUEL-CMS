@@ -55,39 +55,22 @@ class Blocks extends Module {
 	function import_view()
 	{
 		$out = 'error';
-		if ($this->input->post('id')){
-			$block_data = $this->model->find_by_key($this->input->post('id'), 'array');
-			$this->load->helper('file');
-			$view_twin = APPPATH.'views/_blocks/'.$block_data['name'].EXT;
-
-			if (file_exists($view_twin))
-			{
-				$view_twin_info = get_file_info($view_twin);
-				
-				$tz = date('T');
-				if ($view_twin_info['date'] > strtotime($block_data['last_modified'].' '.$tz) OR
-					$block_data['last_modified'] == $block_data['date_added'])
-				{
-					// must have content in order to not return error
-					$out = file_get_contents($view_twin);
-					
-					// replace PHP tags with template tags... comments are replaced because of xss_clean()
-					if ($this->sanitize_input)
-					{
-						$out = php_to_template_syntax($out);
-					}
-				}
-			}
+		if (!empty($_POST['id']))
+		{
+			//$this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
+			//$module = $this->fuel->modules->get($this->module);
+			//$module->upload($this->input->post('id'), $this->sanitize_input);
+			$this->module_obj->upload($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}
 	
-	function upload()
+	function upload($inline = FALSE)
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
 		$this->load->library('form_builder');
-		
+
 		$this->js_controller_params['method'] = 'upload';
 		
 		if (!empty($_POST))
@@ -115,7 +98,8 @@ class Blocks extends Module {
 				else
 				{
 					// change list view page state to show the selected group id
-					$this->session->set_flashdata('success', lang('blocks_success_upload'));
+					$this->fuel->admin->set_notification(lang('blocks_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
 					redirect(fuel_url('blocks/edit/'.$id));
 				}
 				
@@ -125,12 +109,17 @@ class Blocks extends Module {
 				add_error(lang('error_upload'));
 			}
 		}
-		
+
 		$fields = array();
 		$blocks = $this->model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		
-		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'select', 'options' => $blocks, 'class' => 'add_edit blocks');
+		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'inline_edit', 'options' => $blocks, 'module' => 'blocks');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
+		
+		$common_fields = $this->_common_fields();
+		$fields = array_merge($fields, $common_fields);
+		
+		
 		$this->form_builder->hidden = array();
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($_POST);
@@ -138,6 +127,12 @@ class Blocks extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->_render('upload', $vars);
+		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
+		//$vars['back_action'] = fuel_uri($this->module_uri);
+		
+		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		
+		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
 }

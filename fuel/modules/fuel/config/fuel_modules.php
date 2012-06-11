@@ -18,6 +18,7 @@ $config['modules']['pages'] = array(
 		'id', 
 		'location', 
 		'layout', 
+		'last_modified',
 		'published',
 	),
 	'default_col' => 'location',
@@ -26,18 +27,32 @@ $config['modules']['pages'] = array(
 	'js_controller_params' => array('import_view_key' => 'vars--body'),
 	'js_localized' => array('pages_default_location'),
 	'preview_path' => '{location}',
-	'views' => array(
-		'list' => '_layouts/module_list', 
-		'create_edit' => '_layouts/module_create_edit', 
-		'delete' => '_layouts/module_delete'),
-	'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
+	'permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create', 'publish', 'delete'),
 	// 'permission' => array('edit', 'publish', 'delete'),
 	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('pages/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
-	
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
+);
+
+// page module init values
+$config['modules']['pagevariables'] = array(
+	'module_name' => 'Page Variables',
+	'model_location' => 'fuel',
+	'display_field' => 'name',
+	'table_headers' => array(
+		'id', 
+		'location', 
+		'name',
+		'value',
+		'type'
+	),
+	'sanitize_input' => array('template','php'),
+	'default_col' => 'page_id',
+	'default_order' => 'asc',
+	'permission' => array('edit' => 'pages', 'publish' => 'pages/publish', 'delete' => 'pages/delete'),
+	'hidden' => TRUE
 );
 
 // navigation module init values
@@ -52,12 +67,13 @@ $config['modules']['blocks'] = array(
 		'view', 
 		'published',
 	),
+	'permission' => array('blocks', 'create', 'edit', 'blocks/upload' => 'blocks/create', 'publish', 'delete'),
 	'default_col' => 'name',
 	'default_order' => 'asc',
 	'js_controller' => 'BlockController',
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('blocks/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
 );
 
 // navigation module init values
@@ -68,7 +84,7 @@ $config['modules']['navigation'] = array(
 	'table_headers' => array(
 		'id', 
 		'label', 
-		'nav_key',
+		'location',
 		'precedence',
 		'published',
 	),
@@ -76,13 +92,9 @@ $config['modules']['navigation'] = array(
 	'default_order' => 'asc',
 	'js_controller' => 'NavigationController',
 	'preview_path' => '',
-	'views' => array(
-		'list' => '_layouts/module_list', 
-		'create_edit' => '_layouts/module_create_edit', 
-		'delete' => '_layouts/module_delete'),
-	'permission' => 'navigation',
+	'permission' => array('navigation', 'create', 'edit', 'navigation/upload' => 'navigation/create', 'publish', 'delete'),
 	'instructions' => lang('navigation_instructions'),
-	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select')),
+	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model')),
 	'archivable' => TRUE,
 	'list_actions' => array('navigation/upload' => lang('btn_upload'))
 );
@@ -98,6 +110,7 @@ $config['modules']['navigation_group'] = array(
 		'nav_key',
 	),
 );
+
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',
@@ -116,7 +129,7 @@ $config['modules']['assets'] = array(
 	'preview_path' => '',
 	'permission' => 'assets',
 	'instructions' => lang('assets_instructions'),
-	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'))),
+	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'), 'default' => 'images')),
 	'archivable' => FALSE,
 	'table_actions' => array('DELETE'),
 	'rows_selectable' => FALSE,
@@ -166,14 +179,14 @@ $config['modules']['users'] = array(
 	'display_field' => 'email',
 	'preview_path' => '',
 	'permission' => 'users',
-	'edit_method' => 'user_info',
+	//'edit_method' => 'user_info',
 	'instructions' => lang('users_instructions'),
 	'archivable' => FALSE,
 	'table_actions' => array('EDIT', 'DELETE' => array('func' => create_function('$cols', '
 		if ($cols[\'super_admin\'] != "yes") { 
 			$CI =& get_instance();
 			$link = "";
-			if ($CI->fuel_auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+			if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
 			{
 				$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
@@ -192,8 +205,8 @@ $config['modules']['permissions'] = array(
 	'model_location' => 'fuel',
 	'table_headers' => array(
 		'id', 
-		'name', 
 		'description', 
+		'name', 
 		'active', 
 	),
 	
@@ -206,7 +219,33 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-@include(APPPATH.'config/MY_fuel_modules.php');
+// permissions module init values
+$config['modules']['logs'] = array(
+	'module_name' => 'Activity Log',
+	'model_name' => 'Logs_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'entry_date', 
+		'name', 
+		'message', 
+		'type', 
+	),
+	
+	'default_col' => 'entry_date',
+	'default_order' => 'desc',
+	'display_field' => 'message',
+	'preview_path' => '',
+	'permission' => 'logs',
+	'instructions' => lang('permissions_instructions'),
+	'archivable' => FALSE,
+	'item_actions' => array(),
+	'table_actions' => array(),
+	'rows_selectable' => FALSE,
+	'clear_cache_on_save' => FALSE
+);
+
+//@include(APPPATH.'config/MY_fuel_modules.php');
 
 
 /* End of file fuel_modules.php */

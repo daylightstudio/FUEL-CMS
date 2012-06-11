@@ -1,28 +1,30 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // not pulling from the database so just extend the normal model
-require_once(APPPATH.'libraries/Validator.php');
-
+require_once(FUEL_PATH.'libraries/Validator.php');
 
 class Assets_model extends CI_Model {
 	
-	public $filters = array('group_id' => 'images');
-	public $filter_value = null;
-	public $key_field = 'id';
+	public $filters = array('group_id' => 'images'); // the default list view group value for filtering
+	public $filter_value = null; // the default filter value
+	public $key_field = 'id'; // placed here to prevent errors since we are not extended Base_module_model
+	public $boolean_fields = array(); // placed here to prevent errors since we are not extended Base_module_model
+	public $default_file_types = 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'; // default file types to associate to folders without associations
 	
-	protected $_dirs = array('images', 'pdf');
-	protected $_dir_filetypes = array('images' => 'jpg|jpe|jpeg|png|gif', 'pdf' => 'pdf');
 	protected $validator = NULL; // the validator object
 
 	private $_encoded = FALSE;
 
+	/**
+	 * Constructor
+	 *
+	 */
 	function __construct()
 	{
 		parent::__construct();
 		$CI =& get_instance();
 		$CI->load->helper('directory');
-		$this->_dirs = list_directories($CI->asset->assets_server_path, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE, TRUE);
-		$this->_dir_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
+		
 		$CI->load->helper('directory');
 		$CI->load->helper('file');
 		
@@ -31,7 +33,17 @@ class Assets_model extends CI_Model {
 		
 	}
 	
-	function add_filters($filters){
+	// --------------------------------------------------------------------
+
+	/**
+	 * Adds search filters
+	 *
+	 * @access	public
+	 * @param	array	Search filters
+	 * @return	void
+	 */	
+	function add_filters($filters)
+	{
 		if (empty($this->filters))
 		{
 			$this->filters = $filters;
@@ -42,6 +54,18 @@ class Assets_model extends CI_Model {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of data used for the CMS's list view
+	 *
+	 * @access	public
+	 * @param	int		limit
+	 * @param	string	offset
+	 * @param	string	column
+	 * @param	string	order
+	 * @return	array
+	 */	
 	function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc')
 	{
 		$CI =& get_instance();
@@ -61,13 +85,15 @@ class Assets_model extends CI_Model {
 			$group_id = uri_safe_decode($group_id);
 		}
 
-		$asset_dir = $this->get_dir($group_id);
+		$asset_dir = $CI->fuel->assets->dir($group_id);
 		
-		$assets_path = $CI->asset->assets_server_path.$asset_dir.DIRECTORY_SEPARATOR;
+		$assets_path = $CI->asset->assets_server_path().$asset_dir.DIRECTORY_SEPARATOR;
 		
-		$tmpfiles = directory_to_array($assets_path, TRUE, $CI->config->item('assets_excluded_dirs', 'fuel'), FALSE);
+		$exclude = $CI->fuel->config('assets_excluded_dirs');
+		$exclude[] = 'index.html';
+		$tmpfiles = directory_to_array($assets_path, TRUE, $exclude, FALSE);
 		
-		$files = get_dir_file_info($assets_path, TRUE);
+		$files = get_dir_file_info($assets_path, FALSE, TRUE);
 
 		$cnt = count($tmpfiles);
 		$return = array();
@@ -77,11 +103,11 @@ class Assets_model extends CI_Model {
 		//for ($i = $offset; $i < $cnt - 1; $i++)
 		for ($i = 0; $i < $cnt; $i++)
 		{
-			if (!empty($tmpfiles[$i]) && !empty($files[$tmpfiles[$i]]))
+			if (!empty($tmpfiles[$i]) AND !empty($files[$tmpfiles[$i]]))
 			{
 				$key = $tmpfiles[$i];
 				if (empty($this->filters['name']) || 
-					(!empty($this->filters['name']) && 
+					(!empty($this->filters['name']) AND 
 					(strpos($files[$key]['name'], $this->filters['name']) !== FALSE || strpos($key, $this->filters['name']) !== FALSE)))
 				{
 
@@ -121,60 +147,72 @@ class Assets_model extends CI_Model {
 		return $return;
 	}
 	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the number of asset files
+	 *
+	 * @access	public
+	 * @return	int
+	 */	
 	function list_items_total()
 	{
 		return count($this->list_items());
 	}
-	
-	function get_dir($dir)
-	{
-		$dirs = (array) $this->get_dirs();
-		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->get_image_dir();
-	}
-	
-	function get_dirs()
-	{	
-		$dirs = array();
-		if (!empty($this->_dirs))
-		{
-			$dirs = array_combine($this->_dirs, $this->_dirs);
-		}
-		ksort($dirs);
-		return $dirs;
-	}
-	function get_image_dir()
-	{
-		$CI =& get_instance();
-		$editable_filetypes = $CI->config->item('editable_asset_filetypes', 'fuel');
-		foreach($editable_filetypes as $folder => $types)
-		{
-			if (preg_match('#(jp(e){0,1}g|gif|png)#i', $types))
-			{
-				return $folder;
-			}
-		}
-		return key(reset($editable_filetypes));
-		
-	}
 
-	function get_dir_filetypes()
-	{
-		return $this->_dir_filetypes;
-	}
+	// --------------------------------------------------------------------
 
-	function get_dir_filetype($filetype)
-	{
-		return (isset($this->_dir_filetypes[$filetype])) ? $this->_dir_filetypes[$filetype] : FALSE;
-	}
-	
+	/**
+	 * Returns an array of information about a particular asset file
+	 *
+	 * @access	public
+	 * @param	string	An asset file
+	 * @return	array
+	 */	
 	function find_by_key($file)
 	{
+		$file = $this->get_file($file);
+
 		$CI =& get_instance();
-		$asset_path = WEB_ROOT.$CI->config->item('assets_path').$file;
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		
+		// normalize file path
+		$file = trim(str_replace($assets_folder, '', $file), '/');
+		
+		$asset_path = $assets_folder.$file;
 		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
 		return get_file_info($asset_path);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the name of the file and will decode it if necessary
+	 *
+	 * @access	public
+	 * @param	string	An asset file
+	 * @return	string
+	 */	
+	function get_file($file)
+	{
+		// if no extension is provided, then we determine that it needs to be decoded
+		if (strpos($file, '.') === FALSE)
+		{
+			$file = uri_safe_decode($file);
+		}
+		return $file;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the number of assets in a given folder 
+	 *
+	 * @access	public
+	 * @param	string	An asset folder
+	 * @return	int
+	 */	
 	function record_count($dir = 'images')
 	{
 		$CI =& get_instance();
@@ -183,19 +221,62 @@ class Assets_model extends CI_Model {
 		return count($files);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Deletes an asset
+	 *
+	 * @access	public
+	 * @param	string	An asset file to delete
+	 * @return	string
+	 */	
 	function delete($file)
 	{
 		$CI =& get_instance();
-		$CI->load->helper('convert');
+
+		if (is_array($file))
+		{
+			$valid = TRUE;
+			foreach($file as $f)
+			{
+				if (!$this->_delete($f))
+				{
+					$valid = FALSE;
+				}
+			}
+			return $valid;
+		}
+		else
+		{
+			return $this->_delete($file);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Deletes an asset and will perform any necessary folder cleanup
+	 *
+	 * @access	protected
+	 * @param	string	An asset file to delete
+	 * @return	string
+	 */	
+	protected function _delete($file)
+	{
+		$CI =& get_instance();
+
+		$file = $this->get_file($file);
+
+		$deleted = FALSE;
 		
 		// cleanup beginning slashes
-		if (substr($file, 0, 1) == '/')
-		{
-			$file = substr($file, 1);
-		}
-		$filepath = WEB_ROOT.$CI->config->item('assets_path').$file;
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		$file = trim(str_replace($assets_folder, '', $file), '/');
 		
+		// normalize file path
+		$filepath = $assets_folder.$file;
 		$parent_folder = dirname($filepath).'/';
+
 		if (file_exists($filepath))
 		{
 			$deleted = unlink($filepath);
@@ -207,7 +288,8 @@ class Assets_model extends CI_Model {
 		while(!$end)
 		{
 			// if it is the last file in a subfolder (not one of the main asset folders), then we recursively remove the folder to clean things up
-			if (!in_array($parent_folder, $this->_get_excluded_asset_server_folders()))
+			$excluded_asset_folders = $CI->fuel->assets->excluded_asset_server_folders();
+			if (!in_array($parent_folder, $excluded_asset_folders))
 			{
 				$dir_files = directory_to_array($parent_folder);
 
@@ -233,27 +315,14 @@ class Assets_model extends CI_Model {
 		return $deleted;
 	}
 	
-	private function _get_excluded_asset_server_folders()
-	{
-		$CI =& get_instance();
-		$excluded = array_merge($CI->config->item('assets_excluded_dirs', 'fuel'), $CI->asset->assets_folders);
-		$return = array();
-		foreach($excluded as $folder)
-		{
-			$folder_path = assets_server_path($folder);
-			if (substr($folder_path, -1, 1) != '/')
-			{
-				$folder_path = $folder_path.'/';
-			}
-			
-			if (!in_array($folder_path, $return))
-			{
-				$return[] = $folder_path;
-			}
-		}
-		return $return;
-	}
-	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the field to be used as the key for a record
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
 	function key_field()
 	{
 		return $this->key_field;
@@ -285,62 +354,52 @@ class Assets_model extends CI_Model {
 		return $this->validator->get_errors();
 	}
 	
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of form field parameters that can be used by Form_builder
+	 *
+	 * @access	public
+	 * @param	array 	An array of values to be passed to the form fields
+	 * @return	array
+	 */	
 	function form_fields($values = array())
 	{
 		$CI =& get_instance();
 		$fields = array();
-		$editable_asset_types = $this->config->item('editable_asset_filetypes', 'fuel');
-		$accepts = (!empty($editable_asset_types['media']) ? $editable_asset_types['media'] : 'jpg|jpe|jpeg|gif|png');
+		$editable_asset_types = $CI->fuel->config('editable_asset_filetypes');
+		$accepts = (!empty($editable_asset_types['assets']) ? $editable_asset_types['assets'] : $this->default_file_types);
+		$fields[lang('assets_heading_general')] = array('type' => 'fieldset', 'class' => 'tab');
 		$fields['userfile'] = array('label' => lang('form_label_file'), 'type' => 'file', 'class' => 'multifile', 'accept' => $accepts); // key is userfile because that is what CI looks for in Upload Class
-		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $this->get_dirs(), 'comment' => lang('assets_comment_asset_folder'));
-		$fields['userfile_filename'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
+		$fields['asset_folder'] = array('label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => $CI->fuel->assets->dirs(), 'comment' => lang('assets_comment_asset_folder'));
+		$fields['userfile_file_name'] = array('label' => lang('form_label_new_file_name'), 'comment' => lang('assets_comment_filename'));
 		if ($CI->config->item('assets_allow_subfolder_creation', 'fuel'))
 		{
 			$fields['subfolder'] = array('label' => lang('form_label_subfolder'), 'comment' => lang('assets_comment_filename'));
 		}
 		$fields['overwrite'] = array('label' => lang('form_label_overwrite'), 'type' => 'checkbox', 'comment' => lang('assets_comment_overwrite'), 'checked' => true, 'value' => '1');
+		$fields['unzip'] = array('type' => 'checkbox', 'label' => lang('form_label_unzip'), 'comment' => lang('assets_comment_unzip'), 'value' => 1);
 
-		$fields[lang('assets_heading_image_specific')] = array('type' => 'section');
+		$fields[lang('assets_heading_image_specific')] = array('type' => 'fieldset', 'class' => 'tab');
 		$fields['create_thumb'] = array('label' => lang('form_label_create_thumb'), 'type' => 'checkbox', 'comment' => lang('assets_comment_thumb'), 'value' => '1');
 		$fields['maintain_ratio'] = array('label' => lang('form_label_maintain_ratio'), 'type' => 'checkbox', 'comment' => lang('assets_comment_aspect_ratio'), 'value' => '1');
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dimension'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
+		$fields['uploaded_file_name'] = array('type' => 'hidden');
+		
 		return $fields;
 	}
 	
+	// placeholder
+	function on_before_post()
+	{
+		
+	}
+
+	// placeholder
 	function on_after_post($values)
 	{
-		if (empty($values['userfile_path'])) return;
-
-		// process any uploaded images files that have been specified
-		foreach($_FILES as $file)
-		{
-			if (is_image_file($file['name']) AND 
-					(!empty($values['userfile_create_thumb']) OR 
-					!empty($values['userfile_maintain_ratio']) OR 
-					!empty($values['userfile_width']) OR 
-					!empty($values['userfile_height'])))
-			{
-	
-				$CI =& get_instance();
-				$CI->load->library('image_lib');
-
-				$config['source_image']	= $values['userfile_path'].$file['name'];
-				$config['create_thumb'] = $values['userfile_create_thumb'];
-				$config['maintain_ratio'] = $values['userfile_maintain_ratio'];
-				if (!empty($values['userfile_width'])) $config['width'] = $values['userfile_width'];
-				if (!empty($values['userfile_height'])) $config['height'] = $values['userfile_height'];
-				if (!empty($values['userfile_master_dim'])) $config['master_dim'] = $values['userfile_master_dim'];
-				
-				$this->image_lib->initialize($config); 
-
-				if ( ! $CI->image_lib->resize())
-				{
-					$error = $CI->image_lib->display_errors();
-					$CI->validator->catch_error($error);
-				}
-			}
-		}
 	}
 }

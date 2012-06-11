@@ -58,7 +58,7 @@ dave@thedaylightstudio.com
 					$(this).removeClass("fillin");
 				}
 			});
-			$(this).bind('blur', {t:txt}, function(e){
+			$(this).bind('blur,change', {t:txt}, function(e){
 				if ($(this).val() == "" || $(this).val() == e.data['t']){
 					$(this).val(e.data['t']);
 					$(this).addClass("fillin");

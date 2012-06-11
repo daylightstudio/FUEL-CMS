@@ -7,10 +7,34 @@ class Pages_model extends Base_module_model {
 	public $id;
 	public $required = array('location');
 	public $hidden_fields = array('last_modified', 'last_modified_by');
+	public $ignore_replacement = array('location');
 	
 	function __construct()
 	{
 		parent::__construct('pages');
+	}
+	
+	// displays related items on the right side
+	function related_items($values = array())
+	{
+		$CI =& get_instance();
+		$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
+		$where['location'] = $values['location'];
+		$related_items = $CI->navigation_model->find_all_array($where);
+		
+		$return = array();
+		$return['navigation'] = array();
+		foreach($related_items as $key => $item)
+		{
+			$label = $item['label'];
+			if (!empty($item['group_name']))
+			{
+				$label .= ' ('.$item['group_name'].')';
+			}
+			$return['navigation'][$key] = $label;
+		}
+		
+		return $return;
 	}
 	
 	function tree($just_published = FALSE)
@@ -22,7 +46,6 @@ class Pages_model extends Base_module_model {
 		$where = array();
 		if ($just_published) $sql['where'] = array('published' => 'yes');
 		$pages = $this->find_all_array_assoc('location', $where, 'location asc');
-		
 		foreach($pages as $key => $val)
 		{
 			$parts = explode('/', $val['location']);
@@ -59,40 +82,6 @@ class Pages_model extends Base_module_model {
 		return array_keys($this->pages_model->options_list('location', 'location', $where));
 	}
 
-	// include id if set to true will screw up Menu class
-	function export($export_unpublished = FALSE)
-	{
-		$CI =& get_instance();
-		$CI->load->helper('array');
-		$return = array();
-		
-		$sql['select'] = $this->_tables['pages'].'.*';
-		$where = array();
-		if (!$export_unpublished) $where = array('published' => 'yes');
-		$pages = $this->find_all_array_assoc('location', $where, 'location asc');
-		
-		foreach($pages as $key => $val){
-			$parts = explode('/', $val['location']);
-			$parent = implode('/', $parts);
-			
-			if (!empty($pages[$parent]) || strrpos($val['location'], '/') === FALSE)
-			{
-				$pages[$key]['parent_id'] = $parent;
-			}
-			else
-			{
-				// if orphaned... then put them in the _orphans folder
-				if (empty($return['_orphans']))
-				{
-					$pages['_orphans'] = array('parent_id' => null, 'location' => '_orphans');
-				}
-				$pages[$key]['parent_id'] = '_orphans';
-			}
-		}
-		$pages = array_sorter($pages, 'location');
-		return $pages;
-	}
-	
 	function get_root_pages()
 	{
 		$return = array();
@@ -118,79 +107,40 @@ class Pages_model extends Base_module_model {
 		$data = $this->find_one_array($where);
 		return $data;
 	}
-	
-	function recently_updated($limit = 10)
-	{
-		$this->db->select($this->_tables['pages'].'.id, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published');
-		return $this->find_all_array(array(), 'last_modified desc', $limit);
-	}
-	
-	function all_pages_including_views($paths_as_keys = FALSE, $apply_site_url = TRUE, $include_modules = TRUE)
+
+	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
-		$CI->load->helper('directory');
-		$CI->load->module_library(FUEL_FOLDER, 'fuel_modules');
-
-		$cms_pages = $this->list_locations(FALSE);
-		
-		// get valid view files that may show up
-		$views_path = APPPATH.'views/';
-		$view_files = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
-		
-		// module pages
-		if ($include_modules)
-		{
-			$module_pages = $CI->fuel_modules->get_pages();
-		}
-		
-		// merge them together for a complete list
-		$pages = array();
-		
-		// must get the merged unique values (array_values resets the indexes)
-		$pages = array_values(array_unique(array_merge($cms_pages, $view_files, $module_pages)));
-		sort($pages);
-		
-		if ($paths_as_keys)
-		{
-			$keyed_pages = array();
-			foreach($pages as $page)
-			{
-				$key = ($apply_site_url) ? site_url($page) : $page;
-				$keyed_pages[$key] = $page;
-			}
-			$pages = $keyed_pages;
-		}
-		
-		// apply the site_url function to all pages
-		return $pages;
-		
-	}
-	
-	function form_fields()
-	{
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
+		$fields['location']['placeholder'] = lang('pages_default_location');
 		$fields['date_added']['type'] = 'hidden';
-
+		$fields['layout']['type'] = 'select';
+		$fields['layout']['options'] = $CI->fuel->layouts->options_list();
+		
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['cache']['options'] = array('yes' => $yes, 'no' => $no);
-		return $fields;
-	}
-	
-	function clean($values = array())
-	{
-		$cleaned = parent::clean($values);
-		if (!empty($cleaned['location']))
+		
+		// set language field
+		if ($this->fuel->language->has_multiple())
 		{
-			$segments = explode('/', $cleaned['location']);
-			$cleaned_segments = array();
-			foreach($segments as $val)
-			{
-				if (!empty($val)) $cleaned_segments[] = $val;
-			}
-			$cleaned['location'] = implode('/', $cleaned_segments);
+			$lang_options = $CI->fuel->language->options();
+			$fields['language'] = array('type' => 'select', 'options' => $lang_options);
 		}
-		return $cleaned;
+		else
+		{
+			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
+		}
+		
+		// easy add for navigation
+		if (empty($values['id']))
+		{
+			$fields['navigation_label'] = array('comment' => 'This field lets you quickly add a navigation item for this page. 
+			It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the
+			\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.');
+		}
+		
+		return $fields;
 	}
 	
 	function on_before_clean($values)
@@ -205,6 +155,10 @@ class Pages_model extends Base_module_model {
 			$values['location'] = str_replace('/', '___', $values['location']);
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace('___', '/', $values['location']);
+			
+			$segments = array_filter(explode('/', $values['location']));
+			$values['location'] = implode('/', $segments);
+			
 		}
 		return $values;
 	}
@@ -225,7 +179,7 @@ class Pages_model extends Base_module_model {
 	function on_before_save($values)
 	{
 		$CI = get_instance();
-		$user = $CI->fuel_auth->user_data();
+		$user = $CI->fuel->auth->user_data();
 		$values['last_modified_by'] = $user['id'];
 		return $values;
 	}
@@ -236,18 +190,61 @@ class Pages_model extends Base_module_model {
 	}
 	
 	// overwrite parent
-	function restore($ref_id, $version = null)
+	function restore($ref_id, $version = NULL)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
 		$archive = $this->get_archive($ref_id, $version);
-		if (empty($archive)) return true;
+		if (empty($archive))
+		{
+			return TRUE;
+		}
 		$pages_saved = $this->save($archive, array('id' => $ref_id));
 		
 		// delete page variables before saving
 		$CI->pagevariables_model->delete(array('page_id' => $ref_id));
 		$page_variables_saved = $CI->pagevariables_model->save($archive['variables']);
-		return ($pages_saved && $page_variables_saved);
+		return ($pages_saved AND page_variables_saved);
+	}
+	
+	// overwrite parent to replace page variables
+	function replace($replace_id, $id, $delete = TRUE)
+	{
+		$CI =& get_instance();
+		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		
+		// start a transaction in case there are any errors
+		$CI->pagevariables_model->db()->trans_begin();
+
+		// retrieve new variables
+		$new_values = $CI->pagevariables_model->find_all_array(array('page_id' => $id));
+
+		// delete old variables
+		$CI->pagevariables_model->delete(array('page_id' => $replace_id));
+		$saved = TRUE;
+		foreach($new_values as $var)
+		{
+			$var['page_id'] = $replace_id;
+			if (!$CI->pagevariables_model->save($var))
+			{
+				$saved = FALSE;
+			}
+		}
+		
+		// check if there are any errors and if so we rollem back...
+		if ($CI->pagevariables_model->db()->trans_status() === FALSE)
+		{
+			$saved = FALSE;
+		    $CI->pagevariables_model->db()->trans_rollback();
+		}
+		else
+		{
+		    $CI->pagevariables_model->db()->trans_commit();
+		}
+		
+		$saved = parent::replace($replace_id, $id, $delete);
+		
+		return $saved;
 	}
 	
 	function _common_query()

@@ -6,13 +6,16 @@ class Tools extends Fuel_base_controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('fuel_auth');
 	}
 	
 	function index()
 	{
 		$this->_validate_user('tools');
-		$this->_render('tools');
+		
+		$vars['page_title'] = $this->fuel->admin->page_title(lang('section_tools'), FALSE);
+		$this->fuel->admin->set_titlebar(lang('module_page_analysis'), 'ico_tools');
+		
+		$this->fuel->admin->render('tools', $vars,  Fuel_admin::DISPLAY_NO_ACTION);
 	}
 
 }

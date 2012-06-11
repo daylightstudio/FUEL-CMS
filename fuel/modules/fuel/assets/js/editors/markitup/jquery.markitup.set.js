@@ -26,6 +26,8 @@ myMarkItUpSettings = {
 	root: 'skins/simple/',
 	nameSpace:           "html", // Useful to prevent multi-instances CSS conflict
     previewParserPath:   __FUEL_PATH__ + "/preview",
+	previewInWindow: true,
+	previewParserVar: 'data',
 	onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},
 	onCtrlEnter:  	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
 	onTab:    		{keepDefault:false, replaceWith:'    '},
@@ -53,13 +55,13 @@ myMarkItUpSettings = {
 				return false;
 			}
 		},
-		{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" title="[![' + markitupLanguage('title') + ']!]" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},
+		{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},
 		
-		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto("', closeWith:'")}', placeHolder:markitupLanguage('placeholder_email') },
+		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto(', closeWith:')}', placeHolder:markitupLanguage('placeholder_email') },
 		{name:markitupLanguage('php'), className:'fuel_var', key:'', openWith:'{$[![' + markitupLanguage('php') + ':!:]!]', closeWith:'}', placeHolder:'' },
-		{separator:'---------------' },
 		{name:markitupLanguage('clean'), className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },		
-		{name:markitupLanguage('preview'), className:'preview',  call:'preview'},
+		{separator:'---------------' },
+		//{name:markitupLanguage('preview'), className:'preview',  call:'preview'},
 		{name: markitupLanguage('fullscreen'), className: 'maximize', key: 'F', replaceWith: 
 			function(marketItup){ 
 				myMarkItUpSettings.markItUpFullScreen(marketItup); 
@@ -69,7 +71,7 @@ myMarkItUpSettings = {
 	]
 }
 
-myMarkItUpSettings.markItUpFullScreen = function (markItUp){
+myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 	
 	var origTextarea = jQuery(markItUp.textarea);
 	var val = origTextarea.val();
@@ -95,7 +97,7 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 		textarea.show();
 
 		//var fsSetting = myMarkItUpSettings.markupSet[myMarkItUpSettings.markupSet.length - 1];
-		var fsSetting = myMarkItUpSettings.markupSet[23];
+		var fsSetting = myMarkItUpSettings.markupSet[22];
 		fsSetting.className = 'minimize';
 		textarea.markItUp(myMarkItUpSettings);
 
@@ -117,22 +119,25 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 
 		jQuery.scrollTo('body', 800);
 
-		var previewOn = false;
+		var previewOn = $.data(textarea, false);
 		var resizeHandlerBgImg = $('.markItUpResizeHandle', container).css('background');
-
-		$('.preview', container).click(function(){
-			previewOn = (previewOn) ? false : true;
-			var previewFrame = jQuery('.markItUpPreviewFrame', container);
-			previewFrame.css(previewFrameCSS);
-			if (previewOn){
-				// can't use hide because of FF errors
-				textarea.css({ height: '0%'});
-				previewFrame.css({ height: '98%', visibility: 'visible'});
-			} else {
-				textarea.css({ height: '98%'});
-				previewFrame.css({ height: '0%', visibility: 'hidden'});
-			}
-		});
+		
+		if (!myMarkItUpSettings.previewInWindow){
+			$('.preview', container).click(function(){
+				previewOn = ($.data(textarea)) ? false : true;
+				var previewFrame = jQuery('.markItUpPreviewFrame', container);
+				previewFrame.css(previewFrameCSS);
+				if (previewOn){
+					// can't use hide because of FF errors
+					textarea.css({ height: '0%', minHeight: '0%'});
+					previewFrame.css({ height: '98%', visibility: 'visible'});
+				} else {
+					textarea.css({ height: '98%'});
+					previewFrame.css({ height: '0%', visibility: 'hidden'});
+				}
+				$.data(textarea, previewOn)
+			});
+		}
 
 		// toggle maximize to minimize
 		jQuery('.minimize', container).click(function(){
@@ -148,36 +153,24 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp){
 	//	minimize();
 	}
 
-
-
-	
 }
+
 myMarkItUpSettings.markItUpImageInsert = function (markItUp){
-	var isInline = (jQuery('#__FUEL__asset_modal').size());
-	var path = (isInline) ? __FUEL_PATH__ + '/assets/select_ajax/images' : jqx.config.fuelPath + '/assets/select_ajax/images';
-	var imgPath = (isInline) ? __FUEL_INIT_PARAMS__.assetsImgPath : jqx.config.assetsImgPath;
-	jQuery('#asset_modal, #__FUEL__asset_modal').jqm({
-		ajax: path,
-	 	onLoad: function(){
+	var url = jqx.config.fuelPath + '/assets/select/images/?selected=';
+	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 480px; width: 850px;"></iframe>';
+	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
+	
+	$modal.find('iframe#asset_inline_iframe').bind('load', function(){
+		var iframeContext = this.contentDocument;
+		$assetSelect = jQuery('#asset_select', iframeContext);
+		$assetPreview = jQuery('#asset_preview', iframeContext);
+		jQuery('.cancel', iframeContext).add('.modal_close').click(function(){
+			$modal.jqmHide();
+			var selectedVal = $assetSelect.val();
+			var replace = '<img src="{img_path(\'' + selectedVal + '\')}" alt="" />';
+			jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
+			return false;
+		});
+	});
 
-			jQuery('#asset_select').change(function(e){
-				jQuery('#asset_preview').html('<img src="' + imgPath + jQuery('#asset_select').val() + '" />');
-			})
-			jQuery('#asset_select').change();
-			
-			jQuery('.ico_yes').click(function(){
-				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
-				var replace = '<img src="{img_path(\'' + jQuery('#asset_select').val() + '\')}" alt="" />';
-				jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
-				return false;
-			})
-
-			jQuery('.ico_no').click(function(){
-				jQuery('#asset_modal,#__FUEL__asset_modal').jqmHide();
-				return false;
-			})
-			
-			
-		}
-	}).jqmShow();
 }

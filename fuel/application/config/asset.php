@@ -20,7 +20,8 @@ $config['assets_folders'] = array(
 	'pdf' => 'pdf/',
 	'swf' => 'swf/',
 	'media' => 'media/',
-	'captchas' => 'captchas/'
+	'captchas' => 'captchas/',
+	'docs' => 'docs/'
 	);
 
 // makes paths to assets absolute

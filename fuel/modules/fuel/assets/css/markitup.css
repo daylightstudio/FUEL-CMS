@@ -90,7 +90,7 @@
 	text-decoration:none;
 }
 .markItUp  {
-	width:550px;
+	min-width:550px;
 	margin:5px 0 5px 0;
 }
 .markItUpContainer  {
@@ -109,7 +109,7 @@
 .markItUpPreviewFrame	{
 	overflow:auto;
 	background-color:#FFFFFF;
-	width:525px;
+	width:100%;
 	height:280px;
 	margin:5px 0;
 	border: 1px solid #ccc;
