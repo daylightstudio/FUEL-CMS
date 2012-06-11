@@ -20,24 +20,3 @@ $config['modules']['projects'] = array(
 );
 
 *********************** EXAMPLE ***********************************/
-
-$config['modules']['products'] = array(
-	'preview_path' => 'products',
-	);
-$config['modules']['product_widgets'] = array(
-	'preview_path' => 'products',
-	);
-$config['modules']['product_widget_armaments'] = array(
-	'preview_path' => 'products',
-	);
-
-$config['modules']['projects'] = array(
-	'preview_path' => 'showcase/project/{slug}',
-	'sanitize_files' => FALSE // to prevent false positives with xss_clean image sanitation
-);
-
-$config['modules']['quotes'] = array(
-	'preview_path' => 'about',
-	'sanitize_files' => FALSE // to prevent false positives with xss_clean image sanitation
-);
-

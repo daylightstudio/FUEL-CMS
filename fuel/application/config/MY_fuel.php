@@ -1,5 +1,9 @@
 <?php
-// IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
+/*
+|---------------------------------------------------------------------------------------------------
+| IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
+|---------------------------------------------------------------------------------------------------
+*/
 
 // path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
 $config['fuel_path'] = 'fuel/';
@@ -12,7 +16,7 @@ $config['site_name'] = 'My Website';
 // views mode pulls views from the views folder and variables from the _variables folder,
 // and the auto option will first check the database for a page and if it doesn't exist or is 
 // not published, it will then check for the corresponding view file.
-$config['fuel_mode'] = 'auto';
+$config['fuel_mode'] = 'views';
 
 // used for system emails
 $config['domain'] = '';
@@ -34,7 +38,7 @@ $config['modules_allowed'] = array(
 	);
 
 // whether the admin backend is enabled or not
-$config['admin_enabled'] = TRUE;
+$config['admin_enabled'] = FALSE;
 
 // maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:
@@ -55,12 +59,6 @@ $config['assets_upload_max_width']  = 1024;
 // max height for asset images beign uploaded
 $config['assets_upload_max_height']  = 768;
 
-$config['assets_excluded_dirs'] = array(
-	'js',
-	'css',
-	'cache', 
-	'swf', 
-	);
 
 // text editor settings  (options are markitup or ckeditor)
 // markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)
