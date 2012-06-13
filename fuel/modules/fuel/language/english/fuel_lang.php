@@ -167,6 +167,7 @@ $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
 $lang['module_restored_success'] = 'Previous version successfully restored.';
 $lang['module_replaced_success'] = 'The contents of this record were successfully replaced.';
+$lang['module_incompatible'] = 'The version of this module is not compatible with the install FUEL version of '.FUEL_VERSION;
 
 $lang['cannot_determine_module'] = "Cannot determine module.";
 $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";

@@ -28,7 +28,7 @@
 
 // --------------------------------------------------------------------
 
-class Fuel_install extends Fuel_base_library {
+class Fuel_installer extends Fuel_base_library {
 	
 	public $module = ''; // name of the module
 	public $config = array(); // the configuration settings found in the install/install.php
@@ -73,51 +73,95 @@ class Fuel_install extends Fuel_base_library {
 		return MODULES_FOLDER.'/'.$this->module.'/install/';
 	}
 	
-	function migrate()
+	function set_module($module)
+	{
+		$this->module = $module;
+	}
+
+	function module()
+	{
+		return $this->module;
+	}
+
+	function migrate_up()
 	{
 		if (isset($this->config['migration_version']))
 		{
-			$module = $this->fuel->modules->get($this->module);
-			echo "<pre style=\"text-align: left;\">";
-			print_r($module->path());
-			echo "</pre>";
+			$this->_migrate();
+		}
+	}
 
-			$config['migration_path'] = $module->path().'install/migrations/';
-			$config['migration_enabled'] = TRUE;
-			$config['migration_version'] = (int)$this->config['migration_version'];
-			$config['module'] = $module->name();
-			echo "<pre style=\"text-align: left;\">";
-			print_r($config);
-			echo "</pre>";
+	function migrate_down()
+	{
+		$this->_migrate(1);
 
-			$this->CI->load->library('migration', $config);
-			if ( ! $this->CI->migration->latest())
-			{
-				show_error($this->CI->migration->error_string());
-			}
+		// 001 should already be loaded so just create the class
+		$class = 'Migration_'.ucfirst($this->module->name());
+
+		$path = $this->module->path().'install/migrations/001_'.$this->module->name().'.php';
+		if (file_exists($path))
+		{
+			require_once($path);
+			$migration = new $class();
+			$migration->down();
+		}
+
+	}
+
+
+	protected function _migrate($version = NULL)
+	{
+		$config['migration_path'] = $this->module->path().'install/migrations/';
+		$config['migration_enabled'] = TRUE;
+		$config['module'] = $this->module->name();
+		$this->CI->load->library('migration', $config);
+
+		if (!isset($version))
+		{
+			$version = $this->CI->migration->latest();
+		}
+
+		if ( ! $this->CI->migration->version($version))
+		{
+			show_error($this->CI->migration->error_string());
+		}
+
+	}
+
+	function install_sql()
+	{
+		$basepath = $this->module->path().'install/';
+		if (isset($this->config['install_sql']))
+		{
+			$path = $basepath.$this->config['install_sql'];
+		}
+		else
+		{
+			$path = $basepath.$this->module->name().'_install.sql';
+		}
+
+		if (file_exists($path))
+		{
+			$this->CI->db->load_sql($path);
 		}
 	}
 	
-	function test_writable()
+	function uninstall_sql()
 	{
-		if (!empty($this->config['writable']))
+		$basepath = $this->module->path().'install/';
+		if (isset($this->config['uninstall_sql']))
 		{
-			$writable = (array) $this->config['writable'];
-			$return = array();
-			foreach($writable as $file)
-			{
-				if (!is_really_writable($file))
-				{
-					$return['errors'][] = $file;
-				}
-				else
-				{
-					$return['valid'][] = $file;
-				}
-			}
-			return $return;
+			$path = $basepath.$this->config['uninstall_sql'];
 		}
-		return array();
+		else
+		{
+			$path = $basepath.$this->module->name().'_uninstall.sql';
+		}
+
+		if (file_exists($path))
+		{
+			$this->CI->db->load_sql($path);
+		}
 	}
 	
 	function create_permissions()
@@ -154,8 +198,8 @@ class Fuel_install extends Fuel_base_library {
 			else
 			{
 				// save a single permission
-				$save['name'] = $this->config['permission'];
-				$save['description'] = humanize($this->config['permission']);
+				$save['name'] = $this->config['permissions'];
+				$save['description'] = humanize($this->config['permissions']);
 				$this->fuel->permissions->save($save);
 				if ($this->fuel->permissions->save($save))
 				{
@@ -169,11 +213,11 @@ class Fuel_install extends Fuel_base_library {
 	
 	function remove_permissions()
 	{
-		if (!empty($this->config['permission']))
+		if (!empty($this->config['permissions']))
 		{
-			if (is_array($this->config['permission']))
+			if (is_array($this->config['permissions']))
 			{
-				foreach($this->config['permission'] as $key => $val)
+				foreach($this->config['permissions'] as $key => $val)
 				{
 					$save = array();
 					if (is_int($key))
@@ -187,48 +231,82 @@ class Fuel_install extends Fuel_base_library {
 					$this->fuel->permissions->delete($were);
 				}
 			}
+			else
+			{
+				$where['name'] = $this->config['permissions'];
+				$this->fuel->permissions->delete($where);
+			}
 		}
 	}
 	
 	// adds to DB
-	function activate($module)
+	function install($module = NULL)
 	{
-		$installed = $this->_get_install_config($module);
-		$installed[$module] = TRUE;
-		//$this->fuel->settings->save($module, $key, $installed);
-	//	$this->CI->fuel_settings_model->debug_query();
-		//$this->fuel->modules->install($module);
-		
-		// test version number
-		// if ($this->validate())
-		// {
-		// 	// create writable folders
-		// 	$writable = $this->test_writable();
-		// 
-		// 	// create permissions
-		// 	$permissions = $this->create_permissions();
-		// 
-			// load sql
-			//$this->load_sql();
-			$this->migrate();
+		$config = $this->config($module);
 
-			// display checklist notes
-		// }
-		
-		
-		
-		
+		if ($this->is_compatible())
+		{
+
+			$this->migrate_up();
+			$this->install_sql();
+			$this->create_permissions();
+		}
+		else
+		{
+			$this->_add_error(lang('module_incompatible'));
+		}
+
+		if (!$this->has_errors())
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	// removes from DB
-	function deactivate($module)
+	function uninstall($module)
 	{
+		$config = $this->config($module);
+
+		if ($this->is_compatible())
+		{	
+
+			$this->migrate_down();
+			$this->uninstall_sql();
+			$this->remove_permissions();
+		}
+		else
+		{
+			$this->_add_error(lang('module_incompatible'));
+		}
+
+		if (!$this->has_errors())
+		{
+			return TRUE;
+		}
+		return FALSE;
 
 	}
-	
+
+	function is_compatible()
+	{
+		if (isset($this->config['compatibility']))
+		{
+			$compatibility = (float) $this->config['compatibility'];
+			$fuel_version = (float) FUEL_VERSION;
+			if ($compatibility < $fuel_version)
+			{
+				return FALSE;
+			}
+			return TRUE;
+		}
+		return TRUE;
+	}
+
 	protected function _get_install_config($module)
 	{
 		$this->module = $module;
+		$this->config();
 
 		$install_path = MODULES_PATH.$module.'/install/install.php';
 		
@@ -262,6 +340,35 @@ class Fuel_install extends Fuel_base_library {
 			$installed = array();
 		}
 		return $installed;
+	}
+
+	function config($module)
+	{
+		if (!empty($module))
+		{
+			$this->set_module($module);
+		}
+
+		$this->module = $this->fuel->modules->get($this->module);
+		$install_path = MODULES_PATH.$module.'/install/install.php';
+		// if the install configuration file doesn't exist, then we return FALSE'
+		if (!file_exists($install_path))
+		{
+			return FALSE;
+		}
+
+		// get the contents of the install config
+		include($install_path);
+
+		// if no $config variable found, then we return FALSE
+		if (!isset($config))
+		{
+			return FALSE;
+		}
+		
+		$this->config = $config;
+
+		return $this->config;
 	}
 	
 	function validate()

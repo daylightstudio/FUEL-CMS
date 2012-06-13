@@ -24,8 +24,6 @@ class Assets_model extends CI_Model {
 		parent::__construct();
 		$CI =& get_instance();
 		$CI->load->helper('directory');
-		
-		$CI->load->helper('directory');
 		$CI->load->helper('file');
 		
 		$this->validator = new Validator();

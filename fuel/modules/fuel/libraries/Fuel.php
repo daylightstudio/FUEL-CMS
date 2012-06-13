@@ -49,7 +49,7 @@ class Fuel extends Fuel_advanced_module {
 									'auth',
 									'blocks',
 									'cache',
-									'install',
+									'installer',
 									'language',
 									'layouts',
 									'logs',

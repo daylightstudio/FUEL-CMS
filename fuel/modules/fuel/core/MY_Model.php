@@ -3989,6 +3989,7 @@ class Data_record {
 	</code>
 	 *
 	 * @access	public
+	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
 	 * @return	array
 	 */	
 	public function values($include_derived = FALSE)
@@ -4822,4 +4823,4 @@ class Data_record {
 }
 
 /* End of file MY_Model.php */
-/* Location: ./application/libraries/MY_Model.php */
+/* Location: ./modules/fuel/core/MY_Model.php */
