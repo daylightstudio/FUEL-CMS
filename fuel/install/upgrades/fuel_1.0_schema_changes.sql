@@ -17,10 +17,10 @@ ALTER TABLE `fuel_permissions` MODIFY COLUMN `name` VARCHAR(50) NOT NULL COMMENT
 ALTER TABLE `fuel_permissions` CHANGE `name` `name` VARCHAR(50)  NOT NULL  DEFAULT ''  COMMENT 'In most cases, this should be the name of the module (e.g. news)';
 
 
-UPDATE TABLE `fuel_users` SET password = 'f4c99eae874755b97610d650be565f1ac42019d1' WHERE user_id = 1;
-UPDATE TABLE `fuel_users` SET salt = '429c6e14342dd7a63c510007a1858c26' WHERE user_id = 1;
-UPDATE TABLE `fuel_users` SET first_name = 'admin' WHERE user_id = 1;
-UPDATE TABLE `fuel_users` SET last_name = 'admin' WHERE user_id = 1;
+UPDATE TABLE `fuel_users` SET password = 'f4c99eae874755b97610d650be565f1ac42019d1' WHERE id = 1;
+UPDATE TABLE `fuel_users` SET salt = '429c6e14342dd7a63c510007a1858c26' WHERE id = 1;
+UPDATE TABLE `fuel_users` SET first_name = 'admin' WHERE id = 1;
+UPDATE TABLE `fuel_users` SET last_name = 'admin' WHERE id = 1;
 
 
 CREATE TABLE `fuel_relationships` (

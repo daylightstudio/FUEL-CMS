@@ -1,7 +1,7 @@
 <?php fuel_set_var('layout', '')?>
 <?php if ($CI->fuel->config('fuel_mode') == 'views') : ?>
 
-<?php $CI->load->view('install') ?>
+<?php $CI->load->module_view('app', 'install') ?>
 
 <?php else : ?>
 
@@ -14,7 +14,7 @@
 <div id="home_cols">
 	
 	<div id="home_news">
-		<?php $posts = fuel_model('blog_posts', array('find' => 'all', 'limit' => 3, 'order' => 'sticky, date_added desc', 'module' => 'blog')) ?>
+		<?php $posts = fuel_model('blog_posts', array('find' => 'all', 'limit' => 3, 'published' => 'yes', 'order' => 'sticky, date_added desc', 'module' => 'blog')) ?>
 		<?php if (!empty($posts)) : ?>
 		<h2>The Latest from our Blog</h2>
 		<ul>
