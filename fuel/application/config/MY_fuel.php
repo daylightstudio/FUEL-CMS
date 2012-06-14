@@ -1,5 +1,9 @@
 <?php
-// IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
+/*
+|---------------------------------------------------------------------------------------------------
+| IMPORTANT: for a complete list of fuel configurations, go to the modules/fuel/config/fuel.php file
+|---------------------------------------------------------------------------------------------------
+*/
 
 // path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
 $config['fuel_path'] = 'fuel/';

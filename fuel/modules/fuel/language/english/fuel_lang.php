@@ -179,6 +179,17 @@ $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
 $lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
 
+// command line
+$lang['module_install'] = "The module %1s has successfully bee installed.\n";
+
+$msg = "The module %1s has been uninstalled in FUEL.\n\n";
+$msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
+$msg .= "1. Delete the relevant section from the .gitmodules file.\n";
+$msg .= "2. Delete the relevant section from .git/config.\n";
+$msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
+$msg .= "4. Commit and delete the now untracked submodule files.\n";
+$lang['module_uninstall'] = $msg;
+
 
 /*
 |--------------------------------------------------------------------------

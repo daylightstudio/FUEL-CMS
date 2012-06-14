@@ -48,15 +48,13 @@ class Installer extends Fuel_base_controller {
 		$repo = implode('/', $segs);
 
 		// add GIT submodule
-//		$output = $this->_add_git_submodule($repo, $module);
+		$output = $this->_add_git_submodule($repo, $module);
 
-		// install/migrate the database if any
-
-		// if (!empty($output))
-		// {
-		// 	echo $output;
-		// 	return;
-		// }
+		if (!empty($output))
+		{
+			echo $output."\n";;
+			return;
+		}
 		
 		if (!$this->fuel->$module->install())
 		{
@@ -64,7 +62,7 @@ class Installer extends Fuel_base_controller {
 		}
 		else
 		{
-			echo "The module '".$module."' has successfully bee installed.\n";
+			echo lang('module_install', $module);
 		}
 	}
 
@@ -92,14 +90,7 @@ class Installer extends Fuel_base_controller {
 		else
 		{
 			$module_folder = MODULES_WEB_PATH.$module;
-			$msg = '';
-			$msg .= "The module '".$module."' has been uninstalled in FUEL.\n\n";
-			$msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
-			$msg .= "1. Delete the relevant section from the .gitmodules file.\n";
-			$msg .= "2. Delete the relevant section from .git/config.\n";
-			$msg .= "3. Run git rm --cached ".$module_folder." (no trailing slash).\n";
-			$msg .= "4. Commit and delete the now untracked submodule files.\n";
-			echo $msg;
+			echo lang('module_uninstall', $module, $module_folder);
 		}
 
 	}

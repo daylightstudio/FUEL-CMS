@@ -177,6 +177,38 @@ class Fuel_permissions extends Fuel_module {
 		return $save;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates permission(s) for a simple module
+	 *
+	 * @access	public
+	 * @param	string	The name of the module to create permissions
+	 * @param	array	An array of type of permissions to save with the module. If set to False then no extra permission types will be created
+	 * @return	array
+	 */
+	function delete_simple_module_permissions($module, $types = array('create', 'edit', 'publish', 'delete'))
+	{
+		$delete[] = array('name' => $module, 'description' => humanize($module));
+		
+		if (is_array($types))
+		{
+			foreach($types as $type)
+			{
+				$delete[] = array('name' => $module.'/'.$type);
+			}
+		}
+
+		foreach($delete as $d)
+		{
+			if (!$this->model()->delete($d))
+			{
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+
 	
 	
 	// --------------------------------------------------------------------

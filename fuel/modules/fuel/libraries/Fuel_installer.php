@@ -85,7 +85,7 @@ class Fuel_installer extends Fuel_base_library {
 
 	function migrate_up()
 	{
-		if (isset($this->config['migration_version']))
+		if (!empty($this->config['migration_version']))
 		{
 			$this->_migrate();
 		}
@@ -93,19 +93,21 @@ class Fuel_installer extends Fuel_base_library {
 
 	function migrate_down()
 	{
-		$this->_migrate(1);
-
-		// 001 should already be loaded so just create the class
-		$class = 'Migration_'.ucfirst($this->module->name());
-
-		$path = $this->module->path().'install/migrations/001_'.$this->module->name().'.php';
-		if (file_exists($path))
+		if (!empty($this->config['migration_version']))
 		{
-			require_once($path);
-			$migration = new $class();
-			$migration->down();
-		}
+			$this->_migrate(1);
 
+			// 001 should already be loaded so just create the class
+			$class = 'Migration_'.ucfirst($this->module->name());
+
+			$path = $this->module->path().'install/migrations/001_'.$this->module->name().'.php';
+			if (file_exists($path))
+			{
+				require_once($path);
+				$migration = new $class();
+				$migration->down();
+			}
+		}
 	}
 
 
@@ -142,6 +144,7 @@ class Fuel_installer extends Fuel_base_library {
 
 		if (file_exists($path))
 		{
+			echo "\n".$path."\n";
 			$this->CI->db->load_sql($path);
 		}
 	}
@@ -175,20 +178,24 @@ class Fuel_installer extends Fuel_base_library {
 				$save = array();
 				foreach($permissions as $key => $val)
 				{
-					$save[$i]['active'] = 'yes';
-					if (is_int($key))
+					if (!empty($val))
 					{
-						$save[$i]['name'] = $val;
-						$save[$i]['description'] = humanize($val);
+						if (is_int($key))
+						{
+							$this->fuel->permissions->create_simple_module_permissions($val);
+							// $save[$i]['name'] = $val;
+							// $save[$i]['description'] = humanize($val);
+						}
+						else
+						{
+							$save[$i]['active'] = 'yes';
+							$save[$i]['name'] = $key;
+							$save[$i]['description'] = $val;
+						}
+						$i++;
 					}
-					else
-					{
-						$save[$i]['name'] = $key;
-						$save[$i]['description'] = $val;
-					}
-					$i++;
 				}
-				
+					
 				// save multiple permissions
 				if ($this->fuel->permissions->save($save))
 				{
@@ -200,7 +207,6 @@ class Fuel_installer extends Fuel_base_library {
 				// save a single permission
 				$save['name'] = $this->config['permissions'];
 				$save['description'] = humanize($this->config['permissions']);
-				$this->fuel->permissions->save($save);
 				if ($this->fuel->permissions->save($save))
 				{
 					return FALSE;
@@ -219,16 +225,18 @@ class Fuel_installer extends Fuel_base_library {
 			{
 				foreach($this->config['permissions'] as $key => $val)
 				{
-					$save = array();
-					if (is_int($key))
+					if (!empty($val))
 					{
-						$where['name'] = $val;
+						if (is_int($key))
+						{
+							$this->fuel->permissions->delete_simple_module_permissions($val);
+						}
+						else
+						{
+							$where['name'] = $key;
+							$this->fuel->permissions->delete($where);
+						}
 					}
-					else
-					{
-						$where['name'] = $key;
-					}
-					$this->fuel->permissions->delete($were);
 				}
 			}
 			else
@@ -377,5 +385,5 @@ class Fuel_installer extends Fuel_base_library {
 	}
 }
 
-/* End of file Fuel_install.php */
-/* Location: ./modules/fuel/libraries/Fuel_install.php */
+/* End of file Fuel_installer.php */
+/* Location: ./modules/fuel/libraries/Fuel_installer.php */
