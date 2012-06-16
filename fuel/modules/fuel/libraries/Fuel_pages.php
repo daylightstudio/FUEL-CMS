@@ -583,7 +583,9 @@ class Fuel_page extends Fuel_base_library {
 			// run the variables through the pre_process method on the layout
 			$vars = $this->layout->pre_process($vars);
 			
-			$output = $this->CI->load->view($this->layout->view_path(), $vars, TRUE);
+			$layout_vars = $vars;
+			$layout_vars['CI'] =& $this->CI;
+			$output = $this->CI->load->view($this->layout->view_path(), $layout_vars, TRUE);
 
 			// now parse any template like syntax... not good if javascript is used in templates
 			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
@@ -704,7 +706,7 @@ class Fuel_page extends Fuel_base_library {
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
 			{
-				// load her to save on execution time... 
+				// load here to save on execution time... 
 				$this->CI->load->library('parser');
 				
 				$body = file_get_contents($check_file);

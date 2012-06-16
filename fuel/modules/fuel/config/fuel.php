@@ -177,8 +177,9 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'fuel/custom_fields.js',
-	//'jquery/plugins/jquery.formbuilder',
 	'jquery/plugins/jquery.placeholder',
+	'jquery/plugins/jquery.formbuilder', // <-- needs to be included here so that it is loaded on the page in case fields are ajaxed in ... can cause some weirdness
+	'fuel/custom_fields.js', // <-- needs to be included here so that it is loaded on the page in case fields are ajaxed in ... can cause some weirdness
 	'fuel/global',
 );
 
