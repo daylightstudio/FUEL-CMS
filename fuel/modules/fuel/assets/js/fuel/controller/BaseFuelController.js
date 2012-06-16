@@ -218,7 +218,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$('.multi_delete').live('click', function(e){
-			if ($('.multi_delete:checked').size()){
+			if ($('.multi_delete:checked').length){
 				$('#multi_delete').parent().show();
 			} else {
 				$('#multi_delete').parent().hide();
@@ -294,9 +294,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.publish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox').size() > 0){
+			if ($('#published:checkbox').length > 0){
 				$('#published:checkbox').attr('checked', true);
-			} else if ($('#published').size() > 0){
+			} else if ($('#published').length > 0){
 				$('#published').val('yes');
 			} else {
 				$('#published_yes').attr('checked', true);
@@ -307,9 +307,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('.unpublish_action').click(function(e){
 			$.removeChecksave();
-			if ($('#published:checkbox').size() > 0) {
+			if ($('#published:checkbox').length > 0) {
 				$('#published:checkbox').attr('checked', false);
-			} else if ($('#published').size() > 0){
+			} else if ($('#published').length > 0){
 				$('#published').val('no');
 			} else {
 				$('#published_no').attr('checked', true);
@@ -322,9 +322,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
                         
 			// Check if element is a checkbox
-			if ($('#active:checkbox').size() > 1){
+			if ($('#active:checkbox').length > 1){
 				$('#active:checkbox').attr('checked', true);
-			} else if ($('#active').size() > 0){
+			} else if ($('#active').length > 0){
 				$('#active').val('yes');
 			} else {
 				$('#active_yes').attr('checked', true);
@@ -338,9 +338,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
                         
 			// Check if element is a checkbox
-			if ($('#active:checkbox').size() > 1) {
+			if ($('#active:checkbox').length > 1) {
 				$('#active:checkbox').attr('checked', false);
-			} else if ($('#active').size() > 0){
+			} else if ($('#active').length > 0){
 				$('#active').val('no');
 			} else {
 				$('#active_no').attr('checked', true);
@@ -457,7 +457,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	_initFormTabs : function(context){
-		if (!$('#fuel_form_tabs', context).size()){
+		if (!$('#fuel_form_tabs', context).length){
 			
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
 			
@@ -588,15 +588,15 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		// set up row clicks
 		$("#data_table td[class^='col']").each(function(){
 			$(".publish_action", this).click(function(e){
-				if ($(this).parent().find('.toggle_on').size() > 0){
+				if ($(this).parent().find('.toggle_on').length > 0){
 					toggleOnOff(this, 'on');
-				} else if ($(this).parent().find('.toggle_off').size() > 0){
+				} else if ($(this).parent().find('.toggle_off').length > 0){
 					toggleOnOff(this, 'off');
 				}
 				return false;
 
 			});
-			if ($(this).find('a').size() <= 0){
+			if ($(this).find('a').length <= 0){
 				$(this).click(function(e){
 					if (!_this.rearrangeOn){
 						var actions_col = $(this).parent().find('td.actions');

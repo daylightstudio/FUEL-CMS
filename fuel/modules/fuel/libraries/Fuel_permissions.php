@@ -189,23 +189,18 @@ class Fuel_permissions extends Fuel_module {
 	 */
 	function delete_simple_module_permissions($module, $types = array('create', 'edit', 'publish', 'delete'))
 	{
-		$delete[] = array('name' => $module);
+		$delete[] = array('name' => $module, 'description' => humanize($module));
 		
 		if (is_array($types))
 		{
 			foreach($types as $type)
 			{
-				echo '<pre>';
-				print_r($type);
-				echo '</pre>';
 				$delete[] = array('name' => $module.'/'.$type);
 			}
 		}
+
 		foreach($delete as $d)
 		{
-			echo '<pre>';
-			print_r($d);
-			echo '</pre>';
 			if (!$this->model()->delete($d))
 			{
 				return FALSE;
