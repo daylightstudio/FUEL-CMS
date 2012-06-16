@@ -77,12 +77,12 @@ dave@thedaylightstudio.com
 			var $parentElem = $(elem).has(options.repeatableSelector + ' ' + options.repeatableSelector);
 
 			var parentIndex = null;
-			if ($parentElem.size() > 0){
+			if ($parentElem.length > 0){
 				parentIndex = $parentElem.attr('data-index');
 			}
 
 			// if children, then we need to reorganize them too
-			if (depth == 0 && $childTemplates.size()){
+			if (depth == 0 && $childTemplates.length){
 				var $childRepeatables = $(elem).find(options.repeatableSelector);
 				$childRepeatables.find('input,textarea,select').each(function(i){
 					var newName = $(this).attr('name')
@@ -99,7 +99,7 @@ dave@thedaylightstudio.com
 		}
 		
 		var createRemoveButton = function(elem){
-			if ($(elem).children('.' + options.removeButtonClass).size() == 0){
+			if ($(elem).children('.' + options.removeButtonClass).length == 0){
 				$(elem).append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 			}
 			
@@ -112,7 +112,7 @@ dave@thedaylightstudio.com
 					$(this).parent().remove();
 					
 					var $children = $this.children(options.repeatableSelector);
-					if ($children.size() < max){
+					if ($children.length < max){
 						$this.next().show();
 					}
 					// to reorder the indexes
@@ -135,7 +135,7 @@ dave@thedaylightstudio.com
 		}
 		
 		var checkMax = function($elem, max){
-			if (max && $elem.children(options.repeatableSelector).size() != 0 && $elem.children(options.repeatableSelector).size() >= max){
+			if (max && $elem.children(options.repeatableSelector).length != 0 && $elem.children(options.repeatableSelector).length >= max){
 				$elem.next().hide();
 			} else {
 				$elem.next().show();
@@ -147,7 +147,7 @@ dave@thedaylightstudio.com
 			
 			// must grab first in case they are nested
 			min = parseInt(min);
-			if (min && $children.size() != 0 && $children.size() <= min){
+			if (min && $children.length != 0 && $children.length <= min){
 				$children.find('.' + options.removeButtonClass + ':first').hide();
 			} else {
 				$children.find('.' + options.removeButtonClass + ':first').show();
@@ -162,7 +162,7 @@ dave@thedaylightstudio.com
 		var createCollapsingContent = function($elem){
 			if (options.allowCollapsingContent){
 		
-				$($elem).find(options.sortableSelector).dblclick(function(e){
+				$($elem).find(options.sortableSelector).unbind('dblclick').dblclick(function(e){
 					$parent = $(this).closest(options.repeatableSelector).parent();
 
 					var dblclick = ($parent.attr('data-dblclick')) ? $parent.attr('data-dblclick') : null;
@@ -215,11 +215,11 @@ dave@thedaylightstudio.com
 				
 				var $children = $this.children(options.repeatableSelector);
 
-				if (max && $children.size() >= max){
+				if (max && $children.length >= max){
 					return false;
 				}
 
-				var index = $children.size();
+				var index = $children.length;
 				parseTemplate($clonecopy, index);
 
 				createRemoveButton($clonecopy);
@@ -233,7 +233,7 @@ dave@thedaylightstudio.com
 				
 				reOrder($this);
 
-				if (max && $children.size() != 0 && $children.size() >= (max -1)){
+				if (max && $children.length != 0 && $children.length >= (max -1)){
 					$(this).hide();
 				}
 				checkMin($prev, min);
@@ -291,7 +291,7 @@ dave@thedaylightstudio.com
 				}
 			}
 			
-			if ($parent.find(options.addButtonClass).size() == 0){
+			if ($parent.find(options.addButtonClass).length == 0){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}
 			// add sorting

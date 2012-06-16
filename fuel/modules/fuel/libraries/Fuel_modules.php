@@ -28,7 +28,7 @@
 
 // --------------------------------------------------------------------
 
-require_once('Fuel_install.php');
+require_once('Fuel_installer.php');
 
 class Fuel_modules extends Fuel_base_library {
 

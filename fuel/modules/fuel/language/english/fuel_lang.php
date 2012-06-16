@@ -167,6 +167,7 @@ $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
 $lang['module_restored_success'] = 'Previous version successfully restored.';
 $lang['module_replaced_success'] = 'The contents of this record were successfully replaced.';
+$lang['module_incompatible'] = 'The version of this module is not compatible with the install FUEL version of '.FUEL_VERSION;
 
 $lang['cannot_determine_module'] = "Cannot determine module.";
 $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";
@@ -177,6 +178,17 @@ $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
 $lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
+
+// command line
+$lang['module_install'] = "The module %1s has successfully bee installed.\n";
+
+$msg = "The module %1s has been uninstalled in FUEL.\n\n";
+$msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
+$msg .= "1. Delete the relevant section from the .gitmodules file.\n";
+$msg .= "2. Delete the relevant section from .git/config.\n";
+$msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
+$msg .= "4. Commit and delete the now untracked submodule files.\n";
+$lang['module_uninstall'] = $msg;
 
 
 /*

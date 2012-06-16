@@ -42,7 +42,7 @@ fuel.fields.multi_field = function(context, inline_edit){
 		comboOpts.defaultSearchBoxString = fuel.lang('comboselect_filter');
 		
 		var $sortingElem = $(elem).parent().find('.sorting');
-		if ($sortingElem.size()){
+		if ($sortingElem.length){
 			comboOpts.autoSort = false;
 			comboOpts.isSortable = true;
 			comboOpts.selectedOrdering = eval(unescape($sortingElem.val()));
@@ -166,7 +166,7 @@ fuel.fields.wysiwyg_field = function(context){
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
 		
 		// add view source
-		if ($('#' + ckId).parent().find('.editor_viewsource').size() == 0){
+		if ($('#' + ckId).parent().find('.editor_viewsource').length == 0){
 			
 			$('#' + ckId).parent().append(sourceButton);
 
@@ -220,7 +220,7 @@ fuel.fields.wysiwyg_field = function(context){
 		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
 	
 		// add preview to make it noticable and consistent
-		if ($textarea.parent().find('.editor_preview').size() == 0){
+		if ($textarea.parent().find('.editor_preview').length == 0){
 		
 			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
 			if ($previewBtn){
@@ -353,7 +353,7 @@ fuel.fields.asset_field = function(context, options){
 	
 	var _this = this;
 	$('.asset_select', context).each(function(i){
-		if ($(this).parent().find('.asset_upload_button').size() == 0){
+		if ($(this).parent().find('.asset_upload_button').length == 0){
 			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			var btnLabel = '';
@@ -400,7 +400,7 @@ fuel.fields.asset_field = function(context, options){
 		return false;
 	}
 	$('.asset_upload', context).each(function(i){
-		if ($(this).parent().find('.asset_upload_button').size() == 0){
+		if ($(this).parent().find('.asset_upload_button').length == 0){
 			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			var btnLabel = fuel.lang('btn_upload_asset');
@@ -463,8 +463,8 @@ fuel.fields.inline_edit_field = function(context){
 		
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
 		
-		if (!$field.parent().find('.add_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
-		if (!$field.parent().find('.edit_inline_button').size()) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
+		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		
 		var refreshField = function(){
 
@@ -500,8 +500,8 @@ fuel.fields.inline_edit_field = function(context){
 		}
 		
 		var changeField = function($this){
-			if (($this.val() == '' || $this.attr('xmultiple')) || $this.find('option').size() == 0){
-				if ($this.is('select') && $this.find('option').size() == 0){
+			if (($this.val() == '' || $this.attr('xmultiple')) || $this.find('option').length == 0){
+				if ($this.is('select') && $this.find('option').length == 0){
 					$this.hide();
 				}
 				if ($this.is('input, select')) $this.next('.btn_field').hide();

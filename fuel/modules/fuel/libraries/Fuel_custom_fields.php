@@ -607,13 +607,15 @@ class Fuel_custom_fields {
 						$css_class = ' float_left';
 					}
 
+					$depth_suffix = ($params['depth'] > 0) ? '_'.$params['depth'] : '';
+
 					$style = (!empty($params['style'])) ? ' style="'.$params['style'].'"' : '';
 					
 					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"'.$style.'>';
 					$str .= '<h3 class="grabber" title="'.lang('tooltip_dbl_click_to_open').'">';
 					if (!empty($heading)) 
 					{
-						$str .= '<span class="title"></span>';
+						$str .= '<span class="title'.$depth_suffix.'"></span>';
 					}
 					$str .= '</h3>';
 					$str .= '<div class="repeatable_content">';
@@ -809,22 +811,24 @@ class Fuel_custom_fields {
 			$params['options'] = $form_builder->options_from_model($params['model']);
 		}
 		
-		if (strpos($params['module'], '/') === FALSE)
+		if (!empty($params['module']))
 		{
-			$CI =& get_instance();
-			$module = $CI->fuel->modules->get($params['module'], FALSE);
-			$uri = (!empty($module)) ? $module->info('module_uri') : '';
+			if (strpos($params['module'], '/') === FALSE)
+			{
+				$CI =& get_instance();
+				$module = $CI->fuel->modules->get($params['module'], FALSE);
+				$uri = (!empty($module)) ? $module->info('module_uri') : '';
+			}
+			else
+			{
+				$uri = $params['module'];
+			}
+			if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
+			{
+				$inline_class = 'add_edit '.$uri;
+				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+			}
 		}
-		else
-		{
-			$uri = $params['module'];
-		}
-		if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
-		{
-			$inline_class = 'add_edit '.$uri;
-			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-		}
-
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;

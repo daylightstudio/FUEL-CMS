@@ -1,0 +1,3 @@
+[submodule "fuel/modules/blog"]
+	path = fuel/modules/blog
+	url = git://github.com/daylightstudio/FUEL-CMS-Blog-Module.git

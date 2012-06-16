@@ -509,6 +509,23 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns a list of file types that are allowed for a particular folder
+	 *
+	 * @access	public
+	 * @param	string	folder name
+	 * @param	boolean	will recursively look inside nested folders. Default is FALSE
+	 * @param	boolean	will include the server path. Default is FALSE
+	 * @return	mixed
+	 */	
+	function dir_files($folder, $recursive = FALSE, $append_path = FALSE)
+	{
+		$dir = assets_server_path($folder);
+		return directory_to_array($dir, $recursive, array(), $append_path);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * An array of folders excluded from being viewed
 	 *
 	 * @access	public

@@ -132,8 +132,8 @@
 			<p class="important">That&rsquo;s it!</p>
 			<p>To access the FUEL admin, go to: <br />
 			<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br />
-			uid: <strong>admin</strong> <br />
-			pwd: <strong>admin</strong> <br />
+			User name: <strong>admin</strong> <br />
+			Password: <strong>admin</strong> (you can and should change this password after logging in)<br />
 			</p>
 			<br />
 

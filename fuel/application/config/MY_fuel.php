@@ -38,7 +38,7 @@ $config['modules_allowed'] = array(
 	);
 
 // whether the admin backend is enabled or not
-$config['admin_enabled'] = FALSE;
+$config['admin_enabled'] = TRUE;
 
 // maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:

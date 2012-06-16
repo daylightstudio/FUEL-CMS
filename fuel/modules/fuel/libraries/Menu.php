@@ -725,14 +725,17 @@ class Menu {
 			{
 				if (is_array($val['attributes']))
 				{
-					if (!in_array('id', $val['attributes'])) $val['attributes']['id'] = $this->_get_id($val);
+					if (!in_array('id', $val['attributes']))
+					{
+						$val['attributes']['id'] = $this->_get_id($val);
+					}
 				}
 				else if (strpos($val['id'], 'id=') === FALSE)
 				{
 					$val['attributes'] .= ' id="'.$this->_get_id($val).'"';
 				}
 			}
-			$links[] = $this->_create_link($val);
+			$links[] = $this->_create_link($val, $val['id']);
 		}
 		$str = implode($this->delimiter, $links);
 		
@@ -866,16 +869,14 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates an open list item element
+	 * Creates a link element
 	 *
 	 * @access	protected
 	 * @param	array menu item data
-	 * @param	int current level
-	 * @param	int current item index
-	 * @param	boolean whether the item is the last in the list
+	 * @param	string the active path if you want the active class rendered on the anchor (optional)
 	 * @return	string
 	 */
-	protected function _create_link($val)
+	protected function _create_link($val, $active = NULL)
 	{
 		$str = '';
 		$label = $this->_get_label($val['label']);
@@ -899,12 +900,28 @@ class Menu {
 			{
 				$attrs .= ' title="'.strip_tags($val['label']).'"';
 			}
+			
+			if (!empty($active) AND $this->active == $active)
+			{
+				$attrs .= ' class="'.$this->active_class.'"';
+			}
+
 			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : site_url($val['location']);
 			$str .= '<a href="'.$location.'"'.$attrs.'>'.$label.'</a>';
 		}
 		else
 		{
+			if (!empty($active) AND $this->active == $active)
+			{
+				$str .= '<span class="'.$this->active_class.'">';
+				$has_active = TRUE;
+			}
 			$str .= $label;
+			if (!empty($has_active))
+			{
+				$str .= '</span>';
+			}
+			
 		}
 		return $str;
 	}

@@ -1134,7 +1134,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function install()
 	{
-		return $this->fuel->install->activate($this->name());
+		return $this->fuel->installer->install($this->name());
 	}
 
 
@@ -1148,7 +1148,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	function uninstall()
 	{
-		return $this->fuel->install->deactivate($this->name());
+		return $this->fuel->installer->uninstall($this->name());
 	}
 }
 

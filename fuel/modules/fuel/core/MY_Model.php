@@ -2861,11 +2861,8 @@ class MY_Model extends CI_Model {
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->has_many as $related_field => $related_model)
 			{
-				if ( ! empty($this->normalized_save_data[$related_field]))
-				{
-					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
-				}
+				// remove pre-existing relationships
+				$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
 			}
 
 			// then save
@@ -2894,15 +2891,12 @@ class MY_Model extends CI_Model {
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
-				if ( ! empty($this->normalized_save_data[$related_field]))
-				{
-					// cache the loaded models here for reference below
-					$related_models[$related_field] =& $this->load_related_model($related_model);
+				// cache the loaded models here for reference below
+				$related_models[$related_field] =& $this->load_related_model($related_model);
 
-					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
-					
-				}
+				// remove pre-existing relationships
+				$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
+
 			}
 
 			// then save
@@ -3989,6 +3983,7 @@ class Data_record {
 	</code>
 	 *
 	 * @access	public
+	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
 	 * @return	array
 	 */	
 	public function values($include_derived = FALSE)
@@ -4822,4 +4817,4 @@ class Data_record {
 }
 
 /* End of file MY_Model.php */
-/* Location: ./application/libraries/MY_Model.php */
+/* Location: ./modules/fuel/core/MY_Model.php */

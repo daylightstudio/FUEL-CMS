@@ -251,7 +251,7 @@ select[multiple] {
     -webkit-box-shadow: inset 0 0 3px rgba(140,140,140,0.9);
 }
 /*----------------------------------------------------------------------------------------------------
-END FORM FIELDS	
+END FORM FIELDS 
 Inspired by Zero Design http://www.getfuelcms.com/forums/discussion/470/updated-admin-ui/#Item_13
 ----------------------------------------------------------------------------------------------------*/
 
@@ -302,8 +302,8 @@ a.btn { border: 1px solid #ccc;  height: 27px; line-height: 27px; display: block
 div.btn { border: 1px solid #ccc; float: left; list-style: none;  margin: 0;  padding: 0 15px 0 0px; line-height: 27px; }
 .btn input, .btn .button { border: none; height: 19px; }
 a.btn, div.btn, .btn input, .btn .button  {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
-	background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
+  background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
  }
 
 .update_notice { background: #FFFBCC; border: 1px solid #E6DB55; margin-bottom: 10px; padding: 4px 5px; }
@@ -311,13 +311,13 @@ a.btn, div.btn, .btn input, .btn .button  {
 .update_notice a:hover { text-decoration: none; }
 
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; }
-.repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
+.repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
 .repeatable .remove { position: absolute; top: 15px; right: 15px; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { 
-	-moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
-	-webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
-	box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
+  -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
+  -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
+  box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
@@ -328,7 +328,7 @@ a.btn, div.btn, .btn input, .btn .button  {
 fieldset.tab { display: none; }
 fieldset.tab fieldset { display: block; }
 fieldset.collapsible legend { cursor: pointer; }
-	
+  
 /******************************************************
 footer panel 
 ******************************************************/
@@ -343,17 +343,17 @@ div#fuel_body { }
 left panel 
 ******************************************************/
 div#fuel_top { z-index: 2; line-height: 28px; height: 30px;  background-color: #393939; color: #fff; padding: 0 15px; color: #fff; text-shadow: #444 0px 1px 0px; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5d5d5d), color-stop(1, #393939));
-	background: -moz-linear-gradient(top center, #5d5d5d  0%, #393939 100%); }
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5d5d5d), color-stop(1, #393939));
+  background: -moz-linear-gradient(top center, #5d5d5d  0%, #393939 100%); }
 div#fuel_top a:hover { text-decoration: underline; }
 h1#fuel_site_name { float: left; font-size: 18px; width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 h1#fuel_site_name a { color: #999; text-shadow: #111 0px -1px 0px; }
 
 div#fuel_left_panel { z-index: 1; position: absolute; top: 30px; left: 0px; bottom: 0px; width: 200px; background-color: #333; overflow: auto; border-right: 1px solid #292929; overflow-x: hidden; 
-	-moz-box-shadow: inset -5px 5px 20px 5px #2f2f2f; 
-	-webkit-box-shadow: inset -5px 5px 20px 5px #2f2f2f; 
-	box-shadow: inset -5px 5px 20px 5px #2f2f2f;
-	 }
+  -moz-box-shadow: inset -5px 5px 20px 5px #2f2f2f; 
+  -webkit-box-shadow: inset -5px 5px 20px 5px #2f2f2f; 
+  box-shadow: inset -5px 5px 20px 5px #2f2f2f;
+   }
 div#fuel_left_panel a { color: #999; text-decoration: none; text-shadow: #000 0px 1px 0px; display: block; overflow: hidden; text-overflow: ellipsis; width: 130px; }
 div#fuel_left_panel a:hover { color: #bbb; text-decoration: underline; }
 div#fuel_left_panel_inner { padding: 15px; text-shadow: #000 0px 1px 0px; }
@@ -404,6 +404,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_success {  background-image: url(../images/ico_accept.png); }
 .ico_table {  background-image: url(../images/ico_table.png); }
 .ico_tags {  background-image: url(../images/ico_tag_blue.png); }
+.ico_categories {  background-image: url(../images/ico_folder_page.png); }
 .ico_tools { background-image: url(../images/ico_wrench.png); }
 .ico_tree {  background-image: url(../images/ico_vert_tree.png); }
 .ico_unpublish { background-image: url(../images/ico_page_red.png); }
@@ -472,21 +473,21 @@ div#other_items select{  max-width: 300px;}
 /* button bar*/
 div#action_btns { position: absolute; top: 9px; left: 15px; }
 div.buttonbar ul {  height: 27px; float: left; }
-div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; 	float: left;list-style: none;  margin: 0;
-	background: #e6e6e6 url(../images/btn.png) repeat-x; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
-	background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd');
+div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;  float: left;list-style: none;  margin: 0;
+  background: #e6e6e6 url(../images/btn.png) repeat-x; 
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
+  background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd');
  }
 div.buttonbar li:hover { background-position: 0 -27px; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #eee));
-	background: -moz-linear-gradient(top center, #fff 0%, #eee 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee');
-	}
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #eee));
+  background: -moz-linear-gradient(top center, #fff 0%, #eee 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee');
+  }
 div.buttonbar li.active { background-position: 0 -54px; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ddd), color-stop(1, #fff));
-	background: -moz-linear-gradient(top center, #ddd 0%, #fff 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff');
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ddd), color-stop(1, #fff));
+  background: -moz-linear-gradient(top center, #ddd 0%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff');
 }
 div.buttonbar li.active a { color: #000; }
 div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
