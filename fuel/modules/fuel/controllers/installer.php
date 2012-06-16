@@ -3,7 +3,6 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Installer extends Fuel_base_controller {
 	
-	protected $git_path = '/usr/bin/git';
 	protected $module = '';
 
 	function __construct()
@@ -24,15 +23,6 @@ class Installer extends Fuel_base_controller {
 		}
 		
 	}
-	
-	// function index()
-	// {
-	// 	$vars['modules'] = $this->fuel->modules->advanced();
-	// 	$crumbs = array(lang('section_my_modules'));
-	// 	$this->fuel->admin->set_titlebar($crumbs);
-		
-	// 	$this->fuel->admin->render('manage/my_modules', $vars);
-	// }
 	
 	function install($module = NULL)
 	{
@@ -72,7 +62,6 @@ class Installer extends Fuel_base_controller {
 		$module_folder = MODULES_WEB_PATH.$module;
 		$cmd = 'git submodule add '.$repo.' '.$module_folder;
 		$output = shell_exec($cmd);
-		//$output = $this->run_command($cmd);
 
 		if (!empty($output))
 		{
@@ -97,16 +86,5 @@ class Installer extends Fuel_base_controller {
 		}
 
 	}
-	
-	function update()
-	{
-		
-	}
-	
-	function delete()
-	{
-		
-	}
-
 	
 }
