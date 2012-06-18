@@ -10,8 +10,27 @@ class My_modules extends Fuel_base_controller {
 	
 	function index()
 	{
-		$vars = array();
-		$this->fuel->admin->render('modules', $vars);
+		$vars['modules'] = $this->fuel->modules->advanced();
+		$crumbs = array(lang('section_my_modules'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		
+		$this->fuel->admin->render('manage/my_modules', $vars);
 	}
+	
+	function install($module = NULL)
+	{
+		
+		$module = 'test';
+		//$this->fuel->modules->install($module);
+		$this->fuel->install->activate('backup');
+	}
+	
+	function uninstall($module = NULL)
+	{
+		$this->fuel->set_module($module);
+		//$this->fuel->install->deactivate();
+		$this->fuel->$module->deactivate();
+	}
+
 	
 }
