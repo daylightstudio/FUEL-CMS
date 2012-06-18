@@ -1,11 +1,11 @@
 <h1>Generate</h1>
 <p>FUEL CMS provides a command line tool to help you auto generate starter files for your simple and advanced modules. To do so, navigate 
-to the folder (e.g. using "cd") where the main bootstrap index.php file exists. Then you can type the commands below which uses the
+to the folder (e.g. using "cd") where the main bootstrap index.php file exists. Then you can type the commands below which use the
 <a href="http://codeigniter.com/user_guide/general/cli.html" target="_blank">CodeIgniter CLI</a> to generate files automatically.</p>
 
 <h2>Configuration and Templates</h2>
 <p>The default generated template files exist in the <span class="file">fuel/modules/fuel/views/_generated/{type}</span> folder where <dfn>{type}</dfn>
-is either "advanced" or "simple". You can overwrite these defaults by creating a <span class="file">fuel/application/views/_generated/{type}</span> 
+is either "advanced", "model" or "simple". You can overwrite these defaults by creating a <span class="file">fuel/application/views/_generated/{type}</span> 
 folder with files that correspond to the files specified in the <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the "generated" parameter.
 Additionally, you can set additional module folders to look in by adding to the "search" parameter array shown in the configuration array below:
 </p>
@@ -58,7 +58,7 @@ php index.php fuel/generate/simple/ examples
 <h2>Advanced Modules</h2>
 <p>The following will create a directory named "test" in the <span class="file">fuel/modules/</span> folder, as well as create a permission and add it to the "modules_allowed" FUEL configuration.
 It will generate by default the files specified in the
-<a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the "generated" parameter:</p>
+<a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the <dfn>generated</dfn> parameter:</p>
 <pre class="brush:php">
 php index.php fuel/generate/advanced/ examples
 </pre>
@@ -73,5 +73,11 @@ php index.php fuel/generate/advanced/ examples
 	<li><strong>{model_name}</strong>: the model name with the first letter upper cased and without the suffix (e.g. News)</li>
 	<li><strong>{model_record}</strong>: The model records name which will remove any pluralization</li>
 	<li><strong>{ModuleName}</strong>: A camel-cased version of the module name</li>
+	<li><strong>{MODULE_NAME}</strong>: An all upper cased version of the module's name (used for constants)</li>
 </ul>
+
+<h2>Samples</h2>
+<p>By default, the FUEL generate command comes with several models that we thought were pretty common to many website projects and so we included them as samples&mdash;they are <dfn>news</dfn>, <dfn>events</dfn>, <dfn>careers</dfn>.
+When creating a model or simple module with those names, you will get those models generated instead as a starting point.
+</p>
 
