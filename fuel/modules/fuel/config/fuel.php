@@ -382,7 +382,10 @@ $config['generate'] = array(
 
 $config['settings'] = array();
 $config['settings']['site_name'] = array();
-$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+if (!empty($config['modules_allowed']))
+{
+	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+}
 
 
 /* End of file fuel.php */

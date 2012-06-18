@@ -251,14 +251,15 @@ class Fuel_blocks extends Fuel_module {
 	 *
 	 * @access	public
 	 * @param	array 	Where condition to apply to blocks in the CMS (optional)
+	 * @param	string	The subfolder within the views/_blocks folder (optional)
 	 * @param	string	Filter condition for those blocks found in the views/_blocks folder (optional)
 	 * @param	mixed	The ordering condition to apply for the views (applies to those fond in the CMS... optional)
 	 * @return	array
 	 */
-	function options_list($where = array(), $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE)
 	{
 		$model = $this->model();
-		return $model->options_list_with_views($where, $dir_filter, $order);
+		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order);
 	}
 	
 }

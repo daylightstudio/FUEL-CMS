@@ -1624,7 +1624,8 @@ Class Form_builder {
 		// grab options from a model if a model is specified
 		if (!empty($params['model']))
 		{
-			$params['options'] = $this->options_from_model($params['model']);
+			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
+			$params['options'] = $this->options_from_model($params['model'], $model_params);
 		}
 
 		$attrs = array(
@@ -1811,7 +1812,8 @@ Class Form_builder {
 		// grab options from a model if a model is specified
 		if (!empty($params['model']))
 		{
-			$params['options'] = $this->options_from_model($params['model']);
+			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
+			$params['options'] = $this->options_from_model($params['model'], $model_params);
 		}
 		
 		$i = 0;
@@ -3038,7 +3040,7 @@ Class Form_builder {
 	 * @param	mixed model, model/method or module/model/method
 	 * @return	array
 	 */
-	function options_from_model($model)
+	function options_from_model($model, $params = array())
 	{
 		if (is_array($model))
 		{
@@ -3076,8 +3078,8 @@ Class Form_builder {
 		{
 			$this->CI->load->model($model);
 		}
-		
-		$options = $this->CI->$model->$method();
+		$func = array($this->CI->$model, $method);
+		$options = call_user_func_array($func, $params);
 		return $options;
 	}
 	

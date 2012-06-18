@@ -798,6 +798,7 @@ class Fuel_custom_fields {
 			'options' => array(),
 			'mode' => NULL,
 			'model' => NULL,
+			'model_params' => NULL,
 			'wrapper_tag' => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
 			'module' => NULL,
@@ -808,7 +809,8 @@ class Fuel_custom_fields {
 		// grab options from a model if a model is specified
 		if (!empty($params['model']))
 		{
-			$params['options'] = $form_builder->options_from_model($params['model']);
+			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
+			$params['options'] = $form_builder->options_from_model($params['model'], $model_params);
 		}
 		
 		if (!empty($params['module']))
