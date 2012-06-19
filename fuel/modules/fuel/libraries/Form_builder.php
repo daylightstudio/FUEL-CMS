@@ -640,7 +640,6 @@ Class Form_builder {
 		
 		$str = $begin_str . $str . $end_str;
 		$this->_close_form($str);
-		
 		return $this->_html;
 	}
 
@@ -892,7 +891,6 @@ Class Form_builder {
 
 		$str = $begin_str . $str . $end_str;
 		$this->_close_form($str);
-
 		return $this->_html;
 	}
 
@@ -1079,7 +1077,6 @@ Class Form_builder {
 		
 		// apply any CSS first
 		$this->_html .= $this->_apply_css();
-		
 		$this->_html .= $wrapper_open_str.$str.$wrapper_close_str;
 		
 		if (!empty($this->key_check))
@@ -2392,6 +2389,7 @@ Class Form_builder {
 		$form_builder->name_prefix = $this->name_prefix;
 		$form_builder->name_array = $this->name_array;
 		$form_builder->custom_fields = $this->custom_fields;
+		//$form_builder->representatives = $this->representatives;
 		$form_builder->set_validator($this->form->validator);
 		$form_builder->use_form_tag = FALSE;
 		$form_builder->set_field_values($params['value']);
@@ -3301,8 +3299,14 @@ Class Form_builder {
 		// }
 		//$this->CI->load->vars(array('css' => $css));
 		
+		// set as global variable to help with nested forms
+		if (empty($GLOBALS['__css_files__']))
+		{
+			$GLOBALS['__css_files__'] = array();
+		}
+		$add_css = array();
+		$file = '';
 		$out = '';
-		$css_files = array();
 		foreach($this->css as $css)
 		{
 			if (is_array($css))
@@ -3316,28 +3320,34 @@ Class Form_builder {
 					{
 						foreach($c as $file)
 						{
-							$css_files[] = css_path($file, $module);
+							$file = css_path($file, $module);
 						}
 					}
 					else
 					{
-						$css_files[] = css_path($c, $module);
+						$file = css_path($c, $module);
 					}
 				}
 			}
 			else
 			{
-				$css_files[] = css_path($css);
+				$file = css_path($css);
+			}
+
+			if (!empty($file) AND !in_array($file, $GLOBALS['__css_files__']))
+			{
+				array_push($GLOBALS['__css_files__'], $file);
+				$add_css[] = $file;
 			}
 		}
-		
+
 		// must use javascript to do this because forms may get ajaxed in and we need to inject their CSS into the head
-		if (!empty($css_files))
+		if (!empty($add_css))
 		{
 			$out .= "<script type=\"text/javascript\">\n";
 			$out .= "//<![CDATA[\n";
 			$out .= 'if (jQuery){ (function($) {
-					var cssFiles = '.json_encode($css_files).';
+					var cssFiles = '.json_encode($add_css).';
 					var css = [];
 					$("head link").each(function(i){
 						css.push($(this).attr("href"));
@@ -3360,6 +3370,7 @@ Class Form_builder {
 			$out .= "\n//]]>\n";
 			$out .= "</script>\n";
 		}
+
 		return $out;
 	}
 
