@@ -380,13 +380,5 @@ $config['generate'] = array(
 							
 @include(APPPATH.'config/MY_fuel.php');
 
-$config['settings'] = array();
-$config['settings']['site_name'] = array();
-if (!empty($config['modules_allowed']))
-{
-	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
-}
-
-
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */

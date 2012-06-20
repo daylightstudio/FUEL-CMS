@@ -85,6 +85,16 @@ $config['ck_editor_settings'] = "{
 	protectedSource: [/\{[\s\S]*?\}/gi, /<\?[\s\S]*?\?>/g]
 	}";
 
+/* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure
+$config['settings'] = array();
+$config['settings']['site_name'] = array();
+if (!empty($config['modules_allowed']))
+{
+	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+}
+*/
+
+
 
 /* End of file MY_fuel.php */
 /* Location: ./application/config/MY_fuel.php */
