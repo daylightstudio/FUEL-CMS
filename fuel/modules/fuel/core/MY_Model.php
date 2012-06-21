@@ -385,15 +385,16 @@ class MY_Model extends CI_Model {
 			{
 				$result_objects = (!empty($assoc_key)) ? $query->result_assoc_array($assoc_key) : $query->result_array();
 			}
-			$query->free_result();
-			return new Data_set($result_objects, $force_array);
+			$this->last_data_set = new Data_set($result_objects, $force_array);
 		}
+		else
+		{
+			$result_objects = $this->map_query_records($query, $assoc_key);
+			$this->last_data_set = new Data_set($result_objects, $force_array);
+		}
+		$query->free_result();
 		
 		//This array holds all result data
-		$result_objects = $this->map_query_records($query, $assoc_key);
-
-		$query->free_result();
-		$this->last_data_set = new Data_set($result_objects, $force_array);
 		return $this->last_data_set;
 	}
 	
@@ -519,13 +520,9 @@ class MY_Model extends CI_Model {
 				$method = 'find_'.$find;
 				if (is_callable(array($this, $method)))
 				{
-					if (!empty($where)) $this->db->where($where);
-					if (!empty($order)) $this->db->order_by($order);
-					if (!empty($limit)) $this->db->offset($limit);
-					if (!empty($offset)) $this->db->offset($offset);
-					
-					$args = array_shift(func_get_args());
-					$data = call_user_func(array($this, $method), $args);
+					$args = func_get_args();
+					array_shift($args);
+					$data = call_user_func_array(array($this, $method), $args);
 				}
 				else
 				{
@@ -4493,11 +4490,7 @@ class Data_record {
 		{
 			if (array_key_exists($found[1], $this->_fields))
 			{
-				$field = $this->_parent_model->field_info($found[1]);
-				if (!empty($field))
-				{
-					return !empty($this->_fields[$found[1]]);
-				}
+				return !empty($this->_fields[$found[1]]);
 			}
 		}
 
