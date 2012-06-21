@@ -103,6 +103,7 @@ Class Form_builder {
 	protected $_post_process; // post_process functions
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	protected $_rendered_field_types = array(); // holds all the fields types rendered
+	protected $_is_nested = FALSE; // used to determine if the form is nested within another form_builder instance
 	protected $CI;
 	
 	// --------------------------------------------------------------------
@@ -1093,7 +1094,6 @@ Class Form_builder {
 			$this->_html .= $this->form->close('', FALSE); // we set the token above just in case form tags are turned off	
 		}
 		$this->_html .= $this->_render_js();
-
 		$this->_html .= $this->html_append;
 
 		return $this->_html;
@@ -1451,7 +1451,9 @@ Class Form_builder {
 		}
 
 		// cache the field types being rendered
-		$this->_rendered_field_types[$params['type']] = $params['type'];
+		$rendered_type = (!empty($matched)) ? $key : $params['type'];
+		$this->_rendered_field_types[$rendered_type] = $rendered_type;
+		// $this->_rendered_field_types[$params['type']] = $params['type'];
 		
 		// add before/after html 
 		$str = $params['before_html'].$str.$params['after_html'];
@@ -2388,21 +2390,29 @@ Class Form_builder {
 		
 		$form_builder->name_prefix = $this->name_prefix;
 		$form_builder->name_array = $this->name_array;
+
 		$form_builder->custom_fields = $this->custom_fields;
-		//$form_builder->representatives = $this->representatives;
+		$form_builder->representatives = $this->representatives;
 		$form_builder->set_validator($this->form->validator);
 		$form_builder->use_form_tag = FALSE;
 		$form_builder->set_field_values($params['value']);
-		
+		$form_builder->_is_nested = TRUE; // used to prevent multiple loading of assets
 		$form_builder->auto_execute_js = FALSE;
+
+		// add accumulated js
 		$js = $form_builder->get_js();
 		$this->add_js($js);
+
+		// add accumulated css
+		$css = $form_builder->get_css();
+		$this->add_css($css);
 
 		if ($return_object)
 		{
 			return $form_builder;
 		}
 		$form = $form_builder->render();
+
 		return $form;
 		
 	}
@@ -2926,6 +2936,7 @@ Class Form_builder {
 	 * Returns the javascript used for the form
 	 *
 	 * @access	public
+	 * @param	string The key name of a javascript file used when adding
 	 * @return	array
 	 */
 	function get_js($js = NULL)
@@ -2986,9 +2997,10 @@ Class Form_builder {
 	 * Returns the CSS used for the form
 	 *
 	 * @access	public
+ 	 * @param	string The key name of a CSS file used when adding
 	 * @return	array
 	 */
-	function get_css($css)
+	function get_css($css = NULL)
 	{
 		if (!empty($css))
 		{
@@ -3180,6 +3192,8 @@ Class Form_builder {
 	 */
 	protected function _render_js()
 	{
+		if ($this->_is_nested) return '';
+
 		$_js = $this->get_js();
 		if (empty($_js)) return '';
 		
@@ -3194,7 +3208,7 @@ Class Form_builder {
 		
 		$orig_asset_output = $this->CI->asset->assets_output;
 		$this->CI->asset->assets_output = FALSE;
-		
+
 		// loop through to generate javascript
 		foreach($_js as $type => $js)
 		{
@@ -3236,7 +3250,7 @@ Class Form_builder {
 				$str .= "}\n";
 			}
 		}
-		
+
 		// loop through custom fields to generate any js function calls
 		foreach($this->_rendered_field_types as $type => $cs_field)
 		{
@@ -3289,7 +3303,7 @@ Class Form_builder {
 	 */
 	protected function _apply_css()
 	{
-		if (empty($this->css)) return;
+		if (empty($this->css) OR $this->_is_nested) return;
 		
 		// static way but won't work if the form is ajaxed int'
 		// $css = $this->CI->load->get_vars('css');

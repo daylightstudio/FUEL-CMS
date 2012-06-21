@@ -658,7 +658,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>min</strong>: the minimum number of times you can repeat the template</li>
 		<li><strong>max</strong>: the maximum number of times you can repeat the template</li>
 		<li><strong>fields</strong>: the fields to pass to the template (you can only nest the "template" field 2 levels deep total)</li>
-		<li><strong>view</strong>: the view file to use to for rendering the fields. If no view is provided, it will create a nested form builder object and render it.</li>
+		<li><strong>view</strong>: the view file to use to for rendering the fields. If no view is provided, it will create a nested form builder object and render it</li>
 		<li><strong>template</strong>: a string value of the template as opposed to a view file to load in. </li>
 		<li><strong>add_extra</strong>: determines whether to display the "Add" button for repeatable templates</li>
 		<li><strong>depth</strong>: specifies the depth of the template (can only be 2 deep)</li>
@@ -666,6 +666,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>init_display</strong>: determines whether to open just the first repeatable set of fields, none of them, or all of them (default). Options are first, and none or closed (they are the same)</li>
 		<li><strong>title_field</strong>: the field to be used {__title__} placeholder </li>
 		<li><strong>parse</strong>: determines whether to parse the view or template file before rendering</li>
+		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
 	</ul>
 
 	<h4>Example</h4>

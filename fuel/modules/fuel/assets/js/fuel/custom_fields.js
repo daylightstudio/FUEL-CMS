@@ -62,7 +62,8 @@ fuel.fields.multi_field = function(context, inline_edit){
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
-	$editors = $ckEditor = $('textarea', context).not('.no_editor');
+
+	$editors = $ckEditor = $('textarea', context).not('.no_editor, .markItUpEditor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
 
@@ -273,7 +274,6 @@ fuel.fields.wysiwyg_field = function(context){
 				CKEDITOR.instances[ckId].updateElement();
 			}
 		})
-		
 		createPreview(ckId);
 		
 		
@@ -668,6 +668,7 @@ fuel.fields.currency_field = function(context, options){
 }
 // create a repeatable field
 fuel.fields.template_field = function(context, options){
+
 	if (!options) options = {};
 
 	var repeatable = function($repeatable){

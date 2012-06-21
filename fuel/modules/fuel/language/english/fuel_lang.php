@@ -180,7 +180,7 @@ $lang['delete_item_message'] = 'You are about to delete the item:';
 $lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
 
 // command line
-$lang['module_install'] = "The module %1s has successfully bee installed.\n";
+$lang['module_install'] = "The module %1s has successfully been installed.\n";
 
 $msg = "The module %1s has been uninstalled in FUEL.\n\n";
 $msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";

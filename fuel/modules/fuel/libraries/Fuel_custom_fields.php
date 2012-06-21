@@ -433,6 +433,11 @@ class Fuel_custom_fields {
 		{
 			$num = $params['min'];
 		}
+
+		if (!isset($params['display_sub_label']))
+		{
+			$params['display_sub_label']  = TRUE;
+		}
 		
 		if ($num == 0) $num = 1;
 		
@@ -481,7 +486,7 @@ class Fuel_custom_fields {
 					// set placeholders in field ids for javascript to translate... must be last occurence of the digit
 					$field['id'] = preg_replace('#([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$#U', '$1[{index}]$2', $field['name']);
 					$field['id'] = Form::create_id($field['id']);
-					
+					$field['display_label'] = $params['display_sub_label'];
 					
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
 					//$field['id'] = FALSE;
@@ -502,6 +507,7 @@ class Fuel_custom_fields {
 					{
 						$field['name'] = $params['orig_name'].'['.$key.']';
 					}
+					$field['display_label'] = $params['display_sub_label'];
 					$_f[$key] = $field;
 					$fields[$key] = $form_builder->create_field($field);
 				}
