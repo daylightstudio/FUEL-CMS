@@ -33,8 +33,8 @@
 		***************************************************************/
 		body { background: #000 url(http://www.getfuelcms.com/assets/images/bg_waves.jpg) no-repeat top center; font-family: 'Lucida Grande', Arial, sans-serif; color: #fff; font-size: 12px; line-height: 16px; 
 	}
-		h1 { font-size: 40px; margin-top: 50px; text-shadow: #000 0px 1px 3px; padding-left: 160px; line-height: 20px; }
-		h2 { font-size: 25px; color: #fff; color: #c8d1d9; margin-bottom: 15px; text-shadow: #000 0px 1px 3px; padding-left: 164px; line-height: 48px; }
+		h1 { font-size: 40px; margin-top: 30px; text-shadow: #000 0px 1px 3px; line-height: 40px; margin-left: -4px; }
+		h2 { font-size: 25px; color: #fff; color: #c8d1d9; margin-bottom: 5px; text-shadow: #000 0px 1px 3px; line-height: 25px; }
 		h3 { font-size: 22px; color: #ea5b17; margin-bottom: 15px; font-weight: normal; }
 		h4 { font-size: 16px; margin-bottom: 2px; }
 		a { color: #dc461c; }
@@ -65,6 +65,7 @@
 			background: -webkit-gradient(linear, left top, left bottom, from(rgba(42, 96, 147, 0.35)), to(#000));
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e466a', endColorstr='#000'); /* for IE */
 		 }
+		 div#heading { margin-left: 160px; }
 		div#logo {  background: transparent url(http://www.getfuelcms.com/assets/images/fuel_logo_sm.png) no-repeat; width: 150px; height: 150px; float: left; }
 		div#content { padding: 10px 20px; }
 	</style>
@@ -73,9 +74,11 @@
 
 	<div id="container">
 		<div id="logo"></div>
-		<h1>Welcome to FUEL CMS</h1>
-		<h2>Inject More Into Your Web Projects</h2>
-		
+		<div id="heading">
+			<h1>Welcome to FUEL CMS</h1>
+			<h2>Inject More Into Your Web Projects</h2>
+			<h4>Version 1.0 Beta</h4>
+		</div>
 		<div class="clear"></div>
 		<div id="content">
 			<h3>Getting Started</h3>
@@ -121,7 +124,7 @@
 					<ul class="bullets">
 						<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> from "abc123" to your own unique key.</li></li>
 						<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
-						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done to view pages created in the CMS.</li>
+						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
 						<?php endif; ?>
 						<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
@@ -141,11 +144,24 @@
 			<ul class="bullets">
 				<li>To change the contents of this homepage, edit the <strong>fuel/application/views/home.php</strong> file. Also, the header and footer files can be found in the <strong>fuel/application/_blocks/</strong> folder and the 
 					CSS is located at <strong>assets/css/main.css</strong>.</li>
-				<li>Review the <a href="<?=fuel_url('tools/user_guide')?>">User Guide</a>.</li>
+				<li><a href="https://github.com/daylightstudio/FUEL-CMS-User-Guide-Module" target="_blank">Download/Clone 1.0 User Guide</a>. This will be available online soon, but untill then you will need to install the User Guide module by
+					 moving the contents of the downloaded user guide folder to <strong>fuel/modules/user_guide/</strong> 
+					 (this module is already allowed by default in your <strong>fuel/application/config/MY_fuel.php</strong> file).
+					To view the user guide, first log in to the CMS then click on the User Guide link in the left panel or simply <a href="<?=fuel_url('user_guide')?>">click here</a>.</li>
 				<li>Need help? Visit the <a href="http://www.getfuelcms.com/forums/" target="_blank">FUEL CMS Forums</a>.</li>
-				<li>Found a bug? <a href="https://github.com/daylightstudio/FUEL-CMS/issues" target="_blank">Report it on GitHub</a>.</li>
+				<li>Found a bug? <a href="https://github.com/daylightstudio/FUEL-CMS/issues" target="_blank">Report it on GitHub</a> (please specify 1.0 version in bug report).</li>
 				<li>Subscribe to our <a href="http://twitter.com/fuelcms">Twitter Feed</a> for tips and news.</li>
-				<li>Visit our <a href="https://github.com/daylightstudio/" target="_blank">GitHub page</a> for additional modules, including the user guide, blog, backup, and tester modules.</li>
+				<li>Visit our <a href="https://github.com/daylightstudio/" target="_blank">GitHub page</a> for additional modules including:
+					<ul class="bullets">
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Backup-Module" target="_blank">Backup</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Blog-Module" target="_blank">Blog</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Cronjobs-Module" target="_blank">Cronjobs</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Google-Keywords-Module" target="_blank">Google Keywords</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Page-Analysis-Module" target="_blank">Page Analysis</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Tester-Module" target="_blank">Tester</a></li>
+						<li><a href="https://github.com/daylightstudio/FUEL-CMS-Validate-Module" target="_blank">Validate</a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 	</div>

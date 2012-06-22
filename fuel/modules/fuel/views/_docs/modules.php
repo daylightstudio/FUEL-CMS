@@ -27,8 +27,7 @@ The first is to use GIT to add a <a href="http://git-scm.com/book/en/Git-Tools-S
 Adding the advanced module as a GIT submodule will allow you to run updates independed of your main FUEL CMS repository.
 Adding a submodule can be done one of two ways. The first way uses the native "submodule" command from GIT, and the second uses the FUEL installer "add_get_submodule" controller method. 
 To get started, you first need to open up a terminal window and "<a href="http://en.wikipedia.org/wiki/Cd_(command)" target="_blank">cd</a>" (change directory) to the 
-installation directory (where the index.php CodeIgniter bootstrap file exists alongside the "fuel" folder). Then run the commands below where "php" is reference
-the path to your PHP interpreter.</p>
+installation directory (where the index.php CodeIgniter bootstrap file exists alongside the "fuel" folder). Then run the commands below where "php" references the path to your PHP interpreter.</p>
 
 <pre class="brush: php">
 // GIT

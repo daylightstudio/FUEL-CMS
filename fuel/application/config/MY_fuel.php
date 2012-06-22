@@ -27,18 +27,10 @@ $config['default_pwd'] = 'admin';
 // specifies which modules are allowed to be used in the fuel admin
 $config['modules_allowed'] = array(
 	'user_guide',
-	'search',
-	'blog',
-	'backup',
-	'page_analysis',
-	'google_keywords',
-	'validate',
-	'tester',
-	'cronjobs'
-	);
+);
 
 // whether the admin backend is enabled or not
-$config['admin_enabled'] = TRUE;
+$config['admin_enabled'] = FALSE;
 
 // maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:
