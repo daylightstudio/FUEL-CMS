@@ -360,6 +360,7 @@ $config['generate'] = array(
 										'config/{module}_routes.php',
 										'controllers/{module}.php',
 										'helpers/{module}_helper.php',
+										'language/english/{module}_lang.php',
 										'libraries/Fuel_{module}.php',
 										'models/',
 										'tests/sql/',
