@@ -204,7 +204,7 @@ class Pages_model extends Base_module_model {
 		// delete page variables before saving
 		$CI->pagevariables_model->delete(array('page_id' => $ref_id));
 		$page_variables_saved = $CI->pagevariables_model->save($archive['variables']);
-		return ($pages_saved AND page_variables_saved);
+		return ($pages_saved AND $page_variables_saved);
 	}
 	
 	// overwrite parent to replace page variables
