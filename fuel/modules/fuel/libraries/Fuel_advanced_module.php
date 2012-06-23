@@ -31,6 +31,7 @@
 class Fuel_advanced_module extends Fuel_base_library {
 	
 	protected $name = ''; // name of the advanced module... usually the same as the folder name
+	protected $friendly_name = ''; // used for display purposes
 	protected $folder = ''; // name of the folder for the advanced module
 	protected $uri_path = ''; // the uri_path to the module
 	protected $_attached = array(); // attached objects to the advanced module
@@ -150,7 +151,14 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function friendly_name()
 	{
-		return ucwords(str_replace('_', ' ', $this->name));
+		if (empty($this->friendly_name))
+		{
+			return ucwords(str_replace('_', ' ', $this->name));
+		}
+		else
+		{
+			return $this->friendly_name;
+		}
 	}
 
 	// --------------------------------------------------------------------

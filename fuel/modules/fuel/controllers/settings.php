@@ -66,7 +66,7 @@ class Settings extends Fuel_base_controller {
 		}
 		
 		$field_values = $this->fuel->settings->get($module);
-		
+
 		$this->load->library('form_builder');
 		
 		$this->form_builder->label_layout = 'left';
@@ -79,7 +79,7 @@ class Settings extends Fuel_base_controller {
 		$this->form_builder->set_field_values($field_values);
 		
 		$vars = array();
-		$vars['module'] = $module;
+		$vars['module'] = $mod->friendly_name();
 		$vars['form'] = $this->form_builder->render();
 		
 		$this->_validate_user('manage');
