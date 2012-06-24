@@ -159,6 +159,8 @@ $config['assets_upload_max_width']  = '1024';
 $config['assets_upload_max_height']  = '768';
 
 // javascript files (mostly jquery plugins) to be included other then the controller js files
+
+
 $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
@@ -177,8 +179,11 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'jquery/plugins/jquery.placeholder',
-	'jquery/plugins/jquery.formbuilder', // <-- needs to be included here so that it is loaded on the page in case fields are ajaxed in ... can cause some weirdness
-	'fuel/custom_fields.js', // <-- needs to be included here so that it is loaded on the page in case fields are ajaxed in ... can cause some weirdness
+
+	// NASTY Chrome JS bug...
+	// http://stackoverflow.com/questions/10314992/chrome-sometimes-calls-incorrect-constructor
+	// http://stackoverflow.com/questions/10251272/what-could-cause-this-randomly-appearing-error-inside-jquery-itself
+	'jquery/plugins/chrome_pushstack_fix.js',
 	'fuel/global',
 );
 
@@ -252,6 +257,8 @@ $config['nav']['site'] = array(
 	'pages' => lang('module_pages'),
 	'blocks' => lang('module_blocks'),
 	'navigation' => lang('module_navigation'),
+	'tags' => lang('module_tags'),
+	'categories' => lang('module_categories'),
 	'assets' => lang('module_assets'),
 	'sitevariables' => lang('module_sitevariables')
 	);
@@ -360,7 +367,6 @@ $config['generate'] = array(
 										'config/{module}_routes.php',
 										'controllers/{module}.php',
 										'helpers/{module}_helper.php',
-										'language/english/{module}_lang.php',
 										'libraries/Fuel_{module}.php',
 										'models/',
 										'tests/sql/',
@@ -379,6 +385,14 @@ $config['generate'] = array(
 							
 							
 @include(APPPATH.'config/MY_fuel.php');
+
+$config['settings'] = array();
+$config['settings']['site_name'] = array('value' => $config['site_name']);
+if (!empty($config['modules_allowed']))
+{
+	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+}
+
 
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */

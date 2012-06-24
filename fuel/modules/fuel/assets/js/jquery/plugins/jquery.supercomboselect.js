@@ -63,7 +63,7 @@
 				settings.wrapperId = selectID + '_wrapper';
 			}
 			if (settings.isSearchable == 'auto'){
-				if ($('#' + selectID).find('option').size() >= settings.searchableAutoLimit) {
+				if ($('#' + selectID).find('option').length >= settings.searchableAutoLimit) {
 					settings.isSearchable = true;
 				} else {
 					settings.isSearchable = false;
@@ -306,10 +306,10 @@
 				// set left and right messages
 				$('#' + settings.wrapperId + ' .supercomboselect_left_empty_msg').hide();
 				$('#' + settings.wrapperId + ' .supercomboselect_right_empty_msg').hide();
-				if (!$('#' + leftID).children().size()){
+				if (!$('#' + leftID).children().length){
 					$('#' + settings.wrapperId + ' .supercomboselect_left_empty_msg').show();
 				}
-				if (!$('#' + rightID).children().size()){
+				if (!$('#' + rightID).children().length){
 					$('#' + settings.wrapperId + ' .supercomboselect_right_empty_msg').show();
 				} 
 				
