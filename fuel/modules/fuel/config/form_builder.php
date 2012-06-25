@@ -1,9 +1,9 @@
 <?php 
-// $config['js'][] = array(FUEL_FOLDER => array(
-// 								//'jquery/plugins/jquery.formbuilder', loaded automatically by FUEL to prevent some strange errors when the page is AJAXed in chrome
-// 								//'fuel/custom_fields.js',
-// 								)
-// 						);
+$config['js'][] = array(FUEL_FOLDER => array(
+								'jquery/plugins/jquery.formbuilder',
+								'fuel/custom_fields.js',
+								)
+						);
 $config['required_text'] = '<span class="required">{required_indicator}</span> '.lang('required_text');
 $config['representatives'] = array(
 	'number' => array('int', 'smallint', 'mediumint', 'bigint'),
