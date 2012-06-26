@@ -19,7 +19,6 @@ class Preview extends Fuel_base_controller {
 	
 		// check for posted data
 		$data = $this->input->post('data', FALSE);
-		
 		if (empty($data)) show_error(lang('error_cannot_preview'));
 
 		// load global variables
@@ -32,12 +31,13 @@ class Preview extends Fuel_base_controller {
 		get query string parameters of module and field name if they exist so we can set those as variables 
 		in the view to be used if they want to customize based on those parameters
 		*/
-		$vars['body'] = $data;
 		$vars['module'] = $this->input->get('module', TRUE);
 		$vars['field'] = $this->input->get('field', TRUE);
 		$vars['preview'] = $this->input->get('preview', TRUE);
-
 		$vars['CI'] =& get_instance();
+
+		// parse for template syntax here so it doesn't escape single quotes
+		$vars['body'] = $this->parser->parse_string($data, $vars, TRUE);
 		
 		$this->asset->assets_path = $this->config->item('assets_path');
 		$view = '';
@@ -54,12 +54,9 @@ class Preview extends Fuel_base_controller {
 		{
 			$view = $this->load->view('_layouts/main', $vars, TRUE);
 		}
-		
-		// parse for template syntax
-		$output = $this->parser->parse_string($view, $vars, TRUE);
 
 		// render the preview
-		$this->output->set_output($output);
+		$this->output->set_output($view);
 	}
 	
 }
