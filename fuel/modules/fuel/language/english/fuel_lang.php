@@ -134,6 +134,7 @@ $lang['module_dashboard'] = 'Dashboard';
 $lang['module_pages'] = 'Pages';
 $lang['module_blocks'] = 'Blocks';
 $lang['module_navigation'] = 'Navigation';
+$lang['module_categories'] = 'Categories';
 $lang['module_tags'] = 'Tags';
 $lang['module_assets'] = 'Assets';
 $lang['module_sitevariables'] = 'Site Variables';

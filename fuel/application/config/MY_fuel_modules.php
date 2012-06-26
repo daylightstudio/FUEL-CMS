@@ -20,3 +20,9 @@ $config['modules']['projects'] = array(
 );
 
 *********************** EXAMPLE ***********************************/
+
+
+
+/*********************** OVERWRITES ************************************/
+$config['module_overwrites']['categories']['hidden'] = TRUE; // change to TRUE if you want to use the generic categories module
+$config['module_overwrites']['tags']['hidden'] = TRUE; // change to TRUE if you want to use the generic categories module

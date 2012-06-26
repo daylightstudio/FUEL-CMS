@@ -51,7 +51,18 @@ CREATE TABLE `fuel_blocks` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+# Dump of table fuel_categories
+# ------------------------------------------------------------
 
+CREATE TABLE `fuel_categories` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `slug` varchar(100) NOT NULL DEFAULT '',
+  `context` varchar(100) NOT NULL DEFAULT '',
+  `precedence` int(11) NOT NULL,
+  `published` enum('yes','no') NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Dump of table fuel_logs
 # ------------------------------------------------------------
@@ -232,7 +243,17 @@ CREATE TABLE `fuel_site_variables` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+# Dump of table fuel_tags
+# ------------------------------------------------------------
 
+CREATE TABLE `fuel_tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 # Dump of table fuel_users
 # ------------------------------------------------------------

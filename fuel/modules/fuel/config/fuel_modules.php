@@ -111,6 +111,36 @@ $config['modules']['navigation_group'] = array(
 	),
 );
 
+// navigation module init values
+$config['modules']['tags'] = array(
+	'module_name' => 'Tags',
+	'model_name' => 'tags_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'slug',
+		'published',
+	),
+	//'filters' => array('context' => array('label' => lang('form_label_category'), 'type' => 'select', 'model' => 'categories_model', 'first_option' => '')),
+);
+
+// navigation module init values
+$config['modules']['categories'] = array(
+	'module_name' => 'Categories',
+	'model_name' => 'categories_model',
+	'model_location' => 'fuel',
+	'table_headers' => array(
+		'id', 
+		'name', 
+		'slug',
+		'context',
+		'precedence',
+		'published',
+	),
+	'filters' => array('context' => array('label' => lang('form_label_context'), 'type' => 'select', 'model' => array(FUEL_FOLDER => array('categories_model' => 'context_options_list')), 'first_option' => 'Select a context...')),
+);
+
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',

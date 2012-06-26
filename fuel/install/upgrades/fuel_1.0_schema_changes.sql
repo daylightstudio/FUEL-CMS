@@ -43,3 +43,30 @@ CREATE TABLE `fuel_settings` (
 
 
 INSERT INTO `fuel_permissions` (`id`, `description`, `name`, `active`) VALUES (NULL, 'Settings', 'settings', 'yes');
+
+
+# Dump of table fuel_categories
+# ------------------------------------------------------------
+
+CREATE TABLE `fuel_categories` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `slug` varchar(100) NOT NULL DEFAULT '',
+  `context` varchar(100) NOT NULL DEFAULT '',
+  `precedence` int(11) NOT NULL,
+  `published` enum('yes','no') NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+# Dump of table fuel_tags
+# ------------------------------------------------------------
+
+CREATE TABLE `fuel_tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`id`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
