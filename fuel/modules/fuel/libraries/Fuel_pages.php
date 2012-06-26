@@ -987,11 +987,15 @@ class Fuel_page extends Fuel_base_library {
 		{
 			echo $this->CI->load->get_vars('fuelified');
 		}
+
+
+		// fix for pages permission
+		$perm = ($module == 'pagevariables') ? 'pages' : $module;
 		
 		if ($this->fuel->config('admin_enabled') AND 
 			is_fuelified() AND 
 			(is_null($this->CI->load->get_var('fuelified')) OR $this->CI->load->get_var('fuelified') === TRUE)
-			AND $this->CI->fuel->auth->has_permission($module, 'edit') 
+			AND $this->CI->fuel->auth->has_permission($perm, 'edit') 
 			)
 		{
 			if (empty($label))
