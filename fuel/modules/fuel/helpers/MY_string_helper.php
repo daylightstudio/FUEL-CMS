@@ -265,7 +265,20 @@ function php_to_template_syntax($str)
 	
 	// fix arrays
 	$callback = create_function('$matches', '
-		return $matches[1].str_replace("=>", "=", $matches[2]).$matches[3];
+		if (strstr($matches[0], "=>"))
+		{
+			$key_vals = explode(",", $matches[0]);
+			$return_arr = array();
+			foreach($key_vals as $val)
+			{
+				list($k, $v) = explode("=>", $val);
+				$k = str_replace(array("\"", "\'"), "", $k);
+				$return_arr[] = trim($k)."=".trim($v);
+			}
+			$return = implode(" ", $return_arr);
+			return $return;
+		}
+		return $matches[0];
 		');
 	
 	$str = preg_replace_callback('#(array\()(.+)(\))#', $callback, $str);
