@@ -119,6 +119,12 @@
 						</li>
 					</ul>
 				</li>
+
+				<?php  if ($this->config->item('encryption_key') == 'abc123' OR
+							$this->config->item('fuel_mode', 'fuel') == 'views' OR
+							!$this->config->item('admin_enabled', 'fuel')
+
+				) : ?>
 				<li>
 					<h4>Make Configuration Changes</h4>
 					<ul class="bullets">
@@ -132,6 +138,8 @@
 						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
 						<?php endif; ?>
 					</ul>
+				</li>
+				<?php endif; ?>
 			</ol>
 
 			<p class="important">That&rsquo;s it!</p>
