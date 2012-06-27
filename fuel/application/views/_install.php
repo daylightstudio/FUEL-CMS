@@ -122,7 +122,9 @@
 				<li>
 					<h4>Make Configuration Changes</h4>
 					<ul class="bullets">
+						<?php if ($this->config->item('encryption_key') == 'abc123') : ?>
 						<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> from "abc123" to your own unique key.</li></li>
+						<?php endif; ?>
 						<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
 						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
 						<?php endif; ?>
