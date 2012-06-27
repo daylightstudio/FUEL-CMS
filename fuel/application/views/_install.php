@@ -84,7 +84,7 @@
 			<h3>Getting Started</h3>
 			<ol>
 				<li><h4>Change the .htaccess file</h4>
-					<p>Change the Apache .htaccess found at the root of the installation folder to the proper RewriteBase directory. The default is your web servers root directory (e.g "/"). 
+					<p>Change the Apache .htaccess found at the root of the installation folder to the proper RewriteBase directory. The default is your web server's root directory (e.g "/"). 
 						You may need to enable viewing hidden files on your system to see the .htaccess file. Also, if you do not have mod_rewrite enabled you will need to change 
 						the $config['index_page'] from blank to 'index.php'	in your <strong>fuel/application/config/config.php</strong> file. 
 						Visit the <a href="http://httpd.apache.org/docs/2.0/misc/rewriteguide.html" target="_blank">Apache website</a> for more on <strong>mod_rewrite</strong>.
@@ -146,7 +146,7 @@
 			<p>To access the FUEL admin, go to: <br />
 			<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br />
 			User name: <strong>admin</strong> <br />
-			Password: <strong>admin</strong> (you can and should change this password after logging in)<br />
+			Password: <strong>admin</strong> (you can and should change this password and admin user information after logging in)<br />
 			</p>
 			<br />
 
