@@ -204,7 +204,7 @@ $config['modules']['users'] = array(
 		'super_admin', 
 		'active', 
 	),
-	
+	'language_col' => FALSE, // so it won't render the dropdown filter select
 	'js_controller' => 'UserController',
 	'display_field' => 'email',
 	'preview_path' => '',

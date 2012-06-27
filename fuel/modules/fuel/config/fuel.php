@@ -386,12 +386,13 @@ $config['generate'] = array(
 							
 @include(APPPATH.'config/MY_fuel.php');
 
-$config['settings'] = array();
-$config['settings']['site_name'] = array('value' => $config['site_name']);
-if (!empty($config['modules_allowed']))
-{
-	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
-}
+// EXAMPLE: Uncomment if you want to controll these options from the CMS
+// $config['settings'] = array();
+// $config['settings']['site_name'] = array('value' => $config['site_name']);
+// if (!empty($config['modules_allowed']))
+// {
+// 	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
+// }
 
 
 /* End of file fuel.php */

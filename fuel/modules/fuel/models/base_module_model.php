@@ -490,8 +490,9 @@ class Base_module_model extends MY_Model {
 		{
 			$this->db->distinct($field);
 		}
-		
-		$options = $this->options_list($field, $field);
+
+		$where[$field.' !='] = '';
+		$options = $this->options_list($field, $field, $where);
 		return $options;
 	}
 	
