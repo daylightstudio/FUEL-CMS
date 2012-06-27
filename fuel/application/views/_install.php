@@ -157,7 +157,7 @@
 				<li><a href="https://github.com/daylightstudio/FUEL-CMS-User-Guide-Module" target="_blank">Download/Clone 1.0 User Guide</a>. This will be available online soon, but untill then you will need to install the User Guide module by
 					 moving the contents of the downloaded user guide folder to <strong>fuel/modules/user_guide/</strong> 
 					 (this module is already allowed by default in your <strong>fuel/application/config/MY_fuel.php</strong> file).
-					To view the user guide, first log in to the CMS then click on the User Guide link in the left panel or simply <a href="<?=fuel_url('user_guide')?>">click here</a>.</li>
+					To view the user guide, first log in to the CMS then click on the User Guide link in the left panel or simply <a href="<?=fuel_url('tools/user_guide')?>">click here</a>.</li>
 				<li>Need help? Visit the <a href="http://www.getfuelcms.com/forums/" target="_blank">FUEL CMS Forums</a>.</li>
 				<li>Found a bug? <a href="https://github.com/daylightstudio/FUEL-CMS/issues" target="_blank">Report it on GitHub</a> (please specify 1.0 version in bug report).</li>
 				<li>Subscribe to our <a href="http://twitter.com/fuelcms">Twitter Feed</a> for tips and news.</li>
