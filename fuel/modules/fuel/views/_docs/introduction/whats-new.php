@@ -1,11 +1,11 @@
 <h1>What's New with FUEL CMS 1.0</h1>
-<p>A lot... Below is our quick list:</p>
+<p><a href="#">A lot...</a>.</p>
 
 <h2>WARNINGS!!!</h2>
 <ul>
-	<li>page variable data is now saved in a JSON format</li>
-	<li>several tables have been updated</li>
-	<li>user password now use a stronger encryption and requires a password reset</li>
+	<li>Page variable data is now saved in a JSON format</li>
+	<li>Several tables have been updated</li>
+	<li>User passwords now use a stronger encryption and requires a password reset</li>
 </ul>
 
 <h2>General</h2>
@@ -34,6 +34,7 @@
 	<li>Added belongs_to and has_many properties</li>
 	<li>Added boolean_fields property to MY_Model which allows for toggling of boolean values in the module's list view</li>
 	<li>Added the is_{property} method for all boolean type properties (e.g. $my_rec->is_published())</li>
+	<li>Added the has_{property} method for all properties (e.g. $my_rec->has_description())</li>
 	<li>Added where_in if the value of the where parameter is a nested array to the find_all method</li>
 </ul>
 
@@ -41,9 +42,11 @@
 
 <h3>General</h3>
 <ul>
-	<li>Updated backup module</li>
-	<li>Updated tester module so that it can run via command line</li>
-	<li>Updated the validate module so that you can run validation in your own controllers $this->fuel->validate->html('my_page');</li>
+	<li>Extracted all relevant controller logic for modules into their own library to be used on the FUEL object (e.g. $this->fuel->backup->do_backup())</li>
+	<li>Added ability to add a module as GIT submodule and install via command line</li>
+	<li>Added ability to generate advanced and simple modules via command line</li>
+	<li>Updated Tester module so that it can run via command line</li>
+	<li>Updated the Validate module so that you can run validation in your own controllers $this->fuel->validate->html('my_page');</li>
 	<li>Broke out Google Keywords and Page Analysis into their own modules (was "seo" module);</li>
 </ul>
 
@@ -94,9 +97,9 @@
 
 <h3>MY_url_helper</h3>
 <ul>
-	<li>link_target</li>
-	<li>last_url</li>
-	<li>redirect_404</li>
+	<li>added link_target</li>
+	<li>added last_url</li>
+	<li>added redirect_404</li>
 </ul>
 
 
