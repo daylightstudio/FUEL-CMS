@@ -323,42 +323,6 @@ $lang['new_user_created_notification'] = 'The user information was successfully 
 */
 $lang['permissions_instructions'] = 'Here you can manage the permissions for FUEL modules and later assign them to users.';
 
-// permissions
-$lang['perm_assets'] = 'Assets';
-$lang['perm_blocks'] = 'Manage Blocks';
-$lang['perm_blog/categories'] = 'Blog Categories';
-$lang['perm_blog/comments'] = 'Blog Comments';
-$lang['perm_blog/links'] = 'Blog Links';
-$lang['perm_blog/posts'] = 'Blog Posts';
-$lang['perm_blog/settings'] = 'Blog Settings';
-$lang['perm_blog/users'] = 'Blog Authors';
-$lang['perm_google_analytics'] = 'Google Analytics';
-$lang['perm_manage'] = 'View the Manage Dashboard Page';
-$lang['perm_manage/activity'] = 'View activity logs';
-$lang['perm_manage/cache'] = 'Manage the page cache';
-$lang['perm_myPHPadmin'] = 'myPHPadmin';
-$lang['perm_navigation'] = 'Manage navigation';
-$lang['perm_pages'] = 'Manage pages';
-$lang['perm_pages_delete'] = 'Ability to Delete Pages';
-$lang['perm_pages_publish'] = 'Ability to Publish Pages';
-$lang['perm_permissions'] = 'Manage Permissions';
-$lang['perm_projects'] = 'Projects';
-$lang['perm_projects_delete'] = 'Delete Projects';
-$lang['perm_projects_publish'] = 'Publish Projects';
-$lang['perm_quotes'] = 'Quotes';
-$lang['perm_site_docs'] = 'Site Documentation';
-$lang['perm_sitevariables'] = 'Site Variables';
-$lang['perm_tools'] = 'Manage Tools';
-$lang['perm_tools/backup'] = 'Manage database backup';
-$lang['perm_tools/cronjobs'] = 'Cronjobs';
-$lang['perm_tools/seo'] = 'Page Analysis';
-$lang['perm_tools/seo/google_keywords'] = 'Google Keywords';
-$lang['perm_tools/tester'] = 'Tester Module';
-$lang['perm_tools/user_guide'] = 'Access the User Guide';
-$lang['perm_tools/validate'] = 'Validate';
-$lang['perm_users'] = 'Manage users';
-
-
 /*
 |--------------------------------------------------------------------------
 | Manage Cache

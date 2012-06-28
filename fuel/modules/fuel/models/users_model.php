@@ -244,7 +244,12 @@ class Users_model extends Base_module_model {
 			$no_ul = FALSE;
 			if (!empty($val['id']))
 			{
-				$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$val['description']."</label>";
+				$label = lang('perm_'.$val['name']);
+  				if (empty($label))
+  				{
+  					$label = (!empty($val['description'])) ? $val['description'] : $val['name'];
+  				}
+				$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$label."</label>";
 			}
 			else
 			{
@@ -256,7 +261,13 @@ class Users_model extends Base_module_model {
 				if (!$no_ul) $str .= "<ul>\n";
 				foreach($val['permissions'] as $k => $v)
 				{
-					$str .= "\t<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$v["id"]."\" id=\"permission".$v["id"]."\" ".(isset($user_perms[$v['name']]) ? 'checked="checked"' : '')." /><label for=\"permission".$v["id"]."\"> ".$v['description']."</label></li>";
+						$label = lang('perm_'.$v['name']);
+		  				if (empty($label))
+		  				{
+		  					$label = (!empty($v['description'])) ? $v['description'] : $v['name'];
+		  				}
+
+					$str .= "\t<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$v["id"]."\" id=\"permission".$v["id"]."\" ".(isset($user_perms[$v['name']]) ? 'checked="checked"' : '')." /><label for=\"permission".$v["id"]."\"> ".$label."</label></li>";
 				}
 				if (!$no_ul) $str .= "</ul>\n";
 			}
