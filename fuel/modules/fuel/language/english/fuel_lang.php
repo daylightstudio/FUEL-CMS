@@ -140,6 +140,7 @@ $lang['module_assets'] = 'Assets';
 $lang['module_sitevariables'] = 'Site Variables';
 $lang['module_users'] = 'Users';
 $lang['module_permissions'] = 'Permissions';
+$lang['module_tools'] = 'Tools';
 $lang['module_manage_cache'] = 'Page Cache';
 $lang['module_manage_activity'] = 'Activity Log';
 $lang['module_manage_settings'] = 'Settings';
