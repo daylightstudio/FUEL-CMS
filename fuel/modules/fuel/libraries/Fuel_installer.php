@@ -142,7 +142,7 @@ class Fuel_installer extends Fuel_base_library {
 			$path = $basepath.$this->module->name().'_install.sql';
 		}
 
-		if (file_exists($path))
+		if (is_file($path))
 		{
 			echo "\n".$path."\n";
 			$this->CI->db->load_sql($path);
@@ -161,7 +161,7 @@ class Fuel_installer extends Fuel_base_library {
 			$path = $basepath.$this->module->name().'_uninstall.sql';
 		}
 
-		if (file_exists($path))
+		if (is_file($path))
 		{
 			$this->CI->db->load_sql($path);
 		}
