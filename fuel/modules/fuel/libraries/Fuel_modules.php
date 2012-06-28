@@ -172,7 +172,7 @@ class Fuel_modules extends Fuel_base_library {
 			}
 			else
 			{
-				return FALSE;
+				return array();
 			}
 		}
 		

@@ -49,6 +49,7 @@ class Fuel extends Fuel_advanced_module {
 									'auth',
 									'blocks',
 									'cache',
+									'categories',
 									'installer',
 									'language',
 									'layouts',
@@ -62,6 +63,7 @@ class Fuel extends Fuel_advanced_module {
 									'redirects',
 									'settings',
 									'sitevars',
+									'tags',
 									'users',
 									);
 
