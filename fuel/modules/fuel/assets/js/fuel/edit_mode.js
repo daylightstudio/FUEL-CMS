@@ -31,8 +31,8 @@ if (fuel == undefined) var fuel = {};
 	
 	
 	// limit it to the most common for performance
-	var useAutoAdjust = fuel.useAutoAdjust || true;
-	var resizeTags = (fuel.resizeTags) ? fuel.resizeTags : 'div,p,li';
+	var useAutoAdjust = (fuel.useAutoAdjust === false) ? false : true;
+	var resizeTags = (fuel.resizeTags) ? fuel.resizeTags : 'section,div,p,li';
 
 	jQuery.resize.delay = (fuel.resizeDelay) ? fuel.resizeDelay : 1000;
 	
