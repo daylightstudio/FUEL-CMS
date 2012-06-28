@@ -182,11 +182,15 @@ class Users_model extends Base_module_model {
 		{
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
+			$fields['permissions']['mode'] = 'checkbox';
+			$fields['permissions']['display_label'] = FALSE;
+			$fields['permissions']['wrapper_tag'] = 'div';
 		}
-		
-		$fields['permissions']['mode'] = 'checkbox';
-		$fields['permissions']['display_label'] = FALSE;
-		$fields['permissions']['wrapper_tag'] = 'div';
+		else
+		{
+			unset($fields['permissions']);
+		}
+
 		//$fields = array_merge($fields, $perm_fields);
 		unset($fields['reset_key'], $fields['salt']);
 		
@@ -208,7 +212,10 @@ class Users_model extends Base_module_model {
 		if (isset($user->id))
 		{
 			$user_perms_obj = $user->get_permissions(TRUE);
-			$user_perms = $user_perms_obj->find_all_array_assoc('name');
+			if (!empty($user_perms_obj))
+			{
+				$user_perms = $user_perms_obj->find_all_array_assoc('name');
+			}
 		}
 
 		$perms = array();
@@ -230,21 +237,28 @@ class Users_model extends Base_module_model {
 				$perms[$sub[0]]['permissions'][$perm] = $perm_val;
 			}
 		}
-		
 		$str = "<div class=\"perms_list\">\n";
 		$str .= "<ul>\n";
 		foreach($perms as $key => $val)
 		{
-			$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$val['description']."</label>";
-			
+			$no_ul = FALSE;
+			if (!empty($val['id']))
+			{
+				$str .= "<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$val["id"]."\" id=\"permission".$val["id"]."\" ".(isset($user_perms[$val['name']]) ? 'checked="checked"' : '')."  /><label for=\"permission".$val["id"]."\"> ".$val['description']."</label>";
+			}
+			else
+			{
+				$no_ul = TRUE;
+			}
+
 			if (!empty($val['permissions']))
 			{
-				$str .= "<ul>\n";
+				if (!$no_ul) $str .= "<ul>\n";
 				foreach($val['permissions'] as $k => $v)
 				{
 					$str .= "\t<li><input type=\"checkbox\"/ name=\"permissions[]\" value=\"".$v["id"]."\" id=\"permission".$v["id"]."\" ".(isset($user_perms[$v['name']]) ? 'checked="checked"' : '')." /><label for=\"permission".$v["id"]."\"> ".$v['description']."</label></li>";
 				}
-				$str .= "</ul>\n";
+				if (!$no_ul) $str .= "</ul>\n";
 			}
 			$str .= "</li>\n";
 		}
