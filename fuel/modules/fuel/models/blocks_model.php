@@ -32,9 +32,6 @@ class Blocks_model extends Base_module_model {
 
 		// don't display blocks with preceding underscores or .html files'
 		$block_files = directory_to_array($blocks_path, TRUE, '#'.$dir_filter.'#', FALSE, TRUE);
-		echo '<pre>';
-		print_r($block_files);
-		echo '</pre>';
 		$view_blocks = array();
 		foreach($block_files as $block)
 		{
