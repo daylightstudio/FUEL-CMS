@@ -127,7 +127,7 @@ function uri_path($rerouted = TRUE, $start_index = 0)
  * @param	boolean	whether to use the rerouted uri
  * @return	string
  */
-function uri_segment($n, $default = NULL, $rerouted = TRUE)
+function uri_segment($n, $default = FALSE, $rerouted = TRUE)
 {
 	$CI =& get_instance();
 
