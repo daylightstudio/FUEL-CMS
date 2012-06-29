@@ -30,14 +30,36 @@ class Installer extends Fuel_base_controller {
 		{
 			show_error(lang('error_missing_params'));
 		}
-	
-		if (!$this->fuel->$module->install())
+		
+		// load constants
+		$constant = strtoupper($module).'_VERSION';
+		if (!defined($constant))
 		{
-			echo $this->fuel->installer->last_error()."\n";
+			$constants_file = MODULES_PATH.$module.'/config/'.$module.'_constants.php';	
+			if (file_exists($constants_file))
+			{
+				require_once($constants_file);
+			}
+		}
+		
+		// need to load it the old fashioned way because it is not enabled by default
+		$module_file = MODULES_PATH.$module.'/libraries/Fuel_'.$module.'.php';
+		if (file_exists($module_file))
+		{
+			$this->load->module_library($module, 'fuel_'.$module);
+			$module_lib = 'fuel_'.$module;
+			if (!$this->$module_lib->install())
+			{
+				echo $this->fuel->installer->last_error()."\n";
+			}
+			else
+			{
+				echo lang('module_install', $module);
+			}
 		}
 		else
 		{
-			echo lang('module_install', $module);
+			echo lang('module_install_error', $module);
 		}
 	}
 

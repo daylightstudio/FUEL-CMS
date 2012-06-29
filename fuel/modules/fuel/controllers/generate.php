@@ -173,11 +173,19 @@ class Generate extends Fuel_base_controller {
 			// add to advanced module config
 			$my_fuel_path = APPPATH.'config/MY_fuel.php';
 
+			$modules_allowed = $this->fuel->config('modules_allowed');
+			$modules_allowed[] = $name;
+
 			$content = file_get_contents($my_fuel_path);
-			$append = "\n\$config['modules_allowed'][] = '".$name."';";
+			$allowed_str = "\$config['modules_allowed'] = array(\n";
+			foreach($modules_allowed as $mod)
+			{
+				$allowed_str .= "\t\t'".$mod."',\n";
+			}
+			$allowed_str .= ");";
 
 			// create variables for parsed files
-			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', '$1'.$append, $content, 1);
+			$content = preg_replace('#(\$config\[([\'|"])modules_allowed\\2\].+;)#Ums', $allowed_str, $content, 1);
 
 			if (!write_file($my_fuel_path, $content))
 			{
@@ -186,8 +194,6 @@ class Generate extends Fuel_base_controller {
 			$this->modified[] = $my_fuel_path;
 			
 			// save to database if the settings is there
-			$modules_allowed = $this->fuel->config('modules_allowed');
-			$modules_allowed[] = $name;
 			
 			$module_obj = $this->fuel->modules->get($name);
 			if (!empty($module_obj) AND $this->fuel->modules->is_advanced($module_obj))
