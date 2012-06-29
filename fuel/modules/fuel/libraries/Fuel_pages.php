@@ -915,7 +915,7 @@ class Fuel_page extends Fuel_base_library {
 		{
 			// create the inline edit toolbar
 			$inline_edit_bar = $this->fuel->admin->toolbar();
-			$fuel_js_obj = "<script>if (fuel == undefined) fuel = {}</script>\n";
+			$fuel_js_obj = "<script>if (typeof fuel == 'undefined') fuel = {}</script>\n";
 			$inline_css = css('fuel_inline', 'fuel', array('output' => $this->fuel->config('fuel_assets_output')));
 			$output = preg_replace('#(</head>)#i', $fuel_js_obj.$inline_css."\n$1", $output);
 			$output = preg_replace('#(</body>)#i', $inline_edit_bar."\n$1", $output);
