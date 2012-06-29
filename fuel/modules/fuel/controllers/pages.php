@@ -300,7 +300,7 @@ class Pages extends Module {
 				// Does the RegEx match?
 				if (preg_match('#^'.$key.'$#', $field_values['location']))
 				{
-					$routes[] = $key;
+					$routes[] = '"'.$key.'" = "'.$val.'";';
 				}
 			}
 
