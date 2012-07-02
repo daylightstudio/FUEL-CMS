@@ -32,29 +32,41 @@ class Fuel_tags extends Fuel_module {
 	protected $module = 'tags';
 	
 	
-	function find_by_tag($tag, $type = NULL)
+	function find_by_tag($tag, $category = NULL)
 	{
-		$this->CI->load->module_model(FUEL_FOLDER, 'relationships_model');
-		$this->CI->relationships_model->find_by_candidate($candidate_table, $foreign_table, $candidate_id = NULL, $return_method = NULL);
-		// find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
 		$model = $this->model();
+		$where['slug'] = $tag;
+		if (!empty($type))
+		{
+			$categories_table = $model->tables('categories');
+			$where[$categories_table.'.slug'] = $category;
+		}
+		$tag = $model->find_one($where);
+		return $tag;
 	}
 
-	function find_all_by_group($group, $type = NULL)
+	function find_by_category($category, $type = NULL)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'relationships_model');
-		$tag_table  = $this->model()->table_name();
-
-		$group_module = $this->fuel->modules->get($group, FALSE);
-		$group_table = $group_module->model()->table_name();
-
-		$this->CI->relationships_model->find_by_candidate($group_table, $tag_table);
-		// find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
+		$model =& $this->model();
+		$categories_table = $model->tables('categories');
+		$tags_table = $model->tables('tags');
+		if (is_int($category))
+		{
+			$where[$tags_table.'.category_id'] = $category;
+		}
+		else
+		{
+			$where[$categories_table.'.slug'] = $category;
+		}
+		$data = $model->find_all($where);
+		return $data;
 	}
 
-	function list_options()
+	function options_list($key = 'slug', $val = 'name')
 	{
-		return $this->model()->list_options('slug', 'name');
+		$model =& $this->model();
+		return $model->options_list($key, $val);
 	}
 
 }
