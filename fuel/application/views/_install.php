@@ -131,11 +131,11 @@
 						<?php if ($this->config->item('encryption_key') == 'abc123') : ?>
 						<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> from "abc123" to your own unique key.</li></li>
 						<?php endif; ?>
-						<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
-						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
-						<?php endif; ?>
 						<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
+						<?php endif; ?>
+						<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
+						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
 						<?php endif; ?>
 					</ul>
 				</li>

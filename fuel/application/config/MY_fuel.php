@@ -11,6 +11,9 @@ $config['fuel_path'] = 'fuel/';
 // the name to be displayed on the top left of the admin
 $config['site_name'] = 'My Website';
 
+// whether the admin backend is enabled or not
+$config['admin_enabled'] = FALSE;
+
 // options are cms, views, and auto. 
 // cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder,
@@ -18,19 +21,16 @@ $config['site_name'] = 'My Website';
 // not published, it will then check for the corresponding view file.
 $config['fuel_mode'] = 'views';
 
-// used for system emails
-$config['domain'] = '';
-
-// shows an alert in the admin backend if this is the admin password
-$config['default_pwd'] = 'admin';
-
 // specifies which modules are allowed to be used in the fuel admin
 $config['modules_allowed'] = array(
 	'user_guide',
 );
 
-// whether the admin backend is enabled or not
-$config['admin_enabled'] = FALSE;
+// used for system emails
+$config['domain'] = '';
+
+// shows an alert in the admin backend if this is the admin password
+$config['default_pwd'] = 'admin';
 
 // maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:
