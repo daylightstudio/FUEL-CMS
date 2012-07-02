@@ -46,7 +46,8 @@ class Installer extends Fuel_base_controller {
 		$module_file = MODULES_PATH.$module.'/libraries/Fuel_'.$module.'.php';
 		if (file_exists($module_file))
 		{
-			$this->load->module_library($module, 'fuel_'.$module);
+			$init = array('name' => $module, 'folder' => $module);
+			$this->load->module_library($module, 'fuel_'.$module, $init);
 			$module_lib = 'fuel_'.$module;
 			if (!$this->$module_lib->install())
 			{
