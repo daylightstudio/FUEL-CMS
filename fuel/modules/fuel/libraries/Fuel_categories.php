@@ -1,0 +1,53 @@
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL categories object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_tags
+ */
+
+// --------------------------------------------------------------------
+class Fuel_categories extends Fuel_module {
+	
+	protected $module = 'categories';
+	
+	function find_by_context($context, $category = NULL)
+	{
+		$model = $this->model();
+		$where['context'] = $context;
+		if (!empty($category))
+		{
+			$where['slug'] = $category;
+			$data = $model->find_one($where);
+		}
+		else
+		{
+			$data = $model->find_all($where);
+		}
+		return $data;
+	}
+	
+}
+
+/* End of file Fuel_categories.php */
+/* Location: ./modules/fuel/libraries/Fuel_categories.php */
