@@ -459,7 +459,15 @@ class Fuel_custom_fields {
 				
 				if (!isset($field['label']))
 				{
-					$field['label'] = ucfirst(str_replace('_', ' ', $key));
+					if ($lang = $form_builder->label_lang($key))
+					{
+						$field['label'] = $lang;
+					}
+					else
+					{
+						$field['label'] = ucfirst(str_replace('_', ' ', $key));
+						
+					}
 				}
 				
 				if ($repeatable)
@@ -896,6 +904,46 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
+		// --------------------------------------------------------------------
+
+	/**
+	 * Creates the url input select
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function url($params)
+	{
+		$form_builder =& $params['instance'];
+		
+		$defaults = array(
+		);
+		$url_class = 'url_select';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$url_class : $url_class;
+		if (empty($params['size']))
+		{
+			$params['size'] = 90;
+		}
+
+		$data = array();
+		if (isset($params['input']))
+		{
+			$data['target'] = $params['input'];
+		}
+
+		if (isset($params['target']))
+		{
+			$data['target'] = $params['target'];
+		}
+		if (isset($params['title']))
+		{
+			$data['title'] = $params['title'];
+		}
+		$params['data'] = $data;
+		return $form_builder->create_text($params);
+
+	}
 }
 
 

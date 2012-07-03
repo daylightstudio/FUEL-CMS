@@ -300,7 +300,7 @@ class Pages extends Module {
 				// Does the RegEx match?
 				if (preg_match('#^'.$key.'$#', $field_values['location']))
 				{
-					$routes[] = '"'.$key.'" = "'.$val.'";';
+					$routes[] = $key;
 				}
 			}
 
@@ -497,8 +497,7 @@ class Pages extends Module {
 					}
 				}
 			}
-
-
+		
 			// archive
 			$archive = $this->model->cleaned_data();
 			$archive[$this->model->key_field()] = $id;
@@ -666,6 +665,58 @@ class Pages extends Module {
 			}
 		}
 		$this->output->set_output('error');
+	}
+
+	function select()
+	{
+
+		$value = $this->input->get_post('selected');
+		$this->js_controller_params['method'] = 'select';
+	
+		$this->load->helper('array');
+		$this->load->helper('form');
+		$this->load->library('form_builder');
+		$pages = $this->fuel->pages->options_list();
+		$options = array_combine($pages, $pages);
+		
+
+		$select_label = lang('form_label_page');
+		$display_label_select = FALSE;
+		if (isset($_GET['input']))
+		{
+			$fields['input'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_url'), 'size' => 100);	
+			$select_label = lang('form_label_or_select');
+			$display_label_select = TRUE;
+		}
+
+		$fields['url_select'] = array('value' => $value, 'label' => $select_label, 'type' => 'select', 'options' => $options, 'display_label' => $display_label_select);
+
+
+		if (isset($_GET['target']))
+		{
+			$fields['target'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('_self' => '_self', '_blank' => '_blank'));	
+			$fields['url_select']['display_label'] = TRUE;
+		}
+		
+		if (isset($_GET['title']))
+		{
+			$fields['title'] = array('value' => $this->input->get_post('title'), 'label' => lang('form_label_title'));
+			$fields['url_select']['display_label'] = TRUE;
+		}
+
+		$fields['selected'] = array('type' => 'hidden', 'value' => $this->input->get_post('selected'));
+
+		$this->form_builder->submit_value = NULL;
+		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		$vars['form'] = $this->form_builder->render();
+		$this->fuel->admin->set_inline(TRUE);
+
+		$crumbs = array('' => $this->module_name, lang('pages_select_action'));
+		$this->fuel->admin->set_panel_display('notification', FALSE);
+		$this->fuel->admin->set_titlebar($crumbs);
+		$this->fuel->admin->render('modal_select', $vars);
 	}
 
 	

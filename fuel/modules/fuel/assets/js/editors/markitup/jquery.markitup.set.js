@@ -49,14 +49,19 @@ myMarkItUpSettings = {
 		{name:markitupLanguage('hr'), className:'hr', key:'', openWith:'<hr />'},
 		{separator:'---------------' },
 		/*{name:'Image', className:'image', key:'I', replaceWith:'<img src="{img_path}\[![Source:!:]!]\" alt="[![Alternative text]!]" />' },*/
-		{name:markitupLanguage('img'), className: 'image', key: 'L', replaceWith: 
+		{name:markitupLanguage('img'), className: 'image', key: 'I', replaceWith: 
 			function(marketItup){ 
 				myMarkItUpSettings.markItUpImageInsert(marketItup); 
 				return false;
 			}
 		},
 		/*{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},*/
-		{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},
+		{name:markitupLanguage('link'), className: 'link', key: 'L', replaceWith: 
+			function(marketItup){ 
+				myMarkItUpSettings.markItUpLinkInsert(marketItup); 
+				return false;
+			}
+		},
 		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto(', closeWith:')}', placeHolder:markitupLanguage('placeholder_email') },
 		{name:markitupLanguage('php'), className:'fuel_var', key:'', openWith:'{$[![' + markitupLanguage('php') + ':!:]!]', closeWith:'}', placeHolder:'' },
 		{name:markitupLanguage('clean'), className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },		
@@ -166,9 +171,46 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		$assetPreview = jQuery('#asset_preview', iframeContext);
 		jQuery('.cancel', iframeContext).add('.modal_close').click(function(){
 			$modal.jqmHide();
-			var selectedVal = $assetSelect.val();
-			var replace = '<img src="{img_path(\'' + selectedVal + '\')}" alt="" />';
-			jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
+			if ($(this).is('.save')){
+				var selectedVal = $assetSelect.val();
+				var replace = '<img src="{img_path(\'' + selectedVal + '\')}" alt="" />';
+				jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
+			}
+			return false;
+		});
+	});
+
+}
+
+myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
+	var selected = markItUp.selection;
+	var url = jqx.config.fuelPath + '/pages/select/?target=&title=&input=&selected=' + selected;
+	var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+	$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
+	
+	$modal.find('iframe#url_inline_iframe').bind('load', function(){
+		var iframeContext = this.contentDocument;
+
+		jQuery('.cancel', iframeContext).add('.modal_close').click(function(){
+			$modal.jqmHide();
+			if ($(this).is('.save')){
+				$urlSelect = $('#url_select', iframeContext);
+				$input =  $('#input', iframeContext);
+				$target = $('#target', iframeContext);
+				$title = $('#title', iframeContext);
+				$selected = $('#selected', iframeContext);
+				var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
+				
+				var replace = '<a href="{site_url(\'' + selectedUrl + '\')}"';
+				if ($target.length && $target.val() != '_self'){
+					replace += ' target="' + $target.val() + '"';
+				}
+				if ($title.length && $title.val().length){
+					replace += ' title="' + $title.val() + '"';
+				}
+				replace += '>' + $selected.val() + '</a>';
+				jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
+			}
 			return false;
 		});
 	});

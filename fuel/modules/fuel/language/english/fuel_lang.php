@@ -214,7 +214,7 @@ $lang['pages_instructions'] = 'Here you can manage the data associated with the 
 $lang['pages_associated_navigation'] = 'Associated Navigation';
 $lang['pages_success_upload'] = 'The page view was successfully uploaded.';
 $lang['pages_upload_instructions'] = 'Select a view file and upload to a page below.';
-
+$lang['pages_select_action'] = 'Select';
 
 // page specific form fields
 $lang['form_label_layout'] = 'Layout';
@@ -223,6 +223,9 @@ $lang['pages_last_updated'] = 'Last updated %1s';
 $lang['pages_last_updated_by'] = 'Last updated %1s by %2s';
 $lang['pages_not_published'] = 'This page is not published.';
 $lang['pages_default_location'] = 'example: company/about';
+
+$lang['form_label_page'] = 'Page';
+$lang['form_label_target'] = 'Target';
 
 
 /*
@@ -426,29 +429,30 @@ $lang['form_label_location'] = 'Location';
 $lang['form_label_published'] = 'Published';
 $lang['form_label_active'] = 'Active';
 $lang['form_label_precedence'] = 'Precedence';
-$lang['form_label_date_added'] = 'Date Added';
-$lang['form_label_last_updated'] = 'Last Updated';
+$lang['form_label_date_added'] = 'Date added';
+$lang['form_label_last_updated'] = 'Last updated';
 $lang['form_label_file'] = 'File';
 $lang['form_label_value'] = 'Value';
 $lang['form_label_email'] = 'Email';
-$lang['form_label_user_name'] = 'User Name';
-$lang['form_label_first_name'] = 'First Name';
-$lang['form_label_last_name'] = 'Last Name';
-$lang['form_label_super_admin'] = 'Super Admin';
+$lang['form_label_user_name'] = 'User name';
+$lang['form_label_first_name'] = 'First name';
+$lang['form_label_last_name'] = 'Last name';
+$lang['form_label_super_admin'] = 'Super admin';
 $lang['form_label_password'] = 'Password';
-$lang['form_label_confirm_password'] = 'Confirm Password';
-$lang['form_label_new_password'] = 'New Password';
+$lang['form_label_confirm_password'] = 'Confirm password';
+$lang['form_label_new_password'] = 'New password';
 $lang['form_label_description'] = 'Description';
-$lang['form_label_entry_date'] = 'Entry Date';
+$lang['form_label_entry_date'] = 'Entry date';
 $lang['form_label_message'] = 'Message';
 $lang['form_label_image'] = 'Image';
-$lang['form_label_upload_image'] = 'Upload Image';
-$lang['form_label_upload_images'] = 'Upload Images';
+$lang['form_label_upload_image'] = 'Upload image';
+$lang['form_label_upload_images'] = 'Upload images';
 $lang['form_label_content'] = 'Content';
 $lang['form_label_excerpt'] = 'Excerpt';
 $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
+$lang['form_label_link'] = 'Link';
 $lang['form_label_group_id'] = 'Group';
 
 $lang['form_enum_option_yes'] = 'yes';

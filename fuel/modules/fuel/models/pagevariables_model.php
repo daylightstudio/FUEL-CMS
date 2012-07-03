@@ -5,7 +5,7 @@ class Pagevariables_model extends Base_module_model {
 
 	public $page_id;
 	public $honor_page_status = FALSE; // will look at the pages published status as well
-	
+	public $serialized_fields = array('value');
 	function __construct()
 	{
 		parent::__construct('pagevars');
@@ -73,7 +73,7 @@ class Pagevariables_model extends Base_module_model {
 		}
 		
 		$data = $this->find_all_array($where);
-		return $this->_process_casting($data);
+		return $this->_process_casting($data);;
 	}
 	
 	function _process_casting($data)
@@ -120,7 +120,10 @@ class Pagevariables_model extends Base_module_model {
 						$return = $json;
 					}
 				}
-				
+				else if (is_array($val))
+				{
+					$return = $val;
+				}
 				if (empty($return))
 				{
 					$return = array();
@@ -154,14 +157,16 @@ class Pagevariables_model extends Base_module_model {
 		return $fields;
 	}
 	
+	
 	function on_before_clean($values)
 	{
 		if (isset($values['value']))
 		{
 			if (is_array($values['value']))
 			{
+				// NO LONGER NEEDED BECAUSE OF SERIALIZED FIELD SETTING ON MODEL
 				//$values['value'] = serialize($values['value']);
-				$values['value'] = json_encode($values['value']);
+				//$values['value'] = json_encode($values['value']);
 				$values['type'] = 'array';
 			}
 			else if (is_serialized_str($values['value']))
@@ -187,7 +192,6 @@ class Pagevariables_model extends Base_module_model {
 		
 		
 	}
-
 }
 
 

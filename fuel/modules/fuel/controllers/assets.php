@@ -145,15 +145,7 @@ class Assets extends Module {
 			}
 		}
 
-		$value = '';
-		if ($this->input->post('selected'))
-		{
-			$value = $this->input->post('selected');
-		}
-		else if ($this->input->get('selected'))
-		{
-			$value = $this->input->get('selected');
-		}
+		$value = $this->input->get_post('selected');
 		
 		$this->js_controller_params['method'] = 'select';
 		$this->js_controller_params['folder'] = $dir;
@@ -166,7 +158,7 @@ class Assets extends Module {
 		
 		$preview = '<div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
-		$fields['asset_select'] = array('value' => $value, 'label' => 'Select', 'type' => 'select', 'options' => $options, 'after_html' => $preview, 'display_label' => FALSE);
+		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview, 'display_label' => FALSE);
 		$this->form_builder->css_class = 'asset_select';
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
@@ -177,8 +169,9 @@ class Assets extends Module {
 		$this->fuel->admin->set_inline(TRUE);
 
 		$crumbs = array('' => $this->module_name, lang('assets_select_action'));
+		$this->fuel->admin->set_panel_display('notification', FALSE);
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->render('assets/assets_select', $vars);
+		$this->fuel->admin->render('modal_select', $vars);
 	}
 	
 	// no editing of images... just creating/overwriting existing

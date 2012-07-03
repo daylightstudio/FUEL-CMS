@@ -717,3 +717,77 @@ fuel.fields.template_field = function(context, options){
 	})
 
 }
+
+// url select field
+fuel.fields.url_field = function(context, options){
+	
+	var activeField = null;
+
+	var showUrlSelect = function(){
+		$activeField = $('#' + activeField);
+		var url = jqx.config.fuelPath + '/pages/select/?selected=' + escape($activeField.val());
+		
+		if ($activeField.data('target')){
+			url += '&target=' + $activeField.data('target');
+		}
+		if ($activeField.data('title')){
+			url += '&title=' + $activeField.data('title');	
+		}
+
+		var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+		$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
+		
+		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
+		var $iframe = $modal.find('iframe#url_inline_iframe');
+		$iframe.bind('load', function(){
+			var iframeContext = this.contentDocument;
+			
+			$('.cancel', iframeContext).add('.modal_close').click(function(){
+				$modal.jqmHide();
+				if ($(this).is('.save')){
+					var $activeField = $('#' + activeField);
+					$input =  $('#input', iframeContext);
+					$urlSelect = $('#url_select', iframeContext);
+					$target = $('#target', iframeContext);
+					$title = $('#title', iframeContext);
+					$selected = $('#selected', iframeContext);
+
+					var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
+					if ($target.length || $title.length) {
+						var selectedVal = '<a href="{site_url(\'' + selectedUrl + '\')}"';
+
+						if ($target.length && $target.val() != '_self'){
+							selectedVal += ' target="' + $target.val() + '"';
+						}
+						if ($title.length && $title.val().length){
+							selectedVal += ' title="' + $title.val() + '"';
+						}
+						selectedVal += '>' + $selected.val() + '</a>';
+					} else {
+						var selectedVal = $urlSelect.val();	
+					}
+					
+					$('#' + activeField).val(selectedVal);
+				}
+				return false;
+			});
+		})
+		return false;
+	}
+	
+	
+	var _this = this;
+	$('.url_select', context).each(function(i){
+		if ($(this).parent().find('.url_select_button').length == 0){
+			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
+		}
+	});
+
+	$('.url_select_button', context).click(function(e){
+		activeField = $(e.target).parent().find('input,textarea:first').attr('id');
+		showUrlSelect();
+		return false;
+	});
+	
+	
+}

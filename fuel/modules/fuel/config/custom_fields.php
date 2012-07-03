@@ -160,6 +160,20 @@ $fields['list_items'] = array(
 	'filepath'	=> '',
 );
 
+// multi field
+$fields['url'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'url',
+	'filepath'	=> '',
+	'js'		=> array(
+						FUEL_FOLDER => array(
+							'jquery/plugins/jqModal',
+						)
+	),
+	'js_function' => 'fuel.fields.url_field',
+	'represents' => array('name' => 'url|link'),
+);
+
 
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */
