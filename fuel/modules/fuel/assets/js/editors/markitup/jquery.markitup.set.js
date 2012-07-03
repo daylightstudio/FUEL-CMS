@@ -200,8 +200,12 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 				$title = $('#title', iframeContext);
 				$selected = $('#selected', iframeContext);
 				var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
-				
-				var replace = '<a href="{site_url(\'' + selectedUrl + '\')}"';
+				var isHTTP = (selectedUrl.match(/^\w+:\/\//)) ? true : false;
+				var replace = '<a href="';
+				if (!isHTTP) replace += '{site_url(\'';
+				replace += selectedUrl;
+				if (!isHTTP) replace+= '\')}';
+				replace += '"';
 				if ($target.length && $target.val() != '_self'){
 					replace += ' target="' + $target.val() + '"';
 				}

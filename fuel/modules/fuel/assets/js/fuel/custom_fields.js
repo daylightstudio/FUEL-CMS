@@ -754,7 +754,12 @@ fuel.fields.url_field = function(context, options){
 
 					var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
 					if ($target.length || $title.length) {
-						var selectedVal = '<a href="{site_url(\'' + selectedUrl + '\')}"';
+						var isHTTP = (selectedUrl.match(/^\w+:\/\//)) ? true : false;
+						var selectedVal = '<a href="';
+						if (!isHTTP) selectedVal += '{site_url(\'';
+						selectedVal += selectedUrl;
+						if (!isHTTP) replace += '\')}';
+						selectedVal += '"';
 
 						if ($target.length && $target.val() != '_self'){
 							selectedVal += ' target="' + $target.val() + '"';
