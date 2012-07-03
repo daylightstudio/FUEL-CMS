@@ -227,7 +227,7 @@ $foo->bar = 'This is a test';
 $foo->save();
 </pre>
 
-<h3>Automatically Parsing Field Values</h3>
+<h3>Automatically Parse Field Values</h3>
 <p>In some cases, you may be saving text data that you want to parse the <a href="<?=user_guide_url('general/template-parsing')?>">templating syntax</a> upon retrieval. 
 This can be done automatically by setting the <dfn>$parsed_fields</dfn> array property on the table class like so:</p>
 
@@ -264,7 +264,23 @@ $record->get_content()
 $record->content
 </pre>
 
-<p>Additionally, you can use <dfn>is_{property})()</dfn> on any property that is a boolean type value or an enum value with 2 options.</p>
+<p>There are also two additional variations you can use on a record property &mdash; <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
+<p>Using <dfn>{property}_formatted</dfn> will apply the <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>
+function if the property is a string value and if it is a date value will format the date by default to whatever is specified in the <span class="file">fuel/application/config/MY_config.php</span>.
+</p>
+<pre class="brush: php">
+// returns content with &lt;p&gt; tags applied
+echo $record->content_formatted;
+</pre>
+
+<p>Using <dfn>{property}_stripped</dfn> will apply the <a href="http://php.net/manual/en/function.strip-tags.php" target="_blank">strip_tags</a> PHP function and only applies to string values.</p>
+<pre class="brush: php">
+// returns content with HTML tags stripped (only applies to fields that return strings)
+echo $record->content_stripped;
+</pre>
+
+
+<p>Additionally, you can use <dfn>is_{property}()</dfn> on any property that is a boolean type value or an enum value with 2 options.</p>
 <pre class="brush: php">
 if ($record->is_published())
 {
@@ -275,6 +291,21 @@ else
 	echo 'Not Published';
 }
 </pre>
+
+<p>To determine if a value exists for a certain property you can use <dfn>has_{property}()</dfn>.</p>
+<pre class="brush: php">
+if ($record->has_image())
+{
+	echo '<img src="'.$record->image.'" />';
+}
+else
+{
+	echo 'No Image';
+}
+</pre>
+
+
+
 
 <p>In the table class, magic methods are used to find records in interesting ways. For example, you can do something like this (where <var>{}</var> enclose areas where the developer should change to a proper field name):</p>
 <pre class="brush: php">
