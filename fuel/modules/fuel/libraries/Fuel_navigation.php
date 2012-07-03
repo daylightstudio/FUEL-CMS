@@ -45,7 +45,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
 		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
 		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
-		<li><strong>exclude</strong> - nav items to exclude from the menu</li>
+		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
 		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
 
 		<li><strong>append</strong> - adds additional menu items to the current list</li>
@@ -208,7 +208,6 @@ class Fuel_navigation extends Fuel_module {
 		// exclude any items
 		if (!empty($p['exclude']))
 		{
-			$p['exclude'] = (array) $p['exclude'];
 			foreach($items as $key => $item)
 			{
 				if (is_int($key) AND !empty($item['location']))
@@ -219,9 +218,18 @@ class Fuel_navigation extends Fuel_module {
 				{
 					$check = $key;
 				}
-				if (in_array($check, $p['exclude']))
+
+				if (is_string($p['exclude']) AND preg_match('#'.$p['exclude'].'#', $check))
 				{
+					$p['exclude'] = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $p['exclude']));
 					unset($items[$key]);
+				}
+				else if (is_array($p['exclude']))
+				{
+					if (in_array($check, $p['exclude']))
+					{
+						unset($items[$key]);
+					}
 				}
 
 			}
