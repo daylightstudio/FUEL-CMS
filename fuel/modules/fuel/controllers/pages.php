@@ -230,18 +230,10 @@ class Pages extends Module {
 			$this->form_builder->css_class = 'inline_form';
 			
 		}
-		//$this->form_builder->hidden = (array) $this->model->key_field();
-		$this->form_builder->question_keys = array();
-		$this->form_builder->use_form_tag = FALSE;
-		$this->form_builder->auto_execute_js = FALSE;
-		
-		$this->form_builder->set_fields($fields);
-		$this->form_builder->display_errors = FALSE;
-		$this->form_builder->set_field_values($field_values);
-		$this->form_builder->displayonly = $this->displayonly;
 		
 		// create page form fields
 		$this->form_builder->form->validator = &$this->page->validator;
+		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
@@ -254,6 +246,10 @@ class Pages extends Module {
 		$this->form_builder->auto_execute_js = FALSE;
 
 		$vars['form'] = $this->form_builder->render();
+
+		// clear the values hear to prevent issues in subsequent calls
+		$this->form_builder->clear();
+
 
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
