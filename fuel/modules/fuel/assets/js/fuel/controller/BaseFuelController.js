@@ -148,7 +148,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var itemViewsCookie = $.cookie(itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
-				_this._toggleRearrageBtn();
+				_this._toggleRearrangeBtn();
 
 				$('#toggle_tree').parent().addClass('active');
 				if ($('#rearrange').parent().hasClass('active')){
@@ -168,7 +168,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 			$('#toggle_list').click(function(e){
-				_this._toggleRearrageBtn();
+				_this._toggleRearrangeBtn();
 
 				$('#fuel_notification .rearrange').show();
 				$('#toggle_list').parent().addClass('active');
@@ -474,7 +474,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
 			$legends.filter(':first').parent().before(tabs);
-			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + jqx.config.uriPath.replace(/[\/|:]/g, '_'), params: {path: jqx.config.cookieDefaultPath}}
+			var tabId = jqx.config.uriPath.replace(/[\/|:]/g, '_');
+			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + tabId, params: {path: jqx.config.cookieDefaultPath}}
 			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
 			
 		}
@@ -529,7 +530,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 	},
 	
-	_toggleRearrageBtn : function(){
+	_toggleRearrangeBtn : function(){
+
+		// remove the button if no precedence columns
+		if (!$('#precedence').length)
+		{
+			$('.ico_precedence').parent().remove();
+		}
+		
 		if ($('#precedence').val() != 1){
 			$('#rearrange').parent().hide();
 		} else {
@@ -612,7 +620,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		// setup rearranging precedence
-		_this._toggleRearrageBtn();
+		_this._toggleRearrangeBtn();
 
 		if (_this.rearrangeOn){
 			_this.rearrangeItems();
