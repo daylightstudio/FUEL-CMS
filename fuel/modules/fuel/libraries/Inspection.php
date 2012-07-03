@@ -410,7 +410,7 @@ class Inspection_class extends Inspection_base {
 		}
 		
 		// get properties area to parse out for comments later on
-		preg_match('#[c|C]lass\s+'.$this->name.'\s+.*\{.+function __construct#Us', $this->_file, $props_match);
+		preg_match('#[c|C]lass\s+'.$this->name.'\s+.*\{.+function #Us', $this->_file, $props_match);
 		if (isset($props_match[0]))
 		{
 			$props_block = $props_match[0];
