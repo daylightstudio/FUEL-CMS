@@ -54,10 +54,11 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
 	
+
 	
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
-		$('.jqmOverlay', $context).hide();
+		$('.jqmOverlay', $context).remove();
 		if (onCloseCallback) onCloseCallback();
 	}	
 	
