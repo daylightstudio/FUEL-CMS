@@ -447,7 +447,7 @@ div#fuel_main_content_inner .bullets { margin-left: 15px; }
 div.noactions { top: 51px !important; }
 div.notitlebar { top: 69px !important; }
 div.noactions_notitlebar { top: 22px !important; }
-div.noactions_nonotification { top: 29px !important; }
+div.noactions_nonotification { top: 30px !important; }
 
 /* inline/compact mode */
 div#fuel_main_panel_compact { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #fff; }
@@ -550,7 +550,7 @@ span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 
 /* form tables */
 .form { border: none; border-spacing: 0; display: table; } /* important to display as table so that the proper width can be determined with inline editing */
-.form td.label { padding: 4px 15px 2px 0; font-weight: bold; vertical-align: top; }
+.form td.label { padding: 6px 15px 0 0; font-weight: bold; vertical-align: top; }
 .form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
 .form td.required { padding-top: 10px; }
 div.more_filters { padding-left: 10px; }
