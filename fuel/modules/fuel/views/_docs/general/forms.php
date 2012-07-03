@@ -8,7 +8,7 @@ $CI->load->library('form_builder');
 $CI->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
 //echo js('fuel/custom_fields.js', 'fuel');
-//echo js('jquery/plugins/jquery-ui-1.8.17.custom.min', 'fuel');
+echo js('jquery/plugins/jquery-ui-1.8.17.custom.min', 'fuel');
 
 function form_builder_example($field, $params = NULL, $include_submit = FALSE)
 {
@@ -185,6 +185,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>	
 		<li><a href="#template">template</a></li>
 		<li><a href="#asset">asset</a></li>
+		<li><a href="#url">url</a></li>
 		<li><a href="#wysiwyg">wysiwyg</a></li>
 		<li><a href="#file">file</a></li>
 		<li><a href="#inline_edit">inline_edit</a></li>
@@ -750,13 +751,36 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<pre class="brush: php">
 	'name' => '.*image$|.*img$' // targets any field with the name ending with "image" or "img"
 	</pre>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['image'] = array('type' => 'asset', 'folder' => 'images/my_folder', 'hide_options' => TRUE,);
+	</pre>
+	
+</div>
+
+<h3 id="url" class="toggle">url</h3>
+<div class="toggle_block_off">
+	<p>This field type is used for links/URLs.
+	The following additional parameters can be passed to this field type:</p>
+
+	<ul>
+		<li><strong>input</strong>: provides an input field for the link. This field is not displayed by default</li>
+		<li><strong>target</strong>: sets the target of the link. Options are <dfn>_self</dfn> or <dfn>_blank</dfn>. This field is not displayed by default</li>
+		<li><strong>title</strong>: sets the title attribute of the link. This field is not displayed by default</li>
+	</ul>
+	
+	<h4>Representations</h4>
+	<pre class="brush: php">
+	'name' => 'url|link' // targets any field with the name of "url" or "link"
+	</pre>
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
+	$fields['url'] = array();
 	</pre>
 
 </div>
-
 
 <h3 id="wysiwyg" class="toggle">wysiwyg</h3>
 <div class="toggle_block_off">

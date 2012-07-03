@@ -1169,35 +1169,52 @@ class MY_Model extends CI_Model {
 				// safe_htmlspecialchars is buggy for unserialize so we use the cleanup_ms_word
 				if (is_string($values[$key]))
 				{
-					if ($this->auto_encode_entities)
-					{
-						if ((is_array($this->auto_encode_entities) AND in_array($key, $this->auto_encode_entities))
-							OR (is_string($this->auto_encode_entities) AND $key == $this->auto_encode_entities)
-							OR ($this->auto_encode_entities === TRUE)
-						)
-						{
-							$values[$key] = safe_htmlentities($values[$key]);
-						}
-					}
-
-					if ($this->xss_clean)
-					{
-						if ((is_array($this->xss_clean) AND in_array($key, $this->xss_clean))
-							OR (is_string($this->xss_clean) AND $key == $this->xss_clean)
-							OR ($this->xss_clean === TRUE)
-						)
-						{
-							$values[$key] = xss_clean(($values[$key]));
-						}
-					}
+					$values[$key] = $this->encode_and_clean($values[$key], NULL, $key);
+				}
+				else if (is_array($values[$key]))
+				{
+					array_walk_recursive($values['value'], array($this, 'encode_and_clean'), $key);
 				}
 
 				$clean[$key] = $values[$key];
 			}
 		}
-
 		$this->cleaned_data = $clean;
 		return $clean;
+	}
+
+	function encode_and_clean(&$val, $k, $key = NULL)
+	{
+		if (empty($key))
+		{
+			$key = $k;
+		}
+
+		if (is_string($val))
+		{
+			if ($this->auto_encode_entities)
+			{
+				if ((is_array($this->auto_encode_entities) AND in_array($key, $this->auto_encode_entities))
+					OR (is_string($this->auto_encode_entities) AND $key == $this->auto_encode_entities)
+					OR ($this->auto_encode_entities === TRUE)
+				)
+				{
+					$val = safe_htmlentities($val);
+				}
+			}
+
+			if ($this->xss_clean)
+			{
+				if ((is_array($this->xss_clean) AND in_array($key, $this->xss_clean))
+					OR (is_string($this->xss_clean) AND $key == $this->xss_clean)
+					OR ($this->xss_clean === TRUE)
+				)
+				{
+					$val = xss_clean(($val));
+				}
+			}
+		}
+		return $val;
 	}
 	
 	// --------------------------------------------------------------------
@@ -3834,7 +3851,8 @@ class Data_record {
 	protected $_inited = FALSE; // Returns whether the object has been initiated or not
 	protected $_date_format = ''; // datetime method format... will first look in config and then will default to m/d/Y
 	protected $_time_format = 'h:i:s a'; // datetime method format
-	protected $_format_suffix = '_formatted'; // datetime method format
+	protected $_format_suffix = '_formatted'; // suffix to apply auto formatting
+	protected $_strip_suffix = '_stripped'; // suffix to apply for stripping formatting
 	
 	/**
 	 * Constructor - requires a result set from MY_Model. 
@@ -4587,6 +4605,12 @@ class Data_record {
 			$field = substr($var, 0, -10);
 			$output = $this->_get_formatted($field);
 		}
+		// stripped
+		else if (substr($var, -9) == $this->_strip_suffix)
+		{
+			$field = substr($var, 0, -9);
+			$output = $this->_get_stripped($field);
+		}
 		
 		// unserialize any data
 		if (!empty($this->_parent_model->serialized_fields))
@@ -4767,6 +4791,28 @@ class Data_record {
 					$this->_date_format = 'm/d/Y';
 				}
 				$output = date($this->_date_format, strtotime($this->_fields[$field]));
+				break;
+		}
+		return $output;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Method to auto format fields with the suffix $_format_suffix
+	 *
+	 * @access	private
+	 * @param	string	field to check if it is set
+	 * @return	string
+	 */
+	protected function _get_stripped($field)
+	{
+		$type = $this->_parent_model->field_type($field);
+		$output = '';
+		switch($type)
+		{
+			case 'string':
+				$output = strip_tags($this->_fields[$field]);
 				break;
 		}
 		return $output;
