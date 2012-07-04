@@ -1173,7 +1173,7 @@ class MY_Model extends CI_Model {
 				}
 				else if (is_array($values[$key]))
 				{
-					array_walk_recursive($values['value'], array($this, 'encode_and_clean'), $key);
+					array_walk_recursive($values[$key], array($this, 'encode_and_clean'), $key);
 				}
 
 				$clean[$key] = $values[$key];
