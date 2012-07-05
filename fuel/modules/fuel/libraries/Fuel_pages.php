@@ -1317,24 +1317,31 @@ class Fuel_page extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Uses the assigned "location" value to scan the views directory for a corresponding view file. The Fuel configuration value of "auto_search_views" must be set to TRUE (it is FALSE by default).
+	 * Uses the assigned "location" value to scan the views directory for a corresponding view file. 
+	 * The Fuel configuration value of "auto_search_views" must be set to TRUE or a number greater than 1 (it is FALSE by default).
+	 * If a number is provided, it will loop
 	 *
 	 * @access	public
 	 * @param	string	The original location value.
+	 * @param	int	The number of levels deep to search for a view
 	 * @return	string
 	 */
-	function find_view_file($view)
+	function find_view_file($view, $depth = NULL)
 	{
 		if (!$this->fuel->config('auto_search_views')) return NULL;
 		static $cnt;
 		if (is_null($cnt)) $cnt = 0;
 		$cnt++;
+		if (is_null($depth))
+		{
+			$depth = (is_int($this->fuel->config('auto_search_views'))) ? $this->fuel->config('auto_search_views') : 2; // if not a number (e.g. set to TRUE), we default to 2
+		}
 		$view_parts = explode('/', $view);
 		array_pop($view_parts);
 		$view = implode('/', $view_parts);
-		if (!file_exists($this->views_path.$view.EXT) AND count($view_parts) > 1 AND $cnt < 6) // hard coded 6 levels
+		if (!file_exists($this->views_path.$view.EXT) AND count($view_parts) > 1 AND $cnt < $depth)
 		{
-			$view = $this->find_view_file($view);
+			$view = $this->find_view_file($view, $depth);
 		}
 		return $view;
 	}
