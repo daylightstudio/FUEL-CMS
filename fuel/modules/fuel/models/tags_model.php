@@ -32,7 +32,7 @@ class Tags_model extends Base_module_model {
 					$mod_name = $module->name();
 					if (is_array($rel))
 					{
-						if (isset($rel['model']) AND $rel['model'] == 'tags')
+						if (isset($rel['model']) AND ($rel['model'] == 'tags' OR $rel['model'] == array(FUEL_FOLDER => 'tags')))
 						{
 							$belongs_to[$mod_name] = $mod_name;
 						}
