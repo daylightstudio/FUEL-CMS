@@ -20,7 +20,7 @@ class Pages_model extends Base_module_model {
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
 		$where['location'] = $values['location'];
-		$related_items = $CI->navigation_model->find_all_array($where);
+		$related_items = $CI->navigation_model->find_all_array_assoc('id', $where);
 		
 		$return = array();
 		$return['navigation'] = array();
