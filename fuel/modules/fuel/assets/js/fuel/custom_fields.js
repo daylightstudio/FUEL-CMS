@@ -782,7 +782,7 @@ fuel.fields.url_field = function(context, options){
 	
 	
 	var _this = this;
-	$('.url_select', context).each(function(i){
+	$('.url_select', context).not('.no_url').each(function(i){
 		if ($(this).parent().find('.url_select_button').length == 0){
 			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
 		}
