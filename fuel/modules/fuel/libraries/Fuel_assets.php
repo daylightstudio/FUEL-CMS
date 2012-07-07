@@ -158,13 +158,15 @@ class Fuel_assets extends Fuel_base_library {
 					return FALSE;
 				}
 			
+				$non_multi_key = current(explode('___', $key));
+
 				// get params based on the posted variables
 				if (empty($params['override_post_params']))
 				{
 					$posted = array();
 					foreach($valid as $param => $default)
 					{
-						$input_key = $key.'_'.$param;
+						$input_key = $non_multi_key.'_'.$param;
 						if (isset($_POST[$input_key]))
 						{
 							$posted[$param] = $this->CI->input->post($input_key);
