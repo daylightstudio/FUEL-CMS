@@ -69,11 +69,18 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
 		$valid_user = $this->CI->users_model->valid_user($user, $pwd);
-		unset($valid_user['password'], $valid_user['salt']); // no need to store this too
+
+		// set minimal session data
+		$session_data = array();
+		$session_data['id'] = $valid_user['id'];
+		$session_data['super_admin'] = $valid_user['super_admin'];
+		$session_data['user_name'] = $valid_user['user_name'];
+		$session_data['language'] = $valid_user['language'];
+
 		if (!empty($valid_user))
 		{
 			//$valid_user = $this->CI->users_model->user_info($valid_user['id']);
-			$this->set_valid_user($valid_user);
+			$this->set_valid_user($session_data);
 			return TRUE;
 		}
 		return FALSE;
