@@ -449,8 +449,15 @@ class Fuel_custom_fields {
 			
 			foreach($params['fields'] as $key => $field)
 			{
-				$field['value'] = (!empty($value[$key])) ? $value[$key] : '';
-				
+				if (!empty($value[$key]))
+				{
+					$field['value'] = $value[$key];
+				}
+				else if (empty($field['value']))
+				{
+					$field['value'] = '';
+				}
+
 				// Sorry... template can only be nested once... which should be all you need
 				if (isset($field['type']) AND $field['type'] == 'template' AND $params['depth'] > 1)
 				{
