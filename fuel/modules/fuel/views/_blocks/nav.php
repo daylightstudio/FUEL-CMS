@@ -67,7 +67,7 @@
 				
 			<?php 
 				$user_data = $this->fuel->auth->user_data();
-				if (isset($user_data['recent'])) : ?>
+				if (!empty($user_data['recent'])) : ?>
 			<div class="left_nav_section" id="leftnav_recent">
 				<h3><?=lang('section_recently_viewed')?></h3>
 				<ul>
