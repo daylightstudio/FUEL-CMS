@@ -79,7 +79,6 @@
 	<li>Added ability to auto generate documentation on Library and Helper files</li>
 	<li>Added ability to associate examples to generated documentation</li>
 	<li>Added keyboard shortcut of Shift+Space to toggle the Table of Contents</li>
-	<li>Added saving display state of the TOC to a cookie</li>
 	<li>Organized and added more examples</li>
 	<li>Fixed typos (added some too I'm sure)</li>
 	<li>Added toggling of methods/functions to display more information</li>

@@ -13,6 +13,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 			<li><strong>$this->fuel->auth</strong> (<a href="<?=user_guide_url('libraries/fuel_auth')?>">Fuel_auth</a>)</li>
 			<li><strong>$this->fuel->blocks</strong> (<a href="<?=user_guide_url('libraries/fuel_blocks')?>">Fuel_blocks</a>)</li>
 			<li><strong>$this->fuel->cache</strong> (<a href="<?=user_guide_url('libraries/fuel_cache')?>">Fuel_cache</a>)</li>
+			<li><strong>$this->fuel->categories</strong> (<a href="<?=user_guide_url('libraries/Fuel_categories')?>">Fuel_categories</a>)</li>
 			<li><strong>$this->fuel->language</strong> (<a href="<?=user_guide_url('libraries/fuel_language')?>">Fuel_language</a>)</li>
 			<li><strong>$this->fuel->layouts</strong> (<a href="<?=user_guide_url('libraries/fuel_layouts')?>">Fuel_layouts</a>)</li>
 			<li><strong>$this->fuel->logs</strong> (<a href="<?=user_guide_url('libraries/fuel_logs')?>">Fuel_logs</a>)</li>
@@ -25,6 +26,7 @@ This object allows access to your FUEL configuration as well as attaches other u
 			<li><strong>$this->fuel->redirects</strong> (<a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a>)</li>
 			<li><strong>$this->fuel->settings</strong> (<a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a>)</li>
 			<li><strong>$this->fuel->sitevars</strong> (<a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel_sitevars</a>)</li>
+			<li><strong>$this->fuel->tags</strong> (<a href="<?=user_guide_url('libraries/fuel_tags')?>">Fuel_tags</a>)</li>
 			<li><strong>$this->fuel->users</strong> (<a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel_users</a>)</li>
 		</ul>
 	</li>
