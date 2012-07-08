@@ -83,8 +83,22 @@ class Fuel_auth extends Fuel_base_library {
 			$this->set_valid_user($session_data);
 			return TRUE;
 		}
-		return FALSE;
-	}
+		$valid_old_user = $this->CI->users_model->valid_old_user($user, $pwd);
+		if ($valid_old_user) 
+		{
+			// update the hashed password & add a salt
+			$salt = $this->CI->users_model->salt();
+			$updated_user_profile = array('password' => $this->CI->users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
+			$updated_where = array('user_name' => $user, 'active' => 'yes');
+			$this->CI->users_model->update($updated_user_profile, $updated_where);
+			$valid_user = $this->CI->users_model->valid_user($user, $pwd);
+			if ( ! empty($valid_user)) {
+				$this->set_valid_user($valid_user);
+				return TRUE;
+			}
+			return FALSE;
+		}
+		return FALSE;	}
 
 	
 	// --------------------------------------------------------------------
@@ -319,7 +333,7 @@ class Fuel_auth extends Fuel_base_library {
 		}
 		
 		$perms_obj = $user->get_permissions(TRUE);
-		if ($perms)
+		if ($perms_obj)
 		{
 			$this->_user_perms = $perms_obj->find_all_array_assoc('name');
 		}

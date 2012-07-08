@@ -29,6 +29,22 @@ class Users_model extends Base_module_model {
 		return FALSE;
 	}
 	
+	function valid_old_user($user, $pwd)
+	{
+		$where = array('user_name' => $user, 'active' => 'yes');
+		$user = $this->find_one_array($where);
+		
+		if (empty($user)) {
+			return FALSE;
+		}
+		
+		if (empty($user['salt']) AND ($user['password'] == md5($pwd))) {
+			return $user;
+		}
+		
+		return FALSE;
+	}
+	
 	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc')
 	{
 		$CI =& get_instance();
