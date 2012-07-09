@@ -79,7 +79,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function install_path()
 	{
-		return MODULES_FOLDER.'/'.$this->module.'/install/';
+		return MODULES_PATH.$this->module.'/install/';
 	}
 	
 	// --------------------------------------------------------------------
@@ -267,7 +267,6 @@ class Fuel_installer extends Fuel_base_library {
 
 		if (is_file($path))
 		{
-			echo "\n".$path."\n";
 			$this->CI->db->load_sql($path);
 		}
 	}
@@ -560,7 +559,7 @@ class Fuel_installer extends Fuel_base_library {
 			$this->set_module($module);
 		}
 
-		$install_path = MODULES_PATH.$module.'/install/install.php';
+		$install_path = $this->install_path().'install.php';
 
 		// if the install configuration file doesn't exist, then we return FALSE'
 		if (!file_exists($install_path))
