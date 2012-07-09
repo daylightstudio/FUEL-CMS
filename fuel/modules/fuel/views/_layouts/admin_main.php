@@ -77,23 +77,6 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		<div id="fuel_main_content<?=($no_menu) ? '_compact' : ''?>"<?=(!empty($main_content_class)) ? ' class="'.$main_content_class.'"' : ''?>>
 			
 			<?php /* ?><?=$this->form->open('action="'.$form_action.'" method="post" id="form" enctype="multipart/form-data"')?><?php */ ?>
-			
-			<?php if (!empty($warning_window)) : ?>
-				<!-- WARNING WINDOW -->
-				<div class="warning jqmWindow jqmWindowShow" id="warning_window">
-					<p><?=$warning_window?></p>
-
-					<div class="buttonbar" id="yes_no_modal">
-						<ul>
-							<li class="end"><a href="#" class="ico ico_no" id="no_modal"><?=lang('btn_no')?></a></li>
-							<li class="end"><a href="#" class="ico ico_yes" id="yes_modal"><?=lang('btn_yes')?></a></li>
-						</ul>
-					</div>
-					<div class="clear"></div>
-				</div>
-
-			<?php endif; ?>
-
 
 			<!-- BODY -->
 			<?=$body?>

@@ -223,6 +223,7 @@ class Fuel_blocks extends Fuel_module {
 		
 		$view_twin = APPPATH.'views/_blocks/'.$block_data['name'].EXT;
 
+		$output = '';
 		if (file_exists($view_twin))
 		{
 			$view_twin_info = get_file_info($view_twin);

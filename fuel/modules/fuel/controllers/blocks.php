@@ -8,9 +8,9 @@ class Blocks extends Module {
 		parent::__construct();
 	}
 
-	function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
+	function _form_vars($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
 	{
-		$vars = parent::_form($id, $fields, $log_to_recent, $display_normal_submit_cancel);
+		$vars = parent::_form_vars($id, $fields, $log_to_recent, $display_normal_submit_cancel);
 		$saved = $vars['data'];
 		$import_view = FALSE;
 		$warning_window = '';
@@ -18,6 +18,7 @@ class Blocks extends Module {
 			$view_twin = APPPATH.'views/_blocks/'.$saved['name'].EXT;
 			if (file_exists($view_twin))
 			{
+				$this->load->helper('file');
 				$view_twin_info = get_file_info($view_twin);
 				if (!empty($saved)) 
 				{
@@ -57,10 +58,7 @@ class Blocks extends Module {
 		$out = 'error';
 		if (!empty($_POST['id']))
 		{
-			//$this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
-			//$module = $this->fuel->modules->get($this->module);
-			//$module->upload($this->input->post('id'), $this->sanitize_input);
-			$this->module_obj->upload($this->input->post('id'), $this->sanitize_input);
+			$out = $this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}
