@@ -188,26 +188,27 @@ class Fuel_permissions extends Fuel_module {
 	 * @param	array	An array of type of permissions to save with the module. If set to False then no extra permission types will be created
 	 * @return	array
 	 */
-	function delete_simple_module_permissions($module, $types = array('create', 'edit', 'publish', 'delete'))
+	function create_simple_module_permissions($module, $types = array('create', 'edit', 'publish', 'delete'))
 	{
-		$delete[] = array('name' => $module, 'description' => humanize($module));
+		$save = array();
+		$description = humanize(str_replace('/', ' ', $module));
+		$save[] = array('name' => $module, 'description' => $description);
 		
 		if (is_array($types))
 		{
 			foreach($types as $type)
 			{
-				$delete[] = array('name' => $module.'/'.$type);
+				$sub_description = humanize(str_replace('/', ' ', $module)).': '.ucfirst($type);
+				$save[] = array('name' => $module.'/'.$type, 
+								'description' => $sub_description
+								);
 			}
 		}
-
-		foreach($delete as $d)
+		if (!$this->model()->save($save))
 		{
-			if (!$this->model()->delete($d))
-			{
-				return FALSE;
-			}
+			return FALSE;
 		}
-		return TRUE;
+		return $save;
 	}
 
 	
