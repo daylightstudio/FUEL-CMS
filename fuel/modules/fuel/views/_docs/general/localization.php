@@ -1,6 +1,6 @@
 <h1>Localization</h1>
 <p>FUEL CMS 1.0 now provides basic multi-language support through the CMS for pages and modules. You can configure the number of 
-supported languages to display for your pages in <a href="<?=user_guid_url('installation/configuration')?>">FUEL config</a>.
+supported languages to display for your pages in <a href="<?=user_guide_url('installation/configuration')?>">FUEL config</a>.
 Additionally, if you have a simple module has a field named "language", This field name can be configured by specifying
 the  <a href="<?=user_guide_url('modules/simple')?>">simple module's</a> <dfn>language_col</dfn> parameter.
 </p>
