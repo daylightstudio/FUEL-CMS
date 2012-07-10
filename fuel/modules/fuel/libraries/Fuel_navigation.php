@@ -210,9 +210,9 @@ class Fuel_navigation extends Fuel_module {
 		{
 			foreach($items as $key => $item)
 			{
-				if (is_int($key) AND !empty($item['location']))
+				if (is_int($key))
 				{
-					$check = $item['location'];
+					$check = (!empty($item['nav_key'])) ? $item['nav_key'] : $item['location'];
 				}
 				else
 				{
@@ -234,7 +234,6 @@ class Fuel_navigation extends Fuel_module {
 
 			}
 		}
-
 		if ($p['return_normalized'] !== FALSE)
 		{
 			return $this->CI->menu->normalize_items($items);
@@ -439,7 +438,6 @@ class Fuel_navigation extends Fuel_module {
 				$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
 				$save['location'] = $item['location'];
 				$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
-					
 				// fix for homepage links
 				if (empty($save['selected']) AND $save['nav_key'] == 'home')
 				{
@@ -462,7 +460,6 @@ class Fuel_navigation extends Fuel_module {
 				{
 					$save['attributes'] = $item['attributes'];
 				}
-				
 				if (!$this->model()->save($save))
 				{
 					$error = TRUE;
@@ -475,7 +472,6 @@ class Fuel_navigation extends Fuel_module {
 		{
 			$error = TRUE;
 		}
-		
 		return !$error;
 	}
 	
