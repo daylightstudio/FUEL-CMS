@@ -4,7 +4,7 @@ class Permissions_model extends Base_module_model {
 	
 	public $required = array('name', 'description');
 	public $unique_fields = array('name');
-	public $belongs_to = array('users' => array('model' =>'users_model', 'module' => 'fuel', 'where' => array('super_admin' => 'no')));	
+	public $belongs_to = array('users' => array('model' => array(FUEL_FOLDER => 'users_model'), 'where' => array('super_admin' => 'no')));	
 	
 	function __construct()
 	{
