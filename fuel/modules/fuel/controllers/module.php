@@ -1251,7 +1251,7 @@ class Module extends Fuel_base_controller {
 		
 		// use a new instance to prevent problems when duplicating
 		$fb = new Form_builder();
-		$fb->custom_fields = $this->form_builder->custom_fields;
+		$fb->load_custom_fields(APPPATH.'config/custom_fields.php');
 		$fields = $this->model->form_fields($_POST);
 		$fb->set_fields($fields);
 		$fb->post_process_field_values();// manipulates the $_POST values directly
@@ -1581,6 +1581,8 @@ class Module extends Fuel_base_controller {
 			$values = $this->input->post('values', TRUE);
 			$selected = $this->input->post('selected', TRUE);
 			
+			$field_key = end(explode('vars--', $field));
+
 			$this->load->library('form_builder');
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 			
@@ -1593,15 +1595,60 @@ class Module extends Fuel_base_controller {
 			
 			if (!empty($selected)) $fields[$field]['value'] = $selected;
 			$fields[$field]['name'] = $field_id;
-			
-			// if the field is an ID, then we will do a select instead of a text field
-			if (isset($fields[$this->model->key_field()]))
+
+			$output = '';
+
+			// if template/nested field types, then we need to look at the sub field
+			if ($fields[$field_key]['type'] == 'template')
 			{
-				$fields['id']['type'] = 'select';
-				$fields['id']['options'] = $this->model->options_list();
+				//$fields['return_fields'] = TRUE;
+				require_once(FUEL_PATH.'libraries/Fuel_custom_fields.php');
+				$fuel_cf = new Fuel_custom_fields();
+				$index = $this->input->get_post('index', TRUE);
+				$key = $this->input->get_post('key', TRUE);
+				$field_name = $this->input->get_post('field_name', TRUE);
+				$params = $fields[$field_key];
+				$params['index'] = $index;
+				$params['name'] = $field_name;
+				$params['key'] = $field_name;
+				$params['value'] = array();
+				$params['value'][0] = $values;
+				$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+				$this->form_builder->name_array = $field_name;
+				//$fb->set_field_values();
+				$params['instance'] =& $this->form_builder;
+
+				$sub_fields = $fuel_cf->template($params, TRUE);
+				if (!empty($sub_fields[0][$key]))
+				{
+					$output = $sub_fields[0][$key];
+				}
+				
 			}
-			$output = $this->form_builder->create_field($fields[$field]);
+			else
+			{
+				if (!empty($selected)) $fields[$field_key]['value'] = $selected;
+				$fields[$field_key]['name'] = $field_id;
+				
+				// if the field is an ID, then we will do a select instead of a text field
+				if (isset($fields[$this->model->key_field()]))
+				{
+					$fields['id']['type'] = 'select';
+					$fields['id']['options'] = $this->model->options_list();
+				}
+				$output = $this->form_builder->create_field($fields[$field_key]);	
+			}
+			
 			$this->output->set_output($output);
+			
+			// // if the field is an ID, then we will do a select instead of a text field
+			// if (isset($fields[$this->model->key_field()]))
+			// {
+			// 	$fields['id']['type'] = 'select';
+			// 	$fields['id']['options'] = $this->model->options_list();
+			// }
+			// $output = $this->form_builder->create_field($fields[$field]);
+			// $this->output->set_output($output);
 		}
 	}
 	

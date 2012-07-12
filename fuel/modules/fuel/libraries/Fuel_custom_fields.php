@@ -550,17 +550,16 @@ class Fuel_custom_fields {
 		{
 			$vars = $fields;
 		}
-		
-		
+
+		// must set $_POST parameter below or else the post_process won't run the serialization'
+		if (!isset($_POST[$params['key']]))
+		{
+			$_POST[$params['key']] = '';
+		}
+
 		if (!empty($params['serialize']))
 		{
 			
-			// must set $_POST parameter below or else the post_process won't run the serialization'
-			if (!isset($_POST[$params['key']]))
-			{
-				$_POST[$params['key']] = '';
-			}
-
 			$func_str = '$CI =& get_instance();
 			$val = $CI->input->post("'.$params['key'].'");
 			if (isset($_POST["'.$params['key'].'"]) AND is_array($val))
@@ -580,7 +579,7 @@ class Fuel_custom_fields {
 			';
 
 			$func = create_function('$value', $func_str);
-//			$form_builder->set_post_process($params['key'], $func);
+			$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		
