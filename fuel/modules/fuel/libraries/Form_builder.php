@@ -95,6 +95,7 @@ Class Form_builder {
 	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
 	public $js; // javascript files to associate with the form fields to be executed once per render
 	public $css; // CSS files to associate with the form fields to be executed once per render
+	public $no_css_js = FALSE; // used to not display the CSS and JS when rendering to prevent issues with nested forms and post_processing
 	
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
@@ -103,7 +104,6 @@ Class Form_builder {
 	protected $_post_process; // post_process functions
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	protected $_rendered_field_types = array(); // holds all the fields types rendered
-	protected $_is_nested = FALSE; // used to determine if the form is nested within another form_builder instance
 	protected $CI;
 	
 	// --------------------------------------------------------------------
@@ -1275,7 +1275,7 @@ Class Form_builder {
 		{
 			$val = $this->_default($val);
 		}
-		
+
 		// set up defaults
 		$params = array_merge($defaults, $val);
 		
@@ -2396,7 +2396,7 @@ Class Form_builder {
 		$form_builder->set_validator($this->form->validator);
 		$form_builder->use_form_tag = FALSE;
 		$form_builder->set_field_values($params['value']);
-		$form_builder->_is_nested = TRUE; // used to prevent multiple loading of assets
+		$form_builder->no_css_js = TRUE; // used to prevent multiple loading of assets
 		$form_builder->auto_execute_js = FALSE;
 
 		// add accumulated js
@@ -2537,8 +2537,8 @@ Class Form_builder {
 				}
 				else
 				{
-					$this->CI->load->library($custom_field['class']);
 					$library = strtolower($custom_field['class']);
+					$this->CI->load->library($library);
 				}
 				$func = array($this->CI->$library, $custom_field['function']);
 			}
@@ -2742,8 +2742,12 @@ Class Form_builder {
 	 */
 	function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
+ 		$this->no_css_js = TRUE; // set no display so that it won't load the JS and CSS
+
  		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
 		$form = $this->render();
+
+		$this->no_css_js = FALSE; // then set it back to preven any issues with further use
 
 		if (empty($posted)) $posted = $_POST;
 		
@@ -3192,7 +3196,7 @@ Class Form_builder {
 	 */
 	protected function _render_js()
 	{
-		if ($this->_is_nested) return '';
+		if ($this->no_css_js) return '';
 
 		$_js = $this->get_js();
 		if (empty($_js)) return '';
@@ -3303,7 +3307,7 @@ Class Form_builder {
 	 */
 	protected function _apply_css()
 	{
-		if (empty($this->css) OR $this->_is_nested) return;
+		if (empty($this->css) OR $this->no_css_js) return;
 		
 		// static way but won't work if the form is ajaxed int'
 		// $css = $this->CI->load->get_vars('css');
