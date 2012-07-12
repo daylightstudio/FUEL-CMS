@@ -277,7 +277,7 @@ $lang['form_label_maintain_ratio'] = 'Maintain ratio';
 $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
-$lang['form_label_master_dimension'] = 'Master dimension';
+$lang['form_label_master_dim'] = 'Master dimension';
 $lang['form_label_unzip'] = 'Unzip zip files';
 $lang['assets_upload_action'] = 'Upload';
 $lang['assets_select_action'] = 'Select';
@@ -454,12 +454,12 @@ $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
 $lang['form_label_link'] = 'Link';
 $lang['form_label_group_id'] = 'Group';
+$lang['form_label_or_select'] = 'OR select';
 
 $lang['form_enum_option_yes'] = 'yes';
 $lang['form_enum_option_no'] = 'no';
 
 $lang['required_text'] = 'required fields';
-
 
 /*
 |--------------------------------------------------------------------------

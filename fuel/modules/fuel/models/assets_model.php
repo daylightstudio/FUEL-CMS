@@ -384,7 +384,7 @@ class Assets_model extends CI_Model {
 		$fields['maintain_ratio'] = array('label' => lang('form_label_maintain_ratio'), 'type' => 'checkbox', 'comment' => lang('assets_comment_aspect_ratio'), 'value' => '1');
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
-		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dimension'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
+		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dim'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		
 		return $fields;

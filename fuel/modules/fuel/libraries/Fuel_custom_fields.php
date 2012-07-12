@@ -294,7 +294,7 @@ class Fuel_custom_fields {
 		$data_params['maintain_ratio'] = (isset($params['maintain_ratio'])) ? (bool)$params['maintain_ratio'] : FALSE;
 		$data_params['width'] = (isset($params['width'])) ? (int)$params['width'] : '';
 		$data_params['height'] = (isset($params['height'])) ? (int)$params['height'] : '';
-		$data_params['master_dimension'] = (isset($params['master_dimension'])) ? $params['master_dimension'] : '';
+		$data_params['master_dim'] = (isset($params['master_dim'])) ? $params['master_dim'] : '';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
 		
 		if (isset($params['hide_image_options']))
@@ -377,11 +377,11 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
-	function template($params)
+	function template($params, $return_fields = FALSE)
 	{
 		$this->CI->load->library('parser');
 		$form_builder =& $params['instance'];
-		
+
 		$str = '';
 		if (empty($params['fields']))
 		{
@@ -438,7 +438,6 @@ class Fuel_custom_fields {
 		{
 			$params['display_sub_label']  = TRUE;
 		}
-		
 		if ($num == 0) $num = 1;
 		
 		$_f = array();
@@ -481,14 +480,16 @@ class Fuel_custom_fields {
 				{
 					$field_name_key = (!empty($form_builder->name_array)) ? 'name' : 'orig_name';
 					
+					$index = (!isset($params['index'])) ? $i : $params['index'];
+
 					// set file name field types to not use array syntax for name so they can be processed automagically
 					if (isset($field['type']) AND $field['type'] == 'file')
 					{
-						$field['name'] = $params[$field_name_key].'_'.$i.'_'.$key;
+						$field['name'] = $params[$field_name_key].'_'.$index.'_'.$key;
 					}
 					else
 					{
-						$field['name'] = $params[$field_name_key].'['.$i.']['.$key.']';
+						$field['name'] = $params[$field_name_key].'['.$index.']['.$key.']';
 					}
 					
 					// set the key to be the same of the parent... so post processing will work
@@ -500,9 +501,14 @@ class Fuel_custom_fields {
 					
 					// set placeholders in field ids for javascript to translate... must be last occurence of the digit
 					$field['id'] = preg_replace('#([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$#U', '$1[{index}]$2', $field['name']);
+					$field['id'] = $field['name'];
 					$field['id'] = Form::create_id($field['id']);
 					$field['display_label'] = $params['display_sub_label'];
-					
+					$field['data']['orig_name'] = $params['name'];
+					$field['data']['index'] = $index;
+					$field['data']['key'] = $key;
+					$field['data']['field_name'] = $params['key'];
+
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
 					//$field['id'] = FALSE;
 					$_f[$i][$key] = $field;
@@ -510,7 +516,6 @@ class Fuel_custom_fields {
 					$fields[$i]['__index__'] = $i;
 					$fields[$i]['__num__'] = $i + 1;
 					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']])) ? strip_tags($value[$params['title_field']]) : '';
-					
 				}
 				else
 				{
@@ -528,7 +533,13 @@ class Fuel_custom_fields {
 				}
 			}
 		}
-		
+
+		// if just return FIELDs then do it...
+		if ($return_fields OR !empty($params['return_fields']))
+		{
+			return $fields;
+		}
+
 		$vars['values'] = $params['value'];
 		$vars['fields_config'] = $params['fields'];
 		if ($repeatable)

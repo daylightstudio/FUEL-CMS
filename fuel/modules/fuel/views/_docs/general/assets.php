@@ -32,7 +32,7 @@ This field type provides a couple parameters to control things including:</p>
 	<li><strong>maintain_ratio</strong>: Determines whether to maintain the aspect ratio of the image if resized (Image Specific)</li>
 	<li><strong>width</strong>: The thumbnails width (Image Specific)</li>
 	<li><strong>height</strong>: The thumbnails height (Image Specific)</li>
-	<li><strong>master_dimension</strong>: The master dimension to use when creating the thumbnail (Image Specific)</li>
+	<li><strong>master_dim</strong>: The master dimension to use when creating the thumbnail (Image Specific)</li>
 </ul>
 
 <pre class="brush:php">
