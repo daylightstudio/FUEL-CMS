@@ -1306,13 +1306,14 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	function toolbar()
 	{
-		$this->fuel->load_language('fuel_inline_edit', $this->fuel->auth->user_lang());
-		$this->fuel->load_language('fuel_js', $this->fuel->auth->user_lang());
+		$user_lang = $this->fuel->auth->user_lang();
+		$this->fuel->load_language('fuel_inline_edit', $user_lang);
+		$this->fuel->load_language('fuel_js', $user_lang);
 	
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
 		$vars['tools'] = $this->toolbar_tools();
-		$vars['js_localized'] = json_lang('fuel/fuel_js', $this->fuel->auth->user_lang());
+		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
 
 		if ($this->fuel->config('fuel_mode') == 'views')
 		{
