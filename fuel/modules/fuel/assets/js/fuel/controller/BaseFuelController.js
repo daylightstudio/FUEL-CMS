@@ -168,7 +168,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 			$('#toggle_list').click(function(e){
-				_this._toggleRearrangeBtn();
+
+				//_this._toggleRearrangeBtn(); // don't need this because it is called in the redrawTable
 
 				$('#fuel_notification .rearrange').show();
 				$('#toggle_list').parent().addClass('active');
