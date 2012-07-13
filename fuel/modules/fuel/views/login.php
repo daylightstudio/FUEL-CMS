@@ -6,7 +6,7 @@
  	<title><?=$page_title?></title>
 	<?=css('fuel', FUEL_FOLDER)?>
 	<?php if (!empty($css)) : ?>
-	<?=css($css)?>
+	<?=$css?>
 	<?php endif; ?>
 	<script type="text/javascript">
 	<?=$this->load->module_view('fuel', '_blocks/fuel_header_jqx', array(), TRUE)?>

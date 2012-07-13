@@ -12,7 +12,7 @@ class Login extends CI_Controller {
 
 		$this->load->vars(array(
 			'js' => '', 
-			'css' => $this->fuel->config('xtra_css'), 
+			'css' => css($this->fuel->config('xtra_css')), // use CSS function here because of the asset library path changes below
 			'js_controller_params' => array(), 
 			'keyboard_shortcuts' => $this->fuel->config('keyboard_shortcuts')));
 
