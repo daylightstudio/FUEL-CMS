@@ -53,6 +53,7 @@
 					<li><a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-in Controller Development</a></li>
 					<li><a href="<?=user_guide_url('general/inline-editing')?>">Inline Editing</a></li>
 					<li><a href="<?=user_guide_url('general/pages-variables')?>">Pages &amp; Variables</a></li>
+					<li><a href="<?=user_guide_url('general/site-variables')?>">Site Variables</a></li>
 					<li><a href="<?=user_guide_url('general/template-parsing')?>">Template Parsing</a></li>
 					<li><a href="<?=user_guide_url('general/views')?>">Views</a></li>
 					<li><a href="<?=user_guide_url('general/layouts')?>">Layouts</a></li>
@@ -70,6 +71,7 @@
 					<li><a href="<?=user_guide_url('general/localization')?>">Localization</a></li>
 					<li><a href="<?=user_guide_url('general/constants')?>">FUEL Constants</a></li>
 					<li><a href="<?=user_guide_url('general/configs-settings')?>">Configs &amp; Settings</a></li>
+					<li><a href="<?=user_guide_url('general/logs')?>">Logs</a></li>
 					<li><a href="<?=user_guide_url('general/extending')?>">Extending FUEL</a></li>
 				</ul>
 			</td>

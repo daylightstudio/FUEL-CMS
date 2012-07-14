@@ -39,4 +39,7 @@ property which has the following options:</p>
 
 <p class="important">A writable <span class="file">assets/cache</span> folder must exist for asset caching to work. Also, cached asset files must be deleted either manually or by the CMS's <dfn>Clear Cache</dfn> utility.</p>
 
+<h2>Cache Clearing</h2>
+<p>Sometimes you may make changes and not see them reflected on the site. If so, you may need to clear your site's cache.
+To do that, click on the <strong>Page Cache</strong> menu item under manage and then click the <strong>Yes, clear cache</strong> button to clear your sites cache files.</p>
 

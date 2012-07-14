@@ -1,4 +1,8 @@
 <h1><strong>Tutorial:</strong> Creating Simple Modules</h1>
+<p class="important">This tutorial pertains to the 0.93 version of FUEL CMS (note the older looking screenshots). However, most of the content is still relevant and worth digesting.
+W
+</p>
+
 <p>The following is a tutorial on creating <a href="<?=user_guide_url('modules/simple')?>"><strong>simple</strong></a> modules in FUEL. 
 Don't let the word <em>simple</em> fool you though. You can still create pretty powerful modules without the need of creating your own views and controllers which is what <a href="<?=user_guide_url('modules/advanced')?>"><strong>advanced</strong></a> modules are for.
 We will actually create several modules to allow us to create articles and categorize them.
@@ -10,14 +14,14 @@ The last we will create is the categories module which links articles to categor
 
 <h4><strong>These are the steps in the following tutorial:</strong></h4>
 <ol>
-	<li><a href="#setup">Download and Setup</a></li>
-	<li><a href="#authors_module">The Authors Module</a></li>
-	<li><a href="#articles_module">The Articles Module</a></li>
-	<li><a href="#categories_module">The Categories Module</a></li>
-	<li><a href="#categories_to_articles">Associating Categories to Articles</a></li>
-	<li><a href="#permissions">Setting Up Permissions</a></li>
-	<li><a href="#polishing">A Little Polishing</a></li>
-	<li><a href="#views">Bringing it All Into View</a></li>
+  <li><a href="#setup">Download and Setup</a></li>
+  <li><a href="#authors_module">The Authors Module</a></li>
+  <li><a href="#articles_module">The Articles Module</a></li>
+  <li><a href="#categories_module">The Categories Module</a></li>
+  <li><a href="#categories_to_articles">Associating Categories to Articles</a></li>
+  <li><a href="#permissions">Setting Up Permissions</a></li>
+  <li><a href="#polishing">A Little Polishing</a></li>
+  <li><a href="#views">Bringing it All Into View</a></li>
 </ol>
 
 <h2 id="setup">Download and Setup</h2>
@@ -97,14 +101,14 @@ $config['modules']['authors'] = array();
 <a href="<?=user_guide_url('modules/simple')?>">click here</a>.</p>
 
 <p>Now login to fuel (e.g. http://mysite.com/fuel), and you should see the module on the left under the MODULES section.</p>
-<img src="<?=img_path('examples/authors_module.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/authors_module.png', 'user_guide')?>" class="screen" />
 
 <p class="important">If you do not see the module on the left, make sure you are logged in as an admin,
 or that you have the proper <a href="#permissions">permissions</a> to view that module.
 </p>
 
 <p>The form fields should look like the following:</p>
-<img src="<?=img_path('examples/authors_form.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/authors_form.png', 'user_guide')?>" class="screen" />
 
 <h2 id="articles_module">The Articles Module</h2>
 <p>The articles module will contain the content of the articles as well as some meta information including a foreign key to the authors table.</p>
@@ -162,7 +166,7 @@ class Articles_model extends Base_module_model {
     {
         parent::__construct('articles');
     }
-	
+  
     function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
     {
         $this->db->join('authors', 'authors.id = articles.author_id', 'left');
@@ -197,10 +201,10 @@ for the specified fields. The <dfn>content_formatted</dfn> field is a derived fi
 require_once(FUEL_PATH.'models/base_module_model.php');
 
 class Articles_model extends Base_module_model {
-	
-	public $foreign_keys = array('author_id' => 'authors_model');
-	public $parsed_fields = array('content', 'content_formatted');
-	
+  
+  public $foreign_keys = array('author_id' => 'authors_model');
+  public $parsed_fields = array('content', 'content_formatted');
+  
     function __construct()
     {
         parent::__construct('articles'); // table name
@@ -217,7 +221,7 @@ class Articles_model extends Base_module_model {
     function form_fields($values = array())
     {
         $fields = parent::form_fields($values);
-		// ******************* ADD CUSTOM FORM STUFF HERE ******************* 
+    // ******************* ADD CUSTOM FORM STUFF HERE ******************* 
         return $fields;
     }
 }
@@ -236,7 +240,7 @@ insert the date. MY_Model will by default hide field names of <kbd>date_added, e
 <p>Although we are not quite done with this model, we are going to go ahead and create the categories module. After we are done with that,
 we will revisit this model and associate categories to articles in the Articles_model <dfn>form_fields</dfn> method. Below is what the form should look like in FUEL at this point:</p>
 
-<img src="<?=img_path('examples/articles_form.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/articles_form.png','user_guide')?>" class="screen" />
 
 <h2 id="categories_module">The Categories Module</h2>
 <p>The categories module will be used to group articles together. You will be able to create categories separately 
@@ -276,26 +280,26 @@ Now add the following code to that file:
 require_once(FUEL_PATH.'models/base_module_model.php');
 
 class Categories_model extends Base_module_model {
-	
-	public $record_class = 'Category';
-	
-	function __construct()
-	{
-		parent::__construct('categories');
-	}
+  
+  public $record_class = 'Category';
+  
+  function __construct()
+  {
+    parent::__construct('categories');
+  }
 
-	
-	// cleanup category to articles
-	function on_after_delete($where)
-	{
-		$CI =& get_instance();
-		$CI->load->model('categories_to_articles_model');
-		if (is_array($where) && isset($where['id']))
-		{
-			$where = array('category_id' => $where['id']);
-			$CI->categories_to_articles_model->delete($where);
-		}
-	}
+  
+  // cleanup category to articles
+  function on_after_delete($where)
+  {
+    $CI =& get_instance();
+    $CI->load->model('categories_to_articles_model');
+    if (is_array($where) && isset($where['id']))
+    {
+      $where = array('category_id' => $where['id']);
+      $CI->categories_to_articles_model->delete($where);
+    }
+  }
 
 }
 
@@ -319,27 +323,27 @@ Now add the following code to that file:
 
 class Categories_to_articles_model extends MY_Model {
 
-	public $record_class = 'Category_to_article';
+  public $record_class = 'Category_to_article';
 
-	function __construct()
-	{
-		parent::__construct('categories_to_articles');
-	}
+  function __construct()
+  {
+    parent::__construct('categories_to_articles');
+  }
 
-	function _common_query()
-	{
+  function _common_query()
+  {
         $this->db->select('categories_to_articles.*, articles.title, categories.name AS category_name, articles.author_id, categories.published');
         $this->db->join('articles', 'categories_to_articles.article_id = articles.id', 'left');
         $this->db->join('categories', 'categories_to_articles.category_id = categories.id', 'left');
         $this->db->join('authors', 'authors.id = articles.author_id', 'left');
-	}
+  }
 
 }
 
 class Category_to_article_model extends Data_record {
-	public $category_name = '';
-	public $title = '';
-	public $author_id;
+  public $category_name = '';
+  public $title = '';
+  public $author_id;
 }
 </pre>
 <p>Similar to the <dfn>Categories_model</dfn>, we need to specify the record_class name property. 
@@ -356,7 +360,7 @@ $config['modules']['categories'] = array();
 </pre>
 
 <p>The categories form should look like the screen below:</p>
-<img src="<?=img_path('examples/categories_form.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/categories_form.png', 'user_guide')?>" class="screen" />
 
 <h2 id="categories_to_articles">Associating Categories to Articles</h2>
 <p>Now that the category and the categories to articles models are created, we need to add a field to the article models form to allow you to associate one or more
@@ -366,22 +370,22 @@ categories to an article. So go back to the articles model and add the following
 ...
 function form_fields($values = array())
 {
-	
-	// ******************* NEW RELATED CATEGORY FIELD BEGIN ******************* 
-	$related = array('categories' => 'categories_to_articles_model');
-	// ******************* NEW RELATED CATEGORY FIELD END ******************* 
+  
+  // ******************* NEW RELATED CATEGORY FIELD BEGIN ******************* 
+  $related = array('categories' => 'categories_to_articles_model');
+  // ******************* NEW RELATED CATEGORY FIELD END ******************* 
 
-	$fields = parent::form_fields($values, $related);
+  $fields = parent::form_fields($values, $related);
 
-	$CI =& get_instance();
-	$CI->load->model('authors_model');
-	$CI->load->model('categories_model');
-	$CI->load->model('categories_to_articles_model');
+  $CI =& get_instance();
+  $CI->load->model('authors_model');
+  $CI->load->model('categories_model');
+  $CI->load->model('categories_to_articles_model');
 
-	$author_options = $CI->authors_model->options_list('id', 'name', array('published' => 'yes'));
-	$fields['author_id'] = array('type' => 'select', 'options' => $author_options);
+  $author_options = $CI->authors_model->options_list('id', 'name', array('published' => 'yes'));
+  $fields['author_id'] = array('type' => 'select', 'options' => $author_options);
 
-	return $fields;
+  return $fields;
 }
 ...
 </pre>
@@ -397,21 +401,21 @@ save data used for a many to many lookup table:</p>
 ...
 function on_after_save($values)
 {
-	$data = (!empty($this->normalized_save_data['categories'])) ? $this->normalized_save_data['categories'] : array();
-	$this->save_related('categories_to_articles_model', array('article_id' => $values['id']), array('category_id' => $data));
+  $data = (!empty($this->normalized_save_data['categories'])) ? $this->normalized_save_data['categories'] : array();
+  $this->save_related('categories_to_articles_model', array('article_id' => $values['id']), array('category_id' => $data));
 }
 ...
 </pre>
 
 <h2 id="permissions">Creating the Permissions</h2>
-<img src="<?=img_path('examples/manage_permissions.png', 'user_guide')?>" class="screen img_right" />
+<img src="<?=img_path('screens/manage_permissions.png', 'user_guide')?>" class="screen img_right" />
 <p>Now that the modules are created, you will probably want to allow others to use them. To do this,
 you will need to create permissions so users can be allowed to access those modules in FUEL.
 To do that, </p>
 <ol>
-	<li>click on the permissions link on the left and create the permission <dfn>authors</dfn>. This will create a permission for users to be subscribed to. </li>
-	<li>To assign the permission to a user, click the users link on the left menu, then select a user. </li>
-	<li>Once in the edit user screen, check the box for the new authors permission you just created.</li>
+  <li>click on the permissions link on the left and create the permission <dfn>authors</dfn>. This will create a permission for users to be subscribed to. </li>
+  <li>To assign the permission to a user, click the users link on the left menu, then select a user. </li>
+  <li>Once in the edit user screen, check the box for the new authors permission you just created.</li>
 </ol>
 <p>Repeat these step to create the articles permissions.</p>
 
@@ -423,9 +427,9 @@ To do that, </p>
 <p>To improve the authors module, we are going to do the following.</p>
 
 <ol>
-	<li>Add required fields</li>
-	<li>Add image upload functionality to the form</li>
-	<li>Add an avatar_image method to the record object</li>
+  <li>Add required fields</li>
+  <li>Add image upload functionality to the form</li>
+  <li>Add an avatar_image method to the record object</li>
 </ol>
 
 <h4>Required Fields</h4>
@@ -434,8 +438,8 @@ To do that, </p>
 <pre class="brush: php">
 ... 
 class Authors_model extends Base_module_model {
-	
-	public $required = array('name', 'email');
+  
+  public $required = array('name', 'email');
 
 ...
 </pre>
@@ -447,12 +451,12 @@ class Authors_model extends Base_module_model {
 ... 
 function form_fields($values = array())
 {
-	$fields = parent::form_fields($values);
-	
-	$upload_path = assets_server_path('authors/', 'images');
-	$fields['avatar_upload'] = array('type' => 'file', 'upload_path' => $upload_path, 'overwrite' => TRUE);
-	$fields['published']['order'] = 1000;
-	return $fields;
+  $fields = parent::form_fields($values);
+  
+  $upload_path = assets_server_path('authors/', 'images');
+  $fields['avatar_upload'] = array('type' => 'file', 'upload_path' => $upload_path, 'overwrite' => TRUE);
+  $fields['published']['order'] = 1000;
+  return $fields;
 }
 ...
 </pre>
@@ -469,11 +473,11 @@ The <kbd>upload_path</kbd> array parameter tells FUEL where to upload the file. 
 <pre class="brush: php">
 ... 
 class Author_model extends Data_record {
-	
-	public function get_avatar_image()
-	{
-		return '&lt;img src="'.img_path($this->avatar).'" /&gt;';
-	}
+  
+  public function get_avatar_image()
+  {
+    return '&lt;img src="'.img_path($this->avatar).'" /&gt;';
+  }
 }
 ...
 </pre>
@@ -483,12 +487,12 @@ class Author_model extends Data_record {
 <h3>Polishing the Articles Module</h3>
 <p>To improve the articles module, we are going to do the following:</p>
 <ol>
-	<li>Add required fields</li>
-	<li>Integrate with the authors module</li>
-	<li>Add a tree method to the model</li>
-	<li>Improve the form</li>
-	<li>Add an on_after_delete hook</li>
-	<li>Add to the record object</li>
+  <li>Add required fields</li>
+  <li>Integrate with the authors module</li>
+  <li>Add a tree method to the model</li>
+  <li>Improve the form</li>
+  <li>Add an on_after_delete hook</li>
+  <li>Add to the record object</li>
 </ol>
 
 <h4>Required Fields</h4>
@@ -498,8 +502,8 @@ class Author_model extends Data_record {
 <pre class="brush: php">
 ... 
 class Articles_model extends Base_module_model {
-	
-	public $required = array('title', 'content');
+  
+  public $required = array('title', 'content');
 
 ...
 </pre>
@@ -528,7 +532,7 @@ function form_fields($values = array())
 }
 ... 
 </pre>
-<img src="<?=img_path('examples/add_edit.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/add_edit.png', 'user_guide')?>" class="screen" />
 
 <h4>The Tree Method</h4>
 <p>FUEL allows you to create a tree method that will display the list data in a hierarchical tree format as opposed to the list view.
@@ -539,29 +543,29 @@ For the articles module, we will create a tree view that uses the category names
 ...
 function tree()
 {
-	$CI =& get_instance();
-	$CI->load->model('categories_model');
-	$CI->load->model('categories_to_articles_model');
+  $CI =& get_instance();
+  $CI->load->model('categories_model');
+  $CI->load->model('categories_to_articles_model');
 
-	$return = array();
-	$categories = $CI->categories_model->find_all(array(), 'id asc');
-	$categories_to_articles = $CI->categories_to_articles_model->find_all('', 'categories.name asc');
+  $return = array();
+  $categories = $CI->categories_model->find_all(array(), 'id asc');
+  $categories_to_articles = $CI->categories_to_articles_model->find_all('', 'categories.name asc');
 
-	$cat_id = -1;
-	foreach($categories as $category)
-	{
-		$cat_id = $category->id;
-		$return[] = array('id' => $category->id, 'label' => $category->name, 'parent_id' => 0, 'location' => fuel_url('categories/edit/'.$category->id));
-	}
-	$i = $cat_id +1;
+  $cat_id = -1;
+  foreach($categories as $category)
+  {
+    $cat_id = $category->id;
+    $return[] = array('id' => $category->id, 'label' => $category->name, 'parent_id' => 0, 'location' => fuel_url('categories/edit/'.$category->id));
+  }
+  $i = $cat_id +1;
 
-	foreach($categories_to_articles as $val)
-	{
-		$attributes = ($val->published == 'no') ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-		$return[$i] = array('id' => $i, 'label' => $val->title, 'parent_id' => $val->category_id, 'location' => fuel_url('articles/edit/'.$val->article_id), 'attributes' =>  $attributes);
-		$i++;
-	}
-	return $return;
+  foreach($categories_to_articles as $val)
+  {
+    $attributes = ($val->published == 'no') ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+    $return[$i] = array('id' => $i, 'label' => $val->title, 'parent_id' => $val->category_id, 'location' => fuel_url('articles/edit/'.$val->article_id), 'attributes' =>  $attributes);
+    $i++;
+  }
+  return $return;
 }
 ... 
 </pre>
@@ -569,7 +573,7 @@ function tree()
 root level category for uncategorized items.</p>
 
 <p>The tree method will render like the following in the FUEL admin:</p>
-<img src="<?=img_path('examples/articles_tree.png', 'user_guide')?>" class="screen" />
+<img src="<?=img_path('screens/articles_tree.png', 'user_guide')?>" class="screen" />
 
 
 <h4>Adding an After Delete Hook</h4>
@@ -584,7 +588,7 @@ Below is a method we add to the Articles_model class:
 // cleanup articles from categories to articles table
 function on_after_delete($where)
 {
-	$this->delete_related('categories_to_articles_model', 'article_id', $where);
+  $this->delete_related('categories_to_articles_model', 'article_id', $where);
 }
 ... 
 </pre>
@@ -599,11 +603,11 @@ associated with the table record. This means you can access authors like this: <
 If we were to do this manually for the Article_model class, it would look like the following:.</p>
 <pre class="brush: php">
 class Article_model extends Data_record {
-	
-	function get_author()
-	{
-		return $this->lazy_load('author_id', 'authors_model');
-	}
+  
+  function get_author()
+  {
+    return $this->lazy_load('author_id', 'authors_model');
+  }
 }
 </pre>
 <p>Similarly, we add the following <dfn>foreign_keys</dfn> to the categories_to_articles_model:</p>
@@ -611,7 +615,7 @@ class Article_model extends Data_record {
 class Categories_to_articles_model extends MY_Model {
  
     public $record_class = 'Category_to_article';
-	public $foreign_keys = array('category_id' => 'categories_model', 'article_id' => 'articles_model', 'author_id' => 'authors_model');
+  public $foreign_keys = array('category_id' => 'categories_model', 'article_id' => 'articles_model', 'author_id' => 'authors_model');
 ...
 </pre>
 
@@ -621,9 +625,9 @@ class Categories_to_articles_model extends MY_Model {
 <h3>Polishing the Categories Module</h3>
 <p>To improve the categories module, we are going to add required fields, add an on_after_delete hook and improve model validation.</p>
 <ol>
-	<li>Add required fields</li>
-	<li>Add an on_after_delete hook</li>
-	<li>Improve model validation</li>
+  <li>Add required fields</li>
+  <li>Add an on_after_delete hook</li>
+  <li>Improve model validation</li>
 </ol>
 
 
@@ -633,8 +637,8 @@ class Categories_to_articles_model extends MY_Model {
 <pre class="brush: php">
 ... 
 class Categories_model extends Base_module_model {
-	
-	public $required = array('name');
+  
+  public $required = array('name');
 
 ...
 </pre>
@@ -647,7 +651,7 @@ category associated with it in the <dfn>categories_to_articles</dfn> table. Belo
 // cleanup articles from categories to articles table
 function on_after_delete($where)
 {
-	$this->delete_related('categories_to_articles_model', 'category_id', $where);
+  $this->delete_related('categories_to_articles_model', 'category_id', $where);
 }
 ... 
 </pre>
@@ -665,15 +669,15 @@ either the <dfn>is_editable</dfn> or <dfn>is_new</dfn> validation.
 ... 
 function on_before_validate($values)
 {
-	if (!empty($values['id']))
-	{
-		$this->add_validation('name', array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', 'name'), array('name', $values['id']));
-	}
-	else
-	{
-		$this->add_validation('name', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', 'name'), 'name');
-	}
-	return $values;
+  if (!empty($values['id']))
+  {
+    $this->add_validation('name', array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', 'name'), array('name', $values['id']));
+  }
+  else
+  {
+    $this->add_validation('name', array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', 'name'), 'name');
+  }
+  return $values;
 }
 ...
 </pre>
@@ -692,18 +696,18 @@ Although we could use controllers to marshall the data to the views, for our exa
 $category = $CI-&gt;uri-&gt;segment(2);
 if (!empty($category))
 {
-	$CI-&gt;load-&gt;model('categories_model');
-	
-	// remember, all categories that have a published value of 'no' will automatically be excluded
-	$category = $CI-&gt;categories_model-&gt;find_one_by_name($category);
-	$articles = $category-&gt;articles;
+  $CI-&gt;load-&gt;model('categories_model');
+  
+  // remember, all categories that have a published value of 'no' will automatically be excluded
+  $category = $CI-&gt;categories_model-&gt;find_one_by_name($category);
+  $articles = $category-&gt;articles;
 }
 else
 {
-	$CI-&gt;load-&gt;model('articles_model');
+  $CI-&gt;load-&gt;model('articles_model');
 
-	// remember, all articles that have a published value of 'no' will automatically be excluded
-	$articles = $CI-&gt;articles_model-&gt;find_all();
+  // remember, all articles that have a published value of 'no' will automatically be excluded
+  $articles = $CI-&gt;articles_model-&gt;find_all();
 }
 ?&gt;
 

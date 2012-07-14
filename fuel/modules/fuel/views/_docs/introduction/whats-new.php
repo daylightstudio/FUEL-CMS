@@ -1,18 +1,17 @@
 <h1>What's New with FUEL CMS 1.0</h1>
-<p><a href="#">A lot...</a>.</p>
+<p>A lot...</p>
 
 <h2>WARNINGS!!!</h2>
 <ul>
 	<li>Page variable data is now saved in a JSON format</li>
 	<li>Several tables have been updated</li>
-	<li>User passwords now use a stronger encryption and requires a password reset</li>
 </ul>
 
 <h2>General</h2>
 <ul>
 	<li>Extracted much of the controller functionality into library classes so you can now have access to methods like $this->fuel->backup->do_backup(); or $this->fuel->pages->create();</li>
 	<li>Moved all non-extended classes and helpers into the modules/fuel folder to cleanup the application directory some</li>
-	<li>Separated out all modules except the fuel module into their own development repos</li>
+	<li>Separated out all modules except the fuel module into their own <a href="https://github.com/daylightstudio" target="_blank">GitHub repos</a></li>
 </ul>
 
 
