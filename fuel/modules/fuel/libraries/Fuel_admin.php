@@ -1329,6 +1329,7 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
 		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : uri_path());
 		$vars['init_params']['basePath'] = WEB_PATH;
+		$vars['init_params']['cookiePath'] = $this->CI->fuel->config('fuel_cookie_path');
 		$vars['init_params']['imgPath'] = img_path('', 'fuel'); 
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');

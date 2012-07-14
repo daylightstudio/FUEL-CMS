@@ -888,7 +888,6 @@ class Fuel_page extends Fuel_base_library {
 			return $this->remove_markers($output);
 		} 
 		
-		$this->CI->load->library('session');
 		$this->CI->load->helper('convert');
 		
 		
@@ -985,11 +984,6 @@ class Fuel_page extends Fuel_base_library {
 		$marker = $this->markers[$key];
 		if (empty($marker)) return '';
 		extract($marker);
-		if (is_fuelified())
-		{
-			echo $this->CI->load->get_vars('fuelified');
-		}
-
 
 		// fix for pages permission
 		$perm = ($module == 'pagevariables') ? 'pages' : $module;

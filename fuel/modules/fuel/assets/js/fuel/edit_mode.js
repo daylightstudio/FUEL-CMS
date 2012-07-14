@@ -6,6 +6,7 @@ if (fuel == undefined) var fuel = {};
 	var pageId = initObj.pageId;
 	var pageLocation = initObj.pageLocation;
 	var basePath = initObj.basePath;
+	var cookiePath = initObj.cookiePath;
 	var imgPath = initObj.imgPath;
 	var cssPath = initObj.cssPath;
 	var jsPath = initObj.jsPath;
@@ -245,9 +246,6 @@ if (fuel == undefined) var fuel = {};
 			var closeEditor = function(){
 				
 				// turn off inline editing mode
-				//fuel.inlineEditing(false, basePath);
-				jQuery.cookie('fuel_temp_inline', null, {path: '/'});
-				
 				if (activeEditor){
 
 					var iframe = activeEditor.find('iframe')[0];
@@ -400,7 +398,7 @@ if (fuel == undefined) var fuel = {};
 
 				//elem.text('Show Editable Areas');
 				elem.parent('li').removeClass('active');
-				$.supercookie('fuel_bar', 'show_editable_areas', '0', {path: basePath});
+				$.supercookie('fuel_bar', 'show_editable_areas', '0', {path: cookiePath});
 			}
 
 			var showEditors = function(){
@@ -413,7 +411,7 @@ if (fuel == undefined) var fuel = {};
 				editorsOn = true;
 				//elem.text('Hide Editable Areas');
 				elem.parent('li').addClass('active');
-				$.supercookie('fuel_bar', 'show_editable_areas', '1', {path: basePath});
+				$.supercookie('fuel_bar', 'show_editable_areas', '1', {path: cookiePath});
 			}
 			
 			var toggleEditors = function(shown){
@@ -488,7 +486,7 @@ if (fuel == undefined) var fuel = {};
 
 				fuelBarOn = false;
 				elem.parent('li').removeClass('active');
-				$.supercookie('fuel_bar', 'show_fuel_bar', '0', {path: basePath});
+				$.supercookie('fuel_bar', 'show_fuel_bar', '0', {path: cookiePath});
 			}
 
 			var showFuelBar = function(animate){
@@ -501,7 +499,7 @@ if (fuel == undefined) var fuel = {};
 				$('.__fuel_edit_bar__').width();
 				fuelBarOn = true;
 				elem.parent('li').addClass('active');
-				$.supercookie('fuel_bar', 'show_fuel_bar', '1', {path: basePath});
+				$.supercookie('fuel_bar', 'show_fuel_bar', '1', {path: cookiePath});
 			}
 			$('#__fuel_page_toolbar_toggle__').click(
 				function(){

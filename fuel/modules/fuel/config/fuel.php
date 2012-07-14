@@ -73,7 +73,7 @@ $config['max_recent_pages'] = 5;
 $config['saved_page_state_max'] = 0;
 
 // provide a cookie path... different from the CI config if you need it (default is same as CI config)
-$config['fuel_cookie_path'] = '/';
+$config['fuel_cookie_path'] = WEB_PATH;
 
 // external css file for additional styles possibly needed for 3rd party integration and customizing.
 // must exist in the assets/css file and not the fuel/assets/css folder

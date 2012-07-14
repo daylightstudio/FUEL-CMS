@@ -47,7 +47,6 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		parent::__construct($params);
 
-		$this->CI->load->library('session');
 		$this->CI->load->helper('cookie');
 		
 		// needs to be loaded so that we can use the site name for namespacing
@@ -112,7 +111,7 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function set_valid_user($valid_user)
 	{
-		$this->CI->load->helper('string');
+		$this->CI->load->library('session');
 		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
 	}
 
@@ -126,6 +125,10 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function valid_user()
 	{
+		if (!isset($this->CI->session))
+		{
+			$this->CI->load->library('session');
+		}
 		return ($this->CI->session->userdata($this->get_session_namespace())) ? $this->CI->session->userdata($this->get_session_namespace()) : NULL;
 	}
 
@@ -144,6 +147,10 @@ class Fuel_auth extends Fuel_base_library {
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
 		$user_data[$key] = $value;
+		if (!isset($this->CI->session))
+		{
+			$this->CI->load->library('session');
+		}
 		$this->CI->session->set_userdata($session_key, $user_data);
 	}
 	
@@ -181,7 +188,13 @@ class Fuel_auth extends Fuel_base_library {
 	function get_session_namespace()
 	{
 		$key = 'fuel_'.md5(FCPATH); // unique to the site installation
-		if (!$this->CI->session->userdata($key)) $this->CI->session->set_userdata($key, array());
+		if (isset($this->CI->session))
+		{
+			if (!$this->CI->session->userdata($key))
+			{
+				$this->CI->session->set_userdata($key, array());
+			}
+		}
 		return $key;
 	}
 	

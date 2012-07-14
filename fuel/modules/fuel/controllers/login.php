@@ -79,7 +79,8 @@ class Login extends CI_Controller {
 							'name' => $this->fuel->auth->get_fuel_trigger_cookie_name(), 
 							'value' => serialize(array('id' => $this->fuel->auth->user_data('id'), 'language' => $this->fuel->auth->user_data('language'))),
 							'expire' => 0,
-							'path' => WEB_PATH
+							//'path' => WEB_PATH
+							'path' => $this->fuel->config('fuel_cookie_path')
 						);
 
 						set_cookie($config);

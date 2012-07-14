@@ -25,10 +25,10 @@ class Logout extends CI_Controller {
 			$this->load->helper('convert');
 			
 			$redirect = uri_safe_decode($segment);
-			if ($segment == 'page_router')
-			{
-				$segment = $this->fuel->config('default_home_view');
-			}
+		}
+		if ($segment == 'page_router' OR $redirect == 'page_router')
+		{
+			$redirect = $this->fuel->config('default_home_view');
 		}
 		redirect($redirect);
 	}
