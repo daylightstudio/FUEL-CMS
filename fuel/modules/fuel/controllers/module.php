@@ -1613,7 +1613,6 @@ class Module extends Fuel_base_controller {
 				$params['key'] = $field_name;
 				$params['value'] = array();
 				$params['value'][0] = $selected;
-				$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 				$this->form_builder->name_array = $field_name;
 				//$fb->set_field_values();
 				$params['instance'] =& $this->form_builder;
