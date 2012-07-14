@@ -69,6 +69,7 @@ dave@thedaylightstudio.com
 					parseAttribute(this, 'for');
 				} else {
 					parseAttribute(this, 'id');
+					$(this).attr('data-index', i);
 				}
 			})
 			

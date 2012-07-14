@@ -48,7 +48,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	var modalId = '__FUEL_modal__';
 	if (!cssClass) cssClass = '';
 	var $context = $('body', window.document);
-	if (!$('#' + modalId, $context).size()){
+	if (!$('#' + modalId, $context).length){
 		var modalHTML = '<div id="' + modalId + '"><div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div></div>';
 	} else {
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
@@ -92,7 +92,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 
 		if (autoResize){
 			setTimeout(function(){
-					// if ($('#login', contentDoc).size()){
+					// if ($('#login', contentDoc).length){
 					// 	var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
 					// } else {
 					// 	var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc) + 30;
@@ -133,13 +133,13 @@ fuel.getModule = function(context){
 		return window.fuel.module;
 	}
 	if (context == undefined) context = null;
-	var module = ($('.__fuel_module__', context).size()) ? $('.__fuel_module__', context).val() : null;
+	var module = ($('.__fuel_module__', context).length) ? $('.__fuel_module__', context).val() : null;
 	return module;
 }
 
 fuel.getModuleURI = function(context){
 	if (context == undefined) context = null;
-	var module = ($('.__fuel_module_uri__', context).size()) ? $('.__fuel_module_uri__', context).val() : null;
+	var module = ($('.__fuel_module_uri__').length) ? $('.__fuel_module_uri__').val() : null;
 	return module;
 }
 
@@ -159,7 +159,7 @@ fuel.windowLevel = function(){
 
 fuel.calcHeight = function(context){
 	var height = 0;
-	if ($('#login', context).size()){
+	if ($('#login', context).length){
 		var elems = '#login'; 
 	} else {
 		var elems = '#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions';

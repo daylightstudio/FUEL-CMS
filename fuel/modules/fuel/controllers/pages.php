@@ -153,7 +153,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 	
-	function _form($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
+	function _form($id = NULL, $fields = NULL)
 	{
 		
 		$this->load->library('form_builder');
@@ -183,6 +183,9 @@ class Pages extends Module {
 		
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields($saved);
+		$common_fields = $this->_common_fields();
+		$fields = array_merge($fields, $common_fields);
+
 		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			unset($fields['published']);
@@ -212,24 +215,6 @@ class Pages extends Module {
 		if (!empty($field_values['location'])) $this->preview_path = $field_values['location'];
 		
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
-		
-		// not inline edited
-		if (!$display_normal_submit_cancel)
-		{
-			$this->form_builder->submit_value = NULL;
-			$this->form_builder->cancel_value = NULL;
-			//$this->form_builder->name_array = '__fuel_field__'.$this->module_name.'_'.$id;
-			$fields['__fuel_inline_action__'] = array('type' => 'hidden');
-			$fields['__fuel_inline_action__']['class'] = '__fuel_inline_action__';
-			$fields['__fuel_inline_action__']['value'] = (empty($id)) ? 'create' : 'edit';
-
-			$fields['__fuel_module__'] = array('type' => 'hidden');
-			$fields['__fuel_module__']['value'] = $this->module;
-			$fields['__fuel_module__']['class'] = '__fuel_module__';
-			$this->form_builder->name_prefix = '__fuel_field__'.$this->module.'_'.(empty($id) ? 'create' : $id);
-			$this->form_builder->css_class = 'inline_form';
-			
-		}
 		
 		// create page form fields
 		$this->form_builder->form->validator = &$this->page->validator;
@@ -792,21 +777,26 @@ class Pages extends Module {
 	function refresh_field()
 	{
 
-		if (is_ajax() AND !empty($_POST))
+		if (is_ajax() AND (!empty($_POST) OR !empty($_GET)))
 		{
-			$layout =  $this->input->post('layout', TRUE);
-			$values = $this->input->post('values', TRUE);
-			$layout_obj = $this->fuel->layout->get($layout);
+			$layout =  $this->input->get_post('layout', TRUE);
+			$values = $this->input->get_post('values', TRUE);
+			if (empty($layout)) return;
+
+			$layout_obj = $this->fuel->layouts->get($layout);
 			$fields = $layout_obj->fields();
-			$field = $this->input->post('field', TRUE);
+			$field = $this->input->get_post('field', TRUE);
+
 			$field_key = end(explode('vars--', $field));
+
 			if (!isset($fields[$field_key])) return;
-			
+
 			$field_id = $this->input->post('field_id', TRUE);
 			$selected = $this->input->post('selected', TRUE);
 			
 			$this->load->library('form_builder');
-			
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
 			// for multi select
 			if (is_array($values))
 			{
@@ -814,17 +804,48 @@ class Pages extends Module {
 				$selected = array_merge($values, $selected);
 			}
 			
-			if (!empty($selected)) $fields[$field_key]['value'] = $selected;
-			$fields[$field_key]['name'] = $field_id;
-			
-			// if the field is an ID, then we will do a select instead of a text field
-			if (isset($fields[$this->model->key_field()]))
-			{
-				$fields['id']['type'] = 'select';
-				$fields['id']['options'] = $this->model->options_list();
-			}
+			$output = '';
 
-			$output = $this->form_builder->create_field($fields[$field_key]);
+			// if template/nested field types, then we need to look at the sub field
+			if ($fields[$field_key]['type'] == 'template')
+			{
+				//$fields['return_fields'] = TRUE;
+				require_once(FUEL_PATH.'libraries/Fuel_custom_fields.php');
+				$fuel_cf = new Fuel_custom_fields();
+				$index = $this->input->get_post('index', TRUE);
+				$key = $this->input->get_post('key', TRUE);
+				$field_name = $this->input->get_post('field_name', TRUE);
+				$params = $fields[$field_key];
+				$params['index'] = $index;
+				$params['name'] = $field_name;
+				$params['key'] = $field_name;
+				$params['value'] = array();
+				$params['value'][0] = $selected;
+				$this->form_builder->name_prefix = 'vars';
+				$this->form_builder->name_array = $field_name;
+				//$fb->set_field_values();
+				$params['instance'] =& $this->form_builder;
+				$sub_fields = $fuel_cf->template($params, TRUE);
+				if (!empty($sub_fields[0][$key]))
+				{
+					$output = $sub_fields[0][$key];
+				}
+				
+			}
+			else
+			{
+				if (!empty($selected)) $fields[$field_key]['value'] = $selected;
+				$fields[$field_key]['name'] = $field_id;
+				
+				// if the field is an ID, then we will do a select instead of a text field
+				if (isset($fields[$this->model->key_field()]))
+				{
+					$fields['id']['type'] = 'select';
+					$fields['id']['options'] = $this->model->options_list();
+				}
+				$output = $this->form_builder->create_field($fields[$field_key]);	
+			}
+			
 			$this->output->set_output($output);
 		}
 	}

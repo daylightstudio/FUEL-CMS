@@ -329,9 +329,8 @@ fuel.fields.asset_field = function(context, options){
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
-				
 				if ($(this).is('.save')){
-					var $activeField = $('#' + activeField);
+					var $activeField = $('#' + activeField, iframeContext);
 					var assetVal = jQuery.trim($activeField.val());
 					var selectedVal = $assetSelect.val();
 					var separator = $activeField.attr('data-separator');
@@ -460,29 +459,42 @@ fuel.fields.inline_edit_field = function(context){
 			module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
 		}
 		var parentModule = fuel.getModuleURI(context);
-		
 		var url = jqx.config.fuelPath + '/' + module + '/inline_';
 		
 		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
 		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		
-		var refreshField = function(){
+		var refreshField = function($field){
+			// redeclared here in case $field is set
+			var fieldId = $field.attr('id');
+			var $form = $field.closest('form');
 
 			// if no value added,then no need to refresh
 			if (!selected) return;
 			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
 			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:selected};
-							
+
+
 			// fix for pages... a bit kludgy
-			if (module == 'pages'){
-				params['layout'] = $('#layout').val();
+			if (parentModule == 'pages'){
+				params.layout = $('#layout').val();
 			}
+			
+			// for template fields
+			if ($field.data('orig_name')) {
+				params.field = $field.data('orig_name');
+			}
+			params.index = $field.data('index');
+			params.key = $field.data('key');
+			params.field_name = $field.data('field_name');
 
 			$.post(refreshUrl, params, function(html){
 				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
 				fuel.notifications();
 				$modal.jqmHide();
-				$('#' + fieldId, context).replaceWith(html);
+				if (html.length){
+					$('#' + fieldId, context).replaceWith(html);
+				}
 				
 				// already inited with custom fields
 				
@@ -491,7 +503,7 @@ fuel.fields.inline_edit_field = function(context){
 				// refresh field with formBuilder jquery
 				
 				fuel.fields.multi_field(context)
-				
+				$('#form').formBuilder().initialize($('#' + fieldId, context));
 				$('#' + fieldId, context).change(function(){
 					changeField($(this));
 				});
@@ -500,7 +512,7 @@ fuel.fields.inline_edit_field = function(context){
 		}
 		
 		var changeField = function($this){
-			if (($this.val() == '' || $this.attr('xmultiple')) || $this.find('option').length == 0){
+			if ($this.val() == '' || $this.find('option').length == 0){
 				if ($this.is('select') && $this.find('option').length == 0){
 					$this.hide();
 				}
@@ -511,6 +523,7 @@ fuel.fields.inline_edit_field = function(context){
 		}
 		
 		$('.add_inline_button', context).unbind().click(function(e){
+			$field = $(this).parent().children(':first');
 			editModule($(this).attr('href'), null, refreshField);
 			$(context).scrollTo('body', 800);
 			return false;
@@ -537,7 +550,8 @@ fuel.fields.inline_edit_field = function(context){
 				} else {
 					var url = $(this).attr('href') + editIds[0];
 				}
-				editModule(url, null, refreshField);
+				$field = $(this).parent().children(':first');
+				editModule(url, null, function(){ refreshField($field)});
 			}
 			return false;
 		});
