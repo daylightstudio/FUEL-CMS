@@ -369,10 +369,15 @@ class Fuel_custom_fields {
 		{
 			$linked_class = 'linked';
 			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$linked_class : $linked_class;
+			$fields = $form_builder->fields();
+			$linked_to = $params['linked_to'];
+			$linked_to = (!empty($fields[$params['linked_to']])) ? $fields[$params['linked_to']]['name'] : $params['linked_to'];
+			unset($fields);
 			$str .= "<div class=\"linked_info\" style=\"display: none;\">";
-			$str .= json_encode($params['linked_to']);
+			$str .= json_encode($linked_to);
 			$str .= "</div>\n";
 		}
+		$params['type'] = 'text';
 		$str .= $form_builder->create_text($params);
 		return $str;
 	}
