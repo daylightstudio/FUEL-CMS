@@ -568,11 +568,18 @@ fuel.fields.linked_field = function(context){
 	
 	var _this = this;
 	var module = fuel.getModule();
+
+	var getFieldId = function(refId, context){
+		var $key = $('input[data-key="' + refId + '"]', context);
+		var id = ($key.length) ? $key.attr('id') : $('#' + refId, context).attr('id');
+		return id;
+	}
 	
 	// needed for enclosure
 	var bindLinkedKeyup = function(slave, master, func){
-		var slaveId = fuel.getFieldId(slave, context);
-		var masterId = fuel.getFieldId(master, context);
+		var slaveId = getFieldId(slave, context);
+		var masterId = getFieldId(master, $('#' + slaveId).closest('.form'));
+
 		if ($('#' + slaveId).val() == ''){
 			$('#' + masterId).keyup(function(e){
 				// for most common cases
@@ -629,8 +636,9 @@ fuel.fields.linked_field = function(context){
 	}
 	
 	$('.linked', context).each(function(i){
+
 		// go all the way up to the value containing element because error messages insert HTML that won't allow us to use prev()
-		var linkedInfo = $(this).parents('.value').find('.linked_info').text();
+		var linkedInfo = $(this).closest('.value').find('.linked_info').text();
 		if (linkedInfo.length){
 			bindLinked($(this).attr('id'), eval('(' + linkedInfo + ')'));
 		}
