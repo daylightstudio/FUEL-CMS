@@ -371,7 +371,11 @@ class Fuel_custom_fields {
 			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$linked_class : $linked_class;
 			$fields = $form_builder->fields();
 			$linked_to = $params['linked_to'];
-			$linked_to = (!empty($fields[$params['linked_to']])) ? $fields[$params['linked_to']]['name'] : $params['linked_to'];
+			$linked_to = (!empty($fields[$params['linked_to']])) ? Form::create_id($fields[$params['linked_to']]['name']) : $params['linked_to'];
+			if ($form_builder->is_nested())
+			{
+				$linked_to = end(explode('vars--', $linked_to));
+			}
 			unset($fields);
 			$str .= "<div class=\"linked_info\" style=\"display: none;\">";
 			$str .= json_encode($linked_to);

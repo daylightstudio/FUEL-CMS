@@ -104,6 +104,7 @@ Class Form_builder {
 	protected $_post_process; // post_process functions
 	protected $_rendering = FALSE; // used to prevent infinite loops when calling form_builder reference from within a custom form field
 	protected $_rendered_field_types = array(); // holds all the fields types rendered
+	protected $_is_nested = FALSE; // used to detect nested fields
 	protected $CI;
 	
 	// --------------------------------------------------------------------
@@ -2397,6 +2398,7 @@ Class Form_builder {
 		$form_builder->use_form_tag = FALSE;
 		$form_builder->set_field_values($params['value']);
 		$form_builder->no_css_js = TRUE; // used to prevent multiple loading of assets
+		$form_builder->_is_nested = TRUE; // used to detect if it is a nested form
 		$form_builder->auto_execute_js = FALSE;
 
 		// add accumulated js
@@ -3148,6 +3150,20 @@ Class Form_builder {
 		return FALSE;
 	}
 	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns a boolean value as to whether the rendered form_builder instance is nested or not
+	 * 
+	 * @access	protected
+	 * @return	boolean
+	 */
+	function is_nested()
+	{
+		return $this->_is_nested;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
