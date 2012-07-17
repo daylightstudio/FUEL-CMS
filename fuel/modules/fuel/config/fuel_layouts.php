@@ -67,6 +67,7 @@ $config['default_layout'] = 'main';
 
 // initialize layout fields 
 $config['layouts']['301_redirect'] = array(
+	'label' => '301 Redirect',
 	'fields' => array(
 	'	copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
 		'redirect_to' => array('label' => lang('layout_field_redirect_to')),
@@ -74,6 +75,7 @@ $config['layouts']['301_redirect'] = array(
 );
 
 $config['layouts']['sitemap_xml'] = array(
+	'label' => 'sitemap.xml',
 	'fields' => array(
 		'copy' => array('type' => 'copy', 'label' => lang('layout_field_sitemap_xml_copy')),
 		'frequency' => array(
@@ -93,6 +95,7 @@ $config['layouts']['sitemap_xml'] = array(
 );
 
 $config['layouts']['none'] = array(
+	'label' => 'None',
 	'fields' => array(
 		'copy' => array('type' => 'copy', 'label' => lang('layout_field_none_copy')),
 		'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
