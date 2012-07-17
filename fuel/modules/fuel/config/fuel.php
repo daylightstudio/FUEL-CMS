@@ -41,6 +41,8 @@ $config['fuel_path'] = FUEL_FOLDER.'/';
 // options are cms, views, auto... cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder.
 // The auto option will first check the database for a page and if it doesn't exist or is not published, it will then check for a corresponding view file.
+// Additionally, you can create an array value specifying the keys, 'pages', 'blocks' and 'navigation' to specify how those modules work individually 
+// (e.g.  array('pages' => 'AUTO', 'blocks' => 'views', 'navigation' => 'cms');)
 $config['fuel_mode'] = 'views';
 
 // used for system emails. Can be overwritten by MY_fuel.php

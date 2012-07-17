@@ -345,7 +345,7 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 	}
 	
 	if ($edit_module === TRUE) $edit_module = 'pagevariables';
-	if (!empty($edit_module) AND $CI->fuel->config('fuel_mode') != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
+	if (!empty($edit_module) AND $CI->fuel->pages->mode() != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
 	{
 		$marker = fuel_edit($key, humanize($key), $edit_module);
 	}

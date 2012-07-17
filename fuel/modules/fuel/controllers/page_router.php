@@ -25,7 +25,7 @@ class Page_router extends CI_Controller {
 		$config = array();
 		$config['location'] = $this->location;
 
-		if ($this->fuel->config('fuel_mode') == 'views')
+		if ($this->fuel->pages->mode() == 'views')
 		{
 			$config['render_mode'] = 'views';
 			$page = $this->fuel->pages->create($config);
@@ -36,7 +36,7 @@ class Page_router extends CI_Controller {
 		// using FUEL admin
 		else
 		{
-			if ($this->fuel->config('fuel_mode') != 'cms')
+			if ($this->fuel->pages->mode() != 'cms')
 			{
 				
 				$config['render_mode'] = 'auto';

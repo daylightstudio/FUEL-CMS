@@ -78,18 +78,23 @@ class Blocks extends Module {
 				
 				$error = FALSE;
 				$file_info = $_FILES['file'];
-				
+
 				// read in the file so we can filter it
 				$file = read_file($file_info['tmp_name']);
 				
 				// sanitize the file before saving
 				$file = $this->_sanitize($file);
-				$id =  $this->input->post('id', TRUE);
-
-				$save['id'] = $id;
+				$name =  $this->input->post('name', TRUE);
+				if (empty($name))
+				{
+					$name = current(explode('.', $file_info['name']));
+				}
+				$save['name'] = $name;
 				$save['view'] = $file;
-				
-				if (!$this->model->save($save))
+				$save['date_added'] = datetime_now();
+
+				$id  = $this->model->save($save);
+				if (!$id)
 				{
 					add_error(lang('error_upload'));
 				}
@@ -111,8 +116,8 @@ class Blocks extends Module {
 		$fields = array();
 		$blocks = $this->model->options_list('id', 'name', array('published' => 'yes'), 'name');
 		
-		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'inline_edit', 'options' => $blocks, 'module' => 'blocks');
-		$fields['file'] = array('type' => 'file', 'accept' => '');
+		$fields['name'] = array('label' => lang('form_label_name'), 'type' => 'inline_edit', 'options' => $blocks, 'module' => 'blocks');
+		$fields['file'] = array('type' => 'file', 'accept' => '', 'required' => TRUE);
 		
 		$common_fields = $this->_common_fields();
 		$fields = array_merge($fields, $common_fields);

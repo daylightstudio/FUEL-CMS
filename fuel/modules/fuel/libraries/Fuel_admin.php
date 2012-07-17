@@ -1315,7 +1315,7 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
 
-		if ($this->fuel->config('fuel_mode') == 'views')
+		if ($this->fuel->pages->mode() == 'views')
 		{
 			$vars['others'] = array();
 		}

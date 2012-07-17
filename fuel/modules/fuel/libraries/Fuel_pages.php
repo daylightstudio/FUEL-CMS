@@ -235,6 +235,25 @@ class Fuel_pages extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns the rendering mode for the pages module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function mode()
+	{
+		$fuel_mode = $this->fuel->config('fuel_mode');
+		if (is_array($fuel_mode) AND isset($fuel_mode['pages']))
+		{
+			return $fuel_mode['pages'];
+		}
+		return $fuel_mode;
+
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Renders a Fuel_page which includes any inline editing markers
 	 *
 	 * @access	public
@@ -493,7 +512,7 @@ class Fuel_page extends Fuel_base_library {
 	function assign_variables($views_path = NULL, $page_mode = NULL)
 	{
 		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
-		$page_mode = (empty($page_mode)) ? $this->fuel->config('fuel_mode') : $page_mode;
+		$page_mode = (empty($page_mode)) ? $this->fuel->pages->mode() : $page_mode;
 		
 		$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : NULL;
 		$vars_path = $this->views_path.'_variables/';
@@ -1053,6 +1072,7 @@ class Fuel_page extends Fuel_base_library {
 						}
 						return $output;'
 			        );
+
 			$output = preg_replace_callback('#<[^>]+=["\'][^<]*'.$marker_reg_ex.'.*(?<!--)>#Ums', $callback, $output);
 			//$output = preg_replace('#(=["\'][^<]*)('.$marker_reg_ex.')#Ums', '${2}${1}', $output);  // doesn't work with fuel_var in multiple tag attributes
 

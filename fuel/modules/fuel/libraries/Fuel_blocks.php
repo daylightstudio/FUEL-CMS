@@ -147,7 +147,7 @@ class Fuel_blocks extends Fuel_module {
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->config('fuel_mode') != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
+			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->blocks->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('blocks');
 
@@ -262,6 +262,32 @@ class Fuel_blocks extends Fuel_module {
 		$model = $this->model();
 		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order);
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the rendering mode for the blocks module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function mode()
+	{
+		$fuel_mode = $this->fuel->config('fuel_mode');
+		if (is_array($fuel_mode))
+		{
+			if (isset($fuel_mode['blocks']))
+			{
+				return $fuel_mode['blocks'];
+			}
+			else
+			{
+				return 'auto';
+			}
+		}
+		return $fuel_mode;
+	}
+
 	
 }
 
