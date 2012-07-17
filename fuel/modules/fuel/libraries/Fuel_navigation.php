@@ -129,7 +129,7 @@ class Fuel_navigation extends Fuel_module {
 		if (empty($p['items']))
 		{
 			// get the menu data based on the FUEL mode or if the file parameter is specified use that
-			if ($this->CI->fuel->config('fuel_mode') == 'views' OR !empty($params['file']))
+			if ($this->CI->fuel->navigation->mode() == 'views' OR !empty($params['file']))
 			{
 				if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
 				{
@@ -144,7 +144,7 @@ class Fuel_navigation extends Fuel_module {
 			// using FUEL admin
 			else
 			{
-				if ($this->CI->fuel->config('fuel_mode') != 'cms')
+				if ($this->CI->fuel->navigation->mode() != 'cms')
 				{
 					// load in navigation file as a starting poing
 					if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
@@ -351,7 +351,6 @@ class Fuel_navigation extends Fuel_module {
 						'group_id' => 'main',
 						'var' => 'nav',
 						'clear_first' => TRUE,
-						'var_name' => 'nav',
 						);		
 
 		if (!is_array($params))
@@ -365,7 +364,7 @@ class Fuel_navigation extends Fuel_module {
 		{
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
-		
+
 		// no longer needed
 		unset($params);
 		
@@ -381,7 +380,7 @@ class Fuel_navigation extends Fuel_module {
 		{
 			return FALSE;
 		}
-		
+
 		// strip any php tags
 		$file = str_replace('<?php', '', $file);
 		
@@ -390,10 +389,10 @@ class Fuel_navigation extends Fuel_module {
 		
 		// now evaluate the string to get the nav array
 		@eval($file);
-		
-		if (!empty($$var_name))
+
+		if (!empty($$var))
 		{
-			$nav = $this->CI->menu->normalize_items($nav);
+			$nav = $this->CI->menu->normalize_items($$var);
 			
 			if (is_true_val($clear_first))
 			{
@@ -512,7 +511,31 @@ class Fuel_navigation extends Fuel_module {
 		return $group;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns the rendering mode for the navigation module
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function mode()
+	{
+		$fuel_mode = $this->fuel->config('fuel_mode');
+		if (is_array($fuel_mode))
+		{
+			if (isset($fuel_mode['navigation']))
+			{
+				return $fuel_mode['navigation'];
+			}
+			else
+			{
+				return 'auto';
+			}
+		}
+		return $fuel_mode;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

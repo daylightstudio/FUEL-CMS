@@ -386,6 +386,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_manage_cache { background-image: url(../images/ico_page_lightning.png); }
 .ico_module { background-image: url(../images/ico_cog.png); }
 .ico_navigation { background-image: url(../images/ico_sitemap_color.png); }
+.ico_navigation_group { background-image: url(../images/ico_chart_organisation_add.png); }
 .ico_no {  background-image: url(../images/ico_cancel.png); }
 .ico_notes { background-image: url(../images/ico_note.png); }
 .ico_other { background-image: url(../images/ico_cog.png); }
@@ -440,7 +441,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endC
 
 /* main content */
 div#fuel_main_content { overflow: auto; position: absolute; top: 99px; left: 0px; right: 0px; bottom: 0px; }
-div#fuel_main_content .buttonbar li { margin-right: 15px; }
+div#fuel_main_content .buttonbar li, #fuel_main_content_compact .buttonbar li { margin-right: 15px; }
 div#fuel_main_content_inner h3 { background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; }
 div#fuel_main_content_inner { padding: 15px 37px; }
 div#fuel_main_content_inner .bullets { margin-left: 15px; }

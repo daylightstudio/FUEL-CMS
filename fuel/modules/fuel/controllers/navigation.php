@@ -25,6 +25,7 @@ class Navigation extends Module {
 				$error = FALSE;
 				$file_info = $_FILES['file'];
 				$params['file_path'] = $file_info['tmp_name'];
+				$params['var'] = $this->input->post('variable') ? $this->input->post('variable') : 'nav';
 				if (!$this->fuel->navigation->upload($params))
 				{
 					$error = TRUE;
@@ -53,9 +54,21 @@ class Navigation extends Module {
 		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
-		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'class' => 'add_edit navigation_group');
+		// load custom fields
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
+		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
+		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable') : 'nav'), 'size' => 10);
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
+		$fields['__fuel_module__'] = array('type' => 'hidden');
+		$fields['__fuel_module__']['value'] = $this->module;
+		$fields['__fuel_module__']['class'] = '__fuel_module__';
+
+		$fields['__fuel_module_uri__'] = array('type' => 'hidden');
+		$fields['__fuel_module_uri__']['value'] = $this->module_uri;
+		$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;

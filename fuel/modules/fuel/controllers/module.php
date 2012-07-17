@@ -439,7 +439,7 @@ class Module extends Fuel_base_controller {
 			
 			if ($inline === TRUE)
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR, TRUE);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 			}
 			$this->fuel->admin->render($this->views['list'], $vars);
 		}
@@ -656,7 +656,7 @@ class Module extends Fuel_base_controller {
 		
 		if ($inline === TRUE)
 		{
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
 
 		$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_inline_actions', $vars, TRUE);
@@ -842,11 +842,11 @@ class Module extends Fuel_base_controller {
 		
 		if (!empty($field))
 		{
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 		}
 		else if ($inline === TRUE)
 		{
-			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT, TRUE);
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
 
 		$crumbs = array($this->module_uri => $this->module_name);
@@ -1365,7 +1365,7 @@ class Module extends Fuel_base_controller {
 			{
 				
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 				$this->fuel->admin->render($this->views['delete'], $vars);
 			}
 			else
@@ -1437,12 +1437,12 @@ class Module extends Fuel_base_controller {
 			
 			if ($this->fuel->admin->is_inline())
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION, TRUE);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
 			}
 			else
 			{
-				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION, TRUE);
+				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/');
 			}
 			$this->fuel->admin->render($this->views['delete'], $vars);

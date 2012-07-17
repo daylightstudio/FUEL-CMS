@@ -106,8 +106,8 @@ $config['modules']['navigation_group'] = array(
 	'model_location' => 'fuel',
 	'table_headers' => array(
 		'id', 
-		'label', 
-		'nav_key',
+		'name', 
+		'published',
 	),
 );
 

@@ -12,13 +12,6 @@ class Navigation_groups_model extends Base_module_model {
 		$this->add_validation('name', array(&$this, 'valid_name'), lang('error_requires_string_value'));
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'asc')
-	{
-		$this->db->select('id, name, published');
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
-	
 	function valid_name($name)
 	{
 		return (!is_numeric($name));
