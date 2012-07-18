@@ -434,7 +434,7 @@ fuel.fields.inline_edit_field = function(context){
 	var selected = null;
 	var editModule = function(url, onLoadCallback, onCloseCallback){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
-		$modal = fuel.modalWindow(html, true, 'inline_edit_modal', onLoadCallback, onCloseCallback);
+		$modal = fuel.modalWindow(html, 'inline_edit_modal', true, onLoadCallback, onCloseCallback);
 		
 		// bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){

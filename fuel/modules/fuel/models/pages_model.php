@@ -21,17 +21,38 @@ class Pages_model extends Base_module_model {
 		$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
 		$where['location'] = $values['location'];
 		$related_items = $CI->navigation_model->find_all_array_assoc('id', $where);
-		
 		$return = array();
 		$return['navigation'] = array();
-		foreach($related_items as $key => $item)
+
+		if (!empty($related_items))
 		{
-			$label = $item['label'];
-			if (!empty($item['group_name']))
+			foreach($related_items as $key => $item)
 			{
-				$label .= ' ('.$item['group_name'].')';
+				$label = $item['label'];
+				if (!empty($item['group_name']))
+				{
+					$label .= ' ('.$item['group_name'].')';
+				}
+				$return['navigation']['edit/'.$key] = $label;
 			}
-			$return['navigation'][$key] = $label;
+		}
+		else if (!empty($values['location']) AND $this->fuel->auth->has_permission('navigation', 'create'))
+		{
+
+			$label = (!empty($values['page_vars']['page_title'])) ? $values['page_vars']['page_title'] : '';
+			$parent_id = 0;
+			$group_id = $CI->fuel->config('auto_page_navigation_group_id');
+
+			// determine parent based off of location
+			$location_arr = explode('/', $values['location']);
+			$parent_location = implode('/', array_slice($location_arr, 0, (count($location_arr) -1)));
+		
+			if (!empty($parent_location)) $parent = $this->navigation_model->find_by_location($parent_location);
+			if (!empty($parent))
+			{
+				$parent_id = $parent['id'];
+			}
+			$return['navigation']['create?location='.urlencode($values['location']).'&label='.$label.'&group_id='.$group_id.'&parent_id='.$parent_id] = 'Create Navigation';
 		}
 		
 		return $return;
@@ -113,6 +134,7 @@ class Pages_model extends Base_module_model {
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
 		$fields['location']['placeholder'] = lang('pages_default_location');
+		$fields['location']['size'] = 100;
 		$fields['date_added']['type'] = 'hidden';
 		$fields['layout']['type'] = 'select';
 		$fields['layout']['options'] = $CI->fuel->layouts->options_list();

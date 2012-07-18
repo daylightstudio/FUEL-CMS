@@ -31,15 +31,15 @@
 
 	<h3 class="ico <?=$icon?>"><?=$name?></h3>
 	<ul>
-		<?php foreach($group_related as $id => $label) : ?>
+		<?php foreach($group_related as $url => $label) : ?>
 		<?php 
 		if ($this->fuel->modules->is_advanced($mod))
 		{
-			$url = $mod->fuel_url('edit/'.$id);
+			$url = $mod->fuel_url($url);
 		}
 		else
 		{
-			$url = fuel_url($mod->info('module_uri').'/edit/'.$id);
+			$url = fuel_url($mod->info('module_uri').'/'.$url);
 		}
 		?>
 		<li><a href="<?=$url?>"><?=$label?></a></li>
