@@ -243,9 +243,16 @@ class Fuel_pages extends Fuel_base_library {
 	function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
-		if (is_array($fuel_mode) AND isset($fuel_mode['pages']))
+		if (is_array($fuel_mode))
 		{
-			return $fuel_mode['pages'];
+			if (isset($fuel_mode['pages']))
+			{
+				return $fuel_mode['pages'];
+			}
+			else
+			{
+				return 'auto';
+			}
 		}
 		return $fuel_mode;
 
