@@ -322,7 +322,18 @@ class Users_model extends Base_module_model {
 		unset($values['super_admin']); // can't save from UI as security precaution'
 		return $values;
 	}
-	
+
+	function on_before_save($values)
+	{
+		$CI =& get_instance();
+		$valid_user = $CI->fuel->auth->valid_user();
+		if (isset($values['id']) AND $valid_user['id'] == $values['id'] AND $values['published'] == 'no')
+		{
+			show_error(lang('error_cannot_deactivate_yourself'));
+		}
+		return $values;
+	}
+
 	function on_before_clean($values)
 	{
 		$has_pwd = FALSE;

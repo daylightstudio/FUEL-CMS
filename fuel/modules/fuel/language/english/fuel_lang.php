@@ -239,7 +239,6 @@ $lang['blocks_upload_instructions'] = 'Select a block view file and upload it be
 
 $lang['form_label_view'] = 'View';
 
-
 /*
 |--------------------------------------------------------------------------
 | Navigation
@@ -319,7 +318,7 @@ Login URL:'.site_url('fuel/login').'
 User name: %1s
 Password: %2s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
-
+$lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 
 /*
 |--------------------------------------------------------------------------
@@ -367,6 +366,7 @@ $lang['error_missing_generation_files'] = 'There are no generation files to crea
 $lang['table_action_edit'] = 'EDIT';
 $lang['table_action_delete'] = 'DELETE';
 $lang['table_action_view'] = 'VIEW';
+$lang['click_to_toggle'] = 'click to toggle';
 
 
 /*

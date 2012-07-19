@@ -184,10 +184,11 @@ class Module extends Fuel_base_controller {
 		}
 	
 		// set the language dropdown if there is a language column
-		if (!empty($this->language_col) AND method_exists($this->model, 'get_languages'))
+		if ($this->fuel->language->has_multiple() AND !empty($this->language_col) AND method_exists($this->model, 'get_languages'))
 		{
 			$languages = $this->model->get_languages($this->language_col);
-			if (!empty($languages))
+			$first_option = current($languages);
+			if (!empty($languages) AND (is_string($first_option) OR (is_array($first_option)) AND count($first_option) > 1))
 			{
 				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
 				$this->filters[$this->language_col] = $lang_filter;
@@ -1778,8 +1779,13 @@ class Module extends Fuel_base_controller {
 	
 				// run before_save hook
 				$this->_run_hook('before_save', $save);
-				
-				if ($this->model->save($save))
+
+
+				$save = $this->model->clean($save);
+				$where[$this->model->key_field()] = $id;
+
+				// use update instead of save to avoid issue with has_many and belongs_to being removed
+				if ($this->model->update($save, $where))
 				{
 					// log it
 					$data = $this->model->find_by_key($id, 'array');
@@ -1812,25 +1818,22 @@ class Module extends Fuel_base_controller {
 	
 	function _toggle_callback($cols, $heading)
 	{
-		//$can_publish = ($heading == 'publish' AND $this->fuel->auth->has_permission($this->permission, "publish"));
-		$can_publish = TRUE;
-		$is_publish = (isset($cols['published'])) ? TRUE : FALSE;
+		$can_publish = (($heading == 'published' OR $heading == 'active') AND $this->fuel->auth->has_permission($this->permission, "publish"));
 		$no = lang("form_enum_option_no");
 		$yes = lang("form_enum_option_yes");
+		$col_txt = lang('click_to_toggle');
 
 		// boolean fields
 		if (!is_true_val($cols[$heading]))
 		{
 			$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
 			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-			$col_txt = ($is_publish) ? 'click to publish' : 'click to activate';
 			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
 		}
 		else
 		{
 			$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
 			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-			$col_txt = ($is_publish) ? 'click to unpublish' : 'click to deactivate';
 			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
 			
 		}

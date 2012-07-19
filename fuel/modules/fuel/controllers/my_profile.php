@@ -19,6 +19,8 @@ class My_profile extends Fuel_base_controller {
 		{
 			if ($id)
 			{
+				// used to prevent removing of permissions from the user
+				$this->users_model->has_many = array();
 				if ($this->users_model->save())
 				{
 					$this->session->set_flashdata('success', lang('data_saved'));
@@ -49,9 +51,9 @@ class My_profile extends Fuel_base_controller {
 			$saved = $this->users_model->user_info($id);
 		}
 
-		// set active to hidden since setting this is an buttton/action instead of a form field
-		// $fields['active']['type'] = 'hidden';
-		unset($fields['active']);
+		// remove active from field list to prevent them from updating it
+		unset($fields['active'], $fields['Permissions']);
+
 		
 		if (!empty($_POST))
 		{
@@ -61,14 +63,6 @@ class My_profile extends Fuel_base_controller {
 		{
 			$field_values = $saved;
 		}
-		// 
-		// if (!empty($saved['permissions']))
-		// {
-		// 	foreach($saved['permissions'] as $key => $val)
-		// 	{
-		// 		$field_values['permissions['.$val['perm_id'].']'] = true;
-		// 	}
-		// }
 		
 		$this->form_builder->form->validator = &$this->users_model->get_validation();
 		$this->form_builder->submit_value = lang('btn_save');
