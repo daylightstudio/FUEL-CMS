@@ -327,7 +327,7 @@ class Users_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
-		if (isset($values['id']) AND $valid_user['id'] == $values['id'] AND $values['published'] == 'no')
+		if ((isset($values['id']) AND $valid_user['id'] == $values['id']) AND (isset($values['active']) AND $values['active'] == 'no'))
 		{
 			show_error(lang('error_cannot_deactivate_yourself'));
 		}
