@@ -43,8 +43,8 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>file</strong> - the name of the file containing the navigation information</li>
 		<li><strong>var</strong> - the variable name in the file to use</li>
 		<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
-		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
-		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
+		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this</li>
+		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
 		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
 		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
 
@@ -169,7 +169,7 @@ class Fuel_navigation extends Fuel_module {
 					// if parent exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['parent']) AND is_string($p['parent']))
 					{
-						$parent = $this->model()->find_by_nav_key($p['parent'], $p['language']);
+						$parent = $this->model()->find_by_nav_key($p['parent'], $p['group_id'], $p['language']);
 						if (!empty($parent['id']))
 						{
 							$p['parent'] = $parent['id'];
@@ -240,7 +240,6 @@ class Fuel_navigation extends Fuel_module {
 		{
 			return $this->CI->menu->normalize_items($items);
 		}
-		
 		return $this->CI->menu->render($items, $p['active'], $p['parent']);
 	}
 	
@@ -353,6 +352,7 @@ class Fuel_navigation extends Fuel_module {
 						'group_id' => 'main',
 						'var' => 'nav',
 						'clear_first' => TRUE,
+						'language'	=> 'english'
 						);		
 
 		if (!is_array($params))
@@ -439,6 +439,8 @@ class Fuel_navigation extends Fuel_module {
 				$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
 				$save['location'] = $item['location'];
 				$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
+				$save['language'] = $language;
+
 				// fix for homepage links
 				if (empty($save['selected']) AND $save['nav_key'] == 'home')
 				{

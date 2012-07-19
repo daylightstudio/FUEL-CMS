@@ -60,11 +60,11 @@ class Blocks_model extends Base_module_model {
 		// set language field
 		if ($CI->fuel->language->has_multiple())
 		{
-			$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options());
+			$fields['language'] = array('type' => 'select', 'options' => $CI->fuel->language->options());
 		}
 		else
 		{
-			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
+			$fields['language'] = array('type' => 'hidden', 'value' => $CI->fuel->language->default_option());
 		}
 		return $fields;
 	}
