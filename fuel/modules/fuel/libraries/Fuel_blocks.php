@@ -36,7 +36,31 @@ class Fuel_blocks extends Fuel_module {
 	/**
 	 * Allows you to load a view and pass data to it
 	 *
-	 * @access	public
+	 * Renders a navigation structure using the <a href="[user_guide_url]libraries/menu">Menu class</a>.
+	 *
+	 * The <a href="[user_guide_url]helpers/fuel_helper">fuel_block helper</a> function is an alias to this method.
+	 *
+	<ul>
+		<li><strong>view</strong> - the name of the view block file. Also can be the first parameter of the method</li>
+		<li><strong>vars</strong>: an array of variables to pass to the block. Also can be the second parameter of the method.</li>
+		<li><strong>view_string</strong> - a string variable that represents the block</li>
+		<li><strong>model</strong> - the name of a model to automatically load for the block</li>
+		<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
+		<li><strong>select</strong> - select parameters to run for the find method</li>
+		<li><strong>order</strong> - the order the find method should return</li>
+		<li><strong>limit</strong> - the limit number of results to be returned by the find method</li>
+		<li><strong>offset</strong> - the find results returned offset value</li>
+		<li><strong>return_method</strong>: the return method the find query should use</li>
+		<li><strong>assoc_key</strong>: the column name to be used as the associative key in the find method</li>
+		<li><strong>data</strong>: the data values to be passed to the block. This variable get's automatically set if you specify the model and find method</li>
+		<li><strong>editable</strong>: css class styles to apply to menu items... can be a nested array</li>
+		<li><strong>parse</strong>: determines whether to parse the contents of the block. The default is set to 'auto'</li>
+		<li><strong>cache</strong>: determines whether to cache the block. Default is false</li>
+		<li><strong>mode</strong>: explicitly will look in either the </li>
+		<li><strong>module</strong>: the name of the module to look in for the block</li>
+		<li><strong>language</strong>: the language version to use for the block. Must be a value specified found in the 'languages' options in the FUEL configuration</li>
+	</ul>
+	* @access	public
 	 * @param	mixed	Array of parameters
 	 * @param	array	Array of variables
 	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
@@ -62,8 +86,9 @@ class Fuel_blocks extends Fuel_module {
 						'parse' => 'auto',
 						'vars' => array(),
 						'cache' => FALSE,
-						'mode' => 'AUTO',
+						'mode' => 'auto',
 						'module' => '',
+						'language' => NULL,
 						);
 
 		// for convenience

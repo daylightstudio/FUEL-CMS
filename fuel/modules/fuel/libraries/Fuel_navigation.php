@@ -72,6 +72,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>display_current</strong>: determines whether to display the current active breadcrumb item</li>
 		<li><strong>home_link</strong>: the root home link</li>
 		<li><strong>order</strong>: the order to display... for page_title ONLY</li>
+		<li><strong>language</strong>: select the appropriate language</li>
 	</ul>
 		
 	 * @access	public
@@ -112,6 +113,7 @@ class Fuel_navigation extends Fuel_module {
 						'order' => 'asc',
 						'exclude' => array(),
 						'return_normalized' => FALSE,
+						'language' => NULL,
 						);
 
 		if (!is_array($params))
@@ -157,7 +159,7 @@ class Fuel_navigation extends Fuel_module {
 				$this->fuel->load_model('navigation');
 				
 				// grab all menu items by group
-				$menu_items = $this->model()->find_all_by_group($p['group_id']);
+				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language']);
 
 				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 				if (!empty($menu_items)) 
@@ -167,7 +169,7 @@ class Fuel_navigation extends Fuel_module {
 					// if parent exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['parent']) AND is_string($p['parent']))
 					{
-						$parent = $this->model()->find_by_nav_key($p['parent']);
+						$parent = $this->model()->find_by_nav_key($p['parent'], $p['language']);
 						if (!empty($parent['id']))
 						{
 							$p['parent'] = $parent['id'];
@@ -177,7 +179,7 @@ class Fuel_navigation extends Fuel_module {
 					// if active exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['active']) AND is_string($p['active']))
 					{
-						$active = $this->model()->find_by_nav_key($p['active'], $p['group_id']);
+						$active = $this->model()->find_by_nav_key($p['active'], $p['group_id'], $p['language']);
 						if (!empty($active['id']))
 						{
 							$p['active'] = $active['id'];

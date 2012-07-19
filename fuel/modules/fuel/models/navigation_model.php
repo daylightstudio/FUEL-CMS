@@ -20,25 +20,45 @@ class Navigation_model extends Base_module_model {
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc')
 	{
-		$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, published', FALSE);
+		$CI =& get_instance();
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, language, published', FALSE);
+		}
+		else
+		{
+			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, published', FALSE);	
+		}
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 	
-	function find_by_location($location, $group_id = 1)
+	function find_by_location($location, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['navigation'].'.location'] = $location;
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
 		return $this->_find_by_array($where, $group_id);
 	}
 
-	function find_by_nav_key($nav_key, $group_id = 1)
+	function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['navigation'].'.nav_key'] = $nav_key;
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
 		return $this->_find_by_array($where, $group_id);
 	}
 	
-	protected function _find_by_array($where, $group_id = 1)
+	protected function _find_by_array($where, $group_id = 1, $lang = NULL)
 	{
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
 		if (!empty($group_id))
 		{
 			if (is_string($group_id))
@@ -118,9 +138,13 @@ class Navigation_model extends Base_module_model {
 		return $return;
 	}
 	
-	function find_all_by_group($group_id = 1)
+	function find_all_by_group($group_id = 1, $lang = NULL)
 	{
 		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
+		if (!empty($lang))
+		{
+			$where['language'] = $lang;
+		}
 		$data = $this->find_all_array($where);
 		return $data;
 	}
@@ -200,6 +224,7 @@ class Navigation_model extends Base_module_model {
 						'precedence', 
 						'attributes', 
 						'selected', 
+						'language',
 						'hidden'
 						);
 		foreach($order as $key => $val)
@@ -234,35 +259,35 @@ class Navigation_model extends Base_module_model {
 	}*/
 	
 	// validation method
-	function is_new_navigation($nav_key, $group_id)
+	function is_new_navigation($nav_key, $group_id, $lang)
 	{
 		if (empty($group_id)) return FALSE;
-		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'language' => $lang));
 		if (!empty($data)) return FALSE;
 		return TRUE;
 	}
 
 	// validation method
-	function is_editable_navigation($nav_key, $group_id, $id)
+	function is_editable_navigation($nav_key, $group_id, $id, $lang)
 	{
-		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'language' => $lang));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
 		return FALSE;
 	}
 	
 	// validation method
-	function is_new_location($location, $group_id, $parent_id)
+	function is_new_location($location, $group_id, $parent_id, $lang)
 	{
 		if (empty($group_id)) return FALSE;
-		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
 		if (!empty($data)) return FALSE;
 		return TRUE;
 	}
 
 	// validation method
-	function is_editable_location($location, $group_id, $parent_id, $id)
+	function is_editable_location($location, $group_id, $parent_id, $id, $lang)
 	{
-		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id));
+		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
 		return FALSE;
 	}
@@ -288,13 +313,13 @@ class Navigation_model extends Base_module_model {
 		
 		if (!empty($values['id']))
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['id']));
-			$this->add_validation('location', array(&$this, 'is_editable_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['id']));
+			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['id'], $values['language']));
+			$this->add_validation('location', array(&$this, 'is_editable_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['id'], $values['language']));
 		}
 		else
 		{
-			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id']));
-			$this->add_validation('location', array(&$this, 'is_new_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id']));
+			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['language']));
+			$this->add_validation('location', array(&$this, 'is_new_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['language']));
 		}
 		return $values;
 	}

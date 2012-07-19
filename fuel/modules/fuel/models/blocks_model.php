@@ -8,14 +8,23 @@ class Blocks_model extends Base_module_model {
 	public $filters = array('description');
 	public $ignore_replacement = array('name');
 		
-	public function __construct()
+	function __construct()
 	{
 		parent::__construct('blocks');
 	}
-	
-	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
+		
+	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
 	{
-		$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, published', FALSE);
+		$CI =& get_instance();
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, language, published', FALSE);
+		}
+		else
+		{
+			$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, published', FALSE);	
+		}
+		
 		$data = parent::list_items($limit, $offset, $col, $order);
 		foreach($data as $key => $val)
 		{
@@ -24,7 +33,7 @@ class Blocks_model extends Base_module_model {
 		return $data;
 	}
 	
-	public function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
@@ -43,12 +52,43 @@ class Blocks_model extends Base_module_model {
 		return $blocks;
 	}
 	
-	public function form_fields()
+	function form_fields()
 	{
 		$fields = parent::form_fields();
 		return $fields;
 	}
 
+	function on_before_validate($values)
+	{
+		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
+	//	$this->add_validation('id', array(&$this, 'no_id_and_parent_match'), lang('error_location_parents_match'), $values['parent_id']);
+		
+		if (!empty($values['id']))
+		{
+			$this->add_validation('name', array(&$this, 'is_editable_block'), lang('error_val_empty_or_already_exists', lang('form_label_name')), array($values['id'], $values['language']));
+		}
+		else
+		{
+			$this->add_validation('name', array(&$this, 'is_new_block'), lang('error_val_empty_or_already_exists', lang('form_label_name')), array($values['language']));
+		}
+		return $values;
+	}
+
+	function is_new_block($name, $lang)
+	{
+		if (empty($name)) return FALSE;
+		$data = $this->find_one_array(array('name' => $name, 'language' => $lang));
+		if (!empty($data)) return FALSE;
+		return TRUE;
+	}
+
+	// validation method
+	function is_editable_block($name, $id, $lang)
+	{
+		$data = $this->find_one_array(array('name' => $name, 'language' => $lang));
+		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
+		return FALSE;
+	}
 }
 
 class Block_model extends Base_module_record {

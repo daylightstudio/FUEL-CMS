@@ -44,6 +44,7 @@ CREATE TABLE `fuel_blocks` (
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `view` text COLLATE utf8_unicode_ci NOT NULL,
+  `language` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'english',
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   `date_added` datetime DEFAULT NULL,
   `last_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -60,8 +61,10 @@ CREATE TABLE `fuel_categories` (
   `slug` varchar(100) NOT NULL DEFAULT '',
   `context` varchar(100) NOT NULL DEFAULT '',
   `precedence` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
   `published` enum('yes','no') NOT NULL DEFAULT 'yes',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Dump of table fuel_logs
@@ -92,9 +95,10 @@ CREATE TABLE `fuel_navigation` (
   `attributes` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Extra attributes that can be used for navigation implementation',
   `selected` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The pattern to match for the active state. Most likely you leave this field blank',
   `hidden` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no' COMMENT 'A hidden value can be used in rendering the menu. In some areas, the menu item may not want to be displayed',
+  `language` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'english',
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes' COMMENT 'Determines whether the item is displayed or not',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`)
+  UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`, `language`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -262,7 +266,8 @@ CREATE TABLE `fuel_tags` (
   `category_id` int(10) unsigned NOT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 # Dump of table fuel_users

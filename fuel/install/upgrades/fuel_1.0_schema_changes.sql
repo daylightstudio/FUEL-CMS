@@ -54,9 +54,11 @@ CREATE TABLE `fuel_categories` (
   `slug` varchar(100) NOT NULL DEFAULT '',
   `context` varchar(100) NOT NULL DEFAULT '',
   `precedence` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
   `published` enum('yes','no') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 
 # Dump of table fuel_tags
@@ -70,3 +72,11 @@ CREATE TABLE `fuel_tags` (
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE  `fuel_navigation` ADD  `language` VARCHAR( 30 ) NOT NULL DEFAULT  'english' AFTER  `hidden` ;
+ALTER TABLE  `fuel_navigation` DROP INDEX  `group_id` ,
+ADD UNIQUE  `group_id` (  `group_id` ,  `nav_key` ,  `parent_id` ,  `language` );
+
+ALTER TABLE  `fuel_blocks` ADD  `language` VARCHAR( 30 ) NOT NULL DEFAULT  'english' AFTER  `view` ;
+ALTER TABLE  `fuel_blocks` DROP INDEX  `name` ,
+ADD UNIQUE  `name` (  `name` ,  `language` )
