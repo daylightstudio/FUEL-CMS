@@ -174,12 +174,5 @@ $fields['url'] = array(
 	'represents' => array('name' => 'url|link'),
 );
 
-// url field
-$fields['language'] = array(
-	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
-	'function'	=> 'language',
-	'represents' => array('name' => 'language'),
-);
-
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

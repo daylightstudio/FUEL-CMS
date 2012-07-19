@@ -209,6 +209,16 @@ class Navigation_model extends Base_module_model {
 		$no = lang('form_enum_option_no');
 		$fields['hidden']['options'] = array('yes' => $yes, 'no' => $no);
 		
+		// set language field
+		if ($CI->fuel->language->has_multiple())
+		{
+			$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options());
+		}
+		else
+		{
+			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
+		}
+
 		// set order
 		$fields['general_tab'] = array('type' => 'fieldset', 'label' => 'General', 'class' => 'tab', 'order' => 1);
 		$fields['advanced_tab'] = array('type' => 'fieldset', 'label' => 'Advanced', 'class' => 'tab', 'order' => 5);

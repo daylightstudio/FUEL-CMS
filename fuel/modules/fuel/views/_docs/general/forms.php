@@ -186,7 +186,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#template">template</a></li>
 		<li><a href="#asset">asset</a></li>
 		<li><a href="#url">url</a></li>
-		<li><a href="#language">language</a></li>
 		<li><a href="#wysiwyg">wysiwyg</a></li>
 		<li><a href="#file">file</a></li>
 		<li><a href="#inline_edit">inline_edit</a></li>
@@ -779,29 +778,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$fields['url'] = array();
-	</pre>
-
-</div>
-
-<h3 id="url" class="toggle">language</h3>
-<div class="toggle_block_off">
-	<p>This field type is used for capturing which language to associate with the record based on the fuel language settings.
-	If more then one language is specified, a select list will appear. Otherwise it will be a hidden field.</p>
-
-	<ul>
-		<li><strong>input</strong>: provides an input field for the link. This field is not displayed by default</li>
-		<li><strong>target</strong>: sets the target of the link. Options are <dfn>_self</dfn> or <dfn>_blank</dfn>. This field is not displayed by default</li>
-		<li><strong>title</strong>: sets the title attribute of the link. This field is not displayed by default</li>
-	</ul>
-	
-	<h4>Representations</h4>
-	<pre class="brush: php">
-	'name' => 'language' // targets any field with the name of "language"
-	</pre>
-	
-	<h4>Example</h4>
-	<pre class="brush:php">
-	$fields['language'] = array();
 	</pre>
 
 </div>

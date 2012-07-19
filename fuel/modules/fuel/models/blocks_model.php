@@ -54,7 +54,18 @@ class Blocks_model extends Base_module_model {
 	
 	function form_fields()
 	{
+		$CI =& get_instance();
 		$fields = parent::form_fields();
+
+		// set language field
+		if ($CI->fuel->language->has_multiple())
+		{
+			$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options());
+		}
+		else
+		{
+			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
+		}
 		return $fields;
 	}
 

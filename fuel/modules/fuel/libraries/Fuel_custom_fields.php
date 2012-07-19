@@ -974,32 +974,6 @@ class Fuel_custom_fields {
 
 	}
 
-	// --------------------------------------------------------------------
-
-	/**
-	 * Creates the language select/hidden field depending on if there are 1 or more languages
-	 *
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	function language($params)
-	{
-		$form_builder =& $params['instance'];
-
-		// set language field
-		if ($this->fuel->language->has_multiple())
-		{
-			$params['type'] = 'select';
-			$params['options'] = $this->fuel->language->options();
-		}
-		else
-		{
-			$params = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
-		}
-		return $form_builder->create_select($params);
-	}
-
 }
 
 
