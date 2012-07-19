@@ -408,12 +408,16 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 			if (empty($module) OR $module == 'pagevariables')
 			{
 				$module = $id->parent_model()->table_name();
-				$config_tables = $id->parent_model()->tables();
-				$tables = array_flip($config_tables);
-				unset($config_tables);
+				$tables = array_flip($CI->config->item('tables'));
 				if (isset($tables[$module]))
 				{
 					$module = $tables[$module];
+				}
+
+				$mod = $CI->fuel->modules->get($module, FALSE);
+				if (!empty($mod))
+				{
+					$module = $mod->info('module_uri');
 				}
 			}
 			
@@ -425,7 +429,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 				{
 					$label .= $id->title;
 				}
-				else if (isset($id->name))
+				else if ($id->name)
 				{
 					$label .= $id->name;
 				}
