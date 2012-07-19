@@ -33,7 +33,7 @@ class Pages_model extends Base_module_model {
 				{
 					$label .= ' ('.$item['group_name'].')';
 				}
-				$return['navigation']['edit/'.$key] = $label;
+				$return['navigation']['inline_edit/'.$key] = $label;
 			}
 		}
 		else if (!empty($values['location']) AND $this->fuel->auth->has_permission('navigation', 'create'))
@@ -52,7 +52,7 @@ class Pages_model extends Base_module_model {
 			{
 				$parent_id = $parent['id'];
 			}
-			$return['navigation']['create?location='.urlencode($values['location']).'&label='.$label.'&group_id='.$group_id.'&parent_id='.$parent_id] = 'Create Navigation';
+			$return['navigation']['inline_create?location='.urlencode($values['location']).'&label='.$label.'&group_id='.$group_id.'&parent_id='.$parent_id] = lang('navigation_related');
 		}
 		
 		return $return;
@@ -142,17 +142,8 @@ class Pages_model extends Base_module_model {
 		$yes = lang('form_enum_option_yes');
 		$no = lang('form_enum_option_no');
 		$fields['cache']['options'] = array('yes' => $yes, 'no' => $no);
+		$fields['language'] = array();
 		
-		// set language field
-		if ($this->fuel->language->has_multiple())
-		{
-			$lang_options = $CI->fuel->language->options();
-			$fields['language'] = array('type' => 'select', 'options' => $lang_options);
-		}
-		else
-		{
-			$fields['language'] = array('type' => 'hidden', 'value' => $this->fuel->language->default_option());
-		}
 		
 		// easy add for navigation
 		if (empty($values['id']))
