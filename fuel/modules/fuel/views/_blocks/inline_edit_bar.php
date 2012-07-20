@@ -8,8 +8,8 @@
 	var __FUEL_LINKED_FIELDS = null;
 	
 	// to prevent some issues with loading jquery twice on the page
-	if (jQuery == undefined){
-		//document.write('<script type="text/javascript" charset="utf-8" src="<?=js_path('jquery/jquery', 'fuel')?>"><\/script>');
+	if (typeof jQuery == 'undefined'){
+		document.write('<script type="text/javascript" charset="utf-8" src="<?=js_path('jquery/jquery', 'fuel')?>"><\/script>');
 	}
 //]]>
 </script>
