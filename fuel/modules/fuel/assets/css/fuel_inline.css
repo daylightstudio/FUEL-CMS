@@ -20,7 +20,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar li.spacer { margin-left: 10px;}
 .__fuel__ div.buttonbar li.start { border-left: 1px solid #ccc; }
 .__fuel__ div.buttonbar li.end { border-right: 1px solid #ccc; }
-.__fuel__ div.buttonbar li.round { -moz-border-radius: 0 0 0 7px; -webkit-border-bottom-left-radius: 7px; border-left: 1px solid #fff;}
+.__fuel__ div.buttonbar li.round { border-radius: 0 0 0 7px; -moz-border-radius: 0 0 0 7px; -webkit-border-bottom-left-radius: 7px; border-left: 1px solid #fff;}
 .__fuel__ div.buttonbar label { padding-left: 10px; }
 .__fuel__ div.buttonbar select { margin: 0 10px; height: auto; max-height: 20px; padding: 0; background: none; }
 .__fuel__ div.buttonbar li.right { float: right; }
