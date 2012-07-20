@@ -30,7 +30,7 @@
 
 class Fuel_installer extends Fuel_base_library {
 	
-	public $module = ''; // name of the module
+	public $module = ''; // module object
 	public $config = array(); // the configuration settings found in the install/install.php
 	
 	const INSTALLED_SETTINGS_KEY = 'installed_modules';
@@ -79,7 +79,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function install_path()
 	{
-		return MODULES_PATH.$this->module.'/install/';
+		return $this->module->path().'install/';
 	}
 	
 	// --------------------------------------------------------------------
@@ -93,7 +93,14 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function set_module($module)
 	{
-		$this->module = $module;
+		if (is_string($module))
+		{
+			$this->module = $this->fuel->$module;
+		}
+		else
+		{
+			$this->module = $module;
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -403,7 +410,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function allow()
 	{
-		$module = $this->module;
+		$module = $this->module->name();
 
 		// add to modules_allowed to MY_fuel and to the database
 		if (!in_array($module, $this->fuel->config('modules_allowed')))
@@ -432,7 +439,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function disallow()
 	{
-		$module = $this->module;
+		$module = $this->module->name();
 
 		// remove to modules_allowed to MY_fuel and to the database
 		if (in_array($module, $this->fuel->config('modules_allowed')))
@@ -541,7 +548,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function is_valid()
 	{
-		return ($this->is_compatible() AND !empty($this->config) AND !empty($this->module));
+		return ($this->is_compatible() AND !empty($this->config) AND !empty($this->module) AND is_a($this->module, 'Fuel_advanced_module'));
 	}
 
 	// --------------------------------------------------------------------
