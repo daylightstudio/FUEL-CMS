@@ -109,8 +109,10 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			var iframeContext = null;
 			var _this = this;
 			var onCloseCallback = function(){
-				var newLabel = label + ' (' + group + ')';
-				$(_this).html(newLabel);
+				if (label.length){
+					var newLabel = label + ' (' + group + ')';
+					$(_this).html(newLabel);
+				}
 			}
 
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true, null, onCloseCallback);

@@ -227,6 +227,7 @@ $lang['pages_default_location'] = 'example: company/about';
 $lang['form_label_page'] = 'Page';
 $lang['form_label_target'] = 'Target';
 
+$lang['navigation_related'] = 'Create navigation';
 
 /*
 |--------------------------------------------------------------------------

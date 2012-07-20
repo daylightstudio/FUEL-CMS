@@ -22,10 +22,10 @@ class Pages_model extends Base_module_model {
 		$where['location'] = $values['location'];
 		$related_items = $CI->navigation_model->find_all_array_assoc('id', $where);
 		$return = array();
-		$return['navigation'] = array();
-
 		if (!empty($related_items))
 		{
+			$return['navigation'] = array();
+
 			foreach($related_items as $key => $item)
 			{
 				$label = $item['label'];
@@ -39,6 +39,7 @@ class Pages_model extends Base_module_model {
 		else if (!empty($values['location']) AND $this->fuel->auth->has_permission('navigation', 'create'))
 		{
 
+			$return['navigation'] = array();
 			$label = (!empty($values['page_vars']['page_title'])) ? $values['page_vars']['page_title'] : '';
 			$parent_id = 0;
 			$group_id = $CI->fuel->config('auto_page_navigation_group_id');
