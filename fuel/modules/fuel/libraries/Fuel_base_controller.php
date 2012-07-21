@@ -30,7 +30,7 @@ class Fuel_base_controller extends CI_Controller {
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
 		$language = $this->fuel_auth->user_data('language');
 
-		// in case the language field doesn't exist... due to older fersions'
+		// in case the language field doesn't exist... due to older versions'
 		if (empty($language) OR !is_string($language)) $language = $this->config->item('language');
 		
 		// load this language file first because fuel_modules needs it
@@ -322,7 +322,7 @@ class Fuel_base_controller extends CI_Controller {
 		return $css;
 	}
 
-	// load the css files for the admin include from other modules
+	// load the language files for the admin include from other modules
 	protected function _load_languages()
 	{
 		$modules = $this->config->item('modules_allowed', 'fuel');

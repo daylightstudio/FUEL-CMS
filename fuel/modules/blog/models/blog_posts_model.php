@@ -116,6 +116,14 @@ class Blog_posts_model extends Base_module_model {
 		$fields['date_added']['type'] = 'datetime'; // so it will auto add
 		$fields['last_modified']['type'] = 'hidden'; // so it will auto add
 		$fields['permalink']['order'] = 2; // for older versions where the schema order was different
+		
+		// Check if a date added value has been selected
+		if( ! isset($fields['date_added']['value']))
+		{
+			// Set a default date
+			$fields['date_added']['value'] = date('m/d/Y h:i:s a', time());
+		}
+		
 		return $fields;
 	}
 	
