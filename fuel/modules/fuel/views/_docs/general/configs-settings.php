@@ -36,7 +36,7 @@ $config['my_module']['settings']['my_config'] = array();
 				in particular custom field types. By default includes configuration parameters from the <span class="file">fuel/modules/fuel/config/form_builder.php</span> file</li>
 	<li><strong>google:</strong> used by FUEL's <a href="<?=user_guide_url('helpers/google_helper')?>">Google helper</a></li>
 	<li><strong>model:</strong> used by FUEL's <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model class</a></li>
-	<li><strong>MY_config:</strong> this configuration file is meant to augment the CodeIgniter config and is autoloaded. You can set additional <dfn>dev_mode</dfn>, <dfn>dev_email</dfn> (default testing email address) and <dfn>date_format</dfn> configuration parameters</li>
+	<li><strong>MY_config:</strong> this configuration file is meant to augment the CodeIgniter config and is autoloaded. You can set additional <dfn>dev_email</dfn> (default testing email address) and <dfn>date_format</dfn> configuration parameters</li>
 	<li><strong>MY_fuel_layouts:</strong> used to create the FUEL <a href="<?=user_guide_url('general/layouts')?>">layouts for the CMS</a></li>
 	<li><strong>MY_fuel_modules:</strong> used to create FUEL <a href="<?=user_guide_url('modules/simple')?>">simple modules</a></li>
 	<li><strong>MY_fuel:</strong> used to overwrite any of the default <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration settings</a></li>
