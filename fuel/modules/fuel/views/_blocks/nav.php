@@ -26,9 +26,9 @@
 				$url = $key;
 				
 				// Check for a specific module's permission                                
-				$key = (isset($mods[$key]) AND !is_array($mods[$key])) ? $mods[$key] : $key;
+				$perm = (isset($mods[$key]) AND !is_array($mods[$key])) ? $mods[$key] : $key;
 				
-				if (($this->fuel->auth->has_permission($key)) || $key == 'dashboard')
+				if (($this->fuel->auth->has_permission($perm)) || $perm == 'dashboard')
 				{
 					if  (!$header_written)
 					{
