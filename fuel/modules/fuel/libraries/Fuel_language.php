@@ -129,7 +129,20 @@ class Fuel_language extends Fuel_base_library {
 		return isset($this->options[$lang]);
 	}
 	
-
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the default language value
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function default_language()
+	{
+		return key($this->options);
+	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
