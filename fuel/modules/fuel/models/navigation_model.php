@@ -317,7 +317,7 @@ class Navigation_model extends Base_module_model {
 		if (empty($values['language']))
 		{
 			$CI =& get_instance();
-			$values['language'] = $CI->fuel->language->default_language();
+			$values['language'] = $CI->fuel->language->default_option();
 		}
 		return $values;
 	}
