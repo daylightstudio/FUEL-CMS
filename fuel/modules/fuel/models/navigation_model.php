@@ -313,6 +313,12 @@ class Navigation_model extends Base_module_model {
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace(array('____', '___'), array('/', '#'), $values['location']);
 		}
+
+		if (empty($values['language']))
+		{
+			$CI =& get_instance();
+			$values['language'] = $CI->fuel->language->default_option();
+		}
 		return $values;
 	}
 		

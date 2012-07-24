@@ -408,12 +408,12 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 			if (empty($module) OR $module == 'pagevariables')
 			{
 				$module = $id->parent_model()->table_name();
-				$tables = array_flip($CI->config->item('tables'));
+				$tables = array_flip($id->parent_model()->tables());
 				if (isset($tables[$module]))
 				{
 					$module = $tables[$module];
 				}
-
+				unset($tables);
 				$mod = $CI->fuel->modules->get($module, FALSE);
 				if (!empty($mod))
 				{
