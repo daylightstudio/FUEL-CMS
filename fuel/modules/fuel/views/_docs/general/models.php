@@ -208,14 +208,14 @@ function get_content_formatted($strip_images = FALSE)
 </pre>
 
 <h3>Lazy Load Other Objects</h3>
-<p>Lazy loading of object is used when you don't want the overhead of queries to generate sub objects. For example, if you have a book, model
-which has a foreign key to an author model, you could create a method on the record class to lazy load that object like this:</p>
+<p>Lazy loading of object is used when you don't want the overhead of queries to generate sub objects. For example, if you have a books model
+which has a foreign key to an authors model, you could create a method on the record class to lazy load that object like this:</p>
 
 <pre class="brush: php">
-function get_spaceship()
+function get_author()
 {
-    $ship = $this->lazy_load(array('email' => 'hsolo@milleniumfalcon.com'), 'spacehips_model', FALSE);
-    return $ship;
+    $author = $this->lazy_load(array('email' => 'hsolo@milleniumfalcon.com'), 'authors_model', FALSE);
+    return $author;
 }
 </pre>
 
