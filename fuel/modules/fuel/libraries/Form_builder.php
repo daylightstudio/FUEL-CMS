@@ -2071,6 +2071,7 @@ Class Form_builder {
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
 		$params['placeholder'] = $format;
+		$params['type'] = 'text';
 		return $this->create_text($params);
 	}
 	
