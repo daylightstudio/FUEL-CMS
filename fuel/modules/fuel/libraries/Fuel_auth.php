@@ -192,7 +192,8 @@ class Fuel_auth extends Fuel_base_library {
 		{
 			if (!$this->CI->session->userdata($key))
 			{
-				$this->CI->session->set_userdata($key, array());
+				// initialize it
+				$this->CI->session->set_userdata($key, array('id' => 0));
 			}
 		}
 		return $key;
