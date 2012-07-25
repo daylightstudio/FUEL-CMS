@@ -17,7 +17,12 @@ class Page_router extends CI_Controller {
 		// if the rerouted file can't be found, look for the non-routed file'
 		if (!file_exists(APPPATH.'views/'.$this->location.EXT))
 		{
-			$this->location = uri_path(FALSE);
+			$non_routed_uri = uri_path(FALSE);
+			if (file_exists(APPPATH.'views/'.$non_routed_uri.EXT))
+			{
+				$this->location = $non_routed_uri;
+			}
+			unset($non_routed_uri);
 		}
 		
 		if (empty($this->location)) $this->location = $this->fuel->config('default_home_view');
