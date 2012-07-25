@@ -10,6 +10,7 @@ class Navigation_model extends Base_module_model {
 	public $record_class = 'Navigation_item';
 	public $ignore_replacement = array('nav_key');
 	public $filters = array('label', 'location');
+	public $linked_fields = array('nav_key' => array('location' => 'mirror'));
 		
 	function __construct()
 	{
@@ -219,6 +220,10 @@ class Navigation_model extends Base_module_model {
 			$fields['language'] = array('type' => 'hidden', 'value' => $CI->fuel->language->default_option());
 		}
 
+		$fields['nav_key']['type'] = 'linked';
+		$fields['nav_key']['linked_to'] = 'location';
+		$fields['nav_key']['formatter'] = 'mirror';
+
 		// set order
 		$fields['general_tab'] = array('type' => 'fieldset', 'label' => 'General', 'class' => 'tab', 'order' => 1);
 		$fields['advanced_tab'] = array('type' => 'fieldset', 'label' => 'Advanced', 'class' => 'tab', 'order' => 5);
@@ -226,11 +231,11 @@ class Navigation_model extends Base_module_model {
 		$order = array(	'general_tab', 
 						'group_id', 
 						'location', 
+						'nav_key', 
 						'label', 
 						'parent_id', 
 						'published', 
 						'advanced_tab', 
-						'nav_key', 
 						'precedence', 
 						'attributes', 
 						'selected', 
@@ -304,7 +309,7 @@ class Navigation_model extends Base_module_model {
 	
 	function on_before_clean($values)
 	{
-		if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
+		//if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
 		
 		// if the path is local, then we clean it
 		if (!is_http_path($values['location']))

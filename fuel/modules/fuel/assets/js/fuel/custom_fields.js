@@ -610,14 +610,24 @@ fuel.fields.linked_field = function(context){
 
 	// needed for enclosure
 	var bindLinked = function(slave, master, func){
-		if ($('#' + fuel.getFieldId(slave, context)).val() == ''){
+		if ($('#' + getFieldId(slave, context)).val() == ''){
 			if (typeof(master) == 'string'){
-				bindLinkedKeyup(slave, master, url_title);
+				var funcName = $('#' + getFieldId(slave, context)).data('formatter');
+				if (!funcName) {
+					var func = url_title;
+				} else {
+					if (this[funcName]){
+						var func = this[funcName];
+					} else if (window[funcName]){
+						var func = window[funcName];
+					}
+				}
+				bindLinkedKeyup(slave, master, func);
 			} else if (typeof(master) == 'object'){
 				for (var o in master){
 					var func = false;
 					var funcName = master[o];
-					var val = $('#' + fuel.getFieldId(o, context)).val();
+					var val = $('#' + getFieldId(o, context)).val();
 					if (funcName == 'url_title'){
 						var func = url_title;
 					// check for function scope, first check local function, then class, then global window object

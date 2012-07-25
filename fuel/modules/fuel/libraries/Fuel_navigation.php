@@ -90,7 +90,7 @@ class Fuel_navigation extends Fuel_module {
 						'parent' => NULL, 
 						'render_type' => 'basic', 
 						'active_class' => 'active', 
-						'active' => (uri_path(FALSE) !== '') ? uri_path(FALSE) : 'home',
+						'active' => (uri_path(TRUE) !== '') ? uri_path(TRUE) : 'home',
 						'styles' => array(),
 						'first_class' => 'first', 
 						'last_class' => 'last', 
