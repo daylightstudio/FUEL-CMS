@@ -408,12 +408,12 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 			if (empty($module) OR $module == 'pagevariables')
 			{
 				$module = $id->parent_model()->table_name();
-				$tables = array_flip($id->parent_model()->tables());
+				$tables = array_flip($CI->config->item('tables'));
 				if (isset($tables[$module]))
 				{
 					$module = $tables[$module];
 				}
-				unset($tables);
+
 				$mod = $CI->fuel->modules->get($module, FALSE);
 				if (!empty($mod))
 				{
@@ -649,13 +649,14 @@ function fuel_user_lang()
 {
 	$CI =& get_instance();
 	$CI->load->helper('cookie');
-	$cookie_val = get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name());
-	$cookie_val = unserialize($cookie_val);
-	if (empty($cookie_val['language']))
+	static $user_lang;
+	if (empty($user_lang))
 	{
-		$cookie_val['language'] = $CI->config->item('language');
+		$cookie_val = get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name());
+		$cookie_val = unserialize($cookie_val);
+		$user_lang = (!empty($cookie_val['language'])) ? $cookie_val['language'] : $CI->config->item('language');
 	}
-	return $cookie_val['language'];
+	return $user_lang;
 }
 
 // --------------------------------------------------------------------
