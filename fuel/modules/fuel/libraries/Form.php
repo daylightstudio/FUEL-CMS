@@ -139,7 +139,7 @@ class Form {
 	public function open_multipart($attrs = null, $validator = null)
 	{
 		$attrs['enctype'] = 'multipart/form-data';
-		return $this->open($attrs);
+		return $this->open($attrs, $validator);
 	}
 	
 	// --------------------------------------------------------------------
