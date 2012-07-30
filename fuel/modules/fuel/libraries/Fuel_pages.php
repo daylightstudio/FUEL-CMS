@@ -362,8 +362,19 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
+
 		// assign the location of the page
 		$this->assign_location($this->location);
+
+		// grab the view path from a view module if it exists
+		if (empty($this->views_path) AND $this->view_module != 'app')
+		{
+			$mod = $this->fuel->modules->get($this->view_module);
+			if ($mod AND method_exists($mod, 'path'))
+			{
+				$this->views_path = $mod->path().'views/';
+			}
+		}
 
 		// assign variables to the page
 		$this->assign_variables($this->views_path);
