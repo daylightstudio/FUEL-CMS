@@ -90,7 +90,7 @@ class Fuel_navigation extends Fuel_module {
 						'parent' => NULL, 
 						'render_type' => 'basic', 
 						'active_class' => 'active', 
-						'active' => (uri_path(TRUE) !== '') ? uri_path(TRUE) : 'home',
+						'active' => (uri_path(FALSE) !== '') ? uri_path(FALSE) : 'home',
 						'styles' => array(),
 						'first_class' => 'first', 
 						'last_class' => 'last', 
@@ -449,7 +449,7 @@ class Fuel_navigation extends Fuel_module {
 				
 				$save['hidden'] = (is_true_val($item['hidden'])) ? 'yes' : 'no';
 				$save['published'] = 'yes';
-				$save['precedence'] = $cnt;
+				$save['precedence'] = (!empty($item['precedence'])) ? $item['precedence'] : $cnt;
 				if (is_array($item['attributes']))
 				{
 					$attr = '';
