@@ -127,7 +127,7 @@ class Fuel_custom_fields {
 		// set data parameters so that we can use them with the JS
 		
 		// set multiple and separator data attributes so can be used by javascript
-		$multiple = (!empty($params['multiple']) OR strpos($params['value'], ',') !== FALSE) ? 1 : 0;
+		$multiple = (!isset($params['multiple']) AND (!empty($params['multiple']) OR strpos($params['value'], ',') !== FALSE)) ? 1 : 0;
 		
 		// set the separator based on if it is multiple lines or just a single line
 		$separator = (isset($params['multiline']) AND $params['multiline'] === TRUE) ? "\n" : ', ';
