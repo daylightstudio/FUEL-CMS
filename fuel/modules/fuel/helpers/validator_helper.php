@@ -390,10 +390,10 @@ function valid_file_upload($file_name)
  * @param	array	list of allowed characters 
  * @return	boolean
  */
-function is_safe_character($val, $allowed = array('_', '-'))
+function is_safe_character($val, $allowed= array('_', '-'))
 {
 	$newVal = str_replace($allowed, '', $val);
-	if(ctype_alnum($newVal)) 
+	if(ctype_alnum($newVal) || empty($newVal)) 
 	{
 		return TRUE;
 	}
