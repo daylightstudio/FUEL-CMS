@@ -127,7 +127,14 @@ class Fuel_custom_fields {
 		// set data parameters so that we can use them with the JS
 		
 		// set multiple and separator data attributes so can be used by javascript
-		$multiple = (!isset($params['multiple']) AND (!empty($params['multiple']) OR strpos($params['value'], ',') !== FALSE)) ? 1 : 0;
+		if (!isset($params['multiple']))
+		{
+			$multiple = !empty($params['multiple']) OR strpos($params['value'], ',') !== FALSE;
+		}
+		else
+		{
+			$multiple = $params['multiple'];
+		}
 		
 		// set the separator based on if it is multiple lines or just a single line
 		$separator = (isset($params['multiline']) AND $params['multiline'] === TRUE) ? "\n" : ', ';
@@ -136,7 +143,6 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			);
-			
 		if (!empty($params['value']))
 		{
 			if (is_string($params['value']))
@@ -148,12 +154,17 @@ class Fuel_custom_fields {
 					$assets = json_decode($params['value'], TRUE);
 					//$assets = unserialize($params['value']);
 				}
-				else
+				else if ($multiple)
 				{
 					// create assoc array with key being the image and the value being either the image name again or the caption
 					$assets = preg_split('#\s*,\s*|\n#', $params['value']);
 					
 				}
+				else
+				{
+					$assets = array($params['value']);
+				}
+
 				$preview_str = '';
 
 				// loop through all the assets and concatenate them
@@ -183,8 +194,7 @@ class Fuel_custom_fields {
 						if (!empty($asset_path))
 						{
 							$preview_str .= '<a href="'.$asset_path.'" target="_blank">';
-
-							if (is_image_file($asset))
+							if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset)))
 							{
 								$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
 							}
@@ -281,7 +291,6 @@ class Fuel_custom_fields {
 			}
 		}
 		$params['value'] = trim($params['value'], ",\n ");
-		
 		//$params['comment'] = 'Add a caption value to your image by inserting a colon after the image name and then enter your caption like so: my_img.jpg:My caption goes here.';
 		
 		

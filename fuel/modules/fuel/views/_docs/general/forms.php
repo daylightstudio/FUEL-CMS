@@ -736,6 +736,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<h4>Image Specific</h4>
 	<ul>
+		<li><strong>is_image</strong>: will provide an image preview no matter if the image does not end with jpg, png, gif etc.</li>
 		<li><strong>img_container_styles</strong>: styles to associate with the image preview container (only applies to image assets)</li>
 		<li><strong>img_styles</strong>: styles applied to the actual image that is being previewed</li>
 		<li><strong>create_thumb</strong>: determines whether to create a thumbnail</li>
