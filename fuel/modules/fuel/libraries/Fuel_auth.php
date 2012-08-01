@@ -49,8 +49,6 @@ class Fuel_auth extends Fuel_base_library {
 
 		$this->CI->load->helper('cookie');
 		
-		// needs to be loaded so that we can use the site name for namespacing
-		$this->CI->config->module_load('fuel', 'fuel', TRUE);
 	}
 	
 	
