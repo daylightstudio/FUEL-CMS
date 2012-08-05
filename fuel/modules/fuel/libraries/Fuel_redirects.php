@@ -130,7 +130,7 @@ class Fuel_redirects extends Fuel_base_library {
 				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
 
 				// Does the RegEx match?
-				if (preg_match('#^'.$key.'$#', $uri))
+				if (preg_match('#^'.preg_quote($key).'$#', $uri))
 				{
 					// Do we have a back-reference?
 					if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
