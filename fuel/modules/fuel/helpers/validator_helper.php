@@ -40,15 +40,20 @@
  */
 function required($var)
 {
-	$var = trim($var);
-	if (!empty($var)) 
+	if (is_string($var))
 	{
-		return TRUE;
-	} 
-	else 
-	{
-		return FALSE;
+		$var = trim($var);
+		if (!empty($var)) 
+		{
+			return TRUE;
+		} 
 	}
+	else if (is_array($var))
+	{
+		return !empty($var);
+	}
+	return FALSE;
+
 }
    
 // --------------------------------------------------------------------
@@ -390,10 +395,10 @@ function valid_file_upload($file_name)
  * @param	array	list of allowed characters 
  * @return	boolean
  */
-function is_safe_character($val, $allowed= array('_', '-'))
+function is_safe_character($val, $allowed = array('_', '-'))
 {
 	$newVal = str_replace($allowed, '', $val);
-	if(ctype_alnum($newVal) || empty($newVal)) 
+	if(ctype_alnum($newVal)) 
 	{
 		return TRUE;
 	}
