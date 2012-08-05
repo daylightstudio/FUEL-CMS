@@ -463,7 +463,7 @@ Class Form_builder {
 			$func = $this->display_errors_func;
 			if (function_exists($func))
 			{
-				$str .= $func($this->form->validator->get_errors());
+				$str .= $func();
 			}
 		}
 
@@ -674,7 +674,7 @@ Class Form_builder {
 			$func = $this->display_errors_func;
 			if (function_exists($func))
 			{
-				$str .= $func($this->form->validator->get_errors());
+				$str .= $func();
 			}
 		}
 
