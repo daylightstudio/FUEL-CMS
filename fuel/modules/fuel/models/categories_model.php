@@ -35,7 +35,7 @@ class Categories_model extends Base_module_model {
 	function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
-		$fields['parent_id'] = array('type' => 'select', 'model' => 'categories');
+		$fields['parent_id'] = array('type' => 'select', 'model' => 'categories', 'first_option' => lang('label_select_one'));
 
 		// magically sets the options list view to remove the current category
 		if (!empty($values['id']))
