@@ -30,7 +30,7 @@
 
 class Fuel_installer extends Fuel_base_library {
 	
-	public $module = ''; // module object
+	public $module = ''; // module name (NOT THE ACTUAL OBJECT SINCE IT MAY NOT BE LOADED YET!)
 	public $config = array(); // the configuration settings found in the install/install.php
 	
 	const INSTALLED_SETTINGS_KEY = 'installed_modules';
@@ -79,7 +79,9 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function install_path()
 	{
-		return $this->module->path().'install/';
+		// module may not be installed yet so this doesn't exist
+		//return $this->module->path().'install/';
+		return MODULES_PATH.$this->module.'/install/';
 	}
 	
 	// --------------------------------------------------------------------
@@ -93,14 +95,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function set_module($module)
 	{
-		if (is_string($module))
-		{
-			$this->module = $this->fuel->$module;
-		}
-		else
-		{
-			$this->module = $module;
-		}
+		$this->module = $module;
 	}
 
 	// --------------------------------------------------------------------
@@ -212,9 +207,9 @@ class Fuel_installer extends Fuel_base_library {
 			$this->_migrate(1);
 
 			// 001 should already be loaded so just create the class
-			$class = 'Migration_'.ucfirst($this->module->name());
+			$class = 'Migration_'.ucfirst($this->module);
 
-			$path = $this->module->path().'install/migrations/001_'.$this->module->name().'.php';
+			$path = $this->install_path().'migrations/001_'.$this->module.'.php';
 			if (file_exists($path))
 			{
 				require_once($path);
@@ -235,9 +230,9 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	protected function _migrate($version = NULL)
 	{
-		$config['migration_path'] = $this->module->path().'install/migrations/';
+		$config['migration_path'] = $this->install_path().'migrations/';
 		$config['migration_enabled'] = TRUE;
-		$config['module'] = $this->module->name();
+		$config['module'] = $this->module;
 		$this->CI->load->library('migration', $config);
 
 		if (!isset($version))
@@ -269,7 +264,7 @@ class Fuel_installer extends Fuel_base_library {
 		}
 		else
 		{
-			$path = $basepath.$this->module->name().'_install.sql';
+			$path = $basepath.$this->module.'_install.sql';
 		}
 
 		if (is_file($path))
@@ -295,7 +290,7 @@ class Fuel_installer extends Fuel_base_library {
 		}
 		else
 		{
-			$path = $basepath.$this->module->name().'_uninstall.sql';
+			$path = $basepath.$this->module.'_uninstall.sql';
 		}
 
 		if (is_file($path))
@@ -410,7 +405,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function allow()
 	{
-		$module = $this->module->name();
+		$module = $this->module;
 
 		// add to modules_allowed to MY_fuel and to the database
 		if (!in_array($module, $this->fuel->config('modules_allowed')))
@@ -439,7 +434,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function disallow()
 	{
-		$module = $this->module->name();
+		$module = $this->module;
 
 		// remove to modules_allowed to MY_fuel and to the database
 		if (in_array($module, $this->fuel->config('modules_allowed')))
@@ -548,7 +543,7 @@ class Fuel_installer extends Fuel_base_library {
 	 */	
 	function is_valid()
 	{
-		return ($this->is_compatible() AND !empty($this->config) AND !empty($this->module) AND is_a($this->module, 'Fuel_advanced_module'));
+		return ($this->is_compatible() AND !empty($this->config) AND !empty($this->module));
 	}
 
 	// --------------------------------------------------------------------
