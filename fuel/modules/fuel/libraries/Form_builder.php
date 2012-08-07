@@ -1578,6 +1578,9 @@ Class Form_builder {
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
+			'autocorrect' => (!empty($params['autocorrect']) ? $params['autocorrect'] : NULL),
+			'autocapitalize' => (!empty($params['autocapitalize']) ? $params['autocapitalize'] : NULL),
+			'pattern' => (!empty($params['pattern']) ? $params['pattern'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -2205,6 +2208,8 @@ Class Form_builder {
 		$params['attrs']['min'] = (isset($params['min'])) ? $params['min'] : 0;
 		$params['attrs']['max'] = (isset($params['max'])) ? $params['max'] : 10;
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		$params['autocorrect'] = 'off';
+		$params['autocapitalize'] = 'off';
 		return $this->create_text($params);
 	}
 	
