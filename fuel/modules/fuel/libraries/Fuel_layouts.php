@@ -723,9 +723,9 @@ class Fuel_layout extends Fuel_base_library {
 
 class Fuel_module_layout extends Fuel_layout {
 	
-	public $model; // the model to use for retrieving data
-	public $list_block; // the block name to use for the list view
-	public $item_block; // the block name for the detailed item view
+	public $model = NULL; // the model to use for retrieving data
+	public $list_block = NULL; // the block name to use for the list view
+	public $item_block = NULL; // the block name for the detailed item view
 	public $key_field = 'slug'; // the key field to use for querying a single record
 	public $segment = 3; // the segment to use as the parameter to query
 	public $item_where = array(); // additional item query where parameters 

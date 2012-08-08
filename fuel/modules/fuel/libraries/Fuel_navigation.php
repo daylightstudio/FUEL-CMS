@@ -30,7 +30,7 @@
 
 class Fuel_navigation extends Fuel_module {
 
-	protected $module = 'navigation';
+	protected $module = 'navigation'; // value is set to "navigation"
 	
 	// --------------------------------------------------------------------
 	
