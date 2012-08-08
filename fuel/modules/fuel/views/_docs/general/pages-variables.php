@@ -23,7 +23,9 @@
 <p>This is our about page</p>
 </pre>
 
-<p>Note how the <dfn>about</dfn> page should automatically have a header and footer applied to it. This is because the <dfn>application/views/_variables/global.php</dfn> file specifies the <dfn>main</dfn> layout file to be applied to it (more about passing variables below). Layout files exist in the <dfn>application/views/_layouts/</dfn> folder (more about layouts below as well).</p>
+<p>Note how the <dfn>about</dfn> page should automatically have a header and footer applied to it. This is because the <dfn>application/views/_variables/global.php</dfn> file specifies the <dfn>main</dfn> layout file to be applied to it (more about passing variables below). Layout files exist in the <dfn>application/views/_layouts/</dfn> folder (more about layouts below as well).
+Often times you'll see <dfn>fuel_set_var('body', '');</dfn> in a layout. This is because the variable <dfn>$body</dfn> holds the contents of the view file (in this case the 'about' page).
+</p>
 
 <p class="important">The <kbd>home</kbd> view file is reserved as the index page for the site.</p>
 

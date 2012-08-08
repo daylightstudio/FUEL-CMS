@@ -31,7 +31,8 @@ $pages['home'] = array('layout' => 'home');
 &lt;?php fuel_set_var('layout', 'home')?&gt;
 </pre>
 
-
+<p class="important">The variable <dfn>$body</dfn> is is used to hold the contents of the static view file which gets merged into the layout. 
+	Because of this, you'll often see <dfn>fuel_set_var('body', '')</dfn> in layout files.</p>
 
 <h2 id="layouts_cms">Using Layouts in the CMS</h2>
 <p>For a layout to appear in the FUEL admin, a layout view file must exist in the <span class="file">application/views/_layouts/</span> folder AND 
