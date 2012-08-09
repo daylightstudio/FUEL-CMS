@@ -72,6 +72,8 @@ class Fuel_auth extends Fuel_base_library {
 		$session_data['id'] = $valid_user['id'];
 		$session_data['super_admin'] = $valid_user['super_admin'];
 		$session_data['user_name'] = $valid_user['user_name'];
+		$session_data['first_name'] = $valid_user['first_name'];
+		$session_data['last_name'] = $valid_user['last_name'];
 		$session_data['language'] = $valid_user['language'];
 
 		if (!empty($valid_user))
