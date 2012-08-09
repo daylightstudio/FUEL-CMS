@@ -39,7 +39,7 @@ class Manage extends Fuel_base_controller {
 		else 
 		{
 			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
-			$this->fuel->admin->set_titlebar($crumbs);
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_manage_cache');
 			$this->fuel->admin->render('manage/cache');
 		}
 	}
