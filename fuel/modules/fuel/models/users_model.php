@@ -383,16 +383,12 @@ class Users_model extends Base_module_model {
 
 	function is_new_email($email)
 	{
-		if (empty($email)) return FALSE;
-		$this->record_exists(array('email' => $email));
-		return !$this->record_exists(array('email' => $email));
+		return $this->is_new($email, 'email');
 	}
-
+	
 	function is_editable_email($email, $id)
 	{
-		$data = $this->find_one_array(array('email' => $email));
-		if (empty($data) || (!empty($data) AND $data['id'] == $id)) return TRUE;
-		return FALSE;
+		return $this->is_editable($email, 'email', $id);
 	}
 	
 	
