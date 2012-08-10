@@ -394,6 +394,11 @@ class Fuel_custom_fields {
 			$str .= "</div>\n";
 		}
 		$params['type'] = 'text';
+
+		if (!empty($params['formatter']))
+		{
+			$params['data'] = array('formatter' => $params['formatter']);
+		}
 		$str .= $form_builder->create_text($params);
 		return $str;
 	}
@@ -937,6 +942,13 @@ class Fuel_custom_fields {
 				$sorting_params['class'] = 'sorting';
 				$str .= $form_builder->create_hidden($sorting_params);
 			}
+
+			// needed to detect when none exists
+			$exists_params['name'] = $params['name'].'_exists';
+			$exists_params['value'] = 1;
+			$exists_params['type'] = 'hidden';
+			$str .= $form_builder->create_field($exists_params);
+
 		}
 		
 		return $str;

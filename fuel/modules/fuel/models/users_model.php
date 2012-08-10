@@ -291,6 +291,7 @@ class Users_model extends Base_module_model {
 		}
 		$str .= "</ul>\n";
 		$str .= "</div>\n";
+		$str .= '<input type="hidden" name="permissions_exists" value="1" />';
 		return $str;
 	}
 	

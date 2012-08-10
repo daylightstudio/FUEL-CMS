@@ -1924,6 +1924,14 @@ Class Form_builder {
 		{
 			$params['multiple'] = TRUE;
 			$str .= $this->create_select($params);
+
+			// needed to detect when none exists
+			$exists_params['name'] = $params['name'].'_exists';
+			$exists_params['value'] = 1;
+			$exists_params['type'] = 'hidden';
+			$str .= $this->create_field($exists_params);
+
+
 		}
 		
 		return $str;

@@ -80,8 +80,8 @@ class MY_Model extends CI_Model {
 	protected $fields = array(); // fields in the table
 	protected $use_common_query = TRUE; // include the _common_query method for each query
 	protected $validator = NULL; // the validator object
+	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
-	
 	/**
 	 * Constructor - Sets MY_Model preferences
 	 *
@@ -1308,7 +1308,7 @@ class MY_Model extends CI_Model {
 	 * @param	boolean	ignore duplicate records on insert
 	 * @return	mixed
 	 */	
-	public function save($record = NULL, $validate = TRUE, $ignore_on_insert = TRUE)
+	public function save($record = NULL, $validate = TRUE, $ignore_on_insert = TRUE, $clear_related = NULL)
 	{
 		$this->_check_readonly();
 		$CI =& get_instance();
@@ -1318,7 +1318,7 @@ class MY_Model extends CI_Model {
 			$saved = TRUE;
 			foreach($record as $rec)
 			{
-				if(!$this->save($rec))
+				if(!$this->save($rec, $validate, $ignore_on_insert, $clear_related))
 				{
 					$saved = FALSE;
 				}
@@ -1329,6 +1329,13 @@ class MY_Model extends CI_Model {
 		{
 			$fields = array();
 			
+			$old_clear_related_on_save = $this->clear_related_on_save;
+
+			if (isset($clear_related))
+			{
+				$this->clear_related_on_save = $clear_related;
+			}
+
 			$values = $this->normalize_save_values($record);
 
 			// reset validator here so that all validation set with hooks will not be lost
@@ -1488,7 +1495,10 @@ class MY_Model extends CI_Model {
 			}
 
 			$this->on_after_save($values);
-			
+
+			// set this back to the old value
+			$this->clear_related_on_save = $old_clear_related_on_save;
+
 			// check for errors here in case some are thrown in the hooks
 			if ($this->has_error())
 			{
@@ -2486,7 +2496,7 @@ class MY_Model extends CI_Model {
 					
 					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
 					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
-					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'array', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
+					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'multi', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
 		}
@@ -2874,11 +2884,16 @@ class MY_Model extends CI_Model {
 			$fields = $this->relationship_field_names('has_many');
 			$relationships_model = $this->load_model($fields['relationships_model']);
 			
+
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->has_many as $related_field => $related_model)
 			{
-				// remove pre-existing relationships
-				$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
+				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data[$related_field.'_exists'])) OR $this->clear_related_on_save === TRUE);
+				if ($clear_on_save)
+				{
+					// remove pre-existing relationships
+					$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
+				}
 			}
 
 			// then save
@@ -2911,8 +2926,13 @@ class MY_Model extends CI_Model {
 				// cache the loaded models here for reference below
 				$related_models[$related_field] =& $this->load_related_model($related_model);
 
-				// remove pre-existing relationships
-				$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
+				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data[$related_field.'_exists'])) OR $this->clear_related_on_save === TRUE);
+
+				if ($clear_on_save)
+				{
+					// remove pre-existing relationships
+					$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
+				}
 
 			}
 
@@ -4077,9 +4097,9 @@ class Data_record {
 	 * @param	boolean	ignore on insert
 	 * @return	boolean
 	 */	
-	public function save($validate = TRUE, $ignore_on_insert = TRUE)
+	public function save($validate = TRUE, $ignore_on_insert = TRUE, $clear_related = NULL)
 	{
-		return $this->_parent_model->save($this, $validate, $ignore_on_insert);
+		return $this->_parent_model->save($this, $validate, $ignore_on_insert, $clear_related);
 	}
 	
 	// --------------------------------------------------------------------
