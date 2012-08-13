@@ -26,6 +26,9 @@
  */
 class MY_Typography extends CI_Typography {
 
+	// Block level elements that should not be wrapped inside <p> tags
+	var $sometimes_block_elements = 'li';
+
 	/**
 	 * Auto Typography
 	 *
@@ -187,7 +190,7 @@ class MY_Typography extends CI_Typography {
 						'#<p></p><('.$this->block_elements.')#'	=> '<$1',
 
 						// Clean up stray non-breaking spaces preceeding block elements
-						'#(&nbsp;\s*)+<('.$this->block_elements.')#'	=> '  <$2',
+						'#(&nbsp;\s*)+<('.$this->block_elements.'|'.$this->sometimes_block_elements.')#'	=> '  <$2',
 
 						// Replace the temporary markers we added earlier
 						'/\{@TAG\}/'		=> '<',
