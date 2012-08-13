@@ -1577,7 +1577,7 @@ Class Form_builder {
 			'disabled' => $params['disabled'],
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
-			'required' => (!empty($params['required']) ? $params['required'] : NULL),
+			'required' => (!empty($params['required']) ? 'required' : NULL),
 			'autocorrect' => (!empty($params['autocorrect']) ? $params['autocorrect'] : NULL),
 			'autocapitalize' => (!empty($params['autocapitalize']) ? $params['autocapitalize'] : NULL),
 			'pattern' => (!empty($params['pattern']) ? $params['pattern'] : NULL),
@@ -1637,7 +1637,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? $params['required'] : NULL),
+			'required' => (!empty($params['required']) ? 'required' : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -1715,7 +1715,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
-			'required' => (!empty($params['required']) ? $params['required'] : NULL),
+			'required' => (!empty($params['required']) ? 'required' : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -1924,14 +1924,6 @@ Class Form_builder {
 		{
 			$params['multiple'] = TRUE;
 			$str .= $this->create_select($params);
-
-			// needed to detect when none exists
-			$exists_params['name'] = $params['name'].'_exists';
-			$exists_params['value'] = 1;
-			$exists_params['type'] = 'hidden';
-			$str .= $this->create_field($exists_params);
-
-
 		}
 		
 		return $str;
@@ -1964,7 +1956,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? $params['required'] : NULL),
+			'required' => (!empty($params['required']) ? 'required' : NULL),
 			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
