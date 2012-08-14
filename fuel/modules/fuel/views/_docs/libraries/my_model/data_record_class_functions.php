@@ -158,10 +158,12 @@ echo $record->email; // dvader@deathstar.com
 </pre>
 
 
-<h2>$example_record->lazy_load(<var>where</var>, <var>'model'</var>, <var>[multiple]</var>, <var>['cache_key']</var>)</h2>
+<h2>$example_record->lazy_load(<var>where</var>, <var>'model'</var>, <var>[multiple]</var>, <var>['params']</var>, <var>['cache_key']</var>)</h2>
 <p>Lazy load will load another model's record object and is often used in custom derived attributes.
 You can pass a key =&gt; $value array as the <dfn>$model</dfn> parameter with the key representing the $module to load the <dfn>$model</dfn> from.
 To return mulitple record object set the <dfn>$multiple</dfn> to <dfn>TRUE</dfn>.
+The <dfn>$params</dfn> parameter allows you to pass additional query parameters like <dfn>order_by</dfn>, <dfn>limt</dfn>, <dfn>join</dfn> etc (the same parameters found 
+on the table class's query method).
 The <dfn>$cache_key</dfn> is the records property to store the value. Normally you will not need to worry about this value
 because one is created by default.
 </p>

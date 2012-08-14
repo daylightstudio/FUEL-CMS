@@ -790,9 +790,10 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	array	an array of parameters to create a query (optional)
+	 * @param	boolean	determines whether to execute the query and return the results or not
 	 * @return	array
 	 */	
-	public function query($params = array())
+	public function query($params = array(), $exec = TRUE)
 	{
 		if (is_array($params))
 		{
@@ -912,13 +913,22 @@ class MY_Model extends CI_Model {
 				}
 			}
 			
-			if ( ! empty($params['limit'])) {
+			if ( ! empty($params['limit']))
+			{
 				$this->db->limit($params['limit']);
 			}
-			if ( ! empty($params['offset'])) {
+			if ( ! empty($params['offset']))
+			{
 				$this->db->offset($params['offset']);
 			}
+
+			if ($exec === FALSE)
+			{
+				return;
+			}
+
 			$results = $this->get();
+
 		} 
 		else 
 		{
@@ -2469,7 +2479,7 @@ class MY_Model extends CI_Model {
 				}
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
-				$fields[$key]['first_option'] = 'Select...';
+				$fields[$key]['first_option'] = lang('label_select_one');
 				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->short_name(TRUE, TRUE)));
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
 			}
@@ -4247,11 +4257,16 @@ class Data_record {
 	 * @param	mixed	where conditions
 	 * @param	string	model name
 	 * @param	boolean	return 1 or many
+	 * @param	array	an array of extra parameters to pass to the query method. Also, can pass assoc_key and return_ (e.g. join, order_by, limit, etc)
 	 * @param	string	the key to the _obj property to store the lazy loaded object
 	 * @return	array
 	 */	
-	public function lazy_load($where, $model, $multiple = FALSE, $cache_key = '')
+	public function lazy_load($where, $model, $multiple = FALSE, $params = array(), $cache_key = '')
 	{
+
+		// call this first so that the model value is set for the cache_key
+		$model = $this->_parent_model->load_model($model);
+
 		if ($cache_key == '') 
 		{
 			if (is_array($where))
@@ -4263,9 +4278,8 @@ class Data_record {
 				$cache_key = str_replace(' ', '_', $where).'_'.$model;
 			}
 		}
-		if (!empty($this->_objs[$cache_key]) AND $cache_key === FALSE) return $this->_objs[$cache_key];
-		
-		$model = $this->_parent_model->load_model($model);
+
+		if (!empty($this->_objs[$cache_key]) AND $cache_key !== FALSE) return $this->_objs[$cache_key];
 		
 		if (is_array($model))
 		{
@@ -4278,27 +4292,29 @@ class Data_record {
 			$this->_CI->load->model($model);
 		}
 		
-		
 		// set the readonly to the callers
 		$this->_CI->$model->readonly = $this->_parent_model->readonly;
-		
-		if ($multiple)
+		$foreign_key = $this->_CI->$model->key_field();
+		if (is_numeric($where))
 		{
-			$this->_objs[$cache_key] = $this->_CI->$model->find_all($where);
+			$params['where'] = array($foreign_key => $where);
 		}
 		else
 		{
-			if (is_string($where))
-			{
-				$this->_objs[$cache_key] = $this->_CI->$model->find_by_key($this->$where);
-			}
-			else
-			{
-				$this->_objs[$cache_key] = $this->_CI->$model->find_one($where);
-			}
-			
+			$params['where'] = $where;
 		}
-		
+
+		$assoc_key = (isset($params['assoc_key'])) ? $params['assoc_key'] : NULL;
+		$return_method = (isset($params['return_method'])) ? $params['return_method'] : NULL;
+		$use_common_query = (isset($params['use_common_query'])) ? $params['use_common_query'] : NULL;
+
+		$this->_CI->$model->query($params, FALSE);
+
+		$query = $this->_CI->$model->get($multiple, $return_method, $assoc_key, $use_common_query);
+		$data = $query->result();
+
+		$this->_objs[$cache_key] = $data;
+
 		// create an empty object
 		if (empty($this->_objs[$cache_key])) 
 		{
