@@ -67,37 +67,41 @@ class Fuel_auth extends Fuel_base_library {
 		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
 		$valid_user = $this->CI->users_model->valid_user($user, $pwd);
 
-		// set minimal session data
-		$session_data = array();
-		$session_data['id'] = $valid_user['id'];
-		$session_data['super_admin'] = $valid_user['super_admin'];
-		$session_data['user_name'] = $valid_user['user_name'];
-		$session_data['first_name'] = $valid_user['first_name'];
-		$session_data['last_name'] = $valid_user['last_name'];
-		$session_data['language'] = $valid_user['language'];
-
-		if (!empty($valid_user))
+		// check old password logins
+		if (empty($valid_user))
 		{
-			//$valid_user = $this->CI->users_model->user_info($valid_user['id']);
-			$this->set_valid_user($session_data);
-			return TRUE;
+			$valid_user = $this->CI->users_model->valid_old_user($user, $pwd);
 		}
-		$valid_old_user = $this->CI->users_model->valid_old_user($user, $pwd);
-		if ($valid_old_user) 
+		
+		if (!empty($valid_user)) 
 		{
 			// update the hashed password & add a salt
 			$salt = $this->CI->users_model->salt();
 			$updated_user_profile = array('password' => $this->CI->users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
 			$updated_where = array('user_name' => $user, 'active' => 'yes');
-			$this->CI->users_model->update($updated_user_profile, $updated_where);
-			$valid_user = $this->CI->users_model->valid_user($user, $pwd);
-			if ( ! empty($valid_user)) {
+
+
+			// update salt on login
+			if ($this->CI->users_model->update($updated_user_profile, $updated_where))
+			{
+				// set minimal session data
+				$session_data = array();
+				$session_data['id'] = $valid_user['id'];
+				$session_data['super_admin'] = $valid_user['super_admin'];
+				$session_data['user_name'] = $valid_user['user_name'];
+				$session_data['language'] = $valid_user['language'];
+
 				$this->set_valid_user($valid_user);
 				return TRUE;
 			}
-			return FALSE;
+			else
+			{
+				FALSE;
+			}
 		}
-		return FALSE;	}
+
+		return FALSE;	
+	}
 
 	
 	// --------------------------------------------------------------------
@@ -446,8 +450,6 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		$this->CI->load->library('session');
 		$this->CI->session->sess_destroy();
-		
-		$this->CI->load->helper('cookie');
 		
 		$this->CI->session->unset_userdata($this->get_session_namespace());
 		
