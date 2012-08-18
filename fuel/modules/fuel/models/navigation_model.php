@@ -221,8 +221,7 @@ class Navigation_model extends Base_module_model {
 		}
 
 		$fields['nav_key']['type'] = 'linked';
-		$fields['nav_key']['linked_to'] = 'location';
-		$fields['nav_key']['formatter'] = 'mirror';
+		$fields['nav_key']['linked_to'] = array('location' => 'mirror');
 
 		// set order
 		$fields['general_tab'] = array('type' => 'fieldset', 'label' => 'General', 'class' => 'tab', 'order' => 1);
