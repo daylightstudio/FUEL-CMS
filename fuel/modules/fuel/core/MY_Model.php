@@ -843,14 +843,28 @@ class MY_Model extends CI_Model {
 				{
 					foreach($params['join'] as $join)
 					{
+						if (empty($join[2]))
+						{
+							$join[2] = 'left';
+						}
 						$this->db->join($join[0], $join[1], $join[2]);
-						if ($join[3]) $join_select .= ', '.$this->db->safe_select($join[0]);
+						if (!empty($join[3]))
+						{
+							$join_select .= ', '.$this->db->safe_select($join[0]);
+						}
 					}
 				} 
 				else 
 				{
+					if (empty($params['join'][2]))
+					{
+						$params['join'][2] = 'left';
+					}
 					$this->db->join($params['join'][0], $params['join'][1], $params['join'][2]);
-					if ($params['join'][3]) $join_select .= ', '.$this->db->safe_select($params['join'][0]);
+					if (!empty($params['join'][3]))
+					{
+						$join_select .= ', '.$this->db->safe_select($params['join'][0]);
+					}
 				}
 
 				//if (empty($params['select'])) $params['select'] = $join_select;
