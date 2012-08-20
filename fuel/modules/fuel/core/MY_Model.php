@@ -4306,7 +4306,7 @@ class Data_record {
 
 		if (is_string($where))
 		{
-			$params['where'] = array($foreign_key => $where);
+			$params['where'] = array($foreign_key => $this->$where);
 		}
 		else
 		{
