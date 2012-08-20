@@ -848,10 +848,7 @@ class MY_Model extends CI_Model {
 							$join[2] = 'left';
 						}
 						$this->db->join($join[0], $join[1], $join[2]);
-						if (!empty($join[3]))
-						{
-							$join_select .= ', '.$this->db->safe_select($join[0]);
-						}
+						$join_select .= ', '.$this->db->safe_select($join[0]);
 					}
 				} 
 				else 
@@ -861,10 +858,7 @@ class MY_Model extends CI_Model {
 						$params['join'][2] = 'left';
 					}
 					$this->db->join($params['join'][0], $params['join'][1], $params['join'][2]);
-					if (!empty($params['join'][3]))
-					{
-						$join_select .= ', '.$this->db->safe_select($params['join'][0]);
-					}
+					$join_select .= ', '.$this->db->safe_select($params['join'][0]);
 				}
 
 				//if (empty($params['select'])) $params['select'] = $join_select;
@@ -4320,7 +4314,7 @@ class Data_record {
 
 		$assoc_key = (isset($params['assoc_key'])) ? $params['assoc_key'] : NULL;
 		$return_method = (isset($params['return_method'])) ? $params['return_method'] : NULL;
-		$use_common_query = (isset($params['use_common_query'])) ? $params['use_common_query'] : NULL;
+		$use_common_query = (isset($params['use_common_query'])) ? $params['use_common_query'] : TRUE;
 
 		$this->_CI->$model->query($params, FALSE);
 
