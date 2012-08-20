@@ -4303,7 +4303,8 @@ class Data_record {
 		// set the readonly to the callers
 		$this->_CI->$model->readonly = $this->_parent_model->readonly;
 		$foreign_key = $this->_CI->$model->key_field();
-		if (is_numeric($where))
+
+		if (is_string($where))
 		{
 			$params['where'] = array($foreign_key => $where);
 		}
