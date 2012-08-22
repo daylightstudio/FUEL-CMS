@@ -14,7 +14,7 @@ jQuery.checksave = function(context) {
 
 	// get current values
 	$elems.each(function(i){
-		jQuery(this).data('startValue', jQuery(this).val());
+		jQuery(this).data('checksaveStartValue', jQuery(this).val());
 	});
 	
 	var oldChecksave = window.onbeforeunload;
