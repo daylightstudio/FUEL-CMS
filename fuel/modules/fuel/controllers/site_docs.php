@@ -11,7 +11,7 @@ class Site_docs extends Fuel_base_controller {
 	
 	function _remap()
 	{
-		if ($this->fuel->modules->exists('user_guide'))
+		if ($this->fuel->modules->exists('user_guide') AND defined('USER_GUIDE_FOLDER'))
 		{
 			$this->load->helper(USER_GUIDE_FOLDER, 'user_guide');
 		}
