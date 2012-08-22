@@ -40,7 +40,7 @@
  * @param	boolean
  * @return	array
  */
-function array_sorter($array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
+function array_sorter(&$array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
 {
 	if(is_array($array) && count($array) > 0)
 	{
