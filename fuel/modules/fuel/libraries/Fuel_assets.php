@@ -225,7 +225,7 @@ class Fuel_assets extends Fuel_base_library {
 				}
 				else if (empty($params['file_name']))
 				{
-					$params['file_name'] = url_title($file['name'], 'underscore', TRUE);	
+					$params['file_name'] = url_title($file['name'], 'underscore', FALSE);	
 				}
 			
 				// set overwrite
