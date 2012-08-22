@@ -1818,7 +1818,10 @@ class Module extends Fuel_base_controller {
 	
 	function _toggle_callback($cols, $heading)
 	{
-		$can_publish = (($heading == 'published' OR $heading == 'active') AND $this->fuel->auth->has_permission($this->permission, "publish"));
+		$can_publish = (($heading == 'published' OR $heading == 'active') AND $this->fuel->auth->has_permission($this->permission, 'publish') OR
+			(($heading != 'published' AND $heading != 'active') AND $this->fuel->auth->has_permission($this->permission, 'edit'))
+			);
+
 		$no = lang("form_enum_option_no");
 		$yes = lang("form_enum_option_yes");
 		$col_txt = lang('click_to_toggle');

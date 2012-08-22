@@ -11,6 +11,7 @@ class Navigation_model extends Base_module_model {
 	public $ignore_replacement = array('nav_key');
 	public $filters = array('label', 'location');
 	public $linked_fields = array('nav_key' => array('location' => 'mirror'));
+	public $boolean_fields = array('hidden', 'published');
 		
 	function __construct()
 	{
@@ -24,11 +25,11 @@ class Navigation_model extends Base_module_model {
 		$CI =& get_instance();
 		if ($CI->fuel->language->has_multiple())
 		{
-			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, language, published', FALSE);
+			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, language, hidden, published', FALSE);
 		}
 		else
 		{
-			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, published', FALSE);	
+			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, hidden, published', FALSE);	
 		}
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
@@ -200,7 +201,7 @@ class Navigation_model extends Base_module_model {
 			$where['id !='] = $values['id'];
 			$where['parent_id !='] = $values['id'];
 		}
-		$parent_options = $this->options_list('id', 'nav_key', $where);
+		$parent_options = $this->options_list('id', 'nav_key', $where, TRUE, FALSE);
 		$fields['parent_id']['label'] = lang('navigation_model_parent_id');
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
@@ -354,7 +355,7 @@ class Navigation_model extends Base_module_model {
 	
 	
 	// overwritten so we can group items
-	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE)
+	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE, $group = TRUE)
 	{
 		if (!empty($order) AND is_bool($order))
 		{
@@ -365,8 +366,19 @@ class Navigation_model extends Base_module_model {
 			if (strpos($order, ' ') === FALSE) $order .= ' asc';
 			$this->db->order_by($order);
 		}
-		$data = $this->find_all_array_assoc($key, $where);
-		return $this->_group_options($data, $key, $val);
+
+		if ($group)
+		{
+			// need to turn this off to get the proper ordering
+			$data = $this->find_all_array_assoc($key, $where);
+	
+			return $this->_group_options($data, $key, $val);
+		}
+		else
+		{
+			return parent::options_list($key, $val, $where, $order);
+		}
+
 	}
 	
 	
@@ -387,7 +399,15 @@ class Navigation_model extends Base_module_model {
 		foreach($data as $d)
 		{
 			if (!isset($options[$d['group_name']])) $options[$d['group_name']] = array();
-			$options[$d['group_name']][$d[$key]] = $d[$val];
+			if ($val == 'label')
+			{
+				$options[$d['group_name']][$d[$key]] = $d[$val].' ('.$d['nav_key'].')';	
+			}
+			else
+			{
+				$options[$d['group_name']][$d[$key]] = $d[$val].'';
+			}
+			
 		}
 		unset($data);
 		return $options;
