@@ -88,7 +88,7 @@ class Installer extends Fuel_base_controller {
 
 		if (!empty($output))
 		{
-			echo $output."\n";;
+			echo $output."\n";
 			return;
 		}
 
