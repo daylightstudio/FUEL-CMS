@@ -372,6 +372,34 @@ class Users_model extends Base_module_model {
 			}
 			
 		}
+
+		$this->_send_email($values['id']);
+	}
+
+	protected function _send_email($id)
+	{
+		$CI =& get_instance();
+		if (!empty($id) AND !has_errors() AND isset($_POST['send_email']) AND (!empty($_POST['password']) OR !empty($_POST['new_password'])))
+		{
+			$password = (!empty($_POST['password'])) ? $CI->input->post('password') : $CI->input->post('new_password');
+			// send email to user
+			$CI->load->library('email');
+
+			$config['wordwrap'] = TRUE;
+			$CI->email->initialize($config);
+
+			$CI->email->from($CI->config->item('from_email', 'fuel'), $CI->config->item('site_name', 'fuel'));
+			$CI->email->to($CI->input->post('email')); 
+			$CI->email->subject(lang('new_user_email_subject'));
+			$msg = lang('new_user_email', $CI->input->post('user_name'), $password);
+
+			$CI->email->message($msg);
+	
+			if (!$CI->email->send())
+			{
+				add_error(lang('error_sending_email', $this->input->post('email')));
+			}
+		}
 	}
 	
 	function delete($where)

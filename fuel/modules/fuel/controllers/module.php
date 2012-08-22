@@ -623,7 +623,7 @@ class Module extends Fuel_base_controller {
 		
 		if (isset($_POST[$this->model->key_field()])) // check for dupes
 		{
-			if ($id = $this->_process_create())
+			if ($id = $this->_process_create() AND !has_errors())
 			{
 				if ($inline === TRUE)
 				{
@@ -792,7 +792,7 @@ class Module extends Fuel_base_controller {
 		
 		if ($this->input->post($this->model->key_field()))
 		{
-			if ($this->_process_edit($id))
+			if ($this->_process_edit($id) AND !has_errors())
 			{
 				if ($inline === TRUE)
 				{
@@ -1295,8 +1295,8 @@ class Module extends Fuel_base_controller {
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
 					$tmp_field_name = end(explode('--', $field_name));
-					$posted[$tmp_field_name] = url_title($field_value, 'underscore', TRUE);
-					$posted[$field_name] = url_title($field_value, 'underscore', TRUE);
+					$posted[$tmp_field_name] = url_title($field_value, 'underscore', FALSE);
+					$posted[$field_name] = url_title($field_value, 'underscore', FALSE);
 				}
 			}
 		}
