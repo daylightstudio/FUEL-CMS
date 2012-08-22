@@ -19,11 +19,9 @@ class My_profile extends Fuel_base_controller {
 		{
 			if ($id)
 			{
-				// used to prevent removing of permissions from the user
-				$this->users_model->has_many = array();
 				if ($this->users_model->save())
 				{
-					$this->session->set_flashdata('success', lang('data_saved'));
+					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					redirect(fuel_uri('my_profile/edit/'));
 				}
 			}
@@ -77,7 +75,12 @@ class My_profile extends Fuel_base_controller {
 		$vars['data'] = $saved;
 		
 		// active or publish fields
-		$vars['error'] = $this->users_model->get_errors();
+		$errors = $this->users_model->get_errors();
+		if (!empty($errors))
+		{
+			add_errors($errors);	
+		}
+		
 		$this->fuel->admin->set_titlebar_icon('ico_users');
 		
 		$crumbs = lang('section_my_profile');
