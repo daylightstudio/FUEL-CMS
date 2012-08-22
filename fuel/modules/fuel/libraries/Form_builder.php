@@ -463,7 +463,7 @@ Class Form_builder {
 			$func = $this->display_errors_func;
 			if (function_exists($func))
 			{
-				$str .= $func();
+				$str .= $func($this->validator->get_errors());
 			}
 		}
 
@@ -668,7 +668,6 @@ Class Form_builder {
 		$str = '';
 		$begin_str = '';
 		$end_str = '';
-
 		if ($this->display_errors)
 		{
 			$func = $this->display_errors_func;
@@ -1577,10 +1576,7 @@ Class Form_builder {
 			'disabled' => $params['disabled'],
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
-			'required' => (!empty($params['required']) ? 'required' : NULL),
-			'autocorrect' => (!empty($params['autocorrect']) ? $params['autocorrect'] : NULL),
-			'autocapitalize' => (!empty($params['autocapitalize']) ? $params['autocapitalize'] : NULL),
-			'pattern' => (!empty($params['pattern']) ? $params['pattern'] : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -1637,7 +1633,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? 'required' : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -1715,7 +1711,7 @@ Class Form_builder {
 			'readonly' => $params['readonly'], 
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
-			'required' => (!empty($params['required']) ? 'required' : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
 		);
@@ -1945,6 +1941,7 @@ Class Form_builder {
 			'display_overwrite' => TRUE, // displays the overwrite checkbox
 			'accept' => 'gif|jpg|jpeg|png|pdf', // specifies which files are acceptable to upload
 			'upload_path' => NULL, // the server path to upload the file to
+			'folder' => NULL, // the folder name relative to the assets folder to upload the file
 			'file_name' => NULL, // for file uploading
 			'encrypt_name' => NULL, // determines whether to encrypt the uploaded file name to give it a unique value
 		);
@@ -1956,7 +1953,7 @@ Class Form_builder {
 			'class' => $params['class'], 
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? 'required' : NULL),
+			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'accept' => str_replace('|', ',', $params['accept']),
 		);
 		
@@ -1983,9 +1980,16 @@ Class Form_builder {
 				$file .= $this->form->hidden($params['name'].'_overwrite', $overwrite);
 			}
 		}
-		if (isset($params['upload_path']))
+		if (isset($params['upload_path']) OR isset($params['folder']))
 		{
-			$file .= $this->form->hidden($params['name'].'_path', $params['upload_path']);
+			if (isset($params['folder']))
+			{
+				$file .= $this->form->hidden($params['name'].'_upload_path', assets_server_path($params['folder']));
+			}
+			else
+			{
+				$file .= $this->form->hidden($params['name'].'_upload_path', $params['upload_path']);
+			}
 		}
 		if (isset($params['file_name']) OR isset($params['filename']))
 		{
@@ -2030,7 +2034,7 @@ Class Form_builder {
 			'date_format' => '', 
 			'region' => '', 
 			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
-			'max_date' =>  date($params['date_format'], strtotime('12/31/2030')),
+			'max_date' =>  date($params['date_format'], strtotime('12/31/2100')),
 			'first_day' => 0, 
 		);
 
@@ -2075,7 +2079,6 @@ Class Form_builder {
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
 		$params['placeholder'] = $format;
-		$params['type'] = 'text';
 		return $this->create_text($params);
 	}
 	
@@ -2208,8 +2211,6 @@ Class Form_builder {
 		$params['attrs']['min'] = (isset($params['min'])) ? $params['min'] : 0;
 		$params['attrs']['max'] = (isset($params['max'])) ? $params['max'] : 10;
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
-		$params['autocorrect'] = 'off';
-		$params['autocapitalize'] = 'off';
 		return $this->create_text($params);
 	}
 	
