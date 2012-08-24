@@ -69,8 +69,16 @@ $config['default_layout'] = 'main';
 $config['layouts']['301_redirect'] = array(
 	'label' => '301 Redirect',
 	'fields' => array(
-	'	copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
 		'redirect_to' => array('label' => lang('layout_field_redirect_to')),
+	)
+);
+
+$config['layouts']['404_error'] = array(
+	'label' => '404 Error',
+	'fields' => array(
+		'heading' => array('type' => 'copy', 'label' => lang('layout_field_heading')),
+		'body' => array('label' => lang('layout_field_body')),
 	)
 );
 

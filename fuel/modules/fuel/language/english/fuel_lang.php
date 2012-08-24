@@ -472,6 +472,7 @@ $lang['layout_field_page_title'] = 'Page title';
 $lang['layout_field_meta_description'] = 'Meta description';
 $lang['layout_field_meta_keywords'] = 'Meta keywords';
 $lang['layout_field_body'] = 'Body';
+$lang['layout_field_heading'] = 'Heading';
 $lang['layout_field_body_description'] = 'Main content of the page';
 $lang['layout_field_body_class'] = 'Body class';
 $lang['layout_field_redirect_to'] = 'Redirect to';
