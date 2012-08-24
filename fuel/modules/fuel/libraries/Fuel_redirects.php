@@ -145,10 +145,18 @@ class Fuel_redirects extends Fuel_base_library {
 		
 		if ($show_404 === TRUE)
 		{
-			// check CMS first
-			$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'cms'), TRUE);
+			// check CMS first if set to AUTO or views
+			if ($this->fuel->pages->mode() != 'views')
+			{
+				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'cms'), TRUE); 
+			}
 
 			// then views
+			if (empty($error_404) AND file_exists(APPPATH.'views/404_error'.EXT))
+			{
+				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE); 
+			}
+
 			if (empty($error_404))
 			{
 				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE);
