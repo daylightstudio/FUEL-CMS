@@ -2034,7 +2034,7 @@ Class Form_builder {
 			'date_format' => '', 
 			'region' => '', 
 			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
-			'max_date' =>  date($params['date_format'], strtotime('12/31/2100')),
+			'max_date' =>  date($params['date_format'], strtotime('12/31/2030')),
 			'first_day' => 0, 
 		);
 
@@ -2079,6 +2079,7 @@ Class Form_builder {
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
 		$params['placeholder'] = $format;
+		$params['type'] = 'text';
 		return $this->create_text($params);
 	}
 	
