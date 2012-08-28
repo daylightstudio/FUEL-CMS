@@ -28,6 +28,11 @@ class Assets extends Module {
 		
 		$inline = $this->fuel->admin->is_inline();
 
+		if (!empty($dir))
+		{
+			$dir = uri_safe_decode($dir);
+		}
+
 		if (!empty($_FILES))
 		{
 			
