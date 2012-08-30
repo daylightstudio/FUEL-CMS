@@ -221,12 +221,17 @@ function link_target($link)
 	if (isset($url_parts['host']))
 	{
 		$host_parts = explode('.', $url_parts['host']);
+
 		$index = count($host_parts) - 1;
 		if (isset($host_parts[$index - 1]))
 		{
 			$domain = $host_parts[$index - 1];
 			$domain .='.';
 			$domain .= $host_parts[$index];
+		} 
+		else if (count($host_parts) == 1)
+		{
+			$domain = $host_parts[0];
 		}
 	}
 	
