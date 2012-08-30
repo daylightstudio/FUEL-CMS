@@ -7,7 +7,7 @@ line in the application/config/routes.php regarding the sitemap
 fuel_set_var('layout', '');
 $default_frequency = 'Monthly';
 $nav = fuel_nav(array('return_normalized' => TRUE));
-
+$used = array();
 /***************************************************************
 Add any dynamic pages and associate them to the $nav array here:
 **************************************************************/
@@ -26,7 +26,7 @@ echo str_replace(';', '', '<?xml version="1.0" encoding="UTF-8"?>');
 		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <?php foreach($nav as $uri=>$page) { ?>
-	<?php if(isset($page['location']) AND $page['location'] != 'sitemap.xml'): ?> 
+	<?php if(isset($page['location']) AND $page['location'] != 'sitemap.xml' AND !isset($used[$page['location']])): ?> 
 		<url>
 			<loc><?=site_url($page['location'])?></loc>
 			<changefreq><?php if (!empty($page['frequency'])) : ?><?=$page['frequency']?><?php else: ?><?=$default_frequency?><?php endif; ?></changefreq>
@@ -36,7 +36,8 @@ echo str_replace(';', '', '<?xml version="1.0" encoding="UTF-8"?>');
 		<loc><?=site_url($page)?></loc>
 		<changefreq><?=$default_frequency?></changefreq>
 	</url>
+
 	<?php endif; ?>
 
-<?php } ?>
+<?php $used[$page['location']] = $page['location']; } ?>
 </urlset>
