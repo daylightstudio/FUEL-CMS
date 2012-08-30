@@ -220,6 +220,12 @@ function link_target($link)
 	$domain = '';
 	if (isset($url_parts['host']))
 	{
+		
+		if ($url_parts['host'] == $test_domain)
+		{
+			return '';
+		}
+
 		$host_parts = explode('.', $url_parts['host']);
 
 		$index = count($host_parts) - 1;
