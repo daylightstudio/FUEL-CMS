@@ -31,8 +31,7 @@
 		/***************************************************************
 		TAG STYLES
 		***************************************************************/
-		body { background: #000 url(http://www.getfuelcms.com/assets/images/bg_waves.jpg) no-repeat top center; font-family: 'Lucida Grande', Arial, sans-serif; color: #fff; font-size: 12px; line-height: 16px; 
-	}
+		body { background: #000 url(http://www.getfuelcms.com/assets/images/bg_waves.jpg) no-repeat top center; font-family: 'Lucida Grande', Arial, sans-serif; color: #fff; font-size: 12px; line-height: 16px; }
 		h1 { font-size: 40px; margin-top: 30px; text-shadow: #000 0px 1px 3px; line-height: 40px; margin-left: -4px; }
 		h2 { font-size: 25px; color: #fff; color: #c8d1d9; margin-bottom: 5px; text-shadow: #000 0px 1px 3px; line-height: 25px; }
 		h3 { font-size: 22px; color: #ea5b17; margin-bottom: 15px; font-weight: normal; }
@@ -120,7 +119,7 @@
 					</ul>
 				</li>
 
-				<?php  if ($this->config->item('encryption_key') == 'abc123' OR
+				<?php  if ($this->config->item('encryption_key') == '' OR
 							$this->config->item('fuel_mode', 'fuel') == 'views' OR
 							!$this->config->item('admin_enabled', 'fuel')
 
@@ -128,8 +127,8 @@
 				<li>
 					<h4>Make Configuration Changes</h4>
 					<ul class="bullets">
-						<?php if ($this->config->item('encryption_key') == 'abc123') : ?>
-						<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> from "abc123" to your own unique key.</li></li>
+						<?php if ($this->config->item('encryption_key') == '') : ?>
+						<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li></li>
 						<?php endif; ?>
 						<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 						<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
