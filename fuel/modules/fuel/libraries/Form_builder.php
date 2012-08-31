@@ -150,6 +150,7 @@ Class Form_builder {
 		if (is_null($this->form))
 		{
 			$this->CI->load->library('form');
+			$this->CI->load->library('encrypt');
 			$this->form = new Form();
 			
 			// load localization helper if not already
@@ -1984,12 +1985,13 @@ Class Form_builder {
 		{
 			if (isset($params['folder']))
 			{
-				$file .= $this->form->hidden($params['name'].'_upload_path', assets_server_path($params['folder']));
+				$upload_path = $this->CI->encrypt->encode(assets_server_path($params['folder']));
 			}
 			else
 			{
-				$file .= $this->form->hidden($params['name'].'_upload_path', $params['upload_path']);
+				$upload_path = $this->CI->encrypt->encode($params['upload_path']);
 			}
+			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path);
 		}
 		if (isset($params['file_name']) OR isset($params['filename']))
 		{

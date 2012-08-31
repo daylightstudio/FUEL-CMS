@@ -33,75 +33,83 @@ class Assets extends Module {
 			$dir = uri_safe_decode($dir);
 		}
 
-		if (!empty($_FILES))
+		if (!empty($_POST))
 		{
-			
-			$this->model->on_before_post();
-
-			if ($this->input->post('asset_folder')) 
+			if (!empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4)
 			{
-				$dir = $this->input->get_post('asset_folder');
-				if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) 
-				{
-					show_404();
-				}
-			}
-			
-			$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder')) : ''; // remove any going down the folder structure for protections
-			$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
-			$posted['upload_path'] = $upload_path;
-			$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
-			$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
-			$posted['maintain_ratio'] = ($this->input->get_post('maintain_ratio')) ? TRUE : FALSE;
-			$posted['width'] = $this->input->get_post('width');
-			$posted['height'] = $this->input->get_post('height');
-			$posted['master_dim'] = $this->input->get_post('master_dim');
-			$posted['file_name'] = $this->input->get_post('userfile_file_name');
-			$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
-			
-			$id = $posted['file_name'];
-			
-			if ($this->fuel->assets->upload($posted))
-			{
-				foreach($_FILES as $filename => $fileinfo)
-				{
-					$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
-					$this->fuel->logs->write($msg);
-				}
-				$flashdata = $_POST;
-				$uploaded_data = $this->fuel->assets->uploaded_data();
-				$first_file = current($uploaded_data);
 
-				// set the uploaded file name to the first file
-				$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
+				$this->model->on_before_post();
 
-				$this->session->set_flashdata('uploaded_post', $flashdata);
-				$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
+				if ($this->input->post('asset_folder')) 
+				{
+					$dir = $this->input->get_post('asset_folder');
+					if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) 
+					{
+						show_404();
+					}
+				}
 				
-				$this->model->on_after_post($posted);
-
-				$inline = $this->fuel->admin->is_inline();
-
-				$query_str_arr = $this->input->get_post();
-				$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
-
-				if ($inline === TRUE)
+				$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder')) : ''; // remove any going down the folder structure for protections
+				$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
+				$posted['upload_path'] = $upload_path;
+				$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
+				$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
+				$posted['maintain_ratio'] = ($this->input->get_post('maintain_ratio')) ? TRUE : FALSE;
+				$posted['width'] = $this->input->get_post('width');
+				$posted['height'] = $this->input->get_post('height');
+				$posted['master_dim'] = $this->input->get_post('master_dim');
+				$posted['file_name'] = $this->input->get_post('userfile_file_name');
+				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
+				
+				$id = $posted['file_name'];
+				
+				if ($this->fuel->assets->upload($posted))
 				{
-					$url = fuel_uri($this->module.'/inline_create/?'.$query_str, TRUE);
+					foreach($_FILES as $filename => $fileinfo)
+					{
+						$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
+						$this->fuel->logs->write($msg);
+					}
+					$flashdata = $_POST;
+					$uploaded_data = $this->fuel->assets->uploaded_data();
+					$first_file = current($uploaded_data);
+
+					// set the uploaded file name to the first file
+					$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
+
+					$this->session->set_flashdata('uploaded_post', $flashdata);
+					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
+					$this->model->on_after_post($posted);
+
+					$inline = $this->fuel->admin->is_inline();
+
+					$query_str_arr = $this->input->get_post();
+					$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
+
+					if ($inline === TRUE)
+					{
+						$url = fuel_uri($this->module.'/inline_create/?'.$query_str, TRUE);
+					}
+					else
+					{
+						$url = fuel_uri($this->module.'/create/?'.$query_str, TRUE);
+					}
+					redirect($url);
+					
 				}
 				else
 				{
-					$url = fuel_uri($this->module.'/create/?'.$query_str, TRUE);
+					add_errors($this->fuel->assets->errors());
 				}
-				redirect($url);
 				
 			}
 			else
 			{
-				add_errors($this->fuel->assets->errors());
+				add_errors(lang('error_upload'));
 			}
-			
 		}
+		
 		$form_vars = $this->input->get();
 		if (!empty($dir))
 		{

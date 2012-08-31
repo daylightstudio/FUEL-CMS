@@ -109,6 +109,7 @@ class Fuel_assets extends Fuel_base_library {
 	{
 		$this->CI->load->library('upload');
 		$this->CI->load->library('image_lib');
+		$this->CI->load->library('encrypt');
 
 		$valid = array( 'upload_path' => '',
 						'override_post_params' => FALSE,
@@ -167,12 +168,24 @@ class Fuel_assets extends Fuel_base_library {
 					foreach($valid as $param => $default)
 					{
 						$input_key = $non_multi_key.'_'.$param;
+						
+						// decode encrypted file path values
 						if (isset($_POST[$input_key]))
 						{
-							$posted[$param] = $this->CI->input->post($input_key);
+							if ($input_key == $field_name.'_upload_path')
+							{
+								$posted['upload_path'] = $this->CI->encrypt->decode($this->CI->input->post($input_key));
+							}
+							else
+							{
+								$posted[$param] = $this->CI->input->post($input_key);
+							}
 						}
+
 					}
+
 					$params = array_merge($params, $posted);
+
 					unset($params['override_post_params']);
 				}
 				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
@@ -201,6 +214,7 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
 				}
+
 				$params['remove_spaces'] = TRUE;
 
 				// make directory if it doesn't exist and subfolder creation is allowed'
