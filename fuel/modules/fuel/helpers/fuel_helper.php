@@ -203,6 +203,7 @@ function fuel_form($fields, $values = array(), $params = array())
  * @access	public
  * @param	string
  * @param	mixed
+ * @param	mixed
  * @return	string
  */
 function fuel_model($module, $params = array(), $where = array())

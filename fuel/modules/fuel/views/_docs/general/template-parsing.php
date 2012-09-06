@@ -22,12 +22,12 @@ library to implement the expanded Dwoo templating syntax.</p>
 <p>The following are non-namespaced functions that can be used in your application and will be translated by the templating system.</p>
 <ul>
 	<li>{site_url('/my/path/')}</li>
-	<li>{assets_path('images/my_asset.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">assets_path()</a> function</li>
-	<li>{img_path('my_img.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">img_path()</a> function.</li>
-	<li>{js_path('my_js.js')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">js_path()</a> function. The <dfn>.js</dfn> extension is optional.</li>
-	<li>{swf_path('my_swf.swf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">swf_path()</a> function. The <dfn>.swf</dfn> extension is optional.</li>
-	<li>{media_path('my_movie.mov')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">media_path()</a> function.</li>
-	<li>{pdf_path('my_pdf.pdf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper')?>">pdf_path()</a> function. The <dfn>.pdf</dfn> extension is optional.</li>
+	<li>{assets_path('images/my_asset.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_assets_path')?>">assets_path()</a> function</li>
+	<li>{img_path('my_img.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_img_path')?>">img_path()</a> function.</li>
+	<li>{js_path('my_js.js')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_js_path')?>">js_path()</a> function. The <dfn>.js</dfn> extension is optional.</li>
+	<li>{swf_path('my_swf.swf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_swf_path')?>">swf_path()</a> function. The <dfn>.swf</dfn> extension is optional.</li>
+	<li>{media_path('my_movie.mov')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_media_path')?>">media_path()</a> function.</li>
+	<li>{pdf_path('my_pdf.pdf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_pdf_path')?>">pdf_path()</a> function. The <dfn>.pdf</dfn> extension is optional.</li>
 	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">safe_mailto()</a> function.</li>
 	<li>{redirect('my_redirect_page')} - Maps to the <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">redirect()</a> function.</li>
 	<li>{show_404} - Maps to the <a href="http://codeigniter.com/user_guide/general/errors.html" target="_blank">show_404()</a> function.</li>
@@ -37,12 +37,12 @@ library to implement the expanded Dwoo templating syntax.</p>
 <p>The following are namespaced functions that can be used in your application and will be translated by the templating system.</p>
 
 <ul>
-	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">uri_segment(n)</a> function.</li>
-	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_var()</a> function.</li>
-	<li>{fuel_model(model, array(key="val"...)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_modules()</a> function.</li>
-	<li>{fuel_block(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_block()</a> function.</li>
-	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_nav()</a> function.</li>
-	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_edit()</a> function.</li>
+	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/my_url_helper#func_uri_segment')?>">uri_segment(n)</a> function.</li>
+	<li>{fuel_var} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_var')?>">fuel_var()</a> function.</li>
+	<li>{fuel_model('module_name', array(key="val"...)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_model')?>">fuel_model()</a> function. The first parameter is usually the name of your model and does not need to include the "_model" suffix (usually the same as the module name).</li>
+	<li>{fuel_block(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_block')?>">fuel_block()</a> function.</li>
+	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_nav')?>">fuel_nav()</a> function.</li>
+	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_edit')?>">fuel_edit()</a> function.</li>
 </ul>
 <p class="important">Note that several of the functions require an associative array paramter with the <dfn>key="val"</dfn> syntax.</p>
 
@@ -63,7 +63,7 @@ $my_data[] = array('name' => 'Han Solo', 'weapon' => 'blaster');
 <p>You can also iterate over objects. For example, you may have a user model with some custom methods on it:</p>
 <pre class="brush:php">
 ... 
-$my_data = $this->user_model->find_all();
+{$mydata = fuel_model('users', find="all")}
 
 {foreach $my_data user}
 	{$user->name} - {$user->weapon}
