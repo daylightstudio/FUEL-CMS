@@ -35,7 +35,6 @@ class Fuel_cache extends Fuel_base_library {
 	
 	public $ignore = '#^(\..+)|(index\.html)#'; // Regular expression of files to exclude from clearing like .gitignore and .htaccess
 	public $cache_path = ''; // The cache path. If no path is provided it will use the cache path value found in the main CI config file.
-	public $compiled_path = ''; // The path to the compiled template files. If none is provided it will be the $this->cache_path.'dwoo/compiled'
 	
 	protected $_cache; // the Cache object used for saving, retrieving and deleting cached files
 	protected $_types = array(
@@ -284,11 +283,24 @@ class Fuel_cache extends Fuel_base_library {
 		
 		// also delete DWOO compiled files
 		$this->CI->load->helper('file');
-		$dwoo_path = $this->compiled_path;
+
+		include(APPPATH.'config/parser.php');
+
 		
-		if (is_dir($dwoo_path) AND is_writable($dwoo_path))
+		// remove all compile files
+		$dwoo_compile_path =& $config['parser_compile_dir'];
+		if (is_dir($dwoo_compile_path) AND is_writable($dwoo_compile_path))
 		{
-			delete_files($dwoo_path, FALSE, $this->ignore);
+			delete_files($dwoo_compile_path, FALSE, $this->ignore);
+		}
+
+		// remove all cache files
+		$dwoo_cache_path =& $config['parser_cache_dir'];
+		if (is_dir($dwoo_cache_path) AND is_writable($dwoo_cache_path))
+		{
+			$compiled_folder = trim(str_replace($dwoo_cache_path, '', $dwoo_compile_path), '/');
+			$ignore = array($compiled_folder);
+			delete_files($dwoo_cache_path, TRUE, $ignore);
 		}
 		
 		// remove asset cache files if exist
@@ -304,6 +316,8 @@ class Fuel_cache extends Fuel_base_library {
 				$this->_delete_files($cache_folder);
 			}
 		}
+
+
 	}
 	
 	// --------------------------------------------------------------------
