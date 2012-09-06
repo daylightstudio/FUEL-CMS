@@ -86,7 +86,8 @@ class Fuel_cache extends Fuel_base_library {
 		// set the compile templates path
 		if (empty($this->compiled_path))
 		{
-			$this->set_compiled_path($this->cache_path.'dwoo/compiled/');
+			include(APPPATH.'config/parser.php');
+			$this->set_compiled_path($config['parser_compile_dir']);
 		}
 	}
 	
