@@ -166,7 +166,7 @@ class Form {
 			if ($CI->config->item('csrf_protection') === TRUE)
 			{
 				$CI->security->csrf_set_cookie(); // need to set it again here just to be sure ... on initial page loads this may not be there
-				$html_before_form .= $this->hidden($CI->security->csrf_token_name, $CI->security->csrf_hash);
+				$html_before_form .= $this->hidden($CI->security->get_csrf_token_name(), $CI->security->get_csrf_hash());
 			}
 		}
 		return $html_before_form.'</form>';
