@@ -60,6 +60,7 @@ class Fuel_cache extends Fuel_base_library {
 		parent::__construct($params);
 		$this->CI->load->library('cache');
 		$this->_cache = & $this->CI->cache;
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
@@ -76,7 +77,6 @@ class Fuel_cache extends Fuel_base_library {
 	function initialize($params)
 	{
 		parent::initialize($params);
-		
 		// set the cache path to the configs cache path if left empty
 		if (empty($this->cache_path))
 		{
@@ -287,7 +287,7 @@ class Fuel_cache extends Fuel_base_library {
 		
 		if (is_dir($dwoo_path) AND is_writable($dwoo_path))
 		{
-			@delete_files($dwoo_path, FALSE, $this->ignore);
+			delete_files($dwoo_path, FALSE, $this->ignore);
 		}
 		
 		// remove asset cache files if exist

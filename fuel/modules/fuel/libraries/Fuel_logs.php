@@ -46,6 +46,7 @@ class Fuel_logs extends Fuel_base_library {
 	function __construct($params = array())
 	{
 		parent::__construct($params);
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------

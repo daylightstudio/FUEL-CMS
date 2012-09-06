@@ -39,10 +39,10 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Constructor
 	 *
 	 */
-	function __construct()
+	function __construct($params = array())
 	{
 		parent::__construct();
-		$this->initialize();
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------

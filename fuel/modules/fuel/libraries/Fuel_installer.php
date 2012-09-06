@@ -51,6 +51,7 @@ class Fuel_installer extends Fuel_base_library {
 		parent::__construct($params);
 		$this->CI->load->helper('inflector');
 		$this->CI->load->helper('file');
+		$this->initialize($params);
 	}
 	
 	// --------------------------------------------------------------------
