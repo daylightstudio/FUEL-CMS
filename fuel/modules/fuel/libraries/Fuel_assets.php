@@ -128,15 +128,17 @@ class Fuel_assets extends Fuel_base_library {
 						'resize_and_crop' => FALSE, 
 						);
 
-		// set defaults
-		foreach($valid as $param => $default)
-		{
-			$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
-		}
-
 		// upload the file
 		foreach($_FILES as $key => $file)
 		{
+			$params = array();
+
+			// set defaults
+			foreach($valid as $param => $default)
+			{
+				$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
+			}
+
 			if ($file['error'] == 0)
 			{
 				$ext = end(explode('.', $file['name']));
