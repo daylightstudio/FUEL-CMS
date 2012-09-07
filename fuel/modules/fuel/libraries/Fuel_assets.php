@@ -128,17 +128,18 @@ class Fuel_assets extends Fuel_base_library {
 						'resize_and_crop' => FALSE, 
 						);
 
+		// used later
+		$has_empty_filename = (empty($params['file_name'])) ? TRUE : FALSE;
+
+		// set defaults
+		foreach($valid as $param => $default)
+		{
+			$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
+		}
+
 		// upload the file
 		foreach($_FILES as $key => $file)
 		{
-			$params = array();
-
-			// set defaults
-			foreach($valid as $param => $default)
-			{
-				$params[$param] = (isset($params[$param])) ? $params[$param] : $default;
-			}
-
 			if ($file['error'] == 0)
 			{
 				$ext = end(explode('.', $file['name']));
@@ -235,11 +236,11 @@ class Fuel_assets extends Fuel_base_library {
 				} 
 			
 				// set file name
-				if (empty($params['file_name']) AND !empty($params[$field_name.'_filename']))
+				if ($has_empty_filename AND !empty($params[$field_name.'_filename']))
 				{
 					$params['file_name'] = $params[$field_name.'_filename'];
 				}
-				else if (empty($params['file_name']))
+				else if ($has_empty_filename)
 				{
 					$params['file_name'] = url_title($file['name'], 'underscore', FALSE);	
 				}
