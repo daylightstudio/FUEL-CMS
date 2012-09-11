@@ -71,6 +71,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>arrow_class</strong>: the class for the arrows used in breadcrumb type menus</li>
 		<li><strong>display_current</strong>: determines whether to display the current active breadcrumb item</li>
 		<li><strong>home_link</strong>: the root home link</li>
+		<li><strong>append</strong>: appends additional menu items to those items already set (e.g. from the $nav array or from the navigation module). Good to use on dynamic pages where you need to dynamically set a navigation item for a page</li>
 		<li><strong>order</strong>: the order to display... for page_title ONLY</li>
 		<li><strong>language</strong>: select the appropriate language</li>
 	</ul>
@@ -113,6 +114,7 @@ class Fuel_navigation extends Fuel_module {
 						'order' => 'asc',
 						'exclude' => array(),
 						'return_normalized' => FALSE,
+						'append' => array(),
 						'language' => NULL,
 						);
 
