@@ -501,7 +501,7 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
-		if (!empty($page_data))
+		if (!empty($page_data['id']))
 		{
 			$this->id = $page_data['id'];
 			$this->location = $page_data['location'];

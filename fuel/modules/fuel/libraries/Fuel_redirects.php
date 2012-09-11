@@ -113,7 +113,7 @@ class Fuel_redirects extends Fuel_base_library {
 		$redirects = $this->config();
 
 		$uri = implode('/', $this->CI->uri->segments);
-		$query_string = $_SERVER['QUERY_STRING'];
+		$query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
 		
 		if (!empty($query_string)) 
 		{

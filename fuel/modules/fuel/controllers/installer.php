@@ -72,6 +72,8 @@ class Installer extends Fuel_base_controller {
 			show_error(lang('error_missing_params'));
 		}
 
+		$uri = trim($this->uri->uri_string(), '/');
+		$uri = str_replace('-at-', '@', $uri);
 		$segs = explode('/', trim($this->uri->uri_string(), '/'));
 		$segs = array_slice($segs, 3);
 		$module = array_pop($segs);

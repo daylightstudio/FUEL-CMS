@@ -37,6 +37,8 @@ installation directory (where the index.php CodeIgniter bootstrap file exists al
 &gt;php index.php fuel/installer/add_git_submodule git://github.com/daylightstudio/FUEL-CMS-Blog-Module.git blog
 </pre>
 
+<p class="important">If your git repo path has a "@" in it, change it to a "-at-" or else you will get a "The URI you submitted has disallowed characters" error.</p>
+
 <p>Phil Sturgeon of PyroCMS fame has a good <a href="http://philsturgeon.co.uk/blog/2011/09/managing-codeigniter-packages-with-git-submodules" target="_blank">article on using submodules</a>.</p>
 
 <h3>Finalizing the Installation</h3>
