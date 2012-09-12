@@ -292,7 +292,8 @@ body .warning { background-color: #ff1; background-repeat: no-repeat; }
 body .error { background-color: #c30; background-repeat: no-repeat; }
 body .error li { color: #fff; }
 body .error li p, body .error li li { margin: 0; padding: 0; }
-span.error, span.success, strong.error, strong.success { color: #fff; padding: 2px 5px; }
+span.error, span.success, strong.error, strong.success { color: #fff; padding: 1px 5px; }
+span.error a { color: #fff; }
 span.warning { padding: 2px 5px; }
 span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
 .change { background: #ffe; }
