@@ -121,6 +121,14 @@ class Fuel_redirects extends Fuel_base_library {
 		}
 		if (!empty($redirects))
 		{
+
+			// Is there a literal match?  If so we're done
+			if (isset($redirects[$uri]))
+			{
+				$url = site_url($redirects[$uri]);
+				redirect($url, 'location', $this->http_code);
+			}
+
 			foreach ($redirects as $key => $val)
 			{
 				$key = trim($key, '/');
@@ -130,7 +138,7 @@ class Fuel_redirects extends Fuel_base_library {
 				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
 
 				// Does the RegEx match?
-				if (preg_match('#^'.preg_quote($key).'$#', $uri))
+				if (preg_match('#^'.$key.'$#', $uri))
 				{
 					// Do we have a back-reference?
 					if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
