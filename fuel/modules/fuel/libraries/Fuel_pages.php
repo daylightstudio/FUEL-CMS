@@ -713,7 +713,9 @@ class Fuel_page extends Fuel_base_library {
 		// set the extension... allows for sitemap.xml for example
 		$ext = '.'.pathinfo($view, PATHINFO_EXTENSION);
 		$check_file = $this->views_path.$view;
-		if (empty($ext) OR $ext == '.') 
+
+		// added .php so $check_file will essentially not work and will then go to any redirects or 404
+		if (empty($ext) OR $ext == '.' OR $ext == '.php') 
 		{
 			$ext = EXT;
 			$check_file = $this->views_path.$view.$ext;
