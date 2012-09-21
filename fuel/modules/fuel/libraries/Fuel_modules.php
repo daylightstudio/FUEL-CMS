@@ -938,7 +938,7 @@ class Fuel_module extends Fuel_base_library {
 		}
 
 		// retrieve data based on the method
-		$data = $model->find($find, $where, $order, $offset, $limit, $return_method, $assoc_key);
+		$data = $model->find($find, $where, $order, $limit, $offset, $return_method, $assoc_key);
 
 		if ($data !== FALSE)
 		{
