@@ -56,7 +56,7 @@ class MY_Model extends CI_Model {
 	public $xss_clean = FALSE; // automatically run the xss_clean
 	public $readonly = FALSE; // sets the model to readonly mode where you can't save or delete data'
 	public $hidden_fields = array(); // fields to hide when creating a form
-	public $unique_fields = array(); // fields that are not IDs but are unique
+	public $unique_fields = array(); // fields that are not IDs but are unique. Can also be an array of arrays for compound keys
 	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
 	public $serialized_fields = array(); // fields that are contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
 	public $default_serialization_method = 'json'; // the default serialization method. Options are 'json' and 'serialize'
@@ -1795,7 +1795,14 @@ class MY_Model extends CI_Model {
 	function is_new($val, $key)
 	{
 		if (!isset($val)) return FALSE;
-		$data = $this->find_one_array(array($key => $val));
+		if (is_array($key))
+		{
+			$data = $this->find_one_array($key);
+		}
+		else
+		{
+			$data = $this->find_one_array(array($key => $val));
+		}
 		if (!empty($data)) return FALSE;
 		return TRUE;
 	}
@@ -1824,21 +1831,49 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @param	string	value to be checked
 	 * @param	string	column name to check
-	 * @param	mixed	the key field value to check againsts
+	 * @param	mixed	the key field value to check againsts. May also be the complete array of values if the key value is also an array (for compound unique keys)
 	 * @return	array
 	 */	
 	function is_editable($val, $key, $id)
 	{
 		if (!isset($val)) return FALSE;
-		$data = $this->find_one_array(array($key => $val));
-		
-		// if no data then we are new and good
-		if (empty($data)) return TRUE;
 
 		$key_field = $this->key_field();
 		
+		if (is_array($key) AND is_array($id))
+		{
+			foreach($key as $k)
+			{
+				if (!isset($id[$k]))
+				{
+					return FALSE;
+				}
+				$where[$k] = $id[$k];
+			}
+			$data = $this->find_one_array($where);
+			$unique_value = $id[$key_field];
+
+		}
+		else
+		{
+			$data = $this->find_one_array(array($key => $val));
+			$unique_value = $id;
+		}
+		// if no data then we are new and good
+		if (empty($data)) return TRUE;
+
 		// we are going to ignore multiple keys
-		if (!empty($data) AND $data[$key_field] == $id) return TRUE;
+		if (is_string($key_field))
+		{
+			if (!empty($data) AND $data[$key_field] == $unique_value)
+			{
+				return TRUE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
 		return FALSE;
 	}
     
@@ -1903,7 +1938,26 @@ class MY_Model extends CI_Model {
 			return FALSE;
 		}
 		
-		$required = array_merge($this->unique_fields, $this->required);
+		$required = $this->required;
+		foreach($this->unique_fields as $unique_field)
+		{
+			if (is_array($unique_field))
+			{
+				foreach($unique_field as $uf)
+				{
+					if (!in_array($uf, $required))
+					{
+						$required[] = $uf;
+					}
+				}
+			}
+			else if (!in_array($unique_field, $required))
+			{
+				$required[] = $unique_field;
+			}
+		}
+		// changed to above so we can have compound keys
+		//$required = array_merge($this->unique_fields, $this->required);
 
 		// convert required fields to rules
 		foreach($required as $key => $val)
@@ -1947,19 +2001,52 @@ class MY_Model extends CI_Model {
 		foreach($this->unique_fields as $field)
 		{
 			$has_key_field = $this->_has_key_field_value($values);
-			$friendly_field = ucwords(str_replace('_', ' ', $field));
-			if ($has_key_field)
+
+			if (is_array($field))
 			{
-				$key_field = $this->key_field();
-				if (!is_array($key_field))
+				$where = array();
+				foreach($field as $f)
 				{
-					$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values[$key_field]));
+					if (isset($values[$f]))
+					{
+						$where[$f] = $values[$f];
+					}
+				}
+
+				foreach($field as $f)
+				{
+					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
+					if ($has_key_field)
+					{
+						$key_field = $this->key_field();
+						if (!is_array($key_field))
+						{
+							$this->add_validation($f, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values));
+						}
+					}
+					else
+					{
+						$this->add_validation($f, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), array($where));
+					}
 				}
 			}
 			else
 			{
-				$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), $field);
+				$friendly_field = ucwords(str_replace('_', ' ', $field));
+				if ($has_key_field)
+				{
+					$key_field = $this->key_field();
+					if (!is_array($key_field))
+					{
+						$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values[$key_field]));
+					}
+				}
+				else
+				{
+					$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), $field);
+				}
 			}
+
 		}
 
 		// run other validation in model if exists
@@ -1967,6 +2054,7 @@ class MY_Model extends CI_Model {
 		{
 			foreach($this->rules as $rule)
 			{
+				
 				if ($key == $rule[0] AND $rule[1] != 'required')
 				{
 					$rule_val = (array) $val;
@@ -1982,11 +2070,27 @@ class MY_Model extends CI_Model {
 					// now replace any placeholders for values
 					foreach($rule[3] as $r_key => $r_val) 
 					{
-						if (strpos($r_val, '{') === 0)
+						
+						if (is_array($r_val))
 						{
-							$val_key = str_replace(array('{', '}'), '', $r_val);
-							if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
+							foreach($r_val as $rv)
+							{
+								if (strpos($rv, '{') === 0)
+								{
+									$val_key = str_replace(array('{', '}'), '', $rv);
+									if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
+								}
+							}
 						}
+						else
+						{
+							if (strpos($r_val, '{') === 0)
+							{
+								$val_key = str_replace(array('{', '}'), '', $r_val);
+								if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
+							}
+						}
+						
 					}
 					$rule[3] = array_merge($rule_val, $rule[3]);
 					call_user_func_array(array(&$this->validator, 'add_rule'), $rule);
@@ -2469,7 +2573,18 @@ class MY_Model extends CI_Model {
 		{
 			foreach($this->unique_fields as $val)
 			{
-				$fields[$val]['required'] = TRUE;
+				if (is_array($val))
+				{
+					foreach($val as $v)
+					{
+						$fields[$v]['required'] = TRUE;			
+					}
+				}
+				else
+				{
+					$fields[$val]['required'] = TRUE;	
+				}
+				
 			}
 		}
 		
