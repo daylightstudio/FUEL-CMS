@@ -131,12 +131,18 @@ class Fuel_pages extends Fuel_base_library {
 	{
 		$valid_include = array('cms', 'modules', 'views');
 		$pages = array();
-		
-		if (!is_array($include))
+
+		if (is_string($include))
 		{
-			$include = $valid_include;
+			if ($include == 'all')
+			{
+				$include = $valid_include;
+			}
+			else
+			{
+				$include = array($include);
+			}
 		}
-		
 		foreach($include as $method)
 		{
 			if (in_array($method, $valid_include))

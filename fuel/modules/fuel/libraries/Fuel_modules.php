@@ -292,13 +292,16 @@ class Fuel_modules extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function pages()
+	function pages($include_pages_module = FALSE)
 	{
 		$all_pages = array();
 		foreach($this->_modules as $module)
 		{
-			$pages = $module->pages();
-			$all_pages = array_merge($all_pages, $pages);
+			if ($include_pages_module == TRUE OR ($include_pages_module == FALSE AND $module->name() != 'pages'))
+			{
+				$pages = $module->pages();
+				$all_pages = array_merge($all_pages, $pages);
+			}
 		}
 		
 		return $all_pages;
@@ -775,7 +778,10 @@ class Fuel_module extends Fuel_base_library {
 		{
 			$records = $this->CI->$model->find_all_array();
 		}
-		
+
+		echo '<pre>';
+		print_r($model);
+		echo '</pre>';
 		foreach($records as $record)
 		{
 			// need to put in global namesapce for preg_replace_callback to access
