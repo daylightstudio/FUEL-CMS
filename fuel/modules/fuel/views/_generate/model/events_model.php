@@ -23,7 +23,7 @@ class Events_model extends Base_module_model {
 	{
 		if (empty($value['slug']))
 		{
-			$values['slug'] = url_title($values['title'], 'dash', TRUE);
+			$values['slug'] = url_title($values['name'], 'dash', TRUE);
 		}
 		return $values;
 	}
