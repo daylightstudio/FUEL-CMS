@@ -30,8 +30,26 @@ if (defined('STDIN'))
 	$_SERVER['REQUEST_URI'] = $args ? implode('/', $args) : '';
 }
 
-define('USE_FUEL_ROUTES', (strpos($_SERVER['REQUEST_URI'], '/'.$config['fuel_path']) !== FALSE));
+
+
 define('FUEL_ROUTE', $config['fuel_path']);
+
+
+// DETECT URI PATH
+if (isset($_SERVER['REQUEST_URI']))
+{
+	$_URI_PATH = $_SERVER['REQUEST_URI'];
+}
+else if (isset($_SERVER['PATH_INFO']))
+{
+	$_URI_PATH = $_SERVER['PATH_INFO'];
+}
+else if (isset($_SERVER['ORIG_PATH_INFO']))
+{
+	$_URI_PATH = $_SERVER['ORIG_PATH_INFO'];
+}
+
+define('USE_FUEL_ROUTES', (strpos($_URI_PATH, '/'.$config['fuel_path']) !== FALSE));
 
 foreach($config['modules_allowed'] as $module)
 {
@@ -41,6 +59,7 @@ foreach($config['modules_allowed'] as $module)
 		require_once($constants_path);
 	}
 }
+
 
 if (!defined('BASE_URL'))
 {
