@@ -12,6 +12,18 @@ class Sitevariables_model extends Base_module_model {
 		parent::__construct('fuel_site_variables');
 	}
 
+	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
+	{
+
+		$this->db->select('id, name, SUBSTRING(value, 1, 50) as value, scope, active', FALSE);	
+		$data = parent::list_items($limit, $offset, $col, $order);
+		foreach($data as $key => $val)
+		{
+			$data[$key]['value'] = htmlentities($val['value'], ENT_QUOTES, 'UTF-8');
+		}
+		return $data;
+	}
+
 	function retrieve_all()
 	{
 		$vars = $this->options_list('name', 'value', array('active' => 'yes'));
