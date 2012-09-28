@@ -687,13 +687,19 @@ class Module extends Fuel_base_controller {
 		if ($_POST[$this->model->key_field()] == 'dup')
 		{
 			$_POST[$this->model->key_field()] = '';
+
+			$this->load->library('form_builder');
+			$fb = new Form_builder();
+			$fb->load_custom_fields(APPPATH.'config/custom_fields.php');
+			$fields = $this->model->form_fields($_POST);
+			$fb->set_fields($fields);
+			$fb->post_process_field_values();// manipulates the $_POST values directly
 		}
 		else
 		{
 			$this->model->on_before_post();
 
 			$posted = $this->_process();
-
 			// set publish status to no if you do not have the ability to publish
 			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
@@ -905,7 +911,7 @@ class Module extends Fuel_base_controller {
 		$this->model->on_before_post();
 		
 		$posted = $this->_process();
-
+	
 		// run before_edit hook
 		$this->_run_hook('before_edit', $posted);
 		

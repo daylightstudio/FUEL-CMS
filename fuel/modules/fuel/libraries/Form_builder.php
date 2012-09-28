@@ -2122,6 +2122,60 @@ Class Form_builder {
 		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 		$ampm_params['disabled'] = $params['disabled'];
 		$str .= $this->create_enum($this->normalize_params($ampm_params));
+
+
+		// create post processer to recreate date value
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						$hr   = (isset($val["'.$params['subkey'].'_hour"]) AND (int)$val["'.$params['subkey'].'_hour"] > 0 AND (int)$val["'.$params['subkey'].'_hour"] < 24) ? $val["'.$params['subkey'].'_hour"] : "";
+						$min  = (isset($val["'.$params['subkey'].'_min"]) AND is_numeric($val["'.$params['subkey'].'_min"]))  ? $val["'.$params['subkey'].'_min"] : "00";
+						$ampm = (isset($val["'.$params['subkey'].'_am_pm"]) AND $hr AND $min) ? $val["'.$params['subkey'].'_am_pm"] : "am";
+
+						$value = "";
+						if ($hr !== "")
+						{
+							$value = $hr.":".$min.$ampm;
+							$value[$key]["'.$params['subkey'].'"] = date("H:i:s", strtotime($value));
+						}
+					}
+					return $value;
+				}
+				';
+		}
+		else
+		{
+			$func_str = '
+				$hr    = (isset($_POST["'.$params['key'].'_hour"]) AND (int)$_POST["'.$params['key'].'_hour"] > 0 AND (int)$_POST["'.$params['key'].'_hour"] < 24) ? $_POST["'.$params['key'].'_hour"] : "";
+				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"] AND $hr))  ? $_POST["'.$params['key'].'_min"] : "00";
+				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
+
+				$value = "";
+				if ($hr !== "")
+				{
+					$value = $hr.":".$min.$ampm;
+					$value = date("H:i:s", strtotime($value));
+				}
+
+				return $value;
+			';
+		}
+
+		// needed for post processing
+		if (!isset($_POST[$params['key']]))
+		{
+			$_POST[$params['key']] = '';
+		}
+
+		if (empty($params['no_post_process']))
+		{
+			$func = create_function('$value', $func_str);
+			$this->set_post_process($params['key'], $func);
+		}
 		return $str;
 	}
 	
@@ -2138,7 +2192,62 @@ Class Form_builder {
 	{
 		$str = $this->create_date($params);
 		$str .= ' ';
+		$params['no_post_process'] = FALSE;
 		$str .= $this->create_time($params);
+
+
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						if (isset($val["'.$params['subkey'].'"]))
+						{
+							$date = (!empty($val["'.$params['subkey'].'"]) AND is_date_format($val["'.$params['subkey'].'"])) ? $val["'.$params['subkey'].'"] : "";;
+							$hr   = (!empty($val["'.$params['subkey'].'_hour"]) AND  (int)$val["'.$params['subkey'].'_hour"] > 0 AND (int)$val["'.$params['subkey'].'_hour"] < 24) ? $val["'.$params['subkey'].'_hour"] : "";
+							$min  = (!empty($val["'.$params['subkey'].'_min"]) AND is_numeric($val["'.$params['subkey'].'_min"]))  ? $val["'.$params['subkey'].'_min"] : "00";
+							$ampm = (isset($val["'.$params['subkey'].'_am_pm"]) AND $hr AND $min) ? $val["'.$params['subkey'].'_am_pm"] : "am";
+
+							$v = (!empty($date)) ? $date." ".$hr.":".$min.$ampm : 0;
+
+							$value = "";
+							if ($date != "")
+							{
+								$value = $date;
+								if (!empty($hr)) $value .= " ".$hr.":".$min.$ampm;
+								$value = date("Y-m-d H:i:s", strtotime($value));
+							}
+							$value[$key]["'.$params['subkey'].'"] = $value;
+						}
+					}
+					return $value;
+				}
+				';
+		}
+		else
+		{
+			$func_str = '
+				$date  = (!empty($_POST["'.$params['key'].'"]) AND is_date_format($_POST["'.$params['key'].'"])) ? $_POST["'.$params['key'].'"] : "";
+				$hr    = (!empty($_POST["'.$params['key'].'_hour"]) AND (int)$_POST["'.$params['key'].'_hour"] > 0 AND (int)$_POST["'.$params['key'].'_hour"] < 24) ? $_POST["'.$params['key'].'_hour"] : "";
+				$min   = (!empty($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"] AND $hr))  ? $_POST["'.$params['key'].'_min"] : "00";
+				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
+
+				$value = "";
+				if ($date != "")
+				{
+					$value = $date;
+					if (!empty($hr)) $value .= " ".$hr.":".$min.$ampm;
+					$value = date("Y-m-d H:i:s", strtotime($value));
+				}
+				return $value;
+			';
+		}
+
+		$func = create_function('$value', $func_str);
+		$this->set_post_process($params['key'], $func);
+
 		return $str;
 	}
 	
