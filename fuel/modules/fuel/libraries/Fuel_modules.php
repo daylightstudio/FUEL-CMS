@@ -779,9 +779,6 @@ class Fuel_module extends Fuel_base_library {
 			$records = $this->CI->$model->find_all_array();
 		}
 
-		echo '<pre>';
-		print_r($model);
-		echo '</pre>';
 		foreach($records as $record)
 		{
 			// need to put in global namesapce for preg_replace_callback to access
