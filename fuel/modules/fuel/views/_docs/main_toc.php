@@ -63,6 +63,7 @@
 					<li><a href="<?=user_guide_url('general/user-management')?>">User Management</a></li>
 					<li><a href="<?=user_guide_url('general/models')?>">Models</a></li>
 					<li><a href="<?=user_guide_url('general/forms')?>">Forms</a></li>
+					<li><a href="<?=user_guide_url('general/tags-categories')?>">Tags &amp; Categories</a></li>
 					<li><a href="<?=user_guide_url('general/dashboards')?>">Dashboards</a></li>
 					<li><a href="<?=user_guide_url('general/redirects')?>">Redirects</a></li>
 					<li><a href="<?=user_guide_url('general/javascript')?>">Javascript</a></li>
@@ -87,6 +88,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_base_library')?>">Fuel Base Library Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_blocks')?>">Fuel Blocks Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_cache')?>">Fuel Cache Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_categories')?>">Fuel Categories Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_layouts')?>">Fuel Layouts Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_language')?>">Fuel Language Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_logs')?>">Fuel Logs Class</a></li>
@@ -98,6 +100,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel Permissions Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel Redirects Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel Sitevars Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_tags')?>">Fuel Tags Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel Users Class</a></li>
 				</ul>
 

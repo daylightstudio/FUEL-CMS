@@ -31,19 +31,37 @@ class Fuel_categories extends Fuel_module {
 	
 	protected $module = 'categories';
 	
-	function find_by_context($context, $category = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a single category record object based on a slug value
+	 *
+	 * @access	public
+	 * @param	string	the slug value to query on
+	 * @return	array
+	 */	
+	function find_by_slug($slug)
+	{
+		$model = $this->model();
+		$where['slug'] = $slug;
+		$data = $model->find_one($where);
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of categories record objects based on a context value
+	 *
+	 * @access	public
+	 * @param	string	the context to query on
+	 * @return	array
+	 */	
+	function find_by_context($context)
 	{
 		$model = $this->model();
 		$where['context'] = $context;
-		if (!empty($category))
-		{
-			$where['slug'] = $category;
-			$data = $model->find_one($where);
-		}
-		else
-		{
-			$data = $model->find_all($where);
-		}
+		$data = $model->find_all($where);
 		return $data;
 	}
 	

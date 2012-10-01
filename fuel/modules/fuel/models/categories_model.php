@@ -86,7 +86,7 @@ class Category_model extends Base_module_record {
 				foreach($model->foreign_keys as $key => $mod)
 				{
 					$mod_name = $module->name();
-					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND $mod[FUEL_FOLDER] == 'categories_model')
+					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
 					{
 						$mod['model'] =& $module->model();
 						$mod['key'] = $key;
@@ -103,7 +103,7 @@ class Category_model extends Base_module_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns a related category item
+	 * Returns a related category model with the active record query already applied
 	 *
 	 * @access	public
 	 * @param	string	related slug value
@@ -119,7 +119,8 @@ class Category_model extends Base_module_record {
 			}
 			$model =& $this->_belongs_to[$var]['model'];
 			$key = $this->_belongs_to[$var]['key'];
-			$where[$model->table_name().'.'.$key] = $this->_fields['id'];
+			$key_field = $this->_parent_model->key_field();
+			$where[$model->table_name().'.'.$key] = $this->_fields[$key_field];
 			$model->db()->where($where);
 			return $model;
 		}

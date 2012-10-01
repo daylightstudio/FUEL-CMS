@@ -69,6 +69,7 @@ CREATE TABLE `fuel_tags` (
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `category_id` int(10) unsigned NOT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `precedence` int(11) NOT NULL,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;

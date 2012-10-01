@@ -32,11 +32,21 @@ class Fuel_tags extends Fuel_module {
 	protected $module = 'tags';
 	
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a tag model record object
+	 *
+	 * @access	public
+	 * @param	string	the name of the tag
+	 * @param	string	the name of the category the tag belongs to (optional)
+	 * @return	object
+	 */	
 	function find_by_tag($tag, $category = NULL)
 	{
 		$model = $this->model();
 		$where['slug'] = $tag;
-		if (!empty($type))
+		if (!empty($category))
 		{
 			$categories_table = $model->tables('categories');
 			$where[$categories_table.'.slug'] = $category;
@@ -45,7 +55,16 @@ class Fuel_tags extends Fuel_module {
 		return $tag;
 	}
 
-	function find_by_category($category, $type = NULL)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a related category model with the active record query already applied
+	 *
+	 * @access	public
+	 * @param	string	the name of the category
+	 * @return	array
+	 */	
+	function find_by_category($category)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'relationships_model');
 		$model =& $this->model();
@@ -63,6 +82,15 @@ class Fuel_tags extends Fuel_module {
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an associative array with the keys being the tags slug value and the values (label), being the name of the tag
+	 *
+	 * @access	public
+	 * @param	string	related slug value
+	 * @return	array
+	 */	
 	function options_list($key = 'slug', $val = 'name')
 	{
 		$model =& $this->model();
