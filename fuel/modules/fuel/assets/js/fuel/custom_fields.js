@@ -156,6 +156,12 @@ fuel.fields.wysiwyg_field = function(context){
 			if ($.changeChecksaveValue){
 				$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
 			}
+
+			// hack to force the width
+			$elem = $('#' + ckId);
+			if ($elem.get(0).style.width){
+				$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
+			}
 			
 		})
 		CKEDITOR.instances[ckId].resetDirty();
