@@ -210,7 +210,7 @@ $config['modules']['users'] = array(
 			}
 			return $link;
 		}'))),
-	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
+	'item_actions' => array('save', 'activate', 'create', 'delete'),
 	'clear_cache_on_save' => FALSE,
 );
 
