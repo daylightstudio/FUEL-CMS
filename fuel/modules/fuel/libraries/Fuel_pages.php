@@ -607,7 +607,8 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	boolean	Determines whether to render any inline editing
 	 * @return	string
 	 */
-	function cms_render($return = FALSE, $fuelify = FALSE){
+	function cms_render($return = FALSE, $fuelify = FALSE)
+	{
 
 		$this->CI->load->library('parser');
 
