@@ -84,13 +84,23 @@ class Blocks extends Module {
 				
 				// sanitize the file before saving
 				$file = $this->_sanitize($file);
+				$id = $this->input->post('id', TRUE);
 				$name =  $this->input->post('name', TRUE);
+				$language =  $this->input->post('language', TRUE);
+
 				if (empty($name))
 				{
 					$name = current(explode('.', $file_info['name']));
 				}
+
+				if ($id)
+				{
+					$save['id'] = $id;
+				}
+
 				$save['name'] = $name;
 				$save['view'] = $file;
+				$save['language'] = $language;
 				$save['date_added'] = datetime_now();
 
 				$id  = $this->model->save($save);
@@ -118,6 +128,8 @@ class Blocks extends Module {
 		
 		$fields['name'] = array('label' => lang('form_label_name'), 'type' => 'inline_edit', 'options' => $blocks, 'module' => 'blocks');
 		$fields['file'] = array('type' => 'file', 'accept' => '', 'required' => TRUE);
+		$fields['id'] = array('type' => 'hidden');
+		$fields['language'] = array('type' => 'hidden');
 		
 		$common_fields = $this->_common_fields();
 		$fields = array_merge($fields, $common_fields);
