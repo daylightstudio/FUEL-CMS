@@ -22,7 +22,7 @@ class Sitevariables extends Module {
 		{
 			$id = $var;
 		}
-		parent::inline_edit($id);
+		parent::inline_edit($id, 'value');
 	}
 	
 }
