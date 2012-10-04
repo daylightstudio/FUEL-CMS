@@ -23,6 +23,22 @@ class Users extends Module {
 		parent::edit($id, NULL);
 	}
 
+	protected function _process_create()
+	{
+		// reset dup id
+		if ($_POST[$this->model->key_field()] == 'dup')
+		{
+			$_POST[$this->model->key_field()] = '';
+			$_POST['user_name'] = '';
+			$_POST['password'] = '';
+			$_POST['email'] = '';
+			$_POST['first_name'] = '';
+			$_POST['last_name'] = '';
+		}
+		
+		parent::_process_create();
+	}
+
 	function _toggle_callback($cols, $heading)
 	{
 		$valid_user = $this->fuel->auth->valid_user();
