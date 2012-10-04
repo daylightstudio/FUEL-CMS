@@ -41,24 +41,11 @@ class Fuel_login_test extends Fuel_test_base {
 			'ico_navigation' => 'Navigation',
 			'ico_assets' => 'Assets',
 			'ico_sitevariables' => 'Site Variables',
-			'ico_blog_posts' => 'Blog Posts',
-			'ico_blog_categories' => 'Blog Categories',
-			'ico_blog_comments' => 'Blog Comments',
-			'ico_blog_links' => 'Blog Links',
-			'ico_blog_users' => 'Blog Authors',
-			'ico_blog_settings' => 'Blog Settings',
-			'ico_tools_user_guide' => 'User Guide',
-			'ico_tools_backup' => 'Backup',
-			'ico_tools_seo' => 'Page Analysis',
-			'ico_tools_seo_google_keywords' => 'Google Keywords',
-			'ico_tools_validate' => 'Validate',
-			'ico_tools_tester' => 'Tester',
-			'ico_tools_cronjobs' => 'Cronjobs',
 			'ico_users' => 'Users',
-			'ico_dashboard' => 'Dashboard',
 			'ico_permissions' => 'Permissions',
 			'ico_manage_cache' => 'Page Cache',
-			'ico_manage_activity' => 'Activity Log',
+			'ico_logs' => 'Activity Log',
+			'ico_settings' => 'Settings',
 		);
 		
 		$menu = $leftmenu_classes;
@@ -80,7 +67,7 @@ class Fuel_login_test extends Fuel_test_base {
 		$valid = TRUE;
 		foreach($menu as $key => $val)
 		{
-			if (pq(".".$key)->size() !== 1)
+			if (pq(".".$key)->size() === 0)
 			{
 				return FALSE;
 			}

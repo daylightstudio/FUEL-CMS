@@ -73,7 +73,7 @@ class Fuel_page_test extends Fuel_test_base {
 		$this->run($test, $expected, 'Test for successful edit of page');
 
 		// check if page contains archived values
-		$test = $this->page_contains('#version option[value="1"]', TRUE);
+		$test = $this->page_contains('#fuel_restore_version option[value="1"]', TRUE);
 		$expected = TRUE;
 		$this->run($test, $expected, 'Test for archived version of page');
 	}

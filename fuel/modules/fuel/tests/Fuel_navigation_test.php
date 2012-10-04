@@ -26,7 +26,7 @@ class Fuel_navigation_test extends Fuel_test_base {
 	
 	public function test_fuel_nav()
 	{
-		$expected = strip_whitespace('<ul><li class="first last"><a href="'.site_url('test').'" title="Test">Test</a></li></ul>');
+		$expected = strip_whitespace('<ul><li class="first last"><a href="'.site_url('test').'">Test</a></li></ul>');
 		$test = strip_whitespace(fuel_nav());
 		$this->run($test, $expected, 'Test for successful fuel_nav() rendering');
 	}
