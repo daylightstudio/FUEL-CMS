@@ -1103,46 +1103,6 @@ class MY_Model extends CI_Model {
 		
 		foreach ($fields as $key => $field)
 		{
-			// if  ($field['type'] == 'time')
-			// {
-			// 	if (isset($values[$key.'_hour']) AND is_numeric($values[$key.'_hour']))
-			// 	{
-			// 		if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $date_func('H:i:s');
-			// 		//the js seem like only supply minute field, assign 00 for sec now
-			// 		if (empty($values[$key.'_sec']))$values[$key.'_sec'] = '00';
-			// 		$values[$key] = date("H:i:s", strtotime(@$values[$key.'_hour'].':'.@$values[$key.'_min'].':'.@$values[$key.'_sec'].' '.@$values[$key.'_am_pm']));
-			// 	}
-			// }
-			// // make it easier for dates
-			// else if ($field['type'] == 'datetime')
-			// {
-			// 	if (empty($values[$key]) OR (int)$values[$key] == 0)
-			// 	{
-					
-			// 		$values[$key] = $this->default_date;
-			// 		$has_time = FALSE;
-			// 	}
-			// 	else
-			// 	{
-			// 		$has_time = (count(explode(' ', $values[$key])) > 1);
-			// 	}
-				
-			// 	// test if there is an hour field AND that there is NO time values first before looking at other values
-			// 	if (isset($values[$key.'_hour']) AND !$has_time)
-			// 	{
-			// 		if (!empty($values[$key]))
-			// 		{
-			// 			$values[$key] = english_date_to_db_format($values[$key], @$values[$key.'_hour'], @$values[$key.'_min'], @$values[$key.'_sec'], @$values[$key.'_am_pm']);
-			// 		}
-					
-			// 	}
-			// }
-			// else if ($field['type'] == 'date')
-			// {
-			// 	if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
-			// 	if (!empty($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
-			// }
-
 			if ($field['type'] == 'datetime')
 			{
 				if (empty($values[$key]) OR (int)$values[$key] == 0)
@@ -1944,7 +1904,17 @@ class MY_Model extends CI_Model {
 		{
 			$values = $this->on_before_validate($values);
 		}
-		
+
+		// add required values in if they don't exist
+		foreach($this->required as $key => $val)
+		{
+			$field = (is_int($key)) ? $val : $key;
+			if (!isset($values[$field]))
+			{
+				$values[$field] = NULL;
+			}
+		}
+
 		// if any errors are generated in the previous hooks then we return FALSE
 		if ($this->get_errors())
 		{
