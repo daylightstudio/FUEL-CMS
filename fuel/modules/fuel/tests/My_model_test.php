@@ -17,6 +17,100 @@ class My_model_test extends Tester_base {
 		require_once('test_custom_records_model.php');
 	}
 	
+	public function test_short_name()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$test = $test_custom_records_model->short_name();
+		$expected = 'Test_custom_records';
+		$this->run($test, $expected, 'short_name test');
+
+		$test = $test_custom_records_model->short_name(TRUE);
+		$expected = 'test_custom_records';
+		$this->run($test, $expected, 'short_name lowercase test');
+
+		$test = $test_custom_records_model->short_name(FALSE, TRUE);
+		$expected = 'Test_custom_record';
+		$this->run($test, $expected, 'short_name record test');
+
+		$test = $test_custom_records_model->short_name(TRUE, TRUE);
+		$expected = 'test_custom_record';
+		$this->run($test, $expected, 'short_name lowercase record test');
+	}
+
+	public function test_table_name()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$test = $test_custom_records_model->table_name();
+		$expected = 'users';
+		$this->run($test, $expected, 'table_name test');
+	}
+
+	public function test_tables()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$tables = $this->CI->fuel->config('tables');
+	
+		$expected = array(
+		    'archives' => 'fuel_archives',
+		    'blocks' => 'fuel_blocks',
+		    'categories' => 'fuel_categories',
+		    'logs' => 'fuel_logs',
+		    'navigation' => 'fuel_navigation',
+		    'navigation_groups' => 'fuel_navigation_groups',
+		    'pages' => 'fuel_pages',
+		    'pagevars' => 'fuel_page_variables',
+		    'permissions' => 'fuel_permissions',
+		    'relationships' => 'fuel_relationships',
+		    'settings' => 'fuel_settings',
+		    'tags' => 'fuel_tags',
+		    'users' => 'fuel_users'
+		);
+
+		$test_custom_records_model->set_tables($tables);
+		$test = $test_custom_records_model->tables();
+		$this->run($test, $expected, 'table tests');
+	}
+
+	public function test_key_field()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$test = $test_custom_records_model->key_field();
+		$expected = 'id';
+		$this->run($test, $expected, 'key_field test');
+	}
+
+	public function test_fields()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$test = $test_custom_records_model->fields();
+		$expected = array(
+  				'id',
+  				'user_name',
+  				'password',
+  				'email',
+  				'first_name',
+  				'last_name',
+  				'active'
+			);
+		$this->run($test, $expected, 'fields test');
+	}
+
+	public function test_fields()
+	{
+		$test_custom_records_model = new Test_custom_records_model();
+		$test = $test_custom_records_model->fields();
+		$expected = array(
+  				'id',
+  				'user_name',
+  				'password',
+  				'email',
+  				'first_name',
+  				'last_name',
+  				'active'
+			);
+		$this->run($test, $expected, 'fields test');
+	}
+
 	public function test_find_by_key()
 	{
 		$test_custom_records_model = new Test_custom_records_model();
