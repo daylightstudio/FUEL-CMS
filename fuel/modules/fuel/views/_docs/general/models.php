@@ -158,6 +158,8 @@ This gives you more flexibility at the record level for your models. With custom
 	<li><strong>Create Derived Attributes</strong></li>
 	<li><strong>Lazy Load Other Objects</strong></li>
 	<li><strong>Manipulate and Save at the Record Level</strong></li>
+	<li><strong>Automatically Parse Field Values</strong></li>
+	<li><strong>Link and Display Related Data</strong></li>
 </ul>
 <p>When creating a custom record class, it is recommended to use the singular version of the parent model class (so parent models should be plural).</p>
 
@@ -342,10 +344,10 @@ $this->db->find_all(array('published' => 'yes'))
 	<li><strong>on_after_save</strong> - executed after saving</li>
 	<li><strong>on_before_delete</strong> - executed before deleting</li>
 	<li><strong>on_after_delete</strong> - executed after deleting</li>
-	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data.</li>
-	<li><strong>on_after_post</strong> - to be called from within your own code after posting data.</li>
+	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data</li>
+	<li><strong>on_after_post</strong> - to be called from within your own code after posting data</li>
 </ul>
-
+<br />
 <p>Record class hooks</p>
 <ul>
 	<li><strong>before_set</strong> - executed before setting a value</li>
@@ -356,12 +358,157 @@ $this->db->find_all(array('published' => 'yes'))
 </ul>
 
 <h2 id="relationships">Model Relationships</h2>
+<p>FUEL CMS 1.0 provides several ways to link model data to form relationships by adding the following properties to your model:</p>
+<ul>
+	<li><strong>foreign_keys</strong>: one-to-many relationship. If attached to a CMS module, it is as a dropdown select to the model the foreign key belongs to.</li>
+	<li><strong>has_many</strong>: many-to-many relationship. If attached to a CMS module, it is a multiple select field.</li>
+	<li><strong>belongs_to</strong>: many-to-many relationship. If attached to a CMS module, it is a multiple select field.</li>
+</ul>
+
+<h3>Foreign Keys</h3>
+<p>The <dfn>foreign_key</dfn> model property will dynamically bind the foriegn key's record object to the declared model's record object. So for example,
+say you have a products model. Each product can belong to only one category. In this case, we can use FUEL's built in <a href="<?=user_guide_url('general/tags-categories#categories')?>">Categories</a>
+module to make the relationship like so:</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $foreign_keys  = array('category_id' => array(FUEL_FOLDER => 'categories_model')));
+  
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+<p class="important">The constant <dfn>FUEL_FOLDER</dfn> is used as the array key above to point to the module in which to load the model (e.g. array(FUEL_FOLDER => 'categories_model'))).
+You can alternatively just use the name of the model as a string if the model exists in your application directory or you can use <dfn>'app'</dfn> instead of <dfn>FUEL_FOLDER</dfn>
+</p>
+<br />
+
+<p>If your site uses categories within different contexts, you can add a where condition to target that context like so:</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $foreign_keys  = array('category_id' => array(FUEL_FOLDER => 'categories_model', 'where' => array('context' => 'products')));
+  
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+<p>Then in your front end code, you can access the object like so:</p>
+<pre class="brush:php">
+$id = uri_segment(3); // assumption here that the 3rd segment has the product id
+$product = fuel_model('products', 'key', $id);
+if (isset($product->id))
+{
+	echo $product->category->name;
+}
+</pre>
+<p class="important">Foreign Keys are automatically set as required fields when inputting int the CMS.</p>
 
 
+<h3>Has Many Relationship</h3>
+<p>The <dfn>has_many</dfn> model property allows you to assign many-to-many relationships between models without needing to setup a separate lookup table. FUEL will automatically
+save this relationship in the <dfn>fuel_relationships</dfn> table. If we continue with the products example above, a product may also need to be associated with multiple attributes, 
+or tags, like regions your product belongs to, or specific features. For this, you can use FUEL's built in <a href="<?=user_guide_url('general/tags-categories#tags')?>">Tags</a> module to create relationships like so:</p>
 
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $has_many = array('attributes' => array(array(FUEL_FOLDER => 'tags_model'));
 
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+<p class="important">The constant <dfn>FUEL_FOLDER</dfn> is used as the array key above to point to the module in which to load the model (e.g. array(FUEL_FOLDER => 'categories_model'))).
+You can alternatively just use the name of the model as a string if the model exists in your application directory or you can use <dfn>'app'</dfn> instead of <dfn>FUEL_FOLDER</dfn>
+</p>
+<br />
 
+<p>The long way:</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model'));
 
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+<p>Even longer:</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $has_many = array('attributes' => array('model' => 'tags_model', 'module' => FUEL_FOLDER)); //NOTE THE 'module' key
 
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
 
+<p>If, in this example, you want to target only a specific set of tags that belong to a particular category, you can use the where condition to further filter the list of tags like so:</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model', 'where' => 'category_id = 1'));
 
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+
+<p>Then in your front end code, you can access the object like so:</p>
+<pre class="brush:php">
+$id = uri_segment(3); // assumption here that the 3rd segment has the product id
+$product = fuel_model('products', 'key', $id);
+if (isset($product->id))
+{
+	foreach($product->attributes as $attribute)
+	{
+		echo $attribute->name;
+	}
+}
+</pre>
+<p>If you would like to do further active record filtering on the relationship before retrieving the data, you can call the property using it's full method form and passing 
+<dfn>TRUE</dfn> to it. This will return the model object with the "find within" part of the query already set by active record:</p>
+<pre class="brush:php">
+$id = uri_segment(3); // assumption here that the 3rd segment has the product id
+$product = fuel_model('products', 'key', $id);
+if (isset($product->id))
+{
+	$tags_model = $product->get_attributes(TRUE); // NOTE THE DIFFERENCE HERE
+	$attributes = $tags_model->find_all('category_id = 1');
+	foreach($attributes as $attribute)
+	{
+		echo $attribute->name;
+	}
+}
+</pre>
+
+<h3>Belongs To Relationship</h3>
+<p>The <dfn>belongs_to</dfn> model attribute is very similar to the <dfn>has_many</dfn>, but is done from the opposite perspective, which in this case would be from FUEL's <a href="<?=user_guide_url('general/tags-categories#tags')?>">Tags</a> module. 
+FUEL automatically creates the <dfn>belongs_to</dfn> relationship for the Tags module. This allows you to see which products belong to a specific tag in this example:</p>
+<pre class="brush:php">
+$slug = uri_segment(3); // assumption here that the 3rd segment has the slug
+$tag = fuel_model('products', 'one', array('slug', $slug));
+if (isset($tag->id))
+{
+	$tags_model = $product->get_attributes(TRUE); // NOTE THE DIFFERENCE HERE
+	$products = $tag->products;
+	foreach($products as $product)
+	{
+		echo $product->name;
+	}
+}
+</pre>
