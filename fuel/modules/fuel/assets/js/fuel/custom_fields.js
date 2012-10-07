@@ -471,7 +471,7 @@ fuel.fields.inline_edit_field = function(context){
 		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
 		
 		var refreshField = function($field){
-			$field = (field) ? field : $field;
+			//$field = (field != undefined) ? field : $field;
 			
 			// redeclared here in case $field is set
 			var fieldId = $field.attr('id');
