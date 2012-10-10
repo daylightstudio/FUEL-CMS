@@ -27,6 +27,7 @@ if (defined('STDIN'))
 	$_SERVER['SCRIPT_NAME'] = 'index.php';
 	$_SERVER['SERVER_NAME'] = 'localhost';
 	$_SERVER['SERVER_PORT'] = 80;
+	$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	$_SERVER['HTTP_HOST'] = 'localhost';
 }
 
