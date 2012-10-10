@@ -33,7 +33,7 @@
 class Fuel_redirects extends Fuel_base_library {
 	
 	public $http_code = 301; // The HTTP response code to return... 301 = permanent redirect
-	public $redirects = array(); // The pages pages to redirect to
+	public $redirects = array(); // The pages to redirect to
 	
 	/**
 	 * Constructor

@@ -15,23 +15,61 @@ class Categories_model extends Base_module_model {
 	public $serialized_fields = array();
 	
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('categories'); // table name
 	}
 
-	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes the class with the parent model and field names
+	 *
+	 * @access	public
+	 * @param	int	the number in which to limit the returned data results (optional)
+	 * @param	int	the number in which to offset the returned data results (optional)
+	 * @param	string	the column name to sort on (optional)
+	 * @param	string	the order in which to return the results (optional)
+	 * @return	array
+	 */	
+	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
 	{
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes the class with the parent model and field names
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	function context_options_list()
 	{
 		$this->db->group_by('context');
 		return parent::options_list('context', 'context');
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates the form_fields array to be used with Form_builder
+	 *
+	 * @access	public
+	 * @param	array	an array of values to pass to the form fields
+	 * @param	array	related field information
+	 * @return	array
+	 */	
 	function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
@@ -45,6 +83,15 @@ class Categories_model extends Base_module_model {
 		return $fields;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites the on_after_save parent method and doesn't call the parent
+	 *
+	 * @access	public
+	 * @param	array	values
+	 * @return	array
+	 */	
 	function on_after_save($values)
 	{
 		return $values;

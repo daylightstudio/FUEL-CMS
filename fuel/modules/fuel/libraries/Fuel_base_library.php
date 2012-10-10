@@ -37,7 +37,7 @@ class Fuel_base_library {
 	protected $permission = ''; // permission required to run
 	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors
-	protected $_inited = FALSE;
+	protected $_inited = FALSE; // flag set upon initialization
 	
 	// --------------------------------------------------------------------
 	

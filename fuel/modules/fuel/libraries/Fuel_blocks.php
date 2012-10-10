@@ -296,7 +296,7 @@ class Fuel_blocks extends Fuel_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the rendering mode for the blocks module
+	 * Returns the rendering mode for the blocks module (e.g. views or cms)
 	 *
 	 * @access	public
 	 * @return	boolean

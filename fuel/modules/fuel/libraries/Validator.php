@@ -20,7 +20,8 @@
  *
  * This class is used in MY_Model and the Form class. Does not require
  * post data and is a little more generic then the CI Validation class.
- * always a good idea to include the validation_helper.php
+ * The <a href="[user_guide_url]helpers/validator_helper">validator_helper</a> 
+ * that contains many helpful rule functions is automatically loaded.
  * 
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -109,13 +110,14 @@ class Validator {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Add processing rule (function) to an input variable
+	 * Add processing rule (function) to an input variable. 
+	 * The <a href="[user_guide_url]helpers/validator_helper">validator_helper</a> contains many helpful rule functions you can use
 	 *
 	 * @access public
-	 * @param string key in processing array to reference available processing functions
-	 * @param string msg error message
-	 * @param string func function for processing
-	 * @param string args function arguments (optional)
+	 * @param string key in processing array to assign to rule. Often times its the same name as the field input
+	 * @param string error message
+	 * @param string function for processing
+	 * @param mixed function arguments with the first usually being the posted value. If multiple arguments need to be passed, then you can use an array.
 	 * @return void
 	 */
 	public function add_rule($field, $func, $msg, $params = array())
@@ -139,10 +141,10 @@ class Validator {
 	 * 
 	 * @access public
 	 * @param string field to remove
-	 * @param string key for rule for field (can have more then one rule for a field) (optional)
+	 * @param string key for rule (can have more then one rule for a field) (optional)
 	 * @return void
 	 */
-	public function remove_rule($field, $func = null)
+	public function remove_rule($field, $func = NULL)
 	{
 		if (!empty($func))
 		{
@@ -229,7 +231,7 @@ class Validator {
 	 * @param mixed key to identify error message
 	 * @return string key of variable input
 	 */
-	public function catch_error($msg, $key = null)
+	public function catch_error($msg, $key = NULL)
 	{
 	    if (empty($key)) $key = count($this->_errors);
 		if ($this->stack_field_errors)
@@ -309,7 +311,7 @@ class Validator {
 		}
 		else
 		{
-			return null;
+			return NULL;
 		}
 	}
 	
@@ -329,7 +331,7 @@ class Validator {
 		}
 		else
 		{
-			return null;
+			return NULL;
 		}
 	}
 

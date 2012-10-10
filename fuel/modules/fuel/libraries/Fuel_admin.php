@@ -34,7 +34,7 @@ class Fuel_admin extends Fuel_base_library {
 	
 	protected $main_layout = 'admin_main'; // The main layout file for the FUEL admin
 	protected $validate = TRUE; // Whether to check that the user is logged in or not before rendering page
-	protected $is_inline = FALSE; // Determines whether the page being displayed is the inline view or now.
+	protected $is_inline = FALSE; // Determines whether the page being displayed is the inline view or now
 	protected $last_page = ''; // The last page rendered by the admin
 	
 	// The names of panels displayed in the admin
