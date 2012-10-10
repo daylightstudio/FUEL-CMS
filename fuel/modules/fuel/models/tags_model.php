@@ -9,11 +9,32 @@ class Tags_model extends Base_module_model {
 	public $unique_fields = array('name', 'slug');
 	public $linked_fields = array('name' => 'slug');
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor. Automatically assigns belongs_to 
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('tags'); // table name
 		$CI =& get_instance();
 
+		$this->init_relationships();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor. Automatically assigns belongs_to 
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	function init_relationships()
+	{
 		$modules = $CI->fuel->modules->get(NULL, FALSE);
 
 		$belongs_to = array();
@@ -54,12 +75,34 @@ class Tags_model extends Base_module_model {
 		$this->belongs_to = $belongs_to;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes the class with the parent model and field names
+	 *
+	 * @access	public
+	 * @param	int	the number in which to limit the returned data results (optional)
+	 * @param	int	the number in which to offset the returned data results (optional)
+	 * @param	string	the column name to sort on (optional)
+	 * @param	string	the order in which to return the results (optional)
+	 * @return	array
+	 */	
 	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
 	{
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Creates the form_fields array to be used with Form_builder
+	 *
+	 * @access	public
+	 * @param	array	an array of values to pass to the form fields
+	 * @param	array	related field information
+	 * @return	array
+	 */	
 	function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
@@ -68,6 +111,18 @@ class Tags_model extends Base_module_model {
 		return $fields;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites the parent option_list method 
+	 *
+	 * @access	public
+	 * @param	string	the name of the field to be used as the key (optional)
+	 * @param	string	the name of the filed to be used as the value (optional)
+	 * @param	mixed	the where condition to apply (optional)
+	 * @param	mixed	the order in which to return the results (optional)
+	 * @return	array 	
+	 */	
 	function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
 	{
 		$this->db->join($this->_tables['categories'], $this->_tables['categories'].'.id = '.$this->_tables['tags'].'.category_id', 'LEFT');
@@ -87,17 +142,20 @@ class Tags_model extends Base_module_model {
 		return $options;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Common query to automatically join the categories table
+	 *
+	 * @access	public
+	 * @return	void 	
+	 */		
 	function _common_query()
 	{
 		parent::_common_query();
 		$this->db->join($this->_tables['categories'], $this->_tables['categories'].'.id = '.$this->_tables['tags'].'.category_id', 'LEFT');
 	}
 
-	function on_after_save($values)
-	{
-		parent::on_after_save($values);
-		return $values;
-	}
 }
 
 class Tag_model extends Base_module_record {
