@@ -1,8 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
-class Test_custom_records_model extends MY_Model {
+class Test_users_model extends MY_Model {
 
 	public $required = array('email');
+	public $has_many = array('roles' => array(FUEL_FOLDER => 'categories'));
 	
 	function __construct()
 	{
@@ -16,7 +17,7 @@ class Test_custom_records_model extends MY_Model {
 }
 
 
-class Test_custom_record_model extends Data_record {
+class Test_user_model extends Data_record {
 
 	public $full_name;
 	
@@ -26,5 +27,6 @@ class Test_custom_record_model extends Data_record {
 		if (!empty($title)) $full_name = $title.' '.$full_name;
 		return $full_name;
 	}
+	
 	
 }

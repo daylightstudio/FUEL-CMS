@@ -24,8 +24,9 @@ method, which gets passed to the <a href="<?=user_guide_url('libraries/form_buil
 	<li><a href="#custom_records">Custom Record Objects</a></li>
 	<li><a href="#magic_methods">Magic Methods</a></li>
 	<li><a href="#active_record">Working with Active Record</a></li>
-	<li><a href="#hooks">Hooks</a></li>
 	<li><a href="#relationships">Relationships</a></li>
+	<li><a href="#serialized">Serialized Fields</a></li>
+	<li><a href="#hooks">Hooks</a></li>
 </ul>
 
 <h2 id="example">Example</h2>
@@ -330,41 +331,16 @@ $this->db->find_all(array('published' => 'yes'))
 
 </pre>
 
-<h2 id="hooks">Hooks</h2>
-<p>MY_Model provides hooks that you can overwrite with your own custom code to extend the functionality of your model.</p>
-<p>Table class hooks</p>
-<ul>
-	<li><strong>on_before_clean</strong> - executed right before cleaning of values</li>
-	<li><strong>on_before_validate</strong> - executed right before validate of values</li>
-	<li><strong>on_before_insert</strong> - executed before inserting values</li>
-	<li><strong>on_after_insert</strong> - executed after insertion</li>
-	<li><strong>on_before_update</strong> - executed before updating</li>
-	<li><strong>on_after_update</strong> - executed after updating</li>
-	<li><strong>on_before_save</strong> - executed before saving</li>
-	<li><strong>on_after_save</strong> - executed after saving</li>
-	<li><strong>on_before_delete</strong> - executed before deleting</li>
-	<li><strong>on_after_delete</strong> - executed after deleting</li>
-	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data</li>
-	<li><strong>on_after_post</strong> - to be called from within your own code after posting data</li>
-</ul>
-<br />
-<p>Record class hooks</p>
-<ul>
-	<li><strong>before_set</strong> - executed before setting a value</li>
-	<li><strong>after_get</strong> - executed after setting a value</li>
-	<li><strong>on_insert</strong> - executed after inserting</li>
-	<li><strong>on_update</strong> - executed after updating</li>
-	<li><strong>on_init</strong> - executed upon initialization</li>
-</ul>
-
-<h2 id="relationships">Model Relationships</h2>
-<p>FUEL CMS 1.0 provides several ways to link model data to form relationships by adding the following properties to your model:</p>
+<h2 id="relationships">Relationships</h2>
+<p>FUEL CMS 1.0 provides several ways to form model relationships by adding one or more of the following properties to your model:</p>
 <ul>
 	<li><strong>foreign_keys</strong>: one-to-many relationship. If attached to a CMS module, it is as a dropdown select to the model the foreign key belongs to.</li>
 	<li><strong>has_many</strong>: many-to-many relationship. If attached to a CMS module, it is a multiple select field.</li>
 	<li><strong>belongs_to</strong>: many-to-many relationship. If attached to a CMS module, it is a multiple select field.</li>
 </ul>
-
+<p class="important">Note that both the <dfn>has_many</dfn> and <dfn>belongs_to</dfn> relationships use the <dfn>on_after_save</dfn> model hook to store relationship information. So, if you overwrite
+this method in your model and have one of these relationships assigned to your model, you must call parent::on_after_save($values); to properly save the relationship information.
+</p>
 <h3>Foreign Keys</h3>
 <p>The <dfn>foreign_key</dfn> model property will dynamically bind the foriegn key's record object to the declared model's record object. So for example,
 say you have a products model. Each product can belong to only one category. In this case, we can use FUEL's built in <a href="<?=user_guide_url('general/tags-categories#categories')?>">Categories</a>
@@ -455,7 +431,7 @@ class Products_model extends Base_module_model
 }
 </pre>
 
-<p>If, in this example, you want to target only a specific set of tags that belong to a particular category, you can use the where condition to further filter the list of tags like so:</p>
+<p>In this example, if you want to target only a specific set of tags that belong to a particular category, you can use the <dfn>where</dfn> condition to further filter the list of tags like so:</p>
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
@@ -512,3 +488,70 @@ if (isset($tag->id))
 	}
 }
 </pre>
+
+<p class="important">
+	By default, FUEL uses the built-in relationships model to save relationship data. However, if you want to change the model, as well as the field names it uses to store the key information, 
+	you can pass the following	parameters in your <dfn>has_many</dfn> or <dfn>belongs_to</dfn> properties array: <dfn>relationships_model</dfn>, <dfn>foreign_key</dfn>, <dfn>candidate_key</dfn>. An Example is below:
+</p>
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model'), 'relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key');
+
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+
+<h2 id="serialized">Serialized Fields</h2>
+<p>FUEL CMS provides a way for you to automatically serialize and unserialize data in a field. To do this, you can assign the field name to the <dfn>serialized_fields</dfn> array. This will automatically 
+serialize the data upon saving and unserialize it upon retrieval via a "find_*" method on the model. The default encoding is JSON but can be changed to use the PHP serialize/unserialize function by changing the 
+<dfn>default_serialization_method</dfn> value to <dfn>serialize</dfn>.</p>
+
+<pre class="brush:php">
+class Products_model extends Base_module_model
+{
+  public $serialized_fields = array('attributes');
+
+  function __construct()
+  {
+    parent::__construct('products'); // table name
+  }
+}
+</pre>
+<pre class="brush:php">
+// then in your controller or elsewhere
+$product = $this->products_model->create();
+$product->attributes = array('color' => 'black', 'material' => 'metal');
+$product->save(); // saves and serializes the data
+</pre>
+
+
+<h2 id="hooks">Hooks</h2>
+<p>MY_Model provides hooks that you can overwrite with your own custom code to extend the functionality of your model.</p>
+<p>Table class hooks</p>
+<ul>
+	<li><strong>on_before_clean</strong> - executed right before cleaning of values</li>
+	<li><strong>on_before_validate</strong> - executed right before validate of values</li>
+	<li><strong>on_before_insert</strong> - executed before inserting values</li>
+	<li><strong>on_after_insert</strong> - executed after insertion</li>
+	<li><strong>on_before_update</strong> - executed before updating</li>
+	<li><strong>on_after_update</strong> - executed after updating</li>
+	<li><strong>on_before_save</strong> - executed before saving</li>
+	<li><strong>on_after_save</strong> - executed after saving</li>
+	<li><strong>on_before_delete</strong> - executed before deleting</li>
+	<li><strong>on_after_delete</strong> - executed after deleting</li>
+	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data</li>
+	<li><strong>on_after_post</strong> - to be called from within your own code after posting data</li>
+</ul>
+<br />
+<p>Record class hooks</p>
+<ul>
+	<li><strong>before_set</strong> - executed before setting a value</li>
+	<li><strong>after_get</strong> - executed after setting a value</li>
+	<li><strong>on_insert</strong> - executed after inserting</li>
+	<li><strong>on_update</strong> - executed after updating</li>
+	<li><strong>on_init</strong> - executed upon initialization</li>
+</ul>

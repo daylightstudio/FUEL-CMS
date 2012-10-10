@@ -1,7 +1,5 @@
 <h1><strong>Tutorial:</strong> Creating Simple Modules</h1>
-<p class="important">This tutorial pertains to the 0.93 version of FUEL CMS (note the older looking screenshots). However, most of the content is still relevant and worth digesting.
-W
-</p>
+<p class="important">This tutorial pertains to the 0.93 version of FUEL CMS (note the older looking screenshots). However, most of the content is still relevant and worth digesting.</p>
 
 <p>The following is a tutorial on creating <a href="<?=user_guide_url('modules/simple')?>"><strong>simple</strong></a> modules in FUEL. 
 Don't let the word <em>simple</em> fool you though. You can still create pretty powerful modules without the need of creating your own views and controllers which is what <a href="<?=user_guide_url('modules/advanced')?>"><strong>advanced</strong></a> modules are for.

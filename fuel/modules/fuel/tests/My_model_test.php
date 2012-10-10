@@ -11,35 +11,181 @@ class My_model_test extends Tester_base {
 
 	public function setup()
 	{
-		$this->load_sql('test_generic_schema.sql', 'tester');
+		$this->load_sql('test_fuel_schema.sql', 'fuel');
+		$this->load_sql('test_generic_schema.sql', 'fuel');
 
-		// load a basic MY_Model to test
-		require_once('test_custom_records_model.php');
+		// load a basic models to test
+		require_once('test_users_model.php');
 	}
 	
+	public function test_foreign_key_relationship()
+	{
+		$test_custom_records_model = new Test_users_model();
+
+		// set the foreign key
+		$test_custom_records_model->foreign_keys = array('role_id' => array(FUEL_FOLDER => 'categories_model'));
+		
+		// grab a user
+		$user = $test_custom_records_model->find_by_key(1);
+
+		// setup category data
+		$categories_model = $this->fuel->categories->model();
+		$test_category1 = array('id' => 1, 'name' => 'Jedi', 'slug' => 'jedi', 'context' => 'jedi', 'active' => 1);
+		$test_category2 = array('id' => 2, 'name' => 'Droid', 'slug' => 'droid', 'context' => 'droid', 'active' => 1);
+		$test_category3 = array('id' => 3, 'name' => 'Ewok', 'slug' => 'droid', 'context' => 'ewok', 'active' => 1);
+		
+		// save category data
+		$categories_model->save($test_category1);
+		$categories_model->save($test_category2);
+
+
+		$test = is_object($user->role) AND $user->role->name == 'Jedi';
+		$expected = TRUE;
+		$this->run($test, $expected, 'foreign key record object test #1');
+
+		// now change category
+		$user->role_id = 2;
+		$user->save();
+
+		$test = is_object($user->role) AND $user->role->name == 'Droid';
+		$expected = TRUE;
+		$this->run($test, $expected, 'foreign key record object test #2');
+
+		// now try saving it by passing an object
+		$role_obj = $categories_model->create($test_category3);
+		$user->role = $role_obj;
+		$user->save();
+
+		$test = is_object($user->role) AND $user->role->name == 'Ewok';
+		$expected = TRUE;
+		$this->run($test, $expected, 'foreign key record object test by #3');
+
+		$categories_model->truncate();
+	}
+	
+	public function test_has_many_relationship()
+	{
+		$test_custom_records_model = new Test_users_model();
+
+		// set the has_many key
+		$test_custom_records_model->has_many = array('tags' => array(FUEL_FOLDER => 'tags'));
+
+		$user = $test_custom_records_model->find_by_key(1);
+
+		// setup category data
+		$categories_model = $this->fuel->categories->model();
+		$test_categories[] = array('id' => 1, 'name' => 'Jedi', 'slug' => 'jedi', 'context' => 'jedi', 'active' => 1);
+		$test_categories[] = array('id' => 2, 'name' => 'Droid', 'slug' => 'droid', 'context' => 'droid', 'active' => 1);
+		$test_categories[] = array('id' => 3, 'name' => 'Ewok', 'slug' => 'droid', 'context' => 'ewok', 'active' => 1);
+		$categories_model->save($test_categories);
+
+		// setup tags
+		$tags_model = $this->fuel->tags->model();
+		$test_tags[] = array('id' => 1, 'name' => 'Yoda', 'slug' => 'yoda', 'category_id' => 1, 'active' => 1);
+		$test_tags[] = array('id' => 2, 'name' => 'Darth Vader', 'slug' => 'darth-vader', 'category_id' => 1, 'active' => 1);
+		$test_tags[] = array('id' => 3, 'name' => 'C3P0', 'slug' => 'c3p0', 'category_id' => 2, 'active' => 1);
+		
+		// save tags
+		$tags_model->save($test_tags);
+
+		// test #1
+		$test = $tags_model->has_error();
+		$expected = FALSE;
+		$this->run($test, $expected, 'has_many tags save test');
+
+		// test #2
+		$user->tags = array(1, 2, 3);
+		$user->save();
+
+		$test = count($user->tags);
+		$expected = 3;
+		$this->run($test, $expected, 'has_many tag record test');
+
+		$test_custom_records_model->has_many = array('tags' => array(
+																	'model' => array(FUEL_FOLDER => 'tags'), 
+																	'where' => array('context' => 'jedi')
+																	)
+													);
+
+		$test = count($user->tags);
+		$expected = 2;
+		$this->run($test, $expected, 'has_many test #2');
+
+		$user_model = $user->get_tags(TRUE);
+		$test = is_a($user_model, 'Tags_model');
+		$expected = TRUE;
+		$this->run($test, $expected, 'has_many model object returned test');
+
+		$users = $user_model->db()->where(array('fuel_tags.name' => 'Yoda'));
+		$test = count($users);
+		$expected = 1;
+		$this->run($test, $expected, 'has_many filter with active record test');
+
+	}
+
+	public function test_serialized()
+	{
+		$test_custom_records_model = new Test_users_model();
+		$test_custom_records_model->serialized_fields = array('attributes');
+		$user = $test_custom_records_model->find_by_key(1);
+
+		$attributes = array('gender' => 'male', 'hair' => 'brown', 'sign' => 'capricorn');
+		$user->attributes = $attributes;
+		$user->save();
+
+		$user = $test_custom_records_model->find_by_key(1);
+		$test = $attributes;
+		$expected = $user->attributes;
+		$this->run($test, $expected, 'serialized field test');
+	}
+
+	public function test_linked_fields()
+	{
+		$test_custom_records_model = new Test_users_model();
+		$test_custom_records_model->linked_fields = array('user_name' => array('email' => 'mirroed'));
+
+		$user = $test_custom_records_model->create();
+		$user->email = 'han@milleniumfalcon.com';
+		$user->first_name = 'Han';
+		$user->last_name = 'Solo';
+		$user->save();
+
+		$test = $user->errors();
+		$expected = array();
+		$this->run($test, $expected, 'linked field saved without errors test');
+
+		$user->refresh();
+		$test = $user->user_name;
+		$expected = $user->email;
+		$this->run($test, $expected, 'linked field mirrored test');
+
+		// now delete to cleanup
+		$user->delete();
+	}
+
 	public function test_short_name()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 		$test = $test_custom_records_model->short_name();
-		$expected = 'Test_custom_records';
+		$expected = 'Test_users';
 		$this->run($test, $expected, 'short_name test');
 
 		$test = $test_custom_records_model->short_name(TRUE);
-		$expected = 'test_custom_records';
+		$expected = 'test_users';
 		$this->run($test, $expected, 'short_name lowercase test');
 
 		$test = $test_custom_records_model->short_name(FALSE, TRUE);
-		$expected = 'Test_custom_record';
+		$expected = 'Test_user';
 		$this->run($test, $expected, 'short_name record test');
 
 		$test = $test_custom_records_model->short_name(TRUE, TRUE);
-		$expected = 'test_custom_record';
+		$expected = 'test_user';
 		$this->run($test, $expected, 'short_name lowercase record test');
 	}
 
 	public function test_table_name()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 		$test = $test_custom_records_model->table_name();
 		$expected = 'users';
 		$this->run($test, $expected, 'table_name test');
@@ -47,7 +193,7 @@ class My_model_test extends Tester_base {
 
 	public function test_tables()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 		$tables = $this->CI->fuel->config('tables');
 	
 		$expected = array(
@@ -73,7 +219,7 @@ class My_model_test extends Tester_base {
 
 	public function test_key_field()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 		$test = $test_custom_records_model->key_field();
 		$expected = 'id';
 		$this->run($test, $expected, 'key_field test');
@@ -81,7 +227,7 @@ class My_model_test extends Tester_base {
 
 	public function test_fields()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 		$test = $test_custom_records_model->fields();
 		$expected = array(
   				'id',
@@ -90,22 +236,8 @@ class My_model_test extends Tester_base {
   				'email',
   				'first_name',
   				'last_name',
-  				'active'
-			);
-		$this->run($test, $expected, 'fields test');
-	}
-
-	public function test_fields()
-	{
-		$test_custom_records_model = new Test_custom_records_model();
-		$test = $test_custom_records_model->fields();
-		$expected = array(
-  				'id',
-  				'user_name',
-  				'password',
-  				'email',
-  				'first_name',
-  				'last_name',
+  				'role_id',
+  				'attributes',
   				'active'
 			);
 		$this->run($test, $expected, 'fields test');
@@ -113,7 +245,7 @@ class My_model_test extends Tester_base {
 
 	public function test_find_by_key()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 
 		// test find_by_key
 		$record = $test_custom_records_model->find_by_key(1);
@@ -128,7 +260,7 @@ class My_model_test extends Tester_base {
 	
 	public function test_find_one()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 	
 		// test find_one
 		$record = $test_custom_records_model->find_one(array('email' => 'dave@thedaylightstudio.com'));
@@ -149,19 +281,32 @@ class My_model_test extends Tester_base {
 	
 	public function test_find_all()
 	{
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 
 		// test find_all
 		$results = $test_custom_records_model->find_all(array('active' => 'yes'));
 		$test = count($results);
 		$expected = 2;
-		$this->run($test, $expected, 'find_one custom record object test');
+		$this->run($test, $expected, 'find_all custom record object test');
 	}
-		
+
+	public function test_record_count()
+	{
+		$test_custom_records_model = new Test_users_model();
+
+		$test = $test_custom_records_model->record_count(array('user_name' => 'admin'));
+		$expected = 1;
+		$this->run($test, $expected, 'record count test');
+
+		$test = $test_custom_records_model->total_record_count();
+		$expected = 3;
+		$this->run($test, $expected, 'total record count test');
+	}
+
 	public function test_save()
 	{
 
-		$test_custom_records_model = new Test_custom_records_model();
+		$test_custom_records_model = new Test_users_model();
 
 		// test save without email to get required error
 		$record = $test_custom_records_model->create();

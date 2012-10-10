@@ -123,6 +123,11 @@ class Fuel_cache_test extends Fuel_test_base {
 		//$page->delete();
 	}
 
+	public function tear_down()
+	{
+		parent::tear_down();
+		$this->fuel->cache->clear_all();
+	}
 
 
 }
