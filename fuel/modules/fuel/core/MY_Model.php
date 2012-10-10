@@ -45,28 +45,26 @@ class MY_Model extends CI_Model {
 		'email|email_address' => 'valid_email',
 		'phone|phone_number' => 'valid_phone'
 		);
-	public $required = array(); // required fields
+	public $required = array(); // an array of required fields. If a key => val is provided, the key is name of the field and the value is the error message to display
 	public $default_required_message = "Please fill out the required field '%1s'"; // the default required validator message
 	public $auto_date_add = array('date_added', 'entry_date'); // field names to automatically set the date when the value is NULL
 	public $auto_date_update = array('last_modified', 'last_updated'); // field names to automatically set the date on updates
-	public $date_use_gmt = FALSE; // datetime method
+	public $date_use_gmt = FALSE; // determines whether to use GMT time when storing dates and times
 	public $default_date = 0; // default date value that get's passed to the model on save. Using 0000-00-00 will not work if it is a required field since it is not seen as an empty value
 	public $auto_trim = TRUE; // will trim on clean
-	public $auto_encode_entities = TRUE; // automatically encode html entities 
-	public $xss_clean = FALSE; // automatically run the xss_clean
-	public $readonly = FALSE; // sets the model to readonly mode where you can't save or delete data'
+	public $auto_encode_entities = TRUE; // determines whether to automatically encode html entities. An array can be set instead of a boolean value for the names of the fields to perform the xss_clean on
+	public $xss_clean = FALSE; // determines whether automatically run the xss_clean. An array can be set instead of a boolean value for the names of the fields to perform the xss_clean on
+	public $readonly = FALSE; // sets the model to readonly mode where you can't save or delete data
 	public $hidden_fields = array(); // fields to hide when creating a form
 	public $unique_fields = array(); // fields that are not IDs but are unique. Can also be an array of arrays for compound keys
-	public $linked_fields = array(); // fields that are are linked. Key is the field, value is a function name to transform it
-	public $serialized_fields = array(); // fields that are contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
+	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => arry('name' => 'strtolower')));
+	public $serialized_fields = array(); // fields that contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
 	public $default_serialization_method = 'json'; // the default serialization method. Options are 'json' and 'serialize'
-	public $foreign_keys = array(); // map foreign keys to table models
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
 	public $suffix = '_model'; // the suffix used for the data record class
-	
-// !@todo add docs for $has_many
-	public $has_many = array(); // keys are model => key => ', module, relationships_model, foreign_key, candidate_key 
-	public $belongs_to = array();
+	public $foreign_keys = array(); // map foreign keys to table models
+	public $has_many = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
+	public $belongs_to = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
 	
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
@@ -1266,27 +1264,6 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns a an array of records based on the limit (<strong>$per_page</strong>) and <var>'offset'</var> parameters of the method.
-	 *
-	 <code>
-	$data = $this->examples_model->paginate(20, 0);
-	</code>
-	 *
-	 * @access	public
-	 * @param	int	limit part of query
-	 * @param	int	offset part of query
-	 * @return	array
-	 */	
-	public function paginate($per_page, $offset)
-	{
-		$this->db->limit($per_page);
-		$this->db->offset($offset);
-		return $this->find_all_array();
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Saves record object, or array of data to the database
 	 *
 	 <code>
@@ -1783,7 +1760,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * 	Creates a where condition and queries the model's table to see if the column (<dfn>$key</dfn>) already contains the <dfn>$val</dfn> value but compares it to the tables key column with the <dfn>$id</dfn> value.
+	 * Creates a where condition and queries the model's table to see if the column (<dfn>$key</dfn>) already contains the <dfn>$val</dfn> value but compares it to the tables key column with the <dfn>$id</dfn> value.
 	 * Usually used for validation. The example below uses this method to validate on the model before saving. The <dfn>is_new</dfn> and <dfn>is_editable</dfn> methods are usually used during the models validation process as shown in the example.
 	 *
 	 <code>
@@ -4387,17 +4364,6 @@ class Data_record {
 
 		if (!empty($this->_objs[$cache_key]) AND $cache_key !== FALSE) return $this->_objs[$cache_key];
 		
-		if (is_array($model))
-		{
-			$module = key($model);
-			$model = current($model);
-			$this->_CI->load->module_model($module, $model);
-		}
-		else
-		{
-			$this->_CI->load->model($model);
-		}
-		
 		// set the readonly to the callers
 		$this->_CI->$model->readonly = $this->_parent_model->readonly;
 		$foreign_key = $this->_CI->$model->key_field();
@@ -4418,6 +4384,7 @@ class Data_record {
 		$this->_CI->$model->query($params, FALSE);
 
 		$query = $this->_CI->$model->get($multiple, $return_method, $assoc_key, $use_common_query);
+
 		$data = $query->result();
 
 		$this->_objs[$cache_key] = $data;
@@ -4623,11 +4590,7 @@ class Data_record {
 		}
 		else if (preg_match("/get_(.*)/", $method, $found))
 		{
-			if (array_key_exists($found[1], $this->_fields))
-			{
-				return $this->_fields[$found[1]];
-			}
-			else if ($this->_is_relationship_property($found[1], 'has_many'))
+			if ($this->_is_relationship_property($found[1], 'has_many'))
 			{
 				$return_object = (isset($args[0])) ? $args[0] : FALSE;
 				return $this->_get_relationship($found[1], $return_object,'has_many');
@@ -4636,6 +4599,10 @@ class Data_record {
 			{
 				$return_object = (isset($args[0])) ? $args[0] : FALSE;
 				return $this->_get_relationship($found[1], $return_object,'belongs_to');
+			}
+			else if (array_key_exists($found[1], $this->_fields))
+			{
+				return $this->_fields[$found[1]];
 			}
 		}
 		else if (preg_match("/is_(.*)/", $method, $found))
@@ -4673,6 +4640,9 @@ class Data_record {
 	public function __set($var, $val)
 	{
 		$val = $this->before_set($val, $var);
+
+		$foreign_keys = $this->_parent_model->foreign_keys;
+
 		if (property_exists($this, $var))
 		{
 			$this->$var = $val;
@@ -4681,6 +4651,11 @@ class Data_record {
 		{
 			$set_method = "set_".$var;
 			$this->$set_method($val);
+		}
+		// set in foreign keys only if it is an object
+		else if (is_object($val) AND is_a($val, 'Data_record') AND in_array($var.'_id', array_keys($foreign_keys)))
+		{
+			$this->_fields[$var] = $val;
 		}
 		else if (array_key_exists($var, $this->_fields))
 		{
@@ -4839,6 +4814,13 @@ class Data_record {
 			{
 				// construct the method name
 				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
+
+				// check if there is a where condition an apply that too
+				if (!empty($rel_config['where']))
+				{
+					$where = $rel_config['where'];
+					$this->_CI->$foreign_model->db()->where($where);
+				}
 			}
 			else
 			{
@@ -4888,7 +4870,8 @@ class Data_record {
 		if ( ! empty($this->_parent_model->$type) AND array_key_exists($var, $this->_parent_model->$type))
 		{
 			$rel = $this->_parent_model->$type;
-			if ( ! empty($rel[$var])) {
+			if ( ! empty($rel[$var]))
+			{
 				return TRUE;
 			}
 		}
