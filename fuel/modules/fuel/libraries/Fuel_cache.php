@@ -41,7 +41,7 @@ class Fuel_cache extends Fuel_base_library {
 								'compiled',
 								'pages',
 								'assets',
-							); // method names used when doing clear_all()
+							); // method names used when doing clear()
 	
 	// --------------------------------------------------------------------
 	
@@ -287,11 +287,11 @@ class Fuel_cache extends Fuel_base_library {
 		include(APPPATH.'config/parser.php');
 
 		
-		// remove all compile files
+		// remove all compiled files
 		$dwoo_compile_path =& $config['parser_compile_dir'];
 		if (is_dir($dwoo_compile_path) AND is_writable($dwoo_compile_path))
 		{
-			delete_files($dwoo_compile_path, FALSE, $this->ignore);
+			$this->_delete_files($dwoo_compile_path);
 		}
 
 		// remove all cache files
@@ -299,7 +299,7 @@ class Fuel_cache extends Fuel_base_library {
 		if (is_dir($dwoo_cache_path) AND is_writable($dwoo_cache_path))
 		{
 			$compiled_folder = trim(str_replace($dwoo_cache_path, '', $dwoo_compile_path), '/');
-			$ignore = array($compiled_folder);
+			$ignore = array($compiled_folder, 'index.html');
 			delete_files($dwoo_cache_path, TRUE, $ignore);
 		}
 		
