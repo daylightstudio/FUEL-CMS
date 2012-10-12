@@ -152,7 +152,7 @@ CREATE TABLE `fuel_pages` (
   `last_modified_by` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `location` (`location`),
-  KEY `template_id` (`layout`)
+  KEY `layout` (`layout`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
