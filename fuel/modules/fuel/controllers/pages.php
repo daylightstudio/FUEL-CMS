@@ -53,7 +53,8 @@ class Pages extends Module {
 
 				if ($id = $this->model->save($posted))
 				{
-					if (empty($id))
+
+					if (empty($id) OR $this->model->get_errors())
 					{
 						show_error(lang('error_saving'));
 					}
@@ -174,10 +175,11 @@ class Pages extends Module {
 			{
 				show_404();
 			}
-			if ($this->input->get('lang'))
-			{
-				$saved['language'] = $this->input->get('lang');
-			}
+		}
+
+		if ($this->input->get('lang'))
+		{
+			$saved['language'] = $this->input->get('lang');
 		}
 		//$this->model->add_required('location');
 		

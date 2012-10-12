@@ -235,11 +235,11 @@ class Navigation_model extends Base_module_model {
 						'label', 
 						'parent_id', 
 						'published', 
+						'language',
 						'advanced_tab', 
 						'precedence', 
 						'attributes', 
 						'selected', 
-						'language',
 						'hidden'
 						);
 		foreach($order as $key => $val)
