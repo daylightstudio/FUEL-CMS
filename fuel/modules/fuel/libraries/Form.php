@@ -358,7 +358,7 @@ class Form {
 	<code>
 	echo $this->form->checkbox('yesno', 'yes', '');
 	// will echo the following
-	<input type="checbock" name="yesno" id="yesno" value="yes" />
+	<input type="checkbox" name="yesno" id="yesno" value="yes" />
 	</code>
 	 * @access public
 	 * @param string name of the input element
@@ -611,7 +611,7 @@ class Form {
 	$myval = (!empty($_POST['myval'])) ? $_POST['myval'] : '';
 	echo $this->form->checkbox('mycheckbox', 'yes', Form::do_checked($myval=='yes'));
 	// will echo the following
-	<input type="checbock" name="mycheckbox" id="mycheckbox" value="yes" checked="checked" />
+	<input type="checkbox" name="mycheckbox" id="mycheckbox" value="yes" checked="checked" />
 	</code>
 	 * @access public
 	 * @param string elements value
