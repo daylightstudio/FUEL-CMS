@@ -4816,7 +4816,7 @@ class Data_record {
 				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
 
 				// check if there is a where condition an apply that too
-				if (is_array($rel_config) AND array_key_exists('where', $rel_config) AND ! empty($rel_config['where']))
+				if (is_array($rel_config) AND ! empty($rel_config['where']))
 				{
 					$where = $rel_config['where'];
 					$this->_CI->$foreign_model->db()->where($where);
