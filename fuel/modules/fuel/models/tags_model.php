@@ -20,7 +20,6 @@ class Tags_model extends Base_module_model {
 	function __construct()
 	{
 		parent::__construct('tags'); // table name
-		$CI =& get_instance();
 
 		$this->init_relationships();
 	}
@@ -35,6 +34,8 @@ class Tags_model extends Base_module_model {
 	 */	
 	function init_relationships()
 	{
+		$CI =& get_instance();
+
 		$modules = $CI->fuel->modules->get(NULL, FALSE);
 
 		$belongs_to = array();
