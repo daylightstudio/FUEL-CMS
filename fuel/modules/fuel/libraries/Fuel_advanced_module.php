@@ -228,13 +228,18 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$models = array();
 		foreach($model_files as $key => $m)
 		{
-			$models[$key] = substr(strtolower($m), 0, -4);
-
-			// removes '_model'... must have this suffix to work!!!
-			if ($remove_suffix)
+			if (preg_match('#_model.php$#', $m))
 			{
-				$models[$key] = substr($models[$key], 0, -6);
+				$models[$key] = substr(strtolower($m), 0, -4);
+
+				// removes '_model'... must have this suffix to work!!!
+				if ($remove_suffix)
+				{
+					$mod_name = substr($models[$key], 0, -6);
+					$models[$key] = substr($models[$key], 0, -6);
+				}
 			}
+			
 		}
 		return $models;
 	}
