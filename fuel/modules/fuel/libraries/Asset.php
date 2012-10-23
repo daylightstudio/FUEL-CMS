@@ -561,7 +561,70 @@ class Asset {
 		return str_replace('//', '/', $this->assets_path($assets_path));
 	}
 
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns a boolean value of whether a file exists
+	 *
+	<code>
+	if ($this->asset->asset_exists('banner.jpg'))
+	{
+		echo 'file exists!';
+	}
+	</code>
+
+	 * @access	public
+	 * @param	string	asset file name including extension
+ 	 * @param	string	subfolder to asset file (e.g. images, js, css... etc)
+ 	 * @param	string	module folder if any
+	 * @return	boolean
+	 */	
+	public function asset_exists($file = NULL, $path = NULL, $module = NULL)
+	{
+		$asset_file = assets_server_path($file, $path, $module);
+		return (file_exists($asset_file));
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the file size of an asset
+	 *
+	<code>
+	echo $this->asset->asset_filesize('banner.jpg');
+	// 20500
+
+	echo $this->asset->assets_path('banner.jpg', 'images', '', TRUE);
+	// 20.5 KB 
+	</code>
+
+	 * @access	public
+	 * @param	string	asset file name including extension
+ 	 * @param	string	subfolder to asset file (e.g. images, js, css... etc)
+ 	 * @param	string	module folder if any
+ 	 * @param	boolean	format
+	 * @return	string
+	 */	
+	public function asset_filesize($file = NULL, $path = NULL, $module = NULL, $format = TRUE)
+	{
+		$asset_file = assets_server_path($file, $path, $module);
+		$filesize = 0;
+		if (file_exists($asset_file))
+		{
+			$filesize = filesize($asset_file);
+		}
+		if ($format)
+		{
+			if (!function_exists('byte_format'))
+			{
+				$CI = $this->_get_assets_config();
+				$CI->load->helper('number');
+			}
+			$filesize = byte_format($filesize);
+		}
+		return $filesize;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

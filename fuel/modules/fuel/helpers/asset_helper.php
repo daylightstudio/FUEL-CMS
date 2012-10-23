@@ -237,6 +237,41 @@ function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 // --------------------------------------------------------------------
 
 /**
+ * Returns a boolean value of whether a file exists
+ *
+ * @access	public
+ * @param	string	asset file name including extension
+ * @param	string	subfolder to asset file (e.g. images, js, css... etc)
+ * @param	string	module folder if any
+ * @return	boolean
+ */	
+function asset_exists($file = NULL, $path = NULL, $module = NULL)
+{
+	$CI = _get_assets();
+	return $CI->asset->asset_exists($file, $path, $module);
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns the file size of an asset
+ *
+ * @access	public
+ * @param	string	asset file name including extension
+ * @param	string	subfolder to asset file (e.g. images, js, css... etc)
+ * @param	string	module folder if any
+ * @param	boolean	format
+ * @return	string
+ */	
+function asset_filesize($file = NULL, $path = NULL, $module = NULL, $format = FALSE)
+{
+	$CI = _get_assets();
+	return $CI->asset->asset_filesize($file, $path, $module, $format);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Creates javascript code that first tries to pull in jquery from the Google CDN, and if it doesn't exist, goes to the local backup version
  *
  * @access	public
