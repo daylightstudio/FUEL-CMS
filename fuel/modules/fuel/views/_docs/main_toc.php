@@ -107,7 +107,7 @@
 
 			</td>
 			<td class="td_sep">
-				<h3>Abstract FUEL Classes</h3>
+				<h3>Model Classes</h3>
 				<ul>
 					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model Class</a></li>

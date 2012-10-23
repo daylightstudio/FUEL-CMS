@@ -7,7 +7,7 @@ $my_model = $classes['MY_Model'];
 
 <h1>Models</h1>
 <p>There are two main classes FUEL provides for creating models. The first, <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>, 
-extends the <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.
+extends the <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.
 It was developed to augment the <a href="http://codeigniter.com/user_guide/database/active_record.html" target="_blank">CodeIgniter active record</a> class and <strong>DOES NOT</strong> change any of those methods.
 The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a>, extends <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a> and provides 
 <a href="<?=user_guide_url('modules/simple')?>">simple module</a> specific methods and is the class you will most likely want to extend for your models. </p>
@@ -18,15 +18,17 @@ method, which gets passed to the <a href="<?=user_guide_url('libraries/form_buil
 <p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record">API documentation for both table and record model classes</a> (explained below).</p>
 <ul>
 	<li><a href="#example">Example</a></li>
-	<li><a href="#table_result_record">Table, Result and Record Classes</a></li>
+	<li><a href="#table_result_record_field">Table, Result, Record and Field Classes</a></li>
 	<li><a href="#initializing">Initializing</a></li>
 	<li><a href="#extending">Extending</a></li>
 	<li><a href="#custom_records">Custom Record Objects</a></li>
+	<li><a href="#custom_fields">Custom Field Objects</a></li>
 	<li><a href="#magic_methods">Magic Methods</a></li>
 	<li><a href="#active_record">Working with Active Record</a></li>
 	<li><a href="#relationships">Relationships</a></li>
 	<li><a href="#serialized">Serialized Fields</a></li>
 	<li><a href="#hooks">Hooks</a></li>
+	<li><a href="#formatters">Formatters</a></li>
 </ul>
 
 <h2 id="example">Example</h2>
@@ -93,12 +95,13 @@ class Quote_model extends Base_module_record {
 	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html">Security Helper</a></li>
 </ul>
 
-<h2 id="table_result_record">Table, Result and Record Classes</h2>
+<h2 id="table_result_record_field">Table, Result, Record and Field Classes</h2>
 <p>Models are actually made up of 2-3 classes:</p>
 <ul>
-	<li><a href="<?=user_guide_url('libraries/my_model/table_class_functions')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
-	<li><a href="<?=user_guide_url('libraries/my_model/data_set_class_functions')?>"><strong>Data Set Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
-	<li><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attibutes of the table</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model#my_model')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model#data_set')?>"><strong>Data Set Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model#data_record')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attibutes of the table</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model#data_field')?>"><strong>Field Class (optional)</strong> - the custom object for a specific field. By default, it will simply return the value in the database</a></li>
 </ul>
 
 
@@ -117,7 +120,7 @@ echo user_guide_block('properties', $vars);
 
 
 <h2 id="extending">Extending Your Model</h2>
-<p>When extending MY_Model or Base_module_model, it is recommended to use a plural version of the objects name, in
+<p>When extending <a href="<?=user_guide_url('libraries/my_model#my_model')?>">MY_Model</a> or <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a>, it is recommended to use a plural version of the objects name, in
 this example <strong>Examples</strong>, with the suffix of <strong>_model</strong> (e.g.<dfn>Examples_model</dfn>). 
 The plural version is recommended because the singular version is often used for the custom record class (see below for more). 
 </p>
@@ -190,6 +193,7 @@ If the class is not found it will return an <strong>array of arrays</strong> or 
 
 
 
+
 <h3>Create Derived Attributes</h3>
 <p>With a custom record object, you can derive attributes which means you can create new values from the existing fields or even
 other models. For example, you have a table with a text field named <dfn>content</dfn> that you need to filter and encode html entities 
@@ -253,6 +257,36 @@ class Quotes_model extends Base_module_model {
 magic method property.</p>
 
 <p class="important"><a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">Click here to view the function reference for custom record objects</a></p>
+
+
+
+<h2 id="custom_fields">Custom Fields Objects</h2>
+<p>Sometimes, but not as often, you may want a field to be a specific object instead just a string or integer value. 
+MY_Model provides a <dfn>custom_fields</dfn> property that allows you to map specific classes to fields. 
+The value can be an array with the keys being the field name, and the values can either be string values, referencing the class name,
+or an array specfying the module (key) and the class name (value). You can also pass in initialization parameters to the class with the <dfn>init</dfn>
+parameter. Below are some examples:</p>
+
+<pre class="brush:php">
+// loading from the fuel/application/libraries/custom_fields/My_asset_field.php
+'image' => 'My_asset_field', 
+
+// loading from the fuel/modules/my_module/libraries/custom_fields/My_text_field.php
+'name' => array('my_module' => My_text_field'), 
+
+// loading from the fuel/application/libraries/custom_fields/My_url_field.php and passing ina prefix_path of 'test'
+'url' => array('model' => 'My_url_field', 'init' => array('prefix_path' => 'test')), 
+</pre>
+
+<p>Once created by a record, you will be able to reference the fields value as normal, but will also be able to call any methods on the custom field's object like so:</p>
+<pre class="brush:php">
+echo $record->image; // my_img.jpg
+
+echo $record->image->my_func(); // my_func method's output from the My_asset_field object
+</pre>
+
+<p class="important">By default, FUEL will look in the "{module}/libraries/custom_fields" folder for the the classes to load.</p>
+
 
 
 <h2 id="magic_methods">Magic Methods</h2>
@@ -555,3 +589,91 @@ $product->save(); // saves and serializes the data
 	<li><strong>on_update</strong> - executed after updating</li>
 	<li><strong>on_init</strong> - executed upon initialization</li>
 </ul>
+
+
+<h2 id="formatters">Formatters</h2>
+<p>Formatters allow you to easily modify a value by mapping a function to a suffix value of a property. 
+An example of this is to use the "_formatted" suffix on a string type field which would apply the <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>.</p>
+
+<pre class="brush:php">
+echo $record->content;
+// A long time ago...
+
+echo $record->content_fornatted;
+// &lt;p&gt;A long time ago...&lt;/p&gt;
+</pre>
+
+<p>Formatter function that can have additional parameters passed to them can be called as methods. An example would be the "wrap" filter:</p>
+<pre class="brush:php">
+$record->content_wrap(50);
+</pre>
+
+<p>Formatters can be applied to specific field types like datetime fields or string type fields, or they can be applied to field names (e.g. image, img, thumb).
+
+You can also apply multiple formatters to a field type by using the <dfn>format function like so:</p>
+<pre class="brush:php">
+$record->format('content', 'stripped|formatted');
+//OR
+$record->format('content', 'stripped, formatted');
+//OR
+$record->format('content', array('stripped', 'formatted');
+</pre>
+
+<p>MY_Model has a <dfn>formatters</dfn> property in which <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a> extends to 
+	provide you by default with the following formatters for different field types:
+</p>
+
+
+<h3>Datetime and Date Field Examples</h3>
+<p>Below are examples of formatters that can be applied to a date field and links to the functions that they use.</p>
+<ul>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_date_formatter')?>">{datetime}_formatted</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_timestamp')?>">{datetime}_timestamp</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_month')?>">{datetime}_month</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_day')?>">{datetime}_day</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_weekday')?>">{datetime}_weekday</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_year')?>">{datetime}_year</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_hour')?>">{datetime}_hour</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_minute')?>">{datetime}_minute</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_date_helper#func_second')?>">{datetime}_second</a></li>
+</ul>
+
+<h3>String Field Examples</h3>
+<p>Below are examples of formatters that can be applied to a string fields (char, varchar, text) and links to the functions that they use.</p>
+<ul>
+	<li><a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">{string}_formatted</a> (auto_typography CI function)</li>
+	<li><a href="http://php.net/manual/en/function.strip-tags.php" target="_blank">{string}_stripped</a></li>
+	<li><a href="<?=user_guide_url('helpers/markdown_helper')?>">{string}_markdown</a></li>
+	<li><a href="<?=user_guide_url('helpers/my_string_helper#func_parse_template_syntax')?>">{string}_parsed</a></li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_excerpt</a> (word_limiter CI function)</li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_ellipsize</a> (ellipsize CI function)</li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_highlight</a> (highlight_phrase CI function)</li>
+	<li><a href="http://us2.php.net/manual/en/function.htmlentities.php" target="_blank">{string}_entities</a></li>
+	<li><a href="http://us2.php.net/manual/en/function.htmlspecialchars.php" target="_blank">{string}_specialchars</a></li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_humanize</a> (humanize CI function)</li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_underscore</a> (underscore CI function)</li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_camelize</a> (camelize CI function)</li>
+</ul>
+
+<h3>Number Examples</h3>
+<p>Below are examples of formatters that can be applied to a number type fields (tinyint, smallint, int, bigint) and links to the functions that they use.</p>
+<ul>
+	<li><a href="<?=user_guide_url('helpers/format_helper')?>" target="_blank">{string}_dollar</a></li>
+</ul>
+
+<h3>Special Field Name Examples</h3>
+<p>Below are examples of formatters that can be applied to a number type fields (tinyint, smallint, int, bigint) and links to the functions that they use.</p>
+<ul>
+	<li><a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">{url|link}_path</a> (site_url CI function)</li>
+	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_path')?>">{img|image|thumb|pdf}_path</a></li>
+	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_server_path')?>">{img|image|thumb|pdf}_serverpath</a></li>
+	<li><a href="<?=user_guide_url('helpers/asset_helper#func_asset_filesize')?>">{img|image|thumb|pdf}_filesize</a></li>
+	<li><a href="<?=user_guide_url('helpers/asset_helper#func_asset_exists')?>">{img|image|thumb|pdf}_exists</a></li>
+</ul>
+
+
+
+<p class="important">Formatter aliases must <strong>not</strong> contain "_" (underscores). So for example, the function "word_limiter" has an alias of "wordlimiter".</p>
+
+
+

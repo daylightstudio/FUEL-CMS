@@ -22,7 +22,7 @@
  * array values. Each field has a base set of parameters that can be set 
  * for it. Other fields have additional parameters you can pass to it 
  * (e.g. the date field). This class works with the 
- * <a href="[user_guide_url]libraries/my_model/table_class_functions#form_fields">MY_Model form_fields</a> 
+ * <a href="[user_guide_url]libraries/my_model#func_form_fields">MY_Model form_fields</a> 
  * method which returns table meta information regarding the fields of a 
  * table.
  *
@@ -2633,7 +2633,7 @@ Class Form_builder {
 				}
 			}
 
-			// if there's a filepath, then load it and instantiate the any class '
+			// if there's a filepath, then load it and instantiate the class
 			if (!empty($custom_field['filepath']))
 			{
 				require_once($custom_field['filepath']);
@@ -2662,6 +2662,7 @@ Class Form_builder {
 					$library = strtolower($custom_field['class']);
 					$this->CI->load->library($library);
 				}
+				$library = end(explode('/', $library));
 				$func = array($this->CI->$library, $custom_field['function']);
 			}
 			
