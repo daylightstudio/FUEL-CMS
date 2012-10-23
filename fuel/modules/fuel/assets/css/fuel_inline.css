@@ -2,10 +2,10 @@
 
 /* generic styles */
 .__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
-.__fuel__ h2 { font-size: 14px; margin-bottom: 10px; }
-.__fuel__ a { color: #0e3e7e; text-decoration: none; font-weight: normal; }
-.__fuel__ a:hover { text-decoration: underline; }
-.__fuel__ input { color: #000; }
+.__fuel__ h2 { font-size: 14px !important; margin-bottom: 10px !important; }
+.__fuel__ a { color: #0e3e7e !important; text-decoration: none !important; font-weight: normal !important; border: none !important; }
+.__fuel__ a:hover { text-decoration: underline !important; }
+.__fuel__ input { color: #000 !important; }
 .__fuel__ label { text-transform: none !important; font-weight: normal !important; }
 /*.__fuel__ a:visited { color: #4679bd; }*/
 /*.__fuel__ h2.module_name { display: none; }*/
@@ -25,7 +25,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar select { margin: 0 10px; height: auto; max-height: 20px; padding: 0; background: none; }
 .__fuel__ div.buttonbar li.right { float: right; }
 
-.__fuel__ div.buttonbar a.fuel_admin { font-weight: bold; color: #000; }
+.__fuel__ div.buttonbar a.fuel_admin { font-weight: bold !important; color: #000 !important; }
 .__fuel__ div.buttonbar_notop li { border-top: none !important; }
 
 /* icos */
