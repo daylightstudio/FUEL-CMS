@@ -18,7 +18,7 @@ $lang['error_invalid_time'] = 'Invalid time for %1s';
 $lang['error_invalid_year'] = 'Invalid year for %1s';
 $lang['error_invalid_generic'] = 'Invalid value for %1s';
 $lang['error_could_not_find_record_class'] = 'Could not find record class to create for %1s.';
-
+$lang['error_invalid_custom_class'] = 'Invalid custom class associated with the field %1s.';
 
 /* End of file model_lang.php */
 /* Location: ./modules/fuel/language/english/model_lang.php */

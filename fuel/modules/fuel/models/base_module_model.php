@@ -49,6 +49,59 @@ class Base_module_model extends MY_Model {
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
 	
+	protected $_formatters = array(
+								'datetime'	=> array(
+													'formatted' => 'date_formatter',
+													'month', 
+													'day', 
+													'weekday', 
+													'year', 
+													'hour', 
+													'minute', 
+													'second'),
+								'date' 				=> array(
+															'formatted' => 'date_formatter',
+															'month', 
+															'day', 
+															'year', 
+															'hour'),
+								'string'			=> array(
+															'formatted'		=> 'auto_typography',
+															'stripped' 		=> 'strip_tags', 
+															'markdown',
+															'parsed' 		=> 'parse_template_syntax',
+															'excerpt'		=> 'character_limiter',
+															'wordlimiter'  	=> 'word_limiter',
+															'ellipsize',
+															'censor'		=> 'word_censor',
+															'highlight' 	=> 'highlight_phrase',
+															'wrap' 			=> 'word_wrap',
+															'entities' 		=> 'htmlentities',
+															'specialchars'  => 'htmlspecialchars',
+															'humanize',
+															'underscore',
+															'camelize'
+															),
+								'number'			=> array(
+															'dollar',
+															),
+								'url|link'			=> array(
+															'path' 			=> 'site_url'
+															),
+								'img|image|thumb'	=> array(
+															'path' 			=> array('assets_path', 'images'),
+															'serverpath' 	=> array('assets_server_path', 'images'),
+															'filesize' 		=> array('asset_filesize', 'images', '', FALSE),
+															'exists'		=> array('asset_exists', 'images', ''),
+															),
+								'pdf'				=> array(
+															'path' 			=> 'pdf_path',
+															'serverpath' 	=> array('assets_server_path', 'pdf'),
+															'filesize' 		=> array('asset_filesize', 'pdf', '', FALSE),
+															'exists'		=> array('asset_exists', 'pdf', ''),
+															)
+								); // default helpers which get merged into $helpers property array
+	
 	/**
 	 * Constructor
 	 *
@@ -118,6 +171,20 @@ class Base_module_model extends MY_Model {
 		
 		// if no configuration mapping is found then we will assume it is just the straight up table name
 		parent::__construct($table, $params); // table name and params
+
+
+		// load additional helpers here 
+		$this->load->helper('typography');
+		$this->load->helper('text');
+		$this->load->helper('markdown');
+		$this->load->helper('format');
+		$this->load->helper('format');
+
+		// set formatters
+		if (!empty($this->_formatters) AND !empty($this->formatters))
+		{
+			$this->formatters = array_merge_recursive($this->_formatters, $this->formatters);	
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -662,6 +729,7 @@ class Base_module_model extends MY_Model {
 	function _publish_status()
 	{
 		$fields = $this->fields();
+
 		if (in_array('published', $fields))
 		{
 			if (in_array('published', $this->boolean_fields))
@@ -673,6 +741,7 @@ class Base_module_model extends MY_Model {
 				$this->db->where(array($this->table_name.'.published' => 'yes'));
 			}
 		}
+
 		if (in_array('active', $fields))
 		{
 			if (in_array('active', $this->boolean_fields))
@@ -683,6 +752,11 @@ class Base_module_model extends MY_Model {
 			{
 				$this->db->where(array($this->table_name.'.active' => 'yes'));
 			}
+		}
+
+		if (in_array('publish_date', $fields))
+		{
+			$this->db->where(array('publish_date <=' => datetime_now()));
 		}
 	}
 	

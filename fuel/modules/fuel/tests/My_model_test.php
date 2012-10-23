@@ -18,6 +18,49 @@ class My_model_test extends Tester_base {
 		require_once('test_users_model.php');
 	}
 	
+	public function test_formatters()
+	{
+		$test_custom_records_model = new Test_users_model();
+		$user = $test_custom_records_model->find_one(array('user_name' => 'admin'));
+		
+		$test_custom_records_model->add_formatter('string', 'auto_typography', 'formatted');
+		$test = $user->bio_formatted;
+		$expected = '<p>This is my bio.</p>';
+		$this->run($test, $expected, 'formatter test formatted #1');
+
+		$test_custom_records_model->remove_formatter('string', 'formatted');
+		$test = $user->bio_formatted;
+		$expected = 'This is my bio.';
+		$this->run($test, $expected, 'formatter test formatted removed #2');
+
+		$test_custom_records_model->add_formatter('datetime', array('date_formatter', 'm-Y'), 'formatted');
+		$test = $user->date_added_formatted;
+		$expected = '01-2012';
+		$this->run($test, $expected, 'formatter test of date formatting with configuration argments set #3');
+
+		$test_custom_records_model->remove_formatter('datetime', 'formatted');
+		$test_custom_records_model->add_formatter('datetime', 'date_formatter', 'formatted');
+		$test = $user->date_added_formatted('Y-m-d');
+		$expected = '2012-01-02';
+		$this->run($test, $expected, 'formatter test of date formatting using function call #4');
+
+		$test_custom_records_model->remove_formatter('datetime', 'formatted');
+		$test_custom_records_model->add_formatter('string', 'camelize');
+		$test = $user->first_name_camelize;
+		$expected = 'darth';
+		$this->run($test, $expected, 'formatter test of camelize attached to string type #5');
+
+		$test_custom_records_model->remove_formatter('string', 'camelize');
+		$test = $user->first_name_camelize;
+		$expected = 'Darth';
+		$this->run($test, $expected, 'formatter test removal of camelize worked #6');
+
+		$test_custom_records_model->add_formatter('first_name', 'camelize');
+		$test = $user->first_name_camelize;
+		$expected = 'darth';
+		$this->run($test, $expected, 'formatter test using a field name #7');
+	}
+
 	public function test_foreign_key_relationship()
 	{
 		$test_custom_records_model = new Test_users_model();
@@ -142,7 +185,7 @@ class My_model_test extends Tester_base {
 	public function test_linked_fields()
 	{
 		$test_custom_records_model = new Test_users_model();
-		$test_custom_records_model->linked_fields = array('user_name' => array('email' => 'mirroed'));
+		$test_custom_records_model->linked_fields = array('user_name' => array('email' => 'mirrored'));
 
 		$user = $test_custom_records_model->create();
 		$user->email = 'han@milleniumfalcon.com';
@@ -236,9 +279,11 @@ class My_model_test extends Tester_base {
   				'email',
   				'first_name',
   				'last_name',
+  				'bio',
   				'role_id',
   				'attributes',
-  				'active'
+  				'active',
+  				'date_added'
 			);
 		$this->run($test, $expected, 'fields test');
 	}

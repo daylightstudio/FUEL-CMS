@@ -65,7 +65,10 @@ class MY_Model extends CI_Model {
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $has_many = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
 	public $belongs_to = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
-	
+	public $representatives = array(); // n array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
+	public $custom_fields = array(); // an array of field names/types that map to a specific class
+	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
+
 	protected $db; // CI database object
 	protected $table_name; // the table name to associate the model with
 	protected $key_field = 'id'; // usually the tables primary key(s)... can be an array if compound key
@@ -80,6 +83,8 @@ class MY_Model extends CI_Model {
 	protected $validator = NULL; // the validator object
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
+	
+
 	/**
 	 * Constructor - Sets MY_Model preferences
 	 *
@@ -89,11 +94,12 @@ class MY_Model extends CI_Model {
 	{
 		parent::__construct();
 		
-		// load helpers here 
 		$this->load->helper('string');
 		$this->load->helper('date');
 		$this->load->helper('security');
 		$this->load->helper('language');
+
+
 		$this->load->module_language(FUEL_FOLDER, 'model');
 		$this->initialize($table, $params);
     }
@@ -159,6 +165,9 @@ class MY_Model extends CI_Model {
 		}
 		$this->validator = new Validator();
 		$this->validator->register_to_global_errors = FALSE;
+
+		// load any additional classes needed for custom fields
+		$this->load_custom_field_classes();
 
 	}
 
@@ -3282,13 +3291,15 @@ class MY_Model extends CI_Model {
 
 			// TODO .... DECIDE IF WE SHOULD PASS THROUGH to format_model_name... the suffix may be different if configured
 			$CI->load->module_model($module, $m);
-			return $m;
+			$return = $m;
 		}
 		else
 		{
 			$CI->load->model($model);
-			return $model;
+			$return = $model;
 		}
+		$return = end(explode('/', $return));
+		return $return;
 	}
 	
 	// --------------------------------------------------------------------
@@ -3591,7 +3602,127 @@ class MY_Model extends CI_Model {
 		}
 		return $val;
 	}
-		
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loads custom field classes so they can be instantiated when retrieved from the database
+	 *
+	 * @access	public
+	 * @param	string	the folder to look into from within either the module or application directory
+	 * @return	void
+	 */	
+	public function load_custom_field_classes($folder = 'libraries/custom_fields')
+	{
+		if (!is_array($this->custom_fields))
+		{
+			return;
+		}
+
+		// normalize slashes at the ends
+		$folder = trim($folder, '/');
+
+		foreach($this->custom_fields as $field => $custom_class)
+		{
+			if (is_array($custom_class))
+			{
+				$module = FUEL_FOLDER;
+
+				// look in a module folder
+				if (is_array($custom_class) AND isset($custom_class['model']))
+				{
+					$m = $custom_class['model'];
+
+					if (isset($custom_class['module']))
+					{
+						$module = $custom_class['module'];
+					}
+				}
+				else
+				{
+					$m = current($custom_class);
+					$module = key($custom_class);
+				}
+				
+				$class_path = MODULES_PATH.$module.'/'.$folder.'/'.$m.EXT;
+			}
+			else
+			{
+				// look in the application folder
+				$m = $custom_class;
+				$class_path = APPPATH.$folder.'/'.$custom_class.EXT;
+
+				// check the FUEL folder if it doesn't exist
+				if (!file_exists($class_path))
+				{
+					$class_path = MODULES_PATH.FUEL_FOLDER.'/'.$folder.'/'.$m.EXT;
+				}
+			}
+
+			// load the class so it can be instantiated later
+			if (file_exists($class_path))
+			{
+				require_once($class_path);
+			}
+			else
+			{
+				// THROW ERROR
+				throw new Exception(lang('error_invalid_custom_class', $field));
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds a formatter helper function
+	 *
+	 * @access	public
+	 * @param	string	the field type to apply the function to
+	 * @param	mixed	the function
+	 * @param	string	the alias to that function name (e.g. formatted = auto_typography)
+ 	 * @return	void
+	 */	
+	public function add_formatter($type, $func, $alias = NULL)
+	{
+		if (!empty($alias))
+		{
+			$this->formatters[$type][$alias] = $func;
+		}
+		else if (!isset($this->formatters[$type]) OR !in_array($func, $this->formatters[$type]))
+		{
+			 $this->formatters[$type][] = $func;	
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes a formatter helper function
+	 *
+	 * @access	public
+	 * @param	string	the field type to apply the function to
+	 * @param	mixed	the formatter key
+	 * @return	void
+	 */	
+	public function remove_formatter($type, $key)
+	{
+		if (!isset($this->formatters[$type]))
+		{
+			return FALSE;
+		}
+
+		if (isset($this->formatters[$type][$key]))
+		{
+			unset($this->formatters[$type][$key]);
+		}
+		else if (in_array($key, $this->formatters[$type]))
+		{
+			unset($this->formatters[$type][array_search($key, $this->formatters[$type])]);
+		}
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -3961,18 +4092,15 @@ class Data_record {
 	protected $_fields = array(); // fields of the record
 	protected $_objs = array(); // nested objects
 	protected $_parent_model = NULL; // the name of the parent model
-	protected $_inited = FALSE; // Returns whether the object has been initiated or not
-	protected $_date_format = ''; // datetime method format... will first look in config and then will default to m/d/Y
-	protected $_time_format = 'h:i:s a'; // datetime method format
-	protected $_format_suffix = '_formatted'; // suffix to apply auto formatting
-	protected $_strip_suffix = '_stripped'; // suffix to apply for stripping formatting
-	
+	protected $_inited = FALSE; // returns whether the object has been initiated or not
+
 	/**
 	 * Constructor - requires a result set from MY_Model. 
 	 * @param	object	parent object
 	 */
 	public function __construct(&$parent = NULL)
 	{
+		$this->_CI =& get_instance();
 		if (!empty($parent)) $this->initialize($parent);
 	}
 	
@@ -3988,9 +4116,6 @@ class Data_record {
 	 */	
 	public function initialize(&$parent, $fields = array())
 	{
-		$this->_CI =& get_instance();
-		$this->_CI->load->helper('typography');
-		$this->_CI->load->helper('date');
 		
 		$this->_parent_model = $parent;
 		$this->_db = $this->_parent_model->db();
@@ -4442,6 +4567,22 @@ class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Is empty check
+	 *
+	 <code>
+	</code>
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function is_empty()
+	{
+		return empty($this->_fields) AND get_class_vars(__CLASS_);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Prints to the screen the last query run by the parent model. An alias to the parent model's debug_query method.
 	 *
 	 <code>
@@ -4555,6 +4696,123 @@ class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Will format a particular field given the functions passed to it
+	 *
+	 * @access	public
+ 	 * @param	string	the field name
+ 	 * @param	mixed	an array or string value representing one ore more functions to use for formatting
+	 * @param	array	additional arguments to pass to the formatting function. Not applicable when passing multiple formatting functions (optional)
+	 * @return	string
+	 */	
+	public function format($field, $funcs = array(), $args = array())
+	{
+
+		$formatters = $this->_parent_model->formatters;
+
+		if (!isset($this->_fields[$field]))
+		{
+			return NULL;
+		}
+		$value = $this->_fields[$field];
+
+		$type = NULL;
+
+		
+		// look through the list of helpers to find a related function
+		$types = array_keys($formatters);
+
+		// check the array first to see if there is a type that matches the fields name
+		if (in_array($field, $types))
+		{
+			$type = $field;
+		}
+
+		// otherwise, we'll do a preg_match on the field keys to see if we have any matches
+		else
+		{
+			foreach($types as $t)
+			{
+				if (preg_match('#'.$t.'#', $field))
+				{
+					$type = $t;
+					break;					
+				}
+			}
+		}
+
+		// still no matches?... then we grab the type from the parent model (e.g. string, datetime, number, etc)
+		if (empty($type))
+		{
+			// first check the type value fo the field
+			$type = $this->_parent_model->field_type($field);
+		}
+
+
+		// check to make sure the $type exists for the filters
+		if (!isset($formatters[$type]))
+		{
+			return $value;
+		}
+		$type_formatters = $formatters[$type];
+
+		// if the helpers are a tring, then we split it into an array
+		if (is_string($type_formatters))
+		{
+			$type_formatters = preg_split('#,\s*|\|#', $type_formatters);
+
+			// cache the split here so we don't need to split it again
+			$this->_parent_model->formatters[$type] = $type_formatters;
+		}
+		
+		// if the called funcs to apply is a string, then we split into an array
+		if (is_string($funcs))
+		{
+			$funcs = preg_split('#,\s*|\|#', $funcs);
+		}
+
+		$func_args = array_merge(array($value), $args);
+		if (is_array($funcs))
+		{
+			foreach($funcs as $func)
+			{
+				$f = NULL;
+				if (isset($type_formatters[$func]))
+				{
+					$f = $type_formatters[$func];
+
+					// if it is an array, we pass everything after the first argument to be argments for the function
+					if (is_array($f))
+					{
+						$f_args = $f;
+						$f = current($f);
+						array_shift($f_args);
+						$args = array_merge($f_args, $args);
+					}
+				}
+				else if (in_array($func, $type_formatters))
+				{
+					$f = $func;
+				}
+
+				// check the current record object for a method, and if exists, use that instead
+				if (method_exists($this, $f))
+				{
+					$f = array($this, $f);
+				}
+				// apply function if it exists to the value
+				if (is_callable($f))
+				{
+					$func_args = array_merge(array($value), $args);
+					$value = call_user_func_array($f, $func_args);
+				}
+			}
+		}
+		return $value;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * String value of this object is it's values in an array format
 	 *
 	 * @access	public
@@ -4578,7 +4836,7 @@ class Data_record {
 	 * @param	array	field names
 	 * @return	array
 	 */	
-	public function __call($method, $args )
+	public function __call($method, $args)
 	{
 		if (preg_match( "/set_(.*)/", $method, $found))
 		{
@@ -4624,6 +4882,17 @@ class Data_record {
 			}
 		}
 
+		else
+		{
+
+			// // take the field name plus a '_' to get the suffix
+			$suffix = substr(strrchr($method, '_'), 1);
+
+			// get the core field name without the suffix (+1 because of underscore)
+			$field = substr($method, 0, - (strlen($suffix) + 1));
+
+			return $this->format($field, $suffix, $args);
+		}
 		return FALSE;
 	}
 	
@@ -4684,6 +4953,8 @@ class Data_record {
 	{
 		$output = NULL;
 		$foreign_keys = $this->_parent_model->foreign_keys;
+		$custom_fields = $this->_parent_model->custom_fields;
+		
 		// first class property has precedence
 		if (property_exists($this, $var))
 		{
@@ -4695,6 +4966,40 @@ class Data_record {
 			$get_method = "get_".$var;
 			$output = $this->$get_method();
 		}
+		else if (!empty($custom_fields[$var]))
+		{
+			$init = array();
+
+			$custom_class = $custom_fields[$var];
+			if (is_array($custom_class))
+			{
+				if (isset($custom_class['model']))
+				{
+					$model = $custom_class['model'];
+				}
+				else
+				{
+					$model = current($custom_class);
+				}
+
+				if (!empty($custom_class['init']))
+				{
+					$init = $custom_class['init'];
+				}
+
+			}
+			else 
+			{
+				$model = $custom_class;
+			}
+
+			$model = ucfirst(end(explode('/', $model)));
+			$value = (isset($this->_fields[$var])) ? $this->_fields[$var] : NULL;
+			$output = new $model($var, $value, &$this, $init);
+
+			
+		}
+
 		// then look in foreign keys and lazy load (add _id from the end in search)
 		else if (in_array($var.'_id', array_keys($foreign_keys)))
 		{
@@ -4717,17 +5022,16 @@ class Data_record {
 		{
 			$output = $this->_fields[$var];
 		}
-		// formatted
-		else if (substr($var, -10) == $this->_format_suffix)
+		else
 		{
-			$field = substr($var, 0, -10);
-			$output = $this->_get_formatted($field);
-		}
-		// stripped
-		else if (substr($var, -9) == $this->_strip_suffix)
-		{
-			$field = substr($var, 0, -9);
-			$output = $this->_get_stripped($field);
+			// take the field name plus a '_' to get the suffix
+			$suffix = substr(strrchr($var, '_'), 1);
+
+			// get the core field name without the suffix (+1 because of underscore)
+			$field = substr($var, 0, - (strlen($suffix) + 1));
+
+			// apply formatting to the value
+			$output = $this->format($field, $suffix);
 		}
 		
 		// unserialize any data
@@ -4739,7 +5043,7 @@ class Data_record {
 		$output = $this->after_get($output, $var);
 		return $output;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -4877,72 +5181,6 @@ class Data_record {
 		}
 		return FALSE;
 	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Method to auto format fields with the suffix $_format_suffix
-	 *
-	 * @access	private
-	 * @param	string	field to check if it is set
-	 * @return	string
-	 */
-	protected function _get_formatted($field)
-	{
-		$type = $this->_parent_model->field_type($field);
-		$output = '';
-		switch($type)
-		{
-			case 'string':
-				$output = auto_typography($this->_fields[$field]);
-				break;
-			case 'datetime':
-				if (empty($this->_date_format))
-				{
-					$this->_date_format = $this->_CI->config->item('date_format');
-				}
-				if (empty($this->_date_format))
-				{
-					$this->_date_format = 'm/d/Y';
-				}
-				$output = date($this->_date_format.' '.$this->_time_format, strtotime($this->_fields[$field]));
-				break;
-			case 'date':
-				if (empty($this->_date_format))
-				{
-					$this->_date_format = $this->_CI->config->item('date_format');
-				}
-				if (empty($this->_date_format))
-				{
-					$this->_date_format = 'm/d/Y';
-				}
-				$output = date($this->_date_format, strtotime($this->_fields[$field]));
-				break;
-		}
-		return $output;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Method to auto format fields with the suffix $_format_suffix
-	 *
-	 * @access	private
-	 * @param	string	field to check if it is set
-	 * @return	string
-	 */
-	protected function _get_stripped($field)
-	{
-		$type = $this->_parent_model->field_type($field);
-		$output = '';
-		switch($type)
-		{
-			case 'string':
-				$output = strip_tags($this->_fields[$field]);
-				break;
-		}
-		return $output;
-	}
 
 	// --------------------------------------------------------------------
 	
@@ -4968,7 +5206,7 @@ class Data_record {
 	 * @param	string	field to delete
 	 * @return	void
 	 */	
-	public function __unset($isset)
+	public function __unset($key)
 	{
 		$obj_vars = get_object_vars($this);
 		if (isset($this->_fields[$key]))
@@ -4982,6 +5220,252 @@ class Data_record {
 	}
 	
 	
+}
+
+
+
+// --------------------------------------------------------------------
+
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * This class can be extended to return custom field objects for Data_record objects values
+ * 
+ * The Data_record_field class is used to create custom field objects for a Date_record object values. 
+ * Data_record_field objects provides a greater level of flexibility with your models by allowing associate
+ * an object as the value of a field. This class is <strong>optional</strong>.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @prefix		$record->
+ */
+
+class Data_record_field {
+	
+	public $field = NULL; // actual field value
+	public $value = NULL; // the value of the field
+	protected $_CI = NULL; // global CI object
+	protected $_parent_model = NULL; // the name of the parent model
+	protected $_inited = FALSE; // returns whether the object has been initiated or not
+
+	/**
+	 * Constructor - requires a result set from MY_Model. 
+	 * @param	object	parent object
+	 */
+	public function __construct($field = NULL, $value = NULL, &$parent = NULL, $params = array())
+	{
+		$this->_CI =& get_instance();
+		if (!empty($parent)) $this->initialize($field, $value, $parent, $params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initializes the class with the field name, it's value, parent model and any additional parameters needed for the class
+	 *
+	 * @access	public
+	 * @param	object	parent model object
+	 * @param	array	field names
+	 * @return	array
+	 */	
+	public function initialize($field, $value, &$parent, $params = array())
+	{
+		$this->_parent_model = $parent;
+		$this->field = $field;
+		$this->value = $value;
+
+		if (!empty($params))
+		{
+			foreach($params as $key => $val)
+			{
+				if (isset($this->$key) AND substr($key, 0, 1) != '_')
+				{
+					$this->$key = $val;
+				}
+			}
+		}
+
+		$this->on_init();
+		$this->_inited = TRUE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Placeholder - executed after initialization
+	 *
+	 * @access	public
+	 * @return	vpod
+	 */	
+	public function on_init()
+	{
+		
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the field class has been properly intialized.
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function is_initialized()
+	{
+		return $this->_inited;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the parent model object
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function &parent_model()
+	{
+		return $this->_parent_model;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the table model object
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function table_model()
+	{
+		return $this->parent_model()->parent_model();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Is empty check
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function is_empty()
+	{
+		return empty($this->value);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Placeholder - to execute after a magic method get
+	 *
+	 * @access	public
+	 * @param	string	output from get comand
+	 * @param	string	field name
+	 * @return	mixed
+	 */	
+	public function after_get($output, $var)
+	{
+		return $output;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method to return first property then method
+	 *
+	 * @access	public
+	 * @param	string	field name
+	 * @return	mixed
+	 */	
+	public function __get($var)
+	{
+		$output = NULL;
+		
+		// first class property has precedence
+		if (property_exists($this, $var))
+		{
+			$output = $this->$var;
+		} 
+		// check a get_{method}
+		else if (method_exists($this, "get_".$var))
+		{
+			$get_method = "get_".$var;
+			$output = $this->$get_method();
+		}
+		$output = $this->after_get($output, $var);
+		return $output;
+	}
+
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * What to print when echoing out this object
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function __toString()
+	{
+		$value = $this->value;
+		
+		if (is_string($value))
+		{
+			return $value;
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+		// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method to check if a variable is set
+	 *
+	 * @access	public
+	 * @param	string	field to check if it is set
+	 * @return	boolean
+	 */	
+	public function __isset($key)
+	{
+		$obj_vars = get_object_vars($this);
+		return (isset($obj_vars[$key]) OR method_exists($this, 'get_'.$key));
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method for unset
+	 *
+	 * @access	public
+	 * @param	string	field to delete
+	 * @return	void
+	 */	
+	public function __unset($key)
+	{
+		unset($this->parent_model()->$key);
+	}
 }
 
 /* End of file MY_Model.php */
