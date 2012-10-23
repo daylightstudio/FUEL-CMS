@@ -229,7 +229,7 @@ class Article_model extends Data_record {
 }
 </pre>
 
-<p class="important">The <a href="<?=user_guide_url('libraries/my_model/table_class_functions#options_list')?>">options_list</a> method creates a key value array that is used by FUEL's
+<p class="important">The <a href="<?=user_guide_url('libraries/my_model#func_options_list')?>">options_list</a> method creates a key value array that is used by FUEL's
 <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class to create the field.</p>
 
 <p class="important">The <kbd>date_added</kbd> column is hidden by default in the FUEL admin but will be auto-detected as a field that will automatically 
