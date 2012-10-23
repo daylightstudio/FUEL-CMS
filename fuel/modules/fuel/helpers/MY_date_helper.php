@@ -465,10 +465,11 @@ function get_age($bday_ts, $at_time_ts = NULL)
  * Standard Date.. OVERWRITE CI version due to bugs
  *
  * Returns a date formatted according to the submitted standard.
+ * http://codeigniter.com/forums/viewthread/171906/
  *
  * @access	public
  * @param	string	the chosen format
- * @param	integer	Unix timestamp
+ * @param	int	Unix timestamp
  * @return	string
  */
 function standard_date($fmt = 'DATE_RFC822', $time = '')
@@ -492,6 +493,202 @@ function standard_date($fmt = 'DATE_RFC822', $time = '')
 
 	return mdate($formats[$fmt], $time);
 }
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a timestamp from the provided time
+ *
+ * @access	public
+ * @param	string (optional)
+ * @return	string
+ */
+function timestamp($date = NULL)
+{
+	if (empty($date))
+	{
+		return time();
+	}
+
+	return strtotime($date);
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the month value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
+ * @return	string
+ */
+function month($date = NULL, $format = 'M')
+{
+	$ts = timestamp($date);
+	switch($format)
+	{
+		case 'm': case 'numeric':
+			return date('m', $ts);
+		case 'M': case 'short':
+			return date('M', $ts);
+		default:
+			return date('F', $ts);
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the day value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'd/leading', 'j' <- default  (optional)
+ * @return	string
+ */
+function day($date = NULL, $format = 'j')
+{
+	switch($format)
+	{
+		case 'd': case 'leading':
+			return date('d', timestamp($date));
+		default:
+			return date('j',timestamp($date));
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the weekday value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'l/full', 'N/numeric', 'D' <- default (optional)
+ * @return	string
+ */
+function weekday($date = NULL, $format = 'D')
+{
+	$ts = timestamp($date);
+	switch($format)
+	{
+		case 'l': case 'full':
+			return date('l', $ts);
+		case 'N': case 'numeric':
+			return date('N', $ts);
+		default:
+			return date('D', $ts);
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the year value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'y/short', 'Y/long' <- default (optional)
+ * @return	string
+ */
+function year($date = NULL, $format = 'Y')
+{
+	$ts = timestamp($date);
+	switch($format)
+	{
+		case 'y': case 'short':
+			return date('y', $ts);
+		default:
+			return date('Y', $ts);
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the weekday value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are '24/military', '12' <- default (optional)
+ * @return	string
+ */
+function hour($date = NULL, $format = '12')
+{
+	$ts = timestamp($date);
+	switch($format)
+	{
+		case '24':  case 'military':
+			return date('H', $ts);
+		default:
+			return date('h', $ts);
+	}
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the weekday value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'noleading', 'leading' <- default (optional)
+  * @return	string
+ */
+function minute($date = NULL, $format = 'leading')
+{
+	$min = date('i', timestamp($date));
+	if ($format != 'leading')
+	{
+		return (int) $min;
+	}
+	return $min;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the weekday value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'noleading', 'leading' <- default (optional)
+ * @return	string
+ */
+function second($date = NULL, $format = 'leading')
+{
+	$sec = date('s', timestamp($date));
+	if ($format != 'leading')
+	{
+		return (int) $sec;
+	}
+	return $sec;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Returns a the ampm value of a provided date
+ *
+ * @access	public
+ * @param	string (optional)
+ * @param	string options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
+ * @return	string
+ */
+function ampm($date = NULL, $format = 'a')
+{
+	$ts = timestamp($date);
+	switch($format)
+	{
+		case 'A':  case 'upper':  case 'uppercase':
+			return date('A', $ts);
+		default:
+			return date('a', $ts);
+	}
+}
+
+
 
 /* End of file MY_date_helper.php */
 /* Location: ./modules/fuel/helpers/MY_date_helper.php */
