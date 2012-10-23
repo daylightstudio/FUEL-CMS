@@ -48,7 +48,6 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
 		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
 
-		<li><strong>append</strong> - adds additional menu items to the current list</li>
 		<li><strong>render_type</strong>: options are basic, breadcrumb, page_title, collapsible, delimited, array. Default is 'basic'</li>
 		<li><strong>active_class</strong>: the active css class. Default is 'active'</li>
 		<li><strong>active</strong>: the active menu item</li>
