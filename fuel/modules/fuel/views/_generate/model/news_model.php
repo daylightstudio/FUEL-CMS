@@ -7,6 +7,7 @@ class News_model extends Base_module_model {
 	public $required = array('title');
 	public $record_class = 'News_item';
 	public $parsed_fields = array('content', 'content_formatted');
+	public $display_unpublished_if_logged_in = TRUE;
 	
 	function __construct()
 	{

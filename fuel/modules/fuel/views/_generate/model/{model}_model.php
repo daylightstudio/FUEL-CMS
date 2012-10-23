@@ -15,7 +15,8 @@ class {model_name}_model extends Base_module_model {
 	public $serialized_fields = array();
 	public $belongs_to = array();
 	public $has_many = array();
-	
+	public $formatters = array();
+	public $display_unpublished_if_logged_in = FALSE;
 	
 	function __construct()
 	{

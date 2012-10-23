@@ -4,6 +4,7 @@ require_once(FUEL_PATH.'models/base_module_model.php');
 class Careers_model extends Base_module_model {
 
 	public $required = array('position');
+	public $display_unpublished_if_logged_in = TRUE;
 	
 	function __construct()
 	{
