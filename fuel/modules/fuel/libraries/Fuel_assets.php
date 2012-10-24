@@ -131,6 +131,7 @@ class Fuel_assets extends Fuel_base_library {
 		// used later
 		$has_empty_filename = (empty($params['file_name'])) ? TRUE : FALSE;
 
+
 		// set defaults
 		foreach($valid as $param => $default)
 		{
@@ -234,7 +235,6 @@ class Fuel_assets extends Fuel_base_library {
 						chmodr($params['upload_path'], 0777);
 					}
 				} 
-			
 				// set file name
 				if ($has_empty_filename AND !empty($params[$field_name.'_filename']))
 				{
@@ -242,7 +242,8 @@ class Fuel_assets extends Fuel_base_library {
 				}
 				else if ($has_empty_filename)
 				{
-					$params['file_name'] = url_title($file['name'], 'underscore', FALSE);	
+					$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
+					$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
 				}
 			
 				// set overwrite
