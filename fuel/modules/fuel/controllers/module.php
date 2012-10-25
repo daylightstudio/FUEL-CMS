@@ -1301,8 +1301,12 @@ class Module extends Fuel_base_controller {
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
 					$tmp_field_name = end(explode('--', $field_name));
-					$posted[$tmp_field_name] = url_title($field_value, 'underscore', FALSE);
-					$posted[$field_name] = url_title($field_value, 'underscore', FALSE);
+
+					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
+					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
+					$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					$posted[$tmp_field_name] = $file_val;
+					$posted[$field_name] = $file_val;
 				}
 			}
 		}
