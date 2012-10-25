@@ -41,10 +41,13 @@ $config['generate'] = array(
 <h2>Models</h2>
 <p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify):</p>
 <pre class="brush:php">
-php index.php fuel/generate/model/ examples
+php index.php fuel/generate/model examples
 
 // generates multiple models at once
-php index.php fuel/generate/model/ examples:examples2
+php index.php fuel/generate/model examples:examples2
+
+// generates a model in an advanced module named examples
+php index.php fuel/generate/model my_model examples
 </pre>
 
 <p class="important">If you are on a MAC and having trouble where the script is outputting nothing, you may need to make sure you are calling the right php binary. In my case, I needed to call to a /Applications/MAMP/bin/php5/bin/php. Here is a thread that talks about it more: http://codeigniter.com/forums/viewthread/130383/ Hopefully it saves you some time too!</p>
@@ -53,7 +56,7 @@ php index.php fuel/generate/model/ examples:examples2
 <h2>Simple Modules</h2>
 <p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify), add the permisions to manage it in the CMS,  and will add it to the <span class="file">fuel/application/config/MY_fuel_modules.php</span>:</p>
 <pre class="brush:php">
-php index.php fuel/generate/simple/ examples
+php index.php fuel/generate/simple examples
 </pre>
 
 <h2>Advanced Modules</h2>
@@ -61,9 +64,15 @@ php index.php fuel/generate/simple/ examples
 It will generate by default the files specified in the
 <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the <dfn>generated</dfn> parameter:</p>
 <pre class="brush:php">
-php index.php fuel/generate/advanced/ examples
+php index.php fuel/generate/advanced examples
 </pre>
 
+<p>After creating the advanced module, you will need to still setup your simple modules within that advanced module. 
+	To do that, you can pass a second parameter to the "simple" generate CLI command to tell which advanced module folder to generate the simple module:
+</p>
+<pre class="brush:php">
+php index.php fuel/generate/simple my_model examples
+</pre>
 <h2>Placeholder Variables</h2>
 <p>The following variables are available to be used in your generation templates:</p>
 <ul>
