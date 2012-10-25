@@ -47,6 +47,7 @@ php index.php fuel/generate/model/ examples
 php index.php fuel/generate/model/ examples:examples2
 </pre>
 
+<p class="important">If you are on a MAC and having trouble where the script is outputting nothing, you may need to make sure you are calling the right php binary. In my case, I needed to call to a /Applications/MAMP/bin/php5/bin/php. Here is a thread that talks about it more: http://codeigniter.com/forums/viewthread/130383/ Hopefully it saves you some time too!</p>
 <p class="important">Separating module names with a colon will generate multiple models.</p>
 
 <h2>Simple Modules</h2>
@@ -69,7 +70,7 @@ php index.php fuel/generate/advanced/ examples
 	<li><strong>{module}</strong>: the module name (lowercased)</li>
 	<li><strong>{model}</strong>: the model name without the "_model" suffix (lowercased)</li>
 	<li><strong>{table}</strong>: the table name</li>
-	<li><strong>{module_name}</strong>:</li>
+	<li><strong>{module_name}</strong>: the name of the module with the first letter of each word upper cased (e.g. My Module)</li>
 	<li><strong>{model_name}</strong>: the model name with the first letter upper cased and without the suffix (e.g. News)</li>
 	<li><strong>{model_record}</strong>: The model records name which will remove any pluralization</li>
 	<li><strong>{ModuleName}</strong>: A camel-cased version of the module name</li>

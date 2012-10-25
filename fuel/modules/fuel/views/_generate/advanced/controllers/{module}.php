@@ -1,7 +1,7 @@
 <?php
 require_once(FUEL_PATH.'controllers/module.php');
 
-class {module_name} extends Module {
+class {model_name} extends Module {
 	
 	public $nav_selected = '{module}|{module}/:any';
 	
