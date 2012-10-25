@@ -4995,7 +4995,7 @@ class Data_record {
 
 			$model = ucfirst(end(explode('/', $model)));
 			$value = (isset($this->_fields[$var])) ? $this->_fields[$var] : NULL;
-			$output = new $model($var, $value, &$this, $init);
+			$output = new $model($var, $value, $this, $init);
 
 			
 		}
@@ -5267,12 +5267,18 @@ class Data_record_field {
 
 	/**
 	 * Constructor - requires a result set from MY_Model. 
-	 * @param	object	parent object
+	 * @param	string	the name of the field (optional)
+	 * @param	mixed	the value of the field (optional)
+	 * @param	object	parent object (optional)
+	 * @param	array	initialization parameters (optional)
 	 */
 	public function __construct($field = NULL, $value = NULL, &$parent = NULL, $params = array())
 	{
 		$this->_CI =& get_instance();
-		if (!empty($parent)) $this->initialize($field, $value, $parent, $params);
+		if (!empty($parent))
+		{
+			$this->initialize($field, $value, $parent, $params);
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -5281,8 +5287,10 @@ class Data_record_field {
 	 * Initializes the class with the field name, it's value, parent model and any additional parameters needed for the class
 	 *
 	 * @access	public
-	 * @param	object	parent model object
-	 * @param	array	field names
+	 * @param	string	the name of the field
+	 * @param	mixed	the value of the field
+	 * @param	object	parent object
+	 * @param	array	initialization parameters
 	 * @return	array
 	 */	
 	public function initialize($field, $value, &$parent, $params = array())
