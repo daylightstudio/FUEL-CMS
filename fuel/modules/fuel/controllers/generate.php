@@ -1,3 +1,4 @@
+
 <?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
@@ -483,7 +484,7 @@ class Generate extends Fuel_base_controller {
 		$vars['table'] = $name;
 		$vars['module_name'] = ucwords(humanize($name));
 		$vars['model_name'] = ucfirst($name);
-		$vars['model_record'] = ucfirst(preg_replace('#ie$#', 'y', trim($name, 's')));
+		$vars['model_record'] = ucfirst(preg_replace('#ie$#', 'y', ltrim($name, 's')));
 		$vars['ModuleName'] = ucfirst(camelize($name));
 		$vars['MODULE_NAME'] = strtoupper($name);
 		if ($vars['model_name'] == $vars['model_record'])
