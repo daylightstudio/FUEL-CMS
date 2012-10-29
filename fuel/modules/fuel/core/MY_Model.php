@@ -4491,7 +4491,7 @@ class Data_record {
 		
 		// set the readonly to the callers
 		$this->_CI->$model->readonly = $this->_parent_model->readonly;
-		$foreign_key = $this->_CI->$model->key_field();
+		$foreign_key = $this->_CI->$model->table_name().'.'.$this->_CI->$model->key_field();
 
 		if (is_string($where))
 		{
