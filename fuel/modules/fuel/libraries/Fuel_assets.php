@@ -286,7 +286,9 @@ class Fuel_assets extends Fuel_base_library {
 					isset($params['maintain_ratio']) OR 
 					!empty($params['width']) OR 
 					!empty($params['height']) OR
-					!empty($params['master_dim'])
+					!empty($params['master_dim']) OR
+					!empty($params['resize_and_crop']) OR
+					!empty($params['resize_method'])
 					))
 			{
 				$params['source_image']	= $file['full_path'];
@@ -294,7 +296,7 @@ class Fuel_assets extends Fuel_base_library {
 				$this->CI->image_lib->initialize($params); 
 				
 				// check for if they want just a resize or a resize AND crop
-				if (!empty($params['resize_and_crop']))
+				if (!empty($params['resize_and_crop']) OR (!empty($params['resize_method']) AND $params['resize_method'] == 'resize_and_crop'))
 				{
 					$resize = $this->CI->image_lib->resize_and_crop();
 				}

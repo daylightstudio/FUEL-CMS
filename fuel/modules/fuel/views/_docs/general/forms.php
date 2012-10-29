@@ -743,6 +743,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>width</strong>: sets the width of the uploaded image</li>
 		<li><strong>height</strong>: sets the height of the uploaded image</li>
 		<li><strong>maintain_ratio</strong>: determines whether to maintain the images aspect ratio when resizing</li>
+		<li><strong>resize_and_crop</strong>: determines whether to crop the image to be forced into the dimensions</li>
+		<li><strong>resize_method</strong>: values can be "maintain_ratio" or "resize_and_crop". This value will trump any value set for the "maintain_ratio" and "resize_and_crop"</li>
 		<li><strong>master_dim</strong>: sets the dimension (height or width) to be the master dimension when resizing and maintaining aspect ratio</li>
 		<li><strong>hide_options</strong>: hides all of the upload options</li>
 		<li><strong>hide_image_options</strong>: hides only the image specific upload options</li>

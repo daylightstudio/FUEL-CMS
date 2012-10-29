@@ -31,6 +31,18 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 			$assetPreview.hide();
 		}
 		$assetSelect.change();
+	},
+
+	add_edit : function(){
+		this._super();
+		$('#resize_method').change(function(e){
+			if ($(this).val() == 'resize_and_crop'){
+				$('#master_dim').parents('tr').hide();
+			} else {
+				$('#master_dim').parents('tr').show();
+			}
+		})
+		$('#resize_method').change();
 	}
 	
 });

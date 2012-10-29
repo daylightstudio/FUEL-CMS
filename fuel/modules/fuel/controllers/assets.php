@@ -54,7 +54,8 @@ class Assets extends Module {
 				$posted['upload_path'] = $upload_path;
 				$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
 				$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
-				$posted['maintain_ratio'] = ($this->input->get_post('maintain_ratio')) ? TRUE : FALSE;
+				$posted['resize_method'] = ($this->input->get_post('resize_method')) ? $this->input->get_post('resize_method') : 'maintain_ratio';
+				$posted['resize_and_crop'] = $this->input->get_post('resize_and_crop');
 				$posted['width'] = $this->input->get_post('width');
 				$posted['height'] = $this->input->get_post('height');
 				$posted['master_dim'] = $this->input->get_post('master_dim');

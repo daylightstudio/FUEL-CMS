@@ -381,7 +381,9 @@ class Assets_model extends CI_Model {
 
 		$fields[lang('assets_heading_image_specific')] = array('type' => 'fieldset', 'class' => 'tab');
 		$fields['create_thumb'] = array('label' => lang('form_label_create_thumb'), 'type' => 'checkbox', 'comment' => lang('assets_comment_thumb'), 'value' => '1');
-		$fields['maintain_ratio'] = array('label' => lang('form_label_maintain_ratio'), 'type' => 'checkbox', 'comment' => lang('assets_comment_aspect_ratio'), 'value' => '1');
+		
+		$resize_type_options = array('maintain_ratio' => lang('form_label_maintain_ratio'), 'resize_and_crop' => lang('form_label_resize_and_crop'));
+		$fields['resize_method'] =  array('label' => lang('form_label_resize_method'), 'type' => 'select', 'options' => $resize_type_options, 'comment' => lang('assets_comment_thumb'));
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dim'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));

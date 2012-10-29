@@ -304,6 +304,8 @@ class Fuel_custom_fields {
 		$data_params['width'] = (isset($params['width'])) ? (int)$params['width'] : '';
 		$data_params['height'] = (isset($params['height'])) ? (int)$params['height'] : '';
 		$data_params['master_dim'] = (isset($params['master_dim'])) ? $params['master_dim'] : '';
+		$data_params['resize_and_crop'] = (isset($params['resize_and_crop'])) ? $params['resize_and_crop'] : '';
+		$data_params['resize_method'] = (isset($params['resize_method'])) ? $params['resize_method'] : 'maintain_ratio';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
 		
 		if (isset($params['hide_image_options']))
