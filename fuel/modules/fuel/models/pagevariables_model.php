@@ -151,6 +151,8 @@ class Pagevariables_model extends Base_module_model {
 				if (isset($layout_fields[$values['name']]))
 				{
 					$fields['value'] = $layout_fields[$values['name']];
+					$fields['value']['name'] = 'value';
+
 				}
 			}
 		}
