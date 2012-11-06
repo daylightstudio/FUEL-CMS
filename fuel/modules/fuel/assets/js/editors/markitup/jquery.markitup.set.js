@@ -22,10 +22,11 @@ function markitupLanguage(key)
 	}
 }
 
+
 myMarkItUpSettings = {
 	root: 'skins/simple/',
 	nameSpace:           "html", // Useful to prevent multi-instances CSS conflict
-    previewParserPath:   __FUEL_PATH__ + "/preview",
+    previewParserPath:  "fuel/preview", // will be __FUEL_PATH__ + "/preview" after custom field renders
 	previewInWindow: true,
 	previewParserVar: 'data',
 	onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},

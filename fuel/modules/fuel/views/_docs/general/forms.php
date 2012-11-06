@@ -94,6 +94,11 @@ $vars['form'] = $this->form_builder->render($fields);
 $this->load->view('page', $vars);
 </pre>
 
+<p class="important">Many of the custom field types may throw javascript errors if used outside of the CMS because they 
+rely on javascript configuration values which are set by <a href="<?=user_guide_url('general/javascript#jqx')?>">jQX</a>. These config values 
+would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.imgPath, ...etc), otherwise, you may see errors in the console like "jqx is not defined".
+</p>
+
 
 <h2 id="universal_attributes">Universal Field Attributes</h2>
 <p>The following are field parameters that can be used with any field type:</p>

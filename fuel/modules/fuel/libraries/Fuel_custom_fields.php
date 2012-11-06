@@ -74,6 +74,11 @@ class Fuel_custom_fields {
 		{
 			$params['data'] = array('preview' => $params['preview']);
 		}
+
+		$js = '<script type="text/javascript">
+			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
+		</script>';
+		$form_builder->add_js($js);
 		
 		return $form_builder->create_textarea($params);
 	}
@@ -972,8 +977,6 @@ class Fuel_custom_fields {
 	{
 		$form_builder =& $params['instance'];
 		
-		$defaults = array(
-		);
 		$url_class = 'url_select';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$url_class : $url_class;
 		if (empty($params['size']))
