@@ -5049,7 +5049,7 @@ class Data_record {
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Returns an array of relationship data
 	 *
@@ -5058,7 +5058,7 @@ class Data_record {
 	 * @param	boolean	whether return the related object or just the data (optional)
 	 * @param	string	options are 'has_many' and 'belongs_to'(optional)
 	 * @return	array
-	 */	
+	 */
 	protected function _get_relationship($var, $return_object = FALSE, $relationship_type = 'has_many')
 	{
 		$valid_rel_types = array('has_many', 'belongs_to');
@@ -5066,17 +5066,14 @@ class Data_record {
 		{
 			return FALSE;
 		}
-		
+
 		$rel = $this->_parent_model->$relationship_type;
 		$fields = $this->_parent_model->relationship_field_names($relationship_type);
 		$id_field = '';
-		
 		$rel_config = $rel[$var];
-
 		$use_rel_tbl = $this->_parent_model->is_using_relationship_table($rel_config);
-		
 		$output = array();
-		
+
 		// load the necessary models
 		$foreign_model = $this->_parent_model->load_related_model($rel_config);
 		if ($use_rel_tbl)
@@ -5085,13 +5082,13 @@ class Data_record {
 			$id_field = $this->_parent_model->key_field();
 			$related_table_name = $this->_CI->$foreign_model->table_name();
 		}
-		
+
 		// check that the id field is not an array
 		if (!is_string($id_field))
 		{
 			return FALSE;
 		}
-		
+
 		if ($use_rel_tbl == FALSE)
 		{
 			// Using alternative relationship table
@@ -5118,6 +5115,7 @@ class Data_record {
 					);
 				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where));
 			}
+
 			if ( ! empty($rel_ids))
 			{
 				// construct the method name
@@ -5132,37 +5130,36 @@ class Data_record {
 			}
 			else
 			{
-				if ($return_object)
-				{
-					return FALSE;
-				}
-				else
-				{
-					return array();
-				}
+				return ($return_object) ? FALSE : array();
 			}
 		}
 
-		// if return object is set to TRUE, then do just that  with the where_in already applied
-
+		// if return object is set to TRUE, then do just that with the where_in already applied
 		if ($return_object)
 		{
 			return $this->_CI->$foreign_model;
 		}
-		
-		// other wise we do a find all with the where_in already applied
+		// otherwise we do a find all with the where_in already applied
 		else
 		{
 			$foreign_data = $this->_CI->$foreign_model->find_all();
 		}
+
 		if ( ! empty($foreign_data))
 		{
-			$output = $foreign_data;
+			// maintain the order of the related data
+			$rel_ids_flipped = array_flip($rel_ids);
+			foreach ($foreign_data as $row)
+			{
+				$position = $rel_ids_flipped[$row->id];
+				$output[$position] = $row;
+			}
+			ksort($output);
 		}
-		
+
 		return $output;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
