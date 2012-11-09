@@ -3780,7 +3780,11 @@ class MY_Model extends CI_Model {
 		$return = TRUE;
 		foreach($key_field as $key)
 		{
-			if (empty($values[$key])) $return = FALSE;
+			if (empty($values[$key]))
+			{
+					$return = FALSE;
+					break;
+			}
 		}
 		return $return;
 	}
