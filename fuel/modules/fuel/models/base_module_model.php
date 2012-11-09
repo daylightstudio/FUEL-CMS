@@ -185,6 +185,10 @@ class Base_module_model extends MY_Model {
 		{
 			$this->formatters = array_merge_recursive($this->_formatters, $this->formatters);	
 		}
+		else
+		{
+			$this->formatters = $this->_formatters;	
+		}		
 	}
 	
 	// --------------------------------------------------------------------
