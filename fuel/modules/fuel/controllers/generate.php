@@ -1,4 +1,3 @@
-
 <?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
