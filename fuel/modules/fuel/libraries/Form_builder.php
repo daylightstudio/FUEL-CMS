@@ -1617,7 +1617,7 @@ Class Form_builder {
 	{
 		$defaults = array(
 			'options' => array(),
-			'first_option' => '',
+			'first_option' => ''
 		);
 		
 		$params = $this->normalize_params($params, $defaults);
@@ -1656,7 +1656,7 @@ Class Form_builder {
 			$params['options'] = $options;
 		}
 		
-		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option']);
+		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option'], $params['disabled']);
 	}
 	
 	// --------------------------------------------------------------------

@@ -115,7 +115,7 @@
 			$('#' + leftID + ' li').die();
 			$('#' + rightID + ' li').die();
 			
-			$('#' + leftID + ' li').live('dblclick', function(e){
+			$('#' + leftID + ' li').not('.opition_disabled').live('dblclick', function(e){
 				addSelectedToRight();
 			});
 
@@ -274,17 +274,21 @@
 					
 					var text = $(this).text();
 					var value = $(this).attr('value');
+					var disabled = $(this).attr('disabled');
+					var disabledClass = (disabled) ? ' class="opition_disabled"' : '';
 					var id = (settings.optionsIdPrefix + idNum);
 
 					var opt = '';
 					if (customSelectedSorting){
+						opt = '<li id="' + id + '"' + disabledClass + '>' + text + '<span style="display: none;" id="' + id + '_val">';
 						if (flippedSelectedOrder[value]){
-							opt = '<li id="' + id + '">' + text + '<span style="display: none;" id="' + id + '_val">' + flippedSelectedOrder[value] + '</span></li>';
+							opt += flippedSelectedOrder[value];
 						} else {
-							opt = '<li id="' + id + '">' + text + '<span style="display: none;" id="' + id + '_val">' + maxSelected + '</span></li>';
+							opt += maxSelected;
 						}
+						opt += '</span></li>';
 					} else {
-						opt = '<li id="' + id + '">' + text + '</li>';
+						opt = '<li id="' + id + '"' + disabledClass + '>' + text + '</li>';
 					}
 					
 					if ($(this).attr('selected')){

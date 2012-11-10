@@ -416,13 +416,14 @@ class Form {
 	 * @param string value for the input element
 	 * @param mixed html attributes for the input element
 	 * @param string the first option
+	 * @param array an array of disabled options
 	 * @return string
 	 */
-	public function select($name, $options = array(), $value = '', $attrs = '', $first_option = '')
+	public function select($name, $options = array(), $value = '', $attrs = '', $first_option = '', $disabled = array())
 	{
 		$attrs = $this->_create_attrs($attrs);
 		settype($options, 'array');
-		$elem = new Form_select($name, $options, $value, $attrs, $first_option);
+		$elem = new Form_select($name, $options, $value, $attrs, $first_option, $disabled);
 		return $this->_create_element($elem);
 		
 	}
@@ -849,6 +850,7 @@ class Form_select {
 	public $attrs; // attributes of the select form field
 	public $default; // default value of the select form field
 	public $first_option; // the first option to display (e.g. Select one...)
+	public $disabled; // an array of disabled options
 	protected $_selected_already = FALSE; // Used to keep track if something has been selected already
 
 	/**
@@ -860,13 +862,14 @@ class Form_select {
 	 * @param string default value first line for a select
 	 * @param string selected value(s)
 	 */
-	public function __construct($name, $options, $value = '', $attrs = '', $first_option = '')
+	public function __construct($name, $options, $value = '', $attrs = '', $first_option = '', $disabled = array())
 	{
 		$this->name = $name;
 		$this->options = $options;
 		$this->value = $value;
 		$this->attrs = $attrs;
 		$this->first_option = $first_option;
+		$this->disabled = $disabled;
 	}
 
 	// --------------------------------------------------------------------
@@ -887,7 +890,8 @@ class Form_select {
 		}
 		$this->attrs = str_replace('id=""', '', $this->attrs);
 		$str .= "<select name=\"".$this->name."\"".$id.$this->attrs.">\n";
-		if (!empty($this->first_option)) {
+		if (!empty($this->first_option)) 
+		{
 			if (is_array($this->first_option))
 			{
 				foreach($this->first_option as $key => $val)
@@ -959,7 +963,8 @@ class Form_select {
 				}
 			}
 		}
-		return "\t\t<option value=\"".Form::prep($key, FALSE)."\" label=\"".Form::prep($val, FALSE)."\"".$selected.">".Form::prep($val, FALSE)."</option>\n";
+		$disabled = (is_array($this->disabled) AND in_array($key, $this->disabled)) ? ' disabled="disabled"' : '';
+		return "\t\t<option value=\"".Form::prep($key, FALSE)."\" label=\"".Form::prep($val, FALSE)."\"".$selected.$disabled.">".Form::prep($val, FALSE)."</option>\n";
 
 	}
 
