@@ -531,7 +531,9 @@ class Base_module_model extends MY_Model {
 	{
 		if (empty($val_field)) $val_field = $this->key_field;
 		$others = $this->options_list($val_field, $display_field);
-		if (isset($others[$id])) unset($others[$id]);
+
+		// COMMENTED OUT BECAUSE WE DISABLE IT IN THE DROPDOWN INSTEAD
+		//if (isset($others[$id])) unset($others[$id]);
 		return $others;
 	}
 	

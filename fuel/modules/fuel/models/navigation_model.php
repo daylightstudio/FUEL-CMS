@@ -386,9 +386,11 @@ class Navigation_model extends Base_module_model {
 	function get_others($display_field, $id, $val_field = NULL)
 	{
 		$others = $this->find_all_array_assoc('id');
-		if (isset($others[$id])) unset($others[$id]);
+
+		// COMMENTED OUT BECAUSE WE DISABLE IT IN THE DROPDOWN INSTEAD
+		//if (isset($others[$id])) unset($others[$id]);
 		$others = $this->_group_options($others);
-		if (isset($others[$id])) unset($others[$id]);
+		//if (isset($others[$id])) unset($others[$id]);
 		return $others;
 	}
 	

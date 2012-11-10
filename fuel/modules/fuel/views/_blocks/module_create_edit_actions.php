@@ -54,7 +54,7 @@
 			<li class="end"><a href="#" class="ico ico_save save" title="<?=$keyboard_shortcuts['save']?> to save"><?=lang('btn_save')?></a></li>
 		<?php endif; ?>
 	</ul>
-	<?php if (!empty($others) AND !$this->fuel->admin->is_inline()) {?><div id="other_items"><?=$this->form->select('fuel_other_items', $others, '', '', lang('label_select_another'))?></div><?php } ?>
+	<?php if (!empty($others) AND !$this->fuel->admin->is_inline()) {?><div id="other_items"><?=$this->form->select('fuel_other_items', $others, '', '', lang('label_select_another'), array($id))?></div><?php } ?>
 </div>
 
 <?php if (isset($action) AND $action == 'edit') : ?>
