@@ -36,9 +36,10 @@
  *
  * @access	public
  * @param	string	the URI string
+ * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
  * @return	string
  */
-function site_url($uri = '')
+function site_url($uri = '', $https = NULL)
 {
 	if (is_http_path($uri)) return $uri;
 	if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0))
@@ -48,45 +49,16 @@ function site_url($uri = '')
 	else
 	{
 		$CI =& get_instance();
-		return $CI->config->site_url($uri);
-	}
-}
-
-// --------------------------------------------------------------------
-
-/**
- * Creates https URLs or removes the https from the site_url
- *
- * @access	public
- * @param	string	the URI string
- * @param	boolean	changes the https to http
- * @return	string
- */
-function https_site_url($uri = '', $remove_https = FALSE)
-{
-	$CI =& get_instance();
-	if (is_array($uri))
-	{
-		$uri = implode('/', $uri);
-	}
-	$base_url = $CI->config->slash_item('base_url');
-	if ($remove_https)
-	{
-		$base_url = str_replace('https://', 'http://', $base_url);
-	}
-	else
-	{
-		$base_url = str_replace('http://', 'https://', $base_url);
-	}
-
-	if ($uri == '')
-	{
-		return $base_url.$CI->config->item('index_page');
-	}
-	else
-	{
-		$suffix = ($CI->config->item('url_suffix') == FALSE) ? '' : $CI->config->item('url_suffix');
-		return $base_url.$CI->config->slash_item('index_page').preg_replace("|^/*(.+?)/*$|", "\\1", $uri).$suffix;
+		$url = $CI->config->site_url($uri);
+		if ($https === TRUE)
+		{
+			$url = preg_replace('#^http:(.+)#', 'https:$1', $url);
+		}
+		else if ($https === FALSE)
+		{
+			$url = preg_replace('#^https:(.+)#', 'http:$1', $url);
+		}
+		return $url;
 	}
 }
 
