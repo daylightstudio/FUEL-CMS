@@ -187,6 +187,10 @@ class Fuel_layouts extends Fuel_base_library {
 			}
 			else if (is_a($init, 'Fuel_layout'))
 			{
+				if ($init->label() == '')
+				{
+					$init->set_label($name);
+				}
 				$this->_layouts[$name] = $init;
 			}
 
