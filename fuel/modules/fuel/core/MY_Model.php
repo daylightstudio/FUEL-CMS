@@ -97,6 +97,7 @@ class MY_Model extends CI_Model {
 		$this->load->helper('string');
 		$this->load->helper('date');
 		$this->load->helper('security');
+		$this->load->helper('inflector');
 		$this->load->helper('language');
 
 
