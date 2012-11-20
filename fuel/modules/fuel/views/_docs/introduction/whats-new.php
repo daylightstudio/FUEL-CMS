@@ -3,7 +3,7 @@
 
 <h2>WARNINGS!!!</h2>
 <ul>
-	<li>Page variable data is now saved in a JSON format</li>
+	<li>Page variable data is now saved in a JSON format instead of a serialized PHP string</li>
 	<li>Several tables have been updated</li>
 </ul>
 
@@ -11,7 +11,7 @@
 <ul>
 	<li>Extracted much of the controller functionality into library classes so you can now have access to methods like $this->fuel->backup->do_backup(); or $this->fuel->pages->create();</li>
 	<li>Moved all non-extended classes and helpers into the modules/fuel folder to cleanup the application directory some</li>
-	<li>Separated out all modules except the fuel module into their own <a href="https://github.com/daylightstudio" target="_blank">GitHub repos</a></li>
+	<li>Separated out all modules except the "fuel" module into their own <a href="https://github.com/daylightstudio" target="_blank">GitHub repos</a></li>
 </ul>
 
 
@@ -21,16 +21,22 @@
 <ul>
 	<li><a href="<?=user_guide_url('libraries/curl')?>">Curl</a></li>
 	<li><a href="<?=user_guide_url('libraries/inspection')?>">Inspection</a></li>
-	<li><a href="<?=user_guide_url('libraries/fuel_notification')?>">Fuel_notification</a></li>
-	<li><a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_assets')?>">Fuel_assets</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_categories')?>">Fuel_categories</a></li>
 	<li><a href="<?=user_guide_url('libraries/fuel_language')?>">Fuel_language</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_notification')?>">Fuel_notification</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_settings')?>">Fuel_settings</a></li>
+	<li><a href="<?=user_guide_url('libraries/fuel_tags')?>">Fuel_tags</a></li>
 </ul>
 
 <h3>Models</h3>
 
 <h3>MY_Model</h3>
 <ul>
-	<li>Added belongs_to and has_many properties</li>
+	<li>Added belongs_to and has_many properties for relationships</li>
+	<li>Added formatters to manipulate field values (e.g. date_formatted)</li>
+	<li>Added ability to create custom field objects (e.g. $my_record->image->path())</li>
 	<li>Added boolean_fields property to MY_Model which allows for toggling of boolean values in the module's list view</li>
 	<li>Added the is_{property} method for all boolean type properties (e.g. $my_rec->is_published())</li>
 	<li>Added the has_{property} method for all properties (e.g. $my_rec->has_description())</li>
@@ -47,11 +53,13 @@
 	<li>Updated Tester module so that it can run via command line</li>
 	<li>Updated the Validate module so that you can run validation in your own controllers $this->fuel->validate->html('my_page');</li>
 	<li>Broke out Google Keywords and Page Analysis into their own modules (was "seo" module);</li>
+	<li>Added generic Tags and Categories module (hidden by default in fuel/application/config/MY_fuel_modules.php)</li>
 </ul>
 
 <h3>Blog</h3>
 <ul>
-	<li>Added image sets to blog</li>
+	<li>Added main, list and thumbnail image fields to blog posts</li>
+	<li>Added ability to associate blocks to a blog</li>
 	<li>Added hooks to the blog to manipulate the list view</li>
 </ul>
 
@@ -87,33 +95,32 @@
 
 <h3>New</h3>
 <ul>
-	<li>scraper helper</li>
-	<li>simplepie helper</li>
-	<li>session helper</li>
-	<li>database helper</li>
+	<li>Scraper helper</li>
+	<li>Simplepie helper</li>
+	<li>Session helper</li>
 </ul>
 
 <h3>MY_url_helper</h3>
 <ul>
-	<li>added link_target</li>
-	<li>added last_url</li>
-	<li>added redirect_404</li>
+	<li>Combined https_site_url with site_url (added an additional parameter)</li>
+	<li>Added link_target function</li>
+	<li>Added last_url function</li>
+	<li>Added redirect_404 function</li>
 </ul>
 
 
 <h3>fuel_helper</h3>
 <ul>
-	<li>added FUEL and fuel_instance functions</li>
-	<li>added fuel_form function</li>
-	<li>added fuel_page function</li>
-	<li>added ability to only need to pass in a record object into the fuel_edit function</li>
+	<li>Added FUEL and fuel_instance functions</li>
+	<li>Added fuel_form function</li>
+	<li>Added fuel_page function</li>
+	<li>Added ability to only need to pass in a record object into the fuel_edit function</li>
 </ul>
 
 <h2>Misc.</h2>
 <ul>
-	<li>Added jquery UI to the backend</li>
+	<li>Added jquery UI to the CMS</li>
 	<li>Added ability to pass more then one field to edit inline</li>
 	<li>Added ability to export data from module by adding an "export_data" method to your model</li>
-	<!--<li>Added test_connection method on Mysql driver</li>-->
 </ul>
 
