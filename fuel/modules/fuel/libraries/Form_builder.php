@@ -1142,6 +1142,7 @@ Class Form_builder {
 			'js' => '', // js file or script using <script> tag
 			'css' => '', // css to associate with the field
 			'represents' => '', // specifies what other types of fields that this field should represent
+			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -1385,7 +1386,7 @@ Class Form_builder {
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
 
 		// now we look at all the fields that may represent other field types based on parameters
-		if (!empty($this->representatives) AND is_array($this->representatives))
+		if (!empty($this->representatives) AND is_array($this->representatives) AND empty($params['ignore_representative']))
 		{
 			foreach($this->representatives as $key => $val)
 			{
@@ -2982,6 +2983,22 @@ Class Form_builder {
 	function set_representative($type, $match = '')
 	{
 		$this->representatives[$type] = $match;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Removes a representative for a field type.
+	 * 
+	 * This removes a representative globally for all fields
+	 *
+	 * @access	public
+	 * @param	string The field type to be the representative
+	 * @return	void
+	 */
+	function remove_representative($type)
+	{
+		unset($this->representatives[$type]);
 	}
 
 	// --------------------------------------------------------------------

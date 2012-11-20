@@ -1036,5 +1036,17 @@ $fields['my_field'] = array('type' => 'my_field', 'represents' => 'blob');
 <p>The fourth way of setting a representative is to simply use the <dfn>set_representative</dfn> method on the <dfn>form_builder</dfn> object like so:</p>
 
 <pre class="brush:php">
-$this->form_builder->set_representative('my_field', array('blob'))
+$this->form_builder->set_representative('my_field', array('blob'));
+</pre>
+
+<h3>Removing Representatives</h3>
+<p>Sometimes a field may be using a representative that you don't won't. For example, you may have a field that has "url" in the name and it is using the url field type which
+you don't want. To fix that you can use the <dfn>ignore_representative</dfn> parameter like so:</p>
+<pre class="brush:php">
+$fields['my_field'] = array('type' => 'my_field', 'ignore_representative' => TRUE);
+</pre>
+<br />
+<p>If you'd like to remove a representative completely from the <dfn>form_builder</dfn> instance, you can use the <dfn>remove_representative</dfn> like so:</p>
+<pre class="brush:php">
+$this->form_builder->remove_representative('url');
 </pre>
