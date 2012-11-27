@@ -323,12 +323,26 @@ class Module extends Fuel_base_controller {
 				{
 					$action_type = 'url';
 					$action_val = $this->table_actions[$key];
+					$attrs = array();
 					if (is_array($val))
 					{
-						$action_type = key($val);
-						$action_val = current($val);
+						if (isset($val['url']))
+						{
+							$action_type = 'url';
+							$action_val = $val['url'];
+							if (isset($val['attrs']))
+							{
+								$attrs = $val['attrs'];
+							}
+						}
+						else
+						{
+							$action_type = key($val);
+							$action_val = current($val);
+						}
+						$attrs = (isset($val['attrs'])) ? $val['attrs'] : array();
 					}
-					$this->data_table->add_action($key, $action_val, $action_type);
+					$this->data_table->add_action($key, $action_val, $action_type, $attrs);
 				}
 				else if (strtoupper($val) == 'DELETE')
 				{
