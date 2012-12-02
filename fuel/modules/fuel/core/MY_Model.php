@@ -1100,12 +1100,12 @@ class MY_Model extends CI_Model {
 		
 		foreach($fields as $key => $val)
 		{
-			if (isset($values[$key]))
+			if (array_key_exists($key, $values))
 			{
 				$values[$key] = ($this->auto_trim AND is_string($values[$key])) ? trim($values[$key]) : $values[$key];
 			}
 		}
-
+		
 		// process linked fields
 		$values = $this->process_linked($values);
 		
@@ -1143,7 +1143,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
 			
-			if (isset($values[$key]))
+			if (array_key_exists($key, $values))
 			{
 				
 				// format dates
@@ -1323,7 +1323,6 @@ class MY_Model extends CI_Model {
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
 			$values = $this->on_before_validate($values);
-			
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;

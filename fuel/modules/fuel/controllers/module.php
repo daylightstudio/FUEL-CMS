@@ -925,7 +925,7 @@ class Module extends Fuel_base_controller {
 		$this->model->on_before_post();
 		
 		$posted = $this->_process();
-	
+
 		// run before_edit hook
 		$this->_run_hook('before_edit', $posted);
 		
@@ -988,7 +988,14 @@ class Module extends Fuel_base_controller {
 			
 			if ($this->sanitize_input === TRUE)
 			{
-				$posted = xss_clean($data);
+				foreach($data as $key => $val)
+				{
+					if (!empty($val))
+					{
+						$posted[$key] = xss_clean($val);	
+					}
+					
+				}
 			}
 			else
 			{
@@ -1276,9 +1283,9 @@ class Module extends Fuel_base_controller {
 		$fields = $this->model->form_fields($_POST);
 		$fb->set_fields($fields);
 		$fb->post_process_field_values();// manipulates the $_POST values directly
-	
+
 		// sanitize input if set in module configuration
-		$posted = $this->_sanitize($this->input->post());
+		$posted = $this->_sanitize($_POST);
 
 		// loop through uploaded files
 		if (!empty($_FILES))

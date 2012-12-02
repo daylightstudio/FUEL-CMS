@@ -714,6 +714,9 @@ class Fuel_custom_fields {
 	
 	function currency($params)
 	{
+		$this->CI->load->helper('format');
+
+
 		$form_builder =& $params['instance'];
 		
 		if (empty($params['size']))
@@ -741,6 +744,43 @@ class Fuel_custom_fields {
 		$params['class'] = (!empty($params['class'])) ? 'currency '.$params['class'] : 'currency';
 		
 		$params['type'] = 'text';
+
+		if (!isset($_POST[$params['key']]))
+		{
+			$_POST[$params['key']] = '';
+		}
+
+		// check if it's a nested form
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						$val = str_replace(",", "", $val);
+						$val = ($val == "") ? NULL : (float) $value;
+						$value[$key]["'.$params['subkey'].'"] = $val;
+					}
+					return $value;
+				}
+				';
+				$func = create_function('$value', $func_str);
+		}
+		else
+		{
+			$func_str = '
+			$value = str_replace(",", "", $value);
+			$value = ($value == "") ? NULL : (float) $value;
+			return $value;
+				';
+		}
+		// unformat number
+		$func = create_function('$value', $func_str);	
+		$form_builder->set_post_process($params['key'], $func);
+
+		// preformat the currency 
+		$params['value'] = (!isset($params['value'])) ? NULL : currency($params['value'], '');
 
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_text($params);
