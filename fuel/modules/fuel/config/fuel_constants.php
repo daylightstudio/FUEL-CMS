@@ -63,22 +63,15 @@ foreach($config['modules_allowed'] as $module)
 
 if (!defined('BASE_URL'))
 {
-	if ($_SERVER['SERVER_PORT'] == '443' OR $_SERVER['SERVER_PORT'] == '80')
-	{
-		$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+	$_base_path = $_SERVER['HTTP_HOST'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 
-		if ($_SERVER['SERVER_PORT'] == '443')
-		{
-			define('BASE_URL', "https://".$_base_path);
-		}
-		else
-		{
-			define('BASE_URL', "http://".$_base_path);
-		}
+	if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off' OR $_SERVER['SERVER_PORT'] == 443)
+	{
+		define('BASE_URL', "https://".$_base_path);
 	}
 	else
 	{
-		define('BASE_URL', "http://".$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
+		define('BASE_URL', "http://".$_base_path);
 	}
 }
 
