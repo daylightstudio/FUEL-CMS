@@ -13,7 +13,11 @@ class {model_name} extends Fuel_base_controller {
 	
 	function index()
 	{
-		// Put your code here
+		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('module_{module}')), FALSE);
+		$crumbs = array('tools' => lang('section_tools'), lang('module_{module}'));
+		$this->fuel->admin->set_titlebar($crumbs, 'ico_{module}');
+		$this->fuel->admin->render('_admin/{module}');
+
 	}
 	
 }
