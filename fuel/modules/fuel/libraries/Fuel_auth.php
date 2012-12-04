@@ -151,6 +151,7 @@ class Fuel_auth extends Fuel_base_library {
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
 		$user_data[$key] = $value;
+	
 		if (!isset($this->CI->session))
 		{
 			$this->CI->load->library('session');
@@ -173,9 +174,17 @@ class Fuel_auth extends Fuel_base_library {
 		
 		if (!empty($valid_user))
 		{
-			if (!empty($key) && isset($valid_user[$key]))
+			if (!empty($key))
 			{
-				return $valid_user[$key];
+				if (isset($valid_user[$key]))
+				{
+					return $valid_user[$key];	
+				}
+				else
+				{
+					return FALSE;
+				}
+				
 			}
 			return $valid_user;
 		}
