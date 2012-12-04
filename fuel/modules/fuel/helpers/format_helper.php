@@ -31,22 +31,22 @@
 // ------------------------------------------------------------------------
 
 /**
- * Formats value into a dollar string
+ * Formats value into a currency string
  *
  * @access	public
  * @param	string
  * @param	bool	whether to include the cents or not
  * @return	string
  */
-function dollar($value, $include_cents = TRUE)
+function currency($value, $symbol = '$',  $include_cents = TRUE)
 {
 	if (!$include_cents)
 	{
-		return "$".number_format($value);
+		return $symbol.number_format($value);
 	}
 	else
 	{
-		return "$".number_format($value, 2, '.', ',');
+		return $symbol.number_format($value, 2, '.', ',');
 	}
 }
 
