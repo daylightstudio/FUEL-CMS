@@ -2152,7 +2152,7 @@ Class Form_builder {
 		{
 			$func_str = '
 				$hr    = (isset($_POST["'.$params['key'].'_hour"]) AND (int)$_POST["'.$params['key'].'_hour"] > 0 AND (int)$_POST["'.$params['key'].'_hour"] < 24) ? $_POST["'.$params['key'].'_hour"] : "";
-				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"] AND $hr))  ? $_POST["'.$params['key'].'_min"] : "00";
+				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"]) AND $hr) ? $_POST["'.$params['key'].'_min"] : "00";
 				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
 
 				$value = "";
