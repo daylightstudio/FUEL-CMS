@@ -2267,7 +2267,7 @@ class MY_Model extends CI_Model {
 	 */	
 	public function has_error()
 	{
-		return (count($this->validator->get_errors()) > 1);
+		return (count($this->validator->get_errors()) > 0);
 	}
 	
 	// --------------------------------------------------------------------
