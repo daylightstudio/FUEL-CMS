@@ -2401,9 +2401,13 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function remove_all_validation()
+	public function remove_all_validation($remove_required = FALSE)
 	{
 		$this->validator->reset(TRUE);
+		if ($remove_required)
+		{
+			$this->required = array();
+		}
 		$this->rules = array();
 	}
 	
