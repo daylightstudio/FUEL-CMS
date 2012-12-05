@@ -327,7 +327,7 @@ class Curl {
 					$this->_info[] = $info;
 
 					// check for valid http_code
-					if ($info['http_code'] < 400)
+					if ($info['http_code'] < 400 AND $this->info('http_code') != 0)
 					{
 						$result = curl_multi_getcontent($b);
 						$this->_output[] = $result;
@@ -616,7 +616,7 @@ class Curl {
 		$key = 0;
 		$this->add_session($url, $opts);
 		$result = $this->exec_single();
-		$retval = $this->info('http_code') < 400;// check if HTTP OK
+		$retval = $this->info('http_code') < 400 AND $this->info('http_code') != 0;// check if HTTP OK
 		
 		return $retval;
 	}
