@@ -2395,10 +2395,11 @@ class MY_Model extends CI_Model {
 	 * Removes all the validation
 	 *
 	 <code>
-	$this->examples_model->remove_all_validation();
+	$this->examples_model->remove_all_validation(TRUE);
 	</code>
 	 *
 	 * @access	public
+	 * @param	boolean determines whether to remove required validation as well as other validation rules
 	 * @return	void
 	 */	
 	public function remove_all_validation($remove_required = FALSE)
