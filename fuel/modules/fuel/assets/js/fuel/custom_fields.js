@@ -532,7 +532,7 @@ fuel.fields.inline_edit_field = function(context){
 		
 		$('.add_inline_button', context).unbind().click(function(e){
 			$field = $(this).parent().children(':first');
-			editModule($(this).attr('href'), null, refreshField);
+			editModule($(this).attr('href'), null, function(){ refreshField($field)});
 			$(context).scrollTo('body', 800);
 			return false;
 		});

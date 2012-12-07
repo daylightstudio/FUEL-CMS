@@ -239,7 +239,7 @@ class Fuel_admin extends Fuel_base_library {
 		// set the form action
 		if (empty($vars['form_action']))
 		{
-			$vars['form_action'] = site_url($this->CI->uri->uri_string());
+			$vars['form_action'] = site_url($this->CI->uri->uri_string(). '?inline='.$this->is_inline());
 		}
 		else if (!empty($vars['form_action']) AND !is_http_path($vars['form_action']))
 		{

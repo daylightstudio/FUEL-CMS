@@ -1354,6 +1354,7 @@ class Module extends Fuel_base_controller {
 			show_error(lang('error_no_permissions'));
 		}
 
+		$inline = $this->fuel->admin->is_inline();
 		if (!empty($_POST['id']))
 		{
 			$posted = explode('|', $this->input->post('id'));
@@ -1393,7 +1394,7 @@ class Module extends Fuel_base_controller {
 				$this->fuel->logs->write(lang('module_deleted', count($posted), $this->module));
 			}
 			
-			if ($this->fuel->admin->is_inline())
+			if ($inline)
 			{
 				
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
@@ -1467,7 +1468,7 @@ class Module extends Fuel_base_controller {
 			
 			$this->fuel->admin->set_titlebar($crumbs);
 			
-			if ($this->fuel->admin->is_inline())
+			if ($inline)
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
@@ -1477,6 +1478,9 @@ class Module extends Fuel_base_controller {
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/');
 			}
+			$action_uri = 'delete/'.$id;
+			$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
+
 			$this->fuel->admin->render($this->views['delete'], $vars);
 		}
 	}
