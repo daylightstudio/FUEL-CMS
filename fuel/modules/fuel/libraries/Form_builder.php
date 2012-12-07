@@ -1210,7 +1210,14 @@ Class Form_builder {
 			
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
 		}
-		
+
+		// grab options from a model if a model is specified
+		if (!empty($params['model']))
+		{
+			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
+			$params['options'] = $this->options_from_model($params['model'], $model_params);
+		}
+
 		if ($params['type'] == 'enum' OR  $params['type'] == 'select')
 		{
 			if (!isset($params['options']))
@@ -1220,6 +1227,11 @@ Class Form_builder {
 			if ((empty($params['options']) AND is_array($params['options'])) AND is_array($params['max_length']) AND !empty($params['max_length']))
 			{
 				$params['options'] = $params['max_length'];
+			}
+			if (!empty($params['hide_if_one']) AND count($params['options']) <= 1)
+			{
+				$params['type'] = 'hidden';
+				$params['display_label'] = FALSE;
 			}
 		}
 		
@@ -1623,13 +1635,6 @@ Class Form_builder {
 		
 		$params = $this->normalize_params($params, $defaults);
 		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
-			$params['options'] = $this->options_from_model($params['model'], $model_params);
-		}
-
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
@@ -1810,13 +1815,6 @@ Class Form_builder {
 			'model' => NULL,
 			);
 		$params = $this->normalize_params($params, $defaults);
-		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
-			$params['options'] = $this->options_from_model($params['model'], $model_params);
-		}
 		
 		$i = 0;
 		$str = '';
@@ -2152,7 +2150,7 @@ Class Form_builder {
 		{
 			$func_str = '
 				$hr    = (isset($_POST["'.$params['key'].'_hour"]) AND (int)$_POST["'.$params['key'].'_hour"] > 0 AND (int)$_POST["'.$params['key'].'_hour"] < 24) ? $_POST["'.$params['key'].'_hour"] : "";
-				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"]) AND $hr) ? $_POST["'.$params['key'].'_min"] : "00";
+				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"] AND $hr))  ? $_POST["'.$params['key'].'_min"] : "00";
 				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
 
 				$value = "";
