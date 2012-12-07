@@ -80,7 +80,7 @@ $config['modules']['navigation'] = array(
 	'preview_path' => '',
 	'permission' => array('navigation', 'create', 'edit', 'navigation/upload' => 'navigation/create', 'publish', 'delete'),
 	'instructions' => lang('navigation_instructions'),
-	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model'), 'hide_if_one' => TRUE),
+	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model', 'hide_if_one' => TRUE)),
 	'archivable' => TRUE,
 	'list_actions' => array('navigation/upload' => lang('btn_upload'))
 );
