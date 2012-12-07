@@ -175,9 +175,9 @@ class Pages_model extends Base_module_model {
 				$values['location'] = '';
 			}
 			
-			$values['location'] = str_replace('/', '___', $values['location']);
+			$values['location'] = str_replace(array('/', '.'), array('___', '_X_'), $values['location']);
 			$values['location'] = url_title($values['location']);
-			$values['location'] = str_replace('___', '/', $values['location']);
+			$values['location'] = str_replace(array('___', '_X_'), array('/', '.'), $values['location']);
 			
 			$segments = array_filter(explode('/', $values['location']));
 			$values['location'] = implode('/', $segments);
