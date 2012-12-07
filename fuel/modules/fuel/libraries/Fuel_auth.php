@@ -458,9 +458,8 @@ class Fuel_auth extends Fuel_base_library {
 	function logout()
 	{
 		$this->CI->load->library('session');
-		$this->CI->session->sess_destroy();
-		
 		$this->CI->session->unset_userdata($this->get_session_namespace());
+		//$this->CI->session->sess_destroy();
 		
 		$config = array(
 			'name' => $this->get_fuel_trigger_cookie_name(),
