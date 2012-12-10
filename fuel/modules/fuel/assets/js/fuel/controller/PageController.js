@@ -28,7 +28,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		var retreiveLayoutVars = function(){
 			$('#layout_vars .loader').show();
 			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val() + '/' + $('#language').val();
-			$('#layout_vars').load(path, {}, function(){
+			$('#layout_vars').load(path, function(){
 				var context = $('#fuel_main_content_inner');
 				_this.initSpecialFields(context);
 				$(this).trigger('varsLoaded');
