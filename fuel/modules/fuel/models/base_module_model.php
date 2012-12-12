@@ -590,12 +590,13 @@ class Base_module_model extends MY_Model {
 		
 		if (!empty($this->ignore_replacement))
 		{
-			// remove any key field values
+			// ignore certain fields by setting them to their old values
 			foreach($this->ignore_replacement as $field)
 			{
 				if (isset($values[$field]))
 				{
-					unset($values[$field]);
+					$values[$field] = $replace_values[$field];
+					//unset($values[$field]);
 				}
 			}
 		}
@@ -609,7 +610,7 @@ class Base_module_model extends MY_Model {
 			$where[$this->key_field()] = $id;
 			$this->delete($where);
 		}
-		
+
 		// save values
 		$saved = $this->save($values);
 
