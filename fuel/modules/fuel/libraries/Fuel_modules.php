@@ -635,7 +635,7 @@ class Fuel_module extends Fuel_base_library {
 				'icon_class' => '',
 				'folder' => '',
 				'exportable' => FALSE,
-				'limit_options' => array('25' => '25', '50' => '50', '100' => '100'),
+				'limit_options' => array('50' => '50', '100' => '100', '200' => '200'),
 				);
 			$info = array();
 
