@@ -720,7 +720,6 @@ class Module extends Fuel_base_controller {
 				$posted['published'] = 'no';
 				$posted['active'] = 'no';
 			}
-
 			$model = $this->model;
 
 			// run before_create hook
@@ -731,7 +730,6 @@ class Module extends Fuel_base_controller {
 			
 			// save the data
 			$id = $this->model->save($posted);
-			
 			if (empty($id))
 			{
 				add_error(lang('error_invalid_id'));
@@ -752,6 +750,7 @@ class Module extends Fuel_base_controller {
 			
 			$this->model->on_after_post($posted);
 			
+
 			if (!$this->model->is_valid())
 			{
 				add_errors($this->model->get_errors());
@@ -769,10 +768,9 @@ class Module extends Fuel_base_controller {
 				
 				// run after_save hook
 				$this->_run_hook('after_save', $data);
-				
+
 				if (!empty($data))
 				{
-					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->fuel->logs->write($msg);
 					$this->_clear_cache();
@@ -1563,7 +1561,7 @@ class Module extends Fuel_base_controller {
 		
 		$fields = array();
 		$other_options = $this->model->get_others($this->display_field, $id);
-		$fields['fuel_replace_id'] = array('label' => 'Replace record:', 'type' => 'select', 'options' => $other_options, 'first_option' => 'Select record to replace...', 'style' => 'max-width: 400px');
+		$fields['fuel_replace_id'] = array('label' => 'Replace record:', 'type' => 'select', 'options' => $other_options, 'first_option' => 'Select record to replace...', 'style' => 'max-width: 400px', 'disabled_options' => array($id));
 		//$fields['fuel_delete_replacement'] = array('label' => 'Delete replacement', 'type' => 'checkbox', 'value' => 'yes');
 		if ($success)
 		{
