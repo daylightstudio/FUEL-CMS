@@ -31,7 +31,7 @@ CKEDITOR.plugins.add( 'fuellink', {
 					element = element.getAscendant( 'a', true );
 					if (element){
 						var href = element.getAttribute('href');
-						input = href.replace(/^\{site_url\('(.+)'\)\}/g, function(match, contents, offset, s) {
+						input = href.replace(/^\{site_url\('(.*)'\)\}/g, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);

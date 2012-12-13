@@ -293,7 +293,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 		var hrefArr = selected.match(/ href="([^"]+?)"/);
 		if (hrefArr && hrefArr.length >= 1) {
 			href = hrefArr[1];
-			input = href.replace(/^\{site_url\('(.+)'\)\}/g, function(match, contents, offset, s) {
+			input = href.replace(/^\{site_url\('(.*)'\)\}/g, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
