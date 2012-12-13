@@ -661,7 +661,7 @@ class Pages extends Module {
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
-		$pages = $this->fuel->fuel_pages->options_list();
+		$pages = $this->fuel->pages->options_list();
 		$options = array_combine($pages, $pages);
 		
 		// just return the options as json

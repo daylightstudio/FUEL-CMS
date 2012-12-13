@@ -212,7 +212,7 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	function modules()
 	{
-		return $this->fuel->modules->fuel_pages();
+		return $this->fuel->modules->pages();
 	}
 	
 	// --------------------------------------------------------------------
