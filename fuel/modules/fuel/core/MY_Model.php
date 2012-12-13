@@ -1100,7 +1100,7 @@ class MY_Model extends CI_Model {
 		
 		foreach($fields as $key => $val)
 		{
-			if (array_key_exists($key, $values))
+			if (is_array($values) AND array_key_exists($key, $values))
 			{
 				$values[$key] = ($this->auto_trim AND is_string($values[$key])) ? trim($values[$key]) : $values[$key];
 			}
@@ -1143,7 +1143,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
 			
-			if (array_key_exists($key, $values))
+			if (is_array($values) AND array_key_exists($key, $values))
 			{
 				
 				// format dates
