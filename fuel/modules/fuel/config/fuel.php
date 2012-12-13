@@ -322,19 +322,19 @@ $config['uri_view_overwrites'] = array();
 
 // the FUEL specific database tables
 $config['tables'] = array(
-	'archives'            => 'fuel_archives',
-	'blocks'              => 'fuel_blocks',
-	'categories'          => 'fuel_categories',
-	'logs'                => 'fuel_logs',
-	'navigation'          => 'fuel_navigation',
-	'navigation_groups'   => 'fuel_navigation_groups',
-	'pages'               => 'fuel_pages',
-	'pagevars'            => 'fuel_page_variables',
-	'permissions'         => 'fuel_permissions',
-	'relationships'       => 'fuel_relationships',
-	'settings'            => 'fuel_settings',
-	'tags'          	  => 'fuel_tags',
-	'users'               => 'fuel_users',
+	'fuel_archives'            => 'fuel_archives',
+	'fuel_blocks'              => 'fuel_blocks',
+	'fuel_categories'          => 'fuel_categories',
+	'fuel_logs'                => 'fuel_logs',
+	'fuel_navigation'          => 'fuel_navigation',
+	'fuel_navigation_groups'   => 'fuel_navigation_groups',
+	'fuel_pages'               => 'fuel_pages',
+	'fuel_pagevars'            => 'fuel_page_variables',
+	'fuel_permissions'         => 'fuel_permissions',
+	'fuel_relationships'       => 'fuel_relationships',
+	'fuel_settings'            => 'fuel_settings',
+	'fuel_tags'                => 'fuel_tags',
+	'fuel_users'               => 'fuel_users',
 	);
 
 /*
@@ -348,7 +348,6 @@ $config['auto_page_navigation_group_id'] = 1;
 
 // automatically removes the following path from the location
 $config['page_uri_prefix'] = '';
-
 
 /*
 |--------------------------------------------------------------------------
@@ -384,9 +383,8 @@ $config['generate'] = array(
 											'sql/{table}.sql',
 											),
 										);
-							
-							
-							
+
+
 @include(APPPATH.'config/MY_fuel.php');
 
 // EXAMPLE: Uncomment if you want to controll these options from the CMS

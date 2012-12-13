@@ -111,13 +111,13 @@ class Fuel_pagevars extends Fuel_base_library {
 
 		$site_vars = $this->fuel->sitevars->get($location);
 		
-		$this->fuel->load_model('pagevariables_model');
-		$page_vars = $this->CI->pagevariables_model->find_all_by_location($location, $this->lang);
+		$this->fuel->load_model('fuel_pagevariables_model');
+		$page_vars = $this->CI->fuel_pagevariables_model->find_all_by_location($location, $this->lang);
 		
 		// if the selected languages page variables is empty, then we try the default
 		if (empty($page_vars))
 		{
-			$page_vars = $this->CI->pagevariables_model->find_all_by_location($location, $this->fuel->language->default_option());
+			$page_vars = $this->CI->fuel_pagevariables_model->find_all_by_location($location, $this->fuel->language->default_option());
 		}
 		$vars = array_merge($site_vars, $page_vars);
 

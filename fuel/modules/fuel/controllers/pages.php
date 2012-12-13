@@ -9,7 +9,7 @@ class Pages extends Module {
 	{
 		parent::__construct();
 		$this->config->load('fuel', TRUE);
-		$this->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
 	function create()
@@ -161,7 +161,7 @@ class Pages extends Module {
 
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
-		$this->fuel->load_model('navigation');
+		$this->fuel->load_model('fuel_navigation');
 		
 		$this->load->helper('file');
 		$this->js_controller_params['method'] = 'add_edit';
@@ -338,7 +338,7 @@ class Pages extends Module {
 		$page_vars = array();
 		if (!empty($id))
 		{
-			$page_vars = $this->pagevariables_model->find_all_by_page_id($id);
+			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id);
 		}
 		else if (!empty($_POST))
 		{
@@ -360,7 +360,7 @@ class Pages extends Module {
 		$vars['data'] = $saved;
 
 		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
-		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
+		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
 		
 		$vars['publish'] = (!empty($saved['published']) && is_true_val($saved['published'])) ? 'Unpublish' : 'Publish';
 		$vars['import_view'] = $import_view;
@@ -446,8 +446,8 @@ class Pages extends Module {
 				$delete['language'] = $this->input->post('language');
 			}
 			
-			$this->pagevariables_model->delete($delete);
-			$pagevariable_table = $this->db->table_info($this->pagevariables_model->table_name());
+			$this->fuel_pagevariables_model->delete($delete);
+			$pagevariable_table = $this->db->table_info($this->fuel_pagevariables_model->table_name());
 			$var_types = $pagevariable_table['type']['options'];
 			$page_variables_archive = array();
 			
@@ -476,9 +476,9 @@ class Pages extends Module {
 						$where['language'] = $lang;
 					}
 					$where = (!empty($id)) ? $where : array();
-					if ($this->pagevariables_model->save($save, $where))
+					if ($this->fuel_pagevariables_model->save($save, $where))
 					{
-						$page_variables_archive[] = $this->pagevariables_model->cleaned_data();
+						$page_variables_archive[] = $this->fuel_pagevariables_model->cleaned_data();
 					}
 				}
 			}
@@ -493,7 +493,7 @@ class Pages extends Module {
 			// save to navigation if config allows it
 			if ($this->input->post('navigation_label')) {
 					
-				$this->fuel->load_model('navigation');
+				$this->fuel->load_model('fuel_navigation');
 				
 				$save = array();
 				$save['label'] = $this->input->post('navigation_label');
@@ -510,19 +510,19 @@ class Pages extends Module {
 				$where['location'] = $save['location'];
 				$where['group_id'] = $save['group_id'];
 				$where['parent_id'] = $save['parent_id'];
-				$does_it_exist_already = $this->navigation_model->record_exists($where);
+				$does_it_exist_already = $this->fuel_navigation_model->record_exists($where);
 				if (!$does_it_exist_already)
 				{
 					// determine parent based off of location
 					$location_arr = explode('/', $this->input->post('location'));
 					$parent_location = implode('/', array_slice($location_arr, 0, (count($location_arr) -1)));
 				
-					if (!empty($parent_location)) $parent = $this->navigation_model->find_by_location($parent_location);
+					if (!empty($parent_location)) $parent = $this->fuel_navigation_model->find_by_location($parent_location);
 					if (!empty($parent)) {
 						$save['parent_id'] = $parent['id'];
 					}
-					$this->navigation_model->add_validation('parent_id', array(&$this->navigation_model, 'no_location_and_parent_match'), lang('error_location_parents_match'), '{location}');
-					$this->navigation_model->save($save, array('location' => $this->input->post('location'), 'group_id' => $save['group_id']));
+					$this->fuel_navigation_model->add_validation('parent_id', array(&$this->fuel_navigation_model, 'no_location_and_parent_match'), lang('error_location_parents_match'), '{location}');
+					$this->fuel_navigation_model->save($save, array('location' => $this->input->post('location'), 'group_id' => $save['group_id']));
 				}
 			}
 		}
@@ -552,7 +552,7 @@ class Pages extends Module {
 		$this->load->library('form_builder');
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
-		$this->form_builder->form->validator = &$this->pagevariables_model->get_validation();
+		$this->form_builder->form->validator = &$this->fuel_pagevariables_model->get_validation();
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
@@ -563,7 +563,7 @@ class Pages extends Module {
 		
 		if (!empty($id))
 		{
-			$page_vars = $this->pagevariables_model->find_all_by_page_id($id, $lang);
+			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
 			$this->form_builder->set_field_values($page_vars);
 		}
 		$form = $this->form_builder->render();
@@ -661,7 +661,7 @@ class Pages extends Module {
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
-		$pages = $this->fuel->pages->options_list();
+		$pages = $this->fuel->fuel_pages->options_list();
 		$options = array_combine($pages, $pages);
 		
 
@@ -728,7 +728,7 @@ class Pages extends Module {
 				$field = end(explode('--', $this->js_controller_params['import_view_key']));
 				$where['page_id'] = $id;
 				$where['name'] = $field;
-				$page_var = $this->pagevariables_model->find_one_array($where);
+				$page_var = $this->fuel_pagevariables_model->find_one_array($where);
 
 				$file = $this->_sanitize($file);
 				$save['id'] = (empty($page_var)) ? NULL : $page_var['id'];
@@ -736,7 +736,7 @@ class Pages extends Module {
 				$save['page_id'] = $id;
 				$save['value'] = $file;
 				
-				if (!$this->pagevariables_model->save($save))
+				if (!$this->fuel_pagevariables_model->save($save))
 				{
 					add_error(lang('error_upload'));
 				}

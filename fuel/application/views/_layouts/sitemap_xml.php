@@ -1,7 +1,7 @@
 <?php
 	// look at the views/sitemap_xml.php file for another way to get pages using fuel_nav()
-	$this->load->module_model(FUEL_FOLDER, 'pages_model');
-	$pages = $this->pages_model->find_all(array('published' => 'yes'));
+	$this->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+	$pages = $this->fuel_pages_model->find_all(array('published' => 'yes'));
 
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 ?>

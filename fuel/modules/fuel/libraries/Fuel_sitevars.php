@@ -48,9 +48,9 @@ class Fuel_sitevars extends Fuel_module {
 			$location = uri_path();
 		}
 		
-		$this->fuel->load_model('sitevariables');
+		$this->fuel->load_model('fuel_sitevariables');
 		
-		$site_vars = $this->CI->sitevariables_model->find_all_array(array('active' => 'yes'));
+		$site_vars = $this->CI->fuel_sitevariables_model->find_all_array(array('active' => 'yes'));
 		
 		$vars = array();
 		

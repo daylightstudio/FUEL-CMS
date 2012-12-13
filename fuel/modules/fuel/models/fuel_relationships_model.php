@@ -2,11 +2,11 @@
 
 require_once('base_module_model.php');
 
-class Relationships_model extends Base_module_model {
+class Fuel_relationships_model extends Base_module_model {
 
 	function __construct()
 	{
-		parent::__construct('relationships');
+		parent::__construct('fuel_relationships');
 	}
 	
 	function find_by_candidate($candidate_table, $foreign_table, $candidate_id = NULL, $return_method = NULL)
@@ -42,9 +42,8 @@ class Relationships_model extends Base_module_model {
 		$this->db->join($candidate_table, $candidate_table.'.id = '.$this->table_name.'.candidate_key AND '.$this->table_name.'.candidate_table = "'.$candidate_table.'"', 'LEFT');
 		$this->db->join($foreign_table, $foreign_table.'.id = '.$this->table_name.'.foreign_key AND '.$this->table_name.'.foreign_table = "'.$foreign_table.'"', 'LEFT');
 	}
-	
 
 }
 
-class Relationship_model extends Base_module_record {
+class Fuel_relationship_model extends Base_module_record {
 }

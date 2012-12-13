@@ -1,21 +1,21 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 require_once('base_module_model.php');
 
-class Pagevariables_model extends Base_module_model {
+class Fuel_pagevariables_model extends Base_module_model {
 
 	public $page_id;
 	public $honor_page_status = FALSE; // will look at the pages published status as well
 	public $serialized_fields = array('value');
 	function __construct()
 	{
-		parent::__construct('pagevars');
+		parent::__construct('fuel_pagevars');
 	}
 	
 	// used for the FUEL admin
 	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc')
 	{
-		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
-		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
+		$this->db->select($this->_tables['fuel_pagevars'].'.*, '.$this->_tables['fuel_pages'].'.layout, '.$this->_tables['fuel_pages'].'.location, '.$this->_tables['fuel_pages'].'.published AS page_published');
+		$this->db->join($this->_tables['fuel_pages'], $this->_tables['fuel_pages'].'.id = '.$this->_tables['fuel_pagevars'].'.page_id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
@@ -30,7 +30,7 @@ class Pagevariables_model extends Base_module_model {
 
 	function find_one_by_location($location, $name, $lang = NULL)
 	{
-		$where = array($this->_tables['pages'].'.location' => $location, 'name' => $name);
+		$where = array($this->_tables['fuel_pages'].'.location' => $location, 'name' => $name);
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
@@ -41,7 +41,7 @@ class Pagevariables_model extends Base_module_model {
 	
 	function find_all_by_location($location, $lang = NULL)
 	{
-		$where = array($this->_tables['pages'].'.location' => $location);
+		$where = array($this->_tables['fuel_pages'].'.location' => $location);
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
@@ -152,13 +152,11 @@ class Pagevariables_model extends Base_module_model {
 				{
 					$fields['value'] = $layout_fields[$values['name']];
 					$fields['value']['name'] = 'value';
-
 				}
 			}
 		}
 		return $fields;
 	}
-	
 	
 	function on_before_clean($values)
 	{
@@ -178,24 +176,22 @@ class Pagevariables_model extends Base_module_model {
 		}
 		return $values;
 	}
-	
+
 	function _common_query()
 	{
 		$CI =& get_instance();
 		$lang_options = $CI->fuel->config('languages');
 		
-		$this->db->select($this->_tables['pagevars'].'.*, '.$this->_tables['pages'].'.layout, '.$this->_tables['pages'].'.location, '.$this->_tables['pages'].'.published AS page_published');
-		$this->db->join($this->_tables['pages'], $this->_tables['pages'].'.id = '.$this->_tables['pagevars'].'.page_id', 'left');
-		$this->db->where(array($this->_tables['pagevars'].'.active' => 'yes'));
+		$this->db->select($this->_tables['fuel_pagevars'].'.*, '.$this->_tables['fuel_pages'].'.layout, '.$this->_tables['fuel_pages'].'.location, '.$this->_tables['fuel_pages'].'.published AS page_published');
+		$this->db->join($this->_tables['fuel_pages'], $this->_tables['fuel_pages'].'.id = '.$this->_tables['fuel_pagevars'].'.page_id', 'left');
+		$this->db->where(array($this->_tables['fuel_pagevars'].'.active' => 'yes'));
 		if ($this->honor_page_status AND !defined('FUEL_ADMIN'))
 		{
-			$this->db->where(array($this->_tables['pages'].'.published' => 'yes'));
+			$this->db->where(array($this->_tables['fuel_pages'].'.published' => 'yes'));
 		}
-		
-		
 	}
 }
 
 
-class Pagevariable_model extends Data_record {
+class Fuel_pagevariable_model extends Data_record {
 }

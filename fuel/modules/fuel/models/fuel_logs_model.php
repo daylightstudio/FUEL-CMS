@@ -2,20 +2,20 @@
 
 require_once('base_module_model.php');
 
-class Logs_model extends Base_module_model {
+class Fuel_logs_model extends Base_module_model {
 
 	public $id;
 	
 	
 	function __construct()
 	{
-		parent::__construct('logs');
+		parent::__construct('fuel_logs');
 	}
 	
 	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc')
 	{
-		$this->db->select($this->_tables['logs'].'.id, entry_date, CONCAT('.$this->_tables['users'].'.first_name, " ", '.$this->_tables['users'].'.last_name) as name, message, type', FALSE);
-		$this->db->join($this->_tables['users'], $this->_tables['logs'].'.user_id = '.$this->_tables['users'].'.id', 'left');
+		$this->db->select($this->_tables['fuel_logs'].'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
+		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_logs'].'.user_id = '.$this->_tables['fuel_users'].'.id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order);
 		//$this->debug_query();
 		return $data;
@@ -41,5 +41,5 @@ class Logs_model extends Base_module_model {
 	
 }
 
-class Log_model extends Base_module_record {
+class Fuel_log_model extends Base_module_record {
 }

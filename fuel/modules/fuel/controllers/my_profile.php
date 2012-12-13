@@ -6,7 +6,7 @@ class My_profile extends Fuel_base_controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 	}
 	
 	function edit()
@@ -19,7 +19,7 @@ class My_profile extends Fuel_base_controller {
 		{
 			if ($id)
 			{
-				if ($this->users_model->save())
+				if ($this->fuel_users_model->save())
 				{
 					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
 					redirect(fuel_uri('my_profile/edit/'));
@@ -37,7 +37,7 @@ class My_profile extends Fuel_base_controller {
 		
 		// create fields... start with the table info and go from there
 		$values = array('id' => $id);
-		$fields = $this->users_model->form_fields($values);
+		$fields = $this->fuel_users_model->form_fields($values);
 		
 		// remove permissions
 		unset($fields['permissions']);
@@ -46,7 +46,7 @@ class My_profile extends Fuel_base_controller {
 		$saved = array();
 		if (!empty($id))
 		{
-			$saved = $this->users_model->user_info($id);
+			$saved = $this->fuel_users_model->user_info($id);
 		}
 
 		// remove active from field list to prevent them from updating it
@@ -55,14 +55,14 @@ class My_profile extends Fuel_base_controller {
 		
 		if (!empty($_POST))
 		{
-			$field_values = $this->users_model->clean();
+			$field_values = $this->fuel_users_model->clean();
 		}
 		else
 		{
 			$field_values = $saved;
 		}
 		
-		$this->form_builder->form->validator = &$this->users_model->get_validation();
+		$this->form_builder->form->validator = &$this->fuel_users_model->get_validation();
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->use_form_tag = false;
 		$this->form_builder->set_fields($fields);
@@ -75,7 +75,7 @@ class My_profile extends Fuel_base_controller {
 		$vars['data'] = $saved;
 		
 		// active or publish fields
-		$errors = $this->users_model->get_errors();
+		$errors = $this->fuel_users_model->get_errors();
 		if (!empty($errors))
 		{
 			add_errors($errors);	

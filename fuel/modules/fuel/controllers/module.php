@@ -10,7 +10,7 @@ class Module extends Fuel_base_controller {
 	{
 		parent::__construct($validate);
 
-		$this->load->module_model(FUEL_FOLDER, 'archives_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
 		if (empty($this->module))
 		{
 			$this->module = fuel_uri_segment(1);
@@ -1058,7 +1058,7 @@ class Module extends Fuel_base_controller {
 		
 		// other variables
 		$vars['id'] = $id;
-		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
+		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] =  $action;
 		

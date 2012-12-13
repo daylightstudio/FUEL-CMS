@@ -316,7 +316,7 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 </ul>
 
 <h2 id="overwrites">Module Overwrites</h2>
-<p>Module overwrites allow for you to overwrite existing module parameters. For example, if you'd like to overwrite the built-in FUEL pages_model to incorporate your own model hook you've add to the MY_pages_model,
+<p>Module overwrites allow for you to overwrite existing module parameters. For example, if you'd like to overwrite the built-in FUEL fuel_pages_model to incorporate your own model hook you've added to the MY_pages_model,
 you can do so like so:</p>
 <pre class="brush:php">
 $config['module_overwrites']['pages']['model_name'] = 'MY_pages_model';

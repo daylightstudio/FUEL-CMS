@@ -17,7 +17,7 @@ require_once('base_module_model.php');
 
 class Widgets_model extends Base_module_model {
 	....
-	public $has_many = array('tags' => 'tags_model');
+	public $has_many = array('tags' => 'fuel_tags_model');
 	....
 </pre>
 
@@ -57,7 +57,7 @@ require_once('base_module_model.php');
 
 class Widgets_model extends Base_module_model {
 	....
-	public $foreign_keys  = array('category_id' => array(FUEL_FOLDER => 'categories_model', 'where' => array('context' => 'product_categories')));
+	public $foreign_keys  = array('category_id' => array(FUEL_FOLDER => 'fuel_categories_model', 'where' => array('context' => 'product_categories')));
 	....
 </pre>
 
@@ -73,7 +73,7 @@ foreach($widgets as $widget) {
 
 <p>From the category perspective, you can do something like the following:</p>
 <pre class="brush:php">
-// also could use $this->categories_model->find_one(array('slug' => 'my_category')); assuming the model is loaded
+// also could use $this->fuel_categories_model->find_one(array('slug' => 'my_category')); assuming the model is loaded
 $category = $this->fuel->categories->find_by_slug('my_category'); 
 
 foreach($category->widgets as $widget) {

@@ -1,14 +1,14 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
-class Permissions_model extends Base_module_model {
+class Fuel_permissions_model extends Base_module_model {
 	
 	public $required = array('name', 'description');
 	public $unique_fields = array('name');
-	public $belongs_to = array('users' => array('model' => array(FUEL_FOLDER => 'users_model'), 'where' => array('super_admin' => 'no')));	
+	public $belongs_to = array('users' => array('model' => array(FUEL_FOLDER => 'fuel_users_model'), 'where' => array('super_admin' => 'no')));	
 	
 	function __construct()
 	{
-		parent::__construct('permissions');
+		parent::__construct('fuel_permissions');
 	}
 	
 	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
@@ -27,5 +27,5 @@ class Permissions_model extends Base_module_model {
 }
 
 
-class Permission_model extends Data_record {
+class Fuel_permission_model extends Data_record {
 }

@@ -23,7 +23,7 @@ class Login extends CI_Controller {
 		$this->load->helper('ajax');
 		$this->load->library('form_builder');
 
-		$this->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 
 		// set configuration paths for assets in case they are differernt from front end
 		$this->asset->assets_module ='fuel';
@@ -62,7 +62,7 @@ class Login extends CI_Controller {
 			// check if they are locked out out or not
 			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
- 				$this->users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+ 				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
 				
 			}
@@ -116,18 +116,18 @@ class Login extends CI_Controller {
 						// check if they should be locked out
 						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
 						{
-							$this->users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+							$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 							$user_data['failed_login_timer'] = time();
 						}
 						else
 						{
-							$this->users_model->add_error(lang('error_invalid_login'));
+							$this->fuel_users_model->add_error(lang('error_invalid_login'));
 						}
 					}
 				}
 				else
 				{
-					$this->users_model->add_error(lang('error_empty_user_pwd'));
+					$this->fuel_users_model->add_error(lang('error_empty_user_pwd'));
 				}
 			}
 			$this->session->set_userdata($session_key, $user_data);
@@ -135,7 +135,7 @@ class Login extends CI_Controller {
 		
 		// build form
 		
-		$this->form_builder->set_validator($this->users_model->get_validation());
+		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
 		$fields['user_name'] = array('size' => 25);
 		$fields['password'] = array('type' => 'password', 'size' => 25);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
@@ -153,7 +153,7 @@ class Login extends CI_Controller {
 		}
 		else
 		{
-			$errors =  $this->users_model->get_errors();
+			$errors =  $this->fuel_users_model->get_errors();
 		}
 		
 		$vars['error'] = $errors;
@@ -175,7 +175,7 @@ class Login extends CI_Controller {
 		{
 			if ($this->input->post('email'))
 			{
-				$user = $this->users_model->find_one_array(array('email' => $this->input->post('email')));
+				$user = $this->fuel_users_model->find_one_array(array('email' => $this->input->post('email')));
 				if (!empty($user['email']))
 				{
 					$users = $this->fuel->users;
@@ -204,20 +204,20 @@ class Login extends CI_Controller {
 					}
 					else
 					{
-						$this->users_model->add_error(lang('error_invalid_email'));
+						$this->fuel_users_model->add_error(lang('error_invalid_email'));
 					}
 				}
 				else
 				{
-					$this->users_model->add_error(lang('error_invalid_email'));
+					$this->fuel_users_model->add_error(lang('error_invalid_email'));
 				}
 			}
 			else
 			{
-				$this->users_model->add_error(lang('error_empty_email'));
+				$this->fuel_users_model->add_error(lang('error_empty_email'));
 			}
 		}
-		$this->form_builder->set_validator($this->users_model->get_validation());
+		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
 		
 		// build form
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
@@ -227,7 +227,7 @@ class Login extends CI_Controller {
 		$vars['form'] = $this->form_builder->render();
 		
 		// notifications template
-		$vars['error'] = $this->users_model->get_errors();
+		$vars['error'] = $this->fuel_users_model->get_errors();
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
 		$this->load->view('pwd_reset', $vars);
