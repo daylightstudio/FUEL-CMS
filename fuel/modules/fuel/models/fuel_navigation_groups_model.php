@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
-class Navigation_groups_model extends Base_module_model {
+class Fuel_navigation_groups_model extends Base_module_model {
 	
 	public $unique_fields = array('name');
 	
@@ -8,7 +8,7 @@ class Navigation_groups_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$tables = $CI->config->item('tables', 'fuel');
-		parent::__construct($tables['navigation_groups']);
+		parent::__construct($tables['fuel_navigation_groups']);
 		$this->add_validation('name', array(&$this, 'valid_name'), lang('error_requires_string_value'));
 	}
 	
@@ -20,9 +20,9 @@ class Navigation_groups_model extends Base_module_model {
 	 // cleanup navigation items if group is deleted
 	 function on_after_delete($where)
 	 {
-		$this->delete_related(array(FUEL_FOLDER => 'navigation_model'), 'group_id', $where);
+		$this->delete_related(array(FUEL_FOLDER => 'fuel_navigation_model'), 'group_id', $where);
 	 }
 }
 
-class Navigation_group_model extends Base_module_record {
+class Fuel_navigation_group_model extends Base_module_record {
 }

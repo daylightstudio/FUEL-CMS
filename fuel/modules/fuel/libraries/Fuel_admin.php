@@ -129,7 +129,7 @@ class Fuel_admin extends Fuel_base_library {
 			$this->check_login();
 		}
 		
-		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
+		$this->CI->load->model(FUEL_FOLDER.'/fuel_logs_model');
 
 		// set variables
 		$load_vars = array(
@@ -1323,8 +1323,8 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			
 			$location = uri_path();
-			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['others'] = $this->CI->pages_model->get_others('location', $location, 'location');
+			$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+			$vars['others'] = $this->CI->fuel_pages_model->get_others('location', $location, 'location');
 		}
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
 		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : uri_path());

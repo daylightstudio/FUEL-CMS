@@ -13,12 +13,12 @@ class Reset extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('string');
 		
-		$this->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 		$this->load->module_language(FUEL_FOLDER, 'fuel');
 		
 		$email = fuel_uri_segment(2);
 		$reset_key = fuel_uri_segment(3);
-		$user = $this->users_model->find_one('MD5(email) = "'.$email.'" AND MD5(reset_key) = "'.$reset_key.'"');
+		$user = $this->fuel_users_model->find_one('MD5(email) = "'.$email.'" AND MD5(reset_key) = "'.$reset_key.'"');
 		if (isset($user->id))
 		{
 			$new_pwd = random_string('alnum', 8);

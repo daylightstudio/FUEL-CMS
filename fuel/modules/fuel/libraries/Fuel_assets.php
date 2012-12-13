@@ -54,7 +54,7 @@ class Fuel_assets extends Fuel_base_library {
 		$this->CI->load->helper('file');
 		$this->CI->load->library('upload');
 		$this->CI->lang->load('upload'); // loaded here as well so we can use some of the lang messages
-		$this->CI->fuel->load_model('assets');
+		$this->CI->fuel->load_model('fuel_assets');
 		$this->initialize($params);
 	}
 	
@@ -394,7 +394,7 @@ class Fuel_assets extends Fuel_base_library {
 	 */	
 	function file_info($file)
 	{
-		return $this->CI->assets_model->find_by_key($file);
+		return $this->CI->fuel_assets_model->find_by_key($file);
 	}
 
 	// --------------------------------------------------------------------
@@ -408,7 +408,7 @@ class Fuel_assets extends Fuel_base_library {
 	 */	
 	function delete($file)
 	{
-		return $this->CI->assets_model->delete($file);
+		return $this->CI->fuel_assets_model->delete($file);
 	}
 	
 	// --------------------------------------------------------------------
@@ -421,7 +421,7 @@ class Fuel_assets extends Fuel_base_library {
 	 */	
 	function &model()
 	{
-		return $this->CI->assets_model;
+		return $this->CI->fuel_assets_model;
 	}
 	
 	// --------------------------------------------------------------------

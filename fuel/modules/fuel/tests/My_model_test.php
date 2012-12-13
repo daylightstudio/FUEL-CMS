@@ -66,7 +66,7 @@ class My_model_test extends Tester_base {
 		$test_custom_records_model = new Test_users_model();
 
 		// set the foreign key
-		$test_custom_records_model->foreign_keys = array('role_id' => array(FUEL_FOLDER => 'categories_model'));
+		$test_custom_records_model->foreign_keys = array('role_id' => array(FUEL_FOLDER => 'fuel_categories_model'));
 		
 		// grab a user
 		$user = $test_custom_records_model->find_by_key(1);

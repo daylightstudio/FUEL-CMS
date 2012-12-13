@@ -64,25 +64,25 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function login($user, $pwd)
 	{
-		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
-		$valid_user = $this->CI->users_model->valid_user($user, $pwd);
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
+		$valid_user = $this->CI->fuel_users_model->valid_user($user, $pwd);
 
 		// check old password logins
 		if (empty($valid_user))
 		{
-			$valid_user = $this->CI->users_model->valid_old_user($user, $pwd);
+			$valid_user = $this->CI->fuel_users_model->valid_old_user($user, $pwd);
 		}
 		
 		if (!empty($valid_user)) 
 		{
 			// update the hashed password & add a salt
-			$salt = $this->CI->users_model->salt();
-			$updated_user_profile = array('password' => $this->CI->users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
+			$salt = $this->CI->fuel_users_model->salt();
+			$updated_user_profile = array('password' => $this->CI->fuel_users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
 			$updated_where = array('user_name' => $user, 'active' => 'yes');
 
 
 			// update salt on login
-			if ($this->CI->users_model->update($updated_user_profile, $updated_where))
+			if ($this->CI->fuel_users_model->update($updated_user_profile, $updated_where))
 			{
 				// set minimal session data
 				$session_data = array();
@@ -350,9 +350,9 @@ class Fuel_auth extends Fuel_base_library {
 			return $this->_user_perms;
 		}
 		$CI =& get_instance();
-		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 		$where = array('id' => $valid_user['id'], 'active' => 'yes');
-		$user = $CI->users_model->find_one($where);
+		$user = $CI->fuel_users_model->find_one($where);
 		
 		if (!isset($user->id))
 		{

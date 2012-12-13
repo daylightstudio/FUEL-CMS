@@ -2,7 +2,7 @@
 
 require_once('base_module_model.php');
 
-class Blocks_model extends Base_module_model {
+class Fuel_blocks_model extends Base_module_model {
 	
 	public $required = array('name');
 	public $filters = array('description');
@@ -10,7 +10,7 @@ class Blocks_model extends Base_module_model {
 		
 	function __construct()
 	{
-		parent::__construct('blocks');
+		parent::__construct('fuel_blocks');
 	}
 		
 	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
@@ -102,5 +102,5 @@ class Blocks_model extends Base_module_model {
 	}
 }
 
-class Block_model extends Base_module_record {
+class Fuel_block_model extends Base_module_record {
 }

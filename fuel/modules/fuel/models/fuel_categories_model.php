@@ -2,7 +2,7 @@
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
-class Categories_model extends Base_module_model {
+class Fuel_categories_model extends Base_module_model {
 
 	public $filters = array('name', 'slug', 'context');
 	public $required = array('name', 'slug');
@@ -25,7 +25,7 @@ class Categories_model extends Base_module_model {
 	 */	
 	function __construct()
 	{
-		parent::__construct('categories'); // table name
+		parent::__construct('fuel_categories'); // table name
 	}
 
 	// --------------------------------------------------------------------
@@ -98,7 +98,7 @@ class Categories_model extends Base_module_model {
 	}
 }
 
-class Category_model extends Base_module_record {
+class Fuel_category_model extends Base_module_record {
 
 	// contains all the modules that have a foreign key relationship
 	public $_belongs_to = array();
@@ -122,7 +122,7 @@ class Category_model extends Base_module_record {
 		$belongs_to = array();
 
 		// loop through all the modules to check for foreign_key relationships
-		unset($modules['categories'], $modules['tags']);
+		unset($modules['fuel_categories'], $modules['fuel_tags']);
 		foreach($modules as $module)
 		{
 			//grab each model
@@ -133,7 +133,7 @@ class Category_model extends Base_module_record {
 				foreach($model->foreign_keys as $key => $mod)
 				{
 					$mod_name = $module->name();
-					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
+					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'fuel_categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
 					{
 						$mod['model'] =& $module->model();
 						$mod['key'] = $key;

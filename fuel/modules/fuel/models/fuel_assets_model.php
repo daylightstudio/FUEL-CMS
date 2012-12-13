@@ -3,7 +3,7 @@
 // not pulling from the database so just extend the normal model
 require_once(FUEL_PATH.'libraries/Validator.php');
 
-class Assets_model extends CI_Model {
+class Fuel_assets_model extends CI_Model {
 	
 	public $filters = array('group_id' => 'images'); // the default list view group value for filtering
 	public $filter_value = null; // the default filter value

@@ -1,13 +1,13 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Archives_model extends MY_Model {
+class Fuel_archives_model extends MY_Model {
 	
 	function __construct()
 	{
 		$CI =& get_instance();
 		$CI->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
 		$tables = $CI->config->item('tables', 'fuel');
-		parent::__construct($tables['archives']);
+		parent::__construct($tables['fuel_archives']);
 	}
 	
 	function options_list($ref_id, $table_name, $include_current = false)
@@ -34,5 +34,5 @@ class Archives_model extends MY_Model {
 
 }
 
-class Archive_model extends Data_record {
+class Fuel_archive_model extends Data_record {
 }

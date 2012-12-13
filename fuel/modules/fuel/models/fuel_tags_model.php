@@ -2,7 +2,7 @@
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
-class Tags_model extends Base_module_model {
+class Fuel_tags_model extends Base_module_model {
 
 	public $record_class = 'Tag';
 	public $filters = array('name', 'slug');
@@ -19,7 +19,7 @@ class Tags_model extends Base_module_model {
 	 */	
 	function __construct()
 	{
-		parent::__construct('tags'); // table name
+		parent::__construct('fuel_tags'); // table name
 
 		$this->init_relationships();
 	}
@@ -55,16 +55,16 @@ class Tags_model extends Base_module_model {
 					if (is_array($rel))
 					{
 						if (isset($rel['model']) AND (($rel['model'] == 'tags' OR $rel['model'] == array(FUEL_FOLDER => 'tags')) 
-							OR ($rel['model'] == 'tags_model' OR $rel['model'] == array(FUEL_FOLDER => 'tags_model'))))
+							OR ($rel['model'] == 'fuel_tags_model' OR $rel['model'] == array(FUEL_FOLDER => 'fuel_tags_model'))))
 						{
 							$belongs_to[$mod_name] = $mod_name;
 						}
-						else if (current($rel) == 'tags' OR current($rel) == 'tags_model')
+						else if (current($rel) == 'tags' OR current($rel) == 'fuel_tags_model')
 						{
 							$belongs_to[$mod_name] = $mod_name;	
 						}
 					}
-					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'tags_model'))
+					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'fuel_tags_model'))
 					{
 						$belongs_to[$mod_name] = $mod_name;
 					}
@@ -126,18 +126,18 @@ class Tags_model extends Base_module_model {
 	 */	
 	function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
 	{
-		$this->db->join($this->_tables['categories'], $this->_tables['categories'].'.id = '.$this->_tables['tags'].'.category_id', 'LEFT');
+		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
 		// needed to prevent ambiguity
 		if (strpos($key, '.') === FALSE)
 		{
-			$key = $this->_tables['tags'].'.id';
+			$key = $this->_tables['fuel_tags'].'.id';
 		}
 
 		// needed to prevent ambiguity
 		if (strpos($val, '.') === FALSE)
 		{
-			$val = $this->_tables['tags'].'.name';
+			$val = $this->_tables['fuel_tags'].'.name';
 		}
 		$options = parent::options_list($key, $val, $where, $order);
 		return $options;
@@ -154,12 +154,12 @@ class Tags_model extends Base_module_model {
 	function _common_query()
 	{
 		parent::_common_query();
-		$this->db->join($this->_tables['categories'], $this->_tables['categories'].'.id = '.$this->_tables['tags'].'.category_id', 'LEFT');
+		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 	}
 
 }
 
-class Tag_model extends Base_module_record {
+class Fuel_tag_model extends Base_module_record {
 	
 	// put your record model code here
 }

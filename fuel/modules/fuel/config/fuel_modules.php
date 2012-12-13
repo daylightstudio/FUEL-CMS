@@ -13,6 +13,7 @@ $config['modules'] = array();
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_pages_model',
 	'display_field' => 'location',
 	'table_headers' => array(
 		'id', 
@@ -40,6 +41,7 @@ $config['modules']['pages'] = array(
 $config['modules']['pagevariables'] = array(
 	'module_name' => 'Page Variables',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_pagevariables_model',
 	'display_field' => 'name',
 	'table_headers' => array(
 		'id', 
@@ -59,6 +61,7 @@ $config['modules']['pagevariables'] = array(
 $config['modules']['blocks'] = array(
 	'module_name' => 'Blocks',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_blocks_model',
 	'display_field' => 'name',
 	'permission' => array('blocks', 'create', 'edit', 'blocks/upload' => 'blocks/create', 'publish', 'delete'),
 	'default_col' => 'name',
@@ -73,6 +76,7 @@ $config['modules']['blocks'] = array(
 $config['modules']['navigation'] = array(
 	'module_name' => 'Navigation',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_navigation_model',
 	'display_field' => 'label',
 	'default_col' => 'nav_key',
 	'default_order' => 'asc',
@@ -80,7 +84,7 @@ $config['modules']['navigation'] = array(
 	'preview_path' => '',
 	'permission' => array('navigation', 'create', 'edit', 'navigation/upload' => 'navigation/create', 'publish', 'delete'),
 	'instructions' => lang('navigation_instructions'),
-	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'navigation_groups_model', 'hide_if_one' => TRUE)),
+	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'fuel_navigation_groups_model', 'hide_if_one' => TRUE)),
 	'archivable' => TRUE,
 	'list_actions' => array('navigation/upload' => lang('btn_upload'))
 );
@@ -88,8 +92,8 @@ $config['modules']['navigation'] = array(
 // navigation module init values
 $config['modules']['navigation_group'] = array(
 	'module_name' => 'Navigation Groups',
-	'model_name' => 'navigation_groups_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_navigation_groups_model',
 	'table_headers' => array(
 		'id', 
 		'name', 
@@ -100,22 +104,22 @@ $config['modules']['navigation_group'] = array(
 // navigation module init values
 $config['modules']['tags'] = array(
 	'module_name' => 'Tags',
-	'model_name' => 'tags_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_tags_model',
 	'table_headers' => array(
 		'id', 
 		'name', 
 		'slug',
 		'published',
 	),
-	//'filters' => array('context' => array('label' => lang('form_label_category'), 'type' => 'select', 'model' => 'categories_model', 'first_option' => '')),
+	//'filters' => array('context' => array('label' => lang('form_label_category'), 'type' => 'select', 'model' => 'fuel_categories_model', 'first_option' => '')),
 );
 
 // navigation module init values
 $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
-	'model_name' => 'categories_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_categories_model',
 	'table_headers' => array(
 		'id', 
 		'name', 
@@ -124,15 +128,16 @@ $config['modules']['categories'] = array(
 		'precedence',
 		'published',
 	),
-	'filters' => array('context' => array('label' => lang('form_label_context'), 'type' => 'select', 'model' => array(FUEL_FOLDER => array('categories_model' => 'context_options_list')), 'first_option' => 'Select a context...')),
+	'filters' => array('context' => array('label' => lang('form_label_context'), 'type' => 'select', 'model' => array(FUEL_FOLDER => array('fuel_categories_model' => 'context_options_list')), 'first_option' => 'Select a context...')),
 );
 
 // assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_assets_model',
 	'table_headers' => array(
-		'id', 
+		'id',
 		'name', 
 		'preview/kb', 
 		'link', 
@@ -156,8 +161,8 @@ $config['modules']['assets'] = array(
 // sitevariable module init values
 $config['modules']['sitevariables'] = array(
 	'module_name' => 'Site Variables',
-	'model_name' => 'Sitevariables_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_sitevariables_model',
 	'table_headers' => array(
 		'id', 
 		'name', 
@@ -179,8 +184,8 @@ $config['modules']['sitevariables'] = array(
 // users module init values
 $config['modules']['users'] = array(
 	'module_name' => 'Users',
-	'model_name' => 'users_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_users_model',
 	'table_headers' => array(
 		'id', 
 		'email', 
@@ -217,8 +222,8 @@ $config['modules']['users'] = array(
 // permissions module init values
 $config['modules']['permissions'] = array(
 	'module_name' => 'Permissions',
-	'model_name' => 'Permissions_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_permissions_model',
 	'table_headers' => array(
 		'id', 
 		'description', 
@@ -238,8 +243,8 @@ $config['modules']['permissions'] = array(
 // permissions module init values
 $config['modules']['logs'] = array(
 	'module_name' => 'Activity Log',
-	'model_name' => 'Logs_model',
 	'model_location' => 'fuel',
+	'model_name' => 'fuel_logs_model',
 	'table_headers' => array(
 		'id', 
 		'entry_date', 
@@ -247,7 +252,6 @@ $config['modules']['logs'] = array(
 		'message', 
 		'type', 
 	),
-	
 	'default_col' => 'entry_date',
 	'default_order' => 'desc',
 	'display_field' => 'message',

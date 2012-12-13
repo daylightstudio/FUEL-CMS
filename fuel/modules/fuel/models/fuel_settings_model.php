@@ -2,7 +2,7 @@
 
 require_once('base_module_model.php');
 
-class Settings_model extends Base_module_model
+class Fuel_settings_model extends Base_module_model
 {
 	public $required = array('key');
 	public $serialized_fields = array('value');
@@ -13,5 +13,5 @@ class Settings_model extends Base_module_model
 	}
 }
 
-class Setting_model extends Base_module_record {
+class Fuel_setting_model extends Base_module_record {
 }

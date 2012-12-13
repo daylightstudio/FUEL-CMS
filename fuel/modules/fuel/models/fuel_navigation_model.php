@@ -2,7 +2,7 @@
 
 require_once('base_module_model.php');
 
-class Navigation_model extends Base_module_model {
+class Fuel_navigation_model extends Base_module_model {
 	
 	public $group_id = 1;
 	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
@@ -15,7 +15,7 @@ class Navigation_model extends Base_module_model {
 		
 	function __construct()
 	{
-		parent::__construct('navigation');
+		parent::__construct('fuel_navigation');
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 
@@ -37,7 +37,7 @@ class Navigation_model extends Base_module_model {
 	
 	function find_by_location($location, $group_id = 1, $lang = NULL)
 	{
-		$where[$this->_tables['navigation'].'.location'] = $location;
+		$where[$this->_tables['fuel_navigation'].'.location'] = $location;
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
@@ -47,7 +47,7 @@ class Navigation_model extends Base_module_model {
 
 	function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
 	{
-		$where[$this->_tables['navigation'].'.nav_key'] = $nav_key;
+		$where[$this->_tables['fuel_navigation'].'.nav_key'] = $nav_key;
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
@@ -65,7 +65,7 @@ class Navigation_model extends Base_module_model {
 		{
 			if (is_string($group_id))
 			{
-				$where[$this->_tables['navigation_groups'].'.name'] = $group_id;
+				$where[$this->_tables['fuel_navigation_groups'].'.name'] = $group_id;
 			}
 			else
 			{
@@ -142,7 +142,7 @@ class Navigation_model extends Base_module_model {
 	
 	function find_all_by_group($group_id = 1, $lang = NULL)
 	{
-		$where = (is_string($group_id)) ? array($this->_tables['navigation_groups'].'.name' => $group_id) : array($this->_tables['navigation'].'.group_id' => $group_id);
+		$where = (is_string($group_id)) ? array($this->_tables['fuel_navigation_groups'].'.name' => $group_id) : array($this->_tables['fuel_navigation'].'.group_id' => $group_id);
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
@@ -154,7 +154,7 @@ class Navigation_model extends Base_module_model {
 	function max_id()
 	{
 		$this->db->select_max('id');
-		$query = $this->db->get($this->_tables['navigation']);
+		$query = $this->db->get($this->_tables['fuel_navigation']);
 		$data = $query->row_array();
 		return $data['id'];
 	}
@@ -164,12 +164,12 @@ class Navigation_model extends Base_module_model {
 		$fields = parent::form_fields();
 		$CI =& get_instance();
 		// navigation group
-		if (empty($CI->navigation_groups_model)){
-			$CI->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
+		if (empty($CI->fuel_navigation_groups_model)){
+			$CI->load->module_model(FUEL_FOLDER, 'fuel_navigation_groups_model');
 		}
 		$CI->load->helper('array');
 		
-		$group_options = $CI->navigation_groups_model->options_list();
+		$group_options = $CI->fuel_navigation_groups_model->options_list();
 		$group_values = array_keys($group_options);
 		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
 		
@@ -187,9 +187,9 @@ class Navigation_model extends Base_module_model {
 			$fields['group_id']['displayonly'] = TRUE;
 		}
 
-		if (empty($CI->pages_model))
+		if (empty($CI->fuel_pages_model))
 		{
-			$CI->load->module_model(FUEL_FOLDER, 'pages_model');
+			$CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
 		}
 		
 		$this->load->helper('array');
@@ -348,8 +348,8 @@ class Navigation_model extends Base_module_model {
 	function _common_query()
 	{
 		parent::_common_query();
-		$this->db->select($this->_tables['navigation'].'.*, '.$this->_tables['navigation_groups'].'.id group_id, '.$this->_tables['navigation_groups'].'.name group_name');
-		$this->db->join($this->_tables['navigation_groups'], $this->_tables['navigation_groups'].'.id='.$this->_tables['navigation'].'.group_id', 'left');
+		$this->db->select($this->_tables['fuel_navigation'].'.*, '.$this->_tables['fuel_navigation_groups'].'.id group_id, '.$this->_tables['fuel_navigation_groups'].'.name group_name');
+		$this->db->join($this->_tables['fuel_navigation_groups'], $this->_tables['fuel_navigation_groups'].'.id='.$this->_tables['fuel_navigation'].'.group_id', 'left');
 		$this->db->order_by('precedence, location asc');
 	}
 	
@@ -416,5 +416,5 @@ class Navigation_model extends Base_module_model {
 	}
 }
 
-class Navigation_item_model extends Base_module_record {
+class Fuel_navigation_item_model extends Base_module_record {
 }
