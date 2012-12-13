@@ -17,7 +17,7 @@ will send an email to the user with their password.</p>
 The description field is used to better explain the permission but if left blank, will use the name value. After creating the permission, go back to the user in the <dfn>Users</dfn> module and assign the permission.
 </p>
 
-<h2>Assigning Permissions to a Simple Modules</h2>
+<h2>Assigning Permissions to Simple Modules</h2>
 <p>Each simple module in the CMS should have a permission created for it. When configuring your module in the <span class="file">fuel/application/config/MY_fuel_modules.php</span>,
 you have the option of assigning the name of that permission. By default, it is the same name as the module's name (e.g "news"). In some cases you may want to create 
 multiple permissions for a module that pertains to editing, publishing and deleting. To do this, you set the edit permission to the name of the module and then add the suffixes
