@@ -20,11 +20,16 @@ The description field is used to better explain the permission but if left blank
 <h2>Assigning Permissions to Simple Modules</h2>
 <p>Each simple module in the CMS should have a permission created for it. When configuring your module in the <span class="file">fuel/application/config/MY_fuel_modules.php</span>,
 you have the option of assigning the name of that permission. By default, it is the same name as the module's name (e.g "news"). In some cases you may want to create 
-multiple permissions for a module that pertains to editing, publishing and deleting. To do this, you set the edit permission to the name of the module and then add the suffixes
-"_publish" and "_delete" for the other two. The <strong>Pages</strong> module is a good example of this and it's permission setting looks like the following:
+multiple permissions for a module that pertains to editing, publishing and deleting. To do this, you set the edit permission to the name of the module and then add the name of the other
+permissions to associate to the module. You can also map the names of a permission to a different permission by assigning the key as the name of the permission and the association as the value.
+The <strong>Pages</strong> module is a good example of this and it's permission setting looks like the following:
 </p>
 <pre class="brush:php">
 ...
-'permission' => array('edit' => 'pages', 'publish' => 'pages_publish', 'delete' => 'pages_delete'),
+// short hand
+permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create', 'publish', 'delete'),
+
+// long hand
+permission' => array('pages', 'pages/create', 'pages/edit', 'pages/upload' => 'pages/create', 'pages/publish', 'pages/delete'),
 ...
 </pre>
