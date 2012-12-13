@@ -89,6 +89,7 @@ fuel.fields.wysiwyg_field = function(context){
 		var newVal = elemVal.replace(re, '$1>');
 		$(elem).val(newVal);
 	}
+
 	
 	var createCKEditor = function(elem){
 		//window.CKEDITOR_BASEPATH = jqx.config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
@@ -151,6 +152,27 @@ fuel.fields.wysiwyg_field = function(context){
 			{ 		
 				indent : true
 			});
+
+			// process image paths
+			this.dataProcessor.htmlFilter.addRules( {
+				elements : {
+				    $ : function( element ) {
+						// // Output dimensions of images as width and height attributes on src
+						if ( element.name == 'img' ) {
+							var src = element.attributes['src'];
+							img = src.replace(/^\{img_path\('(.+)'\)\}/, function(match, contents, offset, s) {
+		   										return contents;
+	    								}
+									);
+							img = img.replace(jqx.config.assetsImgPath, '');
+							
+							src = "{img_path('" + img + "')}";
+							element.attributes.src = src;
+							element.attributes['data-cke-saved-src'] = src;
+				        }
+				    }
+				}
+			});
 			
 			// need so the warning doesn't pop up if you duplicate a value
 			if ($.changeChecksaveValue){
@@ -162,8 +184,10 @@ fuel.fields.wysiwyg_field = function(context){
 			if ($elem.get(0).style.width){
 				$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
 			}
-			
+
 		})
+
+
 		CKEDITOR.instances[ckId].resetDirty();
 		
 		// needed so it doesn't update the content before submission which we need to clean up... 
@@ -171,7 +195,10 @@ fuel.fields.wysiwyg_field = function(context){
 		CKEDITOR.config.autoUpdateElement = false;
 		
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
-		
+	
+		// translate img_path
+		unTranslateImgPath(CKEDITOR.instances[ckId])
+
 		// add view source
 		if ($('#' + ckId).parent().find('.editor_viewsource').length == 0){
 			
@@ -203,6 +230,7 @@ fuel.fields.wysiwyg_field = function(context){
 				
 				
 				} else {
+
 					CKEDITOR.instances[ckId].hidden = false;
 				
 					$('#cke_' + ckId).show();
@@ -212,15 +240,31 @@ fuel.fields.wysiwyg_field = function(context){
 					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_source'))
 				
 					ckInstance.setData($elem.val());
+
+					unTranslateImgPath(CKEDITOR.instances[ckId])
 				}
 			
 				fixCKEditorOutput(elem);
 				return false;
 			})
 		}
+
 	}
 	
-	
+	var unTranslateImgPath = function(editor){
+		// translate img_path
+		setTimeout(function(){
+
+			var txt = editor.getData();
+			txt = txt.replace(/\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
+		   										return jqx.config.assetsImgPath + contents;
+	    								}
+									);
+			editor.setData(txt);
+			editor.updateElement();
+
+		}, 200)
+	}	
 	
 	var createPreview = function(id){
 		var $textarea = $('#' + id);
@@ -236,10 +280,11 @@ fuel.fields.wysiwyg_field = function(context){
 				$('#' + id + '_preview').click(function(e){
 					var previewWindow = window.open('', 'preview', myMarkItUpSettings.previewInWindow);
 					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
+					var csrf = $('#csrf_test_name').val();
 					$.ajax( {
 						type: 'POST',
 						url: myMarkItUpSettings.previewParserPath,
-						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val),
+						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val) + '&csrf_test_name='+ csrf,
 						success: function(data) {
 							writeInPreview(data); 
 						}
@@ -262,14 +307,15 @@ fuel.fields.wysiwyg_field = function(context){
 			}
 		}
 	}
+
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
-//			createCKEditor(this);
-			setTimeout(function(){
-				createCKEditor(_this);
-			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
+			createCKEditor(this);
+			// setTimeout(function(){
+			// 	createCKEditor(_this);
+			// }, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
 		} else {
 			createMarkItUp(this);
 		}
@@ -476,7 +522,7 @@ fuel.fields.inline_edit_field = function(context){
 			// redeclared here in case $field is set
 			var fieldId = $field.attr('id');
 			var $form = $field.closest('form');
-
+			
 			// if no value added,then no need to refresh
 			if (!selected) return;
 			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
@@ -499,6 +545,7 @@ fuel.fields.inline_edit_field = function(context){
 			$.post(refreshUrl, params, function(html){
 				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
 				fuel.notifications();
+			
 				$modal.jqmHide();
 				if (html.length){
 					$('#' + fieldId, context).replaceWith(html);

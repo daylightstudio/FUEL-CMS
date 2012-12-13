@@ -664,28 +664,66 @@ class Pages extends Module {
 		$pages = $this->fuel->pages->options_list();
 		$options = array_combine($pages, $pages);
 		
+		// just return the options as json
+		$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');
+		if (isset($_GET['options']))
+		{
+			if (isset($_GET['format']) AND strtolower($_GET['format']) == 'json')
+			{
+				json_headers();
+				echo json_encode($options);
+				return;
+			}
+			else
+			{
+				$str = '';
+				if (isset($_GET['first_option']))
+				{
+					$str .= "<option value=\"\" label=\"".Form::prep($this->input->get('first_option'), FALSE)."\">".Form::prep($this->input->get('first_option'), FALSE)."</option>\n";
+				}
+				foreach($options as $key => $val)
+				{
+					$str .= "<option value=\"".Form::prep($key, FALSE)."\" label=\"".Form::prep($val, FALSE)."\">".Form::prep($val, FALSE)."</option>\n";
+				}
+				echo $str;
+				return;
+				
+			}
+		}
 
 		$select_label = lang('form_label_page');
 		$display_label_select = FALSE;
 		if (isset($_GET['input']))
 		{
-			$fields['input'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_url'), 'size' => 100);	
+			$fields['input'] = array('value' => $this->input->get_post('input'), 'label' => lang('form_label_url'), 'size' => 100);	
 			$select_label = lang('form_label_or_select');
 			$display_label_select = TRUE;
 		}
 
-		$fields['url_select'] = array('value' => $value, 'label' => $select_label, 'type' => 'select', 'options' => $options, 'display_label' => $display_label_select);
+		$fields['url_select'] = array('value' => $this->input->get_post('url_select'), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
 
-
+		$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');
 		if (isset($_GET['target']))
 		{
-			$fields['target'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('_self' => '_self', '_blank' => '_blank'));	
+			$target_options = array(
+				''        => '', 
+				'_blank'  => '_blank',
+				'_parent' => '_parent',
+				'_top'    => '_top',
+				);
+			$fields['target'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('' => '', '_blank' => '_blank'));	
 			$fields['url_select']['display_label'] = TRUE;
 		}
 		
 		if (isset($_GET['title']))
 		{
 			$fields['title'] = array('value' => $this->input->get_post('title'), 'label' => lang('form_label_title'));
+			$fields['url_select']['display_label'] = TRUE;
+		}
+
+		if (isset($_GET['class']))
+		{
+			$fields['class'] = array('value' => $this->input->get_post('class'), 'label' => lang('form_label_class'));
 			$fields['url_select']['display_label'] = TRUE;
 		}
 

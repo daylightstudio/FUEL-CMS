@@ -16,10 +16,11 @@ class Preview extends Fuel_base_controller {
 		
 		// don't want to fuelify'
 		define('FUELIFY', FALSE);
-	
+
 		// check for posted data
-		$data = $this->input->post('data', FALSE);
-		if (empty($data)) show_error(lang('error_cannot_preview'));
+		$data = $this->input->get_post('data', FALSE);
+		
+		//if (empty($data)) show_error(lang('error_cannot_preview'));
 
 		// load global variables
 		if (file_exists(APPPATH.'views/_variables/global'.EXT))
