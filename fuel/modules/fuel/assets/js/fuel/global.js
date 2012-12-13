@@ -86,7 +86,8 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
 
-		$('.cancel', contentDoc).add('.modal_close').click(function(){
+		$('.cancel', contentDoc).add('.modal_close').click(function(e){
+			e.preventDefault();
 			$modal.jqmHide();
 		})
 

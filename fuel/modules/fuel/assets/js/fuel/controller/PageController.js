@@ -137,6 +137,27 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 
 	select : function(){
 		$urlSelect = $('#url_select');
+		this._initFormTabs();
+		$('#input').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#url_select').attr('disabled', 'disabled');
+			
+		})
+
+		$('#input').bind('blur', function(){
+			$('#url_select').removeAttr('disabled');
+		})
+
+
+		$('#url_select').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#input').attr('disabled', 'disabled');
+		})
+
+		$('#url_select').bind('blur', function(){
+			$('#input').removeAttr('disabled');
+		})
+
 	}
 		
 });

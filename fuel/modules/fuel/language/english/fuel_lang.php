@@ -226,6 +226,7 @@ $lang['pages_default_location'] = 'example: company/about';
 
 $lang['form_label_page'] = 'Page';
 $lang['form_label_target'] = 'Target';
+$lang['form_label_class'] = 'Class';
 
 $lang['navigation_related'] = 'Create navigation';
 
@@ -279,6 +280,8 @@ $lang['form_label_resize_and_crop'] = 'crop if needed';
 $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
+$lang['form_label_alt'] = 'Alt';
+$lang['form_label_align'] = 'Align';
 $lang['form_label_master_dim'] = 'Master dimension';
 $lang['form_label_unzip'] = 'Unzip zip files';
 $lang['assets_upload_action'] = 'Upload';
@@ -458,6 +461,7 @@ $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
 $lang['form_label_link'] = 'Link';
+
 $lang['form_label_group_id'] = 'Group';
 $lang['form_label_or_select'] = 'OR select';
 
