@@ -157,6 +157,7 @@ fuel.fields.wysiwyg_field = function(context){
 			this.dataProcessor.htmlFilter.addRules( {
 				elements : {
 				    $ : function( element ) {
+				    	
 						// // Output dimensions of images as width and height attributes on src
 						if ( element.name == 'img' ) {
 							var src = element.attributes['src'];
@@ -174,13 +175,17 @@ fuel.fields.wysiwyg_field = function(context){
 				}
 			});
 			
+			$elem = $('#' + ckId);
+
 			// need so the warning doesn't pop up if you duplicate a value
 			if ($.changeChecksaveValue){
-				$.changeChecksaveValue('#' + ckId, $.trim(editor.getData()))
+				//$.changeChecksaveValue('#' + ckId, editor.getData());
+
+				// just remove the checksave for these fields since it's too complicated until we figure out how to deal with all the processing on save
+				$.removeChecksaveValue('#' + ckId);
 			}
 
 			// hack to force the width
-			$elem = $('#' + ckId);
 			if ($elem.get(0).style.width){
 				$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
 			}

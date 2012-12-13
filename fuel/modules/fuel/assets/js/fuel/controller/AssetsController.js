@@ -17,6 +17,7 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 	},
 	
 	select : function(){
+		this.notifications();
 		$assetSelect = $('#asset_select');
 		$assetPreview = $('#asset_preview');
 		var selectedAssetFolder = this.initObj.folder;
@@ -27,8 +28,10 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 				$assetPreview.html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $assetSelect.val() + '" />');
 			})
 			$assetSelect.change();
+			$('.img_only').show();
 		} else {
 			$assetPreview.hide();
+			$('.img_only').hide();
 		}
 		$assetSelect.change();
 	},
@@ -43,6 +46,11 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 			}
 		})
 		$('#resize_method').change();
+
+		$('#back').click(function(e){
+			e.preventDefault();
+			window.location = $(this).data('url');
+		})
 	}
 	
 });
