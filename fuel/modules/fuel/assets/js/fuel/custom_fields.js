@@ -189,9 +189,10 @@ fuel.fields.wysiwyg_field = function(context){
 			if ($elem.get(0).style.width){
 				$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
 			}
-
 		})
-
+	
+		// translate image paths
+		$(elem).val(unTranslateImgPath($(elem).val()));
 
 		CKEDITOR.instances[ckId].resetDirty();
 		
@@ -201,8 +202,6 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		CKEDITOR.instances[ckId].hidden = false; // for toggling
 	
-		// translate img_path
-		unTranslateImgPath(CKEDITOR.instances[ckId])
 
 		// add view source
 		if ($('#' + ckId).parent().find('.editor_viewsource').length == 0){
@@ -244,9 +243,8 @@ fuel.fields.wysiwyg_field = function(context){
 					//$elem.show().closest('.html').hide();
 					$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_source'))
 				
-					ckInstance.setData($elem.val());
-
-					unTranslateImgPath(CKEDITOR.instances[ckId])
+					var txt = unTranslateImgPath($elem.val());
+					ckInstance.setData(txt);
 				}
 			
 				fixCKEditorOutput(elem);
@@ -256,7 +254,16 @@ fuel.fields.wysiwyg_field = function(context){
 
 	}
 	
-	var unTranslateImgPath = function(editor){
+	var unTranslateImgPath = function(txt){
+		txt = txt.replace(/\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
+	   										return jqx.config.assetsImgPath + contents;
+    								}
+								);
+		return txt;
+	}	
+	
+
+	var unTranslateImgPath2 = function(editor){
 		// translate img_path
 		setTimeout(function(){
 
@@ -268,7 +275,7 @@ fuel.fields.wysiwyg_field = function(context){
 			editor.setData(txt);
 			editor.updateElement();
 
-		}, 200)
+		}, 50)
 	}	
 	
 	var createPreview = function(id){
