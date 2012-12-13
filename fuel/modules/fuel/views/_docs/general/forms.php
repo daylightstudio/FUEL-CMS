@@ -252,7 +252,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		not required when specifying the name of the model.
 		</li>
 		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
-		<li><strong>hide_if_one</strong>: Will hide the select if there is only one option and change it to a hidden field. Default is false.</li>
+		<li><strong>disabled_options</strong>: An array of options to display in a disabled state (as opposed to the "disabled" parameter which disables the whole field)</li>
 	</ul>
 	
 	<h4>Example</h4>
