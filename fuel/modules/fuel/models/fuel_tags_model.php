@@ -48,6 +48,7 @@ class Fuel_tags_model extends Base_module_model {
 			$model = $module->model();
 			if (!empty($model->has_many))
 			{
+
 				// loop through the has_many relationships to see if any have a "tags" relationship
 				foreach($model->has_many as $key => $rel)
 				{
@@ -108,7 +109,7 @@ class Fuel_tags_model extends Base_module_model {
 	{	
 		$fields = parent::form_fields($values, $related);
 		$CI =& get_instance();
-		$fields['category_id'] = array('type' => 'select', 'label' => 'Category', 'module' => 'categories', 'model' => array(FUEL_FOLDER => 'categories'), 'first_option' => 'Select a category...');
+		$fields['category_id'] = array('type' => 'select', 'label' => 'Category', 'module' => 'categories', 'model' => array(FUEL_FOLDER => 'fuel_categories'), 'first_option' => 'Select a category...');
 		return $fields;
 	}
 

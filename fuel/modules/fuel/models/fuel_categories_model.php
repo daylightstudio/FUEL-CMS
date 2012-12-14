@@ -2,30 +2,79 @@
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
-class Fuel_categories_model extends Base_module_model {
+class Fuel_tags_model extends Base_module_model {
 
-	public $filters = array('name', 'slug', 'context');
-	public $required = array('name', 'slug');
-	public $linked_fields = array('slug' => 'name');
-	public $unique_fields = array('slug');
-
-	public $boolean_fields = array();
-	public $belongs_to = array();
-	public $has_many = array();
-	public $serialized_fields = array();
-	
+	public $record_class = 'Tag';
+	public $filters = array('name', 'slug');
+	public $unique_fields = array('name', 'slug');
+	public $linked_fields = array('name' => 'slug');
 	
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * Constructor. Automatically assigns belongs_to 
 	 *
 	 * @access	public
 	 * @return	void
 	 */	
 	function __construct()
 	{
-		parent::__construct('fuel_categories'); // table name
+		parent::__construct('fuel_tags'); // table name
+
+		$this->init_relationships();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor. Automatically assigns belongs_to 
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	function init_relationships()
+	{
+		$CI =& get_instance();
+
+		$modules = $CI->fuel->modules->get(NULL, FALSE);
+
+		$belongs_to = array();
+
+		// loop through all the modules to check for has_many relationships
+		unset($modules['categories'], $modules['tags']);
+		foreach($modules as $module)
+		{
+			// grab each model
+			$model = $module->model();
+			if (!empty($model->has_many))
+			{
+
+				// loop through the has_many relationships to see if any have a "tags" relationship
+				foreach($model->has_many as $key => $rel)
+				{
+					$mod_name = $module->name();
+					if (is_array($rel))
+					{
+						if (isset($rel['model']) AND (($rel['model'] == 'tags' OR $rel['model'] == array(FUEL_FOLDER => 'tags')) 
+							OR ($rel['model'] == 'fuel_tags_model' OR $rel['model'] == array(FUEL_FOLDER => 'fuel_tags_model'))))
+						{
+							$belongs_to[$mod_name] = $mod_name;
+						}
+						else if (current($rel) == 'tags' OR current($rel) == 'fuel_tags_model')
+						{
+							$belongs_to[$mod_name] = $mod_name;	
+						}
+					}
+					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'fuel_tags_model'))
+					{
+						$belongs_to[$mod_name] = $mod_name;
+					}
+				}
+			}
+		}
+
+		// set the belongs_to
+		$this->belongs_to = $belongs_to;
 	}
 
 	// --------------------------------------------------------------------
@@ -40,24 +89,10 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	string	the order in which to return the results (optional)
 	 * @return	array
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
+	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
 	{
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initializes the class with the parent model and field names
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
-	function context_options_list()
-	{
-		$this->db->group_by('context');
-		return parent::options_list('context', 'context');
 	}
 
 	// --------------------------------------------------------------------
@@ -73,123 +108,59 @@ class Fuel_categories_model extends Base_module_model {
 	function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
-		$fields['parent_id'] = array('type' => 'select', 'model' => 'categories', 'first_option' => lang('label_select_one'));
-
-		// magically sets the options list view to remove the current category
-		if (!empty($values['id']))
-		{
-			$this->db->where(array('id != ' => $values['id']));
-		}
+		$CI =& get_instance();
+		$fields['category_id'] = array('type' => 'select', 'label' => 'Category', 'module' => 'categories', 'model' => array(FUEL_FOLDER => 'fuel_categories'), 'first_option' => 'Select a category...');
 		return $fields;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites the parent option_list method 
+	 *
+	 * @access	public
+	 * @param	string	the name of the field to be used as the key (optional)
+	 * @param	string	the name of the filed to be used as the value (optional)
+	 * @param	mixed	the where condition to apply (optional)
+	 * @param	mixed	the order in which to return the results (optional)
+	 * @return	array 	
+	 */	
+	function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
+	{
+		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
+
+		// needed to prevent ambiguity
+		if (strpos($key, '.') === FALSE)
+		{
+			$key = $this->_tables['fuel_tags'].'.id';
+		}
+
+		// needed to prevent ambiguity
+		if (strpos($val, '.') === FALSE)
+		{
+			$val = $this->_tables['fuel_tags'].'.name';
+		}
+		$options = parent::options_list($key, $val, $where, $order);
+		return $options;
+	}
 	
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Overwrites the on_after_save parent method and doesn't call the parent
+	 * Common query to automatically join the categories table
 	 *
 	 * @access	public
-	 * @param	array	values
-	 * @return	array
-	 */	
-	function on_after_save($values)
+	 * @return	void 	
+	 */		
+	function _common_query()
 	{
-		return $values;
+		parent::_common_query();
+		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 	}
+
 }
 
-class Fuel_category_model extends Base_module_record {
-
-	// contains all the modules that have a foreign key relationship
-	public $_belongs_to = array();
+class Fuel_tag_model extends Base_module_record {
 	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initializes the class with the parent model and field names
-	 *
-	 * @access	public
-	 * @param	object	parent model object
-	 * @param	array	field names
-	 * @return	array
-	 */	
-	public function initialize(&$parent, $fields = array())
-	{
-		parent::initialize($parent, $fields);
-
-		$modules = $this->_CI->fuel->modules->get(NULL, FALSE);
-
-		$belongs_to = array();
-
-		// loop through all the modules to check for foreign_key relationships
-		unset($modules['fuel_categories'], $modules['fuel_tags']);
-		foreach($modules as $module)
-		{
-			//grab each model
-			$model = $module->model();
-			if (!empty($model->foreign_keys))
-			{
-				// loop through the has_many relationships to see if any have a "tags" relationship
-				foreach($model->foreign_keys as $key => $mod)
-				{
-					$mod_name = $module->name();
-					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'fuel_categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
-					{
-						$mod['model'] =& $module->model();
-						$mod['key'] = $key;
-						$belongs_to[$mod_name] = $mod;
-					}
-				}
-			}
-		}
-
-		// set the belongs_to
-		$this->_belongs_to = $belongs_to;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns a related category model with the active record query already applied
-	 *
-	 * @access	public
-	 * @param	string	related slug value
-	 * @return	array
-	 */	
-	public function get($var)
-	{
-		if (isset($this->_belongs_to[$var]))
-		{
-			if (!empty($this->_belongs_to['where']))
-			{
-				$where = $this->_belongs_to['where'];	
-			}
-			$model =& $this->_belongs_to[$var]['model'];
-			$key = $this->_belongs_to[$var]['key'];
-			$key_field = $this->_parent_model->key_field();
-			$where[$model->table_name().'.'.$key] = $this->_fields[$key_field];
-			$model->db()->where($where);
-			return $model;
-		}
-		return FALSE;
-	}
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Magic method to return first property, method, then field values 
-	 *
-	 * @access	public
-	 * @param	string	field name
-	 * @return	mixed
-	 */	
-	public function __get($var)
-	{
-		$model = $this->get($var);
-		if ($model)
-		{
-			$data = $model->find_all();
-			return $data;
-		}
-		return parent::__get($var);
-	}
+	// put your record model code here
 }
