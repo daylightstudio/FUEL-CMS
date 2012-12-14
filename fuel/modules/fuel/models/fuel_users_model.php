@@ -2,18 +2,18 @@
 
 require_once('base_module_model.php');
 
-class Users_model extends Base_module_model {
+class Fuel_users_model extends Base_module_model {
 	
 	public $required = array('user_name', 'email', 'first_name', 'last_name');
 	public $filters = array('first_name', 'last_name', 'user_name');
 	public $unique_fields = array('user_name');
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'permissions_model')));
+	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model')));
 	
 	function __construct()
 	{
-		parent::__construct('users');
+		parent::__construct('fuel_users');
 	}
-	
+
 	function valid_user($user, $pwd)
 	{
 		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
@@ -219,8 +219,8 @@ class Users_model extends Base_module_model {
 		
 		
 		// first get the permissions
-		$CI->load->module_model(FUEL_FOLDER, 'permissions_model');
-		$perms_list = $CI->permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_permissions_model');
+		$perms_list = $CI->fuel_permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
 
 		// next get the saved permissions for the user
 		$user_perms = array();
@@ -419,15 +419,15 @@ class Users_model extends Base_module_model {
 		return $this->is_editable($email, 'email', $id);
 	}
 	
-	
 	// used to clear out parent base_module_model common query
 	function _common_query()
 	{
 		
 	}
+
 }
 
-class User_model extends Base_module_record {
+class Fuel_user_model extends Base_module_record {
 
 	
 }

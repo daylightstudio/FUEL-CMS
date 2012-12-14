@@ -63,7 +63,7 @@ class Fuel_logs extends Fuel_base_library {
 	function initialize($params)
 	{
 		parent::initialize($params);
-		$this->fuel->load_model('logs');
+		$this->fuel->load_model('fuel_logs');
 	}
 	
 	// --------------------------------------------------------------------
@@ -81,7 +81,7 @@ class Fuel_logs extends Fuel_base_library {
 	{
 		if ($location == 'db')
 		{
-			$this->CI->logs_model->logit($msg, $level);
+			$this->CI->fuel_logs_model->logit($msg, $level);
 		}
 		else
 		{
@@ -92,14 +92,14 @@ class Fuel_logs extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the FUEL logs_model object
+	 * Returns the FUEL fuel_logs_model object
 	 *
 	 * @access	public
 	 * @return	object
 	 */
 	function &model()
 	{
-		return $this->CI->logs_model;
+		return $this->CI->fuel_logs_model;
 	}
 	
 }

@@ -1563,7 +1563,7 @@ class MY_Model extends CI_Model {
 		}
 		else
 		{
-			$relationships_model = $this->load_model($fields['relationships_model']);
+			$relationships_model = $this->load_model($fields['fuel_relationships_model']);
 			
 			if ($mode == 'belongs_to')
 			{
@@ -1790,9 +1790,9 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @param	string	value to be checked
 	 * @param	string	column name to check
-	 * @param	mixed	the key field value to check againsts. May also be the complete array of values if the key value is also an array (for compound unique keys)
+	 * @param	mixed	the key field value to check against. May also be the complete array of values if the key value is also an array (for compound unique keys)
 	 * @return	array
-	 */	
+	 */
 	function is_editable($val, $key, $id)
 	{
 		if (!isset($val)) return FALSE;
@@ -1808,6 +1808,7 @@ class MY_Model extends CI_Model {
 					return FALSE;
 				}
 				$where[$k] = $id[$k];
+
 			}
 			$data = $this->find_one_array($where);
 			$unique_value = $id[$key_field];
@@ -2989,7 +2990,7 @@ class MY_Model extends CI_Model {
 		if ( ! empty($this->has_many))
 		{
 			$fields = $this->relationship_field_names('has_many');
-			$relationships_model = $this->load_model($fields['relationships_model']);
+			$relationships_model = $this->load_model($fields['fuel_relationships_model']);
 			
 
 			// first delete in case there are multiple saves to the same relationship table
@@ -3023,7 +3024,7 @@ class MY_Model extends CI_Model {
 		if ( ! empty($this->belongs_to))
 		{
 			$fields = $this->relationship_field_names('belongs_to');
-			$relationships_model = $this->load_model($fields['relationships_model']);
+			$relationships_model = $this->load_model($fields['fuel_relationships_model']);
 			$related_models = array();
 
 			// first delete in case there are multiple saves to the same relationship table
@@ -3080,7 +3081,7 @@ class MY_Model extends CI_Model {
 
 			foreach ($this->has_many as $related_field => $related_model)
 			{
-				$relationships_model = $this->load_model($fields['relationships_model']);
+				$relationships_model = $this->load_model($fields['fuel_relationships_model']);
 				$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
 			}
 		}
@@ -3090,7 +3091,7 @@ class MY_Model extends CI_Model {
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
 				$related_model = $this->load_related_model($related_model);
-				$relationships_model = $this->load_model($fields['relationships_model']);
+				$relationships_model = $this->load_model($fields['fuel_relationships_model']);
 				$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
 			}
 		}
@@ -3394,7 +3395,7 @@ class MY_Model extends CI_Model {
 			'foreign_table'		=> 'foreign_table',
 			'foreign_key'		=> 'foreign_key',
 			'candidate_key'		=> 'candidate_key',
-			'relationships_model'=> array(FUEL_FOLDER => 'relationships_model'),
+			'fuel_relationships_model'=> array(FUEL_FOLDER => 'fuel_relationships_model'),
 			);
 			
 		if (is_array($rel_config))
@@ -3436,7 +3437,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function is_using_relationship_table($rel_config)
 	{
-		if (is_array($rel_config) AND array_key_exists('relationships_model', $rel_config) AND ($rel_config['relationships_model'] == FALSE)
+		if (is_array($rel_config) AND array_key_exists('fuel_relationships_model', $rel_config) AND ($rel_config['fuel_relationships_model'] == FALSE)
 				AND array_key_exists('foreign_key', $rel_config) AND ! empty($rel_config['foreign_key'])
 				)
 		{
@@ -5083,7 +5084,7 @@ class Data_record {
 		$foreign_model = $this->_parent_model->load_related_model($rel_config);
 		if ($use_rel_tbl)
 		{
-			$relationships_model = $this->_parent_model->load_model($fields['relationships_model']);
+			$relationships_model = $this->_parent_model->load_model($fields['fuel_relationships_model']);
 			$id_field = $this->_parent_model->key_field();
 			$related_table_name = $this->_CI->$foreign_model->table_name();
 		}

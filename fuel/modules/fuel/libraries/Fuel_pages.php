@@ -197,8 +197,8 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	function cms()
 	{
-		$this->fuel->load_model('pages');
-		$cms_pages = $this->CI->pages_model->list_locations(FALSE);
+		$this->fuel->load_model('fuel_pages');
+		$cms_pages = $this->CI->fuel_pages_model->list_locations(FALSE);
 		return $cms_pages;
 	}
 
@@ -212,7 +212,7 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	function modules()
 	{
-		return $this->fuel->modules->pages();
+		return $this->fuel->modules->fuel_pages();
 	}
 	
 	// --------------------------------------------------------------------
@@ -226,14 +226,14 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	function find($id)
 	{
-		$this->fuel->load_model('pages');
+		$this->fuel->load_model('fuel_pages');
 		if (!is_numeric($id))
 		{
-			$page = $this->CI->pages_model->find_by_location($id);
+			$page = $this->CI->fuel_pages_model->find_by_location($id);
 		}
 		else
 		{
-			$page = $this->CI->pages_model->find_by_key($id);
+			$page = $this->CI->fuel_pages_model->find_by_key($id);
 		}
 		return $page;
 	}
@@ -435,11 +435,11 @@ class Fuel_page extends Fuel_base_library {
 		// MUST LOAD AFTER THE ABOVE SO THAT IT DOESN'T THROW A DB ERROR WHEN A DB ISN'T BEING USED
 		// get current page segments so that we can properly iterate through to determine what the actual location 
 		// is and what are params being passed to the location
-		$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
 
 		if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
 		{
-			$page_data = $this->CI->pages_model->find_by_location($default_home, $this->_only_published);
+			$page_data = $this->CI->fuel_pages_model->find_by_location($default_home, $this->_only_published);
 			$this->location = $default_home;
 		} 
 		else 
@@ -492,11 +492,11 @@ class Fuel_page extends Fuel_base_library {
 					{
 						$location = substr($location, strlen($prefix));
 					}
-					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->_only_published);
 				}
 				else
 				{
-					$page_data = $this->CI->pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->_only_published);
 				}
 				
 				if (!empty($page_data))
@@ -1276,7 +1276,7 @@ class Fuel_page extends Fuel_base_library {
 		$this->fuel->load_model('pages');
 		$this->fuel->load_model('pagevariables');
 		
-		$page_props = $this->CI->pages_model->create();
+		$page_props = $this->CI->fuel_pages_model->create();
 		$page_props->location = $this->location;
 		if (empty($this->layout))
 		{
@@ -1314,7 +1314,7 @@ class Fuel_page extends Fuel_base_library {
 		$valid = TRUE;
 		foreach($page_vars as $key => $val)
 		{
-			$page_var = $this->CI->pagevariables_model->create();
+			$page_var = $this->CI->fuel_pagevariables_model->create();
 			$page_var->page_id = $id;
 			$page_var->name = $key;
 			if (is_array($val))
@@ -1350,7 +1350,7 @@ class Fuel_page extends Fuel_base_library {
 		if (isset($page_props['id']))
 		{
 			$where['id'] = $page_props['id'];
-			return $this->CI->pages_model->delete($where);
+			return $this->CI->fuel_pages_model->delete($where);
 		}
 		return FALSE;
 	}

@@ -121,8 +121,8 @@ $parsed_str = $this->parser->parse_string($str, $var);
 
 <h3 class="noline">Object Merge</h3>
 <pre class="brush:php">
-$this->load->model('users_model');
-$data['users'] = $this->users_model->find_by_key(1);
+$this->load->model('fuel_users_model');
+$data['users'] = $this->fuel_users_model->find_by_key(1);
 $template = '{$user->full_name}';
 $test = $this->parser->parse_string($template, $data);
 echo $test; //'Darth Vader';
@@ -131,8 +131,8 @@ echo $test; //'Darth Vader';
 
 <h3 class="noline">Array of Objects Merge</h3>
 <pre class="brush:php">
-$this->load->model('users_model');
-$data['users'] = $this->users_model->find_all();
+$this->load->model('fuel_users_model');
+$data['users'] = $this->fuel_users_model->find_all();
 $str = '
 {loop $users}
 <h3>{$user->first_name} {$user->last_name}</h3>

@@ -2,7 +2,7 @@
 
 require_once('base_module_model.php');
 
-class Pages_model extends Base_module_model {
+class Fuel_pages_model extends Base_module_model {
 
 	public $id;
 	public $required = array('location');
@@ -11,16 +11,16 @@ class Pages_model extends Base_module_model {
 	
 	function __construct()
 	{
-		parent::__construct('pages');
+		parent::__construct('fuel_pages');
 	}
 	
 	// displays related items on the right side
 	function related_items($values = array())
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'navigation_model');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
 		$where['location'] = $values['location'];
-		$related_items = $CI->navigation_model->find_all_array_assoc('id', $where);
+		$related_items = $CI->fuel_navigation_model->find_all_array_assoc('id', $where);
 		$return = array();
 		if (!empty($related_items))
 		{
@@ -48,7 +48,7 @@ class Pages_model extends Base_module_model {
 			$location_arr = explode('/', $values['location']);
 			$parent_location = implode('/', array_slice($location_arr, 0, (count($location_arr) -1)));
 		
-			if (!empty($parent_location)) $parent = $this->navigation_model->find_by_location($parent_location);
+			if (!empty($parent_location)) $parent = $this->fuel_navigation_model->find_by_location($parent_location);
 			if (!empty($parent))
 			{
 				$parent_id = $parent['id'];
@@ -101,7 +101,7 @@ class Pages_model extends Base_module_model {
 	function list_locations($include_unpublished = FALSE)
 	{
 		$where = ($include_unpublished) ? array('published' => 'no') : null;
-		return array_keys($this->pages_model->options_list('location', 'location', $where));
+		return array_keys($this->fuel_pages_model->options_list('location', 'location', $where));
 	}
 
 	function get_root_pages()
@@ -209,14 +209,14 @@ class Pages_model extends Base_module_model {
 	
 	function on_after_delete($where)
 	{
-		$this->delete_related(array(FUEL_FOLDER => 'pagevariables_model'), 'page_id', $where);
+		$this->delete_related(array(FUEL_FOLDER => 'fuel_pagevariables_model'), 'page_id', $where);
 	}
 	
 	// overwrite parent
 	function restore($ref_id, $version = NULL)
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 		$archive = $this->get_archive($ref_id, $version);
 		if (empty($archive))
 		{
@@ -225,8 +225,8 @@ class Pages_model extends Base_module_model {
 		$pages_saved = $this->save($archive, array('id' => $ref_id));
 		
 		// delete page variables before saving
-		$CI->pagevariables_model->delete(array('page_id' => $ref_id));
-		$page_variables_saved = $CI->pagevariables_model->save($archive['variables']);
+		$CI->fuel_pagevariables_model->delete(array('page_id' => $ref_id));
+		$page_variables_saved = $CI->fuel_pagevariables_model->save($archive['variables']);
 		return ($pages_saved AND $page_variables_saved);
 	}
 	
@@ -234,35 +234,35 @@ class Pages_model extends Base_module_model {
 	function replace($replace_id, $id, $delete = TRUE)
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 		
 		// start a transaction in case there are any errors
-		$CI->pagevariables_model->db()->trans_begin();
+		$CI->fuel_pagevariables_model->db()->trans_begin();
 
 		// retrieve new variables
-		$new_values = $CI->pagevariables_model->find_all_array(array('page_id' => $id));
+		$new_values = $CI->fuel_pagevariables_model->find_all_array(array('page_id' => $id));
 
 		// delete old variables
-		$CI->pagevariables_model->delete(array('page_id' => $replace_id));
+		$CI->fuel_pagevariables_model->delete(array('page_id' => $replace_id));
 		$saved = TRUE;
 		foreach($new_values as $var)
 		{
 			$var['page_id'] = $replace_id;
-			if (!$CI->pagevariables_model->save($var))
+			if (!$CI->fuel_pagevariables_model->save($var))
 			{
 				$saved = FALSE;
 			}
 		}
 		
 		// check if there are any errors and if so we rollem back...
-		if ($CI->pagevariables_model->db()->trans_status() === FALSE)
+		if ($CI->fuel_pagevariables_model->db()->trans_status() === FALSE)
 		{
 			$saved = FALSE;
-		    $CI->pagevariables_model->db()->trans_rollback();
+		    $CI->fuel_pagevariables_model->db()->trans_rollback();
 		}
 		else
 		{
-		    $CI->pagevariables_model->db()->trans_commit();
+		    $CI->fuel_pagevariables_model->db()->trans_commit();
 		}
 		
 		$saved = parent::replace($replace_id, $id, $delete);
@@ -272,8 +272,8 @@ class Pages_model extends Base_module_model {
 	
 	function _common_query()
 	{
-		$this->db->join($this->_tables['users'], $this->_tables['users'].'.id = '.$this->_tables['pages'].'.last_modified_by', 'left');
-		$this->db->select($this->_tables['pages'].'.*, '.$this->_tables['users'].'.user_name, '.$this->_tables['users'].'.first_name, '.$this->_tables['users'].'.last_name, '.$this->_tables['users'].'.email, CONCAT('.$this->_tables['users'].'.first_name, '.$this->_tables['users'].'.last_name) AS full_name', FALSE);
+		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->_tables['fuel_pages'].'.last_modified_by', 'left');
+		$this->db->select($this->_tables['fuel_pages'].'.*, '.$this->_tables['fuel_users'].'.user_name, '.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name, '.$this->_tables['fuel_users'].'.email, CONCAT('.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name) AS full_name', FALSE);
 	}
 }
 

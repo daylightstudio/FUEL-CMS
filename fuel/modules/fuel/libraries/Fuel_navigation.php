@@ -157,7 +157,7 @@ class Fuel_navigation extends Fuel_module {
 					}
 				}
 				// now load the models
-				$this->fuel->load_model('navigation');
+				$this->fuel->load_model('fuel_navigation');
 				
 				// grab all menu items by group
 				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language']);
@@ -490,7 +490,7 @@ class Fuel_navigation extends Fuel_module {
 	function groups()
 	{
 		$this->_load_nav_group_model();
-		return $this->CI->navigation_groups_model->find_all();
+		return $this->CI->fuel_navigation_groups_model->find_all();
 	}
 	
 	// --------------------------------------------------------------------
@@ -507,11 +507,11 @@ class Fuel_navigation extends Fuel_module {
 		$this->_load_nav_group_model();
 		if (is_numeric($group))
 		{
-			$group = $this->CI->navigation_groups_model->find_by_key($group);
+			$group = $this->CI->fuel_navigation_groups_model->find_by_key($group);
 		}
 		else
 		{
-			$group = $this->CI->navigation_groups_model->find_one(array('name' => $group));
+			$group = $this->CI->fuel_navigation_groups_model->find_one(array('name' => $group));
 		}
 		return $group;
 	}
@@ -551,9 +551,9 @@ class Fuel_navigation extends Fuel_module {
 	 */	
 	protected function _load_nav_group_model()
 	{
-		if (!isset($this->CI->navigation_groups_model))
+		if (!isset($this->CI->fuel_navigation_groups_model))
 		{
-			$this->fuel->load_model('navigation_groups');
+			$this->fuel->load_model('fuel_navigation_groups');
 		}
 	}
 }

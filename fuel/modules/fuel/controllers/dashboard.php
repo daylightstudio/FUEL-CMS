@@ -17,10 +17,10 @@ class Dashboard extends Fuel_base_controller {
 		}
 		else
 		{
-			$this->fuel->load_model('users');
+			$this->fuel->load_model('fuel_users');
 			$auth_user = $this->fuel->auth->user_data();
-			$user = $this->users_model->find_by_key($auth_user['id'], 'array');
-			$vars['change_pwd'] = ($user['password'] == $this->users_model->salted_password_hash($this->config->item('default_pwd', 'fuel'), $user['salt']));
+			$user = $this->fuel_users_model->find_by_key($auth_user['id'], 'array');
+			$vars['change_pwd'] = ($user['password'] == $this->fuel_users_model->salted_password_hash($this->config->item('default_pwd', 'fuel'), $user['salt']));
 
 			$dashboards = $this->fuel->admin->dashboards();
 			
@@ -38,9 +38,9 @@ class Dashboard extends Fuel_base_controller {
 		if (is_ajax())
 		{
 			$this->load->helper('simplepie');
-			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['recently_modifed_pages'] = $this->pages_model->find_all_array(array(), 'last_modified desc', 10);
-			$vars['latest_activity'] = $this->logs_model->list_items(10);
+			$this->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+			$vars['recently_modifed_pages'] = $this->fuel_pages_model->find_all_array(array(), 'last_modified desc', 10);
+			$vars['latest_activity'] = $this->fuel_logs_model->list_items(10);
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);

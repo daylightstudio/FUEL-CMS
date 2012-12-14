@@ -1,16 +1,13 @@
 <?php fuel_set_var('layout', '')?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+
+<html lang="en-US">
 <head>
+	<meta charset="utf-8">
  	<title>FUEL CMS</title>
-	<meta charset="UTF-8" />
-	<meta name="ROBOTS" content="ALL" />
 
-	<meta name="keywords" content="<?=fuel_var('meta_keywords')?>" />
-	<meta name="description" content="<?=fuel_var('meta_description')?>" />
-
-	<style type="text/css" media="screen">
+	<style type="text/css">
 		/***************************************************************
 		RESET BROWSER VALUES SO EVERYONE IS THE SAME
 		***************************************************************/
@@ -31,7 +28,7 @@
 		/***************************************************************
 		TAG STYLES
 		***************************************************************/
-		body { background: #000 url(http://www.getfuelcms.com/assets/images/bg_waves.jpg) no-repeat top center; font-family: 'Lucida Grande', Arial, sans-serif; color: #fff; font-size: 12px; line-height: 16px; }
+		body { background: #000 url(http://www.getfuelcms.com/assets/images/bg_waves.jpg) no-repeat top center; font-family: 'Lucida Grande', Arial, sans-serif; color: #fff; font-size: 12px; }
 		h1 { font-size: 40px; margin-top: 30px; text-shadow: #000 0px 1px 3px; line-height: 40px; margin-left: -4px; }
 		h2 { font-size: 25px; color: #fff; color: #c8d1d9; margin-bottom: 5px; text-shadow: #000 0px 1px 3px; line-height: 25px; }
 		h3 { font-size: 22px; color: #ea5b17; margin-bottom: 15px; font-weight: normal; }
@@ -41,7 +38,7 @@
 		ul { margin: 10px 0 20px 0; }
 		ol { list-style: decimal; margin: 0 0 20px 20px; }
 		ol>li { margin-bottom: 20px;  }
-		li { margin-bottom: 3px; line-height: 16px; }
+		li { margin-bottom: 3px; }
 		ul.bullets { list-style: disc; }
 		ul.bullets li { margin-left: 20px; }
 		strong, code { color: #8eb8d2; }
@@ -57,16 +54,18 @@
 		/***************************************************************
 		MAIN AREAS 
 		***************************************************************/
-		div#container { 
+		#container { 
 			-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
 			-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
 			width: 700px; margin: 70px auto; border: 1px solid #1e466a; padding: 20px; -moz-border-radius: 10px; -webkit-border-radius: 10px;
 			background: -webkit-gradient(linear, left top, left bottom, from(rgba(42, 96, 147, 0.35)), to(#000));
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e466a', endColorstr='#000'); /* for IE */
-		 }
-		 div#heading { margin-left: 160px; }
-		div#logo {  background: transparent url(http://www.getfuelcms.com/assets/images/fuel_logo_sm.png) no-repeat; width: 150px; height: 150px; float: left; }
-		div#content { padding: 10px 20px; }
+		}
+		#heading { margin-left: 160px; }
+		#logo {  background: transparent url(http://www.getfuelcms.com/assets/images/fuel_logo_sm.png) no-repeat; width: 150px; height: 150px; float: left; }
+		#content { padding: 10px 20px; }
+		.writable li { padding: 5px 8px; font-size: 15px; text-shadow: 1px 1px 2px rgba(10, 10, 10, .75); }
+		.writable li span { font-size: 13px; text-shadow: 1px 1px 1px rgba(20, 20, 20, .45) }
 	</style>
 </head>
 <body>
@@ -103,18 +102,18 @@
 				<li>
 					<h4>Make Folders Writable</h4>
 					<p>Make the following folders writable:</p>
-					<ul>
+					<ul class="writable">
 						<li class="<?=(is_really_writable(APPPATH.'cache/')) ? 'success' : 'error'; ?>">
-							<?=APPPATH.'cache/'?><br />(folder for holding cache files)
+							<?=APPPATH.'cache/'?><br><span>(folder for holding cache files)</span>
 						</li>
 						<li class="<?=(is_really_writable(APPPATH.'cache/dwoo/')) ? 'success' : 'error'; ?>">
-							<?=APPPATH.'cache/dwoo/'?> 
+							<?=APPPATH.'cache/dwoo/'?><br><span>(folder for holding Dwoo cache files)</span>
 						</li>
 						<li class="<?=(is_really_writable(APPPATH.'cache/dwoo/compiled')) ? 'success' : 'error'; ?>">
-							<?=APPPATH.'cache/dwoo/compiled'?><br />(for writing Dwoo compiled template files)
+							<?=APPPATH.'cache/dwoo/compiled'?><br><span>(for writing Dwoo compiled template files)</span>
 						</li>
 						<li class="<?=(is_really_writable(assets_server_path('', 'images'))) ? 'success' : 'error'; ?>">
-							<?=WEB_ROOT.'assets/images'?><br />(for managing image assets in the CMS)
+							<?=WEB_ROOT.'assets/images'?><br><span>(for managing image assets in the CMS)</span>
 						</li>
 					</ul>
 				</li>
@@ -142,12 +141,12 @@
 			</ol>
 
 			<p class="important">That&rsquo;s it!</p>
-			<p>To access the FUEL admin, go to: <br />
-			<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br />
-			User name: <strong>admin</strong> <br />
-			Password: <strong>admin</strong> (you can and should change this password and admin user information after logging in)<br />
+			<p>To access the FUEL admin, go to: <br>
+			<a href="<?=site_url('fuel')?>"><?=site_url('fuel')?></a><br>
+			User name: <strong>admin</strong> <br>
+			Password: <strong>admin</strong> (you can and should change this password and admin user information after logging in)<br>
 			</p>
-			<br />
+			<br>
 
 			<h3>What's Next?</h3>
 			<ul class="bullets">
