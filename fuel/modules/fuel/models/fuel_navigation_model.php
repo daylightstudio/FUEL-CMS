@@ -230,9 +230,9 @@ class Fuel_navigation_model extends Base_module_model {
 
 		$order = array(	'general_tab', 
 						'group_id', 
+						'label', 
 						'location', 
 						'nav_key', 
-						'label', 
 						'parent_id', 
 						'published', 
 						'language',
