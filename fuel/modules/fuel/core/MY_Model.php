@@ -1971,6 +1971,7 @@ class MY_Model extends CI_Model {
 		foreach($this->unique_fields as $field)
 		{
 			$has_key_field = $this->_has_key_field_value($values);
+			$key_field = $this->key_field();
 
 			if (is_array($field))
 			{
@@ -1988,7 +1989,6 @@ class MY_Model extends CI_Model {
 					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
 					if ($has_key_field)
 					{
-						$key_field = $this->key_field();
 						if (!is_array($key_field))
 						{
 							$this->add_validation($f, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values));
@@ -2005,7 +2005,6 @@ class MY_Model extends CI_Model {
 				$friendly_field = ucwords(str_replace('_', ' ', $field));
 				if ($has_key_field)
 				{
-					$key_field = $this->key_field();
 					if (!is_array($key_field))
 					{
 						$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values[$key_field]));
@@ -2013,7 +2012,7 @@ class MY_Model extends CI_Model {
 				}
 				else
 				{
-					$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), $field);
+					$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $field));
 				}
 			}
 
@@ -5084,7 +5083,7 @@ class Data_record {
 		$foreign_model = $this->_parent_model->load_related_model($rel_config);
 		if ($use_rel_tbl)
 		{
-			$relationships_model = $this->_parent_model->load_model($fields['fuel_relationships_model']);
+			$relationships_model = $this->_parent_model->load_model($fields['relationships_model']);
 			$id_field = $this->_parent_model->key_field();
 			$related_table_name = $this->_CI->$foreign_model->table_name();
 		}
@@ -5150,7 +5149,6 @@ class Data_record {
 		{
 			$foreign_data = $this->_CI->$foreign_model->find_all();
 		}
-
 		if ( ! empty($foreign_data))
 		{
 			// maintain the order of the related data
