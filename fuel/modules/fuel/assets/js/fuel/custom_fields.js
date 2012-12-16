@@ -100,8 +100,13 @@ fuel.fields.wysiwyg_field = function(context){
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
 		}
-		
-		CKEDITOR.replace(ckId, jqx.config.ckeditorConfig);
+
+
+		var config = jqx.config.ckeditorConfig;
+
+		// add custom configs
+		config = $.extend(config, $(elem).data())
+		CKEDITOR.replace(ckId, config);
 
 		// add this so that we can set that the page has changed
 		CKEDITOR.instances[ckId].on('instanceReady', function(e){

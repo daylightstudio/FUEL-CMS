@@ -799,18 +799,20 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn></li>
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
+		<li><strong>ckeditor_config</strong>: an array of <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html" target="_blank">CKEditor configurations</a>. CKEditor options use camelcase, however,
+			the options must use a hyphen to separate words. For example 'enterMode' should be set as 'enter-mode'.</li>
 	</ul>
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$fields['wysiwyg_example1'] = array('type' => 'wysiwyg', 'editor' => 'markitup');
-	$fields['wysiwyg_example2'] = array('type' => 'wysiwyg', 'editor' => 'wysiwyg'); //ckeditor
+	$fields['wysiwyg_example2'] = array('type' => 'wysiwyg', 'editor' => 'wysiwyg', 'ckeditor_config' => array('enter-mode' => 2)); //ckeditor
 	</pre>
 	<table class="form">
 		<tbody>
 			<tr>
 				<td><?php form_builder_example('wysiwyg_example1', array('type' => 'wysiwyg', 'editor' => 'markitup')); ?></td>
-				<td><?php form_builder_example('wysiwyg_example2', array('type' => 'wysiwyg', 'editor' => 'wysiwyg')); ?></td>
+				<td><?php form_builder_example('wysiwyg_example2', array('type' => 'wysiwyg', 'editor' => 'wysiwyg', 'ckeditor_config' => array('enter-mode' => 2))); ?></td>
 			</tr>
 		</tbody>
 	</table>
