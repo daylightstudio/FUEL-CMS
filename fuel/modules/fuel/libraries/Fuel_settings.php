@@ -35,7 +35,7 @@ class Fuel_settings extends Fuel_base_library {
 	function __construct($params = array())
 	{
 		parent::__construct($params);
-		$this->fuel->load_model('settings', 'fuel_settings_model');
+		$this->fuel->load_model('fuel_settings');
 	}
 
 	// --------------------------------------------------------------------
@@ -52,7 +52,8 @@ class Fuel_settings extends Fuel_base_library {
 	{
 		if ( ! array_key_exists($module, $this->settings))
 		{
-			$this->settings[$module] = $this->CI->fuel_settings_model->options_list('fuel_settings.key', 'fuel_settings.value', array('module' => $module), 'key');
+			$tables = $this->CI->fuel_settings_model->tables();
+			$this->settings[$module] = $this->CI->fuel_settings_model->options_list($tables['fuel_settings'].'.key', $tables['fuel_settings'].'.value', array('module' => $module), 'key');
 			foreach($this->settings[$module] as $k => $v)
 			{
 				$this->settings[$module][$k] = $this->CI->fuel_settings_model->unserialize_value($this->settings[$module][$k]);
