@@ -277,5 +277,5 @@ class Fuel_pages_model extends Base_module_model {
 	}
 }
 
-class Page_model extends Base_module_record {
+class Fuel_page_model extends Base_module_record {
 }
