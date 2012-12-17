@@ -169,6 +169,7 @@ function strip_javascript($str)
  * Safely converts a string's entities without encoding HTML tags and quotes
  *
  * @param 	string 	string to evaluate
+ * @param 	boolean determines whether to encode the ampersand or not
  * @return	string
  */
 function safe_htmlentities($str, $protect_amp = TRUE)
@@ -281,7 +282,7 @@ function php_to_template_syntax($str)
 		return $matches[0];
 		');
 	
-	$str = preg_replace_callback('#(array\()(.+)(\))#', $callback, $str);
+	$str = preg_replace_callback('#(array\()(.+)(\))#U', $callback, $str);
 	return $str;
 }
 
