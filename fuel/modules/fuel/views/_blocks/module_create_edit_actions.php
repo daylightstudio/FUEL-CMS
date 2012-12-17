@@ -56,12 +56,3 @@
 	</ul>
 	<?php if (!empty($others) AND !$this->fuel->admin->is_inline()) {?><div id="other_items"><?=$this->form->select('fuel_other_items', $others, '', '', lang('label_select_another'), array($id))?></div><?php } ?>
 </div>
-
-<?php if (isset($action) AND $action == 'edit') : ?>
-<div id="filters">
-	<?php if (!empty($versions)) : ?>
-		<div class="versions"><?=$this->form->select('fuel_restore_version', $versions, '', '', lang('label_restore_from_prev'))?></div>
-		<?=$this->form->hidden('fuel_restore_ref_id', $id)?>
-	<?php endif; ?>
-</div>
-<?php endif; ?>

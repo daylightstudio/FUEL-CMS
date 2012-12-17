@@ -470,10 +470,10 @@ a#multi_delete { display: block; }
 
 /* other items */
 div#other_items { float: left; margin: 3px 20px 0px 20px; }
-div#other_items select{  max-width: 300px;}
+div#other_items select{  max-width: 250px;}
 
 /* button bar*/
-div#action_btns { position: absolute; top: 9px; left: 15px; }
+div#action_btns { position: absolute; top: 9px; left: 15px; height: 29px; overflow: hidden; }
 div.buttonbar ul {  height: 27px; float: left; }
 div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #b9b9b9; border-bottom: 1px solid #b9b9b9; float: left;list-style: none;  margin: 0;
   background: #e6e6e6 url(../images/btn.png) repeat-x; 
@@ -618,7 +618,7 @@ a#back_to { margin-bottom: 20px; display: block; }
 .hidden_form { visibility:hidden; height: 0px; overflow: hidden; }
 
 /* pages */
-div#related_items { float: right; width: 180px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 0px 10px; }
+div#related_items { float: right; width: 210px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px; }
 div#related_items h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
 div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 
