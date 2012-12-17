@@ -229,10 +229,10 @@ class Fuel_custom_fields {
 			if (!empty($preview_str))
 			{
 				$img_container_styles = $params['img_container_styles'];
-				if ($multiple == FALSE AND !empty($params['img_styles']))
-				{
-					$img_container_styles = $params['img_styles'];
-				}
+				// if ($multiple == FALSE AND !empty($params['img_styles']))
+				// {
+				// 	$img_container_styles = $params['img_styles'];
+				// }
 				
 				$preview = '<br /><div class="noclone" style="'.$img_container_styles.'">';
 
