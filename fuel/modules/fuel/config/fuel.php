@@ -349,6 +349,10 @@ $config['auto_page_navigation_group_id'] = 1;
 // automatically removes the following path from the location
 $config['page_uri_prefix'] = '';
 
+// view the page from the admin in a new window or within a modal window
+$config['view_in_new_window'] = FALSE;
+
+
 /*
 |--------------------------------------------------------------------------
 | Generate settings
