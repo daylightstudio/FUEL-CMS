@@ -469,7 +469,7 @@ div#filters { position: absolute; right: 15px; top: 12px; }
 a#multi_delete { display: block; }
 
 /* other items */
-div#other_items { float: left; margin: 3px 20px 0px 20px; }
+div#other_items { float: left; margin: 2px 20px 0px 20px; }
 div#other_items select{  max-width: 250px;}
 
 /* button bar*/
