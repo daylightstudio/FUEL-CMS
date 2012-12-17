@@ -1,7 +1,8 @@
 <h1>User Management</h1>
 <p>FUEL CMS initially comes with a single "super admin" user. This user is not assigned permissions because they automatically have permissions for everything.
 However, in most cases you will need to create additional users and assign them appropriate permissions. Users are assigned permissions directly as opposed to being assigned
-a specific role that already has permissions assigned to it (e.g. "editor"). If you are looking for group access permissions, you may be interested in 
+a specific role that already has permissions assigned to it (e.g. "editor"). 
+If you are looking for group access permissions, you may be interested in 
 <a href="https://github.com/imknight/FUEL-CMS-Modules" target="_blank">imknight's module</a>.</p>
 
 <h2>Creating Users</h2>
@@ -9,7 +10,9 @@ a specific role that already has permissions assigned to it (e.g. "editor"). If 
 information including the password and assign the appropriate permissions. After properly entering in the password fields, a checkbox will appear that if checked,
 will send an email to the user with their password.</p>
 
-<p class="important">One must be careful in assigning permissions. A user with the permissions to both manage users and their permissions will give that user a "super admin" type role.</p>
+<p class="important">One must be careful in assigning permissions. A user with the permissions to both manage users and their permissions will give that user a "super admin" type role.
+A user with the permission to manage users, will be restricted to assigning the same permissions that they have access to.
+</p>
 
 <h2>Creating Permissions</h2>
 <p>When creating a user in the CMS, sometimes a permission does not appear in the list you are needing and needs to be created. To create a permission, click on the 

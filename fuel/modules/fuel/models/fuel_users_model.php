@@ -192,9 +192,7 @@ class Fuel_users_model extends Base_module_model {
 		$user = $CI->fuel->auth->user_data();
 		
 		//if (($CI->fuel->auth->is_super_admin() AND ($user['id'] != $user_id)) AND (!empty($values['super_admin']) AND $values['super_admin'] != 'yes'))
-		if (($CI->fuel->auth->is_super_admin() AND ($user['id'] != $user_id))
-			OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions'))
-		)
+		if (($user['id'] != $user_id) OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions')))
 		{
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
@@ -217,14 +215,30 @@ class Fuel_users_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		
-		
+
+
 		// first get the permissions
-		$CI->load->module_model(FUEL_FOLDER, 'fuel_permissions_model');
-		$perms_list = $CI->fuel_permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
+		$perms_list = array();
+		if ($CI->fuel->auth->is_super_admin() OR $CI->fuel->auth->has_permission('permissions'))
+		{
+			$perms_list = $CI->fuel_permissions_model->find_all_array_assoc('name', array('active' => 'yes'), 'name asc');
+		}
+		else
+		{
+			$auth_user_id = $CI->fuel->auth->user_data('id');
+			$auth_user = $this->find_by_key($auth_user_id);
+
+			$perms = array();
+			$auth_user_perms_obj = $auth_user->get_permissions(TRUE);
+
+			$perms_list = $auth_user_perms_obj->find_all_array_assoc('name');
+
+		}
 
 		// next get the saved permissions for the user
-		$user_perms = array();
 		$user = $this->find_by_key($params['user_id']);
+
+		$user_perms = array();
 		if (isset($user->id))
 		{
 			$user_perms_obj = $user->get_permissions(TRUE);
