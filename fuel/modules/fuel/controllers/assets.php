@@ -177,7 +177,7 @@ class Assets extends Module {
 		$options = options_list($this->model->list_items(), 'name', 'name');
 		
 		$redirect_to = rawurlencode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
-		$preview = '<a href="'.fuel_url('assets/inline_create?redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
+		$preview = ' OR <a href="'.fuel_url('assets/inline_create?redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
 		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview);
 
