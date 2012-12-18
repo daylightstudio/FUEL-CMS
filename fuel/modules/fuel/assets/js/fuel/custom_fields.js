@@ -105,7 +105,9 @@ fuel.fields.wysiwyg_field = function(context){
 		var config = jqx.config.ckeditorConfig;
 
 		// add custom configs
-		config = $.extend(config, $(elem).data())
+		config = $.extend(config, $(elem).data());
+		var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
+
 		CKEDITOR.replace(ckId, config);
 
 		// add this so that we can set that the page has changed
@@ -164,7 +166,7 @@ fuel.fields.wysiwyg_field = function(context){
 				    $ : function( element ) {
 				    	
 						// // Output dimensions of images as width and height attributes on src
-						if ( element.name == 'img' ) {
+						if ( element.name == 'img' && hasCKEditorImagePlugin) {
 							var src = element.attributes['src'];
 							img = src.replace(/^\{img_path\('(.+)'\)\}/, function(match, contents, offset, s) {
 		   										return contents;
@@ -323,6 +325,7 @@ fuel.fields.wysiwyg_field = function(context){
 				});
 			}
 		}
+
 	}
 
 	$editors.each(function(i) {
@@ -347,9 +350,6 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		
 	});
-	
-
-	
 }
 
 // file upload field
