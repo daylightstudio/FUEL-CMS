@@ -1,4 +1,4 @@
-<?php  if (!empty($related_items) AND (is_array($related_items) AND current($related_items)) OR !empty($versions)) : ?>
+<?php  if (!empty($related_items) AND (is_array($related_items) AND current($related_items)) OR !empty($versions) AND !$this->fuel->admin->is_inline()) : ?>
 
 
 
