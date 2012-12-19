@@ -762,6 +762,57 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Get the results of a query from within a select group of key field values. Results are sorted by the order from within the group.
+	 *
+	 <code>
+	$examples = $this->examples_model->find_within(array(1, 2, 3, 4), array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
+	 * @access	public
+	 * @param	group	an array of keys to limit the search results to
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
+	 * @param	string	return type (object, array, query, auto) (optional)
+	 * @param	string	the column to use for an associative key array (optional)
+	 * @return	array
+	 */	
+	function find_within($group, $where = array(), $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
+	{
+		if (empty($group) OR !is_array($group))
+		{
+			return array();
+		}
+
+		// setup wherein for the group
+		$this->db->where_in($this->key_field(), $group);
+
+		// must set protect identifiers to FALSE in order for order by to work
+		$_protect_identifiers = $this->db->_protect_identifiers;
+		$this->db->_protect_identifiers = FALSE;
+
+		// escape group
+		foreach($group as $key => $val)
+		{
+			$group[$key] = $this->db->escape($val);
+		}
+
+		// remove any cached order by
+		$this->db->ar_cache_orderby = array();
+
+		$this->db->order_by('FIELD('.$this->key_field().', '.implode(', ', $group).')');
+
+		// set it _protect_identifiers back to original value
+		$this->db->_protect_identifiers = $_protect_identifiers;
+
+		// do a normal find all
+		$data = $this->find_all($where, NULL, $limit, $offset, $return_method, $assoc_key);
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * This method takes an associative array with the key values that map to CodeIgniter active record methods and returns a query result object.
 	 * 
 	 * For more advanced, use CI Active Record. Below are the key values you can pass:
