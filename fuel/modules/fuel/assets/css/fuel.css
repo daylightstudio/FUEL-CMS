@@ -117,7 +117,7 @@ input[type="week"] {
   
 }
 
-select { height: 25px; line-height: 16px;}
+select { height: 25px; line-height: 16px; max-width: 525px; }
 
 /*
   Separate rule for Firefox.
