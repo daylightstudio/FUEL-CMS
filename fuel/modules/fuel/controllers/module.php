@@ -598,7 +598,7 @@ class Module extends Fuel_base_controller {
 					if (!empty($row))
 					{
 						$values = array($this->precedence_col => $i);
-						$where = array('id' => $row);
+						$where = array($this->model->key_field() => $row);
 						$this->model->update($values, $where);
 					}
 					$i++;
