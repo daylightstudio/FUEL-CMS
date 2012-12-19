@@ -116,6 +116,9 @@ class Fuel_auth extends Fuel_base_library {
 	function set_valid_user($valid_user)
 	{
 		$this->CI->load->library('session');
+
+		// remove these from session for security reasons
+		unset($valid_user['password'], $valid_user['salt']);
 		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
 	}
 
