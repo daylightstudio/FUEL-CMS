@@ -252,7 +252,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		not required when specifying the name of the model.
 		</li>
 		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
-		<li><strong>disabled_options</strong>: An array of options to display in a disabled state (as opposed to the "disabled" parameter which disables the whole field)</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -799,20 +798,18 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn></li>
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
-		<li><strong>ckeditor_config</strong>: an array of <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html" target="_blank">CKEditor configurations</a>. CKEditor options use camelcase, however,
-			the options must use a hyphen to separate words. For example 'enterMode' should be set as 'enter-mode'.</li>
 	</ul>
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$fields['wysiwyg_example1'] = array('type' => 'wysiwyg', 'editor' => 'markitup');
-	$fields['wysiwyg_example2'] = array('type' => 'wysiwyg', 'editor' => 'wysiwyg', 'ckeditor_config' => array('enter-mode' => 2)); //ckeditor
+	$fields['wysiwyg_example2'] = array('type' => 'wysiwyg', 'editor' => 'wysiwyg'); //ckeditor
 	</pre>
 	<table class="form">
 		<tbody>
 			<tr>
 				<td><?php form_builder_example('wysiwyg_example1', array('type' => 'wysiwyg', 'editor' => 'markitup')); ?></td>
-				<td><?php form_builder_example('wysiwyg_example2', array('type' => 'wysiwyg', 'editor' => 'wysiwyg', 'ckeditor_config' => array('enter-mode' => 2))); ?></td>
+				<td><?php form_builder_example('wysiwyg_example2', array('type' => 'wysiwyg', 'editor' => 'wysiwyg')); ?></td>
 			</tr>
 		</tbody>
 	</table>
@@ -822,7 +819,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="inline_edit" class="toggle">inline_edit</h3>
 <div class="toggle_block_off">
 	<p>This field type is used for associating a separate module's data with your own.
-	The following additional parameter can be passed to this field type:</p>
+	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>module</strong>: the module to inline edit</li>
 		<li><strong>multiple</strong>: whether to display a multi field to associate the inline edited data with</li>
@@ -868,7 +865,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="currency" class="toggle">currency</h3>
 <div class="toggle_block_off">
 	<p>This field type can be used for inputting currency values.
-	The following additional parameter can be passed to this field type:</p>
+	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>currency</strong>: the currency value to display next to the field. The default is '$'</li>
 		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is 3</li>
@@ -890,7 +887,11 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="state" class="toggle">state</h3>
 <div class="toggle_block_off">
-	<p>This field displays a dropdown of states to select from. It automatically pulls it's options from the <span class="file">fuel/application/config/states.php</span> config file.</p>
+	<p>This field displays a dropdown of states to select from. It automatically pulls it's options from the <span class="file">fuel/application/config/states.php</span> config file.
+	The following additional parameters can be passed to this field type:</p>
+	<ul>
+		<li><strong>format</strong>: the value can be either "short" or "long". Default is none in which the saved value will be the state abbreviation but the displayed option value will be the states name</li>
+	</ul>
 
 	<h4>Representations</h4>
 	<pre class="brush: php">
@@ -903,7 +904,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	</pre>
 	
 	<?php form_builder_example('state_example', array('type' => 'state')); ?>
-	
+	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'short')); ?>
+	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'long')); ?>	
 </div>
 
 <h3 id="slug" class="toggle">slug</h3>

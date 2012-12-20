@@ -69,24 +69,11 @@ class Fuel_custom_fields {
 				$params['class'] = 'markitup '.$params['class'];
 			}
 		}
-
-
-		$params['data'] = array();
+		
 		if (isset($params['preview']))
 		{
-			$params['data']['preview'] = $params['preview'];
+			$params['data'] = array('preview' => $params['preview']);
 		}
-
-		// set ckeditor configs
-		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
-		{
-			foreach($params['ckeditor_config'] as $key => $val)
-			{
-				$params['data'][$key] = $val;
-			}
-			
-		}
-
 
 		$js = '<script type="text/javascript">
 			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
@@ -229,10 +216,10 @@ class Fuel_custom_fields {
 			if (!empty($preview_str))
 			{
 				$img_container_styles = $params['img_container_styles'];
-				// if ($multiple == FALSE AND !empty($params['img_styles']))
-				// {
-				// 	$img_container_styles = $params['img_styles'];
-				// }
+				if ($multiple == FALSE AND !empty($params['img_styles']))
+				{
+					$img_container_styles = $params['img_styles'];
+				}
 				
 				$preview = '<br /><div class="noclone" style="'.$img_container_styles.'">';
 
@@ -804,6 +791,20 @@ class Fuel_custom_fields {
 		include(APPPATH.'config/states.php');
 		$form_builder =& $params['instance'];
 		
+		if (isset($params['format']))
+		{
+			if (strtolower($params['format']) == 'short')
+			{
+				$abbrs = array_keys($states);
+				$states = array_combine($abbrs, $abbrs);
+			}
+			else if (strtolower($params['format']) == 'long')
+			{
+				$names = array_values($states);
+				$states = array_combine($names, $names);
+			}
+
+		}
 		$params['options'] = $states;
 		
 		// set data values for jquery plugin to use
