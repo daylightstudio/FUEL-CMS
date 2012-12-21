@@ -312,6 +312,7 @@ class Fuel_custom_fields {
 		$data_params['resize_and_crop'] = (isset($params['resize_and_crop'])) ? $params['resize_and_crop'] : '';
 		$data_params['resize_method'] = (isset($params['resize_method'])) ? $params['resize_method'] : 'maintain_ratio';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
+		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
 		
 		if (isset($params['hide_image_options']))
 		{

@@ -260,6 +260,12 @@ class Assets extends Module {
 		{
 			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite');
 		}
+
+		if (!empty($field_values['accept']))
+		{
+			$fields['userfile']['accept'] = $field_values['accept'];	
+		}
+		
 		
 		// hide certain fields if params were passed
 		if (!empty($not_hidden))
