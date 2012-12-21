@@ -135,7 +135,9 @@ class Fuel_layouts extends Fuel_base_library {
 				$init['folder'] = $this->layouts_folder;
 				$init['class'] = 'Fuel_layout';
 				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
+				$init['description'] = (isset($init['description'])) ? $init['description'] : '';
 				$init['group'] = (isset($init['group'])) ? $init['group'] : '';
+				$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
 				
 				if (!empty($init['fields']))
 				{
