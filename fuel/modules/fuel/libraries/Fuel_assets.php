@@ -278,6 +278,12 @@ class Fuel_assets extends Fuel_base_library {
 			}
 		}
 
+		// set maintain ration if it is set to maintain_ratio
+		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
+		{
+			$params['maintain_ratio'] = TRUE;
+		}
+
 		// now loop through the uploaded files to do any further image processing
 		foreach($this->_data as $file)
 		{
@@ -291,8 +297,8 @@ class Fuel_assets extends Fuel_base_library {
 					!empty($params['resize_method'])
 					))
 			{
+
 				$params['source_image']	= $file['full_path'];
-				
 				$this->CI->image_lib->initialize($params); 
 				
 				// check for if they want just a resize or a resize AND crop
