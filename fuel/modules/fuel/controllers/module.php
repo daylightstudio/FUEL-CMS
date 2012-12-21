@@ -381,6 +381,7 @@ class Module extends Fuel_base_controller {
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
 			$this->data_table->lang_prefix = 'form_label_';
+			$this->data_table->row_id_key = $this->model->key_field();
 			
 			$boolean_fields = $this->model->boolean_fields;
 			if (!in_array('published', $boolean_fields)) $boolean_fields[] = 'published';
