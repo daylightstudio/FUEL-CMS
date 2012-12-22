@@ -870,7 +870,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		$crumbs = array($this->module_uri => $this->module_name);
-		if (!empty($data))
+		if (!empty($data[$this->display_field]))
 		{
 			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
 		}
