@@ -158,10 +158,6 @@ class Fuel_layouts extends Fuel_base_library {
 						{
 							$fields[$key]['name'] = $key;
 						}
-						if (!isset($fields[$key]['order']))
-						{
-							$fields[$key]['order'] = $order;
-						}
 						
 						// must remove this so that the values can be normalized again
 						unset($fields[$key]['__DEFAULTS__']);
