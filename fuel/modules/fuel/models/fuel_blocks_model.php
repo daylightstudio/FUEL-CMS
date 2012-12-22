@@ -66,6 +66,9 @@ class Fuel_blocks_model extends Base_module_model {
 		{
 			$fields['language'] = array('type' => 'hidden', 'value' => $CI->fuel->language->default_option());
 		}
+
+		// to prevent <p> tags from cropping up
+		$fields['view']['ckeditor_options']['enter-mode'] = 2;
 		return $fields;
 	}
 
