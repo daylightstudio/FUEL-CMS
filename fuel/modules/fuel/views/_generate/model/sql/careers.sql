@@ -25,8 +25,7 @@
 
 CREATE TABLE IF NOT EXISTS `careers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `region` enum('india','emea','north_america','latin_america','asia') NOT NULL DEFAULT 'india',
-  `posting_name` varchar(255) NOT NULL,
+  `job_title` varchar(255) NOT NULL,
   `location` varchar(150) NOT NULL,
   `job_description` text NOT NULL,
   `skills_needed` text NOT NULL,
@@ -35,7 +34,5 @@ CREATE TABLE IF NOT EXISTS `careers` (
   `experience` text NOT NULL,
   `post_date` date NOT NULL,
   `published` enum('yes','no') NOT NULL DEFAULT 'yes',
-  PRIMARY KEY (`id`),
-  KEY `region` (`region`),
-  KEY `location` (`location`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
