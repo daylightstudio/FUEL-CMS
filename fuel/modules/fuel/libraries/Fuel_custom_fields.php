@@ -70,11 +70,21 @@ class Fuel_custom_fields {
 			}
 		}
 		
+		$params['data'] = array();
 		if (isset($params['preview']))
 		{
-			$params['data'] = array('preview' => $params['preview']);
+			$params['data']['preview'] = $params['preview'];
 		}
 
+		// set ckeditor configs
+		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
+		{
+			foreach($params['ckeditor_config'] as $key => $val)
+			{
+				$params['data'][$key] = $val;
+			}
+		}
+		
 		$js = '<script type="text/javascript">
 			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
 		</script>';
