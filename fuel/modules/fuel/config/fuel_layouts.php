@@ -64,6 +64,7 @@ $config['default_layout'] = 'main';
 | * displayonly (bool)
 */
 
+@include(APPPATH.'config/MY_fuel_layouts.php');
 
 // initialize layout fields 
 $config['layouts']['301_redirect'] = array(
@@ -110,7 +111,7 @@ $config['layouts']['none'] = array(
 	)
 );
 
-@include(APPPATH.'config/MY_fuel_layouts.php');
+
 
 /* End of file fuel_layouts.php */
 /* Location: ./modules/fuel/config/fuel_layouts.php */
