@@ -52,6 +52,9 @@
 					<?=$this->form->hidden('cache', $page['cache'], 'id="__fuel_page_cached__"')?>
 				<?php endif; ?>
 			
+				<?php if ($this->fuel->language->has_multiple()) : ?>
+					<li> &nbsp;<?=$this->form->select($this->fuel->language->query_str_param, $this->fuel->language->options(), $CI->fuel->language->selected(), 'id="__fuel_language__"')?></li>
+				<?php endif; ?>
 				
 				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
 				<?php if (count($others) > 0) : ?><li> &nbsp;<?=$this->form->select('others', $others, '', 'id="__fuel_page_others__"', lang('inline_edit_other_pages'))?> </li><?php endif; ?>
