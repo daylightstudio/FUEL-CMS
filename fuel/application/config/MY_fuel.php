@@ -66,6 +66,7 @@ $config['ck_editor_settings'] = "{
 			['NumberedList','BulletedList'],
 			['Link','Unlink'],
 			['Undo','Redo','RemoveFormat'],
+			['PasteFromWord','PasteText'],
 			['Preview'],
 			['Maximize']
 		],
