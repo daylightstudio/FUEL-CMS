@@ -456,7 +456,12 @@ class Pages extends Module {
 			
 			foreach($fields as $key => $val)
 			{
-				if (isset($val['type']) AND !in_array($val['type'], $non_recordable_fields))
+				if (!isset($val['type']))
+				{
+					$val['type'] = 'string';
+				}
+
+				if (!in_array($val['type'], $non_recordable_fields))
 				{
 					$value = (!empty($vars[$key])) ? $vars[$key] : NULL;
 					if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
