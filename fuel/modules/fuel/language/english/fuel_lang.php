@@ -183,7 +183,7 @@ $lang['replace_item_message'] = 'Select a record from the list below that you wo
 
 // command line
 $lang['module_install'] = "The '%1s' module has successfully been installed.\n";
-$lang['module_install_error'] = "There was an error installing the '%1s' module .\n";
+$lang['module_install_error'] = "There was an error installing the '%1s' module.\n";
 
 $msg = "The module %1s has been uninstalled in FUEL.\n\n";
 $msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
