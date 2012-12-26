@@ -604,6 +604,9 @@ class Module extends Fuel_base_controller {
 					}
 					$i++;
 				}
+				
+				// clear cache
+				$this->_clear_cache();
 			}
 		}
 	}
@@ -1513,6 +1516,7 @@ class Module extends Fuel_base_controller {
 				{
 					$this->fuel->admin->set_notification(lang('module_restored_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 				}
+				$this->_clear_cache();
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
 		}
@@ -1550,6 +1554,7 @@ class Module extends Fuel_base_controller {
 				{
 					$this->fuel->admin->set_notification(lang('module_replaced_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 					$success = TRUE;
+					$this->_clear_cache();
 				}
 			}
 			else
@@ -1821,6 +1826,9 @@ class Module extends Fuel_base_controller {
 				// use update instead of save to avoid issue with has_many and belongs_to being removed
 				if ($this->model->update($save, $where))
 				{
+					// clear cache
+					$this->_clear_cache();
+
 					// log it
 					$data = $this->model->find_by_key($id, 'array');
 					
