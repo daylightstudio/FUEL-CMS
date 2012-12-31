@@ -528,8 +528,10 @@ function month($date = NULL, $format = 'M')
 	$ts = timestamp($date);
 	switch($format)
 	{
-		case 'm': case 'numeric':
+		case 'm':
 			return date('m', $ts);
+		case 'n': case 'numeric':
+			return date('n', $ts);
 		case 'M': case 'short':
 			return date('M', $ts);
 		default:
