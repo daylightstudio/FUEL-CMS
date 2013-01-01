@@ -461,6 +461,7 @@ $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
 $lang['form_label_link'] = 'Link';
+$lang['form_label_pdf'] = 'PDF';
 
 $lang['form_label_group_id'] = 'Group';
 $lang['form_label_or_select'] = 'OR select';
