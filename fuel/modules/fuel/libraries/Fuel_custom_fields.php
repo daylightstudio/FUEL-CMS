@@ -1066,8 +1066,31 @@ class Fuel_custom_fields {
 		$params['data'] = $data;
 		return $form_builder->create_text($params);
 
-	}
+	}	
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a dropdown select of languages identified in the MY_fuel.php file
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function language($params)
+	{
+		$form_builder =& $params['instance'];
+		if ((isset($this->CI->language_col) AND $params['key'] == $this->CI->language_col)
+			OR 
+			(!isset($this->CI->language_col) AND $params['key'] == 'language')
+			)
+		{
+			$params['type'] = 'select';
+			$params['options'] = $this->CI->fuel->language->options();
+		}
+		return $form_builder->create_select($params);
+
+	}
 }
 
 
