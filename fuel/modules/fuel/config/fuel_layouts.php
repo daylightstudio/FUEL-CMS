@@ -75,6 +75,14 @@ $config['layouts']['301_redirect'] = array(
 	)
 );
 
+$config['layouts']['alias'] = array(
+	'label' => 'Alias',
+	'fields' => array(
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_alias_copy')),
+		'alias' => array('label' => lang('layout_field_alias')),
+	)
+);
+
 $config['layouts']['404_error'] = array(
 	'label' => '404 Error',
 	'fields' => array(
