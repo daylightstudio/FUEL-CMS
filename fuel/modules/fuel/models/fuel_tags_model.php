@@ -7,6 +7,10 @@ class Fuel_tags_model extends Base_module_model {
 	public $filters = array('name', 'slug');
 	public $unique_fields = array('name', 'slug');
 	public $linked_fields = array('name' => 'slug');
+
+	protected $friendly_name = 'Tags';
+	protected $singular_name = 'Tag';
+	
 	
 	// --------------------------------------------------------------------
 	

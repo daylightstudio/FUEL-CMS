@@ -2673,7 +2673,7 @@ class MY_Model extends CI_Model {
 				
 			}
 		}
-		
+
 		// lookup foreign keys and make the selects by default
 		if (!empty($this->foreign_keys))
 		{
@@ -2689,11 +2689,10 @@ class MY_Model extends CI_Model {
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
 				$fields[$key]['first_option'] = lang('label_select_one');
-				$fields[$key]['label'] = $this->singular_name(FALSE);
+				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->singular_name(FALSE)));
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
 			}
 		}
-		
 		
 		// create related
 		if (!empty($related))

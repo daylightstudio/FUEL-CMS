@@ -13,6 +13,9 @@ class Fuel_categories_model extends Base_module_model {
 	public $belongs_to = array();
 	public $has_many = array();
 	public $serialized_fields = array();
+
+	protected $friendly_name = 'Categories';
+	protected $singular_name = 'Category';
 	
 	
 	// --------------------------------------------------------------------
