@@ -944,19 +944,31 @@ class Fuel_custom_fields {
 			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
 			$params['options'] = $form_builder->options_from_model($params['model'], $model_params);
 		}
-		
 		if (!empty($params['module']))
 		{
+			// hackalicious... used to check for a model's module
+			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
+			foreach($modules as $key => $mod)
+			{
+				$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
+				if (strtolower($params['module']) == $mod_name)
+				{
+					$params['module'] = $key;
+					break;
+				}
+			}
+
 			if (strpos($params['module'], '/') === FALSE)
 			{
-				$CI =& get_instance();
-				$module = $CI->fuel->modules->get($params['module'], FALSE);
+				$module = $this->CI->fuel->modules->get($params['module'], FALSE);
 				$uri = (!empty($module)) ? $module->info('module_uri') : '';
 			}
 			else
 			{
 				$uri = $params['module'];
 			}
+
+			// check for modules with fuel_ prefix
 			if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
 			{
 				$inline_class = 'add_edit '.$uri;
