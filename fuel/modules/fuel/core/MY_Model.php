@@ -246,7 +246,9 @@ class MY_Model extends CI_Model {
 			}
 			return $this->friendly_name;
 		}
-		return $this->short_name($lower, FALSE);
+		$friendly_name = $this->short_name($lower, FALSE);
+		$friendly_name = ucfirst(str_replace('_', ' ', $friendly_name));
+		return $friendly_name;
 	}
 
 	// --------------------------------------------------------------------
@@ -273,7 +275,10 @@ class MY_Model extends CI_Model {
 			}
 			return $this->singular_name;
 		}
-		return $this->short_name($lower, TRUE);
+
+		$singular_name = $this->short_name($lower, TRUE);
+		$singular_name = ucfirst(str_replace('_', ' ', $singular_name));
+		return $singular_name;
 	}
 
 	// --------------------------------------------------------------------
