@@ -357,6 +357,18 @@ class Fuel_custom_fields {
 		$form_builder =& $params['instance'];
 		if (!empty($params['module']))
 		{
+			// hackalicious... used to check for a model's module
+			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
+			foreach($modules as $key => $mod)
+			{
+				$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
+				if (strtolower($params['module']) == $mod_name)
+				{
+					$params['module'] = $key;
+					break;
+				}
+			}
+
 			if (strpos($params['module'], '/') === FALSE)
 			{
 				$CI =& get_instance();
@@ -957,7 +969,6 @@ class Fuel_custom_fields {
 					break;
 				}
 			}
-
 			if (strpos($params['module'], '/') === FALSE)
 			{
 				$module = $this->CI->fuel->modules->get($params['module'], FALSE);
