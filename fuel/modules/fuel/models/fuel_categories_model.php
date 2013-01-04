@@ -96,6 +96,22 @@ class Fuel_categories_model extends Base_module_model {
 	{
 		return $values;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites the _common_query parent method to automatically sort by precedence value
+	 *
+	 * @access	public
+	 * @param	array	values
+	 * @return	array
+	 */	
+	function _common_query()
+	{
+		parent::_common_query();
+		$this->db->order_by('precedence asc');
+	}
+
 }
 
 class Fuel_category_model extends Base_module_record {
