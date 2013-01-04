@@ -941,11 +941,11 @@ class Fuel_module extends Fuel_base_library {
 		{
 			if (is_array($data) AND key($data) === 0)
 			{
-				$var = $model->short_name(TRUE, FALSE);
+				$var = $model->friendly_name(TRUE);
 			}
 			else
 			{
-				$var = $model->short_name(TRUE, TRUE);
+				$var = $model->singular_name(TRUE);
 			}
 		}
 	

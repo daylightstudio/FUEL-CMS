@@ -77,6 +77,8 @@ class MY_Model extends CI_Model {
 	protected $dsn = ''; // the DSN string to connect to the database... if blank it will pull in from database config file
 	protected $has_auto_increment = TRUE; // does the table have auto_increment?
 	protected $record_class = ''; // the name of the record class (if it can't be determined)
+	protected $friendly_name = ''; // a friendlier name of the group of objects
+	protected $singular_name = ''; // a friendlier name of a singular name of an object
 	protected $rules = array(); // validation rules
 	protected $fields = array(); // fields in the table
 	protected $use_common_query = TRUE; // include the _common_query method for each query
@@ -218,6 +220,60 @@ class MY_Model extends CI_Model {
 		{
 			return $short_name;
 		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Gets the name of the model object. By default it will be the same as the short_name(FALSE, FALSE) if no "friendly_name" value is specfied on the model
+	 *
+	 <code>
+	echo $this->examples_model->friendly_name(TRUE); 
+	// example
+	</code>
+	 *
+	 * @access	public
+	 * @param	boolean	lower case the name (optional)
+	 * @return	array
+	 */	
+	public function friendly_name($lower = FALSE)
+	{
+		if (!empty($this->friendly_name))
+		{
+			if ($lower)
+			{
+				return strtolower($this->friendly_name);
+			}
+			return $this->friendly_name;
+		}
+		return $this->short_name($lower, FALSE);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Gets the singular name of the model object. By default it will be the same as the short_name(FALSE, TRUE) if no "singular_name" value is specfied on the model
+	 *
+	 <code>
+	echo $this->examples_model->singular_name(TRUE); 
+	// example
+	</code>
+	 *
+	 * @access	public
+	 * @param	boolean	lower case the name (optional)
+	 * @return	array
+	 */	
+	public function singular_name($lower = FALSE)
+	{
+		if (!empty($this->singular_name))
+		{
+			if ($lower)
+			{
+				return strtolower($this->singular_name);
+			}
+			return $this->singular_name;
+		}
+		return $this->short_name($lower, TRUE);
 	}
 
 	// --------------------------------------------------------------------
@@ -2613,6 +2669,8 @@ class MY_Model extends CI_Model {
 			}
 		}
 		
+		$singular_name = $this->singular_name(TRUE);
+
 		// lookup foreign keys and make the selects by default
 		if (!empty($this->foreign_keys))
 		{
@@ -2628,7 +2686,7 @@ class MY_Model extends CI_Model {
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
 				$fields[$key]['first_option'] = lang('label_select_one');
-				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->short_name(TRUE, TRUE)));
+				$fields[$key]['label'] = $singular_name;
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
 			}
 		}
@@ -2653,7 +2711,7 @@ class MY_Model extends CI_Model {
 					$options = $CI->$related_model_name->options_list();
 					
 					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
-					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
+					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($singular_name.'_id', array($singular_name.'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'multi', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
@@ -2672,7 +2730,7 @@ class MY_Model extends CI_Model {
 				}
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
-				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
+				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->friendly_name(TRUE));
 			}
 		}
 
@@ -2689,7 +2747,7 @@ class MY_Model extends CI_Model {
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
-				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
+				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->friendly_name(TRUE));
 			}
 		}
 

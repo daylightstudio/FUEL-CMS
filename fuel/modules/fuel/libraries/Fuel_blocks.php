@@ -137,10 +137,10 @@ class Fuel_blocks extends Fuel_module {
 			$module = $this->CI->fuel->modules->get($p['model']);
 			if ($module)
 			{
-				$model_name = $module->model()->short_name(TRUE, FALSE);
+				$model_name = $module->model()->friendly_name(TRUE);
 				if (!empty($model_name))
 				{
-					$var_name = $module->model()->short_name(TRUE, FALSE);
+					$var_name = $module->model()->friendly_name(TRUE, FALSE);
 					$vars[$var_name] =& $data; // for convenience
 					$vars['data'] =& $data;
 				}

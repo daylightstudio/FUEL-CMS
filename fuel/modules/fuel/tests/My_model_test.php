@@ -144,6 +144,7 @@ class My_model_test extends Tester_base {
 		$expected = 3;
 		$this->run($test, $expected, 'has_many tag record test');
 
+		// test #3
 		$test_custom_records_model->has_many = array('tags' => array(
 																	'model' => array(FUEL_FOLDER => 'fuel_tags'), 
 																	'where' => array('context' => 'jedi')
@@ -152,8 +153,9 @@ class My_model_test extends Tester_base {
 
 		$test = count($user->tags);
 		$expected = 2;
-		$this->run($test, $expected, 'has_many test #2');
+		$this->run($test, $expected, 'has_many test #3');
 
+		// test #4
 		$user_model = $user->get_tags(TRUE);
 		$test = is_a($user_model, 'Fuel_tags_model');
 		$expected = TRUE;
@@ -225,6 +227,27 @@ class My_model_test extends Tester_base {
 		$expected = 'test_user';
 		$this->run($test, $expected, 'short_name lowercase record test');
 	}
+
+	public function test_friendly_names()
+	{
+		$test_custom_records_model = new Test_users_model();
+		$test = $test_custom_records_model->friendly_name();
+		$expected = 'Users';
+		$this->run($test, $expected, 'friendly name test');
+
+		$test = $test_custom_records_model->friendly_name(TRUE);
+		$expected = 'users';
+		$this->run($test, $expected, 'friendly name lower case test');
+
+		$test = $test_custom_records_model->singular_name();
+		$expected = 'User';
+		$this->run($test, $expected, 'singular_name');
+
+		$test = $test_custom_records_model->singular_name(TRUE);
+		$expected = 'user';
+		$this->run($test, $expected, 'singular_name lower case test');
+	}
+
 
 	public function test_table_name()
 	{
