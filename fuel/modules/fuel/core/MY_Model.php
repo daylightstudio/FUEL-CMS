@@ -2669,8 +2669,6 @@ class MY_Model extends CI_Model {
 			}
 		}
 		
-		$singular_name = $this->singular_name(TRUE);
-
 		// lookup foreign keys and make the selects by default
 		if (!empty($this->foreign_keys))
 		{
@@ -2686,7 +2684,7 @@ class MY_Model extends CI_Model {
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
 				$fields[$key]['first_option'] = lang('label_select_one');
-				$fields[$key]['label'] = $singular_name;
+				$fields[$key]['label'] = $this->singular_name(FALSE);
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
 			}
 		}
@@ -2711,6 +2709,7 @@ class MY_Model extends CI_Model {
 					$options = $CI->$related_model_name->options_list();
 					
 					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
+					$singular_name = $this->singular_name(TRUE);
 					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($singular_name.'_id', array($singular_name.'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'multi', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
