@@ -78,7 +78,7 @@ class MY_Model extends CI_Model {
 	protected $has_auto_increment = TRUE; // does the table have auto_increment?
 	protected $record_class = ''; // the name of the record class (if it can't be determined)
 	protected $friendly_name = ''; // a friendlier name of the group of objects
-	protected $singular_name = ''; // a friendlier name of a singular name of an object
+	protected $singular_name = ''; // a friendly singular name of the object
 	protected $rules = array(); // validation rules
 	protected $fields = array(); // fields in the table
 	protected $use_common_query = TRUE; // include the _common_query method for each query
