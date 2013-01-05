@@ -85,16 +85,26 @@ dave@thedaylightstudio.com
 			// if children, then we need to reorganize them too
 			if (depth == 0 && $childTemplates.length){
 				var $childRepeatables = $(elem).find(options.repeatableSelector);
-				$childRepeatables.find('input,textarea,select').each(function(i){
-					var newName = $(this).attr('name')
-					if (newName && newName.length && parentIndex != null){
-						newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[\d+\])/g, '$1' + parentIndex + '$2');
-						// required for jquery 
-						newName = newName.replace('[', '\[');
-						newName = newName.replace(']', '\]');
-						$(this).attr('name', newName);
-					}
-					
+				console.log($childRepeatables)
+				$childRepeatables.each(function(i){
+					//console.log(i)
+					$(this).find('input,textarea,select').each(function(j){
+						var newName = $(this).attr('name')
+						if (newName && newName.length && parentIndex != null){
+							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[\d+\])/g, '$1' + parentIndex + '$2');
+							// required for jquery 
+							newName = newName.replace('[', '\[');
+							newName = newName.replace(']', '\]');
+							$(this).attr('name', newName);
+						}
+
+						var newId = $(this).attr('id')
+						if (newId && newId.length && parentIndex != null){
+							newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_\d+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
+							$(this).attr('id', newId);
+						}
+						
+					})
 				})
 			}
 		}

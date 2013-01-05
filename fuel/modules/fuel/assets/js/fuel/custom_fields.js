@@ -90,17 +90,22 @@ fuel.fields.wysiwyg_field = function(context){
 		$(elem).val(newVal);
 	}
 
-	
+	var CKEDitor_loaded = false;
 	var createCKEditor = function(elem){
 		//window.CKEDITOR_BASEPATH = jqx.config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
+
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
+			//CKEDITOR.instances[ckId].destroy();
 		}
-
+		// used in cases where repeatable fields cause issues
+		if ($(elem).hasClass('ckeditor_applied')) {
+			return;
+		}
 
 		var config = jqx.config.ckeditorConfig;
 
@@ -183,7 +188,9 @@ fuel.fields.wysiwyg_field = function(context){
 			});
 			
 			$elem = $('#' + ckId);
-
+			
+			// so we can check
+			$elem.addClass('ckeditor_applied');
 			// need so the warning doesn't pop up if you duplicate a value
 			if ($.changeChecksaveValue){
 				//$.changeChecksaveValue('#' + ckId, editor.getData());
@@ -259,6 +266,9 @@ fuel.fields.wysiwyg_field = function(context){
 			})
 		}
 
+		// add class so we can prevent dupes
+		$(elem).addClass('ckeditor_applied');
+
 	}
 	
 	var unTranslateImgPath = function(txt){
@@ -332,10 +342,10 @@ fuel.fields.wysiwyg_field = function(context){
 		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
-			createCKEditor(this);
-			// setTimeout(function(){
-			// 	createCKEditor(_this);
-			// }, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
+			//createCKEditor(this);
+			setTimeout(function(){
+				createCKEditor(_this);
+			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
 		} else {
 			createMarkItUp(this);
 		}
