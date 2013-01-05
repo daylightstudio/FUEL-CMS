@@ -47,6 +47,7 @@ class Fuel_blocks extends Fuel_module {
 		<li><strong>model</strong> - the name of a model to automatically load for the block</li>
 		<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
 		<li><strong>select</strong> - select parameters to run for the find method</li>
+		<li><strong>where</strong> - where parameters to run for the find method</li>
 		<li><strong>order</strong> - the order the find method should return</li>
 		<li><strong>limit</strong> - the limit number of results to be returned by the find method</li>
 		<li><strong>offset</strong> - the find results returned offset value</li>
