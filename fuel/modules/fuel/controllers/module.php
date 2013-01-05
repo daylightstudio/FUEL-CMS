@@ -192,6 +192,7 @@ class Module extends Fuel_base_controller {
 			{
 				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
 				$this->filters[$this->language_col] = $lang_filter;
+				$this->model->filter_join = array();
 				$this->model->filter_join[$this->language_col] = 'and';
 			}
 		}
