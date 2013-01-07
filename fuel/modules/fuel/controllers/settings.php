@@ -69,6 +69,7 @@ class Settings extends Fuel_base_controller {
 
 		$this->load->library('form_builder');
 		
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		$this->form_builder->label_layout = 'left';
 		$this->form_builder->form->validator = $this->fuel->settings->get_validation();
 		$this->form_builder->use_form_tag = FALSE;
