@@ -409,12 +409,13 @@ fuel.fields.asset_field = function(context, options){
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
 				if ($(this).is('.save')){
-					var $activeField = $('#' + activeField, iframeContext);
+					var $activeField = $('#' + activeField);
 					var assetVal = jQuery.trim($activeField.val());
 					var selectedVal = $assetSelect.val();
 					var separator = $activeField.attr('data-separator');
 					var multiple = parseInt($activeField.attr('data-multiple')) == 1;
 					if (multiple){
+						console.log('multiple')
 						if (assetVal.length) assetVal += separator;
 						assetVal += selectedVal;
 					} else {
