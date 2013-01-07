@@ -1114,6 +1114,110 @@ class Fuel_custom_fields {
 		return $form_builder->create_select($params);
 
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a key / value associative array
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function keyval($params)
+	{
+		$form_builder =& $params['instance'];
+		if (!isset($params['delimiter']))
+		{
+			$params['delimiter'] = ":";
+		}
+
+		$split_delimiter = "\s*".$params['delimiter']."\s*";
+
+		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					
+					foreach($value as $key => $val)
+					{
+						if (isset($val["'.$params['subkey'].'"]))
+						{
+
+							$json = array();
+							$rows = preg_split("\s*#\n|,\s*#", $val);
+							foreach($rows as $r)
+							{
+								$vals = preg_split("#'.$split_delimiter.'#", $r);
+								if (isset($vals[1]))
+								{
+									$val = $vals[1];
+									$key = $vals[0];
+									$json[$key] = $val;
+								}
+								else
+								{
+									$json[] = $vals[0];
+								}
+							}
+							$value[$key]["'.$params['subkey'].'"] = json_encode($json);
+						}
+					}
+					return $value;
+				}
+				';
+		}
+		else
+		{
+			
+			$func_str = '
+				$json = array();
+				$rows = preg_split("#\s*\n|,\s*#", $value);
+				foreach($rows as $r)
+				{
+					$vals = preg_split("#'.$split_delimiter.'#", $r);
+					if (isset($vals[1]))
+					{
+						$val = $vals[1];
+						$key = $vals[0];
+						$json[$key] = $val;
+					}
+					else
+					{
+						$json[] = $vals[0];
+					}
+				}
+				return json_encode($json);
+				';
+		}
+		$func = create_function('$value', $func_str);
+		$form_builder->set_post_process($params['key'], $func);
+
+		if (!empty($params['value']))
+		{
+			if (is_json_str($params['value']))
+			{
+				$params['value'] = json_decode($params['value'], TRUE);
+			}
+
+			if (is_array($params['value']))
+			{
+				$new_value = array();
+				foreach($params['value'] as $key => $val)
+				{
+					$new_value[] = $key.$params['delimiter'].$val;
+				}
+				$params['value'] = implode("\n", $new_value);
+			}
+		}
+		$params['type'] = 'textarea';
+		$params['class'] = 'no_editor';
+		return $form_builder->create_field($params);
+
+	}
+
 }
 
 

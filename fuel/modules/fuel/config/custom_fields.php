@@ -182,5 +182,12 @@ $fields['language'] = array(
 	'represents' => array('name' => 'language'),
 );
 
+// keyval field
+$fields['keyval'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'keyval',
+	'filepath'	=> '',
+);
+
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

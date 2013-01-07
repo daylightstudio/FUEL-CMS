@@ -199,6 +199,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
+		<li><a href="#langauge">langauge</a></li>
+		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 	</ul>
 </div>
@@ -954,6 +956,43 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 </div>
 
+<h3 id="language" class="toggle">language</h3>
+<div class="toggle_block_off">
+	<p>This field type generates a dropdown select with the language values specified in MY_fuel.php.</p>
+	
+	<h4>Representations</h4>
+	<pre class="brush: php">
+	'name' => 'language' // targets any field with the name of language
+	</pre>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['language_example'] = array('type' => 'language');
+	</pre>
+
+	
+</div>
+
+<h3 id="keyval" class="toggle">keyval</h3>
+<div class="toggle_block_off">
+	<p>This field allows you go create a key / value array by separating keys and values with a delimiter. Each key/value goes on it's own line. The
+		post-processed result is a JSON encoded string:</p>
+	<ul>
+		<li><strong>delimiter</strong>: the delimiter used to separate between a key and a value. The default is a ":" (colon).</li>
+	</ul>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['keyval_example'] = array('type' => 'keyval');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['keyval_example'] = array('type' => 'keyval', 'value' => "english:English\ngerman:German\nspanish:Spanish");
+	form_builder_example($fields);
+	?>
+	
+</div>
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
