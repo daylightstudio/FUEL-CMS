@@ -4876,7 +4876,7 @@ class Data_record {
 		}
 		$type_formatters = $formatters[$type];
 
-		// if the helpers are a tring, then we split it into an array
+		// if the helpers are a string, then we split it into an array
 		if (is_string($type_formatters))
 		{
 			$type_formatters = preg_split('#,\s*|\|#', $type_formatters);
@@ -4950,11 +4950,11 @@ class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the results of the query
+	 * Magic method for capturing method calls on the record object that don't exist. Allows for "get_{field}" to map to just "{field}" as well as "is_{field}"" and "has_{field}"
 	 *
 	 * @access	public
-	 * @param	object	parent model object
-	 * @param	array	field names
+	 * @param	object	method name
+	 * @param	array	arguments
 	 * @return	array
 	 */	
 	public function __call($method, $args)
