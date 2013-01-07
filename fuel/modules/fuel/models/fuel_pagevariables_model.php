@@ -39,15 +39,34 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return  $this->_process_casting($data);
 	}
 	
-	function find_all_by_location($location, $lang = NULL)
+	function find_all_by_location($location, $lang = NULL, $include_pagevars_object = FALSE)
 	{
 		$where = array($this->_tables['fuel_pages'].'.location' => $location);
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
 		}
-		$data = $this->find_all_array($where);
-		return $this->_process_casting($data);
+
+		$data = array();
+		if ($include_pagevars_object)
+		{
+			$objs = $this->find_all_assoc('name',$where);
+			if (!empty($objs))
+			{
+				$data['pagevar'] = new Fuel_pagevar_helper();
+				foreach($objs as $name => $obj)
+				{
+					$data[$name] = $this->_process_casting($obj);
+					$data['pagevar']->$name = $obj;
+				}
+			}
+		}
+		else
+		{
+			$data = $this->find_all_array($where);
+			$data = $this->_process_casting($data);
+		}
+		return $data;
 	}
 	
 	function find_one_by_page_id($page_id, $name, $lang = NULL)
@@ -83,13 +102,33 @@ class Fuel_pagevariables_model extends Base_module_model {
 			$return = array();
 			foreach ($data as $val)
 			{
-				$return[$val['name']] = $this->cast($val['value'], $val['type']);
+				if (is_object($data))
+				{
+					$value = $val->value;
+					$type = $val->type;
+				}
+				else
+				{
+					$value = $val['value'];
+					$type = $val['type'];
+				}
+				$return[$val['name']] = $this->cast($value, $type);
 			}
 			return $return;
 		}
 		else if (!empty($data))
 		{
-			return $this->cast($data['value'], $data['type']);
+			if (is_object($data))
+			{
+				$value = $data->value;
+				$type = $data->type;
+			}
+			else
+			{
+				$value = $data['value'];
+				$type = $data['type'];
+			}
+			return $this->cast($value, $type);
 		}
 		else
 		{
@@ -194,4 +233,93 @@ class Fuel_pagevariables_model extends Base_module_model {
 
 
 class Fuel_pagevariable_model extends Data_record {
+
+	function __toString()
+	{
+		return $this->value;
+	}
+
+	function get_value()
+	{
+		return $this->_parent_model->cast($this->_fields['value'], $this->type);
+	}	
+}
+
+
+// --------------------------------------------------------------------
+	
+/**
+ * Class used for accessing field values easier
+ *
+ */	
+class Fuel_pagevar_helper {
+
+	protected $_vars = array();
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method for capturing method calls on the record object that don't exist.
+	 *
+	 * @access	public
+	 * @param	object	method name
+	 * @param	array	arguments
+	 * @return	array
+	 */	
+	public function __call($method, $args)
+	{
+		// // take the field name plus a '_' to get the suffix
+		$suffix = substr(strrchr($method, '_'), 1);
+
+		// get the core field name without the suffix (+1 because of underscore)
+		$field = substr($method, 0, - (strlen($suffix) + 1));
+		return $this->_vars[$field]->format('value', $suffix, $args);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method to set variable object
+	 * @access	public
+	 * @param	string	field name
+	 * @param	mixed	
+	 * @return	void
+	 */	
+	public function __set($var, $val)
+	{
+		$this->_vars[$var] = $val;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method to return variable object
+	 *
+	 * @access	public
+	 * @param	string	field name
+	 * @return	mixed
+	 */	
+	public function __get($var)
+	{
+		$output = NULL;
+		
+		// finally check values from the database
+		if (array_key_exists($var, $this->_vars))
+		{
+			$output = $this->_vars[$var];
+		}
+		else
+		{
+			// take the field name plus a '_' to get the suffix
+			$suffix = substr(strrchr($var, '_'), 1);
+
+			// get the core field name without the suffix (+1 because of underscore)
+			$field = substr($var, 0, - (strlen($suffix) + 1));
+
+			// apply formatting to the value
+			$output = $this->_vars[$field]->format('value', $suffix);
+		}
+		
+		return $output;
+	}
 }
