@@ -427,6 +427,7 @@ class Fuel_navigation extends Fuel_module {
 				$ids[$item['id']] = $i;
 				$i++;
 			}
+
 			// now loop through and save
 			$cnt = 0;
 
@@ -440,7 +441,7 @@ class Fuel_navigation extends Fuel_module {
 				$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
 				$save['location'] = $item['location'];
 				$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
-				$save['language'] = $language;
+				$save['language'] = (!empty($item['language'])) ? $item['language'] : $language;
 
 				// fix for homepage links
 				if (empty($save['selected']) AND $save['nav_key'] == 'home')

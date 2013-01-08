@@ -25,6 +25,8 @@ class Navigation extends Module {
 				$file_info = $_FILES['file'];
 				$params['file_path'] = $file_info['tmp_name'];
 				$params['var'] = $this->input->post('variable') ? $this->input->post('variable') : 'nav';
+				$params['language'] = $this->input->post('language');
+				
 				if (!$this->fuel->navigation->upload($params))
 				{
 					$error = TRUE;
@@ -59,6 +61,7 @@ class Navigation extends Module {
 		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
 		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable') : 'nav'), 'size' => 10);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'first_option' => lang('label_select_one'));
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$fields['__fuel_module__'] = array('type' => 'hidden');
 		$fields['__fuel_module__']['value'] = $this->module;
