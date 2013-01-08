@@ -1132,6 +1132,16 @@ class Fuel_custom_fields {
 			$params['delimiter'] = ":";
 		}
 
+		if (!isset($params['numeric_indexes']))
+		{
+			$params['allow_numeric_indexes'] = FALSE;
+		}
+
+		if (!isset($params['allow_empty_values']))
+		{
+			$params['allow_empty_values'] = FALSE;
+		}
+
 		$split_delimiter = "\s*".$params['delimiter']."\s*";
 
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
@@ -1207,9 +1217,22 @@ class Fuel_custom_fields {
 				$new_value = array();
 				foreach($params['value'] as $key => $val)
 				{
-					$new_value[] = $key.$params['delimiter'].$val;
+					if (!empty($params['allow_empty_values']))
+					{
+						if (is_numeric($key) AND $params['allow_numeric_indexes'] == FALSE)
+						{
+							$new_value[] = $val;	
+						}
+						else
+						{
+							$new_value[] = $key.$params['delimiter'].$val;	
+						}
+					}
 				}
-				$params['value'] = implode("\n", $new_value);
+				if (!empty($new_value))
+				{
+					$params['value'] = implode("\n", $new_value);	
+				}
 			}
 		}
 		$params['type'] = 'textarea';
