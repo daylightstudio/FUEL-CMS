@@ -183,7 +183,16 @@ class Fuel_blocks extends Fuel_module {
 				$this->fuel->load_model('fuel_blocks');
 
 				// find the block in FUEL db
-				$block = $this->CI->fuel_blocks_model->find_one_by_name($p['view']);
+				$language = (!empty($p['language'])) ? $p['language'] : $this->CI->fuel->language->selected();
+				if (!empty($language) AND $language != $this->CI->fuel->language->default_option())
+				{
+					$block = $this->CI->fuel_blocks_model->find_one_by_name_and_language($p['view'], $language);	
+				}
+				else
+				{
+					$block = $this->CI->fuel_blocks_model->find_one_by_name($p['view']);
+				}
+				
 				if (isset($block->id))
 				{
 					if (strtolower($p['parse']) == 'auto')
