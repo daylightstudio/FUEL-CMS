@@ -272,7 +272,7 @@ function php_to_template_syntax($str)
 			$return_arr = array();
 			foreach($key_vals as $val)
 			{
-				list($k, $v) = explode("=>", $val);
+				@list($k, $v) = explode("=>", $val);
 				$k = str_replace(array("\"", "\'"), "", $k);
 				$return_arr[] = trim($k)."=".trim($v);
 			}
