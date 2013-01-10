@@ -93,10 +93,11 @@ class Module extends Fuel_base_controller {
 			$this->load->model($this->model_name);
 		}
 		
-		
+		// get the model name
+		$model = end(explode('/', $this->model_name));
+
 		if (empty($this->display_field))
 		{
-			$model = $this->model_name;
 			$fields = $this->$model->fields();
 			
 			// loop through the fields and find the first column that doesn't have id or _id at the end of it
@@ -116,8 +117,7 @@ class Module extends Fuel_base_controller {
 		
 		$this->js_controller_params['module'] = $this->module_uri;
 		
-		// 
-		$model = $this->model_name;
+
 		if (!empty($model))
 		{
 			$this->model =& $this->$model;
