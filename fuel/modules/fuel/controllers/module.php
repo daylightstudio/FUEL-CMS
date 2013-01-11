@@ -1399,7 +1399,9 @@ class Module extends Fuel_base_controller {
 			
 			if ($inline)
 			{
-				
+				$vars['title'] = '';
+				$vars['id'] = '';
+				$vars['back_action'] = '';
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 				$this->fuel->admin->render($this->views['delete'], $vars);
