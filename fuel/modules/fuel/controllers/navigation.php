@@ -74,6 +74,8 @@ class Navigation extends Module {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_field_values($_POST);
+		
 		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
 		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
