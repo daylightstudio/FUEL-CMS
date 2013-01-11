@@ -68,6 +68,7 @@
 	</div>
 	<?php if (isset($page['id'])) : ?>
 	<?=$this->form->hidden('id', $page['id'], 'id=""')?>
+	<?=$this->form->hidden('location', $page['location'], 'id=""')?>
 	<?php endif; ?>
 	<?=$this->form->close()?>
 	
