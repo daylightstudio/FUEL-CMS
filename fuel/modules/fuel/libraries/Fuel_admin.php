@@ -1312,6 +1312,7 @@ class Fuel_admin extends Fuel_base_library {
 	
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
+		$vars['language'] = $this->fuel->language->detect();
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
 

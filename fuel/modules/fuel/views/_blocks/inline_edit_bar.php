@@ -53,13 +53,12 @@
 				<?php endif; ?>
 			
 				<?php if ($this->fuel->language->has_multiple()) : ?>
-					<li> &nbsp;<?=$this->form->select($this->fuel->language->query_str_param, $this->fuel->language->options(), $CI->fuel->language->selected(), 'id="__fuel_language__"')?></li>
+					<li> &nbsp;<?=$this->form->select($this->fuel->language->query_str_param, $this->fuel->language->options(), $language, 'id="__fuel_language__"')?></li>
 				<?php endif; ?>
-				
 				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
 				<?php if (count($others) > 0) : ?><li> &nbsp;<?=$this->form->select('others', $others, '', 'id="__fuel_page_others__"', lang('inline_edit_other_pages'))?> </li><?php endif; ?>
 				<?php if (count($layouts) > 1) : ?><li><label for="layout"><?=lang('inline_edit_layout')?></label> <?=$this->form->select('layout', $layouts, $page['layout'], 'id="__fuel_page_layout__"')?></li><?php endif; ?>
-				<li class="txt"><a href="<?=fuel_url('pages/edit/'.$page['id'])?>" title="<?=lang('inline_edit_back_to_admin')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
+				<li class="txt"><a href="<?=fuel_url('pages/edit/'.$page['id'].'?lang='.$language)?>" title="<?=lang('inline_edit_back_to_admin')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
 				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
 				
 			<?php endif; ?>
