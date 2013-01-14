@@ -40,6 +40,11 @@
  */
 function currency($value, $symbol = '$',  $include_cents = TRUE)
 {
+	if (!isset($value) OR $value === "")
+	{
+		return;
+	}
+	$value = (float) $value;
 	if (!$include_cents)
 	{
 		return $symbol.number_format($value);
