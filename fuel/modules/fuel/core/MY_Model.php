@@ -2807,6 +2807,8 @@ class MY_Model extends CI_Model {
 		// First generate the headings from the table column names
 		if ($display_headers !== FALSE)
 		{
+			$headers = array();
+			
 			// check if it is a query object first
 			if (is_object($data) AND method_exists($data, 'list_fields'))
 			{
