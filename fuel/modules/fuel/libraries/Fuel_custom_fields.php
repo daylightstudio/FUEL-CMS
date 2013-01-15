@@ -1172,7 +1172,8 @@ class Fuel_custom_fields {
 									$json[] = $vals[0];
 								}
 							}
-							$value[$key]["'.$params['subkey'].'"] = json_encode($json);
+							$first_item = current($json);
+							$value[$key]["'.$params['subkey'].'"] = (!empty($first_item)) ? json_encode($json) : "";
 						}
 					}
 					return $value;
@@ -1199,7 +1200,8 @@ class Fuel_custom_fields {
 						$json[] = $vals[0];
 					}
 				}
-				return json_encode($json);
+				$first_item = current($json);
+				return  (!empty($first_item)) ? json_encode($json) : "";
 				';
 		}
 		$func = create_function('$value', $func_str);
@@ -1217,9 +1219,9 @@ class Fuel_custom_fields {
 				$new_value = array();
 				foreach($params['value'] as $key => $val)
 				{
-					if (!empty($params['allow_empty_values']))
+					if (!empty($val) OR ($params['allow_empty_values'] === TRUE AND empty($val)))
 					{
-						if (is_numeric($key) AND $params['allow_numeric_indexes'] == FALSE)
+						if (is_numeric($key) AND $params['allow_numeric_indexes'] === FALSE)
 						{
 							$new_value[] = $val;	
 						}
@@ -1233,8 +1235,17 @@ class Fuel_custom_fields {
 				{
 					$params['value'] = implode("\n", $new_value);	
 				}
+				else
+				{
+					$params['value'] = '';
+				}
 			}
 		}
+		else
+		{
+			$params['value'] = '';
+		}
+
 		$params['type'] = 'textarea';
 		$params['class'] = 'no_editor';
 		return $form_builder->create_field($params);
