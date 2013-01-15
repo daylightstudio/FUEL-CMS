@@ -1188,7 +1188,14 @@ Class Form_builder {
 			}
 			else
 			{
-				$params['name'] = $this->name_array.'['.$params['orig_name'].']';
+				if ($this->key_check_name != $params['orig_name'])
+				{
+					$params['name'] = $this->name_array.'['.$params['orig_name'].']';				
+				}
+				else
+				{
+					$params['name'] = $params['orig_name'];				
+				}
 			}
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
 		}
@@ -1205,7 +1212,14 @@ Class Form_builder {
 			}
 			else
 			{
-				$params['name'] = $this->name_prefix.'--'.$params['orig_name'];
+				if ($this->key_check_name != $params['orig_name'])
+				{
+					$params['name'] = $this->name_prefix.'--'.$params['orig_name'];
+				}
+				else
+				{
+					$params['name'] = $params['orig_name'];				
+				}
 			}
 			
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
