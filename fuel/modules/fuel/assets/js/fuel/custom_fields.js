@@ -791,7 +791,7 @@ fuel.fields.template_field = function(context, options){
 
 		// hack required for CKEditor so it will allow you to sort and not lose the data 
 		$repeatable.bind('sortStarted', function(e){
-			if (CKEDITOR != undefined){
+			if (typeof CKEDITOR != 'undefined'){
 				for(var n in CKEDITOR.instances){
 					currentCKTexts[n] = CKEDITOR.instances[n].getData();
 				}
@@ -799,7 +799,7 @@ fuel.fields.template_field = function(context, options){
 		})
 
 		$repeatable.bind('sortStopped', function(e){
-			if (CKEDITOR != undefined){
+			if (typeof CKEDITOR != 'undefined'){
 				for(var n in CKEDITOR.instances){
 					currentCKTexts[n] = CKEDITOR.instances[n].setData(currentCKTexts[n]);
 				}
