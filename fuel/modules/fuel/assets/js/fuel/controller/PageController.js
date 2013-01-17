@@ -70,7 +70,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					if ($(id).exists()){
 						$(id).val(html);
 						$(id).addClass('change');
-						if (CKEDITOR.instances[_this.initObj.import_view_key]){
+						if (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[_this.initObj.import_view_key]){
 							CKEDITOR.instances[_this.initObj.import_view_key].setData($(id).val());
 							var scrollTo = '#cke_' + _this.initObj.import_view_key;
 						} else {
