@@ -529,8 +529,26 @@ class Base_module_model extends MY_Model {
 	 */	
 	function get_others($display_field, $id, $val_field = NULL)
 	{
-		if (empty($val_field)) $val_field = $this->key_field;
-		$others = $this->options_list($val_field, $display_field);
+		$orderby = TRUE;
+		if (empty($val_field))
+		{
+			$CI =& get_instance();
+			if (!empty($CI->language_col))
+			{
+				$fields = $this->fields();
+
+				if (in_array($CI->language_col, $fields))
+				{
+					$display_field = 'CONCAT('.$display_field.', " - ", '.$CI->language_col.') AS val_field';
+					$orderby = 'val_field ASC';
+				}
+			}
+			else
+			{
+				$val_field = $this->key_field;	
+			}
+		}
+		$others = $this->options_list($val_field, $display_field, NULL, $orderby);
 
 		// COMMENTED OUT BECAUSE WE DISABLE IT IN THE DROPDOWN INSTEAD
 		//if (isset($others[$id])) unset($others[$id]);
