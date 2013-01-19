@@ -391,7 +391,7 @@ class Base_module_model extends MY_Model {
 	function archive($ref_id, $data)
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'archives_model');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
 		
 		// grab archive to compare it to current data values... don't want to save if it isn't different
 		$last_archive = $this->get_last_archive($ref_id, TRUE);
@@ -419,14 +419,14 @@ class Base_module_model extends MY_Model {
 		$save['archived_user_id'] = $user['id'];
 		$save['version'] = $last_archive_version + 1;
 		$save['data'] = json_encode($data);
-		if ($saved = $this->archives_model->save($save))
+		if ($saved = $this->fuel_archives_model->save($save))
 		{
-			$num_versions = $this->archives_model->record_count(array('table_name' => $this->table_name, 'ref_id' => $ref_id));
+			$num_versions = $this->fuel_archives_model->record_count(array('table_name' => $this->table_name, 'ref_id' => $ref_id));
 			if ($num_versions > $CI->config->item('max_number_archived', 'fuel') )
 			{
 				$delete_version = ($last_archive_version - $CI->config->item('max_number_archived', 'fuel')) + 1;
 				$where = array('table_name' => $this->table_name, 'ref_id' => $ref_id, 'version' => $delete_version);
-				$this->archives_model->delete($where);
+				$this->fuel_archives_model->delete($where);
 			}
 		}
 		return $saved;
@@ -445,8 +445,8 @@ class Base_module_model extends MY_Model {
 	function get_last_archive($ref_id, $all_data = FALSE)
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'archives_model');
-		$archive = $this->archives_model->find_one_array(array('table_name' => $this->table_name, 'ref_id' => $ref_id), 'version_timestamp desc');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
+		$archive = $this->fuel_archives_model->find_one_array(array('table_name' => $this->table_name, 'ref_id' => $ref_id), 'version_timestamp desc');
 		if (!empty($archive['data']))
 		{
 			$archive['data'] = json_decode($archive['data'], TRUE);
@@ -469,12 +469,12 @@ class Base_module_model extends MY_Model {
 	function get_archive($ref_id, $version = NULL, $all_data = FALSE)
 	{
 		$CI =& get_instance();
-		$CI->load->module_model(FUEL_FOLDER, 'archives_model');
+		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
 		$CI->load->helper('date');
 		
 		// best to use ref_id and version because it is more secure
 		$where = array('table_name' => $this->table_name, 'ref_id' => $ref_id, 'version' => $version);
-		$archive = $CI->archives_model->find_one_array($where);
+		$archive = $CI->fuel_archives_model->find_one_array($where);
 		$return = $archive;
 		$return['data'] = array();
 		if (!empty($archive))
@@ -529,8 +529,26 @@ class Base_module_model extends MY_Model {
 	 */	
 	function get_others($display_field, $id, $val_field = NULL)
 	{
-		if (empty($val_field)) $val_field = $this->key_field;
-		$others = $this->options_list($val_field, $display_field);
+		$orderby = TRUE;
+		if (empty($val_field))
+		{
+			$CI =& get_instance();
+			if (!empty($CI->language_col))
+			{
+				$fields = $this->fields();
+
+				if (in_array($CI->language_col, $fields))
+				{
+					$display_field = 'CONCAT('.$display_field.', " - ", '.$CI->language_col.') AS val_field';
+					$orderby = 'val_field ASC';
+				}
+			}
+			else
+			{
+				$val_field = $this->key_field;	
+			}
+		}
+		$others = $this->options_list($val_field, $display_field, NULL, $orderby);
 
 		// COMMENTED OUT BECAUSE WE DISABLE IT IN THE DROPDOWN INSTEAD
 		//if (isset($others[$id])) unset($others[$id]);
@@ -590,12 +608,13 @@ class Base_module_model extends MY_Model {
 		
 		if (!empty($this->ignore_replacement))
 		{
-			// remove any key field values
+			// ignore certain fields by setting them to their old values
 			foreach($this->ignore_replacement as $field)
 			{
 				if (isset($values[$field]))
 				{
-					unset($values[$field]);
+					$values[$field] = $replace_values[$field];
+					//unset($values[$field]);
 				}
 			}
 		}
@@ -609,7 +628,7 @@ class Base_module_model extends MY_Model {
 			$where[$this->key_field()] = $id;
 			$this->delete($where);
 		}
-		
+
 		// save values
 		$saved = $this->save($values);
 

@@ -1142,6 +1142,7 @@ Class Form_builder {
 			'js' => '', // js file or script using <script> tag
 			'css' => '', // css to associate with the field
 			'represents' => '', // specifies what other types of fields that this field should represent
+			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -1187,7 +1188,14 @@ Class Form_builder {
 			}
 			else
 			{
-				$params['name'] = $this->name_array.'['.$params['orig_name'].']';
+				if ($this->key_check_name != $params['orig_name'])
+				{
+					$params['name'] = $this->name_array.'['.$params['orig_name'].']';				
+				}
+				else
+				{
+					$params['name'] = $params['orig_name'];				
+				}
 			}
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
 		}
@@ -1204,12 +1212,26 @@ Class Form_builder {
 			}
 			else
 			{
-				$params['name'] = $this->name_prefix.'--'.$params['orig_name'];
+				if ($this->key_check_name != $params['orig_name'])
+				{
+					$params['name'] = $this->name_prefix.'--'.$params['orig_name'];
+				}
+				else
+				{
+					$params['name'] = $params['orig_name'];				
+				}
 			}
 			
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
 		}
-		
+
+		// grab options from a model if a model is specified
+		if (!empty($params['model']))
+		{
+			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
+			$params['options'] = $this->options_from_model($params['model'], $model_params);
+		}
+
 		if ($params['type'] == 'enum' OR  $params['type'] == 'select')
 		{
 			if (!isset($params['options']))
@@ -1219,6 +1241,11 @@ Class Form_builder {
 			if ((empty($params['options']) AND is_array($params['options'])) AND is_array($params['max_length']) AND !empty($params['max_length']))
 			{
 				$params['options'] = $params['max_length'];
+			}
+			if (!empty($params['hide_if_one']) AND count($params['options']) <= 1)
+			{
+				$params['type'] = 'hidden';
+				$params['display_label'] = FALSE;
 			}
 		}
 		
@@ -1385,7 +1412,7 @@ Class Form_builder {
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
 
 		// now we look at all the fields that may represent other field types based on parameters
-		if (!empty($this->representatives) AND is_array($this->representatives))
+		if (!empty($this->representatives) AND is_array($this->representatives) AND empty($params['ignore_representative']))
 		{
 			foreach($this->representatives as $key => $val)
 			{
@@ -1617,18 +1644,12 @@ Class Form_builder {
 	{
 		$defaults = array(
 			'options' => array(),
-			'first_option' => ''
+			'first_option' => '',
+			'disabled_options' => array(),
 		);
 		
 		$params = $this->normalize_params($params, $defaults);
 		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
-			$params['options'] = $this->options_from_model($params['model'], $model_params);
-		}
-
 		$attrs = array(
 			'id' => $params['id'],
 			'class' => $params['class'], 
@@ -1656,7 +1677,7 @@ Class Form_builder {
 			$params['options'] = $options;
 		}
 		
-		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option'], $params['disabled']);
+		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option'], $params['disabled_options']);
 	}
 	
 	// --------------------------------------------------------------------
@@ -1809,13 +1830,6 @@ Class Form_builder {
 			'model' => NULL,
 			);
 		$params = $this->normalize_params($params, $defaults);
-		
-		// grab options from a model if a model is specified
-		if (!empty($params['model']))
-		{
-			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
-			$params['options'] = $this->options_from_model($params['model'], $model_params);
-		}
 		
 		$i = 0;
 		$str = '';
@@ -2982,6 +2996,22 @@ Class Form_builder {
 	function set_representative($type, $match = '')
 	{
 		$this->representatives[$type] = $match;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Removes a representative for a field type.
+	 * 
+	 * This removes a representative globally for all fields
+	 *
+	 * @access	public
+	 * @param	string The field type to be the representative
+	 * @return	void
+	 */
+	function remove_representative($type)
+	{
+		unset($this->representatives[$type]);
 	}
 
 	// --------------------------------------------------------------------

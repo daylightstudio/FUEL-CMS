@@ -28,7 +28,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		var retreiveLayoutVars = function(){
 			$('#layout_vars .loader').show();
 			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val() + '/' + $('#language').val();
-			$('#layout_vars').load(path, {}, function(){
+			$('#layout_vars').load(path, function(){
 				var context = $('#fuel_main_content_inner');
 				_this.initSpecialFields(context);
 				$(this).trigger('varsLoaded');
@@ -70,7 +70,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					if ($(id).exists()){
 						$(id).val(html);
 						$(id).addClass('change');
-						if (CKEDITOR.instances[_this.initObj.import_view_key]){
+						if (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[_this.initObj.import_view_key]){
 							CKEDITOR.instances[_this.initObj.import_view_key].setData($(id).val());
 							var scrollTo = '#cke_' + _this.initObj.import_view_key;
 						} else {
@@ -137,6 +137,27 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 
 	select : function(){
 		$urlSelect = $('#url_select');
+		this._initFormTabs();
+		$('#input').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#url_select').attr('disabled', 'disabled');
+			
+		})
+
+		$('#input').bind('blur', function(){
+			$('#url_select').removeAttr('disabled');
+		})
+
+
+		$('#url_select').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#input').attr('disabled', 'disabled');
+		})
+
+		$('#url_select').bind('blur', function(){
+			$('#input').removeAttr('disabled');
+		})
+
 	}
 		
 });

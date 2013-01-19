@@ -183,7 +183,7 @@ $lang['replace_item_message'] = 'Select a record from the list below that you wo
 
 // command line
 $lang['module_install'] = "The '%1s' module has successfully been installed.\n";
-$lang['module_install_error'] = "There was an error installing the '%1s' module .\n";
+$lang['module_install_error'] = "There was an error installing the '%1s' module.\n";
 
 $msg = "The module %1s has been uninstalled in FUEL.\n\n";
 $msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
@@ -226,6 +226,7 @@ $lang['pages_default_location'] = 'example: company/about';
 
 $lang['form_label_page'] = 'Page';
 $lang['form_label_target'] = 'Target';
+$lang['form_label_class'] = 'Class';
 
 $lang['navigation_related'] = 'Create navigation';
 
@@ -279,6 +280,8 @@ $lang['form_label_resize_and_crop'] = 'crop if needed';
 $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
+$lang['form_label_alt'] = 'Alt';
+$lang['form_label_align'] = 'Align';
 $lang['form_label_master_dim'] = 'Master dimension';
 $lang['form_label_unzip'] = 'Unzip zip files';
 $lang['assets_upload_action'] = 'Upload';
@@ -458,6 +461,8 @@ $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
 $lang['form_label_link'] = 'Link';
+$lang['form_label_pdf'] = 'PDF';
+
 $lang['form_label_group_id'] = 'Group';
 $lang['form_label_or_select'] = 'OR select';
 
@@ -482,6 +487,7 @@ $lang['layout_field_body_class'] = 'Body class';
 $lang['layout_field_redirect_to'] = 'Redirect to';
 
 $lang['layout_field_301_redirect_copy'] = 'This layout will do a 301 redirect to another page.';
+$lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specifiec location is used to render the page.';
 $lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap.';
 $lang['layout_field_none_copy'] = 'This layout is the equivalent of having no layout assigned.';
 

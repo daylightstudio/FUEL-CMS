@@ -545,13 +545,14 @@ class Data_table {
 	</code>
 	 * @access	public
 	 * @param	string text label to display for the action
-	 * @param	a link path or a function
-	 * @param	the type (either url or func)
+	 * @param	string a link path or a function
+	 * @param	string the type (either url or func)
+	 * @param	mixed the anchor attributes (e.g. target="_blank")
 	 * @return	void
 	 */
-	public function add_action($label, $action, $type = 'url')
+	public function add_action($label, $action, $type = 'url', $attrs = array())
 	{
-		$action_arr = array($type => $action);
+		$action_arr = array($type => $action, 'attrs' => $attrs);
 		$this->_actions[$label] = $action_arr;
 	}
 	
@@ -573,7 +574,7 @@ class Data_table {
 	 * 
 	 * @access	public
 	 * @param	string text label to display for the action
-	 * @param	a string that represents a function name
+	 * @param	string a string that represents a function name
 	 * @return	void
 	 */
 	public function add_field_formatter($field, $func)

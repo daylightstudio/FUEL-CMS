@@ -115,7 +115,7 @@
 			$('#' + leftID + ' li').die();
 			$('#' + rightID + ' li').die();
 			
-			$('#' + leftID + ' li').not('.opition_disabled').live('dblclick', function(e){
+			$('#' + leftID + ' li[class!="option_disabled"]').live('dblclick', function(e){
 				addSelectedToRight();
 			});
 
@@ -275,7 +275,7 @@
 					var text = $(this).text();
 					var value = $(this).attr('value');
 					var disabled = $(this).attr('disabled');
-					var disabledClass = (disabled) ? ' class="opition_disabled"' : '';
+					var disabledClass = (disabled) ? ' class="option_disabled"' : '';
 					var id = (settings.optionsIdPrefix + idNum);
 
 					var opt = '';

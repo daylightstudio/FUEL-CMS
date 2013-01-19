@@ -47,6 +47,7 @@ class Fuel_blocks extends Fuel_module {
 		<li><strong>model</strong> - the name of a model to automatically load for the block</li>
 		<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
 		<li><strong>select</strong> - select parameters to run for the find method</li>
+		<li><strong>where</strong> - where parameters to run for the find method</li>
 		<li><strong>order</strong> - the order the find method should return</li>
 		<li><strong>limit</strong> - the limit number of results to be returned by the find method</li>
 		<li><strong>offset</strong> - the find results returned offset value</li>
@@ -59,6 +60,7 @@ class Fuel_blocks extends Fuel_module {
 		<li><strong>mode</strong>: explicitly will look in either the </li>
 		<li><strong>module</strong>: the name of the module to look in for the block</li>
 		<li><strong>language</strong>: the language version to use for the block. Must be a value specified found in the 'languages' options in the FUEL configuration</li>
+		<li><strong>use_default</strong>: determines whether to find a non-language specified version of a block with the same name if the specified language version is not available in the CMS</li>
 	</ul>
 	* @access	public
 	 * @param	mixed	Array of parameters
@@ -89,6 +91,7 @@ class Fuel_blocks extends Fuel_module {
 						'mode' => 'auto',
 						'module' => '',
 						'language' => NULL,
+						'use_default' => TRUE,
 						);
 
 		// for convenience
@@ -137,10 +140,10 @@ class Fuel_blocks extends Fuel_module {
 			$module = $this->CI->fuel->modules->get($p['model']);
 			if ($module)
 			{
-				$model_name = $module->model()->short_name(TRUE, FALSE);
+				$model_name = $module->model()->friendly_name(TRUE);
 				if (!empty($model_name))
 				{
-					$var_name = $module->model()->short_name(TRUE, FALSE);
+					$var_name = $module->model()->friendly_name(TRUE, FALSE);
 					$vars[$var_name] =& $data; // for convenience
 					$vars['data'] =& $data;
 				}
@@ -179,10 +182,18 @@ class Fuel_blocks extends Fuel_module {
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
 			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->blocks->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
-				$this->fuel->load_model('blocks');
+				$this->fuel->load_model('fuel_blocks');
 
 				// find the block in FUEL db
-				$block = $this->CI->blocks_model->find_one_by_name($p['view']);
+				$language = (!empty($p['language'])) ? $p['language'] : $this->CI->fuel->language->detect();
+				$block = $this->CI->fuel_blocks_model->find_one_by_name_and_language($p['view'], $language);
+
+				// if there is no block found with that language we will try to find one that may not have a language associated with it
+				if (!isset($block->id) AND $p['use_default'])	
+				{
+					$block = $this->CI->fuel_blocks_model->find_one_by_name($p['view']);
+				}
+				
 				if (isset($block->id))
 				{
 					if (strtolower($p['parse']) == 'auto')
@@ -264,7 +275,7 @@ class Fuel_blocks extends Fuel_module {
 			{
 				// must have content in order to not return error
 				$output = file_get_contents($view_twin);
-				
+
 				// replace PHP tags with template tags... comments are replaced because of xss_clean()
 				if ($sanitize)
 				{

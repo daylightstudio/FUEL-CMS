@@ -113,11 +113,11 @@ function valid_email($email)
 // --------------------------------------------------------------------
 
 /**
- * Ensure a numeric value is less than given size
+ * Ensure a numeric value is greater than given size
  *
  * @access	public
- * @param	int		interger of any length
- * @param 	int		interger of any lenth to test against 
+ * @param	int		integer of any length
+ * @param 	int		integer of any length to test against 
  * @return	boolean
  */
 function min_num($var, $limit = 1)
@@ -132,11 +132,11 @@ function min_num($var, $limit = 1)
 // --------------------------------------------------------------------
 
 /**
- * Ensure a numeric value is greater than given size
+ * Ensure a numeric value is less than given size
  *
  * @access	public
- * @param	int		interger of any length
- * @param 	int		interger of any lenth to test against 
+ * @param	int		integer of any length
+ * @param 	int		integer of any length to test against 
  * @return	boolean
  */
 function max_num($var, $limit = 1)
@@ -154,9 +154,9 @@ function max_num($var, $limit = 1)
  * Ensure a numeric value exists between a given size
  *
  * @access	public
- * @param	int		interger of any length
- * @param 	int		interger of any lenth to test low
- * @param 	int		interger of any lenth to test high 
+ * @param	int		integer of any length
+ * @param 	int		integer of any length to test low
+ * @param 	int		integer of any length to test high 
  * @return	boolean
  */
 function is_between($var, $lo, $hi)
@@ -174,9 +174,9 @@ function is_between($var, $lo, $hi)
  * Ensure a numeric value exists outside a given range
  *
  * @access	public
- * @param	int		interger of any length
- * @param 	int		interger of any lenth to test low
- * @param 	int		interger of any lenth to test high 
+ * @param	int		integer of any length
+ * @param 	int		integer of any length to test low
+ * @param 	int		integer of any length to test high 
  * @return	boolean
  */
 function is_outside($var, $lo, $hi)
@@ -195,7 +195,7 @@ function is_outside($var, $lo, $hi)
  *
  * @access	public
  * @param	string	string of any length
- * @param 	int		interger to test string length against
+ * @param 	int		integer to test string length against
  * @return	boolean
  */
 function length_max($str, $limit = 1000)
@@ -217,7 +217,7 @@ function length_max($str, $limit = 1000)
  *
  * @access	public
  * @param	string	string of any length
- * @param 	int		interger to test string length against
+ * @param 	int		integer to test string length against
  * @return	boolean
  */
 function length_min($str, $limit = 1)

@@ -56,18 +56,31 @@ class Settings extends Fuel_base_controller {
 			show_error(lang('settings_problem', $module, $module, $module));
 		}
 		
-		$new_settings = $this->input->post('settings', TRUE);
 		
-		if ($this->fuel->settings->process($module, $settings, $new_settings))
+		$this->load->library('form_builder');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
+
+		// reset dup id
+		if (!empty($_POST))
 		{
-			$this->fuel->cache->clear_module($module);
-			$this->session->set_flashdata('success', lang('data_saved'));
-			redirect($this->uri->uri_string());
+	
+			$new_settings = $this->input->post('settings', TRUE);
+
+			$fields = $settings;
+			$this->form_builder->set_fields($fields);
+			$new_settings = $this->form_builder->post_process_field_values($new_settings);// manipulates the $_POST values directly
+			if ($this->fuel->settings->process($module, $settings, $new_settings))
+			{
+				$this->fuel->cache->clear_module($module);
+				$this->session->set_flashdata('success', lang('data_saved'));
+				redirect($this->uri->uri_string());
+			}
 		}
+
 		
 		$field_values = $this->fuel->settings->get($module);
 
-		$this->load->library('form_builder');
 		
 		$this->form_builder->label_layout = 'left';
 		$this->form_builder->form->validator = $this->fuel->settings->get_validation();

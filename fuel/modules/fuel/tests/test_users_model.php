@@ -3,6 +3,8 @@
 class Test_users_model extends MY_Model {
 
 	public $required = array('email');
+	public $friendly_name = 'Users';
+	public $singular_name = 'User';
 	public $has_many = array('roles' => array(FUEL_FOLDER => 'categories'));
 	
 	function __construct()

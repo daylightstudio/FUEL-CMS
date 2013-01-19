@@ -62,6 +62,8 @@ class Assets extends Module {
 				$posted['file_name'] = $this->input->get_post('userfile_file_name');
 				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
 				
+				$redirect_to = $this->input->get_post('redirect_to');
+				
 				$id = $posted['file_name'];
 				
 				if ($this->fuel->assets->upload($posted))
@@ -88,7 +90,11 @@ class Assets extends Module {
 					$query_str_arr = $this->input->get_post();
 					$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
 
-					if ($inline === TRUE)
+					if (!empty($redirect_to))
+					{
+						$url = $redirect_to;
+					}
+					else if ($inline === TRUE)
 					{
 						$url = fuel_uri($this->module.'/inline_create/?'.$query_str, TRUE);
 					}
@@ -170,20 +176,57 @@ class Assets extends Module {
 		$this->model->add_filters(array('group_id' => $dir));
 		$options = options_list($this->model->list_items(), 'name', 'name');
 		
-		$preview = '<div id="asset_preview"></div>';
+		$redirect_to = rawurlencode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
+		$preview = ' OR <a href="'.fuel_url('assets/inline_create?redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
-		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview, 'display_label' => FALSE);
+		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview);
+
+		if (isset($_GET['width']))
+		{
+			$fields['width'] = array('value' => $this->input->get_post('width'), 'label' => lang('form_label_width'), 'size' => 5, 'row_class' => 'img_only');
+		}
+		
+		if (isset($_GET['height']))
+		{
+			$fields['height'] = array('value' => $this->input->get_post('height'), 'label' => lang('form_label_height'), 'size' => 5, 'row_class' => 'img_only');
+		}
+
+		if (isset($_GET['alt']))
+		{
+			$fields['alt'] = array('value' => $this->input->get_post('alt'), 'label' => lang('form_label_alt'), 'row_class' => 'img_only');
+		}
+
+		if (isset($_GET['align']))
+		{
+			$alignment_options = array(
+				'' => '',
+				'left' => 'left',
+				'right' => 'right',
+				'middle' => 'middle',
+				'top' => 'top',
+				'bottom' => 'bottom',
+
+				);
+
+			$fields['align'] = array('value' => $this->input->get_post('align'), 'label' => lang('form_label_align'), 'type' => 'select', 'options' => $alignment_options, 'row_class' => 'img_only');
+		}
+
+		if (isset($_GET['class']))
+		{
+			$fields['class'] = array('value' => $this->input->get_post('class'), 'label' => lang('form_label_class'), 'size' => 6, 'row_class' => 'img_only');
+		}
+		
 		$this->form_builder->css_class = 'asset_select';
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
-		$vars['form'] = $this->form_builder->render();
+		$vars['form'] = $this->form_builder->render_divs();
 		$this->fuel->admin->set_inline(TRUE);
 
 		$crumbs = array('' => $this->module_name, lang('assets_select_action'));
-		$this->fuel->admin->set_panel_display('notification', FALSE);
+		//$this->fuel->admin->set_panel_display('notification', FALSE);
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->render('modal_select', $vars);
 	}
@@ -205,6 +248,9 @@ class Assets extends Module {
 		$this->js_controller_params['method'] = 'add_edit';
 		
 		$fields = $this->model->form_fields();
+
+		$fields['redirect_to'] = array('type' => 'hidden', 'value' => rawurldecode($this->input->get_post('redirect_to')));
+	
 		$not_hidden = array();
 		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
 		{
@@ -214,6 +260,12 @@ class Assets extends Module {
 		{
 			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite');
 		}
+
+		if (!empty($field_values['accept']))
+		{
+			$fields['userfile']['accept'] = $field_values['accept'];	
+		}
+		
 		
 		// hide certain fields if params were passed
 		if (!empty($not_hidden))
@@ -240,6 +292,15 @@ class Assets extends Module {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = false;
 		$this->form_builder->set_field_values($field_values);
+
+
+		/* NOT QUITE WORKING DUE TO CANCEL BUTTON */
+		// if ($this->input->get_post('redirect_to'))
+		// {
+		// 	$this->form_builder->other_actions = $this->form->button('Back', 'back', 'style="margin: 10px 10px 0 0; float: left;" data-url="'.site_url($this->input->get_post('redirect_to')).'"');	
+		// }
+		
+
 		$vars['form'] = $this->form_builder->render();
 		
 		// other variables

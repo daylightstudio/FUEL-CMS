@@ -8,14 +8,14 @@ class Sitevariables extends Module {
 	function inline_edit($var)
 	{
 		// try to get the id, if $var is a name
-		$this->load->module_model(FUEL_FOLDER, 'sitevariables_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_sitevariables_model');
 		
 		// set $id to $var if we didn't find a site variable
 		// test if it is a string value first...
 		// numeric name values won't work!
 		if (!is_numeric($var))
 		{
-			$site_var = $this->sitevariables_model->find_one(array('name' => $var));
+			$site_var = $this->fuel_sitevariables_model->find_one(array('name' => $var));
 			$id = $site_var->id;
 		}
 		else

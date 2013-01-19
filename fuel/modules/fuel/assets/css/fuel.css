@@ -43,9 +43,9 @@ input[type="button"] {
   -moz-background-clip: padding;
   -webkit-background-clip: padding;
   background-clip: padding-box;
-  background: #ddd url(../images/button.png) repeat-x;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
-  background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+  background: #ddd url(../images/btn.png) repeat-x;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, whitesmoke), color-stop(1, #cfd1cf));
+  background: -moz-linear-gradient(top center, whitesmoke 0%, #cfd1cf 100%);
   border: 1px solid;
   border-color: #ddd #bbb #999;
   cursor: pointer;
@@ -117,7 +117,7 @@ input[type="week"] {
   
 }
 
-select { height: 25px; line-height: 16px;}
+select { height: 25px; line-height: 16px; max-width: 525px; }
 
 /*
   Separate rule for Firefox.
@@ -303,8 +303,8 @@ a.btn { border: 1px solid #ccc;  height: 27px; line-height: 27px; display: block
 div.btn { border: 1px solid #ccc; float: left; list-style: none;  margin: 0;  padding: 0 15px 0 0px; line-height: 27px; }
 .btn input, .btn .button { border: none; height: 19px; }
 a.btn, div.btn, .btn input, .btn .button  {
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
-  background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, whitesmoke), color-stop(1, #cfd1cf));
+  background: -moz-linear-gradient(top center, whitesmoke 0%, #cfd1cf 100%);
  }
 
 .update_notice { background: #FFFBCC; border: 1px solid #E6DB55; margin-bottom: 10px; padding: 4px 5px; }
@@ -433,9 +433,9 @@ div#fuel_main_top_panel li a:hover { background: #7c7c7c url(../images/tab.png) 
 div#fuel_main_top_panel li.active a { background: #e7e7e7 url(../images/tab.png) repeat-x 0 -58px; color: #113556; text-shadow: #fff 0px 1px 0px;  }
 div#fuel_login_logout { position: absolute; top: 8px; right: 15px; font-size: 11px; color: #333; background-color: #e7e7e7; height: 21px;text-shadow: #fff 0px 1px 0px;  }
 
-div#fuel_actions { height: 46px; border-bottom: 1px solid #ccc; position: relative; min-width: 680px;
+div#fuel_actions { height: 46px; border-bottom: 1px solid #b6b6b6; position: relative; min-width: 680px;
 background: #eee; 
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f6f6f6), color-stop(1, #ddd));
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0, whiteSmoke), color-stop(1, #cfd1cf));
 background: -moz-linear-gradient(top center, #f6f6f6 0%, #ddd 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#dddddd');
  }
@@ -469,13 +469,13 @@ div#filters { position: absolute; right: 15px; top: 12px; }
 a#multi_delete { display: block; }
 
 /* other items */
-div#other_items { float: left; margin: 3px 20px 0px 20px; }
-div#other_items select{  max-width: 300px;}
+div#other_items { float: left; margin: 2px 20px 0px 20px; }
+div#other_items select{  max-width: 250px;}
 
 /* button bar*/
-div#action_btns { position: absolute; top: 9px; left: 15px; }
+div#action_btns { position: absolute; top: 9px; left: 15px; height: 29px; overflow: hidden; }
 div.buttonbar ul {  height: 27px; float: left; }
-div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;  float: left;list-style: none;  margin: 0;
+div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #b9b9b9; border-bottom: 1px solid #b9b9b9; float: left;list-style: none;  margin: 0;
   background: #e6e6e6 url(../images/btn.png) repeat-x; 
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
   background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
@@ -485,6 +485,9 @@ div.buttonbar li:hover { background-position: 0 -27px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #eee));
   background: -moz-linear-gradient(top center, #fff 0%, #eee 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee');
+-moz-box-shadow: inset 0 0 5px #ddd;
+-webkit-box-shadow: inset 0 0 5px #ddd;
+box-shadow: inner 0 0 5px #ddd;
   }
 div.buttonbar li.active { background-position: 0 -54px; 
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ddd), color-stop(1, #fff));
@@ -494,11 +497,11 @@ div.buttonbar li.active { background-position: 0 -54px;
 div.buttonbar li.active a { color: #000; }
 div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
 div.buttonbar li.spacer, li.unattached { margin-left: 10px;}
-div.buttonbar li:last-child, li.unattached { border-right: 1px solid #ccc; }
-div.buttonbar li.end { border-right: 1px solid #ccc; } /* on own line so it will work in IE 8 */
+div.buttonbar li:last-child, li.unattached { border-right: 1px solid #b9b9b9; }
+div.buttonbar li.end { border-right: 1px solid #b9b9b9; } /* on own line so it will work in IE 8 */
 div.buttonbar li:first-child, div.buttonbar li.unattached { -webkit-border-top-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-topleft: 4px; -moz-border-radius-bottomleft: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
 div.buttonbar li:last-child, div.buttonbar li.unattached { -webkit-border-top-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-topright: 4px; -moz-border-radius-bottomright: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
-div.buttonbar li.start { border-left: 1px solid #ccc; }
+div.buttonbar li.start { border-left: 1px solid #b9b9b9; }
 div.save_cancel { height: 35px;  }
 div.save_cancel li { margin: 5px 3px; }
 
@@ -582,13 +585,16 @@ div.modal_content {  -webkit-border-radius: 4px; -moz-border-radius: 4px; border
 div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
-div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; padding-top: 20px; }
+div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; margin: 10px 0 20px 0;}
+div.asset_select > div > div { float: left; }
+div.asset_select span.label { padding: 0 5px 0 15px; }
+div.asset_select div.actions { padding-top: 50px; float: left; }
 div.img_crop { max-width: 400px; max-height: 200px; overflow: auto; }
 div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }
 div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
-div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 864px; margin-left: -425px; max-height: 488px; background-color: #fff; }
+div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 864px; margin-left: -425px; max-height: 508px; background-color: #fff; }
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
@@ -604,19 +610,15 @@ iframe#viewpage_iframe { border: none; width: 100%; height: 100%; }
 input#Save, input.submit { margin-top: 10px; width: 150px; text-align: center; }
 input#Cancel, input.cancel { margin-top: 10px; margin-right: 10px; width: 60px; text-align: center; }
 div#tooltip h3 { font-size: 11px; font-weight: normal; }
-a.btn_field { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; background-image: url(../images/btn.png); line-height: 12px; border: 1px solid #ccc; padding: 3px 5px 3px 5px; }
+a.btn_field { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; line-height: 12px; border: 1px solid #ccc; padding: 3px 5px 3px 5px; 
+  background: #eee url(../images/btn.png) repeat-x;
+  }
 a.btn_field:hover { background-position: 0 -27px; }
 a#back_to { margin-bottom: 20px; display: block; }
 .hidden_form { visibility:hidden; height: 0px; overflow: hidden; }
 
-/* sticky */
-div.sticky { background: transparent url(../images/sticky_border_bg.png) repeat-y; font-family: 'Comic Sans MS', cursive; width: 241px; position: relative; border-top: 1px solid #eaeaea; }
-div.sticky_inner { min-height: 130px; background: #fafab7 url(../images/sticky_bg.png) repeat-x; width: 230px; margin-left: 9px; }
-div.sticky_inner h1 { padding-top: 10px; font-family: 'Comic Sans MS', cursive; font-size: 14px; text-decoration: underline; margin: 0; font-weight: bold; color: #000; text-align: center; }
-div.sticky_bot { background: transparent url(../images/sticky_bot.png) no-repeat; height: 26px;  }
-
 /* pages */
-div#related_items { float: right; width: 180px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 0px 10px; }
+div#related_items { float: right; width: 210px; background-color: #ecf1f5; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px; }
 div#related_items h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
 div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 

@@ -66,6 +66,7 @@ $config['ck_editor_settings'] = "{
 			['NumberedList','BulletedList'],
 			['Link','Unlink'],
 			['Undo','Redo','RemoveFormat'],
+			['PasteFromWord','PasteText'],
 			['Preview'],
 			['Maximize']
 		],
@@ -73,8 +74,10 @@ $config['ck_editor_settings'] = "{
 	htmlEncodeOutput: false,
 	entities: false,
 	bodyClass: 'ckeditor',
+	protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g],
 	toolbarCanCollapse: false,
-	protectedSource: [/\{[\s\S]*?\}/gi, /<\?[\s\S]*?\?>/g]
+	extraPlugins: 'fuellink,fuelimage',
+	removePlugins: 'link,image'
 	}";
 
 /* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure

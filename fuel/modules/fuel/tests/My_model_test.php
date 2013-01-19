@@ -66,7 +66,7 @@ class My_model_test extends Tester_base {
 		$test_custom_records_model = new Test_users_model();
 
 		// set the foreign key
-		$test_custom_records_model->foreign_keys = array('role_id' => array(FUEL_FOLDER => 'categories_model'));
+		$test_custom_records_model->foreign_keys = array('role_id' => array(FUEL_FOLDER => 'fuel_categories_model'));
 		
 		// grab a user
 		$user = $test_custom_records_model->find_by_key(1);
@@ -111,7 +111,7 @@ class My_model_test extends Tester_base {
 		$test_custom_records_model = new Test_users_model();
 
 		// set the has_many key
-		$test_custom_records_model->has_many = array('tags' => array(FUEL_FOLDER => 'tags'));
+		$test_custom_records_model->has_many = array('tags' => array(FUEL_FOLDER => 'fuel_tags'));
 
 		$user = $test_custom_records_model->find_by_key(1);
 
@@ -144,18 +144,20 @@ class My_model_test extends Tester_base {
 		$expected = 3;
 		$this->run($test, $expected, 'has_many tag record test');
 
+		// test #3
 		$test_custom_records_model->has_many = array('tags' => array(
-																	'model' => array(FUEL_FOLDER => 'tags'), 
+																	'model' => array(FUEL_FOLDER => 'fuel_tags'), 
 																	'where' => array('context' => 'jedi')
 																	)
 													);
 
 		$test = count($user->tags);
 		$expected = 2;
-		$this->run($test, $expected, 'has_many test #2');
+		$this->run($test, $expected, 'has_many test #3');
 
+		// test #4
 		$user_model = $user->get_tags(TRUE);
-		$test = is_a($user_model, 'Tags_model');
+		$test = is_a($user_model, 'Fuel_tags_model');
 		$expected = TRUE;
 		$this->run($test, $expected, 'has_many model object returned test');
 
@@ -226,6 +228,27 @@ class My_model_test extends Tester_base {
 		$this->run($test, $expected, 'short_name lowercase record test');
 	}
 
+	public function test_friendly_names()
+	{
+		$test_custom_records_model = new Test_users_model();
+		$test = $test_custom_records_model->friendly_name();
+		$expected = 'Users';
+		$this->run($test, $expected, 'friendly name test');
+
+		$test = $test_custom_records_model->friendly_name(TRUE);
+		$expected = 'users';
+		$this->run($test, $expected, 'friendly name lower case test');
+
+		$test = $test_custom_records_model->singular_name();
+		$expected = 'User';
+		$this->run($test, $expected, 'singular_name');
+
+		$test = $test_custom_records_model->singular_name(TRUE);
+		$expected = 'user';
+		$this->run($test, $expected, 'singular_name lower case test');
+	}
+
+
 	public function test_table_name()
 	{
 		$test_custom_records_model = new Test_users_model();
@@ -240,19 +263,19 @@ class My_model_test extends Tester_base {
 		$tables = $this->CI->fuel->config('tables');
 	
 		$expected = array(
-		    'archives' => 'fuel_archives',
-		    'blocks' => 'fuel_blocks',
-		    'categories' => 'fuel_categories',
-		    'logs' => 'fuel_logs',
-		    'navigation' => 'fuel_navigation',
-		    'navigation_groups' => 'fuel_navigation_groups',
-		    'pages' => 'fuel_pages',
-		    'pagevars' => 'fuel_page_variables',
-		    'permissions' => 'fuel_permissions',
-		    'relationships' => 'fuel_relationships',
-		    'settings' => 'fuel_settings',
-		    'tags' => 'fuel_tags',
-		    'users' => 'fuel_users'
+		    'fuel_archives' => 'fuel_archives',
+		    'fuel_blocks' => 'fuel_blocks',
+		    'fuel_categories' => 'fuel_categories',
+		    'fuel_logs' => 'fuel_logs',
+		    'fuel_navigation' => 'fuel_navigation',
+		    'fuel_navigation_groups' => 'fuel_navigation_groups',
+		    'fuel_pages' => 'fuel_pages',
+		    'fuel_pagevars' => 'fuel_page_variables',
+		    'fuel_permissions' => 'fuel_permissions',
+		    'fuel_relationships' => 'fuel_relationships',
+		    'fuel_settings' => 'fuel_settings',
+		    'fuel_tags' => 'fuel_tags',
+		    'fuel_users' => 'fuel_users'
 		);
 
 		$test_custom_records_model->set_tables($tables);

@@ -427,7 +427,7 @@ or tags, like regions your product belongs to, or specific features. For this, y
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array(array(FUEL_FOLDER => 'tags_model'));
+  public $has_many = array('attributes' => array(array(FUEL_FOLDER => 'fuel_tags_model'));
 
   function __construct()
   {
@@ -444,7 +444,7 @@ You can alternatively just use the name of the model as a string if the model ex
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model'));
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'));
 
   function __construct()
   {
@@ -456,7 +456,7 @@ class Products_model extends Base_module_model
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => 'tags_model', 'module' => FUEL_FOLDER)); //NOTE THE 'module' key
+  public $has_many = array('attributes' => array('model' => 'fuel_tags_model', 'module' => FUEL_FOLDER)); //NOTE THE 'module' key
 
   function __construct()
   {
@@ -469,7 +469,7 @@ class Products_model extends Base_module_model
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model', 'where' => 'category_id = 1'));
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model', 'where' => 'category_id = 1'));
 
   function __construct()
   {
@@ -525,12 +525,12 @@ if (isset($tag->id))
 
 <p class="important">
 	By default, FUEL uses the built-in relationships model to save relationship data. However, if you want to change the model, as well as the field names it uses to store the key information, 
-	you can pass the following	parameters in your <dfn>has_many</dfn> or <dfn>belongs_to</dfn> properties array: <dfn>relationships_model</dfn>, <dfn>foreign_key</dfn>, <dfn>candidate_key</dfn>. An Example is below:
+	you can pass the following	parameters in your <dfn>has_many</dfn> or <dfn>belongs_to</dfn> properties array: <dfn>fuel_relationships_model</dfn>, <dfn>foreign_key</dfn>, <dfn>candidate_key</dfn>. An Example is below:
 </p>
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'tags_model'), 'relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key');
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'), 'fuel_relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key');
 
   function __construct()
   {

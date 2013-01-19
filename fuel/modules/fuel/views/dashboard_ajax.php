@@ -8,7 +8,7 @@
 		<li><strong><?=english_date($val['entry_date'], true)?>:</strong> <?=$val['message']?> - <?=$val['name']?></li>
 		<?php endforeach; ?>
 	</ul>
-	<a href="<?=fuel_url('manage/activity')?>"><?=lang('dashboard_view_all_activity')?></a>
+	<a href="<?=fuel_url('logs')?>"><?=lang('dashboard_view_all_activity')?></a>
 </div>
 <?php endif; ?>
 <?php endif; ?>

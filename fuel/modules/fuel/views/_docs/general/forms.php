@@ -199,6 +199,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
+		<li><a href="#langauge">langauge</a></li>
+		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 	</ul>
 </div>
@@ -737,6 +739,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>subfolder</strong>: a subfolder to upload the images to (will create one if it doesn't exist)</li>
 		<li><strong>file_name</strong>: the new name to assign the uploaded file</li>
 		<li><strong>overwrite</strong>: determines whether to overwrite the uploaded file or create a new file</li>
+		<li><strong>accept</strong>: specifies which files are acceptable to upload. It will default to what is specified in your fuel configuration for "editable_asset_filetypes"</li>
 	</ul>
 	
 	<h4>Image Specific</h4>
@@ -819,7 +822,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="inline_edit" class="toggle">inline_edit</h3>
 <div class="toggle_block_off">
 	<p>This field type is used for associating a separate module's data with your own.
-	The following additional parameter can be passed to this field type:</p>
+	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>module</strong>: the module to inline edit</li>
 		<li><strong>multiple</strong>: whether to display a multi field to associate the inline edited data with</li>
@@ -865,7 +868,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="currency" class="toggle">currency</h3>
 <div class="toggle_block_off">
 	<p>This field type can be used for inputting currency values.
-	The following additional parameter can be passed to this field type:</p>
+	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>currency</strong>: the currency value to display next to the field. The default is '$'</li>
 		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is 3</li>
@@ -887,7 +890,11 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="state" class="toggle">state</h3>
 <div class="toggle_block_off">
-	<p>This field displays a dropdown of states to select from. It automatically pulls it's options from the <span class="file">fuel/application/config/states.php</span> config file.</p>
+	<p>This field displays a dropdown of states to select from. It automatically pulls it's options from the <span class="file">fuel/application/config/states.php</span> config file.
+	The following additional parameters can be passed to this field type:</p>
+	<ul>
+		<li><strong>format</strong>: the value can be either "short" or "long". Default is none in which the saved value will be the state abbreviation but the displayed option value will be the states name</li>
+	</ul>
 
 	<h4>Representations</h4>
 	<pre class="brush: php">
@@ -900,7 +907,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	</pre>
 	
 	<?php form_builder_example('state_example', array('type' => 'state')); ?>
-	
+	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'short')); ?>
+	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'long')); ?>	
 </div>
 
 <h3 id="slug" class="toggle">slug</h3>
@@ -948,6 +956,43 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 </div>
 
+<h3 id="language" class="toggle">language</h3>
+<div class="toggle_block_off">
+	<p>This field type generates a dropdown select with the language values specified in MY_fuel.php.</p>
+	
+	<h4>Representations</h4>
+	<pre class="brush: php">
+	'name' => 'language' // targets any field with the name of language
+	</pre>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['language_example'] = array('type' => 'language');
+	</pre>
+
+	
+</div>
+
+<h3 id="keyval" class="toggle">keyval</h3>
+<div class="toggle_block_off">
+	<p>This field allows you go create a key / value array by separating keys and values with a delimiter. Each key/value goes on it's own line. The
+		post-processed result is a JSON encoded string:</p>
+	<ul>
+		<li><strong>delimiter</strong>: the delimiter used to separate between a key and a value. The default is a ":" (colon).</li>
+	</ul>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['keyval_example'] = array('type' => 'keyval');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['keyval_example'] = array('type' => 'keyval', 'value' => "english:English\ngerman:German\nspanish:Spanish");
+	form_builder_example($fields);
+	?>
+	
+</div>
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
@@ -1036,5 +1081,17 @@ $fields['my_field'] = array('type' => 'my_field', 'represents' => 'blob');
 <p>The fourth way of setting a representative is to simply use the <dfn>set_representative</dfn> method on the <dfn>form_builder</dfn> object like so:</p>
 
 <pre class="brush:php">
-$this->form_builder->set_representative('my_field', array('blob'))
+$this->form_builder->set_representative('my_field', array('blob'));
+</pre>
+
+<h3>Removing Representatives</h3>
+<p>Sometimes a field may be using a representative that you don't won't. For example, you may have a field that has "url" in the name and it is using the url field type which
+you don't want. To fix that you can use the <dfn>ignore_representative</dfn> parameter like so:</p>
+<pre class="brush:php">
+$fields['my_field'] = array('type' => 'my_field', 'ignore_representative' => TRUE);
+</pre>
+<br />
+<p>If you'd like to remove a representative completely from the <dfn>form_builder</dfn> instance, you can use the <dfn>remove_representative</dfn> like so:</p>
+<pre class="brush:php">
+$this->form_builder->remove_representative('url');
 </pre>

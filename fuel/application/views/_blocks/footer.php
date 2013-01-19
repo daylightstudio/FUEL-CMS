@@ -10,5 +10,7 @@
 	</div>
 </div>
 
+<?php echo jquery('1.8.3').js('main').js($js); ?>
+
 </body>
 </html>

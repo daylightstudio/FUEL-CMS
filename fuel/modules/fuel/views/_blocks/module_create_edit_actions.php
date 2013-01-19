@@ -7,7 +7,7 @@
 			<?php endif; ?>
 			
 			<?php if (!empty($this->preview_path) AND $this->fuel->auth->module_has_action('view')) : ?>
-				<li><a href="<?=site_url($this->preview_path)?>" class="ico ico_view view_action" title="<?=$keyboard_shortcuts['view']?> to view"><?=lang('btn_view')?></a></li>
+				<li><a href="<?=site_url($this->preview_path)?>" class="ico ico_view<?php if (!$this->fuel->config('view_in_new_window')) : ?> view_action<?php endif; ?>" title="<?=$keyboard_shortcuts['view']?> to view" target="_blank"><?=lang('btn_view')?></a></li>
 			<?php endif; ?>
 
 			<?php if ($this->fuel->auth->module_has_action('publish') AND $this->fuel->auth->has_permission($this->permission, 'publish')) : ?>
@@ -56,12 +56,3 @@
 	</ul>
 	<?php if (!empty($others) AND !$this->fuel->admin->is_inline()) {?><div id="other_items"><?=$this->form->select('fuel_other_items', $others, '', '', lang('label_select_another'), array($id))?></div><?php } ?>
 </div>
-
-<?php if (isset($action) AND $action == 'edit') : ?>
-<div id="filters">
-	<?php if (!empty($versions)) : ?>
-		<div class="versions"><?=$this->form->select('fuel_restore_version', $versions, '', '', lang('label_restore_from_prev'))?></div>
-		<?=$this->form->hidden('fuel_restore_ref_id', $id)?>
-	<?php endif; ?>
-</div>
-<?php endif; ?>

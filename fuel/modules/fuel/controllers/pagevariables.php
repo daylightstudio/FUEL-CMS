@@ -14,7 +14,7 @@ class Pagevariables extends Module {
 	function inline_edit($field, $page_id = NULL)
 	{
 		// try to get the id, if $var is a name
-		$this->load->module_model(FUEL_FOLDER, 'pagevariables_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 		
 		// set $id to $var if we didn't find a site variable
 		// test if it is a string value first...
@@ -22,7 +22,9 @@ class Pagevariables extends Module {
 		$id = NULL;
 		if (!is_numeric($field))
 		{
-			$var = $this->pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id));
+			$language = $this->fuel->language->detect();
+			$var = $this->fuel_pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id, 'language' => $language));
+			
 			if (isset($var->id))
 			{
 				$id = $var->id;

@@ -70,11 +70,21 @@ class Fuel_custom_fields {
 			}
 		}
 		
+		$params['data'] = array();
 		if (isset($params['preview']))
 		{
-			$params['data'] = array('preview' => $params['preview']);
+			$params['data']['preview'] = $params['preview'];
 		}
 
+		// set ckeditor configs
+		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
+		{
+			foreach($params['ckeditor_config'] as $key => $val)
+			{
+				$params['data'][$key] = $val;
+			}
+		}
+		
 		$js = '<script type="text/javascript">
 			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
 		</script>';
@@ -312,6 +322,7 @@ class Fuel_custom_fields {
 		$data_params['resize_and_crop'] = (isset($params['resize_and_crop'])) ? $params['resize_and_crop'] : '';
 		$data_params['resize_method'] = (isset($params['resize_method'])) ? $params['resize_method'] : 'maintain_ratio';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
+		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
 		
 		if (isset($params['hide_image_options']))
 		{
@@ -346,6 +357,18 @@ class Fuel_custom_fields {
 		$form_builder =& $params['instance'];
 		if (!empty($params['module']))
 		{
+			// hackalicious... used to check for a model's module
+			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
+			foreach($modules as $key => $mod)
+			{
+				$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
+				if (strtolower($params['module']) == $mod_name)
+				{
+					$params['module'] = $key;
+					break;
+				}
+			}
+
 			if (strpos($params['module'], '/') === FALSE)
 			{
 				$CI =& get_instance();
@@ -714,6 +737,9 @@ class Fuel_custom_fields {
 	
 	function currency($params)
 	{
+		$this->CI->load->helper('format');
+
+
 		$form_builder =& $params['instance'];
 		
 		if (empty($params['size']))
@@ -742,6 +768,43 @@ class Fuel_custom_fields {
 		
 		$params['type'] = 'text';
 
+		if (!isset($_POST[$params['key']]))
+		{
+			$_POST[$params['key']] = '';
+		}
+
+		// check if it's a nested form
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
+					{
+						$val = str_replace(",", "", $val);
+						$val = ($val == "") ? NULL : (float) $value;
+						$value[$key]["'.$params['subkey'].'"] = $val;
+					}
+					return $value;
+				}
+				';
+				$func = create_function('$value', $func_str);
+		}
+		else
+		{
+			$func_str = '
+			$value = str_replace(",", "", $value);
+			$value = ($value == "") ? NULL : (float) $value;
+			return $value;
+				';
+		}
+		// unformat number
+		$func = create_function('$value', $func_str);	
+		$form_builder->set_post_process($params['key'], $func);
+
+		// preformat the currency 
+		$params['value'] = (!isset($params['value'])) ? NULL : currency($params['value'], '');
+
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_text($params);
 	}
@@ -751,6 +814,20 @@ class Fuel_custom_fields {
 		include(APPPATH.'config/states.php');
 		$form_builder =& $params['instance'];
 		
+		if (isset($params['format']))
+		{
+			if (strtolower($params['format']) == 'short')
+			{
+				$abbrs = array_keys($states);
+				$states = array_combine($abbrs, $abbrs);
+			}
+			else if (strtolower($params['format']) == 'long')
+			{
+				$names = array_values($states);
+				$states = array_combine($names, $names);
+			}
+
+		}
 		$params['options'] = $states;
 		
 		// set data values for jquery plugin to use
@@ -879,19 +956,30 @@ class Fuel_custom_fields {
 			$model_params = (!empty($params['model_params'])) ? $params['model_params'] : array();
 			$params['options'] = $form_builder->options_from_model($params['model'], $model_params);
 		}
-		
 		if (!empty($params['module']))
 		{
+			// hackalicious... used to check for a model's module
+			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
+			foreach($modules as $key => $mod)
+			{
+				$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
+				if (strtolower($params['module']) == $mod_name)
+				{
+					$params['module'] = $key;
+					break;
+				}
+			}
 			if (strpos($params['module'], '/') === FALSE)
 			{
-				$CI =& get_instance();
-				$module = $CI->fuel->modules->get($params['module'], FALSE);
+				$module = $this->CI->fuel->modules->get($params['module'], FALSE);
 				$uri = (!empty($module)) ? $module->info('module_uri') : '';
 			}
 			else
 			{
 				$uri = $params['module'];
 			}
+
+			// check for modules with fuel_ prefix
 			if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
 			{
 				$inline_class = 'add_edit '.$uri;
@@ -1000,6 +1088,167 @@ class Fuel_custom_fields {
 		}
 		$params['data'] = $data;
 		return $form_builder->create_text($params);
+
+	}	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a dropdown select of languages identified in the MY_fuel.php file
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function language($params)
+	{
+		$form_builder =& $params['instance'];
+		if ((isset($this->CI->language_col) AND $params['key'] == $this->CI->language_col)
+			OR 
+			(!isset($this->CI->language_col) AND $params['key'] == 'language')
+			)
+		{
+			$params['type'] = 'select';
+			$params['options'] = $this->CI->fuel->language->options();
+		}
+		return $form_builder->create_select($params);
+
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a key / value associative array
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function keyval($params)
+	{
+		$form_builder =& $params['instance'];
+		if (!isset($params['delimiter']))
+		{
+			$params['delimiter'] = ":";
+		}
+
+		if (!isset($params['numeric_indexes']))
+		{
+			$params['allow_numeric_indexes'] = FALSE;
+		}
+
+		if (!isset($params['allow_empty_values']))
+		{
+			$params['allow_empty_values'] = FALSE;
+		}
+
+		$split_delimiter = "\s*".$params['delimiter']."\s*";
+
+		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+		if (isset($params['subkey']))
+		{
+			$func_str = '
+				if (is_array($value))
+				{
+					
+					foreach($value as $key => $val)
+					{
+						if (isset($val["'.$params['subkey'].'"]))
+						{
+
+							$json = array();
+							$rows = preg_split("\s*#\n|,\s*#", $val);
+							foreach($rows as $r)
+							{
+								$vals = preg_split("#'.$split_delimiter.'#", $r);
+								if (isset($vals[1]))
+								{
+									$val = $vals[1];
+									$key = $vals[0];
+									$json[$key] = $val;
+								}
+								else
+								{
+									$json[] = $vals[0];
+								}
+							}
+							$first_item = current($json);
+							$value[$key]["'.$params['subkey'].'"] = (!empty($first_item)) ? json_encode($json) : "";
+						}
+					}
+					return $value;
+				}
+				';
+		}
+		else
+		{
+			
+			$func_str = '
+				$json = array();
+				$rows = preg_split("#\s*\n|,\s*#", $value);
+				foreach($rows as $r)
+				{
+					$vals = preg_split("#'.$split_delimiter.'#", $r);
+					if (isset($vals[1]))
+					{
+						$val = $vals[1];
+						$key = $vals[0];
+						$json[$key] = $val;
+					}
+					else
+					{
+						$json[] = $vals[0];
+					}
+				}
+				$first_item = current($json);
+				return  (!empty($first_item)) ? json_encode($json) : "";
+				';
+		}
+		$func = create_function('$value', $func_str);
+		$form_builder->set_post_process($params['key'], $func);
+
+		if (!empty($params['value']))
+		{
+			if (is_json_str($params['value']))
+			{
+				$params['value'] = json_decode($params['value'], TRUE);
+			}
+
+			if (is_array($params['value']))
+			{
+				$new_value = array();
+				foreach($params['value'] as $key => $val)
+				{
+					if (!empty($val) OR ($params['allow_empty_values'] === TRUE AND empty($val)))
+					{
+						if (is_numeric($key) AND $params['allow_numeric_indexes'] === FALSE)
+						{
+							$new_value[] = $val;	
+						}
+						else
+						{
+							$new_value[] = $key.$params['delimiter'].$val;	
+						}
+					}
+				}
+				if (!empty($new_value))
+				{
+					$params['value'] = implode("\n", $new_value);	
+				}
+				else
+				{
+					$params['value'] = '';
+				}
+			}
+		}
+		else
+		{
+			$params['value'] = '';
+		}
+
+		$params['type'] = 'textarea';
+		$params['class'] = 'no_editor';
+		return $form_builder->create_field($params);
 
 	}
 

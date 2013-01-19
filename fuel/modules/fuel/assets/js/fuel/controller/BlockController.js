@@ -14,7 +14,8 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 		
 		$('#no_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view_cancel/';
-			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html == 'success'){
 					$('#view_twin_notification').hide();
 				}
@@ -25,7 +26,8 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 		
 		$('#yes_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view/';
-			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html != 'error'){
 					var id = '#view';
 					if ($(id).exists())

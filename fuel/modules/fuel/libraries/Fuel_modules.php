@@ -605,7 +605,7 @@ class Fuel_module extends Fuel_base_library {
 					'create_edit' => 'modules/module_create_edit', 
 					'delete' => 'modules/module_delete'),
 				'permission' => $this->module,
-				'js_controller' => 'BaseFuelController',
+				'js_controller' => 'fuel.controller.BaseFuelController',
 				'js_controller_path' => '',
 				'js_controller_params' => array(),
 				'js_localized' => array(),
@@ -635,7 +635,7 @@ class Fuel_module extends Fuel_base_library {
 				'icon_class' => '',
 				'folder' => '',
 				'exportable' => FALSE,
-				'limit_options' => array('25' => '25', '50' => '50', '100' => '100'),
+				'limit_options' => array('50' => '50', '100' => '100', '200' => '200'),
 				);
 			$info = array();
 
@@ -674,7 +674,8 @@ class Fuel_module extends Fuel_base_library {
 			}
 			else if (is_string($info['js_controller']) AND strpos($info['js_controller'], '.') === FALSE)
 			{
-				$info['js_controller'] = 'fuel.controller.'.$info['js_controller'];
+				//$info['js_controller'] = 'fuel.controller.'.$info['js_controller'];
+				$info['js_controller'] = $info['js_controller'];
 			}
 
 			// convert slashes to jqx object periods
@@ -941,11 +942,11 @@ class Fuel_module extends Fuel_base_library {
 		{
 			if (is_array($data) AND key($data) === 0)
 			{
-				$var = $model->short_name(TRUE, FALSE);
+				$var = $model->friendly_name(TRUE);
 			}
 			else
 			{
-				$var = $model->short_name(TRUE, TRUE);
+				$var = $model->singular_name(TRUE);
 			}
 		}
 	

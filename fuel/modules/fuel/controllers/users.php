@@ -36,7 +36,7 @@ class Users extends Module {
 			$_POST['last_name'] = '';
 		}
 		
-		parent::_process_create();
+		return parent::_process_create();
 	}
 
 	function _toggle_callback($cols, $heading)

@@ -136,17 +136,19 @@ class Fuel_cache extends Fuel_base_library {
 	 */
 	function create_id($location = NULL)
 	{
+		$lang = $this->fuel->language->detect();
 		if (empty($location))
 		{
 			$segs = $this->CI->uri->segment_array();
 
 			if (empty($segs)) 
 			{
-				return 'home';
+				return 'home.'.$lang;
 			}
-			return implode('.', $segs);
+			return implode('.', $segs).'.'.$lang;
 		}
-		return str_replace('/', '.', $location);
+		$id = $location.'.'.$lang;
+		return str_replace('/', '.', $id);
 	}
 	
 	// --------------------------------------------------------------------

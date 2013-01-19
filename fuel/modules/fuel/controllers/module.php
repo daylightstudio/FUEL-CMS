@@ -10,7 +10,7 @@ class Module extends Fuel_base_controller {
 	{
 		parent::__construct($validate);
 
-		$this->load->module_model(FUEL_FOLDER, 'archives_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
 		if (empty($this->module))
 		{
 			$this->module = fuel_uri_segment(1);
@@ -93,10 +93,11 @@ class Module extends Fuel_base_controller {
 			$this->load->model($this->model_name);
 		}
 		
-		
+		// get the model name
+		$model = end(explode('/', $this->model_name));
+
 		if (empty($this->display_field))
 		{
-			$model = $this->model_name;
 			$fields = $this->$model->fields();
 			
 			// loop through the fields and find the first column that doesn't have id or _id at the end of it
@@ -116,8 +117,7 @@ class Module extends Fuel_base_controller {
 		
 		$this->js_controller_params['module'] = $this->module_uri;
 		
-		// 
-		$model = $this->model_name;
+
 		if (!empty($model))
 		{
 			$this->model =& $this->$model;
@@ -192,6 +192,7 @@ class Module extends Fuel_base_controller {
 			{
 				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
 				$this->filters[$this->language_col] = $lang_filter;
+				$this->model->filter_join = array();
 				$this->model->filter_join[$this->language_col] = 'and';
 			}
 		}
@@ -323,12 +324,26 @@ class Module extends Fuel_base_controller {
 				{
 					$action_type = 'url';
 					$action_val = $this->table_actions[$key];
+					$attrs = array();
 					if (is_array($val))
 					{
-						$action_type = key($val);
-						$action_val = current($val);
+						if (isset($val['url']))
+						{
+							$action_type = 'url';
+							$action_val = $val['url'];
+							if (isset($val['attrs']))
+							{
+								$attrs = $val['attrs'];
+							}
+						}
+						else
+						{
+							$action_type = key($val);
+							$action_val = current($val);
+						}
+						$attrs = (isset($val['attrs'])) ? $val['attrs'] : array();
 					}
-					$this->data_table->add_action($key, $action_val, $action_type);
+					$this->data_table->add_action($key, $action_val, $action_type, $attrs);
 				}
 				else if (strtoupper($val) == 'DELETE')
 				{
@@ -367,6 +382,7 @@ class Module extends Fuel_base_controller {
 			$this->data_table->actions_field = 'last';
 			$this->data_table->no_data_str = lang('no_data');
 			$this->data_table->lang_prefix = 'form_label_';
+			$this->data_table->row_id_key = $this->model->key_field();
 			
 			$boolean_fields = $this->model->boolean_fields;
 			if (!in_array('published', $boolean_fields)) $boolean_fields[] = 'published';
@@ -584,11 +600,14 @@ class Module extends Fuel_base_controller {
 					if (!empty($row))
 					{
 						$values = array($this->precedence_col => $i);
-						$where = array('id' => $row);
+						$where = array($this->model->key_field() => $row);
 						$this->model->update($values, $where);
 					}
 					$i++;
 				}
+				
+				// clear cache
+				$this->_clear_cache();
 			}
 		}
 	}
@@ -706,7 +725,6 @@ class Module extends Fuel_base_controller {
 				$posted['published'] = 'no';
 				$posted['active'] = 'no';
 			}
-
 			$model = $this->model;
 
 			// run before_create hook
@@ -717,7 +735,6 @@ class Module extends Fuel_base_controller {
 			
 			// save the data
 			$id = $this->model->save($posted);
-			
 			if (empty($id))
 			{
 				add_error(lang('error_invalid_id'));
@@ -738,6 +755,7 @@ class Module extends Fuel_base_controller {
 			
 			$this->model->on_after_post($posted);
 			
+
 			if (!$this->model->is_valid())
 			{
 				add_errors($this->model->get_errors());
@@ -755,10 +773,9 @@ class Module extends Fuel_base_controller {
 				
 				// run after_save hook
 				$this->_run_hook('after_save', $data);
-				
+
 				if (!empty($data))
 				{
-					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->fuel->logs->write($msg);
 					$this->_clear_cache();
@@ -857,7 +874,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		$crumbs = array($this->module_uri => $this->module_name);
-		if (!empty($data))
+		if (!empty($data[$this->display_field]))
 		{
 			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
 		}
@@ -911,7 +928,7 @@ class Module extends Fuel_base_controller {
 		$this->model->on_before_post();
 		
 		$posted = $this->_process();
-	
+
 		// run before_edit hook
 		$this->_run_hook('before_edit', $posted);
 		
@@ -974,7 +991,14 @@ class Module extends Fuel_base_controller {
 			
 			if ($this->sanitize_input === TRUE)
 			{
-				$posted = xss_clean($data);
+				foreach($data as $key => $val)
+				{
+					if (!empty($val))
+					{
+						$posted[$key] = xss_clean($val);	
+					}
+					
+				}
 			}
 			else
 			{
@@ -1039,7 +1063,7 @@ class Module extends Fuel_base_controller {
 		
 		// other variables
 		$vars['id'] = $id;
-		$vars['versions'] = $this->archives_model->options_list($id, $this->model->table_name());
+		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] =  $action;
 		
@@ -1262,9 +1286,9 @@ class Module extends Fuel_base_controller {
 		$fields = $this->model->form_fields($_POST);
 		$fb->set_fields($fields);
 		$fb->post_process_field_values();// manipulates the $_POST values directly
-	
+
 		// sanitize input if set in module configuration
-		$posted = $this->_sanitize($this->input->post());
+		$posted = $this->_sanitize($_POST);
 
 		// loop through uploaded files
 		if (!empty($_FILES))
@@ -1333,6 +1357,7 @@ class Module extends Fuel_base_controller {
 			show_error(lang('error_no_permissions'));
 		}
 
+		$inline = $this->fuel->admin->is_inline();
 		if (!empty($_POST['id']))
 		{
 			$posted = explode('|', $this->input->post('id'));
@@ -1372,9 +1397,11 @@ class Module extends Fuel_base_controller {
 				$this->fuel->logs->write(lang('module_deleted', count($posted), $this->module));
 			}
 			
-			if ($this->fuel->admin->is_inline())
+			if ($inline)
 			{
-				
+				$vars['title'] = '';
+				$vars['id'] = '';
+				$vars['back_action'] = '';
 				$this->fuel->admin->render('modules/module_close_modal', $vars);
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
 				$this->fuel->admin->render($this->views['delete'], $vars);
@@ -1446,7 +1473,7 @@ class Module extends Fuel_base_controller {
 			
 			$this->fuel->admin->set_titlebar($crumbs);
 			
-			if ($this->fuel->admin->is_inline())
+			if ($inline)
 			{
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/inline_edit/'.$id);
@@ -1456,6 +1483,9 @@ class Module extends Fuel_base_controller {
 				$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_NO_ACTION);
 				$vars['back_action'] = fuel_url($this->module_uri.'/');
 			}
+			$action_uri = 'delete/'.$id;
+			$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
+
 			$this->fuel->admin->render($this->views['delete'], $vars);
 		}
 	}
@@ -1489,6 +1519,7 @@ class Module extends Fuel_base_controller {
 				{
 					$this->fuel->admin->set_notification(lang('module_restored_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 				}
+				$this->_clear_cache();
 			}
 			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
 		}
@@ -1526,6 +1557,7 @@ class Module extends Fuel_base_controller {
 				{
 					$this->fuel->admin->set_notification(lang('module_replaced_success'), Fuel_admin::NOTIFICATION_SUCCESS);
 					$success = TRUE;
+					$this->_clear_cache();
 				}
 			}
 			else
@@ -1538,7 +1570,7 @@ class Module extends Fuel_base_controller {
 		
 		$fields = array();
 		$other_options = $this->model->get_others($this->display_field, $id);
-		$fields['fuel_replace_id'] = array('label' => 'Replace record:', 'type' => 'select', 'options' => $other_options, 'first_option' => 'Select record to replace...', 'style' => 'max-width: 400px');
+		$fields['fuel_replace_id'] = array('label' => 'Replace record:', 'type' => 'select', 'options' => $other_options, 'first_option' => 'Select record to replace...', 'style' => 'max-width: 400px', 'disabled_options' => array($id));
 		//$fields['fuel_delete_replacement'] = array('label' => 'Delete replacement', 'type' => 'checkbox', 'value' => 'yes');
 		if ($success)
 		{
@@ -1797,6 +1829,9 @@ class Module extends Fuel_base_controller {
 				// use update instead of save to avoid issue with has_many and belongs_to being removed
 				if ($this->model->update($save, $where))
 				{
+					// clear cache
+					$this->_clear_cache();
+
 					// log it
 					$data = $this->model->find_by_key($id, 'array');
 					

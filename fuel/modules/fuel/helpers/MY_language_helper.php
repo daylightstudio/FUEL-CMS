@@ -52,7 +52,14 @@ function lang($key, $args = NULL)
 		if (!is_array($args))
 		{
 			$args = func_get_args();
-			$args[0] = $CI->lang->line($key);
+			if (isset($CI->lang->language[$key]))
+			{
+				$args[0] = $CI->lang->line($key);
+			}
+			else
+			{
+				$args[0] = FALSE;
+			}
 		}
 		return call_user_func_array('sprintf', $args);
 	}

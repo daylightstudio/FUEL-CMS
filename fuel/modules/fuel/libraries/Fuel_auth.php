@@ -64,25 +64,25 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function login($user, $pwd)
 	{
-		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
-		$valid_user = $this->CI->users_model->valid_user($user, $pwd);
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
+		$valid_user = $this->CI->fuel_users_model->valid_user($user, $pwd);
 
 		// check old password logins
 		if (empty($valid_user))
 		{
-			$valid_user = $this->CI->users_model->valid_old_user($user, $pwd);
+			$valid_user = $this->CI->fuel_users_model->valid_old_user($user, $pwd);
 		}
 		
 		if (!empty($valid_user)) 
 		{
 			// update the hashed password & add a salt
-			$salt = $this->CI->users_model->salt();
-			$updated_user_profile = array('password' => $this->CI->users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
+			$salt = $this->CI->fuel_users_model->salt();
+			$updated_user_profile = array('password' => $this->CI->fuel_users_model->salted_password_hash($pwd, $salt), 'salt' => $salt);
 			$updated_where = array('user_name' => $user, 'active' => 'yes');
 
 
 			// update salt on login
-			if ($this->CI->users_model->update($updated_user_profile, $updated_where))
+			if ($this->CI->fuel_users_model->update($updated_user_profile, $updated_where))
 			{
 				// set minimal session data
 				$session_data = array();
@@ -116,6 +116,9 @@ class Fuel_auth extends Fuel_base_library {
 	function set_valid_user($valid_user)
 	{
 		$this->CI->load->library('session');
+
+		// remove these from session for security reasons
+		unset($valid_user['password'], $valid_user['salt']);
 		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
 	}
 
@@ -151,6 +154,7 @@ class Fuel_auth extends Fuel_base_library {
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
 		$user_data[$key] = $value;
+	
 		if (!isset($this->CI->session))
 		{
 			$this->CI->load->library('session');
@@ -173,9 +177,17 @@ class Fuel_auth extends Fuel_base_library {
 		
 		if (!empty($valid_user))
 		{
-			if (!empty($key) && isset($valid_user[$key]))
+			if (!empty($key))
 			{
-				return $valid_user[$key];
+				if (isset($valid_user[$key]))
+				{
+					return $valid_user[$key];	
+				}
+				else
+				{
+					return FALSE;
+				}
+				
 			}
 			return $valid_user;
 		}
@@ -341,9 +353,9 @@ class Fuel_auth extends Fuel_base_library {
 			return $this->_user_perms;
 		}
 		$CI =& get_instance();
-		$this->CI->load->module_model(FUEL_FOLDER, 'users_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 		$where = array('id' => $valid_user['id'], 'active' => 'yes');
-		$user = $CI->users_model->find_one($where);
+		$user = $CI->fuel_users_model->find_one($where);
 		
 		if (!isset($user->id))
 		{
@@ -449,9 +461,8 @@ class Fuel_auth extends Fuel_base_library {
 	function logout()
 	{
 		$this->CI->load->library('session');
-		$this->CI->session->sess_destroy();
-		
 		$this->CI->session->unset_userdata($this->get_session_namespace());
+		//$this->CI->session->sess_destroy();
 		
 		$config = array(
 			'name' => $this->get_fuel_trigger_cookie_name(),

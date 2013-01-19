@@ -338,7 +338,7 @@ class Fuel_installer extends Fuel_base_library {
 				}
 					
 				// save multiple permissions
-				if ($this->fuel->permissions->save($save))
+				if (!$this->fuel->permissions->save($save))
 				{
 					return FALSE;
 				}
@@ -348,7 +348,7 @@ class Fuel_installer extends Fuel_base_library {
 				// save a single permission
 				$save['name'] = $this->config['permissions'];
 				$save['description'] = humanize($this->config['permissions']);
-				if ($this->fuel->permissions->save($save))
+				if (!$this->fuel->permissions->save($save))
 				{
 					return FALSE;
 				}

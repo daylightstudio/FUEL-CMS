@@ -64,6 +64,7 @@ $config['default_layout'] = 'main';
 | * displayonly (bool)
 */
 
+@include(APPPATH.'config/MY_fuel_layouts.php');
 
 // initialize layout fields 
 $config['layouts']['301_redirect'] = array(
@@ -71,6 +72,14 @@ $config['layouts']['301_redirect'] = array(
 	'fields' => array(
 		'copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
 		'redirect_to' => array('label' => lang('layout_field_redirect_to')),
+	)
+);
+
+$config['layouts']['alias'] = array(
+	'label' => 'Alias',
+	'fields' => array(
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_alias_copy')),
+		'alias' => array('label' => lang('layout_field_alias')),
 	)
 );
 
@@ -110,7 +119,7 @@ $config['layouts']['none'] = array(
 	)
 );
 
-@include(APPPATH.'config/MY_fuel_layouts.php');
+
 
 /* End of file fuel_layouts.php */
 /* Location: ./modules/fuel/config/fuel_layouts.php */

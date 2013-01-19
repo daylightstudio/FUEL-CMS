@@ -133,9 +133,11 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				$init['name'] = $name;
 				$init['folder'] = $this->layouts_folder;
-				$init['class'] = 'Fuel_layout';
+				$init['class'] =  (isset($init['class'])) ? $init['class'] : 'Fuel_layout';
 				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
+				$init['description'] = (isset($init['description'])) ? $init['description'] : '';
 				$init['group'] = (isset($init['group'])) ? $init['group'] : '';
+				$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
 				
 				if (!empty($init['fields']))
 				{
@@ -156,37 +158,38 @@ class Fuel_layouts extends Fuel_base_library {
 						{
 							$fields[$key]['name'] = $key;
 						}
-						if (!isset($fields[$key]['order']))
-						{
-							$fields[$key]['order'] = $order;
-						}
 						
 						// must remove this so that the values can be normalized again
 						unset($fields[$key]['__DEFAULTS__']);
 						$order++;
 					}
-
+	
 					$init['fields'] = $fields;
+				}
 
-					if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
+				if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
+				{
+
+					if (!isset($init['filename']))
 					{
-						if (!isset($init['filename']))
-						{
-							$init['filename'] = $init['class'].EXT;
-						}
-
-						if (!isset($init['filepath']))
-						{
-							$init['filepath'] = 'libraries';
-						}
-						$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
-						require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
+						$init['filename'] = $init['class'].EXT;
 					}
+
+					if (!isset($init['filepath']))
+					{
+						$init['filepath'] = 'libraries';
+					}
+					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+					require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
 				}
 				$this->create($name, $init, $init['class']);
 			}
 			else if (is_a($init, 'Fuel_layout'))
 			{
+				if ($init->label() == '')
+				{
+					$init->set_label($name);
+				}
 				$this->_layouts[$name] = $init;
 			}
 
@@ -235,8 +238,8 @@ class Fuel_layouts extends Fuel_base_library {
 				unset($layouts[$k]);
 			}
 		}
-
-		ksort($options);
+		
+		//ksort($options);
 
 		// create groups first
 		foreach($layouts as $k => $layout)

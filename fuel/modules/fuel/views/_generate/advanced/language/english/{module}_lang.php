@@ -1,2 +1,2 @@
 <?php 
-$lang['{module}_lang_example'] = '';
+$lang['module_{module}'] = '{module_name}';

@@ -77,6 +77,8 @@ class MY_Model extends CI_Model {
 	protected $dsn = ''; // the DSN string to connect to the database... if blank it will pull in from database config file
 	protected $has_auto_increment = TRUE; // does the table have auto_increment?
 	protected $record_class = ''; // the name of the record class (if it can't be determined)
+	protected $friendly_name = ''; // a friendlier name of the group of objects
+	protected $singular_name = ''; // a friendly singular name of the object
 	protected $rules = array(); // validation rules
 	protected $fields = array(); // fields in the table
 	protected $use_common_query = TRUE; // include the _common_query method for each query
@@ -97,6 +99,7 @@ class MY_Model extends CI_Model {
 		$this->load->helper('string');
 		$this->load->helper('date');
 		$this->load->helper('security');
+		$this->load->helper('inflector');
 		$this->load->helper('language');
 
 
@@ -217,6 +220,65 @@ class MY_Model extends CI_Model {
 		{
 			return $short_name;
 		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Gets the name of the model object. By default it will be the same as the short_name(FALSE, FALSE) if no "friendly_name" value is specfied on the model
+	 *
+	 <code>
+	echo $this->examples_model->friendly_name(TRUE); 
+	// example
+	</code>
+	 *
+	 * @access	public
+	 * @param	boolean	lower case the name (optional)
+	 * @return	array
+	 */	
+	public function friendly_name($lower = FALSE)
+	{
+		if (!empty($this->friendly_name))
+		{
+			if ($lower)
+			{
+				return strtolower($this->friendly_name);
+			}
+			return $this->friendly_name;
+		}
+		$friendly_name = $this->short_name($lower, FALSE);
+		$friendly_name = ucfirst(str_replace('_', ' ', $friendly_name));
+		return $friendly_name;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Gets the singular name of the model object. By default it will be the same as the short_name(FALSE, TRUE) if no "singular_name" value is specfied on the model
+	 *
+	 <code>
+	echo $this->examples_model->singular_name(TRUE); 
+	// example
+	</code>
+	 *
+	 * @access	public
+	 * @param	boolean	lower case the name (optional)
+	 * @return	array
+	 */	
+	public function singular_name($lower = FALSE)
+	{
+		if (!empty($this->singular_name))
+		{
+			if ($lower)
+			{
+				return strtolower($this->singular_name);
+			}
+			return $this->singular_name;
+		}
+
+		$singular_name = $this->short_name($lower, TRUE);
+		$singular_name = ucfirst(str_replace('_', ' ', $singular_name));
+		return $singular_name;
 	}
 
 	// --------------------------------------------------------------------
@@ -761,6 +823,57 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Get the results of a query from within a select group of key field values. Results are sorted by the order from within the group.
+	 *
+	 <code>
+	$examples = $this->examples_model->find_within(array(1, 2, 3, 4), array('published' => 'yes'), 'date_added desc'); 
+	</code>
+	 *
+	 * @access	public
+	 * @param	group	an array of keys to limit the search results to
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
+	 * @param	string	return type (object, array, query, auto) (optional)
+	 * @param	string	the column to use for an associative key array (optional)
+	 * @return	array
+	 */	
+	function find_within($group, $where = array(), $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
+	{
+		if (empty($group) OR !is_array($group))
+		{
+			return array();
+		}
+
+		// setup wherein for the group
+		$this->db->where_in($this->key_field(), $group);
+
+		// must set protect identifiers to FALSE in order for order by to work
+		$_protect_identifiers = $this->db->_protect_identifiers;
+		$this->db->_protect_identifiers = FALSE;
+
+		// escape group
+		foreach($group as $key => $val)
+		{
+			$group[$key] = $this->db->escape($val);
+		}
+
+		// remove any cached order by
+		$this->db->ar_cache_orderby = array();
+
+		$this->db->order_by('FIELD('.$this->key_field().', '.implode(', ', $group).')');
+
+		// set it _protect_identifiers back to original value
+		$this->db->_protect_identifiers = $_protect_identifiers;
+
+		// do a normal find all
+		$data = $this->find_all($where, NULL, $limit, $offset, $return_method, $assoc_key);
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * This method takes an associative array with the key values that map to CodeIgniter active record methods and returns a query result object.
 	 * 
 	 * For more advanced, use CI Active Record. Below are the key values you can pass:
@@ -1099,12 +1212,12 @@ class MY_Model extends CI_Model {
 		
 		foreach($fields as $key => $val)
 		{
-			if (isset($values[$key]))
+			if (is_array($values) AND array_key_exists($key, $values))
 			{
 				$values[$key] = ($this->auto_trim AND is_string($values[$key])) ? trim($values[$key]) : $values[$key];
 			}
 		}
-
+		
 		// process linked fields
 		$values = $this->process_linked($values);
 		
@@ -1142,7 +1255,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			} 
 			
-			if (isset($values[$key]))
+			if (is_array($values) AND array_key_exists($key, $values))
 			{
 				
 				// format dates
@@ -1322,7 +1435,6 @@ class MY_Model extends CI_Model {
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
 			$values = $this->on_before_validate($values);
-			
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
@@ -1790,9 +1902,9 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @param	string	value to be checked
 	 * @param	string	column name to check
-	 * @param	mixed	the key field value to check againsts. May also be the complete array of values if the key value is also an array (for compound unique keys)
+	 * @param	mixed	the key field value to check against. May also be the complete array of values if the key value is also an array (for compound unique keys)
 	 * @return	array
-	 */	
+	 */
 	function is_editable($val, $key, $id)
 	{
 		if (!isset($val)) return FALSE;
@@ -1808,6 +1920,7 @@ class MY_Model extends CI_Model {
 					return FALSE;
 				}
 				$where[$k] = $id[$k];
+
 			}
 			$data = $this->find_one_array($where);
 			$unique_value = $id[$key_field];
@@ -1970,6 +2083,7 @@ class MY_Model extends CI_Model {
 		foreach($this->unique_fields as $field)
 		{
 			$has_key_field = $this->_has_key_field_value($values);
+			$key_field = $this->key_field();
 
 			if (is_array($field))
 			{
@@ -1987,7 +2101,6 @@ class MY_Model extends CI_Model {
 					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
 					if ($has_key_field)
 					{
-						$key_field = $this->key_field();
 						if (!is_array($key_field))
 						{
 							$this->add_validation($f, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values));
@@ -2004,7 +2117,6 @@ class MY_Model extends CI_Model {
 				$friendly_field = ucwords(str_replace('_', ' ', $field));
 				if ($has_key_field)
 				{
-					$key_field = $this->key_field();
 					if (!is_array($key_field))
 					{
 						$this->add_validation($field, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values[$key_field]));
@@ -2012,7 +2124,7 @@ class MY_Model extends CI_Model {
 				}
 				else
 				{
-					$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), $field);
+					$this->add_validation($field, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $field));
 				}
 			}
 
@@ -2267,7 +2379,7 @@ class MY_Model extends CI_Model {
 	 */	
 	public function has_error()
 	{
-		return (count($this->validator->get_errors()) > 1);
+		return (count($this->validator->get_errors()) > 0);
 	}
 	
 	// --------------------------------------------------------------------
@@ -2395,15 +2507,20 @@ class MY_Model extends CI_Model {
 	 * Removes all the validation
 	 *
 	 <code>
-	$this->examples_model->remove_all_validation();
+	$this->examples_model->remove_all_validation(TRUE);
 	</code>
 	 *
 	 * @access	public
+	 * @param	boolean determines whether to remove required validation as well as other validation rules
 	 * @return	void
 	 */	
-	public function remove_all_validation()
+	public function remove_all_validation($remove_required = FALSE)
 	{
 		$this->validator->reset(TRUE);
+		if ($remove_required)
+		{
+			$this->required = array();
+		}
 		$this->rules = array();
 	}
 	
@@ -2556,7 +2673,7 @@ class MY_Model extends CI_Model {
 				
 			}
 		}
-		
+
 		// lookup foreign keys and make the selects by default
 		if (!empty($this->foreign_keys))
 		{
@@ -2572,11 +2689,10 @@ class MY_Model extends CI_Model {
 				$fields[$key]['type'] = 'select';
 				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
 				$fields[$key]['first_option'] = lang('label_select_one');
-				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->short_name(TRUE, TRUE)));
+				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->singular_name(FALSE)));
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
 			}
 		}
-		
 		
 		// create related
 		if (!empty($related))
@@ -2597,7 +2713,8 @@ class MY_Model extends CI_Model {
 					$options = $CI->$related_model_name->options_list();
 					
 					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
-					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($CI->$related_model_name->short_name(TRUE, TRUE).'_id', array($this->short_name(TRUE, TRUE).'_id' => $values[$key_field]), 'id asc')) : array();
+					$singular_name = $this->singular_name(TRUE);
+					$field_values = (!empty($values['id'])) ? array_keys($CI->$lookup_name->find_all_array_assoc($singular_name.'_id', array($singular_name.'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'multi', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
@@ -2616,7 +2733,7 @@ class MY_Model extends CI_Model {
 				}
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
-				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
+				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->friendly_name(TRUE));
 			}
 		}
 
@@ -2633,7 +2750,7 @@ class MY_Model extends CI_Model {
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
-				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE, FALSE));
+				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->friendly_name(TRUE));
 			}
 		}
 
@@ -2690,6 +2807,8 @@ class MY_Model extends CI_Model {
 		// First generate the headings from the table column names
 		if ($display_headers !== FALSE)
 		{
+			$headers = array();
+			
 			// check if it is a query object first
 			if (is_object($data) AND method_exists($data, 'list_fields'))
 			{
@@ -3389,7 +3508,7 @@ class MY_Model extends CI_Model {
 			'foreign_table'		=> 'foreign_table',
 			'foreign_key'		=> 'foreign_key',
 			'candidate_key'		=> 'candidate_key',
-			'relationships_model'=> array(FUEL_FOLDER => 'relationships_model'),
+			'relationships_model'=> array(FUEL_FOLDER => 'fuel_relationships_model'),
 			);
 			
 		if (is_array($rel_config))
@@ -4759,7 +4878,7 @@ class Data_record {
 		}
 		$type_formatters = $formatters[$type];
 
-		// if the helpers are a tring, then we split it into an array
+		// if the helpers are a string, then we split it into an array
 		if (is_string($type_formatters))
 		{
 			$type_formatters = preg_split('#,\s*|\|#', $type_formatters);
@@ -4833,11 +4952,11 @@ class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the results of the query
+	 * Magic method for capturing method calls on the record object that don't exist. Allows for "get_{field}" to map to just "{field}" as well as "is_{field}"" and "has_{field}"
 	 *
 	 * @access	public
-	 * @param	object	parent model object
-	 * @param	array	field names
+	 * @param	object	method name
+	 * @param	array	arguments
 	 * @return	array
 	 */	
 	public function __call($method, $args)
@@ -5144,7 +5263,6 @@ class Data_record {
 		{
 			$foreign_data = $this->_CI->$foreign_model->find_all();
 		}
-
 		if ( ! empty($foreign_data))
 		{
 			// maintain the order of the related data

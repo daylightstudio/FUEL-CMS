@@ -37,7 +37,7 @@
 						{
 							$section_hdr = ucfirst(str_replace('_', ' ', $section));
 						}
-						echo "<div class=\"left_nav_section\" id=\"leftnav_".$section."\">\n";
+						echo "<div class=\"left_nav_section\" id=\"leftnav_".str_replace('/', '_', $section)."\">\n";
 						echo "\t<h3>".$section_hdr."</h3>\n";
 						echo "\t<ul>\n";
 					}

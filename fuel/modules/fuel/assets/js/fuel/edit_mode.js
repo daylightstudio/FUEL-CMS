@@ -44,6 +44,12 @@ if (fuel == undefined) var fuel = {};
 	
 	$(document).ready(function(){
 		function init(){
+
+			// disable the toolbar if it is being view from within the admin
+			if (window.top != window){
+				$('#__fuel_edit_bar__').hide();
+				return;
+			}
 			initMarkers();
 			initFUELBar();
 			
@@ -442,6 +448,20 @@ if (fuel == undefined) var fuel = {};
 				$('#__fuel_edit_bar_form__').ajaxSubmit(function(){
 					window.location.reload();
 				});
+				return false;
+			});
+
+			$('#__fuel_language__').change(function(){
+				var beginUrl = window.location.href.split('?')[0];
+				var queryStr = window.location.search.substring(1);
+				var param = $(this).attr('name');
+				var regEx = new RegExp('&?' + param + '=[^&]*');
+
+				// remove any lang field values so it doesn't duplicate it in the query string
+				queryStr = queryStr.replace(regEx, '');
+				queryStr += '&' + param + '=' + $(this).val();
+				var url = beginUrl + '?' + queryStr;
+				window.location = url;
 				return false;
 			});
 

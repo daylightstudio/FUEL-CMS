@@ -129,7 +129,7 @@ class Fuel_admin extends Fuel_base_library {
 			$this->check_login();
 		}
 		
-		$this->CI->load->model(FUEL_FOLDER.'/logs_model');
+		$this->CI->load->model(FUEL_FOLDER.'/fuel_logs_model');
 
 		// set variables
 		$load_vars = array(
@@ -239,7 +239,7 @@ class Fuel_admin extends Fuel_base_library {
 		// set the form action
 		if (empty($vars['form_action']))
 		{
-			$vars['form_action'] = site_url($this->CI->uri->uri_string());
+			$vars['form_action'] = site_url($this->CI->uri->uri_string(). '?inline='.$this->is_inline());
 		}
 		else if (!empty($vars['form_action']) AND !is_http_path($vars['form_action']))
 		{
@@ -1312,6 +1312,7 @@ class Fuel_admin extends Fuel_base_library {
 	
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
+		$vars['language'] = $this->fuel->language->detect();
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
 
@@ -1323,8 +1324,8 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			
 			$location = uri_path();
-			$this->CI->load->module_model(FUEL_FOLDER, 'pages_model');
-			$vars['others'] = $this->CI->pages_model->get_others('location', $location, 'location');
+			$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+			$vars['others'] = $this->CI->fuel_pages_model->get_others('location', $location, 'location');
 		}
 		$vars['init_params']['pageId'] = (!empty($vars['page']['id']) ? $vars['page']['id'] : 0);
 		$vars['init_params']['pageLocation'] = (!empty($vars['page']['location']) ? $vars['page']['location'] : uri_path());

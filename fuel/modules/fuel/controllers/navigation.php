@@ -11,9 +11,8 @@ class Navigation extends Module {
 	function upload()
 	{
 		$this->load->library('form_builder');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_model');
-		
+		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_groups_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
 		$this->js_controller_params['method'] = 'upload';
 		
 		if (!empty($_POST))
@@ -26,6 +25,8 @@ class Navigation extends Module {
 				$file_info = $_FILES['file'];
 				$params['file_path'] = $file_info['tmp_name'];
 				$params['var'] = $this->input->post('variable') ? $this->input->post('variable') : 'nav';
+				$params['language'] = $this->input->post('language');
+				
 				if (!$this->fuel->navigation->upload($params))
 				{
 					$error = TRUE;
@@ -51,7 +52,7 @@ class Navigation extends Module {
 		}
 		
 		$fields = array();
-		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
+		$nav_groups = $this->fuel_navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
 		// load custom fields
@@ -60,6 +61,7 @@ class Navigation extends Module {
 		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
 		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable') : 'nav'), 'size' => 10);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'first_option' => lang('label_select_one'));
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$fields['__fuel_module__'] = array('type' => 'hidden');
 		$fields['__fuel_module__']['value'] = $this->module;
@@ -72,6 +74,8 @@ class Navigation extends Module {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_field_values($_POST);
+		
 		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
 		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
