@@ -1190,11 +1190,11 @@ Class Form_builder {
 			{
 				if ($this->key_check_name != $params['orig_name'])
 				{
-					$params['name'] = $this->name_array.'['.$params['orig_name'].']';				
+					$params['name'] = $this->name_array.'['.$params['orig_name'].']';
 				}
 				else
 				{
-					$params['name'] = $params['orig_name'];				
+					$params['name'] = $params['orig_name'];
 				}
 			}
 			if (in_array($params['orig_name'], $this->hidden) AND !in_array($params['name'], $this->hidden)) $this->hidden[] = $params['name'];
@@ -1828,7 +1828,9 @@ Class Form_builder {
 			'options' => array(),
 			'mode' => NULL,
 			'model' => NULL,
-			);
+			'wrapper_tag' => 'span',// for checkboxes
+			'wrapper_class' => 'multi_field',
+		);
 		$params = $this->normalize_params($params, $defaults);
 		
 		$i = 0;
@@ -1839,6 +1841,7 @@ Class Form_builder {
 			$default = (isset($params['value'])) ? $params['value'] : FALSE;
 			foreach($params['options'] as $key => $val)
 			{
+				$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 				$attrs = array(
 					'class' => $params['class'],
 					'readonly' => $params['readonly'], 
@@ -1862,6 +1865,7 @@ Class Form_builder {
 				
 				$str .= ' '.$this->create_label($enum_params);
 				$str .= "&nbsp;&nbsp;&nbsp;";
+				$str .= '</'.$params['wrapper_tag'].'>';
 				$i++;
 			}
 		}

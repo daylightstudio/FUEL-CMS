@@ -358,6 +358,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		</li>
 		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
 		<li><strong>mode</strong>: Options are 'auto', 'radios' and 'select'. Auto will show radio buttons if there are 2 or less, and will use a single select field if there are more.</li>
+		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the radio and label. Default is the 'span' tag.</li>
+		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
 	</ul>
 	
 	<h4>Example</h4>
