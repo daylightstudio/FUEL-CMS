@@ -676,8 +676,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					if (_this.rearrangeOn){
 						//$('#col').val(_this.initObj.precedence_col);
 						//$('#order').val('asc');
+						var $form = $('#form');
+						var csrf = $('#csrf_test_name').val();
+						var data = $('#data_table').tableDnDSerialize() + '&csrf_test_name='+ csrf;
 						var params = {
-							data: $('#data_table').tableDnDSerialize(),
+							data: data,
 							url: _this.precedenceAjaxURL,
 							type: 'post',
 							success: function(html){
