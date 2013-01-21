@@ -65,6 +65,28 @@ function site_url($uri = '', $https = NULL)
 // --------------------------------------------------------------------
 
 /**
+ * Current URL
+ * Added show_query_str parameter
+ *
+ * @access	public
+ * @param	boolean	determines whether to include query string parameters
+ * @return	string
+ */
+function current_url($show_query_str = FALSE)
+{
+    $CI =& get_instance();
+
+    $url = $CI->config->site_url($CI->uri->uri_string());
+    if ($show_query_str AND !empty($_SERVER['QUERY_STRING']))
+    {
+    	$url = $url.'?'.$_SERVER['QUERY_STRING'];
+    }
+    return $url;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the uri path normalized
  *
  * @access	public
