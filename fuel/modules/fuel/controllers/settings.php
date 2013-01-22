@@ -38,13 +38,16 @@ class Settings extends Fuel_base_controller {
 
 	function manage($module = '')
 	{
-		$this->_validate_user($module.'_settings');
-		
 		if (empty($module))
 		{
 			redirect('fuel/settings');
 		}
 		
+		if (!empty($module))
+		{
+			$this->_validate_user($module);
+		}
+
 		$this->js_controller_params['method'] = 'add_edit';
 		
 		$mod = $this->fuel->modules->get($module);
@@ -95,7 +98,6 @@ class Settings extends Fuel_base_controller {
 		$vars['module'] = $mod->friendly_name();
 		$vars['form'] = $this->form_builder->render();
 		
-		$this->_validate_user('manage');
 		$crumbs = array('settings' => lang('section_settings'), $mod->friendly_name());
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_settings');
 		
