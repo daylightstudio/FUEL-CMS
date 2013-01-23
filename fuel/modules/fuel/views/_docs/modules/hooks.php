@@ -1,7 +1,7 @@
 <h1>Module Hooks</h1>
 <p>FUEL has extended the <a href="http://codeigniter.com/user_guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a> system to provide 
 extra hooks into creating, editing, and deleting of simple module data. An additional <dfn>module</dfn> hook parameter was added to allow you to add hook files
-in your advanced module folders (e.g. <dfn>fuel/modules/my_module/hooks</dfn>). To add a hook, you modify the <dfn>fuel/modules/application/config/hooks.php</dfn>
+in your advanced module folders (e.g. <dfn>fuel/modules/my_module/hooks</dfn>). To add a hook, you modify the <dfn>fuel/application/config/hooks.php</dfn>
 just like the native <a href="http://codeigniter.com/user_guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a>.</p>
 
 <p>The hooks currently available are:</p>
@@ -36,5 +36,5 @@ $hook['before_edit_projects'] = array(
 <p>Unlike <a href="http://www.getfuelcms.com/user_guide/libraries/my_model" target="_blank">model hooks</a>, 
 <dfn>module hooks</dfn> allow a module to execute code before or after an event in another module. This allows for more autonomous integration between modules.
 For example, say you want to integrate into the FUEL blog comment module to send an email notification to someone other then the author of the post (which the blog
-module does automatically). You can add an <dfn>after_edit_blog_comments</dfn> hook to the <dfn>fuel/modules/application/config/hooks.php</dfn> file to make that happen.
+module does automatically). You can add an <dfn>after_edit_blog_comments</dfn> hook to the <dfn>fuel/application/config/hooks.php</dfn> file to make that happen.
 </p>
