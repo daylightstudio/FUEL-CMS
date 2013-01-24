@@ -43,7 +43,7 @@ class Settings extends Fuel_base_controller {
 			redirect('fuel/settings');
 		}
 		
-		if (!empty($module))
+		if (!empty($module) AND $module != FUEL_FOLDER)
 		{
 			$this->_validate_user($module);
 		}
