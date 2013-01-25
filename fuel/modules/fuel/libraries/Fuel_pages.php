@@ -301,6 +301,7 @@ class Fuel_page extends Fuel_base_library {
 	public $views_path = ''; // the path to the views folder for rendering. Used with modules
 	public $render_mode = 'views'; // is the page being rendered from the views folder or the DB
 	public $view_module = 'app'; // the module to look for the view file
+	public $language = ''; // the language to use for rendering both a static view and CMS page
 	public $markers = array(); // the inline editing markers for the page
 	public $include_pagevar_object = TRUE; // includes a $pagevar object that contains the variables for the page
 	public static $marker_key = '__FUEL_MARKER__'; // used for placing inline editing content in the output
@@ -369,6 +370,7 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
+		$this->language = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
 
 		// assign the location of the page
 		$this->assign_location($this->location);
@@ -539,9 +541,8 @@ class Fuel_page extends Fuel_base_library {
 		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
 		$page_mode = (empty($page_mode)) ? $this->fuel->pages->mode() : $page_mode;
 		
-		$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
 		$vars_path = $this->views_path.'_variables/';
-		$init_vars = array('vars_path' => $vars_path, 'lang' => $lang, 'include_pagevar_object' => $this->include_pagevar_object);
+		$init_vars = array('vars_path' => $vars_path, 'lang' => $this->language, 'include_pagevar_object' => $this->include_pagevar_object);
 		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
 		$this->add_variables($vars);
@@ -712,6 +713,16 @@ class Fuel_page extends Fuel_base_library {
 
 		$output = NULL;
 		
+		// test that the file exists in the associated language
+		if (!empty($this->language) AND !$this->fuel->language->is_default($this->language))
+		{
+			$view_tmp = 'language/'.$this->language.'/'.$view;
+			if (file_exists($this->views_path . $view_tmp .'.php'))
+			{
+				$view = $view_tmp;
+			}
+		}
+
 		// set the extension... allows for sitemap.xml for example
 		$ext = '.'.pathinfo($view, PATHINFO_EXTENSION);
 		$check_file = $this->views_path.$view;
