@@ -81,7 +81,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 /* editor icons */
 .__fuel_edit__ { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
 .__fuel_edit__ { position: absolute; z-index: 1000; color: #000; }
-.__fuel_edit__ .__fuel_edit_marker__ { text-align: left; position: relative; display: block; background: transparent url(../images/ico_pencil.png) no-repeat; min-width: 16px; height: 20px; color: #fff; }
+.__fuel_edit__ .__fuel_edit_marker__ { text-align: left !important; position: relative; display: block; background: transparent url(../images/ico_pencil.png) no-repeat !important; min-width: 16px !important; height: 20px !important; color: #fff !important; text-decoration: none !important; }
 .__fuel_edit__ .__fuel_edit_marker_unpublished__ { background-image: url(../images/ico_pencil_delete.png) !important; }
 .__fuel_edit__ .__fuel_edit_marker_inner__ { display: none; }
 .__fuel_edit__ .__fuel_edit_marker_new__ { background-image: url(../images/ico_add.png); }
