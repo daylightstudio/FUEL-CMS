@@ -49,6 +49,7 @@ class Fuel_blocks_model extends Base_module_model {
 
 		$blocks = parent::options_list('name', 'name', $where, $order);
 		$blocks = array_merge($view_blocks, $blocks);
+		ksort($blocks);
 		return $blocks;
 	}
 	
