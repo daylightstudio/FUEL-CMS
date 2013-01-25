@@ -209,6 +209,25 @@ class Fuel_language extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns whether the language is the default language
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function is_default($lang)
+	{
+		if (!$this->has_multiple())
+		{
+			return TRUE;
+		}
+		// the default is the first option of the list
+		$default = key($this->options);
+		return $lang == $default;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Detects which language should be used 
 	 *
 	 * @access	public
