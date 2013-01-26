@@ -34,7 +34,7 @@ class Fuel_redirects extends Fuel_base_library {
 	
 	public $http_code = 301; // The HTTP response code to return... 301 = permanent redirect
 	public $redirects = array(); // The pages to redirect to
-	public $case_sensitive = FALSE; // Determines whether the pattern matching for the redirects is case sensitive
+	public $case_sensitive = TRUE; // Determines whether the pattern matching for the redirects is case sensitive
 
 	/**
 	 * Constructor
@@ -162,7 +162,7 @@ class Fuel_redirects extends Fuel_base_library {
 
 				// Does the RegEx match?
 				$pattern = '#^'.$key.'$#';
-				if ($case_sensitive)
+				if (!$case_sensitive)
 				{
 					$pattern .= 'i';
 				}
