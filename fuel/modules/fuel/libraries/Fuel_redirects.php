@@ -34,7 +34,8 @@ class Fuel_redirects extends Fuel_base_library {
 	
 	public $http_code = 301; // The HTTP response code to return... 301 = permanent redirect
 	public $redirects = array(); // The pages to redirect to
-	
+	public $case_sensitive = FALSE; // Determines whether the pattern matching for the redirects is case sensitive
+
 	/**
 	 * Constructor
 	 *
@@ -95,6 +96,17 @@ class Fuel_redirects extends Fuel_base_library {
 	function config()
 	{
 		include(APPPATH.'config/redirects.php');
+		
+		if (isset($redirect_http_code))
+		{
+			$this->http_code = $redirect_http_code;
+		}
+
+		if (isset($redirect_case_sensitive))
+		{
+			$this->case_sensitive = $redirect_case_sensitive;
+		}
+
 		$redirect = array_merge($redirect, $this->redirects);
 		return $redirect; 
 	}
@@ -125,34 +137,60 @@ class Fuel_redirects extends Fuel_base_library {
 			// Is there a literal match?  If so we're done
 			if (isset($redirects[$uri]))
 			{
-				$url = site_url($redirects[$uri]);
-				redirect($url, 'location', $this->http_code);
+				$info = $this->_get_redirect_info($redirects[$uri]);
+				$url = $info['url'];
+				$http_code = $info['http_code'];
+
+				$url = site_url($url);
+				redirect($url, 'location', $http_code);
 			}
 
 			foreach ($redirects as $key => $val)
 			{
+
+				$info = $this->_get_redirect_info($val);
+
+				$value = $info['url'];
+				$case_sensitive = $info['case_sensitive'];
+				$http_code = $info['http_code'];
+
 				$key = trim($key, '/');
-				$val = trim($val, '/');
+				$value = trim($value, '/');
 				
 				// Convert wild-cards to RegEx
 				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
 
 				// Does the RegEx match?
-				if (preg_match('#^'.$key.'$#', $uri))
+				$pattern = '#^'.$key.'$#';
+				if ($case_sensitive)
 				{
+					$pattern .= 'i';
+				}
+				if (preg_match($pattern, $uri))
+				{
+
 					// Do we have a back-reference?
-					if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
+					if (strpos($value, '$') !== FALSE AND strpos($key, '(') !== FALSE)
 					{
-						$val = preg_replace('#^'.$key.'$#', $val, $uri);
+						$value = preg_replace('#^'.$key.'$#', $value, $uri);
 					}
-					$url = site_url($val);
-					redirect($url, 'location', $this->http_code);
+					$url = site_url($value);
+
+					// call any pre redirect hooks
+					$hook_params = array('url' => $key, 'redirect' => $value, 'uri' => $uri);
+					$GLOBALS['EXT']->_call_hook('pre_redirect', $hook_params);
+
+					redirect($url, 'location', $http_code);
 				}
 			}
 		}
 		
 		if ($show_404 === TRUE)
 		{
+			// call any pre 404 hooks
+			$hook_params = array('uri' => $uri);
+			$GLOBALS['EXT']->_call_hook('pre_404', $hook_params);
+
 			// check CMS first if set to AUTO or views
 			if ($this->fuel->pages->mode() != 'views')
 			{
@@ -179,6 +217,51 @@ class Fuel_redirects extends Fuel_base_library {
 				show_404();
 			}
 		}
+	}
+
+	protected function _get_redirect_info($val)
+	{
+		$return = array(
+				'url' => NULL,
+				'case_sensitive' => $this->case_sensitive,
+				'http_code' => $this->http_code,
+			);
+		if (is_array($val))
+		{
+			// set defaults based on array index for default
+			$return['url'] = current($val);
+			$next_val = next($val);
+			if ($next_val)
+			{
+				$return['case_sensitive'] = $next_val;	
+			}
+			$next_val = next($val);
+			if ($next_val)
+			{
+				$return['http_code'] = $next_val;	
+			}
+			
+			// if keys specified, then you can use those too 
+			if (isset($val['url']))
+			{
+				$return['url'] = $val['url'];
+			}
+
+			if (isset($val['case_sensitive']))
+			{
+				$return['case_sensitive'] = (bool) $val['case_sensitive'];
+			}
+			
+			if (isset($val['http_code']))
+			{
+				$return['http_code'] = $val['http_code'];
+			}
+		}
+		else
+		{
+			$return['url'] = $val;
+		}
+		return $return;
 	}
 
 }

@@ -9,6 +9,23 @@ delivering a 404 error.</p>
 
 <pre class="brush:php">
 $redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
+$redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
+</pre>
+
+<p>You can also pass additional parameters such as the <dfn>case_sensitive</dfn> and <dfn>http_code</dfn> with your redirect if you use an array syntax like so:</p>
+<pre class="brush:php">
+// non key array
+$redirect['news/my_old_news_item'] = array('news/my_brand_new_news_item', TRUE, 302);
+
+// keyed array
+$redirect['news/my_old_news_item'] = array('url' => 'news/my_brand_new_news_item', 'case_sensitive' => TRUE, 'http_code' => 302);
+</pre>
+
+
+<p>You can also set global configuration values from within the <dfn>fuel/application/config/redirects.php</dfn> file like so:</p>
+<pre class="brush:php">
+$redirect_http_code = 302;
+$redirect_case_sensitive = FALSE;
 </pre>
 
 <p>Programmatically, you can access the instantiated <a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a> object like so:</p>
@@ -16,6 +33,14 @@ $redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
 $this->fuel->redirects->execute();
 </pre>
 
+<h3>Redirect Hooks</h3>
+<ul>
+	<li><strong>pre_redirect</strong>: Called right before a page is redirected</li>
+	<li><strong>pre_404</strong>: Called right before a 404 error page is displayed. You must use the <a href="<?=user_guide_url('helpers/my_url_helper#func_redirect_404')?>">redirect_404()</a> function instead of the show_404() function for this hook to be executed.</li>
+</ul>
+
+<h3>Custom 404 Page</h3>
+<p>You can create a custom 404 page by either creating a page in the CMS or a view file named <dfn>404_error</dfn>.</p>
 
 <p class="important">If you are having trouble with a redirect, check that you don't have any routes, or pages with assigned views at the URI path in question.
 Additionally, if you have the FUEL configuration setting <dfn>$config['max_page_params']</dfn> with a value greater then 0, then you may run into issues where 
