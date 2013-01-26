@@ -97,14 +97,25 @@ class Fuel_redirects extends Fuel_base_library {
 	{
 		include(APPPATH.'config/redirects.php');
 		
-		if (isset($redirect_http_code))
+		if (isset($config['http_code']))
 		{
-			$this->http_code = $redirect_http_code;
+			$this->http_code = $config['http_code'];
 		}
 
-		if (isset($redirect_case_sensitive))
+		if (isset($config['case_sensitive']))
 		{
-			$this->case_sensitive = $redirect_case_sensitive;
+			$this->case_sensitive = $config['case_sensitive'];
+		}
+
+		if (isset($config['redirects']))
+		{
+			$this->redirects = $config['redirects'];
+		}
+
+		// do this if the array doesn't exist and instead they use $config['redirects']
+		if (!isset($redirect))
+		{
+			$redirect = array();
 		}
 
 		$redirect = array_merge($redirect, $this->redirects);

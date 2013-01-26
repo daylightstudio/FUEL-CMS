@@ -1,49 +1,281 @@
-<h1>Redirects</h1>
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
-<p>FUEL has added a way to deal with 301 redirects that doesn't require the need for .htaccess. 
-Redirects are configured in the <dfn>fuel/application/config/redirects.php</dfn> file.
-To add a redirect, add a URI location as a key and the redirect location as the value.
-Key values can use regular expression syntax similar to <a href="http://codeigniter.com/user_guide/general/routing.html" target="_blank">routes</a>.
-A redirect will only work if there are no pages detected by FUEL. It will check the redirects right before
-delivering a 404 error.</p>
+// ------------------------------------------------------------------------
 
-<pre class="brush:php">
-$redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
-$redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
-</pre>
+/**
+ * FUEL redirects object
+ *
+ * Looks at the redirects configuration for a possible match to do a HTTP redirect.
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_redirects
+ */
 
-<p>You can also pass additional parameters such as the <dfn>case_sensitive</dfn> and <dfn>http_code</dfn> with your redirect if you use an array syntax like so:</p>
-<pre class="brush:php">
-// non key array
-$redirect['news/my_old_news_item'] = array('news/my_brand_new_news_item', TRUE, 302);
+// --------------------------------------------------------------------
 
-// keyed array
-$redirect['news/my_old_news_item'] = array('url' => 'news/my_brand_new_news_item', 'case_sensitive' => TRUE, 'http_code' => 302);
-</pre>
+class Fuel_redirects extends Fuel_base_library {
+	
+	public $http_code = 301; // The HTTP response code to return... 301 = permanent redirect
+	public $redirects = array(); // The pages to redirect to
+	public $case_sensitive = TRUE; // Determines whether the pattern matching for the redirects is case sensitive
 
+	/**
+	 * Constructor
+	 *
+	 */
+	function __construct($params = array())
+	{
+		parent::__construct();
+		$this->initialize($params);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds to the redirects list
+	 *
+	 * @access	public
+	 * @param	string	The URI location of the page to remove
+	 * @param	string	The page to redirect to (optional)
+	 * @return	array	
+	 */	
+	function add($uri, $redirect = '')
+	{
+		if (is_array($uri))
+		{
+			$this->redirects = array_merge($this->redirects, $uri);
+		}
+		else if (is_string($uri))
+		{
+			$this->redirects[$uri] = $redirect;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Remove from the redirects list
+	 *
+	 * @access	public
+	 * @param	string	The URI location of the page to remove
+	 * @return	array	
+	 */	
+	function remove($uri)
+	{
+		if (isset($this->redirects[$uri]))
+		{
+			unset($this->redirects[$uri]);
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of all the redirects
+	 *
+	 * @access	public
+	 * @return	array	
+	 */	
+	function config()
+	{
+		include(APPPATH.'config/redirects.php');
+		
+		if (isset($config['http_code']))
+		{
+			$this->http_code = $config['http_code'];
+		}
 
-<p>You can also set global configuration values from within the <dfn>fuel/application/config/redirects.php</dfn> file like so:</p>
-<pre class="brush:php">
-$redirect_http_code = 302;
-$redirect_case_sensitive = FALSE;
-</pre>
+		if (isset($config['case_sensitive']))
+		{
+			$this->case_sensitive = $config['case_sensitive'];
+		}
 
-<p>Programmatically, you can access the instantiated <a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a> object like so:</p>
-<pre class="brush:php">
-$this->fuel->redirects->execute();
-</pre>
+		if (isset($config['redirects']))
+		{
+			$this->redirects = $config['redirects'];
+		}
 
-<h3>Redirect Hooks</h3>
-<ul>
-	<li><strong>pre_redirect</strong>: Called right before a page is redirected</li>
-	<li><strong>pre_404</strong>: Called right before a 404 error page is displayed. You must use the <a href="<?=user_guide_url('helpers/my_url_helper#func_redirect_404')?>">redirect_404()</a> function instead of the show_404() function for this hook to be executed.</li>
-</ul>
+		// do this if the array doesn't exist and instead they use $config['redirects']
+		if (!isset($redirect))
+		{
+			$redirect = array();
+		}
 
-<h3>Custom 404 Page</h3>
-<p>You can create a custom 404 page by either creating a page in the CMS or a view file named <dfn>404_error</dfn>.</p>
+		$redirect = array_merge($redirect, $this->redirects);
+		return $redirect; 
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Loops through the redirects config to find a possible match to redirect a page to
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to show a 404 page if the page doesn't exist
+	 * @return	void	
+	 */	
+	function execute($show_404 = TRUE)
+	{
+		$redirects = $this->config();
 
-<p class="important">If you are having trouble with a redirect, check that you don't have any routes, or pages with assigned views at the URI path in question.
-Additionally, if you have the FUEL configuration setting <dfn>$config['max_page_params']</dfn> with a value greater then 0, then you may run into issues where 
-the rendered page is passing a segment as a parameter instead of redirecting. In that case, you may want to change the <dfn>$config['max_page_params']</dfn> 
-value to a key value pair with the keys being the URI paths and the values being the number of segments to accept at those URI paths (e.g. $config['max_page_params'] = array('about/news' => 1);)
-</p>
+		$uri = implode('/', $this->CI->uri->segments);
+		$query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
+		
+		if (!empty($query_string)) 
+		{
+			$uri = $uri.'?'.$query_string;
+		}
+		if (!empty($redirects))
+		{
+
+			// Is there a literal match?  If so we're done
+			if (isset($redirects[$uri]))
+			{
+				$info = $this->_get_redirect_info($redirects[$uri]);
+				$url = $info['url'];
+				$http_code = $info['http_code'];
+
+				$url = site_url($url);
+				redirect($url, 'location', $http_code);
+			}
+
+			foreach ($redirects as $key => $val)
+			{
+
+				$info = $this->_get_redirect_info($val);
+
+				$value = $info['url'];
+				$case_sensitive = $info['case_sensitive'];
+				$http_code = $info['http_code'];
+
+				$key = trim($key, '/');
+				$value = trim($value, '/');
+				
+				// Convert wild-cards to RegEx
+				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
+
+				// Does the RegEx match?
+				$pattern = '#^'.$key.'$#';
+				if (!$case_sensitive)
+				{
+					$pattern .= 'i';
+				}
+				if (preg_match($pattern, $uri))
+				{
+
+					// Do we have a back-reference?
+					if (strpos($value, '$') !== FALSE AND strpos($key, '(') !== FALSE)
+					{
+						$value = preg_replace('#^'.$key.'$#', $value, $uri);
+					}
+					$url = site_url($value);
+
+					// call any pre redirect hooks
+					$hook_params = array('url' => $key, 'redirect' => $value, 'uri' => $uri);
+					$GLOBALS['EXT']->_call_hook('pre_redirect', $hook_params);
+
+					redirect($url, 'location', $http_code);
+				}
+			}
+		}
+		
+		if ($show_404 === TRUE)
+		{
+			// call any pre 404 hooks
+			$hook_params = array('uri' => $uri);
+			$GLOBALS['EXT']->_call_hook('pre_404', $hook_params);
+
+			// check CMS first if set to AUTO or views
+			if ($this->fuel->pages->mode() != 'views')
+			{
+				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'cms'), TRUE); 
+			}
+
+			// then views
+			if (empty($error_404) AND file_exists(APPPATH.'views/404_error'.EXT))
+			{
+				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE); 
+			}
+
+			if (empty($error_404))
+			{
+				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE);
+			}
+			if (!empty($error_404))
+			{
+				echo $error_404;
+				exit();
+			}
+			else
+			{
+				show_404();
+			}
+		}
+	}
+
+	protected function _get_redirect_info($val)
+	{
+		$return = array(
+				'url' => NULL,
+				'case_sensitive' => $this->case_sensitive,
+				'http_code' => $this->http_code,
+			);
+		if (is_array($val))
+		{
+			// set defaults based on array index for default
+			$return['url'] = current($val);
+			$next_val = next($val);
+			if ($next_val)
+			{
+				$return['case_sensitive'] = $next_val;	
+			}
+			$next_val = next($val);
+			if ($next_val)
+			{
+				$return['http_code'] = $next_val;	
+			}
+			
+			// if keys specified, then you can use those too 
+			if (isset($val['url']))
+			{
+				$return['url'] = $val['url'];
+			}
+
+			if (isset($val['case_sensitive']))
+			{
+				$return['case_sensitive'] = (bool) $val['case_sensitive'];
+			}
+			
+			if (isset($val['http_code']))
+			{
+				$return['http_code'] = $val['http_code'];
+			}
+		}
+		else
+		{
+			$return['url'] = $val;
+		}
+		return $return;
+	}
+
+}
+
+/* End of file Fuel_redirects.php */
+/* Location: ./modules/fuel/libraries/Fuel_redirects.php */
