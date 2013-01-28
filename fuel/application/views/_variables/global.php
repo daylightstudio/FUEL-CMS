@@ -1,6 +1,6 @@
 <?php 
 
-// declared here so we don't have to in controller variable files'
+// declared here so we don't have to each controller's variable file
 $CI =& get_instance();
 
 // generic global page variables used for all pages
