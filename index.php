@@ -51,7 +51,41 @@ if (defined('STDIN'))
  * Be sure to switch from 'development' on a production site!
  *
  */
+	
+// automatically set environment based on the values set in the environments config
+@include(INSTALL_ROOT.'application/config/environments.php');
+
+if (!empty($environments))
+{
+	foreach($environments as $env => $paths)
+	{
+		// normalize to an array
+		if (is_string($paths))
+		{
+			$paths = array($paths);
+		}
+
+		foreach($paths as $path)
+		{
+			// Convert wild-cards to RegEx
+			$path = str_replace(array(':any', '*'), '.*', str_replace(':num', '[0-9]+', $path));
+
+			// Does the RegEx match?
+			if (preg_match('#^'.$path.'$#', $_SERVER['HTTP_HOST']))
+			{
+				define('ENVIRONMENT', $env);
+			}
+		}
+	}
+}
+
+
+// set default environment if one is not found above
+if (!defined('ENVIRONMENT'))
+{
 	define('ENVIRONMENT', 'development');
+}
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

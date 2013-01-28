@@ -72,6 +72,7 @@
 					<li><a href="<?=user_guide_url('general/localization')?>">Localization</a></li>
 					<li><a href="<?=user_guide_url('general/constants')?>">FUEL Constants</a></li>
 					<li><a href="<?=user_guide_url('general/configs-settings')?>">Configs &amp; Settings</a></li>
+					<li><a href="<?=user_guide_url('general/environments')?>">Environments</a></li>
 					<li><a href="<?=user_guide_url('general/logs')?>">Logs</a></li>
 					<li><a href="<?=user_guide_url('general/extending')?>">Extending FUEL</a></li>
 				</ul>
