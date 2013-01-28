@@ -739,7 +739,6 @@ class Fuel_custom_fields {
 	{
 		$this->CI->load->helper('format');
 
-
 		$form_builder =& $params['instance'];
 		
 		if (empty($params['size']))
@@ -752,6 +751,16 @@ class Fuel_custom_fields {
 			$params['max_length'] = 10;
 		}
 		
+		if (empty($params['separator']))
+		{
+			$params['separator'] = ',';
+		}
+
+		if (empty($params['decimal']))
+		{
+			$params['decimal'] = '.';
+		}
+
 		$currency = (isset($params['currency'])) ? $params['currency'] : '$';
 		
 		$data_vals = array('separator', 'decimal', 'grouping', 'min', 'max');
@@ -781,8 +790,22 @@ class Fuel_custom_fields {
 				{
 					foreach($value as $key => $val)
 					{
-						$val = str_replace(",", "", $val);
-						$val = ($val == "") ? NULL : (float) $value;
+						if ($val == "")
+						{
+							$val = NULL;
+						}
+						else
+						{
+							$value_parts = explode("'.$params['decimal'].'", $val);
+							$val = current($value_parts);
+							$decimal = "00";
+							if (count($value_parts) > 1)
+							{
+								$decimal = end($value_parts);
+							}
+							$val = str_replace(",", "", $val);
+							$val = (float) $val.".".$decimal;
+						}
 						$value[$key]["'.$params['subkey'].'"] = $val;
 					}
 					return $value;
@@ -793,8 +816,22 @@ class Fuel_custom_fields {
 		else
 		{
 			$func_str = '
-			$value = str_replace(",", "", $value);
-			$value = ($value == "") ? NULL : (float) $value;
+			if ($value == "")
+			{
+				$value = NULL;
+			}
+			else
+			{
+				$value_parts = explode("'.$params['decimal'].'", $value);
+				$value = current($value_parts);
+				$decimal = "00";
+				if (count($value_parts) > 1)
+				{
+					$decimal = end($value_parts);
+				}
+				$value = str_replace(",", "", $value);
+				$value = (float) $value.".".$decimal;
+			}
 			return $value;
 				';
 		}
@@ -803,7 +840,8 @@ class Fuel_custom_fields {
 		$form_builder->set_post_process($params['key'], $func);
 
 		// preformat the currency 
-		$params['value'] = (!isset($params['value'])) ? NULL : currency($params['value'], '');
+		$params['value'] = (!isset($params['value'])) ? NULL : currency($params['value'], '', TRUE, $params['decimal'], $params['separator']);
+		//$params['value'] = (!isset($params['value'])) ? NULL : $params['value'];
 
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_text($params);
