@@ -1684,7 +1684,7 @@ class MY_Model extends CI_Model {
 				{
 					$assoc_where[$fields['foreign_key']] = $values['id'];
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $assoc_where));
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $assoc_where, 'id'));
 			}
 			else
 			{
@@ -1693,7 +1693,7 @@ class MY_Model extends CI_Model {
 				{
 					$assoc_where[$fields['candidate_key']] = $values['id'];
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $assoc_where));
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $assoc_where, 'id'));
 			}
 		}
 		
@@ -5223,7 +5223,7 @@ class Data_record {
 					$fields['foreign_table']   => $this->_parent_model->table_name(),
 					$fields['foreign_key']     => $this->$id_field,
 					);
-				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where));
+				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where, 'id'));
 			}
 			else
 			{
@@ -5232,7 +5232,7 @@ class Data_record {
 					$fields['candidate_key']   => $this->$id_field,
 					$fields['foreign_table']   => $related_table_name,
 					);
-				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where));
+				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where, 'id'));
 			}
 
 			if ( ! empty($rel_ids))
