@@ -415,7 +415,6 @@ fuel.fields.asset_field = function(context, options){
 					var separator = $activeField.attr('data-separator');
 					var multiple = parseInt($activeField.attr('data-multiple')) == 1;
 					if (multiple){
-						console.log('multiple')
 						if (assetVal.length) assetVal += separator;
 						assetVal += selectedVal;
 					} else {

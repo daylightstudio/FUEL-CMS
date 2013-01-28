@@ -85,7 +85,6 @@ dave@thedaylightstudio.com
 			// if children, then we need to reorganize them too
 			if (depth == 0 && $childTemplates.length){
 				var $childRepeatables = $(elem).find(options.repeatableSelector);
-				console.log($childRepeatables)
 				$childRepeatables.each(function(i){
 					//console.log(i)
 					$(this).find('input,textarea,select').each(function(j){
