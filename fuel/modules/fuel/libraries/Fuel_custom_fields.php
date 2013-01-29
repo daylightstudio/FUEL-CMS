@@ -803,7 +803,7 @@ class Fuel_custom_fields {
 							{
 								$decimal = end($value_parts);
 							}
-							$val = str_replace(",", "", $val);
+							$val = str_replace("'.$params['separator'].'", "", $val);
 							$val = (float) $val.".".$decimal;
 						}
 						$value[$key]["'.$params['subkey'].'"] = $val;
@@ -829,7 +829,7 @@ class Fuel_custom_fields {
 				{
 					$decimal = end($value_parts);
 				}
-				$value = str_replace(",", "", $value);
+				$value = str_replace("'.$params['separator'].'", "", $value);
 				$value = (float) $value.".".$decimal;
 			}
 			return $value;
