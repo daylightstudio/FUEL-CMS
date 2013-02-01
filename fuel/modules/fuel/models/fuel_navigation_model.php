@@ -403,7 +403,7 @@ class Fuel_navigation_model extends Base_module_model {
 			if (!isset($options[$d['group_name']])) $options[$d['group_name']] = array();
 			if ($val == 'label')
 			{
-				$options[$d['group_name']][$d[$key]] = $d[$val].' ('.$d['nav_key'].')';	
+				$options[$d['group_name']][$d[$key]] = $d['nav_key'].' ('. $d[$val].')';
 			}
 			else
 			{
