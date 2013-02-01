@@ -8,10 +8,15 @@ fuel_set_var('layout', '');
 $default_frequency = 'Monthly';
 $nav = fuel_nav(array('return_normalized' => TRUE));
 $used = array();
+
+
 /***************************************************************
 Add any dynamic pages and associate them to the $nav array here:
 **************************************************************/
-
+$modules = $CI->fuel->pages->options_list('modules', FALSE, FALSE);
+$nav = array_merge($nav, $modules); 
+$nav[''] = '';
+unset($nav['home']);
 
 
 /**************************************************************/
