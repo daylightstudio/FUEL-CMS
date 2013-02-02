@@ -190,7 +190,23 @@ class Curl {
 	 * Adds a CURL option to a particular session.
 	 *
 	 * @access	public
-	 * @param	array	An array of CURL options (http://www.php.net/manual/en/function.curl-setopt.php). Can be short syntax of 'get', 'post', 'head', 'none 'cookie'
+	 * @param	string	The CURL option (http://www.php.net/manual/en/function.curl-setopt.php)
+	 * @param	mixed	The CURL value for the option
+	 * @param	int	The key value of a CURL session (optional)
+	 * @return	void
+	 */	
+	function set_option($opt, $val, $key = 0)
+	{
+		curl_setopt($this->_sessions[$key], $opt, $val);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds CURL options to a particular session.
+	 *
+	 * @access	public
+	 * @param	array	An array of CURL options (http://www.php.net/manual/en/function.curl-setopt.php).
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	void
 	 */	
@@ -248,6 +264,11 @@ class Curl {
 	 */	
 	function exec_single($key = 0, $clear = TRUE)
 	{
+		// in case it' set to FALSE
+		if (empty($key))
+		{
+			$key = 0;
+		}
 		$this->_output = curl_exec($this->_sessions[$key]);
 		$this->_error[$key] = curl_error($this->_sessions[$key]);
 		$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
