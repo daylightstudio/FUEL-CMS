@@ -131,11 +131,11 @@ class Fuel extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	mixed	Can be a string that references the configuration key or an array of values
-	 * @param	mixed	The value of the key configuration item (only works if $item parameter is not an array)
+	 * @param	mixed	The value of the key configuration item (only works if $item parameter is not an array) (optional)
 	 * @param	string	The module to set the configuration item. Default is fuel. (optional)
 	 * @return	void
 	 */	
-	function set_config($item, $value, $module = 'fuel')
+	function set_config($item, $value = NULL, $module = 'fuel')
 	{
 		$fuel_config = $this->CI->config->item($module);
 		if (is_array($item))
