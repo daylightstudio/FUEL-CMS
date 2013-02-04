@@ -114,7 +114,6 @@ $lang['section_my_modules'] = 'My Modules';
 | Login/Password Reset
 |--------------------------------------------------------------------------
 */
-
 $lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
 $lang['pwd_reset_subject'] = "FUEL admin password reset request";
 $lang['pwd_reset_email'] = "Click the following link to confirm the reset of your FUEL password:\n%1s";
@@ -156,6 +155,7 @@ $lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
 $lang['section_settings'] = 'Settings';
 
+
 /*
 |--------------------------------------------------------------------------
 | Generic Module
@@ -192,6 +192,15 @@ $msg .= "2. Delete the relevant section from .git/config.\n";
 $msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
 $msg .= "4. Commit and delete the now untracked submodule files.\n";
 $lang['module_uninstall'] = $msg;
+
+
+/*
+|--------------------------------------------------------------------------
+| Migrations
+|--------------------------------------------------------------------------
+*/
+$lang['migrate_success'] = "You have successfully migrated to version %s.\n";
+$lang['migrate_nothing_todo'] = "No migrations were necessary.\n";
 
 
 /*
@@ -328,12 +337,14 @@ Password: %2s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 
+
 /*
 |--------------------------------------------------------------------------
 | Permissions
 |--------------------------------------------------------------------------
 */
 $lang['permissions_instructions'] = 'Here you can manage the permissions for FUEL modules and later assign them to users.';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -414,7 +425,6 @@ $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
 $lang['btn_export_data'] = 'Export Data';
 
-
 $lang['btn_no'] = 'No';
 $lang['btn_yes'] = 'Yes';
 
@@ -470,6 +480,7 @@ $lang['form_enum_option_yes'] = 'yes';
 $lang['form_enum_option_no'] = 'no';
 
 $lang['required_text'] = 'required fields';
+
 
 /*
 |--------------------------------------------------------------------------
