@@ -204,8 +204,11 @@ $config['fuel_assets_output'] = FALSE;
 |--------------------------------------------------------------------------
 */
 
-// restrict fuel to only certain ip addresses (array only value so can include multiple)
+// restrict fuel to only certain ip addresses (can be string or an array of IP addresses)
 $config['restrict_to_remote_ip'] = array();
+
+// restrict fuel webhooks like the migrate functionality to only certain IP address (can be string or an array of IP addresses)
+$config['webhook_romote_ip'] = array();
 
 // default password to alert against
 $config['default_pwd'] = 'admin';

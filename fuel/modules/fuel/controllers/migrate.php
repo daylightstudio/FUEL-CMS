@@ -7,12 +7,19 @@ class Migrate extends Fuel_base_controller {
 
 	function __construct()
 	{
-		$validate = (php_sapi_name() == 'cli' or defined('STDIN')) ? FALSE : TRUE;
-		parent::__construct($validate);
-		
+		// don't validate initially because we need to handle it a little different since we can use web hooks
+		parent::__construct(FALSE);
+
+		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
+
+		// check if it is CLI or a web hook otherwise we need to validate
+		$validate = (php_sapi_name() == 'cli' OR defined('STDIN') OR $is_web_hook) ? FALSE : TRUE;
+
 		// validate user has permission
 		if ($validate)
 		{
+			$this->fuel->admin->check_login();
 			$this->_validate_user('migrate');
 		}
 
