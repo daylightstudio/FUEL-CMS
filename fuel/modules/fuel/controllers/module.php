@@ -41,6 +41,10 @@ class Module extends Fuel_base_controller {
 		{
 			$this->module = fuel_uri_segment(2);
 			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
+			if (empty($this->module_obj->name))
+			{
+				show_error(lang('error_missing_module', fuel_uri_segment(1)));
+			}
 			$params = $this->module_obj->info();
 		}
 
