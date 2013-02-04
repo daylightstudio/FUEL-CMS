@@ -267,7 +267,8 @@ class Fuel_pages extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Renders a Fuel_page which includes any inline editing markers
+	 * Renders a Fuel_page which includes any inline editing markers. 
+	 * The 3rd parameter can contain Fuel_page class properties (e.g. array('render_mode' => 'cms'))
 	 *
 	 * @access	public
 	 * @access	string	The location value of the page
@@ -299,7 +300,7 @@ class Fuel_page extends Fuel_base_library {
 	public $is_published = TRUE; // whether the page can be seen or not
 	public $is_cached = TRUE; // is the file cached in the system cache directory
 	public $views_path = ''; // the path to the views folder for rendering. Used with modules
-	public $render_mode = 'views'; // is the page being rendered from the views folder or the DB
+	public $render_mode = 'views'; // values can be either "views" or "cms"
 	public $view_module = 'app'; // the module to look for the view file
 	public $language = ''; // the language to use for rendering both a static view and CMS page
 	public $markers = array(); // the inline editing markers for the page
