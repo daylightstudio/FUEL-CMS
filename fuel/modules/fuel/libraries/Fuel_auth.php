@@ -238,10 +238,59 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function can_access()
 	{
+		$restrict_ip = $this->fuel->config('restrict_to_remote_ip');
 		return ($this->fuel->config('admin_enabled') AND 
-					(!$this->fuel->config('restrict_to_remote_ip') OR !in_array($_SERVER['REMOTE_ADDR'], $this->fuel->config('restrict_to_remote_ip'))));
+					(empty($restrict_ip) OR (!empty($restrict_ip) AND $this->check_valid_ip($restrict_ip)))
+				);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns whether the browsers users remote address matches 
+	 *
+	 * @access	public
+	 * @param	mixed a single IP address, an array of IP addresses or the starting IP address range
+	 * @param	string the ending IP address range or simply an array of IP addresses (optional)
+	 * @return	boolean
+	 */
+	function check_valid_ip($range_start, $range_end = NULL)
+	{
+		$check_address = $_SERVER['REMOTE_ADDR'];
+
+		// check if IP address is range
+		if (empty($range_end) AND is_string($range_start))
+		{
+			$range_arr = preg_split('#\s*-\s*#', $range_start);
+			$range_start = $range_arr[0];
+			if (isset($range_arr[1]))
+			{
+				$range_end = $range_arr[1];
+			}
+		}
+
+		// do a regex match
+		if (is_string($range_start) AND preg_match('#'.$range_start.'#', $check_address))
+		{
+			return TRUE;
+		}
+		// check if it's an array
+		else if (is_array($range_start) AND in_array($check_address, $range_start))
+		{
+			return TRUE;
+		}
+		else if (!empty($range_end))
+		{
+			$range_start = ip2long($range_start);
+			$range_end   = ip2long($range_end);
+			$ip = ip2long($check_address);
+			if ($ip >= $range_start && $ip <= $range_end)
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
 
 	// --------------------------------------------------------------------
 	
