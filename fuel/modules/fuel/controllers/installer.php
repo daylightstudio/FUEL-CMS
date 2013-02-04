@@ -7,7 +7,7 @@ class Installer extends Fuel_base_controller {
 
 	function __construct()
 	{
-		$validate = (php_sapi_name() == 'cli' or defined('STDIN')) ? FALSE : TRUE;
+		$validate = (php_sapi_name() == 'cli' OR defined('STDIN')) ? FALSE : TRUE;
 		parent::__construct($validate);
 		
 		// must be in dev mode to install modules
