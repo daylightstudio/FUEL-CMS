@@ -251,44 +251,41 @@ class Fuel_auth extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	mixed a single IP address, an array of IP addresses or the starting IP address range
-	 * @param	string the ending IP address range or simply an array of IP addresses (optional)
 	 * @return	boolean
 	 */
-	function check_valid_ip($range_start, $range_end = NULL)
+	function check_valid_ip($range_start)
 	{
 		$check_address = $_SERVER['REMOTE_ADDR'];
 
 		// check if IP address is range
 		if (empty($range_end) AND is_string($range_start))
 		{
-			$range_arr = preg_split('#\s*-\s*#', $range_start);
-			$range_start = $range_arr[0];
-			if (isset($range_arr[1]))
-			{
-				$range_end = $range_arr[1];
-			}
+			$ips = preg_split('#\s*,\s*#', $range_start);
 		}
 
-		// do a regex match
-		if (is_string($range_start) AND preg_match('#'.$range_start.'#', $check_address))
+		foreach($ips as $ip)
 		{
-			return TRUE;
-		}
-		// check if it's an array
-		else if (is_array($range_start) AND in_array($check_address, $range_start))
-		{
-			return TRUE;
-		}
-		else if (!empty($range_end))
-		{
-			$range_start = ip2long($range_start);
-			$range_end   = ip2long($range_end);
-			$ip = ip2long($check_address);
-			if ($ip >= $range_start && $ip <= $range_end)
+			$range_arr = preg_split('#\s*-\s*#', trim($ip));
+			$range_start = $range_arr[0];
+			$range_end = (isset($range_arr[1])) ? $range_arr[1] : '';
+
+			if (!empty($range_end))
+			{
+				$range_start = ip2long($range_start);
+				$range_end   = ip2long($range_end);
+				$ip = ip2long($check_address);
+				if ($ip >= $range_start && $ip <= $range_end)
+				{
+					return TRUE;
+				}
+			}
+			// do a regex match
+			else if (preg_match('#'.$range_start.'#', $check_address))
 			{
 				return TRUE;
 			}
 		}
+
 		return FALSE;
 	}
 
