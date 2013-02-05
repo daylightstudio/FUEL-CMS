@@ -380,7 +380,8 @@ class Fuel_custom_fields {
 				$uri = $params['module'];
 			}
 
-			if ($this->fuel->auth->has_permission($uri))
+			$permission = (!empty($module)) ? $module->permission : $uri;
+			if ($this->fuel->auth->has_permission($permission))
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
@@ -1018,7 +1019,8 @@ class Fuel_custom_fields {
 			}
 
 			// check for modules with fuel_ prefix
-			if (!empty($params['module']) AND $this->fuel->auth->has_permission($uri))
+			$permission = (!empty($module)) ? $module->permission : $uri;
+			if (!empty($params['module']) AND $this->fuel->auth->has_permission($permission))
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;

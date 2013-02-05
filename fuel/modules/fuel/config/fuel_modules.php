@@ -99,6 +99,7 @@ $config['modules']['navigation_group'] = array(
 		'name', 
 		'published',
 	),
+	'permission' => 'navigation'
 );
 
 // navigation module init values
