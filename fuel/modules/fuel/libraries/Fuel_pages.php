@@ -305,6 +305,7 @@ class Fuel_page extends Fuel_base_library {
 	public $language = ''; // the language to use for rendering both a static view and CMS page
 	public $markers = array(); // the inline editing markers for the page
 	public $include_pagevar_object = TRUE; // includes a $pagevar object that contains the variables for the page
+	public $vars_honor_page_status = FALSE; // determines whether to honor the page's published status when pulling variable data from the CMS
 	public static $marker_key = '__FUEL_MARKER__'; // used for placing inline editing content in the output
 	
 	protected $_variables = array(); // variables applied to the page
@@ -543,7 +544,7 @@ class Fuel_page extends Fuel_base_library {
 		$page_mode = (empty($page_mode)) ? $this->fuel->pages->mode() : $page_mode;
 		
 		$vars_path = $this->views_path.'_variables/';
-		$init_vars = array('vars_path' => $vars_path, 'lang' => $this->language, 'include_pagevar_object' => $this->include_pagevar_object);
+		$init_vars = array('vars_path' => $vars_path, 'lang' => $this->language, 'include_pagevar_object' => $this->include_pagevar_object, 'honor_page_status' => $this->vars_honor_page_status);
 		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
 		$this->add_variables($vars);

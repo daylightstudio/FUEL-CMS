@@ -34,6 +34,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	public $lang = 'english'; // the language
 	public $vars_path = ''; // the path to the _variables folder
 	public $include_pagevar_object = FALSE; // determines whether to include the $pagevars object or not
+	public $honor_page_status = FALSE;
 	
 	const VARIABLE_TYPE_DB = 'db';
 	const VARIABLE_TYPE_VIEW = 'views';
@@ -113,6 +114,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		$site_vars = $this->fuel->sitevars->get($location);
 		
 		$this->fuel->load_model('fuel_pagevariables_model');
+		$this->CI->fuel_pagevariables_model->honor_page_status = $this->honor_page_status;
 		$page_vars = $this->CI->fuel_pagevariables_model->find_all_by_location($location, $this->lang, $this->include_pagevar_object);
 		
 		// if the selected languages page variables is empty, then we try the default
