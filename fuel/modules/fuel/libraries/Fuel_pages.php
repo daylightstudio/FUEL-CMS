@@ -306,13 +306,13 @@ class Fuel_page extends Fuel_base_library {
 	public $markers = array(); // the inline editing markers for the page
 	public $include_pagevar_object = TRUE; // includes a $pagevar object that contains the variables for the page
 	public $vars_honor_page_status = FALSE; // determines whether to honor the page's published status when pulling variable data from the CMS
+	public $only_published = TRUE; // view only published pages is used if the person viewing page is not logged in
 	public static $marker_key = '__FUEL_MARKER__'; // used for placing inline editing content in the output
 	
 	protected $_variables = array(); // variables applied to the page
 	protected $_segments = array(); // uri segments to pass to the page
 	protected $_page_data = array(); // specific data about the page (not variables being passed necessarily)
 	protected $_fuelified = FALSE; // is the person viewing the page logged in?... If so we will make inline editing and toolbar visible
-	protected $_only_published = TRUE; // view only published pages is used if the person viewing page is not logged in
 	protected $_fuelified_processed = FALSE; // if fuelify has already been called	
 
 	// --------------------------------------------------------------------
@@ -335,7 +335,7 @@ class Fuel_page extends Fuel_base_library {
 		if (is_fuelified())
 		{
 			$this->_fuelified = TRUE;
-			$this->_only_published = FALSE;
+			$this->only_published = FALSE;
 		}
 		
 		if (!empty($params))
@@ -444,7 +444,7 @@ class Fuel_page extends Fuel_base_library {
 
 		if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
 		{
-			$page_data = $this->CI->fuel_pages_model->find_by_location($default_home, $this->_only_published);
+			$page_data = $this->CI->fuel_pages_model->find_by_location($default_home, $this->only_published);
 			$this->location = $default_home;
 		} 
 		else 
@@ -497,11 +497,11 @@ class Fuel_page extends Fuel_base_library {
 					{
 						$location = substr($location, strlen($prefix));
 					}
-					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->only_published);
 				}
 				else
 				{
-					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->_only_published);
+					$page_data = $this->CI->fuel_pages_model->find_by_location($location, $this->only_published);
 				}
 				
 				if (!empty($page_data))
