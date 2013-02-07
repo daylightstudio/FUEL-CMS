@@ -16,7 +16,7 @@ class News_model extends Base_module_model {
 
 	function list_items($limit = null, $offset = null, $col = 'title', $order = 'asc')
 	{
-		$this->db->select('id, title, slug, DATE_FORMAT(date_added,"%m/%d/%Y") as date_added, published', FALSE);
+		$this->db->select('id, title, slug, date_added, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
@@ -63,15 +63,10 @@ class News_model extends Base_module_model {
 
 class News_item_model extends Base_module_record {
 	
-	function get_date_added_formatted()
-	{
-		return date('m.d.y', strtotime($this->date_added));
-	}
-	
 	function get_url()
 	{
 		if (!empty($this->link)) return prep_url($this->link);
-		return site_url('company/news/news-article/'.$this->slug);
+		return site_url('company/'.$this->slug);
 	}
 	
 	function get_excerpt_formatted($char_limit = NULL, $readmore = '')
