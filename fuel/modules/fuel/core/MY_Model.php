@@ -1171,6 +1171,9 @@ class MY_Model extends CI_Model {
 		{
 			$record = new $record_class();
 			$record->initialize($this, $this->table_info());
+
+			// call on_create hook
+			$values = $this->on_create($values);
 			if (!empty($values)) $record->fill($values);
 			return $record;
 		}
@@ -3361,7 +3364,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	array	values to be saved
-	 * @return	void
+	 * @return	array
 	 */	
 	public function on_before_post($values = array())
 	{
@@ -3376,9 +3379,39 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	array	values to be saved
-	 * @return	void
+	 * @return	array
 	 */	
 	public function on_after_post($values)
+	{
+		return $values;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - to inject extra information to a record object after
+	 * duplicating a new record via $rec->duplicate();
+	 *
+	 * @access	public
+	 * @param	array	values to be saved
+	 * @return	array
+	 */	
+	public function on_duplicate($values)
+	{
+		return $values;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - to inject extra information to a record object after
+	 * creating a new record via $this->my_model->create();
+	 *
+	 * @access	public
+	 * @param	array	values to be saved
+	 * @return	array
+	 */	
+	public function on_create($values)
 	{
 		return $values;
 	}
@@ -4411,7 +4444,12 @@ class Data_record {
 	public function duplicate()
 	{
 		$dup = $this->_parent_model->create();
-		$dup->fill($this->values());
+		$values = $this->values();
+
+		// call on duplicate method
+		$values = $this->_parent_model->on_duplicate($values);
+		
+		$dup->fill($$values);
 		
 		// NULL out key values so as not to overwrite existing objects
 		$key_field = (array) $this->_parent_model->key_field();

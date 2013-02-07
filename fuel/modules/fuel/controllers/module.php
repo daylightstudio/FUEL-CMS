@@ -710,6 +710,9 @@ class Module extends Fuel_base_controller {
 		if ($_POST[$this->model->key_field()] == 'dup')
 		{
 			$_POST[$this->model->key_field()] = '';
+			
+			// alter duplicate information if there is a hook
+			$_POST = $this->model->on_duplicate($_POST);
 
 			$this->load->library('form_builder');
 			$fb = new Form_builder();
@@ -717,6 +720,7 @@ class Module extends Fuel_base_controller {
 			$fields = $this->model->form_fields($_POST);
 			$fb->set_fields($fields);
 			$fb->post_process_field_values();// manipulates the $_POST values directly
+
 		}
 		else
 		{
