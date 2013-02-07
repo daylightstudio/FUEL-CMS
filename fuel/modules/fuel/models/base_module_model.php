@@ -583,7 +583,7 @@ class Base_module_model extends MY_Model {
 		}
 
 		$where[$field.' !='] = '';
-		$options = $this->options_list($field, $field, $where);
+		$options = $this->options_list($field, $field, $where, TRUE, FALSE);
 		return $options;
 	}
 	
@@ -875,10 +875,9 @@ class Base_module_record extends Data_record {
 	 */	
 	protected function _parse($output)
 	{
-		$CI =& get_instance();
-		$CI->load->library('parser');
+		$this->_CI->load->library('parser');
 		$vars = $this->values();
-		$output = $CI->parser->parse_string($output, $vars, TRUE);
+		$output = $this->_CI->parser->parse_string($output, $vars, TRUE);
 		return $output;
 	}
 	
