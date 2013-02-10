@@ -12,7 +12,8 @@
 	<?php endif; ?>
 	<?php endif; ?>
 	</h2>
-	<?php if (!$this->fuel->admin->is_inline()) : ?>
+
+	<?php if (!$this->fuel->admin->is_inline() AND !empty($user)) : ?>
 	<div id="fuel_login_logout">
 		<?=lang('logged_in_as')?>
 		<a href="<?=fuel_url('my_profile/edit/')?>"><strong><?=$user['user_name']?></strong></a>
