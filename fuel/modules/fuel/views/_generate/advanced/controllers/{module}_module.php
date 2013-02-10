@@ -16,7 +16,7 @@ class {model_name}_module extends Fuel_base_controller {
 		$vars['page_title'] = $this->fuel->admin->page_title(array(lang('module_{module}')), FALSE);
 		$crumbs = array('tools' => lang('section_tools'), lang('module_{module}'));
 		$this->fuel->admin->set_titlebar($crumbs, 'ico_{module}');
-		$this->fuel->admin->render('_admin/{module}');
+		$this->fuel->admin->render('_admin/{module}', $vars);
 
 	}
 	
