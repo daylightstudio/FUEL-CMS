@@ -59,7 +59,7 @@ class Curl {
 	{
 		if (!$this->is_enabled())
 		{
-			$this->_add_error(lang('error_no_curl_lib')); // found in fuel_lang
+			show_error(lang('error_no_curl_lib')); // found in fuel_lang
 		}
 		$this->CI = & get_instance();
 		$this->CI->load->library('user_agent');
