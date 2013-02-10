@@ -391,7 +391,11 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			if ($look_in_settings)
 			{
-				return array_merge($this->_config, $this->_settings);
+				if (is_array($this->_settings))
+				{
+					return array_merge($this->_config, $this->_settings);	
+				}
+				return $this->_config;
 			}
 			else
 			{
