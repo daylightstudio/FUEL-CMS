@@ -624,6 +624,19 @@ class Curl {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns TRUE if there are errors detected and FALSE if not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function has_error()
+	{
+		return !empty($this->_error);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Shorthand for a simple POST CURL request
 	 *
 	 * @access	public
