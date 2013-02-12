@@ -38,9 +38,17 @@ http://codeigniter.com/forums/viewthread/56515/
 *
 * @access    public
 * @param    string	The google account number
-* @return    string
+* @param    mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push
+* @param    boolean	Whether to check dev mode before adding it in
+* @return   string
 */
-function google_analytics($uacct = '') {
+function google_analytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+
+	if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
+	{
+		return FALSE;
+	}
+
 	$CI =& get_instance();
 	$CI->load->config('google');
 	
@@ -51,6 +59,25 @@ function google_analytics($uacct = '') {
 			<script type="text/javascript">
 			  var _gaq = _gaq || [];
 			  _gaq.push([\'_setAccount\', \''.$uacct.'\']);
+			 ';
+
+			 if (!empty($other_params))
+			 {
+				if (is_array($other_params))
+				 {
+				 	foreach($other_params as $key => $val)
+				 	{
+				 		$google_analytics_code .= ' _gaq.push([\''.$key.'\', \''.$val.'\'])';
+				 	}
+				 	
+				 }
+				 else if (is_string($other_params))
+				 {
+				 	$google_analytics_code .= "	".$other_params."\n";
+				 }		 	
+			 }
+
+		$google_analytics_code .= '			 
 			  _gaq.push([\'_trackPageview\']);
 
 			  (function() {
