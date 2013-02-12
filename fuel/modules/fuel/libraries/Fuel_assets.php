@@ -112,12 +112,13 @@ class Fuel_assets extends Fuel_base_library {
 		$this->CI->load->library('encrypt');
 
 		$valid = array( 'upload_path' => '',
-						'override_post_params' => FALSE,
 						'file_name' => '',
 						'overwrite' => FALSE,
 						'xss_clean' => FALSE,
 						'encrypt_name' => FALSE,
 						'unzip' => FALSE,
+						'override_post_params' => FALSE,
+						'posted' => $_POST,
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
 						'create_thumb' => NULL,
@@ -171,26 +172,30 @@ class Fuel_assets extends Fuel_base_library {
 					$posted = array();
 					foreach($valid as $param => $default)
 					{
-						$input_key = $non_multi_key.'_'.$param;
-						
-						// decode encrypted file path values
-						if (isset($_POST[$input_key]))
+						if ($param != 'posted')
 						{
-							if ($input_key == $field_name.'_upload_path')
+							$input_key = $non_multi_key.'_'.$param;
+							// decode encrypted file path values
+							if (isset($params['posted'][$input_key]))
 							{
-								$posted['upload_path'] = $this->CI->encrypt->decode($this->CI->input->post($input_key));
-							}
-							else
-							{
-								$posted[$param] = $this->CI->input->post($input_key);
+								if ($input_key == $field_name.'_upload_path')
+								{
+									$posted['upload_path'] = $this->CI->encrypt->decode($params['posted'][$input_key]);
+								}
+								else
+								{
+									$posted[$param] = $params['posted'][$input_key];
+								}
+
+								if ($param == 'file_name')
+								{
+									$has_empty_filename = FALSE;
+								}
 							}
 						}
-
 					}
-
 					$params = array_merge($params, $posted);
-
-					unset($params['override_post_params']);
+					unset($params['override_post_params'], $params['posted']);
 				}
 				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
 
@@ -234,11 +239,12 @@ class Fuel_assets extends Fuel_base_library {
 					{
 						chmodr($params['upload_path'], 0777);
 					}
-				} 
+				}
+
 				// set file name
-				if ($has_empty_filename AND !empty($params[$field_name.'_filename']))
+				if ($has_empty_filename AND !empty($params[$field_name.'_file_name']))
 				{
-					$params['file_name'] = $params[$field_name.'_filename'];
+					$params['file_name'] = $params[$field_name.'_file_name'];
 				}
 				else if ($has_empty_filename)
 				{
@@ -263,7 +269,7 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					return FALSE;
 				}
-				
+
 				// UPLOAD!!!
 				$this->CI->upload->initialize($params);
 				if (!$this->CI->upload->do_upload($key))
@@ -460,6 +466,27 @@ class Fuel_assets extends Fuel_base_library {
 		{
 			$dirs = array_combine($this->_dirs, $this->_dirs);
 		}
+		ksort($dirs);
+		return $dirs;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of the main root asset folders
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	function root_dirs($full_path = FALSE)
+	{	
+		$asset_server_path = $this->CI->asset->assets_server_path();
+		$dirs = list_directories($asset_server_path, array(), $full_path, FALSE, FALSE);
+		if (!empty($dirs))
+		{
+			$dirs = array_combine($dirs, $dirs);
+		}
+
 		ksort($dirs);
 		return $dirs;
 	}

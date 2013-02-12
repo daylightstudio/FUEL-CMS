@@ -198,33 +198,62 @@ function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $
  * @param 	boolean
  * @param 	boolean
  * @param 	boolean
+ * @param 	boolean
  * @return	array
  */
-function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $_first_time = TRUE)
+function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $recursive = TRUE, $_first_time = TRUE)
 {
 	static $orig_directory;
 	static $dirs;
-	if ($_first_time) $orig_directory = $directory;
+	if ($_first_time)
+	{
+		$orig_directory = rtrim($directory, '/');
+		$dirs = NULL;
+	}
 
 	if ($handle = opendir($directory)) 
 	{
-		while (false !== ($file = readdir($handle))) 
+		while (FALSE !== ($file = readdir($handle))) 
 		{
 			if (strncmp($file, '.', 1) !== 0  AND 
 				((is_array($exclude) AND !in_array($file, $exclude)) OR (is_string($exclude) AND !empty($exclude) AND !preg_match($exclude, $file)))
 				)
 			{
 				$file_path = $directory. "/" . $file;
+
 				if (is_dir($file_path))
 				{
-					if ($is_writable AND !is_writable($file_path)) continue;
-					$dir_prefix = (!$full_path) ? substr($directory, strlen($orig_directory)) : $directory;
-					$dir = $dir_prefix."/".$file;
+					if ($is_writable AND !is_writable($file_path)) 
+					{
+						continue;
+					}
+					if (!$full_path)
+					{
+						$dir_prefix = substr($directory, strlen($orig_directory));
+						$dir = trim($dir_prefix."/".$file, '/');
+					}
+					else
+					{
+						$dir_prefix = $directory;
+						$dir = $dir_prefix."/".$file;
+					}
+
 					$dir = str_replace("//", "/", $dir); // replace double slash
-					if (substr($dir, 0, 1) == '/') $dir = substr($dir, 1); // remove begining slash
-					if (!isset($dirs)) $dirs = array();
-					if (!in_array($dir, $dirs)) $dirs[] = $dir;
-					list_directories($file_path, $exclude, $full_path, $is_writable, FALSE);
+
+
+					if (!isset($dirs))
+					{
+						$dirs = array();
+					}
+					if (!empty($dir) AND !in_array($dir, $dirs)) 
+					{
+						$dirs[] = $dir;
+					}
+					if ($recursive)
+					{
+						list_directories($file_path, $exclude, $full_path, $is_writable, TRUE, FALSE);	
+					}
+					
 				}
 				
 			}

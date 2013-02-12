@@ -3,8 +3,11 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Module extends Fuel_base_controller {
 	
-	public $module_obj;
-	public $module = '';
+	public $module_obj; // the module object
+	public $module = ''; // the name of the module
+	public $uploaded_data = array(); // reference to the uploaded data
+
+	protected $_orig_post = array(); // used for reference
 	
 	function __construct($validate = TRUE)
 	{
@@ -724,7 +727,7 @@ class Module extends Fuel_base_controller {
 		}
 		else
 		{
-			$this->model->on_before_post();
+			$this->model->on_before_post($this->input->post());
 
 			$posted = $this->_process();
 			// set publish status to no if you do not have the ability to publish
@@ -749,16 +752,16 @@ class Module extends Fuel_base_controller {
 				return FALSE;
 			}
 			
-			// process $_FILES
-			if (!$this->_process_uploads($posted))
-			{
-				return FALSE;
-			}
-			
 			// add id value to the posted array
 			if (!is_array($this->model->key_field()))
 			{
 				$posted[$this->model->key_field()] = $id;
+			}
+
+			// process $_FILES
+			if (!$this->_process_uploads($posted))
+			{
+				return FALSE;
 			}
 			
 			$this->model->on_after_post($posted);
@@ -817,7 +820,6 @@ class Module extends Fuel_base_controller {
 		{
 			show_error(lang('error_no_permissions'));
 		}
-		
 
 		$inline = $this->fuel->admin->is_inline();
 		
@@ -933,7 +935,7 @@ class Module extends Fuel_base_controller {
 	 */	
 	protected function _process_edit($id)
 	{
-		$this->model->on_before_post();
+		$this->model->on_before_post($this->input->post());
 		
 		$posted = $this->_process();
 
@@ -1201,13 +1203,6 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->date_format = $this->config->item('date_format');
 			}
 
-			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
-			//$this->form_builder->auto_execute_js = FALSE;
-			if (!isset($fields['__FORM_BUILDER__'], $fields['__FORM_BUILDER__']['displayonly']))
-			{
-				$this->form_builder->displayonly = $this->displayonly;
-			}
-			
 			if ($inline)
 			{
 				$this->form_builder->cancel_value = lang('viewpage_close');
@@ -1215,8 +1210,15 @@ class Module extends Fuel_base_controller {
 			else
 			{
 				$this->form_builder->cancel_value = lang('btn_cancel');
-				
 			}
+
+			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
+			//$this->form_builder->auto_execute_js = FALSE;
+			if (!isset($fields['__FORM_BUILDER__'], $fields['__FORM_BUILDER__']['displayonly']))
+			{
+				$this->form_builder->displayonly = $this->displayonly;
+			}
+			
 			
 			$form = $this->form_builder->render();
 		}
@@ -1234,6 +1236,8 @@ class Module extends Fuel_base_controller {
 	protected function _process()
 	{
 		$this->load->helper('security');
+
+		$this->_orig_post = $_POST;
 
 		// filter placeholder $_POST values 
 		$callback = create_function('$matches', '
@@ -1297,51 +1301,6 @@ class Module extends Fuel_base_controller {
 
 		// sanitize input if set in module configuration
 		$posted = $this->_sanitize($_POST);
-
-		// loop through uploaded files
-		if (!empty($_FILES))
-		{
-			foreach ($_FILES as $file => $file_info)
-			{
-				if ($file_info['error'] == 0)
-				{
-					$posted[$file] = $file_info['name'];
-					
-					$file_tmp = current(explode('___', $file));
-					$field_name = $file_tmp;
-
-					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') {
-						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-					}
-
-					if (isset($posted[$file_tmp.'_filename']))
-					{
-						// get file extension
-						$path_info = pathinfo($file_info['name']);
-						$field_value = $posted[$file_tmp.'_filename'].'.'.$path_info['extension'];
-					}
-					else
-					{
-						$field_value = $file_info['name'];
-					}
-					
-					if (strpos($field_value, '{') !== FALSE )
-					{
-						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
-					}
-
-					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
-					$tmp_field_name = end(explode('--', $field_name));
-
-					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
-					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
-					$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
-					$posted[$tmp_field_name] = $file_val;
-					$posted[$field_name] = $file_val;
-				}
-			}
-		}
 		return $posted;
 	}
 	
@@ -1924,13 +1883,60 @@ class Module extends Fuel_base_controller {
 	protected function _process_uploads($posted = NULL)
 	{
 		if (empty($posted)) $posted = $_POST;
-		
 		$errors = FALSE;
 		
 		if (!empty($_FILES))
 		{
-			$params['xss_clean'] = $this->sanitize_files;
 
+			// loop through uploaded files
+			foreach ($_FILES as $file => $file_info)
+			{
+				if ($file_info['error'] == 0)
+				{
+					$posted[$file] = $file_info['name'];
+					
+					$file_tmp = current(explode('___', $file));
+					$field_name = $file_tmp;
+
+					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') 
+					{
+						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+					}
+
+					if (isset($posted[$file_tmp.'_file_name']))
+					{
+						// get file extension
+						$path_info = pathinfo($file_info['name']);
+						$field_value = $this->_orig_post[$file_tmp.'_file_name'].'.'.$path_info['extension'];
+					}
+					else
+					{
+						$field_value = $file_info['name'];
+					}
+					if (strpos($field_value, '{') !== FALSE )
+					{
+						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+					}
+
+					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
+					$tmp_field_name = end(explode('--', $field_name));
+
+					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
+					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
+					$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					$posted[$tmp_field_name] = $file_val;
+					$posted[$field_name] = $file_val;
+					$posted[$file_tmp.'_file_name'] = $file_val;
+
+				}
+			}
+
+
+			$params['xss_clean'] = $this->sanitize_files;
+			$params['posted'] = $posted;
+
+			// UPLOAD!!!
 			if (!$this->fuel->assets->upload($params))
 			{
 				$errors = TRUE;
@@ -1943,34 +1949,33 @@ class Module extends Fuel_base_controller {
 				
 				// do post processing of updating field values if they changed during upload due to overwrite being FALSE
 				$uploaded_data = $this->fuel->assets->uploaded_data();
-				
-				foreach($_FILES as $key => $file)
+
+				// transfer uploaded data info to the model
+				$this->model->upload_data =& $uploaded_data;
+
+				// transfer uploaded data the controller object as well
+				$this->upload_data =& $uploaded_data;
+
+				foreach($uploaded_data as $key => $val)
 				{
-					// check if the file name is changed due to overwrite being set to FALSE
-					if (isset($uploaded_data[$key]) AND $uploaded_data[$key]['file_name'] != $uploaded_data[$key]['orig_name'])
+					$file_tmp = current(explode('___', $key));
+
+					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
 					{
-						$file_tmp = current(explode('___', $key));
-
-						// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-						if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
-						{
-							$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-						}
-
-						// get the file name field
-						// if ithe file name field exists AND there is no specified hidden filename field to assign to it AND...
-						// the model does not have an array key field AND there is a key field value posted
-						if (isset($field_name) AND isset($posted[$field_name]) AND !isset($posted[$field_name.'_file_name']) AND
-							!is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()])
-							)
-						{
-							$id = $posted[$this->model->key_field()];
-							$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
-							$data[$field_name] = $this->upload_data[$key]['file_name'];
-							$this->model->save($data);
-						}
+						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
 					}
-					
+
+					// get the file name field
+					// if ithe file name field exists AND there is no specified hidden filename field to assign to it AND...
+					// the model does not have an array key field AND there is a key field value posted
+					if (isset($field_name) AND isset($posted[$field_name]) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
+					{
+						$id = $posted[$this->model->key_field()];
+						$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+						$data[$field_name] = $val['file_name'];
+						$this->model->save($data);
+					}
 				}
 				
 			}
