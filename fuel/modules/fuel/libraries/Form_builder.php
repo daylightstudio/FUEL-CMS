@@ -2435,13 +2435,15 @@ Class Form_builder {
 		{
 			$tooltip = $params['description'];
 		}
+
 		if (!empty($tooltip))
 		{
+			$tooltip = htmlentities($tooltip, ENT_QUOTES, config_item('charset'));
 			$str = str_replace(array('{?}', '[?]'), array($tooltip, $params['label']), $this->tooltip_format);
 		}
 		else
 		{
-			$str = $params['label'];
+			$str = htmlentities($params['label'], ENT_QUOTES, config_item('charset'));
 		}
 		return $str;
 	}
