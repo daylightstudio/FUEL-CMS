@@ -21,17 +21,17 @@ class Assets extends Module {
 	{
 		$id = NULL;
 
+		if (!empty($dir))
+		{
+			$dir = uri_safe_decode($dir);
+		}
+
 		if ($inline)
 		{
 			$this->fuel->admin->set_inline(TRUE);
 		}
 		
 		$inline = $this->fuel->admin->is_inline();
-
-		if (!empty($dir))
-		{
-			$dir = uri_safe_decode($dir);
-		}
 
 		if (!empty($_POST))
 		{
@@ -79,6 +79,7 @@ class Assets extends Module {
 
 					// set the uploaded file name to the first file
 					$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
+					$flashdata['uploaded_file_webpath'] = assets_server_to_web_path($first_file['full_path']);
 
 					$this->session->set_flashdata('uploaded_post', $flashdata);
 					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
@@ -96,11 +97,11 @@ class Assets extends Module {
 					}
 					else if ($inline === TRUE)
 					{
-						$url = fuel_uri($this->module.'/inline_create/?'.$query_str, TRUE);
+						$url = fuel_uri($this->module.'/inline_create/'.uri_safe_encode($dir).'?'.$query_str, TRUE);
 					}
 					else
 					{
-						$url = fuel_uri($this->module.'/create/?'.$query_str, TRUE);
+						$url = fuel_uri($this->module.'/create/'.uri_safe_encode($dir).'?'.$query_str, TRUE);
 					}
 					redirect($url);
 					
@@ -122,8 +123,10 @@ class Assets extends Module {
 		{
 			$form_vars['asset_folder'] = $dir;
 		}
+		
 		$form_vars['asset_folder'] = (!empty($form_vars['asset_folder'])) ? trim($form_vars['asset_folder'], '/') : '';
 		$vars = $this->_form($form_vars, $inline);
+		$vars['related_items'] = $this->model->related_items($vars);
 
 		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;
 		$crumbs = array($list_view => $this->module_name, lang('assets_upload_action'));
@@ -242,7 +245,6 @@ class Assets extends Module {
 	{
 		$this->load->library('form_builder');
 		$this->load->helper('convert');
-		if (!empty($dir)) $dir = uri_safe_decode($dir);
 		
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
@@ -287,10 +289,11 @@ class Assets extends Module {
 		// load custom fields
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
-		$this->form_builder->submit_value = 'Save';
-		$this->form_builder->use_form_tag = false;
+		$this->form_builder->submit_value = lang('btn_upload');
+		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
-		$this->form_builder->display_errors = false;
+		$this->form_builder->display_errors = FALSE;
+
 		$this->form_builder->set_field_values($field_values);
 
 
@@ -304,7 +307,7 @@ class Assets extends Module {
 		$vars['form'] = $this->form_builder->render();
 		
 		// other variables
-		$vars['id'] = NULL;
+		$vars['id'] = (!empty($field_values['asset_folder'])) ? uri_safe_encode($field_values['asset_folder']) : NULL;
 		$vars['data'] = array();
 		$vars['action'] =  'create';
 		$preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
