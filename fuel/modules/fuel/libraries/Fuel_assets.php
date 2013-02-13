@@ -94,6 +94,7 @@ class Fuel_assets extends Fuel_base_library {
 		 	<li><strong>xss_clean</strong>: boolean value that determines whether to try and run the xss_clean function on any images that are uploaded</li>
 		 	<li><strong>encrypt_name</strong>: boolean value that determines whether to encrypt the file name and make it unique</li>
 		 	<li><strong>create_thumb</strong>: image specific boolean value that determines whether to create a thumbnail image based on the original uploaded image</li>
+		 	<li><strong>thumb_marker</strong>: the default suffix to use on a generated thumbnail. The default is "_thumb"</li>
 		 	<li><strong>maintain_ratio</strong>:image specific boolean value that determines whether to maintain the aspect ratio of the image upon resize</li>
 		 	<li><strong>master_dim</strong>: image specific boolean value that determines which dimension should be used when resizing and maintaining the aspect ratio. Options are height, width, auto</li>
 		 	<li><strong>width</strong>: sets the width of the uploaded image</li>
@@ -122,6 +123,7 @@ class Fuel_assets extends Fuel_base_library {
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
 						'create_thumb' => NULL,
+						'thumb_marker' => '_thumb',
 						'maintain_ratio' => NULL, 
 						'master_dim' => NULL, 
 						'width' => NULL, 
@@ -305,6 +307,13 @@ class Fuel_assets extends Fuel_base_library {
 			{
 
 				$params['source_image']	= $file['full_path'];
+
+				// to fix issues with resize and crop
+				if (empty($params['create_thumb']))
+				{
+					$params['thumb_marker'] = '';
+				}
+
 				$this->CI->image_lib->initialize($params); 
 				
 				// check for if they want just a resize or a resize AND crop
