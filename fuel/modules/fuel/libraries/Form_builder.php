@@ -1549,7 +1549,9 @@ Class Form_builder {
 		if ($this->tooltip_labels)
 		{
 			$str .= $this->create_tooltip($params);
-		} else {
+		} 
+		else
+		{
 			$str .= $params['label'];
 		}
 		if ($params['required'])
@@ -2443,7 +2445,7 @@ Class Form_builder {
 		}
 		else
 		{
-			$str = htmlentities($params['label'], ENT_QUOTES, config_item('charset'));
+			$str = $params['label'];
 		}
 		return $str;
 	}
