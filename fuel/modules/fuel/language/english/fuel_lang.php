@@ -302,11 +302,9 @@ $lang['assets_comment_overwrite'] = 'Overwrite a file with the same name. If unc
 $lang['assets_heading_general'] = 'General';
 $lang['assets_heading_image_specific'] = 'Image Specific';
 $lang['assets_comment_thumb'] = 'Create a thumbnail of the image.';
-$lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image if resized.';
-$lang['assets_comment_resize_and_crop'] = 'Crop to fit the dimensions.';
-$lang['assets_comment_resize_method'] = 'Maintains the aspect ratio or resizes and crops the image to fit the provided dimensions.';
-$lang['assets_comment_width'] = 'Will change the width of an image to the desired amount.';
-$lang['assets_comment_height'] = 'Will change the height of an image to the desired amount.';
+$lang['assets_comment_resize_method'] = 'Maintains the aspect ratio or resizes and crops the image to fit the provided dimensions. If "Create thumbnail" is selected, it will only effect the size of the thumbnail.';
+$lang['assets_comment_width'] = 'Will change the width of an image to the desired amount. If "Create thumbnail" is selected, then it will only effect the size of the thumbnail.';
+$lang['assets_comment_height'] = 'Will change the height of an image to the desired amount. If "Create thumbnail" is selected, it will only effect the size of the thumbnail.';
 $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
 $lang['assets_comment_unzip'] = 'Unzips a zip file';
 
