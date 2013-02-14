@@ -545,7 +545,7 @@ class Base_module_model extends MY_Model {
 			}
 			else
 			{
-				$val_field = $this->key_field;	
+				$val_field = $this->table_name.'.'.$this->key_field;	
 			}
 		}
 		$others = $this->options_list($val_field, $display_field, NULL, $orderby);
