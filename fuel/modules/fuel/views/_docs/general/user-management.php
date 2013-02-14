@@ -36,3 +36,9 @@ permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create'
 permission' => array('pages', 'pages/create', 'pages/edit', 'pages/upload' => 'pages/create', 'pages/publish', 'pages/delete'),
 ...
 </pre>
+
+<h2>Login As Another User</h2>
+<p>If you are a "Super Admin" user, meaning that you have the "super_admin" field set to yes in the fuel_users table, you will see an additional action in the list view next to other user name
+that says <dfn>LOGIN AS</dfn>. Clicking on this allows you to easily take on the role of another user to test out their permissions and diagnose user specific problems.
+To logout and resume your role as the "Super Admin", click the <dfn>Restore original user</dfn> link at the top near your user name.
+</p>
