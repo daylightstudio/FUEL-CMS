@@ -318,6 +318,14 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
 
+		$this->CI->load->library('session');
+		if (($permission == 'users') AND ($this->CI->uri->segment(3) == 'login_as')
+			AND $this->CI->session->userdata('original_user_id') AND $this->CI->session->userdata('original_user_hash')
+			AND ($this->CI->session->userdata('original_user_hash') == $this->CI->uri->segment(5))
+			) {
+			return TRUE;
+		}
+
 		// get the users permissions
 		$user_perms = $this->get_permissions();
 
