@@ -72,6 +72,7 @@ $lang['dev_pwd_instructions'] = 'This site is currently in development and requi
 $lang['login_forgot_pwd'] = 'Forgot password?';
 $lang['login_reset_pwd'] = 'Reset Password';
 $lang['login_btn'] = 'Login';
+$lang['logout_restore_original_user'] = 'Restore original user';
 
 
 /*
@@ -384,6 +385,7 @@ $lang['table_action_edit'] = 'EDIT';
 $lang['table_action_delete'] = 'DELETE';
 $lang['table_action_view'] = 'VIEW';
 $lang['click_to_toggle'] = 'click to toggle';
+$lang['table_action_login_as'] = 'LOGIN AS';
 
 
 /*
