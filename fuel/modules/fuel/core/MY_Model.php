@@ -3393,7 +3393,7 @@ class MY_Model extends CI_Model {
 	 * duplicating a new record via $rec->duplicate();
 	 *
 	 * @access	public
-	 * @param	array	values to be saved
+	 * @param	array	values to initialize object
 	 * @return	array
 	 */	
 	public function on_duplicate($values)
@@ -3408,7 +3408,7 @@ class MY_Model extends CI_Model {
 	 * creating a new record via $this->my_model->create();
 	 *
 	 * @access	public
-	 * @param	array	values to be saved
+	 * @param	array	values to initialize object
 	 * @return	array
 	 */	
 	public function on_create($values)

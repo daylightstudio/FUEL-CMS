@@ -581,6 +581,7 @@ an array of values to be processed and should return the processed array.</p>
 	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data</li>
 	<li><strong>on_after_post</strong> - to be called from within your own code after posting data</li>
 	<li><strong>on_duplicate</strong> - executed when a record class is duplicated</li>
+	<li><strong>on_created</strong> - executed when a record class is created</li>
 </ul>
 <br />
 <p>Record class hooks</p>
