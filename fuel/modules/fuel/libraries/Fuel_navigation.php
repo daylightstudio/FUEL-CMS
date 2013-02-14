@@ -47,7 +47,6 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
 		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
 		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
-
 		<li><strong>render_type</strong>: options are basic, breadcrumb, page_title, collapsible, delimited, array. Default is 'basic'</li>
 		<li><strong>active_class</strong>: the active css class. Default is 'active'</li>
 		<li><strong>active</strong>: the active menu item</li>
@@ -73,6 +72,8 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>append</strong>: appends additional menu items to those items already set (e.g. from the $nav array or from the navigation module). Good to use on dynamic pages where you need to dynamically set a navigation item for a page</li>
 		<li><strong>order</strong>: the order to display... for page_title ONLY</li>
 		<li><strong>language</strong>: select the appropriate language</li>
+		<li><strong>include_default_language</strong>: will merge in the default language with the results. Default is FALSE</li>
+		<li><strong>language_default_group</strong>: the default group to be used when including a default language. Default is FALSE</li>
 	</ul>
 		
 	 * @access	public
@@ -115,6 +116,8 @@ class Fuel_navigation extends Fuel_module {
 						'return_normalized' => FALSE,
 						'append' => array(),
 						'language' => NULL,
+						'include_default_language' => FALSE,
+						'language_default_group' => FALSE,
 						);
 
 		if (!is_array($params))
@@ -160,7 +163,27 @@ class Fuel_navigation extends Fuel_module {
 				$this->fuel->load_model('fuel_navigation');
 				
 				// grab all menu items by group
-				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language']);
+				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language'], 'nav_key');
+
+				// if you want to simply augment the navigation, you can grab the defaults and merge in the menu items
+				if (!empty($params['include_default_language']))
+				{
+					// get the default language value for the query
+					$default_lang = $this->fuel->language->default_option();
+				
+					// grab all menu items by group
+					$group = (!empty($params['language_default_group'])) ? $params['language_default_group'] : $p['group_id'];
+					$default_menu_items = $this->model()->find_all_by_group($group, $default_lang, 'nav_key');
+
+					// loop through and add defaults if there is no matching nav_key
+					foreach($default_menu_items as $key => $item)
+					{
+						if (!isset($menu_items[$item['nav_key']]))
+						{
+							$menu_items[$key] = $default_menu_items[$item['nav_key']];	
+						}
+					}
+				}
 
 				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 				if (!empty($menu_items)) 
@@ -340,10 +363,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Uploads a static'navigation structure which is most like the <span class="file">fuel/application/views/_variables/nav.php</span> file
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	boolean
 	 */	
-	function upload($params)
+	function upload($params = array())
 	{
 		$this->CI->load->library('menu');
 		$this->CI->load->helper('file');

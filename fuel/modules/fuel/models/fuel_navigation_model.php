@@ -38,21 +38,13 @@ class Fuel_navigation_model extends Base_module_model {
 	function find_by_location($location, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.location'] = $location;
-		if (!empty($lang))
-		{
-			$where['language'] = $lang;
-		}
-		return $this->_find_by_array($where, $group_id);
+		return $this->_find_by_array($where, $group_id, $lang);
 	}
 
 	function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.nav_key'] = $nav_key;
-		if (!empty($lang))
-		{
-			$where['language'] = $lang;
-		}
-		return $this->_find_by_array($where, $group_id);
+		return $this->_find_by_array($where, $group_id, $lang);
 	}
 	
 	protected function _find_by_array($where, $group_id = 1, $lang = NULL)
@@ -140,14 +132,22 @@ class Fuel_navigation_model extends Base_module_model {
 		return $return;
 	}
 	
-	function find_all_by_group($group_id = 1, $lang = NULL)
+	function find_all_by_group($group_id = 1, $lang = NULL, $assoc_key = NULL)
 	{
 		$where = (is_string($group_id)) ? array($this->_tables['fuel_navigation_groups'].'.name' => $group_id) : array($this->_tables['fuel_navigation'].'.group_id' => $group_id);
 		if (!empty($lang))
 		{
 			$where['language'] = $lang;
 		}
-		$data = $this->find_all_array($where);
+		if (!empty($assoc_key))
+		{
+			$data = $this->find_all_array_assoc($assoc_key, $where);	
+		}
+		else
+		{
+			$data = $this->find_all_array($where);
+		}
+		
 		return $data;
 	}
 
