@@ -175,17 +175,40 @@ class Fuel_blocks extends Fuel_module {
 			{
 				$view_path = APPPATH.$view_path;
 			}
-			$view_file = $view_path.$p['view'].EXT;
+
+			// get language value
+			if ($this->fuel->language->has_multiple())
+			{
+				$language = (!empty($p['language'])) ? $p['language'] : $this->fuel->language->detect();
+			}
+			else
+			{
+				$language = $this->fuel->language->default_option();
+			}
+
+			// test that the file exists in the associated language
+			if (!empty($language) AND !$this->fuel->language->is_default($language))
+			{
+				$view_tmp = 'language/'.$language.'/'.$view;
+				if (file_exists($view_path . $view_tmp .'.php'))
+				{
+					$view_file = $view_path.$view_tmp.EXT;
+				}
+			}
+			else
+			{
+				$view_file = $view_path.$p['view'].EXT;	
+			}
+			
 			
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ($check_db AND (($p['mode'] == 'auto' AND $this->CI->fuel->blocks->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
+			if ($check_db AND (($p['mode'] == 'auto' AND $this->fuel->blocks->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('fuel_blocks');
 
 				// find the block in FUEL db
-				$language = (!empty($p['language'])) ? $p['language'] : $this->CI->fuel->language->detect();
 				$block = $this->CI->fuel_blocks_model->find_one_by_name_and_language($p['view'], $language);
 
 				// if there is no block found with that language we will try to find one that may not have a language associated with it
