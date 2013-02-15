@@ -233,9 +233,6 @@ class Generate extends Fuel_base_controller {
 			$this->_simple($name, $module);
 		}
 		
-		// now create permissions
-		$this->fuel->permissions->create_simple_module_permissions($name);
-		
 		$vars['created'] = $this->created;
 		$vars['errors'] = $this->errors;
 		$vars['modified'] = $this->modified;
