@@ -309,6 +309,19 @@ class Module extends Fuel_base_controller {
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
 			
+			// set data table actions... look first for item_actions set in the fuel_modules
+			$edit_func = '
+			$CI =& get_instance();
+			$link = "";
+			if ($CI->fuel->auth->has_permission($CI->permission, "edit") AND isset($cols[$CI->model->key_field()]))
+			{
+				$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+				$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+			}
+			return $link;';
+			
+			$edit_func = create_function('$cols', $edit_func);
 			
 			
 			// set data table actions... look first for item_actions set in the fuel_modules
@@ -352,9 +365,16 @@ class Module extends Fuel_base_controller {
 					}
 					$this->data_table->add_action($key, $action_val, $action_type, $attrs);
 				}
+				else if (strtoupper($val) == 'EDIT')
+				{
+					if ($this->fuel->auth->has_permission($this->permission, "edit"))
+					{
+						$action_url = fuel_url($this->module_uri.'/edit/{'.$this->model->key_field().'}');
+						$this->data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+					}
+				}
 				else if (strtoupper($val) == 'DELETE')
 				{
-					
 					$this->data_table->add_action($val, $delete_func, 'func');
 				}
 				else

@@ -604,7 +604,7 @@ class Fuel_module extends Fuel_base_library {
 					'list' => 'modules/module_list', 
 					'create_edit' => 'modules/module_create_edit', 
 					'delete' => 'modules/module_delete'),
-				'permission' => array('create', 'edit', 'publish', 'delete'),
+				'permission' => array($this->module, 'create', 'edit', 'publish', 'delete', 'export'),
 				'js_controller' => 'fuel.controller.BaseFuelController',
 				'js_controller_path' => '',
 				'js_controller_params' => array(),
