@@ -189,8 +189,8 @@ class Fuel_blocks extends Fuel_module {
 			// test that the file exists in the associated language
 			if (!empty($language) AND !$this->fuel->language->is_default($language))
 			{
-				$view_tmp = 'language/'.$language.'/'.$view;
-				if (file_exists($view_path . $view_tmp .'.php'))
+				$view_tmp = 'language/'.$language.'/'.$p['view'];
+				if (file_exists($view_path . $view_tmp.EXT))
 				{
 					$view_file = $view_path.$view_tmp.EXT;
 				}
