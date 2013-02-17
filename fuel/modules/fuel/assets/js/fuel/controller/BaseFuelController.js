@@ -608,15 +608,19 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if ($(this).find('a').length <= 0){
 				$(this).click(function(e){
 					if (!_this.rearrangeOn){
-						var actions_col = $(this).parent().find('td.actions');
-						if (actions_col)
-						{
-							window.location = $('a:first', actions_col[0]).attr('href');
+						var actionsCol = $(this).parent().find('td.actions');
+						var firstLink = $('a:first', actionsCol[0]).attr('href');
+						if (firstLink && firstLink){
+							window.location = firstLink;
 						}
 					}
 					return false;
 
 				});
+			}
+
+			if (!$('#data_table td.actions a:first').length){
+				$('tr.rowaction').removeClass('rowaction');
 			}
 		});
 		
