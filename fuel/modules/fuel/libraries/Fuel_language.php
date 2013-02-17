@@ -31,6 +31,8 @@
 
 // --------------------------------------------------------------------
 
+require_once('Fuel_base_library.php');
+
 class Fuel_language extends Fuel_base_library {
 	
 	public $options = array(); // The language options available. Specified in the main FUEL config
@@ -142,7 +144,7 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	function set_selected($selected, $set_config = FALSE)
 	{
-		if ($this->has_language($selected))
+		if ($this->has_language($selected) AND $this->is_valid($selected))
 		{
 			$this->set_cookie($selected);
 			$this->set_query_str($selected);
@@ -152,7 +154,9 @@ class Fuel_language extends Fuel_base_library {
 			{
 				$this->CI->config->set_item('language', $selected);
 			}
+			return TRUE;
 		}
+		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
@@ -228,6 +232,19 @@ class Fuel_language extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns whether the language is a valid selection
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function is_valid($lang)
+	{
+		return isset($this->options[$lang]);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Detects which language should be used 
 	 *
 	 * @access	public
@@ -259,9 +276,9 @@ class Fuel_language extends Fuel_base_library {
 				}
 			}
 		}
-		
+
 		// if language is still not legit, we'll use the default language
-		if ($language === FALSE)
+		if ($language === FALSE OR !$this->is_valid($language))
 		{
 			$language = $this->default_option();
 		}
