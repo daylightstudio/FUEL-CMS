@@ -270,7 +270,11 @@ class Curl {
 			$key = 0;
 		}
 		$this->_output = curl_exec($this->_sessions[$key]);
-		$this->_error[$key] = curl_error($this->_sessions[$key]);
+		$curl_error = curl_error($this->_sessions[$key]);
+		if (!empty($curl_error))
+		{
+			$this->_error[$key] = $curl_error;
+		}
 		$this->_info[$key] = curl_getinfo($this->_sessions[$key]);
 
 		// clear and close all sessions
