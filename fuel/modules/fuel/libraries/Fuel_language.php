@@ -31,14 +31,12 @@
 
 // --------------------------------------------------------------------
 
-require_once('Fuel_base_library.php');
-
 class Fuel_language extends Fuel_base_library {
 	
 	public $options = array(); // The language options available. Specified in the main FUEL config
 	public $selected = ''; // The currently selected language. The default is the language specified in the CI config
 	public $query_str_param = 'lang'; // The name of the query string parameter to use for setting the language
-	public $cookie_name = 'lang'; // The name of the cookie to hold the currently selected language
+	public $cookie_name = ''; // The name of the cookie to hold the currently selected language
 	public $cookie_exp = '63072000'; // Default is 2 years
 	
 	// --------------------------------------------------------------------
@@ -303,7 +301,7 @@ class Fuel_language extends Fuel_base_library {
 			return FALSE;
 		}
 		$config = array(
-			'name' => $this->cookie_name, 
+			'name' => $this->cookie_name(), 
 			'value' => $lang,
 			'expire' => $this->cookie_exp,
 			'path' => $this->CI->config->item('cookie_path'),
@@ -322,9 +320,29 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	function cookie_value()
 	{
-		return get_cookie($this->cookie_name);
+		return get_cookie($this->cookie_name());
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the name of the cookie
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function cookie_name()
+	{
+		if (!empty($this->cookie_name))
+		{
+			return $this->cookie_name;
+		}
+		else
+		{
+			return 'fuel_lang_'.substr($this->fuel->auth->get_session_namespace(), 5);
+		}
+		
+	}
 	// --------------------------------------------------------------------
 	
 	/**
