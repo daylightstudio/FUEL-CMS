@@ -357,7 +357,7 @@ class Fuel_page extends Fuel_base_library {
 	 */	
 	function initialize($params = array())
 	{
-		// if $paramsis a string then we will assume that they are passing the most common parameter location
+		// if $params is a string then we will assume that they are passing the most common parameter location
 		if (is_string($params))
 		{
 			$params = array('location' => $params);
