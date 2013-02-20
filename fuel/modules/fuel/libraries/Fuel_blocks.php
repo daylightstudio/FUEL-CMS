@@ -195,16 +195,17 @@ class Fuel_blocks extends Fuel_module {
 					$view_file = $view_path.$view_tmp.EXT;
 				}
 			}
-			else
+
+
+			if (empty($view_file))
 			{
 				$view_file = $view_path.$p['view'].EXT;	
 			}
 			
-			
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
-			if ($check_db AND (($p['mode'] == 'auto' AND $this->fuel->blocks->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
+			if ($check_db AND (($p['mode'] == 'auto' AND $this->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
 				$this->fuel->load_model('fuel_blocks');
 
