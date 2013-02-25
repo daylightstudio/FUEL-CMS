@@ -45,7 +45,34 @@ class Settings extends Fuel_base_controller {
 		
 		if (!empty($module) AND $module != FUEL_FOLDER)
 		{
-			$this->_validate_user($module);
+			$mod_install_config = $this->fuel->installer->config($module);
+			if (isset($mod_install_config['permissions']))
+			{
+				$perm = $mod_install_config['permissions'];
+				if (is_array($perm))
+				{
+					if (count($perm) > 1)
+					{
+						if (isset($perm[$module.'/settings']))
+						{
+							$this->_validate_user($module.'/settings');
+						}
+						else
+						{
+							$this->_validate_user($module);
+						}
+					}
+					else
+					{
+						$perm = (is_int(key($perm))) ? current($perm) : key($perm);
+						$this->_validate_user($perm);
+					}
+				}
+				else
+				{
+					$this->_validate_user($perm);
+				}
+			}
 		}
 
 		$this->js_controller_params['method'] = 'add_edit';
