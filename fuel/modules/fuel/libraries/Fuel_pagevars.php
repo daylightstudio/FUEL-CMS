@@ -129,7 +129,10 @@ class Fuel_pagevars extends Fuel_base_library {
 			$this->CI->load->library('parser');
 			foreach($vars as $key => $val)
 			{
-				$vars[$key] = $this->CI->parser->parse_string($val, $vars, TRUE);
+				if (is_string($val))
+				{
+					$vars[$key] = $this->CI->parser->parse_string($val, $vars, TRUE);	
+				}
 			}
 		}
 		return $vars;
