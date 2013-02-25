@@ -1,4 +1,4 @@
-CREATE TABLE `news` (
+CREATE TABLE IF NOT EXISTS `news` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type` enum('press','news') COLLATE utf8_unicode_ci NOT NULL,
@@ -13,4 +13,4 @@ CREATE TABLE `news` (
   `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
