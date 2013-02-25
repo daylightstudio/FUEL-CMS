@@ -111,6 +111,14 @@ $config['layouts']['sitemap_xml'] = array(
 	)
 );
 
+$config['layouts']['robots_txt'] = array(
+	'label' => 'robots.txt',
+	'fields' => array(
+		'copy' => array('type' => 'copy', 'label' => lang('layout_field_robots_txt_copy')),
+		'body' => array('type' => 'textarea', 'label' => lang('layout_field_body'), 'value' => "User-agent: *\nDisallow: /fuel/", 'class' => 'no_editor'),
+	)
+);
+
 $config['layouts']['none'] = array(
 	'label' => 'None',
 	'fields' => array(

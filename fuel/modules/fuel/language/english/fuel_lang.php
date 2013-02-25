@@ -499,7 +499,8 @@ $lang['layout_field_redirect_to'] = 'Redirect to';
 
 $lang['layout_field_301_redirect_copy'] = 'This layout will do a 301 redirect to another page.';
 $lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specifiec location is used to render the page.';
-$lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap.';
+$lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap. For this page to appear, a sitemap.xml must not exist on the server.';
+$lang['layout_field_robots_txt_copy'] = 'This layout is used to generate a robots.txt file. For this page to appear, a robots.txt must not exist on the server.';
 $lang['layout_field_none_copy'] = 'This layout is the equivalent of having no layout assigned.';
 
 $lang['layout_field_frequency'] = 'Frequency';
