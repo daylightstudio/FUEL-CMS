@@ -99,6 +99,12 @@ class Installer extends Fuel_base_controller {
 	
 	function uninstall($module = NULL)
 	{
+		if (!$this->fuel->modules->exists($module))
+		{
+			echo lang('cannot_determine_module')."\n";
+			return;
+		}
+
 		// uninstall
 		if (!$this->fuel->$module->uninstall())
 		{
