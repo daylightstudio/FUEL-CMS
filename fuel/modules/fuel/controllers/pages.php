@@ -8,7 +8,6 @@ class Pages extends Module {
 	function __construct()
 	{
 		parent::__construct();
-		$this->config->load('fuel', TRUE);
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
@@ -557,7 +556,6 @@ class Pages extends Module {
 		$this->load->library('form_builder');
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
-		$this->form_builder->form->validator = &$this->fuel_pagevariables_model->get_validation();
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
