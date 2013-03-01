@@ -311,7 +311,7 @@ a.btn, div.btn, .btn input, .btn .button  {
 .update_notice a { font-style: italic; text-decoration: underline; }
 .update_notice a:hover { text-decoration: none; }
 
-.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; }
+.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
 .repeatable .remove { position: absolute; top: 15px; right: 15px; }
 .add_another { padding: 10px; float: left; }
