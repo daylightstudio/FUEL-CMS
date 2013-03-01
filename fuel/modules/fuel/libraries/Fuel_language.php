@@ -137,17 +137,22 @@ class Fuel_language extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The selected language 
-	 * @param	boolean	Set the config language value (optional)
+	 * @param	boolean	Set the config language value (optional
+	 * @param	boolean	Set the query string lang value (optional)
 	 * @return	boolean
 	 */	
-	function set_selected($selected, $set_config = FALSE)
+	function set_selected($selected, $set_config = FALSE, $set_query = FALSE)
 	{
 		if ($this->has_language($selected) AND $this->is_valid($selected))
 		{
 			$this->set_cookie($selected);
-			$this->set_query_str($selected);
 			$this->selected = $selected;
 
+			if ($set_query)
+			{
+				$this->set_query_str($selected);	
+			}
+			
 			if ($set_config)
 			{
 				$this->CI->config->set_item('language', $selected);
@@ -346,7 +351,7 @@ class Fuel_language extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets the query string to the selected language language from the query string
+	 * Sets the query string to the selected language from the query string
 	 *
 	 * @access	public
 	 * @param	string	The selected language 
