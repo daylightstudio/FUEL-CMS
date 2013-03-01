@@ -1987,7 +1987,7 @@ class Module extends Fuel_base_controller {
 					}
 
 					// get the file name field
-					// if ithe file name field exists AND there is no specified hidden filename field to assign to it AND...
+					// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
 					// the model does not have an array key field AND there is a key field value posted
 					if (isset($field_name) AND isset($posted[$field_name]) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
 					{
