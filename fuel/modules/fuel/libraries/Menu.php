@@ -493,7 +493,7 @@ class Menu {
 			// loop through base menu items and start drill down
 			foreach($menu as $key => $val)
 			{
-				$label = $this->_get_label($val['label']);
+				$label = $this->_get_label($val);
 
 				if ($active_index > -1 AND $key == $this->_active_items[$active_index])
 				{
@@ -593,7 +593,7 @@ class Menu {
 		for ($i = $num; $i >= 0; $i--)
 		{
 			$val = $this->_active_items[$i];
-			$label = $this->_get_label($this->_items[$val]['label']);
+			$label = $this->_get_label($this->_items[$val]);
 			if (!empty($this->item_tag))
 			{
 				$str .= "\t<".$this->item_tag.">";
@@ -665,7 +665,7 @@ class Menu {
 			for ($i = 0; $i <= $num; $i++)
 			{
 				$val = $this->_active_items[$i];
-				$label = $this->_get_label(strip_tags($this->_items[$val]['label']));
+				$label = strip_tags($this->_get_label($this->_items[$val]));
 				if ($i != 0)
 				{
 					$str .= $this->delimiter;
@@ -682,7 +682,7 @@ class Menu {
 			for ($i = $num; $i >= 0; $i--)
 			{
 				$val = $this->_active_items[$i];
-				$label = $this->_get_label(strip_tags($this->_items[$val]['label']));
+				$label = strip_tags($this->_get_label($this->_items[$val]));
 				$str .= $label;
 				if ($i != 0)
 				{
@@ -879,7 +879,7 @@ class Menu {
 	protected function _create_link($val, $active = NULL)
 	{
 		$str = '';
-		$label = $this->_get_label($val['label']);
+		$label = $this->_get_label($val);
 		
 		$attrs = '';
 		if (!empty($val['location']))
@@ -979,11 +979,10 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Generates the label of the menu item
+	 * Generates the label of the menu item and will call any pre_render_func before returning value
 	 *
 	 * @access	protected
-	 * @param	string active element
-	 * @param	boolean first time iterating through?
+	 * @param	array menu item values
 	 * @return	string
 	 */
 	protected function _get_label($label)
@@ -991,6 +990,12 @@ class Menu {
 		if (!empty($this->pre_render_func)) 
 		{
 			$label = call_user_func($this->pre_render_func, $label);
+		}
+
+		// if it is an array, we will assume they want the 'label' key
+		if (is_array($label))
+		{
+			$label = $label['label'];
 		}
 		return $label;
 	}
