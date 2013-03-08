@@ -462,7 +462,7 @@ class Menu {
 	 */
 	protected function _render_collabsible($menu, $level = 0)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
 		$menu = $this->_filter_hidden($menu);
 		
 		$str = '';
@@ -556,9 +556,6 @@ class Menu {
 	 */
 	protected function _render_breadcrumb($menu)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
-		$menu = $this->_filter_hidden($menu);
-		
 		if (empty($this->delimiter))
 		{
 			$this->delimiter = ' &gt; ';
@@ -638,9 +635,6 @@ class Menu {
 	 */
 	protected function _render_page_title($menu)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
-		$menu = $this->_filter_hidden($menu);
-		
 		if (empty($this->delimiter))
 		{
 			$this->delimiter = ' &gt; ';
@@ -706,7 +700,7 @@ class Menu {
 	 */
 	protected function _render_delimited($menu)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden on e at the end
+		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
 		$menu = $this->_filter_hidden($menu);
 		
 		if ($this->container_tag !== FALSE)
