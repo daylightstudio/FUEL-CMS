@@ -188,7 +188,7 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($library)) return $this->libraries($library);		
 		
-		$class = end(explode('/', $library));
+		$class = strtolower(end(explode('/', $library)));
 		
 		if (isset($this->_ci_classes[$class]) AND $_alias = $this->_ci_classes[$class])
 			return CI::$APP->$_alias;
