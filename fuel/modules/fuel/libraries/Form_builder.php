@@ -2073,7 +2073,7 @@ Class Form_builder {
 			$params['value'] = '';
 		}
 		$params['maxlength'] = 10;
-		$params['size'] = 10;
+		$params['size'] = 11; // extra room for cramped styling
 		
 		// create the right format for placeholder display based on the date format
 		$date_arr = preg_split('#-|/#', $params['date_format']);
@@ -2126,19 +2126,19 @@ Class Form_builder {
 		}
 		$time_params['size'] = 2;
 		$time_params['max_length'] = 2;
-		$time_params['name'] = $params['orig_name'].'_hour';
+		$time_params['name'] = str_replace($params['key'], $params['key'].'_hour', $params['orig_name']);
 		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
 		$time_params['placeholder'] = 'hh';
 		$str = $this->create_text($this->normalize_params($time_params));
 		$str .= ":";
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00') $time_params['value'] = date('i', strtotime($params['value']));
-		$time_params['name'] = $params['orig_name'].'_min';
+		$time_params['name'] = str_replace($params['key'], $params['key'].'_min', $params['orig_name']);
 		$time_params['class'] = 'datepicker_mm';
 		$time_params['placeholder'] = 'mm';
 		$str .= $this->create_text($this->normalize_params($time_params));
 		$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
-		$ampm_params['name'] = $params['orig_name'].'_am_pm';
+		$ampm_params['name'] = str_replace($params['key'], $params['key'].'_am_pm', $params['orig_name']);
 		$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 		$ampm_params['disabled'] = $params['disabled'];
 		$str .= $this->create_enum($this->normalize_params($ampm_params));
@@ -2156,11 +2156,10 @@ Class Form_builder {
 						$min  = (isset($val["'.$params['subkey'].'_min"]) AND is_numeric($val["'.$params['subkey'].'_min"]))  ? $val["'.$params['subkey'].'_min"] : "00";
 						$ampm = (isset($val["'.$params['subkey'].'_am_pm"]) AND $hr AND $min) ? $val["'.$params['subkey'].'_am_pm"] : "am";
 
-						$value = "";
 						if ($hr !== "")
 						{
-							$value = $hr.":".$min.$ampm;
-							$value[$key]["'.$params['subkey'].'"] = date("H:i:s", strtotime($value));
+							$dateval = $hr.":".$min.$ampm;
+							$value[$key]["'.$params['subkey'].'"] = date("H:i:s", strtotime($dateval));
 						}
 					}
 					return $value;
@@ -2174,14 +2173,14 @@ Class Form_builder {
 				$min   = (isset($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"]))  ? $_POST["'.$params['key'].'_min"] : "00";
 				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
 
-				$value = "";
+				$dateval = "";
 				if ($hr !== "")
 				{
-					$value = $hr.":".$min.$ampm;
-					$value = date("H:i:s", strtotime($value));
+					$dateval = $hr.":".$min.$ampm;
+					$dateval = date("H:i:s", strtotime($value));
 				}
 
-				return $value;
+				return $dateval;
 			';
 		}
 
@@ -2215,55 +2214,47 @@ Class Form_builder {
 		$params['no_post_process'] = FALSE;
 		$str .= $this->create_time($params);
 
-
-		if (isset($params['subkey']))
-		{
-			$func_str = '
+		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+		$func_str = '
 				if (is_array($value))
 				{
 					foreach($value as $key => $val)
 					{
-						if (isset($val["'.$params['subkey'].'"]))
+						if (isset($val["'.$process_key.'"]))
 						{
-							$date = (!empty($val["'.$params['subkey'].'"]) AND is_date_format($val["'.$params['subkey'].'"])) ? $val["'.$params['subkey'].'"] : "";;
-							$hr   = (!empty($val["'.$params['subkey'].'_hour"]) AND  (int)$val["'.$params['subkey'].'_hour"] > 0 AND (int)$val["'.$params['subkey'].'_hour"] < 24) ? $val["'.$params['subkey'].'_hour"] : "";
-							$min  = (!empty($val["'.$params['subkey'].'_min"]) AND is_numeric($val["'.$params['subkey'].'_min"]))  ? $val["'.$params['subkey'].'_min"] : "00";
-							$ampm = (isset($val["'.$params['subkey'].'_am_pm"]) AND $hr AND $min) ? $val["'.$params['subkey'].'_am_pm"] : "am";
+							$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? $val["'.$process_key.'"] : "";;
+							$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
+							$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
+							$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "am";
 
-							$v = (!empty($date)) ? $date." ".$hr.":".$min.$ampm : 0;
-
-							$value = "";
+							$dateval = "";
 							if ($date != "")
 							{
-								$value = $date;
-								if (!empty($hr)) $value .= " ".$hr.":".$min.$ampm;
-								$value = date("Y-m-d H:i:s", strtotime($value));
+								if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+								$dateval = date("Y-m-d H:i:s", strtotime($dateval));
 							}
-							$value[$key]["'.$params['subkey'].'"] = $value;
+							$value[$key]["'.$process_key.'"] = $dateval;
 						}
 					}
 					return $value;
 				}
-				';
-		}
-		else
-		{
-			$func_str = '
-				$date  = (!empty($_POST["'.$params['key'].'"]) AND is_date_format($_POST["'.$params['key'].'"])) ? $_POST["'.$params['key'].'"] : "";
-				$hr    = (!empty($_POST["'.$params['key'].'_hour"]) AND (int)$_POST["'.$params['key'].'_hour"] > 0 AND (int)$_POST["'.$params['key'].'_hour"] < 24) ? $_POST["'.$params['key'].'_hour"] : "";
-				$min   = (!empty($_POST["'.$params['key'].'_min"]) AND is_numeric($_POST["'.$params['key'].'_min"]))  ? $_POST["'.$params['key'].'_min"] : "00";
-				$ampm  = (isset($_POST["'.$params['key'].'_am_pm"]) AND $hr AND $min) ? $_POST["'.$params['key'].'_am_pm"] : "am";
-
-				$value = "";
-				if ($date != "")
+				else
 				{
-					$value = $date;
-					if (!empty($hr)) $value .= " ".$hr.":".$min.$ampm;
-					$value = date("Y-m-d H:i:s", strtotime($value));
+					$date  = (!empty($_POST["'.$process_key.'"]) AND is_date_format($_POST["'.$process_key.'"])) ? $_POST["'.$process_key.'"] : "";
+					$hr    = (!empty($_POST["'.$process_key.'_hour"]) AND (int)$_POST["'.$process_key.'_hour"] > 0 AND (int)$_POST["'.$process_key.'_hour"] < 24) ? $_POST["'.$process_key.'_hour"] : "";
+					$min   = (!empty($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
+					$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "am";
+					$dateval = "";
+					
+					if ($date != "")
+					{
+						$dateval = $date;
+						if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+						$dateval = date("Y-m-d H:i:s", strtotime($dateval));
+					}
+					return $dateval;
 				}
-				return $value;
 			';
-		}
 
 		$func = create_function('$value', $func_str);
 		$this->set_post_process($params['key'], $func);
@@ -2750,6 +2741,78 @@ Class Form_builder {
 		$this->form->validator = $validator;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Handles validation for the form builder fields
+	 */
+	function validate($validator)
+	{
+		if ( ! empty($_POST) AND (get_class($validator) == 'Validator'))
+		{
+			// $this->CI->load->library('validator');
+			$this->CI->load->helper('inflector');
+
+			$validator->reset();
+
+			foreach ($this->_fields as $field_name => $params)
+			{
+				$field_validations = array();
+				if (array_key_exists('validation', $params))
+				{
+					foreach ($params['validation'] as $rule => $args) {
+						$field_validations[$rule] = $args;
+					}
+				}
+				// add to validation only if it is in the $_POST
+				if (array_key_exists('validation_if_exists', $params))
+				{
+					if ($this->CI->input->post($field_name))
+					{
+						foreach ($params['validation_if_exists'] as $rule => $args) {
+							$field_validations[$rule] = $args;
+						}
+					}
+				}
+				// add required validation if it is set outside of the validation
+				if (array_key_exists('required', $params) AND $params['required'] 
+					AND ! array_key_exists('required', $field_validations)) {
+					$field_validations['required'] = '';
+				}
+
+				// add the rules
+				$field_value = $params['value'];
+				foreach ($field_validations as $rule => $args)
+				{
+					$field_label = humanize($field_name);
+
+					if (is_array($args) AND array_key_exists('message', $args))
+					{
+						$msg = $args['message'];
+						unset($args['message']);
+					}
+					else
+					{
+						$msg = "{$field_label} is {$rule}.";
+					}
+
+					$rule_params = $field_value;
+					if ( ! empty($args) AND array_key_exists('params', $args) AND is_array($args['params']))
+					{
+						$rule_params = $args['params'];
+						array_unshift($rule_params, $field_value);
+					}
+
+					$validator->add_rule($field_name, $rule, $msg, $rule_params);
+				}
+			}
+
+			$validator->validate();
+
+			return $validator->get_errors();
+		}
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
