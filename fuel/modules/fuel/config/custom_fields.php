@@ -189,5 +189,14 @@ $fields['keyval'] = array(
 	'filepath'	=> '',
 );
 
+// block field
+$fields['block'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'block',
+	'filepath'	=> '',
+	'js_function' => 'fuel.fields.block',
+
+);
+
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

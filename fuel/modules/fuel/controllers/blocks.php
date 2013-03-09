@@ -150,4 +150,70 @@ class Blocks extends Module {
 		
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}
+
+
+	function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL)
+	{
+
+		// check to make sure there is no conflict between page columns and layout vars
+		$layout = $this->fuel->layouts->get($layout, 'block');
+		if (!$layout)
+		{
+			return;
+		}
+
+		// sort of kludgy but not wanting to encode/unencode brackets
+		if (empty($_context))
+		{
+			$_context = $this->input->get('context', TRUE);
+		}
+		if (!empty($_context))
+		{
+			$layout->set_context($_context);
+		}
+		
+		$fields = $layout->fields();
+
+
+		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
+		$this->load->library('form_builder');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+		
+		$this->form_builder->question_keys = array();
+		$this->form_builder->submit_value = '';
+		$this->form_builder->cancel_value = '';
+		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->name_prefix = 'vars';
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		
+		if (!empty($id))
+		{
+			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
+
+			// the following will pre-populate fields of a different language to the default values
+			if (empty($page_vars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+			{
+				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+			}
+			// extract variables
+			extract($page_vars);
+			$_context_var = str_replace(array('[', ']'), array('["', '"]'), $_context);
+			if (!empty($_context_var))
+			{
+				$_context_var_eval = '$_context = (isset($'.$_context_var.')) ? $'.$_context_var.' : "";';
+				eval($_context_var_eval);
+			}
+
+			if (isset($_context))
+			{
+				$block_vars = $_context;
+				$this->form_builder->set_field_values($block_vars);
+			}
+
+		}
+		
+		$form = $this->form_builder->render();
+		$this->output->set_output($form);
+	}
 }

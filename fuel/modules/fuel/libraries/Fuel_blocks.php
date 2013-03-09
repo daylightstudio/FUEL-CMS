@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 class Fuel_blocks extends Fuel_module {
 	
+	public $blocks_folder = '_blocks';
 	protected $module = 'blocks';
 	
 	// --------------------------------------------------------------------
@@ -196,12 +197,11 @@ class Fuel_blocks extends Fuel_module {
 				}
 			}
 
-
 			if (empty($view_file))
 			{
 				$view_file = $view_path.$p['view'].EXT;	
 			}
-			
+
 			$p['mode'] = strtolower($p['mode']);
 			
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
@@ -320,12 +320,13 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	string	The subfolder within the views/_blocks folder (optional)
 	 * @param	string	Filter condition for those blocks found in the views/_blocks folder (optional)
 	 * @param	mixed	The ordering condition to apply for the views (applies to those fond in the CMS... optional)
+	 * @param	boolean	Determines whether to recursively look for files (optional)
 	 * @return	array
 	 */
-	function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
 	{
 		$model = $this->model();
-		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order);
+		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order, $recursive);
 	}
 
 	// --------------------------------------------------------------------

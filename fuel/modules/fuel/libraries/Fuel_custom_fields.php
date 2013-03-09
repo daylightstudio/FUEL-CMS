@@ -75,7 +75,10 @@ class Fuel_custom_fields {
 		{
 			$params['data']['preview'] = $params['preview'];
 		}
-
+		
+		// the dimensions for the preview window		
+		$params['data']['preview_options'] = (!empty($params['preview_options'])) ? $params['preview_options'] : 'width=1024,height=768';
+		
 		// set ckeditor configs
 		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
 		{
@@ -242,37 +245,33 @@ class Fuel_custom_fields {
 		
 		if ($multiple)
 		{
+			$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+
 			// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-			if (isset($params['subkey']))
-			{
-				$func_str = '
-					if (is_array($value))
+			$func_str = '
+				if (is_array($value))
+				{
+					foreach($value as $key => $val)
 					{
-						foreach($value as $key => $val)
+						if (isset($val["'.$process_key.'"]))
 						{
-							if (isset($val["'.$params['subkey'].'"]))
+							$val = trim($val["'.$process_key.'"]);
+							$assets = array();
+							$assets_arr = preg_split("#\s*,\s*|\n#", $val);
+							if (count($assets_arr) > 1)
 							{
-								$val = trim($val["'.$params['subkey'].'"]);
-								$assets = array();
-								$assets_arr = preg_split("#\s*,\s*|\n#", $val);
-								if (count($assets_arr) > 1)
-								{
-									$value[$key]["'.$params['subkey'].'"] = json_encode($assets_arr);
-								}
-								else
-								{
-									$value[$key]["'.$params['subkey'].'"] = $val;
-								}
+								$value[$key]["'.$process_key.'"] = json_encode($assets_arr);
+							}
+							else
+							{
+								$value[$key]["'.$process_key.'"] = $val;
 							}
 						}
-						return $value;
 					}
-					';
-			}
-			else
-			{
-				
-				$func_str = '
+					return $value;
+				}
+				else
+				{
 					$value = trim($value);
 					$assets_arr = preg_split("#\s*,\s*|\n#", $value);
 					if (count($assets_arr) > 1)
@@ -283,8 +282,9 @@ class Fuel_custom_fields {
 					{
 						return $value;
 					}
-					';
-			}
+				}
+				';
+			
 
 			$func = create_function('$value', $func_str);
 			$form_builder->set_post_process($params['key'], $func);
@@ -532,7 +532,6 @@ class Fuel_custom_fields {
 					else
 					{
 						$field['label'] = ucfirst(str_replace('_', ' ', $key));
-						
 					}
 				}
 				
@@ -575,7 +574,7 @@ class Fuel_custom_fields {
 					$fields[$i][$key] = $form_builder->create_field($field);
 					$fields[$i]['__index__'] = $i;
 					$fields[$i]['__num__'] = $i + 1;
-					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']])) ? strip_tags($value[$params['title_field']]) : '';
+					$fields[$i]['__title__'] = (isset($params['title_field']) AND !empty($value[$params['title_field']]) AND is_string($value[$params['title_field']])) ? strip_tags($value[$params['title_field']]) : '';
 				}
 				else
 				{
@@ -683,7 +682,16 @@ class Fuel_custom_fields {
 							$value = $form_builder->simple_field_value($ff);
 							if (isset($params['title_field'], $f[$params['title_field']]))
 							{
-								$heading = str_replace('{__title__}', $f[$params['title_field']]['value'], $value);
+								$header_value = (is_array($f[$params['title_field']]['value'])) ? current($f[$params['title_field']]['value']) : $f[$params['title_field']]['value'];
+								if (is_string($header_value))
+								{
+									$heading = str_replace('{__title__}', $header_value, $value);		
+								}
+								
+							}
+							else
+							{
+								$heading = $value;	
 							}
 							unset($f[$kk]);
 							//$f[$kk]['label'] = $heading;
@@ -706,7 +714,7 @@ class Fuel_custom_fields {
 					$str .= '<h3 class="grabber" title="'.lang('tooltip_dbl_click_to_open').'">';
 					if (!empty($heading)) 
 					{
-						$str .= '<span class="title'.$depth_suffix.'"></span>';
+						$str .= '<span class="title'.$depth_suffix.'">'.$heading.'</span>';
 					}
 					$str .= '</h3>';
 					$str .= '<div class="repeatable_content">';
@@ -783,59 +791,57 @@ class Fuel_custom_fields {
 			$_POST[$params['key']] = '';
 		}
 
+		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+
 		// check if it's a nested form
-		if (isset($params['subkey']))
-		{
-			$func_str = '
-				if (is_array($value))
-				{
-					foreach($value as $key => $val)
-					{
-						if ($val == "")
-						{
-							$val = NULL;
-						}
-						else
-						{
-							$value_parts = explode("'.$params['decimal'].'", $val);
-							$val = current($value_parts);
-							$decimal = "00";
-							if (count($value_parts) > 1)
-							{
-								$decimal = end($value_parts);
-							}
-							$val = str_replace("'.$params['separator'].'", "", $val);
-							$val = (float) $val.".".$decimal;
-						}
-						$value[$key]["'.$params['subkey'].'"] = $val;
-					}
-					return $value;
-				}
-				';
-				$func = create_function('$value', $func_str);
-		}
-		else
-		{
-			$func_str = '
-			if ($value == "")
+		$func_str = '
+			if (is_array($value))
 			{
-				$value = NULL;
+				foreach($value as $key => $val)
+				{
+					$curval = $val;
+					if ($val["'.$process_key.'"] == "")
+					{
+						$val = NULL;
+					}
+					else
+					{
+						$value_parts = explode("'.$params['decimal'].'", $val["'.$process_key.'"]);
+						$curval = current($value_parts);
+						$decimal = "00";
+						if (count($value_parts) > 1)
+						{
+							$decimal = end($value_parts);
+						}
+						$curval = str_replace("'.$params['separator'].'", "", $curval);
+						$curval = (float) $curval.".".$decimal;
+					}
+					$value[$key]["'.$process_key.'"] = $curval;
+				}
+				return $value;
 			}
 			else
 			{
-				$value_parts = explode("'.$params['decimal'].'", $value);
-				$value = current($value_parts);
-				$decimal = "00";
-				if (count($value_parts) > 1)
+				if ($value == "")
 				{
-					$decimal = end($value_parts);
+					$value = NULL;
 				}
-				$value = str_replace("'.$params['separator'].'", "", $value);
-				$value = (float) $value.".".$decimal;
+				else
+				{
+					$value_parts = explode("'.$params['decimal'].'", $value);
+					$value = current($value_parts);
+					$decimal = "00";
+					if (count($value_parts) > 1)
+					{
+						$decimal = end($value_parts);
+					}
+					$value = str_replace("'.$params['separator'].'", "", $value);
+					$value = (float) $value.".".$decimal;
+				}
+				return $value;
 			}
-			return $value;
-				';
-		}
+			';
+		
 		// unformat number
 		$func = create_function('$value', $func_str);	
 		$form_builder->set_post_process($params['key'], $func);
@@ -876,34 +882,8 @@ class Fuel_custom_fields {
 	function slug($params)
 	{
 		$form_builder =& $params['instance'];
-		
-		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-		if (isset($params['subkey']))
-		{
-			$func_str = '
-				if (is_array($value))
-				{
-					foreach($value as $key => $val)
-					{
-						if (isset($val["'.$params['subkey'].'"]))
-						{
-							$val = url_title($val["'.$params['subkey'].'"], "dash", TRUE);
-							$value[$key]["'.$params['subkey'].'"] = $val;
-						}
-					}
-					return $value;
-				}
-				';
-				$func = create_function('$value', $func_str);
-		}
-		else
-		{
-			$func = array('url_title', 'dash', TRUE);
-		}
-		
-		$form_builder->set_post_process($params['key'], $func);
-		
-		// assume a default is either name or title
+	
+			// assume a default is either name or title
 		if (empty($params['linked_to']))
 		{
 			$fields = $form_builder->fields();
@@ -915,7 +895,42 @@ class Fuel_custom_fields {
 			{
 				$params['linked_to'] = 'name';
 			}
+			else
+			{
+				$params['linked_to'] = NULL;			
+			}
 		}
+
+		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+
+		$func_str = '
+			if (is_array($value))
+			{
+				foreach($value as $key => $val)
+				{
+					if (isset($val["'.$params['linked_to'].'"]))
+					{
+						$v = url_title($val["'.$params['linked_to'].'"], "dash", TRUE);
+						$value[$key]["'.$process_key.'"] = $v;
+					}
+				}
+				return $value;
+			}
+			else
+			{
+
+				$CI =& get_instance();
+				$linked_value = $CI->input->post("'.$params['linked_to'].'");
+				if ($linked_value)
+				{
+					return url_title($linked_value, "dash", TRUE);	
+				}
+				
+			}
+			';
+		$func = create_function('$value', $func_str);
+		$form_builder->set_post_process($params['key'], $func);
+		
 		$params['type'] = 'text';
 		
 		// set data values for jquery plugin to use
@@ -931,31 +946,31 @@ class Fuel_custom_fields {
 		
 		$output_class = (!empty($params['output_class'])) ? 'class="'.$params['output_class'].'"' : '';
 		
-		if (isset($params['subkey']))
-		{
-			$func_str = '
-				if (is_array($value))
+		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+
+		$func_str = '
+			if (is_array($value))
+			{
+				foreach($value as $key => $val)
 				{
-					foreach($value as $key => $val)
+					if (isset($val["'.$process_key.'"]))
 					{
-						if (isset($val["'.$params['subkey'].'"]))
-						{
-							$lis = explode("\n", $value);
-							$lis = array_map("trim", $lis);
-							$val = ul($lis, "'.$output_class.'");
-							$value[$key]["'.$params['subkey'].'"] = $val;
-						}
+						$lis = explode("\n", $value);
+						$lis = array_map("trim", $lis);
+						$val = ul($lis, "'.$output_class.'");
+						$value[$key]["'.$process_key.'"] = $val;
 					}
-					return $value;
 				}
-				';
-		}
-		else
-		{
-			$func_str = '$lis = explode("\n", $value);
+				return $value;
+			}
+			else
+			{
+				$lis = explode("\n", $value);
 				$lis = array_map("trim", $lis);
-				return ul($lis, "'.$output_class.'");';
-		}
+				return ul($lis, "'.$output_class.'");
+			}
+			';
+		
 		
 		$func = create_function('$value', $func_str);
 		$form_builder->set_post_process($params['key'], $func);
@@ -1184,46 +1199,42 @@ class Fuel_custom_fields {
 
 		$split_delimiter = "\s*".$params['delimiter']."\s*";
 
-		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-		if (isset($params['subkey']))
-		{
-			$func_str = '
-				if (is_array($value))
-				{
-					
-					foreach($value as $key => $val)
-					{
-						if (isset($val["'.$params['subkey'].'"]))
-						{
+		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-							$json = array();
-							$rows = preg_split("\s*#\n|,\s*#", $val);
-							foreach($rows as $r)
+		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
+		$func_str = '
+			if (is_array($value))
+			{
+				
+				foreach($value as $key => $val)
+				{
+					if (isset($val["'.$process_key.'"]))
+					{
+
+						$json = array();
+						$rows = preg_split("\s*#\n|,\s*#", $val);
+						foreach($rows as $r)
+						{
+							$vals = preg_split("#'.$split_delimiter.'#", $r);
+							if (isset($vals[1]))
 							{
-								$vals = preg_split("#'.$split_delimiter.'#", $r);
-								if (isset($vals[1]))
-								{
-									$val = $vals[1];
-									$key = $vals[0];
-									$json[$key] = $val;
-								}
-								else
-								{
-									$json[] = $vals[0];
-								}
+								$val = $vals[1];
+								$key = $vals[0];
+								$json[$key] = $val;
 							}
-							$first_item = current($json);
-							$value[$key]["'.$params['subkey'].'"] = (!empty($first_item)) ? json_encode($json) : "";
+							else
+							{
+								$json[] = $vals[0];
+							}
 						}
+						$first_item = current($json);
+						$value[$key]["'.$process_key.'"] = (!empty($first_item)) ? json_encode($json) : "";
 					}
-					return $value;
 				}
-				';
-		}
-		else
-		{
-			
-			$func_str = '
+				return $value;
+			}
+			else
+			{
 				$json = array();
 				$rows = preg_split("#\s*\n|,\s*#", $value);
 				foreach($rows as $r)
@@ -1242,8 +1253,9 @@ class Fuel_custom_fields {
 				}
 				$first_item = current($json);
 				return  (!empty($first_item)) ? json_encode($json) : "";
-				';
-		}
+			}
+			';
+		
 		$func = create_function('$value', $func_str);
 		$form_builder->set_post_process($params['key'], $func);
 
@@ -1289,6 +1301,64 @@ class Fuel_custom_fields {
 		$params['type'] = 'textarea';
 		$params['class'] = 'no_editor';
 		return $form_builder->create_field($params);
+
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a dropdown select of blocks and when selected, will display fields related to that block
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	function block($params)
+	{
+		$form_builder =& $params['instance'];
+
+		$params['type'] = 'select';
+		if (!isset($params['options']))
+		{
+			if (!isset($params['where']))
+			{
+				$params['where'] = array();
+			}
+			if (!isset($params['folder']))
+			{
+				$params['folder'] = '';
+			}
+			if (!isset($params['filter']))
+			{
+				$params['filter'] = '^_(.*)|\.html$';
+			}
+			if (!isset($params['order']))
+			{
+				$params['order'] = TRUE;
+			}
+
+			if (!isset($params['recursive']))
+			{
+				$params['recursive'] = FALSE;
+			}
+			// set options_list to not be recursive since block layout names won't have slashes in them (e.g. sections/right_image... it would just be right_image)			
+
+			//$params['options'] = $this->CI->fuel->blocks->options_list($params['where'], $params['folder'], $params['filter'], $params['order'], $params['recursive']);
+			$params['options'] = $this->CI->fuel->layouts->options_list(TRUE);
+		}
+
+		$select_class = 'block_layout_select';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$select_class : $select_class;
+
+		if (!empty($params['ajax_url']))
+		{
+			$params['data']['url'] = rawurlencode($params['ajax_url']);
+		}
+
+		$params['value'] = (isset($params['value']['block_name'])) ? $params['value']['block_name'] : '';
+		$field = $form_builder->create_select($params);
+		$field = $field.'<div class="block_layout_fields"></div><div class="loader hidden"></div>';
+		return $field;
 
 	}
 

@@ -27,12 +27,15 @@
  */
 
 // --------------------------------------------------------------------
+// to prevent errors if 'blocks' are set in MY_fuel_layouts.php
+//require_once('Fuel_blocks.php');
 
 class Fuel_layouts extends Fuel_base_library {
 	
 	public $default_layout = 'main'; // default layout folder
 	public $layouts_folder = '_layouts'; // layout folder 
 	public $layouts = array(); // layout object initialization parameters
+	public $blocks = array(); // block object initialization parameters
 
 	protected $_layouts = array(); // layout objects
 	
@@ -82,7 +85,7 @@ class Fuel_layouts extends Fuel_base_library {
 				$this->$key = $val;
 			}
 		}
-		
+
 		// grab layouts from the directory if layouts auto is true in the fuel_layouts config
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('directory');
@@ -129,73 +132,13 @@ class Fuel_layouts extends Fuel_base_library {
 		// initialize layout objects
 		foreach($this->layouts as $name => $init)
 		{
-			if (is_array($init))
+			$layout = $this->create($name, $init);
+			if ($layout)
 			{
-				$init['name'] = $name;
-				$init['folder'] = $this->layouts_folder;
-				$init['class'] =  (isset($init['class'])) ? $init['class'] : 'Fuel_layout';
-				$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
-				$init['description'] = (isset($init['description'])) ? $init['description'] : '';
-				$init['group'] = (isset($init['group'])) ? $init['group'] : '';
-				$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
-				
-				if (!empty($init['fields']))
-				{
-					$fields = $init['fields'];
-					
-					$order = 1;
-
-					// must reset this first to prevent any initialization of stuff like adding javascript for rendering
-					//	$this->CI->form_builder->clear();
-					
-					// create a new object so we don't conflict with the main form_builder object on CI'
-					$fb = new Form_builder();
-					
-					foreach($fields as $key => $f)
-					{
-						$fields[$key] = $fb->normalize_params($f);
-						if (empty($fields[$key]['name']))
-						{
-							$fields[$key]['name'] = $key;
-						}
-						
-						// must remove this so that the values can be normalized again
-						unset($fields[$key]['__DEFAULTS__']);
-						$order++;
-					}
-	
-					$init['fields'] = $fields;
-				}
-
-				if (!empty($init['class']) AND $init['class'] != 'Fuel_layout')
-				{
-
-					if (!isset($init['filename']))
-					{
-						$init['filename'] = $init['class'].EXT;
-					}
-
-					if (!isset($init['filepath']))
-					{
-						$init['filepath'] = 'libraries';
-					}
-					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
-					require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
-				}
-				$this->create($name, $init, $init['class']);
+				$this->_layouts[$name] = $layout;	
 			}
-			else if (is_a($init, 'Fuel_layout'))
-			{
-				if ($init->label() == '')
-				{
-					$init->set_label($name);
-				}
-				$this->_layouts[$name] = $init;
-			}
-
 		}
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
@@ -206,9 +149,17 @@ class Fuel_layouts extends Fuel_base_library {
 	 * @param	string	The name of the layout
 	 * @return	object
 	 */	
-	function get($layout)
+	function get($layout, $type = 'page')
 	{
-		if (!empty($this->_layouts[$layout]))
+		if ($type == 'block')
+		{
+			if (!empty($this->blocks[$layout]))
+			{
+				$layout = $this->create($layout, $this->blocks[$layout]);
+				return $layout;
+			}
+		}
+		else if (!empty($this->_layouts[$layout]))
 		{
 			return $this->_layouts[$layout];
 		}
@@ -221,12 +172,25 @@ class Fuel_layouts extends Fuel_base_library {
 	 * Returns a key/value array good for creating form select options
 	 *
 	 * @access	public
+	 * @param	boolean use block layouts or page (optional)
 	 * @return	array
 	 */	
-	function options_list()
+	function options_list($blocks = FALSE)
 	{
 		$options = array();
-		$layouts = $this->_layouts;
+		$layouts = array();
+
+		if ($blocks AND !empty($this->blocks))
+		{
+			foreach($this->blocks as $key => $block)
+			{
+				$layouts[$key] = $this->get($key, 'block');
+			}
+		}
+		else
+		{
+			$layouts = $this->_layouts;
+		}
 		
 		// add all layouts without a group first
 		foreach($layouts as $k => $layout)
@@ -265,22 +229,66 @@ class Fuel_layouts extends Fuel_base_library {
 	 * @access	public
 	 * @param	string	The name of the layout
 	 * @param	array	Layout object initialization parameters (optional)
-	 * @param	string	The name of an alternative class to use for the layout (must extend the Fuel_layout class... optional)
 	 * @return	object
 	 */	
-	function create($name, $init = array(), $class = 'Fuel_layout')
+	function create($name, $init = array())
 	{
-		if (empty($init['name']))
+		$default_class = 'Fuel_layout';
+
+		if (is_array($init))
 		{
 			$init['name'] = $name;
-		}
+			$init['folder'] = $this->layouts_folder;
+			$init['class'] =  (isset($init['class'])) ? $init['class'] : $default_class;
+			$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
+			$init['description'] = (isset($init['description'])) ? $init['description'] : '';
+			$init['group'] = (isset($init['group'])) ? $init['group'] : '';
+			$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
 
-		if (empty($class))
-		{
-			$class = 'Fuel_layout';
+			// modifications for block layouts
+			if (!empty($init['type']) AND $init['type'] == 'block')
+			{
+				if (!isset($init['class']))
+				{
+					$init['class'] = 'Fuel_block_layout';
+				}
+				$init['folder'] = $this->fuel->blocks->blocks_folder;
+			}
+
+			// load custom layout classes
+			if (!empty($init['class']) AND $init['class'] != $default_class)
+			{
+
+				if (!isset($init['filename']))
+				{
+					$init['filename'] = $init['class'].EXT;
+				}
+
+				if (!isset($init['filepath']))
+				{
+					$init['filepath'] = 'libraries';
+				}
+				$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+				require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
+			}
+			$class = $init['class'];
+			unset($init['class']);
+
+			$layout = new $class($init);
 		}
-		$this->_layouts[$name] = new $class($init);
-		return $this->_layouts[$name];
+		else if (is_a($init, $default_class))
+		{
+			if ($init->label() == '')
+			{
+				$init->set_label($name);
+			}
+			$layout =& $init;
+		}
+		else
+		{
+			return FALSE;
+		}
+		return $layout;
 	}
 }
 
@@ -490,6 +498,23 @@ class Fuel_layout extends Fuel_base_library {
 			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
 		}
 		$fields = array_merge($fields, $this->fields);
+
+		$order = 1;
+		// create a new object so we don't conflict with the main form_builder object on CI'
+		$fb = new Form_builder();
+		
+		foreach($fields as $key => $f)
+		{
+			$fields[$key] = $fb->normalize_params($f);
+			if (empty($fields[$key]['name']))
+			{
+				$fields[$key]['name'] = $key;
+			}
+			
+			// must remove this so that the values can be normalized again
+			unset($fields[$key]['__DEFAULTS__']);
+			$order++;
+		}
 		return $fields;
 	}
 
@@ -859,6 +884,69 @@ class Fuel_module_layout extends Fuel_layout {
 		return $vars;
 	}
 	
+}
+
+class Fuel_block_layout extends Fuel_layout 
+{
+
+	public $context = NULL;
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the context of the form fields (e.g. $block[0])
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function set_context($context)
+	{
+		$this->context = $context;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the context of the form fields (e.g. $block[0])
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function context()
+	{
+		return $this->context;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the layout's fields
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function fields()
+	{
+		$fields = parent::fields();
+
+		// automatically add a field for the block name
+		$fields['block_name'] = array('type' => 'hidden', 'value' => $this->name, 'class' => 'block_name');
+
+		if (!empty($this->context))
+		{
+			foreach($fields as $key => $val)
+			{
+				$fields[$key]['name'] = $this->context.'['.$key.']';
+				if (empty($val['label']))
+				{
+					$fields[$key]['label'] = $key;	
+				}
+			}
+		}
+
+		return $fields;
+	}
+
 }
 
 /* End of file Fuel_layouts.php */

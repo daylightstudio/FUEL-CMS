@@ -35,8 +35,8 @@ $pages['home'] = array('layout' => 'home');
 	Because of this, you'll often see <dfn>fuel_set_var('body', '')</dfn> in layout files.</p>
 
 <h2 id="layouts_cms">Using Layouts in the CMS</h2>
-<p>For a layout to appear in the FUEL admin, a layout view file must exist in the <span class="file">application/views/_layouts/</span> folder AND 
-there must be an entry in the <span class="file">application/config/MY_fuel_layouts.php</span> file. The latter, assigns the variable fields to the layout and signals that the layout can be used to create pages in the admin.<p>
+<p>For a layout to appear in the FUEL admin, a layout view file must exist in the <span class="file">fuel/application/views/_layouts/</span> folder AND 
+there must be an entry in the <span class="file">fuel/application/config/MY_fuel_layouts.php</span> file. The latter, assigns the variable fields to the layout and signals that the layout can be used to create pages in the admin.<p>
 
 <p>As of version 1.0, there are two ways to assign layouts in the <span class="file">MY_fuel_layouts.php</span> file. The first being the old way of assigning the layout variables to the 
 <dfn>fields</dfn> key which is a multi-demensional array that will be used by <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>.</p>
@@ -58,6 +58,7 @@ $config['layouts']['main'] = array(
 );
 </pre>
 
+<h3>Layout Objects</h3>
 <p>The second, and newer way, is to create a <a href="<?=user_guide_url('libraries/fuel_layouts#fuel_layout')?>">Fuel_layout</a> object and assign the layout variables to it. Additionally, you can assign the <dfn>label</dfn> (used for the dropdown in the admin), 
 and the <dfn>description</dfn> (used to describe the layout in the admin). For layouts that share common fields, we recommend separating them out and assigning them using the <dfn>add_fields</dfn> method which adds multiple fields at once.
 Note that you must still assign the object to the <dfn>$config['layouts']['main']</dfn> below:
@@ -93,6 +94,8 @@ displaying the new field type of "template", which gives you the power to easilt
 For more details visit the <a href="#">Form_builder</a> page.</p>
 
 
+
+
 <h2 id="layouts_custom_classes">Custom Layout Classes</h2>
 <p>Occasionally, you may need a layout that does some additional variable processing before being applied to the page. To accomplish this, you can create your own 
 Layout class by extending the <a href="<?=user_guide_url('libraries/fuel_layouts#fuel_layout')?>">Fuel_layout</a> class and modifying the <dfn>pre_process</dfn> and/or <dfn>post_process</dfn> method hooks. The <dfn>pre_process</dfn> 
@@ -118,6 +121,57 @@ $config['layouts']['main'] = array(
 	)
 );
 </pre>
+<h3>Layouts As Their Own Class Files</h3>
+<p>Similarly, you can overwite the <dfn>Base_layout</dfn> classes <dfn>fields()</dfn> method to return the fields for your layout:</p>
+<span class="file">fuel/application/config/MY_fuel_layouts.php</span><br />
+<pre class="brush:php">
+$config['layouts']['home'] = array(
+	'label' => 'Home',
+	'filepath' => 'libraries/_layouts',
+	'class' => 'Home_layout',
+);
+
+</pre>
+
+<br />
+
+<span class="file">fuel/application/libraries/_layouts/Home_layout.php </span><br />
+<pre class="brush:php">
+require_once('Base_layout.php');
+
+class Home_layout extends Base_layout {
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Fields specific to the home page
+	 *
+	 * @access	public
+	 * @return	array
+	 */	function fields()
+	{
+		$fields = parent::fields($include);
+		// PUT YOUR FIELDS HERE...
+		return $fields;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Hook used for processing variables specific to a layout
+	 *
+	 * @access	public
+	 * @param	array	variables for the view
+	 * @return	array
+	 */	
+	function pre_process($vars)
+	{
+		return $vars;
+	}
+
+}
+
+</pre>
 
 <h2 id="layouts_different_layout">Assigning a Different Layout View</h2>
 <p>By default, FUEL will assume the layout view file is the same name as the layout's key value (e.g. 'main'). To change it, you can assign the layout a different <dfn>file</dfn> value:</p>
@@ -138,4 +192,108 @@ $config['layouts']['main'] = array(
 		'body_class' => array('label' => lang('layout_field_body_class')),
 	)
 );
+</pre>
+
+<h2 id="layouts_block_layouts">Block Layouts</h2>
+<p>Block layouts are a way to associate layout form fields to particular blocks. This creates a whole new level of layout control for FUEL layouts. 
+For example, you can now create repeatable sections in your layouts that allow you to select the block you want to use and will 
+automatically pull in that blocks associated fields. Block layouts are added to the <dfn>$config['blocks']</dfn> and <strong>NOT</strong>
+<dfn>$config['layouts']</dfn>. Below is an example that creates a block field on a repeatable section. 
+It assumes that you have a page layout of <span class="file">fuel/application/views/_layouts/test.php</span> and a block at <span class="file">fuel/application/views/_blocks/sections/image_right.php</span>:
+</p>
+
+<br />
+<span class="file">fuel/application/config/MY_fuel_layouts.php</span></br >
+<pre class="brush:php">
+$test_layout = new Fuel_layout('test');
+$test_layout->set_description('This is the test layout field.');
+$test_layout->set_label('Test');
+
+$test_fields = array(
+	'Title/Intro'	=> array('type' => 'fieldset', 'label' => 'Title/Intro', 'class' => 'tab'),
+	'h1' => array('label' => 'Heading'),
+	'Sections'	=> array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'),
+	'sections' => array(
+					'type'			=> 'template',
+					'display_label' => FALSE,
+					'label' 		=> 'Sections', 
+					'add_extra' 	=> FALSE,
+					'repeatable'	=> TRUE,
+					'max'			=> 4,
+					'min'			=> 0,
+					'title_field'   => 'block',
+					'fields' 		=> array(
+											'section'	=> array('type' => 'section', 'value' => 'Section &lt;span class=&quot;num&quot;&gt;{num}&lt;/span&gt;'),
+											'block'		=> array('type' => 'block', 'folder' => 'sections'),
+										),
+
+					),
+
+);
+
+// Added to the 'layouts' key
+$config['layouts']['test'] = $test_layout;
+
+
+// Fuel layout block
+$image_right = new Fuel_block_layout('image_right');
+$image_right->set_label('Image Right');
+$image_right->add_field('title', array());
+$image_right->add_field('content', array('type' =>'text'));
+$image_right->add_field('image', array('type' =>'asset'));
+
+// NOTE THIS IS ADDED TO THE 'blocks' key and not the 'layouts' key !!!!
+$config['blocks']['image_right'] = $image_right;
+</pre>
+
+<br />
+<span class="file">fuel/application/views/_layouts/test.php</span></br >
+<pre class="brush:php">
+	
+&lt;?php $this->load->view('_blocks/header')?&gt;
+	
+	&lt;div id=&quot;main&quot;&gt;
+		&lt;div class=&quot;wrapper&quot;&gt;
+			
+			&lt;article id=&quot;primary&quot;&gt;
+				&lt;?=fuel_var(&#039;h1&#039;, &#039;&#039;); ?&gt;
+
+				&lt;?php foreach($sections as $section) : 
+					// 'block_name' contains the hidden field value that automatically set to the name of the selected block
+					$block_name = $section[&#039;block&#039;][&#039;block_name&#039;];
+					if (!empty($block_name)) :
+				?&gt;
+				&lt;?=fuel_block(&#039;sections/&#039;.$block_name, $section[&#039;block&#039;]) ?&gt;
+				&lt;?php endif; ?&gt;
+				&lt;?php endforeach; ?&gt;
+			&lt;/article&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+	
+&lt;?php $this->load->view('_blocks/footer')?&gt;
+
+
+</pre>
+
+<br />
+<span class="file">fuel/application/views/_blocks/sections/image_right.php</span></br >
+<pre class="brush:php">
+&lt;section class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col_1-3&quot;&gt;&lt;img src=&quot;&lt;?=img_path($image)?&gt;&quot; /&gt;&lt;/div&gt;
+	&lt;div class=&quot;col_2-3&quot;&gt;
+		&lt;h3&gt;&lt;?=$title?&gt;&lt;/h3&gt;
+		&lt;p&gt;&lt;?=$content?&gt;&lt;/p&gt;
+	&lt;/div&gt;
+&lt;/section&gt;
+</pre>
+
+<p>The value saved for block is an array that includes a special value of <dfn>block_name</dfn> for the name of the block selected.</p>
+<pre class="brush:php">
+Array
+(
+    [title] => My Title
+    [content] => My Content
+    [image] => my_image.jpg
+    [block_name] => image_right
+)
 </pre>

@@ -33,14 +33,14 @@ class Fuel_blocks_model extends Base_module_model {
 		return $data;
 	}
 	
-	function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE)
+	function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
 		$blocks_path = APPPATH.'views/_blocks/'.$dir_folder;
 
 		// don't display blocks with preceding underscores or .html files'
-		$block_files = directory_to_array($blocks_path, TRUE, '#'.$dir_filter.'#', FALSE, TRUE);
+		$block_files = directory_to_array($blocks_path, $recursive, '#'.$dir_filter.'#', FALSE, TRUE);
 		$view_blocks = array();
 		foreach($block_files as $block)
 		{
@@ -49,7 +49,10 @@ class Fuel_blocks_model extends Base_module_model {
 
 		$blocks = parent::options_list('name', 'name', $where, $order);
 		$blocks = array_merge($view_blocks, $blocks);
-		ksort($blocks);
+		if ($order)
+		{
+			ksort($blocks);	
+		}
 		return $blocks;
 	}
 	

@@ -189,6 +189,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h3>FUEL Custom Field Types</h3>
 	<ul>	
 		<li><a href="#template">template</a></li>
+		<li><a href="#block">block</a></li>
 		<li><a href="#asset">asset</a></li>
 		<li><a href="#url">url</a></li>
 		<li><a href="#wysiwyg">wysiwyg</a></li>
@@ -478,7 +479,11 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="datetime" class="toggle">datetime</h3>
 <div class="toggle_block_off">
 	<p>This field type combines the date and time fields and has the same additional parameters as the date field.</p>
-	
+	<p>This field type creates a text field with a <a href="http://jqueryui.com/demos/datepicker" target="_blank">date picker</a>.
+	The following additional parameters can be passed to this field type:</p>
+	<ul>
+		<li><strong>ampm</strong>: Determines whether to use am / pm radio buttons or 24 hour time. Default is TRUE</li>
+	</ul>
 	<h4>Representations</h4>
 	<pre class="brush: php">
 	'type' => 'datetime|timestamp' // targets any field with the type of datetime or timestampe (equivalent to array('datetime', 'timestamp'))
@@ -486,10 +491,10 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
-	$fields['datetime_example'] = array('type' => 'datetime', 'first_day' => 2, 'date_format' => 'd-m-Y', 'min_date' => '01-01-2012', 'max_date' => '31-12-2012');
+	$fields['datetime_example'] = array('type' => 'datetime', 'first_day' => 2, 'date_format' => 'd-m-Y', 'min_date' => '01-01-2012', 'max_date' => '31-12-2012', 'ampm' => TRUE);
 	</pre>
 	
-	<?php form_builder_example('datetime_example', array('type' => 'datetime', 'first_day' => 2, 'date_format' => 'd-m-Y', 'min_date' => '01-01-2012', 'max_date' => '31-12-2012')); ?>
+	<?php form_builder_example('datetime_example', array('type' => 'datetime', 'first_day' => 2, 'date_format' => 'd-m-Y', 'min_date' => '01-01-2012', 'max_date' => '31-12-2012', 'ampm' => TRUE)); ?>
 	
 </div>
 
@@ -727,6 +732,29 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 </div>
 
+<h3 id="block" class="toggle">block</h3>
+<div class="toggle_block_off">
+	<p>This field type is used for dynamically pulling in <a href="<?=user_guide_url('general/layouts#layouts_block_layouts')?>">block layout fields</a>:</p>
+
+	<h4>Upload Specific</h4>
+	<ul>
+		<li><strong>folder</strong>: determines which <span class="file">fuel/application/views/_blocks</span> subfolder to look in for displaying</li>
+		<li><strong>filter</strong>: an array or regular expression string to filter out certain files (e.g. those beginning with underscores). The default value is <dfn>^_(.*)|\.html$</dfn></li>
+		<li><strong>recursive</strong>: determines whether to recursively look for subfolders within the <span class="file">fuel/application/views/_blocks</span> folder</li>
+		<li><strong>options</strong>: the options to display for the block selection. If left empty, it will default to using the Fue_blocks::options_list() method.</li>
+		<li><strong>where</strong>: the where condition to be used for querying blocks stored in the CMS database</li>
+		<li><strong>order</strong>: the order clause to be used for sorting the list option items obtained from the CMS stored blocks.</li>
+		<li><strong>ajax_url</strong>: the AJAX URL used to get the form fields. Default is <dfn>'/blocks/layout_fields/{layout}/{page_id}/english/'</dfn></li>
+	</ul>
+
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['block_example'] = array('type' => 'block', 'folder' => 'sections');
+	</pre>
+	
+</div>
+
 <h3 id="asset" class="toggle">asset</h3>
 <div class="toggle_block_off">
 	<p>This field type is used for uploading and assigning asset values to fields. It can provide two buttons next to the field. One to select an asset and the other to upload.
@@ -767,7 +795,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 	<h4>Example</h4>
 	<pre class="brush:php">
-	$fields['image'] = array('type' => 'asset', 'folder' => 'images/my_folder', 'hide_options' => TRUE,);
+	$fields['image'] = array('type' => 'asset', 'folder' => 'images/my_folder', 'hide_options' => TRUE);
 	</pre>
 	
 </div>
@@ -800,9 +828,10 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field type is used for textareas and will use FUEL's <dfn>$config['text_editor']</dfn> configuration to determine which editor to display in the field by default.
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
-		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn></li>
+		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn> and wysiwyg being <a href="http://www.ckeditor.com" target="_blank">CKEditor</a></li>
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
+		<li><strong>preview_options</strong>: preview popup window options (used as the third parameter of <a href="http://www.w3schools.com/jsref/met_win_open.asp" target="_blank">window.open</a> . The default is <dfn>width=1024,height=768</dfn></li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -818,7 +847,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 			</tr>
 		</tbody>
 	</table>
-	
+
 </div>
 
 <h3 id="inline_edit" class="toggle">inline_edit</h3>

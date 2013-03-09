@@ -227,8 +227,8 @@ fuel.fields.wysiwyg_field = function(context){
 				ckInstance = CKEDITOR.instances[ckId];
 
 				//if (!$('#cke_' + ckId).is(':hidden')){
-				if (!CKEDITOR.instances[ckId].hidden){
-					CKEDITOR.instances[ckId].hidden = true;
+				if (!ckInstance.hidden){
+					ckInstance.hidden = true;
 					if (!$elem.hasClass('markItUpEditor')){
 						createMarkItUp(elem);
 						$elem.show();
@@ -249,7 +249,7 @@ fuel.fields.wysiwyg_field = function(context){
 				
 				} else {
 
-					CKEDITOR.instances[ckId].hidden = false;
+					ckInstance.hidden = false;
 				
 					$('#cke_' + ckId).show();
 				
@@ -306,7 +306,11 @@ fuel.fields.wysiwyg_field = function(context){
 				$textarea.parent().append(previewButton);
 
 				$('#' + id + '_preview').click(function(e){
-					var previewWindow = window.open('', 'preview', myMarkItUpSettings.previewInWindow);
+					e.preventDefault();
+					var previewOptions = $textarea.data('preview_options');
+					if (!previewOptions.length) previewOptions = 'width=1024,height=768';
+
+					var previewWindow = window.open('', 'preview', previewOptions);
 					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
 					var csrf = $('#csrf_test_name').val();
 					$.ajax( {
@@ -779,30 +783,34 @@ fuel.fields.currency_field = function(context, options){
 		$(this).autoNumeric(o);
 	});
 }
+
 // create a repeatable field
 fuel.fields.template_field = function(context, options){
 
 	if (!options) options = {};
 
+	var currentCKTexts = {};
+
+	var sortStarted = function(){
+		if (typeof CKEDITOR != 'undefined'){
+			for(var n in CKEDITOR.instances){
+				currentCKTexts[n] = CKEDITOR.instances[n].getData();
+				$('#' + n).removeClass('ckeditor_applied');
+				CKEDITOR.instances[n].destroy();
+			}
+		}
+	}
+
+	var sortStopped = function(){
+		if (typeof CKEDITOR != 'undefined'){
+			// can't pass context because we do a global destroy on CKEditor fields
+			fuel.fields.wysiwyg_field();
+		}
+	}
+
 	var repeatable = function($repeatable){
 		var currentCKTexts = {};
-
-		// hack required for CKEditor so it will allow you to sort and not lose the data 
-		$repeatable.bind('sortStarted', function(e){
-			if (typeof CKEDITOR != 'undefined'){
-				for(var n in CKEDITOR.instances){
-					currentCKTexts[n] = CKEDITOR.instances[n].getData();
-				}
-			}
-		})
-
-		$repeatable.bind('sortStopped', function(e){
-			if (typeof CKEDITOR != 'undefined'){
-				for(var n in CKEDITOR.instances){
-					currentCKTexts[n] = CKEDITOR.instances[n].setData(currentCKTexts[n]);
-				}
-			}
-		})
+		var currentCKHead = {};
 		
 		// set individual options based on the data-max attribute
 		$repeatable.each(function(i){
@@ -816,16 +824,23 @@ fuel.fields.template_field = function(context, options){
 			$(this).repeatable(options);
 		})
 	}
-	
 	// get nested ones first
-	$elems = $('.repeatable .repeatable', context).parent();
-	repeatable($elems);
-	
+	$nestedElems = $('.repeatable .repeatable').parent();
+	repeatable($nestedElems);
+
 	// then the parents
-	$elems = $('.repeatable', context).not('.repeatable .repeatable').parent();
-	repeatable($elems);
+	$parentElems = $('.repeatable').not('.repeatable .repeatable').parent();
+	repeatable($parentElems);
+
+	$(document).off('sortStopped').on('sortStarted', function(){
+		sortStarted();
+	})
+	$(document).off('sortStopped').on('sortStopped', function(){
+		sortStopped();
+	})
 	
-	$('.repeatable_container', context).live('cloned', function(e){
+	// Add another event handler	
+	$(context).off('cloned').on('cloned', '.repeatable_container', function(e){
 		$('#form').formBuilder().initialize(e.clonedNode);
 	})
 
@@ -907,5 +922,36 @@ fuel.fields.url_field = function(context, options){
 		return false;
 	});
 	
+}
+
+fuel.fields.block = function(context, options){
+	$(context).on('change', '.block_layout_select', function(e){
+		var val = $(this).val();
+		var url = $(this).data('url');
+		if (url){
+			url = eval(unescape(url));
+		} else {
+			var layout = $(this).val().split('/').pop();
+			url = jqx.config.fuelPath + '/blocks/layout_fields/' + layout + '/' + $('#id').val() + '/english/';
+		}
+		var context = $(this).attr("name");
+		var contextArr = context.split("--")
+		if (contextArr.length > 1){
+			context = contextArr.pop();
+			url += '?context=' + context;
+		}
+		// show loader
+		$(this).parent().find('.loader').show();
+		
+		$layout_fields = $(this).next('.block_layout_fields');
+
+		$layout_fields.load(url, function(){
+			// hide loader
+			$(this).parent().find('.loader').hide();
+			$layout_fields.find('.block_name').val(val);
+		});
+	})
 	
+	$('.block_layout_select', context).change();
+
 }

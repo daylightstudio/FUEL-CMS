@@ -426,7 +426,22 @@ class Pages extends Module {
 
 			$layout = $this->fuel->layouts->get($this->input->post('layout'));
 			$fields = $layout->fields();
+
+			// add in block fields
+			foreach($fields as $key => $val)
+			{
+				if (isset($val['type']) AND $val['type'] == 'block' AND isset($posted[$key]['block_name']))
+				{
+					$block_layout = $this->fuel->layouts->get($posted[$key]['block_name'], 'block');
+					if ($block_layout)
+					{
+						$block_fields = $block_layout->fields();
+						$fields = array_merge($fields, $block_fields);
+					}
+				}
+			}
 			
+
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 			
 			$this->form_builder->set_fields($fields);
@@ -450,7 +465,7 @@ class Pages extends Module {
 			$var_types = $pagevariable_table['type']['options'];
 			$page_variables_archive = array();
 			
-			// fieldtypes that
+			// field types that shouldn't be saved
 			$non_recordable_fields = array('section', 'copy', 'fieldset');
 			
 			foreach($fields as $key => $val)
@@ -541,12 +556,14 @@ class Pages extends Module {
 
 	function layout_fields($layout, $id = NULL, $lang = NULL)
 	{
-		
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout);
-
+		if (!$layout)
+		{
+			return;
+		}
 		$fields = $layout->fields();
-		
+
 		$conflict = $this->_has_conflict($fields);
 		if (!empty($conflict))
 		{
