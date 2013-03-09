@@ -556,7 +556,7 @@ span.publish_col { width: 100px; display: block; cursor: pointer !important; }
 /* form tables */
 .form { border: none; border-spacing: 0; display: table; } /* important to display as table so that the proper width can be determined with inline editing */
 .form td.label { padding: 6px 15px 0 0; font-weight: bold; vertical-align: top; }
-.form td.value { padding: 3px 0;vertical-align: top; white-space: nowrap; }
+.form td.value { padding: 3px 0; white-space: nowrap; }
 .form td.required { padding-top: 10px; }
 div.more_filters { padding-left: 10px; }
 div.more_filters span.label { float: left; padding-top: 6px; }
