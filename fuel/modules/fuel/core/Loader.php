@@ -188,12 +188,14 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($library)) return $this->libraries($library);		
 		
-		$class = strtolower(end(explode('/', $library)));
-		
-		if (isset($this->_ci_classes[$class]) AND $_alias = $this->_ci_classes[$class])
-			return CI::$APP->$_alias;
-			
-		($_alias = strtolower($object_name)) OR $_alias = strtolower($class);
+		$class = strtolower(end(explode('/', $library))); 
+
+    	($_alias = strtolower($object_name)) OR $_alias = $class;
+
+    	if (isset($this->_ci_classes[$_alias]) AND $_alias == $this->_ci_classes[$_alias]) // alias change
+        	return CI::$APP->$_alias;
+
+		($_alias = strtolower($object_name)) OR $_alias = $class;
 		list($path, $_library) = Modules::find($library, $module, 'libraries/');
 		
 		/* load library config file	 */
