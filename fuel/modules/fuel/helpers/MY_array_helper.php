@@ -124,9 +124,10 @@ function object_sorter(&$data, $key, $order = 'asc')
  * @param	array
  * @param	string
  * @param	string
+ * @param	boolean
  * @return	array
  */
-function options_list($values, $value = 'id', $label = 'name')
+function options_list($values, $value = 'id', $label = 'name', $value_as_key = FALSE)
 {
 	$return = array();
 	foreach($values as $key => $val)
@@ -135,6 +136,10 @@ function options_list($values, $value = 'id', $label = 'name')
 		{
 			if (is_object($val)) $val = get_object_vars($val);
 			if (!empty($val[$label])) $return[$val[$value]] = $val[$label];
+		}
+		else if ($value_as_key)
+		{
+			$return[$val] = $val;
 		}
 		else
 		{
