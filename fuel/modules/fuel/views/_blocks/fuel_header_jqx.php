@@ -22,6 +22,9 @@ jqx_config.lang = '<?=$this->fuel->auth->user_lang()?>';
 <?php if (!empty($js_localized)) :?>
 jqx_config.localized = <?=json_lang($js_localized)?>;
 var __FUEL_LOCALIZED__ = <?=json_lang($js_localized)?>; 
+<?php else:  ?>
+jqx_config.localized = <?=json_lang('fuel/fuel_js', 'english')?>;
+var __FUEL_LOCALIZED__ = <?=json_lang('fuel/fuel_js', 'english')?>; 
 <?php endif; ?>
 jqx_config.editor = '<?=$this->fuel->config('text_editor')?>';
 jqx_config.ckeditorConfig = <?=is_array($this->fuel->config('ck_editor_settings')) ? json_encode($this->fuel->config('ck_editor_settings')) : $this->fuel->config('ck_editor_settings')?>;

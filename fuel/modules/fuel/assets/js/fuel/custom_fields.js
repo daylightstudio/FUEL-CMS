@@ -16,7 +16,7 @@ fuel.fields.datetime_field = function(context){
 		showOn: 'button',
 	    buttonText: 'Click to show the calendar',
 	    buttonImageOnly: true, 
-	    buttonImage: jqx.config.imgPath + 'calendar.png'
+	    buttonImage: jqx_config.imgPath + 'calendar.png'
 	}
 	$('.datepicker', context).each(function(i){
 		var options = {
@@ -92,7 +92,7 @@ fuel.fields.wysiwyg_field = function(context){
 
 	var CKEDitor_loaded = false;
 	var createCKEditor = function(elem){
-		//window.CKEDITOR_BASEPATH = jqx.config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
+		//window.CKEDITOR_BASEPATH = jqx_config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
 
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
@@ -107,7 +107,7 @@ fuel.fields.wysiwyg_field = function(context){
 			return;
 		}
 
-		var config = jqx.config.ckeditorConfig;
+		var config = jqx_config.ckeditorConfig;
 
 		// add custom configs
 		config = $.extend(config, $(elem).data());
@@ -177,7 +177,7 @@ fuel.fields.wysiwyg_field = function(context){
 		   										return contents;
 	    								}
 									);
-							img = img.replace(jqx.config.assetsImgPath, '');
+							img = img.replace(jqx_config.assetsImgPath, '');
 							
 							src = "{img_path('" + img + "')}";
 							element.attributes.src = src;
@@ -273,7 +273,7 @@ fuel.fields.wysiwyg_field = function(context){
 	
 	var unTranslateImgPath = function(txt){
 		txt = txt.replace(/\{img_path\('([^']+)'\)\}/g, function(match, contents, offset, s) {
-	   										return jqx.config.assetsImgPath + contents;
+	   										return jqx_config.assetsImgPath + contents;
     								}
 								);
 		return txt;
@@ -285,7 +285,7 @@ fuel.fields.wysiwyg_field = function(context){
 		setTimeout(function(){
 			var txt = editor.getData();
 			txt = txt.replace(/\{img_path\('([^']+)'\)\}/g, function(match, contents, offset, s) {
-		   										return jqx.config.assetsImgPath + contents;
+		   										return jqx_config.assetsImgPath + contents;
 	    								}
 									);
 			editor.setData(txt);
@@ -344,7 +344,7 @@ fuel.fields.wysiwyg_field = function(context){
 	$editors.each(function(i) {
 		var _this = this;
 		var ckId = $(this).attr('id');
-		if ((jqx.config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
+		if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
 			//createCKEditor(this);
 			setTimeout(function(){
 				createCKEditor(_this);
@@ -371,7 +371,7 @@ fuel.fields.file_upload_field = function(context){
 	// hackalicious... to prevent issues when things get ajaxed in
 	setTimeout(function(){
 		// setup multi-file naming convention
-		$.fn.MultiFile.options.accept = jqx.config.assetsAccept;
+		$.fn.MultiFile.options.accept = jqx_config.assetsAccept;
 		$multiFile = $('.multifile:file');
 
 		// get accept types and then remove the attribute from the DOM to prevent issue with Chrome
@@ -391,7 +391,7 @@ fuel.fields.asset_field = function(context, options){
 
 	var showAssetsSelect = function(){
 		var winHeight = 450;
-		var url = jqx.config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
+		var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
 		var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 		
@@ -451,7 +451,7 @@ fuel.fields.asset_field = function(context, options){
 				default :
 					btnLabel = fuel.lang('btn_asset');
 			}
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 		}
 	});
 
@@ -485,7 +485,7 @@ fuel.fields.asset_field = function(context, options){
 			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
 			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			var btnLabel = fuel.lang('btn_upload_asset');
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
 		}
 	});
 	
@@ -541,7 +541,7 @@ fuel.fields.inline_edit_field = function(context){
 			module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
 		}
 		var parentModule = fuel.getModuleURI(context);
-		var url = jqx.config.fuelPath + '/' + module + '/inline_';
+		var url = jqx_config.fuelPath + '/' + module + '/inline_';
 		
 		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
 		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
@@ -555,7 +555,7 @@ fuel.fields.inline_edit_field = function(context){
 			
 			// if no value added,then no need to refresh
 			if (!selected) return;
-			var refreshUrl = jqx.config.fuelPath + '/' + parentModule + '/refresh_field';
+			var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
 			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:selected};
 
 
@@ -853,7 +853,7 @@ fuel.fields.url_field = function(context, options){
 
 	var showUrlSelect = function(){
 		$activeField = $('#' + activeField);
-		var url = jqx.config.fuelPath + '/pages/select/?selected=' + escape($activeField.val());
+		var url = jqx_config.fuelPath + '/pages/select/?selected=' + escape($activeField.val());
 		
 		if ($activeField.data('target')){
 			url += '&target=' + $activeField.data('target');
@@ -912,7 +912,7 @@ fuel.fields.url_field = function(context, options){
 	var _this = this;
 	$('.url_select', context).not('.no_url').each(function(i){
 		if ($(this).parent().find('.url_select_button').length == 0){
-			$(this).after('&nbsp;<a href="'+ jqx.config.fuelPath + '/pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
 		}
 	});
 
@@ -932,7 +932,7 @@ fuel.fields.block = function(context, options){
 			url = eval(unescape(url));
 		} else {
 			var layout = $(this).val().split('/').pop();
-			url = jqx.config.fuelPath + '/blocks/layout_fields/' + layout + '/' + $('#id').val() + '/english/';
+			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + $('#id').val() + '/english/';
 		}
 		var context = $(this).attr("name");
 		var contextArr = context.split("--")

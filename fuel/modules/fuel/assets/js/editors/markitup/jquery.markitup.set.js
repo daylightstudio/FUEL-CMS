@@ -12,13 +12,13 @@
 
 function markitupLanguage(key)
 {
-	if (window['jqx'] != undefined)
-	{
-		return jqx.config.localized['markitup_' + key];
-	}
-	else if (window['__FUEL_LOCALIZED__'] != undefined)
+	if (typeof(window['__FUEL_LOCALIZED__']) != 'undefined')
 	{
 		return __FUEL_LOCALIZED__['markitup_' + key];
+	}
+	else if (typeof(window['jqx']) != 'undefined')
+	{
+		return jqx.config.localized['markitup_' + key];
 	}
 }
 
