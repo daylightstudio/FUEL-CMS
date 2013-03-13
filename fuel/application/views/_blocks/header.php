@@ -32,7 +32,7 @@
 	<?php echo jquery('1.8.3');	?>
 </head>
 
-<body class="<?php echo fuel_var('body_class', 'Body Class'); ?>">
+<body class="<?php echo fuel_var('body_class', ''); ?>">
 <div id="container">
 	<div id="container_inner">
 		<div id="header">
