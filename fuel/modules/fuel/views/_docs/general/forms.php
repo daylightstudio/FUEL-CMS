@@ -1027,7 +1027,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
-to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:
+to the <dfn>$fields</dfn> initialization array. The following parameters can be used in the association:
 </p>
 <ul>
 	<li><strong>class</strong>: key is the module, and the value is the class</li>
