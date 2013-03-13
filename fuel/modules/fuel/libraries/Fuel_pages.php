@@ -289,6 +289,61 @@ class Fuel_pages extends Fuel_base_library {
 			return $output;
 		}
 	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Uploads a block view file into the database
+	 *
+	 * @access	public
+	 * @param	string	The name of the page to upload to the CMS
+	 * @param	boolean	Determines whether to sanitize the page by applying the php to template syntax function before uploading
+	 * @return	string
+	 */
+	function upload($page, $sanitize = TRUE)
+	{
+		$this->CI->load->helper('file');
+
+		if (!isset($this->CI->fuel_pages_model))
+		{
+			$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+		}
+		$model =& $this->CI->fuel_pages_model;
+
+		if (!is_numeric($page))
+		{
+			$page_data = $model->find_by_location($page, FALSE);
+		}
+		else
+		{
+			$page_data = $model->find_by_key($page, 'array');
+		}
+		
+		$view_twin = APPPATH.'views/'.$page_data['location'].EXT;
+		
+		$output = '';
+		if (file_exists($view_twin))
+		{
+			$view_twin_info = get_file_info($view_twin);
+			$tz = date('T');
+			if ($view_twin_info['date'] > strtotime($page_data['last_modified'].' '.$tz) OR
+				$page_data['last_modified'] == $page_data['date_added'])
+			{
+				// must have content in order to not return error
+				$output = file_get_contents($view_twin);
+				
+				// replace PHP tags with template tags... comments are replaced because of xss_clean()
+				if ($sanitize)
+				{
+					$output = php_to_template_syntax($output);
+				}
+			}
+		}
+
+		return $output;
+	}
+
 }
 
 

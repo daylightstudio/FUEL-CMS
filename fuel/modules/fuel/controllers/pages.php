@@ -614,32 +614,13 @@ class Pages extends Module {
 		}
 		return FALSE;
 	}
-	
+
 	function import_view()
 	{
 		$out = 'error';
-		if ($this->input->post('id')){
-			$page_data = $this->model->find_by_key($this->input->post('id'), 'array');
-			$this->load->helper('file');
-			$view_twin = APPPATH.'views/'.$page_data['location'].EXT;
-			
-			if (file_exists($view_twin))
-			{
-				$view_twin_info = get_file_info($view_twin);
-				$tz = date('T');
-				if ($view_twin_info['date'] > strtotime($page_data['last_modified'].' '.$tz) OR
-					$page_data['last_modified'] == $page_data['date_added'])
-				{
-					// must have content in order to not return error
-					$out = file_get_contents($view_twin);
-					
-					// replace PHP tags with template tags... comments are replaced because of xss_clean()
-					if ($this->sanitize_input)
-					{
-						$out = php_to_template_syntax($out);
-					}
-				}
-			}
+		if (!empty($_POST['id']))
+		{
+			$out = $this->fuel->pages->upload($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}
