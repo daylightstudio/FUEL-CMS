@@ -2863,12 +2863,12 @@ Class Form_builder {
 						$msg = "{$field_label} is {$rule}.";
 					}
 
-					$rule_params = $field_value;
-					if ( ! empty($args) AND array_key_exists('params', $args) AND is_array($args['params']))
-					{
+					$rule_params = array();
+					if ( ! empty($args) AND array_key_exists('params', $args) AND is_array($args['params'])) {
 						$rule_params = $args['params'];
-						array_unshift($rule_params, $field_value);
 					}
+					$validation_val = ( ! empty($args['validation_val'])) ? $args['validation_val'] : $field_value;
+					array_unshift($rule_params, $validation_val);
 
 					$validator->add_rule($field_name, $rule, $msg, $rule_params);
 				}
