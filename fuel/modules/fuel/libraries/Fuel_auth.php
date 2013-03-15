@@ -253,14 +253,14 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	mixed a single IP address, an array of IP addresses or the starting IP address range
 	 * @return	boolean
 	 */
-	function check_valid_ip($range_start)
+	function check_valid_ip($ips)
 	{
 		$check_address = $_SERVER['REMOTE_ADDR'];
 
 		// check if IP address is range
-		if (empty($range_end) AND is_string($range_start))
+		if (is_string($ips))
 		{
-			$ips = preg_split('#\s*,\s*#', $range_start);
+			$ips = preg_split('#\s*,\s*#', $ips);
 		}
 
 		foreach($ips as $ip)

@@ -55,7 +55,7 @@ class Migrate extends Fuel_base_controller {
 			$this->_show_error(lang('error_not_in_dev_mode'));
 		}
 
-		$version = $this->migration->version();
+		$version = $this->migration->version($version);
 		if ( ! $version)
 		{
 			$this->_show_error();

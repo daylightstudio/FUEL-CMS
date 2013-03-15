@@ -12,6 +12,10 @@ php index.php fuel/migrate/current
 php index.php fuel/migrate/version/2
 </pre>
 
+<p class="important">Fuel comes with a single "001_install" migration as an example which will load in the fuel_schema.sql file if it hasn't already been loaded. 
+If you have already loaded the fuel_schema.sql file, replace this migration with the first migration of your site or you will get SQL errors stating that
+	the tables have already been created.</p>
+
 <p class="important">You can also simply browse to the URI path (e.g. fuel/migrate/latest).</p>
 <h2>Web Hooks</h2>
 <p>The <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration's <dfn>webhook_romote_ip</dfn> parameter</a> gives you the ability to set one or more IP addresses
