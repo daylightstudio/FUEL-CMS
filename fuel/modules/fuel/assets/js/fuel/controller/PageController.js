@@ -25,21 +25,22 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		}
 		
 		var _this = this;
-		var retreiveLayoutVars = function(){
+
+		var retreiveLayoutVarsCallback = function(){
+			var context = $('#fuel_main_content_inner');
+			_this.initSpecialFields(context);
+			$(this).trigger('varsLoaded');
+			if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
+		}
+
+		
+		
+		$('#layout').change(function(e){
 			$('#layout_vars .loader').show();
 			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val() + '/' + $('#language').val();
 			$('#layout_vars').load(path, function(){
-				var context = $('#fuel_main_content_inner');
-				_this.initSpecialFields(context);
-				$(this).trigger('varsLoaded');
-				if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
-				//$(this).parents('form').formBuilder().initialize();
+				retreiveLayoutVarsCallback();
 			});
-			
-		}
-		
-		$('#layout').change(function(e){
-			retreiveLayoutVars();
 		});
 		
 		$('#language').change(function(e){
@@ -56,7 +57,6 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 				}
 			});
 
-			//$('.jqmWindow').jqm().jqmHide(); // causes error because of multiple modals
 			$('.jqmOverlay').hide();
 			return false;
 		});
@@ -66,24 +66,21 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			var params = $('#form').serialize();
 			$.post(path, params, function(html){
 				if (html != 'error'){
-					var id = '#' + _this.initObj.import_view_key;
-					if ($(id).exists()){
-						$(id).val(html);
-						$(id).addClass('change');
-						if (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[_this.initObj.import_view_key]){
-							CKEDITOR.instances[_this.initObj.import_view_key].setData($(id).val());
-							var scrollTo = '#cke_' + _this.initObj.import_view_key;
-						} else {
-							var scrollTo = id;
-						}
-						$('#main_content').scrollTo($(scrollTo), 800);
+
+					$('#layout_vars').html(html);
+
+					var renderedLayout = $('#vars--__layout__').val();
+
+					if (renderedLayout.length){
+						$('#layout').val(renderedLayout);
 					}
+
+					retreiveLayoutVarsCallback();
 					$('#view_twin_notification').hide();
 				} else {
 					new jqx.Message(_this.lang('error_importing_ajax'));
 				}
 			});
-			//$('.jqmWindow').jqm().jqmHide();
 			$('.jqmOverlay').hide();
 			return false;
 		});

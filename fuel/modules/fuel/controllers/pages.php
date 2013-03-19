@@ -153,9 +153,8 @@ class Pages extends Module {
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 	
-	function _form($id = NULL, $fields = NULL)
+	function _form($id = NULL)
 	{
-		
 		$this->load->library('form_builder');
 
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
@@ -245,6 +244,12 @@ class Pages extends Module {
 		if (!empty($layout))
 		{
 			$fields = $layout->fields();
+		}
+
+		$import_field = $layout->import_field();
+		if (!empty($import_field))
+		{
+			$this->js_controller_params['import_field'] = $import_field;
 		}
 
 		/*****************************************************************************
@@ -440,7 +445,6 @@ class Pages extends Module {
 					}
 				}
 			}
-			
 
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 			
@@ -495,13 +499,14 @@ class Pages extends Module {
 						$where['language'] = $lang;
 					}
 					$where = (!empty($id)) ? $where : array();
+
 					if ($this->fuel_pagevariables_model->save($save, $where))
 					{
 						$page_variables_archive[] = $this->fuel_pagevariables_model->cleaned_data();
 					}
 				}
 			}
-		
+
 			// archive
 			$archive = $this->model->cleaned_data();
 			$archive[$this->model->key_field()] = $id;
@@ -554,15 +559,17 @@ class Pages extends Module {
 		}
 	}
 
-	function layout_fields($layout, $id = NULL, $lang = NULL)
+	function layout_fields($layout_name, $id = NULL, $lang = NULL, $vars = array())
 	{
 		// check to make sure there is no conflict between page columns and layout vars
-		$layout = $this->fuel->layouts->get($layout);
+		$layout = $this->fuel->layouts->get($layout_name);
 		if (!$layout)
 		{
 			return;
 		}
 		$fields = $layout->fields();
+
+		$fields['__layout__'] = array('type' => 'hidden', 'value' => $layout_name);
 
 		$conflict = $this->_has_conflict($fields);
 		if (!empty($conflict))
@@ -583,15 +590,17 @@ class Pages extends Module {
 		
 		if (!empty($id))
 		{
-			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
+			$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
 
 			// the following will pre-populate fields of a different language to the default values
-			if (empty($page_vars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+			if (empty($pagevars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
 			{
-				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+				$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
 			}
 
-			$this->form_builder->set_field_values($page_vars);
+			$pagevars = array_merge($pagevars, $vars);
+
+			$this->form_builder->set_field_values($pagevars);
 		}
 		
 		$form = $this->form_builder->render();
@@ -617,11 +626,16 @@ class Pages extends Module {
 
 	function import_view()
 	{
-		$out = 'error';
 		if (!empty($_POST['id']))
 		{
-			$out = $this->fuel->pages->upload($this->input->post('id'), $this->sanitize_input);
+			$id = $this->input->post('id');
+			$pagevars = $this->fuel->pages->import($this->input->post('id'), $this->sanitize_input);
+			$layout = $pagevars['layout'];
+			unset($pagevars['layout']);
+			$this->layout_fields($layout, $id, NULL, $pagevars);
+			return;
 		}
+		$out = 'error';
 		$this->output->set_output($out);
 	}
 	
@@ -772,30 +786,47 @@ class Pages extends Module {
 				
 				// sanitize the file before saving
 				$id = $this->input->post('id', TRUE);
-				$field = end(explode('--', $this->js_controller_params['import_view_key']));
-				$where['page_id'] = $id;
-				$where['name'] = $field;
-				$page_var = $this->fuel_pagevariables_model->find_one_array($where);
+				$pagevars = $this->fuel->pages->import($id);
 
-				$file = $this->_sanitize($file);
-				$save['id'] = (empty($page_var)) ? NULL : $page_var['id'];
-				$save['name'] = $field;
-				$save['page_id'] = $id;
-				$save['value'] = $file;
-				
-				if (!$this->fuel_pagevariables_model->save($save))
+				if (!empty($pagevars))
+				{
+					$layout = $this->fuel->layouts->get($pagevars['layout']);
+					unset($pagevars['layout']);
+
+					foreach($pagevars as $key => $val)
+					{
+						$where['page_id'] = $id;
+						$where['name'] = $key;
+						$page_var = $this->fuel_pagevariables_model->find_one_array($where);
+						$save['id'] = (empty($page_var['id'])) ? NULL : $page_var['id'];
+						$save['name'] = $key;
+						$save['page_id'] = $id;
+						$save['value'] = $val;
+						if (!$this->fuel_pagevariables_model->save($save))
+						{
+							add_error(lang('error_upload'));
+						}
+					}
+
+					// resave to prevent import popup on next page
+					$page = $this->fuel_pages_model->find_by_key($id, 'array');
+					$page['last_modified'] = date('Y-m-d H:i:s', (time() + 1)); // to prevent window from popping up after upload
+					$this->model->save($page);
+
+					if (!has_errors())
+					{
+						// change list view page state to show the selected group id
+						$this->fuel->admin->set_notification(lang('pages_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+						
+						redirect(fuel_url('pages/edit/'.$id));
+					}
+
+				}
+				else
 				{
 					add_error(lang('error_upload'));
 				}
 
-
-				if (!has_errors())
-				{
-					// change list view page state to show the selected group id
-					$this->fuel->admin->set_notification(lang('pages_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
-					
-					redirect(fuel_url('pages/edit/'.$id));
-				}
 				
 			}
 			else if (!empty($_FILES['file']['error']))

@@ -265,14 +265,14 @@ class Fuel_blocks extends Fuel_module {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Uploads a block view file into the database
+	 * Imports a block view file into the database
 	 *
 	 * @access	public
-	 * @param	string	The name of the block file to upload to the CMS
+	 * @param	string	The name of the block file to import to the CMS
 	 * @param	boolean	Determines whether to sanitize the block by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
-	function upload($block, $sanitize = TRUE)
+	function import($block, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
 		
