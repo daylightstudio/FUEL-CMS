@@ -197,7 +197,7 @@ $config['layouts']['main'] = array(
 <h2 id="layouts_block_layouts">Block Layouts</h2>
 <p>Block layouts are a way to associate layout form fields to particular blocks. This creates a whole new level of layout control for FUEL layouts. 
 For example, you can now create repeatable sections in your layouts that allow you to select the block you want to use and will 
-automatically pull in that blocks associated fields. Block layouts are added to the <dfn>$config['blocks']</dfn> and <strong>NOT</strong>
+automatically pull in that block's associated fields. Block layouts are added to the <dfn>$config['blocks']</dfn> and <strong>NOT</strong>
 <dfn>$config['layouts']</dfn>. Below is an example that creates a block field on a repeatable section. 
 It assumes that you have a page layout of <span class="file">fuel/application/views/_layouts/test.php</span> and a block at <span class="file">fuel/application/views/_blocks/sections/image_right.php</span>:
 </p>
