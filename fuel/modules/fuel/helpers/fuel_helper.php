@@ -320,6 +320,10 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 {
 	$CI =& get_instance();
 	$CI->load->helper('inflector');
+
+	$key_arr = explode('|', $key);
+	$key = $key_arr[0];
+
 	if (isset($GLOBALS[$key]))
 	{
 		$val = $GLOBALS[$key];
@@ -339,9 +343,23 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 	}
 	else if (is_array($val) AND $evaluate)
 	{
-		foreach($val as $k => $v)
+		if (isset($key_arr[1]))
 		{
-			$val[$k] = eval_string($v);
+			if (isset($val[$key_arr[1]]))
+			{
+				$val = $val[$key_arr[1]];
+			}
+			else
+			{
+				$val = $default;
+			}
+		}
+		else
+		{
+			foreach($val as $k => $v)
+			{
+				$val[$k] = eval_string($v);
+			}
 		}
 	}
 	
