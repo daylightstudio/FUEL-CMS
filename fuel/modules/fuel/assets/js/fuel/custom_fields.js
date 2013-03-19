@@ -62,7 +62,6 @@ fuel.fields.multi_field = function(context, inline_edit){
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
-
 	$editors = $ckEditor = $('textarea', context).not('.no_editor, .markItUpEditor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
@@ -94,7 +93,6 @@ fuel.fields.wysiwyg_field = function(context){
 	var createCKEditor = function(elem){
 		//window.CKEDITOR_BASEPATH = jqx_config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
-
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 		
 		// cleanup
@@ -786,11 +784,12 @@ fuel.fields.currency_field = function(context, options){
 
 // create a repeatable field
 fuel.fields.template_field = function(context, options){
-
+	
 	if (!options) options = {};
 
 	var currentCKTexts = {};
 
+	// hack to prevent CKEditor issues
 	var sortStarted = function(){
 		if (typeof CKEDITOR != 'undefined'){
 			for(var n in CKEDITOR.instances){
@@ -809,8 +808,6 @@ fuel.fields.template_field = function(context, options){
 	}
 
 	var repeatable = function($repeatable){
-		var currentCKTexts = {};
-		var currentCKHead = {};
 		
 		// set individual options based on the data-max attribute
 		$repeatable.each(function(i){
@@ -839,10 +836,16 @@ fuel.fields.template_field = function(context, options){
 		sortStopped();
 	})
 	
+	// Remove clone event	
+	$(context).off('cloned', '.repeatable_container');
+
 	// Add another event handler	
-	$(context).off('cloned').on('cloned', '.repeatable_container', function(e){
+	$(context).on('cloned', '.repeatable_container', function(e){
+	
+		/*TODO: FIX BUG WITH CLONING A NEW ITEM AND THEN SORTING WITHOUT SAVING WITH CKEDITOR */
 		$('#form').formBuilder().initialize(e.clonedNode);
 	})
+
 
 }
 
@@ -928,28 +931,40 @@ fuel.fields.block = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
 		var val = $(this).val();
 		var url = $(this).data('url');
+
+		// for pages inline editing
+		var module = $('#__fuel_module__');
+		if (module.length && module.val() == 'pagevariables'){
+			var id = $('#page_id').val();
+			var context = $(this).attr("name").replace(/^value/, $('#name').attr("value")) ;
+		} else {
+			var id = $('#id').val();
+			var context = $(this).attr("name");
+		}
+
 		if (url){
 			url = eval(unescape(url));
 		} else {
 			var layout = $(this).val().split('/').pop();
-			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + $('#id').val() + '/english/';
+			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
 		}
-		var context = $(this).attr("name");
+		
 		var contextArr = context.split("--")
 		if (contextArr.length > 1){
 			context = contextArr.pop();
-			url += '?context=' + context;
 		}
+		url += '?context=' + context;
+
 		// show loader
 		$(this).parent().find('.loader').show();
 		
 		$layout_fields = $(this).next('.block_layout_fields');
-
 		$layout_fields.load(url, function(){
 			// hide loader
 			$(this).parent().find('.loader').hide();
-			$layout_fields.find('.block_name').val(val);
+			$(this).find('.block_name').val(val);
 		});
+
 	})
 	
 	$('.block_layout_select', context).change();
