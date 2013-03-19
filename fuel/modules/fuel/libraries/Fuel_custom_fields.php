@@ -523,7 +523,7 @@ class Fuel_custom_fields {
 					continue;
 				}
 				
-				if (!isset($field['label']))
+				if (empty($field['label']))
 				{
 					if ($lang = $form_builder->label_lang($key))
 					{
@@ -672,6 +672,7 @@ class Fuel_custom_fields {
 				$title_field = (!empty($params['title_field'])) ? $params['title_field'] : '';
 				$str .= '<div class="repeatable_container'.$css_class.'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'">';
 				$i = 0;
+
 
 				foreach($_f as $k => $f)
 				{
@@ -1317,49 +1318,99 @@ class Fuel_custom_fields {
 	{
 		$form_builder =& $params['instance'];
 
-		$params['type'] = 'select';
-		if (!isset($params['options']))
+		// check to make sure there is no conflict between page columns and layout vars
+		if (!empty($params['block_name']))
 		{
-			if (!isset($params['where']))
+			// check to make sure there is no conflict between page columns and layout vars
+			$layout = $this->fuel->layouts->get($params['block_name'], 'block');
+
+			if (!$layout)
 			{
-				$params['where'] = array();
-			}
-			if (!isset($params['folder']))
-			{
-				$params['folder'] = '';
-			}
-			if (!isset($params['filter']))
-			{
-				$params['filter'] = '^_(.*)|\.html$';
-			}
-			if (!isset($params['order']))
-			{
-				$params['order'] = TRUE;
+				return;
 			}
 
-			if (!isset($params['recursive']))
+			if (!isset($params['context']))
 			{
-				$params['recursive'] = FALSE;
+				$params['context'] = $params['key'];
 			}
-			// set options_list to not be recursive since block layout names won't have slashes in them (e.g. sections/right_image... it would just be right_image)			
 
-			//$params['options'] = $this->CI->fuel->blocks->options_list($params['where'], $params['folder'], $params['filter'], $params['order'], $params['recursive']);
-			$params['options'] = $this->CI->fuel->layouts->options_list(TRUE);
+			$layout->set_context($params['context']);
+			$fields = $layout->fields();
+
+			$fb = new Form_builder();
+			$fb->load_custom_fields(APPPATH.'config/custom_fields.php');
+			
+			$fb->question_keys = array();
+			$fb->submit_value = '';
+			$fb->cancel_value = '';
+			$fb->use_form_tag = FALSE;
+			$fb->name_prefix = 'vars';
+			$fb->set_fields($fields);
+			$fb->display_errors = FALSE;
+
+			if (!empty($params['value']))
+			{
+				$fb->set_field_values($params['value']);	
+			}
+			
+			$form = $fb->render();
+			return $form;
 		}
-
-		$select_class = 'block_layout_select';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$select_class : $select_class;
-
-		if (!empty($params['ajax_url']))
+		else
 		{
-			$params['data']['url'] = rawurlencode($params['ajax_url']);
+			$params['type'] = 'select';
+			if (!isset($params['options']))
+			{
+				// if a folder is specified, we will look in that directory to get the list of blocks
+				if (isset($params['folder']))
+				{
+					if (!isset($params['where']))
+					{
+						$params['where'] = array();
+					}
+					if (!isset($params['filter']))
+					{
+						$params['filter'] = '^_(.*)|\.html$';
+					}
+					if (!isset($params['order']))
+					{
+						$params['order'] = TRUE;
+					}
+
+					// set options_list to not be recursive since block layout names won't have slashes in them (e.g. sections/right_image... it would just be right_image)			
+					if (!isset($params['recursive']))
+					{
+						$params['recursive'] = FALSE;
+					}
+
+					$params['options'] = $this->CI->fuel->blocks->options_list($params['where'], $params['folder'], $params['filter'], $params['order'], $params['recursive']);
+				}
+
+				// otherwise we use the ones found on the MY_fuel_layouts.php
+				else
+				{
+					if (!isset($params['group']))
+					{
+						$params['group'] = '';
+					}
+					$params['options'] = $this->CI->fuel->layouts->options_list(TRUE, $params['group']);
+				}
+			}
+
+			$select_class = 'block_layout_select';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$select_class : $select_class;
+
+			if (!empty($params['ajax_url']))
+			{
+				$params['data']['url'] = rawurlencode($params['ajax_url']);
+			}
+
+			$params['value'] = (isset($params['value']['block_name'])) ? $params['value']['block_name'] : '';
+			$params['style'] = 'margin-bottom: 10px;';
+			$field = $form_builder->create_select($params);
+			$field = $field.'<div class="block_layout_fields"></div><div class="loader hidden"></div>';
+			return $field;
 		}
-
-		$params['value'] = (isset($params['value']['block_name'])) ? $params['value']['block_name'] : '';
-		$field = $form_builder->create_select($params);
-		$field = $field.'<div class="block_layout_fields"></div><div class="loader hidden"></div>';
-		return $field;
-
 	}
 
 }
