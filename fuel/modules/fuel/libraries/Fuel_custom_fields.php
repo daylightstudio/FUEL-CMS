@@ -1404,8 +1404,8 @@ class Fuel_custom_fields {
 			{
 				$params['data']['url'] = rawurlencode($params['ajax_url']);
 			}
-
-			$params['value'] = (isset($params['value']['block_name'])) ? $params['value']['block_name'] : '';
+			$value = (is_array($params['value']) AND isset($params['value']['block_name'])) ? $params['value']['block_name'] : ((isset($params['value'])) ? $params['value'] : '');
+			$params['value'] = $value;
 			$params['style'] = 'margin-bottom: 10px;';
 			$field = $form_builder->create_select($params);
 			$field = $field.'<div class="block_layout_fields"></div><div class="loader hidden"></div>';
