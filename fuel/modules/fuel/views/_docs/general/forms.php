@@ -745,6 +745,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>where</strong>: the where condition to be used for querying blocks stored in the CMS database</li>
 		<li><strong>order</strong>: the order clause to be used for sorting the list option items obtained from the CMS stored blocks.</li>
 		<li><strong>ajax_url</strong>: the AJAX URL used to get the form fields. Default is <dfn>'/blocks/layout_fields/{layout}/{page_id}/english/'</dfn></li>
+		<li><strong>block_name</strong>: if specified, it will automatically return the fields of that block as opposed to a dropdown list to select from</li>
+		<li><strong>group</strong>: if specified, will filter the options list to only those block layouts with that group name ('folder' must not be specified)</li>
 	</ul>
 
 
@@ -1027,7 +1029,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
-to the <dfn>$fields</dfn> initialization array. The following parameters can be used in the association:
+to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:
 </p>
 <ul>
 	<li><strong>class</strong>: key is the module, and the value is the class</li>

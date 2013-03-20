@@ -155,7 +155,9 @@ class Fuel_layouts extends Fuel_base_library {
 		{
 			if (!empty($this->blocks[$layout]))
 			{
-				$layout = $this->create($layout, $this->blocks[$layout]);
+				$init = $this->blocks[$layout];
+				$init['type'] = 'block';
+				$layout = $this->create($layout, $init);
 				return $layout;
 			}
 		}
@@ -173,14 +175,15 @@ class Fuel_layouts extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	boolean use block layouts or page (optional)
+	 * @param	string the name of the group to filter the options by (optional)
 	 * @return	array
 	 */	
-	function options_list($blocks = FALSE)
+	function options_list($blocks = FALSE, $group = '')
 	{
 		$options = array();
 		$layouts = array();
 
-		if ($blocks AND !empty($this->blocks))
+		if ($blocks)
 		{
 			foreach($this->blocks as $key => $block)
 			{
@@ -205,17 +208,31 @@ class Fuel_layouts extends Fuel_base_library {
 		
 		//ksort($options);
 
-		// create groups first
-		foreach($layouts as $k => $layout)
+		if (!empty($group))
 		{
-			if (!empty($layout->group))
+			foreach($layouts as $k => $layout)
 			{
-				if (!isset($options[$layout->group]))
+				if ($layout->group == $group)
 				{
-					$options[$layout->group] = array();
+					$options[$layout->name] = $layout->label;
+					unset($layouts[$k]);
 				}
-				$options[$layout->group][$layout->name] = $layout->label;
-				unset($layouts[$k]);
+			}
+		}
+		else
+		{
+			// create groups first
+			foreach($layouts as $k => $layout)
+			{
+				if (!empty($layout->group))
+				{
+					if (!isset($options[$layout->group]))
+					{
+						$options[$layout->group] = array();
+					}
+					$options[$layout->group][$layout->name] = $layout->label;
+					unset($layouts[$k]);
+				}
 			}
 		}
 		return $options;
@@ -234,9 +251,20 @@ class Fuel_layouts extends Fuel_base_library {
 	function create($name, $init = array())
 	{
 		$default_class = 'Fuel_layout';
+		$loaded_classes = array('Fuel_layout', 'Fuel_module_layout', 'Fuel_block_layout');
 
 		if (is_array($init))
 		{
+			// modifications for block layouts
+			if (!empty($init['type']) AND $init['type'] == 'block')
+			{
+				if (!isset($init['class']) OR $init['class'] == $default_class)
+				{
+					$init['class'] = 'Fuel_block_layout';
+				}
+				$init['folder'] = $this->fuel->blocks->blocks_folder;
+			}
+
 			$init['name'] = $name;
 			$init['folder'] = $this->layouts_folder;
 			$init['class'] =  (isset($init['class'])) ? $init['class'] : $default_class;
@@ -244,21 +272,12 @@ class Fuel_layouts extends Fuel_base_library {
 			$init['description'] = (isset($init['description'])) ? $init['description'] : '';
 			$init['group'] = (isset($init['group'])) ? $init['group'] : '';
 			$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
-
-			// modifications for block layouts
-			if (!empty($init['type']) AND $init['type'] == 'block')
-			{
-				if (!isset($init['class']))
-				{
-					$init['class'] = 'Fuel_block_layout';
-				}
-				$init['folder'] = $this->fuel->blocks->blocks_folder;
-			}
+			$init['fields'] = (isset($init['fields'])) ? $init['fields'] : array();
+			$init['import_field'] = (isset($init['import_field'])) ? $init['import_field'] : '';
 
 			// load custom layout classes
-			if (!empty($init['class']) AND $init['class'] != $default_class)
+			if (!empty($init['class']) AND !in_array($init['class'], $loaded_classes))
 			{
-
 				if (!isset($init['filename']))
 				{
 					$init['filename'] = $init['class'].EXT;
@@ -269,11 +288,10 @@ class Fuel_layouts extends Fuel_base_library {
 					$init['filepath'] = 'libraries';
 				}
 				$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+
 				require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
 			}
 			$class = $init['class'];
-			unset($init['class']);
-
 			$layout = new $class($init);
 		}
 		else if (is_a($init, $default_class))
@@ -304,6 +322,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $field_values = array(); // The values to assign to the fields
 	public $folder = '_layouts'; // The folder to look in for the layout view files
 	public $group = ''; // The group name to associate with the layout
+	public $import_field = 'body'; // The field to be used when importing a view file
 	
 	// --------------------------------------------------------------------
 	
@@ -492,13 +511,28 @@ class Fuel_layout extends Fuel_base_library {
 	 */
 	function fields()
 	{
-		$fields = array();
+		$fields = $this->fields;	
+		//$fields = $this->process_fields($this->fields);
+
 		if (!empty($this->description))
 		{
 			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
 		}
-		$fields = array_merge($fields, $this->fields);
 
+		return $fields;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Processes the layout's fields
+	 *
+	 * @access	public
+	 * @param	array	The new fields to process
+	 * @return	array
+	 */
+	function process_fields($fields = array())
+	{
 		$order = 1;
 		// create a new object so we don't conflict with the main form_builder object on CI'
 		$fb = new Form_builder();
@@ -572,6 +606,33 @@ class Fuel_layout extends Fuel_base_library {
 		return $this->group;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the field to import the main content of the page into
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function import_field()
+	{
+		return $this->import_field;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the field to import the main content of the page into
+	 *
+	 * @access	public
+	 * @param	string	The name of the field to use
+	 * @return	void
+	 */	
+	function set_import_field($key)
+	{
+		$this->import_field = $key;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -928,6 +989,21 @@ class Fuel_block_layout extends Fuel_layout
 	function fields()
 	{
 		$fields = parent::fields();
+		$fields = $this->process_fields($fields);
+		return $fields;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Processes the layout's fields
+	 *
+	 * @access	public
+	 * @param	array	The new fields to process
+	 * @return	array
+	 */
+	function process_fields($fields = array())
+	{
 
 		// automatically add a field for the block name
 		$fields['block_name'] = array('type' => 'hidden', 'value' => $this->name, 'class' => 'block_name');
@@ -939,14 +1015,12 @@ class Fuel_block_layout extends Fuel_layout
 				$fields[$key]['name'] = $this->context.'['.$key.']';
 				if (empty($val['label']))
 				{
-					$fields[$key]['label'] = $key;	
+					$fields[$key]['label'] =  ucfirst(str_replace('_', ' ', $key));
 				}
 			}
 		}
-
 		return $fields;
 	}
-
 }
 
 /* End of file Fuel_layouts.php */

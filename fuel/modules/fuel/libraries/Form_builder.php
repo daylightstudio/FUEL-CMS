@@ -3584,7 +3584,9 @@ Class Form_builder {
 		$out .= $str."\n";
 		$out .= 'if (jQuery){ jQuery(function(){';
 		$out .= 'if (jQuery.fn.formBuilder) {';
-		$out .= 'jQuery("#'.$this->id.'").formBuilder('.json_encode($js_exec).');';
+		$out .= 'if (typeof(window[\'formBuilderFuncs\']) == "undefined") { window[\'formBuilderFuncs\'] = {}; };';
+		$out .= 'window[\'formBuilderFuncs\'] = jQuery.extend(window[\'formBuilderFuncs\'], '.json_encode($js_exec).');';
+		$out .= 'jQuery("#'.$this->id.'").formBuilder(window[\'formBuilderFuncs\']);';
 		if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
 		$out .= '}';
 		$out .= '})}';

@@ -53,11 +53,13 @@ dave@thedaylightstudio.com
 				}
 			}
 			
-			$('label,.field_depth_' + depth, elem).each(function(j){
-				var newName = $(this).attr('name')
+			//$('label,.field_depth_' + depth, elem).each(function(j){
+			$(elem).find('label,input,textarea,select').not('.field_depth_1').each(function(j){
+				var newName = $(this).attr('name');
+
 				if (newName && newName.length){
-					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$/, '$1[' + i + ']$2');
-					
+					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\]([\[\]-_a-zA-Z0-9]+)$/, '$1[' + i + ']$2');
+
 					// required for jquery 
 					newName = newName.replace('[', '\[');
 					newName = newName.replace(']', '\]');
@@ -73,8 +75,6 @@ dave@thedaylightstudio.com
 				}
 			})
 			
-			
-			
 			var $parentElem = $(elem).has(options.repeatableSelector + ' ' + options.repeatableSelector);
 
 			var parentIndex = null;
@@ -89,8 +89,10 @@ dave@thedaylightstudio.com
 					//console.log(i)
 					$(this).find('input,textarea,select').each(function(j){
 						var newName = $(this).attr('name')
+
 						if (newName && newName.length && parentIndex != null){
-							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[\d+\])/g, '$1' + parentIndex + '$2');
+							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[[-_a-zA-Z0-9]+\])/g, '$1' + parentIndex + '$2');
+							
 							// required for jquery 
 							newName = newName.replace('[', '\[');
 							newName = newName.replace(']', '\]');
@@ -99,7 +101,7 @@ dave@thedaylightstudio.com
 
 						var newId = $(this).attr('id')
 						if (newId && newId.length && parentIndex != null){
-							newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_\d+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
+							newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_[-_a-zA-Z0-9]+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
 							$(this).attr('id', newId);
 						}
 						

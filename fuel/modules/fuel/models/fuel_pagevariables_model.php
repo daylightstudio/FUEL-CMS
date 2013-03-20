@@ -24,7 +24,10 @@ class Fuel_pagevariables_model extends Base_module_model {
 	function find_one_array($where, $order_by = NULL)
 	{
 		$data = parent::find_one_array($where, $order_by);
-		$data['value'] = $this->_process_casting($data);
+		if (!empty($data))
+		{
+			$data['value'] = $this->_process_casting($data);	
+		}
 		return $data;
 	}
 

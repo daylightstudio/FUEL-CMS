@@ -24,7 +24,7 @@ class Blocks extends Module {
 				{
 					$tz = date('T');
 					if ($view_twin_info['date'] > strtotime($saved['last_modified'].' '.$tz) OR 
-						$saved['last_modified'] == $saved['date_added'])
+						$saved['last_modified'] == $saved['date_added'] AND !$this->input->get('uploaded'))
 					{
 						$warning_window = lang('blocks_updated_view', $view_twin);
 					}
@@ -58,7 +58,7 @@ class Blocks extends Module {
 		$out = 'error';
 		if (!empty($_POST['id']))
 		{
-			$out = $this->fuel->blocks->upload($this->input->post('id'), $this->sanitize_input);
+			$out = $this->fuel->blocks->import($this->input->post('id'), $this->sanitize_input);
 		}
 		$this->output->set_output($out);
 	}
@@ -102,6 +102,7 @@ class Blocks extends Module {
 				$save['view'] = $file;
 				$save['language'] = $language;
 				$save['date_added'] = datetime_now();
+				$save['last_modified'] = date('Y-m-d H:i:s', (time() + 1)); // to prevent window from popping up after upload
 
 				$id  = $this->model->save($save);
 				if (!$id)
@@ -204,7 +205,6 @@ class Blocks extends Module {
 				$_context_var_eval = '$_context = (isset($'.$_context_var.')) ? $'.$_context_var.' : "";';
 				eval($_context_var_eval);
 			}
-
 			if (isset($_context))
 			{
 				$block_vars = $_context;
