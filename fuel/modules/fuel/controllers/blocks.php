@@ -213,12 +213,12 @@ class Blocks extends Module {
 			$_name_var = str_replace(array('[', ']'), array('["', '"]'), $_name);
 			if (!empty($_name_var))
 			{
-				$_name_var_eval = '@$_vars = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
+				$_name_var_eval = '@$_name = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
 				eval($_name_var_eval);
 			}
 			if (isset($_context))
 			{
-				$block_vars = $_vars;
+				$block_vars = $_name;
 				$this->form_builder->set_field_values($block_vars);
 			}
 
