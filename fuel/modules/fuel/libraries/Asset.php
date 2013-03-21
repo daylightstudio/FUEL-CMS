@@ -481,11 +481,18 @@ class Asset {
 			return $file.$cache;
 		}
 		
-		$assets_path = $this->_get_assets_path($module);
-		
 		$assets_folders = $this->assets_folders;
 
 		$asset_type = (!empty($assets_folders[$path])) ? $assets_folders[$path] : $CI->config->item($path);
+
+		// if absolute path, then we just return that
+		if (!$this->_is_local_path($this->assets_path))
+		{
+			return $this->assets_path.$asset_type.$file.$cache;
+		}
+
+		$assets_path = $this->_get_assets_path($module);
+		
 		$path = WEB_PATH.$assets_path.$asset_type.$file.$cache;
 
 		if ($absolute)

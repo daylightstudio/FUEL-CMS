@@ -1,6 +1,6 @@
 <?php 
 
-// relative to web_root
+// relative to the web root. Can also be absolute to a different server for CDN
 $config['assets_path'] = 'assets/';
 
 // path structure to use for modules relative to web root
