@@ -202,7 +202,7 @@ class Blocks extends Module {
 			$_context_var = str_replace(array('[', ']'), array('["', '"]'), $_context);
 			if (!empty($_context_var))
 			{
-				$_context_var_eval = '$_context = (isset($'.$_context_var.')) ? $'.$_context_var.' : "";';
+				$_context_var_eval = '@$_context = (isset($'.$_context_var.')) ? $'.$_context_var.' : "";';
 				eval($_context_var_eval);
 			}
 			if (isset($_context))
