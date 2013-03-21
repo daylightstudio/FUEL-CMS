@@ -940,12 +940,14 @@ fuel.fields.block = function(context, options){
 
 		// for pages inline editing
 		var module = $('#__fuel_module__');
+		var context = $(this).attr("name");
+
 		if (module.length && module.val() == 'pagevariables'){
 			var id = $('#page_id').val();
-			var context = $(this).attr("name").replace(/^value/, $('#name').attr("value")) ;
+			var name = $(this).attr("name").replace(/^value/, $('#name').attr("value"));
 		} else {
 			var id = $('#id').val();
-			var context = $(this).attr("name");
+			var name = '';
 		}
 
 		if (url){
@@ -959,7 +961,7 @@ fuel.fields.block = function(context, options){
 		if (contextArr.length > 1){
 			context = contextArr.pop();
 		}
-		url += '?context=' + context;
+		url += '?context=' + context + '&name=' + name;
 
 		// show loader
 		$(this).parent().find('.loader').show();

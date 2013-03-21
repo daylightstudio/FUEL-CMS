@@ -153,7 +153,7 @@ class Blocks extends Module {
 	}
 
 
-	function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL)
+	function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
 	{
 
 		// check to make sure there is no conflict between page columns and layout vars
@@ -168,6 +168,17 @@ class Blocks extends Module {
 		{
 			$_context = $this->input->get('context', TRUE);
 		}
+
+		if (empty($_name))
+		{
+			$_name = $this->input->get('name', TRUE);
+		}
+
+		if (empty($_var_name))
+		{
+			$_var_name = $_context;
+		}
+
 		if (!empty($_context))
 		{
 			$layout->set_context($_context);
@@ -199,15 +210,15 @@ class Blocks extends Module {
 			}
 			// extract variables
 			extract($page_vars);
-			$_context_var = str_replace(array('[', ']'), array('["', '"]'), $_context);
-			if (!empty($_context_var))
+			$_name_var = str_replace(array('[', ']'), array('["', '"]'), $_name);
+			if (!empty($_name_var))
 			{
-				$_context_var_eval = '@$_context = (isset($'.$_context_var.')) ? $'.$_context_var.' : "";';
-				eval($_context_var_eval);
+				$_name_var_eval = '@$_vars = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
+				eval($_name_var_eval);
 			}
 			if (isset($_context))
 			{
-				$block_vars = $_context;
+				$block_vars = $_vars;
 				$this->form_builder->set_field_values($block_vars);
 			}
 
