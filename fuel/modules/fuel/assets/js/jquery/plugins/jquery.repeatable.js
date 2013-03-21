@@ -53,12 +53,10 @@ dave@thedaylightstudio.com
 				}
 			}
 			
-			//$('label,.field_depth_' + depth, elem).each(function(j){
-			$(elem).find('label,input,textarea,select').not('.field_depth_1').each(function(j){
+			$('label,.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name');
-
 				if (newName && newName.length){
-					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\]([\[\]-_a-zA-Z0-9]+)$/, '$1[' + i + ']$2');
+					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$/, '$1[' + i + ']$2');
 
 					// required for jquery 
 					newName = newName.replace('[', '\[');
@@ -86,10 +84,9 @@ dave@thedaylightstudio.com
 			if (depth == 0 && $childTemplates.length){
 				var $childRepeatables = $(elem).find(options.repeatableSelector);
 				$childRepeatables.each(function(i){
-					//console.log(i)
+
 					$(this).find('input,textarea,select').each(function(j){
 						var newName = $(this).attr('name')
-
 						if (newName && newName.length && parentIndex != null){
 							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[[-_a-zA-Z0-9]+\])/g, '$1' + parentIndex + '$2');
 							
@@ -101,6 +98,7 @@ dave@thedaylightstudio.com
 
 						var newId = $(this).attr('id')
 						if (newId && newId.length && parentIndex != null){
+							//newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_[-_a-zA-Z0-9]+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
 							newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_[-_a-zA-Z0-9]+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
 							$(this).attr('id', newId);
 						}
@@ -197,66 +195,64 @@ dave@thedaylightstudio.com
 				$(this).data('clone', $clone);
 			});
 			
-			$('.' + options.addButtonClass).live('click', function(e){
-
-				var $prev = $(this).prev();
-				var max = ($prev.attr('data-max')) ? parseInt($prev.attr('data-max')) : null;
-				var min = ($prev.attr('data-min')) ? parseInt($prev.attr('data-min')) : null;
-				var dblclick = ($prev.attr('data-dblclick')) ? $prev.attr('data-dblclick') : null;
-
-				if (!$(e.currentTarget).data('clone')){
-					var $clone = cloneRepeatableNode($prev);
-					$(e.currentTarget).data('clone', $clone);
-				} else {
-					var $clone = $(e.currentTarget).data('clone');
-				}
-				
-				var $this = $(this).prev();
-				var $clonecopy = $clone.clone(false);
-
-				// add the noclone class so that it gets removed if nested
-				$clonecopy.addClass('noclone');
-				
-				
-				$clonecopy.find(options.contentSelector + ':first').show();
-				if (dblclick == 'accordian'){
-					$prev.find(options.contentSelector).hide();
-				}
-				
-				createCollapsingContent($clonecopy);
-				
-				var $children = $this.children(options.repeatableSelector);
-
-				if (max && $children.length >= max){
-					return false;
-				}
-
-				var index = $children.length;
-				parseTemplate($clonecopy, index);
-
-				createRemoveButton($clonecopy);
-				$this.append($clonecopy);
-
-				// remove values from any form fields
-				$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"]').val('');
-				$clonecopy.find('.noclone').remove();
-				
-				$this.trigger({type: 'cloned', clonedNode: $clonecopy});
-				
-				reOrder($this);
-
-				if (max && $children.length != 0 && $children.length >= (max -1)){
-					$(this).hide();
-				}
-				checkMin($prev, min);
-				
-				e.stopImmediatePropagation();
-				return false;
-			});
-			
 		}
 		
-		
+		$('.' + options.addButtonClass).die().live('click', function(e){
+			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			var $prev = $(this).prev();
+			var max = ($prev.attr('data-max')) ? parseInt($prev.attr('data-max')) : null;
+			var min = ($prev.attr('data-min')) ? parseInt($prev.attr('data-min')) : null;
+			var dblclick = ($prev.attr('data-dblclick')) ? $prev.attr('data-dblclick') : null;
+
+			if (!$(e.currentTarget).data('clone')){
+				var $clone = cloneRepeatableNode($prev);
+				$(e.currentTarget).data('clone', $clone);
+			} else {
+				var $clone = $(e.currentTarget).data('clone');
+			}
+			
+			var $this = $(this).prev();
+			var $clonecopy = $clone.clone(false);
+
+			// add the noclone class so that it gets removed if nested
+			$clonecopy.addClass('noclone');
+			
+			
+			$clonecopy.find(options.contentSelector + ':first').show();
+			if (dblclick == 'accordian'){
+				$prev.find(options.contentSelector).hide();
+			}
+			
+			createCollapsingContent($clonecopy);
+			
+			var $children = $this.children(options.repeatableSelector);
+
+			if (max && $children.length >= max){
+				return false;
+			}
+
+			var index = $children.length;
+			parseTemplate($clonecopy, index);
+
+			createRemoveButton($clonecopy);
+			$this.append($clonecopy);
+
+			// remove values from any form fields
+			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"]').val('');
+			$clonecopy.find('.noclone').remove();
+			
+			reOrder($this);
+
+			if (max && $children.length != 0 && $children.length >= (max -1)){
+				$(this).hide();
+			}
+			checkMin($prev, min);
+			$this.trigger({type: 'cloned', clonedNode: $clonecopy});
+
+		});
+
 		
 		var index = 0;
 		
