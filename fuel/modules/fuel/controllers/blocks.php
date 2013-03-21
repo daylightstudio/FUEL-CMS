@@ -174,9 +174,9 @@ class Blocks extends Module {
 			$_name = $this->input->get('name', TRUE);
 		}
 
-		if (empty($_var_name))
+		if (empty($_name))
 		{
-			$_var_name = $_context;
+			$_name = $_context;
 		}
 
 		if (!empty($_context))
@@ -208,6 +208,7 @@ class Blocks extends Module {
 			{
 				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
 			}
+
 			// extract variables
 			extract($page_vars);
 			$_name_var = str_replace(array('[', ']'), array('["', '"]'), $_name);
@@ -216,7 +217,7 @@ class Blocks extends Module {
 				$_name_var_eval = '@$_name = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
 				eval($_name_var_eval);
 			}
-			if (isset($_context))
+			if (isset($_name))
 			{
 				$block_vars = $_name;
 				$this->form_builder->set_field_values($block_vars);
