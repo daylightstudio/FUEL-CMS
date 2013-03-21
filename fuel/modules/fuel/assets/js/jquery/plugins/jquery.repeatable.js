@@ -9,8 +9,6 @@ dave@thedaylightstudio.com
 ;(function($){
 	jQuery.fn.repeatable = function(o) {
 		
-		var _clones = {};
-		
 		var options = $.extend({
 			addButtonText : 'Add Another',
 			addButtonClass : 'add_another',
@@ -249,7 +247,7 @@ dave@thedaylightstudio.com
 				$(this).hide();
 			}
 			checkMin($prev, min);
-			$this.trigger({type: 'cloned', clonedNode: $clonecopy});
+			$(document).trigger({type: 'cloned', clonedNode: $clonecopy});
 
 		});
 
@@ -260,11 +258,8 @@ dave@thedaylightstudio.com
 			var $this = $(this);
 			
 			// simply return if it's already been instantiated
-			if ($this.hasClass('__applied__')) return this;
+			//if ($this.hasClass('__applied__')) return this;
 			
-			// set this class so we can detect whether it's been cloned yet or not
-			$this.addClass('__applied__');
-
 			// parse the template
 			var $repeatables = $this.children(options.repeatableSelector);
 			$repeatables.each(function(i){
@@ -299,7 +294,7 @@ dave@thedaylightstudio.com
 				}
 			}
 			
-			if ($parent.find(options.addButtonClass).length == 0){
+			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}
 			// add sorting
@@ -317,7 +312,10 @@ dave@thedaylightstudio.com
 				});
 			}
 			
-			createAddButton($this);
+			if (!$this.hasClass('__applied__')){
+				createAddButton($this);	
+			}
+			
 
 			if ($this.attr('data-max')) checkMax($this, options.max);
 			if ($this.attr('data-min')) checkMin($this, options.min);
@@ -325,6 +323,11 @@ dave@thedaylightstudio.com
 			createCollapsingContent($this);
 			
 			index++;
+
+			// set this class so we can detect whether it's been cloned yet or not
+			$this.addClass('__applied__');
+
+
 			return this;
 		});
 	};

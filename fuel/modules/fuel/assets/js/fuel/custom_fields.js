@@ -95,26 +95,28 @@ fuel.fields.wysiwyg_field = function(context){
 		var ckId = $(elem).attr('id');
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 		
+		// used in cases where repeatable fields cause issues
+		if ($(elem).hasClass('ckeditor_applied')) {
+			return;
+		}
+		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
 			//CKEDITOR.instances[ckId].destroy();
 		}
-		// used in cases where repeatable fields cause issues
-		if ($(elem).hasClass('ckeditor_applied')) {
-			return;
-		}
-
 		var config = jqx_config.ckeditorConfig;
 
 		// add custom configs
 		config = $.extend(config, $(elem).data());
 		var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
 
+		
 		CKEDITOR.replace(ckId, config);
 
 		// add this so that we can set that the page has changed
 		CKEDITOR.instances[ckId].on('instanceReady', function(e){
+
 			editor = e.editor;
 			this.document.on('keyup', function(e){
 				editor.updateElement();
@@ -264,9 +266,6 @@ fuel.fields.wysiwyg_field = function(context){
 			})
 		}
 
-		// add class so we can prevent dupes
-		$(elem).addClass('ckeditor_applied');
-
 	}
 	
 	var unTranslateImgPath = function(txt){
@@ -293,6 +292,7 @@ fuel.fields.wysiwyg_field = function(context){
 	}	
 	
 	var createPreview = function(id){
+
 		var $textarea = $('#' + id);
 		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
 	
@@ -343,7 +343,7 @@ fuel.fields.wysiwyg_field = function(context){
 		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
-			//createCKEditor(this);
+			// createCKEditor(this);
 			setTimeout(function(){
 				createCKEditor(_this);
 			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
@@ -835,15 +835,21 @@ fuel.fields.template_field = function(context, options){
 	$(document).off('sortStopped').on('sortStopped', function(){
 		sortStopped();
 	})
-	
+
 	// Remove clone event	
-	$(context).off('cloned', '.repeatable_container');
+	$(document).off('cloned');
+
 
 	// Add another event handler	
-	$(context).on('cloned', '.repeatable_container', function(e){
-	
-		/*TODO: FIX BUG WITH CLONING A NEW ITEM AND THEN SORTING WITHOUT SAVING WITH CKEDITOR */
+	$(document).on('cloned', function(e){
+		
 		$('#form').formBuilder().initialize(e.clonedNode);
+
+		// to help with CKEditor issues... UGH!!!
+		setTimeout(function(){
+			sortStarted();
+			sortStopped();
+		}, 300)
 	})
 
 
