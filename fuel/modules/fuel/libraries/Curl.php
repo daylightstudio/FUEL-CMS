@@ -269,6 +269,13 @@ class Curl {
 		{
 			$key = 0;
 		}
+
+		if ($clear)
+		{
+			$this->_error = array();
+			$this->_info = array();
+		}
+
 		$this->_output = curl_exec($this->_sessions[$key]);
 		$curl_error = curl_error($this->_sessions[$key]);
 		if (!empty($curl_error))
@@ -631,11 +638,16 @@ class Curl {
 	 * Returns TRUE if there are errors detected and FALSE if not
 	 *
 	 * @access	public
+	 * @param	string	An index value of an error message (optional)
 	 * @return	boolean
 	 */	
-	function has_error()
+	function has_error($key = FALSE)
 	{
-		return !empty($this->_error);
+		if ($key === FALSE)
+		{
+			return !empty($this->_error);
+		}
+		return !empty($this->_error[$key]);
 	}
 
 	// --------------------------------------------------------------------
