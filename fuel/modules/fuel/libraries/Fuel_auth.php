@@ -333,11 +333,20 @@ class Fuel_auth extends Fuel_base_library {
 		{
 			if (is_array($permission))
 			{
+				$foreign_module = NULL;
+				if (($permission[0] != $this->CI->module) AND in_array($permission[0], array_keys($this->CI->fuel->modules->get()))) {
+					$foreign_module = $permission[0];
+				}
 				foreach($permission as $key => $val)
 				{
 					if (is_int($key) && !empty($this->CI->module))
 					{
-						if ($val != $this->CI->module)
+						if ($foreign_module)
+						{
+							// set the correct permission for foreign modules
+							$permission[$val] = ($foreign_module == $val) ? $val : $foreign_module.'/'.$val;
+						}
+						else if ($val != $this->CI->module)
 						{
 							$permission[$val] = $this->CI->module.'/'.$val;
 						}
