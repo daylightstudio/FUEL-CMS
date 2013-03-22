@@ -1711,6 +1711,10 @@ Class Form_builder {
 		{
 			$attrs['checked'] = 'checked';
 		}
+		if (isset($params['value']) AND $params['value'] == '')
+		{
+			$params['value'] = 1;
+		}
 		$str .= $this->form->checkbox($params['name'], $params['value'], $attrs);
 		return $str;
 	}
