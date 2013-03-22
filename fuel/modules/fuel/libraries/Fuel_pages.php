@@ -300,75 +300,6 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	boolean	Determines whether to sanitize the page by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
-	function import_old($page, $sanitize = TRUE)
-	{
-		$this->CI->load->helper('file');
-
-		if (!isset($this->CI->fuel_pages_model))
-		{
-			$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
-		}
-		$model =& $this->CI->fuel_pages_model;
-
-		if (!is_numeric($page))
-		{
-			$page_data = $model->find_by_location($page, FALSE);
-		}
-		else
-		{
-			$page_data = $model->find_by_key($page, 'array');
-		}
-		
-		$view_twin = APPPATH.'views/'.$page_data['location'].EXT;
-
-		$pagevars = array();
-		if (file_exists($view_twin))
-		{
-			// must have content in order to not return error
-			$output = file_get_contents($view_twin);
-
-			$pagevars['layout'] = $page_data['layout'];
-			$layout = $this->fuel->layouts->get($pagevars['layout']);
-
-			if (isset($layout) AND $layout->import_field())
-			{
-				$import_field = $layout->import_field();
-			}
-			else
-			{
-				$import_field = 'body';
-			}
-
-			// parse out fuel_set_var
-
-			// for arrays... since I couldn't get it under one regex... not perfect but works OK
-			$fuel_set_var_arr_regex = '#(?<!//)fuel_set_var\(([\'|"])(.+)\\1,\s*([^\)]+\s*\))\s*\)\s*;?#Um';
-			$pagevars = $this->_import_fuel_set_var_callback($fuel_set_var_arr_regex, $output, $sanitize, $pagevars);
-			$output = preg_replace($fuel_set_var_arr_regex, '', $output);
-	
-			// for strings
-			$fuel_set_var_regex = '#(?<!//)fuel_set_var\(([\'|"])(.+)\\1,\s*([^\)]+)\s*\)\s*;?#Um';
-			$pagevars = $this->_import_fuel_set_var_callback($fuel_set_var_regex, $output, $sanitize, $pagevars);
-			$output = preg_replace($fuel_set_var_regex, '', $output);
-
-			// cleanup empty tags
-			$output = preg_replace('#<\?php\s*\?>#Ums', '', $output);
-			$pagevars[$import_field] = $output;
-
-		}
-		return $pagevars;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Imports a block view file into the database
-	 *
-	 * @access	public
-	 * @param	string	The name of the page to import to the CMS
-	 * @param	boolean	Determines whether to sanitize the page by applying the php to template syntax function before uploading
-	 * @return	string
-	 */
 	function import($page, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
@@ -423,7 +354,6 @@ class Fuel_pages extends Fuel_base_library {
 
 			// cleanup empty tags
 			$output = preg_replace('#<\?php\s*\?>#Ums', '', $output);
-			$pagevars[$import_field] = $output;
 
 
 			// now get the variables loaded into the page by comparing the FUEL vars after a page is rendered
@@ -441,6 +371,8 @@ class Fuel_pages extends Fuel_base_library {
 					}
 				}
 			}
+			$pagevars[$import_field] = $output;
+
 		}
 		
 		return $pagevars;
