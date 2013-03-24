@@ -729,13 +729,27 @@ class Module extends Fuel_base_controller {
 		$this->create($field);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Duplicates a record. Similar to edit but without the record ID attached.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	function duplicate()
+	{
+		$_POST[$this->model->key_field()] = 'dup';
+		$this->create();
+	}
+
 	protected function _process_create()
 	{
 		// reset dup id
 		if ($_POST[$this->model->key_field()] == 'dup')
 		{
 			$_POST[$this->model->key_field()] = '';
-			
+
 			// alter duplicate information if there is a hook
 			$_POST = $this->model->on_duplicate($_POST);
 
@@ -1202,7 +1216,7 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->set_validator($this->model->get_validation());
 
 			// add hidden field with the module name for convenience
-			$common_fields = $this->_common_fields();
+			$common_fields = $this->_common_fields($field_values);
 			$fields = array_merge($fields, $common_fields);
 
 			$fields['__fuel_inline_action__'] = array('type' => 'hidden');
@@ -1216,6 +1230,7 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->submit_value = lang('btn_save');
 			$this->form_builder->question_keys = array();
 			$this->form_builder->use_form_tag = FALSE;
+			$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->display_errors = FALSE;
 			$this->form_builder->set_field_values($field_values);
@@ -1890,7 +1905,7 @@ class Module extends Fuel_base_controller {
 		return in_array($action, $this->item_actions);
 	}
 	
-	protected function _common_fields()
+	protected function _common_fields($values)
 	{
 		$fields['__fuel_module__'] = array('type' => 'hidden');
 		$fields['__fuel_module__']['value'] = $this->module;
@@ -1899,6 +1914,10 @@ class Module extends Fuel_base_controller {
 		$fields['__fuel_module_uri__'] = array('type' => 'hidden');
 		$fields['__fuel_module_uri__']['value'] = $this->module_uri;
 		$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+
+		$fields['__fuel_id__'] = array('type' => 'hidden');
+		$fields['__fuel_id__']['value'] = (!empty($values[$this->model->key_field()])) ? $values[$this->model->key_field()] : '';
+		$fields['__fuel_id__']['class'] = '__fuel_id__';
 		return $fields;
 	}
 	

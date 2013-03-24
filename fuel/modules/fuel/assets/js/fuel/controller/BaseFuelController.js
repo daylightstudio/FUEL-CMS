@@ -351,8 +351,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$('.duplicate_action').click(function(e){
-			$('#id').val('dup');
-			$('#form').attr('action', _this.modulePath + '/create').submit();
+			$('#form').attr('action', _this.modulePath + '/duplicate').submit();
 			return false;
 		});
 		

@@ -946,7 +946,7 @@ fuel.fields.block = function(context, options){
 			var id = $('#page_id').val();
 			var name = $(this).attr("name").replace(/^value/, $('#name').attr("value"));
 		} else {
-			var id = $('#id').val();
+			var id = $('#__fuel_id__').val();
 			var name = '';
 		}
 

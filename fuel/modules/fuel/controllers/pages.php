@@ -40,7 +40,7 @@ class Pages extends Module {
 			if ($_POST['id'] == 'dup')
 			{
 				$_POST['id'] = '';
-				$_POST['location'] = '';
+				$_POST['location'] = $_POST['location'].'_copy';
 			}
 			else
 			{
@@ -183,7 +183,7 @@ class Pages extends Module {
 		
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields($saved);
-		$common_fields = $this->_common_fields();
+		$common_fields = $this->_common_fields($saved);
 		$fields = array_merge($fields, $common_fields);
 
 		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
@@ -364,6 +364,8 @@ class Pages extends Module {
 		$vars['data'] = $saved;
 
 		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
+		$action_uri = $vars['action'].'/'.$id.'/';
+		$vars['form_action'] = ($this->fuel->admin->is_inline()) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
 		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
 		
 		$vars['publish'] = (!empty($saved['published']) && is_true_val($saved['published'])) ? 'Unpublish' : 'Publish';
