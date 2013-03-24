@@ -66,7 +66,7 @@ class News_item_model extends Base_module_record {
 	function get_url()
 	{
 		if (!empty($this->link)) return prep_url($this->link);
-		return site_url('company/'.$this->slug);
+		return site_url('news/'.$this->slug);
 	}
 	
 	function get_excerpt_formatted($char_limit = NULL, $readmore = '')
