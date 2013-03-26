@@ -537,7 +537,7 @@ Class Form_builder {
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
-				$str .= $this->create_label($val, FALSE);
+				$str .= $this->create_label($val, TRUE);
 				$str .= "</span>";
 				$str .= "<span class=\"field\">";
 				$str .= $val['custom'];
@@ -563,7 +563,7 @@ Class Form_builder {
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
-				$str .= $this->create_label($val, FALSE);
+				$str .= $this->create_label($val, TRUE);
 				$str .= "</span>";
 				$str .= "<span class=\"field\">";
 				$str .= $this->create_field($val, FALSE);
@@ -2035,8 +2035,8 @@ Class Form_builder {
 	/**
 	 * Creates the date input for the form
 	 *
-	 * Adds the datepicker and fillin classes so that you can use jquery to 
-	 * add the datepicker and fillin jquery plugins
+	 * Adds the datepicker so that you can use jquery to 
+	 * add the datepicker jquery plugin
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
@@ -2114,8 +2114,6 @@ Class Form_builder {
 	/**
 	 * Creates the time input for the form
 	 *
-	 * Adds the fillin class so that you can use fillin jquery plugins
-	 * 
 	 * @access	public
 	 * @param	array fields parameters
 	 * @return	string
