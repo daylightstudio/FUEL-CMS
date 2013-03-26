@@ -138,13 +138,13 @@ class Fuel_tags_model extends Base_module_model {
 		// needed to prevent ambiguity
 		if (strpos($key, '.') === FALSE)
 		{
-			$key = $this->_tables['tags'].'.'.$key;
+			$key = $this->_tables['fuel_tags'].'.'.$key;
 		}
 
 		// needed to prevent ambiguity
 		if (strpos($val, '.') === FALSE)
 		{
-			$val = $this->_tables['tags'].'.'.$val;
+			$val = $this->_tables['fuel_tags'].'.'.$val;
 		}
 	
 		$options = parent::options_list($key, $val, $where, $order);
