@@ -482,7 +482,13 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function is_fuelified()
 	{
-		return (get_cookie($this->get_fuel_trigger_cookie_name()));
+		// cache it in a static variable so we don't make multiple cookie requests
+		static $is_fuelified;
+		if (is_null($is_fuelified))
+		{
+			$is_fuelified = get_cookie($this->get_fuel_trigger_cookie_name());
+		}
+		return $is_fuelified;
 	}
 	
 
@@ -496,21 +502,26 @@ class Fuel_auth extends Fuel_base_library {
 	 */	
 	function user_lang()
 	{
-		$default_lang = $this->CI->config->item('language');
-		$cookie_val = get_cookie($this->get_fuel_trigger_cookie_name());
-		if (is_string($cookie_val))
+		static $user_lang;
+		if (is_null($user_lang))
 		{
-			$cookie_val = unserialize($cookie_val);
-			if (empty($cookie_val['language']) OR !is_string($cookie_val['language']))
+			$default_lang = $this->CI->config->item('language');
+			$cookie_val = get_cookie($this->get_fuel_trigger_cookie_name());
+			if (is_string($cookie_val))
 			{
-				$cookie_val['language'] = $default_lang;
+				$cookie_val = unserialize($cookie_val);
+				if (empty($cookie_val['language']) OR !is_string($cookie_val['language']))
+				{
+					$cookie_val['language'] = $default_lang;
+				}
+				$user_lang = $cookie_val['language'];
 			}
-			return $cookie_val['language'];
+			else
+			{
+				$user_lang = $default_lang;
+			}
 		}
-		else
-		{
-			return $default_lang;
-		}
+		return $user_lang;
 	}
 
 	// --------------------------------------------------------------------
