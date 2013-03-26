@@ -182,7 +182,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
 		
-		$fields['value']['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
+		//$fields['value']['value'] = (!empty($values['value'])) ? $this->cast($values['value'], $values['type']) : '';
 		if (isset($values['page_id']))
 		{
 			$page = $CI->fuel->pages->find($values['page_id']);
@@ -197,6 +197,8 @@ class Fuel_pagevariables_model extends Base_module_model {
 				}
 			}
 		}
+		// not needed due to on_before_clean
+		unset($fields['type']);
 		return $fields;
 	}
 	
@@ -204,19 +206,18 @@ class Fuel_pagevariables_model extends Base_module_model {
 	{
 		if (isset($values['value']))
 		{
-			if (is_array($values['value']))
-			{
-				// NO LONGER NEEDED BECAUSE OF SERIALIZED FIELD SETTING ON MODEL
-				//$values['value'] = serialize($values['value']);
-				//$values['value'] = json_encode($values['value']);
-				$values['type'] = 'array';
-			}
-			else if (is_serialized_str($values['value']))
-			{
-				$values['type'] = 'array';
-			}
+			$values['type'] = $this->determine_type($values['value']);
 		}
 		return $values;
+	}
+
+	function determine_type($value)
+	{
+		if (is_array($value) OR is_serialized_str($value))
+		{
+			return 'array';
+		}
+		return 'string';
 	}
 
 	function _common_query()
