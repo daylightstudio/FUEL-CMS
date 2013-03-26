@@ -24,9 +24,7 @@
 <div class="__fuel__" id="__fuel_edit_bar__">
 	<?=$this->form->open(array('action' => fuel_url('pages/ajax_page_edit/'), 'method' => 'post', 'id' => '__fuel_edit_bar_form__'))?>
 	<div class="buttonbar buttonbar_notop">
-		<?php 
 
-		 ?>
 		<ul>
 			<?php if (!isset($page['id']) AND $is_fuelified) : ?>
 				<li class="<?=(isset($page['published']) && !is_true_val($page['published']))? 'exposed' : 'start round exposed'; ?>"><a href="#" id="__fuel_page_toolbar_toggle__" class="ico ico_fuel" title="<?=lang('inline_edit_toggle_toolbar')?>"></a></li>
@@ -76,7 +74,7 @@
 				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
 				<?php endif; ?>
 
-				
+
 			<?php endif; ?>
 		</ul>
 		<div class="clear"></div>
