@@ -93,28 +93,14 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 
 		if (autoResize){
 			setTimeout(function(){
-					// if ($('#login', contentDoc).length){
-					// 	var docHeight = $('#login', contentDoc).outerHeight(); // bottom margin is added... not sure from what though
-					// } else {
-					// 	var docHeight = fuel.calcHeight('#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions', contentDoc) + 30;
-					// }
 					docHeight = fuel.calcHeight(contentDoc);
-				//	docHeight = iframe.contentDocument.body.scrollHeight;
-					//console.log(iframe.contentWindow.parent.document.title + ' ' + $(iframe.contentWindow.parent.document).height() )
 					if (docHeight > 480) {
 						docHeight = 480;
 					} else {
 						docHeight += 30;
 					}
-					//console.log(iframe.contentWindow.document.title)
-
-					//console.log($(iframe.contentWindow.parent.parent).find('iframe'))
-					// set the height of the parent iframe if it needs to be bigger
-					//if ($(iframe.contentWindow.parent.document).height() < docHeight){
-						$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
-				//	}
-					fuel.cascadeIframeWindowSize(iframe.contentWindow, docHeight);
-					//docHeight = docHeight - (fuel.windowLevel() * 50);
+					$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
+					fuel.cascadeIframeWindowSize(docHeight);
 					$(iframe).height(docHeight);
 			}, 250);
 		}
@@ -172,11 +158,12 @@ fuel.calcHeight = function(context){
 }
 
 
-fuel.cascadeIframeWindowSize = function(win, height){
+fuel.cascadeIframeWindowSize = function(height){
 	var level = 0;
+	if (height) height = height + 100;
 	//var win = window;
 	// console.log(win.document.title)
-	$('.inline_iframe', top.window.document).height(height + 100)
+	$('.inline_iframe', top.window.document).height(height)
 	// do 
 	// {
 	// 	level++;

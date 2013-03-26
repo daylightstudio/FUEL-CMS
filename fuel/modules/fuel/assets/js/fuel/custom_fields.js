@@ -971,6 +971,8 @@ fuel.fields.block = function(context, options){
 			// hide loader
 			$(this).parent().find('.loader').hide();
 			$(this).find('.block_name').val(val);
+			fuel.cascadeIframeWindowSize();
+			
 		});
 
 	})
