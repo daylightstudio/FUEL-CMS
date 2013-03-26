@@ -428,7 +428,7 @@ class Fuel_auth extends Fuel_base_library {
 		$perms_obj = $user->get_permissions(TRUE);
 		if ($perms_obj)
 		{
-			$this->_user_perms = $perms_obj->find_all_array_assoc('name');
+			$this->_user_perms = $perms_obj->find_all_array_assoc('name', array('active' => 'yes'));
 		}
 		
 		if (!empty($this->_user_perms))
