@@ -74,6 +74,7 @@ if (!empty($environments))
 			if (preg_match('#^'.$path.'$#', $_SERVER['HTTP_HOST']))
 			{
 				define('ENVIRONMENT', $env);
+				break 2;
 			}
 		}
 	}

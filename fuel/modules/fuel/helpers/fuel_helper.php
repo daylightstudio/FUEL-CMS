@@ -364,7 +364,7 @@ function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate
 	}
 	
 	if ($edit_module === TRUE) $edit_module = 'pagevariables';
-	if (!empty($edit_module) AND $CI->fuel->pages->mode() != 'views' AND !defined('USE_FUEL_MARKERS') OR (defined('USE_FUEL_MARKERS') AND USE_FUEL_MARKERS))
+	if (!empty($edit_module) AND $CI->fuel->pages->mode() != 'views' AND !defined('FUELIFY') OR (defined('FUELIFY') AND FUELIFY))
 	{
 		$marker = fuel_edit($key, humanize($key), $edit_module);
 	}
@@ -639,8 +639,7 @@ function fuel_uri_string($from = 0, $to = NULL, $rerouted = FALSE)
 function is_fuelified()
 {
 	$CI =& get_instance();
-	$CI->load->helper('cookie');
-	return (get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name()));
+	return $CI->fuel->auth->is_fuelified();
 }
 
 // --------------------------------------------------------------------
@@ -667,15 +666,7 @@ function in_fuel_admin()
 function fuel_user_lang()
 {
 	$CI =& get_instance();
-	$CI->load->helper('cookie');
-	static $user_lang;
-	if (empty($user_lang))
-	{
-		$cookie_val = get_cookie($CI->fuel->auth->get_fuel_trigger_cookie_name());
-		$cookie_val = unserialize($cookie_val);
-		$user_lang = (!empty($cookie_val['language'])) ? $cookie_val['language'] : $CI->config->item('language');
-	}
-	return $user_lang;
+	return $CI->fuel->auth->user_lang();
 }
 
 // --------------------------------------------------------------------
