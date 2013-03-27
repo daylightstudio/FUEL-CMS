@@ -286,5 +286,17 @@ function is_dev_mode()
 	return (ENVIRONMENT != 'production');
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Returns whether the current environment is equal to the passed environment
+ *
+ * @return 	boolean
+ */
+function is_environment($environment)
+{
+	return (strtolower(ENVIRONMENT) == strtolower($environment));
+}
+
 /* End of file utility_helper.php */
 /* Location: ./modules/fuel/helpers/utility_helper.php */
