@@ -490,9 +490,4 @@ class Generate extends Fuel_base_controller {
 		return $vars;
 	}
 	
-	protected function _create_permissions($module)
-	{
-		$this->fuel->permissions();
-	}
-	
 }
