@@ -23,12 +23,13 @@ class Migrate extends Fuel_base_controller {
 			$this->_validate_user('migrate');
 		}
 
-		$this->load->library('migration');
 	}
 
 
-	function latest()
+	function latest($module = NULL)
 	{
+		$this->_init_migrate($module);
+
 		$version = $this->migration->latest();
 		if ( ! $version)
 		{
@@ -37,8 +38,10 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	function current()
+	function current($module = NULL)
 	{
+		$this->_init_migrate($module);
+
 		$version = $this->migration->current();
 		if ( ! $version)
 		{
@@ -47,8 +50,10 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	function version($version = 1)
+	function version($version = 1, $module = NULL)
 	{
+		$this->_init_migrate($module);
+
 		// must be in dev mode change the version to something uther then the latest or current
 		if (!is_dev_mode())
 		{
@@ -61,6 +66,13 @@ class Migrate extends Fuel_base_controller {
 			$this->_show_error();
 		}
 		$this->_success($version);
+	}
+
+	protected function _init_migrate($module)
+	{
+		$config['migration_enabled'] = TRUE;
+		$config['module'] = $module;
+		$this->load->library('migration', $config);
 	}
 
 	protected function _success($version)

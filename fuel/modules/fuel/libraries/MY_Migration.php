@@ -63,10 +63,22 @@ class MY_Migration extends CI_Migration{
 		}
 
 		// If not set, set it
-		$this->_migration_path == '' AND $this->_migration_path = APPPATH . 'migrations/';
+		if (empty($this->_migration_path))
+		{
+			// take into account the module that's set
+			if (!empty($this->_module))
+			{
+
+				$this->_migration_path = MODULES_PATH . $this->_module.'/migrations/';
+			}
+			else
+			{
+				$this->_migration_path = APPPATH . 'migrations/';
+			}
+		}
 
 		// Add trailing slash if not set
-		$this->_migration_path = rtrim($this->_migration_path, '/').'/';
+		$this->set_migration_path($this->_migration_path);
 
 		// Load migration language
 		$this->lang->load('migration');
@@ -91,6 +103,61 @@ class MY_Migration extends CI_Migration{
 	// --------------------------------------------------------------------
 
 	/**
+	 * Sets the migration path
+	 *
+	 * @access	public
+	 * @param  string	The path to the migration folder
+	 * @return	void
+	 */
+	function set_migration_path($path)
+	{
+		// Add trailing slash if not set
+		$this->_migration_path = rtrim($path, '/').'/';
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the migration path
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function migration_path()
+	{
+		return $this->_migration_path;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets the module
+	 *
+	 * @access	public
+	 * @param  string	The name of the module
+	 * @return	void
+	 */
+	function set_module($module)
+	{
+		$this->_module = $module;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the module
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	function module()
+	{
+		return $this->_module;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Stores the current schema version
 	 *
 	 * @access	protected
@@ -103,6 +170,29 @@ class MY_Migration extends CI_Migration{
 			'version' => $migrations,
 			'module' => $this->_module
 		));
+	}
+
+
+	// THIS IS A FIX FOR A BUG IN CI --------------------------------------------------------------------
+
+	/**
+	 * Set's the schema to the latest migration
+	 *
+	 * @return	mixed	true if already latest, false if failed, int if upgraded
+	 */
+	public function latest()
+	{
+		if ( ! $migrations = $this->find_migrations())
+		{
+			$this->_error_string = $this->lang->line('migration_none_found');
+			return false;
+		}
+
+		$last_migration = basename(end($migrations));
+
+		// Calculate the last migration step from existing migration
+		// filenames and procceed to the standard version migration
+		return $this->version((int) substr($last_migration, 0, 3));
 	}
 
 }
