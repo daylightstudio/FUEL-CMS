@@ -343,7 +343,7 @@ $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 |--------------------------------------------------------------------------
 */
 $lang['permissions_instructions'] = 'Here you can manage the permissions for FUEL modules and later assign them to users.';
-
+$lang['form_label_other_perms'] = 'Generate related simple<br /> module permissions';
 
 /*
 |--------------------------------------------------------------------------
