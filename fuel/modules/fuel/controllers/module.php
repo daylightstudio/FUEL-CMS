@@ -297,6 +297,8 @@ class Module extends Fuel_base_controller {
 		
 		$vars['table'] = '';
 		
+		
+
 		// reload table
 		if (is_ajax())
 		{
@@ -310,18 +312,24 @@ class Module extends Fuel_base_controller {
 				$items = $this->model->list_items($params['limit'], $params['offset'], $params['col'], $params['order']);
 				$this->data_table->set_sorting($params['col'], $params['order']);
 			}
+
+			$has_edit_permission = $this->fuel->auth->has_permission($this->permission, "edit") ? '1' : '0';
+			$has_delete_permission = $this->fuel->auth->has_permission($this->permission, "delete") ? '1' : '0';
 			
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$edit_func = '
 			$CI =& get_instance();
-			$link = "";
-			if ($CI->fuel->auth->has_permission($CI->permission, "edit") AND isset($cols[$CI->model->key_field()]))
+			$link = "";';
+			if ($has_edit_permission)
 			{
-				$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
-				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
-				$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
+				{
+					$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+					$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				}';	
 			}
-			return $link;';
+			$edit_func .= 'return $link;';
 			
 			$edit_func = create_function('$cols', $edit_func);
 			
@@ -329,14 +337,18 @@ class Module extends Fuel_base_controller {
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$delete_func = '
 			$CI =& get_instance();
-			$link = "";
-			if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+			$link = "";';
+			if ($has_delete_permission)
 			{
-				$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
-				$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
-				$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				$delete_func .= 'if (isset($cols[$CI->model->key_field()]))
+				{
+					$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
+					$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				}';				
 			}
-			return $link;';
+
+			$delete_func .= 'return $link;';
 			
 			$delete_func = create_function('$cols', $delete_func);
 			
@@ -416,12 +428,45 @@ class Module extends Fuel_base_controller {
 			$boolean_fields = $this->model->boolean_fields;
 			if (!in_array('published', $boolean_fields)) $boolean_fields[] = 'published';
 			if (!in_array('active', $boolean_fields)) $boolean_fields[] = 'active';
+
+			$has_publish_permission = ($this->fuel->auth->has_permission($this->permission, 'publish')) ? '1' : '0';
+			$has_edit_permission = $this->fuel->auth->has_permission($this->permission, 'edit') ? '1' : '0';
+
+			$no = lang("form_enum_option_no");
+			$yes = lang("form_enum_option_yes");
+			$col_txt = lang('click_to_toggle');
+			$key_field = $this->model->key_field();
+
+
+			$_publish_toggle_callback = '
+			$can_publish = (($heading == "published" OR $heading == "active") AND '.$has_publish_permission.' OR
+				(($heading != "published" AND $heading != "active") AND '.$has_edit_permission.'));
+
+			$no = "'.$no.'";
+			$yes = "'.$yes.'";
+			$col_txt = "'.$col_txt.'";
+
+			// boolean fields
+			if (!is_true_val($cols[$heading]))
+			{
+				$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
+				$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$no.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
+			}
+			else
+			{
+				$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
+				$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$yes.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
+				
+			}';
+
+			$_publish_toggle_callback = create_function('$cols, $heading', $_publish_toggle_callback);
+
 			foreach($boolean_fields as $bool)
 			{
-				$this->data_table->add_field_formatter($bool, array($this, '_toggle_callback'));
+				$this->data_table->add_field_formatter($bool, $_publish_toggle_callback);
 			}
-			// $this->data_table->add_field_formatter('published', $_publish_toggle_callback);
-			// $this->data_table->add_field_formatter('active', $_publish_toggle_callback);
 			
 			$this->data_table->auto_sort = TRUE;
 			$this->data_table->sort_js_func = 'fuel.sortList';
@@ -1862,32 +1907,6 @@ class Module extends Fuel_base_controller {
 		else
 		{
 			$this->items();
-		}
-	}
-	
-	function _toggle_callback($cols, $heading)
-	{
-		$can_publish = (($heading == 'published' OR $heading == 'active') AND $this->fuel->auth->has_permission($this->permission, 'publish') OR
-			(($heading != 'published' AND $heading != 'active') AND $this->fuel->auth->has_permission($this->permission, 'edit'))
-			);
-
-		$no = lang("form_enum_option_no");
-		$yes = lang("form_enum_option_yes");
-		$col_txt = lang('click_to_toggle');
-
-		// boolean fields
-		if (!is_true_val($cols[$heading]))
-		{
-			$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
-			$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
-		}
-		else
-		{
-			$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
-			$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-			return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$this->model->key_field()].'" data-field="'.$heading.'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
-			
 		}
 	}
 	
