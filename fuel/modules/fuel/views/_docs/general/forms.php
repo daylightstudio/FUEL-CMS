@@ -683,7 +683,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>add_extra</strong>: determines whether to display the "Add" button for repeatable templates</li>
 		<li><strong>depth</strong>: specifies the depth of the template (can only be 2 deep)</li>
 		<li><strong>dblclick</strong>: determines whether a double click is required to open up the set of fields. Options are "accordian" and "toggle"</li>
-		<li><strong>init_display</strong>: determines whether to open just the first repeatable set of fields, none of them, or all of them (default). Options are first, and none or closed (they are the same)</li>
+		<li><strong>init_display</strong>: determines whether to open just the first repeatable set of fields, none of them, or all of them (default). Options are <dfn>false</dfn>, <dfn>first</dfn>, and <dfn>none</dfn> or <dfn>closed</dfn> (they are the same)</li>
 		<li><strong>title_field</strong>: the field to be used {__title__} placeholder </li>
 		<li><strong>parse</strong>: determines whether to parse the view or template file before rendering</li>
 		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
