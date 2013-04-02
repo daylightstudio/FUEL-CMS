@@ -219,8 +219,7 @@ class Base_module_model extends MY_Model {
 	 * Adds multiple filters for searching
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	string
+	 * @param	array
 	 * @return	void
 	 */	
 	function add_filters($filters)
@@ -288,6 +287,9 @@ class Base_module_model extends MY_Model {
 		{
 			if (is_int($key))
 			{
+				if (isset($this->filters[$val])) {
+					continue;
+				}
 				$key = $val;
 				$val = $this->filter_value;
 			}
