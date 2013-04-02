@@ -5,7 +5,7 @@ require_once(FUEL_PATH.'models/base_module_model.php');
 class Fuel_tags_model extends Base_module_model {
 
 	public $filters = array('name', 'slug');
-	public $unique_fields = array('name', 'slug');
+	public $unique_fields = array('slug');
 	public $linked_fields = array('name' => 'slug');
 
 	protected $friendly_name = 'Tags';
