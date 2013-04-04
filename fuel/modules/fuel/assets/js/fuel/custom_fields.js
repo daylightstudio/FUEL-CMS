@@ -433,8 +433,13 @@ fuel.fields.asset_field = function(context, options){
 	var _this = this;
 	$('.asset_select', context).each(function(i){
 		if ($(this).parent().find('.asset_upload_button').length == 0){
-			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
-			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			var assetFolder = $(this).data('folder');
+
+			// legacy code
+			if (!assetFolder) {
+				var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).data('folder').split(' ') : [];
+				var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			}
 			var btnLabel = '';
 			switch(assetFolder.split('/')[0].toLowerCase()){
 				case 'pdf':
@@ -449,14 +454,19 @@ fuel.fields.asset_field = function(context, options){
 				default :
 					btnLabel = fuel.lang('btn_asset');
 			}
-			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 		}
 	});
 
 	$('.asset_select_button', context).click(function(e){
 		activeField = $(e.target).parent().find('input,textarea:first').attr('id');
-		var assetTypeClasses = $(e.target).attr('class').split(' ');
-		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		selectedAssetFolder = $(e.target).data('folder');
+
+		// legacy code
+		if (!selectedAssetFolder){
+			var assetTypeClasses = $(e.target).attr('class').split(' ');
+			selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		}
 		showAssetsSelect();
 		return false;
 	});
@@ -480,8 +490,13 @@ fuel.fields.asset_field = function(context, options){
 	}
 	$('.asset_upload', context).each(function(i){
 		if ($(this).parent().find('.asset_upload_button').length == 0){
-			var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
-			var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			var assetFolder = $(this).data('folder');
+
+			// legacy code
+			if (!assetFolder){
+				var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).attr('class').split(' ') : [];
+				var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
+			}
 			var btnLabel = fuel.lang('btn_upload_asset');
 			$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
 		}
@@ -489,8 +504,13 @@ fuel.fields.asset_field = function(context, options){
 	
 	$('.asset_upload_button', context).click(function(e){
 		activeField = $(e.target).parent().find('input:first').attr('id');
-		var assetTypeClasses = $(e.target).attr('class').split(' ');
-		selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		selectedAssetFolder = $(e.target).data('folder');
+
+		// legacy code
+		if (!selectedAssetFolder){
+			var assetTypeClasses = $(e.target).attr('class').split(' ');
+			selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
+		}
 		var params = $(this).attr('data-params');
 		var url = $(this).attr('href') + '?' + params;
 		showAssetUpload(url);
@@ -529,15 +549,10 @@ fuel.fields.inline_edit_field = function(context){
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
 		var className = ($field.attr('class') != undefined) ? $field.attr('class').split(' ') : [];
-		var module = '';
+		var module = $field.data('module');
 		
 		var isMulti = ($field.attr('multiple')) ? true : false;
 		
-		if (className.length > 1){
-			module = className[className.length -1];
-		} else {
-			module = fieldId.substr(0, fieldId.length - 3) + 's'; // eg id = client_id so module would be clients
-		}
 		var parentModule = fuel.getModuleURI(context);
 		var url = jqx_config.fuelPath + '/' + module + '/inline_';
 		
