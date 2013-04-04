@@ -23,11 +23,10 @@ class Pagevariables extends Module {
 		if (!is_numeric($field))
 		{
 			$language = $this->fuel->language->detect();
-			$var = $this->fuel_pagevariables_model->find_one(array('name' => $field, 'page_id' => $page_id, 'language' => $language));
-			
-			if (isset($var->id))
+			$var = $this->fuel_pagevariables_model->find_one_array(array('name' => $field, 'page_id' => $page_id, 'language' => $language));
+			if (isset($var['id']))
 			{
-				$id = $var->id;
+				$id = $var['id'];
 			}
 		}
 		else
