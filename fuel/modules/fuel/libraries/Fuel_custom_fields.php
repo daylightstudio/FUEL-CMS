@@ -160,6 +160,7 @@ class Fuel_custom_fields {
 		$params['data'] = array(
 			'multiple' => $multiple,
 			'separator' => $separator,
+			'folder' => $params['folder'],
 			);
 		if (!empty($params['value']))
 		{
@@ -385,6 +386,9 @@ class Fuel_custom_fields {
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+				$params['data'] = array(
+					'module' => $uri,
+					);
 			}
 		}
 		
