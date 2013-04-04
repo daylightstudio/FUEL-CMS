@@ -42,6 +42,9 @@ dave@thedaylightstudio.com
 			$('.index' + depthSuffix, elem).html(i);
 			$('.title' + depthSuffix, elem).html(title);
 			
+			// set the field depth class in case it's not already
+			$(elem).find('label,input,textarea,select').addClass('field_depth_0');
+
 			var parseAttribute = function(elem, attr){
 				var newId = $(elem).attr(attr);
 				if (newId && newId.length){
@@ -50,11 +53,22 @@ dave@thedaylightstudio.com
 					$(elem).attr(attr, newId);
 				}
 			}
-			
+
+			// set depth classes if they aren't already
+			var $childRepeatables = $(elem).find(options.repeatableSelector);
+			if (depth == 0 && $childTemplates.length){
+				$childRepeatables.each(function(i){
+					$(this).find('input,textarea,select').each(function(j){
+						$(this).removeClass('field_depth_0');
+						$(this).addClass('field_depth_1');
+					});
+				});
+			}
+
 			$('label,.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name');
 				if (newName && newName.length){
-					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$/, '$1[' + i + ']$2');
+					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\]([-_a-zA-Z0-9\[\]]+)$/, '$1[' + i + ']$2');
 
 					// required for jquery 
 					newName = newName.replace('[', '\[');
@@ -78,15 +92,16 @@ dave@thedaylightstudio.com
 				parentIndex = $parentElem.attr('data-index');
 			}
 
-			// if children, then we need to reorganize them too
+			
+			// if children, then we need to reorganize them too but only touch the first digit since the second digit was already changed
 			if (depth == 0 && $childTemplates.length){
-				var $childRepeatables = $(elem).find(options.repeatableSelector);
 				$childRepeatables.each(function(i){
 
 					$(this).find('input,textarea,select').each(function(j){
 						var newName = $(this).attr('name')
 						if (newName && newName.length && parentIndex != null){
 							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[[-_a-zA-Z0-9]+\])/g, '$1' + parentIndex + '$2');
+							// newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\][-_a-zA-Z0-9\[\]]+)$/, '$1' + parentIndex + '$2');
 							
 							// required for jquery 
 							newName = newName.replace('[', '\[');
@@ -100,10 +115,15 @@ dave@thedaylightstudio.com
 							newId = newId.replace(/([-_a-zA-Z]+)_\d+_([-_a-zA-Z]+_[-_a-zA-Z0-9]+_[-_a-zA-Z])/g, '$1_' + parentIndex + '_$2');
 							$(this).attr('id', newId);
 						}
+
 						
 					})
 				})
 			}
+
+
+
+
 		}
 		
 		var createRemoveButton = function(elem){
