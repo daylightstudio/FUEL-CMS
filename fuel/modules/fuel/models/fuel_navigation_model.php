@@ -254,7 +254,7 @@ class Fuel_navigation_model extends Base_module_model {
 	// validation method
 	function no_location_and_parent_match($parent_id)
 	{
-		$data = $this->find_one_array(array('fuel_navigation.id' => $parent_id));
+		$data = $this->find_one_array(array($this->_tables['fuel_navigation'].'.id' => $parent_id));
 		if (!empty($data))
 		{
 			if ($data['id'] == $data['parent_id']) return FALSE;
