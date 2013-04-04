@@ -650,7 +650,8 @@ class Pages extends Module {
 			$save['location'] = $this->input->post('location');
 			$save['last_modified'] = datetime_now();
 
-			if ($this->model->save($save))
+			$where['id'] = $save['id'];
+			if ($this->model->update($save, $where))
 			{
 				$this->output->set_output('success');
 				return;
