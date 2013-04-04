@@ -63,7 +63,7 @@ class Fuel_hooks
 			$CI->load->library('session');
 			if (!$CI->session->userdata('dev_password'))
 			{
-				redirect('fuel/login/dev');
+				redirect(fuel_uri().'login/dev');
 			}
 		}
 	}
