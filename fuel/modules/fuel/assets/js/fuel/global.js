@@ -94,11 +94,6 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		if (autoResize){
 			setTimeout(function(){
 					docHeight = fuel.calcHeight(contentDoc);
-					if (docHeight > 480) {
-						docHeight = 480;
-					} else {
-						docHeight += 30;
-					}
 					$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
 					fuel.cascadeIframeWindowSize(docHeight);
 					$(iframe).height(docHeight);
@@ -154,16 +149,34 @@ fuel.calcHeight = function(context){
 	$(elems, context).each(function(i){
 		height += $(this).outerHeight();
 	})
+	if (height > 480) {
+		height = 480;
+	} else {
+		height += 30;
+	}
 	return height;
 }
 
+fuel.adjustIframeWindowSize = function(){
+	var iframe = $('.inline_iframe', top.window.document);
+	if (iframe.length){
+		iframe = iframe[0];
+		var contentDoc = iframe.contentDocument;
+		var height = fuel.calcHeight(contentDoc);
+
+		var width = $('#fuel_main_content_inner .form', contentDoc).width() + 50;
+		$(iframe).height(height);
+		$(iframe).width(width);
+	}
+}
 
 fuel.cascadeIframeWindowSize = function(height){
 	var level = 0;
 	if (height) height = height + 100;
 	//var win = window;
 	// console.log(win.document.title)
-	$('.inline_iframe', top.window.document).height(height)
+	$('.inline_iframe', top.window.document).height(height);
+	
 	// do 
 	// {
 	// 	level++;

@@ -941,7 +941,6 @@ fuel.fields.block = function(context, options){
 		// for pages inline editing
 		var module = $('#__fuel_module__');
 		var context = $(this).attr("name");
-
 		if (module.length && module.val() == 'pagevariables'){
 			var id = $('#page_id').val();
 			var name = $(this).attr("name").replace(/^value/, $('#name').attr("value"));
@@ -971,7 +970,7 @@ fuel.fields.block = function(context, options){
 			// hide loader
 			$(this).parent().find('.loader').hide();
 			$(this).find('.block_name').val(val);
-			fuel.cascadeIframeWindowSize();
+			fuel.adjustIframeWindowSize();	
 			
 		});
 
