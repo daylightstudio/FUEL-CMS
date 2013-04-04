@@ -1007,7 +1007,7 @@ class Fuel_block_layout extends Fuel_layout
 
 		// automatically add a field for the block name
 		$fields['block_name'] = array('type' => 'hidden', 'value' => $this->name, 'class' => 'block_name');
-
+		$fb = new Form_builder();
 		if (!empty($this->context))
 		{
 			foreach($fields as $key => $val)
@@ -1015,7 +1015,7 @@ class Fuel_block_layout extends Fuel_layout
 				$fields[$key]['name'] = $this->context.'['.$key.']';
 				if (empty($val['label']))
 				{
-					$fields[$key]['label'] =  ucfirst(str_replace('_', ' ', $key));
+					$fields[$key]['label'] = ($lang = $fb->label_lang($key)) ? $lang : ucfirst(str_replace('_', ' ', $key));
 				}
 			}
 		}
