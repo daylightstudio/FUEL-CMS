@@ -595,8 +595,7 @@ class Form {
 			else
 			{
 				$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
-				//$str = str_replace(array('<', '>', '\'', '"'), array('<', '>', '&#39;', '&quot;'), $str);
-				$str = str_replace(array('<', '>'), array('<', '>'), $str);
+				//$str = str_replace(array(''\'', '"'), array('&#39;', '&quot;'), $str);
 			}
 		}
 		return $str;
