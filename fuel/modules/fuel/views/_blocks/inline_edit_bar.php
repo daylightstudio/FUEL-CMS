@@ -67,12 +67,13 @@
 				
 				<?php endif; ?>
 				
-
+				<?php if (!empty($page['id'])) : ?>
 				<li class="txt"><a href="<?=fuel_url('pages/edit/'.$page['id'].'?lang='.$language)?>" title="<?=lang('inline_edit_back_to_admin')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
-
-				<?php if ($is_fuelified) : ?>
-				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
 				<?php endif; ?>
+				
+				
+				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
+				
 
 
 			<?php endif; ?>
