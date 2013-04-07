@@ -13,7 +13,7 @@ class Careers_model extends Base_module_model {
 
 	function list_items($limit = NULL, $offset = NULL, $col = 'post_date', $order = 'desc')
 	{
-		$this->db->select('id, job_title, DATE_FORMAT(post_date,"%m/%d/%Y") as date_added, published', FALSE);
+		$this->db->select('id, job_title, post_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
