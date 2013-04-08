@@ -548,7 +548,6 @@ fuel.fields.inline_edit_field = function(context){
 		var $field = $(this);
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
-		var className = ($field.attr('class') != undefined) ? $field.attr('class').split(' ') : [];
 		var module = $field.data('module');
 		
 		var isMulti = ($field.attr('multiple')) ? true : false;
