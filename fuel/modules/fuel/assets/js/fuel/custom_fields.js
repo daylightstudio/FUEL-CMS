@@ -970,10 +970,10 @@ fuel.fields.block = function(context, options){
 			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
 		}
 		
-		var contextArr = context.split("--")
-		if (contextArr.length > 1){
-			context = contextArr.pop();
-		}
+		// var contextArr = context.split("--")
+		// if (contextArr.length > 1){
+		// 	context = contextArr.pop();
+		// }
 		url += '?context=' + context + '&name=' + name;
 
 		// show loader

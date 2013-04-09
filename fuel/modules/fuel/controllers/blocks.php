@@ -195,7 +195,7 @@ class Blocks extends Module {
 		$this->form_builder->submit_value = '';
 		$this->form_builder->cancel_value = '';
 		$this->form_builder->use_form_tag = FALSE;
-		$this->form_builder->name_prefix = 'vars';
+		//$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
 		
@@ -211,6 +211,7 @@ class Blocks extends Module {
 
 			// extract variables
 			extract($page_vars);
+			$_name = end(explode('--', $_name));
 			$_name_var = str_replace(array('[', ']'), array('["', '"]'), $_name);
 			if (!empty($_name_var))
 			{
