@@ -130,8 +130,9 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 	<li><strong>css</strong>: CSS to associate with the field</li>
 	<li><strong>represents</strong>: specifies what other types of fields that this field should represent</li>
 	<li><strong>data</strong>: an array of data attribute fields. For example, an array of array('type' => 'my_type', 'title' => 'my_title') would yield
-		field attributes of data-type="my_type" data-title="my_title". This parameter is handy for adding attributes you need to use with your javascript.
+		field attributes of data-type="my_type" data-title="my_title". This parameter is handy for adding attributes you need to use with your javascript
 	</li>
+	<li><strong>row_class</strong>: sets a class on the containing table row or container div (depending on the rendering method)</li>
 </ul>
 
 <h2 id="form_field_types">Form Field Types</h2>
