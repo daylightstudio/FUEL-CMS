@@ -244,9 +244,9 @@ class Pages extends Module {
 		if (!empty($layout))
 		{
 			$fields = $layout->fields();
+			$import_field = $layout->import_field();
 		}
 
-		$import_field = $layout->import_field();
 		if (!empty($import_field))
 		{
 			$this->js_controller_params['import_field'] = $import_field;
