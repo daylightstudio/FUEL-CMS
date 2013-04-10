@@ -71,8 +71,14 @@
 				<li class="txt"><a href="<?=fuel_url('pages/edit/'.$page['id'].'?lang='.$language)?>" title="<?=lang('inline_edit_back_to_admin')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
 				<?php endif; ?>
 				
-				
+				<?php if ($is_fuelified) : ?>
 				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
+				<?php else: 
+				$uri = uri_string();
+				if ($uri == '') $uri = 'home';
+				?>
+				<li class="txt"><a href="<?=fuel_url('login/'.uri_safe_encode($uri))?>" title="<?=lang('inline_edit_login_title')?>"><?=lang('inline_edit_login')?></a></li>
+				<?php endif; ?>
 				
 
 

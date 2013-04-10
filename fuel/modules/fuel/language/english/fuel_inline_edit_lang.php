@@ -16,6 +16,8 @@ $lang['inline_edit_layout'] = 'Layout';
 $lang['inline_edit_back_to_admin'] = 'Back to Admin';
 $lang['inline_edit_logout'] = 'Logout';
 $lang['inline_edit_logout_title'] = 'Logout of FUEL admin';
+$lang['inline_edit_login'] = 'Login';
+$lang['inline_edit_login_title'] = 'Login to FUEL admin';
 $lang['inline_edit_page_not_published'] = 'The page is not published';
 
 /* End of file fuel_inline_edit_lang.php */
