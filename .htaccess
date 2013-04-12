@@ -1,4 +1,5 @@
 Options +FollowSymLinks
+Options -Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
@@ -20,11 +21,10 @@ Options +FollowSymLinks
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	RewriteRule .* index.php/$0 [L]
-	
+
 	# Prevents access to dot files (.git, .htaccess) - security.
 	RewriteCond %{SCRIPT_FILENAME} -d
 	RewriteCond %{SCRIPT_FILENAME} -f
 	RewriteRule "(^|/)\." - [F]
-	
+
 </IfModule>
-Options -Indexes
