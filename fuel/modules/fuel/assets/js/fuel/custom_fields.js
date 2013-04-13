@@ -966,8 +966,11 @@ fuel.fields.block = function(context, options){
 		if (url){
 			url = eval(unescape(url));
 		} else {
-			var layout = $(this).val().split('/').pop();
-			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+			var layout = $(this).val();
+			if (layout){
+				layout = layout.split('/').pop();
+				url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+			}
 		}
 		
 		// var contextArr = context.split("--")
