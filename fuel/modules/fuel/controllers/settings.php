@@ -91,10 +91,8 @@ class Settings extends Fuel_base_controller {
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
 
-		// reset dup id
 		if (!empty($_POST))
 		{
-	
 			$new_settings = $this->input->post('settings', TRUE);
 
 			$fields = $settings;
