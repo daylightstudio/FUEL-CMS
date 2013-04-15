@@ -292,6 +292,7 @@ class Generate extends Fuel_base_controller {
 		{
 			// create variables for parsed files
 			$vars = $this->_common_vars($name);
+			$vars['advanced_module'] = $module;
 			$file = current($config);
 			$content = "\n".$this->_parse_template($file, $vars, 'simple');
 
