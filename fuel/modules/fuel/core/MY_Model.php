@@ -2730,11 +2730,20 @@ class MY_Model extends CI_Model {
 			{
 				$related_model = $this->load_related_model($rel_config);
 				$where = array();
-				if (is_array($rel_config) AND !empty($rel_config['where']))
+				$order = TRUE;
+				if (is_array($rel_config))
 				{
-					$where = $rel_config['where'];
+					if (!empty($rel_config['where']))
+					{
+						$where = $rel_config['where'];	
+					}
+					
+					if (!empty($rel_config['order']))
+					{
+						$order = $rel_config['order'];	
+					}
 				}
-				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
+				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
@@ -2745,13 +2754,22 @@ class MY_Model extends CI_Model {
 			foreach ($this->belongs_to as $related_field => $rel_config)
 			{
 				$where = array();
-				if (is_array($rel_config) AND !empty($rel_config['where']))
+				$order = TRUE;
+				if (is_array($rel_config))
 				{
-					$where = $rel_config['where'];
+					if (!empty($rel_config['where']))
+					{
+						$where = $rel_config['where'];	
+					}
+					
+					if (!empty($rel_config['order']))
+					{
+						$order = $rel_config['order'];	
+					}
 				}
 
 				$related_model = $this->load_related_model($rel_config);
-				$related_options = $CI->$related_model->options_list(NULL, NULL, $where);
+				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
 				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
@@ -5279,10 +5297,18 @@ class Data_record {
 				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
 
 				// check if there is a where condition an apply that too
-				if (is_array($rel_config) AND ! empty($rel_config['where']))
+				if (is_array($rel_config))
 				{
-					$where = $rel_config['where'];
-					$this->_CI->$foreign_model->db()->where($where);
+					if (! empty($rel_config['where']))
+					{
+						$this->_CI->$foreign_model->db()->where($rel_config['where']);
+					}
+					
+					if (! empty($rel_config['order']))
+					{
+						$this->_CI->$foreign_model->db()->order_by($rel_config['order']);
+					}
+					
 				}
 			}
 			else
