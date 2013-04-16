@@ -668,6 +668,7 @@ $record->format('content', array('stripped', 'formatted');
 <p>Below are examples of formatters that can be applied to a number type fields (tinyint, smallint, int, bigint) and links to the functions that they use.</p>
 <ul>
 	<li><a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">{url|link}_path</a> (site_url CI function)</li>
+	<li><a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">{url|link}_prep</a> (prep_url CI function)</li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_path')?>">{img|image|thumb|pdf}_path</a></li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_server_path')?>">{img|image|thumb|pdf}_serverpath</a></li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_asset_filesize')?>">{img|image|thumb|pdf}_filesize</a></li>

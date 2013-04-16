@@ -86,7 +86,8 @@ class Base_module_model extends MY_Model {
 															'dollar',
 															),
 								'url|link'			=> array(
-															'path' 			=> 'site_url'
+															'path' 			=> 'site_url',
+															'prep'			=> 'prep_url',
 															),
 								'img|image|thumb'	=> array(
 															'path' 			=> array('assets_path', 'images'),
