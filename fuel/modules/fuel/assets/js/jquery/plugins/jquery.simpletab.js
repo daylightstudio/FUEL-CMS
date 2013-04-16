@@ -21,6 +21,8 @@ dave@thedaylightstudio.com
 		var hasCookie = (s.cookie && s.cookie.group && s.cookie.name);
 		return this.each(function(){
 			
+			var _this = this;
+
 			// hide them all at first
 			$(this).find('a').each(function(i){
 				var id = $(this).attr('href');
@@ -48,7 +50,7 @@ dave@thedaylightstudio.com
 					activeContent.show();
 					
 					activeTab = $this;
-					$(this).trigger('tabClicked');
+					$(_this).trigger('tabClicked', [index, activeTab, activeContent, s]);
 					if (hasCookie){
 						$.supercookie(s.cookie.group, s.cookie.name, index.toString(), s.cookie.params);
 					} else {

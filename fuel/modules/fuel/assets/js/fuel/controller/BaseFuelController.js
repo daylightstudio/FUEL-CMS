@@ -458,7 +458,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	_initFormTabs : function(context){
 		if (!$('#fuel_form_tabs', context).length){
-			
+
+			var tabId = jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
+			var tabCookieSettings = {group: 'fuel_tabs', name: tabId, params: {path: jqx.config.cookieDefaultPath}}
+
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
 			
 			// prevent nested fieldsets from showing up with not()
@@ -473,13 +476,21 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			});
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
+
+			var startIndex = parseInt($.supercookie(tabCookieSettings.group, tabCookieSettings.name));
+			if (!startIndex) startIndex = 0;
+			tabs += '<input type="hidden" name="__fuel_selected_tab__" id="__fuel_selected_tab__" value="' + startIndex + '" />';
 			$legends.filter(':first').parent().before(tabs);
 
-			$('#form').trigger( 'fuel_form_tabs_loaded', [$('#fuel_form_tabs')] );
+			$('#form').trigger('fuel_form_tabs_loaded', [$('#fuel_form_tabs')] );
 
-			var tabId = jqx.config.uriPath.replace(/[\/|:]/g, '_');
-			var tabCookieSettings = {group: 'fuel_tabs', name: 'tab_' + tabId, params: {path: jqx.config.cookieDefaultPath}}
-			$('#fuel_form_tabs ul', context).simpleTab({cookie: tabCookieSettings});
+			$tabs = $('#fuel_form_tabs ul', context);
+			$tabs.simpleTab({cookie: tabCookieSettings});
+			
+			var tabCallback = function(e, index, selected, content, settings){
+				$('#__fuel_selected_tab__').val(index);
+			}
+			$tabs.bind('tabClicked', tabCallback);
 			
 		}
 	},

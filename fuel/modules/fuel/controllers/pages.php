@@ -13,7 +13,7 @@ class Pages extends Module {
 
 	function create()
 	{
-		
+
 		// check that the action even exists and if not, show a 404
 		if (!$this->fuel->auth->module_has_action('save'))
 		{
@@ -74,11 +74,15 @@ class Pages extends Module {
 
 					// run after_save hook
 					$this->_run_hook('after_save', $data);
-				
+
 					if (!empty($data))
 					{
 						$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
 						$url = fuel_uri('pages/edit/'.$id);
+
+						// save any tab states
+						$this->_save_tab_state($id);
+
 						if ($this->input->post('language'))
 						{
 							$url .= '?lang='.$this->input->post('language');

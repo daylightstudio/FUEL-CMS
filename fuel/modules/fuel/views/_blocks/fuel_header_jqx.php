@@ -4,7 +4,7 @@ jqx_config.basePath =  "<?=(trim(site_url(), '/').'/');?>";
 jqx_config.jsPath = "<?=js_path('', 'fuel')?>";
 jqx_config.imgPath = "<?=img_path('', 'fuel')?>";
 
-jqx_config.uriPath = "<?=uri_path()?>";
+jqx_config.uriPath = "<?=uri_path(FALSE)?>";
 jqx_config.assetsImgPath = "<?=img_path('')?>";
 jqx_config.assetsPath = "<?=assets_path('')?>";
 jqx_config.assetsCssPath = "<?=css_path('')?>";
