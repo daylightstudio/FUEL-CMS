@@ -978,13 +978,13 @@ fuel.fields.block = function(context, options){
 		// if (contextArr.length > 1){
 		// 	context = contextArr.pop();
 		// }
+		$layout_fields = $(this).next('.block_layout_fields');
 		if (url.length){
 			url += '?context=' + context + '&name=' + name;
 
 			// show loader
 			$(this).parent().find('.loader').show();
 			
-			$layout_fields = $(this).next('.block_layout_fields');
 			$layout_fields.load(url, function(){
 				// hide loader
 				$(this).parent().find('.loader').hide();
