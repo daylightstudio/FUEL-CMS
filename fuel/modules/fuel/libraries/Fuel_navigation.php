@@ -40,6 +40,7 @@ class Fuel_navigation extends Fuel_module {
 	 * The <a href="[user_guide_url]helpers/fuel_helper">fuel_nav helper</a> function is an alias to this method.
 	 *
 	<ul>
+		<li><strong>items</strong> - the navigation items to use. By default, this is empty and will look for the nav.php file or the records in the Navigation module</li>
 		<li><strong>file</strong> - the name of the file containing the navigation information</li>
 		<li><strong>var</strong> - the variable name in the file to use</li>
 		<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
