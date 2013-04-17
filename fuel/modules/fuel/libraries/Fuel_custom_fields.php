@@ -1105,10 +1105,10 @@ class Fuel_custom_fields {
 			}
 
 			// needed to detect when none exists
-			// $exists_params['name'] = $params['name'].'_exists';
-			// $exists_params['value'] = 1;
-			// $exists_params['type'] = 'hidden';
-			// $str .= $form_builder->create_field($exists_params);
+			$exists_params['name'] = 'exists_'.$params['name'];
+			$exists_params['value'] = 1;
+			$exists_params['type'] = 'hidden';
+			$str .= $form_builder->create_field($exists_params);
 
 		}
 		

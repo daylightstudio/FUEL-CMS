@@ -3130,7 +3130,7 @@ class MY_Model extends CI_Model {
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->has_many as $related_field => $related_model)
 			{
-				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data[$related_field.'_exists'])) OR $this->clear_related_on_save === TRUE);
+				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data['exists_'.$related_field])) OR $this->clear_related_on_save === TRUE);
 				if ($clear_on_save)
 				{
 					// remove pre-existing relationships
@@ -3168,7 +3168,7 @@ class MY_Model extends CI_Model {
 				// cache the loaded models here for reference below
 				$related_models[$related_field] =& $this->load_related_model($related_model);
 
-				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data[$related_field.'_exists'])) OR $this->clear_related_on_save === TRUE);
+				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data['exists_'.$related_field])) OR $this->clear_related_on_save === TRUE);
 
 				if ($clear_on_save)
 				{
