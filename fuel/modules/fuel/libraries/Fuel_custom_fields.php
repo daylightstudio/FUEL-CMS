@@ -703,6 +703,12 @@ class Fuel_custom_fields {
 						}
 					}
 					$form_params['fields'] = $f;
+
+					if ( ! empty($params['value'][$k])) 
+					{
+						$form_params['value'] = $params['value'][$k];
+					}
+
 					$form_obj = $form_builder->create_nested($form_params, TRUE);
 					$form = $form_obj->render();
 					$css_class = ($i > 0) ? ' noclone' : '';
