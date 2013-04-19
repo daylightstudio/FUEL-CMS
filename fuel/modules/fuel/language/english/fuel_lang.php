@@ -230,7 +230,6 @@ $lang['form_label_subfolder'] = 'Subfolder';
 $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_create_thumb'] = 'Create thumb';
 $lang['form_label_maintain_ratio'] = 'Maintain ratio';
-$lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
 $lang['form_label_master_dimension'] = 'Master dimension';
