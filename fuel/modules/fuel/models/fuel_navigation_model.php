@@ -11,8 +11,8 @@ class Fuel_navigation_model extends Base_module_model {
 	public $ignore_replacement = array('nav_key');
 	public $filters = array('label', 'location');
 	public $linked_fields = array('nav_key' => array('location' => 'mirror'));
-	public $boolean_fields = array('hidden', 'published');
-		
+	public $boolean_fields = array('hidden');
+
 	function __construct()
 	{
 		parent::__construct('fuel_navigation');
