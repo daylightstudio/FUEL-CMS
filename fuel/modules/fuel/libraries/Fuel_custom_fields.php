@@ -703,6 +703,12 @@ class Fuel_custom_fields {
 						}
 					}
 					$form_params['fields'] = $f;
+
+					if ( ! empty($params['value'][$k])) 
+					{
+						$form_params['value'] = $params['value'][$k];
+					}
+
 					$form_obj = $form_builder->create_nested($form_params, TRUE);
 					$form = $form_obj->render();
 					$css_class = ($i > 0) ? ' noclone' : '';
@@ -1105,7 +1111,7 @@ class Fuel_custom_fields {
 			}
 
 			// needed to detect when none exists
-			$exists_params['name'] = $params['name'].'_exists';
+			$exists_params['name'] = 'exists_'.$params['name'];
 			$exists_params['value'] = 1;
 			$exists_params['type'] = 'hidden';
 			$str .= $form_builder->create_field($exists_params);

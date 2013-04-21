@@ -53,8 +53,7 @@ class Fuel_hooks
 		}
 	}
 
-	// this hook allows us to route the the fuel controller if the method 
-	// on a controller doesn't exist... not just the controller itself'
+	// this hook allows us to setup a development password for the site
 	function dev_password()
 	{
 		$CI =& get_instance();
@@ -73,6 +72,18 @@ class Fuel_hooks
 		}
 	}
 	
+	// this hook allows us to display an offline page
+	function offline()
+	{
+		$CI =& get_instance();
+		if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		{
+			echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
+			exit();
+		}
+	}
+
+	// this hook allows us to enable profiler
 	function post_controller()
 	{
 		$CI =& get_instance();

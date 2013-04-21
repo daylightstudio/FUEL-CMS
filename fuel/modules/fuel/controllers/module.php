@@ -577,6 +577,7 @@ class Module extends Fuel_base_controller {
 		$defaults['view_type'] = 'list';
 		$defaults['extra_filters'] = array();
 		$defaults['precedence'] = 0;
+
 		//$defaults['language'] = '';
 		
 		// custom module filters defaults
@@ -726,6 +727,10 @@ class Module extends Fuel_base_controller {
 				{
 					$url = fuel_uri($this->module_uri.'/edit/'.$id);
 				}
+
+				// save any tab states
+				$this->_save_tab_state($id);
+
 				if ($redirect)
 				{
 					if (!$this->fuel->admin->has_notification(Fuel_admin::NOTIFICATION_SUCCESS))
@@ -1270,8 +1275,7 @@ class Module extends Fuel_base_controller {
 			
 			$fields['__fuel_inline__'] = array('type' => 'hidden');
 			$fields['__fuel_inline__']['value'] = ($inline) ? 1 : 0;
-			
-			
+
 			$this->form_builder->submit_value = lang('btn_save');
 			$this->form_builder->question_keys = array();
 			$this->form_builder->use_form_tag = FALSE;
@@ -1383,6 +1387,7 @@ class Module extends Fuel_base_controller {
 
 		// sanitize input if set in module configuration
 		$posted = $this->_sanitize($_POST);
+
 		return $posted;
 	}
 	
@@ -1938,6 +1943,33 @@ class Module extends Fuel_base_controller {
 		$fields['__fuel_id__']['value'] = (!empty($values[$this->model->key_field()])) ? $values[$this->model->key_field()] : '';
 		$fields['__fuel_id__']['class'] = '__fuel_id__';
 		return $fields;
+	}
+
+	protected function _save_tab_state($id)
+	{
+		// set tab
+		if (isset($_POST['__fuel_selected_tab__']))
+		{
+			if (!empty($_COOKIE['fuel_tabs']))
+			{
+				$tab_cookie = json_decode(urldecode($_COOKIE['fuel_tabs']), TRUE);
+				if (!empty($tab_cookie))
+				{
+					$tab_cookie[$this->module.'_edit_'.$id] = $_POST['__fuel_selected_tab__'];
+					$cookie_val = urlencode(json_encode($tab_cookie));
+
+					// set the cookie for viewing the live site with added FUEL capabilities
+					$config = array(
+						'name' => 'fuel_tabs', 
+						'value' => $cookie_val,
+						'expire' => 0,
+						//'path' => WEB_PATH
+						'path' => $this->fuel->config('fuel_cookie_path')
+					);
+					set_cookie($config);
+				}
+			}
+		}
 	}
 	
 	protected function _process_uploads($posted = NULL)

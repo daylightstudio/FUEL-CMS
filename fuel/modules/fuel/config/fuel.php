@@ -203,6 +203,9 @@ $config['fuel_assets_output'] = FALSE;
 |--------------------------------------------------------------------------
 */
 
+// sets the site to offline mode. Uses "offline" view file to render page
+$config['offline'] = FALSE;
+
 // restrict fuel to only certain ip addresses (can be string or an array of IP addresses)
 $config['restrict_to_remote_ip'] = array();
 

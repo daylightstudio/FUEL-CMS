@@ -292,6 +292,7 @@ class Generate extends Fuel_base_controller {
 		{
 			// create variables for parsed files
 			$vars = $this->_common_vars($name);
+			$vars['advanced_module'] = $module;
 			$file = current($config);
 			$content = "\n".$this->_parse_template($file, $vars, 'simple');
 
@@ -480,7 +481,7 @@ class Generate extends Fuel_base_controller {
 		$vars['table'] = $name;
 		$vars['module_name'] = ucwords(humanize($name));
 		$vars['model_name'] = ucfirst($name);
-		$vars['model_record'] = ucfirst(preg_replace('#ie$#', 'y', ltrim($name, 's')));
+		$vars['model_record'] = ucfirst(preg_replace('#ie$#', 'y', rtrim($name, 's')));
 		$vars['ModuleName'] = ucfirst(camelize($name));
 		$vars['MODULE_NAME'] = strtoupper($name);
 		if ($vars['model_name'] == $vars['model_record'])

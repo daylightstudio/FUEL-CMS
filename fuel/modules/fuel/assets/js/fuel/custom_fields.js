@@ -951,6 +951,7 @@ fuel.fields.block = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
 		var val = $(this).val();
 		var url = $(this).data('url');
+		if (!url) url = '';
 
 		// for pages inline editing
 		var module = $('#__fuel_module__');
@@ -963,30 +964,38 @@ fuel.fields.block = function(context, options){
 			var name = '';
 		}
 
-		if (url){
+		if (url.length){
 			url = eval(unescape(url));
 		} else {
-			var layout = $(this).val().split('/').pop();
-			url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+			var layout = $(this).val();
+			if (layout && layout.length){
+				layout = layout.split('/').pop();
+				url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+			}
 		}
 		
 		// var contextArr = context.split("--")
 		// if (contextArr.length > 1){
 		// 	context = contextArr.pop();
 		// }
-		url += '?context=' + context + '&name=' + name;
-
-		// show loader
-		$(this).parent().find('.loader').show();
-		
 		$layout_fields = $(this).next('.block_layout_fields');
-		$layout_fields.load(url, function(){
-			// hide loader
-			$(this).parent().find('.loader').hide();
-			$(this).find('.block_name').val(val);
-			fuel.adjustIframeWindowSize();	
+		if (url.length){
+			url += '?context=' + context + '&name=' + name;
+
+			// show loader
+			$(this).parent().find('.loader').show();
 			
-		});
+			$layout_fields.load(url, function(){
+				// hide loader
+				$(this).parent().find('.loader').hide();
+				$(this).find('.block_name').val(val);
+				fuel.adjustIframeWindowSize();	
+				
+			});
+		} else {
+			$layout_fields.empty();
+		}
+
 
 	})
 	

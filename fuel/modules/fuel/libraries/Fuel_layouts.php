@@ -511,9 +511,8 @@ class Fuel_layout extends Fuel_base_library {
 	 */
 	function fields()
 	{
-		$fields = $this->fields;	
-		//$fields = $this->process_fields($this->fields);
-
+		$fields = $this->fields;
+		$fields = $this->process_fields($fields);
 		if (!empty($this->description))
 		{
 			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
@@ -536,7 +535,6 @@ class Fuel_layout extends Fuel_base_library {
 		$order = 1;
 		// create a new object so we don't conflict with the main form_builder object on CI'
 		$fb = new Form_builder();
-		
 		foreach($fields as $key => $f)
 		{
 			$fields[$key] = $fb->normalize_params($f);
@@ -545,6 +543,11 @@ class Fuel_layout extends Fuel_base_library {
 				$fields[$key]['name'] = $key;
 			}
 			
+			if (!isset($fields[$key]['order']))
+			{
+				$fields[$key]['order'] = $order;
+			}
+
 			// must remove this so that the values can be normalized again
 			unset($fields[$key]['__DEFAULTS__']);
 			$order++;
@@ -645,7 +648,13 @@ class Fuel_layout extends Fuel_base_library {
 	 */
 	function add_field($key, $val)
 	{
-		$fb = new Form_builder();
+		static $fb;
+
+		if (is_null($fb)) 
+		{
+			$fb = new Form_builder();
+		}
+
 		$val = $fb->normalize_params($val);
 		if (!isset($val['name']))
 		{
@@ -1008,6 +1017,7 @@ class Fuel_block_layout extends Fuel_layout
 		// automatically add a field for the block name
 		$fields['block_name'] = array('type' => 'hidden', 'value' => $this->name, 'class' => 'block_name');
 		$fb = new Form_builder();
+
 		if (!empty($this->context))
 		{
 			foreach($fields as $key => $val)

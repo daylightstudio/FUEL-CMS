@@ -16,19 +16,19 @@ class News_model extends Base_module_model {
 
 	function list_items($limit = null, $offset = null, $col = 'title', $order = 'asc')
 	{
-		$this->db->select('id, title, slug, date_added, published', FALSE);
+		$this->db->select('id, title, slug, publish_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 	
 	function find_by_month($limit = NULL, $where = array())
 	{
-		$items = $this->find_all($where, 'date_added desc', $limit);
+		$items = $this->find_all($where, 'publish_date desc', $limit);
 		
 		$return = array();
 		foreach($items as $item)
 		{
-			$key = date('F Y', strtotime($item->date_added));
+			$key = date('F Y', strtotime($item->publish_date));
 			if (!isset($return[$key]))
 			{
 				$return[$key] = array();
@@ -50,13 +50,12 @@ class News_model extends Base_module_model {
 	function _common_query()
 	{
 		parent::_common_query();
-		$this->db->order_by('date_added desc');
+		$this->db->order_by('publish_date desc');
 	}
 	
 	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields();
-		$fields['date_added']['type'] = 'datetime';
+		$fields = parent::form_fields($values, $related);
 		return $fields;
 	}
 }
