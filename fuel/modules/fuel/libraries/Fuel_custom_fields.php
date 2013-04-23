@@ -1015,6 +1015,12 @@ class Fuel_custom_fields {
 
 		$params = $form_builder->normalize_params($params, $defaults);
 		
+		// force to multi if sorting is selected
+		if ($params['sorting'] === TRUE)
+		{
+			$params['mode'] = 'multi';
+		}
+
 		// grab options from a model if a model is specified
 		if (!empty($params['model']))
 		{
