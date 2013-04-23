@@ -80,7 +80,9 @@ class Base_module_model extends MY_Model {
 															'specialchars'  => 'htmlspecialchars',
 															'humanize',
 															'underscore',
-															'camelize'
+															'camelize',
+															'upper'			=> 'strtoupper',
+															'lower'			=> 'strtlower',
 															),
 								'number'			=> array(
 															'dollar',
