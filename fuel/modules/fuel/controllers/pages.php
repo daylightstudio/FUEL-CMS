@@ -423,7 +423,7 @@ class Pages extends Module {
 		// process post vars... can't use an array because of file upload complications'
 		foreach($posted as $key => $val)
 		{
-			if (strncmp('vars--', $key, 4) === 0)
+			if (strncmp('vars--', $key, 6) === 0)
 			{
 				$new_key = end(explode('--', $key));
 				$vars[$new_key] = $val;
