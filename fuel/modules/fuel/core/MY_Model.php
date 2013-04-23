@@ -2220,28 +2220,22 @@ class MY_Model extends CI_Model {
 		{
 			case 'var' : case 'varchar': case 'string': case 'tinytext': case 'text':  case 'longtext':
 				return 'string';
-				break;
 			case 'int': case 'tinyint': case 'smallint': case 'mediumint': case 'float':  case 'double':  case 'decimal':
 				return 'number';
-				break;
 			case 'datetime': case 'timestamp':
 				return 'datetime';
-				break;
 			case 'date':
 				return 'date';
-				break;
 			case 'year':
 				return 'year';
-				break;
 			case 'time':
 				return 'time';
-				break;
 			case 'blob': case 'mediumblob': case 'longblob':  case 'binary':
 				return 'blob';
-				break;
 			case 'enum':
 				return 'enum';
-				break;
+			default:
+				return $field_info['type'];
 		}
 	}
 	
