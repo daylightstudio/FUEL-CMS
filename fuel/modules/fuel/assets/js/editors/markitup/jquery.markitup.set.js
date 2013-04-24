@@ -78,7 +78,7 @@ myMarkItUpSettings = {
 }
 
 myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
-	
+
 	var origTextarea = jQuery(markItUp.textarea);
 	var val = origTextarea.val();
 	var textarea = jQuery('#fullscreen');
@@ -87,10 +87,10 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 	var minimize = function(){
 		origTextarea.val(textarea.val());
 		textarea.unbind();
-		
 		// TODO: fix markitup selection error
 		container.jqmHide();
-		container.parent().remove();
+		//container.parent().remove();
+		container.remove();
 
 	}
 
