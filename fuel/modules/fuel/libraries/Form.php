@@ -699,7 +699,7 @@ class Form {
 	 * @param mixed attrs if array then create string
 	 * @return string
 	 */
-	protected function _create_attrs ($attrs)
+	protected function _create_attrs($attrs)
 	{
 		if (is_array($attrs))
 		{
@@ -722,7 +722,7 @@ class Form {
 						}
 					}
 				}
-				else
+				else if (is_string($val))
 				{
 					if ($val != '')
 					{
