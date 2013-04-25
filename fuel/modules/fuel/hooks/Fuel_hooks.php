@@ -56,10 +56,10 @@ class Fuel_hooks
 	// this hook performs redirects before trying to find the page (vs. passive redirects which will only happen if no page is found by FUEL)
 	function redirects()
 	{
+		$CI =& get_instance();
+		$CI->fuel->redirects->ssl();
 		if (!USE_FUEL_ROUTES)
 		{
-			$CI =& get_instance();
-			$CI->fuel->redirects->ssl();
 			$CI->fuel->redirects->execute(FALSE, FALSE);
 		}
 	}
