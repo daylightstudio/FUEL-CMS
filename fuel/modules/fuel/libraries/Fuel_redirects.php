@@ -196,7 +196,7 @@ class Fuel_redirects extends Fuel_base_library {
 			{
 				$redirect = array();
 			}
-			$config['passive_redirects'] = array_merge($redirect, $config['passive_redirects']);
+			$config['passive_redirects'] = (isset($config['passive_redirects'])) ? array_merge($redirect, $config['passive_redirects']) : $redirect;
 
 			// used for testing purposes
 			if (defined('TESTING') AND !empty($_POST['config']))
