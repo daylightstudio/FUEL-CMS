@@ -11,10 +11,10 @@ class Fuel_permissions_model extends Base_module_model {
 		parent::__construct('fuel_permissions');
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$this->db->select('id, name, description, active');
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	

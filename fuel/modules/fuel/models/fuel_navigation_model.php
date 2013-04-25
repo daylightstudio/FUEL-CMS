@@ -20,7 +20,7 @@ class Fuel_navigation_model extends Base_module_model {
 	}
 
 	// used for the FUEL admin
-	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		if ($CI->fuel->language->has_multiple())
@@ -31,7 +31,7 @@ class Fuel_navigation_model extends Base_module_model {
 		{
 			$this->db->select('id, label, if (nav_key != "", nav_key, location) AS location, precedence, hidden, published', FALSE);	
 		}
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	

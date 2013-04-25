@@ -12,14 +12,17 @@ class Fuel_sitevariables_model extends Base_module_model {
 		parent::__construct('fuel_site_variables');
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
 	{
 
 		$this->db->select('id, name, SUBSTRING(value, 1, 50) as value, scope, active', FALSE);	
-		$data = parent::list_items($limit, $offset, $col, $order);
-		foreach($data as $key => $val)
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+		if (empty($just_count))
 		{
-			$data[$key]['value'] = htmlentities($val['value'], ENT_QUOTES, 'UTF-8');
+			foreach($data as $key => $val)
+			{
+				$data[$key]['value'] = htmlentities($val['value'], ENT_QUOTES, 'UTF-8');
+			}
 		}
 		return $data;
 	}

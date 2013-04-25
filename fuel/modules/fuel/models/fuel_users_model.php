@@ -45,7 +45,7 @@ class Fuel_users_model extends Base_module_model {
 		return FALSE;
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		$user = $CI->fuel->auth->user_data();
@@ -54,7 +54,7 @@ class Fuel_users_model extends Base_module_model {
 			$this->db->where(array('super_admin' => 'no'));
 		}
 		$this->db->select('id, email, user_name, first_name, last_name, super_admin, active');
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	

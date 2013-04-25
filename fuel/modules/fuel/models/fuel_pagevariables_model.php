@@ -12,11 +12,11 @@ class Fuel_pagevariables_model extends Base_module_model {
 	}
 	
 	// used for the FUEL admin
-	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_pagevars'].'.*, '.$this->_tables['fuel_pages'].'.layout, '.$this->_tables['fuel_pages'].'.location, '.$this->_tables['fuel_pages'].'.published AS page_published');
 		$this->db->join($this->_tables['fuel_pages'], $this->_tables['fuel_pages'].'.id = '.$this->_tables['fuel_pagevars'].'.page_id', 'left');
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	

@@ -13,7 +13,7 @@ class Fuel_blocks_model extends Base_module_model {
 		parent::__construct('fuel_blocks');
 	}
 		
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		if ($CI->fuel->language->has_multiple())
@@ -26,9 +26,12 @@ class Fuel_blocks_model extends Base_module_model {
 		}
 		
 		$data = parent::list_items($limit, $offset, $col, $order);
-		foreach($data as $key => $val)
+		if (empty($just_count))
 		{
-			$data[$key]['view'] = htmlentities($val['view'], ENT_QUOTES, 'UTF-8');
+			foreach($data as $key => $val)
+			{
+				$data[$key]['view'] = htmlentities($val['view'], ENT_QUOTES, 'UTF-8');
+			}
 		}
 		return $data;
 	}

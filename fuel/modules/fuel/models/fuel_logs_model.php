@@ -11,11 +11,11 @@ class Fuel_logs_model extends Base_module_model {
 		parent::__construct('fuel_logs');
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_logs'].'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_logs'].'.user_id = '.$this->_tables['fuel_users'].'.id', 'left');
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		//$this->debug_query();
 		return $data;
 	}

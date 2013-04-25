@@ -43,9 +43,9 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	string	the order in which to return the results (optional)
 	 * @return	array
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc', $just_count = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 
