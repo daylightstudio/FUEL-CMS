@@ -5324,6 +5324,8 @@ class Data_record {
 		if ( ! empty($foreign_data))
 		{
 			// maintain the order of the related data
+				if (!empty($rel_ids))
+		{
 			$rel_ids_flipped = array_flip($rel_ids);
 			foreach ($foreign_data as $row)
 			{
@@ -5331,6 +5333,8 @@ class Data_record {
 				$output[$position] = $row;
 			}
 			ksort($output);
+		}
+		else $output= $foreign_data;
 		}
 
 		return $output;
