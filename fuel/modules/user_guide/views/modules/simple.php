@@ -232,7 +232,7 @@ on the key value specified in the config (e.g. example):</p>
 		<tr>
 			<td><strong>displayonly</strong></td>
 			<td>None</td>
-			<td>None</td>
+			<td>Boolean Value TRUE/FALSE</td>
 			<td>Will only display the data and not allow you to save it</td>
 		</tr>
 		<tr>
