@@ -348,8 +348,9 @@ class Fuel_redirects extends Fuel_base_library {
 	function ssl()
 	{
 		$config = $this->config();
+		$is_https = (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] == 'on');
 
-		if (!isset($config['ssl']))
+		if (!isset($config['ssl']) OR $is_https)
 		{
 			return;
 		}
@@ -362,10 +363,8 @@ class Fuel_redirects extends Fuel_base_library {
 
 			$uri = $this->_get_uri();
 
-			$is_https = (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] != 'on');
-
 			// Is there a literal match?  If so we're done
-			if (isset($ssl_redirects[$uri]) AND $is_https)
+			if (isset($ssl_redirects[$uri]) AND !$is_https)
 			{
 				redirect( site_url($uri, TRUE) );
 			}
@@ -378,7 +377,7 @@ class Fuel_redirects extends Fuel_base_library {
 				// Does the RegEx match?
 				$pattern = '#^'.$val.'$#';
 				
-				if (preg_match($pattern, $uri) AND $is_https)
+				if (preg_match($pattern, $uri) AND !$is_https)
 				{
 					redirect( site_url($uri, TRUE), 'location', 301);
 				}
