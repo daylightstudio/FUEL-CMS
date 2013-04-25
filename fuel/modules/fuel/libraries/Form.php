@@ -722,7 +722,7 @@ class Form {
 						}
 					}
 				}
-				else if (is_string($val))
+				else if (!is_array($val))
 				{
 					if ($val != '')
 					{
