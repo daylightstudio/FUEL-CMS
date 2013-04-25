@@ -1,36 +1,41 @@
 <h1>Redirects</h1>
  
-<p>FUEL has added a way to deal with 301 redirects that doesn't require the need for .htaccess. 
+<p>FUEL has added a way to deal with page redirects that doesn't require the need for .htaccess. 
 Redirects are configured in the <dfn>fuel/application/config/redirects.php</dfn> file.
-To add a redirect, add a URI location as a key and the redirect location as the value.
-Key values can use regular expression syntax similar to <a href="http://codeigniter.com/user_guide/general/routing.html" target="_blank">routes</a>.
-A redirect will only work if there are no pages detected by FUEL. It will check the redirects right before
-delivering a 404 error.</p>
- 
-<pre class="brush:php">
-$redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
-$redirect['news/my_old_news_item'] = 'news/my_brand_new_news_item';
-</pre>
- 
+To add a redirect, add a URI location as a key and the redirect location as the value 
+to either the <dfn>passive_redirects</dfn> (recommended) or <dfn>aggressive_redirects</dfn> config parameters.
+<dfn>passive_redirects</dfn> will only work if there are no pages detected by FUEL. 
+This means that it will only incur the expense of looping through the redirects list if no pages are found. 
+Alternatively, <dfn>aggressive_redirects</dfn> will redirect no matter what but will incur the cost of looping the the redirects list on every request.
+</p>
+
 <p>You can also pass additional parameters such as the <dfn>case_sensitive</dfn> and <dfn>http_code</dfn> with your redirect if you use an array syntax like so:</p>
 <pre class="brush:php">
 // non key array
-$redirect['news/my_old_news_item'] = array('news/my_brand_new_news_item', TRUE, 302);
+$config['passive_redirects'] = array(
+									'news/my_old_news_item' => array('news/my_brand_new_news_item', TRUE, 302)
+									);
  
 // keyed array
-$redirect['news/my_old_news_item'] = array('url' => 'news/my_brand_new_news_item', 'case_sensitive' => TRUE, 'http_code' => 302);
+$config['passive_redirects'] = array(
+									'news/my_old_news_item' => array('url' => 'news/my_brand_new_news_item', 'case_sensitive' => TRUE, 'http_code' => 302)
+									);
 </pre>
- 
- 
-<p>You can also set global configuration values from within the <dfn>fuel/application/config/redirects.php</dfn> file like so:</p>
-<pre class="brush:php">
-$redirect_http_code = 302;
-$redirect_case_sensitive = FALSE;
-</pre>
- 
+
+<p class="important">Key values can use regular expression syntax similar to <a href="http://codeigniter.com/user_guide/general/routing.html" target="_blank">routes</a>.</p>
+
+<br />
+
 <p>Programmatically, you can access the instantiated <a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects</a> object like so:</p>
 <pre class="brush:php">
 $this->fuel->redirects->execute();
+</pre>
+
+
+<p>You can also set global configuration values from within the <dfn>fuel/application/config/redirects.php</dfn> file like so:</p>
+<pre class="brush:php">
+$config['http_code'] = 302;
+$config['case_sensitive'] = FALSE;
 </pre>
  
 <h3>Redirect Hooks</h3>

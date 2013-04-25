@@ -36,6 +36,15 @@ $hook['post_controller_constructor'][] = array(
 								'module' => FUEL_FOLDER,
 								);
 
+$hook['post_controller_constructor'][] = array(
+								'class'    => 'Fuel_hooks',
+								'function' => 'redirects',
+								'filename' => 'Fuel_hooks.php',
+								'filepath' => 'hooks',
+								'params'   => array(),
+								'module'   => FUEL_FOLDER,
+								);
+
 $hook['post_controller'][] = array(
 								'class'    => 'Fuel_hooks',
 								'function' => 'post_controller',

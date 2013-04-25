@@ -53,21 +53,35 @@ class Fuel_hooks
 		}
 	}
 
+	// this hook performs redirects before trying to find the page (vs. passive redirects which will only happen if no page is found by FUEL)
+	function redirects()
+	{
+		if (!USE_FUEL_ROUTES)
+		{
+			$CI =& get_instance();
+			$CI->fuel->redirects->ssl();
+			$CI->fuel->redirects->execute(FALSE, FALSE);
+		}
+	}
+
 	// this hook allows us to setup a development password for the site
 	function dev_password()
 	{
-		$CI =& get_instance();
-		if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		if (!USE_FUEL_ROUTES)
 		{
-			if (isset($_POST['fuel_dev_password']) AND $_POST['fuel_dev_password'] == md5($CI->fuel->config('dev_password')))
+			$CI =& get_instance();
+			if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
-				return;
-			}
+				if (isset($_POST['fuel_dev_password']) AND $_POST['fuel_dev_password'] == md5($CI->fuel->config('dev_password')))
+				{
+					return;
+				}
 
-			$CI->load->library('session');
-			if (!$CI->session->userdata('dev_password'))
-			{
-				redirect('fuel/login/dev');
+				$CI->load->library('session');
+				if (!$CI->session->userdata('dev_password'))
+				{
+					redirect('fuel/login/dev');
+				}
 			}
 		}
 	}
@@ -75,11 +89,14 @@ class Fuel_hooks
 	// this hook allows us to display an offline page
 	function offline()
 	{
-		$CI =& get_instance();
-		if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		if (!USE_FUEL_ROUTES)
 		{
-			echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
-			exit();
+			$CI =& get_instance();
+			if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+			{
+				echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
+				exit();
+			}
 		}
 	}
 
