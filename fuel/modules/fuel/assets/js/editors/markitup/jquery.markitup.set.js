@@ -78,7 +78,7 @@ myMarkItUpSettings = {
 }
 
 myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
-
+	
 	var origTextarea = jQuery(markItUp.textarea);
 	var val = origTextarea.val();
 	var textarea = jQuery('#fullscreen');
@@ -87,10 +87,10 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 	var minimize = function(){
 		origTextarea.val(textarea.val());
 		textarea.unbind();
+		
 		// TODO: fix markitup selection error
 		container.jqmHide();
-		//container.parent().remove();
-		container.remove();
+		container.parent().remove();
 
 	}
 
@@ -199,20 +199,30 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		align = myMarkItUpSettings.parseAttrs(selected, 'align');
 		className = myMarkItUpSettings.parseAttrs(selected, 'class');
 
-
 		// set title
 		if (isAnchorSelected && isAnchorSelected.length >= 1) {
 			selected = isAnchorSelected[1];
 		}
 	}
-	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className}, function(replace){
+	imgFolder = jQuery(markItUp.textarea).attr('data-img_folder');
+
+	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	});
 }
 
 
 myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
-	var url = jqx.config.fuelPath + '/assets/select/images?nocache=' + new Date().getTime();
+	var folder = 'images';
+	var imgFolder = attrs['imgFolder'];
+	if (imgFolder){
+		if (imgFolder.substr(0, 1) != '/'){
+			folder += '/';
+		}
+		folder += imgFolder;
+	}
+	console.log(jqx.config.fuelPath + '/assets/select/' + folder)
+	var url = jqx.config.fuelPath + '/assets/select/' + folder + '?nocache=' + new Date().getTime();
 	if (selected) url += '&selected=' + escape(selected);
 	url += '&width=' + ((attrs.width) ? attrs.width : '');
 	url += '&height=' + ((attrs.height) ? attrs.height : '');

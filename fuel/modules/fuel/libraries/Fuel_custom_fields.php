@@ -79,6 +79,12 @@ class Fuel_custom_fields {
 		// the dimensions for the preview window		
 		$params['data']['preview_options'] = (!empty($params['preview_options'])) ? $params['preview_options'] : 'width=1024,height=768';
 		
+		// set the image folder for inserting assets
+		if (isset($params['img_folder']))
+		{
+			$params['data']['img_folder'] = $params['img_folder'];
+		}
+
 		// set ckeditor configs
 		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
 		{

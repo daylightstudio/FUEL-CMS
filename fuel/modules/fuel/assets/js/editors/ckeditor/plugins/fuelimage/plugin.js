@@ -52,8 +52,8 @@ CKEDITOR.plugins.add( 'fuelimage', {
 
 					}
 				}
-
-				myMarkItUpSettings.displayAssetInsert(img, {width: width, height: height, alt: alt, align: align, className: className}, function(imgHtml){
+				imgFolder = editor.element.getAttribute('data-img_folder');
+				myMarkItUpSettings.displayAssetInsert(img, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder}, function(imgHtml){
 					imgHtml = imgHtml.replace(/\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
 		   										var img = jqx.config.assetsImgPath + contents;
 		   										return img;

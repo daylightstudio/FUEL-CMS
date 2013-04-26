@@ -835,6 +835,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
 		<li><strong>preview_options</strong>: preview popup window options (used as the third parameter of <a href="http://www.w3schools.com/jsref/met_win_open.asp" target="_blank">window.open</a> . The default is <dfn>width=1024,height=768</dfn></li>
+		<li><strong>img_folder</strong>: the image folder to pull from when inserting an image</li>
 	</ul>
 	
 	<h4>Example</h4>
