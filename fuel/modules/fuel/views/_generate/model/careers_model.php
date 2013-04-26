@@ -30,7 +30,7 @@ class Careers_model extends Base_module_model {
 	
 	function form_fields($values = array(), $related = array())
 	{	
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		$fields['post_date']['comment'] = 'If blank, will default to current date/time'; 
 		$fields['post_date']['value'] = datetime_now(); 
 		$fields['skillset_requirements']['class'] = 'no_editor'; 
