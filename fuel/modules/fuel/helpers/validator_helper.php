@@ -640,9 +640,8 @@ function display_errors_js($ERRORS = NULL)
 	{
 		$GLOBALS['__ERRORS_JS__'] = 0;
 	}
-	$str = "<script language=\"JavaScript\" type=\"text/javascript\">\n";
-	$str .= "// <![CDATA[\n";
-	$str .= "// exception reporting
+	$str = "<script>\n";
+	$str .= "
 	function displayErrors".$GLOBALS['__ERRORS_JS__']."() {
 		var msg = \"\";\n";
 	if(!isset($ERRORS) && defined('GLOBAL_ERRORS'))
@@ -684,17 +683,12 @@ function display_errors_js($ERRORS = NULL)
 		}
 	}
 	  var oldonload = window.onload;
-	  if (typeof window.onload != 'function') {
-	    window.onload = func;
-	  } else {
 	    window.onload = function() {
 	      if (oldonload) {
 	        oldonload();
 	      }
 	      setTimeout(displayErrors".$GLOBALS['__ERRORS_JS__'].", 0);
-	    }
-	  }
-	}\n;";
+	    }\n";
 	$str .= "// ]]>\n";
 	$str .= "</script>\n";
 	$GLOBALS['__ERRORS_JS__']++;
