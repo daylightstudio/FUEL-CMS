@@ -1,4 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+
 require_once('base_module_model.php');
 
 class Fuel_pagevariables_model extends Base_module_model {

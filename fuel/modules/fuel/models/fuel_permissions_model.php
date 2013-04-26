@@ -1,5 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
+require_once('base_module_model.php');
+
 class Fuel_permissions_model extends Base_module_model {
 	
 	public $required = array('name', 'description');
