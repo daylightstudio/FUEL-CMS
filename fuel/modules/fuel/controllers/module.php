@@ -213,10 +213,10 @@ class Module extends Fuel_base_controller {
 		
 		
 		// create search filter
-		$filters[$this->display_field] = $params['search_term'];
+		$filters[$this->display_field] = trim($params['search_term']);
 		
 		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
-		$this->model->filter_value = $params['search_term'];
+		$this->model->filter_value = trim($params['search_term']);
 		foreach($this->filters as $key => $val)
 		{
 			$filters[$key] = $params[$key];
