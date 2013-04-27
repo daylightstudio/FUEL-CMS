@@ -567,6 +567,7 @@ class Module extends Fuel_base_controller {
 		$filters = array();
 		
 		$page_state = $this->fuel->admin->get_page_state($this->module_uri);
+		unset($page_state['offset']);
 		
 		$defaults = array();
 		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
