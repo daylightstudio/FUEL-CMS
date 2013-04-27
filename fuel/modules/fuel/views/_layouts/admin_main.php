@@ -95,6 +95,20 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_bottom'); ?>
 <?php endif; ?>
 <?php */ ?>
+    
+    <script type="text/javascript">
+        <?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_footer_jqx', array(), TRUE)?>
+    </script>
+    
+    <?php if (!empty($this->js_controller)) : ?> 
+    <script type="text/javascript">
+        <?php if ($this->js_controller != 'fuel.controller.BaseFuelController') : ?>
+        jqx.addPreload('fuel.controller.BaseFuelController');
+        <?php endif; ?>
+        jqx.init('<?=$this->js_controller?>', <?=json_encode($this->js_controller_params)?>, '<?=$this->js_controller_path?>');
+    </script>
+    <?php endif; ?>
+
 
 </body>
 </html>
