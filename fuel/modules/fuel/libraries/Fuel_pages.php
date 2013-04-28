@@ -880,12 +880,15 @@ class Fuel_page extends Fuel_base_library {
 				$this->layout = $this->fuel->layouts->get($layout);
 			}
 
-			// call layout hook
-			$this->layout->call_hook('pre_render', array('vars' => $vars));
+			if ($this->layout)
+			{
+				// call layout hook
+				$this->layout->call_hook('pre_render', array('vars' => $vars));
 
-			// run the variables through the pre_process method on the layout
-			// !important ... will reference the layout specified to this point so a layout variable set within the body of the page will not work
-			$vars = $this->layout->pre_process($vars);
+				// run the variables through the pre_process method on the layout
+				// !important ... will reference the layout specified to this point so a layout variable set within the body of the page will not work
+				$vars = $this->layout->pre_process($vars);
+			}
 
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
