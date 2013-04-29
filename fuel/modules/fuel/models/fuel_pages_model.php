@@ -100,7 +100,7 @@ class Fuel_pages_model extends Base_module_model {
 	
 	function list_locations($include_unpublished = FALSE)
 	{
-		$where = ($include_unpublished) ? array('published' => 'no') : null;
+		$where = (!$include_unpublished) ? array('published' => 'yes') : NULL;
 		return array_keys($this->fuel_pages_model->options_list('location', 'location', $where));
 	}
 
