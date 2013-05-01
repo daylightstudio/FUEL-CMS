@@ -40,6 +40,7 @@ class Fuel_blocks_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
+		$dir_folder = trim($dir_folder, '/');
 		$blocks_path = APPPATH.'views/_blocks/'.$dir_folder;
 
 		// don't display blocks with preceding underscores or .html files'
@@ -50,8 +51,31 @@ class Fuel_blocks_model extends Base_module_model {
 			$view_blocks[$block] = $block;
 		}
 
+		// if a dir_folder exists, then we will look for any CMS blocks that may be prefixed with that dir_folder 
+		// (e.g. sections/left_block becomes just left_block) 
+		if (!empty($dir_folder) AND empty($where))
+		{
+			$where = 'name LIKE "'.$dir_folder.'/%"';
+		}
 		$blocks = parent::options_list('name', 'name', $where, $order);
-		$blocks = array_merge($view_blocks, $blocks);
+
+		// continue filter of cms blocks dir_folder is specified
+		$cms_blocks = array();
+		if (!empty($dir_folder))
+		{
+			$cms_blocks = array();
+			foreach($blocks as $key => $val)
+			{
+				$key = preg_replace('#^'.$dir_folder.'/(.+)#', '$1', $key);
+				$cms_blocks[$key] = $key;
+			}
+		}
+		else
+		{
+			$cms_blocks = $blocks;
+		}
+
+		$blocks = array_merge($view_blocks, $cms_blocks);
 		if ($order)
 		{
 			ksort($blocks);	
