@@ -935,14 +935,14 @@ class Fuel_custom_fields {
 			}
 			else
 			{
-
 				$CI =& get_instance();
+				$slug_val = $CI->input->post("'.$params['name'].'");
 				$linked_value = $CI->input->post("'.$params['linked_to'].'");
-				if ($linked_value)
+				if ( ! $slug_val AND $linked_value)
 				{
-					return url_title($linked_value, "dash", TRUE);	
+					return url_title($linked_value, "dash", TRUE);
 				}
-				
+				return $slug_val;
 			}
 			';
 		$func = create_function('$value', $func_str);
