@@ -1,6 +1,6 @@
 <div id="fuel_main_content_inner">
 	<?=$form?>
-	<br />
+	<br clear="both" />
 	<div class="buttonbar">
 		<ul>
 			<li class="unattached"><a href="#" class="ico ico_no cancel"><?=lang('btn_cancel')?></a></li>
