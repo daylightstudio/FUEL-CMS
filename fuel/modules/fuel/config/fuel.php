@@ -146,8 +146,8 @@ $config['assets_allow_subfolder_creation'] = TRUE;
 // specifies what filetype extensions can be included in the folders
 $config['editable_asset_filetypes'] = array(
 										'images' => 'jpg|jpeg|jpe|gif|png|zip', 
-										'pdf' => 'pdf|zip', 
-										'media' => 'mov|mp3|aiff|mpeg|zip', 
+										'pdf'    => 'pdf|zip', 
+										'media'  => 'mov|mp3|aiff|mpeg|zip', 
 										'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css|zip'
 										);
 
@@ -160,11 +160,12 @@ $config['assets_upload_max_width']  = '1024';
 // max height for asset images being uploaded
 $config['assets_upload_max_height']  = '768';
 
-// javascript files (mostly jquery plugins) to be included other then the controller js files
-
-
+// javascript files (mostly jquery plugins) to be included other than the controller js files
 $config['fuel_javascript'] = array(
-	'jquery/plugins/jquery-ui-1.8.17.custom.min',
+	'jquery/plugins.min',
+	'fuel/global',
+
+	/*'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
 	'jquery/plugins/jquery.tooltip',
@@ -177,7 +178,6 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.supercookie',
 	'jquery/plugins/jquery.hotkeys',
-	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'jquery/plugins/jquery.placeholder',
@@ -185,12 +185,11 @@ $config['fuel_javascript'] = array(
 	// NASTY Chrome JS bug...
 	// http://stackoverflow.com/questions/10314992/chrome-sometimes-calls-incorrect-constructor
 	// http://stackoverflow.com/questions/10251272/what-could-cause-this-randomly-appearing-error-inside-jquery-itself
-	'jquery/plugins/chrome_pushstack_fix.js',
-	'fuel/global',
+	'jquery/plugins/chrome_pushstack_fix.js',*/
 );
 
 
-// css other then the fuel.css file which automatically gets loaded
+// css other than the fuel.css file which automatically gets loaded
 $config['fuel_css'] = array();
 
 // allow for asset optimization. Requires that all module folders have a writable assets/cache folder

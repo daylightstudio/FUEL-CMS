@@ -368,56 +368,65 @@ div#fuel_left_panel_inner li.active ul li.active  {  background: none; }
 div#fuel_left_panel_inner li.active ul li a { color: #333; text-decoration: none; text-shadow: #fff 0px 1px 0px; background: none;  }
 div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline; }
 
-/* icos */
-.ico { display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 20px; background-image: url(../images/ico_cog.png); min-width: 16px; min-height: 16px; }
-.ico_activate { background-image: url(../images/ico_page_green.png); }
-.ico_assets { background-image: url(../images/ico_pictures.png); }
-.ico_blocks { background-image: url(../images/ico_application_view_tile.png); }
-.ico_cancel {  background-image: url(../images/ico_cancel.png); }
-.ico_create { background-image: url(../images/ico_page_add.png); }
-.ico_dashboard { background-image: url(../images/ico_house.png); }
-.ico_deactivate { background-image: url(../images/ico_page_red.png); }
-.ico_delete { background-image: url(../images/ico_page_delete.png); }
-.ico_duplicate { background-image: url(../images/ico_page_copy.png); }
-.ico_error {  background-image: url(../images/ico_cancel.png); }
-.ico_export { background-image: url(../images/ico_page_excel.png); }
-.ico_fuel { background-image: url(../images/ico_fuel.png); }
-.ico_info {  background-image: url(../images/ico_information.png); }
-.ico_logs { background-image: url(../images/ico_book_open.png); }
-.ico_manage_cache { background-image: url(../images/ico_page_lightning.png); }
-.ico_module { background-image: url(../images/ico_cog.png); }
-.ico_navigation { background-image: url(../images/ico_sitemap_color.png); }
-.ico_navigation_group { background-image: url(../images/ico_chart_organisation_add.png); }
-.ico_no {  background-image: url(../images/ico_cancel.png); }
-.ico_notes { background-image: url(../images/ico_note.png); }
-.ico_other { background-image: url(../images/ico_cog.png); }
-.ico_pages { background-image: url(../images/ico_layout.png); }
-.ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload { background-image: url(../images/ico_page_white_get.png); }
-.ico_permissions { background-image: url(../images/ico_key.png); }
-.ico_precedence { background-image: url(../images/ico_table_row_insert.png); }
-.ico_publish { background-image: url(../images/ico_page_green.png); }
-.ico_refresh { background-image: url(../images/ico_arrow_refresh.png); }
-.ico_remove_line { background-image: url(../images/ico_cancel.png); float: right;  }
-.ico_replace { background-image: url(../images/ico_page_refresh.png); }
-.ico_save { background-image: url(../images/ico_disk.png); }
-.ico_select_all { background-image: url(../images/ico_page_white_stack.png); }
-.ico_settings { background-image: url(../images/ico_table_gear.png); }
-.ico_sitevariables { background-image: url(../images/ico_page_white_code.png); }
-.ico_success {  background-image: url(../images/ico_accept.png); }
-.ico_table {  background-image: url(../images/ico_table.png); }
-.ico_tags {  background-image: url(../images/ico_tag_blue.png); }
-.ico_categories {  background-image: url(../images/ico_folder_page.png); }
-.ico_tools { background-image: url(../images/ico_wrench.png); }
-.ico_tree {  background-image: url(../images/ico_vert_tree.png); }
-.ico_unpublish { background-image: url(../images/ico_page_red.png); }
-.ico_users { background-image: url(../images/ico_status_online.png); }
-.ico_users_send_email { background-image: url(../images/ico_email_go.png); }
-.ico_view { background-image: url(../images/ico_layout_content.png); }
+/* icons */
+.ico { display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 20px; background-image: url(../images/fuel_icons.png); min-width: 16px; min-height: 16px; }
+.ico_success, .ico_yes { background-position-y: 2px; }
+.ico_add{ background-position-y: -35px; }
+.ico_application_side_list{ background-position-y: -72px; }
+.ico_blocks{ background-position-y: -109px; }
+.ico_refresh{ background-position-y: -146px; }
+.ico_logs{ background-position-y: -183px; }
+.ico_cancel, .ico_error, .ico_no, .ico_remove_line{ background-position-y: -220px; }
+.ico_remove_line{ background-position-y: -257px; }
+.ico_chart_organisation{ background-position-y: -294px; }
+.ico_navigation_group{ background-position-y: -331px; }
+.ico_module, .ico_other{ background-position-y: -368px; }
+.ico_comment{ background-position-y: -405px; }
+.ico_control_play{ background-position-y: -442px; }
+.ico_save{ background-position-y: -442px; }
+.ico_users_send_email{ background-position-y: -516px; }
+.ico_warn{ background-position-y: -553px; }
+.ico_categories{ background-position-y: -313px; }
+.ico_fuel{ background-position-y: -590px; }
+.ico_help{ background-position-y: -627px; }
+.ico_dashboard{ background-position-y: -664px; }
+.ico_html_valid{ background-position-y: -701px; }
+.ico_info{ background-position-y: -738px; }
+.ico_permissions{ background-position-y: -775px; }
+.ico_pages{ background-position-y: -812px; }
+.ico_view{ background-position-y: -849px; }
+.ico_notes{ background-position-y: -886px; }
+.ico_create{ background-position-y: -923px; }
+.ico_duplicate{ background-position-y: -960px; }
+.ico_delete{ background-position-y: -997px; }
+.ico_export{ background-position-y: -1034px; }
+.ico_activate, .ico_publish{ background-position-y: -1071px; }
+.ico_manage_cache{ background-position-y: -1108px; }
+.ico_deactivate, .ico_unpublish{ background-position-y: -1145px; }
+.ico_replace{ background-position-y: -1182px; }
+.ico_sitevariables{ background-position-y: -1219px; }
+.ico_page_white_edit{ background-position-y: -1256px; }
+.ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload{ background-position-y: -1293px; }
+.ico_select_all{ background-position-y: -1330px; }
+.ico_pencil{ background-position-y: -1367px; }
+.ico_pencil_delete{ background-position-y: -1404px; }
+.ico_picture_link{ background-position-y: -1441px; }
+.ico_assets{ background-position-y: -1478px; }
+.ico_navigation{ background-position-y: -1515px; }
+.ico_sortable{ background-position-y: -1552px; }
+.ico_users{ background-position-y: -1589px; }
+.ico_stop{ background-position-y: -1626px; }
+.ico_table{ background-position-y: -1663px; width:16px;height:16px; }
+.ico_settings{ background-position-y: -1700px; }
+.ico_precedence{ background-position-y: -1737px; }
+.ico_tags{ background-position-y: -1774px; }
+.ico_user{ background-position-y: -1811px; }
+.ico_vcard_edit{ background-position-y: -1848px; }
+.ico_tree{ background-position-y: -1885px; }
+.ico_world_link{ background-position-y: -1922px; }
+.ico_tools{ background-position-y: -1959px; }
 .ico_view_all { background-image: none; line-height: 22px; padding-left: 5px; }
-.ico_warn {  background-image: url(../images/ico_error.png); }
-.ico_yes {  background-image: url(../images/ico_accept.png); }
-
-
+h2.ico { margin-top: 5px; line-height: 21px !important; }
 /******************************************************
 main panel 
 ******************************************************/
@@ -475,7 +484,7 @@ div#other_items select{  max-width: 250px;}
 /* button bar*/
 div#action_btns { position: absolute; top: 9px; left: 15px; height: 29px; overflow: hidden; }
 div.buttonbar ul {  height: 27px; float: left; }
-div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #b9b9b9; border-bottom: 1px solid #b9b9b9; float: left;list-style: none;  margin: 0;
+div.buttonbar li { border-top: 1px solid #ccc; border-left: 1px solid #b9b9b9; border-bottom: 1px solid #b9b9b9; float: left; list-style: none;  margin: 0;
   background: #e6e6e6 url(../images/btn.png) repeat-x; 
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
   background: -moz-linear-gradient(top center, #fff 0%, #ddd 100%);
@@ -495,7 +504,7 @@ div.buttonbar li.active { background-position: 0 -54px;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff');
 }
 div.buttonbar li.active a { color: #000; }
-div.buttonbar li a { color: #0e3e7e; height: 27px; line-height: 27px; display: block; padding: 0 10px 0 26px; }
+div.buttonbar li a { color: #0e3e7e; height: 22px; line-height: 20px; display: block; padding: 0 11px 1px 26px; margin-top: 4px; }
 div.buttonbar li.spacer, li.unattached { margin-left: 10px;}
 div.buttonbar li:last-child, li.unattached { border-right: 1px solid #b9b9b9; }
 div.buttonbar li.end { border-right: 1px solid #b9b9b9; } /* on own line so it will work in IE 8 */
@@ -597,7 +606,6 @@ div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 864px; margin-left: -425px; max-height: 508px; background-color: #fff; }
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
-
 
 div.viewpage_modal { top: 16px; border: 2px solid #666; background-color: #fff; height: 96% !important; width: 96% !important; max-width: 96% !important; max-height: 96% !important; padding: 0; display: none; }
 div#viewpage_btns { position: absolute; z-index: 1; top: -17px; right: -2px; }
