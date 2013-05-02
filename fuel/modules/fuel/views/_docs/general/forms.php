@@ -979,15 +979,17 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="list_items" class="toggle">list_items</h3>
 <div class="toggle_block_off">
 	<p>This field type allows you to create bulletted list items by separating each line by a return. 
-	The data saved in the database will be an unordered HTML list.</p>
-	
+	The data saved in the database will be either an unordered or ordered HTML list. The following additional parameter can be passed to this field type:</p>
+	<ul>
+		<li><strong>list_type</strong>: the list type. Options are either "ol" or "ul". Default is "ul".</li>
+	</ul>
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$value = "line1\nline2\nline3";
-	$fields['list_items'] = array('type' => 'list_items', 'value' => $value);
+	$fields['list_items'] = array('type' => 'list_items', 'value' => $value, 'list_type' => 'ol');
 	</pre>
 	
-	<?php form_builder_example('list_items_example', array('type' => 'list_items', 'value' => "line1\nline2\nline3")); ?>
+	<?php form_builder_example('list_items_example', array('type' => 'list_items', 'value' => "line1\nline2\nline3", 'list_type' => 'ol')); ?>
 	
 </div>
 
