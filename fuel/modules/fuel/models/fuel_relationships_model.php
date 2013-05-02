@@ -18,7 +18,7 @@ class Fuel_relationships_model extends Base_module_model {
 			$where['candidate_id'] = $candidate_id;
 		}
 		$this->_common_select_and_joins($candidate_table, $foreign_table);
-		return $this->find_all($where, NULL, NULL, NULL, NULL, $return_method);
+		return $this->find_all($where, NULL, NULL, NULL, $return_method);
 	}
 
 	function find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
@@ -30,7 +30,7 @@ class Fuel_relationships_model extends Base_module_model {
 			$where['foreign_id'] = $foreign_id;
 		}
 		$this->_common_select_and_joins($candidate_table, $foreign_table);
-		return $this->find_all($where, NULL, NULL, NULL, NULL, $return_method);
+		return $this->find_all($where, NULL, NULL, NULL, $return_method);
 	}
 	
 	function _common_select_and_joins($candidate_table, $foreign_table)
