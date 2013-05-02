@@ -105,21 +105,7 @@ class Module extends Fuel_base_controller {
 		// get the model name
 		$model = end(explode('/', $this->model_name));
 
-		if (empty($this->display_field))
-		{
-			$fields = $this->$model->fields();
-			
-			// loop through the fields and find the first column that doesn't have id or _id at the end of it
-			for ($i = 1; $i < count($fields); $i++)
-			{
-				if (substr($fields[$i], -3) != '_id')
-				{
-					$this->display_field = $fields[$i];
-					break;
-				}
-			}
-			if (empty($this->display_field)) $this->display_field = $fields[1]; // usually the second field is the display_field... first is the id
-		}
+		
 		
 		// set the module_uri
 		if (empty($this->module_uri)) $this->module_uri = $this->module;

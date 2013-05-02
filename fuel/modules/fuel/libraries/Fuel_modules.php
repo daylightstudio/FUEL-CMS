@@ -229,6 +229,20 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function get($module = NULL, $include_advanced = TRUE)
 	{
+		// allows you to get a module based on the model name
+		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module))
+		{
+			$modules = $this->get(NULL, FALSE);
+			foreach($modules as $key => $mod)
+			{
+				if (strtolower($mod->info('model_name')) == $module)
+				{
+					$module = $key;
+					break;
+				}
+			}
+		}
+		
 		if (!empty($module))
 		{
 			if ($module == 'fuel')
@@ -691,7 +705,25 @@ class Fuel_module extends Fuel_base_library {
 			{
 				$info['create_action_name'] = $create_action_name;
 			}
+
 			$this->_info = $info;
+
+			// must be done after the above 
+			if (empty($this->_info['display_field']))
+			{
+				$fields = $this->model()->fields();
+				
+				// loop through the fields and find the first column that doesn't have id or _id at the end of it
+				for ($i = 1; $i < count($fields); $i++)
+				{
+					if (substr($fields[$i], -3) != '_id')
+					{
+						$this->_info['display_field'] = $fields[$i];
+						break;
+					}
+				}
+				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $this->_info[1]; // usually the second field is the display_field... first is the id
+			}
 		}
 		if (empty($prop))
 		{
