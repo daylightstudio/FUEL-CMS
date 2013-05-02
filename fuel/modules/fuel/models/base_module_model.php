@@ -103,14 +103,14 @@ class Base_module_model extends MY_Model {
 															'filesize' 		=> array('asset_filesize', 'pdf', '', FALSE),
 															'exists'		=> array('asset_exists', 'pdf', ''),
 															)
-								); // default helpers which get merged into $helpers property array
+								); // default formatters which get merged into $formatters property array
 	
 	/**
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	string	the table name
-	 * @param	string	the module name to 
+	 * @param	string	The table name
+	 * @param	mixed	If an array, it will assume they are initialization properties. If a string, it will assume it's the name of the module the module exists in
 	 * @return	void
 	 */
 	function __construct($table = NULL, $params = NULL)
@@ -181,7 +181,6 @@ class Base_module_model extends MY_Model {
 		$this->load->helper('text');
 		$this->load->helper('markdown');
 		$this->load->helper('format');
-		$this->load->helper('format');
 
 		// set formatters
 		if (!empty($this->_formatters) AND !empty($this->formatters))
@@ -200,8 +199,8 @@ class Base_module_model extends MY_Model {
 	 * Adds a filter for searching
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	string
+	 * @param	string The name of the field to filter on
+	 * @param	string A key to associate with the filter(optional)
 	 * @return	void
 	 */	
 	function add_filter($filter, $key = NULL)
@@ -222,7 +221,7 @@ class Base_module_model extends MY_Model {
 	 * Adds multiple filters for searching
 	 *
 	 * @access	public
-	 * @param	array
+	 * @param	array An array of fields to filter on
 	 * @return	void
 	 */	
 	function add_filters($filters)
@@ -243,11 +242,12 @@ class Base_module_model extends MY_Model {
 	 * Lists the module items
 	 *
 	 * @access	public
-	 * @param	int
-	 * @param	int
-	 * @param	string
-	 * @param	string
-	 * @return	void
+	 * @param	int The limit value for the list data
+	 * @param	int The offset value for the list data
+	 * @param	string The field name to order by
+	 * @param	string The sorting order
+	 * @param	boolean Determines whether the result is just an 
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
 	 */	
 	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
@@ -276,9 +276,9 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Creates the query logic for the list view. Separated out so that the count can use this method as well.
+	 * Creates the query logic for the list view using CI's active record. Separated out so that the count can use this method as well.
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @return	void
 	 */	
 	protected function _list_items_query()
@@ -373,7 +373,7 @@ class Base_module_model extends MY_Model {
 	 * Lists the total number of module items
 	 *
 	 * @access	public
-	 * @return	int
+	 * @return	int The total number of items with filters applied
 	 */	
 	function list_items_total()
 	{
@@ -384,16 +384,127 @@ class Base_module_model extends MY_Model {
 		}
 		return $cnt;
 	}
+
 	
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a tree array structure that can be used by a public "tree" method on models inheriting from this class 
+	 *
+	 * @access	protected
+	 * @param	string The name of the model's property to used to generate the tree. Options are 'foreign_fields', 'has_many' or 'belongs_to'
+	 * @return	array
+	 */	
+	protected function _tree($prop = NULL)
+	{
+		$CI =& get_instance();
+		$return = array();
+
+
+		if (!empty($this->foreign_keys) OR !empty($this->has_many) OR !empty($this->belongs_to))
+		{
+			if (empty($prop))
+			{
+				if (!empty($this->foreign_keys))
+				{
+					$p = $this->foreign_keys;
+				}
+				else if (!empty($this->has_many))
+				{
+					$p = $this->has_many;
+				}
+			}
+			else if (property_exists($this, $prop))
+			{
+				$p = $this->$prop;
+			}
+
+			$key_field = key($p);
+
+			// get related model info
+			$rel_module = current($p);
+			if (is_array($rel_module))
+			{
+				$rel_module =  current($rel_module);
+			}
+			$rel_module_obj =  $CI->fuel->modules->get($rel_module, FALSE);
+
+			if (!$rel_module_obj)
+			{
+				return array();
+			}
+			$rel_model = $rel_module_obj->model();
+			$rel_key_field = $rel_model->key_field();
+			$rel_display_field = $rel_module_obj->info('display_field');
+
+
+			$module = $this->table_name();
+			$module_obj =  $CI->fuel->modules->get($module, FALSE);
+			if (!$module_obj)
+			{
+				return array();
+			}
+			$model = $module_obj->model();
+			$display_field = $module_obj->info('display_field');
+			$rel_col = !empty($rel_module_obj->default_col) ? $rel_module_obj->default_col : $this->key_field();
+			$rel_order = !empty($rel_module_obj->default_order) ? $rel_module_obj->default_order : 'asc';
+
+			if ($prop == 'foreign_keys')
+			{
+				$groups = $rel_model->find_all_array(array(), $rel_model->key_field().' asc');
+				$children = $this->find_all_array(array(), $key_field.' asc');
+				$g_key_field = $key_field;
+			}
+			else if ($prop == 'has_many')
+			{
+				$CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
+				$groups = $rel_model->find_all_array(array(), $rel_col.' '.$rel_order);
+				$children = $CI->fuel_relationships_model->find_by_candidate($this->table_name(), $rel_model->table_name(), NULL, 'array');
+				$key_field = 'foreign_id';
+				$g_key_field = 'candidate_id';
+				$display_field = 'candidate_'.$display_field;
+			}
+			else if ($prop == 'belongs_to')
+			{
+				$CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
+				$groups = $rel_model->find_all_array(array(), $rel_col.' '.$rel_order);
+				$children = $CI->fuel_relationships_model->find_by_candidate($rel_model->table_name(), $this->table_name(), NULL, 'array');
+				$key_field = 'candidate_id';
+				$g_key_field = 'foreign_id';
+				$display_field = 'foreign_'.$display_field;
+			}
+
+			// now get this models records
+			foreach($children as $child)
+			{
+				$used_groups[$child[$key_field]] = $child[$key_field];
+				$attributes = ((isset($child['published']) AND $child['published'] == 'no') OR (isset($child['active']) AND $child['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->name().'/edit/'.$child[$key_field]), 'attributes' => $attributes);
+			}
+
+			foreach($groups as $group)
+			{
+				if (isset($used_groups[$group[$rel_key_field]]))
+				{
+					$attributes = ((isset($group['published']) AND $group['published'] == 'no') OR (isset($group['active']) AND $group['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+					$return[$group[$rel_key_field]] = array('id' => $group[$rel_key_field], 'parent_id' => 0, 'label' => $group[$rel_display_field], 'location' => fuel_url($rel_module_obj->name().'/edit/'.$group[$rel_key_field]), 'attributes' => $attributes);	
+				}
+				
+			}
+		}
+		return $return;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
 	 * Saves data to the archive
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	array
-	 * @return	void
+	 * @param	int The record ID associated with the archive
+	 * @param	array The array of data to be archived
+	 * @return	boolean Whether it was saved properly or not
 	 */	
 	function archive($ref_id, $data)
 	{
@@ -419,7 +530,8 @@ class Base_module_model extends MY_Model {
 		if (!empty($last_archive_data) AND $last_archive_data == $tmp_data) {
 			return true;
 		}
-		
+
+		// save to archive
 		$user = $CI->fuel->auth->user_data();
 		$save['ref_id'] = $ref_id;
 		$save['table_name'] = $this->table_name;
@@ -445,9 +557,9 @@ class Base_module_model extends MY_Model {
 	 * Retrieves the last archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	array
-	 * @return	void
+	 * @param	int The record ID associated with the archive
+	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
+	 * @return	array
 	 */	
 	function get_last_archive($ref_id, $all_data = FALSE)
 	{
@@ -468,9 +580,9 @@ class Base_module_model extends MY_Model {
 	 * Retrieves an archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @param	boolean
+	 * @param	int The record ID associated with the archive
+	 * @param	int The version of the archive to retrieve (optional)
+	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
 	 * @return	array
 	 */	
 	function get_archive($ref_id, $version = NULL, $all_data = FALSE)
@@ -514,9 +626,9 @@ class Base_module_model extends MY_Model {
 	 * Restores module item from an archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	int The record ID associated with the archive
+	 * @param	int The version of the archive to retrieve (optional)
+	 * @return	boolean Whether it was saved properly or not
 	 */	
 	function restore($ref_id, $version = NULL)
 	{
@@ -530,11 +642,12 @@ class Base_module_model extends MY_Model {
 	 * Get other listed module items excluding the currently displayed
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	string The field name used as the label
+	 * @param	int The current value... and actually deprecated (optional)
+	 * @param	string The value field (optional)
+	 * @return	array Key/value array
 	 */	
-	function get_others($display_field, $id, $val_field = NULL)
+	function get_others($display_field, $id = NULL, $val_field = NULL)
 	{
 		$orderby = TRUE;
 		if (empty($val_field))
@@ -565,12 +678,11 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get other listed module items excluding the currently displayed
+	 * Returns a key/value array of a distinct set of languages associated with records that have a language field
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	string The name of the field used to determine which language. if empty, it will default to 'language' (optional)
+	 * @return	array
 	 */	
 	function get_languages($field = NULL)
 	{
@@ -600,10 +712,10 @@ class Base_module_model extends MY_Model {
 	 * Replaces an existing record with another record
 	 *
 	 * @access	public
-	 * @param	int
-	 * @param	int
-	 * @param	boolean
-	 * @return	boolean
+	 * @param	int The old record id of data that will be replaced
+	 * @param	int The new record id of data that will be used for the replacement
+	 * @param	boolean Determines whether to delete the old record (optional)
+	 * @return	boolean Whether it was saved properly or not
 	 */	
 	function replace($replace_id, $id, $delete = TRUE)
 	{
@@ -645,14 +757,14 @@ class Base_module_model extends MY_Model {
 		return $saved;
 		
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns data that will be downloaded automatically
+	 * Returns CSV data that will be downloaded automatically. Overwrite this method for more specific output
 	 *
 	 * @access	public
-	 * @param	array
+	 * @param	array An array that contains "col", "order", "offset", "limit", "searh_term" to help with the formatting of the output. By default only the "col" and "order" parameters are used (optional)
 	 * @return	string
 	 */	
 	function export_data($params = array())
@@ -678,8 +790,8 @@ class Base_module_model extends MY_Model {
 	 * Placeholder for return data that appears in the right side when editing a record (e.g. Related Navigation in pages module )
 	 *
 	 * @access	public
-	 * @param	array
-	 * @return	string
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
 	 */	
 	function related_items($params = array())
 	{
@@ -692,9 +804,9 @@ class Base_module_model extends MY_Model {
 	 * Add FUEL specific changes to the form_fields method
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
 	 */	
 	function form_fields($values = array(), $related = array())
 	{
@@ -734,7 +846,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	public
 	 * @param	boolean	whether to display unpublished content in the front end if logged in
-	 * @return	string
+	 * @return	void
 	 */	
 	function _common_query($display_unpublished_if_logged_in = NULL)
 	{
@@ -755,10 +867,10 @@ class Base_module_model extends MY_Model {
 	/**
 	 * Used for displaying content that is published
 	 *
-	 * @access	public
-	 * @return	string
+	 * @access	protected
+	 * @return	void
 	 */	
-	function _publish_status()
+	protected function _publish_status()
 	{
 		$fields = $this->fields();
 
