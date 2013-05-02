@@ -39,10 +39,7 @@ class Fuel_custom_fields {
 	/**
 	 * Constructor
 	 *
-	 * Accepts an associative array as input, containing preferences (optional)
-	 *
 	 * @access	public
-	 * @param	array	config preferences
 	 * @return	void
 	 */	
 	function __construct()
@@ -50,7 +47,16 @@ class Fuel_custom_fields {
 		$this->CI =& get_instance();
 		$this->fuel =& $this->CI->fuel;
 	}
-	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a richer text editor for textarea fields
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function wysiwyg($params)
 	{
 		$form_builder =& $params['instance'];
@@ -102,6 +108,15 @@ class Fuel_custom_fields {
 		return $form_builder->create_textarea($params);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a file upload field but has the option to allow multiple fields
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function file($params)
 	{
 		$form_builder =& $params['instance'];
@@ -112,6 +127,15 @@ class Fuel_custom_fields {
 		return $form_builder->create_file($params);
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates an asset select/upload field
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function asset($params)
 	{
 
@@ -359,6 +383,15 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates an inline edit field type useful for drop down selects that reference data from another module
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function inline_edit($params)
 	{
 		$form_builder =& $params['instance'];
@@ -411,7 +444,16 @@ class Fuel_custom_fields {
 		return $field;
 	}
 
-	function linked($params)
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a linked field which will use another fields value as the basis for it's own and will usually apply some sort of transform (e.g. url_title, lowercase, etc)
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
+	 function linked($params)
 	{
 		$form_builder =& $params['instance'];
 		$str = '';
@@ -447,6 +489,15 @@ class Fuel_custom_fields {
 		return $str;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a a template field type... This baby has a ton of options including repeatable and sortable fields. Get's stored as JSON string
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function template($params, $return_fields = FALSE)
 	{
 		$this->CI->load->library('parser');
@@ -761,6 +812,15 @@ class Fuel_custom_fields {
 		return $str;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a currency field type
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function currency($params)
 	{
 		$this->CI->load->helper('format');
@@ -871,6 +931,15 @@ class Fuel_custom_fields {
 		return $currency.' '.$form_builder->create_text($params);
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a state field type
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function state($params)
 	{
 		include(APPPATH.'config/states.php');
@@ -895,7 +964,16 @@ class Fuel_custom_fields {
 		// set data values for jquery plugin to use
 		return $form_builder->create_select($params);
 	}
-	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a slug field type that has the url_title function applied to it
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function slug($params)
 	{
 		$form_builder =& $params['instance'];
@@ -935,14 +1013,14 @@ class Fuel_custom_fields {
 			}
 			else
 			{
-
 				$CI =& get_instance();
+				$slug_val = $CI->input->post("'.$params['name'].'");
 				$linked_value = $CI->input->post("'.$params['linked_to'].'");
-				if ($linked_value)
+				if ( ! $slug_val AND $linked_value)
 				{
-					return url_title($linked_value, "dash", TRUE);	
+					return url_title($linked_value, "dash", TRUE);
 				}
-				
+				return $slug_val;
 			}
 			';
 		$func = create_function('$value', $func_str);
@@ -954,6 +1032,15 @@ class Fuel_custom_fields {
 		return $this->linked($params);
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a text area that will automatically create unordered list items off of each new line
+	 *
+	 * @access	public
+	 * @param	array Fields parameters
+	 * @return	string
+	 */
 	function list_items($params)
 	{
 		$form_builder =& $params['instance'];
@@ -965,6 +1052,8 @@ class Fuel_custom_fields {
 		
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
+		$list_type = (!empty($params['list_type']) AND $params['list_type'] == 'ol') ? 'ol' : 'ul';
+
 		$func_str = '
 			if (is_array($value))
 			{
@@ -974,7 +1063,7 @@ class Fuel_custom_fields {
 					{
 						$lis = explode("\n", $value);
 						$lis = array_map("trim", $lis);
-						$val = ul($lis, "'.$output_class.'");
+						$val = '.$list_type.'($lis, "'.$output_class.'");
 						$value[$key]["'.$process_key.'"] = $val;
 					}
 				}
@@ -984,7 +1073,7 @@ class Fuel_custom_fields {
 			{
 				$lis = explode("\n", $value);
 				$lis = array_map("trim", $lis);
-				return ul($lis, "'.$output_class.'");
+				return '.$list_type.'($lis, "'.$output_class.'");
 			}
 			';
 		
@@ -1001,7 +1090,7 @@ class Fuel_custom_fields {
 	 * Creates the multi select input for the form
 	 *
 	 * @access	public
-	 * @param	array fields parameters
+	 * @param	array Fields parameters
 	 * @return	string
 	 */
 	function multi($params)
@@ -1035,7 +1124,7 @@ class Fuel_custom_fields {
 		}
 		if (!empty($params['module']))
 		{
-			// hackalicious... used to check for a model's module
+			// // hackalicious... used to check for a model's module
 			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
 			foreach($modules as $key => $mod)
 			{
@@ -1139,7 +1228,7 @@ class Fuel_custom_fields {
 	 * Creates the url input select
 	 *
 	 * @access	public
-	 * @param	array fields parameters
+	 * @param	array Fields parameters
 	 * @return	string
 	 */
 	function url($params)
@@ -1178,7 +1267,7 @@ class Fuel_custom_fields {
 	 * Creates a dropdown select of languages identified in the MY_fuel.php file
 	 *
 	 * @access	public
-	 * @param	array fields parameters
+	 * @param	array Fields parameters
 	 * @return	string
 	 */
 	function language($params)
@@ -1202,7 +1291,7 @@ class Fuel_custom_fields {
 	 * Creates a key / value associative array
 	 *
 	 * @access	public
-	 * @param	array fields parameters
+	 * @param	array Fields parameters
 	 * @return	string
 	 */
 	function keyval($params)
@@ -1336,7 +1425,7 @@ class Fuel_custom_fields {
 	 * Creates a dropdown select of blocks and when selected, will display fields related to that block
 	 *
 	 * @access	public
-	 * @param	array fields parameters
+	 * @param	array Fields parameters
 	 * @return	string
 	 */
 	function block($params)
