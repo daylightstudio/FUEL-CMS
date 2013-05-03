@@ -1,4 +1,31 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends CI_Model
+ *
+ * <strong>Fuel_assets_model</strong> is used for managing asset data with the file system which includes retrieving and deleting images, pdfs, etc.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_assets_model
+ */
 
 // not pulling from the database so just extend the normal model
 require_once(FUEL_PATH.'libraries/Validator.php');
@@ -18,8 +45,10 @@ class Fuel_assets_model extends CI_Model {
 	/**
 	 * Constructor
 	 *
+	 * @access	public
+	 * @return	void
 	 */
-	function __construct()
+		function __construct()
 	{
 		parent::__construct();
 		$CI =& get_instance();
@@ -403,11 +432,19 @@ class Fuel_assets_model extends CI_Model {
 	{
 	}
 
+		
+	/**
+	 * Displays the most recently uplloaded 
+	 *
+	 * @access	public
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
+	 */
 	function related_items($params)
 	{
 		$CI =& get_instance();
 		$uploaded_post = $CI->session->flashdata('uploaded_post');
-		if (!empty($uploaded_post['uploaded_file_webpath']))
+		if (!empty($uploaded_post['uploaded_file_webpath']) AND is_image_file($uploaded_post['uploaded_file_webpath']))
 		{
 			$img = '<a href="'.$uploaded_post['uploaded_file_webpath'].'" target="_blank"><img src="'.$uploaded_post['uploaded_file_webpath'].'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
 			return $img;
