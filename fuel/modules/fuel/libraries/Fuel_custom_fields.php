@@ -727,11 +727,25 @@ class Fuel_custom_fields {
 
 			if ($repeatable)
 			{
-				$css_class = (!empty($params['depth'])) ? ' child':  '';
+				$container_class = array('repeatable_container');
+				$container_class[] = (!empty($params['depth'])) ? ' child' :  '';
+				if (!empty($params['container_class']))
+				{
+					if (is_array($params['container_class']))
+					{
+						$container_class = $container_class + $params['container_class'];
+					}
+					else
+					{
+						$container_class[] = $params['container_class'];
+					}
+				}
+				$container_class[] = (!empty($params['condensed']) AND $params['condensed']) ? 'repeatable_container_condensed' : '';
+				$container_class[] = (!empty($params['non_sortable']) AND $params['non_sortable']) ? 'non_sortable' : '';
 				$dblclick = (!empty($params['dblclick'])) ? $params['dblclick'] : 0;
 				$init_display = (!empty($params['init_display'])) ? $params['init_display'] : '';
 				$title_field = (!empty($params['title_field'])) ? $params['title_field'] : '';
-				$str .= '<div class="repeatable_container'.$css_class.'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'">';
+				$str .= '<div class="'.implode(' ', $container_class).'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'">';
 				$i = 0;
 
 

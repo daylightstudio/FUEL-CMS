@@ -319,6 +319,9 @@ a.btn, div.btn, .btn input, .btn .button  {
   -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
   -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
   box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); }
+.repeatable_container.repeatable_container_condensed .repeatable { margin: 0; padding: 1px 5px; }
+.repeatable_container.repeatable_container_condensed .repeatable .grabber { float: left; }
+.repeatable_container.non_sortable .grabber { display: none; }
 
 /* for multi-file plugin*/
 .MultiFile-remove { line-height: 22px; padding: 0 3px; border: 1px solid #ccc; background-color: #f9f9f9; }
