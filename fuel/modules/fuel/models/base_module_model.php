@@ -34,7 +34,7 @@
  * @subpackage	Models
  * @category	Models
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/base_module_model
+ * @link		http://www.getfuelcms.com/user_guide/models/base_module_model
  */
 
 require_once(APPPATH.'core/MY_Model.php');
@@ -246,7 +246,7 @@ class Base_module_model extends MY_Model {
 	 * @param	int The offset value for the list data
 	 * @param	string The field name to order by
 	 * @param	string The sorting order
-	 * @param	boolean Determines whether the result is just an 
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
 	 */	
 	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
