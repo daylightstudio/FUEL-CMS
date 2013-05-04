@@ -1,15 +1,63 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_logs_model</strong> is used for logging action in FUEL
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_logs_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_logs_model extends Base_module_model {
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_logs');
 		$this->filters = array('entry_date', $this->_tables['fuel_users'].'.first_name', $this->_tables['fuel_users'].'.last_name', 'message');
 	}
-
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the log items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data
+	 * @param	int The offset value for the list data
+	 * @param	string The field name to order by
+	 * @param	string The sorting order
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
+	 */	
 	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_logs'].'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
@@ -17,13 +65,33 @@ class Fuel_logs_model extends Base_module_model {
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
-
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns just the latest activity in the log
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @return	array of data
+	 */	
 	function latest_activity($limit = NULL)
 	{
 		$this->db->where('type', 'info');
 		return $this->list_items($limit);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Saves to the logging table
+	 *
+	 * @access	public
+	 * @param	string The message to associate with the log
+	 * @param	string The type of log (optional)
+	 * @param	int The user ID associated with the log (optional)
+	 * @return	boolean TRUE if saved correctly. FALSE otherwise
+	 */	
 	function logit($msg, $type = NULL, $user_id = NULL)
 	{
 		$CI =& get_instance();
@@ -40,7 +108,7 @@ class Fuel_logs_model extends Base_module_model {
 		$save['type'] = $type;
 		$save['user_id'] = $user_id;
 		$save['entry_date'] = datetime_now();
-		$this->save($save);
+		return $this->save($save);
 	}
 
 }
