@@ -1,12 +1,39 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_tags_model</strong> is used for managing FUEL tags in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_tags_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_tags_model extends Base_module_model {
 
-	public $filters = array('name', 'slug');
-	public $unique_fields = array('slug');
-	public $linked_fields = array('name' => 'slug');
+	public $filters = array('name', 'slug'); // Allows for filtering on both the name and the slug
+	public $unique_fields = array('slug'); // The slug value must be unique
+	public $linked_fields = array('name' => 'slug'); // the slug value should be the name field's value with the url_title function applied to it if there is no value specified
 
 	protected $friendly_name = 'Tags';
 	protected $singular_name = 'Tag';
@@ -83,24 +110,6 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initializes the class with the parent model and field names
-	 *
-	 * @access	public
-	 * @param	int	the number in which to limit the returned data results (optional)
-	 * @param	int	the number in which to offset the returned data results (optional)
-	 * @param	string	the column name to sort on (optional)
-	 * @param	string	the order in which to return the results (optional)
-	 * @return	array
-	 */	
-	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
-	{
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Creates the form_fields array to be used with Form_builder
 	 *
 	 * @access	public
@@ -169,5 +178,4 @@ class Fuel_tags_model extends Base_module_model {
 
 class Fuel_tag_model extends Base_module_record {
 	
-	// put your record model code here
 }
