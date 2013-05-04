@@ -1,7 +1,39 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Extends MY_Model
+ *
+ * <strong>Fuel_archives_model</strong> is used for archiving saved data that can be rolled back in the admin.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_archives_model
+ */
 class Fuel_archives_model extends MY_Model {
 	
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	function __construct()
 	{
 		$CI =& get_instance();
@@ -10,7 +42,16 @@ class Fuel_archives_model extends MY_Model {
 		parent::__construct($tables['fuel_archives']);
 	}
 	
-	function options_list($ref_id, $table_name, $include_current = false)
+	/**
+	 * Returns an option list of saved archives based on a record ID and table name
+	 *
+	 * @access	public
+	 * @param	string	The record ID
+	 * @param	string	The table name
+	 * @param	boolean	Determines whether to include the currently active record in the archive list (optional)
+	 * @return	array Key/value array with the key being the archive ID value
+	 */
+	function options_list($ref_id, $table_name, $include_current = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('date');
