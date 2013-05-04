@@ -1,18 +1,40 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_categories_model</strong> is used for managing FUEL categories in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_categories_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_categories_model extends Base_module_model {
 
-	public $filters = array('name', 'slug', 'context');
-	public $required = array('name', 'slug');
-	public $linked_fields = array('slug' => 'name');
-	public $unique_fields = array('slug');
-
-	public $boolean_fields = array();
-	public $belongs_to = array();
-	public $has_many = array();
-	public $serialized_fields = array();
+	public $required = array('name', 'slug'); // name and slug are required
+	public $filters = array('name', 'slug', 'context'); // allows for the description field to be searchable as well as the name field
+	public $linked_fields = array('slug' => 'name'); // the slug value should be the name field's value with the url_title function applied to it if there is no value specified
+	public $unique_fields = array('slug'); // the slug field needs to be unique
 
 	protected $friendly_name = 'Categories';
 	protected $singular_name = 'Category';
@@ -29,24 +51,6 @@ class Fuel_categories_model extends Base_module_model {
 	function __construct()
 	{
 		parent::__construct('fuel_categories'); // table name
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Initializes the class with the parent model and field names
-	 *
-	 * @access	public
-	 * @param	int	the number in which to limit the returned data results (optional)
-	 * @param	int	the number in which to offset the returned data results (optional)
-	 * @param	string	the column name to sort on (optional)
-	 * @param	string	the order in which to return the results (optional)
-	 * @return	array
-	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc', $just_count = FALSE)
-	{
-		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
-		return $data;
 	}
 
 	// --------------------------------------------------------------------
@@ -89,20 +93,6 @@ class Fuel_categories_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Overwrites the on_after_save parent method and doesn't call the parent
-	 *
-	 * @access	public
-	 * @param	array	values
-	 * @return	array
-	 */	
-	function on_after_save($values)
-	{
-		return $values;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Overwrites the _common_query parent method to automatically sort by precedence value
 	 *
 	 * @access	public
@@ -117,10 +107,10 @@ class Fuel_categories_model extends Base_module_model {
 
 }
 
+
 class Fuel_category_model extends Base_module_record {
 
-	// contains all the modules that have a foreign key relationship
-	public $_belongs_to = array();
+	public $_belongs_to = array(); // contains all the modules that have a foreign key relationship
 	
 	// --------------------------------------------------------------------
 	
@@ -192,6 +182,7 @@ class Fuel_category_model extends Base_module_record {
 		}
 		return FALSE;
 	}
+
 	// --------------------------------------------------------------------
 	
 	/**
