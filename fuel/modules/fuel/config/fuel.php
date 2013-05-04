@@ -228,7 +228,7 @@ $config['seconds_to_unlock'] = 60;
 // If you set a dev password, the site will require a password to view
 $config['dev_password'] = '';
 
-// will auto search view files. 
+// will auto search view files. The max_page_params config can also be used for this as well
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
 $config['auto_search_views'] = FALSE;
 

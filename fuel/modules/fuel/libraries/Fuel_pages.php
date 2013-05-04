@@ -578,30 +578,7 @@ class Fuel_page extends Fuel_base_library {
 			
 			
 			// determine max page params
-			$max_page_params = 0;
-			if (is_array($this->fuel->config('max_page_params')))
-			{
-				$location = implode('/', $this->CI->uri->rsegment_array());
-				foreach($this->fuel->config('max_page_params') as $key => $val)
-				{
-					// add any match to the end of the key in case it doesn't exist (no problems if it already does)'
-					$key .= ':any';
-					
-					// convert wild-cards to RegEx
-					$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
-
-					// does the RegEx match?
-					if (preg_match('#^'.$key.'$#', $location))
-					{
-						$max_page_params = $val;
-						break;
-					}
-				}
-			}
-			else
-			{
-				$max_page_params = (int)$this->fuel->config('max_page_params');
-			}
+			$max_page_params = $this->get_max_page_param();
 			
 			$matched = FALSE;
 			while(count($segments) >= 1)
@@ -1510,13 +1487,19 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	function find_view_file($view, $depth = NULL)
 	{
-		if (!$this->fuel->config('auto_search_views')) return NULL;
+		if (!isset($depth))
+		{
+			$depth = $this->get_max_page_param();	
+		}
+		
+		if (!$this->fuel->config('auto_search_views') AND empty($depth)) return NULL;
+		
 		static $cnt;
 		if (is_null($cnt)) $cnt = 0;
 		$cnt++;
 		if (is_null($depth))
 		{
-			$depth = (is_int($this->fuel->config('auto_search_views'))) ? $this->fuel->config('auto_search_views') : 2; // if not a number (e.g. set to TRUE), we default to 2
+			$depth = (is_int($this->fuel->config('auto_search_views'))) ? $this->fuel->config('auto_search_views') : $this->get_max_page_param(); // if not a number (e.g. set to TRUE), we default to 2
 		}
 		$view_parts = explode('/', $view);
 		array_pop($view_parts);
@@ -1526,6 +1509,50 @@ class Fuel_page extends Fuel_base_library {
 			$view = $this->find_view_file($view, $depth);
 		}
 		return $view;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the maximum number of page parameters associated with the current page
+	 *
+	 * @access	public
+	 * @return	int
+	 */
+	function get_max_page_param()
+	{
+		static $max_page_params;
+
+		// determine max page params
+		if (is_null($max_page_params))
+		{
+			$max_page_params = 0;	
+		}
+		
+		if (is_array($this->fuel->config('max_page_params')))
+		{
+			$location = implode('/', $this->CI->uri->rsegment_array());
+			foreach($this->fuel->config('max_page_params') as $key => $val)
+			{
+				// add any match to the end of the key in case it doesn't exist (no problems if it already does)'
+				$key .= ':any';
+				
+				// convert wild-cards to RegEx
+				$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
+
+				// does the RegEx match?
+				if (preg_match('#^'.$key.'$#', $location))
+				{
+					$max_page_params = $val;
+					break;
+				}
+			}
+		}
+		else
+		{
+			$max_page_params = (int)$this->fuel->config('max_page_params');
+		}
+		return $max_page_params;
 	}
 }
 
