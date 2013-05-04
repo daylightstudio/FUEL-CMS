@@ -48,7 +48,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @access	public
 	 * @return	void
 	 */
-		function __construct()
+	function __construct()
 	{
 		parent::__construct();
 		$CI =& get_instance();
@@ -421,13 +421,26 @@ class Fuel_assets_model extends CI_Model {
 		return $fields;
 	}
 	
-	// placeholder
+		
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	function on_before_post()
 	{
 		
 	}
 
-	// placeholder
+		
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @param   array Posted values
+	 * @return	void
+	 */
 	function on_after_post($values)
 	{
 	}
