@@ -17,7 +17,7 @@ for you based on the modules you have installed.
 	<div class="overlay" style="top: 405px; left: 120px;">Site Development Modules</div>
 	<div class="overlay" style="top: 575px; left: 120px;">FUEL User Management Modules</div>
 	<div class="overlay" style="top: 190px; left: 260px;">Site Specific Documentation</div>
-	<img src="<?=img_path('screens/screen_dashboard.jpg', 'user_guide')?>" class="screen" />
+	<img src="<?=img_path('screens/screen_dashboard.jpg', FUEL_FOLDER)?>" class="screen" />
 </div>
 
 
@@ -33,7 +33,7 @@ for you based on the modules you have installed.
 	<div class="overlay" style="top: 130px; left: 990px;">Delete Multiple Items</div>
 	<div class="overlay" style="top: 10px; left: 740px;">Search Items</div>
 	<div class="overlay" style="top: 10px; left: 900px;">Limit Search Items</div>
-	<img src="<?=img_path('screens/screen_pages_list.jpg', 'user_guide')?>" class="screen" />
+	<img src="<?=img_path('screens/screen_pages_list.jpg', FUEL_FOLDER)?>" class="screen" />
 </div>
 
 <a name="edit_view"></a>
@@ -45,7 +45,7 @@ for you based on the modules you have installed.
 	<div class="overlay" style="top: 45px; left: 800px;">Restore From Previous</div>
 	<div class="overlay" style="top: 245px; left: 700px;">Editing Form</div>
 	<div class="overlay" style="top: 15px; left: 260px;">Breadcrumb</div>
-	<img src="<?=img_path('screens/screen_page_edit.jpg', 'user_guide')?>" class="screen" />
+	<img src="<?=img_path('screens/screen_page_edit.jpg', FUEL_FOLDER)?>" class="screen" />
 </div>
 
 <h2>Edit User Permissions</h2>
@@ -53,5 +53,5 @@ for you based on the modules you have installed.
 <div class="screenshot">
 	<div class="overlay" style="top: 255px; left: 700px;">User Information</div>
 	<div class="overlay" style="top: 505px; left: 540px;">Permissions</div>
-	<img src="<?=img_path('screens/screen_users.jpg', 'user_guide')?>" class="screen" />
+	<img src="<?=img_path('screens/screen_users.jpg', FUEL_FOLDER)?>" class="screen" />
 </div>
