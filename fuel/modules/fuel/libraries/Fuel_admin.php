@@ -666,7 +666,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			if (file_exists(MODULES_PATH.$module.'/language/'.$language.'/'.$module.'_lang'.EXT))
 			{
-				$this->CI->load->module_language($module, $module);
+				$this->CI->load->module_language($module, $module, $language);
 			}
 		}
 	}
