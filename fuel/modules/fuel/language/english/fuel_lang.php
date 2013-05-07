@@ -154,7 +154,6 @@ $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
 $lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
-$lang['section_settings'] = 'Settings';
 
 
 /*
