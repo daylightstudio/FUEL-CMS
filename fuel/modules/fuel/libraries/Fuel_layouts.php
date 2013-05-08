@@ -310,7 +310,19 @@ class Fuel_layouts extends Fuel_base_library {
 	}
 }
 
+// ------------------------------------------------------------------------
 
+/**
+ * Base FUEL layout object.
+ *
+ * Can be retrieved by $this->fuel->layouts->get('{location}')
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$layout->
+ */
 class Fuel_layout extends Fuel_base_library {
 	
 	public $name = ''; // The name of the layout
@@ -323,6 +335,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $folder = '_layouts'; // The folder to look in for the layout view files
 	public $group = ''; // The group name to associate with the layout
 	public $import_field = 'body'; // The field to be used when importing a view file
+	public $include_pagevar_object = FALSE; // Determines whether to include a single variable of object of $pagevar that includes all the pages variables
 	
 	// --------------------------------------------------------------------
 	
@@ -819,6 +832,19 @@ class Fuel_layout extends Fuel_base_library {
 
 
 
+// ------------------------------------------------------------------------
+
+/**
+ * Base FUEL module layout object.
+ *
+ * Can be retrieved by $this->fuel->layouts->get('{location}')
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$layout->
+ */
 class Fuel_module_layout extends Fuel_layout {
 	
 	public $model = NULL; // the model to use for retrieving data
@@ -956,6 +982,19 @@ class Fuel_module_layout extends Fuel_layout {
 	
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * Base FUEL layout object.
+ *
+ * Can be retrieved by $this->fuel->layouts->get('{location}', TRUE)
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$layout->
+ */
 class Fuel_block_layout extends Fuel_layout 
 {
 
