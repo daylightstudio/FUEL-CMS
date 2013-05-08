@@ -193,7 +193,18 @@ class Assets extends Module {
 		$this->load->helper('array');
 		$this->load->library('form_builder');
 		$this->model->add_filters(array('group_id' => $dir));
-		$options = options_list($this->model->list_items(), 'name', 'name');
+
+		$order = $this->input->get_post('order');
+		if ($order == 'last_updated')
+		{
+			$by = 'desc';
+		}
+		else
+		{
+			$order = 'name';
+			$by = 'asc';
+		}
+		$options = options_list($this->model->list_items(NULL, 0, $order, $by), 'name', 'name');
 		
 		$redirect_to = rawurlencode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
 		$preview = ' OR <a href="'.fuel_url('assets/inline_create?redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';

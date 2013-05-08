@@ -183,7 +183,7 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 	var isImgSelected = selected.match(/\<img[^>]+src=[^>]+>/);
 
 	// if anchor selected then we start grabbing values
-	var width, height, alt, align, className;
+	var width, height, alt, align, className, imgFolder, imgOrder;
 
 	if (isImgSelected){
 
@@ -210,8 +210,9 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		}
 	}
 	imgFolder = jQuery(markItUp.textarea).attr('data-img_folder');
+	imgOrder = jQuery(markItUp.textarea).attr('data-img_order');
 
-	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder}, function(replace){
+	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	});
 }
@@ -226,7 +227,6 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 		}
 		folder += imgFolder;
 	}
-	console.log(jqx.config.fuelPath + '/assets/select/' + folder)
 	var url = jqx.config.fuelPath + '/assets/select/' + folder + '?nocache=' + new Date().getTime();
 	if (selected) url += '&selected=' + escape(selected);
 	url += '&width=' + ((attrs.width) ? attrs.width : '');
@@ -234,6 +234,7 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 	url += '&alt=' + ((attrs.alt) ? escape(attrs.alt) : '');
 	url += '&align=' + ((attrs.align) ? attrs.align : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
+	url += '&order=' + ((attrs.imgOrder) ? attrs.imgOrder : '');
 
 	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 500px; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);

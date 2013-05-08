@@ -91,6 +91,12 @@ class Fuel_custom_fields {
 			$params['data']['img_folder'] = $params['img_folder'];
 		}
 
+		// set the image order in the dropdown select (name or last_updated)
+		if (isset($params['img_order']))
+		{
+			$params['data']['img_order'] = $params['img_order'];
+		}
+
 		// set ckeditor configs
 		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
 		{

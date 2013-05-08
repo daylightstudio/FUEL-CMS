@@ -27,7 +27,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
 				var selection = editor.getSelection();
 				element = selection.getStartElement();
 
-				var img = '', width, height, alt, align, className;
+				var img = '', width, height, alt, align, className, imgFolder, imgOrder;
 				if ( element ) {
 					element = element.getAscendant( 'img', true );
 					if (element){
@@ -48,12 +48,11 @@ CKEDITOR.plugins.add( 'fuelimage', {
 						height = element.getAttribute('height');
 						alt = element.getAttribute('alt');
 						align = element.getAttribute('align');
-						className = element.getAttribute('class');
-
 					}
 				}
 				imgFolder = editor.element.getAttribute('data-img_folder');
-				myMarkItUpSettings.displayAssetInsert(img, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder}, function(imgHtml){
+				imgOrder = editor.element.getAttribute('data-img_order');
+				myMarkItUpSettings.displayAssetInsert(img, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(imgHtml){
 					imgHtml = imgHtml.replace(/\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
 		   										var img = jqx.config.assetsImgPath + contents;
 		   										return img;
