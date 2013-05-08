@@ -235,19 +235,19 @@ class Base_module_model extends MY_Model {
 			$this->filters = array_merge($this->filters, $filters);
 		}
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Lists the module items
+	 * Lists the module's items
 	 *
 	 * @access	public
-	 * @param	int The limit value for the list data
-	 * @param	int The offset value for the list data
-	 * @param	string The field name to order by
-	 * @param	string The sorting order
-	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data
-	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
 	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
@@ -385,8 +385,6 @@ class Base_module_model extends MY_Model {
 		return $cnt;
 	}
 
-	
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -394,7 +392,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	protected
 	 * @param	string The name of the model's property to used to generate the tree. Options are 'foreign_fields', 'has_many' or 'belongs_to'
-	 * @return	array
+	 * @return	array An array that can be used by the Menu class to create a hierachical structure
 	 */	
 	protected function _tree($prop = NULL)
 	{
