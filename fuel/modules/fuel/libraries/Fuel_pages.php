@@ -415,6 +415,19 @@ class Fuel_pages extends Fuel_base_library {
 
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * FUEL page object.
+ *
+ * Can be retrieved by $this->fuel->pages->get('{location}')
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$page->
+ */
 
 class Fuel_page extends Fuel_base_library {
 	
@@ -662,19 +675,21 @@ class Fuel_page extends Fuel_base_library {
 	 */	
 	function assign_layout($layout)
 	{
-		if (!empty($this->layout) AND is_string($this->layout))
+		if (!empty($layout) AND is_string($layout))
 		{
-			$this->layout = $this->fuel->layouts->get($this->layout);
+			$layout = $this->fuel->layouts->get($layout);
 		}
-		else if (is_a($layout, 'Fuel_layout'))
+		
+		if (is_a($layout, 'Fuel_layout'))
 		{
-			$this->layout = $this->layout;
+			$this->layout = $layout;
+			$this->include_pagevar_object = $this->layout->include_pagevar_object;
 		}
 		else
 		{
-			//$this->layout = $this->fuel->layouts->get('main');
 			$this->layout = '';
 		}
+
 	}
 	
 	// --------------------------------------------------------------------
@@ -1493,7 +1508,7 @@ class Fuel_page extends Fuel_base_library {
 		}
 		
 		if (!$this->fuel->config('auto_search_views') AND empty($depth)) return NULL;
-		
+
 		static $cnt;
 		if (is_null($cnt)) $cnt = 0;
 		$cnt++;
