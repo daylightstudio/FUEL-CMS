@@ -154,7 +154,6 @@ $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
 $lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
-$lang['section_settings'] = 'Settings';
 
 
 /*
@@ -266,6 +265,8 @@ $lang['form_label_parent_id'] = 'Parent';
 $lang['form_label_attributes'] = 'Attributes';
 $lang['form_label_selected'] = 'Selected';
 $lang['form_label_hidden'] = 'Hidden';
+
+$lang['error_location_parents_match'] = 'Location and parents can\'t match.';
 
 // for upload form
 $lang['form_label_clear_first'] = 'Clear First';
