@@ -155,6 +155,11 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 			minimize();
 			return false;
 		})
+
+		jQuery('.jqmOverlay').click(function(){
+			minimize();
+			return false;
+		})
 	} else {
 	//	minimize();
 	}
