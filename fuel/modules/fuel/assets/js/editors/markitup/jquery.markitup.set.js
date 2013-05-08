@@ -262,6 +262,9 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 				var isHTTP = false; // for later
 				var replace = '<img src="';
 				if (!isHTTP) replace += '{img_path(\'';
+				if (imgFolder && imgFolder.length){
+					replace += imgFolder + '/';	
+				}
 				replace += selectedVal;
 
 				if (!isHTTP) replace += '\')}';
