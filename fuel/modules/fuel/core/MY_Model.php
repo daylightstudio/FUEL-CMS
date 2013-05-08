@@ -1080,7 +1080,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	the column to use for the value (optional)
 	 * @param	string	the column to use for the label (optional)
 	 * @param	mixed	an array or string containg the where paramters of a query (optional)
-	 * @param	string	the order by of the query. defaults to $val asc (optional)
+	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
 	 * @return	array
 	 */	
 	public function options_list($key = NULL, $val = NULL, $where = array(), $order = TRUE)
