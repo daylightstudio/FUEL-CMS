@@ -1,11 +1,46 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_navigation_groups_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_navigation_groups_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_navigation_groups_model extends Base_module_model {
 	
-	public $unique_fields = array('name');
+	public $unique_fields = array('name'); // The name field is unique
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		$CI =& get_instance();
@@ -14,12 +49,29 @@ class Fuel_navigation_groups_model extends Base_module_model {
 		$this->add_validation('name', array(&$this, 'valid_name'), lang('error_requires_string_value'));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback function. Navigation group names must not be numeric.
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */	
 	function valid_name($name)
 	{
 		return (!is_numeric($name));
 	}
 
-	 // cleanup navigation items if group is deleted
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Cleanup navigation items if group is deleted
+	 *
+	 * @access	public
+	 * @param	mixed The where condition for the delete
+	 * @return	void
+	 */	
 	 function on_after_delete($where)
 	 {
 		$this->delete_related(array(FUEL_FOLDER => 'fuel_navigation_model'), 'group_id', $where);

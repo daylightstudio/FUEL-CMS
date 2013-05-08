@@ -1,25 +1,72 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_navigation_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_navigation_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_navigation_model extends Base_module_model {
 	
-	public $group_id = 1;
-	public $required = array('label', 'group_id' => 'Please create a Navigation Group');
-	public $filter_join = array('label' => 'or', 'location' => 'or', 'group_id' => 'and');
-	public $record_class = 'Fuel_navigation_item';
-	public $ignore_replacement = array('nav_key');
-	public $filters = array('label', 'location');
-	public $linked_fields = array('nav_key' => array('location' => 'mirror'));
-	public $boolean_fields = array('hidden');
+	public $group_id = 1; // The default navigation group ID
+	public $required = array('label', 'group_id' => 'Please create a Navigation Group'); // The label and group_id are required fields
+	public $filters = array('label', 'location'); // The label and location 
+	public $filter_join = array('label' => 'or', 'location' => 'or', 'group_id' => 'and'); // The search filters will look in label OR location from within a specified group_id
+	public $record_class = 'Fuel_navigation_item'; // The name of the record class
+	public $ignore_replacement = array('nav_key'); // The "nav_key" will be ignored upon replacement
+	public $linked_fields = array('nav_key' => array('location' => 'mirror')); // nav_key and location value will mirror each other by default
+	public $boolean_fields = array('hidden'); // The hidden field is considered a boolean field which allows us to toggle it between "yes" and "no" in the list view of the admin
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_navigation');
 		$this->required['group_id'] = lang('error_create_nav_group');
 	}
 
-	// used for the FUEL admin
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the module's items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
 	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
@@ -35,18 +82,51 @@ class Fuel_navigation_model extends Base_module_model {
 		return $data;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of page information based on the location
+	 *
+	 * @access	public
+	 * @param	string The location value of the menu item
+	 * @param	mixed The group that the menu item belongs to. Can be a string (name) or an int (ID)  (optional)
+	 * @param	string The language of the navigation item (optional)
+	 * @return	array
+	 */	
 	function find_by_location($location, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.location'] = $location;
 		return $this->_find_by_array($where, $group_id, $lang);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of page information based on the location
+	 *
+	 * @access	public
+	 * @param	string The nav_key value of the menu item
+	 * @param	mixed The navigation group name (string) or ID (int) value (optional)
+	 * @param	string The language of the navigation item (optional)
+	 * @return	array
+	 */	
 	function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.nav_key'] = $nav_key;
 		return $this->_find_by_array($where, $group_id, $lang);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of page information based on the location
+	 *
+	 * @access	protected
+	 * @param	array The where condition for the query
+	 * @param	mixed The navigation group name (string) or ID (int) value (optional)
+	 * @param	string The language of the navigation item (optional)
+	 * @return	array
+	 */	
 	protected function _find_by_array($where, $group_id = 1, $lang = NULL)
 	{
 		if (!empty($lang))
@@ -74,7 +154,16 @@ class Fuel_navigation_model extends Base_module_model {
 		return $data;
 	}
 	
-	function tree($just_published = false)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Tree view that puts navigation items in a hierarchy based on their location value
+	 *
+	 * @access	public
+	 * @param	boolean Determines whether to return just published navigation items or not (optional... and ignored in the admin)
+	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 */	
+	function tree($just_published = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('array');
@@ -132,6 +221,17 @@ class Fuel_navigation_model extends Base_module_model {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds all menu items based on a group value
+	 *
+	 * @access	public
+	 * @param	mixed The navigation group name (string) or ID (int) value (optional)
+	 * @param	string The language of the navigation item (optional)
+	 * @param	string The column name to be used as the key value
+	 * @return	array
+	 */	
 	function find_all_by_group($group_id = 1, $lang = NULL, $assoc_key = NULL)
 	{
 		$where = (is_string($group_id)) ? array($this->_tables['fuel_navigation_groups'].'.name' => $group_id) : array($this->_tables['fuel_navigation'].'.group_id' => $group_id);
@@ -151,6 +251,14 @@ class Fuel_navigation_model extends Base_module_model {
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Finds the max menu ID value. Used when importing menu items
+	 *
+	 * @access	public
+	 * @return	int
+	 */	
 	function max_id()
 	{
 		$this->db->select_max('id');
@@ -159,9 +267,19 @@ class Fuel_navigation_model extends Base_module_model {
 		return $data['id'];
 	}
 	
-	function form_fields($values = array())
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Navigation form fields
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
+	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		$CI =& get_instance();
 		// navigation group
 		if (empty($CI->fuel_navigation_groups_model)){
@@ -250,8 +368,15 @@ class Fuel_navigation_model extends Base_module_model {
 		return $fields;
 	}
 	
+	// --------------------------------------------------------------------
 	
-	// validation method
+	/**
+	 * Validation callback method to make sure that the location and parent ID's don't match (to prevent infinite recursive loopiness)
+	 *
+	 * @access	public
+	 * @param	array The parent ID of the navigation item
+	 * @return	boolean
+	 */	
 	function no_location_and_parent_match($parent_id)
 	{
 		$data = $this->find_one_array(array($this->_tables['fuel_navigation'].'.id' => $parent_id));
@@ -261,19 +386,18 @@ class Fuel_navigation_model extends Base_module_model {
 		}
 		return TRUE;
 	}
-
-	// validation method
-	/*function no_id_and_parent_match($id, $parent_id)
-	{
-		$data = $this->find_one_array(array('fuel_navigation.parent_id' => $id));
-		if (!empty($data))
-		{
-			if ($data['id'] == $parent_id) return FALSE;
-		}
-		return TRUE;
-	}*/
+		
+	// --------------------------------------------------------------------
 	
-	// validation method
+	/**
+	 * Validation callback method to make sure that new navigation item doesn't already exist with the same nav_key, group_id and language values
+	 *
+	 * @access	public
+	 * @param	string The nav_key value of the menu itemparent ID of the navigation item
+	 * @param	mixed The navigation group name (string) or ID (int) value
+	 * @param	string The language of the navigation item
+	 * @return	boolean
+	 */	
 	function is_new_navigation($nav_key, $group_id, $lang)
 	{
 		if (empty($group_id)) return FALSE;
@@ -282,7 +406,18 @@ class Fuel_navigation_model extends Base_module_model {
 		return TRUE;
 	}
 
-	// validation method
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback method to make sure that existing navigation item doesn't change values to already existing navigation with the same nav_key, group_id and language values
+	 *
+	 * @access	public
+	 * @param	string The nav_key value of the menu itemparent ID of the navigation item
+	 * @param	mixed The navigation group name (string) or ID (int) value
+	 * @param	int The navigation's ID value
+	 * @param	string The language of the navigation item
+	 * @return	boolean
+	 */	
 	function is_editable_navigation($nav_key, $group_id, $id, $lang)
 	{
 		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'language' => $lang));
@@ -290,7 +425,17 @@ class Fuel_navigation_model extends Base_module_model {
 		return FALSE;
 	}
 	
-	// validation method
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback method to make sure that new navigation item doesn't already exist with the same location, group_id and language values
+	 *
+	 * @access	public
+	 * @param	string The location value of the menu itemparent ID of the navigation item
+	 * @param	mixed The navigation group name (string) or ID (int) value
+	 * @param	string The language of the navigation item
+	 * @return	boolean
+	 */	
 	function is_new_location($location, $group_id, $parent_id, $lang)
 	{
 		if (empty($group_id)) return FALSE;
@@ -299,7 +444,18 @@ class Fuel_navigation_model extends Base_module_model {
 		return TRUE;
 	}
 
-	// validation method
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback method to make sure that existing navigation item doesn't change values to already existing navigation with the same location, group_id and language values
+	 *
+	 * @access	public
+	 * @param	string The location value of the menu itemparent ID of the navigation item
+	 * @param	mixed The navigation group name (string) or ID (int) value
+	 * @param	int The navigation's ID value
+	 * @param	string The language of the navigation item
+	 * @return	boolean
+	 */
 	function is_editable_location($location, $group_id, $parent_id, $id, $lang)
 	{
 		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
@@ -307,6 +463,15 @@ class Fuel_navigation_model extends Base_module_model {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook right before the data is cleaned. Cleans up location value if needed
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right the clean method is run
+	 * @return	array Returns the values to be cleaned
+	 */	
 	function on_before_clean($values)
 	{
 		//if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
@@ -326,7 +491,16 @@ class Fuel_navigation_model extends Base_module_model {
 		}
 		return $values;
 	}
-		
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before validation is run to add additional navigation validation
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before validation
+	 * @return	array Returns the values to be validated right before saving
+	 */		
 	function on_before_validate($values)
 	{
 		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
@@ -344,7 +518,15 @@ class Fuel_navigation_model extends Base_module_model {
 		}
 		return $values;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Common query that joins fuel_navigation_groups table info
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function _common_query()
 	{
 		parent::_common_query();
@@ -353,8 +535,18 @@ class Fuel_navigation_model extends Base_module_model {
 		$this->db->order_by('precedence, location asc');
 	}
 	
+	// --------------------------------------------------------------------
 	
-	// overwritten so we can group items
+	/**
+	 * Overwritten: Allows for grouping of menu items with last paramter
+	 *
+	 * @access	public
+	 * @param	string	The column to use for the value (optional)
+	 * @param	string	The column to use for the label (optional)
+	 * @param	mixed	An array or string containg the where paramters of a query (optional)
+	 * @param	string	The order by of the query. defaults to $val asc (optional)
+	 * @param	boolean	Determines whether it will group the options together based on the menu troup (optional)
+	 * @return	array	 */	
 	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE, $group = TRUE)
 	{
 		if (!empty($order) AND is_bool($order))
@@ -381,8 +573,17 @@ class Fuel_navigation_model extends Base_module_model {
 
 	}
 	
+	// --------------------------------------------------------------------
 	
-	// used to get nested groups
+	/**
+	 * Overwritten: Allows for grouping of menu items with last paramter
+	 *
+	 * @access	public
+	 * @param	string The field name used as the label
+	 * @param	int The current value... and actually deprecated (optional)
+	 * @param	string The value field (optional)
+	 * @return	array Key/value array
+	 */	
 	function get_others($display_field, $id, $val_field = NULL)
 	{
 		$others = $this->find_all_array_assoc('id');
@@ -394,7 +595,17 @@ class Fuel_navigation_model extends Base_module_model {
 		return $others;
 	}
 	
-	// group the options together
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Groups the options together
+	 *
+	 * @access	protected
+	 * @param	array The data to group together
+	 * @param	int The current value... and actually deprecated (optional)
+	 * @param	string The value field (optional)
+	 * @return	array Key/value array
+	 */	
 	protected function _group_options($data, $key = 'id', $val = 'label')
 	{
 		$options = array();

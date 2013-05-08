@@ -51,12 +51,12 @@ class Fuel_logs_model extends Base_module_model {
 	 * Lists the log items
 	 *
 	 * @access	public
-	 * @param	int The limit value for the list data
-	 * @param	int The offset value for the list data
-	 * @param	string The field name to order by
-	 * @param	string The sorting order
-	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data
-	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
 	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
 	{

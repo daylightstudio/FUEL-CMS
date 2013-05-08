@@ -1,25 +1,83 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_permissions_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_permissions_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_permissions_model extends Base_module_model {
 	
-	public $required = array('name', 'description');
-	public $unique_fields = array('name');
-	public $belongs_to = array('users' => array('model' => array(FUEL_FOLDER => 'fuel_users_model'), 'where' => array('super_admin' => 'no')));	
+	public $required = array('name', 'description'); // The name and description value are required
+	public $unique_fields = array('name'); // The name needs to be a unique value
+	public $belongs_to = array('users' => array('model' => array(FUEL_FOLDER => 'fuel_users_model'), 'where' => array('super_admin' => 'no')));	// Permissions have a "belong_to" relationship with users
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_permissions');
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the permission items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
+	 function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$this->db->select('id, name, description, active');
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * User form fields
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
 	function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
@@ -33,7 +91,16 @@ class Fuel_permissions_model extends Base_module_model {
 		return $fields;
 	}
 	
-	// must use on_after_post to avoid recursion of save
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed at the end of the post cycle (after saving). Used to avoid recursion of save
+	 *
+	 * @access	public
+	 * @param	array The values that were just saved
+	 * @return	array Returns the values that were saved
+	 */	
+	// 
 	function on_after_post($values)
 	{
 		$values = parent::on_after_save($values);
@@ -48,7 +115,15 @@ class Fuel_permissions_model extends Base_module_model {
 		return $values;
 	}
 
-	// displays related items on the right side
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays related items on the right side
+	 *
+	 * @access	public
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
+	 */	
 	function related_items($values = array())
 	{
 		$CI =& get_instance();

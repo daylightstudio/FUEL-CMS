@@ -1,19 +1,62 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_users_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_users_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_users_model extends Base_module_model {
 	
-	public $required = array('user_name', 'email', 'first_name', 'last_name');
-	public $filters = array('first_name', 'last_name', 'user_name');
-	public $unique_fields = array('user_name');
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model')));
+	public $required = array('user_name', 'email', 'first_name', 'last_name'); // User name, email, first name, and last name are required
+	public $filters = array('first_name', 'last_name', 'user_name'); // Additional fields that will be searched
+	public $unique_fields = array('user_name'); // User name is a unique field
+	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model'))); // Users have a "has_many" relationship with permissions
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_users');
 	}
 
+	/**
+	 * Determines whether the passed user name and password are valid
+	 *
+	 * @access	public
+	 * @param	string	The user name
+	 * @param	string	The password
+	 * @return	boolean 
+	 */
 	function valid_user($user, $pwd)
 	{
 		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
@@ -29,6 +72,14 @@ class Fuel_users_model extends Base_module_model {
 		return FALSE;
 	}
 	
+	/**
+	 * Determines whether the passed user name and password are valid for FUEL 0.93
+	 *
+	 * @access	public
+	 * @param	string	The user name
+	 * @param	string	The password
+	 * @return	boolean 
+	 */
 	function valid_old_user($user, $pwd)
 	{
 		$where = array('user_name' => $user, 'active' => 'yes');
@@ -45,6 +96,19 @@ class Fuel_users_model extends Base_module_model {
 		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the user items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
 	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
@@ -58,7 +122,16 @@ class Fuel_users_model extends Base_module_model {
 		return $data;
 	}
 	
-	function user_info($user_id)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of the currently logged in user
+	 *
+	 * @access	public
+	 * @param	int The user ID of the person logged in
+	 * @return	array
+	 */	
+	 function user_info($user_id)
 	{
 		$user = $this->find_one(array('id' => $user_id));
 		$user_data = $user->values();
@@ -68,6 +141,15 @@ class Fuel_users_model extends Base_module_model {
 		return $user_data;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Resets the password with a random value
+	 *
+	 * @access	public
+	 * @param	string The email address of the user to reset 
+	 * @return	string The new password
+	 */	
 	function reset_password($email)
 	{
 		// check first to see if they exist in the system
@@ -90,25 +172,63 @@ class Fuel_users_model extends Base_module_model {
 				return $reset_key;
 			}
 		}
-		return false;
+		return FALSE;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines whether a user exists
+	 *
+	 * @access	public
+	 * @param	string The email address of the user
+	 * @return	boolean 
+	 */	
 	function user_exists($email)
 	{
 		return $this->record_exists(array('email' => $email));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a random salt value to be used with a user
+	 *
+	 * @access	public
+	 * @return	string 
+	 */	
 	function salt()
 	{
 		return md5(uniqid(rand(), TRUE));
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a hash value based on the users password and salt value
+	 *
+	 * @access	public
+	 * @param	string The users password
+	 * @param	string The users salt value
+	 * @return	string 
+	 */	
 	function salted_password_hash($password, $salt)
 	{
 		return sha1($password.$salt);
 	}
 	
-	/* overwrite */
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwritten options list method
+	 *
+	 * @access	public
+	 * @param	string The key value for the options list (optional)
+	 * @param	string The value (lable) value for the options list (optional)
+	 * @param	string A where condition to apply to options list data
+	 * @param	string The order to return the options list data
+	 * @return	array 
+	 */	
 	function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
 	{
 		$CI =& get_instance();
@@ -134,6 +254,16 @@ class Fuel_users_model extends Base_module_model {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * User form fields
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
 	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
@@ -177,7 +307,6 @@ class Fuel_users_model extends Base_module_model {
 			$fields['language']['type'] = 'hidden';
 		}
 
-
 		$fields['user_name']['order'] = 1;
 		$fields['email']['order'] = 2;
 		$fields['first_name']['order'] = 3;
@@ -211,12 +340,19 @@ class Fuel_users_model extends Base_module_model {
 		return $fields;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Permissions custom field callback which returns permission checkboxes
+	 *
+	 * @access	protected
+	 * @param	array The parameters passed to the permissions form field
+	 * @return	string 
+	 */	
 	function _create_permission_fields($params = array())
 	{
 		$CI =& get_instance();
 		
-
-
 		// first get the permissions
 		$perms_list = array();
 		if ($CI->fuel->auth->is_super_admin() OR $CI->fuel->auth->has_permission('permissions'))
@@ -309,7 +445,40 @@ class Fuel_users_model extends Base_module_model {
 		return $str;
 	}
 	
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Model hook executed right before the data is cleaned
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right the clean method is run
+	 * @return	array Returns the values to be cleaned
+	 */	
+	function on_before_clean($values)
+	{
+		$has_pwd = FALSE;
+		if (!empty($values['password'])) 
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
+		}
+		if (!empty($values['new_password']))
+		{
+			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+		}
+		return $values;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before validation is run
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before validation
+	 * @return	array Returns the values to be validated right before saving
+	 */	
 	function on_before_validate($values)
 	{
 		$this->add_validation('email', 'valid_email', lang('error_invalid_email'));
@@ -338,6 +507,15 @@ class Fuel_users_model extends Base_module_model {
 		return $values;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before saving
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before saving
+	 * @return	array Returns the values to be saved
+	 */	
 	function on_before_save($values)
 	{
 		$CI =& get_instance();
@@ -349,22 +527,15 @@ class Fuel_users_model extends Base_module_model {
 		return $values;
 	}
 
-	function on_before_clean($values)
-	{
-		$has_pwd = FALSE;
-		if (!empty($values['password'])) 
-		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
-		}
-		if (!empty($values['new_password']))
-		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
-		}
-		return $values;
-	}
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Model hook executed right after saving
+	 *
+	 * @access	public
+	 * @param	array The values that were just saved
+	 * @return	array Returns the values that were saved
+	 */	
 	function on_after_save($values)
 	{
 		parent::on_after_save($values);
@@ -388,8 +559,18 @@ class Fuel_users_model extends Base_module_model {
 		}
 
 		$this->_send_email($values['id']);
+		return $values;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected method that will send out a passowrd change email to a user
+	 *
+	 * @access	protected
+	 * @param	int The user ID
+	 * @return	void
+	 */	
 	protected function _send_email($id)
 	{
 		$CI =& get_instance();
@@ -415,7 +596,16 @@ class Fuel_users_model extends Base_module_model {
 			}
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Overwrites parent model so as you won't accidentally delete the super admin user
+	 *
+	 * @access	public
+	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
+	 * @return	void
+	 */	
 	function delete($where)
 	{
 		//prevent the deletion of the super admins
@@ -423,17 +613,43 @@ class Fuel_users_model extends Base_module_model {
 		return parent::delete($where);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback to check if a new user's email already exists
+	 *
+	 * @access	public
+	 * @param	string The email address
+	 * @return	boolean
+	 */	
 	function is_new_email($email)
 	{
 		return $this->is_new($email, 'email');
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback to check if an existing user's email address doen't already exist in the system
+	 *
+	 * @access	public
+	 * @param	string The email address
+	 * @param	string The email address
+	 * @return	boolean
+	 */	
 	function is_editable_email($email, $id)
 	{
 		return $this->is_editable($email, 'email', $id);
 	}
 	
-	// used to clear out parent base_module_model common query
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwritten: used to clear out parent base_module_model common query
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function _common_query()
 	{
 		

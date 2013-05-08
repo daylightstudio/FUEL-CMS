@@ -1,18 +1,66 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_pagevariables_model</strong> is used for storing page variable data
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_pagevariables_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_pagevariables_model extends Base_module_model {
 
-	public $page_id;
-	public $honor_page_status = FALSE; // will look at the pages published status as well
-	public $serialized_fields = array('value');
+	public $page_id; // The page ID of the most recently queried page
+	public $honor_page_status = FALSE; // Will look at the pages published status as well
+	public $serialized_fields = array('value'); // The "value" field is serialized using JSON
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_pagevars');
 	}
 	
-	// used for the FUEL admin
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the page variables (not displayed in the CMS)
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
 	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_pagevars'].'.*, '.$this->_tables['fuel_pages'].'.layout, '.$this->_tables['fuel_pages'].'.location, '.$this->_tables['fuel_pages'].'.published AS page_published');
@@ -21,7 +69,16 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $data;
 	}
 	
-	/* OVERWRITE */
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrite: returns a single page variable record in an array format
+	 *
+	 * @access	public
+	 * @param	mixed The where condition for the query
+	 * @param	string The field name to order by (optional)
+	 * @return	array
+	 */	
 	function find_one_array($where, $order_by = NULL)
 	{
 		$data = parent::find_one_array($where, $order_by);
@@ -32,6 +89,17 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a single page variable record in an array format based on the page location value
+	 *
+	 * @access	public
+	 * @param	string The page location
+	 * @param	string The variable name
+	 * @param	string The language associated with the variable (optional)
+	 * @return	array
+	 */	
 	function find_one_by_location($location, $name, $lang = NULL)
 	{
 		$where = array($this->_tables['fuel_pages'].'.location' => $location, 'name' => $name);
@@ -43,6 +111,17 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return  $this->_process_casting($data);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a all page variable records in an array format based on the page location value
+	 *
+	 * @access	public
+	 * @param	string The page location
+	 * @param	string The language associated with the variable (optional)
+	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
+	 * @return	array
+	 */	
 	function find_all_by_location($location, $lang = NULL, $include_pagevars_object = FALSE)
 	{
 		$where = array($this->_tables['fuel_pages'].'.location' => $location);
@@ -73,6 +152,17 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $data;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a single page variable record in an array format based on the pages ID value
+	 *
+	 * @access	public
+	 * @param	string The page location
+	 * @param	string The language associated with the variable (optional)
+	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
+	 * @return	array
+	 */	
 	function find_one_by_page_id($page_id, $name, $lang = NULL)
 	{
 		$this->page_id = $page_id;
@@ -86,6 +176,17 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $this->_process_casting($data);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a all page variable records in an array format based on the page ID value
+	 *
+	 * @access	public
+	 * @param	string The page location
+	 * @param	string The language associated with the variable (optional)
+	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
+	 * @return	array
+	 */	
 	function find_all_by_page_id($page_id, $lang = NULL)
 	{
 		$this->page_id = $page_id;
@@ -99,7 +200,16 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $this->_process_casting($data);;
 	}
 	
-	function _process_casting($data)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Casts one or multiple page variables to their proper type
+	 *
+	 * @access	protected
+	 * @param	mixed The data to be cast
+	 * @return	mixed
+	 */	
+	protected function _process_casting($data)
 	{
 		if (is_array(current($data)))
 		{
@@ -140,6 +250,15 @@ class Fuel_pagevariables_model extends Base_module_model {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Casts and unserializes if necessary a single variable to it's proper type (int, boolean, array)
+	 *
+	 * @access	protected
+	 * @param	mixed The data to be cast
+	 * @return	mixed
+	 */	
 	function cast($val, $type)
 	{
 		$return = '';
@@ -178,6 +297,16 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Add FUEL specific changes to the form_fields method
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
 	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
@@ -203,6 +332,15 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $fields;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook right before the data is cleaned. Determines type of variable
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right the clean method is run
+	 * @return	array Returns the values to be cleaned
+	 */	
 	function on_before_clean($values)
 	{
 		if (isset($values['value']))
@@ -212,6 +350,15 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return $values;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Used by on_before_clean model hook to determine the type of variable (int, string, array)
+	 *
+	 * @access	public
+	 * @param	array The values to be determined
+	 * @return	string
+	 */	
 	function determine_type($value)
 	{
 		if (is_array($value) OR is_serialized_str($value))
@@ -221,6 +368,14 @@ class Fuel_pagevariables_model extends Base_module_model {
 		return 'string';
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Common query that joins user page information with the page variable data
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function _common_query()
 	{
 		$CI =& get_instance();
@@ -236,27 +391,64 @@ class Fuel_pagevariables_model extends Base_module_model {
 	}
 }
 
+// ------------------------------------------------------------------------
 
+/**
+ * FUEL page variable record object
+ *
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$var->
+ */
 class Fuel_pagevariable_model extends Data_record {
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Magic method that returns the value data if the object is echoed (e.g. $pagevar->h1 == $pagevar=>h1->value)
+	 *
+	 * @access	public
+	 * @param	object	method name
+	 * @param	array	arguments
+	 * @return	array
+	 */	
 	function __toString()
 	{
 		return $this->value;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the value of the page variable
+	 *
+	 * @access	public
+	 * @param	object	method name
+	 * @param	array	arguments
+	 * @return	array
+	 */	
 	function get_value()
 	{
 		return $this->_parent_model->cast($this->_fields['value'], $this->type);
 	}	
 }
 
+// ------------------------------------------------------------------------
 
-// --------------------------------------------------------------------
-	
 /**
- * Class used for accessing field values easier
+ * The Fuel_pagevar_helper object.
+ * 
+ * Class used for accessing page variable field values easier
  *
- */	
+ * @package		FUEL CMS
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author		David McReynolds @ Daylight Studio
+ * @prefix		$var->
+ */
+// --------------------------------------------------------------------
 class Fuel_pagevar_helper {
 
 	protected $_vars = array();

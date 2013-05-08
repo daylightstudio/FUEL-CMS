@@ -1,20 +1,63 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_pages_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://www.getfuelcms.com/user_guide/models/fuel_pages_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_pages_model extends Base_module_model {
 
-	public $id;
-	public $required = array('location');
-	public $hidden_fields = array('last_modified', 'last_modified_by');
-	public $ignore_replacement = array('location');
+	public $required = array('location'); // The location field is required
+	public $unique_fields = array('location'); // The location field is unique
+	public $hidden_fields = array('last_modified', 'last_modified_by'); // The Last modified and Last modified by are hidden fields
+	public $ignore_replacement = array('location'); // The location value will be ignored upon replacement
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function __construct()
 	{
 		parent::__construct('fuel_pages');
 	}
+
+	// --------------------------------------------------------------------
 	
-	// displays related items on the right side
+	/**
+	 * Displays related items on the right side
+	 *
+	 * @access	public
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
+	 */	
 	function related_items($values = array())
 	{
 		$CI =& get_instance();
@@ -59,6 +102,15 @@ class Fuel_pages_model extends Base_module_model {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Tree view that puts pages in a hierarchy based on their location value
+	 *
+	 * @access	public
+	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
+	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 */	
 	function tree($just_published = FALSE)
 	{
 		$CI =& get_instance();
@@ -98,25 +150,31 @@ class Fuel_pages_model extends Base_module_model {
 		return $return;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a key/value array list of the page locations
+	 *
+	 * @access	public
+	 * @param	boolean Determines whether to included unpublished or not (optional)
+	 * @return	array
+	 */	
 	function list_locations($include_unpublished = FALSE)
 	{
 		$where = (!$include_unpublished) ? array('published' => 'yes') : NULL;
 		return array_keys($this->fuel_pages_model->options_list('location', 'location', $where));
 	}
 
-	function get_root_pages()
-	{
-		$return = array();
-		$data = $this->find_all('location');
-		foreach($data as $key => $val){
-			$parts = explode('/', $val['location']);
-			if (isset($parts[0])){
-				$return[] = array('name' => $parts[0], 'value' => $parts[0]);
-			}
-		}
-		return $return;
-	}
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns an array of page information based on the location
+	 *
+	 * @access	public
+	 * @param	string The location of the page
+	 * @param	boolean Determines whether to included unpublished or not (optional)
+	 * @return	array
+	 */	
 	function find_by_location($location, $just_published = 'yes')
 	{
 		
@@ -130,6 +188,16 @@ class Fuel_pages_model extends Base_module_model {
 		return $data;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Page form fields
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
 	function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
@@ -166,6 +234,15 @@ class Fuel_pages_model extends Base_module_model {
 		return $fields;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook right before the data is cleaned
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right the clean method is run
+	 * @return	array Returns the values to be cleaned
+	 */	
 	function on_before_clean($values)
 	{
 		if (!empty($values['location']))
@@ -186,6 +263,15 @@ class Fuel_pages_model extends Base_module_model {
 		return $values;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before validation is run
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before validation
+	 * @return	array Returns the values to be validated right before saving
+	 */	
 	function on_before_validate($values)
 	{
 		if (!empty($values['id']))
@@ -199,6 +285,15 @@ class Fuel_pages_model extends Base_module_model {
 		return $values;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before saving
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before saving
+	 * @return	array Returns the values to be saved
+	 */	
 	function on_before_save($values)
 	{
 		$CI = get_instance();
@@ -207,12 +302,30 @@ class Fuel_pages_model extends Base_module_model {
 		return $values;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right after deleting
+	 *
+	 * @access	public
+	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
+	 * @return	void
+	 */	
 	function on_after_delete($where)
 	{
 		$this->delete_related(array(FUEL_FOLDER => 'fuel_pagevariables_model'), 'page_id', $where);
 	}
 	
-	// overwrite parent
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites parent method. Used to restore page data from the archive
+	 *
+	 * @access	public
+	 * @param	int The record ID associated with the archive
+	 * @param	int The version of the archive to retrieve (optional)
+	 * @return	boolean
+	 */	
 	function restore($ref_id, $version = NULL)
 	{
 		$CI =& get_instance();
@@ -230,7 +343,18 @@ class Fuel_pages_model extends Base_module_model {
 		return ($pages_saved AND $page_variables_saved);
 	}
 	
-	// overwrite parent to replace page variables
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrite parent method to replace variable data as well
+	 *
+	 * @access	public
+	 * @param	int The old record id of data that will be replaced
+	 * @param	int The new record id of data that will be used for the replacement
+	 * @param	boolean Determines whether to delete the old record (optional)
+	 * @return	boolean Whether it was saved properly or not
+	 */	
+	// 
 	function replace($replace_id, $id, $delete = TRUE)
 	{
 		$CI =& get_instance();
@@ -270,6 +394,14 @@ class Fuel_pages_model extends Base_module_model {
 		return $saved;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Common query that joins user created/modified information to the page
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
 	function _common_query()
 	{
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->_tables['fuel_pages'].'.last_modified_by', 'left');

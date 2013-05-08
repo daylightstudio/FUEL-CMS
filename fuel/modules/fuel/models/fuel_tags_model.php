@@ -42,7 +42,7 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor. Automatically assigns belongs_to 
+	 * Constructor.
 	 *
 	 * @access	public
 	 * @return	void
@@ -57,7 +57,7 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor. Automatically assigns belongs_to 
+	 * Initializes belongs_to relationship
 	 *
 	 * @access	public
 	 * @return	void
