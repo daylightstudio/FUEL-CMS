@@ -652,6 +652,33 @@ class Fuel_layout extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns a boolean value as to whether to include the $pagevar object when rendering a page
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	function include_pagevar_object()
+	{
+		return (bool) $this->include_pagevar_object;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets a boolean value as to whether to include the $pagevar object when rendering a page
+	 *
+	 * @access	public
+	 * @param	boolean Determines whether to include the pagevar object or not
+	 * @return	void
+	 */	
+	function set_include_pagevar_object($bool)
+	{
+		$this->include_pagevar_object = (bool) $bool;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Adds a single field to the layout (See the <a href="[user_guide_url]libraries/form_builder">Form_builder</a>) class for more info
 	 *
 	 * @access	public
