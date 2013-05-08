@@ -168,13 +168,29 @@ class Assets extends Module {
 			}
 		}
 
-		$value = $this->input->get_post('selected');
+		$value = '';
+		if ($this->session->flashdata('uploaded_post'))
+		{
+			$uploaded_post = $this->session->flashdata('uploaded_post');
+			if (isset($uploaded_post))
+			{
+				$subfolder = trim(preg_replace('#^'.preg_quote($dir).'(.*)#', '$1', $uploaded_post['asset_folder']), '/');
+				if (!empty($subfolder))
+				{
+					$subfolder = $subfolder.'/';
+				}
+				$value = $subfolder.$uploaded_post['uploaded_file_name'];
+			}
+		}
+		else
+		{
+			$value = $this->input->get_post('selected');	
+		}
 		
 		$this->js_controller_params['method'] = 'select';
 		$this->js_controller_params['folder'] = $dir;
 	
 		$this->load->helper('array');
-		$this->load->helper('form');
 		$this->load->library('form_builder');
 		$this->model->add_filters(array('group_id' => $dir));
 		$options = options_list($this->model->list_items(), 'name', 'name');
