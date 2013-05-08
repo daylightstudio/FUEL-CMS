@@ -508,12 +508,15 @@ class Fuel_modules extends Fuel_base_library {
 // ------------------------------------------------------------------------
 
 /**
- * FUEL module object
+ * FUEL module object.
+ *
+ * Can be retrieved by $this->fuel->modules->get('{module_name}')
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
+ * @prefix		$module->
  */
 class Fuel_module extends Fuel_base_library {
 	
