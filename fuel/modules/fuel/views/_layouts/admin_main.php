@@ -90,11 +90,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 <div id="fuel_modal" class="jqmWindow"></div>
 
-<?php /* ?>
-<?php if ($this->fuel->admin->has_panel('bottom')) : ?>
-<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_bottom'); ?>
-<?php endif; ?>
-<?php */ ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_footer');  ?>
 
 </body>
 </html>
