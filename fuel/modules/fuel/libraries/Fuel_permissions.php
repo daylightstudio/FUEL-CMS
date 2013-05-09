@@ -159,7 +159,12 @@ class Fuel_permissions extends Fuel_module {
 	{
 		$save = array();
 		$description = humanize(str_replace('/', ' ', $module));
-		$save[] = array('name' => $module, 'description' => $description);
+
+		// check if the module permission already exists
+		if (!$this->model()->record_exists(array('name' => $module)))
+		{
+			$save[] = array('name' => $module, 'description' => $description);
+		}
 		
 		if (is_array($types))
 		{
