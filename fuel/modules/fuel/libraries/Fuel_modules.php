@@ -229,6 +229,12 @@ class Fuel_modules extends Fuel_base_library {
 	 */	
 	function get($module = NULL, $include_advanced = TRUE)
 	{
+		// used to extract model name when there is an array with the key being the advanced module folder
+		if (is_array($module))
+		{
+			$module = current($module);
+		}
+
 		// allows you to get a module based on the model name
 		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module))
 		{
