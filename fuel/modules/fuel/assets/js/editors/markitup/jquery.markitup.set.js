@@ -235,15 +235,15 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 	url += '&align=' + ((attrs.align) ? attrs.align : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
 	url += '&order=' + ((attrs.imgOrder) ? attrs.imgOrder : '');
-
+	var loaded = false;
 	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 500px; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 	
 	$modal.find('iframe#asset_inline_iframe').bind('load', function(){
-
+		if (loaded) return;
 		// to prevent double loading issue
-		$(this).unbind();
-
+		//$(this).unbind();
+		var loaded = false;
 		var iframeContext = this.contentDocument;
 		$assetSelect = jQuery('#asset_select', iframeContext);
 		$assetPreview = jQuery('#asset_preview', iframeContext);
@@ -293,6 +293,7 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 			}
 			return false;
 		});
+		loaded = true;
 	});
 
 }
