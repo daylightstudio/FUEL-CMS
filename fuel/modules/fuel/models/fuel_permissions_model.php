@@ -68,6 +68,23 @@ class Fuel_permissions_model extends Base_module_model {
 		return $data;
 	}
 	
+	function tree()
+	{
+		$CI =& get_instance();
+		// first get the permissions
+		$perms_list = $CI->fuel_permissions_model->find_all_array_assoc('name', array(), 'name asc');
+		$perms = array();
+
+		foreach($perms_list as $perm => $perm_val)
+		{
+			$sub = explode('/', $perm);
+
+			$parent_id = (isset($sub[1])) ? $sub[0] : 0;
+			$sub_attributes = ($perm_val['active'] == 'no') ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+			$perms[$perm] = array('label' => $perm_val['description'], 'parent_id' => $parent_id, 'location' => fuel_url('permissions/edit/'.$perm_val['id']), 'attributes' => $sub_attributes);
+		}
+		return $perms;
+	}
 	// --------------------------------------------------------------------
 	
 	/**
@@ -110,7 +127,35 @@ class Fuel_permissions_model extends Base_module_model {
 		{
 			$module = $values['name'];
 			$CI =& get_instance();
-			$CI->fuel->permissions->create_simple_module_permissions($module, $data['other_perms']);
+			$other_perms = $CI->fuel->permissions->create_simple_module_permissions($module, $data['other_perms']);
+
+			$users = $CI->input->post('users');
+			if (!empty($users))
+			{
+				// get the IDS of the other perms
+				$perm_ids = array();
+				foreach($other_perms as $op)
+				{
+					$perm = $this->find_one_array(array('name' => $op['name']));
+					$perm_ids[] = $perm['id'];
+				}
+
+				// now associate the other users to those perms
+				$CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
+				foreach($users as $user_id)
+				{
+					$user = $CI->fuel_users_model->find_by_key($user_id);
+					if (isset($user->id))
+					{
+						$model = $user->get_permissions(TRUE);
+						$user_perms = $model->find_all_array_assoc('id');
+						$user_perm_ids = array_keys($user_perms);
+
+						$user->permissions = array_merge($user_perm_ids, $perm_ids);
+						$user->save();
+					}
+				}
+			}
 		}
 		return $values;
 	}
