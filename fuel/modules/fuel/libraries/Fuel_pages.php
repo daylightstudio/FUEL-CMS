@@ -1502,9 +1502,9 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	function find_view_file($view, $depth = NULL)
 	{
-		if (!isset($depth))
+		if (is_null($depth))
 		{
-			$depth = $this->get_max_page_param();	
+			$depth = (is_int($this->fuel->config('auto_search_views'))) ? $this->fuel->config('auto_search_views') : $this->get_max_page_param(); // if not a number (e.g. set to TRUE), we default to 2
 		}
 		
 		if (!$this->fuel->config('auto_search_views') AND empty($depth)) return NULL;
@@ -1512,10 +1512,6 @@ class Fuel_page extends Fuel_base_library {
 		static $cnt;
 		if (is_null($cnt)) $cnt = 0;
 		$cnt++;
-		if (is_null($depth))
-		{
-			$depth = (is_int($this->fuel->config('auto_search_views'))) ? $this->fuel->config('auto_search_views') : $this->get_max_page_param(); // if not a number (e.g. set to TRUE), we default to 2
-		}
 		$view_parts = explode('/', $view);
 		array_pop($view_parts);
 		$view = implode('/', $view_parts);
