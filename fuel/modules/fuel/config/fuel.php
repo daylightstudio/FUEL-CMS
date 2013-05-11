@@ -197,6 +197,10 @@ $config['fuel_css'] = array();
 // values can be TRUE, FALSE, inline, gzip, whitespace, or combine. See the config/asset.php file for more info
 $config['fuel_assets_output'] = FALSE;
 
+// set this value to the file permission that will be applied with chmod() after a file gets uploaded
+// value should be a unix file permission integer (i.e. 0755)
+$config['set_upload_file_perms'] = FALSE;
+
 
 /*
 |--------------------------------------------------------------------------
