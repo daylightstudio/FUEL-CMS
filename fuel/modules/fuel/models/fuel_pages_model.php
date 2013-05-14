@@ -182,9 +182,27 @@ class Fuel_pages_model extends Base_module_model {
 		{
 			$location = substr($location, strlen(site_url()));
 		}
-		$where['location'] = $location;
+		
+		$segs = explode('/', $location);
+		if (count($segs) > 1)
+		{
+			$last_seg = array_pop($segs);
+
+			$wildcard_location = implode('/', $segs);
+			$where = 'location="'.$location.'" OR location="'.$wildcard_location.'/:any"';
+
+			if (is_numeric($last_seg))
+			{
+				$where .= ' OR location="'.$wildcard_location.'/:num"';
+			}
+			$where = '('.$where.')';
+		}
+		else
+		{
+			$where['location'] = $location;
+		}
 		if ($just_published === TRUE || $just_published == 'yes') $where['published'] = 'yes';
-		$data = $this->find_one_array($where);
+		$data = $this->find_one_array($where, 'location desc');
 		return $data;
 	}
 
@@ -234,7 +252,7 @@ class Fuel_pages_model extends Base_module_model {
 		return $fields;
 	}
 	
-	// --------------------------------------------------------------------
+		// --------------------------------------------------------------------
 	
 	/**
 	 * Model hook right before the data is cleaned
@@ -252,9 +270,9 @@ class Fuel_pages_model extends Base_module_model {
 				$values['location'] = '';
 			}
 			
-			$values['location'] = str_replace(array('/', '.'), array('___', '_X_'), $values['location']);
+			$values['location'] = str_replace(array('/', '.', ':any', ':num'), array('___', '_X_', '__ANY__', '__NUM__'), $values['location']);
 			$values['location'] = url_title($values['location']);
-			$values['location'] = str_replace(array('___', '_X_'), array('/', '.'), $values['location']);
+			$values['location'] = str_replace(array('___', '_X_', '__ANY__', '__NUM__'), array('/', '.', ':any', ':num'), $values['location']);
 			
 			$segments = array_filter(explode('/', $values['location']));
 			$values['location'] = implode('/', $segments);
