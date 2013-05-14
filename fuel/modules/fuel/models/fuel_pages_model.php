@@ -196,12 +196,17 @@ class Fuel_pages_model extends Base_module_model {
 				$where .= ' OR location="'.$wildcard_location.'/:num"';
 			}
 			$where = '('.$where.')';
+			if ($just_published === TRUE || $just_published == 'yes')
+			{
+				$where .= ' AND published = "yes"';
+			}
+
 		}
 		else
 		{
 			$where['location'] = $location;
+			if ($just_published === TRUE || $just_published == 'yes') $where['published'] = 'yes';
 		}
-		if ($just_published === TRUE || $just_published == 'yes') $where['published'] = 'yes';
 		$data = $this->find_one_array($where, 'location desc');
 		return $data;
 	}
