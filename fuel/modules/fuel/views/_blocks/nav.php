@@ -3,7 +3,7 @@
 <?php 
 	// // Get all modules
 	$modules = $this->fuel->modules->get();
-	$mods = array();
+	$mods = $icons = array();
 	        
 	foreach($modules as $mod)
 	{
@@ -12,6 +12,8 @@
 	    {
 	        // Index modules by their uri so we know which module belongs to a specific nav item
 	        $mods[$info['module_uri']] = isset($info['permission']) ? $info['permission'] : '';
+	        // Use custom icon classes
+	        $icons[$info['module_uri']] =isset($info['icon_class']) ?$info['icon_class'] : "ico_".url_title(str_replace('/', '_', $info['module_uri']),'_', TRUE);
 	    }
 	}
 	
@@ -46,7 +48,9 @@
 					{
 						echo ' class="active"';
 					}
-					echo "><a href=\"".fuel_url($url)."\" class=\"ico ico_".url_title(str_replace('/', '_', $key),'_', TRUE)."\">".$val."</a></li>\n";
+					// Use custom icons or default to key as class
+					$icon = isset($icons[$key]) ? $icons[$key] :  "ico_".url_title(str_replace('/', '_', $key),'_', TRUE);
+					echo "><a href=\"".fuel_url($url)."\" class=\"ico ".$icon."\">".$val."</a></li>\n";
 					$header_written = TRUE;
 				} 
 			}
