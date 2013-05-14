@@ -150,7 +150,7 @@ fuel.fields.wysiwyg_field = function(context){
 			for ( var e in CKEDITOR.tools.extend( {}, dtd.$list, dtd.$listItem, dtd.$tableContent ) )
 			{
 				this.dataProcessor.writer.setRules( e, {			
-					indent : true,
+					indent : true
 				});
 			}
 
