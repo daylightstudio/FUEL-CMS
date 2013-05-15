@@ -859,6 +859,9 @@ fuel.fields.template_field = function(context, options){
 		
 		$('#form').formBuilder().initialize(e.clonedNode);
 
+		// Hacktastic to remove any loader icons left on from fuel.fields.block
+		e.clonedNode.find('.loader').hide();
+
 		// to help with CKEditor issues... UGH!!!
 		setTimeout(function(){
 			sortStarted();
@@ -984,7 +987,6 @@ fuel.fields.block = function(context, options){
 
 			// show loader
 			$(this).parent().find('.loader').show();
-			
 			$layout_fields.load(url, function(){
 				// hide loader
 				$(this).parent().find('.loader').hide();
