@@ -48,7 +48,7 @@ class Base_module_model extends MY_Model {
 	public $upload_data = array(); // data about all uploaded files
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
-	
+	protected static $tables = array();
 	protected $_formatters = array(
 								'datetime'	=> array(
 													'formatted' => 'date_formatter',
@@ -162,9 +162,8 @@ class Base_module_model extends MY_Model {
 		}
 		
 		// create master list of tables
-		$tables = array_merge($config_tables, $module_tables, $fuel_tables);
-		
-		$this->set_tables($tables);
+		self::$tables = array_merge(self::$tables, $config_tables, $module_tables, $fuel_tables);
+		$this->set_tables(self::$tables);
 		
 		// set the table to the configuration mapping if it is in array
 		if ($this->tables($table)) 
