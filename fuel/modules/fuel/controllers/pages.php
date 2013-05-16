@@ -691,6 +691,7 @@ class Pages extends Module {
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
+		$has_advanced_tab = isset($_GET['target']) OR isset($_GET['title']) OR isset($_GET['class']);
 		$pages = $this->fuel->pages->options_list();
 		$pdfs = $this->fuel->assets->dir_files('pdf', TRUE);
 
@@ -703,9 +704,14 @@ class Pages extends Module {
 		{
 			$options = array_combine($pages, $pages);
 		}
+
 		
 		// just return the options as json
-		$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');
+		if ($has_advanced_tab)
+		{
+			$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');	
+		}
+		
 		if (isset($_GET['options']))
 		{
 			if (isset($_GET['format']) AND strtolower($_GET['format']) == 'json')
@@ -742,7 +748,11 @@ class Pages extends Module {
 
 		$fields['url_select'] = array('value' => $this->input->get_post('url_select'), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
 
-		$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');
+		if ($has_advanced_tab)
+		{
+			$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');	
+		}
+		
 		if (isset($_GET['target']))
 		{
 			$target_options = array(
