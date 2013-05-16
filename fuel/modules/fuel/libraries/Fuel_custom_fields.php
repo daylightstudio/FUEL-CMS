@@ -76,7 +76,11 @@ class Fuel_custom_fields {
 			}
 		}
 		
-		$params['data'] = array();
+		if (!isset($params['data']))
+		{
+			$params['data'] = $params['data'] = array();
+		}
+		
 		if (isset($params['preview']))
 		{
 			$params['data']['preview'] = $params['preview'];
@@ -487,6 +491,7 @@ class Fuel_custom_fields {
 		}
 		$params['type'] = 'text';
 
+
 		if (!empty($params['formatter']))
 		{
 			$params['data'] = array('formatter' => $params['formatter']);
@@ -870,7 +875,11 @@ class Fuel_custom_fields {
 		$currency = (isset($params['currency'])) ? $params['currency'] : '$';
 		
 		$data_vals = array('separator', 'decimal', 'grouping', 'min', 'max');
-		$params['data'] = array();
+
+		if (!isset($params['data']))
+		{
+			$params['data'] = array();	
+		}
 		foreach($data_vals as $val)
 		{
 			if (isset($params[$val]))
@@ -1265,7 +1274,7 @@ class Fuel_custom_fields {
 		$data = array();
 		if (isset($params['input']))
 		{
-			$data['target'] = $params['input'];
+			$data['input'] = $params['input'];
 		}
 
 		if (isset($params['target']))
@@ -1280,7 +1289,16 @@ class Fuel_custom_fields {
 		{
 			$data['pdfs'] = 1;	
 		}
-		$params['data'] = $data;
+
+		if (!empty($params['data']))
+		{
+			$params['data'] = array_merge($params['data'], $data);	
+		}
+		else
+		{
+			$params['data'] = $data;
+		}
+		
 		return $form_builder->create_text($params);
 
 	}	

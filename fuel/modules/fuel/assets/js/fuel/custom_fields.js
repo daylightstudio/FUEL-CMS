@@ -881,6 +881,9 @@ fuel.fields.url_field = function(context, options){
 		$activeField = $('#' + activeField);
 		var url = jqx_config.fuelPath + '/pages/select/?selected=' + escape($activeField.val());
 		
+		if ($activeField.data('input')){
+			url += '&input=' + $activeField.val();
+		}
 		if ($activeField.data('target')){
 			url += '&target=' + $activeField.data('target');
 		}
