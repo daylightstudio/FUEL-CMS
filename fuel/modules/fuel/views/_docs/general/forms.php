@@ -814,6 +814,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>input</strong>: provides an input field for the link. This field is not displayed by default</li>
 		<li><strong>target</strong>: sets the target of the link. Options are <dfn>_self</dfn> or <dfn>_blank</dfn>. This field is not displayed by default</li>
 		<li><strong>title</strong>: sets the title attribute of the link. This field is not displayed by default</li>
+		<li><strong>pdfs</strong>: determines whether to display PDFs along with the list of URLs. Default it is set to not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -839,6 +840,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>preview_options</strong>: preview popup window options (used as the third parameter of <a href="http://www.w3schools.com/jsref/met_win_open.asp" target="_blank">window.open</a> . The default is <dfn>width=1024,height=768</dfn></li>
 		<li><strong>img_folder</strong>: the image folder to pull from when inserting an image</li>
 		<li><strong>img_order</strong>: the image order displayed in the dropdown select. Options are <dfn>name</dfn> and <dfn>last_updated</dfn>. Default is <dfn>name</dfn></li>
+		<li><strong>link_pdfs</strong>: determines whether to display PDFs along with the list of URLs when inserting a link. Default it is set to not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
 	</ul>
 	
 	<h4>Example</h4>

@@ -305,7 +305,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 	var isAnchorSelected = selected.match(/\<a[^>]+href=[^>]+>(.*)<\/a>/);
 
 	// if anchor selected then we start grabbing values
-	var input, target, title, className;
+	var input, target, title, className, linkPdfs;
 
 	if (isAnchorSelected){
 
@@ -329,8 +329,8 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 			selected = isAnchorSelected[1];
 		}
 	}
-
-	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className}, function(replace){
+	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
+	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
@@ -342,7 +342,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 	url += '&target=' + ((attrs.target) ? attrs.target : '');
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
-
+	url += '&pdfs=' + ((attrs.linkPdfs) ? attrs.linkPdfs : '');
 
 	var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', true);

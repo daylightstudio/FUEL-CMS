@@ -239,6 +239,9 @@ $lang['form_label_class'] = 'Class';
 
 $lang['navigation_related'] = 'Create navigation';
 
+$lang['page_select_pages'] = 'Pages';
+$lang['page_select_pdfs'] = 'PDFs';
+
 /*
 |--------------------------------------------------------------------------
 | Blocks

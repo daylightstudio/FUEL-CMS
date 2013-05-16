@@ -1276,6 +1276,10 @@ class Fuel_custom_fields {
 		{
 			$data['title'] = $params['title'];
 		}
+		if (isset($params['pdfs']))
+		{
+			$data['pdfs'] = 1;	
+		}
 		$params['data'] = $data;
 		return $form_builder->create_text($params);
 

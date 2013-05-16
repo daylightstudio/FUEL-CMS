@@ -26,7 +26,7 @@ CKEDITOR.plugins.add( 'fuellink', {
 	        exec: function( editor ) {
 				var selection = editor.getSelection();
 				element = selection.getStartElement();
-				var input, target, title, className;
+				var input, target, title, className, linkPdfs;
 				if ( element ) {
 					element = element.getAscendant( 'a', true );
 					if (element){
@@ -40,13 +40,13 @@ CKEDITOR.plugins.add( 'fuellink', {
 						className = element.getAttribute('class');
 					}
 				}
-
+				linkPdfs = editor.element.getAttribute('data-link_pdfs');
 				var selected = selection.getSelectedText();
 				var selectedElem = selection.getSelectedElement();
 				if (selectedElem){
 					selected = selectedElem.getOuterHtml();
 				}
-				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className}, function(replace){
+				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs}, function(replace){
 					editor.insertHtml(replace);
 				})
 	        }
