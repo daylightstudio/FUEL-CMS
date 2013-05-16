@@ -524,12 +524,12 @@ class Fuel_layout extends Fuel_base_library {
 	 */
 	function fields()
 	{
-		$fields = $this->fields;
-		$fields = $this->process_fields($fields);
 		if (!empty($this->description))
 		{
 			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
 		}
+		$fields = array_merge($fields, $this->fields);
+		$fields = $this->process_fields($fields);
 
 		return $fields;
 	}
