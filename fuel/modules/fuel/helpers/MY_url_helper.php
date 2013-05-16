@@ -204,9 +204,10 @@ function last_url($default = FALSE, $only_uri = FALSE)
  *
  * @access	public
  * @param	string	URL
+ * @param	array	An array of extensions to check to force it to target="_blank"
  * @return	boolean
  */
-function link_target($link)
+function link_target($link, $exts = array())
 {
 	$url_parts = parse_url($link);
 	
@@ -234,9 +235,16 @@ function link_target($link)
 			$domain = $host_parts[0];
 		}
 	}
+
+	// get the extension to check
+	if (is_string($exts))
+	{
+		$exts = array($exts);
+	}
+	$ext = end(explode('.', $link));
 	
 	// check if an http path and that it is from a different domain
-	if (is_http_path($link) AND $test_domain != $domain)
+	if (is_http_path($link) AND $test_domain != $domain OR (!empty($exts) AND in_array($ext, $exts)))
 	{
 		return ' target="_blank"';
 	}
