@@ -4,10 +4,10 @@
 <ul>
 	<li><a href="http://ellislabs.com" target="_blank">EllisLabs</a> - for the great work with CodeIgniter/ExpressionEngine</li>
 	<li><a href="http://jquery.com" target="_blank">jQuery Team</a> - it's hard to imagine doing our jobs without jQuery</li>
-	<li><a href="http://bitbucket.org/wiredesignz/codeigniter-modular-extensions-hmvc/wiki/Home" target="_blank">wiredesignz</a> - for his excellent <a href="http://code.google.com/p/matchbox/" target="_blank">Modular Extensions - HMVC</a> module library</li>
+	<li><a href="http://bitbucket.org/wiredesignz/codeigniter-modular-extensions-hmvc/wiki/Home" target="_blank">wiredesignz</a> - for his excellent <a href="http://bitbucket.org/wiredesignz/codeigniter-modular-extensions-hmvc/wiki/Home" target="_blank">Modular Extensions - HMVC</a> module library</li>
 	<li><a href="http://codeigniter.com/forums/viewthread/57117/" target="_blank">Al James</a> - for his Cache library we use all over</li>
 	<li><a href="http://markitup.jaysalvat.com/home/" target="_blank">Jay Salvat</a> - for his great textarea editor MarkItUp!</li>
-	<li><a href="http://philsturgeon.co.uk" target="_blank">Phil Sturgeon</a> - for his My_Parser implementation with Dwoo and Unzip class (and many other great contributions to the CI community including <a href="http://www.pyrocms.com" target="_blank">PyroCMS</a>)</li>
+	<li><a href="http://philsturgeon.co.uk" target="_blank">Phil Sturgeon</a> - for his MY_Parser implementation with Dwoo and Unzip class (and many other great contributions to the CI community including <a href="http://www.pyrocms.com" target="_blank">PyroCMS</a>)</li>
 	<li><a href="http://dwoo.org" target="_blank">Jordi Boggiano</a> - for his Dwoo template library. We tried reinventing the wheel but quickly realized Jordi had already done it.</li>
 	<li><a href="http://www.famfamfam.com/lab/icons/" target="_blank">famfamfam icon set</a> - for their great icon library</li>
 </ul>
