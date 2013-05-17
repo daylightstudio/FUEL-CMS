@@ -6,7 +6,15 @@ It is highly recommended that you take a peek at this module's files and any oth
 to create one (it's not too tough!).
 </p>
 
-<h2>Steps to Create an Advanced Module</h2>
+<h2>Generating an Advanced Module</h2>
+<p>FUEL comes with the ability to automatically <a href="<?=user_guide_url('modules/generate')?>">generate</a> the starter files for an advanced module. Below is an example of how to 
+do so:</p>
+<pre class="brush:php">
+php index.php fuel/generate/advanced examples
+</pre>
+<p class="important"><a href="<?=user_guide_url('modules/generate')?>">Read more about FUEL's generate capabilities</a>.</p>
+
+<h2>Steps to Create an Advanced Module Manually</h2>
 <ol>
 	<li>Create a folder to contain your code in the <dfn>fuel/modules/</dfn> folder</li>
 	<li>Create your config folder and add a <dfn>{module_name}.php</dfn>, <dfn>{module_name}_constants.php</dfn>, and a <dfn>{module_name}_routes.php</dfn>
@@ -62,7 +70,7 @@ $config['nav']['blog'] = array(
 		</ul>
 	</li>
 	<li>Create your assets folder and add any specific styles you want to use for that module's admin interface in a <dfn>css/{module_name}.css</dfn> file including your menu item icons.</li>
-	<li>If you have the <a href="<?=user_guide_url('modules/tester')?>">Tester</a> module, you can add your tests to a <dfn>tests</dfn> folder.</li>
+	<li>If you have the <a href="<?=user_guide_url('tools/user_guide/modules/user_guide')?>">Tester</a> module, you can add your tests to a <dfn>tests</dfn> folder.</li>
 	<li>If you have this <dfn>user_guide</dfn> module installed, you can add documentation to the <dfn>views/_docs/</dfn> folder. There needs to be at least an <dfn>index.php</dfn> file before it will appear in the <dfn>user_guide</dfn> module.</li>
 	<li>Last but not least, in order to see your module you must add the folder name of your module to the <dfn>$config['modules_allowed']</dfn> array in your <dfn>fuel/application/config/MY_fuel.php</dfn> file.</li>
 </ol>

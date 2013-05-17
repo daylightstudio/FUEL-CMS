@@ -382,6 +382,7 @@ $config['generate'] = array(
 										'config/{module}_routes.php',
 										'controllers/{module}_module.php',
 										'helpers/{module}_helper.php',
+										'install/install.php',
 										'libraries/Fuel_{module}.php',
 										'language/english/{module}_lang.php',
 										'models/',
