@@ -238,9 +238,7 @@ $lang['form_label_target'] = 'Target';
 $lang['form_label_class'] = 'Class';
 
 $lang['navigation_related'] = 'Create navigation';
-
-$lang['page_select_pages'] = 'Pages';
-$lang['page_select_pdfs'] = 'PDFs';
+$lang['navigation_quick_add'] = 'This field lets you quickly add a navigation item for this page. It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.';
 
 /*
 |--------------------------------------------------------------------------
