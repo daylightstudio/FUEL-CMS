@@ -225,14 +225,14 @@ class Pages extends Module {
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
-		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_order($sort_arr);
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->show_required = FALSE;
-		$this->form_builder->set_field_values($field_values);
 		
 		// set this one to FALSE because the layout selection will execute the js again
 		$this->form_builder->auto_execute_js = FALSE;
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->set_field_values($field_values);
 
 		$vars['form'] = $this->form_builder->render();
 
@@ -691,27 +691,11 @@ class Pages extends Module {
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
-		$has_advanced_tab = isset($_GET['target']) OR isset($_GET['title']) OR isset($_GET['class']);
 		$pages = $this->fuel->pages->options_list();
-		$pdfs = $this->fuel->assets->dir_files('pdf', TRUE);
-
-		if (!empty($pdfs) AND !empty($_GET['pdfs']))
-		{
-			$options[lang('page_select_pages')] = array_combine($pages, $pages);
-			$options[lang('page_select_pdfs')] = array_combine($pdfs, $pdfs);
-		}
-		else
-		{
-			$options = array_combine($pages, $pages);
-		}
-
+		$options = array_combine($pages, $pages);
 		
 		// just return the options as json
-		if ($has_advanced_tab)
-		{
-			$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');	
-		}
-		
+		$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');
 		if (isset($_GET['options']))
 		{
 			if (isset($_GET['format']) AND strtolower($_GET['format']) == 'json')
@@ -748,11 +732,7 @@ class Pages extends Module {
 
 		$fields['url_select'] = array('value' => $this->input->get_post('url_select'), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
 
-		if ($has_advanced_tab)
-		{
-			$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');	
-		}
-		
+		$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');
 		if (isset($_GET['target']))
 		{
 			$target_options = array(
