@@ -438,6 +438,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 */	
 	function is_new_location($location, $group_id, $parent_id, $lang)
 	{
+		if (empty($location)) return TRUE;
 		if (empty($group_id)) return FALSE;
 		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
 		if (!empty($data)) return FALSE;
@@ -458,6 +459,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 */
 	function is_editable_location($location, $group_id, $parent_id, $id, $lang)
 	{
+		if (empty($location)) return TRUE;
 		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
 		return FALSE;
