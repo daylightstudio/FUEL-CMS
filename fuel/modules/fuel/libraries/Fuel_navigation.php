@@ -65,6 +65,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>item_tag</strong>: the html list item element. Default is 'li'</li>
 		<li><strong>item_id_prefix</strong>: the prefix to the item id</li>
 		<li><strong>item_id_key</strong>: either id or location. Default is 'id'</li>
+		<li><strong>use_nav_key</strong>: determines whether to use the nav_key or the location for the active state. Default is "AUTO"</li>
 		<li><strong>pre_render_func</strong>: function to apply to menu labels before rendering</li>
 		<li><strong>delimiter</strong>: the html element between the links </li>
 		<li><strong>arrow_class</strong>: the class for the arrows used in breadcrumb type menus</li>
@@ -107,6 +108,7 @@ class Fuel_navigation extends Fuel_module {
 						'item_tag' => 'li',
 						'item_id_prefix' => '',
 						'item_id_key' => 'id',
+						'use_nav_key' => 'AUTO',
 						'pre_render_func' => '',
 						'delimiter' => FALSE,
 						'arrow_class' => 'arrow',
