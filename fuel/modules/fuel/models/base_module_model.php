@@ -565,7 +565,7 @@ class Base_module_model extends MY_Model {
 		$archive = $this->fuel_archives_model->find_one_array(array('table_name' => $this->table_name, 'ref_id' => $ref_id), 'version_timestamp desc');
 		if (!empty($archive['data']))
 		{
-			$archive['data'] = json_decode($archive['data'], TRUE);
+			$archive['data'] = (is_serialized_str($archive['data'])) ? @unserialize($archive['data']) : json_decode($archive['data'], TRUE);
 			return ($all_data) ? $archive : $archive['data'];
 		}
 		return array();
@@ -596,7 +596,7 @@ class Base_module_model extends MY_Model {
 		if (!empty($archive))
 		{
 			// check for serialization for backwards compatibility
-			$data = (is_serialized_str($archive['data'])) ? unserialize($archive['data']) : json_decode($archive['data'], TRUE);
+			$data = (is_serialized_str($archive['data'])) ? @unserialize($archive['data']) : json_decode($archive['data'], TRUE);
 			foreach($data as $key => $val)
 			{
 				// reformat dates
