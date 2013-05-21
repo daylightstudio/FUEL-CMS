@@ -58,7 +58,6 @@ class Users extends Module {
 		// reset dup id
 		if ($_POST[$this->model->key_field()] == 'dup')
 		{
-			$_POST[$this->model->key_field()] = '';
 			$_POST['user_name'] = '';
 			$_POST['password'] = '';
 			$_POST['email'] = '';

@@ -384,6 +384,12 @@ class Fuel_users_model extends Base_module_model {
 			}
 		}
 
+		// for duplicated users
+		elseif (!empty($_POST['permissions']))
+		{
+			$user_perms = $CI->fuel_permissions_model->find_within($_POST['permissions'], array(), NULL, NULL, NULL, 'name');
+		}
+
 		$perms = array();
 		foreach($perms_list as $perm => $perm_val)
 		{

@@ -232,7 +232,7 @@ $config['modules']['users'] = array(
 				'),
 			),
 		),
-	'item_actions' => array('save', 'activate', 'create', 'delete'),
+	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
 	'clear_cache_on_save' => FALSE,
 );
 
