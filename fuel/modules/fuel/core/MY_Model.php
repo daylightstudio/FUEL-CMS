@@ -5566,6 +5566,20 @@ class Data_record_field {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns a JSON encoded string of the record values
+	 *
+	 * @access	public
+	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
+	 * @return	string
+	 */	
+	public function to_json($include_derived = TRUE)
+	{
+		$values = $this->values($include_derived);
+		return json_encode($values);
+	}
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Placeholder - to execute after a magic method get
 	 *
 	 * @access	public
