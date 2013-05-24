@@ -4650,13 +4650,23 @@ class Data_record {
 
 		if ($cache_key == '') 
 		{
+			$model_str = '';
+			if (is_array($model))
+			{
+				$model_str = key($model);
+				$model_str .= current($model);
+			}
+			elseif (is_string($model))
+			{
+				$model_str = $model;
+			}
 			if (is_array($where))
 			{
-				$cache_key = implode('_', array_keys($where));
+				$cache_key = implode('_', array_keys($where)).'_'.$model_str;
 			}
 			else
 			{
-				$cache_key = str_replace(' ', '_', $where).'_'.$model;
+				$cache_key = str_replace(' ', '_', $where).'_'.$model_str;
 			}
 		}
 
