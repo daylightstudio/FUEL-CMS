@@ -169,7 +169,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 * returns a new template object from the given include name, null if no include is
 	 * possible (resource not found), or false if include is not permitted by this resource type
 	 *
-	 * @param Dwoo $dwoo the dwoo instance requiring it
+	 * @param Dwoo_Core $dwoo the dwoo instance requiring it
 	 * @param mixed $resourceId the filename (relative to this template's dir) of the template to include
 	 * @param int $cacheTime duration of the cache validity for this template,
 	 * 						 if null it defaults to the Dwoo instance that will
@@ -183,7 +183,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 * 											an include, extends or any other plugin)
 	 * @return Dwoo_Template_File|null
 	 */
-	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
+	public static function templateFactory(Dwoo_Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
 		if (DIRECTORY_SEPARATOR === '\\') {
 			$resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
@@ -244,16 +244,16 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 * returns the full compiled file name and assigns a default value to it if
 	 * required
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests the file name
 	 * @return string the full path to the compiled file
 	 */
-	protected function getCompiledFilename(Dwoo $dwoo)
+	protected function getCompiledFilename(Dwoo_Core $dwoo)
 	{
 		// no compile id was provided, set default
 		if ($this->compileId===null) {
 			$this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
 		}
-		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
+		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo_Core::RELEASE_TAG.'.php';
 	}
 
 	/**

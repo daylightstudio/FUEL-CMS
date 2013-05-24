@@ -91,12 +91,12 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 			if ($usesIteration) $pre .="\n\t".'"iteration"		=> 1,';
 			if ($usesFirst) $pre .="\n\t".'"first"		=> null,';
 			if ($usesLast) $pre .="\n\t".'"last"		=> null,';
-			if ($usesShow) $pre .="\n\t".'"show"		=> $this->isArray($_loop'.$cnt.'_data, true),';
-			if ($usesTotal) $pre .="\n\t".'"total"		=> $this->isArray($_loop'.$cnt.'_data) ? count($_loop'.$cnt.'_data) : 0,';
+			if ($usesShow) $pre .="\n\t".'"show"		=> $this->isTraversable($_loop'.$cnt.'_data, true),';
+			if ($usesTotal) $pre .="\n\t".'"total"		=> $this->count($_loop'.$cnt.'_data),';
 			$pre.="\n);\n".'$_loop'.$cnt.'_glob =& $this->globals["loop"]['.$name.'];';
 		}
 		// checks if the loop must be looped
-		$pre .= "\n".'if ($this->isArray($_loop'.$cnt.'_data'.(isset($params['hasElse']) ? ', true' : '').') === true)'."\n{";
+		$pre .= "\n".'if ($this->isTraversable($_loop'.$cnt.'_data'.(isset($params['hasElse']) ? ', true' : '').') == true)'."\n{";
 		// iterates over keys
 		$pre .= "\n\t".'foreach ($_loop'.$cnt.'_data as $tmp_key => $this->scope["-loop-"])'."\n\t{";
 		// updates properties

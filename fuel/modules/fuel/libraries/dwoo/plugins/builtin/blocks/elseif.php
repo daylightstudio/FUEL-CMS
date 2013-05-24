@@ -44,9 +44,10 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Bloc
 			return '';
 		}
 
+		$tokens = $compiler->getParamTokens($params);
 		$params = $compiler->getCompiledParams($params);
 
-		$pre = Dwoo_Compiler::PHP_OPEN."elseif (".implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
+		$pre = Dwoo_Compiler::PHP_OPEN."elseif (".implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
 		$post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
 		if (isset($params['hasElse'])) {

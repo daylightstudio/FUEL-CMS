@@ -18,7 +18,7 @@
  * @date       2008-10-23
  * @package    Dwoo
  */
-function Dwoo_Plugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
+function Dwoo_Plugin_regex_replace(Dwoo_Core $dwoo, $value, $search, $replace)
 {
 	$search = (array) $search;
 	$cnt = count($search);

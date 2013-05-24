@@ -24,14 +24,15 @@
  * @date       2008-10-23
  * @package    Dwoo
  */
-function Dwoo_Plugin_eval(Dwoo $dwoo, $var, $assign = null)
+function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 {
 	if ($var == '') {
 		return;
 	}
 
 	$tpl = new Dwoo_Template_String($var);
-	$out = $dwoo->get($tpl, $dwoo->readVar('_parent'));
+	$clone = clone $dwoo;
+	$out = $clone->get($tpl, $dwoo->readVar('_parent'));
 
 	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);

@@ -71,7 +71,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 										"\n".'$_for'.$cnt.'_step = abs('.$step.');'.
 										"\n".'if (is_numeric($_for'.$cnt.'_from) && !is_numeric($_for'.$cnt.'_to)) { $this->triggerError(\'For requires the <em>to</em> parameter when using a numerical <em>from</em>\'); }'.
 										"\n".'$tmp_shows = $this->isArray($_for'.$cnt.'_from, true) || (is_numeric($_for'.$cnt.'_from) && (abs(($_for'.$cnt.'_from - $_for'.$cnt.'_to)/$_for'.$cnt.'_step) !== 0 || $_for'.$cnt.'_from == $_for'.$cnt.'_to));';
-		// adds foreach properties
+		// adds for properties
 		if ($usesAny) {
 			$out .= "\n".'$this->globals["for"]['.$name.'] = array'."\n(";
 			if ($usesIndex) $out .="\n\t".'"index"		=> 0,';
@@ -79,14 +79,14 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 			if ($usesFirst) $out .="\n\t".'"first"		=> null,';
 			if ($usesLast) $out .="\n\t".'"last"		=> null,';
 			if ($usesShow) $out .="\n\t".'"show"		=> $tmp_shows,';
-			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? floor(count($_for'.$cnt.'_from) / $_for'.$cnt.'_step) : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
+			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? floor($this->count($_for'.$cnt.'_from) / $_for'.$cnt.'_step) : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
 			$out.="\n);\n".'$_for'.$cnt.'_glob =& $this->globals["for"]['.$name.'];';
 		}
 		// checks if for must be looped
 		$out .= "\n".'if ($tmp_shows)'."\n{";
 		// set from/to to correct values if an array was given
-		$out .= "\n\t".'if ($this->isArray($_for'.$cnt.'_from, true)) {
-		$_for'.$cnt.'_to = is_numeric($_for'.$cnt.'_to) ? $_for'.$cnt.'_to - $_for'.$cnt.'_step : count($_for'.$cnt.'_from) - 1;
+		$out .= "\n\t".'if ($this->isArray($_for'.$cnt.'_from'.(isset($params['hasElse']) ? ', true' : '').') == true) {
+		$_for'.$cnt.'_to = is_numeric($_for'.$cnt.'_to) ? $_for'.$cnt.'_to - $_for'.$cnt.'_step : $this->count($_for'.$cnt.'_from) - 1;
 		$_for'.$cnt.'_from = 0;
 	}';
 
@@ -114,8 +114,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 			}';
 		}
 
-		$out .= '
-	for ($this->scope['.$name.'] = $_for'.$cnt.'_from; $this->scope['.$name.'] '.$condition.' $_for'.$cnt.'_to; $this->scope['.$name.'] '.$incrementer.'= $_for'.$cnt.'_step)'."\n\t{";
+		$out .= "\n\t".'for ($this->scope['.$name.'] = $_for'.$cnt.'_from; $this->scope['.$name.'] '.$condition.' $_for'.$cnt.'_to; $this->scope['.$name.'] '.$incrementer.'= $_for'.$cnt.'_step)'."\n\t{";
 		// updates properties
 		if ($usesIndex) {
 			$out .="\n\t\t".'$_for'.$cnt.'_glob["index"] = $this->scope['.$name.'];';

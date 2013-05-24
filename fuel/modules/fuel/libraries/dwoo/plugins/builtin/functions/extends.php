@@ -19,6 +19,7 @@
 class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 {
 	protected static $childSource;
+	protected static $regex;
 	protected static $l;
 	protected static $r;
 	protected static $lastReplacement;
@@ -28,6 +29,20 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		list($l, $r) = $compiler->getDelimiters();
 		self::$l = preg_quote($l,'/');
 		self::$r = preg_quote($r,'/');
+		self::$regex = '/
+			'.self::$l.'block\s(["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)
+			((?:
+				(?R)
+				|
+				[^'.self::$l.']*
+				(?:
+					(?! '.self::$l.'\/?block\b )
+					'.self::$l.'
+					[^'.self::$l.']*+
+				)*
+			)*)
+			'.self::$l.'\/block'.self::$r.'
+			/six';
 
 		if ($compiler->getLooseOpeningHandling()) {
 			self::$l .= '\s*';
@@ -74,7 +89,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			}
 			$inheritanceTree[] = $newParent;
 
-			if (preg_match('/^'.self::$l.'extends\s+(?:file=)?\s*((["\']).+?\2|\S+?)'.self::$r.'/i', $parent->getSource(), $match)) {
+			if (preg_match('/^'.self::$l.'extends(?:\(?\s*|\s+)(?:file=)?\s*((["\']).+?\2|\S+?)\s*\)?\s*?'.self::$r.'/i', $parent->getSource(), $match)) {
 				$curPath = dirname($identifier) . DIRECTORY_SEPARATOR;
 				if (isset($match[2]) && $match[2] == '"') {
 					$file = '"'.str_replace('"', '\\"', substr($match[1], 1, -1)).'"';
@@ -96,39 +111,51 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			if (!isset($newSource)) {
 				$newSource = $parent['source'];
 			}
-
-			// TODO parse blocks tree for child source and new source
-			// TODO replace blocks that are found in the child and in the parent recursively
-			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
-
-			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.$r.$newSource;
+			$newSource = preg_replace_callback(self::$regex, array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
+			$newSource = $l.'do extendsCheck('.var_export($parent['resource'].':'.$parent['identifier'], true).')'.$r.$newSource;
 
 			if (self::$lastReplacement) {
 				break;
 			}
 		}
-
 		$compiler->setTemplateSource($newSource);
 		$compiler->recompile();
 	}
 
 	protected static function replaceBlock(array $matches)
 	{
-		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2],'/').'\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
+		$matches[3] = self::removeTrailingNewline($matches[3]);
+
+		if (preg_match_all(self::$regex, self::$childSource, $override) && in_array($matches[2], $override[2])) {
+			$key = array_search($matches[2], $override[2]);
+			$override = self::removeTrailingNewline($override[3][$key]);
+
 			$l = stripslashes(self::$l);
 			$r = stripslashes(self::$r);
 
 			if (self::$lastReplacement) {
-				return preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]);
-			} else {
-				return $l.'block '.$matches[1].$matches[2].$matches[1].$r.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override[2]).$l.'/block'.$r;
+				return preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override);
 			}
-		} else {
-			if (self::$lastReplacement) {
-				return $matches[3];
-			} else {
-				return $matches[0];
-			}
+			return $l.'block '.$matches[1].$matches[2].$matches[1].$r.preg_replace('/'.self::$l.'\$dwoo\.parent'.self::$r.'/is', $matches[3], $override).$l.'/block'.$r;
 		}
+
+		if (preg_match(self::$regex, $matches[3])) {
+			return preg_replace_callback(self::$regex, array('Dwoo_Plugin_extends', 'replaceBlock'), $matches[3] );
+		}
+
+		if (self::$lastReplacement) {
+			return $matches[3];
+		}
+
+		return  $matches[0];
+	}
+
+	protected static function removeTrailingNewline($text)
+	{
+		return substr($text, -1) === "\n"
+				? substr($text, -2, 1) === "\r"
+					? substr($text, 0, -2)
+					: substr($text, 0, -1)
+				: $text;
 	}
 }

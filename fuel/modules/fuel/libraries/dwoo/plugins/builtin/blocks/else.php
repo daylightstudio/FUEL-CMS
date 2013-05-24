@@ -39,6 +39,9 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		while (true) {
 			$preContent .= $compiler->removeTopBlock();
 			$block =& $compiler->getCurrentBlock();
+			if (!$block) {
+				throw new Dwoo_Compilation_Exception($compiler, 'An else block was found but it was not preceded by an if or other else-able construct');
+			}
 			$interfaces = class_implements($block['class'], false);
 			if (in_array('Dwoo_IElseable', $interfaces) !== false) {
 				break;

@@ -30,9 +30,9 @@ abstract class Dwoo_Plugin
 	 * constructor, if you override it, call parent::__construct($dwoo); or assign
 	 * the dwoo instance yourself if you need it
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that runs this plugin
+	 * @param Dwoo_Core $dwoo the dwoo instance that runs this plugin
 	 */
-	public function __construct(Dwoo $dwoo)
+	public function __construct(Dwoo_Core $dwoo)
 	{
 		$this->dwoo = $dwoo;
 	}
@@ -59,9 +59,10 @@ abstract class Dwoo_Plugin
 	 *
 	 * @param array $params an array of attributeName=>value items that will be compiled to be ready for inclusion in a php string
 	 * @param string $delim the string delimiter you want to use (defaults to ')
+	 * @param Dwoo_Compiler $compiler the compiler instance (optional for BC, but recommended to pass it for proper escaping behavior)
 	 * @return string
 	 */
-	public static function paramsToAttributes(array $params, $delim = '\'')
+	public static function paramsToAttributes(array $params, $delim = '\'', Dwoo_Compiler $compiler = null)
 	{
 		if (isset($params['*'])) {
 			$params = array_merge($params, $params['*']);
@@ -76,7 +77,20 @@ abstract class Dwoo_Plugin
 			} elseif (substr($val, 0, 1) === $delim && substr($val, -1) === $delim) {
 				$out .= str_replace($delim, '\\'.$delim, '"'.substr($val, 1, -1).'"');
 			} else {
-				$out .= str_replace($delim, '\\'.$delim, '"') . $delim . '.'.$val.'.' . $delim . str_replace($delim, '\\'.$delim, '"');
+				if (!$compiler) {
+					// disable double encoding since it can not be determined if it was encoded
+					$escapedVal = '.(is_string($tmp2='.$val.') ? htmlspecialchars($tmp2, ENT_QUOTES, $this->charset, false) : $tmp2).';
+				} elseif (!$compiler->getAutoEscape() || false === strpos($val, 'isset($this->scope')) {
+					// escape if auto escaping is disabled, or there was no variable in the string
+					$escapedVal = '.(is_string($tmp2='.$val.') ? htmlspecialchars($tmp2, ENT_QUOTES, $this->charset) : $tmp2).';
+				} else {
+					// print as is
+					$escapedVal = '.'.$val.'.';
+				}
+
+				$out .= str_replace($delim, '\\'.$delim, '"') .
+					$delim . $escapedVal . $delim .
+					str_replace($delim, '\\'.$delim, '"');
 			}
 		}
 

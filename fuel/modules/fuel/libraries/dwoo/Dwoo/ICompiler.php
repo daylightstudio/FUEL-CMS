@@ -27,12 +27,12 @@ interface Dwoo_ICompiler
 	 * @param string $templateStr the template to compile
 	 * @return string a compiled php code string
 	 */
-	public function compile(Dwoo $dwoo, Dwoo_ITemplate $template);
+	public function compile(Dwoo_Core $dwoo, Dwoo_ITemplate $template);
 
 	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
 	 *
-	 * @see Dwoo::addPlugin
+	 * @see Dwoo_Core::addPlugin
 	 * @param array $customPlugins an array of custom plugins
 	 */
 	public function setCustomPlugins(array $customPlugins);

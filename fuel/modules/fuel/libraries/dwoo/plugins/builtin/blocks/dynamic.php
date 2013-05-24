@@ -27,6 +27,11 @@ class Dwoo_Plugin_dynamic extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
+		try {
+			$compiler->findBlock('dynamic');
+			return $content;
+		} catch (Dwoo_Compilation_Exception $e) {
+		}
 		$output = Dwoo_Compiler::PHP_OPEN .
 			'if($doCache) {'."\n\t".
 				'echo \'<dwoo:dynamic_\'.$dynamicId.\'>'.

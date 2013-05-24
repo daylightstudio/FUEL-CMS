@@ -242,10 +242,10 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * returns the cached template output file name, true if it's cache-able but not cached
 	 * or false if it's not cached
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @return string|bool
 	 */
-	public function getCachedTemplate(Dwoo $dwoo)
+	public function getCachedTemplate(Dwoo_Core $dwoo)
 	{
 		if ($this->cacheTime !== null) {
 			$cacheLength = $this->cacheTime;
@@ -254,7 +254,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		}
 
 		// file is not cacheable
-		if ($cacheLength === 0) {
+		if ($cacheLength == 0) {
 			return false;
 		}
 
@@ -276,11 +276,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * caches the provided output into the cache file
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @param string $output the template output
 	 * @return mixed full path of the cached file or false upon failure
 	 */
-	public function cache(Dwoo $dwoo, $output)
+	public function cache(Dwoo_Core $dwoo, $output)
 	{
 		$cacheDir = $dwoo->getCacheDir();
 		$cachedFile = $this->getCacheFilename($dwoo);
@@ -317,11 +317,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * clears the cached template if it's older than the given time
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that was used to cache that template
+	 * @param Dwoo_Core $dwoo the dwoo instance that was used to cache that template
 	 * @param int $olderThan minimum time (in seconds) required for the cache to be cleared
 	 * @return bool true if the cache was not present or if it was deleted, false if it remains there
 	 */
-	public function clearCache(Dwoo $dwoo, $olderThan = -1)
+	public function clearCache(Dwoo_Core $dwoo, $olderThan = -1)
 	{
 		$cachedFile = $this->getCacheFilename($dwoo);
 
@@ -331,11 +331,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * returns the compiled template file name
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @param Dwoo_ICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
+	public function getCompiledTemplate(Dwoo_Core $dwoo, Dwoo_ICompiler $compiler = null)
 	{
 		$compiledFile = $this->getCompiledFilename($dwoo);
 
@@ -390,7 +390,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * returns a new template string object with the resource id being the template source code
 	 *
-	 * @param Dwoo $dwoo the dwoo instance requiring it
+	 * @param Dwoo_Core $dwoo the dwoo instance requiring it
 	 * @param mixed $resourceId the filename (relative to this template's dir) of the template to include
 	 * @param int $cacheTime duration of the cache validity for this template,
 	 * 						 if null it defaults to the Dwoo instance that will
@@ -404,7 +404,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * 											an include, extends or any other plugin)
 	 * @return Dwoo_Template_String
 	 */
-	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
+	public static function templateFactory(Dwoo_Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
 		return new self($resourceId, $cacheTime, $cacheId, $compileId);
 	}
@@ -413,26 +413,26 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * returns the full compiled file name and assigns a default value to it if
 	 * required
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests the file name
 	 * @return string the full path to the compiled file
 	 */
-	protected function getCompiledFilename(Dwoo $dwoo)
+	protected function getCompiledFilename(Dwoo_Core $dwoo)
 	{
 		// no compile id was provided, set default
 		if ($this->compileId===null) {
 			$this->compileId = $this->name;
 		}
-		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
+		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo_Core::RELEASE_TAG.'.php';
 	}
 
 	/**
 	 * returns the full cached file name and assigns a default value to it if
 	 * required
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests the file name
 	 * @return string the full path to the cached file
 	 */
-	protected function getCacheFilename(Dwoo $dwoo)
+	protected function getCacheFilename(Dwoo_Core $dwoo)
 	{
 		// no cache id provided, use request_uri as default
 		if ($this->cacheId === null) {
@@ -482,7 +482,15 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		} else {
 			$chmod = $this->chmod;
 		}
-		mkdir($path, $chmod, true);
+
+		$retries = 3;
+		while ($retries--) {
+			@mkdir($path, $chmod, true);
+			if (is_dir($path)) {
+				break;
+			}
+			usleep(20);
+		}
 
 		// enforce the correct mode for all directories created
 		if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
@@ -490,7 +498,12 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			$folders = explode('/', trim($path, '/'));
 			foreach ($folders as $folder) {
 				$baseDir .= $folder . DIRECTORY_SEPARATOR;
-				chmod($baseDir, $chmod);
+				if (!chmod($baseDir, $chmod))
+				{
+					throw new Exception("Unable to chmod ".
+						"$baseDir to $chmod: ".
+						print_r(error_get_last(), TRUE));
+				}
 			}
 		}
 	}

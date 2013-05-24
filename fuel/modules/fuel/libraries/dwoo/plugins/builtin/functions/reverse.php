@@ -17,7 +17,7 @@
  * @date       2008-10-23
  * @package    Dwoo
  */
-function Dwoo_Plugin_reverse(Dwoo $dwoo, $value, $preserve_keys=false)
+function Dwoo_Plugin_reverse(Dwoo_Core $dwoo, $value, $preserve_keys=false)
 {
 	if (is_array($value)) {
 		return array_reverse($value, $preserve_keys);
