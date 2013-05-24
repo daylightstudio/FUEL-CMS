@@ -316,7 +316,7 @@ because it returns inline editing markers that later get parsed out by FUEL. For
  * @param	boolean
  * @return	string
  */
-function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate = TRUE)
+function fuel_var($key, $default = '', $edit_module = 'pagevariables', $evaluate = FALSE)
 {
 	$CI =& get_instance();
 	$CI->load->helper('inflector');
