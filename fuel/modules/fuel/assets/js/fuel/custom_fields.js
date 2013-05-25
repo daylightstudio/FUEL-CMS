@@ -173,13 +173,12 @@ fuel.fields.wysiwyg_field = function(context){
 						// // Output dimensions of images as width and height attributes on src
 						if ( element.name == 'img' && hasCKEditorImagePlugin) {
 							var src = element.attributes['src'];
-							img = src.replace(/^\{img_path\('([^']+)'\)\}/, function(match, contents, offset, s) {
+							img = src.replace(/^\{img_path\(([^\)]+)\)\}/, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
 							img = img.replace(jqx_config.assetsImgPath, '');
-							
-							src = "{img_path('" + img + "')}";
+							src = "{img_path(" + img + ")}";
 							element.attributes.src = src;
 							element.attributes['data-cke-saved-src'] = src;
 				        }
@@ -269,7 +268,8 @@ fuel.fields.wysiwyg_field = function(context){
 	}
 	
 	var unTranslateImgPath = function(txt){
-		txt = txt.replace(/\{img_path\('([^']+)'\)\}/g, function(match, contents, offset, s) {
+		txt = txt.replace(/\{img_path\(([^\)]+)\)\}/g, function(match, contents, offset, s) {
+											contents = contents.replace(/'|"/g, '');
 	   										return jqx_config.assetsImgPath + contents;
     								}
 								);
