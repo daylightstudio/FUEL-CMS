@@ -83,21 +83,24 @@ class Fuel_tags_model extends Base_module_model {
 				foreach($model->has_many as $key => $rel)
 				{
 					$mod_name = $module->name();
+					$model_name = $module->info('model_name');
+					$module_location = $module->info('model_location');
+
 					if (is_array($rel))
 					{
 						if (isset($rel['model']) AND (($rel['model'] == 'tags' OR $rel['model'] == array(FUEL_FOLDER => 'tags')) 
 							OR ($rel['model'] == 'fuel_tags_model' OR $rel['model'] == array(FUEL_FOLDER => 'fuel_tags_model'))))
 						{
-							$belongs_to[$mod_name] = $mod_name;
+							$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 						}
 						else if (current($rel) == 'tags' OR current($rel) == 'fuel_tags_model')
 						{
-							$belongs_to[$mod_name] = $mod_name;	
+							$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 						}
 					}
 					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'fuel_tags_model'))
 					{
-						$belongs_to[$mod_name] = $mod_name;
+						$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 					}
 				}
 			}
