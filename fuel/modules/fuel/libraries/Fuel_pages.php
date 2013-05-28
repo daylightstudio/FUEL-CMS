@@ -1406,8 +1406,8 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	function save()
 	{
-		$this->fuel->load_model('pages');
-		$this->fuel->load_model('pagevariables');
+		$this->fuel->load_model('fuel_pages');
+		$this->fuel->load_model('fuel_pagevariables');
 		
 		$page_props = $this->CI->fuel_pages_model->create();
 		$page_props->location = $this->location;
