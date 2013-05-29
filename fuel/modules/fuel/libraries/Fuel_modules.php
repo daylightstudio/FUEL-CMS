@@ -923,7 +923,8 @@ class Fuel_module extends Fuel_base_library {
 	 * Loads a module model and creates a variable in the view that you can use to merge data 
 	 *
 	 * @access	public
-	 * @param	array  (optional)
+	 * @param	mixed  A string value of "all", "one", "key", "find" or "by" OR A key value array of options which include "find", "select", "where", "order", "limit", "offset", "return_method", "assoc_key", "var", "module", and "params"(optional)
+	 * @param	mixed  Where condition (since it's most common parameter) (optional)
 	 * @return	string
 	 */
 	function find($params = array(), $where = NULL)
@@ -940,8 +941,7 @@ class Fuel_module extends Fuel_base_library {
 						'module' => '',
 						'params' => array(),
 						);
-		
-		if (is_string($params))
+ 		if (is_string($params))
 		{
 			if (preg_match('#^(all|one|key|find|by)#', $params))
 			{
