@@ -16,7 +16,10 @@
  *           <parameter name="request_data">rd</parameter>
  *        </parameter>
  *        <parameter name="extract_vars">true</parameter>
- *        <parameter name="plugin_dir">%core.lib_dir%/dwoo_plugins</parameter>
+ *        <parameters name="plugin_dir">
+ *           <parameter>%core.lib_dir%/dwoo_plugins</parameter>
+ *           <parameter>%core.lib_dir%/other_dwoo_plugins</parameter>
+ *        </parameters>
  *     </renderer>
  *
  *  - add dwoo's directory to your include path or include dwooAutoload.php yourself
@@ -27,6 +30,8 @@
  *    lib directory, or change the plugin_dir parameter in the output_types.xml file.
  *    these plugins are agavi-specific helpers that shortens the syntax to call common
  *    agavi helpers (i18n, routing, ..)
+ *  - in the previous versions of this adapter, only a single value could be passed to
+ *    plugin_dir parameter; now you can pass several plugin directories (see example)
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the
@@ -36,8 +41,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    1.1.1
+ * @date       2010-04-06
  * @package    Dwoo
  */
 class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
@@ -72,7 +77,7 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 	protected $defaultExtension = '.html';
 
 	/**
-	 * stores the (optional) plugin directory to add to the Dwoo_Loader
+	 * stores the (optional) plugin directories to add to the Dwoo_Loader
 	 */
 	protected $plugin_dir = null;
 
@@ -128,6 +133,7 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 			return $this->dwoo;
 		}
 
+		// this triggers Agavi autoload
 		if(!class_exists('Dwoo')) {
 			if (file_exists(dirname(__FILE__).'/../../../dwooAutoload.php')) {
 				// file was dropped with the entire dwoo package
@@ -146,10 +152,12 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 		$cacheDir = AgaviConfig::get('core.cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_DIR;
 		AgaviToolkit::mkdir($cacheDir, $parentMode, true);
 
-		$this->dwoo = new Dwoo($compileDir, $cacheDir);
+		$this->dwoo = new Dwoo_Core($compileDir, $cacheDir);
 
 		if (!empty($this->plugin_dir)) {
-			$this->dwoo->getLoader()->addDirectory($this->plugin_dir);
+			foreach ((array) $this->plugin_dir as $dir) {
+				$this->dwoo->getLoader()->addDirectory($dir);
+			}
 		}
 
 		$this->dwoo->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
@@ -181,7 +189,7 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 		$data[$this->slotsVarName] =& $slots;
 
 		foreach($this->assigns as $key => $getter) {
-			$data[$key] = $this->context->$getter();
+			$data[$key] = $this->getContext()->$getter();
 		}
 
 		foreach($moreAssigns as $key => &$value) {

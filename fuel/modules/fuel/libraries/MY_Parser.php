@@ -240,8 +240,7 @@ class MY_Parser extends CI_Parser {
 			$data = (array) $data;
 		}
 
-		$data = array_merge($data, $this->_ci->load->get_vars());
-
+		$data = array_merge($this->_ci->load->get_vars(), $data);
 		foreach ($this->_parser_assign_refs as $ref)
 		{
 			$data[$ref] = & $this->_ci->{$ref};

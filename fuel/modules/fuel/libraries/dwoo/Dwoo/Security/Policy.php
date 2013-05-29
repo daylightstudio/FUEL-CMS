@@ -47,9 +47,26 @@ class Dwoo_Security_Policy
 	 */
 	protected $allowedPhpFunctions = array
 	(
-		'str_repeat', 'number_format', 'htmlentities', 'htmlspecialchars',
-		'long2ip', 'strlen', 'list', 'empty', 'count', 'sizeof', 'in_array', 'is_array',
+		'str_repeat' => true,
+		'number_format' => true,
+		'htmlentities' => true,
+		'htmlspecialchars' => true,
+		'long2ip' => true,
+		'strlen' => true,
+		'list' => true,
+		'empty' => true,
+		'count' => true,
+		'sizeof' => true,
+		'in_array' => true,
+		'is_array' => true,
 	);
+
+	/**
+	 * methods that are allowed to be used within the template
+	 *
+	 * @var array
+	 */
+	protected $allowedMethods = array();
 
 	/**
 	 * paths that are safe to use with include or other file-access plugins
@@ -113,6 +130,49 @@ class Dwoo_Security_Policy
 	public function getAllowedPhpFunctions()
 	{
 		return $this->allowedPhpFunctions;
+	}
+
+	/**
+	 * adds a class method to the allowed list, this must be used for
+	 * both static and non static method by providing the class name
+	 * and method name to use
+	 *
+	 * @param mixed $class class name or array of array('class', 'method') couples
+	 * @param string $method method name
+	 */
+	public function allowMethod($class, $method = null)
+	{
+		if (is_array($class))
+			foreach ($class as $elem)
+				$this->allowedMethods[strtolower($elem[0])][strtolower($elem[1])] = true;
+		else
+			$this->allowedMethods[strtolower($class)][strtolower($method)] = true;
+	}
+
+	/**
+	 * removes a class method from the allowed list
+	 *
+	 * @param mixed $class class name or array of array('class', 'method') couples
+	 * @param string $method method name
+	 */
+	public function disallowMethod($class, $method = null)
+	{
+		if (is_array($class))
+			foreach ($class as $elem)
+				unset($this->allowedMethods[strtolower($elem[0])][strtolower($elem[1])]);
+		else
+			unset($this->allowedMethods[strtolower($class)][strtolower($method)]);
+	}
+
+	/**
+	 * returns the list of class methods allowed to run, note that the class names
+	 * and method names are stored in the array keys and not values
+	 *
+	 * @return array
+	 */
+	public function getAllowedMethods()
+	{
+		return $this->allowedMethods;
 	}
 
 	/**
@@ -195,5 +255,50 @@ class Dwoo_Security_Policy
 	public function getConstantHandling()
 	{
 		return $this->constHandling;
+	}
+
+	/**
+	 * this is used at run time to check whether method calls are allowed or not
+	 *
+	 * @param Dwoo_Core $dwoo dwoo instance that calls this
+	 * @param object $obj any object on which the method must be called
+	 * @param string $method lowercased method name
+	 * @param array $args arguments array
+	 * @return mixed result of method call or unll + E_USER_NOTICE if not allowed
+	 */
+	public function callMethod(Dwoo_Core $dwoo, $obj, $method, $args)
+	{
+		foreach ($this->allowedMethods as $class => $methods) {
+			if (!isset($methods[$method])) {
+				continue;
+			}
+			if ($obj instanceof $class) {
+				return call_user_func_array(array($obj, $method), $args);
+			}
+		}
+		$dwoo->triggerError('The current security policy prevents you from calling '.get_class($obj).'::'.$method.'()');
+		return null;
+	}
+
+	/**
+	 * this is used at compile time to check whether static method calls are allowed or not
+	 *
+	 * @param mixed $class lowercased class name or array('class', 'method') couple
+	 * @param string $method lowercased method name
+	 * @return bool
+	 */
+	public function isMethodAllowed($class, $method = null) {
+		if (is_array($class)) {
+			list($class, $method) = $class;
+		}
+		foreach ($this->allowedMethods as $allowedClass => $methods) {
+			if (!isset($methods[$method])) {
+				continue;
+			}
+			if ($class === $allowedClass || is_subclass_of($class, $allowedClass)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

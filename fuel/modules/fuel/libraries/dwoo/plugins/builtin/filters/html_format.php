@@ -43,7 +43,7 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 	 * Those tags must however contain only htmlentities-escaped text for everything to work properly.
 	 * Inline tags are presented on a single line with their content
 	 *
-	 * @param Dwoo $dwoo the dwoo instance rendering this
+	 * @param Dwoo_Core $dwoo the dwoo instance rendering this
 	 * @param string $input the xhtml to format
 	 * @return string formatted xhtml
 	 */

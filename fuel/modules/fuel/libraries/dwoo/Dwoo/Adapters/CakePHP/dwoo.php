@@ -59,7 +59,7 @@ class DwooView extends View
 		$this->_sv_compile_dir = TMP . 'dwoo' . DS . 'compile';
 		$this->_sv_cache_dir = TMP . 'dwoo' . DS . 'cache';
 
-		$this->_dwoo = new Dwoo($this->_sv_compile_dir, $this->_sv_cache_dir);
+		$this->_dwoo = new Dwoo_Core($this->_sv_compile_dir, $this->_sv_cache_dir);
 
 		$this->_sv_compile_id = $controller->name;
 

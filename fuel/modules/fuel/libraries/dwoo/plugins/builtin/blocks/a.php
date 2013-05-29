@@ -42,7 +42,7 @@ class Dwoo_Plugin_a extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 	{
 		$p = $compiler->getCompiledParams($params);
 
-		$out = Dwoo_Compiler::PHP_OPEN . 'echo \'<a '.self::paramsToAttributes($p);
+		$out = Dwoo_Compiler::PHP_OPEN . 'echo \'<a '.self::paramsToAttributes($p, "'", $compiler);
 
 		return $out.'>\';' . Dwoo_Compiler::PHP_CLOSE;
 	}

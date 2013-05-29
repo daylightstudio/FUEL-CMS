@@ -28,7 +28,7 @@ class Fuel_cache_test extends Fuel_test_base {
 
 		// check with no location value passed
 		$test = $this->fuel->cache->create_id('test/method');
-		$expected = 'test.method';
+		$expected = 'test.method.english';
 		$this->run($test, $expected, 'Test creating cache ID WITH a location parameters passed');
 	}
 

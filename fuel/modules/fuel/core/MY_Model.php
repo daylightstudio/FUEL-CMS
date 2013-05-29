@@ -65,7 +65,7 @@ class MY_Model extends CI_Model {
 	public $foreign_keys = array(); // map foreign keys to table models
 	public $has_many = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
 	public $belongs_to = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
-	public $representatives = array(); // n array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
+	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
 	public $custom_fields = array(); // an array of field names/types that map to a specific class
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 
@@ -4650,13 +4650,23 @@ class Data_record {
 
 		if ($cache_key == '') 
 		{
+			$model_str = '';
+			if (is_array($model))
+			{
+				$model_str = key($model);
+				$model_str .= current($model);
+			}
+			elseif (is_string($model))
+			{
+				$model_str = $model;
+			}
 			if (is_array($where))
 			{
-				$cache_key = implode('_', array_keys($where));
+				$cache_key = implode('_', array_keys($where)).'_'.$model_str;
 			}
 			else
 			{
-				$cache_key = str_replace(' ', '_', $where).'_'.$model;
+				$cache_key = str_replace(' ', '_', $where).'_'.$model_str;
 			}
 		}
 
@@ -5563,6 +5573,20 @@ class Data_record_field {
 		return empty($this->value);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a JSON encoded string of the record values
+	 *
+	 * @access	public
+	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
+	 * @return	string
+	 */	
+	public function to_json($include_derived = TRUE)
+	{
+		$values = $this->values($include_derived);
+		return json_encode($values);
+	}
 	// --------------------------------------------------------------------
 	
 	/**

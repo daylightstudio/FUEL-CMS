@@ -2,7 +2,8 @@
 // Usage example :
 // ------------------------
 // Note that you might need to manually include 'lib/Dwoo.php',
-// 'lib/Dwoo/Adapters/ZendFramework/View.php' and
+// 'lib/Dwoo/Adapters/ZendFramework/View.php',
+// 'lib/Dwoo/Adapters/ZendFramework/Dwoo.php', and
 // 'lib/Dwoo/Adapters/ZendFramework/PluginProxy.php' for this to
 // work as expected, depending on your ZF setup
 //
@@ -15,6 +16,7 @@ $view = new Dwoo_Adapters_ZendFramework_View(array(
 ));
 
 // This allows you to use ZF's helpers as if they were Dwoo plugins (i.e. {doctype} will call the doctype helper)
+// This also allows you to use $this->variable to access view variables from within templates
 
 $view->setPluginProxy(new Dwoo_Adapters_ZendFramework_PluginProxy(new Zend_View()));
 

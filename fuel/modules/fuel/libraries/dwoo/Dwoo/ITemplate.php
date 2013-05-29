@@ -41,37 +41,37 @@ interface Dwoo_ITemplate
 	 * returns the cached template output file name, true if it's cache-able but not cached
 	 * or false if it's not cached
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @return string|bool
 	 */
-	public function getCachedTemplate(Dwoo $dwoo);
+	public function getCachedTemplate(Dwoo_Core $dwoo);
 
 	/**
 	 * caches the provided output into the cache file
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @param string $output the template output
 	 * @return mixed full path of the cached file or false upon failure
 	 */
-	public function cache(Dwoo $dwoo, $output);
+	public function cache(Dwoo_Core $dwoo, $output);
 
 	/**
 	 * clears the cached template if it's older than the given time
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that was used to cache that template
+	 * @param Dwoo_Core $dwoo the dwoo instance that was used to cache that template
 	 * @param int $olderThan minimum time (in seconds) required for the cache to be cleared
 	 * @return bool true if the cache was not present or if it was deleted, false if it remains there
 	 */
-	public function clearCache(Dwoo $dwoo, $olderThan = -1);
+	public function clearCache(Dwoo_Core $dwoo, $olderThan = -1);
 
 	/**
 	 * returns the compiled template file name
 	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
+	 * @param Dwoo_Core $dwoo the dwoo instance that requests it
 	 * @param Dwoo_ICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null);
+	public function getCompiledTemplate(Dwoo_Core $dwoo, Dwoo_ICompiler $compiler = null);
 
 	/**
 	 * returns the template name
@@ -146,5 +146,5 @@ interface Dwoo_ITemplate
 	 * 											an include, extends or any other plugin)
 	 * @return Dwoo_ITemplate|null|false
 	 */
-	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null);
+	public static function templateFactory(Dwoo_Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null);
 }

@@ -101,6 +101,12 @@ class Fuel_custom_fields {
 			$params['data']['img_order'] = $params['img_order'];
 		}
 
+		// adds list of PDFs when selecting a PDF link
+		if (isset($params['link_pdfs']))
+		{
+			$params['data']['link_pdfs'] = 1;
+		}
+
 		// set ckeditor configs
 		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
 		{

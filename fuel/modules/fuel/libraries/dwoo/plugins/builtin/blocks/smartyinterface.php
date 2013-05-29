@@ -25,7 +25,7 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin implements Dwoo_ICom
 		$pluginType = $params['__functype'];
 		$params = $params['*'];
 
-		if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+		if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 			$customPlugins = $compiler->getDwoo()->getCustomPlugins();
 			$callback = $customPlugins[$func]['callback'];
 			if (is_array($callback)) {

@@ -58,7 +58,7 @@ class Fuel_blocks extends Fuel_module {
 		<li><strong>editable</strong>: css class styles to apply to menu items... can be a nested array</li>
 		<li><strong>parse</strong>: determines whether to parse the contents of the block. The default is set to 'auto'</li>
 		<li><strong>cache</strong>: determines whether to cache the block. Default is false</li>
-		<li><strong>mode</strong>: explicitly will look in either the </li>
+		<li><strong>mode</strong>: explicitly will look in either the CMS or the views/_blocks folder</li>
 		<li><strong>module</strong>: the name of the module to look in for the block</li>
 		<li><strong>language</strong>: the language version to use for the block. Must be a value specified found in the 'languages' options in the FUEL configuration</li>
 		<li><strong>use_default</strong>: determines whether to find a non-language specified version of a block with the same name if the specified language version is not available in the CMS</li>
@@ -167,9 +167,18 @@ class Fuel_blocks extends Fuel_module {
 		{
 			$is_module_block = FALSE;
 			$view_path = 'views/_blocks/';
+
 			if ( ! empty($p['module']) AND defined('MODULES_PATH'))
 			{
-				$view_path = MODULES_PATH.$p['module'].'/'.$view_path;
+				if ($p['module'] == 'app' OR $p['module'] == 'application')
+				{
+					$view_path = APPPATH.$view_path;
+				}
+				else
+				{
+					$view_path = MODULES_PATH.$p['module'].'/'.$view_path;	
+				}
+				
 				$is_module_block = TRUE;
 			}
 			else
@@ -243,11 +252,13 @@ class Fuel_blocks extends Fuel_module {
 			}
 			else if (file_exists($view_file))
 			{
+
 				// pass in reference to global CI object
 				$vars['CI'] =& $this->CI;
 
 				// pass along these since we know them... perhaps the view can use them
 				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
+
 			}
 		}
 

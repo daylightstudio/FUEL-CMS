@@ -11,8 +11,9 @@ class Pagevariables extends Module {
 	
 	// Thanks floorish!
 	// http://www.getfuelcms.com/forums/discussion/comment/1216/#Comment_1216
-	function inline_edit($field, $page_id = NULL)
+	function inline_edit($field = NULL, $page_id = NULL)
 	{
+		
 		// try to get the id, if $var is a name
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 		

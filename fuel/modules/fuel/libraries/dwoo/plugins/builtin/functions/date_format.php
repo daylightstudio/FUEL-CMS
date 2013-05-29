@@ -18,7 +18,7 @@
  * @date       2008-12-24
  * @package    Dwoo
  */
-function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $default=null)
+function Dwoo_Plugin_date_format(Dwoo_Core $dwoo, $value, $format='%b %e, %Y', $default=null)
 {
 	if (!empty($value)) {
 		// convert if it's not a valid unix timestamp

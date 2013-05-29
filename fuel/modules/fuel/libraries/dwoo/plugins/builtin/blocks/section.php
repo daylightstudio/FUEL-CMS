@@ -92,7 +92,7 @@ class Dwoo_Plugin_section extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 			if ($usesFirst) $output .="\n\t".'"first"		=> null,';
 			if ($usesLast) $output .="\n\t".'"last"		=> null,';
 			if ($usesShow) $output .="\n\t".'"show"		=> ($this->isArray($_for'.$cnt.'_from, true)) || (is_numeric($_for'.$cnt.'_from) && $_for'.$cnt.'_from != $_for'.$cnt.'_to),';
-			if ($usesTotal) $output .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? count($_for'.$cnt.'_from) - $_for'.$cnt.'_skip : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
+			if ($usesTotal) $output .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? $this->count($_for'.$cnt.'_from) - $_for'.$cnt.'_skip : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
 			$out.="\n);\n".'$_section'.$cnt.'[\'glob\'] =& $this->globals["section"]['.$name.'];'."\n\n";
 		}
 */

@@ -26,13 +26,11 @@
 function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest=array())
 {
 	$out = array();
-	foreach ($rest as $k=>$v) {
-		if (is_numeric($k)) {
-			$out[] = $k.'=>'.$v;
-		} else {
-			$out[] = '"'.$k.'"=>'.$v;
+	foreach ($rest as $key => $value) {
+		if (!is_numeric($key) && !strstr($key, '$this->scope')) {
+			$key = "'".$key."'";
 		}
+		$out[] = $key.'=>'.$value;
 	}
-
 	return 'array('.implode(', ', $out).')';
 }
