@@ -692,7 +692,17 @@ class Pages extends Module {
 		$this->load->helper('form');
 		$this->load->library('form_builder');
 		$pages = $this->fuel->pages->options_list();
-		$options = array_combine($pages, $pages);
+		$pdfs = $this->fuel->assets->dir_files('pdf', TRUE);
+ 
+		if (!empty($pdfs) AND !empty($_GET['pdfs']))
+		{
+			$options[lang('page_select_pages')] = array_combine($pages, $pages);
+			$options[lang('page_select_pdfs')] = array_combine($pdfs, $pdfs);
+		}
+		else
+		{
+			$options = array_combine($pages, $pages);
+		}
 		
 		// just return the options as json
 		$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');
