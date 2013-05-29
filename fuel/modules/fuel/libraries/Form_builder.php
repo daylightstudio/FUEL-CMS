@@ -289,7 +289,11 @@ Class Form_builder {
 			}
 			
 			// set the key value
-			$this->_fields[$key]['key'] = $key;
+			if (empty($this->_fields[$key]['key']))
+			{
+				$this->_fields[$key]['key'] = $key;	
+			}
+			
 			if (empty($val['name']))
 			{
 				$this->_fields[$key]['name'] = $key;
@@ -1408,7 +1412,6 @@ Class Form_builder {
 		// {
 		// 	return FALSE;
 		// }
-		
 		if ($normalize) $params = $this->normalize_params($params); // done again here in case you create a field without doing the render method
 
 		// now we look at all the fields that may represent other field types based on parameters
