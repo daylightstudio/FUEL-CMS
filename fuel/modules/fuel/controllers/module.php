@@ -460,7 +460,8 @@ class Module extends Fuel_base_controller {
 			}
 			
 			$this->data_table->auto_sort = TRUE;
-			$this->data_table->sort_js_func = 'fuel.sortList';
+			$heading_sort_func = (isset($this->disable_heading_sort) AND $this->disable_heading_sort) ? '' : 'fuel.sortList';
+			$this->data_table->sort_js_func = $heading_sort_func;
 			
 			$this->data_table->assign_data($items, $this->table_headers);
 

@@ -327,14 +327,13 @@ class Base_module_model extends MY_Model {
 				
 				// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
 				//else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
-				else if (preg_match('#_from$#', $key) OR preg_match('#_fromequal$#', $key) OR preg_match('#_to$#', $key) OR preg_match('#_toequal$#', $key))
+				else if (preg_match('#_from$#', $key) OR preg_match('#_fromequal$#', $key) OR preg_match('#_to$#', $key) OR preg_match('#_toequal$#', $key) OR preg_match('#_equal$#', $key))
 				{
 					//$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
-					$key = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#'), array(' >', ' >=', ' <', ' <='), $key);
+					$key_with_comparison_operator = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), array(' >', ' >=', ' <', ' <=', ' ='), $key);
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
-					array_push($$joiner_arr, $key.'='.$val);
-					
+					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
 				}
 				else
 				{

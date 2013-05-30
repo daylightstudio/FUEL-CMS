@@ -699,7 +699,7 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads the language files from the allowed modules
+	 * Sets the Fuel admin page title based on the module name if set or uri segments
 	 *
 	 * @access	public
 	 * @param	array 	An array of page segments to be parsed into a cookie crumb type page title
@@ -709,23 +709,34 @@ class Fuel_admin extends Fuel_base_library {
 	function page_title($segs = array(), $humanize = TRUE)
 	{
 		$segs = (array) $segs;
-		
+		$simple_module_configs = $this->fuel->modules->get_module_config('app');
+		$page_title = lang('fuel_page_title').' : ';
+
 		if (empty($segs))
 		{
 			$segs = $this->CI->uri->segment_array();
 			array_shift($segs);
 		}
-		$page_segs = array();
 		if (empty($segs)) $segs = array('dashboard');
-		foreach($segs as $seg)
+
+		if ($segs AND ! empty($simple_module_configs[ $segs[0] ]['module_name']))
 		{
-			if (!is_numeric($seg))
-			{
-				if ($humanize) $seg = humanize($seg);
-				$page_segs[] = $seg;
-			}
+			$page_title .= $simple_module_configs[ $segs[0] ]['module_name'];
 		}
-		$page_title = lang('fuel_page_title').' : '.implode(' : ', $page_segs);
+		else
+		{
+			$page_segs = array();
+			foreach($segs as $seg)
+			{
+				if (!is_numeric($seg))
+				{
+					if ($humanize) $seg = humanize($seg);
+					$page_segs[] = $seg;
+				}
+			}
+			$page_title .= implode(' : ', $page_segs);
+		}
+
 		return $page_title;
 	}
 	
