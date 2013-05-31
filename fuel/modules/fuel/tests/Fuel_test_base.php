@@ -14,7 +14,7 @@ class Fuel_test_base extends Tester_base {
 
 	public function setup()
 	{
-		$this->load_sql('test_fuel_schema.sql', 'tester');
+		$this->load_sql('test_fuel_schema.sql', 'fuel');
 	}
 
 	
