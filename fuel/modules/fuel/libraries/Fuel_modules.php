@@ -659,6 +659,7 @@ class Fuel_module extends Fuel_base_library {
 				'folder' => '',
 				'exportable' => FALSE,
 				'limit_options' => array('50' => '50', '100' => '100', '200' => '200'),
+				'disable_heading_sort' => FALSE,
 				);
 			$info = array();
 

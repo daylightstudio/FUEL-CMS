@@ -283,7 +283,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>array</td>
 			<td>The "Show" options displayed in the list view</td>
 		</tr>
-		
+		<tr>
+			<td><strong>disable_heading_sort</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If TRUE, this will disable heading sorting on the list view</td>
+		</tr>
 	</tbody>
 </table>
 
