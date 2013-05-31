@@ -279,7 +279,7 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	function render($location, $vars = array(), $params = array(), $return = FALSE)
 	{
-		// TODO: cant have this be called within another page or will cause and infinite loop
+		// TODO: cant have this be called within another page or will cause an infinite loop
 		$params['location'] = $location;
 		$page = $this->create($params);
 		$page->add_variables($vars);
