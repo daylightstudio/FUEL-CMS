@@ -121,6 +121,7 @@ class Fuel_navigation extends Fuel_module {
 						'language' => NULL,
 						'include_default_language' => FALSE,
 						'language_default_group' => FALSE,
+						'cache' => FALSE,
 						);
 
 		if (!is_array($params))
@@ -135,6 +136,18 @@ class Fuel_navigation extends Fuel_module {
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
 
+		if ($p['cache'] === TRUE)
+		{
+			// cache id and group
+			$cache_id = md5(json_encode($params));
+			$cache_group = $this->CI->fuel->config('page_cache_group');
+			$cache = $this->CI->fuel->cache->get($cache_id, $cache_group);
+			if (!empty($cache))
+			{
+				return $cache;
+			}
+		}
+		
 		if (empty($p['items']))
 		{
 			// get the menu data based on the FUEL mode or if the file parameter is specified use that
@@ -263,11 +276,21 @@ class Fuel_navigation extends Fuel_module {
 
 			}
 		}
+
 		if ($p['return_normalized'] !== FALSE)
 		{
-			return $this->CI->menu->normalize_items($items);
+			$return = $this->CI->menu->normalize_items($items);
 		}
-		return $this->CI->menu->render($items, $p['active'], $p['parent']);
+		else
+		{
+			$return = $this->CI->menu->render($items, $p['active'], $p['parent']);
+		}
+
+		if ($p['cache'] === TRUE)
+		{
+			$this->CI->fuel->cache->save($cache_id, $return, $cache_group, $this->CI->fuel->config('page_cache_ttl'));
+		}
+		return $return;
 	}
 	
 	// --------------------------------------------------------------------
