@@ -4876,6 +4876,22 @@ class Data_record {
 		return $output;
 	}
 	
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a JSON encoded string of the record values
+	 *
+	 * @access	public
+	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
+	 * @return	string
+	 */	
+	public function to_json($include_derived = TRUE)
+	{
+		$values = $this->values($include_derived);
+		return json_encode($values);
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -5573,20 +5589,6 @@ class Data_record_field {
 		return empty($this->value);
 	}
 
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns a JSON encoded string of the record values
-	 *
-	 * @access	public
-	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
-	 * @return	string
-	 */	
-	public function to_json($include_derived = TRUE)
-	{
-		$values = $this->values($include_derived);
-		return json_encode($values);
-	}
 	// --------------------------------------------------------------------
 	
 	/**

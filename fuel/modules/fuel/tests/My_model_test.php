@@ -18,6 +18,18 @@ class My_model_test extends Tester_base {
 		require_once('test_users_model.php');
 	}
 	
+	public function test_json()
+	{
+		$test_custom_records_model = new Test_users_model();
+
+		// test find_one
+		$record = $test_custom_records_model->find_one(array('email' => 'dave@thedaylightstudio.com'));
+
+		$test = $record->to_json();
+		$expected = '{"id":"2","user_name":"dave","password":"21232f297a57a5a743894a0e4a801fc3","email":"dave@thedaylightstudio.com","first_name":"Dave","last_name":"McReynolds","bio":"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.","role_id":"2","attributes":"","active":"yes","date_added":"2012-01-01 00:00:00","full_name":"Dave McReynolds"}';
+		$this->run($test, $expected, 'to_json custom record object test');
+	}
+
 	public function test_formatters()
 	{
 		$test_custom_records_model = new Test_users_model();
