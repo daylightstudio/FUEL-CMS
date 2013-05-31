@@ -124,6 +124,7 @@ $config['modules']['categories'] = array(
 		'name', 
 		'slug',
 		'context',
+		'parent_id',
 		'precedence',
 		'published',
 	),
