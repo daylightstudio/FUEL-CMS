@@ -1,16 +1,3 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 3408
-#
-# http://www.sequelpro.com/
-# http://code.google.com/p/sequel-pro/
-#
-# Host: localhost (MySQL 5.5.9)
-# Database: fuel_widgicorp
-# Generation Time: 2012-04-24 05:22:21 +0000
-# ************************************************************
-
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -159,8 +146,6 @@ CREATE TABLE `fuel_pages` (
 
 # Dump of table fuel_permissions
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `fuel_permissions`;
 
 CREATE TABLE `fuel_permissions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
