@@ -111,6 +111,7 @@ class Page_router extends CI_Controller {
 				// save to cache but you must not be logged in for it to save
 				if ($this->fuel->config('use_page_cache') !== FALSE AND 
 					$this->fuel->config('use_page_cache') !== 'views' AND 
+					$page->is_cached() AND
 					!is_fuelified())
 				{
 					$this->cache->save($cache_id, $output, $cache_group, $this->fuel->config('page_cache_ttl'));
