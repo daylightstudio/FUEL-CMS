@@ -70,7 +70,7 @@ class Login extends CI_Controller {
 			{
 				if ($this->input->post('user_name') AND $this->input->post('password'))
 				{
-					if ($this->fuel->auth->login($this->input->post('user_name'), $this->input->post('password')))
+					if ($this->fuel->auth->login($this->input->post('user_name', TRUE), $this->input->post('password', TRUE)))
 					{
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
