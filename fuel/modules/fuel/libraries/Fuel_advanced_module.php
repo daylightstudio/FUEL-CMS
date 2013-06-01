@@ -84,7 +84,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		
 		$this->load_config();
-		$this->_config = $this->CI->config->item($this->name);
 	}
 	
 	// --------------------------------------------------------------------
@@ -1039,7 +1038,23 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		
 		// last parameter tells it to fail gracefully
+		// check application directory for overwrites
+		$this->CI->load->module_config('app', $config, FALSE, TRUE);
+		$app_config = $this->CI->config->item($this->name);
+
+		// now get the blog configuration
 		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
+		$module_config = $this->CI->config->item($this->name);
+
+		// if app config exists then merge
+		if (!empty($app_config))
+		{
+			$this->_config = array_merge($module_config, $app_config);
+		}
+		else
+		{
+			$this->_config = $module_config;
+		}
 	}
 
 	// --------------------------------------------------------------------
