@@ -45,7 +45,10 @@ $config['nav']['blog'] = array(
 &lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/links&quot; class=&quot;ico ico_blog_links&quot;&gt;Links&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/users&quot; class=&quot;ico ico_blog_users&quot;&gt;Authors&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://localhost/fuelcmsdemo/index.php/fuel/blog/settings&quot; class=&quot;ico ico_blog_settings&quot;&gt;Settings&lt;/a&gt;&lt;/li&gt;
-</pre>				
+</pre>	
+
+			<p class="important">You can overwrite the configuration values by adding your own <dfn>application/config/{module}.php</dfn> file with the specific values you want to overwrite.</p>
+			
 			</li>
 			<li>In the {module_name}_constants.php file its a good idea to create the following constants (although not required):
 				<ul>
