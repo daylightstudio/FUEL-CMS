@@ -255,7 +255,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// automatically set selects to submit
 		$('.more_filters select').change(function(e){
-			$('#form').submit();
+			if ($(this).parents().hasClass('adv_search') === false) {
+				$('#form').submit();
+			}
 		});
 		
 		// automatically set selects to submit
@@ -282,6 +284,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#multi_delete').parent().hide();
 				$('.multi_delete', '#fuel_main_content').attr('checked', false);
 			});
+
+		$('#adv-search-btn, #adv-search-close').click(function(e){
+			e.preventDefault();
+			$('.adv_search').toggle();
+		});
 	},
 	
 	add_edit : function(initSpecFields){
