@@ -774,6 +774,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>subfolder</strong>: a subfolder to upload the images to (will create one if it doesn't exist)</li>
 		<li><strong>file_name</strong>: the new name to assign the uploaded file</li>
 		<li><strong>overwrite</strong>: determines whether to overwrite the uploaded file or create a new file</li>
+		<li><strong>unzip</strong>: determines whether to unzip zip files automatically or not</li>
 		<li><strong>accept</strong>: specifies which files are acceptable to upload. It will default to what is specified in your fuel configuration for "editable_asset_filetypes"</li>
 	</ul>
 	

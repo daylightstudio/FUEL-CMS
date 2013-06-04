@@ -361,6 +361,7 @@ class Fuel_custom_fields {
 		$data_params['subfolder'] = (isset($params['subfolder'])) ? $params['subfolder'] : '';
 		$data_params['userfile_file_name'] = (isset($params['file_name'])) ? $params['file_name'] : '';
 		$data_params['overwrite'] = (isset($params['overwrite'])) ? (bool)$params['overwrite'] : TRUE;
+		$data_params['unzip'] = (isset($params['unzip'])) ? (bool)$params['unzip'] : TRUE;
 		$data_params['create_thumb'] = (isset($params['create_thumb'])) ? (bool)$params['create_thumb'] : FALSE;
 		$data_params['maintain_ratio'] = (isset($params['maintain_ratio'])) ? (bool)$params['maintain_ratio'] : FALSE;
 		$data_params['width'] = (isset($params['width'])) ? (int)$params['width'] : '';

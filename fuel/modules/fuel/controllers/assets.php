@@ -287,7 +287,7 @@ class Assets extends Module {
 		}
 		else if (!empty($field_values['hide_image_options']) AND is_true_val($field_values['hide_image_options']))
 		{
-			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite');
+			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite', 'unzip');
 		}
 
 		if (!empty($field_values['accept']))
