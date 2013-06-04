@@ -23,5 +23,6 @@ $success = str_replace(array('{script}', '{/script}'), array('<script>', '</scri
 <p class="ico ico_info">
 	<?=$this->session->flashdata('info');?>
 </p>
+<?php elseif (!empty($info)) : ?>
+<p class="ico ico_info"><?=$info?></p>
 <?php endif; ?>
-
