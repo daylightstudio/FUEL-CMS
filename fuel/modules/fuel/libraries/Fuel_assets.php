@@ -347,7 +347,7 @@ class Fuel_assets extends Fuel_base_library {
 			}
 			
 			// unzip any zip files
-			else if ($params['unzip'] === TRUE AND $file['file_ext'] == '.zip')
+			else if (is_true_val($params['unzip']) AND $file['file_ext'] == '.zip')
 			{
 				// unzip the contents
 				$this->unzip($file['full_path']);
