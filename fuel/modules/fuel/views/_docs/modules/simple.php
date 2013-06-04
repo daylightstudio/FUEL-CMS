@@ -284,6 +284,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>The "Show" options displayed in the list view</td>
 		</tr>
 		<tr>
+			<td><strong>advanced_search</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If TRUE, this will display model filters in an advanced search menu</td>
+		</tr>
+		<tr>
 			<td><strong>disable_heading_sort</strong></td>
 			<td>FALSE</td>
 			<td>Boolean Value TRUE/FALSE</td>

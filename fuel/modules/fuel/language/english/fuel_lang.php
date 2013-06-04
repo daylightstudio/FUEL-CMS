@@ -202,6 +202,14 @@ $lang['module_uninstall'] = $msg;
 $lang['migrate_success'] = "You have successfully migrated to version %s.\n";
 $lang['migrate_nothing_todo'] = "No migrations were necessary.\n";
 
+/*
+|--------------------------------------------------------------------------
+| List View
+|--------------------------------------------------------------------------
+*/
+$lang['adv_search'] = 'Advanced Search';
+$lang['reset_search'] = 'Reset Search';
+
 
 /*
 |--------------------------------------------------------------------------
