@@ -40,7 +40,7 @@
  * @link		http://www.getfuelcms.com/user_guide/libraries/form_builder.html
  */
 
-Class Form_builder {
+class Form_builder {
 
 	public $form; // form object used to create the form fields and associate errors with
 	public $id = ''; // id to be used for the containing table or div
@@ -3731,7 +3731,7 @@ Class Form_builder {
  * @autodoc		FALSE
  */
 
-Class Form_builder_field {
+class Form_builder_field {
 	
 	public $type = ''; // the type value of the field (e.g. textare, enum, datetime)
 	public $render_func = array();
