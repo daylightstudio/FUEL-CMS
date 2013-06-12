@@ -1498,7 +1498,7 @@ class Module extends Fuel_base_controller {
 			if (!empty($_POST['delete']) AND is_array($_POST['delete'])) 
 			{
 				$data = array();
-				foreach($this->input->post('delete', TRUE) as $key => $val)
+				foreach($this->input->post('delete') as $key => $val)
 				{
 					$d = $this->model->find_by_key($key, 'array');
 					if (!empty($d)) $data[] = $d[$this->display_field];
