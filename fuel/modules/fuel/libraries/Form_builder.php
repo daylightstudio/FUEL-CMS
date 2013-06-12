@@ -2136,7 +2136,7 @@ class Form_builder {
 			$time_params['value'] = date($hour_format, strtotime($params['value']));
 		}
 		$time_params['size'] = 2;
-		$time_params['max_length'] = 2;
+		$time_params['maxlength'] = 2;
 		$field_name = (empty($params['is_datetime'])) ? $params['key'] : $params['key'].'_hour';
 		$time_params['name'] = str_replace($params['key'], $field_name, $params['orig_name']);
 		$time_params['class'] = 'datepicker_hh';
@@ -2376,9 +2376,9 @@ class Form_builder {
 			$attrs['size'] = 10;
 		}
 
-		if (empty($params['max_length']))
+		if (empty($params['maxlength']))
 		{
-			$attrs['max_length'] = 10;
+			$attrs['maxlength'] = 10;
 		}
 
 		// set data values for jquery plugin to use
