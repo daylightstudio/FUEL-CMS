@@ -233,7 +233,7 @@ class Module extends Fuel_base_controller {
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
-			$query_str_arr = $this->input->get();
+			$query_str_arr = $this->input->get(NULL, TRUE);
 			unset($query_str_arr['offset']);
 			$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
 		
@@ -517,7 +517,7 @@ class Module extends Fuel_base_controller {
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
 			
-			$inline = $this->input->get('inline');
+			$inline = $this->input->get('inline', TRUE);
 			$this->fuel->admin->set_inline($inline);
 			
 			if ($inline === TRUE)
@@ -583,7 +583,7 @@ class Module extends Fuel_base_controller {
 		if (!empty($_POST) OR !empty($_GET))
 		{
 
-			$posted['search_term'] = $this->input->get_post('search_term');
+			$posted['search_term'] = $this->input->get_post('search_term', TRUE);
 			$posted_vars = array('col', 'order', 'limit', 'offset', 'precedence', 'view_type');
 			foreach($posted_vars as $val)
 			{
@@ -737,7 +737,7 @@ class Module extends Fuel_base_controller {
 		
 		$shell_vars = $this->_shell_vars($id);
 		
-		$passed_init_vars = ($this->input->get()) ? $this->input->get() : array();
+		$passed_init_vars = ($this->input->get(NULL, TRUE)) ? $this->input->get(NULL, TRUE) : array();
 		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
@@ -1407,7 +1407,7 @@ class Module extends Fuel_base_controller {
 		$inline = $this->fuel->admin->is_inline();
 		if (!empty($_POST['id']))
 		{
-			$posted = explode('|', $this->input->post('id'));
+			$posted = explode('|', $this->input->post('id', TRUE));
 			
 			
 			// run before_delete hook
@@ -1490,7 +1490,7 @@ class Module extends Fuel_base_controller {
 			if (!empty($_POST['delete']) AND is_array($_POST['delete'])) 
 			{
 				$data = array();
-				foreach($this->input->post('delete') as $key => $val)
+				foreach($this->input->post('delete', TRUE) as $key => $val)
 				{
 					$d = $this->model->find_by_key($key, 'array');
 					if (!empty($d)) $data[] = $d[$this->display_field];
@@ -1568,7 +1568,7 @@ class Module extends Fuel_base_controller {
 				}
 				$this->_clear_cache();
 			}
-			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
+			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id', TRUE)));
 		}
 		else
 		{

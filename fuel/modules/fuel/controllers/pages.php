@@ -85,7 +85,7 @@ class Pages extends Module {
 
 						if ($this->input->post('language'))
 						{
-							$url .= '?lang='.$this->input->post('language');
+							$url .= '?lang='.$this->input->post('language', TRUE);
 						}
 						redirect($url);
 					}
@@ -147,7 +147,7 @@ class Pages extends Module {
 				$url = fuel_uri('pages/edit/'.$id);
 				if ($this->input->post('language'))
 				{
-					$url .= '?lang='.$this->input->post('language');
+					$url .= '?lang='.$this->input->post('language', TRUE);
 				}
 				redirect($url);
 			}
@@ -181,7 +181,7 @@ class Pages extends Module {
 
 		if ($this->input->get('lang'))
 		{
-			$saved['language'] = $this->input->get('lang');
+			$saved['language'] = $this->input->get('lang', TRUE);
 		}
 		//$this->model->add_required('location');
 		
@@ -198,7 +198,7 @@ class Pages extends Module {
 		// layout name tweaks
 		if ($this->input->post('layout'))
 		{
-			$layout = $this->input->post('layout');
+			$layout = $this->input->post('layout', TRUE);
 		} 
 		else if (!empty($saved['layout']))
 		{
@@ -435,7 +435,7 @@ class Pages extends Module {
 
 			// run any form field post processing hooks
 
-			$layout = $this->fuel->layouts->get($this->input->post('layout'));
+			$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 			$fields = $layout->fields();
 
 			// add in block fields
@@ -461,13 +461,13 @@ class Pages extends Module {
 
 			$save = array();
 			
-			$lang = $this->input->post('language');
+			$lang = $this->input->post('language', TRUE);
 			
 			// clear out all other variables
 			$delete = array('page_id' => $id);
 			if ($this->input->post('language'))
 			{
-				$delete['language'] = $this->input->post('language');
+				$delete['language'] = $this->input->post('language', TRUE);
 			}
 			
 			$this->fuel_pagevariables_model->delete($delete);
@@ -526,11 +526,11 @@ class Pages extends Module {
 				$this->fuel->load_model('fuel_navigation');
 				
 				$save = array();
-				$save['label'] = $this->input->post('navigation_label');
-				$save['location'] = $this->input->post('location');
+				$save['label'] = $this->input->post('navigation_label', TRUE);
+				$save['location'] = $this->input->post('location', TRUE);
 				$save['group_id'] = $this->fuel->config('auto_page_navigation_group_id');
 				$save['parent_id'] = 0;
-				$save['published'] = $this->input->post('published');
+				$save['published'] = $this->input->post('published', TRUE);
 				if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 				{
 				     $save['published'] = 'no';
@@ -544,7 +544,7 @@ class Pages extends Module {
 				if (!$does_it_exist_already)
 				{
 					// determine parent based off of location
-					$location_arr = explode('/', $this->input->post('location'));
+					$location_arr = explode('/', $this->input->post('location', TRUE));
 					$parent_location = implode('/', array_slice($location_arr, 0, (count($location_arr) -1)));
 				
 					if (!empty($parent_location)) $parent = $this->fuel_navigation_model->find_by_location($parent_location);
@@ -552,7 +552,7 @@ class Pages extends Module {
 						$save['parent_id'] = $parent['id'];
 					}
 					$this->fuel_navigation_model->add_validation('parent_id', array(&$this->fuel_navigation_model, 'no_location_and_parent_match'), lang('error_location_parents_match'), '{location}');
-					$this->fuel_navigation_model->save($save, array('location' => $this->input->post('location'), 'group_id' => $save['group_id']));
+					$this->fuel_navigation_model->save($save, array('location' => $this->input->post('location', TRUE), 'group_id' => $save['group_id']));
 				}
 			}
 		}
@@ -561,7 +561,7 @@ class Pages extends Module {
 		// reset cache for that page only
 		if ($this->input->post('location'))
 		{
-			$this->fuel->cache->clear_page($this->input->post('location'));
+			$this->fuel->cache->clear_page($this->input->post('location', TRUE));
 		}
 	}
 
@@ -634,8 +634,8 @@ class Pages extends Module {
 	{
 		if (!empty($_POST['id']))
 		{
-			$id = $this->input->post('id');
-			$pagevars = $this->fuel->pages->import($this->input->post('id'), $this->sanitize_input);
+			$id = $this->input->post('id', TRUE);
+			$pagevars = $this->fuel->pages->import($this->input->post('id', TRUE), $this->sanitize_input);
 			$layout = $pagevars['layout'];
 			unset($pagevars['layout']);
 			$this->layout_fields($layout, $id, NULL, $pagevars);
@@ -650,8 +650,8 @@ class Pages extends Module {
 		if ($this->input->post('id')){
 
 			// don't need to pass anything because it will automatically update last_modified'
-			$save['id'] = $this->input->post('id');
-			$save['location'] = $this->input->post('location');
+			$save['id'] = $this->input->post('id', TRUE);
+			$save['location'] = $this->input->post('location', TRUE);
 			$save['last_modified'] = datetime_now();
 
 			$where['id'] = $save['id'];
@@ -685,7 +685,7 @@ class Pages extends Module {
 	function select()
 	{
 
-		$value = $this->input->get_post('selected');
+		$value = $this->input->get_post('selected', TRUE);
 		$this->js_controller_params['method'] = 'select';
 	
 		$this->load->helper('array');
@@ -719,7 +719,8 @@ class Pages extends Module {
 				$str = '';
 				if (isset($_GET['first_option']))
 				{
-					$str .= "<option value=\"\" label=\"".Form::prep($this->input->get('first_option'), FALSE)."\">".Form::prep($this->input->get('first_option'), FALSE)."</option>\n";
+					$first_option = $this->input->get('first_option', TRUE);
+					$str .= "<option value=\"\" label=\"".Form::prep($first_option, FALSE)."\">".Form::prep($first_option, FALSE)."</option>\n";
 				}
 				foreach($options as $key => $val)
 				{
@@ -735,12 +736,12 @@ class Pages extends Module {
 		$display_label_select = FALSE;
 		if (isset($_GET['input']))
 		{
-			$fields['input'] = array('value' => $this->input->get_post('input'), 'label' => lang('form_label_url'), 'size' => 100);	
+			$fields['input'] = array('value' => $this->input->get_post('input', TRUE), 'label' => lang('form_label_url'), 'size' => 100);	
 			$select_label = lang('form_label_or_select');
 			$display_label_select = TRUE;
 		}
 
-		$fields['url_select'] = array('value' => $this->input->get_post('url_select'), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
+		$fields['url_select'] = array('value' => $this->input->get_post('url_select', TRUE), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
 
 		$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');
 		if (isset($_GET['target']))
@@ -751,23 +752,23 @@ class Pages extends Module {
 				'_parent' => '_parent',
 				'_top'    => '_top',
 				);
-			$fields['target'] = array('value' => $this->input->get_post('target'), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('' => '', '_blank' => '_blank'));	
+			$fields['target'] = array('value' => $this->input->get_post('target', TRUE), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('' => '', '_blank' => '_blank'));	
 			$fields['url_select']['display_label'] = TRUE;
 		}
 		
 		if (isset($_GET['title']))
 		{
-			$fields['title'] = array('value' => $this->input->get_post('title'), 'label' => lang('form_label_title'));
+			$fields['title'] = array('value' => $this->input->get_post('title', TRUE), 'label' => lang('form_label_title'));
 			$fields['url_select']['display_label'] = TRUE;
 		}
 
 		if (isset($_GET['class']))
 		{
-			$fields['class'] = array('value' => $this->input->get_post('class'), 'label' => lang('form_label_class'));
+			$fields['class'] = array('value' => $this->input->get_post('class', TRUE), 'label' => lang('form_label_class'));
 			$fields['url_select']['display_label'] = TRUE;
 		}
 
-		$fields['selected'] = array('type' => 'hidden', 'value' => $this->input->get_post('selected'));
+		$fields['selected'] = array('type' => 'hidden', 'value' => $this->input->get_post('selected', TRUE));
 
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;

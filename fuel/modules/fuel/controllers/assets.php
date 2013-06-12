@@ -42,27 +42,27 @@ class Assets extends Module {
 
 				if ($this->input->post('asset_folder')) 
 				{
-					$dir = $this->input->get_post('asset_folder');
+					$dir = $this->input->get_post('asset_folder', TRUE);
 					if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) 
 					{
 						show_404();
 					}
 				}
 				
-				$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder')) : ''; // remove any going down the folder structure for protections
+				$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder', TRUE)) : ''; // remove any going down the folder structure for protections
 				$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 				$posted['upload_path'] = $upload_path;
 				$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
 				$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
-				$posted['resize_method'] = ($this->input->get_post('resize_method')) ? $this->input->get_post('resize_method') : 'maintain_ratio';
-				$posted['resize_and_crop'] = $this->input->get_post('resize_and_crop');
-				$posted['width'] = $this->input->get_post('width');
-				$posted['height'] = $this->input->get_post('height');
-				$posted['master_dim'] = $this->input->get_post('master_dim');
-				$posted['file_name'] = $this->input->get_post('userfile_file_name');
+				$posted['resize_method'] = ($this->input->get_post('resize_method')) ? $this->input->get_post('resize_method', TRUE) : 'maintain_ratio';
+				$posted['resize_and_crop'] = $this->input->get_post('resize_and_crop', TRUE);
+				$posted['width'] = $this->input->get_post('width', TRUE);
+				$posted['height'] = $this->input->get_post('height', TRUE);
+				$posted['master_dim'] = $this->input->get_post('master_dim', TRUE);
+				$posted['file_name'] = $this->input->get_post('userfile_file_name', TRUE);
 				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
 				
-				$redirect_to = $this->input->get_post('redirect_to');
+				$redirect_to = $this->input->get_post('redirect_to', TRUE);
 				
 				$id = $posted['file_name'];
 				
@@ -88,7 +88,7 @@ class Assets extends Module {
 
 					$inline = $this->fuel->admin->is_inline();
 
-					$query_str_arr = $this->input->get_post();
+					$query_str_arr = $this->input->get_post(NULL, TRUE);
 					$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
 
 					if (!empty($redirect_to))
@@ -118,7 +118,7 @@ class Assets extends Module {
 			}
 		}
 		
-		$form_vars = $this->input->get();
+		$form_vars = $this->input->get(NULL, TRUE);
 		if (!empty($dir))
 		{
 			$form_vars['asset_folder'] = $dir;
@@ -184,7 +184,7 @@ class Assets extends Module {
 		}
 		else
 		{
-			$value = $this->input->get_post('selected');	
+			$value = $this->input->get_post('selected', TRUE);	
 		}
 		
 		$this->js_controller_params['method'] = 'select';
@@ -194,7 +194,7 @@ class Assets extends Module {
 		$this->load->library('form_builder');
 		$this->model->add_filters(array('group_id' => $dir));
 
-		$order = $this->input->get_post('order');
+		$order = $this->input->get_post('order', TRUE);
 		if ($order == 'last_updated')
 		{
 			$by = 'desc';
@@ -213,17 +213,17 @@ class Assets extends Module {
 
 		if (isset($_GET['width']))
 		{
-			$fields['width'] = array('value' => $this->input->get_post('width'), 'label' => lang('form_label_width'), 'size' => 5, 'row_class' => 'img_only');
+			$fields['width'] = array('value' => $this->input->get_post('width', TRUE), 'label' => lang('form_label_width'), 'size' => 5, 'row_class' => 'img_only');
 		}
 		
 		if (isset($_GET['height']))
 		{
-			$fields['height'] = array('value' => $this->input->get_post('height'), 'label' => lang('form_label_height'), 'size' => 5, 'row_class' => 'img_only');
+			$fields['height'] = array('value' => $this->input->get_post('height', TRUE), 'label' => lang('form_label_height'), 'size' => 5, 'row_class' => 'img_only');
 		}
 
 		if (isset($_GET['alt']))
 		{
-			$fields['alt'] = array('value' => $this->input->get_post('alt'), 'label' => lang('form_label_alt'), 'row_class' => 'img_only');
+			$fields['alt'] = array('value' => $this->input->get_post('alt', TRUE), 'label' => lang('form_label_alt'), 'row_class' => 'img_only');
 		}
 
 		if (isset($_GET['align']))
@@ -238,12 +238,12 @@ class Assets extends Module {
 
 				);
 
-			$fields['align'] = array('value' => $this->input->get_post('align'), 'label' => lang('form_label_align'), 'type' => 'select', 'options' => $alignment_options, 'row_class' => 'img_only');
+			$fields['align'] = array('value' => $this->input->get_post('align', TRUE), 'label' => lang('form_label_align'), 'type' => 'select', 'options' => $alignment_options, 'row_class' => 'img_only');
 		}
 
 		if (isset($_GET['class']))
 		{
-			$fields['class'] = array('value' => $this->input->get_post('class'), 'label' => lang('form_label_class'), 'size' => 6, 'row_class' => 'img_only');
+			$fields['class'] = array('value' => $this->input->get_post('class', TRUE), 'label' => lang('form_label_class'), 'size' => 6, 'row_class' => 'img_only');
 		}
 		
 		$this->form_builder->css_class = 'asset_select';
@@ -278,7 +278,7 @@ class Assets extends Module {
 		
 		$fields = $this->model->form_fields();
 
-		$fields['redirect_to'] = array('type' => 'hidden', 'value' => rawurldecode($this->input->get_post('redirect_to')));
+		$fields['redirect_to'] = array('type' => 'hidden', 'value' => rawurldecode($this->input->get_post('redirect_to', TRUE)));
 	
 		$not_hidden = array();
 		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
