@@ -388,7 +388,7 @@ class Validator {
  * @author		David McReynolds @ Daylight Studio
  * @autodoc		FALSE
  */
-Class Validator_Rule {
+class Validator_Rule {
 	public $func; // function to execute that will return TRUE/FALSE
 	public $msg; // message to be display on error
 	public $args; // arguments to pass to the function

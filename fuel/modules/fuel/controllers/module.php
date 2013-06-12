@@ -506,7 +506,15 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->date_format = $this->config->item('date_format');
 			}
 			$this->form_builder->set_field_values($field_values);
-			
+
+			if (method_exists($this->model, 'friendly_filter_info'))
+			{
+				$friendly_filter_info = $this->model->friendly_filter_info($field_values);
+				if ( ! empty($friendly_filter_info)) {
+					$vars['info'] = $friendly_filter_info;
+				}
+			}
+
 			// keycheck is already put in place by $this->form->close() in module_list layout
 			$this->form_builder->key_check = FALSE; 
 			$vars['more_filters'] = $this->form_builder->render_divs();
