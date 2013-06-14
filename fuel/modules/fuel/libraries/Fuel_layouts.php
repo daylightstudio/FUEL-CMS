@@ -983,7 +983,7 @@ class Fuel_module_layout extends Fuel_layout {
 	function set_list_where($where)
 	{
 	
-		$this->list_hwere = $where;
+		$this->list_where = $where;
 	}
 	
 	// --------------------------------------------------------------------
