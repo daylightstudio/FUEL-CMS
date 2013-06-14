@@ -1305,7 +1305,7 @@ class Fuel_custom_fields {
 		{
 			$params['data'] = $data;
 		}
-		
+		$params['type'] = 'text';
 		return $form_builder->create_text($params);
 
 	}	
