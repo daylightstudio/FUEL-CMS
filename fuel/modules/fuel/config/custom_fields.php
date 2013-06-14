@@ -41,7 +41,7 @@ $fields['asset'] = array(
 						)
 	),
 	'js_function' => 'fuel.fields.asset_field',
-	'represents' => array('key' => '.*image$|.*img$'),
+	'represents' => array('name' => '.*image\]?$|.*img\]?$'),
 );
 
 // wysiwyg field
@@ -127,7 +127,7 @@ $fields['currency'] = array(
 	'filepath'	=> '',
 	'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.autoNumeric'),
 	'js_function' => 'fuel.fields.currency_field',
-	'represents' => array('key' => 'price')
+	'represents' => array('name' => 'price')
 );
 
 // state field
@@ -135,7 +135,7 @@ $fields['state'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'state',
 	'filepath'	=> '',
-	'represents' => array('key' => 'state'),
+	'represents' => array('name' => 'state'),
 	
 );
 
@@ -150,7 +150,7 @@ $fields['slug'] = array(
 		)
 	),
 	'js_function' => 'fuel.fields.linked_field',
-	'represents' => array('key' => 'slug|permalink'),
+	'represents' => array('name' => 'slug|permalink'),
 );
 
 // list items
@@ -171,7 +171,7 @@ $fields['url'] = array(
 						)
 	),
 	'js_function' => 'fuel.fields.url_field',
-	'represents' => array('key' => 'url|link'),
+	'represents' => array('name' => 'url|link'),
 );
 
 // language field
@@ -179,7 +179,7 @@ $fields['language'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'language',
 	'filepath'	=> '',
-	'represents' => array('key' => 'language'),
+	'represents' => array('name' => 'language'),
 );
 
 // keyval field
