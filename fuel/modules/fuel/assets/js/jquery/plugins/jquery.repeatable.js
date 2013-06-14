@@ -29,19 +29,20 @@ dave@thedaylightstudio.com
 			allowCollapsingContent : true
 		}, o || {});
 
+		// used for issue when renaming checkboxes
+		var $checked = null;
+
 		var parseTemplate = function(elem, i){
-			
+
 			var $childTemplates = $(elem).find(options.repeatableSelector);
 			var depth = $(elem).parent().attr('data-depth');
 			var titleField = $(elem).parent().attr('data-title_field');
 			var title = $(elem).find('input[name$="[' + titleField + ']"]').val();
-
 			if (!depth) depth = 0;
 			var depthSuffix = (depth > 0) ? '_' + depth : '';
 			$('.num' + depthSuffix, elem).html((i + 1));
 			$('.index' + depthSuffix, elem).html(i);
 			$('.title' + depthSuffix, elem).html(title);
-			
 			// set the field depth class in case it's not already
 			$(elem).find('label,input,textarea,select').addClass('field_depth_0');
 
@@ -65,6 +66,7 @@ dave@thedaylightstudio.com
 				});
 			}
 
+
 			$('label,.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name');
 				if (newName && newName.length){
@@ -73,8 +75,17 @@ dave@thedaylightstudio.com
 					// required for jquery 
 					newName = newName.replace('[', '\[');
 					newName = newName.replace(']', '\]');
+					$(this).attr('name', newName);
+
+					// fix for losing checked value for radios
+					if ($checked){
+						setTimeout(function(){
+							$checked.each(function(){
+								$(this).attr('checked', 'checked');
+							});
+						}, 0);
+					}
 					
-					$(this).attr('name', newName)
 				}
 				
 				if ($(this).is('label')){
@@ -156,6 +167,8 @@ dave@thedaylightstudio.com
 		}
 		
 		var reOrder = function($elem){
+			$checked = $('input[type="radio"]', $elem).filter(':checked');
+
 			$elem.children(options.repeatableSelector).each(function(i){
 				$(this).attr('data-index', i);
 				parseTemplate(this, i);
