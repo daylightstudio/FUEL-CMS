@@ -876,7 +876,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<?php 
 	$fields = array();
-	$fields['inline_edit_example'] = array('type' => 'inline_edit', 'module' => 'test');
+	$fields['inline_edit_example'] = array('type' => 'inline_edit', 'options' => array('a' => 'a', 'b' => 'b', 'c' => 'c'), 'class' => 'add_edit projects');
 	form_builder_example($fields);
 	?>
 </div>
@@ -947,7 +947,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['state'] = array('type' => 'state');
 	</pre>
 	
-	<?php form_builder_example('state_example', array('type' => 'state')); ?>
 	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'short')); ?>
 	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'long')); ?>	
 </div>
