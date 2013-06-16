@@ -82,7 +82,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 			$lang = (defined('FUEL_ADMIN')) ? $this->fuel->auth->user_lang() : NULL;
 			$this->load_language($this->name, $lang);
 		}
-		
 		$this->load_config();
 	}
 	
@@ -373,6 +372,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	function config($item = NULL, $look_in_settings = TRUE)
 	{
+
 		if (!empty($item))
 		{
 			if ($look_in_settings AND $this->has_settings())
@@ -394,12 +394,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 				{
 					return array_merge($this->_config, $this->_settings);	
 				}
-				return $this->_config;
 			}
-			else
-			{
-				return $this->_config;
-			}
+			return $this->_config;
 		}
 	}
 
