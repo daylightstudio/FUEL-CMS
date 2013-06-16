@@ -129,8 +129,6 @@ class Fuel_admin extends Fuel_base_library {
 			$this->check_login();
 		}
 		
-		$this->CI->load->model(FUEL_FOLDER.'/fuel_logs_model');
-
 		// set variables
 		$load_vars = array(
 			'js' => array(), 
