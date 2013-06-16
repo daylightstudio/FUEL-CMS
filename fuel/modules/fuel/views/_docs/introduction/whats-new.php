@@ -13,6 +13,7 @@
 	<li>Extracted much of the controller functionality into library classes so you can now have access to methods like <dfn>$this->fuel->backup->do_backup()</dfn> or <dfn>$this->fuel->pages->create()</dfn>. 
 		Read more on the <a href="<?=user_guide_url('general/fuel-object-structure')?>">FUEL object structure</a></li>
 	<li>Moved all non-extended classes and helpers into the modules/fuel folder to cleanup the application directory</li>
+	<p>Improved the security hashing used for storing passwords in the database</p>
 	<li>Separated out all other modules into their own <a href="https://github.com/daylightstudio" target="_blank">GitHub repos</a> 
 		(e.g. <a href="https://github.com/daylightstudio/FUEL-CMS-Backup-Module" target="_blank">backup</a>, 
 		<a href="https://github.com/daylightstudio/FUEL-CMS-Blog-Module" target="_blank">blog</a>, 
@@ -44,6 +45,7 @@
 <ul>
 	<li>Added ability to create custom fields that can be associated with their own layout, javascript and CSS</li>
 	<li>Added a lot of <a href="<?=user_guide_url('general/forms')?>">new custom field types</a> including the powerful <a href="<?=user_guide_url('general/forms#template')?>">template</a> field type</li>
+	<li>Added custom date formatting support</li>
 </ul>
 
 <h2>Helpers</h2>
@@ -95,6 +97,9 @@
 	<li>Added ability to set related items panels information (e.g. related permssions in the permissions module)</li>
 	<li>Simplified the ability to create tree structures for models that have has_many, belongs_to or foreign_key relationships</li>
 	<li>Added ability to export data from module by adding an "export_data" method to your module's model</li>
+	<li>Added ability to replace record values with existing ones. This is useful in situations where you have say a published page at the location
+		<dfn>about</dfn> and an unpublished version at <dfn>about_1</dfn> that you want to instantly replace.</li>
+	<li>Improved list item filtering capabilities</li>
 </ul>
 
 <h2>Advanced Modules</h2>
@@ -166,5 +171,6 @@
 	<li>Added jquery UI to the CMS</li>
 	<li>Added ability to pass more then one field to edit inline</li>
 	<li>Improved importing of views into the CMS to capture set variables in the view</li>
+	<li>Added migration support with <span class="file">fuel/migrate/latest</span></li>
 </ul>
 
