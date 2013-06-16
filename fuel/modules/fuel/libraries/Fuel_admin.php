@@ -116,7 +116,7 @@ class Fuel_admin extends Fuel_base_library {
 		$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');
 		
 		// check if the admin is even accessible... this method looks at if the admin is enabled and at any remote host or IP restrictions
-		if (!$this->fuel->auth->can_access())
+		if (!$this->fuel->auth->can_access() AND $this->validate)
 		{
 			show_404();
 		}
