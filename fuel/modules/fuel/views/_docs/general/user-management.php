@@ -5,7 +5,7 @@ a specific role that already has permissions assigned to it (e.g. "editor").
 If you are looking for group access permissions, you may be interested in 
 <a href="https://github.com/imknight/FUEL-CMS-Modules" target="_blank">imknight's module</a>.</p>
 
-<h2>Creating Users</h2>
+<h2 id="creating_users">Creating Users</h2>
 <p>To create a user, click on the <dfn>Users</dfn> module in the left menu of the CMS and then click the <dfn>Create</dfn> button. Enter in the users required 
 information including the password and assign the appropriate permissions. After properly entering in the password fields, a checkbox will appear that if checked,
 will send an email to the user with their password.</p>
@@ -20,7 +20,7 @@ A user with the permission to manage users, will be restricted to assigning the 
 The description field is used to better explain the permission but if left blank, will use the name value. After creating the permission, go back to the user in the <dfn>Users</dfn> module and assign the permission.
 </p>
 
-<h2>Assigning Permissions to Simple Modules</h2>
+<h2 id="assigning_permissions">Assigning Permissions to Simple Modules</h2>
 <p>Each simple module in the CMS should have a permission created for it. When configuring your module in the <span class="file">fuel/application/config/MY_fuel_modules.php</span>,
 you have the option of assigning the name of that permission. By default, it is the same name as the module's name (e.g "news"). In some cases you may want to create 
 multiple permissions for a module that pertains to editing, publishing and deleting. To do this, you set the edit permission to the name of the module and then add the name of the other
@@ -37,7 +37,7 @@ permission' => array('pages', 'pages/create', 'pages/edit', 'pages/upload' => 'p
 ...
 </pre>
 
-<h2>Login As Another User</h2>
+<h2 id="login_as_another">Login As Another User</h2>
 <p>If you are a "Super Admin" user, meaning that you have the "super_admin" field set to yes in the fuel_users table, you will see an additional action in the list view next to other user name
 that says <dfn>LOGIN AS</dfn>. Clicking on this allows you to easily take on the role of another user to test out their permissions and diagnose user specific problems.
 To logout and resume your role as the "Super Admin", click the <dfn>Restore original user</dfn> link at the top near your user name.
