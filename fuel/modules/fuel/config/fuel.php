@@ -251,17 +251,8 @@ $config['module_sanitize_funcs'] = array(
 |--------------------------------------------------------------------------
 */
 
-// specifies which modules are allowed to be used in the FUEL admin
-$config['modules_allowed'] = array(
-	'user_guide',
-	'blog',
-	'backup',
-	'page_analysis',
-	'google_keywords',
-	'validate',
-	'tester',
-	'cronjobs'
-);
+// specifies which modules are allowed to be used in the FUEL admin (e.g. 'user_guide', 'blog', 'backup'...)
+$config['modules_allowed'] = array();
 
 // site... Dashboard will always be there
 $config['nav']['site'] = array(
