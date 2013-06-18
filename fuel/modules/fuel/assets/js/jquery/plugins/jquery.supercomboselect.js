@@ -198,6 +198,7 @@
 				var searchBoxHTML = '<div class="supercomboselect_search">';
 				searchBoxHTML += '<input type="text" value="" name="supercomboselect_search" class="supercomboselect_search_text" />';
 				searchBoxHTML += '</div>';
+
 				$('#' + leftID).parent().after(searchBoxHTML);
 				searchBox = $('#' + leftID).parent().parent().find('.supercomboselect_search_text');
 				searchBox
@@ -205,18 +206,18 @@
 					.keyup(function(e){
 						isShiftDown = false; // reset this to prevent issue with not being able to select
 						if (e.shiftKey || e.metaKey || e.altKey || e.ctrlKey || $.inArray(e.keyCode, nonSearchableChars) != -1) return false;
-
 						var searchTerm = searchBox.val();
 						if (searchTerm.length >= settings.minNumOfSearchChars || searchTerm.length == 0) {
 
 							// only refresh list when we know that the current search term doesn't begin with the previous search term
 							if (searchTerm.substr(0, (prevSearchText.length)) != prevSearchText || searchTerm.length == 0) {
-								//refreshLists();
+								// commented out because this can be slow with big lists
+								refreshLists();
 							}
 							var val = $(this).val().toLowerCase();
 							if (val.length){
 								var filtered = $('#' + leftID + ' li').filter(function(){
-									var text = $(this).text();
+									var text = $(this).data('label');
 									var index = text.toLowerCase().indexOf(val);
 									if (index == -1){
 										return false;
@@ -280,7 +281,7 @@
 
 					var opt = '';
 					if (customSelectedSorting){
-						opt = '<li id="' + id + '"' + disabledClass + '>' + text + '<span style="display: none;" id="' + id + '_val">';
+						opt = '<li id="' + id + '"' + disabledClass + ' data-label="' + text + '">' + text + '<span style="display: none;" id="' + id + '_val">';
 						if (flippedSelectedOrder[value]){
 							opt += flippedSelectedOrder[value];
 						} else {
