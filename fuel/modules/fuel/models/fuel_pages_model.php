@@ -238,7 +238,7 @@ class Fuel_pages_model extends Base_module_model {
 		// set language field
 		if ($CI->fuel->language->has_multiple())
 		{
-			$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'order' => 2);
+			$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'order' => 4);
 		}
 		else
 		{
