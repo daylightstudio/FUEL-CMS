@@ -1,5 +1,4 @@
 <?php 
-require_once(BASEPATH.'core/Model.php');
 $CI->load->library('inspection');
 $CI->inspection->initialize(array('file' => FUEL_PATH.'core/MY_Model.php'));
 $classes = $CI->inspection->classes();
