@@ -855,6 +855,19 @@ class Fuel_layout extends Fuel_base_library {
 		return $output;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder - used for validating layout variables
+	 *
+	 * @access	public
+	 * @param	array	variables to validate
+	 * @return	boolean
+	 */	
+	function validate($vars)
+	{
+		return TRUE;
+	}
 }
 
 

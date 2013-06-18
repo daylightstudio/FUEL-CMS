@@ -2834,11 +2834,22 @@ class Form_builder {
 
 	/**
 	 * Handles validation for the form builder fields
+	 *
+	 * If valid it will return TRUE. If not, it will return an array of errors
+	 * 
+	 * @access	public
+	 * @param	object the validator object to use for validating (optional)
+	 * @return	mixed
 	 */
-	function validate($validator)
+	function validate($validator = NULL)
 	{
+		if (empty($validator))
+		{
+			$validator = $this->form->validator;
+		}
 		if ( ! empty($_POST) AND (get_class($validator) == 'Validator'))
 		{
+
 			// $this->CI->load->library('validator');
 			$this->CI->load->helper('inflector');
 
@@ -2897,8 +2908,16 @@ class Form_builder {
 			}
 
 			$validator->validate();
+			$errors = $validator->get_errors();
 
-			return $validator->get_errors();
+			if (empty($errors))
+			{
+				return TRUE;
+			}
+			else
+			{
+				return $validator->get_errors();	
+			}
 		}
 	}
 

@@ -65,30 +65,32 @@ class Pages extends Module {
 						unset($_POST['published']);
 					}
 				
-					$this->_save_page_vars($id, $posted);
-					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
-
-					// run after_create hook
-					$this->_run_hook('after_create', $data);
-
-					// run after_save hook
-					$this->_run_hook('after_save', $data);
-
-					if (!empty($data))
+					if ($this->_save_page_vars($id, $posted))
 					{
-						$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
-						$url = fuel_uri('pages/edit/'.$id);
+						$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+				
+						// run after_create hook
+						$this->_run_hook('after_create', $data);
 
-						// save any tab states
-						$this->_save_tab_state($id);
+						// run after_save hook
+						$this->_run_hook('after_save', $data);
 
-						if ($this->input->post('language'))
+						if (!empty($data))
 						{
-							$url .= '?lang='.$this->input->post('language', TRUE);
+							$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
+							$url = fuel_uri('pages/edit/'.$id);
+
+							// save any tab states
+							$this->_save_tab_state($id);
+
+							if ($this->input->post('language'))
+							{
+								$url .= '?lang='.$this->input->post('language');
+							}
+							redirect($url);
 						}
-						redirect($url);
 					}
+					
 				}
 			}
 			
@@ -96,7 +98,6 @@ class Pages extends Module {
 		$vars = $this->_form();
 		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
 		$this->fuel->admin->set_titlebar($crumbs);
-		
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 
@@ -132,24 +133,26 @@ class Pages extends Module {
 			{
 				$this->_process_uploads();
 				
-				$this->_save_page_vars($id, $posted);
-				$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
-				// run after_edit hook
-				$this->_run_hook('after_edit', $data);
-
-				// run after_save hook
-				$this->_run_hook('after_save', $data);
-
-				
-				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
-				$this->fuel->logs->write($msg);
-				$url = fuel_uri('pages/edit/'.$id);
-				if ($this->input->post('language'))
+				if ($this->_save_page_vars($id, $posted))
 				{
-					$url .= '?lang='.$this->input->post('language', TRUE);
+					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
+				
+					// run after_edit hook
+					$this->_run_hook('after_edit', $data);
+
+					// run after_save hook
+					$this->_run_hook('after_save', $data);
+
+					
+					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+					$this->fuel->logs->write($msg);
+					$url = fuel_uri('pages/edit/'.$id);
+					if ($this->input->post('language'))
+					{
+						$url .= '?lang='.$this->input->post('language');
+					}
+					redirect($url);
 				}
-				redirect($url);
 			}
 		}
 		
@@ -221,7 +224,7 @@ class Pages extends Module {
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
 		
 		// create page form fields
-		$this->form_builder->form->validator = &$this->page->validator;
+		$this->form_builder->set_validator($this->model->get_validation());
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
@@ -506,10 +509,22 @@ class Pages extends Module {
 					}
 					$where = (!empty($id)) ? $where : array();
 
+					if (!$layout->validate($vars))
+					{
+						add_errors($layout->errors());
+						return FALSE;
+					}
+
 					if ($this->fuel_pagevariables_model->save($save, $where))
 					{
 						$page_variables_archive[] = $this->fuel_pagevariables_model->cleaned_data();
 					}
+					else
+					{
+						add_error(lang('error_saving'));
+						return FALSE;
+					}
+
 				}
 			}
 
@@ -563,6 +578,7 @@ class Pages extends Module {
 		{
 			$this->fuel->cache->clear_page($this->input->post('location', TRUE));
 		}
+		return TRUE;
 	}
 
 	function layout_fields($layout_name, $id = NULL, $lang = NULL, $vars = array())
