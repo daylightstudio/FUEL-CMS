@@ -903,7 +903,7 @@ class Fuel_page extends Fuel_base_library {
 			$vars = $this->CI->load->get_vars();
 
 			// set layout variable again if it's changed'
-			if (isset($vars['layout']) AND $this->layout->name != $vars['layout'])
+			if (isset($vars['layout']) AND (empty($this->layout) OR (is_object($this->layout) AND $this->layout->name != $vars['layout'])))
 			{
 				$layout = $vars['layout'];
 				$this->layout = $this->fuel->layouts->get($layout);
@@ -981,69 +981,63 @@ class Fuel_page extends Fuel_base_library {
 		// load helpers
 		if (!empty($vars['helpers']))
 		{
-			if (is_array($vars['helpers']))
+			if (is_string($vars['helpers']))
 			{
-				foreach($vars['helpers'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_helper($key, $val);
-					}
-					else
-					{
-						$this->CI->load->helper($val);
-					}
-				}
+				$vars['helpers'] = array($vars['helpers']);
 			}
-			else
+
+			foreach($vars['helpers'] as $key => $val)
 			{
-				$this->CI->load->helpers($vars['helpers']);
+				if (!is_numeric($key))
+				{
+					$this->CI->load->module_helper($key, $val);
+				}
+				else
+				{
+					$this->CI->load->helper($val);
+				}
 			}
 		}
 			
 		// load libraries
 		if (!empty($vars['libraries']))
 		{
-			if (is_array($vars['libraries']))
+			if (is_string($vars['libraries']))
 			{
-				foreach($vars['libraries'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_library($key, $val);
-					}
-					else
-					{
-						$this->CI->load->library($val);
-					}
-				}
+				$vars['libraries'] = array($vars['libraries']);
 			}
-			else
+
+			foreach($vars['libraries'] as $key => $val)
 			{
-				$this->CI->load->library($vars['libraries']);
+				if (!is_numeric($key))
+				{
+					$this->CI->load->module_library($key, $val);
+				}
+				else
+				{
+					$this->CI->load->library($val);
+				}
 			}
 		}
 
 		// load models
 		if (!empty($vars['models']))
 		{
-			if (is_array($vars['models']))
+			if (is_string($vars['libraries']))
 			{
-				foreach($vars['models'] as $key => $val)
-				{
-					if (!is_numeric($key))
-					{
-						$this->CI->load->module_model($key, $val);
-					}
-					else
-					{
-						$this->CI->load->model($val);
-					}
-				}
+				$vars['models'] = array($vars['models']);
 			}
-			else
+
+			foreach($vars['models'] as $key => $val)
 			{
-				$this->CI->load->model($vars['models']);
+				if (!is_numeric($key))
+				{
+					$this->CI->load->module_model($key, $val);
+				}
+				else
+				{
+					$this->CI->load->model($val);
+				}
 			}
 		}
 		
