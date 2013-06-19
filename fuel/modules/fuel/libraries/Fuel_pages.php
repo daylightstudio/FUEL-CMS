@@ -1023,7 +1023,7 @@ class Fuel_page extends Fuel_base_library {
 		// load models
 		if (!empty($vars['models']))
 		{
-			if (is_string($vars['libraries']))
+			if (is_string($vars['models']))
 			{
 				$vars['models'] = array($vars['models']);
 			}
