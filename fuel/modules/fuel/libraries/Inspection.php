@@ -382,7 +382,7 @@ class Inspection_class extends Inspection_base {
 	 * @param	string	the name of the file the class belongs to (optional)
 	 * @return	void
 	 */	
-	function __construct($class, $file = '')
+	function __construct($class = NULL, $file = '')
 	{
 		parent::__construct('ReflectionClass', $class);
 		$this->_file = $file;
@@ -616,7 +616,7 @@ class Inspection_function extends Inspection_base {
 	 * @param	string	the name of the function
 	 * @return	void
 	 */	
-	function __construct($function)
+	function __construct($function = NULL)
 	{
 		parent::__construct('ReflectionFunction', $function);
 	}
@@ -646,7 +646,7 @@ class Inspection_method extends Inspection_base {
 	 * @param	string	the corresponding object of the method
 	 * @return	void
 	 */	
-	function __construct($method, $obj)
+	function __construct($method = NULL, $obj = NULL)
 	{
 		parent::__construct('ReflectionMethod', $method, $obj);
 	}
