@@ -1631,7 +1631,7 @@ class MY_Model extends CI_Model {
 		// first remove all the articles
 		$CI->$model->delete(array($key_field => $id));
 		
-		// then readd them
+		// then read them
 		$return = TRUE;
 		foreach($data as $val)
 		{
