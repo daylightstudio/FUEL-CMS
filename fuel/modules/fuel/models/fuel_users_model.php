@@ -328,6 +328,7 @@ class Fuel_users_model extends Base_module_model {
 			$fields['permissions']['mode'] = 'checkbox';
 			$fields['permissions']['display_label'] = FALSE;
 			$fields['permissions']['wrapper_tag'] = 'div';
+			$fields['exists_permissions'] = array('type' => 'hidden', 'value' => 1);
 		}
 		else
 		{
