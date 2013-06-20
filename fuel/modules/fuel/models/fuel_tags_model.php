@@ -169,9 +169,10 @@ class Fuel_tags_model extends Base_module_model {
 	 * Common query to automatically join the categories table
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void 	
 	 */		
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');

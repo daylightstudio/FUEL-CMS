@@ -140,10 +140,10 @@ class Fuel_categories_model extends Base_module_model {
 	 * Overwrites the _common_query parent method to automatically sort by precedence value
 	 *
 	 * @access	public
-	 * @param	array	values
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	array
 	 */	
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->order_by('precedence asc');

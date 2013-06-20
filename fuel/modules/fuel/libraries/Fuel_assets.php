@@ -67,10 +67,10 @@ class Fuel_assets extends Fuel_base_library {
 	 * Also will set the values in the parameters array as properties of this object
 	 *
 	 * @access	public
-	 * @param	array	Config preferences
+	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params)
+	function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->normalize_files_array();

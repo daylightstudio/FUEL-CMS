@@ -11,7 +11,7 @@ class Pages extends Module {
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
-	function create()
+	function create($field = NULL, $redirect = TRUE)
 	{
 
 		// check that the action even exists and if not, show a 404
@@ -101,7 +101,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 
-	function edit($id = NULL)
+	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		if (!$this->fuel->auth->module_has_action('save'))
 		{

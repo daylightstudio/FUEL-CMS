@@ -374,9 +374,10 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * Common query that joins user page information with the page variable data
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		$CI =& get_instance();
 		$lang_options = $CI->fuel->config('languages');

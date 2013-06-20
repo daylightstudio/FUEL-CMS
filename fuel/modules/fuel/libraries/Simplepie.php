@@ -753,7 +753,9 @@ class Simplepie
 		// Other objects, instances created here so we can set options on them
 		$this->sanitize = new SimplePie_Sanitize();
 
-		if (func_num_args() > 0)
+		// David McReynolds - Change to watch for empty first paramters 6/19/2013
+		$args = func_get_args();
+		if (!empty($args) AND !empty($args[0]))
 		{
 			trigger_error('Passing parameters to the constructor is no longer supported. Please use set_feed_url(), set_cache_location(), and set_cache_location() directly.');
 		}

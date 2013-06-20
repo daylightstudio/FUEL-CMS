@@ -655,9 +655,10 @@ class Fuel_users_model extends Base_module_model {
 	 * Overwritten: used to clear out parent base_module_model common query
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		
 	}

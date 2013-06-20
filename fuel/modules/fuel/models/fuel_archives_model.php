@@ -49,18 +49,23 @@ class Fuel_archives_model extends MY_Model {
 	 * @param	string	The record ID
 	 * @param	string	The table name
 	 * @param	boolean	Determines whether to include the currently active record in the archive list (optional)
+	 * @param	boolean	Order by for options list (optional)
 	 * @return	array Key/value array with the key being the archive ID value
 	 */
-	function options_list($ref_id, $table_name, $include_current = FALSE)
+	function options_list($ref_id = NULL, $table_name = NULL, $include_current = array(), $order_by = TRUE)
 	{
+		if ($order_by === TRUE)
+		{
+			$order_by = 'version_timestamp desc';
+		}
 		$CI =& get_instance();
 		$CI->load->helper('date');
-		$options = $this->find_all_array(array('ref_id' => $ref_id, 'table_name' => $table_name), 'version_timestamp desc');
+		$options = $this->find_all_array(array('ref_id' => $ref_id, 'table_name' => $table_name), $order_by);
 		$return = array();
 		$i = 0;
 		foreach($options as $val)
 		{
-			if ($i == 0 && $include_current)
+			if ($i == 0 && !empty($include_current))
 			{
 				$return[$val['version']] = 'Current Version';
 			}

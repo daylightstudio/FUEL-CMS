@@ -73,7 +73,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params)
+	function initialize($params = array())
 	{
 		parent::initialize($params);
 		// set the cache path to the configs cache path if left empty

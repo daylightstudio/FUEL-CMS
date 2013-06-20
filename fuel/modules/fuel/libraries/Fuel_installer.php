@@ -65,7 +65,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params)
+	function initialize($params = array())
 	{
 		parent::initialize($params);
 	}

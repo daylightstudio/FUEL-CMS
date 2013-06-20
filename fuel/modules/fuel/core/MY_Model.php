@@ -1484,7 +1484,7 @@ class MY_Model extends CI_Model {
 					}
 
 					// execute on_insert/update hook methods on the Date_record model if exists
-					if (is_object($record) AND is_a($record, 'Data_record'))
+					if (is_object($record) AND ($record instanceof Data_record))
 					{
 						if ($no_key)
 						{
@@ -1511,7 +1511,7 @@ class MY_Model extends CI_Model {
 						$values[$this->key_field] = $this->db->insert_id();
 					}
 					$this->on_after_insert($values);
-					if (is_a($record, 'Data_record'))
+					if ($record instanceof Data_record)
 					{
 						$record->on_after_insert($values);
 					}
@@ -1532,7 +1532,7 @@ class MY_Model extends CI_Model {
 					
 					$this->db->update($this->table_name, $values);
 					$this->on_after_update($values);
-					if (is_a($record, 'Data_record'))
+					if ($record instanceof Data_record)
 					{
 						$record->on_after_update();
 					}
@@ -1550,7 +1550,7 @@ class MY_Model extends CI_Model {
 			}
 			else
 			{
-				if (is_a($record, 'Data_record')) 
+				if ($record instanceof Data_record)
 				{
 					$key_field = $this->key_field;
 					if (is_string($this->key_field))
@@ -3035,7 +3035,7 @@ class MY_Model extends CI_Model {
 	{
 		if (is_object($data))
 		{
-			if (is_a($data, 'Data_record'))
+			if ($record instanceof Data_record)
 			{
 				$values = $data->values();
 			}
@@ -5121,7 +5121,7 @@ class Data_record {
 			$this->$set_method($val);
 		}
 		// set in foreign keys only if it is an object
-		else if (is_object($val) AND is_a($val, 'Data_record') AND in_array($var.'_id', array_keys($foreign_keys)))
+		else if (is_object($val) AND ($record instanceof Data_record) AND in_array($var.'_id', array_keys($foreign_keys)))
 		{
 			$this->_fields[$var] = $val;
 		}

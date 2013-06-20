@@ -17,7 +17,7 @@ class Assets extends Module {
 		parent::items($inline);
 	}
 
-	function create($dir = NULL, $inline = FALSE)
+	function create($dir = NULL, $not_inline = TRUE)
 	{
 		$id = NULL;
 
@@ -26,7 +26,7 @@ class Assets extends Module {
 			$dir = uri_safe_decode($dir);
 		}
 
-		if ($inline)
+		if ($not_inline !== TRUE)
 		{
 			$this->fuel->admin->set_inline(TRUE);
 		}
@@ -262,7 +262,7 @@ class Assets extends Module {
 	}
 	
 	// no editing of images... just creating/overwriting existing
-	function edit($dir = NULL)
+	function edit($dir = NULL, $field = NULL, $redirect = TRUE)
 	{
 		redirect(fuel_uri('assets/create/'.$dir));
 	}

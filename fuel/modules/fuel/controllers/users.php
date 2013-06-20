@@ -10,7 +10,7 @@ class Users extends Module {
 		parent::__construct();
 	}
 	
-	function edit($id)
+	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		$user = $this->model->find_by_key($id, 'array');
 		if (!empty($user))

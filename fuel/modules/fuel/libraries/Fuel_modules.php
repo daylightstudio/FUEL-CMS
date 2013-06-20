@@ -284,7 +284,7 @@ class Fuel_modules extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function overwrites()
+	static function overwrites()
 	{
 		if (isset(self::$_overwrites))
 		{

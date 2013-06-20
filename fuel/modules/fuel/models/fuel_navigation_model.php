@@ -527,9 +527,10 @@ class Fuel_navigation_model extends Base_module_model {
 	 * Common query that joins fuel_navigation_groups table info
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->select($this->_tables['fuel_navigation'].'.*, '.$this->_tables['fuel_navigation_groups'].'.id group_id, '.$this->_tables['fuel_navigation_groups'].'.name group_name');
@@ -586,7 +587,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The value field (optional)
 	 * @return	array Key/value array
 	 */	
-	function get_others($display_field, $id, $val_field = NULL)
+	function get_others($display_field, $id = NULL, $val_field = NULL)
 	{
 		$others = $this->find_all_array_assoc('id');
 

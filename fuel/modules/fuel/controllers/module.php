@@ -108,8 +108,8 @@ class Module extends Fuel_base_controller {
 		}
 		
 		// get the model name
-		$model = end(explode('/', $this->model_name));
-
+		$model_parts = explode('/', $this->model_name);
+		$model = end($model_parts);
 		
 		
 		// set the module_uri
@@ -495,8 +495,8 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->question_keys = array();
 			//$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->label_layout = 'left';
-			$this->form_builder->set_validator($this->model->get_validation());
-			$this->form_builder->submit_value = NULL;
+			$this->form_builder->form->validator = &$this->model->get_validation();
+			$this->form_builder->submit_value = null;
 			$this->form_builder->use_form_tag = FALSE;
 			$this->form_builder->set_fields($this->filters);
 			$this->form_builder->display_errors = FALSE;

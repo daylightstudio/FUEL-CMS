@@ -421,9 +421,10 @@ class Fuel_pages_model extends Base_module_model {
 	 * Common query that joins user created/modified information to the page
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query()
+	function _common_query($params = NULL)
 	{
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->_tables['fuel_pages'].'.last_modified_by', 'left');
 		$this->db->select($this->_tables['fuel_pages'].'.*, '.$this->_tables['fuel_users'].'.user_name, '.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name, '.$this->_tables['fuel_users'].'.email, CONCAT('.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name) AS full_name', FALSE);

@@ -60,7 +60,7 @@ class Fuel_logs extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params)
+	function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->fuel->load_model('fuel_logs');
