@@ -799,24 +799,40 @@ class Pages extends Module {
 		$this->fuel->admin->render('modal_select', $vars);
 	}
 
-	
 	function upload()
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
 		$this->load->library('form_builder');
+		$this->load->library('upload');
 		$this->js_controller_params['method'] = 'upload';
 
-		if (!empty($_POST))
+		if (!empty($_POST) AND !empty($_FILES))
 		{
-			if (!empty($_FILES['file']['name']))
+			$params['upload_path'] = sys_get_temp_dir();
+			$params['allowed_types'] = 'php|html|txt';
+
+			// to ensure we check the proper mime types
+			$this->upload->initialize($params);
+
+			// Hackery to ensure that a proper php mimetype is set. 
+			// Would set in mimes.php config but that may be updated with the next version of CI which does not include the text/plain
+			$this->upload->mimes['php'] =  array(
+				'application/x-httpd-php', 
+				'application/php', 
+				'application/x-php', 
+				'text/php', 
+				'text/x-php', 
+				'application/x-httpd-php-source', 
+				'text/plain');
+
+			if ($this->upload->do_upload('file'))
 			{
-				
+				$upload_data = $this->upload->data();
 				$error = FALSE;
-				$file_info = $_FILES['file'];
 				
 				// read in the file so we can filter it
-				$file = read_file($file_info['tmp_name']);
+				$file = read_file($upload_data['full_path']);
 				
 				// sanitize the file before saving
 				$id = $this->input->post('id', TRUE);
@@ -860,12 +876,11 @@ class Pages extends Module {
 				{
 					add_error(lang('error_upload'));
 				}
-
-				
 			}
-			else if (!empty($_FILES['file']['error']))
+			else
 			{
-				add_error(lang('error_upload'));
+				$error_msg = $this->upload->display_errors('', '');
+				add_error($error_msg);
 			}
 		}
 		
