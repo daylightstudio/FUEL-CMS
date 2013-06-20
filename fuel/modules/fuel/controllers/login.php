@@ -143,7 +143,7 @@ class Login extends CI_Controller {
 		$this->form_builder->submit_value = lang('login_btn');
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->remove_js();
-		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
+		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
 		$vars['form'] = $this->form_builder->render();
 		
 		// set any errors that 
@@ -260,7 +260,7 @@ class Login extends CI_Controller {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
 		$this->form_builder->set_fields($fields);
-		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
+		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
 		$vars['form'] = $this->form_builder->render();
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
 		
