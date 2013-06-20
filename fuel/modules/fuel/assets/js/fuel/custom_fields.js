@@ -522,7 +522,7 @@ fuel.fields.asset_field = function(context, options){
 // inline editing of another module
 fuel.fields.inline_edit_field = function(context){
 
-	fuel.fields.multi_field(context, false);
+	// fuel.fields.multi_field(context, false);
 
 	var topWindowContext = window.top.document;
 	
