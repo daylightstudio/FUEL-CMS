@@ -2264,33 +2264,36 @@ class MY_Model extends CI_Model {
 		
 		// set auto validation based on field type
 		$field_data = $this->db->field_info($this->table_name, $field);
-		if (!empty($field_data) AND !empty($value)){
+		if (!empty($field_data) AND !empty($value))
+		{
 			$field_name = "'".(str_replace('_', ' ', $field))."'";
 			$type = $this->field_type($field);
-			
-			switch($type)
+			if ( !is_array($value) )
 			{
-				case 'string':
-					if (!empty($field_data['max_length'])) $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
-					break;
-				case 'number':
-					$this->validator->add_rule($field, 'is_numeric', lang('error_not_number', $field_name), $value);
-					if ($field_data['type'] != 'float') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
-					break;
-				case 'date':
-					if (strncmp($value, '0000', 4) !== 0)
-					{
-						$this->validator->add_rule($field, 'valid_date', lang('error_invalid_date', $field_name), $value);
-						if ($field_data['type'] == 'datetime') $this->validator->add_rule($field, 'valid_time', lang('error_invalid_time', $field_name), $value);
-					}
-					break;
-				case 'year':
-					$reg_ex = (strlen(strval($value)) == 2) ? '\d{2}' : '\d{4}';
-					$this->validator->add_rule($field, 'regex', lang('error_invalid_year', $field_name), array($value, $reg_ex));
-					break;
-				case 'enum':
-					$options = (!empty($field_data['options'])) ? $field_data['options'] : $field_data['max_length'];
-					$this->validator->add_rule($field, 'is_one_of_these', lang('error_invalid_generic', $field_name), array($value, $options)); // options get put into max_length field
+				switch($type)
+				{
+					case 'string':
+						if (!empty($field_data['max_length'])) $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
+						break;
+					case 'number':
+						$this->validator->add_rule($field, 'is_numeric', lang('error_not_number', $field_name), $value);
+						if ($field_data['type'] != 'float') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
+						break;
+					case 'date':
+						if (strncmp($value, '0000', 4) !== 0)
+						{
+							$this->validator->add_rule($field, 'valid_date', lang('error_invalid_date', $field_name), $value);
+							if ($field_data['type'] == 'datetime') $this->validator->add_rule($field, 'valid_time', lang('error_invalid_time', $field_name), $value);
+						}
+						break;
+					case 'year':
+						$reg_ex = (strlen(strval($value)) == 2) ? '\d{2}' : '\d{4}';
+						$this->validator->add_rule($field, 'regex', lang('error_invalid_year', $field_name), array($value, $reg_ex));
+						break;
+					case 'enum':
+						$options = (!empty($field_data['options'])) ? $field_data['options'] : $field_data['max_length'];
+						$this->validator->add_rule($field, 'is_one_of_these', lang('error_invalid_generic', $field_name), array($value, $options)); // options get put into max_length field
+				}
 			}
 		}
 	}
