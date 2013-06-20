@@ -336,6 +336,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $group = ''; // The group name to associate with the layout
 	public $import_field = 'body'; // The field to be used when importing a view file
 	public $include_pagevar_object = FALSE; // Determines whether to include a single variable of object of $pagevar that includes all the pages variables
+	public $preview_image = ''; // An image for previewing the layout
 	
 	// --------------------------------------------------------------------
 	
@@ -868,6 +869,34 @@ class Fuel_layout extends Fuel_base_library {
 	{
 		return TRUE;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the image for the layout
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	function preview_image()
+	{
+		return $this->preview_image;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets the preview image for the layout
+	 *
+	 * @access	public
+	 * @param	string	the preview image
+	 * @return	void
+	 */	
+	function set_preview_image($image)
+	{
+		$this->preview_image = $image;
+	}
+
 }
 
 
