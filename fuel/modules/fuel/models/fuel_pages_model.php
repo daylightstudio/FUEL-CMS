@@ -44,7 +44,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_pages');
 	}
@@ -58,7 +58,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	array View variable data (optional)
 	 * @return	mixed Can be an array of items or a string value
 	 */	
-	function related_items($values = array())
+	public function related_items($values = array())
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
@@ -118,7 +118,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
 	 * @return	array An array that can be used by the Menu class to create a hierachical structure
 	 */	
-	function tree($just_published = FALSE)
+	public function tree($just_published = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('array');
@@ -166,7 +166,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	boolean Determines whether to included unpublished or not (optional)
 	 * @return	array
 	 */	
-	function list_locations($include_unpublished = FALSE)
+	public function list_locations($include_unpublished = FALSE)
 	{
 		$where = (!$include_unpublished) ? array('published' => 'yes') : NULL;
 		return array_keys($this->fuel_pages_model->options_list('location', 'location', $where));
@@ -182,7 +182,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	boolean Determines whether to included unpublished or not (optional)
 	 * @return	array
 	 */	
-	function find_by_location($location, $just_published = 'yes')
+	public function find_by_location($location, $just_published = 'yes')
 	{
 		
 		if (substr($location, 0, 4) == 'http')
@@ -228,7 +228,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
@@ -271,7 +271,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	array The values to be saved right the clean method is run
 	 * @return	array Returns the values to be cleaned
 	 */	
-	function on_before_clean($values)
+	public function on_before_clean($values)
 	{
 		if (!empty($values['location']))
 		{
@@ -300,7 +300,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	array The values to be saved right before validation
 	 * @return	array Returns the values to be validated right before saving
 	 */	
-	function on_before_validate($values)
+	public function on_before_validate($values)
 	{
 		if (!empty($values['id']))
 		{
@@ -322,7 +322,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	array The values to be saved right before saving
 	 * @return	array Returns the values to be saved
 	 */	
-	function on_before_save($values)
+	public function on_before_save($values)
 	{
 		$CI = get_instance();
 		$user = $CI->fuel->auth->user_data();
@@ -339,7 +339,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
 	 * @return	void
 	 */	
-	function on_after_delete($where)
+	public function on_after_delete($where)
 	{
 		$this->delete_related(array(FUEL_FOLDER => 'fuel_pagevariables_model'), 'page_id', $where);
 	}
@@ -354,7 +354,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param	int The version of the archive to retrieve (optional)
 	 * @return	boolean
 	 */	
-	function restore($ref_id, $version = NULL)
+	public function restore($ref_id, $version = NULL)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
@@ -383,7 +383,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @return	boolean Whether it was saved properly or not
 	 */	
 	// 
-	function replace($replace_id, $id, $delete = TRUE)
+	public function replace($replace_id, $id, $delete = TRUE)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
@@ -431,7 +431,7 @@ class Fuel_pages_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->_tables['fuel_pages'].'.last_modified_by', 'left');
 		$this->db->select($this->_tables['fuel_pages'].'.*, '.$this->_tables['fuel_users'].'.user_name, '.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name, '.$this->_tables['fuel_users'].'.email, CONCAT('.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name) AS full_name', FALSE);

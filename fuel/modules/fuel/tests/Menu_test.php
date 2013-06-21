@@ -51,7 +51,7 @@ class Menu_test extends Tester_base {
 		$this->run($test, $expected, 'Menu basic test');
 	}
 	
-	function test_collapsible()
+	public function test_collapsible()
 	{
 		/*******************************************
 		basic test
@@ -76,7 +76,7 @@ class Menu_test extends Tester_base {
 		
 	}
 
-		function test_breadcrumb()
+		public function test_breadcrumb()
 		{
 			/*******************************************
 			basic test
@@ -96,7 +96,7 @@ class Menu_test extends Tester_base {
 		}
 
 
-		function test_page_title()
+		public function test_page_title()
 		{
 			/*******************************************
 			basic test
@@ -134,7 +134,7 @@ EOD;
 
 		}
 		
-		function test_delimited()
+		public function test_delimited()
 		{
 			/*******************************************
 			basic test
@@ -150,7 +150,7 @@ EOD;
 
 		}
 
-		function test_array()
+		public function test_array()
 		{
 			/*******************************************
 			basic test
@@ -232,7 +232,7 @@ EOD;
 
 		}
 
-		function test_hidden_items()
+		public function test_hidden_items()
 		{
 			$this->nav['about'] = 'About';
 			$this->nav['about/history']['hidden'] = TRUE;

@@ -45,7 +45,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	array	Config preferences (optional)
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 	}
@@ -60,7 +60,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	boolean	Sets the page as the currently active
 	 * @return	object
 	 */	
-	function create($init = array(), $set_active = TRUE)
+	public function create($init = array(), $set_active = TRUE)
 	{
 		$page = new Fuel_page($init);
 		if ($set_active)
@@ -79,7 +79,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	object	The page to set as active
 	 * @return	void
 	 */	
-	function set_active(&$page)
+	public function set_active(&$page)
 	{
 		// for backwards compatability
 		$this->CI->fuel_page = $page;
@@ -96,7 +96,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	string	The page to set as active
 	 * @return	object
 	 */	
-	function get($location)
+	public function get($location)
 	{
 		$init['location'] = $location;
 		$page = $this->create($init, FALSE);
@@ -111,7 +111,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	public
 	 * @return	object
 	 */	
-	function &active()
+	public function &active()
 	{
 		return $this->_active;
 	}
@@ -127,7 +127,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	boolean	Applies the site_url() to the keys of the returned array (optional)
 	 * @return	array
 	 */	
-	function options_list($include = 'all', $paths_as_keys = FALSE, $apply_site_url = TRUE)
+	public function options_list($include = 'all', $paths_as_keys = FALSE, $apply_site_url = TRUE)
 	{
 		$valid_include = array('cms', 'modules', 'views');
 		$pages = array();
@@ -178,7 +178,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function views()
+	public function views()
 	{
 		$this->CI->load->helper('directory');
 		$views_path = APPPATH.'views/';
@@ -195,7 +195,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function cms()
+	public function cms()
 	{
 		$this->fuel->load_model('fuel_pages');
 		$cms_pages = $this->CI->fuel_pages_model->list_locations(FALSE);
@@ -210,7 +210,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function modules()
+	public function modules()
 	{
 		return $this->fuel->modules->pages();
 	}
@@ -224,7 +224,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	mixed	Either the pages location or ID value (CMS only)
 	 * @return	object
 	 */	
-	function find($id)
+	public function find($id)
 	{
 		$this->fuel->load_model('fuel_pages');
 		if (!is_numeric($id))
@@ -246,7 +246,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function mode()
+	public function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
 		if (is_array($fuel_mode))
@@ -277,7 +277,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @access	boolean	Return the result or echo it out
 	 * @return	string
 	 */	
-	function render($location, $vars = array(), $params = array(), $return = FALSE)
+	public function render($location, $vars = array(), $params = array(), $return = FALSE)
 	{
 		// TODO: cant have this be called within another page or will cause an infinite loop
 		$params['location'] = $location;
@@ -300,7 +300,7 @@ class Fuel_pages extends Fuel_base_library {
 	 * @param	boolean	Determines whether to sanitize the page by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
-	function import($page, $sanitize = TRUE)
+	public function import($page, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
 
@@ -463,7 +463,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->CI->load->helper('cookie');
@@ -492,7 +492,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	mixed	config preferences
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		// if $params is a string then we will assume that they are passing the most common parameter location
 		if (is_string($params))
@@ -541,7 +541,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	location to assign to the page
 	 * @return	void
 	 */	
-	function assign_location($location)
+	public function assign_location($location)
 	{
 		$this->location = $location;
 		
@@ -652,7 +652,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	Determines whether to assign variables from the CMS as well as variables from the _variables folder (optional)
 	 * @return	void
 	 */	
-	function assign_variables($views_path = NULL, $page_mode = NULL)
+	public function assign_variables($views_path = NULL, $page_mode = NULL)
 	{
 		$this->views_path = (empty($views_path)) ? APPPATH.'views/' : $views_path;
 		$page_mode = (empty($page_mode)) ? $this->fuel->pages->mode() : $page_mode;
@@ -673,7 +673,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	mixed	Can be either a name of the layout or a Fuel_layout object
 	 * @return	void
 	 */	
-	function assign_layout($layout)
+	public function assign_layout($layout)
 	{
 		if (!empty($layout) AND is_string($layout))
 		{
@@ -702,7 +702,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	boolean	Determines whether to render any inline editing (optional)
 	 * @return	string
 	 */	
-	function render($return = FALSE, $fuelify = TRUE)
+	public function render($return = FALSE, $fuelify = TRUE)
 	{
 		// check the _page_data to see if it even exists in the CMS
 		if (!isset($this->_page_data['id']))
@@ -727,7 +727,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	boolean	Determines whether to render any inline editing
 	 * @return	string
 	 */
-	function cms_render($return = FALSE, $fuelify = FALSE)
+	public function cms_render($return = FALSE, $fuelify = FALSE)
 	{
 
 		$this->CI->load->library('parser');
@@ -789,7 +789,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	boolean	Determines whether to render any inline editing (optional)
 	 * @return	string
 	 */
-	function variables_render($return = FALSE, $fuelify = FALSE)
+	public function variables_render($return = FALSE, $fuelify = FALSE)
 	{
 		// get the location and load page vars
 		$page = $this->location;
@@ -971,7 +971,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	array	An array of variables to check for resources
 	 * @return	void
 	 */
-	function load_resources($vars = NULL)
+	public function load_resources($vars = NULL)
 	{
 		if (empty($vars))
 		{
@@ -1052,7 +1052,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output to be rendered
 	 * @return	string
 	 */
-	function fuelify($output)
+	public function fuelify($output)
 	{
 		// if not logged in then we remove the markers
 		if (!$this->fuel->config('admin_enabled') OR $this->variables('fuelified') === FALSE OR 
@@ -1106,7 +1106,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	array	An array of marker values which includes, id, label, module, published, xoffset, and yoffset values
 	 * @return	string
 	 */
-	function add_marker($marker)
+	public function add_marker($marker)
 	{
 		$key = $this->get_marker_prefix().count($this->markers);
 		$this->markers[$key] = $marker;
@@ -1121,7 +1121,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function get_marker_prefix()
+	public function get_marker_prefix()
 	{
 		return Fuel_page::$marker_key;
 	}
@@ -1134,7 +1134,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function get_marker_regex()
+	public function get_marker_regex()
 	{
 		$marker_prefix = $this->get_marker_prefix();
 		$marker_reg_ex = '<!--('.$marker_prefix.'\d+)-->';
@@ -1150,7 +1150,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The markers key value used to identify it on the apge
 	 * @return	string
 	 */
-	function render_marker($key)
+	public function render_marker($key)
 	{
 		if (!isset($this->markers[$key])) return '';
 		
@@ -1201,7 +1201,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page
 	 * @return	string
 	 */
-	function render_all_markers($output)
+	public function render_all_markers($output)
 	{
 		// get the marker regex
 		$marker_reg_ex = $this->get_marker_regex();
@@ -1286,7 +1286,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page
 	 * @return	string
 	 */
-	function remove_markers($output)
+	public function remove_markers($output)
 	{
 		// if no markers, then we simply return the output to speed up processing
 		// if (empty($this->markers)) return $output; // needs to run all the time in case it's cached'
@@ -1306,7 +1306,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page (optional)
 	 * @return	string
 	 */
-	function properties($prop = NULL)
+	public function properties($prop = NULL)
 	{
 		if (is_string($prop) AND isset($this->_page_data[$prop])) return $this->_page_data[$prop];
 		return $this->_page_data;
@@ -1321,7 +1321,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page
 	 * @return	string
 	 */
-	function variables($key = NULL)
+	public function variables($key = NULL)
 	{
 		if (is_string($key) AND isset($this->_variables[$key])) return $this->_variables[$key];
 		return $this->_variables;
@@ -1336,7 +1336,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	array	An array of variables to assign to the page for rendering
 	 * @return	void
 	 */
-	function add_variables($vars = array())
+	public function add_variables($vars = array())
 	{
 		$vars = (array) $vars;
 		$this->_variables = array_merge($this->_variables, $vars);
@@ -1356,7 +1356,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The segment number to return (optional)
 	 * @return	string
 	 */	
-	function segment($n = NULL)
+	public function segment($n = NULL)
 	{
 		if (is_int($n) AND isset($this->_segments[$n])) return $this->_segments[$n];
 		return $this->_segments;
@@ -1371,7 +1371,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page
 	 * @return	string
 	 */
-	function has_cms_data()
+	public function has_cms_data()
 	{
 		return !empty($this->_page_data['location']);
 	}
@@ -1385,7 +1385,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	string	The output of the page
 	 * @return	boolean
 	 */	
-	function is_cached()
+	public function is_cached()
 	{
 		return is_true_val($this->is_cached);
 	}
@@ -1398,7 +1398,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function save()
+	public function save()
 	{
 		$this->fuel->load_model('fuel_pages');
 		$this->fuel->load_model('fuel_pagevariables');
@@ -1468,7 +1468,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function delete()
+	public function delete()
 	{
 		// remove cached files
 		$this->fuel->load_model('pages');
@@ -1494,7 +1494,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @param	int	The number of levels deep to search for a view
 	 * @return	string
 	 */
-	function find_view_file($view, $depth = NULL)
+	public function find_view_file($view, $depth = NULL)
 	{
 		if (is_null($depth))
 		{
@@ -1524,7 +1524,7 @@ class Fuel_page extends Fuel_base_library {
 	 * @access	public
 	 * @return	int
 	 */
-	function get_max_page_param()
+	public function get_max_page_param()
 	{
 		static $max_page_params;
 

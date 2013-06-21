@@ -3,12 +3,12 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Tools extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function index()
+	public function index()
 	{
 		$this->_validate_user('tools');
 		

@@ -1,13 +1,13 @@
 <?php
 class Reset extends CI_Controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->config->load('fuel', true);
 	}
 	
-	function _remap($method)
+	public function _remap($method)
 	{
 		if (!$this->config->item('allow_forgotten_password', 'fuel')) show_404();
 		$this->load->library('session');

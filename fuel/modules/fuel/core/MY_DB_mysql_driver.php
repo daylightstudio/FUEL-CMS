@@ -39,7 +39,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	boolean	will exit the script
 	 * @return	void
 	 */
-	function debug_query($hidden = FALSE, $exit = FALSE)
+	public function debug_query($hidden = FALSE, $exit = FALSE)
 	{
 		if (!empty($hidden)) echo '<!--';
 		echo $this->last_query()." \n";
@@ -55,7 +55,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @access	public
 	 * @return	object
 	 */
-	function load_rdriver()
+	public function load_rdriver()
 	{
 		$driver = 'MY_DB_mysql_result';
 
@@ -79,7 +79,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	string
 	 * @return	string
 	 */
-	function safe_select($table, $fields = NULL, $prefix = NULL)
+	public function safe_select($table, $fields = NULL, $prefix = NULL)
 	{
 		if (empty($prefix)) $prefix = $table.'.';
 		if (empty($fields)) {
@@ -113,7 +113,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	string	field name
 	 * @return	string
 	 */
-	function field_info($table, $field)
+	public function field_info($table, $field)
 	{
 		$table_info = $this->table_info($table);
 		if (isset($table_info[$field]))
@@ -135,7 +135,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	string	field name
 	 * @return	string
 	 */
-	function table_info($table, $set_field_key = TRUE)
+	public function table_info($table, $set_field_key = TRUE)
 	{
 		if (!empty($this->_table_info_cache[$table]) AND $set_field_key) return $this->_table_info_cache[$table]; // lazy load
 		$sql = "SHOW FULL COLUMNS FROM ". $this->_escape_identifiers($table);
@@ -207,7 +207,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	mixed	primary key value(s)
 	 * @return	string
 	 */
-	function insert_ignore($table, $values, $primary_key = 'id')
+	public function insert_ignore($table, $values, $primary_key = 'id')
 	{
 		if (empty($values)) return false;
 		$sql = "INSERT IGNORE ";
@@ -279,7 +279,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	boolean	clear the active record
 	 * @return	string
 	 */
-	function get_query_string($clear = TRUE)
+	public function get_query_string($clear = TRUE)
 	{
 		$sql = $this->_compile_select();
 		if ($clear)
@@ -298,7 +298,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @access	public
 	 * @return	string
 	 */
-	function clear_query_string()
+	public function clear_query_string()
 	{
 	   $this->_reset_select();
 	}
@@ -313,7 +313,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param	boolean	If the contents being passed in parameter 1 is a path or a SQL string
 	 * @return	void
 	 */
-	function load_sql($sql_path, $is_path = TRUE)
+	public function load_sql($sql_path, $is_path = TRUE)
 	{
 		$CI =& get_instance();
 		// check first to see if it is a path to a file

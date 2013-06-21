@@ -32,7 +32,7 @@ class Fuel_users extends Fuel_module {
 
 	protected $module = 'users';
 
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 	}
@@ -47,7 +47,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	string
 	 * @return	string
 	 */
-	function get($user_id, $return_type = NULL)
+	public function get($user_id, $return_type = NULL)
 	{
 		if (is_int($user_id))
 		{
@@ -117,7 +117,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function reset_password($email)
+	public function reset_password($email)
 	{
 		// make sure user exists when saving
 		$model = &$this->model();
@@ -144,7 +144,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function user_exists($email)
+	public function user_exists($email)
 	{
 		return $this->record_exists(array('email' => $email));
 	}
@@ -158,7 +158,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function send_email($user_id)
+	public function send_email($user_id)
 	{
 		$user = $this->get($user_id, 'array');
 		

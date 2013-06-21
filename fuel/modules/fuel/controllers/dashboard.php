@@ -3,13 +3,13 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Dashboard extends Fuel_base_controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->js_controller = 'fuel.controller.DashboardController';
 	}
 
-	function index()
+	public function index()
 	{
 		if (is_ajax())
 		{
@@ -33,7 +33,7 @@ class Dashboard extends Fuel_base_controller {
 	}
 
 	/* need to be outside of index so when you click back button it will not show the ajax */
-	function ajax()
+	public function ajax()
 	{
 		if (is_ajax())
 		{
@@ -62,7 +62,7 @@ class Dashboard extends Fuel_base_controller {
 		}
 	}
 
-	function recent()
+	public function recent()
 	{
 		$recent = $this->session->userdata('recent');
 		if (!empty($recent[0]))

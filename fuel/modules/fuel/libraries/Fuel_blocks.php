@@ -69,7 +69,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
 	 * @return	string
 	 */
-	function render($params, $vars = array(), $check_db = TRUE)
+	public function render($params, $vars = array(), $check_db = TRUE)
 	{
 		$this->CI->load->library('parser');
 
@@ -283,7 +283,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	boolean	Determines whether to sanitize the block by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
-	function import($block, $sanitize = TRUE)
+	public function import($block, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
 		
@@ -334,7 +334,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	boolean	Determines whether to recursively look for files (optional)
 	 * @return	array
 	 */
-	function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
+	public function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
 	{
 		$model = $this->model();
 		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order, $recursive);
@@ -348,7 +348,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function mode()
+	public function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
 		if (is_array($fuel_mode))

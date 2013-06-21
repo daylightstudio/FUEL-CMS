@@ -42,7 +42,7 @@ class Fuel_tags extends Fuel_module {
 	 * @param	string	the name of the category the tag belongs to (optional)
 	 * @return	object
 	 */	
-	function find_by_tag($tag, $category = NULL)
+	public function find_by_tag($tag, $category = NULL)
 	{
 		$model = $this->model();
 		$where['slug'] = $tag;
@@ -64,7 +64,7 @@ class Fuel_tags extends Fuel_module {
 	 * @param	string	the name of the category
 	 * @return	array
 	 */	
-	function find_by_category($category)
+	public function find_by_category($category)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'relationships_model');
 		$model =& $this->model();
@@ -91,7 +91,7 @@ class Fuel_tags extends Fuel_module {
 	 * @param	string	related slug value
 	 * @return	array
 	 */	
-	function options_list($key = 'slug', $val = 'name')
+	public function options_list($key = 'slug', $val = 'name')
 	{
 		$model =& $this->model();
 		return $model->options_list($key, $val);

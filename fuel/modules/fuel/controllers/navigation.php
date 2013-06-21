@@ -3,12 +3,12 @@ require_once('module.php');
 
 class Navigation extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function upload()
+	public function upload()
 	{
 		$this->load->library('form_builder');
 		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_groups_model');
@@ -86,7 +86,7 @@ class Navigation extends Module {
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}	
 	
-	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
+	public function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
 	{
 		if (is_ajax() AND !empty($group_id))
 		{

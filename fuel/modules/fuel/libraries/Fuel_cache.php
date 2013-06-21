@@ -54,7 +54,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		$this->CI->load->library('cache');
@@ -73,7 +73,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 		// set the cache path to the configs cache path if left empty
@@ -99,7 +99,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	The path to the cache folder
 	 * @return	void
 	 */	
-	function set_cache_path($path)
+	public function set_cache_path($path)
 	{
 		$this->cache_path = $path;
 		$this->_cache->set_cache_path($this->cache_path);
@@ -114,7 +114,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	The path to the compiled templates folder
 	 * @return	void
 	 */	
-	function set_compiled_path($path)
+	public function set_compiled_path($path)
 	{
 		$this->compiled_path = $path;
 	}
@@ -134,7 +134,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Location used in creating the ID (optional)
 	 * @return	string
 	 */
-	function create_id($location = NULL)
+	public function create_id($location = NULL)
 	{
 		$lang = $this->fuel->language->detect();
 		if (empty($location))
@@ -169,7 +169,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	int	Time to live in seconds for cache  (optional)
 	 * @return	void
 	 */
-	function save($cache_id, $data, $group = NULL, $ttl = NULL)
+	public function save($cache_id, $data, $group = NULL, $ttl = NULL)
 	{
 		$this->_cache->save($cache_id, $data, $group, $ttl);
 	}
@@ -190,7 +190,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	boolean	Skip checking if it is in the cache or not (optional)
 	 * @return	string	The contents of the cached file or NULL if it doesn't exist
 	 */
-	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	public function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
 	{
 		return $this->_cache->get($cache_id, $cache_group, $skip_checking);
 	}
@@ -214,7 +214,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Cache group ID (optional)
 	 * @return	boolean
 	 */
-	function is_cached($cache_id, $group = NULL)
+	public function is_cached($cache_id, $group = NULL)
 	{
 		return $this->_cache->is_cached($cache_id, $group);
 	}
@@ -238,7 +238,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	mixed	Value can be either a string of one value or an array of multiple values. Valid values are compiled, pages and assets. (optional)
 	 * @return	void
 	 */
-	function clear($what = NULL)
+	public function clear($what = NULL)
 	{
 		if (!empty($what) AND is_array($what))
 		{
@@ -280,7 +280,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_compiled()
+	public function clear_compiled()
 	{
 		
 		// also delete DWOO compiled files
@@ -334,7 +334,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_pages()
+	public function clear_pages()
 	{
 		$cache_group = $this->fuel->config('page_cache_group');
 		$this->_cache->remove_group($cache_group);
@@ -353,7 +353,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Page location
 	 * @return	void
 	 */
-	function clear_page($location)
+	public function clear_page($location)
 	{
 		$cache_group = $this->fuel->config('page_cache_group');
 		$cache_id = $this->create_id($location);
@@ -375,7 +375,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_assets()
+	public function clear_assets()
 	{
 		// remove asset cache files if exist
 		$modules = $this->fuel->config('modules_allowed');
@@ -407,7 +407,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Cache ID
 	 * @return	void
 	 */
-	function clear_file($cache_id)
+	public function clear_file($cache_id)
 	{
 		$this->_cache->remove($cache_id);
 	}
@@ -426,7 +426,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Cache group ID
 	 * @return	void
 	 */
-	function clear_group($group)
+	public function clear_group($group)
 	{
 		$this->_cache->remove_group($group);
 	}
@@ -445,7 +445,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @param	string	Module name
 	 * @return	void
 	 */
-	function clear_module($module)
+	public function clear_module($module)
 	{
 		$module_path = MODULES_PATH.$module.'/cache';
 		if (file_exists($module_path))
@@ -466,7 +466,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_all_modules()
+	public function clear_all_modules()
 	{
 		$modules = $this->CI->fuel->config('modules_allowed');
 		foreach($modules as $module)
@@ -489,7 +489,7 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_all()
+	public function clear_all()
 	{
 		$this->clear_pages();
 		$this->clear_compiled();

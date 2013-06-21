@@ -313,7 +313,7 @@ class MY_Model extends CI_Model {
 	 * @param	array	an array of tables
 	 * @return	void
 	 */	
-	function set_tables($tables)
+	public function set_tables($tables)
 	{
 		$this->_tables = array_merge($this->_tables, $tables);
 	}
@@ -331,7 +331,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	the table name (optional)
 	 * @return	string
 	 */	
-	function tables($table = NULL)
+	public function tables($table = NULL)
 	{
 		if (!empty($table))
 		{
@@ -487,7 +487,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	the field name to be used the key value (optional)
 	 * @return	array
 	 */	
-	function map_query_records($query, $assoc_key = NULL)
+	public function map_query_records($query, $assoc_key = NULL)
 	{
 		$result_objects = array();
 		
@@ -525,7 +525,7 @@ class MY_Model extends CI_Model {
 	 * @param	array	all the fields available for the object (optional)
 	 * @return	array
 	 */	
-	function map_to_record_class($row, $fields = NULL)
+	public function map_to_record_class($row, $fields = NULL)
 	{
 		if (empty($fields))
 		{
@@ -557,7 +557,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	the column to use for an associative key array (optional)
 	 * @return	array
 	 */	
-	function find($find = 'all', $where = NULL, $order = NULL, $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
+	public function find($find = 'all', $where = NULL, $order = NULL, $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
 	{
 		// allows for just a single parameter of arrays to be passed
 		if (is_array($find))
@@ -838,7 +838,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	the column to use for an associative key array (optional)
 	 * @return	array
 	 */	
-	function find_within($group, $where = array(), $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
+	public function find_within($group, $where = array(), $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
 	{
 		if (empty($group) OR !is_array($group))
 		{
@@ -1297,7 +1297,7 @@ class MY_Model extends CI_Model {
 		return $clean;
 	}
 
-	function encode_and_clean(&$val, $k, $key = NULL)
+	public function encode_and_clean(&$val, $k, $key = NULL)
 	{
 		if (empty($key))
 		{
@@ -1866,7 +1866,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	column name to check
 	 * @return	array
 	 */	
-	function is_new($val, $key)
+	public function is_new($val, $key)
 	{
 		if (!isset($val)) return FALSE;
 		if (is_array($key))
@@ -1888,7 +1888,7 @@ class MY_Model extends CI_Model {
 	 * Usually used for validation. The example below uses this method to validate on the model before saving. The <dfn>is_new</dfn> and <dfn>is_editable</dfn> methods are usually used during the models validation process as shown in the example.
 	 *
 	 <code>
-	function on_before_validate($values) 
+	public function on_before_validate($values) 
 	{ 
 	    if (!empty($values['id'])) 
 	    { 
@@ -1908,7 +1908,7 @@ class MY_Model extends CI_Model {
 	 * @param	mixed	the key field value to check against. May also be the complete array of values if the key value is also an array (for compound unique keys)
 	 * @return	array
 	 */
-	function is_editable($val, $key, $id)
+	public function is_editable($val, $key, $id)
 	{
 		if (!isset($val)) return FALSE;
 
@@ -2208,7 +2208,7 @@ class MY_Model extends CI_Model {
 	echo $type; // string
 	</code>
 	 *
-	 * @access	private
+	 * @access	public
 	 * @param	string	field
 	 * @return	array
 	 */	
@@ -2244,12 +2244,12 @@ class MY_Model extends CI_Model {
 	/**
 	 * Automatically validate the data before saving based on the table meta info
 	 *
-	 * @access	private
+	 * @access	protected
 	 * @param	string	field name
 	 * @param	string	value of field
 	 * @return	array
 	 */	
-	private function auto_validate_field($field, $value)
+	protected function auto_validate_field($field, $value)
 	{
 		$CI =& get_instance();
 
@@ -2875,7 +2875,7 @@ class MY_Model extends CI_Model {
 	 * If a name does not exist, it will try to intelligently find a class with a singular version 
 	 * of the parent table model's name (e.g. <dfn>examples_model</dfn> = <dfn>example_model</dfn>)
 	 *
-	 * @access	private
+	 * @access	public
 	 * @param	string	the table class name (not the record class)
 	 * @return	string
 	 */	
@@ -4100,8 +4100,8 @@ class MY_Model extends CI_Model {
 
 class Data_set {
 	
-	private $results; // the results array
-	private $force_array; // return one or many
+	protected $results; // the results array
+	protected $force_array; // return one or many
 	
 	/**
 	 * Constructor - requires a result set from MY_Model. 
@@ -4630,7 +4630,7 @@ class Data_record {
 	 * Will load another model's record object and is often used in custom derived attributes.
 	 *
 	 <code>
-	function get_spaceship()
+	public function get_spaceship()
 	{
 	    $ship = $this->lazy_load(array('email' => 'hsolo@milleniumfalcon.com'), 'spacehips_model', FALSE);
 	    return $ship;

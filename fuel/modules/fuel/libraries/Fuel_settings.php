@@ -32,7 +32,7 @@ class Fuel_settings extends Fuel_base_library {
 
 	protected $settings = array(); // Settings array of Form_builder form fields
 	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		$this->fuel->load_model('fuel_settings');
@@ -48,7 +48,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @param string $key, Key name
 	 * @return array
 	 */
-	function get($module, $key = '')
+	public function get($module, $key = '')
 	{
 		if ( ! array_key_exists($module, $this->settings))
 		{
@@ -87,7 +87,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @param boolean $skip_empty_vals, Store empty vals
 	 * @return boolean
 	 */
-	function process($module, $settings, $new_settings, $skip_empty_vals = FALSE)
+	public function process($module, $settings, $new_settings, $skip_empty_vals = FALSE)
 	{
 		/* if (isset($module, $settings, $new_settings)) */
 		if ( ! empty($new_settings) AND ! empty($module) AND ! empty($settings))
@@ -150,7 +150,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @access	public
 	 * @return	object
 	 */
-	function get_validation()
+	public function get_validation()
 	{
 		$validation = &$this->CI->fuel_settings_model->get_validation();
 		return $validation;
@@ -165,7 +165,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @access	public
 	 * @return	object
 	 */
-	function &model()
+	public function &model()
 	{
 		return $this->CI->fuel_settings_model;
 	}
@@ -182,7 +182,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @param	mixed 	The value of the setting (required if first parameter is a string)
 	 * @return	boolean
 	 */
-	function save($module, $key = NULL, $value = NULL)
+	public function save($module, $key = NULL, $value = NULL)
 	{
 		if (is_string($module))
 		{
@@ -208,7 +208,7 @@ class Fuel_settings extends Fuel_base_library {
 	 * @param	array 	Array of where conditions to delete
 	 * @return	boolean
 	 */
-	function delete($where)
+	public function delete($where)
 	{
 		return $this->model()->delete($where);
 	}

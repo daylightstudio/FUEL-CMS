@@ -48,7 +48,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_navigation');
 		$this->required['group_id'] = lang('error_create_nav_group');
@@ -67,7 +67,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		if ($CI->fuel->language->has_multiple())
@@ -93,7 +93,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item (optional)
 	 * @return	array
 	 */	
-	function find_by_location($location, $group_id = 1, $lang = NULL)
+	public function find_by_location($location, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.location'] = $location;
 		return $this->_find_by_array($where, $group_id, $lang);
@@ -110,7 +110,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item (optional)
 	 * @return	array
 	 */	
-	function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
+	public function find_by_nav_key($nav_key, $group_id = 1, $lang = NULL)
 	{
 		$where[$this->_tables['fuel_navigation'].'.nav_key'] = $nav_key;
 		return $this->_find_by_array($where, $group_id, $lang);
@@ -163,7 +163,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	boolean Determines whether to return just published navigation items or not (optional... and ignored in the admin)
 	 * @return	array An array that can be used by the Menu class to create a hierachical structure
 	 */	
-	function tree($just_published = FALSE)
+	public function tree($just_published = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('array');
@@ -232,7 +232,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The column name to be used as the key value
 	 * @return	array
 	 */	
-	function find_all_by_group($group_id = 1, $lang = NULL, $assoc_key = NULL)
+	public function find_all_by_group($group_id = 1, $lang = NULL, $assoc_key = NULL)
 	{
 		$where = (is_string($group_id)) ? array($this->_tables['fuel_navigation_groups'].'.name' => $group_id) : array($this->_tables['fuel_navigation'].'.group_id' => $group_id);
 		if (!empty($lang))
@@ -259,7 +259,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @access	public
 	 * @return	int
 	 */	
-	function max_id()
+	public function max_id()
 	{
 		$this->db->select_max('id');
 		$query = $this->db->get($this->_tables['fuel_navigation']);
@@ -277,7 +277,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
 		$CI =& get_instance();
@@ -377,7 +377,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	array The parent ID of the navigation item
 	 * @return	boolean
 	 */	
-	function no_location_and_parent_match($parent_id)
+	public function no_location_and_parent_match($parent_id)
 	{
 		$data = $this->find_one_array(array($this->_tables['fuel_navigation'].'.id' => $parent_id));
 		if (!empty($data))
@@ -398,7 +398,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item
 	 * @return	boolean
 	 */	
-	function is_new_navigation($nav_key, $group_id, $lang)
+	public function is_new_navigation($nav_key, $group_id, $lang)
 	{
 		if (empty($group_id)) return FALSE;
 		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'language' => $lang));
@@ -418,7 +418,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item
 	 * @return	boolean
 	 */	
-	function is_editable_navigation($nav_key, $group_id, $id, $lang)
+	public function is_editable_navigation($nav_key, $group_id, $id, $lang)
 	{
 		$data = $this->find_one_array(array('group_id' => $group_id, 'nav_key' => $nav_key, 'language' => $lang));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
@@ -436,7 +436,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item
 	 * @return	boolean
 	 */	
-	function is_new_location($location, $group_id, $parent_id, $lang)
+	public function is_new_location($location, $group_id, $parent_id, $lang)
 	{
 		if (empty($location)) return TRUE;
 		if (empty($group_id)) return FALSE;
@@ -457,7 +457,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item
 	 * @return	boolean
 	 */
-	function is_editable_location($location, $group_id, $parent_id, $id, $lang)
+	public function is_editable_location($location, $group_id, $parent_id, $id, $lang)
 	{
 		if (empty($location)) return TRUE;
 		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
@@ -474,7 +474,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	array The values to be saved right the clean method is run
 	 * @return	array Returns the values to be cleaned
 	 */	
-	function on_before_clean($values)
+	public function on_before_clean($values)
 	{
 		//if (empty($values['nav_key'])) $values['nav_key'] = $values['location'];
 		
@@ -503,7 +503,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	array The values to be saved right before validation
 	 * @return	array Returns the values to be validated right before saving
 	 */		
-	function on_before_validate($values)
+	public function on_before_validate($values)
 	{
 		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
 	//	$this->add_validation('id', array(&$this, 'no_id_and_parent_match'), lang('error_location_parents_match'), $values['parent_id']);
@@ -530,7 +530,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->select($this->_tables['fuel_navigation'].'.*, '.$this->_tables['fuel_navigation_groups'].'.id group_id, '.$this->_tables['fuel_navigation_groups'].'.name group_name');
@@ -550,7 +550,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string	The order by of the query. defaults to $val asc (optional)
 	 * @param	boolean	Determines whether it will group the options together based on the menu troup (optional)
 	 * @return	array	 */	
-	function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE, $group = TRUE)
+	public function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE, $group = TRUE)
 	{
 		if (!empty($order) AND is_bool($order))
 		{
@@ -587,7 +587,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The value field (optional)
 	 * @return	array Key/value array
 	 */	
-	function get_others($display_field, $id = NULL, $val_field = NULL)
+	public function get_others($display_field, $id = NULL, $val_field = NULL)
 	{
 		$others = $this->find_all_array_assoc('id');
 

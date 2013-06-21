@@ -50,7 +50,7 @@ class Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		$this->CI =& get_instance();
 		if (isset($this->CI->fuel))
@@ -71,7 +71,7 @@ class Fuel_base_library {
 	 * @param	array	Config preferences
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		if ($this->init_permission_check === TRUE)
 		{
@@ -90,7 +90,7 @@ class Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function is_inited()
+	public function is_inited()
 	{
 		return $this->_inited;
 	}
@@ -104,7 +104,7 @@ class Fuel_base_library {
 	 * @param	array	Config preferences
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (!is_array($params) OR empty($params)) return;
 		
@@ -131,7 +131,7 @@ class Fuel_base_library {
 	 * @param	string	The closing tag to append before the error messages
 	 * @return	mixed	Will return either an array of error messages or a formatted string if the first parameter is set to TRUE
 	 */	
-	function errors($formatted = FALSE, $open = '', $close = "\n\n")
+	public function errors($formatted = FALSE, $open = '', $close = "\n\n")
 	{
 		if ($formatted === FALSE)
 		{
@@ -155,7 +155,7 @@ class Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function last_error()
+	public function last_error()
 	{
 		$error = '';
 		if (!empty($this->_errors))
@@ -174,7 +174,7 @@ class Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function has_errors()
+	public function has_errors()
 	{
 		return count($this->_errors) > 0;
 	}

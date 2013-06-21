@@ -42,7 +42,7 @@ class Fuel_custom_fields {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		$this->CI =& get_instance();
 		$this->fuel =& $this->CI->fuel;
@@ -57,7 +57,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function wysiwyg($params)
+	public function wysiwyg($params)
 	{
 		$form_builder =& $params['instance'];
 		if (isset($params['editor']))
@@ -133,7 +133,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function file($params)
+	public function file($params)
 	{
 		$form_builder =& $params['instance'];
 		if (!empty($params['multiple']))
@@ -152,7 +152,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function asset($params)
+	public function asset($params)
 	{
 
 		$this->CI->load->helper('file');
@@ -409,7 +409,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function inline_edit($params)
+	public function inline_edit($params)
 	{
 		$form_builder =& $params['instance'];
 		if (!empty($params['module']))
@@ -470,7 +470,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	 function linked($params)
+	 public function linked($params)
 	{
 		$form_builder =& $params['instance'];
 		$str = '';
@@ -516,7 +516,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function template($params, $return_fields = FALSE)
+	public function template($params, $return_fields = FALSE)
 	{
 		$this->CI->load->library('parser');
 		$form_builder =& $params['instance'];
@@ -853,7 +853,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function currency($params)
+	public function currency($params)
 	{
 		$this->CI->load->helper('format');
 
@@ -976,7 +976,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function state($params)
+	public function state($params)
 	{
 		include(APPPATH.'config/states.php');
 		$form_builder =& $params['instance'];
@@ -1010,7 +1010,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function slug($params)
+	public function slug($params)
 	{
 		$form_builder =& $params['instance'];
 	
@@ -1077,7 +1077,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function list_items($params)
+	public function list_items($params)
 	{
 		$form_builder =& $params['instance'];
 		
@@ -1129,7 +1129,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function multi($params)
+	public function multi($params)
 	{
 		$form_builder =& $params['instance'];
 		
@@ -1267,7 +1267,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function url($params)
+	public function url($params)
 	{
 		$form_builder =& $params['instance'];
 		
@@ -1319,7 +1319,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function language($params)
+	public function language($params)
 	{
 		$form_builder =& $params['instance'];
 		if ((isset($this->CI->language_col) AND $params['key'] == $this->CI->language_col)
@@ -1343,7 +1343,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function keyval($params)
+	public function keyval($params)
 	{
 		$form_builder =& $params['instance'];
 		if (!isset($params['delimiter']))
@@ -1477,7 +1477,7 @@ class Fuel_custom_fields {
 	 * @param	array Fields parameters
 	 * @return	string
 	 */
-	function block($params)
+	public function block($params)
 	{
 		$form_builder =& $params['instance'];
 

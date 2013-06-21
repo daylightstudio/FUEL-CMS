@@ -3,12 +3,12 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class My_modules extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function index()
+	public function index()
 	{
 		$vars['modules'] = $this->fuel->modules->advanced();
 		$crumbs = array(lang('section_my_modules'));
@@ -17,7 +17,7 @@ class My_modules extends Fuel_base_controller {
 		$this->fuel->admin->render('manage/my_modules', $vars);
 	}
 	
-	function install($module = NULL)
+	public function install($module = NULL)
 	{
 		
 		$module = 'test';
@@ -25,7 +25,7 @@ class My_modules extends Fuel_base_controller {
 		$this->fuel->install->activate('backup');
 	}
 	
-	function uninstall($module = NULL)
+	public function uninstall($module = NULL)
 	{
 		$this->fuel->set_module($module);
 		//$this->fuel->install->deactivate();

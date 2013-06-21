@@ -48,7 +48,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_categories'); // table name
 	}
@@ -66,7 +66,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$table = $this->table_name();
 		$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
@@ -83,7 +83,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @access	public
 	 * @return	array
 	 */	
-	function context_options_list()
+	public function context_options_list()
 	{
 		$this->db->group_by('context');
 		return parent::options_list('context', 'context');
@@ -98,7 +98,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
 	 * @return	array An array that can be used by the Menu class to create a hierachical structure
 	 */	
-	function tree($just_published = FALSE)
+	public function tree($just_published = FALSE)
 	{
 		$return = array(); 
 		$where = ($just_published) ? array('published' => 'yes') : array();
@@ -121,7 +121,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	array	related field information
 	 * @return	array
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
 		$fields['parent_id'] = array('type' => 'select', 'model' => 'fuel_categories', 'first_option' => lang('label_select_one'));
@@ -143,7 +143,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	array
 	 */	
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->order_by('precedence asc');

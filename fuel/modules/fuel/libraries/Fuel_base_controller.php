@@ -48,7 +48,7 @@ class Fuel_base_controller extends CI_Controller {
 	 * @param	boolean	Determines whether to validate the user or not (optional)
 	 * @return	void
 	 */	
-	function __construct($validate = TRUE)
+	public function __construct($validate = TRUE)
 	{
 		parent::__construct();
 		
@@ -69,7 +69,7 @@ class Fuel_base_controller extends CI_Controller {
 	 * @param	string (optional)
 	 * @return	void
 	 */	
-	function reset_page_state($state_key = NULL)
+	public function reset_page_state($state_key = NULL)
 	{
 		if (empty($state_key))
 		{

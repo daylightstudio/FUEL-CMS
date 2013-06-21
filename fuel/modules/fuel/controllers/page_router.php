@@ -5,12 +5,12 @@ class Page_router extends CI_Controller {
 	public $layout = '';
 	public $location;
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function _remap($method)
+	public function _remap($method)
 	{
 		$this->location = uri_path(TRUE);
 		
@@ -80,7 +80,7 @@ class Page_router extends CI_Controller {
 	* Checks database for page variables (FUEL CMS)
 	* ------------------------------------------------------
 	*/
-	function _remap_cms($page)
+	public function _remap_cms($page)
 	{
 		$page_data = $page->properties();
 		$this->load->helper('cookie');
@@ -145,7 +145,7 @@ class Page_router extends CI_Controller {
 	* specific configuration variables if they exist
 	* ------------------------------------------------------
 	*/
-	function _remap_variables($page)
+	public function _remap_variables($page)
 	{
 		
 		// set up cache info 

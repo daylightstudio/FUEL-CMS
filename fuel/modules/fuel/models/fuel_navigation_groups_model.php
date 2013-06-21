@@ -41,7 +41,7 @@ class Fuel_navigation_groups_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		$CI =& get_instance();
 		$tables = $CI->config->item('tables', 'fuel');
@@ -58,7 +58,7 @@ class Fuel_navigation_groups_model extends Base_module_model {
 	 * @param	string
 	 * @return	boolean
 	 */	
-	function valid_name($name)
+	public function valid_name($name)
 	{
 		return (!is_numeric($name));
 	}
@@ -72,7 +72,7 @@ class Fuel_navigation_groups_model extends Base_module_model {
 	 * @param	mixed The where condition for the delete
 	 * @return	void
 	 */	
-	 function on_after_delete($where)
+	 public function on_after_delete($where)
 	 {
 		$this->delete_related(array(FUEL_FOLDER => 'fuel_navigation_model'), 'group_id', $where);
 	 }

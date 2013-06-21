@@ -113,7 +113,7 @@ class Base_module_model extends MY_Model {
 	 * @param	mixed	If an array, it will assume they are initialization properties. If a string, it will assume it's the name of the module the module exists in
 	 * @return	void
 	 */
-	function __construct($table = NULL, $params = NULL)
+	public function __construct($table = NULL, $params = NULL)
 	{
 		$CI = & get_instance();
 		
@@ -202,7 +202,7 @@ class Base_module_model extends MY_Model {
 	 * @param	string A key to associate with the filter(optional)
 	 * @return	void
 	 */	
-	function add_filter($filter, $key = NULL)
+	public function add_filter($filter, $key = NULL)
 	{
 		if (!empty($key))
 		{
@@ -223,7 +223,7 @@ class Base_module_model extends MY_Model {
 	 * @param	array An array of fields to filter on
 	 * @return	void
 	 */	
-	function add_filters($filters)
+	public function add_filters($filters)
 	{
 		if (empty($this->filters))
 		{
@@ -248,7 +248,7 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
 		$this->_list_items_query();
 		
@@ -373,7 +373,7 @@ class Base_module_model extends MY_Model {
 	 * @access	public
 	 * @return	int The total number of items with filters applied
 	 */	
-	function list_items_total()
+	public function list_items_total()
 	{
 		$cnt = $this->list_items(NULL, NULL, NULL, NULL, TRUE);
 		if (is_array($cnt))
@@ -502,7 +502,7 @@ class Base_module_model extends MY_Model {
 	 * @param	array The array of data to be archived
 	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function archive($ref_id, $data)
+	public function archive($ref_id, $data)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
@@ -557,7 +557,7 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
 	 * @return	array
 	 */	
-	function get_last_archive($ref_id, $all_data = FALSE)
+	public function get_last_archive($ref_id, $all_data = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
@@ -581,7 +581,7 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
 	 * @return	array
 	 */	
-	function get_archive($ref_id, $version = NULL, $all_data = FALSE)
+	public function get_archive($ref_id, $version = NULL, $all_data = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
@@ -626,7 +626,7 @@ class Base_module_model extends MY_Model {
 	 * @param	int The version of the archive to retrieve (optional)
 	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function restore($ref_id, $version = NULL)
+	public function restore($ref_id, $version = NULL)
 	{
 		$archive = $this->get_archive($ref_id, $version);
 		return $this->save($archive);
@@ -643,7 +643,7 @@ class Base_module_model extends MY_Model {
 	 * @param	string The value field (optional)
 	 * @return	array Key/value array
 	 */	
-	function get_others($display_field, $id = NULL, $val_field = NULL)
+	public function get_others($display_field, $id = NULL, $val_field = NULL)
 	{
 		$orderby = TRUE;
 		if (empty($val_field))
@@ -680,7 +680,7 @@ class Base_module_model extends MY_Model {
 	 * @param	string The name of the field used to determine which language. if empty, it will default to 'language' (optional)
 	 * @return	array
 	 */	
-	function get_languages($field = NULL)
+	public function get_languages($field = NULL)
 	{
 		if (empty($field))
 		{
@@ -713,7 +713,7 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean Determines whether to delete the old record (optional)
 	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function replace($replace_id, $id, $delete = TRUE)
+	public function replace($replace_id, $id, $delete = TRUE)
 	{
 		$replace_values = $this->find_by_key($replace_id, 'array');
 		$new_values = $this->find_by_key($id, 'array');
@@ -763,7 +763,7 @@ class Base_module_model extends MY_Model {
 	 * @param	array An array that contains "col", "order", "offset", "limit", "searh_term" to help with the formatting of the output. By default only the "col" and "order" parameters are used (optional)
 	 * @return	string
 	 */	
-	function export_data($params = array())
+	public function export_data($params = array())
 	{
 		// normalize parameters
 		$valid_params = array('col', 'order');
@@ -789,7 +789,7 @@ class Base_module_model extends MY_Model {
 	 * @param	array View variable data (optional)
 	 * @return	mixed Can be an array of items or a string value
 	 */	
-	function related_items($params = array())
+	public function related_items($params = array())
 	{
 		return array();
 	}
@@ -804,7 +804,7 @@ class Base_module_model extends MY_Model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
 		$order = 1;
@@ -844,7 +844,7 @@ class Base_module_model extends MY_Model {
 	 * @param	boolean	whether to display unpublished content in the front end if logged in
 	 * @return	void
 	 */	
-	function _common_query($display_unpublished_if_logged_in = NULL)
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
 		if (!isset($display_unpublished_if_logged_in))
 		{
@@ -927,7 +927,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	array
 	 */	
-	function set_parsed_fields($fields)
+	public function set_parsed_fields($fields)
 	{
 		$this->_parsed_fields = $fields;
 	}
@@ -941,7 +941,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	array
 	 */	
-	function get_parsed_fields()
+	public function get_parsed_fields()
 	{
 		$parsed = NULL;
 		if (isset($this->_parsed_fields))
@@ -965,7 +965,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	string
 	 */	
-	function after_get($output, $var)
+	public function after_get($output, $var)
 	{
 		if (is_string($output))
 		{

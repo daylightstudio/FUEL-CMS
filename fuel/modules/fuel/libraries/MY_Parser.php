@@ -39,7 +39,7 @@ class MY_Parser extends CI_Parser {
 	private $_parser_allowed_php_functions = array();
 	private $_parser_assign_refs = array();
 
-	function __construct($config = array())
+	public function __construct($config = array())
 	{
 		if (!empty($config))
 		{
@@ -62,7 +62,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	array
 	 * @return	void
 	 */
-	function initialize($config = array())
+	public function initialize($config = array())
 	{
 		foreach ($config as $key => $val)
 		{
@@ -84,7 +84,7 @@ class MY_Parser extends CI_Parser {
 	 * @access	public
 	 * @return	object
 	 */
-	function spawn()
+	public function spawn()
 	{
 		// try to create directory if it doesn't exist'
 		// added by David McReynolds @ Daylight Studio 9/16/10 to prevent problems of axing the entire directory
@@ -135,7 +135,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @return	string
 	 */
-	function parse($template, $data = array(), $return = FALSE, $cache_id = NULL)
+	public function parse($template, $data = array(), $return = FALSE, $cache_id = NULL)
 	{
 		$string = $this->_ci->load->view($template, $data, TRUE);
 
@@ -160,14 +160,14 @@ class MY_Parser extends CI_Parser {
 	
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
-	function string_parse($string, $data = array(), $return = TRUE, $cache_id = NULL)
+	public function string_parse($string, $data = array(), $return = TRUE, $cache_id = NULL)
 	{
 		return $this->_parse_compiled($string, $data, $return, $cache_id);
 	}
 
 	// Changed default return to TRUE by David McReynolds @ Daylight Studio 12/21/10
 	// removed is_include parameter and changed to use compile parameter instead 11/26/11
-	function parse_string($string, $data = array(), $return = TRUE, $cache_id = NULL)
+	public function parse_string($string, $data = array(), $return = TRUE, $cache_id = NULL)
 	{
 		return $this->_parse_compiled($string, $data, $return, $cache_id);
 	}
@@ -186,7 +186,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	function parse_simple($string, $data, $return = TRUE)
+	public function parse_simple($string, $data, $return = TRUE)
 	{
 		if ($string == '')
 		{
@@ -229,7 +229,7 @@ class MY_Parser extends CI_Parser {
 	 * @param	string
 	 * @return	string
 	 */
-	function _parse_compiled($string, $data, $return = FALSE, $cache_id = NULL)
+	public function _parse_compiled($string, $data, $return = FALSE, $cache_id = NULL)
 	{
 		// Start benchmark
 		$this->_ci->benchmark->mark('dwoo_parse_start');

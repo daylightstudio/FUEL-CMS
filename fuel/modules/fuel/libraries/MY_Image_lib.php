@@ -174,7 +174,7 @@ class MY_Image_lib extends CI_Image_lib {
 	 * @param	boolean	indicates whether to remove empty array values from uri
 	 * @return	array
 	 */	
-	function convert($type = 'jpg', $delete_orig = FALSE)
+	public function convert($type = 'jpg', $delete_orig = FALSE)
 	{
 		$this->full_dst_path = $this->dest_folder . end($this->explode_name($this->dest_image)) . '.' . $type;
 

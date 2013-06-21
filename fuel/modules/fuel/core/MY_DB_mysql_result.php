@@ -41,7 +41,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 	 * @param	string	field name to use as associative key
 	 * @return	void
 	 */
-	function result_assoc_array($key)
+	public function result_assoc_array($key)
 	{
 		if (count($this->result_assoc_array) > 0)
 		{
@@ -85,7 +85,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 	 * @param	string	field name to use as associative key
 	 * @return	void
 	 */
-	function result_assoc($key)
+	public function result_assoc($key)
 	{
 		if (count($this->result_assoc) > 0)
 		{

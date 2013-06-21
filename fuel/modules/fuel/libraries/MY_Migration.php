@@ -109,7 +109,7 @@ class MY_Migration extends CI_Migration{
 	 * @param  string	The path to the migration folder
 	 * @return	void
 	 */
-	function set_migration_path($path)
+	public function set_migration_path($path)
 	{
 		// Add trailing slash if not set
 		$this->_migration_path = rtrim($path, '/').'/';
@@ -123,7 +123,7 @@ class MY_Migration extends CI_Migration{
 	 * @access	public
 	 * @return	string
 	 */
-	function migration_path()
+	public function migration_path()
 	{
 		return $this->_migration_path;
 	}
@@ -137,7 +137,7 @@ class MY_Migration extends CI_Migration{
 	 * @param  string	The name of the module
 	 * @return	void
 	 */
-	function set_module($module)
+	public function set_module($module)
 	{
 		$this->_module = $module;
 	}
@@ -150,7 +150,7 @@ class MY_Migration extends CI_Migration{
 	 * @access	public
 	 * @return	string
 	 */
-	function module()
+	public function module()
 	{
 		return $this->_module;
 	}

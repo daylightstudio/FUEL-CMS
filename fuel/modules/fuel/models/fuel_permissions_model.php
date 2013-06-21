@@ -43,7 +43,7 @@ class Fuel_permissions_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_permissions');
 	}
@@ -61,14 +61,14 @@ class Fuel_permissions_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	 function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
+	 public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$this->db->select('id, name, description, active');
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	
-	function tree()
+	public function tree()
 	{
 		$CI =& get_instance();
 		// first get the permissions
@@ -95,7 +95,7 @@ class Fuel_permissions_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
 		$other_perms_options = array('create', 'edit', 'publish', 'delete', 'export');
@@ -118,7 +118,7 @@ class Fuel_permissions_model extends Base_module_model {
 	 * @return	array Returns the values that were saved
 	 */	
 	// 
-	function on_after_post($values)
+	public function on_after_post($values)
 	{
 		$values = parent::on_after_save($values);
 		$data = $this->normalized_save_data;
@@ -169,7 +169,7 @@ class Fuel_permissions_model extends Base_module_model {
 	 * @param	array View variable data (optional)
 	 * @return	mixed Can be an array of items or a string value
 	 */	
-	function related_items($values = array())
+	public function related_items($values = array())
 	{
 		$CI =& get_instance();
 		$return = array();

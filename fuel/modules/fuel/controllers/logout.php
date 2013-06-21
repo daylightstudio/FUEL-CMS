@@ -2,14 +2,14 @@
 
 class Logout extends CI_Controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->config->load('fuel', TRUE);
 		if (!$this->config->item('admin_enabled', 'fuel')) show_404();
 	}
 	
-	function _remap($segment)
+	public function _remap($segment)
 	{
 		$this->load->helper('convert');
 		$this->fuel->auth->logout();

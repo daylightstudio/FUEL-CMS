@@ -39,7 +39,7 @@ class Fuel_relationships_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_relationships');
 	}
@@ -56,7 +56,7 @@ class Fuel_relationships_model extends Base_module_model {
 	 * @param	string Values can be object, array, query, auto (optional)
 	 * @return	array
 	 */	
-	function find_by_candidate($candidate_table, $foreign_table, $candidate_id = NULL, $return_method = NULL)
+	public function find_by_candidate($candidate_table, $foreign_table, $candidate_id = NULL, $return_method = NULL)
 	{
 		$where['candidate_table'] = $candidate_table;
 		$where['foreign_table'] = $foreign_table;
@@ -79,7 +79,7 @@ class Fuel_relationships_model extends Base_module_model {
 	 * @param	string Values can be object, array, query, auto
 	 * @return	array
 	 */	
-	function find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
+	public function find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
 	{
 		$where['candidate_table'] = $candidate_table;
 		$where['foreign_table'] = $foreign_table;

@@ -6,13 +6,13 @@ class Manage extends Fuel_base_controller {
 	public $nav_selected = 'manage';
 	public $module_uri = 'manage/activity';
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->js_controller = 'fuel.controller.ManageController';
 	}
 	
-	function index()
+	public function index()
 	{
 		$this->_validate_user('manage');
 		$crumbs = array(lang('section_manage'));
@@ -20,7 +20,7 @@ class Manage extends Fuel_base_controller {
 		$this->fuel->admin->render('manage');
 	}
 	
-	function cache()
+	public function cache()
 	{
 		$this->_validate_user('cache');
 		

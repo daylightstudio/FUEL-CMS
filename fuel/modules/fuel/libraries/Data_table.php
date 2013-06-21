@@ -110,7 +110,7 @@ class Data_table {
 	 * @param	array
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (is_array($params) AND count($params) > 0)
 		{
@@ -564,7 +564,7 @@ class Data_table {
 	<p>The formatter should be a function that accepts an array of field values.</p>
 
 	<code>
-	function is_darkside($fields)
+	public function is_darkside($fields)
 	{
 		return ($fields['darkside']) ? 'yes' : 'no';
 	}

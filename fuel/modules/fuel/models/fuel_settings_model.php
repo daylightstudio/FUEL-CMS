@@ -42,7 +42,7 @@ class Fuel_settings_model extends Base_module_model
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_settings');
 	}

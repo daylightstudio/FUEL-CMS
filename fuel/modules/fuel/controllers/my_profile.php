@@ -3,13 +3,13 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class My_profile extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 	}
 	
-	function edit()
+	public function edit()
 	{
 		
 		$user = $this->fuel->auth->user_data();
@@ -30,7 +30,7 @@ class My_profile extends Fuel_base_controller {
 	}
 
 	// seperated to make it easier in subclasses to use the form without rendering the page
-	function _form($id = null)
+	public function _form($id = null)
 	{
 		$this->load->library('form_builder');
 		$this->js_controller_params['method'] = 'add_edit';

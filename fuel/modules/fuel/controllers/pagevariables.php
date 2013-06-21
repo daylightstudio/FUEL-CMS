@@ -3,7 +3,7 @@ require_once('module.php');
 
 class Pagevariables extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
@@ -11,7 +11,7 @@ class Pagevariables extends Module {
 	
 	// Thanks floorish!
 	// http://www.getfuelcms.com/forums/discussion/comment/1216/#Comment_1216
-	function inline_edit($field = NULL, $page_id = NULL)
+	public function inline_edit($field = NULL, $page_id = NULL)
 	{
 		
 		// try to get the id, if $var is a name

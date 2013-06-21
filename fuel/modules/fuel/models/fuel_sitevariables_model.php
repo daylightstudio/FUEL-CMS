@@ -42,7 +42,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_site_variables');
 	}
@@ -61,7 +61,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
 	{
 
 		$this->db->select('id, name, SUBSTRING(value, 1, 50) as value, scope, active', FALSE);	
@@ -84,7 +84,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 * @access	public
 	 * @return	Key/value option list with the names of the variables and the values as the value
 	 */	
-	function retrieve_all()
+	public function retrieve_all()
 	{
 		$vars = $this->options_list('name', 'value', array('active' => 'yes'));
 		return $vars;
@@ -98,7 +98,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 * @access	public
 	 * @return	string
 	 */	
-	function retrieve_one($name = null)
+	public function retrieve_one($name = null)
 	{
 		$vars = $this->find_one_array(array('active' => 'yes', 'name' => $name));
 		return $vars['value'];
@@ -114,7 +114,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array()){
+	public function form_fields($values = array(), $related = array()){
 		$fields = parent::form_fields($values, $related);
 		$fields['value']['class'] = 'markitup';
 		return $fields;

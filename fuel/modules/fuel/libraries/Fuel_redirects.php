@@ -42,7 +42,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Constructor
 	 *
 	 */
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->initialize($params);
@@ -51,14 +51,15 @@ class Fuel_redirects extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Adds to the redirects list
+	 * Initialize the object and set object parameters
+	 *
+	 * Accepts an associative array as input, containing object preferences.
 	 *
 	 * @access	public
-	 * @param	string	The URI location of the page to remove
-	 * @param	string	The page to redirect to (optional)
-	 * @return	array	
+	 * @param	array	Array of initalization parameters  (optional)
+	 * @return	void
 	 */	
-	function initialize($params)
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 	}
@@ -74,7 +75,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	boolean	Determines whether it is a passive redirect or not. Default is TRUE(optional)
 	 * @return	array	
 	 */	
-	function add($uri, $redirect = '', $passive = TRUE)
+	public function add($uri, $redirect = '', $passive = TRUE)
 	{
 		if (is_array($uri))
 		{
@@ -111,7 +112,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	boolean	Determines whether it is a passive redirect or not. Default is TRUE(optional)
 	 * @return	array	
 	 */	
-	function remove($uri, $passive = TRUE)
+	public function remove($uri, $passive = TRUE)
 	{
 		if (!$passive AND isset($this->aggressive_redirects[$uri]))
 		{
@@ -134,7 +135,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	array	
 	 */	
-	function add_ssl($uri, $redirect = '')
+	public function add_ssl($uri, $redirect = '')
 	{
 		if (is_array($uri))
 		{
@@ -160,7 +161,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	array	
 	 */	
-	function remove_ssl($uri, $environment = 'production')
+	public function remove_ssl($uri, $environment = 'production')
 	{
 		if (isset($this->ssl[$environment][$uri]))
 		{
@@ -174,7 +175,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */
-	function config()
+	public function config()
 	{
 		static $config;
 		if (!isset($config))
@@ -216,7 +217,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	boolean	Determines whether only redirect those pages that are deemed "passive"
 	 * @return	array	
 	 */	
-	function redirects($only_passive = TRUE)
+	public function redirects($only_passive = TRUE)
 	{
 		$config = $this->config();
 
@@ -244,7 +245,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	boolean	Determines whether only redirect those pages that are deemed "passive"
 	 * @return	void	
 	 */	
-	function execute($show_404 = TRUE, $only_passive = TRUE)
+	public function execute($show_404 = TRUE, $only_passive = TRUE)
 	{
 		$redirects = $this->redirects($only_passive);
 		$uri = $this->_get_uri();
@@ -345,7 +346,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function ssl()
+	public function ssl()
 	{
 		$config = $this->config();
 		$is_https = (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] == 'on');

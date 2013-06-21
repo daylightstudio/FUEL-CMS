@@ -642,7 +642,7 @@ class Asset {
 	 * @param	string	local asset path to default version
 	 * @return	string
 	 */	
-	function jquery($version = '1.7.1', $default = 'jquery')
+	public function jquery($version = '1.7.1', $default = 'jquery')
 	{
 		$js = '<script src="//ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery.min.js"></script>';
 		$js .= '<script>window.jQuery || document.write(\'<script src="'.js_path($default).'"><\/script>\');</script>';
@@ -1099,7 +1099,7 @@ class Asset {
 	 * @param	string	file name
 	 * @return	boolean
 	 */	
-	function is_used($type, $file)
+	public function is_used($type, $file)
 	{
 		return (isset($this->_used[$type]) AND in_array($file, $this->_used[$type]));
 	}

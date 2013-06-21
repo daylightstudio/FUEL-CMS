@@ -1,7 +1,7 @@
 <?php
 class Login extends CI_Controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -35,7 +35,7 @@ class Login extends CI_Controller {
 
 	}
 	
-	function index()
+	public function index()
 	{
 		// check if it's a password request and redirect'
 		if ($this->uri->segment(3) == 'pwd_reset')
@@ -166,7 +166,7 @@ class Login extends CI_Controller {
 		$this->load->view('login', $vars);
 	}
 	
-	function pwd_reset()
+	public function pwd_reset()
 	{
 		if (!$this->fuel->config('allow_forgotten_password')) show_404();
 		$this->js_controller_params['method'] = 'add_edit';
@@ -234,7 +234,7 @@ class Login extends CI_Controller {
 	}
 	
 	
-	function dev()
+	public function dev()
 	{
 		$this->config->set_item('allow_forgotten_password', FALSE);
 		if (!empty($_POST))

@@ -4,7 +4,7 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Settings extends Fuel_base_controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		
@@ -14,7 +14,7 @@ class Settings extends Fuel_base_controller {
 		$this->fuel->admin->set_titlebar($crumbs);
 	}
 
-	function index()
+	public function index()
 	{
 		$this->_validate_user('settings');
 		
@@ -36,7 +36,7 @@ class Settings extends Fuel_base_controller {
 		$this->fuel->admin->render('settings', $vars);
 	}
 
-	function manage($module = '')
+	public function manage($module = '')
 	{
 		if (empty($module))
 		{

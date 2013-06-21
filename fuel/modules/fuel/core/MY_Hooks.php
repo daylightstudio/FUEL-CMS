@@ -38,7 +38,7 @@ class MY_Hooks extends CI_Hooks {
 	 * @param	array	params
 	 * @return	mixed
 	 */
-	function _call_hook($which = '', $params = array())
+	public function _call_hook($which = '', $params = array())
 	{
 		if ( ! $this->enabled OR ! isset($this->hooks[$which]))
 		{
@@ -102,7 +102,7 @@ class MY_Hooks extends CI_Hooks {
 	 * @param	array	the hook details
 	 * @return	bool
 	 */
-	function _run_hook($data)
+	public function _run_hook($data)
 	{
 		if ( ! is_array($data))
 		{

@@ -82,7 +82,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function render($params = array())
+	public function render($params = array())
 	{
 		$this->CI->load->library('menu');
 		$valid = array( 'items' => array(),
@@ -302,7 +302,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function basic($params)
+	public function basic($params)
 	{
 		$params['render_type'] = 'basic';
 		return $this->render($params);
@@ -317,7 +317,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function breadcrumb($params)
+	public function breadcrumb($params)
 	{
 		$params['render_type'] = 'breadcrumb';
 		return $this->render($params);
@@ -332,7 +332,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function collapsible($params)
+	public function collapsible($params)
 	{
 		$params['render_type'] = 'collapsible';
 		return $this->render($params);
@@ -347,7 +347,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function page_title($params)
+	public function page_title($params)
 	{
 		$params['render_type'] = 'page_title';
 		return $this->render($params);
@@ -362,7 +362,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function delimited($params)
+	public function delimited($params)
 	{
 		$params['render_type'] = 'delimited';
 		return $this->render($params);
@@ -377,7 +377,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function data($params)
+	public function data($params)
 	{
 		$params['render_type'] = 'array';
 		return $this->render($params);
@@ -392,7 +392,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences (optional)
 	 * @return	boolean
 	 */	
-	function upload($params = array())
+	public function upload($params = array())
 	{
 		$this->CI->load->library('menu');
 		$this->CI->load->helper('file');
@@ -537,7 +537,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @access	public
 	 * @return	array
 	 */	
-	function groups()
+	public function groups()
 	{
 		$this->_load_nav_group_model();
 		return $this->CI->fuel_navigation_groups_model->find_all();
@@ -552,7 +552,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	mixed	Can be a groups name or ID value
 	 * @return	object
 	 */	
-	function group($group)
+	public function group($group)
 	{
 		$this->_load_nav_group_model();
 		if (is_numeric($group))
@@ -574,7 +574,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function mode()
+	public function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
 		if (is_array($fuel_mode))

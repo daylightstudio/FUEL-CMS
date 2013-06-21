@@ -3,12 +3,12 @@ require_once('module.php');
 
 class Blocks extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	function _form_vars($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
+	public function _form_vars($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
 	{
 		$vars = parent::_form_vars($id, $fields, $log_to_recent, $display_normal_submit_cancel);
 		$saved = $vars['data'];
@@ -35,7 +35,7 @@ class Blocks extends Module {
 		return $vars;
 	}
 	
-	function import_view_cancel()
+	public function import_view_cancel()
 	{
 		if ($this->input->post('id')){
 
@@ -53,7 +53,7 @@ class Blocks extends Module {
 		$this->output->set_output('error');
 	}
 	
-	function import_view()
+	public function import_view()
 	{
 		$out = 'error';
 		if (!empty($_POST['id']))
@@ -63,7 +63,7 @@ class Blocks extends Module {
 		$this->output->set_output($out);
 	}
 	
-	function upload($inline = FALSE)
+	public function upload($inline = FALSE)
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
@@ -172,7 +172,7 @@ class Blocks extends Module {
 	}
 
 
-	function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
+	public function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
 	{
 
 		// check to make sure there is no conflict between page columns and layout vars

@@ -41,7 +41,7 @@ class Fuel_sitevars extends Fuel_module {
 	 * @param	string	A URI path. If left blank, the current URI path will be used (optional)
 	 * @return	array
 	 */	
-	function get($location = NULL)
+	public function get($location = NULL)
 	{
 		if (is_null($location))
 		{

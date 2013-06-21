@@ -34,7 +34,7 @@ class Fuel_archives_model extends MY_Model {
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
+	public function __construct()
 	{
 		$CI =& get_instance();
 		$CI->config->module_load(FUEL_FOLDER, 'fuel', TRUE);
@@ -52,7 +52,7 @@ class Fuel_archives_model extends MY_Model {
 	 * @param	boolean	Order by for options list (optional)
 	 * @return	array Key/value array with the key being the archive ID value
 	 */
-	function options_list($ref_id = NULL, $table_name = NULL, $include_current = array(), $order_by = TRUE)
+	public function options_list($ref_id = NULL, $table_name = NULL, $include_current = array(), $order_by = TRUE)
 	{
 		if ($order_by === TRUE)
 		{

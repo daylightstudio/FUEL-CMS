@@ -43,7 +43,7 @@ class Fuel_logs extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		$this->initialize($params);
@@ -60,7 +60,7 @@ class Fuel_logs extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->fuel->load_model('fuel_logs');
@@ -77,7 +77,7 @@ class Fuel_logs extends Fuel_base_library {
 	 * @param	string	Where to store the log message. Options are 'db' or 'file'. Default is 'db.'  (optional)
 	 * @return	void
 	 */	
-	function write($msg, $level = 'info', $location = 'db')
+	public function write($msg, $level = 'info', $location = 'db')
 	{
 		if ($location == 'db')
 		{
@@ -97,7 +97,7 @@ class Fuel_logs extends Fuel_base_library {
 	 * @access	public
 	 * @return	object
 	 */
-	function &model()
+	public function &model()
 	{
 		return $this->CI->fuel_logs_model;
 	}

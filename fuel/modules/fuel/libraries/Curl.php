@@ -55,7 +55,7 @@ class Curl {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		if (!$this->is_enabled())
 		{
@@ -80,7 +80,7 @@ class Curl {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		$this->set_params($params);
 	}
@@ -94,7 +94,7 @@ class Curl {
 	 * @param	array	config preferences
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (!is_array($params)) return;
 
@@ -119,7 +119,7 @@ class Curl {
 	 * @param	array	An array of additional options you can pass to your request. In particular $_POST or $_COOKIE parameters (optional)
 	 * @return	void
 	 */	
-	function add_session($url, $opts = array(), $opt_params = array())
+	public function add_session($url, $opts = array(), $opt_params = array())
 	{
 		// normalize the URL
 		$url = $this->_normalize_url($url);
@@ -195,7 +195,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	void
 	 */	
-	function set_option($opt, $val, $key = 0)
+	public function set_option($opt, $val, $key = 0)
 	{
 		curl_setopt($this->_sessions[$key], $opt, $val);
 	}
@@ -210,7 +210,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	void
 	 */	
-	function set_options($opts, $key = 0)
+	public function set_options($opts, $key = 0)
 	{
 		curl_setopt_array($this->_sessions[$key], $opts);
 	}
@@ -225,7 +225,7 @@ class Curl {
 	 * @param	boolean	Wether to clear out the sessions after execution. Default is TRUE (optional)
 	 * @return	string
 	 */	
-	function exec($key = FALSE, $clear = TRUE)
+	public function exec($key = FALSE, $clear = TRUE)
 	{
 		if (empty($this->_sessions))
 		{
@@ -262,7 +262,7 @@ class Curl {
 	 * @param	boolean	Wether to clear out the sessions after execution. Default is TRUE (optional)
 	 * @return	string
 	 */	
-	function exec_single($key = 0, $clear = TRUE)
+	public function exec_single($key = 0, $clear = TRUE)
 	{
 		// in case it' set to FALSE
 		if (empty($key))
@@ -304,7 +304,7 @@ class Curl {
 	 * @param	int	The number to execute simultaneously. Default is 5 (optional)
 	 * @return	string
 	 */	
-	function exec_multi($clear = TRUE, $block_size = NULL)
+	public function exec_multi($clear = TRUE, $block_size = NULL)
 	{
 		$mh = curl_multi_init();
 		
@@ -394,7 +394,7 @@ class Curl {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_multi()
+	public function is_multi()
 	{
 		$cnt = count($this->_sessions);
 		return $cnt > 1;
@@ -410,7 +410,7 @@ class Curl {
 	 * @param	mixed	The key value of a CURL session. If set to TRUE, then it will return all the infos from a mult-session (optional)
 	 * @return	mixed
 	 */	
-	function info($opt = NULL, $key = 0)
+	public function info($opt = NULL, $key = 0)
 	{
 		$info = array();
 		if ($key === TRUE)
@@ -451,7 +451,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	array
 	 */	
-	function sessions($key = FALSE)
+	public function sessions($key = FALSE)
 	{
 		if ($key === TRUE)
 		{
@@ -471,7 +471,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	mixed
 	 */	
-	function output($key = FALSE)
+	public function output($key = FALSE)
 	{
 		if ($key === TRUE AND is_array($this->_output))
 		{
@@ -491,7 +491,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	void
 	 */	
-	function close($key = FALSE)
+	public function close($key = FALSE)
 	{
 		if($key === FALSE)
 		{
@@ -517,7 +517,7 @@ class Curl {
 	 * @param	int	The key value of a CURL session (optional)
 	 * @return	void
 	 */	
-	function clear($key = FALSE)
+	public function clear($key = FALSE)
 	{
 		if($key === FALSE)
 		{
@@ -543,7 +543,7 @@ class Curl {
 	 * @param	string	The URL to use for the CURL session
 	 * @return	string
 	 */	
-	function get($url)
+	public function get($url)
 	{
 		$opts = $this->_opts('get');
 		$this->add_session($url, $opts);
@@ -560,7 +560,7 @@ class Curl {
 	 * @param	array	An array of $_POST parameter to pass to the URL (optional)
 	 * @return	string
 	 */	
-	function post($url, $post = array())
+	public function post($url, $post = array())
 	{
 		// NOTE TO SELF: to add a file to upload, you can do the following as a value:
 		//'@path/to/file.txt;type=text/html';
@@ -578,7 +578,7 @@ class Curl {
 	 * @param	string	The URL to use for the CURL session
 	 * @return	string
 	 */	
-	function head($url)
+	public function head($url)
 	{
 		$opts = $this->_opts('head');
 		$this->add_session($url, $opts);
@@ -596,7 +596,7 @@ class Curl {
 	 * @param	boolean	Whether to cleanup the cookie crumbs left behind (optional)
 	 * @return	string
 	 */	
-	function cookie($url, $cookie, $cleanup = TRUE)
+	public function cookie($url, $cookie, $cleanup = TRUE)
 	{
 		if (is_array($cookie))
 		{
@@ -623,7 +623,7 @@ class Curl {
 	 * @param	string	An index value of an error message (optional)
 	 * @return	mixed
 	 */	
-	function error($key = FALSE)
+	public function error($key = FALSE)
 	{
 		if ($key === FALSE)
 		{
@@ -641,7 +641,7 @@ class Curl {
 	 * @param	string	An index value of an error message (optional)
 	 * @return	boolean
 	 */	
-	function has_error($key = FALSE)
+	public function has_error($key = FALSE)
 	{
 		if ($key === FALSE)
 		{
@@ -659,7 +659,7 @@ class Curl {
 	 * @param	string	The URL to use for the CURL session
 	 * @return	void
 	 */	
-	function is_valid($url)
+	public function is_valid($url)
 	{
 		$opts = $this->_opts('head');
 		

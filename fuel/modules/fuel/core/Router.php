@@ -82,7 +82,7 @@ class Fuel_Router extends MX_Router
 	 * @param	bool
 	 * @return	void
 	 */
-	function _set_request($segments = array())
+	public function _set_request($segments = array())
 	{
 		$segments = $this->_validate_request($segments);
 

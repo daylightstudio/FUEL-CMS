@@ -7,7 +7,7 @@ class Generate extends Fuel_base_controller {
 	public $errors = array();
 	public $modified = array();
 	
-	function __construct()
+	public function __construct()
 	{
 		$validate = (php_sapi_name() == 'cli' OR defined('STDIN')) ? FALSE : TRUE;
 		parent::__construct($validate);
@@ -38,7 +38,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name
 	 * @return	void
 	 */	
-	function advanced($name = NULL)
+	public function advanced($name = NULL)
 	{
 		if (empty($name))
 		{
@@ -220,7 +220,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function simple($name = NULL, $module = '')
+	public function simple($name = NULL, $module = '')
 	{
 		if (empty($name))
 		{
@@ -320,7 +320,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function model($model, $module = '', $display_results = TRUE)
+	public function model($model, $module = '', $display_results = TRUE)
 	{
 		if (empty($model))
 		{
@@ -360,7 +360,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function _model($model, $module = '')
+	public function _model($model, $module = '')
 	{
 		$fuel_config = $this->fuel->config('generate');
 		

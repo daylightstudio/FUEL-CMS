@@ -39,7 +39,7 @@ class Fuel_logs_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_logs');
 		$this->filters = array('entry_date', $this->_tables['fuel_users'].'.first_name', $this->_tables['fuel_users'].'.last_name', 'message');
@@ -58,7 +58,7 @@ class Fuel_logs_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_logs'].'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_logs'].'.user_id = '.$this->_tables['fuel_users'].'.id', 'left');
@@ -75,7 +75,7 @@ class Fuel_logs_model extends Base_module_model {
 	 * @param	int The limit value for the list data (optional)
 	 * @return	array of data
 	 */	
-	function latest_activity($limit = NULL)
+	public function latest_activity($limit = NULL)
 	{
 		$this->db->where('type', 'info');
 		return $this->list_items($limit);
@@ -92,7 +92,7 @@ class Fuel_logs_model extends Base_module_model {
 	 * @param	int The user ID associated with the log (optional)
 	 * @return	boolean TRUE if saved correctly. FALSE otherwise
 	 */	
-	function logit($msg, $type = NULL, $user_id = NULL)
+	public function logit($msg, $type = NULL, $user_id = NULL)
 	{
 		$CI =& get_instance();
 		if (!isset($user_id))

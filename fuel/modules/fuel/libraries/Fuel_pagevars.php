@@ -39,13 +39,13 @@ class Fuel_pagevars extends Fuel_base_library {
 	const VARIABLE_TYPE_DB = 'db';
 	const VARIABLE_TYPE_VIEW = 'views';
 	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->initialize($params);
 	}
 	
-	function initialize($params)
+	public function initialize($params)
 	{
 		parent::initialize($params);
 
@@ -70,7 +70,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function retrieve($location = NULL, $what = '')
+	public function retrieve($location = NULL, $what = '')
 	{
 		if (isset($location))
 		{
@@ -107,7 +107,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	boolean
 	 * @return	array
 	 */
-	function db($parse = FALSE)
+	public function db($parse = FALSE)
 	{
 		$location = $this->location;
 
@@ -145,7 +145,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function view($controller = NULL){
+	public function view($controller = NULL){
 
 		$location = $this->location;
 		

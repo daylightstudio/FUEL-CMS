@@ -5,13 +5,13 @@ class Pages extends Module {
 	
 	private $_importing = FALSE;
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
-	function create($field = NULL, $redirect = TRUE)
+	public function create($field = NULL, $redirect = TRUE)
 	{
 
 		// check that the action even exists and if not, show a 404
@@ -101,7 +101,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 
-	function edit($id = NULL, $field = NULL, $redirect = TRUE)
+	public function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		if (!$this->fuel->auth->module_has_action('save'))
 		{
@@ -160,7 +160,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('pages/page_create_edit', $vars);
 	}
 	
-	function _form($id = NULL)
+	public function _form($id = NULL)
 	{
 		$this->load->library('form_builder');
 
@@ -418,7 +418,7 @@ class Pages extends Module {
 		return $vars;
 	}
 	
-	function _save_page_vars($id, $posted)
+	public function _save_page_vars($id, $posted)
 	{
 		//$vars = $this->input->post('vars');
 		$vars = array();
@@ -581,7 +581,7 @@ class Pages extends Module {
 		return TRUE;
 	}
 
-	function layout_fields($layout_name, $id = NULL, $lang = NULL, $vars = array())
+	public function layout_fields($layout_name, $id = NULL, $lang = NULL, $vars = array())
 	{
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout_name);
@@ -629,13 +629,13 @@ class Pages extends Module {
 		$this->output->set_output($form);
 	}
 	
-	function _has_conflict($fields)
+	public function _has_conflict($fields)
 	{
 		$page_columns = $this->model->form_fields();
 		unset($page_columns['id']);
 		$reserved_cols = array_keys($page_columns);
 		$page_variable_cols = array_keys($fields);
-		
+
 		foreach($page_variable_cols as $val)
 		{
 			if (in_array($val, $reserved_cols))
@@ -646,7 +646,7 @@ class Pages extends Module {
 		return FALSE;
 	}
 
-	function import_view()
+	public function import_view()
 	{
 		if (!empty($_POST['id']))
 		{
@@ -661,7 +661,7 @@ class Pages extends Module {
 		$this->output->set_output($out);
 	}
 	
-	function import_view_cancel()
+	public function import_view_cancel()
 	{
 		if ($this->input->post('id')){
 
@@ -680,7 +680,7 @@ class Pages extends Module {
 		$this->output->set_output('error');
 	}
 	
-	function ajax_page_edit()
+	public function ajax_page_edit()
 	{
 		if (is_ajax())
 		{
@@ -698,7 +698,7 @@ class Pages extends Module {
 		$this->output->set_output('error');
 	}
 
-	function select()
+	public function select()
 	{
 
 		$value = $this->input->get_post('selected', TRUE);
@@ -799,7 +799,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('modal_select', $vars);
 	}
 
-	function upload()
+	public function upload()
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
@@ -905,7 +905,7 @@ class Pages extends Module {
 		$this->fuel->admin->render('upload', $vars);
 	}
 	
-	function refresh_field()
+	public function refresh_field()
 	{
 
 		if (is_ajax() AND (!empty($_POST) OR !empty($_GET)))

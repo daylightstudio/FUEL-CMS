@@ -5,19 +5,19 @@ class Assets extends Module {
 	
 	public $module = '';
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function items($inline = FALSE)
+	public function items($inline = FALSE)
 	{
 		$dirs = $this->fuel->assets->dirs();
 		$this->filters['group_id']['options'] = $dirs;
 		parent::items($inline);
 	}
 
-	function create($dir = NULL, $not_inline = TRUE)
+	public function create($dir = NULL, $not_inline = TRUE)
 	{
 		$id = NULL;
 
@@ -147,12 +147,12 @@ class Assets extends Module {
 		
 	}
 	
-	function inline_create($field = NULL)
+	public function inline_create($field = NULL)
 	{
 		$this->create($field, TRUE);
 	}
 	
-	function select($dir = NULL)
+	public function select($dir = NULL)
 	{
 		if (!is_numeric($dir))
 		{
@@ -262,13 +262,13 @@ class Assets extends Module {
 	}
 	
 	// no editing of images... just creating/overwriting existing
-	function edit($dir = NULL, $field = NULL, $redirect = TRUE)
+	public function edit($dir = NULL, $field = NULL, $redirect = TRUE)
 	{
 		redirect(fuel_uri('assets/create/'.$dir));
 	}
 	
 	// seperated to make it easier in subclasses to use the form without rendering the page
-	function _form($field_values = NULL, $inline = FALSE)
+	public function _form($field_values = NULL, $inline = FALSE)
 	{
 		$this->load->library('form_builder');
 		$this->load->helper('convert');
@@ -358,7 +358,7 @@ class Assets extends Module {
 		return $vars;
 	}
 
-	function view($id = null)
+	public function view($id = null)
 	{
 		$url = $this->preview_path.'/'.$id;
 		redirect($url);

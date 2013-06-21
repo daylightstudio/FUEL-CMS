@@ -5,7 +5,7 @@ class Installer extends Fuel_base_controller {
 	
 	protected $module = '';
 
-	function __construct()
+	public function __construct()
 	{
 		$validate = (php_sapi_name() == 'cli' OR defined('STDIN')) ? FALSE : TRUE;
 		parent::__construct($validate);
@@ -24,7 +24,7 @@ class Installer extends Fuel_base_controller {
 		
 	}
 	
-	function install($module = NULL)
+	public function install($module = NULL)
 	{
 		if (empty($module))
 		{
@@ -64,7 +64,7 @@ class Installer extends Fuel_base_controller {
 		}
 	}
 
-	function add_git_submodule($params = NULL)
+	public function add_git_submodule($params = NULL)
 	{
 
 		if (empty($params))
@@ -97,7 +97,7 @@ class Installer extends Fuel_base_controller {
 		return $output;
 	}
 	
-	function uninstall($module = NULL)
+	public function uninstall($module = NULL)
 	{
 		if (!$this->fuel->modules->exists($module))
 		{

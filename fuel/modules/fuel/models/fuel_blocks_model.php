@@ -41,7 +41,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_blocks');
 	}
@@ -59,7 +59,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		if ($CI->fuel->language->has_multiple())
@@ -82,7 +82,7 @@ class Fuel_blocks_model extends Base_module_model {
 		return $data;
 	}
 	
-	function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
+	public function options_list_with_views($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
@@ -139,7 +139,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
@@ -168,7 +168,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @param	array An array of values to be saved
 	 * @return	array An array of values that will be sent to the validate method before saving
 	 */	
-	function on_before_validate($values)
+	public function on_before_validate($values)
 	{
 		$this->add_validation('parent_id', array(&$this, 'no_location_and_parent_match'), lang('error_location_parents_match'));
 	//	$this->add_validation('id', array(&$this, 'no_id_and_parent_match'), lang('error_location_parents_match'), $values['parent_id']);
@@ -194,7 +194,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @param	string The language associated with the block
 	 * @return	boolean
 	 */	
-	function is_new_block($name, $lang)
+	public function is_new_block($name, $lang)
 	{
 		if (empty($name)) return FALSE;
 		$data = $this->find_one_array(array('name' => $name, 'language' => $lang));
@@ -213,7 +213,7 @@ class Fuel_blocks_model extends Base_module_model {
 	 * @param	string The language associated with the block
 	 * @return	boolean
 	 */	
-	function is_editable_block($name, $id, $lang)
+	public function is_editable_block($name, $id, $lang)
 	{
 		$data = $this->find_one_array(array('name' => $name, 'language' => $lang));
 		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;

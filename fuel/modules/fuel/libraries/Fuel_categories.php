@@ -40,7 +40,7 @@ class Fuel_categories extends Fuel_module {
 	 * @param	string	the slug value to query on
 	 * @return	array
 	 */	
-	function find_by_slug($slug)
+	public function find_by_slug($slug)
 	{
 		$model = $this->model();
 		$where['slug'] = $slug;
@@ -57,7 +57,7 @@ class Fuel_categories extends Fuel_module {
 	 * @param	string	the context to query on
 	 * @return	array
 	 */	
-	function find_by_context($context)
+	public function find_by_context($context)
 	{
 		$model = $this->model();
 		$where['context'] = $context;

@@ -61,7 +61,7 @@ class Inspection {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($file = NULL)
+	public function __construct($file = NULL)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
@@ -85,7 +85,7 @@ class Inspection {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($params = NULL)
+	public function initialize($params = NULL)
 	{
 		if (!empty($params))
 		{
@@ -171,7 +171,7 @@ class Inspection {
 	 * @param	string	The name of a class. If not provided, then an array of all the classes will be returned (optional)
 	 * @return	void
 	 */	
-	function classes($class = NULL)
+	public function classes($class = NULL)
 	{
 		if (!empty($class))
 		{
@@ -193,7 +193,7 @@ class Inspection {
 	 * @param	array	The name of a function. If not provided, then an array of all the functions will be returned (optional)
 	 * @return	void
 	 */	
-	function functions($function = NULL)
+	public function functions($function = NULL)
 	{
 		if (!empty($function))
 		{
@@ -215,7 +215,7 @@ class Inspection {
 	 * @param	array	The name of a function. If not provided, then an array of all the functions will be returned (optional)
 	 * @return	void
 	 */	
-	function comments($comment = NULL)
+	public function comments($comment = NULL)
 	{
 		if (isset($comment))
 		{
@@ -237,7 +237,7 @@ class Inspection {
 	 * @param	string	The code to parse
 	 * @return	void
 	 */	
-	function parse_classes($code)
+	public function parse_classes($code)
 	{
 		$classes = array();
 		$tokens = token_get_all($code);
@@ -267,7 +267,7 @@ class Inspection {
 	 * @param	boolean	Determines whether to include functions that begin with an underscore
 	 * @return	void
 	 */	
-	function parse_functions($code, $include_underscore_funcs = FALSE)
+	public function parse_functions($code, $include_underscore_funcs = FALSE)
 	{
 		$functions = array();
 		$tokens = token_get_all($code);
@@ -339,7 +339,7 @@ class Inspection {
 	 * @param	string	The code to parse
 	 * @return	array
 	 */	
-	function parse_comments($code)
+	public function parse_comments($code)
 	{
 		$comments = array();
 		$tokens = token_get_all($code);
@@ -382,7 +382,7 @@ class Inspection_class extends Inspection_base {
 	 * @param	string	the name of the file the class belongs to (optional)
 	 * @return	void
 	 */	
-	function __construct($class = NULL, $file = '')
+	public function __construct($class = NULL, $file = '')
 	{
 		parent::__construct('ReflectionClass', $class);
 		$this->_file = $file;
@@ -398,7 +398,7 @@ class Inspection_class extends Inspection_base {
 	 * @param	boolean	Determines whether to include any parent properties. Default is FALSE (optional)
 	 * @return	array 	An array of Inspection_property objects
 	 */	
-	function properties($types = array(), $include_parent = FALSE)
+	public function properties($types = array(), $include_parent = FALSE)
 	{
 		$ref_props = $this->reflection->getProperties();
 		
@@ -491,7 +491,7 @@ class Inspection_class extends Inspection_base {
 	 * @access	public
 	 * @return	string
 	 */	
-	function parent()
+	public function parent()
 	{
 		$parent = $this->reflection->getParentClass();
 		if ($parent)
@@ -509,7 +509,7 @@ class Inspection_class extends Inspection_base {
 	 * @param	string	The name of the method to return
 	 * @return	object
 	 */	
-	function method($method)
+	public function method($method)
 	{
 		$methods = $this->methods();
 		if (isset($methods[$method]))
@@ -530,7 +530,7 @@ class Inspection_class extends Inspection_base {
 	 * @param	boolean	Determines whether to include the contstructor method. Default is FALSE (optional)
 	 * @return	array
 	 */	
-	function methods($types = array(), $include_parent = FALSE, $include_constructor = FALSE)
+	public function methods($types = array(), $include_parent = FALSE, $include_constructor = FALSE)
 	{
 		if (!isset($this->_methods))
 		{
@@ -616,7 +616,7 @@ class Inspection_function extends Inspection_base {
 	 * @param	string	the name of the function
 	 * @return	void
 	 */	
-	function __construct($function = NULL)
+	public function __construct($function = NULL)
 	{
 		parent::__construct('ReflectionFunction', $function);
 	}
@@ -646,7 +646,7 @@ class Inspection_method extends Inspection_base {
 	 * @param	string	the corresponding object of the method
 	 * @return	void
 	 */	
-	function __construct($method = NULL, $obj = NULL)
+	public function __construct($method = NULL, $obj = NULL)
 	{
 		parent::__construct('ReflectionMethod', $method, $obj);
 	}
@@ -678,7 +678,7 @@ class Inspection_property extends Inspection_base {
 	 * @param	string	the class name the property belongs to (optional)
 	 * @return	void
 	 */	
-	function __construct($property = NULL, $class = NULL)
+	public function __construct($property = NULL, $class = NULL)
 	{
 		parent::__construct('ReflectionProperty', $class, $property);
 		if ($this->is_public())
@@ -711,7 +711,7 @@ class Inspection_param extends Inspection_base {
 	 * @param	string	the class name the property belongs to (optional)
 	 * @return	void
 	 */	
-	function __construct($method = NULL, $obj = NULL)
+	public function __construct($method = NULL, $obj = NULL)
 	{
 		if (isset($obj))
 		{
@@ -732,7 +732,7 @@ class Inspection_param extends Inspection_base {
 	 * @param	boolean	Determines whether you want the default value as a string or as an object
 	 * @return	array
 	 */	
-	function default_value($to_string = FALSE)
+	public function default_value($to_string = FALSE)
 	{
 		if ($this->is_default_value_available())
 		{
@@ -773,7 +773,7 @@ class Inspection_param extends Inspection_base {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_default_array()
+	public function is_default_array()
 	{
 		if ($this->is_array())
 		{
@@ -818,7 +818,7 @@ class Inspection_comment {
 	 * @param	string	the comment raw text
 	 * @return	void
 	 */	
-	function __construct($comment)
+	public function __construct($comment)
 	{
 		$this->initialize($comment);
 	}
@@ -832,7 +832,7 @@ class Inspection_comment {
 	 * @param	string
 	 * @return	void
 	 */	
-	function initialize($comment)
+	public function initialize($comment)
 	{
 		$this->_text = (string)$comment;
 
@@ -887,7 +887,7 @@ class Inspection_comment {
 	 * @param	string The name of the tag (optional)
 	 * @return	mixed
 	 */	
-	function tags($type = 'param')
+	public function tags($type = 'param')
 	{
 		if (!empty($type))
 		{
@@ -910,7 +910,7 @@ class Inspection_comment {
 	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
 	 * @return	boolean
 	 */	
-	function param($index, $type = NULL)
+	public function param($index, $type = NULL)
 	{
 		if (!isset($this->_tags['param']))
 		{
@@ -953,7 +953,7 @@ class Inspection_comment {
 	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
 	 * @return	boolean
 	 */	
-	function return_value($type = NULL)
+	public function return_value($type = NULL)
 	{
 		if (!isset($this->_tags['return']))
 		{
@@ -1003,7 +1003,7 @@ class Inspection_comment {
 	 * @param	string	The part of the parameter to retrieve. Options are 'type' and 'comment'
 	 * @return	boolean
 	 */	
-	function description($format = FALSE)
+	public function description($format = FALSE)
 	{
 
 		if (!isset($this->_description))
@@ -1159,7 +1159,7 @@ class Inspection_comment {
 	 * @param	string	The closing tag to wrap the example in
 	 * @return	string
 	 */	
-	function example($opening = '', $closing = '')
+	public function example($opening = '', $closing = '')
 	{
 		if (!isset($this->_example))
 		{
@@ -1182,7 +1182,7 @@ class Inspection_comment {
 	 * @access	public
 	 * @return	string
 	 */
-	function text()
+	public function text()
 	{
 		return $this->_text;
 	}
@@ -1196,7 +1196,7 @@ class Inspection_comment {
 	 * @param	string	The comment text
 	 * @return	boolean
 	 */	
-	function set_text($text)
+	public function set_text($text)
 	{
 		$this->_text = $text;
 	}
@@ -1211,7 +1211,7 @@ class Inspection_comment {
 	 * @param	string	A key value to assign to the filter which can be used in removing filters later
 	 * @return	boolean
 	 */	
-	function add_filter($func, $key = NULL)
+	public function add_filter($func, $key = NULL)
 	{
 		if (empty($key))
 		{
@@ -1232,7 +1232,7 @@ class Inspection_comment {
 	 * @param	string	The key value of the filter you want to remove
 	 * @return	boolean
 	 */	
-	function remove_filter($key)
+	public function remove_filter($key)
 	{
 		unset($this->_filters[$key]);
 	}
@@ -1285,7 +1285,7 @@ class Inspection_base {
 	 * @param	string	the class name of the object
 	 * @return	void
 	 */	
-	function __construct($ref_class = NULL, $method = NULL, $obj = NULL)
+	public function __construct($ref_class = NULL, $method = NULL, $obj = NULL)
 	{
 		if (!empty($ref_class) AND !empty($method))
 		{
@@ -1302,7 +1302,7 @@ class Inspection_base {
 	 * @param	string	The comment text
 	 * @return	void
 	 */	
-	function initialize($ref_class, $method, $obj = NULL)
+	public function initialize($ref_class, $method, $obj = NULL)
 	{
 		if (is_object($method) AND strncasecmp(get_class($method), 'Reflection', 10) === 0)
 		{
@@ -1347,7 +1347,7 @@ class Inspection_base {
 	 * @access	public
 	 * @return	string
 	 */	
-	function friendly_name()
+	public function friendly_name()
 	{
 		return humanize($this->name);
 	}
@@ -1360,7 +1360,7 @@ class Inspection_base {
 	 * @access	public
 	 * @return	void
 	 */	
-	function comment()
+	public function comment()
 	{
 		return $this->comment;
 	}
@@ -1374,7 +1374,7 @@ class Inspection_base {
 	 * @param	int	The index number of the parameter you want to retrieve
 	 * @return	object
 	 */	
-	function param($index)
+	public function param($index)
 	{
 		if (isset($this->params[$index]))
 		{
@@ -1395,7 +1395,7 @@ class Inspection_base {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function params()
+	public function params()
 	{
 		return $this->params;
 	}
@@ -1411,7 +1411,7 @@ class Inspection_base {
 	 * @param	array	An array of arguments to pass to the Reflection class method being called
 	 * @return	boolean
 	 */	
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		if (!preg_match('#^get|is|set#', $name))
 		{

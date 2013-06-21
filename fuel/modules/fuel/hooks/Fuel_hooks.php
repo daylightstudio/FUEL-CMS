@@ -30,13 +30,13 @@
 class Fuel_hooks
 {
 	
-	function __construct()
+	public function __construct()
 	{
 	}
 		
 	// this hook allows us to route the the fuel controller if the method 
 	// on a controller doesn't exist... not just the controller itself'
-	function pre_controller()
+	public function pre_controller()
 	{
 		// if called from same Wordpress, the the global scope will not work
 		global $method, $class, $RTR;
@@ -54,7 +54,7 @@ class Fuel_hooks
 	}
 
 	// this hook performs redirects before trying to find the page (vs. passive redirects which will only happen if no page is found by FUEL)
-	function redirects()
+	public function redirects()
 	{
 		$CI =& get_instance();
 		$CI->fuel->redirects->ssl();
@@ -65,7 +65,7 @@ class Fuel_hooks
 	}
 
 	// this hook allows us to setup a development password for the site
-	function dev_password()
+	public function dev_password()
 	{
 		if (!USE_FUEL_ROUTES)
 		{
@@ -87,7 +87,7 @@ class Fuel_hooks
 	}
 	
 	// this hook allows us to display an offline page
-	function offline()
+	public function offline()
 	{
 		if (!USE_FUEL_ROUTES)
 		{
@@ -101,7 +101,7 @@ class Fuel_hooks
 	}
 
 	// this hook allows us to enable profiler
-	function post_controller()
+	public function post_controller()
 	{
 		$CI =& get_instance();
 		$CI->output->enable_profiler($CI->config->item('enable_profiler'));

@@ -43,7 +43,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_pagevars');
 	}
@@ -61,7 +61,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'location', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select($this->_tables['fuel_pagevars'].'.*, '.$this->_tables['fuel_pages'].'.layout, '.$this->_tables['fuel_pages'].'.location, '.$this->_tables['fuel_pages'].'.published AS page_published');
 		$this->db->join($this->_tables['fuel_pages'], $this->_tables['fuel_pages'].'.id = '.$this->_tables['fuel_pagevars'].'.page_id', 'left');
@@ -79,7 +79,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	string The field name to order by (optional)
 	 * @return	array
 	 */	
-	function find_one_array($where, $order_by = NULL)
+	public function find_one_array($where, $order_by = NULL)
 	{
 		$data = parent::find_one_array($where, $order_by);
 		if (!empty($data))
@@ -100,7 +100,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	string The language associated with the variable (optional)
 	 * @return	array
 	 */	
-	function find_one_by_location($location, $name, $lang = NULL)
+	public function find_one_by_location($location, $name, $lang = NULL)
 	{
 		$where = array($this->_tables['fuel_pages'].'.location' => $location, 'name' => $name);
 		if (!empty($lang))
@@ -122,7 +122,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
 	 * @return	array
 	 */	
-	function find_all_by_location($location, $lang = NULL, $include_pagevars_object = FALSE)
+	public function find_all_by_location($location, $lang = NULL, $include_pagevars_object = FALSE)
 	{
 		$where = array($this->_tables['fuel_pages'].'.location' => $location);
 		if (!empty($lang))
@@ -163,7 +163,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
 	 * @return	array
 	 */	
-	function find_one_by_page_id($page_id, $name, $lang = NULL)
+	public function find_one_by_page_id($page_id, $name, $lang = NULL)
 	{
 		$this->page_id = $page_id;
 		$where = array('page_id' => $page_id, 'name' => $name);
@@ -187,7 +187,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	boolean Determines whether to include the $pagevar object which includes all the page variables
 	 * @return	array
 	 */	
-	function find_all_by_page_id($page_id, $lang = NULL)
+	public function find_all_by_page_id($page_id, $lang = NULL)
 	{
 		$this->page_id = $page_id;
 		$where = array('page_id' => $page_id);
@@ -259,7 +259,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	mixed The data to be cast
 	 * @return	mixed
 	 */	
-	function cast($val, $type)
+	public function cast($val, $type)
 	{
 		$return = '';
 		switch ($type){
@@ -307,7 +307,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
@@ -341,7 +341,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	array The values to be saved right the clean method is run
 	 * @return	array Returns the values to be cleaned
 	 */	
-	function on_before_clean($values)
+	public function on_before_clean($values)
 	{
 		if (isset($values['value']))
 		{
@@ -359,7 +359,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param	array The values to be determined
 	 * @return	string
 	 */	
-	function determine_type($value)
+	public function determine_type($value)
 	{
 		if (is_array($value) OR is_serialized_str($value))
 		{
@@ -377,7 +377,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		$CI =& get_instance();
 		$lang_options = $CI->fuel->config('languages');
@@ -415,7 +415,7 @@ class Fuel_pagevariable_model extends Data_record {
 	 * @param	array	arguments
 	 * @return	array
 	 */	
-	function __toString()
+	public function __toString()
 	{
 		return $this->value;
 	}
@@ -430,7 +430,7 @@ class Fuel_pagevariable_model extends Data_record {
 	 * @param	array	arguments
 	 * @return	array
 	 */	
-	function get_value()
+	public function get_value()
 	{
 		return $this->_parent_model->cast($this->_fields['value'], $this->type);
 	}	

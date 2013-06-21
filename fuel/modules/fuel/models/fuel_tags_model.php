@@ -47,7 +47,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_tags'); // table name
 
@@ -62,7 +62,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function init_relationships()
+	public function init_relationships()
 	{
 		$CI =& get_instance();
 
@@ -120,7 +120,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @param	array	related field information
 	 * @return	array
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
 		$CI =& get_instance();
@@ -140,7 +140,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @param	mixed	the order in which to return the results (optional)
 	 * @return	array 	
 	 */	
-	function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
+	public function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
 	{
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
@@ -172,7 +172,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void 	
 	 */		
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');

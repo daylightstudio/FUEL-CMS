@@ -46,7 +46,7 @@ class MY_Typography extends CI_Typography {
 	 * @param	bool	allows you to specify not to format special characters like quotes. Helps with templating syntax (CHANGED BY DAYLIGHT July 20, 2012)
 	 * @return	string
 	 */
-	function auto_typography($str, $reduce_linebreaks = FALSE)
+	public function auto_typography($str, $reduce_linebreaks = FALSE)
 	{
 		if ($str == '')
 		{
@@ -236,7 +236,7 @@ class MY_Typography extends CI_Typography {
 
 	}
 
-	function _escape_template_syntax($matches)
+	public function _escape_template_syntax($matches)
 	{
 		static $search;
 		static $replace;

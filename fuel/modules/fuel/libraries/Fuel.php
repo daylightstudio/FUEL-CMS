@@ -74,7 +74,7 @@ class Fuel extends Fuel_advanced_module {
 	 * Constructor
 	 *
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		self::$_instance =& $this;
@@ -108,7 +108,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	array	Config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array())
+	public function initialize($config = array())
 	{
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
@@ -135,7 +135,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	The module to set the configuration item. Default is fuel. (optional)
 	 * @return	void
 	 */	
-	function set_config($item, $value = NULL, $module = 'fuel')
+	public function set_config($item, $value = NULL, $module = 'fuel')
 	{
 		$fuel_config = $this->CI->config->item($module);
 		if (is_array($item))
@@ -161,7 +161,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	The object
 	 * @return	object
 	 */	
-	function &__get($var)
+	public function &__get($var)
 	{
 		if (!isset($this->_attached[$var]))
 		{
@@ -209,7 +209,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	An array of arguments
 	 * @return	object
 	 */	
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		$obj = $this->$name;
 		if (method_exists($obj, 'get'))

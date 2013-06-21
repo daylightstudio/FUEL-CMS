@@ -46,7 +46,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		$this->CI->load->helper('inflector');
@@ -65,7 +65,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 	}
@@ -78,7 +78,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function install_path()
+	public function install_path()
 	{
 		// module may not be installed yet so this doesn't exist
 		//return $this->module->path().'install/';
@@ -94,7 +94,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	string	The name of the module to install
 	 * @return	void
 	 */	
-	function set_module($module)
+	public function set_module($module)
 	{
 		$this->module = $module;
 	}
@@ -107,7 +107,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function module()
+	public function module()
 	{
 		return $this->module;
 	}
@@ -121,7 +121,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	string	The name of the module (optional)
 	 * @return	void
 	 */	
-	function install($module = NULL)
+	public function install($module = NULL)
 	{
 		$config = $this->config($module);
 
@@ -153,7 +153,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @param	string	The name of the module (optional)
 	 * @return	void
 	 */	
-	function uninstall($module = NULL)
+	public function uninstall($module = NULL)
 	{
 		$config = $this->config($module);
 
@@ -185,7 +185,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function migrate_up()
+	public function migrate_up()
 	{
 		if (!empty($this->config['migration_version']))
 		{
@@ -201,7 +201,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function migrate_down()
+	public function migrate_down()
 	{
 		if (!empty($this->config['migration_version']))
 		{
@@ -256,7 +256,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function install_sql()
+	public function install_sql()
 	{
 		$basepath = $this->install_path();
 		if (isset($this->config['install_sql']))
@@ -282,7 +282,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function uninstall_sql()
+	public function uninstall_sql()
 	{
 		$basepath = $this->install_path();
 		if (isset($this->config['uninstall_sql']))
@@ -308,7 +308,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function create_permissions()
+	public function create_permissions()
 	{
 		if (!empty($this->config['permissions']))
 		{
@@ -366,7 +366,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function remove_permissions()
+	public function remove_permissions()
 	{
 		if (!empty($this->config['permissions']))
 		{
@@ -404,7 +404,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function allow()
+	public function allow()
 	{
 		$module = $this->module;
 
@@ -433,7 +433,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function disallow()
+	public function disallow()
 	{
 		$module = $this->module;
 
@@ -518,7 +518,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_compatible()
+	public function is_compatible()
 	{
 		if (isset($this->config['compatibility']))
 		{
@@ -542,7 +542,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_valid()
+	public function is_valid()
 	{
 		return ($this->is_compatible() AND !empty($this->config) AND !empty($this->module));
 	}
@@ -555,7 +555,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function config($module = NULL)
+	public function config($module = NULL)
 	{
 		if (!empty($module))
 		{

@@ -44,7 +44,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_users');
 	}
@@ -57,7 +57,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string	The password
 	 * @return	boolean 
 	 */
-	function valid_user($user, $pwd)
+	public function valid_user($user, $pwd)
 	{
 		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
 		$where = array('user_name' => $user, 'active' => 'yes');
@@ -80,7 +80,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string	The password
 	 * @return	boolean 
 	 */
-	function valid_old_user($user, $pwd)
+	public function valid_old_user($user, $pwd)
 	{
 		$where = array('user_name' => $user, 'active' => 'yes');
 		$user = $this->find_one_array($where);
@@ -109,7 +109,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		$user = $CI->fuel->auth->user_data();
@@ -131,7 +131,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	int The user ID of the person logged in
 	 * @return	array
 	 */	
-	 function user_info($user_id)
+	 public function user_info($user_id)
 	{
 		$user = $this->find_one(array('id' => $user_id));
 		$user_data = $user->values();
@@ -150,7 +150,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The email address of the user to reset 
 	 * @return	string The new password
 	 */	
-	function reset_password($email)
+	public function reset_password($email)
 	{
 		// check first to see if they exist in the system
 		$CI =& get_instance();
@@ -184,7 +184,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The email address of the user
 	 * @return	boolean 
 	 */	
-	function user_exists($email)
+	public function user_exists($email)
 	{
 		return $this->record_exists(array('email' => $email));
 	}
@@ -197,7 +197,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @access	public
 	 * @return	string 
 	 */	
-	function salt()
+	public function salt()
 	{
 		return md5(uniqid(rand(), TRUE));
 	}
@@ -212,7 +212,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The users salt value
 	 * @return	string 
 	 */	
-	function salted_password_hash($password, $salt)
+	public function salted_password_hash($password, $salt)
 	{
 		return sha1($password.$salt);
 	}
@@ -229,7 +229,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The order to return the options list data
 	 * @return	array 
 	 */	
-	function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
+	public function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
 	{
 		$CI =& get_instance();
 		if ($key == 'id')
@@ -264,7 +264,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
 	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
@@ -350,7 +350,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array The parameters passed to the permissions form field
 	 * @return	string 
 	 */	
-	function _create_permission_fields($params = array())
+	public function _create_permission_fields($params = array())
 	{
 		$CI =& get_instance();
 		
@@ -461,7 +461,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array The values to be saved right the clean method is run
 	 * @return	array Returns the values to be cleaned
 	 */	
-	function on_before_clean($values)
+	public function on_before_clean($values)
 	{
 		$has_pwd = FALSE;
 		if (!empty($values['password'])) 
@@ -486,7 +486,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array The values to be saved right before validation
 	 * @return	array Returns the values to be validated right before saving
 	 */	
-	function on_before_validate($values)
+	public function on_before_validate($values)
 	{
 		$this->add_validation('email', 'valid_email', lang('error_invalid_email'));
 		
@@ -523,7 +523,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array The values to be saved right before saving
 	 * @return	array Returns the values to be saved
 	 */	
-	function on_before_save($values)
+	public function on_before_save($values)
 	{
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
@@ -543,7 +543,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	array The values that were just saved
 	 * @return	array Returns the values that were saved
 	 */	
-	function on_after_save($values)
+	public function on_after_save($values)
 	{
 		parent::on_after_save($values);
 		$CI =& get_instance();
@@ -613,7 +613,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
 	 * @return	void
 	 */	
-	function delete($where)
+	public function delete($where)
 	{
 		//prevent the deletion of the super admins
 		$where['super_admin'] = 'no';
@@ -629,7 +629,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The email address
 	 * @return	boolean
 	 */	
-	function is_new_email($email)
+	public function is_new_email($email)
 	{
 		return $this->is_new($email, 'email');
 	}
@@ -644,7 +644,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	string The email address
 	 * @return	boolean
 	 */	
-	function is_editable_email($email, $id)
+	public function is_editable_email($email, $id)
 	{
 		return $this->is_editable($email, 'email', $id);
 	}
@@ -658,7 +658,7 @@ class Fuel_users_model extends Base_module_model {
 	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void
 	 */	
-	function _common_query($params = NULL)
+	public function _common_query($params = NULL)
 	{
 		
 	}

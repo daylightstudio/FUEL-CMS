@@ -3,13 +3,13 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Site_docs extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->_validate_user('site_docs');
 	}
 	
-	function _remap()
+	public function _remap()
 	{
 		if ($this->fuel->modules->exists('user_guide') AND defined('USER_GUIDE_FOLDER'))
 		{

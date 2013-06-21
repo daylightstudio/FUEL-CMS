@@ -5,12 +5,12 @@ class Users extends Module {
 	
 	var $module = '';
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function edit($id = NULL, $field = NULL, $redirect = TRUE)
+	public function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		$user = $this->model->find_by_key($id, 'array');
 		if (!empty($user))
@@ -26,7 +26,7 @@ class Users extends Module {
 	/**
 	 * Login as another user if super admin
 	 */
-	function login_as($id, $original_user_hash = '')
+	public function login_as($id, $original_user_hash = '')
 	{
 		$CI =& get_instance();
 		$CI->load->library('session');
@@ -68,7 +68,7 @@ class Users extends Module {
 		return parent::_process_create();
 	}
 
-	function _toggle_callback($cols, $heading)
+	public function _toggle_callback($cols, $heading)
 	{
 		$valid_user = $this->fuel->auth->valid_user();
 		$can_publish = ($heading == 'active' AND $this->fuel->auth->has_permission($this->permission) AND $cols['id'] != $valid_user['id']);

@@ -122,7 +122,7 @@ class Menu {
 	 * @param	array
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (is_array($params) AND count($params) > 0)
 		{

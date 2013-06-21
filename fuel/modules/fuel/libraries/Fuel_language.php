@@ -50,7 +50,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		$this->CI->load->helper('cookie');
@@ -69,7 +69,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->options = $this->fuel->config('languages');
@@ -85,7 +85,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	array	Array of language options with the key being the language and the value being a friendly label
 	 * @return	void
 	 */	
-	function set_options($options)
+	public function set_options($options)
 	{
 		$this->options = (array)$options;
 	}
@@ -98,7 +98,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function options()
+	public function options()
 	{
 		return (array)$this->options;
 	}
@@ -111,7 +111,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function has_multiple()
+	public function has_multiple()
 	{
 		return count($this->options) > 1;
 	}
@@ -124,7 +124,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function has_language($lang)
+	public function has_language($lang)
 	{
 		return isset($this->options[$lang]);
 	}
@@ -141,7 +141,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	boolean	Set the query string lang value (optional)
 	 * @return	boolean
 	 */	
-	function set_selected($selected, $set_config = FALSE, $set_query = FALSE)
+	public function set_selected($selected, $set_config = FALSE, $set_query = FALSE)
 	{
 		if ($this->has_language($selected) AND $this->is_valid($selected))
 		{
@@ -170,7 +170,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function selected()
+	public function selected()
 	{
 		return $this->selected;
 	}
@@ -183,7 +183,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function selected_label()
+	public function selected_label()
 	{
 		if (isset($this->options[$this->selected]))
 		{
@@ -200,7 +200,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function default_option()
+	public function default_option()
 	{
 		if (is_array($this->options))
 		{
@@ -221,7 +221,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_default($lang)
+	public function is_default($lang)
 	{
 		if (!$this->has_multiple())
 		{
@@ -240,7 +240,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_valid($lang)
+	public function is_valid($lang)
 	{
 		return isset($this->options[$lang]);
 	}
@@ -254,7 +254,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	boolean	Whether to set the selected value to the detected or not (optional)
 	 * @return	string
 	 */	
-	function detect($set_config = FALSE)
+	public function detect($set_config = FALSE)
 	{
 		// obtain language code from query string if available
 		$language = $this->query_str_value();
@@ -299,7 +299,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string	The selected language 
 	 * @return	void
 	 */	
-	function set_cookie($lang)
+	public function set_cookie($lang)
 	{
 		if (!$this->has_language($lang))
 		{
@@ -323,7 +323,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string	The selected language 
 	 * @return	string
 	 */	
-	function cookie_value()
+	public function cookie_value()
 	{
 		return get_cookie($this->cookie_name());
 	}
@@ -336,7 +336,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function cookie_name()
+	public function cookie_name()
 	{
 		if (!empty($this->cookie_name))
 		{
@@ -357,7 +357,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string	The selected language 
 	 * @return	void
 	 */	
-	function set_query_str($lang)
+	public function set_query_str($lang)
 	{
 		if (!$this->has_language($lang))
 		{
@@ -375,7 +375,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string	The selected language 
 	 * @return	boolean
 	 */	
-	function query_str_value()
+	public function query_str_value()
 	{
 		if ($this->CI->input->get($this->query_str_param))
 		{
