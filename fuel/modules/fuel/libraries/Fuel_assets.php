@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
  * @license		http://www.getfuelcms.com/user_guide/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -47,7 +47,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->CI->load->helper('directory');
@@ -70,7 +70,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->normalize_files_array();
@@ -106,7 +106,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	array	upload parameters (optional)
 	 * @return	boolean
 	 */	
-	function upload($params = array())
+	public function upload($params = array())
 	{
 		$this->CI->load->library('upload');
 		$this->CI->load->library('image_lib');
@@ -374,7 +374,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	string	The uploaded $_FILE key value (optional)
 	 * @return	array
 	 */	
-	function uploaded_data($key = NULL)
+	public function uploaded_data($key = NULL)
 	{
 		if (isset($key))
 		{
@@ -391,7 +391,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function normalize_files_array()
+	public function normalize_files_array()
 	{
 		$i = 0;
 		if (!empty($_FILES))
@@ -427,7 +427,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	string
 	 * @return	object
 	 */	
-	function file_info($file)
+	public function file_info($file)
 	{
 		return $this->CI->fuel_assets_model->find_by_key($file);
 	}
@@ -441,7 +441,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	string
 	 * @return	object
 	 */	
-	function delete($file)
+	public function delete($file)
 	{
 		return $this->CI->fuel_assets_model->delete($file);
 	}
@@ -454,7 +454,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	object
 	 */	
-	function &model()
+	public function &model()
 	{
 		return $this->CI->fuel_assets_model;
 	}
@@ -468,7 +468,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	string	The key associated with the asset folder (usually the same as the asset folder's name)
 	 * @return	string
 	 */	
-	function dir($dir)
+	public function dir($dir)
 	{
 		$dirs = (array) $this->dirs();
 		return (isset($dirs[$dir])) ? $dirs[$dir] : $this->image_dir();
@@ -482,7 +482,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function dirs()
+	public function dirs()
 	{	
 		$dirs = array();
 		if (!empty($this->_dirs))
@@ -501,7 +501,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function root_dirs($full_path = FALSE)
+	public function root_dirs($full_path = FALSE)
 	{	
 		$asset_server_path = $this->CI->asset->assets_server_path();
 		$dirs = list_directories($asset_server_path, array(), $full_path, FALSE, FALSE);
@@ -522,7 +522,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function image_dir()
+	public function image_dir()
 	{
 		$editable_filetypes = $this->CI->fuel->config('editable_asset_filetypes');
 		foreach($editable_filetypes as $folder => $types)
@@ -545,7 +545,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	boolean	returns an array instead of the pipe delimited list. Default is FALSE
 	 * @return	mixed
 	 */	
-	function dir_filetypes($return_array = FALSE)
+	public function dir_filetypes($return_array = FALSE)
 	{
 		if ($return_array)
 		{
@@ -569,7 +569,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	boolean	returns an array instead of the pipe delimited list. Default is FALSE
 	 * @return	mixed
 	 */	
-	function dir_filetype($filetype, $return_array = FALSE)
+	public function dir_filetype($filetype, $return_array = FALSE)
 	{
 		if (!isset($this->dir_filetypes[$filetype]))
 		{
@@ -595,7 +595,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	boolean	will include the server path. Default is FALSE
 	 * @return	mixed
 	 */	
-	function dir_files($folder, $recursive = FALSE, $append_path = FALSE)
+	public function dir_files($folder, $recursive = FALSE, $append_path = FALSE)
 	{
 		$dir = assets_server_path($folder);
 		return directory_to_array($dir, $recursive, array(), $append_path);
@@ -609,7 +609,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function excluded_asset_server_folders()
+	public function excluded_asset_server_folders()
 	{
 		$excluded = array_merge($this->CI->fuel->config('assets_excluded_dirs'), $this->CI->asset->assets_folders);
 		$return = array();
@@ -641,7 +641,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	boolean	Allow a file with the same name as the zip to be overwritten
 	 * @return	string
 	 */	
-	function zip($dir, $file_name = NULL, $download = FALSE, $allow_overwrite = TRUE)
+	public function zip($dir, $file_name = NULL, $download = FALSE, $allow_overwrite = TRUE)
 	{
 		$this->CI->load->library('zip');
 
@@ -731,7 +731,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * @param	string	The destination path
 	 * @return	array 	An array of unzipped file names
 	 */	
-	function unzip($zip_file, $destination = NULL)
+	public function unzip($zip_file, $destination = NULL)
 	{
 		$this->CI->load->library('unzip');
 

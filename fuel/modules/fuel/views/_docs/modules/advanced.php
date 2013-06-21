@@ -48,7 +48,7 @@ $config['nav']['blog'] = array(
 </pre>	
 
 			<p class="important">You can overwrite the configuration values by adding your own <dfn>application/config/{module}.php</dfn> file with the specific values you want to overwrite.</p>
-			
+
 			</li>
 			<li>In the {module_name}_constants.php file its a good idea to create the following constants (although not required):
 				<ul>
