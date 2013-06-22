@@ -36,6 +36,9 @@ $config['aggressive_redirects'] =  array();
 // The pages to redirect to only AFTER no page is found by FUEL
 $config['passive_redirects'] = array();
 
+// The max number of times to redirect before showing a 404
+$config['max_redirects'] = 2;
+
 // DEPRECATED BUT STILL WILL WORK. THIS MAPS TO $config['passive_redirects']
 //$redirect = array(); 
 

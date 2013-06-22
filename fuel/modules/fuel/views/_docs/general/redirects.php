@@ -9,7 +9,7 @@ This means that it will only incur the expense of looping through the redirects 
 Alternatively, <dfn>aggressive_redirects</dfn> will redirect no matter what but will incur the cost of looping the the redirects list on every request.
 </p>
 
-<p>You can also pass additional parameters such as the <dfn>case_sensitive</dfn> and <dfn>http_code</dfn> with your redirect if you use an array syntax like so:</p>
+<p>You can also pass additional parameters such as the <dfn>case_sensitive</dfn>, <dfn>http_code</dfn> and <dfn>max_redirects</dfn> with your redirect if you use an array syntax like so:</p>
 <pre class="brush:php">
 // non key array
 $config['passive_redirects'] = array(
@@ -36,8 +36,10 @@ $this->fuel->redirects->execute();
 <pre class="brush:php">
 $config['http_code'] = 302;
 $config['case_sensitive'] = FALSE;
+$config['max_redirects'] = 2;
 </pre>
- 
+<p class="important">The <dfn>max_redirects</dfn> is used to prevent scenarios where it can cause an infinite redirect loop.</p>
+
 <h3>Redirect Hooks</h3>
 <ul>
 	<li><strong>pre_redirect</strong>: Called right before a page is redirected</li>

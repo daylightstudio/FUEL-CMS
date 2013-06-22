@@ -37,6 +37,10 @@ class Fuel_redirects extends Fuel_base_library {
 	public $ssl = array(); // The paths to force SSL with
 	public $aggressive_redirects = array(); // The pages to redirect to regardless if it's found by FUEL. WARNING: Run on every request.
 	public $passive_redirects = array(); // The pages to redirect to only AFTER no page is found by FUEL
+	public $max_redirects = 3; // Sets the number of times the page can redirect before giving nup and displaying a 404
+
+	const REDIRECT_COUNT = '__FUEL_REDIRECT_COUNT__';
+	const REDIRECT_ORIG = '__FUEL_REDIRECT_ORIG__';
 
 	/**
 	 * Constructor
@@ -192,6 +196,10 @@ class Fuel_redirects extends Fuel_base_library {
 				$this->case_sensitive = $config['case_sensitive'];
 			}
 
+			if (isset($config['max_redirects']))
+			{
+				$this->max_redirects = $config['max_redirects'];
+			}
 			// do this if the array doesn't exist and instead they use $config['redirects']
 			if (!isset($redirect))
 			{
@@ -247,9 +255,12 @@ class Fuel_redirects extends Fuel_base_library {
 	 */	
 	public function execute($show_404 = TRUE, $only_passive = TRUE)
 	{
+		// loaded for counting number of redirects
+		$this->CI->load->library('session');
+
 		$redirects = $this->redirects($only_passive);
 		$uri = $this->_get_uri();
-
+		
 		if (!empty($redirects))
 		{
 
@@ -260,10 +271,20 @@ class Fuel_redirects extends Fuel_base_library {
 
 				$url = $info['url'];
 				$http_code = $info['http_code'];
-
+				$max_redirects = $info['max_redirects'];
 				$url = site_url($url);
 
 				redirect($url, 'location', $http_code);
+			}
+
+			// set the original URI value so we can redirect back to it and 404 if the redirects exceed the number of max redirects
+			if (!empty($this->max_redirects) AND !$this->CI->session->flashdata(self::REDIRECT_ORIG))
+			{
+				$this->CI->session->set_flashdata(self::REDIRECT_ORIG, $uri);
+			}
+			else
+			{
+				$this->CI->session->keep_flashdata(self::REDIRECT_ORIG);
 			}
 
 			foreach ($redirects as $key => $val)
@@ -273,6 +294,7 @@ class Fuel_redirects extends Fuel_base_library {
 				$value = $info['url'];
 				$case_sensitive = $info['case_sensitive'];
 				$http_code = $info['http_code'];
+				$max_redirects = $info['max_redirects'];
 
 				$key = trim($key, '/');
 				$value = trim($value, '/');
@@ -301,11 +323,31 @@ class Fuel_redirects extends Fuel_base_library {
 					$hook_params = array('url' => $key, 'redirect' => $value, 'uri' => $uri);
 					$GLOBALS['EXT']->_call_hook('pre_redirect', $hook_params);
 
-					redirect($url, 'location', $http_code);
+					// increment the number of redirects and make sure we don't go into a redirect loop
+					$cnt = $this->CI->session->flashdata(self::REDIRECT_COUNT);
+					$cnt = (int)$cnt + 1;
+					$this->CI->session->set_flashdata(self::REDIRECT_COUNT, $cnt);
+
+					// if the current count of redirects is greater then the max_directs value, 
+					// we will set the URL to the original and display a 404 error
+					if ($cnt >= $max_redirects)
+					{
+						$url = $this->CI->session->flashdata(self::REDIRECT_ORIG);
+					}
+
+					// now redirect
+					if ($cnt <= $max_redirects)
+					{
+						redirect($url, 'location', $http_code);	
+					}
+					else
+					{
+						break;
+					}
 				}
 			}
 		}
-		
+
 		if ($show_404 === TRUE)
 		{
 			// call any pre 404 hooks
@@ -397,7 +439,8 @@ class Fuel_redirects extends Fuel_base_library {
 		$return = array(
 				'url' => NULL,
 				'case_sensitive' => $this->case_sensitive,
-				'http_code' => $this->http_code
+				'http_code' => $this->http_code,
+				'max_redirects' => $this->max_redirects
 			);
 		if (is_array($val))
 		{
@@ -414,6 +457,12 @@ class Fuel_redirects extends Fuel_base_library {
 				$return['http_code'] = $next_val;	
 			}
 			
+			$next_val = next($val);
+			if ($next_val)
+			{
+				$return['max_redirects'] = $next_val;	
+			}
+
 			// if keys specified, then you can use those too 
 			if (isset($val['url']))
 			{
@@ -428,6 +477,11 @@ class Fuel_redirects extends Fuel_base_library {
 			if (isset($val['http_code']))
 			{
 				$return['http_code'] = $val['http_code'];
+			}
+
+			if (isset($val['max_redirects']))
+			{
+				$return['max_redirects'] = $val['max_redirects'];
 			}
 		}
 		else
