@@ -451,7 +451,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	public function settings($item = NULL)
 	{
-		if (is_null($this->_settings))
+		if (is_null($this->_settings) AND isset($this->fuel->settings))
 		{
 			$this->_settings = $this->fuel->settings->get($this->folder());
 		}
