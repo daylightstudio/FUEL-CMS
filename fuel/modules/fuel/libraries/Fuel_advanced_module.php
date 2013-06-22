@@ -411,7 +411,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	public function set_config($item, $val)
 	{
-		return $this->CI->config->set_item($item, $val, $this->name);
+		$this->_config[$item] = $val;
+		$this->CI->config->set_item($item, $val, $this->name);
 	}
 
 	// --------------------------------------------------------------------
@@ -451,7 +452,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */	
 	public function settings($item = NULL)
 	{
-		if (is_null($this->_settings) AND isset($this->fuel->settings))
+		if (is_null($this->_settings))
 		{
 			$this->_settings = $this->fuel->settings->get($this->folder());
 		}
