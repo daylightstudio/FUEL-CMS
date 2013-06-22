@@ -136,7 +136,7 @@ class Fuel_cache extends Fuel_base_library {
 	 */
 	public function create_id($location = NULL)
 	{
-		$lang = $this->fuel->language->detect();
+		$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
 		if (empty($location))
 		{
 			$segs = $this->CI->uri->segment_array();
