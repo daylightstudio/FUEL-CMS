@@ -46,7 +46,7 @@ class Fuel_permissions extends Fuel_module {
 	 */	
 	public function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->initialize($params);
 	}
 	

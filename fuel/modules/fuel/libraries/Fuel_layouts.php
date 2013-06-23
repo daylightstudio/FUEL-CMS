@@ -52,7 +52,7 @@ class Fuel_layouts extends Fuel_base_library {
 	 */	
 	public function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		
 		@include(FUEL_PATH.'config/fuel_layouts'.EXT);
 		

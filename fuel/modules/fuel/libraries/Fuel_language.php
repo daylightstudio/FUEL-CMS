@@ -52,7 +52,7 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	public function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->CI->load->helper('cookie');
 		$this->CI->load->library('user_agent');
 		$this->initialize($params);

@@ -56,7 +56,7 @@ class Fuel_cache extends Fuel_base_library {
 	 */	
 	public function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->CI->load->library('cache');
 		$this->_cache = & $this->CI->cache;
 		$this->initialize($params);
