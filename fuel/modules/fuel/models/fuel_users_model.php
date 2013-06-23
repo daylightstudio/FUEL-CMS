@@ -593,7 +593,7 @@ class Fuel_users_model extends Base_module_model {
 			$CI->email->from($CI->config->item('from_email', 'fuel'), $CI->config->item('site_name', 'fuel'));
 			$CI->email->to($CI->input->post('email')); 
 			$CI->email->subject(lang('new_user_email_subject'));
-			$msg = lang('new_user_email', $CI->input->post('user_name'), $password);
+			$msg = lang('new_user_email', site_url('fuel/login'), $CI->input->post('user_name'), $password);
 
 			$CI->email->message($msg);
 	
