@@ -515,11 +515,7 @@ class Pages extends Module {
 						return FALSE;
 					}
 
-					if ($this->fuel_pagevariables_model->save($save, $where))
-					{
-						$page_variables_archive[] = $this->fuel_pagevariables_model->cleaned_data();
-					}
-					else
+					if (!$this->fuel_pagevariables_model->save($save, $where))
 					{
 						add_error(lang('error_saving'));
 						return FALSE;
@@ -527,6 +523,8 @@ class Pages extends Module {
 
 				}
 			}
+
+			$page_variables_archive = $this->fuel_pagevariables_model->find_all_array(array('page_id' => $id));
 
 			// archive
 			$archive = $this->model->cleaned_data();
