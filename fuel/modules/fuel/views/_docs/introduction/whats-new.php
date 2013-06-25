@@ -4,7 +4,7 @@
 <h2>WARNING!!!</h2>
 <ul>
 	<li>Page variable data is now saved in a JSON format instead of a serialized PHP string</li>
-	<li>Several tables have been updated</li>
+	<li>Several tables have been updated with the addition of several tables (e.g. fuel_categories, fuel_tags, fuel_settings, fuel_relationships) and minor changes to existing ones. There is a <span class="file">fuel/install/upgrades/fuel_1.0_schema_changes.sql</span> file you can run to upgrade the schema.</li>
 	<li>User to permission and blog post to category relationships are now stored in the <a href="<?=user_guide_url('general/models#relationships')?>">fuel_relationships</a> table.</li>
 </ul>
 
