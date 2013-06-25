@@ -9,7 +9,7 @@ class Module extends Fuel_base_controller {
 
 	protected $_orig_post = array(); // used for reference
 	
-	public function __construct($validate = TRUE)
+	function __construct($validate = TRUE)
 	{
 		parent::__construct($validate);
 
@@ -159,7 +159,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function index()
+	function index()
 	{
 		$this->items();
 	}
@@ -172,7 +172,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function items()
+	function items()
 	{
 		$this->load->library('data_table');
 	
@@ -495,8 +495,8 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->question_keys = array();
 			//$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->label_layout = 'left';
-			$this->form_builder->form->validator = &$this->model->get_validation();
-			$this->form_builder->submit_value = null;
+			$this->form_builder->set_validator($this->model->get_validation());
+			$this->form_builder->submit_value = NULL;
 			$this->form_builder->use_form_tag = FALSE;
 			$this->form_builder->set_fields($this->filters);
 			$this->form_builder->display_errors = FALSE;
@@ -544,7 +544,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function inline_items()
+	function inline_items()
 	{
 		$this->items(TRUE);
 	}
@@ -629,7 +629,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function items_tree()
+	function items_tree()
 	{
 		// tree
 		if (method_exists($this->model, 'tree') AND is_ajax())
@@ -664,7 +664,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function items_precedence()
+	function items_precedence()
 	{
 		if (is_ajax() AND !empty($_POST['data_table']) AND !empty($this->precedence_col))
 		{
@@ -698,7 +698,7 @@ class Module extends Fuel_base_controller {
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
-	public function create($field = NULL, $redirect = TRUE)
+	function create($field = NULL, $redirect = TRUE)
 	{
 		$id = NULL;
 		
@@ -774,7 +774,7 @@ class Module extends Fuel_base_controller {
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
-	public function inline_create($field = NULL)
+	function inline_create($field = NULL)
 	{
 		$this->fuel->admin->set_inline(TRUE);
 		$this->create($field);
@@ -788,7 +788,7 @@ class Module extends Fuel_base_controller {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function duplicate()
+	function duplicate()
 	{
 		$_POST[$this->model->key_field()] = 'dup';
 		$this->create();
@@ -894,7 +894,7 @@ class Module extends Fuel_base_controller {
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
-	public function edit($id = NULL, $field = NULL, $redirect = TRUE)
+	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		// check that the action even exists and if not, show a 404
 		if (!$this->fuel->auth->module_has_action('save'))
@@ -999,7 +999,7 @@ class Module extends Fuel_base_controller {
 	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
 	 * @return	void
 	 */	
-	public function inline_edit($id = NULL, $field = NULL)
+	function inline_edit($id = NULL, $field = NULL)
 	{
 		if (empty($id))
 		{
@@ -1392,14 +1392,14 @@ class Module extends Fuel_base_controller {
 		return $posted;
 	}
 	
-	public function form($id = NULL, $field = NULL)
+	function form($id = NULL, $field = NULL)
 	{
 		$saved = $this->_saved_data($id);
 		$vars = $this->_form_vars($id, $saved, $field);
 		$this->load->module_view(FUEL_FOLDER, '_layouts/module_form', $vars);
 	}
 
-	public function delete($id = NULL)
+	function delete($id = NULL)
 	{
 		// check that the action even exists and if not, show a 404
 		if (!$this->fuel->auth->module_has_action('delete'))
@@ -1545,13 +1545,13 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	public function inline_delete($id)
+	function inline_delete($id)
 	{
 		$this->fuel->admin->set_inline(TRUE);
 		$this->delete($id);
 	}
 	
-	public function restore()
+	function restore()
 	{
 		if (!$this->fuel->auth->has_permission($this->permission, 'edit')) 
 		{
@@ -1584,7 +1584,7 @@ class Module extends Fuel_base_controller {
 		}
 	}
 	
-	public function replace($id = NULL)
+	function replace($id = NULL)
 	{
 		if (empty($id))
 		{
@@ -1647,7 +1647,7 @@ class Module extends Fuel_base_controller {
 	}
 	
 	// displays the module's designated view'
-	public function view($id = NULL)
+	function view($id = NULL)
 	{
 		if (!empty($this->preview_path) AND !empty($id))
 		{
@@ -1667,7 +1667,7 @@ class Module extends Fuel_base_controller {
 	}
 	
 	// refreshes a single field
-	public function refresh_field()
+	function refresh_field()
 	{
 		if (!empty($_POST))
 		{
@@ -1677,6 +1677,7 @@ class Module extends Fuel_base_controller {
 			
 			$field_id = $this->input->post('field_id', TRUE);
 			$values = $this->input->post('values', TRUE);
+
 			$selected = $this->input->post('selected', TRUE);
 			
 			$field_key = end(explode('vars--', $field));
@@ -1688,7 +1689,13 @@ class Module extends Fuel_base_controller {
 			if (is_array($values))
 			{
 				$selected = (array) $selected;
-				$selected = array_merge($values, $selected);
+				foreach($values as $v)
+				{
+					if (!in_array($v, $selected))
+					{
+						$selected[] = $v;
+					}
+				}
 			}
 			
 			if (!empty($selected)) $fields[$field]['value'] = $selected;
@@ -1726,31 +1733,23 @@ class Module extends Fuel_base_controller {
 			{
 				if (!empty($selected)) $fields[$field_key]['value'] = $selected;
 				$fields[$field_key]['name'] = $field_id;
-				
+
 				// if the field is an ID, then we will do a select instead of a text field
 				if (isset($fields[$this->model->key_field()]))
 				{
-					$fields['id']['type'] = 'select';
-					$fields['id']['options'] = $this->model->options_list();
+					$fields[$this->model->key_field()]['type'] = 'select';
+					$fields[$this->model->key_field()]['options'] = $this->model->options_list();
 				}
-				$output = $this->form_builder->create_field($fields[$field_key]);	
+				$output = $this->form_builder->create_field($fields[$field_key]);
 			}
 			
 			$this->output->set_output($output);
-			
-			// // if the field is an ID, then we will do a select instead of a text field
-			// if (isset($fields[$this->model->key_field()]))
-			// {
-			// 	$fields['id']['type'] = 'select';
-			// 	$fields['id']['options'] = $this->model->options_list();
-			// }
-			// $output = $this->form_builder->create_field($fields[$field]);
-			// $this->output->set_output($output);
+		
 		}
 	}
 	
 	// processes linked fields
-	public function process_linked()
+	function process_linked()
 	{
 		if (!empty($_POST))
 		{
@@ -1771,7 +1770,7 @@ class Module extends Fuel_base_controller {
 	}
 	
 	// automatically calls ajax methods on the model
-	public function ajax($method = NULL)
+	function ajax($method = NULL)
 	{
 		// must not be empty and must start with find_ (... don't want to access methods like delete)
 		if (is_ajax())
@@ -1806,7 +1805,7 @@ class Module extends Fuel_base_controller {
 	}
 	
 	// exports data to CSV
-	public function export()
+	function export()
 	{
 		if (empty($this->exportable))
 		{
@@ -1831,19 +1830,19 @@ class Module extends Fuel_base_controller {
 	}
 	
 	// used in list view to quickly unpublish (if they have permisison)
-	public function toggle_on($id = NULL, $field = 'published')
+	function toggle_on($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'on');
 	}
 
 	// used in list view to quickly publish (if they have permisison)
-	public function toggle_off($id = NULL, $field = 'published')
+	function toggle_off($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'off');
 	}
 	
 	// reduce code by creating this shortcut function for the unpublish/publish
-	public function _toggle($id, $field, $toggle)
+	function _toggle($id, $field, $toggle)
 	{
 		if (!$this->fuel->auth->module_has_action('save') OR ($field == 'publish' AND !$this->fuel->auth->has_permission($this->permission, 'publish'))) 
 		{
