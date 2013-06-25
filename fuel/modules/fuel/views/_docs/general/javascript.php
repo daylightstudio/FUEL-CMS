@@ -8,7 +8,7 @@ The following are topics which discuss adding javascript to FUEL CMS:
 <ul>
 	<li><a href="#config">FUEL Configuration</a></li>
 	<li><a href="#modules">Modules</a></li>
-	<li><a href="#form">Forms</a></li>
+	<li><a href="#forms">Forms</a></li>
 	<li><a href="#ajax">AJAX with Models</a></li>
 	<li><a href="#jqx">jQX Framework</a></li>
 </ul>
