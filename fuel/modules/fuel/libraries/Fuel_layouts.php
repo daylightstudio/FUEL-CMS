@@ -337,6 +337,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $import_field = 'body'; // The field to be used when importing a view file
 	public $include_pagevar_object = FALSE; // Determines whether to include a single variable of object of $pagevar that includes all the pages variables
 	public $preview_image = ''; // An image for previewing the layout
+	public $double_parse = NULL; // Double parse pages created in the CMS to allow for variables set in the CMS to cascade up to the layout. Valid options are TRUE/FALSE (AUTO only applies to the global FUEL configuration)
 	
 	// --------------------------------------------------------------------
 	
@@ -897,6 +898,37 @@ class Fuel_layout extends Fuel_base_library {
 		$this->preview_image = $image;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the double parse values
+	 *
+	 * @access	public
+	 * @param	string	the preview image
+	 * @return	boolean
+	 */	
+	public function is_double_parse()
+	{
+		if (is_null($this->double_parse))
+		{
+			return $this->fuel->config('double_parse');
+		}
+		return (boolean) $this->double_parse;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets whether CMS pages should be double parsed to allow for variables set in the CMS fields to bubble up to the layout
+	 *
+	 * @access	public
+	 * @param	boolean	
+	 * @return	boolean
+	 */	
+	public function set_double_parse($parse)
+	{
+		$this->double_parse = (boolean) $parse;
+	}
 }
 
 

@@ -353,6 +353,14 @@ $config['page_uri_prefix'] = '';
 // view the page from the admin in a new window or within a modal window
 $config['view_in_new_window'] = FALSE;
 
+// runs the parsing process twice for pages created in the CMS which allows
+// for variables to be set from within blocks and layout fields and can
+// bubble up to the layout view file (takes slightly longer to render
+// if caching is turned off). Valid values are TRUE, FALSE, or 'AUTO' which
+// will be activated if fuel_set_var is called from within a block or page
+// layout variable. This can also be set as a property of a layout object
+$config['double_parse'] = FALSE;
+
 
 /*
 |--------------------------------------------------------------------------

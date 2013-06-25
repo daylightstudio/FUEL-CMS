@@ -232,6 +232,11 @@ function fuel_model($module, $params = array(), $where = array())
 function fuel_set_var($key, $val = NULL)
 {
 	$CI =& get_instance();
+	if (strtoupper($CI->fuel->config('double_parse')) == 'AUTO')
+	{
+		$CI->fuel->set_config('double_parse', TRUE);
+	}
+
 	if (is_array($key))
 	{
 		$CI->load->vars($key);
