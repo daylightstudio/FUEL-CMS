@@ -563,12 +563,11 @@ fuel.fields.inline_edit_field = function(context){
 			
 			// redeclared here in case $field is set
 			var fieldId = $field.attr('id');
-			var $form = $field.closest('form');
 			
 			// if no value added,then no need to refresh
 			if (!selected) return;
 			var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
-			var params = { field:fieldId, field_id: fieldId, values: $field.val(), selected:selected};
+			var params = { field:fieldId, field_id: fieldId, selected:selected};
 
 
 			// fix for pages... a bit kludgy
@@ -584,13 +583,41 @@ fuel.fields.inline_edit_field = function(context){
 			params.key = $field.data('key');
 			params.field_name = $field.data('field_name');
 
+
+			// for sortable fields
+			var fieldName = $field.attr('name');
+			fieldName = fieldName.replace('[', '\\[');
+			fieldName = fieldName.replace(']', '\\]');
+
+			var $form = $field.closest('form');
+
+			$fieldContainer = $('#' + fieldId, context).closest('td.value');
+			$field.closest('form').trigger('form-pre-serialize');
+			var selector = '[name=' + fieldName + ']';
+
+			// refresh value
+			$field = $(selector);
+			if ($field.length > 1){
+				var val = [];
+				$field.each(function(i){
+					val.push($(this).val());
+				})
+			} else {
+				var val = $field.val();
+			}
+
+			params.values = val;
+
 			$.post(refreshUrl, params, function(html){
 				$('#notification').html('<ul class="success ico_success"><li>Successfully added to module ' + module + '</li></ul>')
 				fuel.notifications();
 			
 				$modal.jqmHide();
 				if (html.length){
-					$('#' + fieldId, context).replaceWith(html);
+					$fieldContainer.empty();
+					$fieldContainer.html(html)
+
+					//$('#' + fieldId, context).replaceWith(html);
 				}
 				
 				// already inited with custom fields
@@ -621,7 +648,7 @@ fuel.fields.inline_edit_field = function(context){
 		
 		$('.add_inline_button', context).unbind().click(function(e){
 			$field = $(this).parent().children(':first');
-			editModule($(this).attr('href'), null, function(){ refreshField($field)});
+			editModule($(this).attr('href'), null, function(){ refreshField($('#' + fieldId))});
 			$(context).scrollTo('body', 800);
 			return false;
 		});
@@ -629,6 +656,13 @@ fuel.fields.inline_edit_field = function(context){
 		$('.edit_inline_button', context).unbind().click(function(e){
 			var $elem = $(this).parent().find('select');
 			var val = $elem.val();
+
+			var fieldName = $elem.attr('name')
+			fieldName = fieldName.replace('[', '');
+			fieldName = fieldName.replace(']', '');
+			var sortName = 'sorting_' + fieldName;
+			var form = $(this).parents('form');
+
 			if (!val){
 				alert(fuel.lang('edit_multi_select_warning'));
 				return false;
