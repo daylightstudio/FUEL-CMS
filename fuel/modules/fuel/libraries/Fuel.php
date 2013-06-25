@@ -149,6 +149,7 @@ class Fuel extends Fuel_advanced_module {
 		{
 			$fuel_config[$item] = $value;
 		}
+		$this->_config[$item] = $value;
 		$this->CI->config->set_item($module, $fuel_config);
 	}
 
