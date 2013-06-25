@@ -235,7 +235,7 @@ class Blocks extends Module {
 			if (!empty($_name_var))
 			{
 				$_name_var_eval = '@$_name = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
-				eval($_name_var_eval);
+				@eval($_name_var_eval);
 			}
 			if (isset($_name))
 			{
