@@ -16,7 +16,7 @@
 			selectedEmptyString : 'Select from the values on the left', // string to display when the there are no more values in the left
 			defaultSearchBoxString : 'Filter your search', // string to display in the search text box...
 			minNumOfSearchChars : 3, //... mmm variable name says it all
-			selectedOrdering : {} // used for ordering the selected when you have something sorted and may not match the ordering on the left
+			selectedOrdering : [] // used for ordering the selected when you have something sorted and may not match the ordering on the left
 		}, settings);
 		
 		this.each(function(i){
@@ -72,7 +72,6 @@
 
 			var customSelectedSorting = (settings.isSortable && settings.selectedOrdering);
 			
-			
 			/**********************************************************************
 			SET HTML
 			**********************************************************************/
@@ -115,16 +114,16 @@
 			$('#' + leftID + ' li').die();
 			$('#' + rightID + ' li').die();
 			
-			$('#' + leftID + ' li[class!="option_disabled"]').live('dblclick', function(e){
+			$(document).on('dblclick', '#' + leftID + ' li[class!="option_disabled"]', function(e){
 				addSelectedToRight();
 			});
 
-			$('#' + rightID + ' li').live('dblclick', function(e){
+			$(document).on('dblclick', '#' + rightID + ' li', function(e){
 				removeSelectedFromRight();
 			});
 			
 			
-			$('#' + leftID + ' li').live('click', function(e){
+			$(document).on('click', '#' + leftID + ' li', function(e){
 				if (isCtrlDown) {
 					$(this).removeClass(settings.selectedClass);
 				} else {
@@ -133,7 +132,7 @@
 			});
 
 
-			$('#' + rightID + ' li').live('click', function(e){
+			$(document).on('click', '#' + rightID + ' li', function(e){
 				if (isCtrlDown) {
 					$(this).removeClass(settings.selectedClass);
 				} else {
@@ -416,7 +415,7 @@
 			function onFormSubmit(){
 				$('#' + rightID + ' li').each(function(i){
 					var src = $(getOptionSourceRef(getIdNum(this)));
-					$(this).prepend('<input type="hidden" name="' + $('#' + selectID).attr('name') + '" value="' + src.attr('value') + '" />')
+					$(this).prepend('<input type="hidden" name="' + $('#' + selectID).attr('name') + '" value="' + src.attr('value') + '"" class="sorted_val" />');
 				});
 				$('#' + selectID).remove();
 			}

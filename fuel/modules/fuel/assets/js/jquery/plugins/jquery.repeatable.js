@@ -143,7 +143,7 @@ dave@thedaylightstudio.com
 			}
 			
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
-			$(options.repeatableSelector +' .' + options.removeButtonClass).live('click',  function(e){
+			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
 				var $this = $(this).closest(options.repeatableSelector).parent();
 				var max = ($this.attr('data-max')) ? parseInt($this.attr('data-max')) : null;
 				var min = ($this.attr('data-min')) ? parseInt($this.attr('data-min')) : null;
@@ -228,7 +228,7 @@ dave@thedaylightstudio.com
 			
 		}
 		
-		$('.' + options.addButtonClass).die().live('click', function(e){
+		$(document).on('click', '.' + options.addButtonClass, function(e){
 			e.preventDefault();
 			e.stopImmediatePropagation();
 

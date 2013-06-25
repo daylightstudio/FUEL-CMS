@@ -218,7 +218,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
-		$('.multi_delete').live('click', function(e){
+		$(document).on('click', '.multi_delete', function(e){
 			if ($('.multi_delete:checked').length){
 				$('#multi_delete').parent().show();
 			} else {
@@ -227,7 +227,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		$('#multi_delete').parent().hide();
 		
-		$('#rearrange').live('click', function(e){
+		$('#fuel_actions').on('click', '#rearrange', function(e){
 			if (!$('#toggle_list').parent().hasClass('active')){
 				$('#toggle_list').click();
 			}
@@ -391,13 +391,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
 		});
 		
-		$('.save, #form input[type="submit"]').live('click', function(e){
+		$(document).on('click', '.save, #form input[type="submit"]', function(e){
 			$.removeChecksave();
 			$('#form').submit();
 			return false;
 		});
 		
-		$('.cancel, #' + this.lang('btn_cancel')).live('click', function(e){
+		$(document).on('click', '.cancel, #' + this.lang('btn_cancel'), function(e){
 			_this.go(_this.modulePath);
 			return false;
 		});
