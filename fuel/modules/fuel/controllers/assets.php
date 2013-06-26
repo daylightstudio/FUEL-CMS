@@ -17,7 +17,7 @@ class Assets extends Module {
 		parent::items($inline);
 	}
 
-	public function create($dir = NULL, $not_inline = TRUE)
+	public function create($dir = NULL, $inline = FALSE)
 	{
 		$id = NULL;
 
@@ -26,7 +26,7 @@ class Assets extends Module {
 			$dir = uri_safe_decode($dir);
 		}
 
-		if ($not_inline !== TRUE)
+		if ($inline !== FALSE)
 		{
 			$this->fuel->admin->set_inline(TRUE);
 		}
