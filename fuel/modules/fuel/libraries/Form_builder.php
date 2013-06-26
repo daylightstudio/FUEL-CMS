@@ -1281,7 +1281,7 @@ class Form_builder {
 		// set the field type CSS class
 		$type = (!empty($params['type'])) ? $params['type'] : 'text';
 		$field_class = $this->class_type_prefix.$type;
-		$params['class'] = (!empty($params['class'])) ? $field_class.' '.$params['class'] : $field_class;
+		$params['class'] = (!empty($params['class']) AND strpos($params['class'], $field_class) === FALSE) ? $field_class.' '.$params['class'] : $params['class'];
 
 		$this->_cached[$params['name']] = $params;
 		return $params;
@@ -3666,35 +3666,36 @@ class Form_builder {
 		$out = '';
 		foreach($this->css as $css)
 		{
-			if (is_array($css))
+			if (is_string($css))
 			{
-				if (is_string(key($css)))
-				{
-					$module = key($css);
-					
-					$c = current($css);
-					if (is_array($c))
-					{
-						foreach($c as $file)
-						{
-							$file = css_path($file, $module);
-						}
-					}
-					else
-					{
-						$file = css_path($c, $module);
-					}
-				}
-			}
-			else
-			{
-				$file = css_path($css);
+				$css = preg_split('#\s*,\s*#', $css);
 			}
 
-			if (!empty($file) AND !in_array($file, $GLOBALS['__css_files__']))
+			foreach($css as $k => $c)
 			{
-				array_push($GLOBALS['__css_files__'], $file);
-				$add_css[] = $file;
+				$module = (is_string($k)) ? $k : NULL;
+
+				if (is_array($c))
+				{
+					foreach($c as $file)
+					{
+						$f = css_path($file, $module);
+						if (!empty($f) AND !in_array($f, $GLOBALS['__css_files__']))
+						{
+							array_push($GLOBALS['__css_files__'], $f);
+							$add_css[] = $f;
+						}
+					}
+				}
+				else
+				{
+					$file = css_path($c, $module);
+					if (!empty($file) AND !in_array($file, $GLOBALS['__css_files__']))
+					{
+						array_push($GLOBALS['__css_files__'], $file);
+						$add_css[] = $file;
+					}
+				}
 			}
 		}
 
