@@ -1,5 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
+require_once(BASEPATH.'core/Model.php');
+require_once(APPPATH.'core/MY_Model.php');
+
 class Test_users_model extends MY_Model {
 
 	public $required = array('email');
@@ -7,12 +10,12 @@ class Test_users_model extends MY_Model {
 	public $singular_name = 'User';
 	public $has_many = array('roles' => array(FUEL_FOLDER => 'categories'));
 	
-	public function __construct()
+	function __construct()
 	{
 		parent::__construct('users');
 	}
 	
-	public function _common_query()
+	function _common_query()
 	{
 		$this->db->select('users.*, CONCAT(first_name, " ", last_name) as full_name', FALSE);
 	}
@@ -23,7 +26,7 @@ class Test_user_model extends Data_record {
 
 	public $full_name;
 	
-	public function get_full_name($title = '')
+	function get_full_name($title = '')
 	{
 		$full_name = $this->first_name.' '.$this->last_name;
 		if (!empty($title)) $full_name = $title.' '.$full_name;
