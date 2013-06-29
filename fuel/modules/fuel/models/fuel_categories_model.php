@@ -133,7 +133,27 @@ class Fuel_categories_model extends Base_module_model {
 		}
 		return $fields;
 	}
+	/**
+	 * Creates the tree view for categories
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
 	
+	function tree() 
+	{ 
+		$this->fuel->load_model('fuel_categories_model');
+		$return = array(); 
+		$categories = $this->fuel->fuel_categories_model->find_all(); 
+
+		foreach($categories as $category) 
+		{ 
+			$return[] = array('id' => $category->id, 'label' => $category->name, 'parent_id' => $category->parent_id, 'location' => fuel_url('categories/edit/'.$category->id)); 
+		} 
+	
+		return $return;
+
+	} 	
 	// --------------------------------------------------------------------
 	
 	/**
