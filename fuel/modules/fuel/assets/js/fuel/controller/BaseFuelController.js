@@ -28,6 +28,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this._initLeftMenu();
 		this._initTopMenu();
 		this._initModals();
+		this._initResponsive();
 	},
 	
 	_initLeftMenu : function(){
@@ -94,6 +95,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.jqmWindowShow').jqmShow();
 	},
 
+	_initResponsive : function(){
+		$('#nav_toggle').on('click', function(event) {
+			event.preventDefault();
+			$('html').toggleClass('nav_show');
+		});
+	},
 	
 	_submit : function(){
 		$('#submit').click(function(){
