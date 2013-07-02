@@ -191,7 +191,7 @@ VALUES
   (NULL,'Site Documentation','site_docs','yes'),
   (NULL,'Users','users','yes'),
   (NULL,'Permissions','permissions','yes'),
-  (NULL,'Cache','cache','yes'),
+  (NULL,'Cache','manage/cache','yes'),
   (NULL,'Logs','logs','yes'),
   (NULL,'Settings','settings','yes'),
   (NULL,'Generate Code','generate','yes');
