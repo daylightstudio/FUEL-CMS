@@ -390,8 +390,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			if ($look_in_settings)
 			{
-				if (is_array($this->_settings))
-				{
+                if (is_array($this->settings()))  //change from _settings to settings() because _settings isn't populated yet and settings() populates it
+                    {
 					return array_merge($this->_config, $this->_settings);	
 				}
 			}
