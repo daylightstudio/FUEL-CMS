@@ -287,6 +287,9 @@ class Base_module_model extends MY_Model {
 		$where_and = array();
 		foreach($this->filters as $key => $val)
 		{
+			// used for separating table names and fields since periods get translated to underscores
+			$key = str_replace(':', '.', $key);
+			
 			if (is_int($key))
 			{
 				if (isset($this->filters[$val])) {
