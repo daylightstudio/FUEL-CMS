@@ -80,7 +80,8 @@ class Fuel_hooks
 				$CI->load->library('session');
 				if (!$CI->session->userdata('dev_password'))
 				{
-					redirect('fuel/login/dev');
+					//redirect('fuel/login/dev');
+                    redirect(FUEL_ROUTE.'login/dev'); //to respect your MY_Fuel $config['fuel_path']
 				}
 			}
 		}
