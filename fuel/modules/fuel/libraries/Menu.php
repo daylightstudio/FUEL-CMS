@@ -403,6 +403,19 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Returns the active items in the navigation. A render must be performed first
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function active_items()
+	{
+		return $this->_active_items;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Renders a basic menu
 	 *
 	 * @access	protected
