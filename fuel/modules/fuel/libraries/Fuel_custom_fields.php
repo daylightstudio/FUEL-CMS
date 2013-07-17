@@ -1251,6 +1251,7 @@ class Fuel_custom_fields {
 			$exists_params['name'] = 'exists_'.$params['orig_name'];
 			$exists_params['value'] = 1;
 			$exists_params['type'] = 'hidden';
+			$exists_params['ignore_representative'] = TRUE;
 			$str .= $form_builder->create_field($exists_params);
 
 		}
