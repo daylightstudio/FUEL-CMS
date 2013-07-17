@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -28,7 +28,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$this->example_model->
  */
 
@@ -4124,7 +4124,7 @@ class MY_Model extends CI_Model {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -4140,7 +4140,7 @@ class MY_Model extends CI_Model {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$data_set->
  */
 
@@ -4278,7 +4278,7 @@ class Data_set {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -4298,7 +4298,7 @@ class Data_set {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$record->
  */
 
@@ -5495,7 +5495,7 @@ class Data_record {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -5512,7 +5512,7 @@ class Data_record {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$record->
  */
 

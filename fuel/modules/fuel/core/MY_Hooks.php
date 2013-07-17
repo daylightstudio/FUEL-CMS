@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/modules/hooks
+ * @link		http://docs.getfuelcms.com/modules/hooks
  */
 class MY_Hooks extends CI_Hooks {
 
