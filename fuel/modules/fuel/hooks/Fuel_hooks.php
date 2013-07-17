@@ -10,7 +10,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -80,7 +80,8 @@ class Fuel_hooks
 				$CI->load->library('session');
 				if (!$CI->session->userdata('dev_password'))
 				{
-					redirect('fuel/login/dev');
+					//redirect('fuel/login/dev');
+                    redirect(FUEL_ROUTE.'login/dev'); //to respect your MY_Fuel $config['fuel_path']
 				}
 			}
 		}

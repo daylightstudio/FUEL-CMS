@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -24,7 +24,7 @@
  * @subpackage	Models
  * @category	Models
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/models/fuel_logs_model
+ * @link		http://docs.getfuelcms.com/models/fuel_logs_model
  */
 
 require_once('base_module_model.php');

@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -26,7 +26,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/directory_helper
+ * @link		http://docs.getfuelcms.com/helpers/directory_helper
  */
 
 

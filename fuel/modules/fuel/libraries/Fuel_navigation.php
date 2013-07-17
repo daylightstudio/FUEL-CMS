@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_navigation
+ * @link		http://docs.getfuelcms.com/libraries/fuel_navigation
  */
 
 // --------------------------------------------------------------------
@@ -168,7 +168,7 @@ class Fuel_navigation extends Fuel_module {
 			{
 				if ($this->CI->fuel->navigation->mode() != 'cms')
 				{
-					// load in navigation file as a starting poing
+					// load in navigation file as a starting point
 					if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
 					{
 						$p['root_value'] = NULL;
@@ -201,7 +201,7 @@ class Fuel_navigation extends Fuel_module {
 					}
 				}
 
-				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
+				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value
 				if (!empty($menu_items)) 
 				{
 					$$p['var'] = $menu_items;

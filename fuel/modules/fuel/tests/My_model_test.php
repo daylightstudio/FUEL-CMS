@@ -34,6 +34,9 @@ class My_model_test extends Tester_base {
 	{
 		$test_custom_records_model = new Test_users_model();
 		$user = $test_custom_records_model->find_one(array('user_name' => 'admin'));
+
+		// load helper first
+		$this->CI->load->helper('typography');
 		
 		$test_custom_records_model->add_formatter('string', 'auto_typography', 'formatted');
 		$test = $user->bio_formatted;

@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_advanced_modules
+ * @link		http://docs.getfuelcms.com/libraries/fuel_advanced_modules
  */
 
 // --------------------------------------------------------------------
@@ -390,8 +390,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			if ($look_in_settings)
 			{
-				if (is_array($this->_settings))
-				{
+                if (is_array($this->settings()))  //change from _settings to settings() because _settings isn't populated yet and settings() populates it
+                    {
 					return array_merge($this->_config, $this->_settings);	
 				}
 			}

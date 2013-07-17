@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -30,7 +30,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/menu
+ * @link		http://docs.getfuelcms.com/libraries/menu
  */
 
 class Menu {
@@ -398,6 +398,19 @@ class Menu {
 	public function render_array($items, $active = NULL, $parent_id = NULL)
 	{
 		return $this->render($items, $active, $parent_id, 'array');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the active items in the navigation. A render must be performed first
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function active_items()
+	{
+		return $this->_active_items;
 	}
 
 	// --------------------------------------------------------------------

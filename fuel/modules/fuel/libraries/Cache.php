@@ -10,7 +10,7 @@
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
- * @link		http://www.getfuelcms.com/user_guide/libraries/cache
+ * @link		http://docs.getfuelcms.com/libraries/cache
  */
 
 class Cache

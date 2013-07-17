@@ -9,7 +9,7 @@
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -28,7 +28,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$this->example_model->
  */
 
@@ -1665,38 +1665,50 @@ class MY_Model extends CI_Model {
 		$CI =& get_instance();
 		$use_rel_tbl = $this->is_using_relationship_table($rel_config);
 		$fields = $this->relationship_field_names($mode);
-		
+
 		if (is_array($related_model))
 		{
 			$related_model = $this->load_related_model($related_model);
 		}
 		
+		$key_field = $this->key_field();
 		if ($use_rel_tbl == FALSE)
 		{
-			$assoc_where = array($rel_config['foreign_key'] => $values['id']);
+			$assoc_where = array($rel_config['foreign_key'] => $values[$key_field]);
 			$related_keys = array_keys($CI->$related_model->find_all_array_assoc($CI->$related_model->key_field(), $assoc_where));
 		}
 		else
 		{
 			$relationships_model = $this->load_model($fields['relationships_model']);
-			
+			$assoc_where = array();
 			if ($mode == 'belongs_to')
 			{
-				$assoc_where = array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name());
-				if ( ! empty($values) AND array_key_exists('id', $values))
+				
+				if (!empty($fields['candidate_table']) AND !empty($fields['foreign_table']))
 				{
-					$assoc_where[$fields['foreign_key']] = $values['id'];
+					$assoc_where = array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name());
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $assoc_where, 'id'));
+
+				if ( ! empty($values) AND array_key_exists($key_field, $values))
+				{
+					$assoc_where[$fields['foreign_key']] = $values[$key_field];
+				}
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $assoc_where, $CI->$relationships_model->key_field()));
 			}
 			else
 			{
-				$assoc_where = array($fields['candidate_table'] => $this->table_name(), $fields['foreign_table'] => $CI->$related_model->table_name);
-				if ( ! empty($values) AND array_key_exists('id', $values))
+
+				if (!empty($fields['foreign_table']) AND !empty($fields['candidate_table']))
 				{
-					$assoc_where[$fields['candidate_key']] = $values['id'];
+					$assoc_where = array($fields['candidate_table'] => $this->table_name(), $fields['foreign_table'] => $CI->$related_model->table_name);	
 				}
-				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $assoc_where, 'id'));
+				
+				if ( ! empty($values) AND array_key_exists($key_field, $values))
+				{
+					$assoc_where[$fields['candidate_key']] = $values[$key_field];
+				}
+
+				$related_keys = array_keys($CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $assoc_where, $CI->$relationships_model->key_field()));
 			}
 		}
 		
@@ -3038,7 +3050,7 @@ class MY_Model extends CI_Model {
 	{
 		if (is_object($data))
 		{
-			if ($record instanceof Data_record)
+			if ($data instanceof Data_record)
 			{
 				$values = $data->values();
 			}
@@ -3131,7 +3143,15 @@ class MY_Model extends CI_Model {
 				if ($clear_on_save)
 				{
 					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
+					if (!empty($fields['candidate_table']))
+					{
+						$del_where = array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id);
+					}
+					else
+					{
+						$del_where = array($fields['candidate_key'] => $id);	
+					}
+					$CI->$relationships_model->delete($del_where);	
 				}
 			}
 
@@ -3170,7 +3190,15 @@ class MY_Model extends CI_Model {
 				if ($clear_on_save)
 				{
 					// remove pre-existing relationships
-					$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
+					if (!empty($fields['foreign_table']))
+					{
+						$del_where = array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
+					}
+					else
+					{
+						$del_where = array($fields['foreign_key'] => $id);
+					}
+					$CI->$relationships_model->delete($del_where);	
 				}
 
 			}
@@ -3213,7 +3241,15 @@ class MY_Model extends CI_Model {
 			foreach ($this->has_many as $related_field => $related_model)
 			{
 				$relationships_model = $this->load_model($fields['relationships_model']);
-				$CI->$relationships_model->delete(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id));
+				if (!empty($fields['candidate_table']))
+				{
+					$del_where = array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id);
+				}
+				else
+				{
+					$del_where = array($fields['candidate_key'] => $id);
+				}
+				$CI->$relationships_model->delete($del_where);
 			}
 		}
 		if ( ! empty($this->belongs_to))
@@ -3223,7 +3259,15 @@ class MY_Model extends CI_Model {
 			{
 				$related_model = $this->load_related_model($related_model);
 				$relationships_model = $this->load_model($fields['relationships_model']);
-				$CI->$relationships_model->delete(array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id));
+				if (!empty($fields['foreign_table']) AND !empty($fields['foreign_table']))
+				{
+					$del_where = array($fields['candidate_table'] => $CI->$related_model->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
+				}
+				else
+				{
+					$del_where = array($fields['foreign_key'] => $id);
+				}
+				$CI->$relationships_model->delete($del_where);
 			}
 		}
 	}
@@ -3550,7 +3594,6 @@ class MY_Model extends CI_Model {
 			return FALSE;
 		}
 		
-		$rel_config = $this->$relationship_type;
 		$fields = array(
 			'candidate_table'	=> 'candidate_table',
 			'foreign_table'		=> 'foreign_table',
@@ -3558,15 +3601,18 @@ class MY_Model extends CI_Model {
 			'candidate_key'		=> 'candidate_key',
 			'relationships_model'=> array(FUEL_FOLDER => 'fuel_relationships_model'),
 			);
-			
-		if (is_array($rel_config))
+
+		foreach($this->$relationship_type as $key => $rel_config)
 		{
-			// loop
-			foreach($fields as $key => $val)
+			if (is_array($rel_config))
 			{
-				if (isset($rel_config[$key]))
+				// loop
+				foreach($fields as $k => $v)
 				{
-					$fields[$key] = $rel_config[$key];
+					if (isset($rel_config[$k]))
+					{
+						$fields[$k] = $rel_config[$k];
+					}
 				}
 			}
 		}
@@ -4078,7 +4124,7 @@ class MY_Model extends CI_Model {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -4094,7 +4140,7 @@ class MY_Model extends CI_Model {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$data_set->
  */
 
@@ -4232,7 +4278,7 @@ class Data_set {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -4252,7 +4298,7 @@ class Data_set {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$record->
  */
 
@@ -4982,7 +5028,7 @@ class Data_record {
 				{
 					$f = $type_formatters[$func];
 
-					// if it is an array, we pass everything after the first argument to be argments for the function
+					// if it is an array, we pass everything after the first argument to be arguments for the function
 					if (is_array($f))
 					{
 						$f_args = $f;
@@ -5124,7 +5170,7 @@ class Data_record {
 			$this->$set_method($val);
 		}
 		// set in foreign keys only if it is an object
-		else if (is_object($val) AND ($record instanceof Data_record) AND in_array($var.'_id', array_keys($foreign_keys)))
+		else if (is_object($val) AND ($val instanceof Data_record) AND in_array($var.'_id', array_keys($foreign_keys)))
 		{
 			$this->_fields[$var] = $val;
 		}
@@ -5302,7 +5348,7 @@ class Data_record {
 					$fields['foreign_table']   => $this->_parent_model->table_name(),
 					$fields['foreign_key']     => $this->$id_field,
 					);
-				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('candidate_key', $rel_where, 'id'));
+				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc($fields['candidate_key'], $rel_where, $this->_CI->$relationships_model->key_field()));
 			}
 			else
 			{
@@ -5311,7 +5357,7 @@ class Data_record {
 					$fields['candidate_key']   => $this->$id_field,
 					$fields['foreign_table']   => $related_table_name,
 					);
-				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc('foreign_key', $rel_where, 'id'));
+				$rel_ids = array_keys($this->_CI->$relationships_model->find_all_array_assoc($fields['foreign_key'], $rel_where, $this->_CI->$relationships_model->key_field()));
 			}
 
 			if ( ! empty($rel_ids))
@@ -5449,7 +5495,7 @@ class Data_record {
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
  * @copyright	Copyright (c) 2013, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -5466,7 +5512,7 @@ class Data_record {
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_model
+ * @link		http://docs.getfuelcms.com/libraries/my_model
  * @prefix		$record->
  */
 
