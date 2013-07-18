@@ -191,9 +191,8 @@ class Module extends Fuel_base_controller {
 			if (!empty($languages) AND (is_string($first_option) OR (is_array($first_option)) AND count($first_option) > 1))
 			{
 				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
-				$this->filters[$this->language_col] = $lang_filter;
-				$this->model->filter_join = array();
-				$this->model->filter_join[$this->language_col] = 'and';
+				$this->filters[$this->language_col.'_equal'] = $lang_filter;
+				$this->model->add_filter_join($this->language_col.'_equal', 'and');
 			}
 		}
 		

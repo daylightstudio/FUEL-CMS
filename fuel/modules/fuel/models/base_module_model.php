@@ -238,6 +238,25 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Adds a filter join such as "and" or "or" to a particular field
+	 *
+	 * @access	public
+	 * @param	string The name of the field to filter on
+	 * @param	string "and" or "or" (optional)
+	 * @return	void
+	 */	
+	public function add_filter_join($field, $join_type = 'or')
+	{
+		if (!empty($this->filter_join) AND is_string($this->filter_join))
+		{
+			$this->filter_join = array($this->filter_join);
+		}
+		$this->filter_join[$field] = $join_type;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Lists the module's items
 	 *
 	 * @access	public
