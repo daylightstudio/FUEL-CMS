@@ -58,7 +58,10 @@
 				<?php endif; ?>
 			
 				<?php if ($this->fuel->language->has_multiple()) : ?>
-					<li> &nbsp;<?=$this->form->select($this->fuel->language->query_str_param, $this->fuel->language->options(), $language, 'id="__fuel_language__"')?></li>
+					<li> &nbsp;<?=$this->form->select($this->fuel->language->query_str_param, $this->fuel->language->options(), $language, 'id="__fuel_language__"')?>
+						<?=$this->form->hidden('language_mode', $language_mode, 'id="__fuel_language_mode__"')?>
+						<?=$this->form->hidden('language_default', $language_default, 'id="__fuel_language_default__"')?>
+					</li>
 				<?php endif; ?>
 				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
 				<?php if (count($others) > 0) : ?><li> &nbsp;<?=$this->form->select('others', $others, '', 'id="__fuel_page_others__"', lang('inline_edit_other_pages'))?> </li><?php endif; ?>

@@ -452,15 +452,25 @@ if (fuel == undefined) var fuel = {};
 			});
 
 			$('#__fuel_language__').change(function(){
-				var beginUrl = window.location.href.split('?')[0];
-				var queryStr = window.location.search.substring(1);
 				var param = $(this).attr('name');
-				var regEx = new RegExp('&?' + param + '=[^&]*');
+				var lang = $(this).val();
+				if ($('#__fuel_language_mode__').val() == 'segment'){
+					if ($('#__fuel_language_default__').val() != lang){
+						var url = basePath + lang + '/' + pageLocation;	
+					} else {
+						var url = basePath + pageLocation;
+					}
+					
+				} else {
+					var beginUrl = window.location.href.split('?')[0];
+					var queryStr = window.location.search.substring(1);
+					var regEx = new RegExp('&?' + param + '=[^&]*');
 
-				// remove any lang field values so it doesn't duplicate it in the query string
-				queryStr = queryStr.replace(regEx, '');
-				queryStr += '&' + param + '=' + $(this).val();
-				var url = beginUrl + '?' + queryStr;
+					// remove any lang field values so it doesn't duplicate it in the query string
+					queryStr = queryStr.replace(regEx, '');
+					queryStr += '&' + param + '=' + lang;
+					var url = beginUrl + '?' + queryStr;
+				}
 				window.location = url;
 				return false;
 			});

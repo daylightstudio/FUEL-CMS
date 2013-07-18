@@ -509,8 +509,6 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
-		$this->language = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
-
 		// assign the location of the page
 		$this->assign_location($this->location);
 
@@ -543,6 +541,9 @@ class Fuel_page extends Fuel_base_library {
 	 */	
 	public function assign_location($location)
 	{
+
+		$this->language = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
+
 		$this->location = $location;
 		
 		$default_home = $this->fuel->config('default_home_view');
@@ -567,19 +568,35 @@ class Fuel_page extends Fuel_base_library {
 		{
 			$segments = $this->CI->uri->rsegment_array();
 		}
-		
+
 		// in case a module has a name the same (like news...)
-		if (!empty($segments) AND $segments[count($segments)] == 'index')
+		if (!empty($segments))
 		{
-			array_pop($segments);
+			if ($segments[count($segments)] == 'index')
+			{
+				array_pop($segments);	
+			}
 		}
-		
+
+		// check if we are using language segments
+		if ($this->fuel->language->has_multiple())
+		{
+			$lang_seg = (empty($segments)) ? '' : $segments[1];
+			if ($this->fuel->language->lang_segment($lang_seg))
+			{
+				$this->fuel->language->set_selected($lang_seg);
+				$this->language = $lang_seg;
+				array_shift($segments);	
+			}
+		}
+
 		// MUST LOAD AFTER THE ABOVE SO THAT IT DOESN'T THROW A DB ERROR WHEN A DB ISN'T BEING USED
 		// get current page segments so that we can properly iterate through to determine what the actual location 
 		// is and what are params being passed to the location
 		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
 
-		if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
+		//if (count($this->CI->uri->segment_array()) == 0 OR $this->location == $default_home) 
+		if (count($segments) == 0 OR $this->location == $default_home) 
 		{
 			$page_data = $this->CI->fuel_pages_model->find_by_location($default_home, $this->only_published);
 			$this->location = $default_home;
@@ -588,7 +605,6 @@ class Fuel_page extends Fuel_base_library {
 		{
 			// if $location = xxx/yyy/zzz/, check first to see if /xxx/yyy/zzz exists in the DB, then reduce segments to xxx/yyy,
 			// xxx... until one is found in the DB. If only xxx is found in the database yyy and zzz will be treated as parameters
-			
 			
 			// determine max page params
 			$max_page_params = $this->get_max_page_param();

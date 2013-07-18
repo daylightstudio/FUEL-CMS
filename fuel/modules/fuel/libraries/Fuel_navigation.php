@@ -136,6 +136,20 @@ class Fuel_navigation extends Fuel_module {
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
 
+		// get language value... possible to get menu items from different languages so commented out for now
+		// if ($this->fuel->language->has_multiple() AND empty($p['language']))
+		// {
+		// 	$p['language'] = (!empty($p['language'])) ? $p['language'] : $this->fuel->language->detect();
+		// }
+
+		// adjust active value if using language segments
+		if ($this->fuel->language->lang_segment($p['active']))
+		{
+			$segments = explode('/', trim($p['active'], '/'));
+			array_shift($segments);
+			$p['active'] = implode('/', $segments);
+		}
+
 		if ($p['cache'] === TRUE)
 		{
 			// cache id and group
@@ -168,7 +182,7 @@ class Fuel_navigation extends Fuel_module {
 			{
 				if ($this->CI->fuel->navigation->mode() != 'cms')
 				{
-					// load in navigation file as a starting point
+					// load in navigation file as a starting poing
 					if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
 					{
 						$p['root_value'] = NULL;
@@ -177,7 +191,7 @@ class Fuel_navigation extends Fuel_module {
 				}
 				// now load the models
 				$this->fuel->load_model('fuel_navigation');
-				
+
 				// grab all menu items by group
 				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language'], 'nav_key');
 
@@ -201,7 +215,7 @@ class Fuel_navigation extends Fuel_module {
 					}
 				}
 
-				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value
+				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 				if (!empty($menu_items)) 
 				{
 					$$p['var'] = $menu_items;

@@ -1324,6 +1324,8 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
 		$vars['language'] = $this->fuel->language->detect();
+		$vars['language_mode'] = $this->fuel->language->mode();
+		$vars['language_default'] = $this->fuel->language->default_option();
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
 		$vars['is_fuelified'] = (is_fuelified() AND $this->CI->fuel->auth->has_permission('pages', 'edit'));

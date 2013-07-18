@@ -37,9 +37,10 @@
  * @access	public
  * @param	string	the URI string
  * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
+ * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
  * @return	string
  */
-function site_url($uri = '', $https = NULL)
+function site_url($uri = '', $https = NULL, $language = NULL)
 {
 	if (is_http_path($uri)) return $uri;
 	if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0))
@@ -48,8 +49,14 @@ function site_url($uri = '', $https = NULL)
 	}
 	else
 	{
+
 		$CI =& get_instance();
+		
+		// append any language stuff to the URL if configured
+		$uri  = $CI->fuel->language->uri($uri, $language);
+
 		$url = $CI->config->site_url($uri);
+
 		if ($https === TRUE)
 		{
 			$url = preg_replace('#^http:(.+)#', 'https:$1', $url);
