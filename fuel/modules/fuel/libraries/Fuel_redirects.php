@@ -308,7 +308,6 @@ class Fuel_redirects extends Fuel_base_library {
 				{
 					$pattern .= 'i';
 				}
-
 				if (preg_match($pattern, $uri))
 				{
 
@@ -317,7 +316,7 @@ class Fuel_redirects extends Fuel_base_library {
 					{
 						$value = preg_replace('#^'.$key.'$#', $value, $uri);
 					}
-					$url = site_url($value);
+					$url = site_url($value, FALSE, FALSE);
 
 					// call any pre redirect hooks
 					$hook_params = array('url' => $key, 'redirect' => $value, 'uri' => $uri);
