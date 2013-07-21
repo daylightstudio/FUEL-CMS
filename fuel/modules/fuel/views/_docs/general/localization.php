@@ -105,12 +105,6 @@ with your urser login.</p>
 <h2>The detect_lang Function:</h2>
 <p>The <a href="<?=user_guide_url('helpers/my_language_helper#func_detect_lang')?>">detect_lang()</a> function detects any specified language settings pulling from the URI, query string and then the user's browser settings.</p>
 
-<h2>The current_lang_url Function:</h2>
-<p>The <a href="<?=user_guide_url('helpers/my_language_helper#func_current_lang_url')?>">current_lang_url()</a> function returns the current url given a particular language value.</p>
-
-<h2>The site_lang_url Function:</h2>
-<p>The <a href="<?=user_guide_url('helpers/my_language_helper#func_site_lang_url')?>">site_lang_url()</a> function returns the a site url and is an alias to site_url($uri, NULL, $lang).</p>
-
 <h2>Form_builder Class</h2>
 <p>The <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder class</a> is used throughout FUEL CMS to create the forms used to manage module data. To allow for the localized labels in the module forms, the <var>lang_prefix</var> property can be used and will look for labels in language files using the format <var>form_label_{literal}{field_name}{/literal}</var>, if not label value is supplied.</p>
 

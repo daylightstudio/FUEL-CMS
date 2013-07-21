@@ -20,7 +20,7 @@
  * FUEL language object
  *
  * This class is used for setting and retrieving the different language options
- * Some code inspired by http://codeigniter.com/wiki/Language_Selection_2
+ * Some code inspired by https://github.com/EllisLab/CodeIgniter/wiki/Language-Selection-2
  *
  * @package		FUEL CMS
  * @subpackage	Libraries
@@ -517,6 +517,22 @@ class Fuel_language extends Fuel_base_library {
 	 */
 	function cleaned_uri($uri = NULL, $routed = FALSE)
 	{
+		$segs = $this->cleaned_uri_segments($uri, $routed);
+		return implode($segs, '/');
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Cleans a URI segments of any language segements
+	 *
+	 * @access	public
+	 * @param	string The URI string to check. If none provided, will use the regment_array or rsegment_array on the URI object (optional)
+	 * @param	boolean Determines whether to use a routed (TRUE), non-routed (FALSE) when looking at the URI segment if one is not provided in first argument (optional)
+	 * @return	string
+	 */
+	function cleaned_uri_segments($uri = NULL, $routed = FALSE)
+	{
 		if (is_null($uri))
 		{
 			$segs = ($routed) ? $this->CI->uri->rsegment_array() : $this->CI->uri->segment_array();
@@ -533,7 +549,10 @@ class Fuel_language extends Fuel_base_library {
 		{
 			array_shift($segs);	
 		}
-		return implode($segs, '/');
+
+		array_unshift($segs, NULL);
+		unset($segs[0]);
+		return $segs;
 	}
 
 	// --------------------------------------------------------------------
@@ -568,28 +587,6 @@ class Fuel_language extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the current URL with the option of specifying a different language (e.g. http://mysite.com/about could be http://mysite.com/es/about)
-	 * The <dfn>current_lang_url</dfn> function in the MY_language_helper calls this method
-	 *
-	 * 
-	 * @access	public
-	 * @param	string The language version you want the current URL to represent (optional)
-	 * @return	string
-	 */
-	function current_url($lang = NULL)
-	{
-		$uri = $this->cleaned_uri();
-
-		if (!empty($lang))
-		{
-			$uri = $lang.'/'.$uri;	
-		}
-		return site_url($uri, NULL, $lang);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Returns the URI path appending any necessary language information to the path
 	 *
 	 * @access	public
@@ -597,10 +594,10 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string The language version you want the current URL to represent (optional)
 	 * @return	string
 	 */
-	function uri($uri = '', $language = NULL)
+	function uri($uri = '', $lang = NULL)
 	{
-		$use_detect_lang = ($language === TRUE OR (is_null($language) AND (isset($this->CI->fuel) AND $this->CI->fuel->config('add_language_to_site_url'))));
-		if ((is_string($language) OR $use_detect_lang) AND !defined('FUEL_ADMIN') AND USE_FUEL_ROUTES === FALSE)
+		$use_detect_lang = ($lang === TRUE OR (is_null($lang) AND (isset($this->CI->fuel) AND $this->CI->fuel->config('add_language_to_site_url'))));
+		if (((is_string($lang) AND $lang != '') OR $use_detect_lang) AND !defined('FUEL_ADMIN') AND USE_FUEL_ROUTES === FALSE)
 		{
 
 			// set static variables to speed up subsequent calls
@@ -615,7 +612,7 @@ class Fuel_language extends Fuel_base_library {
 				{
 					$detect_lang =  $this->detect();
 				}
-				$language = $detect_lang;
+				$lang = $detect_lang;
 			}
 
 			if (is_null($lang_seg))
@@ -633,13 +630,14 @@ class Fuel_language extends Fuel_base_library {
 				}
 			}
 
-			// if $language is set then we will check to see if it is a legit language and use it
-			if (!empty($language) AND $language != $this->is_default($language) AND !in_array($lang_seg, $no_lang))
+			$uri = $this->cleaned_uri($uri);
+			
+			// if $lang is set then we will check to see if it is a legit language and use it
+			if (!empty($lang) AND $lang != $this->is_default($lang) AND !in_array($lang_seg, $no_lang))
 			{
-				$uri = $this->cleaned_uri($uri);
 				if (!$this->is_mode('query_string'))
 				{
-					$uri = $language.'/'.trim($uri, '/');
+					$uri = $lang.'/'.trim($uri, '/');
 				}
 				else
 				{
@@ -663,9 +661,9 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string The language version you want the current URL to represent (optional)
 	 * @return	string
 	 */
-	function url($uri = '', $language = NULL)
+	function url($uri = '', $lang = NULL)
 	{
-		return site_url($uri, NULL, $language);
+		return site_url($uri, NULL, $lang);
 	}
 
 

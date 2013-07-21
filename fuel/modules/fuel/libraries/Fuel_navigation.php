@@ -141,15 +141,6 @@ class Fuel_navigation extends Fuel_module {
 		// {
 		// 	$p['language'] = (!empty($p['language'])) ? $p['language'] : $this->fuel->language->detect();
 		// }
-
-		// adjust active value if using language segments
-		if ($this->fuel->language->lang_segment($p['active']))
-		{
-			$segments = explode('/', trim($p['active'], '/'));
-			array_shift($segments);
-			$p['active'] = implode('/', $segments);
-		}
-
 		if ($p['cache'] === TRUE)
 		{
 			// cache id and group

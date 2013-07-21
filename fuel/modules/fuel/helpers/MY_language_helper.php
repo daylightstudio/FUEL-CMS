@@ -40,7 +40,6 @@
  * @param 	mixed
  * @return	string
  */
-// 
 function lang($key, $args = NULL)
 {
 
@@ -74,7 +73,6 @@ function lang($key, $args = NULL)
  * @param 	boolean
  * @return	string
  */
-// 
 function json_lang($js_localized = array(), $return_json = TRUE)
 {
 	
@@ -128,13 +126,11 @@ function json_lang($js_localized = array(), $return_json = TRUE)
 // --------------------------------------------------------------------
 
 /**
- * Detects any specified language settings
+ * Detects any specified language settings pulling from the URI, query string and then the user's browser settings
  *
- * @param 	array
  * @param 	boolean	Determines whether to set the "langauge" config property
  * @return	string
  */
-// 
 function detect_lang($set_config = FALSE)
 {
 	$CI =& get_instance();

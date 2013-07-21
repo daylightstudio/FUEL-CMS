@@ -1572,7 +1572,9 @@ class Fuel_page extends Fuel_base_library {
 		
 		if (is_array($this->fuel->config('max_page_params')))
 		{
-			$location = implode('/', $this->CI->uri->rsegment_array());
+			//$location = implode('/', $this->CI->uri->rsegment_array());
+			$location = uri_path(); // use this function instead so it will remove any language parameters
+			
 			foreach($this->fuel->config('max_page_params') as $key => $val)
 			{
 				// add any match to the end of the key in case it doesn't exist (no problems if it already does)'

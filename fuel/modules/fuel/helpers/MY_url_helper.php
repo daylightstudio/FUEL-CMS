@@ -77,13 +77,14 @@ function site_url($uri = '', $https = NULL, $language = NULL)
  *
  * @access	public
  * @param	boolean	determines whether to include query string parameters
+ * @param	boolean	determines whether to change the language value
  * @return	string
  */
-function current_url($show_query_str = FALSE)
+function current_url($show_query_str = FALSE, $lang = NULL)
 {
     $CI =& get_instance();
 
-    $url = $CI->config->site_url($CI->uri->uri_string());
+    $url = site_url($CI->uri->uri_string(), NULL, $lang);
     if ($show_query_str AND !empty($_SERVER['QUERY_STRING']))
     {
     	$url = $url.'?'.$_SERVER['QUERY_STRING'];
@@ -99,21 +100,32 @@ function current_url($show_query_str = FALSE)
  * @access	public
  * @param	boolean	use the rerouted URI string?
  * @param	boolean	the start index to build the uri path
+ * @param	boolean	determines whether to strip any language segments
  * @return	string
  */
-function uri_path($rerouted = TRUE, $start_index = 0)
+function uri_path($rerouted = TRUE, $start_index = 0, $strip_lang = TRUE)
 {
 	$CI =& get_instance();
-	$segments = ($rerouted) ? $CI->uri->rsegment_array() : $CI->uri->segment_array();
-	if (!empty($segments) && $segments[count($segments)] == 'index')
+
+	if ($strip_lang AND isset($CI->fuel) AND $CI->fuel->language->has_multiple())
 	{
-		array_pop($segments);
+		$location = $CI->fuel->language->cleaned_uri(NULL, !$rerouted);
 	}
-	if (!empty($start_index))
+	else
 	{
-		$segments = array_slice($segments, $start_index);
+
+		$segments = ($rerouted) ? $CI->uri->rsegment_array() : $CI->uri->segment_array();
+		if (!empty($segments) && $segments[count($segments)] == 'index')
+		{
+			array_pop($segments);
+		}
+		if (!empty($start_index))
+		{
+			$segments = array_slice($segments, $start_index);
+		}
+		$location = implode('/', $segments);
+
 	}
-	$location = implode('/', $segments);
 	return $location;
 }
 
@@ -126,21 +138,29 @@ function uri_path($rerouted = TRUE, $start_index = 0)
  * @param	int	the segment number
  * @param	string	the default value if the segment doesn't exist
  * @param	boolean	whether to use the rerouted uri
+ * @param	boolean	determines whether to strip any language segments
  * @return	string
  */
-function uri_segment($n, $default = FALSE, $rerouted = TRUE)
+function uri_segment($n, $default = FALSE, $rerouted = TRUE, $strip_lang = TRUE)
 {
 	$CI =& get_instance();
-
-	if ($rerouted)
+	if ($strip_lang AND isset($CI->fuel) AND $CI->fuel->language->has_multiple())
 	{
-		return $CI->uri->segment($n, $default);
+		$segments = $CI->fuel->language->cleaned_uri_segments(NULL, !$rerouted);
+		$seg =  (isset($segments[$n])) ? $segments[$n] : $default;
 	}
 	else
 	{
-		return $CI->uri->rsegment($n, $default);
-
+		if ($rerouted)
+		{
+			$seg = $CI->uri->segment($n, $default);
+		}
+		else
+		{
+			$seg = $CI->uri->rsegment($n, $default);
+		}
 	}
+	return $seg;
 }
 
 // --------------------------------------------------------------------
