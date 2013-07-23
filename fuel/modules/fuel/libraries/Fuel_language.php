@@ -453,9 +453,27 @@ class Fuel_language extends Fuel_base_library {
 	 * @param	string The language segment value
 	 * @return	boolean
 	 */
-	function is_lang_segment($segment)
+	function is_current_lang_segment($segment)
 	{
 		return $this->lang_segment() == $segment;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a boolean value depending on if the passed segment value is a valid language segment
+	 *
+	 * @access	public
+	 * @param	string The language segment value
+	 * @return	boolean
+	 */
+	function is_lang_segment($lang)
+	{
+		if (!empty($lang) AND in_array($lang, array_keys($this->options())))
+		{
+			return $lang;
+		}
+		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -478,29 +496,44 @@ class Fuel_language extends Fuel_base_library {
 
 		if (is_null($uri))
 		{
-			if ($routed === FALSE)
+			if ($routed == 'both')
 			{
+
+				// check the normal segment array
 				$segs = $this->CI->uri->segment_array();
-			}
-			else if ($routed === TRUE)
-			{
+				$lang = array_shift($segs);
+				if ($this->is_lang_segment($lang))
+				{
+					return $lang;
+				}
+
+				// check the routed segment array
 				$segs = $this->CI->uri->rsegment_array();
+				$lang = array_shift($segs);
+				if ($this->is_lang_segment($lang))
+				{
+					return $lang;
+				}
+
 			}
 			else
 			{
-				$segs = array_merge($this->CI->uri->rsegment_array(), $this->CI->uri->segment_array());	
+				if ($routed === FALSE)
+				{
+					$segs = $this->CI->uri->segment_array();
+				}
+				else
+				{
+					$segs = $this->CI->uri->rsegment_array();
+				}
+				$lang = array_shift($segs);
+				return $this->is_lang_segment($lang);
 			}
-			
-			$lang = array_shift($segs);
 		}
-		else
+		else if (is_string($uri))
 		{
 			$lang = current(explode('/', $uri));
-		}
-
-		if (!empty($lang) AND in_array($lang, array_keys($this->options())))
-		{
-			return $lang;
+			return $this->is_lang_segment($lang);
 		}
 		return FALSE;
 	}
@@ -566,7 +599,7 @@ class Fuel_language extends Fuel_base_library {
 	 */
 	function redirect_to_lang($lang = NULL)
 	{
-		if ($this->lang_segment($lang) AND !$this->is_lang_segment($lang))
+		if ($this->lang_segment($lang) AND !$this->is_current_lang_segment($lang))
 		{
 			if (empty($lang))
 			{
