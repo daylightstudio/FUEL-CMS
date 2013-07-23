@@ -93,7 +93,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$this->config->load($this->language);
+				$this->load->language($this->language);
 			}
 		}
 		
