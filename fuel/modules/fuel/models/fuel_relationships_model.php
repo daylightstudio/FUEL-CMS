@@ -56,13 +56,13 @@ class Fuel_relationships_model extends Base_module_model {
 	 * @param	string Values can be object, array, query, auto (optional)
 	 * @return	array
 	 */	
-	public function find_by_candidate($candidate_table, $foreign_table, $candidate_id = NULL, $return_method = NULL)
+	public function find_by_candidate($candidate_table, $foreign_table, $candidate_key = NULL, $return_method = NULL)
 	{
 		$where['candidate_table'] = $candidate_table;
 		$where['foreign_table'] = $foreign_table;
-		if (!empty($candidate_id))
+		if (!empty($candidate_key))
 		{
-			$where['candidate_id'] = $candidate_id;
+			$where['candidate_key'] = $candidate_key;
 		}
 		$this->_common_select_and_joins($candidate_table, $foreign_table);
 		return $this->find_all($where, NULL, NULL, NULL, $return_method);
@@ -79,13 +79,13 @@ class Fuel_relationships_model extends Base_module_model {
 	 * @param	string Values can be object, array, query, auto
 	 * @return	array
 	 */	
-	public function find_by_foreign($candidate_table, $foreign_table, $foreign_id = NULL, $return_method = NULL)
+	public function find_by_foreign($candidate_table, $foreign_table, $foreign_key = NULL, $return_method = NULL)
 	{
 		$where['candidate_table'] = $candidate_table;
 		$where['foreign_table'] = $foreign_table;
-		if (!empty($foreign_id))
+		if (!empty($foreign_key))
 		{
-			$where['foreign_id'] = $foreign_id;
+			$where['foreign_key'] = $foreign_key;
 		}
 		$this->_common_select_and_joins($candidate_table, $foreign_table);
 		return $this->find_all($where, NULL, NULL, NULL, $return_method);
