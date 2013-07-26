@@ -339,6 +339,8 @@ if (fuel == undefined) var fuel = {};
 							} else {
 								var url = $(this).attr('href') + param1 + '/' + param2;
 							}
+							url = url + '?lang=' + $('#__fuel_language__').val();
+
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
