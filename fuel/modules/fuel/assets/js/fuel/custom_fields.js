@@ -835,26 +835,6 @@ fuel.fields.template_field = function(context, options){
 	
 	if (!options) options = {};
 
-	var currentCKTexts = {};
-
-	// hack to prevent CKEditor issues
-	var sortStarted = function(){
-		if (typeof CKEDITOR != 'undefined'){
-			for(var n in CKEDITOR.instances){
-				currentCKTexts[n] = CKEDITOR.instances[n].getData();
-				$('#' + n).removeClass('ckeditor_applied');
-				CKEDITOR.instances[n].destroy();
-			}
-		}
-	}
-
-	var sortStopped = function(){
-		if (typeof CKEDITOR != 'undefined'){
-			// can't pass context because we do a global destroy on CKEditor fields
-			fuel.fields.wysiwyg_field();
-		}
-	}
-
 	var repeatable = function($repeatable){
 		
 		// set individual options based on the data-max attribute
@@ -878,32 +858,51 @@ fuel.fields.template_field = function(context, options){
 	repeatable($parentElems);
 
 	$(document).off('sortStopped').on('sortStarted', function(){
-		sortStarted();
+		fuel.fields.sortStarted();
 	})
 	$(document).off('sortStopped').on('sortStopped', function(){
-		sortStopped();
+		fuel.fields.sortStopped();
 	})
 
 	// Remove clone event	
-	$(document).off('cloned');
-
+	$(document).off('cloned', '.repeatable_container', fuel.fields.clonedFunc);
 
 	// Add another event handler	
-	$(document).on('cloned', function(e){
-		
-		$('#form').formBuilder().initialize(e.clonedNode);
-
-		// Hacktastic to remove any loader icons left on from fuel.fields.block
-		e.clonedNode.find('.loader').hide();
-
-		// to help with CKEditor issues... UGH!!!
-		setTimeout(function(){
-			sortStarted();
-			sortStopped();
-		}, 300)
-	})
+	$(document).on('cloned', '.repeatable_container', fuel.fields.clonedFunc)
 
 
+}
+
+// hack to prevent CKEditor issues
+fuel.fields.sortStarted = function(){
+	var currentCKTexts = {};
+	if (typeof CKEDITOR != 'undefined'){
+		for(var n in CKEDITOR.instances){
+			currentCKTexts[n] = CKEDITOR.instances[n].getData();
+			$('#' + n).removeClass('ckeditor_applied');
+			CKEDITOR.instances[n].destroy();
+		}
+	}
+}
+
+fuel.fields.sortStopped = function(){
+	if (typeof CKEDITOR != 'undefined'){
+		// can't pass context because we do a global destroy on CKEditor fields
+		fuel.fields.wysiwyg_field();
+	}
+}
+
+fuel.fields.clonedFunc = function(e){
+	$('#form').formBuilder().initialize(e.clonedNode);
+
+	// Hacktastic to remove any loader icons left on from fuel.fields.block
+	e.clonedNode.find('.loader').hide();
+
+	// to help with CKEditor issues... UGH!!!
+	setTimeout(function(){
+		fuel.fields.sortStarted();
+		fuel.fields.sortStopped();
+	}, 300)
 }
 
 // url select field

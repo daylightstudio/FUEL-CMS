@@ -280,7 +280,7 @@ dave@thedaylightstudio.com
 				$(this).hide();
 			}
 			checkMin($prev, min);
-			$(document).trigger({type: 'cloned', clonedNode: $clonecopy});
+			$this.trigger({type: 'cloned', clonedNode: $clonecopy});
 
 		});
 
