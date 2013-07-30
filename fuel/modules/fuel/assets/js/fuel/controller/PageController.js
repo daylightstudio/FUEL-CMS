@@ -29,7 +29,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		var retreiveLayoutVarsCallback = function(){
 			var context = $('#fuel_main_content_inner');
 			_this.initSpecialFields(context);
-			$(this).trigger('varsLoaded');
+			$('#layout_vars').trigger('varsLoaded')
 			if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 		}
 
