@@ -1,5 +1,4 @@
 <?php
-
 /***************************************************************
 ATTENTION: There is a static view file of sitemap_xml.php that 
 can be used to create sitemaps outside of creating a CMS page
@@ -19,7 +18,13 @@ $nav = array_merge($nav, $modules);
 $nav[''] = '';
 unset($nav['home']);
 
+
+/**************************************************************/
+
 if (empty($nav)) show_404();
+header('Content-type: text/xml');
+// needed because of the Loader class mistaking the end of the xml node as PHP in load->view
+echo str_replace(';', '', '<?xml version="1.0" encoding="UTF-8"?>');
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
