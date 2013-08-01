@@ -90,7 +90,7 @@ $fields['sections'] = array(
 $this->form_builder->set_fields($fields);
 
 // render the page
-$vars['form'] = $this->form_builder->render($fields);
+$vars['form'] = $this->form_builder->render();
 $this->load->view('page', $vars);
 </pre>
 
