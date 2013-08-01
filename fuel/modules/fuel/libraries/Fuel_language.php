@@ -37,8 +37,10 @@ class Fuel_language extends Fuel_base_library {
 	public $selected = ''; // The currently selected language. The default is the language specified in the CI config
 	public $query_str_param = 'lang'; // The name of the query string parameter to use for setting the language
 	public $cookie_name = ''; // The name of the cookie to hold the currently selected language
-	public $cookie_exp = '63072000'; // Default is 2 years
-	public $use_cookies = FALSE; // use cookies to remember a selected language
+	public $cookie_exp = '63072000'; // default is 2 years
+	public $use_cookies = TRUE; // use cookies to remember a selected language
+	public $detect_user_agent = 'auto'; // will check the user agent during language detection
+	public $default_option = NULL; // the default language to use 
 	
 	// --------------------------------------------------------------------
 	
@@ -72,6 +74,17 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	public function initialize($params = array())
 	{
+		// first set the default to the values in the FUEL config
+		$_fuel_config = array('query_str_param', 'cookie_name', 'cookie_exp', 'use_cookies', 'detect_user_agent', 'default_option');
+		foreach($_fuel_config as $p)
+		{
+			$config = $this->fuel->config('language_'.$p);
+			if (!empty($config))
+			{
+				$this->$p = $config;	
+			}
+		}
+
 		parent::initialize($params);
 		$this->options = $this->fuel->config('languages');
 		$this->selected = $this->CI->config->item('language');
@@ -196,6 +209,20 @@ class Fuel_language extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Sets the default language option
+	 *
+	 * @access	public
+	 * @param	string language key value to set as the default
+	 * @return	string
+	 */	
+	public function set_default_option($lang)
+	{
+		return $this->default_option = $lang;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * The default language option
 	 *
 	 * @access	public
@@ -203,6 +230,11 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	public function default_option()
 	{
+		if (isset($this->default_option))
+		{
+			return $this->default_option;
+		}
+
 		if (is_array($this->options))
 		{
 			reset($this->options);
@@ -269,6 +301,10 @@ class Fuel_language extends Fuel_base_library {
 		if ($this->is_mode('segment') OR $this->is_mode('both') AND empty($language))
 		{
 			$language = $this->lang_segment();
+			if (!$language)
+			{
+				$language = $this->default_option();
+			}
 		}
 
 		// if that language doesn't exist, then we'll check the cookie value
@@ -278,17 +314,12 @@ class Fuel_language extends Fuel_base_library {
 			$language = $this->cookie_value();
 			
 			// again... if that language doesn't exist in the query string or cookie, then we'll check the HTTP_ACCEPT_LANGUAGE value
-			if (!$this->has_language($language))
+			// this will only be used if you are using the query_string mode and have detect_user_agent set to TRUE (which it is by default)
+			if (!$this->has_language($language) AND 
+				($this->detect_user_agent === TRUE OR 
+				(strtolower($this->detect_user_agent) == 'auto' AND $this->is_mode('query_string'))))
 			{
-				// check all of them
-				foreach ($this->CI->agent->languages() as $lang)
-				{
-					if ($this->has_language($lang))
-					{
-						$language = $lang;
-						break;
-					}
-				}
+				$language = $this->user_agent();
 			}
 		}
 
@@ -305,6 +336,28 @@ class Fuel_language extends Fuel_base_library {
 		}
 		
 		return $language;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Retrieves the language set by the user agent
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function user_agent()
+	{
+		// check all of them
+		foreach ($this->CI->agent->languages() as $lang)
+		{
+			if ($this->has_language($lang))
+			{
+				$language = $lang;
+				return $lang;
+			}
+		}
+		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
