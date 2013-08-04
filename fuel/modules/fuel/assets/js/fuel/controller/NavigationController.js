@@ -4,15 +4,17 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 		this._super(initObj);
 	},
 
-	/*items : function(){
+	items : function(){
 		// call parent
 		fuel.controller.BaseFuelController.prototype.items.call(this);
 		//fuel.controller.BaseFuelController.prototype.items();
 		var _this = this;
-		$('#group_id').change(function(e){
-			$('#form_actions').submit();
-		});
-	},*/
+		
+		$('.ico_navigation_download').click(function(e){
+			e.preventDefault();
+			$('#form').attr('action', $(this).attr('href')).attr('method', 'post').submit();
+		})
+	},
 	
 	add_edit : function(){
 		// call parent

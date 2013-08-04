@@ -436,6 +436,7 @@ $lang['btn_duplicate'] = 'Duplicate';
 $lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
+$lang['btn_download'] = 'Download';
 $lang['btn_export_data'] = 'Export Data';
 
 $lang['btn_no'] = 'No';

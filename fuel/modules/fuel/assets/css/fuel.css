@@ -396,6 +396,7 @@ div#fuel_left_panel_inner li.active ul li.active a { text-decoration: underline;
 .ico_other { background-image: url(../images/ico_cog.png); }
 .ico_pages { background-image: url(../images/ico_layout.png); }
 .ico_pages_upload, .ico_navigation_upload, .ico_blocks_upload { background-image: url(../images/ico_page_white_get.png); }
+.ico_navigation_download { background-image: url(../images/ico_page_white_put.png); }
 .ico_permissions { background-image: url(../images/ico_key.png); }
 .ico_precedence { background-image: url(../images/ico_table_row_insert.png); }
 .ico_publish { background-image: url(../images/ico_page_green.png); }

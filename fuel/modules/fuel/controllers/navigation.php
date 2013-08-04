@@ -86,6 +86,54 @@ class Navigation extends Module {
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}	
 	
+	public function download()
+	{
+		if (!empty($_POST['group_id']))
+		{
+			$this->load->helper('download');
+			$where['group_id'] = $this->input->post('group_id', TRUE);
+			$where['published'] = 'yes';
+			$data = $this->model->find_all_array_assoc('nav_key', $where, 'parent_id asc, precedence asc');
+			$var = '$nav';
+			$str = "<?php \n";
+			foreach($data as $key => $val)
+			{
+				// add label
+				$str .= $var."['".$key."'] = array('label' => '".$val['label']."', ";
+
+				// add location
+				if ($key != $val['location'])
+				{
+					$str .= "'location' => '".$val['location']."', ";
+				}
+
+				if (!empty($val['parent_id']))
+				{
+					$parent_data  = $this->model->find_one_array(array('id' => $val['parent_id']));
+					$str .= "'parent_id' => '".$parent_data['nav_key']."', ";
+				}
+
+				if (is_true_val($val['hidden']))
+				{
+					$str .= "'hidden' => 'yes', ";
+				}
+
+				if (!empty($val['attributes']))
+				{
+					$str .= "'attributes' => '".$val['attributes']."', ";
+				}
+
+				if (!empty($val['selected']))
+				{
+					$str .= "'selected' => '".$val['selected']."', ";
+				}
+				$str = substr($str, 0, -2);
+				$str .= ");\n";
+			}
+			force_download('nav.php', $str);
+		}
+	}
+	
 	public function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
 	{
 		if (is_ajax() AND !empty($group_id))
