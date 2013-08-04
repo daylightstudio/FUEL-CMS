@@ -84,7 +84,7 @@ $config['modules']['navigation'] = array(
 	'instructions' => lang('navigation_instructions'),
 	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'fuel_navigation_groups_model', 'hide_if_one' => TRUE)),
 	'archivable' => TRUE,
-	'list_actions' => array('navigation/upload' => lang('btn_upload'), 'navigation/download' => lang('btn_downlaod'))
+	'list_actions' => array('navigation/upload' => lang('btn_upload'), 'navigation/download' => lang('btn_download'))
 );
 
 // navigation module init values
