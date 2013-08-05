@@ -163,25 +163,6 @@ $config['language_default_option'] = NULL;
 
 /*
 |--------------------------------------------------------------------------
-| Language settings 
-|--------------------------------------------------------------------------
-*/
-
-// languages for pages. The key is saved to the page variables
-$config['languages'] = array(
-						'english' => 'English',
-						);
-
-// specifies the method in which to look for pages with different languages.
-// values can be "segment", "query_string" or "both"
-$config['language_mode'] = 'segment';
-
-// append the current language value to the site URL automatically
-$config['add_language_to_site_url'] = FALSE;
-
-
-/*
-|--------------------------------------------------------------------------
 | Asset settings 
 |--------------------------------------------------------------------------
 */
