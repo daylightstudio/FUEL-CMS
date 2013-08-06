@@ -18,15 +18,15 @@ $fields['date'] = array(
 $fields['multi'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'multi',
-	'js'		=> array(
-						FUEL_FOLDER => array(
-							'jquery/plugins/jquery.selso',
-							'jquery/plugins/jquery.disable.text.select.pack',
-							'jquery/plugins/jquery.supercomboselect',
-						)
-	),
+	// 'js'		=> array(
+	// 					FUEL_FOLDER => array(
+	// 						'jquery/plugins/jquery.selso',
+	// 						'jquery/plugins/jquery.disable.text.select.pack',
+	// 						'jquery/plugins/jquery.supercomboselect',
+	// 					)
+	// ),
 	'js_function' => 'fuel.fields.multi_field',
-	'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
+	//'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
 	'represents' => 'array',
 );	
 
@@ -35,11 +35,11 @@ $fields['asset'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'asset',
 	'filepath'	=> '',
-	'js'		=> array(
-						FUEL_FOLDER => array(
-							'jquery/plugins/jqModal',
-						)
-	),
+	// 'js'		=> array(
+	// 					FUEL_FOLDER => array(
+	// 						'jquery/plugins/jqModal',
+	// 					)
+	// ),
 	'js_function' => 'fuel.fields.asset_field',
 	'represents' => array('name' => '.*image\]?$|.*img\]?$'),
 );
@@ -49,7 +49,6 @@ $fields['wysiwyg'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'wysiwyg',
 	'filepath'	=> '',
-	'css' 		=> array(FUEL_FOLDER => 'markitup'),
 	'js'		=> array(
 						FUEL_FOLDER => array(
 							'editors/markitup/jquery.markitup',
@@ -58,7 +57,7 @@ $fields['wysiwyg'] = array(
 							'editors/ckeditor/config.js',
 						)
 	),
-	'css' => array(FUEL_FOLDER => 'markitup'),
+	//'css' => array(FUEL_FOLDER => 'markitup'),
 	'js_function' => 'fuel.fields.wysiwyg_field',
 	'represents' => array('text', 'textarea', 'longtext', 'mediumtext'),
 );
@@ -68,11 +67,11 @@ $fields['file'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'file',
 	'filepath'	=> '',
-	'js'		=> array(
-						FUEL_FOLDER => array(
-							'jquery/plugins/jquery.MultiFile',
-						)
-	),
+	// 'js'		=> array(
+	// 					FUEL_FOLDER => array(
+	// 						'jquery/plugins/jquery.MultiFile',
+	// 					)
+	// ),
 	'js_function' => 'fuel.fields.file_upload_field',
 	'represents' => 'blob',
 	
@@ -91,11 +90,11 @@ $fields['linked'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'linked',
 	'filepath'	=> '',
-	'js'		=> array(
-		FUEL_FOLDER => array(
-			'fuel/linked_field_formatters',
-		)
-	),
+	// 'js'		=> array(
+	// 	FUEL_FOLDER => array(
+	// 		'fuel/linked_field_formatters',
+	// 	)
+	// ),
 	'js_function' => 'fuel.fields.linked_field',
 
 );
@@ -105,17 +104,17 @@ $fields['template'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'template',
 	'filepath'	=> '',
-	'js'		=> array(
-						FUEL_FOLDER => 
-							'jquery/plugins/jquery.repeatable',
-							),
+	// 'js'		=> array(
+	// 					FUEL_FOLDER => 
+	// 						'jquery/plugins/jquery.repeatable',
+	// 						),
 	'js_function' => 'fuel.fields.template_field',
 	'js_exec_order' => 0, // must be set to 0 so that the node clone will get raw nodes before other js is executed
 );
 
 // number field
 $fields['number'] = array(
-	'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
+	//'js'		=> array(FUEL_FOLDER => 'jquery/plugins/jquery.numeric'),
 	'js_function' => 'fuel.fields.number_field',
 	'represents' => array('int', 'smallint', 'mediumint', 'bigint'),
 );
@@ -144,11 +143,11 @@ $fields['slug'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'slug',
 	'filepath'	=> '',
-	'js'		=> array(
-		FUEL_FOLDER => array(
-			'fuel/linked_field_formatters',
-		)
-	),
+	// 'js'		=> array(
+	// 	FUEL_FOLDER => array(
+	// 		'fuel/linked_field_formatters',
+	// 	)
+	// ),
 	'js_function' => 'fuel.fields.linked_field',
 	'represents' => array('name' => 'slug|permalink'),
 );
@@ -165,11 +164,11 @@ $fields['url'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'url',
 	'filepath'	=> '',
-	'js'		=> array(
-						FUEL_FOLDER => array(
-							'jquery/plugins/jqModal',
-						)
-	),
+	// 'js'		=> array(
+	// 					FUEL_FOLDER => array(
+	// 						'jquery/plugins/jqModal',
+	// 					)
+	// ),
 	'js_function' => 'fuel.fields.url_field',
 	'represents' => array('name' => 'url|link'),
 );

@@ -7,7 +7,7 @@
 
  	<meta name="viewport" content="width=device-width">
 
-	<?=css('jqmodal, jquery.tooltip, jquery.treeview, fuel-theme/jquery-ui-1.8.17.custom, fuel', 'fuel')?>
+	<?=css('fuel.min', 'fuel')?>
 
 	<?php foreach($css as $m => $c) : echo css(array($m => $c))."\n\t"; endforeach; ?>
 	<?=js('jquery/jquery', 'fuel')?>

@@ -10,7 +10,7 @@
 $success = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('success')); // convert script tags
 
 ?>
-	<div class="success ico_success"><?=$success;?></div>
+	<div class="success ico ico_success"><?=$success;?></div>
 <?php else: ?>
 	<?php echo display_errors(NULL, 'error ico_error')?>
 <?php endif; ?>

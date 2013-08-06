@@ -115,13 +115,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		switch(type){
 			case 'warn' : case 'warning':
-				cssClass = 'ico_warn warning ' + cssClass;
+				cssClass = 'ico ico_warn warning ' + cssClass;
 				break;
 			case 'error':
-				cssClass = 'ico_error error ' + cssClass;
+				cssClass = 'ico ico_error error ' + cssClass;
 				break;
 			case 'success': case 'saved':
-				cssClass = 'ico_success success ' + cssClass;
+				cssClass = 'ico ico_success success ' + cssClass;
 				break;
 		}
 		

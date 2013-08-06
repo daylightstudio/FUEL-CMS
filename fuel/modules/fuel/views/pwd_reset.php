@@ -4,7 +4,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
  	<title><?=$page_title?></title>
-	<?=css('fuel', FUEL_FOLDER)?>
+	<?=css('fuel.min', FUEL_FOLDER)?>
 	<?php if (!empty($css)) : ?>
 	<?=$css?>
 	<?php endif; ?>
