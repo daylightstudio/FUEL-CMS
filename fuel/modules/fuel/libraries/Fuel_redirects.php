@@ -255,14 +255,14 @@ class Fuel_redirects extends Fuel_base_library {
 	 */	
 	public function execute($show_404 = TRUE, $only_passive = TRUE)
 	{
-		// loaded for counting number of redirects
-		$this->CI->load->library('session');
-
 		$redirects = $this->redirects($only_passive);
 		$uri = $this->_get_uri();
 		
 		if (!empty($redirects))
 		{
+			// loaded for counting number of redirects
+			$this->CI->load->library('session');
+
 
 			// Is there a literal match?  If so we're done
 			if (isset($redirects[$uri]))
