@@ -53,7 +53,10 @@ function site_url($uri = '', $https = NULL, $language = NULL)
 		$CI =& get_instance();
 		
 		// append any language stuff to the URL if configured
-		$uri  = $CI->fuel->language->uri($uri, $language);
+		if (isset($CI->fuel))
+		{
+			$uri  = $CI->fuel->language->uri($uri, $language);	
+		}
 
 		$url = $CI->config->site_url($uri);
 
