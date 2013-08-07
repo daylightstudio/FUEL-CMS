@@ -426,7 +426,7 @@ main panel
 ******************************************************/
 div#fuel_main_panel { position: absolute; top: 0; left: 201px; right: 0px; bottom: 0px; background-color: #fff; -webkit-transition: all 0.2s cubic-bezier(0.445,0,0,1); -moz-transition: all 0.2s cubic-bezier(0.445,0,0,1); -ms-transition: all 0.2s cubic-bezier(0.445,0,0,1); -o-transition: all 0.2s cubic-bezier(0.445,0,0,1); transition: all 0.2s cubic-bezier(0.445,0,0,1); }
 #nav_toggle { opacity:0.9;}
-#nav_toggle { position: absolute; left: 182px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 25px; background:url(../images/ico_nav_list.png) no-repeat left center; background-size: 50%; text-indent: -10000px; }
+#nav_toggle { position: absolute; left: 182px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 25px; background:url(../images/icons/ico_nav_list.png) no-repeat left center; background-size: 50%; text-indent: -10000px; }
 
 .nav_hide div#fuel_main_panel, div#fuel_left_panel { top: 30px; left: 0px; }
 body.nav_hide { overflow: hidden; width: 100%; display: block; position: relative;  }
@@ -436,7 +436,7 @@ body.nav_hide, div#fuel_main_panel { min-width: 700px; }
 .nav_hide div#fuel_main_panel { left: 0px; z-index: 100;  }
 .nav_hide h1#fuel_site_name { width: auto; display: block; float: none;  padding: 0 100px 0 85px; text-align: center; }
 .nav_hide div#fuel_left_panel_inner li.active { -webkit-background-size: auto 100%; background-size: auto 100%; }
-.nav_hide #nav_toggle { position: absolute; left: 15px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 20px; background:url(../images/ico_nav_list.png) no-repeat left center; background-size: 27%; text-indent: 0; }
+.nav_hide #nav_toggle { position: absolute; left: 15px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 20px; background-size: 27%; text-indent: 0; }
 .nav_hide div#fuel_main_panel {-webkit-transform: translateX(0px); -moz-transform: translateX(0px); -ms-transform: translateX(0px); -o-transform: translateX(0px); transform: translateX(0px); }
 
 /* iPads (portrait and landscape) */
