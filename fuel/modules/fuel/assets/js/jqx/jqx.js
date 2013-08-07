@@ -347,6 +347,4 @@ jqx.extender = {};
 
 if (jqx_config) jqx.config = jQuery.extend({}, jqx.config, jqx_config);
 
-jqx.addPreload(jqx.config.jqxPath + "plugins/util.js");
-
 jqx._includeCache = new jqx.Cache();

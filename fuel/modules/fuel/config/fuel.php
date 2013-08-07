@@ -197,6 +197,7 @@ $config['assets_upload_max_height']  = '768';
 
 
 $config['fuel_javascript'] = array(
+/*
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
@@ -214,12 +215,23 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'jquery/plugins/jquery.placeholder',
+	'jquery/plugins/jquery.selso',
+	'jquery/plugins/jquery.disable.text.select.pack',
+	'jquery/plugins/jquery.supercomboselect',
+	'jquery/plugins/jquery.MultiFile',
+	'fuel/linked_field_formatters',
+	'jquery/plugins/jquery.numeric',
+	'jquery/plugins/jquery.repeatable',
 
 	// NASTY Chrome JS bug...
 	// http://stackoverflow.com/questions/10314992/chrome-sometimes-calls-incorrect-constructor
 	// http://stackoverflow.com/questions/10251272/what-could-cause-this-randomly-appearing-error-inside-jquery-itself
 	'jquery/plugins/chrome_pushstack_fix.js',
-	'fuel/global',
+	'jqx/plugins/util.js',
+	'fuel/global',*/
+
+
+	'fuel/fuel.min'
 );
 
 
