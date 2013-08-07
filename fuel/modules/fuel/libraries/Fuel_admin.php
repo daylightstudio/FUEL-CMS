@@ -843,6 +843,55 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the UI cookie values
+	 *
+	 * @access	public
+	 * @param	string 	The key value to return. If none provided, it will return all (optional)
+	 * @return	mixed
+	 */	
+	public function ui_cookie($key = NULL)
+	{
+		$cookie_val = json_decode(urldecode($this->CI->input->cookie('fuel_ui')), TRUE);
+		if (!empty($key))
+		{
+			if (isset($cookie_val[$key]))
+			{
+				return $cookie_val[$key];	
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		return $cookie_val;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the UI cookie values
+	 *
+	 * @access	public
+	 * @param	string 	The key value to set. If none provided, it will set the entire cookie
+	 * @return	void
+	 */	
+	public function set_ui_cookie($key = NULL, $val = NULL)
+	{
+		if (!empty($key))
+		{
+			$cookie_val = $this->ui_cookie();
+			$cookie_val[$key] = $val;
+		}
+		else
+		{
+			$cookie_val = json_encode(urlencode($key));
+		}
+		$this->CI->input->set_cookie('fuel_ui', $cookie_val);
+	}
 	
 	// --------------------------------------------------------------------
 	

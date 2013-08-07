@@ -10,7 +10,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 <body>
 
-<div id="fuel_body">
+<div id="fuel_body"<?=($this->fuel->admin->ui_cookie('leftnav_hide') === '1') ? ' class="nav_hide"' : ''; ?>>
 
 
 	<?php if ($this->fuel->admin->has_panel('top')) : ?>

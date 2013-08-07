@@ -23,16 +23,18 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.formController = null;
 //		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
-		
+		this.uiCookie = 'fuel_ui';
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
 		this._initModals();
-		this._initResponsive();
 	},
 	
 	_initLeftMenu : function(){
 		if (this.leftMenuInited) return;
+
+		var cookieSettings = {group: this.uiCookie, name: 'leftnav_h3', params: {path: jqx.config.cookieDefaultPath}}
+
 		var leftNavTogglers = function(id, index){
 			$('#' + id + ' h3').bind('click', {id:id,index:index},
 				function(e){
@@ -46,12 +48,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 						$(this).removeClass('closed');
 						var cookieVal = 0;
 					}
-					var leftNavCookie = $.cookie('fuel_leftnav');
+					var leftNavCookie = $.supercookie(cookieSettings.group, cookieSettings.name);
 					if (leftNavCookie){
 						var cookieVals = leftNavCookie.split('|');
 						cookieVals[e.data['index']] = cookieVal;
 						leftNavCookie = cookieVals.join('|');
-						$.cookie('fuel_leftnav', leftNavCookie, {path:jqx.config.cookieDefaultPath});
+						$.supercookie(cookieSettings.group, cookieSettings.name, leftNavCookie, cookieSettings.params);
 					}
 					return false;
 				}
@@ -67,10 +69,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		// create a cookie to remember state
 		if (ids.length){
 			var leftNavCookie;
-			if (!$.cookie('fuel_leftnav')){
-				$.cookie('fuel_leftnav', '0|0|0|0', {path:jqx.config.cookieDefaultPath});
+
+			if (!$.supercookie(cookieSettings.group, cookieSettings.name)){
+				$.supercookie(cookieSettings.group, cookieSettings.name, '0|0|0|0', cookieSettings.params);
 			}
-			var leftNavCookie = $.cookie('fuel_leftnav');
+
+			var leftNavCookie = $.supercookie(cookieSettings.group, cookieSettings.name);
 			var cookieVals = leftNavCookie.split('|');
 			for (var i = 0; i < ids.length; i++){
 				leftNavTogglers(ids[i], i);
@@ -80,6 +84,35 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 			this.leftMenuInited = true;
 		}
+		
+		// change the name of the cookie settings for the left nav toggling
+		var navToggleCookie = 'leftnav_hide';
+
+		var showLeftNav = function(){
+			$('#fuel_body').addClass('nav_show');
+			$('#fuel_body').removeClass('nav_hide');
+		}
+		var hideLeftNav = function(){
+			$('#fuel_body').addClass('nav_hide');
+			$('#fuel_body').removeClass('nav_show');
+		}
+
+		$('#nav_toggle').on('click', function(e) {
+			e.preventDefault();
+			if ($('#fuel_body').hasClass('nav_hide')){
+				showLeftNav();
+				$.supercookie(cookieSettings.group, navToggleCookie, '0', cookieSettings.params);
+			} else {
+				hideLeftNav();
+				$.supercookie(cookieSettings.group, navToggleCookie, '1', cookieSettings.params);
+			}
+		});
+
+		// hide the nav if the cookie says so
+		if ($.supercookie(cookieSettings.group, navToggleCookie) === '1'){
+			hideLeftNav();	
+		}
+		
 	},
 	
 	_initTopMenu : function(){
@@ -95,13 +128,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.jqmWindowShow').jqmShow();
 	},
 
-	_initResponsive : function(){
-		$('#nav_toggle').on('click', function(event) {
-			event.preventDefault();
-			$('html').toggleClass('nav_show');
-		});
-	},
-	
 	_submit : function(){
 		$('#submit').click(function(){
 			$('#form').submit();
@@ -473,8 +499,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	_initFormTabs : function(context){
 		if (!$('#fuel_form_tabs', context).length){
 
-			var tabId = jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
-			var tabCookieSettings = {group: 'fuel_tabs', name: tabId, params: {path: jqx.config.cookieDefaultPath}}
+			var tabId = 'tabs_' + jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
+			var tabCookieSettings = {group: this.uiCookie, name: tabId, params: {path: jqx.config.cookieDefaultPath}}
 
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
 			
