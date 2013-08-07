@@ -346,12 +346,13 @@ div#fuel_body { }
 /******************************************************
 left panel 
 ******************************************************/
-div#fuel_top { z-index: 2; line-height: 28px; height: 30px;  background-color: #393939; color: #fff; padding: 0 15px; color: #fff; text-shadow: #444 0px 1px 0px; 
+div#fuel_top { z-index: 2; line-height: 28px; height: 30px;  background-color: #393939; color: #fff; padding: 0 10px; color: #fff; text-shadow: #444 0px 1px 0px; 
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5d5d5d), color-stop(1, #393939));
   background: -moz-linear-gradient(top center, #5d5d5d  0%, #393939 100%); }
 div#fuel_top a:hover { text-decoration: underline; }
 h1#fuel_site_name { float: left; font-size: 18px; width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-h1#fuel_site_name a { color: #999; text-shadow: #111 0px -1px 0px; }
+h1#fuel_site_name a { color: #999; text-shadow: #111 0px -1px 0px; text-decoration: none; }
+h1#fuel_site_name a:hover { color: #aaa; text-decoration: none; }
 
 div#fuel_left_panel { z-index: 1; position: absolute; top: 30px; left: 0px; bottom: 0px; width: 200px; background-color: #333; overflow: auto; border-right: 1px solid #292929; overflow-x: hidden; 
   -moz-box-shadow: inset -5px 5px 20px 5px #2f2f2f; 
@@ -360,10 +361,10 @@ div#fuel_left_panel { z-index: 1; position: absolute; top: 30px; left: 0px; bott
    }
 div#fuel_left_panel a { color: #999; text-decoration: none; text-shadow: #000 0px 1px 0px; display: block; overflow: hidden; text-overflow: ellipsis; width: 130px; }
 div#fuel_left_panel a:hover { color: #bbb; text-decoration: underline; }
-div#fuel_left_panel_inner { padding: 15px; text-shadow: #000 0px 1px 0px; }
+div#fuel_left_panel_inner { padding: 10px; text-shadow: #000 0px 1px 0px; }
 div#fuel_left_panel_inner h3 { margin: 0; cursor: pointer; font-size: 11px; color: #999; text-transform: uppercase; background: transparent url(../images/toggle_arrow_down.png) no-repeat 0px 3px; padding-left: 15px; margin-bottom: 2px; }
 div#fuel_left_panel_inner h3.closed { background-image: url(../images/toggle_arrow_right.png); background-position: 1px 3px;}
-div#fuel_left_panel_inner li { list-style: none; margin: 0 -15px 0 -15px; padding: 0 30px 0 30px; width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+div#fuel_left_panel_inner li { list-style: none; margin: 0 -15px 0 -15px; padding: 0 30px 0 30px; width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 div#fuel_left_panel_inner li.active { background: transparent url(../images/leftnav_on.png) repeat-x; color: #fff; }
 div#fuel_left_panel_inner li.active a { color: #fff; text-shadow: #555 0px 1px 0px; }
 div#fuel_left_panel_inner li ul li a { margin-left: 15px; }
@@ -423,24 +424,20 @@ h2.ico { margin-top: 5px; line-height: 21px !important; }
 /******************************************************
 main panel 
 ******************************************************/
-div#fuel_main_panel { position: absolute; top: 0; left: 201px; right: 0px; bottom: 0px; background-color: #fff; }
-#nav_toggle { display: none; }
-@media only screen and (max-width:860px) {
-  div#fuel_main_panel,
-  div#fuel_left_panel { top: 30px; }
-  html, body { overflow: hidden; width: 100%; display: block; position: relative;  }
-  html, body, div#fuel_main_panel { min-width: 700px; }
-  div#fuel_top { height: 30px; line-height: 30px;  }
-  div#fuel_main_panel { -webkit-transition: all 0.2s cubic-bezier(0.445,0,0,1); -moz-transition: all 0.2s cubic-bezier(0.445,0,0,1); -ms-transition: all 0.2s cubic-bezier(0.445,0,0,1); -o-transition: all 0.2s cubic-bezier(0.445,0,0,1); transition: all 0.2s cubic-bezier(0.445,0,0,1);    }
-  .nav_show div#fuel_main_panel {-webkit-transform: translateX(200px); -moz-transform: translateX(200px); -ms-transform: translateX(200px); -o-transform: translateX(200px); transform: translateX(200px);}
-  .nav_show #nav_toggle { opacity:0.9;}
-  div#fuel_left_panel {  left: 0; z-index: 50;  }
-  div#fuel_main_panel { left: 0; z-index: 100;  }
-  #nav_toggle { position: absolute; left: 15px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 25px; background: url(../images/fuel_icons.png) no-repeat 0 -2283px; background-size: 30%;  }
-  h1#fuel_site_name { width: auto; display: block; float: none;  padding: 0 100px 0 85px;  text-align: center;  }
-  div#fuel_left_panel a { font-size: 1.2em; line-height: 2em;  }
-  div#fuel_left_panel_inner li.active { -webkit-background-size: auto 100%; background-size: auto 100%; }
-}
+div#fuel_main_panel { position: absolute; top: 0; left: 201px; right: 0px; bottom: 0px; background-color: #fff; -webkit-transition: all 0.2s cubic-bezier(0.445,0,0,1); -moz-transition: all 0.2s cubic-bezier(0.445,0,0,1); -ms-transition: all 0.2s cubic-bezier(0.445,0,0,1); -o-transition: all 0.2s cubic-bezier(0.445,0,0,1); transition: all 0.2s cubic-bezier(0.445,0,0,1); }
+#nav_toggle { opacity:0.9;}
+#nav_toggle { position: absolute; left: 182px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 25px; background:url(../images/ico_nav_list.png) no-repeat left center; background-size: 50%; text-indent: -10000px; }
+
+.nav_hide div#fuel_main_panel, div#fuel_left_panel { top: 30px; left: 0px; }
+body.nav_hide { overflow: hidden; width: 100%; display: block; position: relative;  }
+body.nav_hide, div#fuel_main_panel { min-width: 700px; }
+.nav_hide div#fuel_top { height: 30px; line-height: 30px;  }
+.nav_hide div#fuel_left_panel { left: -201px; z-index: 50; -webkit-transform: translateX(201px); -moz-transform: translateX(201px); -ms-transform: translateX(201px); -o-transform: translateX(201px); transform: translateX(201px); }
+.nav_hide div#fuel_main_panel { left: 0px; z-index: 100;  }
+.nav_hide h1#fuel_site_name { width: auto; display: block; float: none;  padding: 0 100px 0 85px; text-align: center; }
+.nav_hide div#fuel_left_panel_inner li.active { -webkit-background-size: auto 100%; background-size: auto 100%; }
+.nav_hide #nav_toggle { position: absolute; left: 15px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 20px; background:url(../images/ico_nav_list.png) no-repeat left center; background-size: 27%; text-indent: 0; }
+.nav_hide div#fuel_main_panel {-webkit-transform: translateX(0px); -moz-transform: translateX(0px); -ms-transform: translateX(0px); -o-transform: translateX(0px); transform: translateX(0px); }
 
 /* bread nav */
 div#fuel_main_top_panel { height: 29px; font-size: 13px; color: #fff; background-color: #e7e7e7; border-bottom: 1px solid #ccc; overflow: hidden; }
