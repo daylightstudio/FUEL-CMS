@@ -439,6 +439,16 @@ body.nav_hide, div#fuel_main_panel { min-width: 700px; }
 .nav_hide #nav_toggle { position: absolute; left: 15px; top: 0; font-size: 1.3em; color: #fff; opacity:0.5; cursor: pointer; display: block; padding-left: 20px; background:url(../images/ico_nav_list.png) no-repeat left center; background-size: 27%; text-indent: 0; }
 .nav_hide div#fuel_main_panel {-webkit-transform: translateX(0px); -moz-transform: translateX(0px); -ms-transform: translateX(0px); -o-transform: translateX(0px); transform: translateX(0px); }
 
+/* iPads (portrait and landscape) */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+  div#fuel_left_panel a { font-size: 1.2em; line-height: 2em; }
+}
+
+/* Smartphones (portrait and landscape) */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  div#fuel_left_panel a { font-size: 1.2em; line-height: 2em; }
+}
+
 /* bread nav */
 div#fuel_main_top_panel { height: 29px; font-size: 13px; color: #fff; background-color: #e7e7e7; border-bottom: 1px solid #ccc; overflow: hidden; }
 div#fuel_main_top_panel h2 { color: #333; text-shadow: #fff 0px 1px 0px; line-height: 30px; margin-left: 11px; }
