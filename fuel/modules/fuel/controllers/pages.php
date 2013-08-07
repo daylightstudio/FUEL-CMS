@@ -364,7 +364,19 @@ class Pages extends Module {
 		$this->form_builder->set_field_values($page_vars);
 		
 		$conflict = $this->_has_conflict($fields);
-		$vars['layout_fields'] = (!empty($conflict)) ? $conflict : $this->form_builder->render();
+
+		if (!empty($conflict))
+		{
+			$vars['layout_fields'] = $conflict;
+		}
+		else if (empty($id))
+		{
+			$vars['layout_fields'] = $this->form_builder->render();
+		}
+		else
+		{
+			$vars['layout_fields'] = '';
+		}
 
 		// other variables
 		$vars['id'] = $id;
