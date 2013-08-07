@@ -683,7 +683,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>template</strong>: a string value of the template as opposed to a view file to load in. </li>
 		<li><strong>add_extra</strong>: determines whether to display the "Add" button for repeatable templates</li>
 		<li><strong>depth</strong>: specifies the depth of the template (can only be 2 deep)</li>
-		<li><strong>dblclick</strong>: determines whether a double click is required to open up the set of fields. Options are "accordian" and "toggle"</li>
+		<li><strong>dblclick</strong>: determines whether a double click is required to open up the set of fields. Options are "accordion" and "toggle"</li>
 		<li><strong>init_display</strong>: determines whether to open just the first repeatable set of fields, none of them, or all of them (default). Options are <dfn>false</dfn>, <dfn>first</dfn>, and <dfn>none</dfn> or <dfn>closed</dfn> (they are the same)</li>
 		<li><strong>title_field</strong>: the field to be used {__title__} placeholder </li>
 		<li><strong>parse</strong>: determines whether to parse the view or template file before rendering</li>
@@ -697,7 +697,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['template_example'] = array('display_label' => FALSE, 
 								'add_extra' => FALSE, 
 								'init_display' => 'none', 
-								'dblclick' => 'accordian', 
+								'dblclick' => 'accordion', 
 								'repeatable' => TRUE, 
 								'style' => 'width: 900px;', 
 								'type' => 'template', 
@@ -718,7 +718,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['template_example'] = array('display_label' => FALSE, 
 								'add_extra' => FALSE, 
 								'init_display' => 'all', 
-								'dblclick' => 'accordian', 
+								'dblclick' => 'accordion', 
 								'repeatable' => TRUE, 
 								'style' => 'width: 800px;', 
 								'type' => 'template', 

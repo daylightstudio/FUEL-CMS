@@ -22,7 +22,7 @@ dave@thedaylightstudio.com
 			sortableSelector : '.grabber',
 			sortable : true,
 			initDisplay : false,
-			dblClickBehavior : 'toggle', // options are false, toggle or accordian
+			dblClickBehavior : 'toggle', // options are false, toggle or accordion
 			max : null,
 			min : null,
 			depth : 1,
@@ -207,7 +207,7 @@ dave@thedaylightstudio.com
 					$parent = $(this).closest(options.repeatableSelector).parent();
 
 					var dblclick = ($parent.attr('data-dblclick')) ? $parent.attr('data-dblclick') : null;
-					if (dblclick == 'accordian'){
+					if (dblclick == 'accordion' || dblclick == 'accordian'){
 						$parent.find(options.contentSelector).hide();
 						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').show();
 					} else {
@@ -252,7 +252,7 @@ dave@thedaylightstudio.com
 			
 			
 			$clonecopy.find(options.contentSelector + ':first').show();
-			if (dblclick == 'accordian'){
+			if (dblclick == 'accordian' || dblclick == 'accordion'){
 				$prev.find(options.contentSelector).hide();
 			}
 			
