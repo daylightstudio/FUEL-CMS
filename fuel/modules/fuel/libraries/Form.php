@@ -706,25 +706,38 @@ class Form {
 			$str = '';
 			foreach($attrs as $key => $val)
 			{
+				// the key must be a string value
+				if (is_numeric($key))
+				{
+					continue;
+				}
+
 				// create data fields 
 				if ($key == 'id' AND $val === FALSE)
 				{
 					// this gets stripped out upon rendering if the id is blank so we set it so if the value is FALSE
 					$str .= ' id=""';
 				}
-				else if (is_array($val) AND $key == 'data')
+				else if (is_array($val))
 				{
-					foreach($val as $k => $v)
+					if ($key == 'data')
 					{
-						if ($v !== '')
+						foreach($val as $k => $v)
 						{
-							$str .= ' data-'.$k.'="'.$v.'"';
+							if ($v !== '')
+							{
+								$str .= ' data-'.$k.'="'.$v.'"';
+							}
 						}
+					}
+					else
+					{
+						$str .= ' '.$key.'="'.implode(',', $val).'"';
 					}
 				}
 				else if (!is_array($val))
 				{
-					if ($val != '')
+					if (is_string($val) AND $val != '')
 					{
 						$str .= ' '.$key.'="'.$val.'"';
 					}
