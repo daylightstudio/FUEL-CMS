@@ -225,6 +225,9 @@
 							if (val.length){
 								var filtered = $('#' + leftID + ' li:not(.optgrp)').filter(function(){
 									var text = $(this).data('label');
+									if (!text){
+										return false;
+									}
 									var index = text.toLowerCase().indexOf(val);
 									if (index == -1){
 										return false;
@@ -296,13 +299,13 @@
 
 					$opt.text(text);
 					$opt.attr('id', id);
+					$opt.attr('data-label', text);
 					if ($(this).is(':disabled')) {
 						$opt.addClass('option_disabled');
 					}
 					if (customSelectedSorting)
 					{
 						var optSpanVal = (flippedSelectedOrder[value]) ? flippedSelectedOrder[value] : maxSelected;
-						$opt.attr('data-label', text);
 						$opt.append('<span/>');
 						$opt.find('span').attr('id', id + '_val').text(optSpanVal).hide();
 					}
