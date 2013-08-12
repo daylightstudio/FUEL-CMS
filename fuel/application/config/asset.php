@@ -57,6 +57,9 @@ js/css function without multiple file in the first parameter
 
 $config['assets_output'] = FALSE;
 
+// force assets to recompile on each load
+$config['force_assets_recompile'] = FALSE;
+
 // cache folder relative to the web root folder... must be writable directory (default is the application/assets/cache folder)
 $config['assets_cache_folder'] = 'cache/';
 
