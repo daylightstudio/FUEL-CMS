@@ -74,6 +74,9 @@ class Asset {
 	 */
 	public $assets_output = FALSE;
 
+	// force assets to recompile on each load
+	public $force_assets_recompile = FALSE;
+
 	// cache folder relative to the application folder... must be writable directory (default is the application/assets/cache folder)
 	public $assets_cache_folder = 'cache/';
 
@@ -1167,7 +1170,7 @@ class Asset {
 		$cache_file = $cache_dir.$cache_file_name;
 
 		// create cache file if it doesn't exist'
-		if (!file_exists($cache_file))
+		if (!file_exists($cache_file) || $this->force_assets_recompile)
 		{
 			$CI->load->helper('file');
 			$assets_folders = $this->assets_folders;
