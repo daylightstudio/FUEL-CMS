@@ -1166,7 +1166,6 @@ class Fuel_advanced_module extends Fuel_base_library {
 		return $this->fuel->installer->install($this->name());
 	}
 
-
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1178,6 +1177,21 @@ class Fuel_advanced_module extends Fuel_base_library {
 	public function uninstall()
 	{
 		return $this->fuel->installer->uninstall($this->name());
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrite this method to run your own custom builds for an advanced module.
+	 * This can be done by doing it via command line: > php index.php fuel/build/{module}. 
+	 * FUEL uses > php index.php fuel/build to build optimized CSS and JS files.
+	 *
+	 * @access	public
+	 * @return	mixed
+	 */
+	public function build()
+	{
+		return FALSE;
 	}
 }
 

@@ -1,3 +1,14 @@
+/*----------------------------------------------------------------------------------------------------
+IMPORT CSS HERE SO THAT REQUIRE.JS CAN OPTIMIZE IT
+----------------------------------------------------------------------------------------------------*/
+@import url('jqmodal.css');
+@import url('jquery.tooltip.css');
+@import url('jquery.treeview.css');
+@import url('jquery.supercomboselect.css');
+@import url('markitup.css');
+@import url('jquery-ui-1.8.17.custom.css');
+
+
 * { margin: 0; padding: 0; outline-style: none; }
 html, body { height: 100%; overflow: hidden; }
 body { background-color: #333; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
@@ -364,7 +375,7 @@ div#fuel_left_panel a:hover { color: #bbb; text-decoration: underline; }
 div#fuel_left_panel_inner { padding: 10px; text-shadow: #000 0px 1px 0px; }
 div#fuel_left_panel_inner h3 { margin: 0; cursor: pointer; font-size: 11px; color: #999; text-transform: uppercase; background: transparent url(../images/toggle_arrow_down.png) no-repeat 0px 3px; padding-left: 15px; margin-bottom: 2px; }
 div#fuel_left_panel_inner h3.closed { background-image: url(../images/toggle_arrow_right.png); background-position: 1px 3px;}
-div#fuel_left_panel_inner li { list-style: none; margin: 0 -15px 0 -15px; padding: 0 30px 0 30px; width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+div#fuel_left_panel_inner li { list-style: none; margin: 0 -15px 0 -20px; padding: 0 30px 0 30px; width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 div#fuel_left_panel_inner li.active { background: transparent url(../images/leftnav_on.png) repeat-x; color: #fff; }
 div#fuel_left_panel_inner li.active a { color: #fff; text-shadow: #555 0px 1px 0px; }
 div#fuel_left_panel_inner li ul li a { margin-left: 15px; }

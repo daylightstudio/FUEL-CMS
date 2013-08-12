@@ -1007,7 +1007,7 @@ class Asset {
 		<li><strong>params</strong> - additional parameters to be passed to the swf file. For information on the additional parameters, visit the <a href="http://http://code.google.com/p/swfobject/wiki/documentation">swfobject documentation</a></li>
 	</ul>
 	<code>
-	echo swf('home', 'home_flash', 800, 300, array('color' => '#000000', 'version' => 9));
+	echo $this->asset->swf('home', 'home_flash', 800, 300, array('color' => '#000000', 'version' => 9));
 
 	// &lt;script src="/assets/js/swfobject.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 	// &lt;script type="text/javascript"&gt;
@@ -1114,8 +1114,8 @@ class Asset {
 	 *
 	 * @access	protected
 	 * @param	string	file name of the swf file including extension
-	 * @param	string	type of file (e.g. images, js, css... etc)
-	 * @param	string	additional parameter to include (attrs, ie_conditional, and output)
+	 * @param	string	type of file (e.g.  js or css)
+	 * @param	string	optimization methods which include FALSE, TRUE, 'inline', 'gzip', 'whitespace' and 'combine'
 	 * @param	string	type module folder if any
 	 * @return	string
 	 */	
@@ -1169,111 +1169,34 @@ class Asset {
 		$cache_file_name = $cache_file_name_md5.'_'.strtotime($this->assets_last_updated).'.'.$ext;
 		$cache_file = $cache_dir.$cache_file_name;
 
+
+
 		// create cache file if it doesn't exist'
-		if (!file_exists($cache_file) || $this->force_assets_recompile)
+		if (!file_exists($cache_file) OR $this->force_assets_recompile)
 		{
+		
 			$CI->load->helper('file');
 			$assets_folders = $this->assets_folders;
 			//$asset_folder = WEB_ROOT.'/'.$this->assets_path.$assets_folders[$type];
 			
 			$output = '';
-			foreach($this->_cacheable_files as $mod_file)
-			{
-				$file = current($mod_file);
-				$mod = key($mod_file);
-				
-				// check for extension... if not there, add it
-				if (!preg_match('#(\.'.$type.'|\.php)(\?.+)?$#', $file))
-				{
-					$file = $file.'.'.$type;
-				}
-				// replace backslashes with hyphens
-				$asset_folder = $this->assets_server_path('', $type, $mod);
-				$file_path = $asset_folder.$file;
-				if (file_exists($file_path))
-				{
-					$output .= file_get_contents($file_path).PHP_EOL;
-				}
-			}
-		
-			// optimize file by removing returns and tabs
-			if ($type == 'js')
-			{
-				if ($optimize === TRUE OR $optimize == 'whitespace')
-				{
-					$output = str_replace(array("\t"), '', $output);
-					$output = preg_replace("/^\s/m", '', $output);
-				
-					// no replacing multi-line comments because it normally has copyright stuff
-				} 
 
-				$mime = 'text/javascript';
-			}
-			else if ($type == 'css')
+			// set optimization parameters
+			$optimize_params['type'] = $type;
+			$optimize_params['js_minify'] = TRUE;
+
+			if ($optimize === TRUE OR $optimize == 'whitespace')
 			{
-		
-				// now include all import files as well ... only 1 deep though
-				preg_match_all('/@import url\(([\'|"])*(.+)\\1\);/U', $output, $imports);
-				if (!empty($imports[2][0]))
-				{
-					foreach($imports[2] as $import)
-					{
-						$import_file_path = $this->assets_server_path($import, $type, $module);
-						if (file_exists($import_file_path))
-						{
-							$import_files[$import] = file_get_contents($import_file_path);
-						}
-					}
-					
-					// remove calls to the import since they are combined into the same css
-					if (!empty($import_files))
-					{
-						$output = preg_replace('/@import url\(([\'|"])*(.+)\\1\);/Ue', "\$import_files[('\\2')]", $output);
-					}
-				}
-			
-				// strip unnecessary whitespace
-				if ($optimize === TRUE OR $optimize == 'whitespace')
-				{
-					$output = str_replace(array("\n", "\r", "\t"), '', $output);
-					$output = preg_replace('<\s*([@{}:;,]|\)\s|\s\()\s*>S', '\1', $output);// Remove whitespace around separators,
-					// remove multi-line comments...
-					//$output = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/?)|(?:\/\/.*))/", "", $output);// buggy with absolute image paths
-					$output = preg_replace("#/\*[^*]*\*+(?:[^/*][^*]*\*+)*/#", "", $output);
-				}
-			
-				$mime = 'text/css';
-			
+				$optimize_params['whitespace'] = TRUE;
 			}
-			
-			// gzip if enabled in config and the server
-			if (($optimize === TRUE OR $optimize == 'gzip') AND extension_loaded('zlib'))
+
+			if ($optimize === TRUE OR $optimize == 'gzip')
 			{
-				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
-				{
-					$gzip = "<?php".PHP_EOL;
-					$gzip .= "ob_start();".PHP_EOL;
-				
-					// start an inner buffer so we can get the content length
-					$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
-					$gzip .= "\n?>";
-					$gzip .= $output;
-					$gzip .= "<?php".PHP_EOL;
-					$gzip .= "ob_end_flush();".PHP_EOL;
-				
-					// now begin inner buffer headers
-					$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;
-					$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
-					$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
-					$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
-					$gzip .= "header(\$exp);".PHP_EOL;
-					$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
-					$gzip .= "header(\$size);".PHP_EOL;
-					$gzip .= 'ob_end_flush();';
-					$gzip .= "\n?>".PHP_EOL;
-					$output = $gzip;
-				}
+				$optimize_params['gzip'] = TRUE;
 			}
+
+			$output = $this->optimize($this->_cacheable_files, $optimize_params);
+
 
 			// try to create directories if not there
 			if (!is_dir($cache_dir) AND is_writable($cache_dir))
@@ -1296,6 +1219,281 @@ class Asset {
 		return $this->cache_path($cache_file_name, $module);
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Optimizes CSS and JS files by combining files together with options to remove whitespace and optimize code.
+	 *
+	<ul>
+		<li><strong>type</strong> - valid options are "js", "css" and auto. The default is "auto" and will look for the first file extension in the list of files passed</li>
+		<li><strong>destination</strong> - the path and file name of the file to save the output to. Default is FALSE which means no file will be written</li>
+		<li><strong>whitespace</strong> - whether to perform basic removal of whitespace.</li>
+		<li><strong>js_minify</strong> - will use <a href="https://developers.google.com/closure/compiler/" target="_blank">Google's Closure Compiler</a> for javascript minification.</li>
+		<li><strong>compilation_level</strong> - WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS and ADVANCED_OPTIMIZATION. More can be found here <a href="https://developers.google.com/closure/compiler/docs/api-ref" target="_blank">here</a>. The default is WHITESPACE_ONLY.</li>
+		<li><strong>gzip</strong> - determines whether to add PHP code to gzip the file. Must be saved as a php file.</li>
+	</ul>
+	<code>
+	$output = $this->asset->optimize(array('file1, 'file2.js', array('type' => 'js', 'destination' => 'my.min.js', 'whitespace' => TRUE, 'js_minify' => TRUE, 'gzip' => TRUE));
+	</code>
+
+	 *
+	 * @access	protected
+	 * @param	mixed	file(s) to optimize. Can be an array or string
+	 * @param	array  an array of parameters including "destination", "whitespace", "js_minify", "compilation_level" and "type"
+	 * @return	string
+	 */	
+	public function optimize($files, $params = array())
+	{
+		$CI =& get_instance();
+		$CI->load->helper('file');
+
+		// removes basic whitespace
+		if (!isset($params['destination']))
+		{
+			$params['destination'] = FALSE;
+		}
+
+		// removes basic whitespace
+		if (!isset($params['whitespace']))
+		{
+			$params['whitespace'] = TRUE;
+		}
+
+		// will CURL http://closure-compiler.appspot.com/compile
+		if (empty($params['js_minify']))
+		{
+			$params['js_minify'] = TRUE;
+		}
+
+		// sets the curl level of http://closure-compiler.appspot.com/compile
+		if (empty($params['compilation_level']))
+		{
+			$params['compilation_level'] = 'WHITESPACE_ONLY';
+		}
+
+		// type of optimization ("css" or "js")
+		if (empty($params['type']))
+		{
+			$params['type'] = 'auto';
+		}
+
+		// add gzip compression and make it a .php file
+		if (!isset($params['gzip']))
+		{
+			$params['gzip'] = FALSE;
+		}
+
+		$assets_folders = $this->assets_folders;
+		
+		$output = '';
+
+		// normalize $files array
+		if (!is_array($files))
+		{
+			$files = array($files);
+		}
+
+		// automatically come up with the type of file based on first file that you can detect extension
+		$valid_exts = array('css', 'js');
+		if (strtolower($params['type']) == 'auto')
+		{
+			// set type to javascript by default
+			$params['type'] = 'js';
+			foreach($files as $file)
+			{
+				$ext =  end(explode('.', $files[0]));
+				if (in_array($ext, $valid_exts))
+				{
+					$params['type'] = $ext;
+					break;
+				}
+			}
+		}
+		else if (!in_array($params['type'], $valid_exts))
+		{
+			return FALSE;
+		}
+
+		$mime = NULL;
+
+		// loop through files to combine them
+		foreach($files as $key => $file)
+		{	
+			if (!empty($params['module']))
+			{
+				$module = $params['module'];
+			}
+			else
+			{
+				$module = $this->assets_module;	
+			}
+			
+			if (is_array($file))
+			{
+				$path_arr = each($file);
+				if (!is_numeric($path_arr['key']))
+				{
+					$module = $path_arr['key'];
+					$file = $path_arr['value'];
+				}
+			}
+
+			// check for extension... if not there, add it
+			if (!preg_match('#(\.'.$params['type'].'|\.php)(\?.+)?$#', $file))
+			{
+				$file = $file.'.'.$params['type'];
+			}
+			// replace backslashes with hyphens
+			$asset_folder = $this->assets_server_path('', $params['type'], $module);
+			$file_path = $asset_folder.$file;
+
+			if (file_exists($file_path))
+			{
+				$output .= file_get_contents($file_path).PHP_EOL;
+			}
+		}
+
+		// optimize file by removing returns and tabs
+		if ($params['type'] == 'js')
+		{
+			if ($params['whitespace'] == TRUE)
+			{
+				$output = str_replace(array("\t"), '', $output);
+
+				// remove whitespace from the beginning of the line
+				$output = preg_replace("/^\s+/m", '', $output);
+
+				// no replacing multi-line comments because it normally has copyright stuff
+			} 
+
+			if ($params['js_minify'] == TRUE AND extension_loaded('curl'))
+			{
+
+				// REST API arguments
+				$api_args = array(
+					'compilation_level' => $params['compilation_level'],
+					'output_format' => 'text',
+					'output_info' => 'compiled_code'
+				);
+				
+				$args = 'js_code=' . urlencode($output);
+				foreach ($api_args as $key => $value)
+				{
+					$args .= '&' . $key . '=' . urlencode($value);
+				}
+				// API call using cURL
+				$ch = curl_init();
+				curl_setopt_array($ch, array(
+					CURLOPT_URL => 'http://closure-compiler.appspot.com/compile',
+					CURLOPT_POST => 1,
+					CURLOPT_POSTFIELDS => $args,
+					CURLOPT_RETURNTRANSFER => 1,
+					CURLOPT_HEADER => 0,
+					CURLOPT_FOLLOWLOCATION => 0
+				));
+
+				if (curl_error($ch) == '')
+				{
+					$output = curl_exec($ch);	
+				}
+				else
+				{
+					exit(lang('error_curl_page'));
+				}
+			}
+
+			$mime = 'text/javascript';
+		}
+		else if ($params['type'] == 'css')
+		{
+			// now include all import files as well ... only 1 deep though
+			preg_match_all('/@import url\(([\'|"])*(.+)\\1\);/U', $output, $imports);
+			if (!empty($imports[2][0]))
+			{
+				foreach($imports[2] as $import)
+				{
+					$import_file_path = $this->assets_server_path($import, $params['type'], $module);
+					if (file_exists($import_file_path))
+					{
+						$import_files[$import] = file_get_contents($import_file_path);
+					}
+				}
+
+				$callback = create_function('$matches', '
+					if (isset($matches[2]))
+					{
+						return $GLOBALS["__TMP_CSS_IMPORT__"][$matches[2]];	
+					} else {
+						return "";
+					}');
+
+				// remove calls to the import since they are combined into the same css
+				if (!empty($import_files))
+				{
+					// temporarily put it in the global space so the anonymoous function can grab it
+					$GLOBALS["__TMP_CSS_IMPORT__"] = $import_files;
+					$output = preg_replace_callback('/@import url\(([\'|"])*(.+)\\1\);/U', $callback, $output);
+					unset($GLOBALS["__TMP_CSS_IMPORT__"]);
+				}
+			}
+		
+			// strip unnecessary whitespace
+			if ($params['whitespace'] == TRUE)
+			{
+				$output = str_replace(array("\n", "\r", "\t"), '', $output);
+				$output = preg_replace('<\s*([@{}:;,]|\)\s|\s\()\s*>S', '\1', $output);// Remove whitespace around separators,
+				// remove multi-line comments...
+				//$output = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/?)|(?:\/\/.*))/", "", $output);// buggy with absolute image paths
+				$output = preg_replace("#/\*[^*]*\*+(?:[^/*][^*]*\*+)*/#", "", $output);
+			}
+			$mime = 'text/css';
+		
+		}
+		
+		// gzip if enabled in config and the server
+		if (($params['gzip'] == TRUE) AND extension_loaded('zlib'))
+		{
+			if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
+			{
+				$gzip = "<?php".PHP_EOL;
+				$gzip .= "ob_start();".PHP_EOL;
+			
+				// start an inner buffer so we can get the content length
+				$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
+				$gzip .= "\n?>";
+				$gzip .= $output;
+				$gzip .= "<?php".PHP_EOL;
+				$gzip .= "ob_end_flush();".PHP_EOL;
+			
+				// now begin inner buffer headers
+				if (!empty($mime))
+				{
+					$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;	
+				}
+				$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
+				$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
+				$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
+				$gzip .= "header(\$exp);".PHP_EOL;
+				$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
+				$gzip .= "header(\$size);".PHP_EOL;
+				$gzip .= 'ob_end_flush();';
+				$gzip .= "\n?>".PHP_EOL;
+				$output = $gzip;
+			}
+		}
+
+		// write contents to file
+		if (!empty($params['destination']))
+		{
+			$destination_dir = dirname($params['destination']);
+			if (is_writable($destination_dir))
+			{
+				write_file($params['destination'], $output);	
+			}
+			
+		}
+		return $output;
+	}
 
 	// --------------------------------------------------------------------
 	

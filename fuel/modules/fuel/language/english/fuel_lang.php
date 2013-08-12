@@ -49,6 +49,7 @@ $lang['error_class_property_does_not_exist'] = 'Class property %1s does not exis
 $lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
 $lang['error_could_not_create_folder'] = 'Could not create folder %1s';
 $lang['error_could_not_create_file'] = 'Could not create file %1s';
+$lang['error_no_build'] = "No build setup for this module.\n";
 
 
 /*
