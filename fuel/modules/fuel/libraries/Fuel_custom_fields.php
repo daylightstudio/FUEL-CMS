@@ -861,12 +861,12 @@ class Fuel_custom_fields {
 		
 		if (empty($params['size']))
 		{
-			$params['size'] = 10;
+			$params['size'] = '10';
 		}
 
 		if (empty($params['max_length']))
 		{
-			$params['max_length'] = 10;
+			$params['max_length'] = '10';
 		}
 		
 		if (empty($params['separator']))
@@ -1276,7 +1276,7 @@ class Fuel_custom_fields {
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$url_class : $url_class;
 		if (empty($params['size']))
 		{
-			$params['size'] = 90;
+			$params['size'] = '90';
 		}
 
 		$data = array();

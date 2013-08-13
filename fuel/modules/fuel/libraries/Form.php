@@ -737,7 +737,7 @@ class Form {
 				}
 				else if (!is_array($val))
 				{
-					if (is_string($val) AND $val != '')
+					if ($val != '')
 					{
 						$str .= ' '.$key.'="'.$val.'"';
 					}
