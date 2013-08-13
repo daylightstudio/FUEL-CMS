@@ -119,7 +119,7 @@ class Fuel_custom_fields {
 		$js = '<script type="text/javascript">
 			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
 		</script>';
-		$form_builder->add_js($js);
+		$form_builder->add_js($js, 'markitup_preview_path');
 		
 		return $form_builder->create_textarea($params);
 	}
