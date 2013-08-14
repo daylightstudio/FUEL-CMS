@@ -501,7 +501,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="number" class="toggle">number</h3>
 <div class="toggle_block_off">
-	<p>This field type creates a number field which is supported by <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">some modern browsers</a> checkbox field.
+	<p>This field type creates a number field which is supported by <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">some modern browsers</a> checkbox field.
 	The following additional parameter can be passed to this field type:</p>
 	<ul>
 		<li><strong>decimal</strong>: determines whether to allow decimals or not. The default is FALSE</li>
@@ -528,7 +528,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="email" class="toggle">email</h3>
 <div class="toggle_block_off">
-	<p>This field type creates an input field of type "email" which is <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">supported by some modern browsers</a> and will automatically validate the email address.</p>
+	<p>This field type creates an input field of type "email" which is <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">supported by some modern browsers</a> and will automatically validate the email address.</p>
 
 	<h4>Example</h4>
 	<pre class="brush:php">
@@ -541,7 +541,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="range" class="toggle">range</h3>
 <div class="toggle_block_off">
-	<p>This field type creates an input field of type "range" which is supported by <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">some modern browsers</a> and creates a slider.
+	<p>This field type creates an input field of type "range" which is supported by <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">some modern browsers</a> and creates a slider.
 	The following additional parameters can be passed to this field type:
 	</p>
 	<ul>
