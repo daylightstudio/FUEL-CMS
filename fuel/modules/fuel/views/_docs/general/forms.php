@@ -1,8 +1,9 @@
+<?=css('jquery.supercomboselect, markitup, jquery-ui-1.8.17.custom', 'fuel')?>
 <script>
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx'); ?>
 </script>
 <?=js('jqx/jqx', 'fuel')?>
-<?=js('fuel/global', 'fuel')?>
+<?=js('fuel/fuel.min', 'fuel')?>
 <?php 
 $CI->load->library('form_builder');
 $CI->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
@@ -384,7 +385,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field type creates either a series of checkboxes or a multiple select field.
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
-		<li><strong>sorting</strong>: </li>
+		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE.</li>
 		<li><strong>options</strong>: an array of select options</li>
 		<li><strong>model</strong>: The name of a model to use. The default method it will use is <dfn>options_list</dfn>. You can specify
 		an array where the key is the name of the module and the value is either string value for the name of the model, or an array value where the key is
@@ -406,12 +407,12 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$options = array('a' => 'option A', 'b' => 'option B', 'c' => 'option C');
-	$fields['mult_example'] = array('type' => 'multi', 'options' => $options, 'value' => 'a');
+	$fields['multi_example'] = array('type' => 'multi', 'options' => $options, 'value' => 'a');
 	</pre>
 	<?php 
 	$options = array('a' => 'option A', 'b' => 'option B', 'c' => 'option C');
-	form_builder_example('mult_example1', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'checkbox'));
-	form_builder_example('mult_example2', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'multi')); 
+	form_builder_example('multi_example1', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'checkbox'));
+	form_builder_example('multi_example2', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'multi')); 
 	?>
 	
 </div>
