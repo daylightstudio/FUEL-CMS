@@ -960,9 +960,9 @@ class Menu {
 					$css_classes[] = $this->active_class;
 				}
 
-		if (!empty($this->styles[$level][$i]))
+		if (!empty($this->styles[$level]))
 		{
-			if (is_array($this->styles[$level]))
+			if (is_array($this->styles[$level]) AND !empty($this->styles[$level][$i]))
 			{
 				$css_classes[] = $this->styles[$level][$i];
 			}
@@ -970,7 +970,6 @@ class Menu {
 			{
 				$css_classes[] = $this->styles[$level];
 			}
-			
 		}
 
 		if (!empty($css_classes))
