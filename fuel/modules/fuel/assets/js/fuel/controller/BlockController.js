@@ -17,7 +17,7 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 			var params = $('#form').serialize();
 			$.post(path, params, function(html){
 				if (html == 'success'){
-					$('#view_twin_notification').hide();
+					$('#warning_window').hide();
 				}
 			});
 			$('.jqmWindow').jqm().jqmHide();
