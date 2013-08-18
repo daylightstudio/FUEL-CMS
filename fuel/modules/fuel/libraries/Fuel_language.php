@@ -151,7 +151,7 @@ class Fuel_language extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The selected language 
-	 * @param	boolean	Set the config language value (optional
+	 * @param	boolean	Set the config language value (optional)
 	 * @param	boolean	Set the query string lang value (optional)
 	 * @return	boolean
 	 */	
