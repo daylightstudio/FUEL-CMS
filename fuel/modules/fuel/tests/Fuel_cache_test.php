@@ -21,12 +21,15 @@ class Fuel_cache_test extends Fuel_test_base {
 	
 	public function test_create_id()
 	{
-		// check with no location value passed... should be the current URI location
-		// $test = $this->fuel->cache->create_id();
-		// $expected = uri_path();
-		// $this->run($test, $expected, 'Test creating cache ID with NO location parameter passed');
+		// configure language to only be one
+		$this->fuel->language->set_options(array('english' => 'English'));
 
-		// check with no location value passed
+		// check with no location value passed... should be the current URI location
+		$test = $this->fuel->cache->create_id();
+		$expected = 'fuel.tools.tester.run.english';
+		$this->run($test, $expected, 'Test creating cache ID with NO location parameter passed');
+
+		// check with location value passed
 		$test = $this->fuel->cache->create_id('test/method');
 		$expected = 'test.method.english';
 		$this->run($test, $expected, 'Test creating cache ID WITH a location parameters passed');
