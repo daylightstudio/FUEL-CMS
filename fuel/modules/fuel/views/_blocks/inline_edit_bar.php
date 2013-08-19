@@ -19,7 +19,7 @@
 
 //]]>
 </script>
-<?=js('jquery/plugins/jquery.form, jquery/plugins/jqModal, jquery/plugins/jquery.serialize, jquery/plugins/jquery.cookie, jquery/plugins/jquery.supercookie, jquery/plugins/jquery.ba-resize.min, fuel/global, fuel/edit_mode', 'fuel', array('ignore_if_loaded' => TRUE, 'output' => $this->fuel->config('fuel_assets_output')))?>
+<?=js('fuel/fuel_inline.min.js', 'fuel', array('ignore_if_loaded' => TRUE, 'output' => $this->fuel->config('fuel_assets_output')))?>
 
 <div class="__fuel__" id="__fuel_edit_bar__">
 	<?=$this->form->open(array('action' => fuel_url('pages/ajax_page_edit/'), 'method' => 'post', 'id' => '__fuel_edit_bar_form__'))?>

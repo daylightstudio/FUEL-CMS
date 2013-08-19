@@ -89,6 +89,18 @@ class Build extends Fuel_base_controller {
 			'fuel/global',
 		);
 	
+		
+		$js_inline = array(
+				'jquery/plugins/jquery.form', 
+				'jquery/plugins/jqModal', 
+				'jquery/plugins/jquery.serialize', 
+				'jquery/plugins/jquery.cookie', 
+				'jquery/plugins/jquery.supercookie', 
+				'jquery/plugins/jquery.ba-resize.min', 
+				'fuel/global', 
+				'fuel/edit_mode'
+		);
+
 
 		// set the folder in which to place the file
 		$output_params['type'] = 'js';
@@ -96,6 +108,12 @@ class Build extends Fuel_base_controller {
 		$output_params['destination'] = assets_server_path('fuel/fuel.min.js', 'js', FUEL_FOLDER);
 		$output_params['module'] = FUEL_FOLDER;
 		$output = $this->asset->optimize($js, $output_params);
+
+		$output_params['destination'] = assets_server_path('fuel/fuel_inline.min.js', 'js', FUEL_FOLDER);
+		$output = $this->asset->optimize($js_inline, $output_params);
+
+
+
 		echo "FUEL JS Optimized!\n";
 		//echo $output;
 	}
