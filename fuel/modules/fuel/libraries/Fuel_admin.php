@@ -1348,7 +1348,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			// check if there is a dashboard controller for each module
 			$t = $module->tools();
-			if ($t)
+			if ($t AND $this->CI->fuel->auth->has_permission($module->name()))
 			{
 				$tools = $tools + $t;
 			}
@@ -1377,7 +1377,8 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['language_default'] = $this->fuel->language->default_option();
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
-		$vars['is_fuelified'] = (is_fuelified() AND $this->CI->fuel->auth->has_permission('pages', 'edit'));
+		$vars['is_fuelified'] = is_fuelified();
+		$vars['can_edit_pages'] = $this->CI->fuel->auth->has_permission('pages', 'edit');
 
 		if ($this->fuel->pages->mode() == 'views')
 		{

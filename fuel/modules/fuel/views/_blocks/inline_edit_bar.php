@@ -27,8 +27,13 @@
 
 		<ul>
 			<?php if (!isset($page['id']) AND $is_fuelified) : ?>
+				
+				
 				<li class="<?=(isset($page['published']) && !is_true_val($page['published']))? 'exposed' : 'start round exposed'; ?>"><a href="#" id="__fuel_page_toolbar_toggle__" class="ico ico_fuel" title="<?=lang('inline_edit_toggle_toolbar')?>"></a></li>
+				<?php if ($can_edit_pages) : ?>
 				<li class="<?php if (!empty($_COOKIE['fuel_show_editable_areas']) && $_COOKIE['fuel_show_editable_areas'] == 1) : ?>active<?php endif; ?>"><a href="#" id="__fuel_page_edit_toggle__" class="ico ico_edit" title="<?=lang('inline_edit_toggle_editable')?>"></a></li>
+				<?php endif; ?>
+
 				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
 				<li class="txt"><a href="<?=fuel_url('recent')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
 				<li class="txt"><a href="<?=fuel_url('logout/'.$last_page)?>" class="" title="<?=lang('inline_edit_logout_title')?>"><?=lang('inline_edit_logout')?></a></li>
@@ -41,7 +46,7 @@
 				<li class="<?=(isset($page['published']) && !is_true_val($page['published']))? 'exposed' : 'start round exposed'; ?>"><a href="#" id="__fuel_page_toolbar_toggle__" class="ico ico_fuel" title="<?=lang('inline_edit_toggle_toolbar')?>"></a></li>
 				
 
-				<?php if ($is_fuelified) : ?>
+				<?php if ($is_fuelified AND $can_edit_pages) : ?>
 
 
 				<li<?php if (!empty($_COOKIE['fuel_show_editable_areas']) && $_COOKIE['fuel_show_editable_areas'] == 1) : ?> class="active"<?php endif; ?>><a href="#" id="__fuel_page_edit_toggle__" class="ico ico_edit" title="<?=lang('inline_edit_toggle_editable')?>"></a></li>
@@ -63,12 +68,13 @@
 						<?=$this->form->hidden('language_default', $language_default, 'id="__fuel_language_default__"')?>
 					</li>
 				<?php endif; ?>
-				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
-				<?php if (count($others) > 0) : ?><li> &nbsp;<?=$this->form->select('others', $others, '', 'id="__fuel_page_others__"', lang('inline_edit_other_pages'))?> </li><?php endif; ?>
-				<?php if (count($layouts) > 1) : ?><li><label for="layout"><?=lang('inline_edit_layout')?></label> <?=$this->form->select('layout', $layouts, $page['layout'], 'id="__fuel_page_layout__"')?></li><?php endif; ?>
-
 				
 				<?php endif; ?>
+
+				<?php if (count($tools) > 0) : ?><li> &nbsp;<?=$this->form->select('tools', $tools, '', 'id="__fuel_page_tools__"', lang('inline_edit_tools'))?> </li><?php endif; ?>
+				<?php if (count($others) > 0) : ?><li> &nbsp;<?=$this->form->select('others', $others, '', 'id="__fuel_page_others__"', lang('inline_edit_other_pages'))?> </li><?php endif; ?>
+				<?php if (count($layouts) > 1 AND $can_edit_pages) : ?><li><label for="layout"><?=lang('inline_edit_layout')?></label> <?=$this->form->select('layout', $layouts, $page['layout'], 'id="__fuel_page_layout__"')?></li><?php endif; ?>
+
 				
 				<?php if (!empty($page['id'])) : ?>
 				<li class="txt"><a href="<?=fuel_url('pages/edit/'.$page['id'].'?lang='.$language)?>" title="<?=lang('inline_edit_back_to_admin')?>"><?=lang('inline_edit_back_to_admin')?></a></li>
