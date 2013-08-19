@@ -112,23 +112,23 @@ function uri_path($rerouted = TRUE, $start_index = 0, $strip_lang = TRUE)
 
 	if ($strip_lang AND isset($CI->fuel) AND $CI->fuel->language->has_multiple())
 	{
-		$location = $CI->fuel->language->cleaned_uri(NULL, !$rerouted);
+		$segments = $CI->fuel->language->cleaned_uri_segments(NULL, $rerouted);
 	}
 	else
 	{
-
 		$segments = ($rerouted) ? $CI->uri->rsegment_array() : $CI->uri->segment_array();
-		if (!empty($segments) && $segments[count($segments)] == 'index')
-		{
-			array_pop($segments);
-		}
-		if (!empty($start_index))
-		{
-			$segments = array_slice($segments, $start_index);
-		}
-		$location = implode('/', $segments);
-
 	}
+	if (!empty($segments) && $segments[count($segments)] == 'index')
+	{
+		array_pop($segments);
+	}
+	if (!empty($start_index))
+	{
+		$segments = array_slice($segments, $start_index);
+	}
+	$location = implode('/', $segments);
+
+
 	return $location;
 }
 
