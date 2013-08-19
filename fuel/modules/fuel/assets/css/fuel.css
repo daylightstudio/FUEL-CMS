@@ -430,6 +430,7 @@ h2.ico { margin-top: 5px; line-height: 21px !important; }
 .ico_warn { background-position: 15px -516px; }
 
 .notification .ico_success, .notification .ico_yes { background-position: 15px -330px; }
+.notification .ico_error { background-position: 15px -220px; }
 
 
 /******************************************************

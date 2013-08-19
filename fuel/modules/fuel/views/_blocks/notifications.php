@@ -1,10 +1,10 @@
 <?php if (!empty($error)) :
 	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $error); // convert script tags
-	echo display_errors($error, 'error ico_error');
+	echo display_errors($error, 'ico error ico_error');
 ?>
 <?php elseif ($this->session->flashdata('error') AND $this->session->flashdata('error') !== TRUE AND $this->session->flashdata('success') !== '1') : 
 	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('error')); // convert script tags
-	echo display_errors($this->session->flashdata('error'), 'error ico_error');
+	echo display_errors($this->session->flashdata('error'), 'ico error ico_error');
 ?>
 <?php elseif ($this->session->flashdata('success') AND $this->session->flashdata('success') !== TRUE AND $this->session->flashdata('success') !== '1') : 
 $success = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('success')); // convert script tags

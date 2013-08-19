@@ -586,56 +586,9 @@ class Form_builder {
 		}
 		
 		$str .= "<div class=\"actions\"><div class=\"actions_inner\">";
-		if (!empty($this->reset_value))
-		{
-			if (preg_match("/^</i", $this->reset_value))
-			{
-				$str .= $this->reset_value;
-			}
-			else
-			{
-				$str .= $this->form->reset($this->reset_value, '', array('class' => 'reset'));
-			}
-		}
-		if (!empty($this->cancel_value))
-		{
-			if (preg_match("/^</i", $this->cancel_value))
-			{
-				$str .= $this->cancel_value;
-			}
-			else
-			{
-				$cancel_attrs = array('class' => 'cancel');
-				if (!empty($this->cancel_action))
-				{
-					$cancel_attrs['onclick'] = $this->cancel_action;
-				}
 
-				$str .= $this->form->button($this->cancel_value, '', $cancel_attrs);
-			}
-		}
-		if (!empty($this->submit_value) AND $this->displayonly != 'all')
-		{
-			// check if the string has a tag and if so just pump in the string
-			if (preg_match("/^</i", $this->submit_value))
-			{
-				$str .= $this->submit_value;
-			}
-			else
-			{
-				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
-				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
-				$submit_id = $submit_name;
-				if (!empty($this->name_prefix))
-				{
-					$submit_id = $this->name_prefix.'--'.$submit_id;
-				}
-				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
-			}
-		}
+		$str .= $this->_render_actions();
 
-		if (!empty($this->other_actions)) $str .= $this->other_actions;
 		$str .= "</div></div>\n";
 		if ($this->has_required AND $this->show_required)
 		{
@@ -837,56 +790,10 @@ class Form_builder {
 		{
 			$str .= "<tr>\n\t<td class=\"actions\"><div class=\"actions\">";
 		}
-		if (!empty($this->reset_value))
-		{
-			if (preg_match("/^</i", $this->reset_value))
-			{
-				$str .= $this->reset_value;
-			}
-			else
-			{
-				$str .= $this->form->reset($this->reset_value, '', array('class' => 'reset'));
-			}
-		}
-		if (!empty($this->cancel_value))
-		{
-			if (preg_match("/^</i", $this->cancel_value))
-			{
-				$str .= $this->cancel_value;
-			}
-			else
-			{
-				$cancel_attrs = array('class' => 'cancel');
-				if (!empty($this->cancel_action))
-				{
-					$cancel_attrs['onclick'] = $this->cancel_action;
-				}
 
-				$str .= $this->form->button($this->cancel_value, '', $cancel_attrs);
-			}
-		}
+		$str .= $this->_render_actions();
 
-		if (!empty($this->submit_value) AND $this->displayonly != 'all')
-		{
-			// check if the string has a tag and if so just pump in the string
-			if (preg_match("/^</i", $this->submit_value))
-			{
-				$str .= $this->submit_value;
-			}
-			else
-			{
-				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
-				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
-				$submit_id = $submit_name;
-				if (!empty($this->name_prefix))
-				{
-					$submit_id = $this->name_prefix.'--'.$submit_id;
-				}
-				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
-			}
-		}
-		if (!empty($this->other_actions)) $str .= $this->other_actions;
+
 		$str .= "</div></td>\n</tr>\n";
 		if ($this->has_required AND $this->show_required)
 		{
@@ -944,11 +851,12 @@ class Form_builder {
 		
 		$vars['fields'] = $fields;
 		$vars['errors'] = $errors;
-		
+
 		if (is_array($template))
 		{
 			$module = key($template);
 			$view = current($template);
+
 			$str = $this->CI->load->module_view($module, $view, $vars, TRUE);
 		}
 		else
@@ -958,10 +866,18 @@ class Form_builder {
 		
 		if ($parse === TRUE)
 		{
+			$this->CI->load->library('parser');
 			$str = $this->CI->parser->parse_simple($str, $vars);
 		}
-		$this->_html = $str;
-		
+
+		$str .= '<div class=\"actions\">';
+
+		$str .= $this->_render_actions();
+
+		$str .= "</div>";
+
+		$this->_html = $this->_close_form($str);
+		$this->_html .= $str;
 		$this->_html .= $this->_render_js();
 		$this->_html .= $this->html_append;
 		
@@ -1051,6 +967,74 @@ class Form_builder {
 		}
 		return $str;
 	}
+
+	// --------------------------------------------------------------------
+	/**
+	 * Outputs the actions for the form
+	 * 
+	 * @access	public
+	 * @param	string	
+	 * @return	void
+	 */
+	protected function _render_actions()
+	{
+		$str = '';
+		if ( ! empty($this->reset_value))
+		{
+			if (preg_match("/^</i", $this->reset_value))
+			{
+				$str .= $this->reset_value;
+			}
+			else
+			{
+				$str .= $this->form->reset($this->reset_value, '', array('class' => 'reset'));
+			}
+		}
+
+		if ( ! empty($this->cancel_value))
+		{
+			if (preg_match("/^</i", $this->cancel_value))
+			{
+				$str .= $this->cancel_value;
+			}
+			else
+			{
+				$cancel_attrs = array('class' => 'cancel');
+
+				if ( ! empty($this->cancel_action))
+				{
+					$cancel_attrs['onclick'] = $this->cancel_action;
+				}
+
+				$str .= $this->form->button($this->cancel_value, '', $cancel_attrs);
+			}
+		}
+
+		if (!empty($this->submit_value) AND $this->displayonly != 'all')
+		{
+			// check if the string has a tag and if so just pump in the string
+			if (preg_match("/^</i", $this->submit_value))
+			{
+				$str .= $this->submit_value;
+			}
+			else
+			{
+				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
+				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
+				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
+				$submit_id = $submit_name;
+				if (!empty($this->name_prefix))
+				{
+					$submit_id = $this->name_prefix.'--'.$submit_id;
+				}
+				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
+			}
+		}
+		if (!empty($this->other_actions)) $str .= $this->other_actions;
+
+		if ( ! empty($this->other_actions)) $str .= $this->other_actions;
+		return $str;
+	}
 	
 	// --------------------------------------------------------------------
 	/**
@@ -1075,7 +1059,7 @@ class Form_builder {
 		$wrapper_open_str = "<div class=\"".$this->css_class."\"";
 		if (empty($this->id))
 		{
-			$this->id = uniqid('form_');
+			$this->id = $this->id();
 		}
 		$wrapper_open_str .= ' id="'.$this->id.'"';
 		$wrapper_open_str .= ">\n";
@@ -1285,6 +1269,23 @@ class Form_builder {
 
 		$this->_cached[$params['name']] = $params;
 		return $params;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the id for a form
+	 * 
+	 * @access	public
+	 * @return	string
+	 */
+	public function id()
+	{
+		if (empty($this->id))
+		{
+			$this->id = uniqid('form_');
+		}
+		return $this->id;
 	}
 	
 	// --------------------------------------------------------------------
