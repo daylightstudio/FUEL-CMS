@@ -96,7 +96,8 @@ class Form_builder {
 	public $js; // javascript files to associate with the form fields to be executed once per render
 	public $css; // CSS files to associate with the form fields to be executed once per render
 	public $no_css_js = FALSE; // used to not display the CSS and JS when rendering to prevent issues with nested forms and post_processing
-	
+	public $template = ''; // the html template view file to use for rendering the form when using "render_template"
+
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
 	protected $_cached; // cached parameters
@@ -431,14 +432,17 @@ class Form_builder {
 		}
 		else if ($render_format == 'template')
 		{
+			if (empty($template))
+			{
+				$template = $this->template;
+			} 
 			return $this->render_template($template, $fields);
 		}
 		else
 		{
 			return $this->render_table($fields);
 		}
-
-	}	
+	}
 
 	// --------------------------------------------------------------------
 
@@ -877,12 +881,10 @@ class Form_builder {
 		$str .= "</div>";
 
 		$this->_html = $this->_close_form($str);
-		$this->_html .= $str;
-		$this->_html .= $this->_render_js();
-		$this->_html .= $this->html_append;
 		
 		return $this->_html;
 	}
+
 	// --------------------------------------------------------------------
 
 	/**
