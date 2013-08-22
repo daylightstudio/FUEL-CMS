@@ -105,11 +105,14 @@ function has_one_of_these($args = null)
  * @param	string	string containing email address
  * @return	boolean
  */
-function valid_email($email)
+// to prevent issue with email helpers function
+if ( ! function_exists('valid_email'))
 {
-    return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
-}
- 
+	function valid_email($email)
+	{
+	    return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
+	}
+} 
 // --------------------------------------------------------------------
 
 /**
