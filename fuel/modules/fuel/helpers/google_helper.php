@@ -245,12 +245,14 @@ function google_map_url($address, $params = array())
 *
 * Finds the latitude and longitude of a given address. 
 * Use sleep() or usleep() functions to meter multiple requests (10/s is limit I believe)
+* More on the return types here: https://developers.google.com/maps/documentation/geocoding/
 *
 * @access    public
 * @param    mixed	Address can be either an array with "address", "city", "state" or simply a string
-* @return   array  (e.g. array('latitude' => xxxx, 'longitude' => xxxx))
+* @param    mixed	Return type can be 'all' (default), 'address_components', 'formatted_address', 'geometry', 'location', 'street_number', 'route', 'neighborhood', 'city',  'county', 'state', 'country', 'zip' (optional)
+* @return   mixed  usually an array (e.g. array('latitude' => xxxx, 'longitude' => xxxx))
 */
-function google_geolocate($data)
+function google_geolocate($data, $return = 'all')
 {
 	$address = '';
 	
@@ -287,10 +289,81 @@ function google_geolocate($data)
 	if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '200') 
 	{
 		$json = json_decode($response, TRUE);
-		if (isset($json['results']))
+
+		$lookup_func = create_function('$data, $key, $single = FALSE', '
+			$components = $data["address_components"];
+			$return = array("long_name" => "", "short_name" => "");
+
+			foreach($components as $c)
+			{
+				if (isset($c["types"]) AND in_array($key, $c["types"]))
+				{
+					if (isset($c["long_name"]))
+					{
+						$return["long_name"] = $c["long_name"];
+						if ($single)
+						{
+							return $return["long_name"];
+						}
+					}
+					if (isset($c["short_name"]))
+					{
+						$return["short_name"] = $c["short_name"];
+						if ($single)
+						{
+							return $return["long_name"];
+						}
+					}
+					return $return;
+				}
+			}
+		');
+		if (isset($json['results']) AND $json['status'] == 'OK')
 		{
-			$values['latitude'] = $json['results'][0]['geometry']['location']['lat'];
-			$values['longitude'] = $json['results'][0]['geometry']['location']['lng'];
+			$results = $json['results'][0];
+			$return = strtolower($return);
+			switch($return)
+			{
+				case 'address_components':
+					$values = $results['address_components'];
+					break;
+				case 'formatted_address':
+					$values = $results['formatted_address'];
+					break;
+				case 'geometry':
+					$values = $results['geometry'];
+					break;
+				case 'location':
+					$values['latitude'] = $results['geometry']['location']['lat'];
+					$values['longitude'] = $results['geometry']['location']['lng'];
+					break;
+				case 'street_number':
+					$values = $lookup_func($results, 'street_number', TRUE);
+					break;
+				case 'route':
+					$values = $lookup_func($results, 'route');
+					break;
+				case 'neighborhood':
+					$values = $lookup_func($results, 'neighborhood', TRUE);
+					break;
+				case 'city': case 'locality':
+					$values = $lookup_func($results, 'locality');
+					break;
+				case 'county': case 'administrative_area_level_2':
+					$values = $lookup_func($results, 'administrative_area_level_2');
+					break;
+				case 'state': case 'administrative_area_level_1':
+					$values = $lookup_func($results, 'administrative_area_level_1');
+					break;
+				case 'country':
+					$values = $lookup_func($results, 'country');
+					break;
+				case 'zip': case 'postal_code':
+					$values = $lookup_func($results, 'postal_code', TRUE);
+					break;
+				default:
+					$values = $results;
+			}
 		}
 	}
 	curl_close($ch);
