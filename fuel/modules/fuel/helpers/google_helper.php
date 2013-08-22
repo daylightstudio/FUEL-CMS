@@ -172,7 +172,7 @@ function google_map_url($address, $params = array())
 	}
 	else
 	{
-		$p['q'] = urlencode($p['q']);
+		$p['q'] = urlencode($address);
 	}
 
 	// default parameters
