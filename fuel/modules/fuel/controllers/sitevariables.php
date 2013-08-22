@@ -13,10 +13,10 @@ class Sitevariables extends Module {
 		// set $id to $var if we didn't find a site variable
 		// test if it is a string value first...
 		// numeric name values won't work!
-		if (!is_numeric($var))
+		if (!empty($var) AND !is_numeric($var))
 		{
-			$site_var = $this->fuel_sitevariables_model->find_one(array('name' => $var));
-			$id = $site_var->id;
+			$site_var = $this->fuel_sitevariables_model->find_one_array(array('name' => $var));
+			$id = $site_var['id'];
 		}
 		else
 		{
