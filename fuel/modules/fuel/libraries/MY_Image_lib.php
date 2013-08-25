@@ -82,12 +82,23 @@ class MY_Image_lib extends CI_Image_lib {
 		$props = $this->get_image_properties($this->source_folder.$this->source_image, TRUE);
 		$orig_width = $props['width'];
 		$orig_height = $props['height'];
-		
+
 		// if ($orig_width < $orig_height )
 		// {
 		// 	$this->master_dim = 'width';
 		// }
 		// 
+
+		if (empty($this->width))
+		{
+			$this->width = $orig_width;
+		}
+
+		if (empty($this->height))
+		{
+			$this->height = $orig_height;
+		}
+
 		if (empty($orig_width) OR empty($orig_height))
 		{
 			return FALSE;
