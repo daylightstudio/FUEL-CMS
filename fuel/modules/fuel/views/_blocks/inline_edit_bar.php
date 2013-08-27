@@ -6,13 +6,15 @@
 	var __FUEL_LOCALIZED__ = <?=$js_localized?>; 
 	var __FUEL_PATH__ = '<?=site_url($this->config->item('fuel_path', 'fuel'))?>'; // for preview in markitup settings
 	var __FUEL_LINKED_FIELDS = null;
-	
+
 	// to prevent some issues with loading jquery twice on the page
 	if (typeof jQuery == 'undefined'){
 		document.write('<script type="text/javascript" charset="utf-8" src="<?=js_path('jquery/jquery', 'fuel')?>"><\/script>');
 	}
-	else if (parseFloat($.fn.jquery) >= 1.9)
-	{
+
+	// must be less then version 1.9 or we will load campatability helper
+	var __jq_version__ = $.fn.jquery.split('.');
+	if (parseInt(__jq_version__[0]) > 1 || (parseInt(__jq_version__[0]) == 1 && parseInt(__jq_version__[1]) >= 9)){
 		document.write('<script type="text/javascript" charset="utf-8" src="<?=js_path('jquery/plugins/jquery-migrate-1.1.1.js', 'fuel')?>"><\/script>');
 		jQuery.migrateMute = true;
 	}
