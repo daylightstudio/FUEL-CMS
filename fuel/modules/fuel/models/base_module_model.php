@@ -87,7 +87,7 @@ class Base_module_model extends MY_Model {
 								'number'			=> array(
 															'dollar',
 															),
-								'url|link'			=> array(
+								'url|link|website'	=> array(
 															'path' 			=> 'site_url',
 															'prep'			=> 'prep_url',
 															),
