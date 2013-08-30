@@ -12,7 +12,7 @@ $success = str_replace(array('{script}', '{/script}'), array('<script>', '</scri
 ?>
 	<div class="success ico ico_success"><?=$success;?></div>
 <?php else: ?>
-	<?php echo display_errors(NULL, 'error ico_error')?>
+	<?php echo display_errors(NULL, 'ico error ico_error')?>
 <?php endif; ?>
 
 <?php if (!empty($last_updated)) : ?>
