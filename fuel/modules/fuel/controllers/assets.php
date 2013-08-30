@@ -73,7 +73,19 @@ class Assets extends Module {
 						$msg = lang('module_edited', $this->module_name, $fileinfo['name']);
 						$this->fuel->logs->write($msg);
 					}
-					$flashdata = $_POST;
+
+					// explicitly set the flash values to save cookie space
+					$flashdata['asset_folder'] = $this->input->post('asset_folder', TRUE);
+					$flashdata['userfile_file_name'] = $this->input->post('userfile_file_name', TRUE);
+					$flashdata['subfolder'] = $this->input->post('subfolder', TRUE);
+					$flashdata['overwrite'] = $this->input->post('overwrite', TRUE);
+					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
+					$flashdata['width'] = $this->input->post('width', TRUE);
+					$flashdata['height'] = $this->input->post('height', TRUE);
+					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
+					$flashdata['master_dim'] = $this->input->post('master_dim', TRUE);
+					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
+
 					$uploaded_data = $this->fuel->assets->uploaded_data();
 					$first_file = current($uploaded_data);
 
