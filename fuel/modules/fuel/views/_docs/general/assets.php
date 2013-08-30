@@ -73,6 +73,6 @@ function call and optimize them by removing whitespace and adding gzip compressi
 // css
 &gt;php index.php fuel/build/app/css/plugins:plugins
 </pre>
-<p>The above will grab all the javascript files located in the main <span class="file">asset/js/plugins</span> folder (specified by the "app" segment) and create a file called <span class="file">plugins.js</span> in the <span class="file">asset/js</span> folder.
+<p>The above will grab all the javascript files located in the main <span class="file">assets/js/plugins</span> folder (the segment "app" refers to the main assets directory) and create a file called <span class="file">plugins.js</span> in the <span class="file">assets/js</span> folder.
 The file name is denoted after the colon. If no file name is provided then it will default to <span class="file">main.min.js</span> or <span class="file">main.min.css</span> respectively.
 </p>
