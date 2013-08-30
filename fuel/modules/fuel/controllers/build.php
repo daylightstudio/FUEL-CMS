@@ -14,7 +14,7 @@ class Build extends Fuel_base_controller {
 		}
 	}
 	
-	function _remap($module)
+	function _remap($module, $segs = NULL)
 	{
 		$remote_ips = $this->fuel->config('webhook_romote_ip');
 		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
@@ -32,7 +32,47 @@ class Build extends Fuel_base_controller {
 		$params = array('module' => $module);
 		$GLOBALS['EXT']->_call_hook('before_build', $params);
 
-		if ($module != 'index' AND $this->fuel->modules->exists($module) AND $this->fuel->modules->is_advanced($this->fuel->$module))
+
+		// get the type of build which can either be CSS or JS
+		$type = array_shift($segs);
+
+		$valid_types = array('css', 'js');
+		if (!empty($type) AND in_array($type, $valid_types))
+		{	
+			$this->load->helper('file');
+
+			// get the folder name if it exists
+			$segs_str = implode('/', $segs);
+
+			// explode on colon to separate the folder name from the file name
+			$seg_parts = explode(':', $segs_str);
+
+			// set the folder name to lookin
+			$folder = $seg_parts[0];
+
+			// set the file name if one exists
+			$filename = (!empty($seg_parts[1])) ? $seg_parts[1] : 'main.min';
+
+			// get list of files
+			$files_path = assets_server_path($folder, $type);
+			$_files = get_filenames($files_path, TRUE);
+			$files = array();
+
+			foreach($_files as $file)
+			{
+				// trim to normalize path
+				$replace = trim(assets_server_path('', $type), '/');
+				$files[] = str_replace($replace, '', trim($file, '/'));
+			}
+
+
+			$output_params['type'] = $type;
+			$output_params['whitespace'] = TRUE;
+			$output_params['destination'] = assets_server_path($filename.'.'.$type, $type, $module);
+			$output = $this->asset->optimize($files, $output_params);
+			echo lang('module_build_asset', strtoupper($type), $output_params['destination']);
+		}
+		else if ($module != 'index' AND $this->fuel->modules->exists($module) AND $this->fuel->modules->is_advanced($this->fuel->$module))
 		{
 			$results = $this->fuel->$module->build();
 
@@ -53,6 +93,7 @@ class Build extends Fuel_base_controller {
 
 	}
 
+	
 	function optimize_js()
 	{
 		$js = array(
@@ -112,10 +153,7 @@ class Build extends Fuel_base_controller {
 		$output_params['destination'] = assets_server_path('fuel/fuel_inline.min.js', 'js', FUEL_FOLDER);
 		$output = $this->asset->optimize($js_inline, $output_params);
 
-
-
-		echo "FUEL JS Optimized!\n";
-		//echo $output;
+		echo lang('module_build_asset', 'JS', $output_params['destination']);
 	}
 
 	function optimize_css()
@@ -137,7 +175,6 @@ class Build extends Fuel_base_controller {
 		$output_params['module'] = FUEL_FOLDER;
 
 		$output = $this->asset->optimize($css, $output_params);
-		echo "FUEL CSS Optimized!\n";
-		// echo $output;
+		echo lang('module_build_asset', 'CSS', $output_params['destination']);
 	}
 }

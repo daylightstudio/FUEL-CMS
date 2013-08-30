@@ -194,6 +194,8 @@ $msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
 $msg .= "4. Commit and delete the now untracked submodule files.\n";
 $lang['module_uninstall'] = $msg;
 
+// build
+$lang['module_build_asset'] = "%1s optimized and ouput to %2s\n";
 
 /*
 |--------------------------------------------------------------------------

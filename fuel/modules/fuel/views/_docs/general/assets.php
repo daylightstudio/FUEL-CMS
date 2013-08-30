@@ -56,3 +56,23 @@ function form_fields($values = array(), $related = array())
 // using the templating syntax if used in field in the CMS
 &lt;img src="{img_path('my_img.jpg')}" alt="My Image" /&gt;
 </pre>
+
+<h2>Optimizing Assets</h2>
+<p>FUEL provides a way to optimize JS and CSS files by condensing their output into a single file. This can be done "on the fly" by changing the 
+<dfn>assets_output</dfn> configuration parameter to TRUE (or one of the other values listed in the configuration parameters comment).
+This will combine all the files called in a single <a href="<?=user_guide_url('helpers/asset_helper#func_js')?>">js()</a> and <a href="<?=user_guide_url('helpers/asset_helper#func_css')?>">css()</a> 
+function call and optimize them by removing whitespace and adding gzip compression.
+</p>
+<p class="important">Must have the assets/cache/ folder writable for the assets_output compression to work "on the fly".</p>
+<br />
+<p>Alternatively, you can generate these files via command line by using FUEL's "build" functionality like so:</p>
+<pre class="brush:php">
+// js
+&gt;php index.php fuel/build/app/js/plugins:plugins
+
+// css
+&gt;php index.php fuel/build/app/css/plugins:plugins
+</pre>
+<p>The above will grab all the javascript files located in the main <span class="file">asset/js/plugins</span> folder (specified by the "app" segment) and create a file called <span class="file">plugins.js</span> in the <span class="file">asset/js</span> folder.
+The file name is denoted after the colon. If no file name is provided then it will default to <span class="file">main.min.js</span> or <span class="file">main.min.css</span> respectively.
+</p>
