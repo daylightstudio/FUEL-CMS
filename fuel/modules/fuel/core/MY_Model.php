@@ -1202,6 +1202,8 @@ class MY_Model extends CI_Model {
 		$CI =& get_instance();
 		if (empty($values)) $values = $CI->input->post();
 
+		$original_values = $values;
+
 		// run clean hook
 		if ($run_hook)
 		{
@@ -1212,20 +1214,22 @@ class MY_Model extends CI_Model {
 		$fields = $this->table_info();
 
 		$clean = array();
-		
+		$values = array();
 		foreach($fields as $key => $val)
 		{
-			if (is_array($values) AND array_key_exists($key, $values))
+			if (is_array($original_values) AND array_key_exists($key, $original_values))
 			{
-				$values[$key] = ($this->auto_trim AND is_string($values[$key])) ? trim($values[$key]) : $values[$key];
+				$values[$key] = ($this->auto_trim AND is_string($original_values[$key])) ? trim($original_values[$key]) : $original_values[$key];
 			}
 		}
 		
 		// process linked fields
 		$values = $this->process_linked($values);
 		
-		foreach ($fields as $key => $field)
+		foreach ($values as $key => $field)
 		{
+			$field = $fields[$key];
+
 			if ($field['type'] == 'datetime')
 			{
 				if (empty($values[$key]) OR (int)$values[$key] == 0)
@@ -1242,9 +1246,9 @@ class MY_Model extends CI_Model {
 			$date_func = ($this->date_use_gmt) ? 'gmdate' : 'date';
 
 			// create dates for date added and last updated fields automatically
-			if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_add))
+			$is_date_field_type = ($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date');
+			if ($is_date_field_type AND in_array($key, $this->auto_date_add))
 			{
-				
 				$test_date = (isset($values[$key])) ? (int) $values[$key] : 0;
 				
 				// if no key field then we assume it is a new save and so we add the date if it's empty'
@@ -1252,11 +1256,16 @@ class MY_Model extends CI_Model {
 				{
 					$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 				}
+				else
+				{
+					// continue the loop so an empty date value doesn't get passed thru
+					continue;
+				}
 			} 
-			else if (($field['type'] == 'datetime' OR $field['type'] == 'timestamp' OR $field['type'] == 'date') AND in_array($key, $this->auto_date_update))
+			else if ($is_date_field_type AND in_array($key, $this->auto_date_update))
 			{
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
-			} 
+			}
 			
 			if (is_array($values) AND array_key_exists($key, $values))
 			{
@@ -1290,6 +1299,7 @@ class MY_Model extends CI_Model {
 					array_walk_recursive($values[$key], array($this, 'encode_and_clean'), $key);
 				}
 
+				
 				$clean[$key] = $values[$key];
 			}
 		}
