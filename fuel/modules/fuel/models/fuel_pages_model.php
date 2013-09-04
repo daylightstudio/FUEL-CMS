@@ -190,6 +190,11 @@ class Fuel_pages_model extends Base_module_model {
 			$location = substr($location, strlen(site_url()));
 		}
 		
+		if (empty($location))
+		{
+			return NULL;
+		}
+
 		$segs = explode('/', $location);
 		if (count($segs) > 1)
 		{
