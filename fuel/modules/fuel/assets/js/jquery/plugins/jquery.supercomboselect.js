@@ -350,6 +350,8 @@
 				// IE hack to get overflow to expand the full width after scrollbars appear
 				$('.supercomboselect').css({overflowY:'hidden'}).css({overflowY:'auto'}).disableTextSelect();
 
+				$('#form').trigger('supercombo_list_refreshed');
+
 				autoSort();
 
 			}
