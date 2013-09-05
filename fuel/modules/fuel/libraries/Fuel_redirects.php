@@ -39,6 +39,8 @@ class Fuel_redirects extends Fuel_base_library {
 	public $passive_redirects = array(); // The pages to redirect to only AFTER no page is found by FUEL
 	public $max_redirects = 3; // Sets the number of times the page can redirect before giving nup and displaying a 404
 
+	protected $has_session = FALSE; // used to determine if there currently is a native session being used
+
 	const REDIRECT_COUNT = '__FUEL_REDIRECT_COUNT__';
 	const REDIRECT_ORIG = '__FUEL_REDIRECT_ORIG__';
 
@@ -260,9 +262,6 @@ class Fuel_redirects extends Fuel_base_library {
 		
 		if (!empty($redirects))
 		{
-			// loaded for counting number of redirects
-			$this->CI->load->library('session');
-
 
 			// Is there a literal match?  If so we're done
 			if (isset($redirects[$uri]))
@@ -277,14 +276,12 @@ class Fuel_redirects extends Fuel_base_library {
 				redirect($url, 'location', $http_code);
 			}
 
+			$check_num_redirects = !empty($this->max_redirects);
+
 			// set the original URI value so we can redirect back to it and 404 if the redirects exceed the number of max redirects
-			if (!empty($this->max_redirects) AND !$this->CI->session->flashdata(self::REDIRECT_ORIG))
+			if ($check_num_redirects)
 			{
-				$this->CI->session->set_flashdata(self::REDIRECT_ORIG, $uri);
-			}
-			else
-			{
-				$this->CI->session->keep_flashdata(self::REDIRECT_ORIG);
+				$this->_session_init($uri);
 			}
 
 			foreach ($redirects as $key => $val)
@@ -322,20 +319,32 @@ class Fuel_redirects extends Fuel_base_library {
 					$hook_params = array('url' => $key, 'redirect' => $value, 'uri' => $uri);
 					$GLOBALS['EXT']->_call_hook('pre_redirect', $hook_params);
 
-					// increment the number of redirects and make sure we don't go into a redirect loop
-					$cnt = $this->CI->session->flashdata(self::REDIRECT_COUNT);
-					$cnt = (int)$cnt + 1;
-					$this->CI->session->set_flashdata(self::REDIRECT_COUNT, $cnt);
-
-					// if the current count of redirects is greater then the max_directs value, 
-					// we will set the URL to the original and display a 404 error
-					if ($cnt >= $max_redirects)
+					if ($check_num_redirects)
 					{
-						$url = $this->CI->session->flashdata(self::REDIRECT_ORIG);
+
+						// grab the current number of redirects performed
+						$cnt = $_SESSION[self::REDIRECT_COUNT];
+												
+						// increment the number of redirects and make sure we don't go into a redirect loop
+						$cnt = (int)$cnt + 1;
+
+						// set the session number of redirects to the new number
+						$_SESSION[self::REDIRECT_COUNT] = $cnt;
+
+						// if the current count of redirects is greater then the max_directs value, 
+						// we will set the URL to the original and display a 404 error
+						if ($cnt > $max_redirects)
+						{
+							$url = $_SESSION[self::REDIRECT_ORIG];
+
+							// cleanup session stuff
+							$this->_session_cleanup();
+						}
+						
 					}
 
 					// now redirect
-					if ($cnt <= $max_redirects)
+					if (!$check_num_redirects OR ($check_num_redirects AND $cnt <= $max_redirects))
 					{
 						redirect($url, 'location', $http_code);	
 					}
@@ -430,7 +439,7 @@ class Fuel_redirects extends Fuel_base_library {
 	/**
 	 * Gets redirect info
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @return	array
 	 */
 	protected function _get_redirect_info($val)
@@ -493,7 +502,7 @@ class Fuel_redirects extends Fuel_base_library {
 	/**
 	 * Gets the current uri path with query string parameters
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _get_uri()
@@ -506,6 +515,63 @@ class Fuel_redirects extends Fuel_base_library {
 			$uri = $uri.'?'.$query_string;
 		}
 		return $uri;
+	}
+
+	/**
+	 * Initialize $_SESSION variables for tracking the number of redirects
+	 *
+	 * @access	protected
+	 * @param   string the original URL to redirect to
+	 * @return	void
+	 */
+	protected function _session_init($uri)
+	{
+		$this->has_session = session_id();
+
+		if (!$this->has_session)
+		{
+			// set the session cookie for 1 second which should be more then enough time to do the redirects
+			session_set_cookie_params(1);
+
+			// set a unique session ID
+			// set to time() because we expect the session to be done in a second
+			session_id(time());
+		}
+
+		// use native sessions because it seems to work better and less chance for session conflict
+		session_start();
+
+		// set the original URI value so we can redirect back to it and 404 if the redirects exceed the number of max redirects
+		if (!isset($_SESSION[self::REDIRECT_ORIG]))
+		{
+			$_SESSION[self::REDIRECT_ORIG] = $uri;
+		}
+
+		if (!isset($_SESSION[self::REDIRECT_COUNT]))
+		{
+			$_SESSION[self::REDIRECT_COUNT] = 0;
+		}
+
+	}
+
+	/**
+	 * Cleans up $_SESSION variables and the PHP session itself which is used to prevent infinite redirects
+	 *
+	 * @access	protected
+	 * @return	void
+	 */
+	protected function _session_cleanup()
+	{
+		// cleanup
+		unset($_SESSION[self::REDIRECT_COUNT]);
+		unset($_SESSION[self::REDIRECT_ORIG]);
+
+		if (empty($_SESSION) AND !$this->has_session)
+		{
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', 0, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
+			session_destroy();
+		}
 	}
 
 }
