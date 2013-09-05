@@ -34,6 +34,7 @@ class Fuel_tags_model extends Base_module_model {
 	public $filters = array('name', 'slug'); // Allows for filtering on both the name and the slug
 	public $unique_fields = array('slug'); // The slug value must be unique
 	public $linked_fields = array('name' => 'slug'); // the slug value should be the name field's value with the url_title function applied to it if there is no value specified
+	public $foreign_keys = array('category_id' => array(FUEL_FOLDER => 'fuel_categories_model')); // to create the foreign key association with the fuel_categories model
 
 	protected $friendly_name = 'Tags';
 	protected $singular_name = 'Tag';
@@ -71,7 +72,7 @@ class Fuel_tags_model extends Base_module_model {
 		$belongs_to = array();
 
 		// loop through all the modules to check for has_many relationships
-		unset($modules['categories'], $modules['tags']);
+		unset($modules['tags']);
 		foreach($modules as $module)
 		{
 			// grab each model
@@ -123,8 +124,6 @@ class Fuel_tags_model extends Base_module_model {
 	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
-		$CI =& get_instance();
-		$fields['category_id'] = array('type' => 'select', 'label' => 'Category', 'module' => 'categories', 'model' => array(FUEL_FOLDER => 'fuel_categories'), 'first_option' => 'Select a category...');
 		return $fields;
 	}
 

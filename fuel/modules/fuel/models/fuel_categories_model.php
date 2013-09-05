@@ -175,7 +175,7 @@ class Fuel_category_model extends Base_module_record {
 		$belongs_to = array();
 
 		// loop through all the modules to check for foreign_key relationships
-		unset($modules['categories'], $modules['tags']);
+		unset($modules['categories']);
 		foreach($modules as $module)
 		{
 			//grab each model
