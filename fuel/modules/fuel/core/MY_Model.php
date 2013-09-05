@@ -4109,10 +4109,21 @@ class MY_Model extends CI_Model {
 			}
 			
 			$force_array = ($find_how_many == 'find_all') ? TRUE : FALSE;
+			$limit = NULL;
+			
+			if (!$force_array)
+			{
+				$limit = 1;
+			}
+			else if (!empty($other_args[1]))
+			{
+				$limit = $other_args[1];
+			}
+
 			$other_args = array_slice($args, count($find_and_or) -1);
 			
 			if (!empty($other_args[0])) $this->db->order_by($other_args[0]);
-			if (!empty($other_args[1])) $this->db->limit($other_args[1]);
+			if (!empty($limit)) $this->db->limit($limit);
 			if (!empty($other_args[1])) $this->db->offset($other_args[2]);
 			return $this->get($force_array)->result();
 		}
