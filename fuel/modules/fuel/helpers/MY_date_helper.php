@@ -331,41 +331,62 @@ function format_db_date($y = NULL, $m = NULL, $d = NULL, $h = NULL, $i = NULL, $
 	return $str;
 }
 
-
 // --------------------------------------------------------------------
 
 /**
  * Creates a date range string (e.g. January 1-10, 2010)
  *
  * @access	public
- * @param	string
- * @param	string
+ * @param	string start date
+ * @param	string end date
+ * @param	array formatting parameters
  * @return	string
  */
-function date_range_string($date1, $date2)
+function date_range_string($date1, $date2, $params = array())
 {
+	
+	// set formatting defaults
+	$format['same_day_and_time'] = 'F j, Y h:i a';
+	$format['same_day'] = array('F j, h:i a', 'h:i a');
+	$format['same_month'] = array('F j', 'j, Y');
+	$format['same_year'] = array('F j', 'F j, Y');
+	$format['default'] = 'F j, Y';
+	$format['joiner'] = '-';
+
+	$format = array_merge($format, $params);
+
 	$date1TS = (is_string($date1)) ? strtotime($date1) : $date1;
 	$date2TS = (is_string($date2)) ? strtotime($date2) : $date2;
 
-	if (date('Y-m-d', $date1TS) == date('Y-m-d', $date2TS))
+	// same day
+	if (date('Y-m-d', $date1TS) == date('Y-m-d', $date2TS) OR (int) $date2 == 0)
 	{
-		return date('F j, Y', $date1TS);
+		// same day but different time
+		if (date('H:i', $date1TS) != date('H:i', $date2TS))
+		{
+			return date($format['same_day'][0], $date1TS).$format['joiner'].date($format['same_day'][1], $date2TS);
+		}
+
+		// same day and time format
+		return date($format['same_day_and_time'], $date1TS);
 	}
-	if (date('m/Y', $date1TS) == date('m/Y', $date2TS))
+	// same month
+	else if (date('m/Y', $date1TS) == date('m/Y', $date2TS))
 	{
-		return date('F j', $date1TS).'-'.date('j, Y', $date2TS);
+		return date($format['same_month'][0], $date1TS).$format['joiner'].date($format['same_month'][1], $date2TS);
 	}
+	// same year
 	else if (date('Y', $date1TS) == date('Y', $date2TS))
 	{
-		return date('F j', $date1TS)."-".date('F j, Y', $date2TS);
+		return date($format['same_year'][0], $date1TS).$format['joiner'].date($format['same_year'][1], $date2TS);
 	}
+
+	// default
 	else
 	{
-		return date('F j, Y', $date1TS).'-'.date('F j, Y', $date2TS);
+		return date($format['default'], $date1TS).$format['joiner'].date($format['default'], $date2TS);
 	}
 }
-
-
 
 // --------------------------------------------------------------------
 
