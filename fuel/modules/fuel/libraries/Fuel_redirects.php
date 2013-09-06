@@ -37,7 +37,7 @@ class Fuel_redirects extends Fuel_base_library {
 	public $ssl = array(); // The paths to force SSL with
 	public $aggressive_redirects = array(); // The pages to redirect to regardless if it's found by FUEL. WARNING: Run on every request.
 	public $passive_redirects = array(); // The pages to redirect to only AFTER no page is found by FUEL
-	public $max_redirects = 3; // Sets the number of times the page can redirect before giving nup and displaying a 404
+	public $max_redirects = 2; // Sets the number of times the page can redirect before giving nup and displaying a 404
 
 	protected $has_session = FALSE; // used to determine if there currently is a native session being used
 
@@ -531,6 +531,54 @@ class Fuel_redirects extends Fuel_base_library {
 		else
 		{
 			$return['url'] = $val;
+		}
+		return $return;
+	}
+
+	/**
+	 * Tests redirects and returns an array of valid URL and errors
+	 *
+	 * @access	public
+	 * @param	mixed an array or string of URLs to test. If none are provided, it will pull from the config
+	 * @return	array
+	 */
+	public function test($urls = array())
+	{
+		$this->CI->load->library('curl');
+
+		if (empty($redirects))
+		{
+			$config = $this->config();
+			$urls = array_keys(array_merge($config['passive_redirects'], $config['aggressive_redirects']));
+		}
+		if (is_string($urls))
+		{
+			$urls = preg_split('#\s*(,|\s)\s*#', $urls);
+		}
+
+		foreach($urls as $url)
+		{
+			$url = site_url($url);
+			$this->CI->curl->add_session($url, array(CURLOPT_FOLLOWLOCATION => TRUE, CURLOPT_MAXREDIRS => $this->max_redirects));
+		}
+		$this->CI->curl->exec_multi();
+		$infos = $this->CI->curl->info(NULL, TRUE);
+
+		$return = array(
+			'valid' => array(),
+			'errors' => array(),
+			);
+		foreach($infos as $key => $info)
+		{
+			//echo $info['http_code'] .'<br />';
+			if ((int) $info['http_code'] >= 400 OR $this->CI->curl->error($key))
+			{
+				$return['errors'][] = $urls[$key];
+			}
+			else
+			{
+				$return['valid'][] = $urls[$key];
+			}
 		}
 		return $return;
 	}
