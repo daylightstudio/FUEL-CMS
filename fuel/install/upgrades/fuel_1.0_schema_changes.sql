@@ -7,8 +7,8 @@ CREATE TABLE `fuel_relationships` (
   `foreign_table` varchar(100) DEFAULT NULL,
   `foreign_key` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `candidate_table` (`candidate_table`,`candidate_key`),
-  UNIQUE KEY `foreign_table` (`foreign_table`,`foreign_key`)
+  KEY `candidate_table` (`candidate_table`,`candidate_key`),
+  KEY `foreign_table` (`foreign_table`,`foreign_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fuel_settings` (
