@@ -210,7 +210,9 @@ CREATE TABLE `fuel_relationships` (
   `candidate_key` int(11) NOT NULL,
   `foreign_table` varchar(100) DEFAULT NULL,
   `foreign_key` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `candidate_table` (`candidate_table`,`candidate_key`),
+  UNIQUE KEY `foreign_table` (`foreign_table`,`foreign_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
