@@ -51,10 +51,21 @@ $config['ssl'] = array('production' => array(
 
 <h3>Enforce Host</h3>
 <p>The <dfn>host</dfn> configuration provides an alternative to .htaccess for redirecting your page if the current $_SERVER['HTTP_HOST'] PHP variable doesn't match what is specified
-as the "host" value in the redirect configuration. The following example would redirect any requests to "mysite.com" if the HTTP_HOST value doesn't match in the "production" environment (e.g. www.mysite.com):</p>
+	as the "host" value in the redirect configuration. The following example would redirect any requests to "mysite.com" if the HTTP_HOST value doesn't match in the "production" environment (e.g. www.mysite.com):</p>
 <pre class="brush:php">
 $config['host'] = array('production' => 'mysite.com'); 
 </pre>
+
+<h3>Testing Redirects</h3>
+<p>If you are needing to check the redirects, you can utilize <a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects::test method</a> and create a simple view file at <span class="file">fuel/applications/views/redirects_test.php</span> with the following:</p>
+<pre class="brush:php">
+&lt;?php 
+echo '<pre>';
+print_r($CI->fuel->redirects->test());
+echo '</pre>';
+?&gt;
+</pre>
+<p class="important">Regular expressions and shorthand :any will not be properly translated and will return errors.</p>
 
 <h3>Redirect Hooks</h3>
 <ul>
