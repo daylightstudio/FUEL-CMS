@@ -40,6 +40,22 @@ $config['max_redirects'] = 2;
 </pre>
 <p class="important">The <dfn>max_redirects</dfn> is used to prevent scenarios where it can cause an infinite redirect loop.</p>
 
+<h3>SSL</h3>
+<p>The <dfn>ssl</dfn> configuration provides an easy way to force SSL encryption (https) for your page URLs. The following example would 
+restrict any url under "store" to use SSL encription when in the "production" environment:</p>
+<pre class="brush:php">
+$config['ssl'] = array('production' => array(
+	'^store|store/:any'
+)); 
+</pre>
+
+<h3>Enforce Host</h3>
+<p>The <dfn>host</dfn> configuration provides an alternative to .htaccess for redirecting your page if the current $_SERVER['HTTP_HOST'] PHP variable doesn't match what is specified
+as the "host" value in the redirect configuration. The following example would redirect any requests to "mysite.com" if the HTTP_HOST value doesn't match in the "production" environment (e.g. www.mysite.com):</p>
+<pre class="brush:php">
+$config['host'] = array('production' => 'mysite.com'); 
+</pre>
+
 <h3>Redirect Hooks</h3>
 <ul>
 	<li><strong>pre_redirect</strong>: Called right before a page is redirected</li>

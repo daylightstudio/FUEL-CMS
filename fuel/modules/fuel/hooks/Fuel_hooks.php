@@ -57,7 +57,9 @@ class Fuel_hooks
 	public function redirects()
 	{
 		$CI =& get_instance();
+		$CI->fuel->redirects->enforce_host();
 		$CI->fuel->redirects->ssl();
+
 		if (!USE_FUEL_ROUTES)
 		{
 			$CI->fuel->redirects->execute(FALSE, FALSE);

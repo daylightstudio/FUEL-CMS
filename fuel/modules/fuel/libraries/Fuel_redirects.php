@@ -244,7 +244,7 @@ class Fuel_redirects extends Fuel_base_library {
 		}
 
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -436,6 +436,42 @@ class Fuel_redirects extends Fuel_base_library {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Will redirect the site based on the host (e.g. mysite.com vs www.mysite.com)
+	 *
+	 * @access	public
+	 * @return	void	
+	 */	
+	public function enforce_host()
+	{
+		$config = $this->config();
+
+		if (!isset($config['host']))
+		{
+			return;
+		}
+
+		$host = $config['host'];
+
+		if ( ! empty($host[ENVIRONMENT]))
+		{
+			if ($_SERVER['HTTP_HOST'] != $host[ENVIRONMENT])
+			{
+				$url = $host[ENVIRONMENT].$_SERVER['REQUEST_URI'];
+
+				$prefix = 'http://';
+				if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off' OR $_SERVER['SERVER_PORT'] == 443)
+				{
+					$prefix = 'https://';
+				}
+				$url = $prefix.$url;
+				header("Location: ".$url, TRUE, 301);
+			}
+		}
+	}
+	
 	/**
 	 * Gets redirect info
 	 *

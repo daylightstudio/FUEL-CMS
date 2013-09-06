@@ -29,6 +29,9 @@ $config['case_sensitive'] = TRUE;
 // The paths to force SSL with the key being the environment it belongs to
 $config['ssl'] = array('development' => array()); 
 
+// The host name to enforce (e.g. mysite.com vs www.mysite.com) with the key being the environment it belongs to
+$config['host'] = array('production' => ''); 
+
 // The pages to redirect to regardless if it's found by FUEL. 
 // WARNING: Run on every request.
 $config['aggressive_redirects'] =  array();
