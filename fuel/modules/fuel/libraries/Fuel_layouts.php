@@ -152,7 +152,7 @@ class Fuel_layouts extends Fuel_base_library {
 	 */	
 	public function get($layout = NULL, $type = 'page')
 	{
-		if (!empty($layout))
+		if (isset($layout))
 		{
 			if ($type == 'block')
 			{

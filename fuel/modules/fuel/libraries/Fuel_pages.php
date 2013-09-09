@@ -942,7 +942,8 @@ class Fuel_page extends Fuel_base_library {
 			if (isset($vars['layout']) AND (empty($this->layout) OR (is_object($this->layout) AND $this->layout->name != $vars['layout'])))
 			{
 				$layout = $vars['layout'];
-				$this->layout = $this->fuel->layouts->get($layout);
+				if (empty($layout)) $layout = '';
+				$this->layout = $this->fuel->layouts->get($layout);	
 			}
 
 			if ($this->layout)
