@@ -521,6 +521,7 @@ class Module extends Fuel_base_controller {
 			$vars['form_action'] = $this->module_uri.'/items';
 			$vars['form_method'] = 'get';
 			$vars['query_string'] = $query_str;
+			$vars['description'] = $this->description;
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
 			

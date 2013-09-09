@@ -570,6 +570,9 @@ div#pagination a { line-height: 21px; padding: 0 3px; border: 1px solid #ccc; ba
 div#pagination a:hover { background-color: #fdfdfd; } 
 div#pagination b { color: #fff; background-color: #4f7193; line-height: 21px; padding: 0 3px; border: 1px solid #ccc;  }
 
+/* module description */
+div#module_description { border-bottom: 1px solid #ccc; background-color: #f6f6f6; padding: 15px; }
+div#module_description p { margin: 0; }
 
 /* data table */
 div#table_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}

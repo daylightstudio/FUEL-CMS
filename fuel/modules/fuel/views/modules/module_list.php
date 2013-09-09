@@ -1,3 +1,9 @@
+<?php if (!empty($description)) : ?>
+<div id="module_description">
+	<p><?=$description?></p>
+</div>
+<?php endif; ?>
+
 <!-- list view -->
 <div id="list_container">
 	<div id="data_table_container">
