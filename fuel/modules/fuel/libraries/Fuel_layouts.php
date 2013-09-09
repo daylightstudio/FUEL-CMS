@@ -147,25 +147,43 @@ class Fuel_layouts extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The name of the layout
-	 * @return	object
+	 * @param	string	The type of layout to return. Options are "page" or "block"
+	 * @return	mixed 	Returns either an array of Fuel_Layout objects or a single Fuel_layout object
 	 */	
-	public function get($layout, $type = 'page')
+	public function get($layout = NULL, $type = 'page')
 	{
+		if (!empty($layout))
+		{
+			if ($type == 'block')
+			{
+				if (!empty($this->blocks[$layout]))
+				{
+					$init = $this->blocks[$layout];
+					$init['type'] = 'block';
+					$layout = $this->create($layout, $init);
+					return $layout;
+				}
+			}
+			else if (!empty($this->_layouts[$layout]))
+			{
+				return $this->_layouts[$layout];
+			}
+			return FALSE;
+		}
+
 		if ($type == 'block')
 		{
-			if (!empty($this->blocks[$layout]))
+			$return = array();
+			foreach($this->blocks as $key => $val)
 			{
-				$init = $this->blocks[$layout];
-				$init['type'] = 'block';
-				$layout = $this->create($layout, $init);
-				return $layout;
+				$return[$key] = $this->get($key, 'block');
 			}
+			return $return;
 		}
-		else if (!empty($this->_layouts[$layout]))
+		else
 		{
-			return $this->_layouts[$layout];
+			return $this->_layouts;
 		}
-		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
