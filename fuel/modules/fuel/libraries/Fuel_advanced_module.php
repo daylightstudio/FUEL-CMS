@@ -213,6 +213,49 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns an array of any sub modules
+	 *
+	 * @access	public
+	 * @param	string The name of a particular sub module you want returned (optional)
+	 * @return	mixed Returns an array if no parameter is set, otherwise it will return an object
+	 */	
+	public function submodules($sub = NULL)
+	{
+		static $subs = NULL;
+
+		if (!isset($subs))
+		{
+			$subs = array();
+			$config = $this->fuel->modules->get_module_config($this->name());
+
+			if (!empty($config))
+			{	
+				$config = array_keys($config);
+				foreach($config as $c)
+				{
+					$mod = $this->fuel->modules->get($c, FALSE);
+					if (!empty($mod))
+					{
+						$subs[$c] = $mod;
+					}
+				}
+			}
+		}
+		
+		if (!empty($sub))
+		{
+			if (isset($subs[$sub]))
+			{
+				return $subs[$sub];
+			}
+			return FALSE;
+		}
+		return $subs;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * The models you can load for this advanced module
 	 *
 	 * @access	public
@@ -1178,6 +1221,41 @@ class Fuel_advanced_module extends Fuel_base_library {
 	{
 		return $this->fuel->installer->uninstall($this->name());
 	}
+
+
+// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the information from the install configuration file
+	 *
+	 * @access	public
+	 * @param	string The key to the install config you want returned (optional)
+	 * @return	string
+	 */
+	public function install_info($key = NULL)
+	{
+		$install_config_path = $this->server_path().'install/install.php';
+		static $config;
+		if (!isset($config))
+		{
+			if (file_exists($install_config_path))
+			{
+				include($install_config_path);
+			}
+		}
+
+		if (!empty($config))
+		{
+			if (!empty($key))
+			{
+				return (isset($config[$key])) ? $config[$key] : FALSE;
+			}
+			return $config;
+		}
+
+		return FALSE;
+	}
+
 
 	// --------------------------------------------------------------------
 	
