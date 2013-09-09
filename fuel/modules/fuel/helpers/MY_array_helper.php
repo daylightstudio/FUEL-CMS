@@ -149,7 +149,6 @@ function options_list($values, $value = 'id', $label = 'name', $value_as_key = F
 	return $return;
 }
 
-
 // --------------------------------------------------------------------
 
 /**
@@ -172,6 +171,20 @@ function parse_string_to_array($str)
 	}
 	return $params;
 	
+}
+
+/**
+ * Returns an array of arrays.
+ *
+ * @access	public
+ * @param	array an array to be divided
+ * @param	int number of groups to divide the array into
+ * @return	array
+ */	
+function array_group($array, $groups)
+{
+	$items_in_each_group = ceil(count($array)/$groups);
+	return array_chunk($array, $items_in_each_group);
 }
 
 /* End of file MY_array_helper.php */

@@ -23,7 +23,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://docs.getfuelcms.com/helpers/simplepie
+ * @link		http://docs.getfuelcms.com/helpers/simplepie_helper
  */
 
 

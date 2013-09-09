@@ -26,7 +26,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://docs.getfuelcms.com/helpers/directory_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_directory_helper
  */
 
 
