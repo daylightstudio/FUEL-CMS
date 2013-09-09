@@ -340,6 +340,33 @@ function swf($flash, $id, $width, $height, $options = array()){
 // --------------------------------------------------------------------
 
 /**
+ * Uses the "http://placehold.it" service to display images (good for mocking up sites)
+ *
+ * @access	public
+ * @param	int		width of placeholder image (optional)
+ * @param	int		height of placeholder image (optional)
+ * @param	string	text to display inside placeholder
+ * @param	string	color of placeholder
+ * @param	boolean	determines whether to wrap it in an image tag or just return the path (optional)
+ * @return	string
+ */	
+function placeholder($width = 100, $height = '', $text = '', $colors = '', $img_tag = FALSE)
+{
+	$dimentions = $width.( !empty($height) ? 'x'.$height : '');
+	$text = !empty($text) ? '&text='.urlencode($text) : '';
+	$colors = !empty($colors) ? explode(' ', $colors) : '';
+	$colors = !empty($colors) ? '/'.$colors[0].'/'.$colors[1] : '';
+	$path = 'http://placehold.it/'.$dimentions.$colors.$text;
+	if ($img_tag)
+	{
+		return '<img src="'.$path.'" alt="'.$text.'" width="'.$width.'" height="'.$height.'" />';
+	}
+	return $path;
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the CI super object
  *
  * @access	public
