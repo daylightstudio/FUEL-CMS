@@ -295,6 +295,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>If TRUE, this will disable heading sorting on the list view</td>
 		</tr>
+		<tr>
+			<td><strong>description</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>A description value that can be used in the site docs</td>
+		</tr>
 	</tbody>
 </table>
 

@@ -105,7 +105,7 @@ class Fuel_modules extends Fuel_base_library {
 		$module_init = array_merge($my_module_init, $fuel_module_init);
 		
 		// no longer need these so we get rid of them
-		unset($my_module_init, $fuel_module_init, $params);
+		unset($my_module_init, $fuel_module_init);
 		
 		// then get the allowed modules initialization information
 		foreach($allowed as $mod)
@@ -661,6 +661,7 @@ class Fuel_module extends Fuel_base_library {
 				'limit_options' => array('50' => '50', '100' => '100', '200' => '200'),
 				'advanced_search' => FALSE,
 				'disable_heading_sort' => FALSE,
+				'description' => '',
 				);
 			$info = array();
 
