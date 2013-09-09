@@ -260,7 +260,7 @@ $config['offline'] = FALSE;
 $config['restrict_to_remote_ip'] = array();
 
 // restrict fuel webhooks like the migrate functionality to only certain IP address (can be string or an array of IP addresses)
-$config['webhook_romote_ip'] = array();
+$config['webhook_remote_ip'] = array();
 
 // default password to alert against
 $config['default_pwd'] = 'admin';

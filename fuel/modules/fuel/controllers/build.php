@@ -16,7 +16,7 @@ class Build extends Fuel_base_controller {
 	
 	function _remap($module, $segs = NULL)
 	{
-		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$remote_ips = $this->fuel->config('webhook_remote_ip');
 		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
 
 		// check if it is CLI or a web hook otherwise we need to validate

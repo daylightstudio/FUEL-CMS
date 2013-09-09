@@ -10,7 +10,7 @@ class Migrate extends Fuel_base_controller {
 		// don't validate initially because we need to handle it a little different since we can use web hooks
 		parent::__construct(FALSE);
 
-		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$remote_ips = $this->fuel->config('webhook_remote_ip');
 		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
 
 		// check if it is CLI or a web hook otherwise we need to validate
