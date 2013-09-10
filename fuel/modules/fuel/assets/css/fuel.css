@@ -555,9 +555,10 @@ div.form_tabs li.active { background-color: #eee; }
 div.form_tabs li.active a { color: #333; }
 
 /* box buttons use for manage */
-div.boxbuttons li {  float: left;  display: block; list-style: none; width: 110px; height: 50px;  border: 1px solid #ccc;  margin-bottom: 15px; margin-right: 15px; }
-div.boxbuttons li a { display: block; text-align: center; padding: 25px 5px 5px 5px; width: 100px; height: 20px; background-color: #fff; background-repeat: no-repeat; background-position: center 5px;}
+div.boxbuttons li {  float: left; display: block; list-style: none; width: 110px; height: 60px;  border: 1px solid #ccc;  margin-bottom: 15px; margin-right: 15px; }
+div.boxbuttons li a { display: block; text-align: center; padding: 10px 5px 5px 5px; width: 100px; height: 45px; background-color: #fff; }
 div.boxbuttons li a:hover { background-color: #f6f6f6; }
+div.boxbuttons li i { display: block; padding: 0; margin: auto; width: 21px; height: 22px; padding-right: 5px; }
 
 /* notification */
 div#fuel_notification { height: 21px; border-bottom: 1px solid #ccc; background-color: #ecf1f5; text-overflow: ellipsis; overflow: hidden; position: relative; }
