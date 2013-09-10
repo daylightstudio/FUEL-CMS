@@ -23,11 +23,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.formController = null;
 //		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
-		this.uiCookie = 'fuel_ui';
+		this.uiCookie = jqx.config.uiCookie;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
 		this._initModals();
+
 	},
 	
 	_initLeftMenu : function(){
@@ -176,9 +177,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').submit();
 		});
 		
+
 		if ($('#tree').exists()){
 			var itemViewsCookieId = 'fuel_' + _this.module + '_items';
-			var itemViewsCookie = $.cookie(itemViewsCookieId);
+			//var itemViewsCookie = $.cookie(itemViewsCookieId);
+			var itemViewsCookie = $.supercookie(this.uiCookie, itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
 				_this._toggleRearrangeBtn();
@@ -193,7 +196,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#tree_container').show();
 				$('#pagination').hide();
 				$('#view_type').val('tree');
-				$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				//$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				$.supercookie(_this.uiCookie, itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				
 				// lazy load tree
 				if (!_this.treeLoaded){
 					_this.redrawTree();
@@ -211,7 +216,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#tree_container').hide();
 				$('#pagination').show();
 				$('#view_type').val('list');
-				$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				$.supercookie(_this.uiCookie, itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
 				// lazy load table
 				if (!_this.tableLoaded){
 					_this.redrawTable();
@@ -219,7 +224,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 
-			if ($.cookie(itemViewsCookieId) == 'tree'){
+			if ($.supercookie(_this.uiCookie, itemViewsCookieId) == 'tree'){
 				$('#toggle_tree').click();
 			} else {
 				$('#toggle_list').click();
@@ -620,7 +625,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			persist: "cookie",
 			collapsed: false,
 			unique: false,
-			cookieId: _this.module + '_tree'
+			cookieId: _this.module + '_tree',
+			groupCookieId: _this.uiCookie,
+			cookieOptions: {path: jqx.config.cookieDefaultPath}
 		});
 		if (!_this.treeLoaded) _this.treeLoaded = true;
 		

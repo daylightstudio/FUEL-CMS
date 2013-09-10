@@ -206,7 +206,7 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jqModal',
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
-	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.treeview',
 	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.supercookie',
