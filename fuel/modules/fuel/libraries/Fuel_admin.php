@@ -409,9 +409,9 @@ class Fuel_admin extends Fuel_base_library {
 		$already_included = FALSE;
 		foreach($user_data['recent'] as $key => $pages)
 		{
-			if ($pages['link'] == $link AND $pages['name'] == $name AND $pages['type'] == $type)
+			if ($pages['l'] == $link AND $pages['n'] == $name AND $pages['t'] == $type)
 			{
-				$user_data['recent'][$key]['last_visited'] = time();
+				$user_data['recent'][$key]['ts'] = time();
 				$already_included = TRUE;
 			}
 		}
@@ -419,7 +419,7 @@ class Fuel_admin extends Fuel_base_library {
 		if (!$already_included)
 		{
 			if (strlen($name) > 100) $name = substr($name, 0, 100).'&hellip;';
-			$val = array('name' => $name, 'link' => $link, 'last_visited' => time(), 'type' => $type);
+			$val = array('n' => $name, 'l' => $link, 'ts' => time(), 't' => $type);
 			array_unshift($user_data['recent'], $val);
 		}
 
@@ -427,10 +427,9 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			array_pop($user_data['recent']);
 		}
-		$user_data['recent'] = array_sorter($user_data['recent'], 'last_visited', 'desc', TRUE);
+		$user_data['recent'] = array_sorter($user_data['recent'], 'ts', 'desc', TRUE);
 		$this->CI->session->set_userdata($session_key, $user_data);
 	}
-	
 	
 	// --------------------------------------------------------------------
 	

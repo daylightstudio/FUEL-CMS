@@ -76,7 +76,7 @@
 				<h3><?=lang('section_recently_viewed')?></h3>
 				<ul>
 					<?php foreach($user_data['recent'] as $val) : ?>
-					<li><a href="<?=site_url($val['link'])?>" class="ico ico_<?=$val['type']?>" title="<?=$val['name']?>"><?=$val['name']?></a></li>
+					<li><a href="<?=site_url($val['l'])?>" class="ico ico_<?=$val['t']?>" title="<?=$val['n']?>"><?=$val['n']?></a></li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
