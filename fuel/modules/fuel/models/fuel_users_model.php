@@ -319,9 +319,13 @@ class Fuel_users_model extends Base_module_model {
 		$CI =& get_instance();
 		$perm_fields = array();
 		$user = $CI->fuel->auth->user_data();
-		
-		//if (($user['id'] != $user_id) OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions')))
-		if ((!empty($values['super_admin']) AND $values['super_admin'] != 'yes') AND (($user['id'] != $user_id) OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions'))))
+
+		// if you are a super admin or a user that has permissions to assign permissions and you are not editing yourself, then display the permissions
+		if ($CI->fuel->auth->has_permission('permissions') AND 
+			(($user['id'] != $user_id) AND // can't edit yourself's permissions
+			(!empty($values['super_admin']) AND $values['super_admin'] != 'yes') OR // super admin profiles don't show permissions
+			($CI->fuel->auth->has_permission('permissions') AND empty($values))) // for creating new users so as to show permissions if you are a super admin
+			)
 		{
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
