@@ -255,6 +255,11 @@ class Fuel_auth extends Fuel_base_library {
 	 */
 	public function check_valid_ip($ips)
 	{
+		if (empty($ips))
+		{
+			return FALSE;
+		}
+		
 		$check_address = $_SERVER['REMOTE_ADDR'];
 
 		// check if IP address is range
