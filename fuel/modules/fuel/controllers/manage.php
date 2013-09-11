@@ -8,7 +8,7 @@ class Manage extends Fuel_base_controller {
 	
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(FALSE);
 		$this->js_controller = 'fuel.controller.ManageController';
 	}
 	
@@ -22,23 +22,40 @@ class Manage extends Fuel_base_controller {
 	
 	public function cache()
 	{
-		$this->_validate_user('manage/cache');
+		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
+
+		// check if it is CLI or a web hook otherwise we need to validate
+		$validate = (php_sapi_name() == 'cli' OR defined('STDIN') OR $is_web_hook) ? FALSE : TRUE;
+
+		if ($validate)
+		{
+			$this->_validate_user('manage/cache');	
+		}
 		
 		$this->fuel->admin->set_nav_selected('manage/cache');
 		
-		if ($post = $this->input->post('action'))
+		if ($post = $this->input->post('action') OR $this->input->is_cli_request())
 		{
 			$this->fuel->cache->clear();
 			
 			$msg = lang('cache_cleared');
 			$this->fuel->logs->write($msg);
-			$this->fuel->admin->set_notification(lang('cache_cleared'), Fuel_admin::NOTIFICATION_SUCCESS);
-			
-			redirect('fuel/manage/cache');
+
+			if ($this->input->is_cli_request())
+			{
+				echo $msg."\n";
+			}
+			else
+			{
+				$this->fuel->admin->set_notification(lang('cache_cleared'), Fuel_admin::NOTIFICATION_SUCCESS);
+				redirect('fuel/manage/cache');
+			}
 		}
 		else 
 		{
 			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
+
 			$this->fuel->admin->set_titlebar($crumbs, 'ico_manage_cache');
 			$this->fuel->admin->render('manage/cache');
 		}
