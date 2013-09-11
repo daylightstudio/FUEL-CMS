@@ -1843,6 +1843,7 @@ class Form_builder {
 			'wrapper_tag' => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
 		);
+
 		$params = $this->normalize_params($params, $defaults);
 		
 		$i = 0;
@@ -1860,9 +1861,13 @@ class Form_builder {
 					'disabled' => $params['disabled'],
 					'style' => $params['style'],
 				);
-				if (($i == 0 AND !$default) OR  ($default == $key))
+
+				if (empty($params['null']) OR (!empty($params['null']) AND !empty($params['default'])))
 				{
-					$attrs['checked'] = 'checked';
+					if (($i == 0 AND !$default) OR  ($default == $key))
+					{
+						$attrs['checked'] = 'checked';
+					}
 				}
 				$str .= $this->form->radio($params['name'], $key, $attrs);
 				$name = Form::create_id($params['orig_name']);
