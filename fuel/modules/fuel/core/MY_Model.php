@@ -1256,11 +1256,6 @@ class MY_Model extends CI_Model {
 				{
 					$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 				}
-				else
-				{
-					// continue the loop so an empty date value doesn't get passed thru
-					continue;
-				}
 			} 
 			else if ($is_date_field_type AND in_array($key, $this->auto_date_update))
 			{
