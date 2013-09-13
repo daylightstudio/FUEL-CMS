@@ -399,7 +399,7 @@ class Fuel_redirects extends Fuel_base_library {
 	public function ssl()
 	{
 		$config = $this->config();
-		$is_https = (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] == 'on');
+		$is_https = is_https();
 
 		if (!isset($config['ssl']) OR $is_https)
 		{
@@ -461,13 +461,10 @@ class Fuel_redirects extends Fuel_base_library {
 			{
 				$url = $host[ENVIRONMENT].$_SERVER['REQUEST_URI'];
 
-				$prefix = 'http://';
-				if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off' OR $_SERVER['SERVER_PORT'] == 443)
-				{
-					$prefix = 'https://';
-				}
+				$prefix = (is_https()) ? 'https://' : 'http://';
 				$url = $prefix.$url;
 				header("Location: ".$url, TRUE, 301);
+				exit();
 			}
 		}
 	}

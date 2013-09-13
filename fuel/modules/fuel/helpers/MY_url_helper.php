@@ -314,7 +314,7 @@ function redirect($uri = '', $method = 'location', $http_response_code = 302)
 {
 	if ( ! preg_match('#^https?://#i', $uri))
 	{
-		$uri = site_url($uri, FALSE, FALSE);
+		$uri = site_url($uri, is_https(), FALSE);
 	}
 
 	switch($method)
@@ -325,6 +325,25 @@ function redirect($uri = '', $method = 'location', $http_response_code = 302)
 			break;
 	}
 	exit;
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Returns whether the current page is using SSL (https)
+ *
+ * @access	public
+ * @param	string	the URL
+ * @param	string	the method: location or redirect
+ * @return	string
+ */
+// used function exists to future proof it https://github.com/IT-Can/CodeIgniter/commit/98bc5d985b7119ff71b9f50a1b226559f647797a
+if ( ! function_exists('is_https'))
+{
+	function is_https()
+	{
+		return ((!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off'));
+	}
 }
 
 /* End of file MY_url_helper.php */
