@@ -687,3 +687,6 @@ div.perms_list label { font-weight: bold; }
 .match_class span { display: inline-block; cursor: pointer; padding: 3px; background-color: #fcfce6; border: 1px solid #ccc; margin: 3px 0 3px 3px; }
 
 .multi_field { margin-bottom: 10px; }
+
+/* ckeditor */
+.cke_top { min-width: 565px !important; }
