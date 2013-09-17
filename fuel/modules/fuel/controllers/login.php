@@ -18,6 +18,9 @@ class Login extends CI_Controller {
 
 		// change assets path to admin
 		$this->asset->assets_path = $this->fuel->config('fuel_assets_path');
+
+		// set asset output settings
+		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
 		
 		$this->lang->load('fuel');
 		$this->load->helper('ajax');
