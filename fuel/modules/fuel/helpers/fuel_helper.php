@@ -63,24 +63,26 @@ function &FUEL()
  * The <dfn>params</dfn> parameter can either be string value (in which case it will assume it is the name of the block view file) or an associative array that can have the following values:
 
 <ul>
-	<li><strong>view</strong> - a view file located in the <dfn>views/_blocks</dfn></li>
-	<li><strong>view_string</strong> - a string value to be used for the view</li>
-	<li><strong>model</strong> - the model to load and be available for the view</li>
-	<li><strong>find</strong> - the find method on the model to use (e.g. 'one', 'all' or 'key')</li>
-	<li><strong>select</strong> - the select condition to filter the results of the find query</li>
-	<li><strong>where</strong> - the where condition on the model to be used in the find query</li>
-	<li><strong>order</strong> - order the data results returned from the model and sort them</li>
-	<li><strong>limit</strong> - limit the number of data results returned by the model</li>
-	<li><strong>offset</strong> - offset the data results returned by the model</li>
-	<li><strong>return_method</strong> - the return method to use which can be an object or an array</li>
-	<li><strong>assoc_key</strong> - the field to be used as an associative key for the data results</li>
-	<li><strong>data</strong> - data to be passed to the view if a model isn't provided. This information can be accessed in the block from the variable <dfn>$data</dfn></li>
-	<li><strong>editable</strong> - insert in inline editing</li>
-	<li><strong>parse</strong> - parse the contents of the page. Default is set to 'auto' which will NOT try and parse if your <dfn>fuel_mode</dfn> value in the fuel config file is set to "views".</li>
-	<li><strong>vars</strong> - additional variables to pass to the block</li>
-	<li><strong>cache</strong> - will cache the block</li>
-	<li><strong>mode</strong> - determines whether to pull from the cms or the views folder. Options are "views" or "cms"</li>
-	<li><strong>module</strong> - the advanced module that the block will load from</li>
+	<li><strong>view</strong> - the name of the view block file. Also can be the first parameter of the method</li>
+	<li><strong>vars</strong>: an array of variables to pass to the block. Also can be the second parameter of the method.</li>
+	<li><strong>view_string</strong> - a string variable that represents the block</li>
+	<li><strong>model</strong> - the name of a model to automatically load for the block</li>
+	<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
+	<li><strong>select</strong> - select parameters to run for the find method</li>
+	<li><strong>where</strong> - where parameters to run for the find method</li>
+	<li><strong>order</strong> - the order the find method should return</li>
+	<li><strong>limit</strong> - the limit number of results to be returned by the find method</li>
+	<li><strong>offset</strong> - the find results returned offset value</li>
+	<li><strong>return_method</strong>: the return method the find query should use</li>
+	<li><strong>assoc_key</strong>: the column name to be used as the associative key in the find method</li>
+	<li><strong>data</strong>: the data values to be passed to the block. This variable get's automatically set if you specify the model and find method</li>
+	<li><strong>editable</strong>: css class styles to apply to menu items... can be a nested array</li>
+	<li><strong>parse</strong>: determines whether to parse the contents of the block. The default is set to 'auto'</li>
+	<li><strong>cache</strong>: determines whether to cache the block. Default is false</li>
+	<li><strong>mode</strong>: explicitly will look in either the CMS or the views/_blocks folder</li>
+	<li><strong>module</strong>: the name of the module to look in for the block</li>
+	<li><strong>language</strong>: the language version to use for the block. Must be a value specified found in the 'languages' options in the FUEL configuration</li>
+	<li><strong>use_default</strong>: determines whether to find a non-language specified version of a block with the same name if the specified language version is not available in the CMS</li>
 </ul>
  *
  * @access	public
@@ -104,15 +106,43 @@ function fuel_block($params, $vars = array(), $check_db = TRUE)
  * The parameter values are very similar to the <a href="[user_guide_url]libraries/menu">Menu class</a>, with a few additions shown below:
 
 <ul>
-	<li><strong>file</strong> - the name of the file containing the navigation information</li>
-	<li><strong>var</strong> - the variable name in the file to use</li>
-	<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
-	<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this.</li>
-	<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin.</li>
-	<li><strong>exclude</strong> - nav items to exclude from the menu</li>
-	<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
-	<li><strong>append</strong> - adds additional menu items to the current list</li>
-</ul>
+		<li><strong>items</strong> - the navigation items to use. By default, this is empty and will look for the nav.php file or the records in the Navigation module</li>
+		<li><strong>file</strong> - the name of the file containing the navigation information</li>
+		<li><strong>var</strong> - the variable name in the file to use</li>
+		<li><strong>parent</strong> - the parent id you would like to start rendering from. This is either the database ID or the nav array key of the menu item</li>
+		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this</li>
+		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
+		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
+		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
+		<li><strong>render_type</strong>: options are basic, breadcrumb, page_title, collapsible, delimited, array. Default is 'basic'</li>
+		<li><strong>active_class</strong>: the active css class. Default is 'active'</li>
+		<li><strong>active</strong>: the active menu item</li>
+		<li><strong>styles</strong>: css class styles to apply to menu items... can be a nested array</li>
+		<li><strong>first_class</strong>: the css class for the first menu item. Default is first</li>
+		<li><strong>last_class</strong>: the css class for the last menu item. Default is last</li>
+		<li><strong>depth</strong>: the depth of the menu to render at</li>
+		<li><strong>use_titles</strong>: use the title attribute in the links. Default is FALSE</li>
+		<li><strong>container_tag</strong>: the html tag for the container of a set of menu items. Default is ul</li>
+		<li><strong>container_tag_attrs</strong>: html attributes for the container tag</li>
+		<li><strong>container_tag_id</strong>: html container id</li>
+		<li><strong>container_tag_class</strong>: html container class</li>
+		<li><strong>cascade_selected</strong>: cascade the selected items. Default is TRUE</li>
+		<li><strong>include_hidden</strong>: include menu items with the hidden attribute. Default is FALSE</li>
+		<li><strong>item_tag</strong>: the html list item element. Default is 'li'</li>
+		<li><strong>item_id_prefix</strong>: the prefix to the item id</li>
+		<li><strong>item_id_key</strong>: either id or location. Default is 'id'</li>
+		<li><strong>use_nav_key</strong>: determines whether to use the nav_key or the location for the active state. Default is "AUTO"</li>
+		<li><strong>pre_render_func</strong>: function to apply to menu labels before rendering</li>
+		<li><strong>delimiter</strong>: the html element between the links </li>
+		<li><strong>arrow_class</strong>: the class for the arrows used in breadcrumb type menus</li>
+		<li><strong>display_current</strong>: determines whether to display the current active breadcrumb item</li>
+		<li><strong>home_link</strong>: the root home link</li>
+		<li><strong>append</strong>: appends additional menu items to those items already set (e.g. from the $nav array or from the navigation module). Good to use on dynamic pages where you need to dynamically set a navigation item for a page</li>
+		<li><strong>order</strong>: the order to display... for page_title ONLY</li>
+		<li><strong>language</strong>: select the appropriate language</li>
+		<li><strong>include_default_language</strong>: will merge in the default language with the results. Default is FALSE</li>
+		<li><strong>language_default_group</strong>: the default group to be used when including a default language. Default is FALSE</li>
+	</ul>
 
 <p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>
  *
@@ -132,7 +162,6 @@ function fuel_nav($params = array())
  * Generates a page using the Fuel_page class
  *
  * @access	public
- * @param	string
  * @param	array
  * @param	array
  * @return	string
