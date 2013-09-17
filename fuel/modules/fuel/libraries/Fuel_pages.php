@@ -586,7 +586,7 @@ class Fuel_page extends Fuel_base_library {
 			{
 				$this->fuel->language->set_selected($lang_seg);
 				$this->language = $lang_seg;
-				array_shift($segments);	
+				//array_shift($segments);	
 			}
 		}
 
