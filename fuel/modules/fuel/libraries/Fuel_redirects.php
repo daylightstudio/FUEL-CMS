@@ -620,7 +620,7 @@ class Fuel_redirects extends Fuel_base_library {
 		}
 
 		// use native sessions because it seems to work better and less chance for session conflict
-		session_start();
+		if (!session_id()) session_start();
 
 		// set the original URI value so we can redirect back to it and 404 if the redirects exceed the number of max redirects
 		if (!isset($_SESSION[self::REDIRECT_ORIG]))
