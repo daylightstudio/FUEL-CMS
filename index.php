@@ -100,13 +100,12 @@ if (defined('ENVIRONMENT'))
 {
 	switch (ENVIRONMENT)
 	{
-		case 'development':
+		case 'development': case 'testing': 
 			ini_set('display_errors', 1);
 			error_reporting(E_ALL);
 		break;
 	
-		case 'testing':
-		case 'production':
+		case 'staging': case 'production':
 			error_reporting(0);
 		break;
 
