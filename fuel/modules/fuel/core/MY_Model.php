@@ -489,22 +489,25 @@ class MY_Model extends CI_Model {
 	 */	
 	public function map_query_records($query, $assoc_key = NULL)
 	{
+		$result = $query->result_array(); 
 		$result_objects = array();
-		
-		$fields = $query->list_fields();
-		foreach ($query->result_array() as $row) 
+		if (!empty($result))
 		{
-			$record = $this->map_to_record_class($row, $fields);
-			if (!empty($assoc_key))
+			$fields = $query->list_fields();
+			foreach ($result as $row) 
 			{
-				$result_objects[$row[$assoc_key]] = $record;
-			}
-			else
-			{
-				$result_objects[] = $record;
+				$record = $this->map_to_record_class($row, $fields);
+				if (!empty($assoc_key))
+				{
+					$result_objects[$row[$assoc_key]] = $record;
+				}
+				else
+				{
+					$result_objects[] = $record;
+				}
 			}
 		}
-		return $result_objects;
+		return $result_objects;	
 	}
 	
 	// --------------------------------------------------------------------
