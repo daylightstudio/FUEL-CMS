@@ -32,7 +32,8 @@
 				
 				<h3>Introduction</h3>
 				<ul>
-					<li><a href="<?=user_guide_url('introduction/whats-new')?>">What's New In FUEL CMS 1.0</a></li>
+					<li><a href="<?=user_guide_url('introduction/what-is-fuel')?>">What is FUEL CMS?</a></li>
+					<li><a href="<?=user_guide_url('introduction/whats-new')?>">New In FUEL CMS 1.0</a></li>
 					<?php /* ?><li><a href="<?=user_guide_url('introduction/demo-site')?>">The Demo Site</a></li><?php */ ?>
 					<li><a href="<?=user_guide_url('introduction/interface')?>">The CMS Interface</a></li>
 				</ul>
