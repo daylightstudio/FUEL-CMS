@@ -43,7 +43,7 @@ function required($var)
 	if (is_string($var))
 	{
 		$var = trim($var);
-		if (!empty($var)) 
+		if ($var !== '')  
 		{
 			return TRUE;
 		} 
