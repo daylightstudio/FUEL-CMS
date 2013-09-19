@@ -5105,7 +5105,7 @@ class Data_record {
 	 */	
 	public function __call($method, $args)
 	{
-		if (preg_match( "/set_(.*)/", $method, $found))
+		if (preg_match( "/^set_(.*)/", $method, $found))
 		{
 			if (array_key_exists($found[1], $this->_fields))
 			{
@@ -5113,7 +5113,7 @@ class Data_record {
 				return TRUE;
 			}
 		}
-		else if (preg_match("/get_(.*)/", $method, $found))
+		else if (preg_match("/^get_(.*)/", $method, $found))
 		{
 			if ($this->_is_relationship_property($found[1], 'has_many'))
 			{
@@ -5130,7 +5130,7 @@ class Data_record {
 				return $this->_fields[$found[1]];
 			}
 		}
-		else if (preg_match("/is_(.*)/", $method, $found))
+		else if (preg_match("/^is_(.*)/", $method, $found))
 		{
 			if (array_key_exists($found[1], $this->_fields))
 			{
@@ -5141,7 +5141,7 @@ class Data_record {
 				}
 			}
 		}
-		else if (preg_match("/has_(.*)/", $method, $found))
+		else if (preg_match("/^has_(.*)/", $method, $found))
 		{
 			if (array_key_exists($found[1], $this->_fields))
 			{
