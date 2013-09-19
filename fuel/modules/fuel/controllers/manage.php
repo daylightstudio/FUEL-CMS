@@ -22,7 +22,28 @@ class Manage extends Fuel_base_controller {
 	
 	public function cache()
 	{
-		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$this->_validate_user('manage/cache');	
+		
+		$this->fuel->admin->set_nav_selected('manage/cache');
+		
+		if ($this->input->post('action'))
+		{
+			$msg = $this->clear_cache(TRUE);
+			$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_SUCCESS);
+			redirect('fuel/manage/cache');
+		}
+		else 
+		{
+			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
+
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_manage_cache');
+			$this->fuel->admin->render('manage/cache');
+		}
+	}
+
+	public function clear_cache($return = FALSE)
+	{
+		$remote_ips = $this->fuel->config('webhook_remote_ip');
 		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
 
 		// check if it is CLI or a web hook otherwise we need to validate
@@ -32,33 +53,16 @@ class Manage extends Fuel_base_controller {
 		{
 			$this->_validate_user('manage/cache');	
 		}
-		
-		$this->fuel->admin->set_nav_selected('manage/cache');
-		
-		if ($post = $this->input->post('action') OR $this->input->is_cli_request())
-		{
-			$this->fuel->cache->clear();
-			
-			$msg = lang('cache_cleared');
-			$this->fuel->logs->write($msg);
 
-			if ($this->input->is_cli_request())
-			{
-				echo $msg."\n";
-			}
-			else
-			{
-				$this->fuel->admin->set_notification(lang('cache_cleared'), Fuel_admin::NOTIFICATION_SUCCESS);
-				redirect('fuel/manage/cache');
-			}
-		}
-		else 
-		{
-			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
+		$this->fuel->cache->clear();
+		$msg = lang('cache_cleared');
 
-			$this->fuel->admin->set_titlebar($crumbs, 'ico_manage_cache');
-			$this->fuel->admin->render('manage/cache');
+		$this->fuel->logs->write($msg);
+		if ($return)
+		{
+			return $msg;	
 		}
+		echo $msg."\n";
 	}
 
 }
