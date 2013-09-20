@@ -153,7 +153,8 @@ class Fuel_pages_model extends Base_module_model {
 			}
 			$return[$key]['location'] = fuel_url('pages/edit/'.$val['id']);
 		}
-		$return = array_sorter($return, 'label', 'asc');
+		// can cause memory issues because it will mess with the array keys
+		//$return = array_sorter($return, 'label', 'asc');
 		return $return;
 	}
 	
