@@ -280,7 +280,10 @@ $config['modules']['logs'] = array(
 	'item_actions' => array(),
 	'table_actions' => array(),
 	'rows_selectable' => FALSE,
-	'clear_cache_on_save' => FALSE
+	'clear_cache_on_save' => FALSE,
+	'filters' => array(
+		'type' => array('type' => 'select', 'label' => 'Type:', 'options' => array('info' => 'info', 'debug' => 'debug'), 'first_option' => lang('label_select_one')),
+		),
 );
 
 //@include(APPPATH.'config/MY_fuel_modules.php');

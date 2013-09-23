@@ -569,6 +569,10 @@ class Fuel_users_model extends Base_module_model {
 			
 		}
 
+		if ( ! empty($this->normalized_save_data['new_password'])) {
+			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
+		}
+
 		$this->_send_email($values['id']);
 		return $values;
 	}
