@@ -75,6 +75,12 @@ $lang['login_reset_pwd'] = 'Reset Password';
 $lang['login_btn'] = 'Login';
 $lang['logout_restore_original_user'] = 'Restore original user';
 
+$lang['auth_log_pass_reset_request'] = "Password reset request for '%1s' from %2s";
+$lang['auth_log_pass_reset'] = "Password reset for '%1s' from %2s";
+$lang['auth_log_cms_pass_reset'] = "Password reset from CMS for '%1s' from %2s";
+$lang['auth_log_login_success'] = "Successful login by '%1s' from %2s";
+$lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
+$lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 
 /*
 |--------------------------------------------------------------------------

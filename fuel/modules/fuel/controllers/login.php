@@ -121,10 +121,12 @@ class Login extends CI_Controller {
 						{
 							$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 							$user_data['failed_login_timer'] = time();
+							$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post('user_name', TRUE), $this->input->ip_address()), 'debug');
 						}
 						else
 						{
 							$this->fuel_users_model->add_error(lang('error_invalid_login'));
+							$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
 						}
 					}
 				}
@@ -198,6 +200,7 @@ class Login extends CI_Controller {
 						if ($this->fuel->notification->send($params))
 						{
 							$this->session->set_flashdata('success', lang('pwd_reset'));
+							$this->fuel->logs->write(lang('auth_log_pass_reset_request', $user['email'], $this->input->ip_address()), 'debug');
 						}
 						else
 						{
