@@ -49,3 +49,9 @@ The top right area <strong>will not</strong> have the controls for page publish 
 
 <p>Clicking the pencil will reveal the form to edit the module information.</p>
 <img src="<?=img_path('screens/inline_editing_form.jpg', FUEL_FOLDER)?>" class="screen" />
+
+<h2>Disabling Inline Editing</h2>
+<p>To disable inline editing for a static view file, set the "FUELIFY" constant to FALSE in your view file like so:</p>
+<pre class="brush: php">
+&lt;?php define('FUELIFY', FALSE); ?&gt;
+</pre>
