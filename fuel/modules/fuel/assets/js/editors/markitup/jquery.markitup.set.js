@@ -205,14 +205,14 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		className = myMarkItUpSettings.parseAttrs(selected, 'class');
 
 		// set title
-		if (isAnchorSelected && isAnchorSelected.length >= 1) {
-			selected = isAnchorSelected[1];
+		if (isImgSelected && isImgSelected.length >= 1) {
+			selected = isImgSelected[1];
 		}
 	}
 	imgFolder = jQuery(markItUp.textarea).attr('data-img_folder');
 	imgOrder = jQuery(markItUp.textarea).attr('data-img_order');
 
-	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(replace){
+	myMarkItUpSettings.displayAssetInsert(escape(selected), {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	});
 }
@@ -330,7 +330,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 		}
 	}
 	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
-	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs}, function(replace){
+	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
