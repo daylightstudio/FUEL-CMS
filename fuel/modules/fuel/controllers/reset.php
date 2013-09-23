@@ -35,6 +35,7 @@ class Reset extends CI_Controller {
 				if ($this->fuel->notification->send($params))
 				{
 					$this->session->set_flashdata('success', lang('pwd_reset_success'));
+					$this->fuel->logs->write(lang('auth_log_pass_reset', $user->user_name, $this->input->ip_address()), 'debug');
 				}
 				else
 				{

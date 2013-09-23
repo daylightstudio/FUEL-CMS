@@ -92,6 +92,7 @@ class Fuel_auth extends Fuel_base_library {
 				$session_data['language'] = $valid_user['language'];
 
 				$this->set_valid_user($valid_user);
+				$this->CI->fuel->logs->write(lang('auth_log_login_success', $valid_user['user_name'], $this->CI->input->ip_address()), 'debug');
 				return TRUE;
 			}
 			else
