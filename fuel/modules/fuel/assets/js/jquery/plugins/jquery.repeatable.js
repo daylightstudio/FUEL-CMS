@@ -146,7 +146,7 @@ dave@thedaylightstudio.com
 				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
 					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 				} else {
-					$elem.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+					$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 				}
 			}
 			
