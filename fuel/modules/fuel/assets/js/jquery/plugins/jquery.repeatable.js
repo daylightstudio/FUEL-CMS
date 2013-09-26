@@ -15,6 +15,8 @@ dave@thedaylightstudio.com
 			removeButtonClass : 'remove',
 			removeButtonText : 'Remove',
 			repeatableSelector : '.repeatable',
+			repeatableParentSelector : '.repeatable_container',
+			removeSelector : '.remove_repeatable',
 			contentSelector : '.repeatable_content',
 			warnBeforeDelete : true,
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
@@ -138,17 +140,22 @@ dave@thedaylightstudio.com
 		}
 		
 		var createRemoveButton = function(elem){
-			if ($(elem).children('.' + options.removeButtonClass).length == 0){
-				$(elem).append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+			$elem = $(elem);
+			var $remove = $elem.find(options.removeSelector + ':first');
+			if ($remove.length){
+				$remove.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+			} else {
+				$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 			}
 			
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
-				var $this = $(this).closest(options.repeatableSelector).parent();
+				//var $this = $(this).closest(options.repeatableSelector).parent();
+				var $this = $(this).closest(options.repeatableParentSelector);
 				var max = ($this.attr('data-max')) ? parseInt($this.attr('data-max')) : null;
 				var min = ($this.attr('data-min')) ? parseInt($this.attr('data-min')) : null;
 				if (options.warnBeforeDelete == false || confirm(options.warnBeforeDeleteMessage)){
-					$(this).parent().remove();
+					$(this).closest(options.repeatableSelector).remove();
 					
 					var $children = $this.children(options.repeatableSelector);
 					if ($children.length < max){
@@ -302,7 +309,8 @@ dave@thedaylightstudio.com
 				
 			// add button
 			$parent = $this.parent();
-			
+			//$parent = $this.closest(options.repeatableParentSelector);
+
 			// add max limit attribute to reference later
 			if (options.max){
 				$this.attr('data-max', options.max); // set it if it's not already
@@ -321,9 +329,9 @@ dave@thedaylightstudio.com
 				
 				// hide all but the first
 				if (options.initDisplay == 'first'){
-					$repeatables.find('.repeatable_content').not(':first').hide();
+					$repeatables.find(options.contentSelector).not(':first').hide();
 				} else if (options.initDisplay == 'none' || options.initDisplay == 'closed'){
-					$repeatables.find('.repeatable_content').hide();
+					$repeatables.find(options.contentSelector).hide();
 				}
 			}
 			
