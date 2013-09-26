@@ -2372,7 +2372,10 @@ class Form_builder {
 			'min' => (isset($params['min']) ? $params['min'] : '0'),
 			'max' => (isset($params['max']) ? $params['max'] : NULL),
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
+			'data' => $params['data'],
+			'style' => $params['style'],
 		);
+
 		$numeric_class = 'numeric';
 		$attrs['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
 		$params['type'] = 'number';
