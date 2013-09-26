@@ -549,6 +549,15 @@ class Fuel_auth extends Fuel_base_library {
 			'path' => WEB_PATH
 		);
 		delete_cookie($config);
+
+		// remove UI cookie
+		$ui_cookie_name = 'fuel_ui_'.str_replace('fuel_', '', $this->fuel->auth->get_fuel_trigger_cookie_name());
+		$config = array(
+			'name' => $ui_cookie_name,
+			'path' => WEB_PATH
+		);
+		delete_cookie($config);
+
 		
 	}
 	
