@@ -396,7 +396,7 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 // view the page from the admin in a new window or within a modal window
-$config['view_in_new_window'] = FALSE;
+$config['view_in_new_window'] = TRUE;
 
 // runs the parsing process twice for pages created in the CMS which allows
 // for variables to be set from within blocks and layout fields and can
