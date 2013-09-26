@@ -141,11 +141,13 @@ dave@thedaylightstudio.com
 		
 		var createRemoveButton = function(elem){
 			$elem = $(elem);
-			var $remove = $elem.find(options.removeSelector + ':first');
-			if ($remove.length){
-				$remove.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
-			} else {
-				$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+			if (!$elem.find(options.removeButtonClass).length) {
+				var $remove = $elem.find(options.removeSelector + ':first');
+				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
+					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+				} else {
+					$elem.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+				}
 			}
 			
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
@@ -273,7 +275,6 @@ dave@thedaylightstudio.com
 
 			var index = $children.length;
 			parseTemplate($clonecopy, index);
-
 			createRemoveButton($clonecopy);
 			$this.append($clonecopy);
 
@@ -334,7 +335,6 @@ dave@thedaylightstudio.com
 					$repeatables.find(options.contentSelector).hide();
 				}
 			}
-			
 			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}
