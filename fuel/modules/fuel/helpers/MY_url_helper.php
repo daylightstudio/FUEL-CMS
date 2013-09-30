@@ -308,13 +308,19 @@ function redirect_404($redirect = TRUE)
  * @access	public
  * @param	string	the URL
  * @param	string	the method: location or redirect
+ * @param	string	the http response code
+ * @param	string	wether to force or not https
  * @return	string
  */
-function redirect($uri = '', $method = 'location', $http_response_code = 302)
+function redirect($uri = '', $method = 'location', $http_response_code = 302, $use_https = NULL)
 {
 	if ( ! preg_match('#^https?://#i', $uri))
 	{
-		$uri = site_url($uri, is_https(), FALSE);
+		if (is_null($use_https))
+		{
+			$use_https = is_https();
+		} 
+		$uri = site_url($uri, $use_https, FALSE);
 	}
 
 	switch($method)
