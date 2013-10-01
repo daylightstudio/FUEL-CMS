@@ -211,16 +211,16 @@ dave@thedaylightstudio.com
 		
 		var createCollapsingContent = function($elem){
 			if (options.allowCollapsingContent){
-		
 				$($elem).find(options.sortableSelector).unbind('dblclick').dblclick(function(e){
 					$parent = $(this).closest(options.repeatableSelector).parent();
-
 					var dblclick = ($parent.attr('data-dblclick')) ? $parent.attr('data-dblclick') : null;
+
+					var $elems = $(this).closest(options.repeatableSelector).find(options.contentSelector + ':first');
 					if (dblclick == 'accordion' || dblclick == 'accordian'){
 						$parent.find(options.contentSelector).hide();
-						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').show();
+						 $elems.show();
 					} else {
-						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').toggle();
+						 $elems.toggle();
 					}
 				})
 			}
@@ -264,7 +264,7 @@ dave@thedaylightstudio.com
 			if (dblclick == 'accordian' || dblclick == 'accordion'){
 				$prev.find(options.contentSelector).hide();
 			}
-			
+
 			createCollapsingContent($clonecopy);
 			
 			var $children = $this.children(options.repeatableSelector);
@@ -325,7 +325,7 @@ dave@thedaylightstudio.com
 				$this.attr('data-dblclick', options.dblClickBehavior);
 			}
 
-			if (options.initDisplay){
+			if (options.initDisplay && !$this.is('.__applied__')){
 				$this.attr('data-init_display', options.init_display);
 				
 				// hide all but the first

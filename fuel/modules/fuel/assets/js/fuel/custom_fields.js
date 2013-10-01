@@ -850,11 +850,11 @@ fuel.fields.template_field = function(context, options){
 		})
 	}
 	// get nested ones first
-	$nestedElems = $('.repeatable .repeatable').parent();
+	$nestedElems = $('.repeatable .repeatable').closest('.repeatable_container');
 	repeatable($nestedElems);
 
 	// then the parents
-	$parentElems = $('.repeatable').not('.repeatable .repeatable').parent();
+	$parentElems = $('.repeatable').not('.repeatable .repeatable').closest('.repeatable_container');
 	repeatable($parentElems);
 
 	$(document).off('sortStopped').on('sortStarted', function(){
@@ -864,17 +864,18 @@ fuel.fields.template_field = function(context, options){
 		fuel.fields.sortStopped();
 	})
 
+	// used event namespace http://api.jquery.com/event.namespace/
 	// Remove clone event	
-	$(document).off('cloned', '.repeatable_container', fuel.fields.clonedFunc);
+	$(document).off('cloned.fuel', '.repeatable_container');
 
 	// Add another event handler	
-	$(document).on('cloned', '.repeatable_container', fuel.fields.clonedFunc)
-
+	$(document).on('cloned.fuel', '.repeatable_container', fuel.fields.clonedFunc)
 
 }
 
 // hack to prevent CKEditor issues
 fuel.fields.sortStarted = function(){
+
 	var currentCKTexts = {};
 	if (typeof CKEDITOR != 'undefined'){
 		for(var n in CKEDITOR.instances){
