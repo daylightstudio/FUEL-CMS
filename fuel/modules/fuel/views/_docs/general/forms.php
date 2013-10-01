@@ -143,10 +143,10 @@ and use the '<a href="#custom">custom</a>' field type to render it. In FUEL CMS 
 field types which means you don't need to make those associations for every form. It also allows you to 
 associate them with their own <a href="<?=user_guide_url('general/javascript#forms')?>">javavascript</a> files and functions to execute upon rendering. 
 In addition, you can overwrite or augment existing field types, by adding field type associations in the 
-<span class="file">fuel/application/config/form_builder.php</span>. For example, we use this method to 
+<span class="file">fuel/application/config/custom_fields.php</span>. For example, we use this method to 
 associate the the datetime field type with the jQuery UI datepicker.
 
-<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file (<a href="#association_parameters">this file is explained below</a>). 
+<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/custom_fields.php</span> file (<a href="#association_parameters">this file is explained below</a>). 
 Custom field types are not automatically load but can be done so by one of the following ways:
 </p>
 <pre class="brush:php">

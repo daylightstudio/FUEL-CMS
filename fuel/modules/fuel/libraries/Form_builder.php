@@ -29,7 +29,7 @@
  * The <a href="[user_guide_url]libraries/form">Form.php</a> class is required if a 
  * form object is not passed in the initialization process.
  * 
- * Custom form fields can be configured in the <span class="file">fuel/application/config/form_builder.php</span> file.
+ * Custom form fields can be configured in the <span class="file">fuel/application/config/custom_fields.php</span> file.
  *
  * <p class="important">Additional information about <a href="[user_guide_url]general/forms">creating forms using Form_builder can be found in the General Topics area</a>.
  *
@@ -37,7 +37,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://docs.getfuelcms.com/libraries/form_builder.html
+ * @link		http://docs.getfuelcms.com/libraries/form_builder
  */
 
 class Form_builder {

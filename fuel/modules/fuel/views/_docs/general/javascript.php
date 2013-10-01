@@ -66,7 +66,7 @@ $this->form_builder->render();
 <p>One of the most powerful new features of FUEL 1.0 is the addition of custom form fields with <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>. A custom field is a combination of custom 
 has 2 main parts. The first being a method or function that renders the field type. FUEL comes with several built in custom field types which are rendered using the <span class="file">fuel/modules/fuel/libraries/Fuel_custom_fields.php</span> file.
 The second component is a configuration that associates the field type to that method or function and any javascript files and/or functions
-needed for the field. This configuration is done in the <span class="file">fuel/modules/fuel/config/form_builder.php</span> file and can be done for your specific field types in the <span class="file">fuel/application/config/form_builder.php</span> file.</p>
+needed for the field. This configuration is done in the <span class="file">fuel/modules/fuel/config/custom_fields.php</span> file and can be done for your specific field types in the <span class="file">fuel/application/config/custom_fields.php</span> file.</p>
 
 <p>Custom fields have 5 javascript related parameters:</p>
 <ul>
