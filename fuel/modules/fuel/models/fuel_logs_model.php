@@ -31,6 +31,8 @@ require_once('base_module_model.php');
 
 class Fuel_logs_model extends Base_module_model {
 
+	private $_logs_table;
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -39,9 +41,10 @@ class Fuel_logs_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function __construct()
+	public function __construct($logs_table = 'fuel_logs')
 	{
-		parent::__construct('fuel_logs');
+		parent::__construct($logs_table);
+		$this->_logs_table = ($logs_table == 'fuel_logs') ? $this->_tables[$logs_table] : $logs_table;
 		$this->filters = array('entry_date', $this->_tables['fuel_users'].'.first_name', $this->_tables['fuel_users'].'.last_name', 'message');
 	}
 	
@@ -60,8 +63,8 @@ class Fuel_logs_model extends Base_module_model {
 	 */	
 	public function list_items($limit = NULL, $offset = NULL, $col = 'entry_date', $order = 'desc', $just_count = FALSE)
 	{
-		$this->db->select($this->_tables['fuel_logs'].'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
-		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_logs'].'.user_id = '.$this->_tables['fuel_users'].'.id', 'left');
+		$this->db->select($_logs_table.'.id, entry_date, CONCAT('.$this->_tables['fuel_users'].'.first_name, " ", '.$this->_tables['fuel_users'].'.last_name) as name, message, type', FALSE);
+		$this->db->join($this->_tables['fuel_users'], $this->_logs_table.'.user_id = '.$this->_tables['fuel_users'].'.id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
