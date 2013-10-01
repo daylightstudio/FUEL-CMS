@@ -1,3 +1,3 @@
 <?php 
-redirect_404($redirect_to);
+redirect($redirect_to);
 ?>
