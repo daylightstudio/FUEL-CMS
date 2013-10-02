@@ -281,7 +281,7 @@ $lang['navigation_instructions'] = 'Here you create and edit the top menu items 
 $lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable assigned in the variable field below (e.g. <strong>$nav</strong>). For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>.';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
 $lang['form_label_navigation_group'] = 'Navigation Group:';
-$lang['form_label_nav_key'] = 'Nav Key';
+$lang['form_label_nav_key'] = 'Key';
 $lang['form_label_parent_id'] = 'Parent';
 $lang['form_label_attributes'] = 'Attributes';
 $lang['form_label_selected'] = 'Selected';
