@@ -3207,6 +3207,11 @@ class Form_builder {
 	 */
 	public function add_js($js = NULL, $key = NULL)
 	{
+		if (is_null($this->js))
+		{
+			$this->js = array();
+		}
+
 		if (is_array($key))
 		{
 			foreach($key as $k => $j)
@@ -3225,12 +3230,12 @@ class Form_builder {
 				{
 					$this->js = array_merge($this->js, $js);
 				}
-				else
+				else if (!in_array($js, $this->js))
 				{
 					$this->js[] = $js;
 				}
 			}
-			else
+			else if (!in_array($js, $this->js))
 			{
 				$this->js[$key] = $js;
 			}
@@ -3298,6 +3303,11 @@ class Form_builder {
 	 */
 	public function add_css($css = NULL, $key = NULL)
 	{
+		if (is_null($this->css))
+		{
+			$this->css = array();
+		}
+		
 		if (is_array($key))
 		{
 			foreach($key as $k => $c)
@@ -3316,13 +3326,13 @@ class Form_builder {
 				{
 					$this->css = array_merge($this->css, $css);
 				}
-				else
+				else if (!in_array($css, $this->css))
 				{
-					$this->css[] = $js;
+					$this->css[] = $css;
 				}
 				
 			}
-			else
+			else if (!in_array($css, $this->css))
 			{
 				$this->css[$key] = $css;
 			}
