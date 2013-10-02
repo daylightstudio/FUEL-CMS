@@ -50,21 +50,23 @@ class Base_module_model extends MY_Model {
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
 	public static $tables = array(); // cached array of table names that can be accessed statically
 	protected $_formatters = array(
-								'datetime'	=> array(
-													'formatted' => 'date_formatter',
-													'month', 
-													'day', 
-													'weekday', 
-													'year', 
-													'hour', 
-													'minute', 
-													'second'),
+								'datetime'			=> array(
+															'formatted' => 'date_formatter',
+															'month', 
+															'day', 
+															'weekday', 
+															'year', 
+															'hour', 
+															'minute', 
+															'second',
+															'pretty'),
 								'date' 				=> array(
 															'formatted' => 'date_formatter',
 															'month', 
 															'day', 
 															'year', 
-															'hour'),
+															'hour',
+															'pretty'),
 								'string'			=> array(
 															'formatted'		=> 'auto_typography',
 															'stripped' 		=> 'strip_tags', 
@@ -85,7 +87,7 @@ class Base_module_model extends MY_Model {
 															'lower'			=> 'strtlower',
 															),
 								'number'			=> array(
-															'dollar',
+															'currency',
 															),
 								'url|link|website'	=> array(
 															'path' 			=> 'site_url',
