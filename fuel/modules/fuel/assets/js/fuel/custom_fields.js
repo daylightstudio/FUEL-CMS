@@ -839,10 +839,11 @@ fuel.fields.template_field = function(context, options){
 		
 		// set individual options based on the data-max attribute
 		$repeatable.each(function(i){
-			options.max = $(this).attr('data-max');
-			options.min = $(this).attr('data-min');
-			options.dblClickBehavior = $(this).attr('data-dblclick');
-			options.initDisplay = $(this).attr('data-init_display');
+			var $attrElem = ($(this).is('.repeatable_container')) ? $(this) : $(this).closest('.repeatable_container');
+			options.max = $attrElem.attr('data-max');
+			options.min = $attrElem.attr('data-min');
+			options.dblClickBehavior = $attrElem.attr('data-dblclick');
+			options.initDisplay = $attrElem.attr('data-init_display');
 			options.addButtonText = fuel.lang('btn_add_another');
 			options.removeButtonText = fuel.lang('btn_remove');
 			options.warnBeforeDeleteMessage = fuel.lang('warn_before_delete_msg');
@@ -850,11 +851,11 @@ fuel.fields.template_field = function(context, options){
 		})
 	}
 	// get nested ones first
-	$nestedElems = $('.repeatable .repeatable').closest('.repeatable_container');
+	$nestedElems = $('.repeatable .repeatable').parent();
 	repeatable($nestedElems);
 
 	// then the parents
-	$parentElems = $('.repeatable').not('.repeatable .repeatable').closest('.repeatable_container');
+	$parentElems = $('.repeatable').not('.repeatable .repeatable').parent();
 	repeatable($parentElems);
 
 	$(document).off('sortStopped').on('sortStarted', function(){
