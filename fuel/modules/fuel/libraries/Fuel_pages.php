@@ -949,7 +949,10 @@ class Fuel_page extends Fuel_base_library {
 			if ($this->layout)
 			{
 				$this->_page_data['layout'] = $layout;
-				$layout = $this->layout->name;
+				if (is_object($this->layout))
+				{
+					$layout = $this->layout->name;
+				}
 			}
 			else
 			{
