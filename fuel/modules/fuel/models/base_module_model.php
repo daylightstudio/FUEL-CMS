@@ -59,14 +59,16 @@ class Base_module_model extends MY_Model {
 															'hour', 
 															'minute', 
 															'second',
-															'pretty'),
+															'pretty',
+															'ts' => 'strtotime'),
 								'date' 				=> array(
 															'formatted' => 'date_formatter',
 															'month', 
 															'day', 
 															'year', 
 															'hour',
-															'pretty'),
+															'pretty',
+															'ts' => 'strtotime'),
 								'string'			=> array(
 															'formatted'		=> 'auto_typography',
 															'stripped' 		=> 'strip_tags', 
