@@ -1,6 +1,6 @@
 # FUEL CMS
 FUEL CMS is a CodeIgniter based Content Management System. To learn more about
-it's features visit:
+its features visit:
 http://www.getfuelcms.com
 
 ## INSTALLATION
