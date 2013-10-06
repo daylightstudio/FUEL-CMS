@@ -354,7 +354,7 @@ fuel.fields.wysiwyg_field = function(context){
 		
 		// setup update of element on save just in case
 		$(this).parents('form').submit(function(){
-			if (CKEDITOR && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
+			if (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[ckId] != undefined && CKEDITOR.instances[ckId].hidden == false){
 				CKEDITOR.instances[ckId].updateElement();
 			}
 		})
