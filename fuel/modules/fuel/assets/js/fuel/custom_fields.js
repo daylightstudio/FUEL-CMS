@@ -91,6 +91,7 @@ fuel.fields.wysiwyg_field = function(context){
 
 	var CKEDitor_loaded = false;
 	var createCKEditor = function(elem){
+		if (typeof CKEDITOR == 'undefined') return;
 		//window.CKEDITOR_BASEPATH = jqx_config.jsPath + 'editors/ckeditor/'; // only worked once in jqx_header.php file
 		var ckId = $(elem).attr('id');
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
