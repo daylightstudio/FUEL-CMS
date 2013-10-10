@@ -649,7 +649,7 @@ fuel.fields.inline_edit_field = function(context){
 		
 		$('.add_inline_button', context).unbind().click(function(e){
 			$field = $(this).parent().children(':first');
-			editModule($(this).attr('href'), null, function(){ refreshField($('#' + fieldId))});
+			editModule($(this).attr('href'), null, function(){ refreshField($('#' + $field.attr('id')))});
 			$(context).scrollTo('body', 800);
 			return false;
 		});
@@ -1013,7 +1013,8 @@ fuel.fields.block = function(context, options){
 		} else {
 			var layout = $(this).val();
 			if (layout && layout.length){
-				layout = layout.split('/').pop();
+				//layout = layout.split('/').pop();
+				layout = layout.replace('/', ':');
 				url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
 			}
 		}
