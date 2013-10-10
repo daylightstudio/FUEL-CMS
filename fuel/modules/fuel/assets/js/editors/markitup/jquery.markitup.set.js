@@ -367,13 +367,19 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
 				var isHTTP = (selectedUrl.match(/^\w+:\/\//)) ? true : false;
 				var replace = '<a href="';
-				if (selectedUrl.match(/\.pdf$/)){
-					replace += '{pdf_path(\'' + selectedUrl + '\')}';
+				
+				if (selectedUrl.substr(0, 1) != '{') {
+					if (selectedUrl.match(/\.pdf$/)){
+						replace += '{pdf_path(\'' + selectedUrl + '\')}';
+					} else {
+						if (!isHTTP) replace += '{site_url(\'';
+						replace += selectedUrl;
+						if (!isHTTP) replace += '\')}';
+					}
 				} else {
-					if (!isHTTP) replace += '{site_url(\'';
 					replace += selectedUrl;
-					if (!isHTTP) replace += '\')}';
 				}
+
 				replace += '"';
 				if ($target.length && ($target.val().length != '' && $target.val() != '_self')){
 					replace += ' target="' + $target.val() + '"';
