@@ -175,6 +175,9 @@ class Blocks extends Module {
 	public function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
 	{
 
+		// add back in slash 
+		$layout = str_replace(':', '/', $layout);
+		
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout, 'block');
 		if (!$layout)
@@ -203,23 +206,9 @@ class Blocks extends Module {
 			$layout->set_context($_context);
 		}
 		
-		$fields = $layout->fields();
-
-
-		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
-		$this->load->library('form_builder');
-		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-		
-		$this->form_builder->question_keys = array();
-		$this->form_builder->submit_value = '';
-		$this->form_builder->cancel_value = '';
-		$this->form_builder->use_form_tag = FALSE;
-		//$this->form_builder->name_prefix = 'vars';
-		$this->form_builder->set_fields($fields);
-		$this->form_builder->display_errors = FALSE;
-		
 		if (!empty($id))
 		{
+			$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
 
 			// the following will pre-populate fields of a different language to the default values
@@ -237,14 +226,31 @@ class Blocks extends Module {
 				$_name_var_eval = '@$_name = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
 				@eval($_name_var_eval);
 			}
+
 			if (isset($_name))
 			{
 				$block_vars = $_name;
-				$this->form_builder->set_field_values($block_vars);
+				$layout->set_field_values($block_vars);
 			}
 
 		}
+		$fields = $layout->fields();
+
+
+		$this->load->library('form_builder');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
+		$this->form_builder->question_keys = array();
+		$this->form_builder->submit_value = '';
+		$this->form_builder->cancel_value = '';
+		$this->form_builder->use_form_tag = FALSE;
+		//$this->form_builder->name_prefix = 'vars';
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		if (isset($block_vars))
+		{
+			$this->form_builder->set_field_values($block_vars);
+		}
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}
