@@ -287,11 +287,11 @@ class Fuel_layouts extends Fuel_base_library {
 			$init['folder'] = $this->layouts_folder;
 			$init['class'] =  (isset($init['class'])) ? $init['class'] : $default_class;
 			$init['label'] = (isset($init['label'])) ? $init['label'] : $name;
-			$init['description'] = (isset($init['description'])) ? $init['description'] : '';
-			$init['group'] = (isset($init['group'])) ? $init['group'] : '';
-			$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : array();
+			$init['description'] = (isset($init['description'])) ? $init['description'] : NULL;
+			$init['group'] = (isset($init['group'])) ? $init['group'] : NULL;
+			$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : NULL;
 			$init['fields'] = (isset($init['fields'])) ? $init['fields'] : array();
-			$init['import_field'] = (isset($init['import_field'])) ? $init['import_field'] : '';
+			$init['import_field'] = (isset($init['import_field'])) ? $init['import_field'] : NULL;
 
 			// load custom layout classes
 			if (!empty($init['class']) AND !in_array($init['class'], $loaded_classes))
@@ -400,7 +400,7 @@ class Fuel_layout extends Fuel_base_library {
 		// setup any intialized variables
 		foreach ($params as $key => $val)
 		{
-			if (isset($this->$key))
+			if (isset($this->$key) AND isset($val))
 			{
 				$this->$key = $val;
 			}
@@ -549,6 +549,7 @@ class Fuel_layout extends Fuel_base_library {
 		{
 			$fields['description'] = array('type' => 'copy', 'label' => $this->description);
 		}
+
 		$fields = array_merge($fields, $this->fields);
 		$fields = $this->process_fields($fields);
 		return $fields;
