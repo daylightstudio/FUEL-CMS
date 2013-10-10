@@ -417,7 +417,7 @@ class Base_module_model extends MY_Model {
 	 * Returns a tree array structure that can be used by a public "tree" method on models inheriting from this class 
 	 *
 	 * @access	protected
-	 * @param	string The name of the model's property to used to generate the tree. Options are 'foreign_fields', 'has_many' or 'belongs_to'
+	 * @param	string The name of the model's property to use to generate the tree. Options are 'foreign_fields', 'has_many' or 'belongs_to'
 	 * @return	array An array that can be used by the Menu class to create a hierachical structure
 	 */	
 	protected function _tree($prop = NULL)
