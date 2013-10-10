@@ -230,6 +230,25 @@ class Fuel_category_model extends Base_module_record {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Find the children
+	 *
+	 * @access	public
+	 * @param	mixed where conditions
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
+	 * @return	mixed
+	 */	
+	public function get_children($where = array(), $order = NULL, $limit = NULL, $offset = NULL)
+	{
+		$where['parent_id'] = $this->id;
+		$children = $this->_parent_model->find_all($where, $order, $limit, $offset);
+		return $children;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Magic method to return first property, method, then field values 
 	 *
 	 * @access	public
