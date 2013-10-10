@@ -41,6 +41,12 @@ class {model_name}_model extends Base_module_model {
 		return $fields;
 	}
 	
+	function on_before_save($values)
+	{
+		parent::on_after_save($values);
+		return $values;
+	}
+
 	function on_after_save($values)
 	{
 		parent::on_after_save($values);
@@ -50,6 +56,9 @@ class {model_name}_model extends Base_module_model {
 	function _common_query()
 	{
 		parent::_common_query();
+
+		// remove if no precedence column is provided
+		$this->db->order_by('precedence asc');
 	}
 
 }

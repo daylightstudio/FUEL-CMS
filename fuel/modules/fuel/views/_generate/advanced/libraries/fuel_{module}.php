@@ -23,7 +23,7 @@ class Fuel_{module} extends Fuel_advanced_module {
 	
 	
 	/**
-	 * Constructor - Sets Fuel_backup preferences
+	 * Constructor - Sets preferences
 	 *
 	 * The constructor can be passed an array of config values
 	 */
