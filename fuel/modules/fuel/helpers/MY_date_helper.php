@@ -356,7 +356,14 @@ function date_range_string($date1, $date2, $params = array())
 	$format = array_merge($format, $params);
 
 	$date1TS = (is_string($date1)) ? strtotime($date1) : $date1;
-	$date2TS = (is_string($date2)) ? strtotime($date2) : $date2;
+	if (is_null($date2) OR (int) $date2 == 0)
+	{
+		$date2TS = $date1TS;
+	}
+	else
+	{
+		$date2TS = (is_string($date2)) ? strtotime($date2) : $date2;
+	}
 
 	// same day
 	if (date('Y-m-d', $date1TS) == date('Y-m-d', $date2TS) OR (int) $date2 == 0)
@@ -521,7 +528,7 @@ function standard_date($fmt = 'DATE_RFC822', $time = '')
  * Returns a timestamp from the provided time
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @return	string
  */
 function timestamp($date = NULL)
@@ -540,7 +547,7 @@ function timestamp($date = NULL)
  * Returns a the month value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
  * @return	string
  */
@@ -566,7 +573,7 @@ function month($date = NULL, $format = 'M')
  * Returns a the day value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'd/leading', 'j' <- default  (optional)
  * @return	string
  */
@@ -587,7 +594,7 @@ function day($date = NULL, $format = 'j')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'l/full', 'N/numeric', 'D' <- default (optional)
  * @return	string
  */
@@ -611,7 +618,7 @@ function weekday($date = NULL, $format = 'D')
  * Returns a the year value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'y/short', 'Y/long' <- default (optional)
  * @return	string
  */
@@ -633,7 +640,7 @@ function year($date = NULL, $format = 'Y')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are '24/military', '12' <- default (optional)
  * @return	string
  */
@@ -655,7 +662,7 @@ function hour($date = NULL, $format = '12')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'noleading', 'leading' <- default (optional)
   * @return	string
  */
@@ -675,7 +682,7 @@ function minute($date = NULL, $format = 'leading')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'noleading', 'leading' <- default (optional)
  * @return	string
  */
@@ -695,7 +702,7 @@ function second($date = NULL, $format = 'leading')
  * Returns a the ampm value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
  * @return	string
  */
@@ -711,6 +718,20 @@ function ampm($date = NULL, $format = 'a')
 	}
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Determines whether the time is midnight or not. Helps with dates that are set without time values
+ *
+ * @access	public
+ * @param	string date
+ * @return	string
+ */
+function is_midnight($date)
+{
+	$ts = timestamp($date);
+	return (date('H:i:s', $ts) == '00:00:00');
+}
 
 
 /* End of file MY_date_helper.php */
