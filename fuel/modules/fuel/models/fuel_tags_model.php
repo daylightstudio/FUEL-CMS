@@ -111,6 +111,32 @@ class Fuel_tags_model extends Base_module_model {
 		$this->belongs_to = $belongs_to;
 	}
 
+	/**
+	 * Tree view that puts tags in a hierarchy based on their category
+	 *
+	 * @access	public
+	 * @param	boolean 	Determines whether to return just published pages or not (optional... and ignored in the admin)
+	 * @return	array 		An array that can be used by the Menu class to create a hierachical structure
+	 */	
+	public function tree($just_published = FALSE)
+	{
+		$return = array(); 
+		$where = ($just_published) ? array('published' => 'yes') : array();
+
+		$categories = $this->fuel_categories_model->find_all_array($where); 
+
+		foreach($categories as $category) 
+		{ 
+			$return[] = array('id' =>$category['id'], 'label' => $category['name'], 'parent_id' => $category['parent_id'], 'location' => ''); 
+			$tags = $this->find_all_array( array('category_id'=>$category['id']), 'name asc' );
+			foreach($tags as $tag){
+				$return[] = array('id' => $tag['name'], 'label' => $tag['name'], 'parent_id' => $category['id'], 'location' => fuel_url('tags/edit/'.$tag['id'])); 
+			}
+			
+		}
+		return $return;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
