@@ -793,6 +793,7 @@ class Fuel_custom_fields {
 					}
 					$form_params['fields'] = $f;
 
+					$form_params['value'] = '';
 					if ( ! empty($params['value'][$k])) 
 					{
 						$form_params['value'] = $params['value'][$k];
