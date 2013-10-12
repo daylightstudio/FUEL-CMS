@@ -1090,13 +1090,14 @@ class Fuel_module_layout extends Fuel_layout {
 	 */	
 	public function pre_process($vars)
 	{
-		$vars['model'] = $this->model;
-		$vars['list_block'] = $this->list_block;
-		$vars['item_block'] = $this->item_block;
-		$vars['key_field'] = $this->key_field;
-		$vars['segment'] = $this->segment;
-		$vars['item_where'] = $this->item_where;
-		$vars['list_where'] = $this->list_where;
+		$_vars = array('model', 'list_block', 'item_block', 'key_field', 'segment', 'item_where', 'list_where');
+		foreach($_vars as $v)
+		{
+			if (!isset($vars[$v]))
+			{
+				$vars[$v] = $this->$v;
+			}
+		}
 		return $vars;
 	}
 	
