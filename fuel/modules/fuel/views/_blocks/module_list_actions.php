@@ -11,7 +11,7 @@
 				<?php endif; ?>
 				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>" class="reset"></a></td>
 				<td>
-					<div class="search_input">
+					<div class="search_input<?php if ( ! empty($this->advanced_search)) : ?> advanced<?php endif; ?>">
 						<?=$this->form->search('search_term', $params['search_term'], 'placeholder="'.lang('label_search').'"')?>
 						<?php if ( ! empty($this->advanced_search)) : ?>
 						<a href="#" id="adv-search-btn" title="<?=lang('adv_search')?>"><img src="<?=fuel_url('modules/fuel/assets/images/th_arrow_desc.png')?>" /></a>
