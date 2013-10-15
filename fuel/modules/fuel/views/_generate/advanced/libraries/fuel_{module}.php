@@ -21,6 +21,7 @@
 
 class Fuel_{module} extends Fuel_advanced_module {
 	
+	public $name = "{module}"; // the folder name of the module
 	
 	/**
 	 * Constructor - Sets preferences
