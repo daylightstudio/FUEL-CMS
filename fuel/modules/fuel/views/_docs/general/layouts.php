@@ -230,6 +230,7 @@ $test_fields = array(
 					),
 
 );
+$test_layout->add_fields($test_fields);
 
 // Added to the 'layouts' key
 $config['layouts']['test'] = $test_layout;
