@@ -650,12 +650,17 @@ function fuel_uri_string($from = 0, $to = NULL, $rerouted = FALSE)
 		$segs = $CI->uri->segment_array($fuel_index);
 	}
 	$from = fuel_uri_index($from);
-	if (isset($to)) {
+	if (isset($to))
+	{
 		$to = fuel_uri_index($to);
 		if ($from < $to)
 		{
 			$to = $from;
 		}
+	}
+	else
+	{
+		$to = sizeof($segs);
 	}
 	$segs = array_slice($segs, $from, $to);
 	$uri = implode('/', $segs);
