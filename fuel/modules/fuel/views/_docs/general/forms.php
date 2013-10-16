@@ -844,7 +844,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>img_order</strong>: the image order displayed in the dropdown select. Options are <dfn>name</dfn> and <dfn>last_updated</dfn>. Default is <dfn>name</dfn></li>
 		<li><strong>link_pdfs</strong>: a boolean value that determines whether to display PDFs along with the list of URLs when inserting a link. Default is set to FALSE which will not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
 		<li><strong>ckeditor_config</strong>: sets the CKEditor configuration values for a particular field. Camel-cased attributes need to be converted to lowercase with hyphens (e.g. extraPlugins should be extra-plugins). These configuration values are attached to the textarea field so you can use
-			Javascript to set more complex object values as long they are set on the textarea field before CKEditor initialization (e.g. $('.mytextarea').data('toolbar', toolbar:[['Bold','Italic','Strike']]).</li>
+			Javascript to set more complex object values as long they are set on the textarea field before CKEditor initialization (e.g. $('.mytextarea').data('toolbar', [['Bold','Italic','Strike']]).</li>
 	</ul>
 	
 	<h4>Example</h4>
