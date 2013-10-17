@@ -158,10 +158,14 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				if (!empty($this->blocks[$layout]))
 				{
-					$init = $this->blocks[$layout];
-					$init['type'] = 'block';
-					$layout = $this->create($layout, $init);
-					return $layout;
+					if (is_array($this->blocks[$layout]))
+					{
+						$init = $this->blocks[$layout];
+						$init['type'] = 'block';
+						$layout = $this->create($layout, $init);
+						return $layout;
+					}
+					return $this->blocks[$layout];
 				}
 			}
 			else if (!empty($this->_layouts[$layout]))
