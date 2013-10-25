@@ -183,6 +183,10 @@ function parse_string_to_array($str)
  */	
 function array_group($array, $groups)
 {
+	if (empty($array))
+	{
+		return array();
+	}
 	$items_in_each_group = ceil(count($array)/$groups);
 	return array_chunk($array, $items_in_each_group);
 }
