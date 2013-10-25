@@ -134,6 +134,7 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 		field attributes of data-type="my_type" data-title="my_title". This parameter is handy for adding attributes you need to use with your javascript
 	</li>
 	<li><strong>row_class</strong>: sets a class on the containing table row or container div (depending on the rendering method)</li>
+	<li><strong>tabindex</strong>: sets the tabindex value of a field. If using a mutli select, datetime, time, or enum, the value needs to be an array</li>
 </ul>
 
 <h2 id="form_field_types">Form Field Types</h2>

@@ -1121,6 +1121,7 @@ class Form_builder {
 			'value' => '', // the value of the field
 			'readonly' => '', // sets readonly attribute on field
 			'disabled' => '', // sets disabled attribute on the field
+			'tabindex' => '', // adds the tab index attribute to a field
 			'label_colons' => NULL, // whether to display the label colons
 			'display_label' => TRUE, // whether to display the label
 			'order' => NULL, // the display order value to associate with the field
@@ -1615,6 +1616,7 @@ class Form_builder {
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		
 		if (isset($params['attrs']))
@@ -1666,6 +1668,7 @@ class Form_builder {
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
@@ -1712,6 +1715,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		if ($params['checked'])
 		{
@@ -1748,6 +1752,7 @@ class Form_builder {
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -1793,6 +1798,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		return $this->form->submit($params['value'], $params['name'], $attrs);
 	}
@@ -1816,6 +1822,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 		$use_input_type = (isset($params['use_input']) AND $params['use_input'] === FALSE) ? FALSE : TRUE;
 		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
@@ -1860,6 +1867,7 @@ class Form_builder {
 					'readonly' => $params['readonly'], 
 					'disabled' => $params['disabled'],
 					'style' => $params['style'],
+					'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i])) ? $params['tabindex'][$i] : NULL),
 				);
 
 				if (empty($params['null']) OR (!empty($params['null']) AND !empty($params['default'])))
@@ -1927,13 +1935,14 @@ class Form_builder {
 			{
 				foreach($params['options'] as $key => $val)
 				{
+					$tabindex_id = $i -1;
 					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
 						'readonly' => $params['readonly'], 
 						'disabled' => $params['disabled'],
 						'id' => Form::create_id($params['name']).$i,
-						'style' => '' // to overwrite any input width styles
-
+						'style' => '', // to overwrite any input width styles
+						'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i - 1])) ? $params['tabindex'][$i - 1] : NULL),
 					);
 
 					if (in_array($key, $value))
@@ -1991,6 +2000,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? $params['required'] : NULL),
 			'accept' => str_replace('|', ',', $params['accept']),
+			'tabindex' => $params['tabindex'],
 		);
 		
 		if (is_array($this->form_attrs))
@@ -2150,12 +2160,21 @@ class Form_builder {
 		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
 		$time_params['placeholder'] = 'hh';
+		if (isset($params['tabindex'][0]))
+		{
+			$time_params['tabindex'] = $params['tabindex'][0];
+		}
 		$str = $this->create_text($this->normalize_params($time_params));
 		$str .= ":";
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00') $time_params['value'] = date('i', strtotime($params['value']));
 		$time_params['name'] = str_replace($params['key'], $params['key'].'_min', $params['orig_name']);
 		$time_params['class'] = 'datepicker_mm';
 		$time_params['placeholder'] = 'mm';
+
+		if (isset($params['tabindex'][1]))
+		{
+			$time_params['tabindex'] = $params['tabindex'][1];
+		}
 		$str .= $this->create_text($this->normalize_params($time_params));
 
 		if (!empty($params['ampm']))
@@ -2164,6 +2183,13 @@ class Form_builder {
 			$ampm_params['name'] = str_replace($params['key'], $params['key'].'_am_pm', $params['orig_name']);
 			$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 			$ampm_params['disabled'] = $params['disabled'];
+
+			if (isset($params['tabindex']) AND is_array($params['tabindex']))
+			{
+				array_shift($params['tabindex']);
+				array_shift($params['tabindex']);
+				$ampm_params['tabindex'] = $params['tabindex'];
+			}
 			$str .= $this->create_enum($this->normalize_params($ampm_params));
 		}
 
@@ -2252,14 +2278,25 @@ class Form_builder {
 	 */
 	public function create_datetime($params)
 	{
-		$str = $this->create_date($params);
+		$date_params = $params;
+		if (isset($params['tabindex']) AND is_array($params['tabindex']))
+		{
+			$date_params['tabindex'] = current($params['tabindex']);
+		}
+
+		$str = $this->create_date($date_params);
 		$str .= ' ';
 		$params['is_datetime'] = TRUE;
 		if (!isset($params['ampm']))
 		{
 			$params['ampm'] = TRUE;
 		}
-		$str .= $this->create_time($params);
+		$time_params = $params;
+		if (isset($params['tabindex']) AND is_array($params['tabindex']))
+		{
+			array_shift($time_params['tabindex']);
+		}
+		$str .= $this->create_time($time_params);
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 		$func_str = '
@@ -2374,6 +2411,7 @@ class Form_builder {
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
 		);
 
 		$numeric_class = 'numeric';
