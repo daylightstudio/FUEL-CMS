@@ -84,13 +84,6 @@ class Fuel_auth extends Fuel_base_library {
 			// update salt on login
 			if ($this->CI->fuel_users_model->update($updated_user_profile, $updated_where))
 			{
-				// set minimal session data
-				$session_data = array();
-				$session_data['id'] = $valid_user['id'];
-				$session_data['super_admin'] = $valid_user['super_admin'];
-				$session_data['user_name'] = $valid_user['user_name'];
-				$session_data['language'] = $valid_user['language'];
-
 				$this->set_valid_user($valid_user);
 				$this->CI->fuel->logs->write(lang('auth_log_login_success', $valid_user['user_name'], $this->CI->input->ip_address()), 'debug');
 				return TRUE;
@@ -118,9 +111,13 @@ class Fuel_auth extends Fuel_base_library {
 	{
 		$this->CI->load->library('session');
 
-		// remove these from session for security reasons
-		unset($valid_user['password'], $valid_user['salt'], $valid_user['reset_key'], $valid_user['active']);
-		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
+		// set minimal session data
+		$session_data = array();
+		$session_data['id'] = $valid_user['id'];
+		$session_data['super_admin'] = $valid_user['super_admin'];
+		$session_data['user_name'] = $valid_user['user_name'];
+		$session_data['language'] = $valid_user['language'];
+		$this->CI->session->set_userdata($this->get_session_namespace(), $session_data);
 	}
 
 	// --------------------------------------------------------------------
