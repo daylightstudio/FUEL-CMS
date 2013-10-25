@@ -62,10 +62,8 @@ class Assets extends Module {
 				$posted['file_name'] = $this->input->get_post('userfile_file_name', TRUE);
 				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
 				
-				$redirect_to = $this->input->get_post('redirect_to', TRUE);
-				
+				$redirect_to = uri_safe_decode($this->input->get_post('redirect_to'));
 				$id = $posted['file_name'];
-				
 				if ($this->fuel->assets->upload($posted))
 				{
 					foreach($_FILES as $filename => $fileinfo)
@@ -217,8 +215,8 @@ class Assets extends Module {
 			$by = 'asc';
 		}
 		$options = options_list($this->model->list_items(NULL, 0, $order, $by), 'name', 'name');
-		
-		$redirect_to = rawurlencode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
+		$redirect_to = uri_safe_encode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
+
 		$preview = ' OR <a href="'.fuel_url('assets/inline_create?asset_folder='.urlencode($dir).'&redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
 		$field_values['asset_folder']['value'] = $dir;
 		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview);
@@ -290,8 +288,8 @@ class Assets extends Module {
 		
 		$fields = $this->model->form_fields();
 
-		$fields['redirect_to'] = array('type' => 'hidden', 'value' => rawurldecode($this->input->get_post('redirect_to', TRUE)));
-	
+		$fields['redirect_to'] = array('type' => 'hidden', 'value' => uri_safe_encode($this->input->get_post('redirect_to')));
+
 		$not_hidden = array();
 		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
 		{
