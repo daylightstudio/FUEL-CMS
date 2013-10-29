@@ -818,6 +818,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>target</strong>: sets the target of the link. Options are <dfn>_self</dfn> or <dfn>_blank</dfn>. This field is not displayed by default</li>
 		<li><strong>title</strong>: sets the title attribute of the link. This field is not displayed by default</li>
 		<li><strong>pdfs</strong>: determines whether to display PDFs along with the list of URLs. Default it is set to not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
+		<li><strong>filter</strong>: a regular expression value that can be used to filter the page list down to only the pages you need</li>
 	</ul>
 	
 	<h4>Representations</h4>

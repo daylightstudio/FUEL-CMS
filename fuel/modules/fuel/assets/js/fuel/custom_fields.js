@@ -929,6 +929,9 @@ fuel.fields.url_field = function(context, options){
 		if ($activeField.data('pdfs')){
 			url += '&pdfs=1';	
 		}
+		if ($activeField.data('filter')){
+			url += '&filter=' + $activeField.data('filter');	;	
+		}
 		var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 		

@@ -1298,7 +1298,10 @@ class Fuel_custom_fields {
 		{
 			$data['pdfs'] = 1;	
 		}
-
+		if (isset($params['filter']))
+		{
+			$data['filter'] = $params['filter'];	
+		}
 		if (!empty($params['data']))
 		{
 			$params['data'] = array_merge($params['data'], $data);	
