@@ -1300,7 +1300,7 @@ class Fuel_custom_fields {
 		}
 		if (isset($params['filter']))
 		{
-			$data['filter'] = $params['filter'];	
+			$data['filter'] = rawurlencode($params['filter']);	
 		}
 		if (!empty($params['data']))
 		{

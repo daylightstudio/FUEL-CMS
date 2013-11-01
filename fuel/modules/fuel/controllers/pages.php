@@ -712,7 +712,10 @@ class Pages extends Module {
 	{
 
 		$value = $this->input->get_post('selected', TRUE);
-		$filter = $this->input->get_post('filter', TRUE);
+		$filter = rawurldecode($this->input->get_post('filter', TRUE));
+
+		// Convert wild-cards to RegEx
+		$filter = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $filter));
 		$this->js_controller_params['method'] = 'select';
 	
 		$this->load->helper('array');
