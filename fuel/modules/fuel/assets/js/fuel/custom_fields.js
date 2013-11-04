@@ -310,7 +310,7 @@ fuel.fields.wysiwyg_field = function(context){
 					if (!previewOptions.length) previewOptions = 'width=1024,height=768';
 
 					var previewWindow = window.open('', 'preview', previewOptions);
-					var val = (CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
+					var val = (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
 					var csrf = $('#csrf_test_name').val();
 					$.ajax( {
 						type: 'POST',
