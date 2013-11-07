@@ -404,7 +404,7 @@ class Pages extends Module {
 		$vars['actions'] = $actions;
 		$vars['error'] = $this->model->get_errors();
 		
-		if (!empty($data['last_modified']))
+		if (!empty($saved['last_modified']))
 		{
 			$vars['last_updated'] = lang('pages_last_updated_by', english_date($vars['data']['last_modified'], true), $vars['data']['email']);
 		}
