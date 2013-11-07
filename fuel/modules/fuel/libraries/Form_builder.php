@@ -1870,7 +1870,7 @@ class Form_builder {
 					'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i])) ? $params['tabindex'][$i] : NULL),
 				);
 
-				if (empty($params['null']) OR (!empty($params['null']) AND !empty($params['default'])))
+				if (empty($params['null']) OR (!empty($params['null']) AND (!empty($params['default']) OR !empty($params['value']))))
 				{
 					if (($i == 0 AND !$default) OR  ($default == $key))
 					{
