@@ -1287,7 +1287,7 @@ class MY_Model extends CI_Model {
 					} 
 				}
 				
-				// safe_htmlspecialchars is buggy for unserialize so we use the cleanup_ms_word
+				// safe_htmlspecialchars is buggy for unserialize so we use the encode_and_clean
 				if (is_string($values[$key]))
 				{
 					$values[$key] = $this->encode_and_clean($values[$key], NULL, $key);
