@@ -43,6 +43,9 @@ if (fuel == undefined) var fuel = {};
 	
 	
 	$(document).ready(function(){
+
+		$('body').addClass('__fuel_inline__');
+		
 		function init(){
 
 			// disable the toolbar if it is being view from within the admin
