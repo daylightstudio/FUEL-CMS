@@ -107,6 +107,21 @@ class Fuel_custom_fields {
 			$params['data']['link_pdfs'] = 1;
 		}
 
+		// adds markdown controlls to the markItUp!  editor
+		if (isset($params['markdown']) AND $params['markdown'] === TRUE)
+		{
+			$params['data']['markdown'] = 1;
+		}
+
+		// set markitup config
+		if (isset($params['editor_config']) AND is_array($params['editor_config']))
+		{
+			foreach($params['editor_config'] as $key => $val)
+			{
+				$params['data'][$key] = $val;
+			}
+		}
+
 		// set ckeditor configs
 		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
 		{
