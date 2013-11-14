@@ -1150,14 +1150,15 @@ class Fuel_custom_fields {
 		$form_builder =& $params['instance'];
 		
 		$defaults = array(
-			'sorting' => NULL,
-			'options' => array(),
-			'mode' => NULL,
-			'model' => NULL,
-			'model_params' => NULL,
-			'wrapper_tag' => 'span',// for checkboxes
+			'sorting'       => NULL,
+			'options'       => array(),
+			'mode'          => NULL,
+			'model'         => NULL,
+			'model_params'  => NULL,
+			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
-			'module' => NULL,
+			'module'        => NULL,
+			'spacer'        => "&nbsp;&nbsp;&nbsp;",
 		);
 
 		$params = $form_builder->normalize_params($params, $defaults);
@@ -1241,7 +1242,7 @@ class Fuel_custom_fields {
 					$label = ($lang = $form_builder->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
 					$str .= ' '.$form_builder->create_label($enum_params);
-					$str .= "&nbsp;&nbsp;&nbsp;";
+					$str .= $params['spacer'];
 					$str .= '</'.$params['wrapper_tag'].'>';
 					$i++;
 				}
