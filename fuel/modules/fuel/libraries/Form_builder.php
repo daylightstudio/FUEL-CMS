@@ -1843,12 +1843,13 @@ class Form_builder {
 	public function create_enum($params)
 	{
 		$defaults = array(
-			'checked' => FALSE, // for radio
-			'options' => array(),
-			'mode' => NULL,
-			'model' => NULL,
-			'wrapper_tag' => 'span',// for checkboxes
+			'checked'       => FALSE, // for radio
+			'options'       => array(),
+			'mode'          => NULL,
+			'model'         => NULL,
+			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
+			'spacer'        => "&nbsp;&nbsp;&nbsp;",
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1889,7 +1890,7 @@ class Form_builder {
 				$enum_params = array('label' => $label, 'name' => $enum_name);
 				
 				$str .= ' '.$this->create_label($enum_params);
-				$str .= "&nbsp;&nbsp;&nbsp;";
+				$str .= $params['spacer'];
 				$str .= '</'.$params['wrapper_tag'].'>';
 				$i++;
 			}
@@ -1914,10 +1915,11 @@ class Form_builder {
 	public function create_multi($params)
 	{
 		$defaults = array(
-			'options' => array(),
-			'mode' => NULL,
-			'wrapper_tag' => 'span',// for checkboxes
+			'options'       => array(),
+			'mode'          => NULL,
+			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
+			'spacer'        => "&nbsp;&nbsp;&nbsp;",
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1955,7 +1957,7 @@ class Form_builder {
 					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
 					$str .= ' '.$this->create_label($enum_params);
-					$str .= "&nbsp;&nbsp;&nbsp;";
+					$str .= $params['spacer'];
 					$str .= '</'.$params['wrapper_tag'].'>';
 					$i++;
 				}
