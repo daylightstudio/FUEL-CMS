@@ -367,9 +367,17 @@ class Fuel_pages extends Fuel_base_library {
 				{
 					if (is_string($val) OR is_array($val))
 					{
-						$pagevars[$key] = $val;	
+						if ($sanitize AND is_string($val))
+						{
+							$val = php_to_template_syntax($val);
+						}
+						$pagevars[$key] = $val;
 					}
 				}
+			}
+			if ($sanitize)
+			{
+				$output = php_to_template_syntax($output);
 			}
 			$pagevars[$import_field] = $output;
 
