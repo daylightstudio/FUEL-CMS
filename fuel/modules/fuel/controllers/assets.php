@@ -347,8 +347,9 @@ class Assets extends Module {
 		$vars['id'] = (!empty($field_values['asset_folder'])) ? uri_safe_encode($field_values['asset_folder']) : NULL;
 		$vars['data'] = array();
 		$vars['action'] =  'create';
-		$preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
-		if (!empty($vars['data'][$preview_key])) $this->preview_path = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$vars['data']['\\2'].'\\3'", $this->preview_path);
+		
+		// $preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
+		// if (!empty($vars['data'][$preview_key])) $this->preview_path = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$vars['data']['\\2'].'\\3'", $this->preview_path);
 		
 		// active or publish fields
 		//$vars['publish'] = (!empty($saved['published']) && ($saved['published'] == 'yes')) ? 'Unpublish' : 'Publish';

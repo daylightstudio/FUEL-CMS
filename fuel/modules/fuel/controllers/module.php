@@ -2008,7 +2008,22 @@ class Module extends Fuel_base_controller {
 					}
 					if (strpos($field_value, '{') !== FALSE )
 					{
-						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+						//e modifier is deprecated
+						if (version_compare(PHP_VERSION, '5.5', '>='))
+						{
+							$field_value = preg_replace_callback('#(.*){(.+)\}(.*)#',
+								function($match) use ($posted) { 
+									if (!empty($match[2]))
+									{
+										return $match[1].$posted[$match[2]].$match[3];
+									}
+									return '';
+								}, $field_value);
+						}
+						else
+						{
+							$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+						}
 					}
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
