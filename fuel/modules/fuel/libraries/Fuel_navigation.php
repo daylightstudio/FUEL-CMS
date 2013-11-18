@@ -266,10 +266,13 @@ class Fuel_navigation extends Fuel_module {
 					$check = $key;
 				}
 
-				if (is_string($p['exclude']) AND preg_match('#'.$p['exclude'].'#', $check))
+				if (is_string($p['exclude']))
 				{
 					$p['exclude'] = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $p['exclude']));
-					unset($items[$key]);
+					if (preg_match('#'.$p['exclude'].'#', $check))
+					{
+						unset($items[$key]);
+					}
 				}
 				else if (is_array($p['exclude']))
 				{
