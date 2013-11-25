@@ -165,7 +165,10 @@ class Cache
 		
 		fclose($f1);
 		fclose($f2);
-		
+
+		// Added by Daylight Studio 
+		@chmod($f1, FILE_WRITE_MODE);
+		@chmod($f1, FILE_WRITE_MODE);
 	}
 	
 	/**
