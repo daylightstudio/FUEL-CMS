@@ -704,6 +704,7 @@ class Form {
 		if (is_array($attrs))
 		{
 			$str = '';
+			$only_key = array('required', 'readonly', 'disabled', 'checked');
 			foreach($attrs as $key => $val)
 			{
 				// the key must be a string value
@@ -739,7 +740,15 @@ class Form {
 				{
 					if ($val != '')
 					{
-						$str .= ' '.$key.'="'.$val.'"';
+						if ($val === TRUE AND in_array($key, $only_key))
+						{
+							$str .= ' '.$key;		
+						}
+						else
+						{
+							$str .= ' '.$key.'="'.$val.'"';
+						}
+						
 					}
 				}
 			}
