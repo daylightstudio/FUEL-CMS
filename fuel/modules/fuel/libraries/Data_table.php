@@ -791,12 +791,23 @@ class Data_table {
 					$fields[] = new Data_table_field('actions', $this->_render_actions($this->_actions, $columns), array('class' => 'actions'));
 					$i++;
 				}
-
 				// add the actions
 				if (empty($action)) $action = $this->default_field_action;
 				if (!empty($action))
 				{
-					$action = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$columns['\\2'].'\\3'", $action);
+
+					//e modifier is deprecated so we have to do this
+					$callback = create_function('$match', '
+							$return = $match[0];
+							if (!empty($match[2]))
+							{
+								$return = $match[1].$GLOBALS["__tmp_transient_columns__"][$match[2]].$match[3];
+							}
+							return $return;');
+
+					// hacky but avoids 5.3 funcation syntax (which is nicer but doesn't work with 5.2)
+					$GLOBALS['__tmp_transient_columns__'] = $columns;
+					$action = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $action);
 					$fields[] = new Data_table_field($key, $val, array(), $action);
 				}
 				else
@@ -811,6 +822,13 @@ class Data_table {
 					$i++;
 				}
 			}
+
+			// hacky cleanup to avoid using 5.3 syntax
+			if (isset($GLOBALS["__tmp_transient_columns__"]))
+			{
+				unset($GLOBALS["__tmp_transient_columns__"]);
+			}
+
 		}
 		$attrs['id'] = (!empty($columns[$this->row_id_key])) ? $this->id.'_row'.$columns[$this->row_id_key] : $this->id.'_row'.$index;
 		$this->rows[$index] = new Data_table_row($fields, $attrs, $col_attrs);
@@ -909,12 +927,31 @@ class Data_table {
 			}
 			else
 			{
-				// i love regexp... key is the e modifier that evaluates the code
-				$url = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.((!empty(\$fields['\\2'])) ? \$fields['\\2'] : '').'\\3'", $val['url']);
+				//e modifier is deprecated so we have to do this
+				$callback = create_function('$match', '
+						$return = "";
+						if (!empty($match[2]))
+						{
+							$return = $match[1].$GLOBALS["__tmp_transient_fields__"][$match[2]].$match[3];
+						}
+						return $return;');
+
+				// hacky but avoids 5.3 funcation syntax (which is nicer but doesn't work with 5.2)
+				$GLOBALS['__tmp_transient_fields__'] = $fields;
+				$url = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $val['url']);
+				
+
 				$attrs = (!empty($val['attrs'])) ? ' '.$this->_render_attrs($val['attrs']) : '';
 				$actions[] ='<a href="'.$url.'"'.$attrs.'>'.$key.'</a>';
 			}
 		}
+
+		// hacky cleanup to avoid using 5.3 syntax
+		if (isset($GLOBALS["__tmp_transient_fields__"]))
+		{
+			unset($GLOBALS["__tmp_transient_fields__"]);
+		}
+
 		if (!empty($actions)) $str = implode('&nbsp; '.$this->action_delimiter.'  &nbsp;', $actions);
 		return $str;
 	}

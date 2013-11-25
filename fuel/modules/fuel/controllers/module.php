@@ -2008,22 +2008,19 @@ class Module extends Fuel_base_controller {
 					}
 					if (strpos($field_value, '{') !== FALSE )
 					{
-						//e modifier is deprecated
-						if (version_compare(PHP_VERSION, '5.5', '>='))
-						{
-							$field_value = preg_replace_callback('#(.*){(.+)\}(.*)#',
-								function($match) use ($posted) { 
-									if (!empty($match[2]))
-									{
-										return $match[1].$posted[$match[2]].$match[3];
-									}
-									return '';
-								}, $field_value);
-						}
-						else
-						{
-							$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
-						}
+						//e modifier is deprecated so we have to do this
+						$callback = create_function('$match', '
+								$return = "";
+								if (!empty($match[2]))
+								{
+									$return = $match[1].$GLOBALS["__tmp_transient_posted__"][$match[2]].$match[3];
+								}
+								return $return;');
+
+						// hacky but avoids 5.3 funcation syntax (which is nicer but doesn't work with 5.2)
+						$GLOBALS['__tmp_transient_posted__'] = $posted;
+
+						$field_value = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $field_value);
 					}
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
@@ -2039,6 +2036,11 @@ class Module extends Fuel_base_controller {
 				}
 			}
 
+			// hacky cleanup to avoid using 5.3 syntax
+			if (isset($GLOBALS["__tmp_transient_posted__"]))
+			{
+				unset($GLOBALS["__tmp_transient_posted__"]);
+			}
 
 			$params['xss_clean'] = $this->sanitize_files;
 			$params['posted'] = $posted;
