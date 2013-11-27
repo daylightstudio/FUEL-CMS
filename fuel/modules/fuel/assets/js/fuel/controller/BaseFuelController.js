@@ -474,7 +474,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$(document).bind('keydown', jqx.config.keyboardShortcuts.view, function(e){ 
-			window.location = ($('.view_action').attr('href'));
+			window.location = ($('.key_view_action').attr('href'));
 		});
 		
 		//$('#form input:first').select();

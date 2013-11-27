@@ -7,7 +7,7 @@
 			<?php endif; ?>
 			
 			<?php if (!empty($this->preview_path) AND $this->fuel->auth->module_has_action('view')) : ?>
-				<li><a href="<?=site_url($this->preview_path, FALSE)?>" class="ico ico_view<?php if (!$this->fuel->config('view_in_new_window')) : ?> view_action<?php endif; ?>" title="<?=$keyboard_shortcuts['view']?> to view" target="_blank"><?=lang('btn_view')?></a></li>
+				<li><a href="<?=site_url($this->preview_path, FALSE)?>" class="ico ico_view key_view_action<?php if (!$this->fuel->config('view_in_new_window')) : ?> view_action<?php endif; ?>" title="<?=$keyboard_shortcuts['view']?> to view" target="_blank"><?=lang('btn_view')?></a></li>
 			<?php endif; ?>
 
 			<?php if ($this->fuel->auth->module_has_action('publish') AND $this->fuel->auth->has_permission($this->permission, 'publish')) : ?>
