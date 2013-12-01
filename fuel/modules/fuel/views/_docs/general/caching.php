@@ -43,3 +43,16 @@ property which has the following options:</p>
 <p>Sometimes you may make changes and not see them reflected on the site. If so, you may need to clear your site's cache.
 To do that, click on the <strong>Page Cache</strong> menu item under manage and then click the <strong>Yes, clear cache</strong> button to clear your sites cache files.</p>
 
+<p>Alternatively, you can use the command line to clear the cache:</p>
+<pre class="brush:php">
+php index.php fuel/manage/clear_cache
+</pre>
+
+<h2>Web Hooks</h2>
+<p>The <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration's <dfn>webhook_remote_ip</dfn> parameter</a> gives you the ability to set one or more IP addresses
+that can be used to remotely call the fuel/manage/clear_cache. For example, say you use <a href="http://beanstalkapp.com" target="_blank">Beanstalk</a> to manage your GIT repositories and you would like to automatically clear the cache upon 
+commit. You can set this configuration value to the IP address ranges <a href="http://support.beanstalkapp.com/customer/portal/articles/68153-ip-addresses-for-access-to-beanstalk" target="_blank">provided here</a>.
+Then, in Beanstalk you can set up your <a href="http://support.beanstalkapp.com/customer/portal/articles/68163-web-hooks-for-deployments" target="_blank">web deployment post hook</a>. In this case you would set it in Beanstalk to be the full URL path:</p>
+<pre class="brush:php">
+http://www.mysite.com/fuel/manage/clear_cache
+</pre>
