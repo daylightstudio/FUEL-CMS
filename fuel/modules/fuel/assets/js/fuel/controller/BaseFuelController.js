@@ -430,8 +430,15 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$(document).on('click', '.save, #form input[type="submit"]', function(e){
+			
+			if ($(this).hasClass('disabled')){
+				return false;
+			}
+
 			$.removeChecksave();
 			$('#form').submit();
+			$(this).attr('disabled', true);
+			$(this).addClass('disabled');
 			return false;
 		});
 		
