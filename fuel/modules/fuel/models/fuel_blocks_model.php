@@ -86,8 +86,19 @@ class Fuel_blocks_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
+
+		$module_path = APPPATH;
+		if (is_array($dir_folder))
+		{
+			$module = key($dir_folder);
+			$dir_folder = current($dir_folder);
+			if (is_string($module))
+			{
+				$module_path = MODULES_PATH.$module;
+			}
+		}
 		$dir_folder = trim($dir_folder, '/');
-		$blocks_path = APPPATH.'views/_blocks/'.$dir_folder;
+		$blocks_path = $module_path.'/views/_blocks/'.$dir_folder;
 
 		// don't display blocks with preceding underscores or .html files'
 		$block_files = directory_to_array($blocks_path, $recursive, '#'.$dir_filter.'#', FALSE, TRUE);
