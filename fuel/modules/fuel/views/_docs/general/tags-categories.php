@@ -1,9 +1,9 @@
 <h1>Tags &amp; Categories</h1>
-<p>FUEL CMS 1.0 provides a generic tags and categories modules that can you incorporate into your own modules. They are hidden by default. 
-To turn on you must comment out the lines in the fuel/application/config/MY_fuel_modules.php making them hidden. 
+<p>FUEL CMS 1.0 provides a generic tags and categories modules that can you incorporate into your own modules. <strong>They are hidden by default. </strong>
+To turn them on, you must comment out the lines in the <span class="file">fuel/application/config/MY_fuel_modules.php</span> making them hidden. 
 The differences between tags and categories can be a little confusing at first but the best way to think of their differences is that
 tags provide a flat many-to-many relationship between things whereas categories provide a one-to-many relationship and can often be
-hierarchical. In fact, the tags module uses it so you can categorize your tags if need be.</p>
+hierarchical. In fact, the tags module uses categories to group tags together.</p>
 </p>
 
 <h2 id="tags">Tags</h2>
