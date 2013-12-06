@@ -4461,6 +4461,9 @@ class Data_record {
 		{
 			if ($this->prop_exists($key)) $this->$key = $val;
 		}
+		if (method_exists($this, 'on_after_fill')) {
+			$this->on_after_fill();
+		}
 	}
 	
 	// --------------------------------------------------------------------
