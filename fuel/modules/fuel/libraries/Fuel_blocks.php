@@ -44,6 +44,7 @@ class Fuel_blocks extends Fuel_module {
 	<ul>
 		<li><strong>view</strong> - the name of the view block file. Also can be the first parameter of the method</li>
 		<li><strong>vars</strong>: an array of variables to pass to the block. Also can be the second parameter of the method.</li>
+		<li><strong>scope</strong>: a string value used for placing the variables into a certain scope to prevent conflict with other loaded variables. Default behavior will load variables in to a global context. The value of TRUE will generate one for you.</li>
 		<li><strong>view_string</strong> - a string variable that represents the block</li>
 		<li><strong>model</strong> - the name of a model to automatically load for the block</li>
 		<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
@@ -67,9 +68,10 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	mixed	Array of parameters
 	 * @param	array	Array of variables
 	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
+	 * @param	boolean	Determines whether to scope the variables. A string can also be passed otherwise the scope value will be created for you
 	 * @return	string
 	 */
-	public function render($params, $vars = array(), $check_db = TRUE)
+	public function render($params, $vars = array(), $check_db = TRUE, $scope = NULL)
 	{
 		$this->CI->load->library('parser');
 
@@ -88,6 +90,7 @@ class Fuel_blocks extends Fuel_module {
 						'editable' => TRUE,
 						'parse' => 'auto',
 						'vars' => array(),
+						'scope' => $scope,
 						'cache' => FALSE,
 						'mode' => 'auto',
 						'module' => '',
@@ -212,7 +215,7 @@ class Fuel_blocks extends Fuel_module {
 			}
 
 			$p['mode'] = strtolower($p['mode']);
-			
+
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
 			if ($check_db AND (($p['mode'] == 'auto' AND $this->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
@@ -247,7 +250,7 @@ class Fuel_blocks extends Fuel_module {
 					$vars['CI'] =& $this->CI;
 
 					// pass along these since we know them... perhaps the view can use them
-					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
+					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE, $p['scope']) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE, $p['scope']);
 				}
 			}
 			else if (file_exists($view_file))
@@ -257,7 +260,7 @@ class Fuel_blocks extends Fuel_module {
 				$vars['CI'] =& $this->CI;
 
 				// pass along these since we know them... perhaps the view can use them
-				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
+				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE, $p['scope']) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE, $p['scope']);
 
 			}
 		}

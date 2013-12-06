@@ -89,10 +89,10 @@ function &FUEL()
  * @param	mixed
  * @return	string
  */
-function fuel_block($params, $vars = array(), $check_db = TRUE)
+function fuel_block($params, $vars = array(), $check_db = TRUE, $scope = NULL)
 {
 	$CI =& get_instance();
-	return $CI->fuel->blocks->render($params, $vars, $check_db);
+	return $CI->fuel->blocks->render($params, $vars, $check_db, $scope);
 }
 
 // --------------------------------------------------------------------

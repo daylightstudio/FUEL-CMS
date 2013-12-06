@@ -66,6 +66,8 @@ class Fuel_Loader extends MX_Loader
 	private $_module;
 	
 	public $_ci_plugins;
+
+	public $_ci_cached_vars_scope = 'global';
 	
 	public function __construct() {
 		
@@ -108,9 +110,9 @@ class Fuel_Loader extends MX_Loader
 	}
 
 	/** Load view Matchbox style for backwards compatability **/
-	public function module_view($module, $view, $vars = array(), $return = FALSE)
+	public function module_view($module, $view, $vars = array(), $return = FALSE, $scope = NULL)
 	{
-		return $this->view($view, $vars, $return, $module);
+		return $this->view($view, $vars, $return, $scope, $module);
 	}
 
 
@@ -266,14 +268,14 @@ class Fuel_Loader extends MX_Loader
 	}
 
 	/** Load a module view **/
-	public function view($view, $vars = array(), $return = FALSE, $module = NULL) {
+	public function view($view, $vars = array(), $return = FALSE, $scope = NULL, $module = NULL) {
 		if (!isset($module)) $module = $this->_module; // FUEL
 		list($path, $view) = Modules::find($view, $module, 'views/');
 		$this->_ci_view_path = $path;
-		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return), $scope);
 	}
 
-	function _ci_load($_ci_data) {
+	function _ci_load($_ci_data, $scope = NULL) {
 		
 		foreach (array('_ci_view', '_ci_vars', '_ci_path', '_ci_return') as $_ci_val) {
 			$$_ci_val = ( ! isset($_ci_data[$_ci_val])) ? FALSE : $_ci_data[$_ci_val];
@@ -303,15 +305,28 @@ class Fuel_Loader extends MX_Loader
 				$this->$_ci_key =& $_ci_CI->$_ci_key;
 			}
 		}
-	
-		
+
+		// if the scope is set to TRUE, then we will scope it to just the name of this view file
+		if ($scope === TRUE)
+		{
+			$scope = $_ci_view;
+		}
+
+		if (empty($scope))
+		{
+			$scope = $this->_ci_cached_vars_scope;
+		}
+
+		if (!isset($this->_ci_cached_vars[$scope]))
+		{
+			$this->_ci_cached_vars[$scope] = array();
+		}
 		if (is_array($_ci_vars))
 		{
-			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $_ci_vars);
+			$this->_ci_cached_vars[$scope] = array_merge($this->_ci_cached_vars[$scope], $_ci_vars);
 		}
 		// FUEL FIX -->
-		
-		extract($this->_ci_cached_vars);
+		extract($this->_ci_cached_vars[$scope]);
 
 		ob_start();
 
@@ -475,6 +490,42 @@ class Fuel_Loader extends MX_Loader
 		}
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set Variables
+	 *
+	 * Once variables are set they become available within
+	 * the controller class and its "view" files.
+	 *
+	 * @param	array
+	 * @param 	string
+	 * @return	void
+	 */
+	public function vars($vars = array(), $val = '', $scope = NULL)
+	{
+		if (empty($scope))
+		{
+			$scope = $this->_ci_cached_vars_scope;
+		}
+		if ($val != '' AND is_string($vars))
+		{
+			$vars = array($vars => $val);
+		}
+
+		$vars = $this->_ci_object_to_array($vars);
+		if (is_array($vars) AND count($vars) > 0)
+		{
+			if (!isset($this->_ci_cached_vars[$scope]))
+			{
+				$this->_ci_cached_vars[$scope] = array();
+			}
+			foreach ($vars as $key => $val)
+			{
+				$this->_ci_cached_vars[$scope][$key] = $val;
+			}
+		}
+	}
 	
 	// --------------------------------------------------------------------
 
@@ -486,17 +537,44 @@ class Fuel_Loader extends MX_Loader
 	 */	
 	
 	//<!-- FUEL Added... 
-	function get_vars($key = NULL)
+	function get_vars($key = NULL, $scope = NULL)
 	{
+		if (empty($scope))
+		{
+			$scope = $this->_ci_cached_vars_scope;
+		}
 		if (isset($key))
 		{
-			if (isset($this->_ci_cached_vars[$key]))
+			if (isset($this->_ci_cached_vars[$scope][$key]))
 			{
-				return $this->_ci_cached_vars[$key];
+				return $this->_ci_cached_vars[$scope][$key];
 			}
 			return NULL;
 		}
-		return $this->_ci_cached_vars;
+		if ($scope == 'all')
+		{
+			return $this->_ci_cached_vars;
+		}
+		return $this->_ci_cached_vars[$scope];
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get Variable
+	 *
+	 * Check if a variable is set and retrieve it.
+	 *
+	 * @param	array
+	 * @return	void
+	 */
+	public function get_var($key, $scope = NULL)
+	{
+		if (empty($scope))
+		{
+			$scope = $this->_ci_cached_vars_scope;
+		}
+		return isset($this->_ci_cached_vars[$scope][$key]) ? $this->_ci_cached_vars[$scope][$key] : NULL;
 	}
 }
 
