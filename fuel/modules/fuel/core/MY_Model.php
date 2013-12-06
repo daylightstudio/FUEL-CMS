@@ -4461,11 +4461,20 @@ class Data_record {
 		{
 			if ($this->prop_exists($key)) $this->$key = $val;
 		}
-		if (method_exists($this, 'on_after_fill')) {
-			$this->on_after_fill();
-		}
+		$this->on_after_fill();
 	}
-	
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * A hook that can be used in the record class that runs after the Data record gets model data applied to it
+	 * @access	public
+	 * @return	void
+	 */
+	public function on_after_fill()
+	{
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
