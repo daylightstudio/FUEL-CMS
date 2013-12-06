@@ -79,7 +79,7 @@ class Fuel_language extends Fuel_base_library {
 		foreach($_fuel_config as $p)
 		{
 			$config = $this->fuel->config('language_'.$p);
-			if (!empty($config))
+			if (!is_null($config))
 			{
 				$this->$p = $config;	
 			}
@@ -230,7 +230,7 @@ class Fuel_language extends Fuel_base_library {
 	 */	
 	public function default_option()
 	{
-		if (isset($this->default_option))
+		if (!empty($this->default_option))
 		{
 			return $this->default_option;
 		}
