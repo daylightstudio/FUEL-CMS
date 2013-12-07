@@ -167,8 +167,8 @@ class Cache
 		fclose($f2);
 
 		// Added by Daylight Studio 
-		@chmod($f1, FILE_WRITE_MODE);
-		@chmod($f1, FILE_WRITE_MODE);
+		@chmod($expiry_file, FILE_WRITE_MODE);
+		@chmod($cache_file, FILE_WRITE_MODE);
 	}
 	
 	/**
@@ -206,8 +206,8 @@ class Cache
 		$cache_file = $file.$this->cache_postfix;
 		$expiry_file = $file.$this->expiry_postfix;
 		
-		@unlink($cache_file);
-		@unlink($expiry_file);
+		if (is_file($cache_file)) @unlink($cache_file);
+		if (is_file($expiry_file)) @unlink($expiry_file);
 		
 	}
 	
