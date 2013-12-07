@@ -306,11 +306,6 @@ class Fuel_Loader extends MX_Loader
 			}
 		}
 
-		// if the scope is set to TRUE, then we will scope it to just the name of this view file
-		if ($scope === TRUE)
-		{
-			$scope = $_ci_view;
-		}
 
 		if (empty($scope))
 		{
@@ -325,8 +320,11 @@ class Fuel_Loader extends MX_Loader
 		{
 			$this->_ci_cached_vars[$scope] = array_merge($this->_ci_cached_vars[$scope], $_ci_vars);
 		}
+		$vars = $this->_ci_cached_vars[$scope];
 		// FUEL FIX -->
-		extract($this->_ci_cached_vars[$scope]);
+
+		// if the scope is set to TRUE then it is just unique to this view and is not loaded into the global view namespace so we just use that instead
+		extract(($scope === TRUE) ? $_ci_vars : $this->_ci_cached_vars[$scope]);
 
 		ob_start();
 
