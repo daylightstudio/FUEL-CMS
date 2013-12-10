@@ -2734,7 +2734,7 @@ class MY_Model extends CI_Model {
 					
 					// important to sort by id ascending order in case a field type uses the saving order as how it should be returned (e.g. a sortable multi-select)
 					$singular_name = $this->singular_name(TRUE);
-					$field_values = (!empty($values[$key_field])) ? array_keys($lookup_model->find_all_array_assoc($singular_name.'_id', array($singular_name.'_id' => $values[$key_field]), 'id asc')) : array();
+					$field_values = (!empty($values[$key_field])) ? array_keys($CI->$lookup_name->find_all_array_assoc($singular_name.'_id', array($singular_name.'_id' => $values[$key_field]), 'id asc')) : array();
 					$fields[$key] = array('label' => ucfirst($related_name), 'type' => 'multi', 'module' => $key, 'options' => $options, 'value' => $field_values, 'mode' => 'multi');
 				}
 			}
