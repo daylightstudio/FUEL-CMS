@@ -478,7 +478,17 @@ class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$str .= $this->_open_div(TRUE);
+		$first = reset($this->_fields);
+
+		$is_fieldset_first = FALSE;
+		if ($first['type'] != 'fieldset')
+		{
+			$str .= $this->_open_div();
+		}
+		else
+		{
+			$is_fieldset_first = TRUE;
+		}
 
 		$fieldset_on = FALSE;
 		
@@ -488,8 +498,14 @@ class Form_builder {
 			
 			if ($val['type'] == 'fieldset' OR !empty($val['fieldset']))
 			{
+				// don't close the table if it isn't opened earlier
+				if ($is_fieldset_first == FALSE)
+				{
+					$str .= $this->_close_div();
+				}
+				$is_fieldset_first = FALSE;
 				// close any existing field sets
-				$str .= $this->_close_div();
+				
 				if ($fieldset_on)
 				{
 					$fieldset_val['open'] = FALSE;
@@ -583,10 +599,10 @@ class Form_builder {
 		// close any open fieldsets
 		if ($fieldset_on)
 		{
-			$str .= $this->_close_table();
+			$str .= $this->_close_div();
 			$val['open'] = FALSE;
 			$str .= $this->create_fieldset($val);
-			$str .= $this->_open_table();
+			$str .= $this->_open_div();
 		}
 		
 		$str .= "<div class=\"actions\"><div class=\"actions_inner\">";
@@ -640,18 +656,33 @@ class Form_builder {
 		}
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
-		$str .= $this->_open_table(TRUE);
+		$first = reset($this->_fields);
+
+		$is_fieldset_first = FALSE;
+		if ($first['type'] != 'fieldset')
+		{
+			$str .= $this->_open_table();
+		}
+		else
+		{
+			$is_fieldset_first = TRUE;
+		}
 
 		$fieldset_on = FALSE;
-
 		foreach($this->_fields as $key => $val)
 		{
 			$val = $this->normalize_params($val);
 		
 			if ($val['type'] == 'fieldset' OR !empty($val['fieldset']))
-			{
+			{	
+				// don't close the table if it isn't opened earlier
+				if ($is_fieldset_first == FALSE)
+				{
+					$str .= $this->_close_table();
+				}
+				$is_fieldset_first = FALSE;
+
 				// close any existing field sets
-				$str .= $this->_close_table();
 				if ($fieldset_on)
 				{
 					$fieldset_val['open'] = FALSE;
@@ -911,7 +942,7 @@ class Form_builder {
 	protected function _open_table()
 	{
 		$str = '';
-		$str .= "<table>";
+		$str .= "<table>\n";
 		$str .= "<tbody>\n";
 		return $str;
 	}
