@@ -296,7 +296,7 @@ function jquery($version = '1.7.1', $default = 'jquery')
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function js($path, $module = '', $options = '')
+function js($path, $module = '', $options = array())
 {
 	$CI = _get_assets();
 	return $CI->asset->js($path, $module, $options);
@@ -313,7 +313,7 @@ function js($path, $module = '', $options = '')
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function css($path, $module = '', $options = '')
+function css($path, $module = '', $options = array())
 {
 	$CI = _get_assets();
 	return $CI->asset->css($path, $module, $options);
