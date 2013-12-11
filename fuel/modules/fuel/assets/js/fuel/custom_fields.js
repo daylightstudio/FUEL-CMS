@@ -432,7 +432,7 @@ fuel.fields.asset_field = function(context, options){
 					} else {
 						assetVal = selectedVal;
 					}
-					$('#' + activeField).val(assetVal);
+					$('#' + activeField).val(assetVal).trigger("change");
 				}
 				return false;
 			});
@@ -980,7 +980,7 @@ fuel.fields.url_field = function(context, options){
 						var selectedVal = $urlSelect.val();	
 					}
 					
-					$('#' + activeField).val(selectedVal);
+					$('#' + activeField).val(selectedVal).trigger("change");
 				}
 				return false;
 			});
