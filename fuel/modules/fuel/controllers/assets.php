@@ -98,20 +98,19 @@ class Assets extends Module {
 
 					$inline = $this->fuel->admin->is_inline();
 
-					$query_str_arr = $this->input->get_post(NULL, TRUE);
-					$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
-
+					$query_str = query_str(array(), TRUE);
+					
 					if (!empty($redirect_to))
 					{
 						$url = $redirect_to;
 					}
 					else if ($inline === TRUE)
 					{
-						$url = fuel_uri($this->module.'/inline_create/'.uri_safe_encode($dir).'?'.$query_str, TRUE);
+						$url = fuel_uri($this->module.'/inline_create/'.uri_safe_encode($dir).$query_str, FALSE);
 					}
 					else
 					{
-						$url = fuel_uri($this->module.'/create/'.uri_safe_encode($dir).'?'.$query_str, TRUE);
+						$url = fuel_uri($this->module.'/create/'.uri_safe_encode($dir).$query_str, FALSE);
 					}
 					redirect($url);
 					
@@ -330,7 +329,6 @@ class Assets extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
-
 		$this->form_builder->set_field_values($field_values);
 
 
@@ -357,13 +355,16 @@ class Assets extends Module {
 		$vars['actions'] = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
 		
+		// setup query string
+		$query_str = query_str();
+
 		if ($inline === TRUE)
 		{
-			$vars['form_action'] = $this->module_uri.'/inline_create/'.$vars['id'];
+			$vars['form_action'] = $this->module_uri.'/inline_create/'.$vars['id'].$query_str;
 		}
 		else
 		{
-			$vars['form_action'] = $this->module_uri.'/create/'.$vars['id'];
+			$vars['form_action'] = $this->module_uri.'/create/'.$vars['id'].$query_str;
 		}
 
 		return $vars;

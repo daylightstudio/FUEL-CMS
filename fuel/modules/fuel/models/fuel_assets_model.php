@@ -417,7 +417,8 @@ class Fuel_assets_model extends CI_Model {
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dim'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
-		
+		$fields['hide_options'] = array('type' => 'hidden');
+		$fields['hide_image_options'] = array('type' => 'hidden');
 		return $fields;
 	}
 	

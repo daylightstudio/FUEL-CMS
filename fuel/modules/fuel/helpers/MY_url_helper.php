@@ -352,5 +352,43 @@ if ( ! function_exists('is_https'))
 	}
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * Returns a query string formatted
+ *
+ * @access	public
+ * @param	array	an array of query string parameters to only include
+ * @param	boolean	determines whether to include posted variables in the query string
+ * @param	boolean	determines whether to include the question mark
+ * @return	string
+ */
+function query_str($only = array(), $include_post = FALSE, $include_q = TRUE)
+{
+	$CI =& get_instance();
+	$query_str = '';
+	if ($include_post)
+	{
+		$get_array = $CI->input->get(NULL, TRUE);
+	}
+	else
+	{
+		$get_array = $CI->input->get_post(NULL, TRUE);
+	}
+	
+	if (!empty($get_array))
+	{
+		if (!empty($include))
+		{
+			$get_array = array_intersect($only, $get_array);
+		}
+		$query_str = http_build_query($get_array);
+		if (!empty($query_str) AND $include_q)
+		{
+			$query_str = '?'.$query_str;
+		}
+	}
+	return $query_str;
+}
 /* End of file MY_url_helper.php */
 /* Location: ./modules/fuel/helpers/MY_url_helper.php */
