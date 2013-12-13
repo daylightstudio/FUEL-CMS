@@ -99,7 +99,7 @@ div#__fuel_edit_bar__ { display: none; height: 28px; position: fixed; z-index: 9
 div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; background-color: #c30 !important; background-image: none !important; color: #fff; float: left;line-height: 22px; padding: 0 10px; }
 div#__fuel_edit_bar__ li { display: block; }
 
-div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 30px !important; }
+div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 27px !important; }
 div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
 div#__fuel_edit_bar__ select { appearance: menu !important; -moz-appearance: menu !important; -webkit-appearance: menu !important; border: none !important; background: none !important; color: #000 !important; display: inline !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important; }
 

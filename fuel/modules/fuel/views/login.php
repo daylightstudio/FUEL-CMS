@@ -17,11 +17,15 @@
 		jqx.addPreload('fuel.controller.BaseFuelController');
 		jqx.init('fuel.controller.LoginController', {});
 	</script>
+
 </head>
 <body>
 <div id="login">
-	<div id="login_inner">
-		<img src="<?=img_path('fuel_logo.jpg')?>" width="400" height="100" alt="FUEL CMS" border="0" id="login_logo" />
+		
+		<div class="login_logo">
+			<span class="hidden">FUEL CMS</span>
+		</div>
+
 		<div id="login_notification" class="notification">
 			<?=$notifications?>
 		</div>
@@ -33,7 +37,6 @@
 			<a href="<?=fuel_url('login/pwd_reset')?>" id="forgotten_pwd"><?=lang('login_forgot_pwd')?></a>
 		<?php endif; ?>
 	</div>
-	<div id="login_footer"><?=$this->load->module_view('fuel', '_blocks/fuel_footer_copyright', array(), TRUE) ?></div>
 </div>
 </body>
 </html>

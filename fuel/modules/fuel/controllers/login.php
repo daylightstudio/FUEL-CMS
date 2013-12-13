@@ -141,8 +141,8 @@ class Login extends CI_Controller {
 		// build form
 		
 		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
-		$fields['user_name'] = array('size' => 25);
-		$fields['password'] = array('type' => 'password', 'size' => 25);
+		$fields['user_name'] = array('size' => 25, 'placeholder' => 'username', 'display_label' => FALSE);
+		$fields['password'] = array('type' => 'password', 'size' => 25, 'placeholder' => 'password', 'display_label' => FALSE);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = lang('login_btn');
@@ -227,7 +227,7 @@ class Login extends CI_Controller {
 		
 		// build form
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
-		$fields['email'] = array('required' => TRUE, 'size' => 30);
+		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
 		$vars['form'] = $this->form_builder->render();

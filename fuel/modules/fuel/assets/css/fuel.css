@@ -618,16 +618,16 @@ div#tree_container { padding: 16px 15px; }
 div#tree_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; z-index: 2;}
 
 /* #login */
-div#login { margin: 50px auto 0 auto; background-color: #ffffff; border: 10px solid #797979; width: 558px; min-height: 270px; position: relative; padding-bottom: 20px; }
-img#login_logo { margin: 20px auto 10px auto; }
-div#login h1 { background: none; font-size: 16px; margin-bottom: 0; margin-left: 92px;}
-div#login_inner { width: 400px; margin: 10px auto 0 auto; position: relative; }
-div#login_inner table { margin: 0 auto 0 auto; }
-div#login_inner .form { display: block; }
+div#login { padding: 18% 0 0 0; border: none; background-color: transparent; text-align: center; width: 270px; margin: 0 auto; }
+div#login h3 { color: #fff; }
+div#login input { background-color: #1d1d1d; color: #fff; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; border: 2px solid #444; height: 40px;  width: 270px; padding: 0 1em; }
+.login_logo { background: transparent url(../images/fuel_logo.png) no-repeat; background-size: 100%; width: 233px; height: 46px; overflow: hidden; margin: 0 auto 1.5em auto; }
+div#login ::-webkit-input-placeholder {color: #999; }
+div#login :-moz-placeholder { color: #999; }
+div#login :-ms-input-placeholder { color:  #999; }
+div#login input[type="submit"] { background: #3dbfd9 !important; color: #fff; font-size: 20px; text-shadow: none; }
 div#login_notification { text-overflow: ellipsis; overflow: hidden;  margin-bottom: 5px; margin-left: -15px; margin-right: -15px; }
-a#login_btn { width: 60px; }
-div#login_footer { position: absolute; width: 558px; bottom: -35px; }
-a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; }
+a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; color: #999; }
 
 /* assets & modal */
 a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }
