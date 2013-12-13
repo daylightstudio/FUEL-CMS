@@ -365,6 +365,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the radio and label. Default is the 'span' tag.</li>
 		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
 		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
+		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially</li>
 	</ul>
 	
 	<h4>Example</h4>
