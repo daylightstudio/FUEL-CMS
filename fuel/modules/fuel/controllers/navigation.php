@@ -3,135 +3,35 @@ require_once('module.php');
 
 class Navigation extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function items()
+	public function upload()
 	{
-		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		if (!empty($this->filters['group_id'])) $this->filters['group_id']['options'] = $this->navigation_groups_model->options_list('id', 'name', array(), false);
-		parent::items();
-	}
-	
-	function upload()
-	{
-		$this->load->helper('file');
-		$this->load->helper('security');
 		$this->load->library('form_builder');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_groups_model');
-		$this->load->module_model(FUEL_FOLDER, 'navigation_model');
-		
+		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_groups_model');
+		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
 		$this->js_controller_params['method'] = 'upload';
 		
 		if (!empty($_POST))
 		{
-			$this->load->library('menu');
+			$params = $this->input->post();
 			
 			if (!empty($_FILES['file']['name']))
 			{
 				$error = FALSE;
 				$file_info = $_FILES['file'];
+				$params['file_path'] = $file_info['tmp_name'];
+				$params['var'] = $this->input->post('variable') ? $this->input->post('variable', TRUE) : 'nav';
+				$params['language'] = $this->input->post('language', TRUE);
 				
-				// read in the file so we can filter it
-				$file = read_file($file_info['tmp_name']);
-				
-				// strip any php tags
-				$file = str_replace('<?php', '', $file);
-				
-				// run xss_clean on it 
-				$file = xss_clean($file);
-				
-				// now evaluate the string to get the nav array
-				@eval($file);
-				
-				//@include($file_info['tmp_name']);
-				
-				if (!empty($nav))
-				{
-					$nav = $this->menu->normalize_items($nav);
-					
-					$group_id = $this->input->post('group_id');
-					if (is_true_val($this->input->post('clear_first')))
-					{
-						$this->navigation_model->delete(array('group_id' => $this->input->post('group_id')));
-					}
-					
-					// save navigation group
-					$group = $this->navigation_groups_model->find_by_key($this->input->post('group_id'));
-					
-					// set default navigation group if it doesn't exist'
-					if (!isset($group->id))
-					{
-						$save['name'] = 'main';
-						$id = $this->navigation_groups_model->save($save);
-						$group_id = $id;
-					}
-					// convert string ids to numbers so we can save... must start at last id in db
-					$ids = array();
-					$i = $this->navigation_model->max_id() + 1;
-					foreach($nav as $key => $item)
-					{
-						// if the id is empty then we assume it is the homepage
-						if (empty($item['id']))
-						{
-							$item['id'] = 'home';
-							$nav[$key]['id'] = 'home';
-						}
-						$ids[$item['id']] = $i;
-						$i++;
-					}
-					// now loop through and save
-					$cnt = 0;
-
-					foreach($nav as $key => $item)
-					{
-						$save = array();
-						$save['id'] = $ids[$item['id']];
-						$save['nav_key'] = (empty($key)) ? 'home' : $key;
-						$save['group_id'] = $group_id;
-						$save['label'] = $item['label'];
-						$save['parent_id'] = (empty($ids[$item['parent_id']])) ? 0 : $ids[$item['parent_id']];
-						$save['location'] = $item['location'];
-						$save['selected'] = (!empty($item['selected'])) ? $item['selected'] : $item['active']; // must be different because "active" has special meaning in FUEL
-							
-						// fix for homepage links
-						if (empty($save['selected']) AND $save['nav_key'] == 'home')
-						{
-							$save['selected'] = 'home$';
-						}
-						
-						$save['hidden'] = (is_true_val($item['hidden'])) ? 'yes' : 'no';
-						$save['published'] = 'yes';
-						$save['precedence'] = $cnt;
-						if (is_array($item['attributes']))
-						{
-							$attr = '';
-							foreach($item['attributes'] as $key => $val)
-							{
-								$attr .= $key .'="'.$val.'" ';
-							}
-							$attr = trim($attr);
-						}
-						else
-						{
-							$save['attributes'] = $item['attributes'];
-						}
-						
-						if (!$this->navigation_model->save($save))
-						{
-							$error = TRUE;
-							break;
-						}
-						$cnt++;
-					}
-				}
-				else
+				if (!$this->fuel->navigation->upload($params))
 				{
 					$error = TRUE;
 				}
-				
+
 				if ($error)
 				{
 					add_error(lang('error_upload'));
@@ -139,11 +39,9 @@ class Navigation extends Module {
 				else
 				{
 					// change list view page state to show the selected group id
-					$page_state = $this->_get_page_state($this->module_uri);
-					$page_state['group_id'] = $group_id;
-					$this->_save_page_state($page_state);
-					$this->session->set_flashdata('success', lang('navigation_success_upload'));
-					redirect(fuel_url('navigation'));
+					$this->fuel->admin->set_notification(lang('navigation_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+					
+					redirect(fuel_url('navigation?group_id='.$params['group_id']));
 				}
 				
 			}
@@ -154,21 +52,89 @@ class Navigation extends Module {
 		}
 		
 		$fields = array();
-		$nav_groups = $this->navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
+		$nav_groups = $this->fuel_navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 		if (empty($nav_groups)) $nav_groups = array('1' => 'main');
 		
-		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'class' => 'add_edit navigation_group');
+		// load custom fields
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+
+		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
+		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable', TRUE) : 'nav'), 'size' => 10);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'first_option' => lang('label_select_one'));
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
+		$fields['__fuel_module__'] = array('type' => 'hidden');
+		$fields['__fuel_module__']['value'] = $this->module;
+		$fields['__fuel_module__']['class'] = '__fuel_module__';
+
+		$fields['__fuel_module_uri__'] = array('type' => 'hidden');
+		$fields['__fuel_module_uri__']['value'] = $this->module_uri;
+		$fields['__fuel_module_uri__']['class'] = '__fuel_module_uri__';
+
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+		$this->form_builder->set_field_values($_POST);
+		
 		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
-		$this->_render('upload', $vars);
+		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
+
+		$crumbs = array($this->module_uri => $this->module_name, lang('action_upload'));
+		$this->fuel->admin->set_titlebar($crumbs);
+		
+		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
+	}	
+	
+	public function download()
+	{
+		if (!empty($_POST['group_id']))
+		{
+			$this->load->helper('download');
+			$where['group_id'] = $this->input->post('group_id', TRUE);
+			$where['published'] = 'yes';
+			$data = $this->model->find_all_array_assoc('nav_key', $where, 'parent_id asc, precedence asc');
+			$var = '$nav';
+			$str = "<?php \n";
+			foreach($data as $key => $val)
+			{
+				// add label
+				$str .= $var."['".$key."'] = array('label' => '".$val['label']."', ";
+
+				// add location
+				if ($key != $val['location'])
+				{
+					$str .= "'location' => '".$val['location']."', ";
+				}
+
+				if (!empty($val['parent_id']))
+				{
+					$parent_data  = $this->model->find_one_array(array('id' => $val['parent_id']));
+					$str .= "'parent_id' => '".$parent_data['nav_key']."', ";
+				}
+
+				if (is_true_val($val['hidden']))
+				{
+					$str .= "'hidden' => 'yes', ";
+				}
+
+				if (!empty($val['attributes']))
+				{
+					$str .= "'attributes' => '".$val['attributes']."', ";
+				}
+
+				if (!empty($val['selected']))
+				{
+					$str .= "'selected' => '".$val['selected']."', ";
+				}
+				$str = substr($str, 0, -2);
+				$str .= ");\n";
+			}
+			force_download('nav.php', $str);
+		}
 	}
 	
-	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
+	public function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
 	{
 		if (is_ajax() AND !empty($group_id))
 		{

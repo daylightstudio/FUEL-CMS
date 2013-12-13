@@ -3,17 +3,15 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Site_docs extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->_validate_user('site_docs');
 	}
 	
-	function _remap()
+	public function _remap()
 	{
-		$this->load->module_library(FUEL_FOLDER, 'fuel_pagevars');
-		
-		if ($this->_has_module('user_guide'))
+		if ($this->fuel->modules->exists('user_guide') AND defined('USER_GUIDE_FOLDER'))
 		{
 			$this->load->helper(USER_GUIDE_FOLDER, 'user_guide');
 		}
@@ -22,8 +20,10 @@ class Site_docs extends Fuel_base_controller {
 		$page = uri_path(TRUE, 1);
 
 		if (empty($page)) $page = 'index';
-		$this->fuel_pagevars->vars_path = APPPATH.'views/_variables/';
-		$vars = $this->fuel_pagevars->view_variables($page, 'site_docs');
+		$this->fuel->pagevars->vars_path = APPPATH.'views/_variables/';
+		$this->fuel->pagevars->location = $page;
+		
+		$vars = $this->fuel->pagevars->view('site_docs');
 		$vars['body'] = 'index';
 
 		// render page
@@ -37,7 +37,7 @@ class Site_docs extends Fuel_base_controller {
 			{
 				$this->load->module_view(NULL, '_layouts/documentation', $vars);
 			}
-			else if ($this->_has_module('user_guide'))
+			else if (file_exists(FUEL_PATH.'views/_layouts/documentation'.EXT))
 			{
 				$vars['page_title'] = $this->config->item('site_name', 'fuel');
 				$this->load->view('_layouts/documentation', $vars);

@@ -4,7 +4,10 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
  	<title><?=$page_title?></title>
-	<?=css('fuel', FUEL_FOLDER)?>
+	<?=css('fuel.min', FUEL_FOLDER)?>
+	<?php if (!empty($css)) : ?>
+	<?=$css?>
+	<?php endif; ?>
 	<script type="text/javascript">
 	<?=$this->load->module_view('fuel', '_blocks/fuel_header_jqx', array(), true)?>
 	</script>
@@ -16,15 +19,23 @@
 	</script>
 </head>
 <body>
+
+
 <div id="login">
-	<div id="login_inner">
-		<img src="<?=img_path('fuel_logo.jpg')?>" width="400" height="100" alt="FUEL CMS" border="0" id="login_logo" />
-		<div id="login_notification" class="notification">
-			<?=$notifications?>
-		</div>
-		<?=$form?>
+
+	<div class="login_logo">
+		<span class="hidden">FUEL CMS</span>
 	</div>
-	<div id="login_footer"><?=$this->load->module_view('fuel', '_blocks/fuel_footer_copyright', array(), true) ?></div>
+
+	<div id="login_notification" class="notification">
+		<?=$notifications?>
+	</div>
+	<?php if (!empty($instructions)) : ?>
+	<p><?=$instructions?></p>
+	<?php endif; ?>
+	<?=$form?>
+	
+	
 </div>
 </body>
 </html>

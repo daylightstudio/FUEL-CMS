@@ -9,38 +9,13 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 	add_edit : function(){
 		var _this = this;
 		// do this first so that the fillin is in the checksaved value
-		$('#location').fillin(_this.localized.pages_default_location);
-
 		fuel.controller.BaseFuelController.prototype.add_edit.call(this, false);
-
-		// if new, then we use default fillin value... else set to actual value
-		if ($('#id').val() == ''){
-			$.changeChecksaveValue('location', _this.localized.pages_default_location);
-		} else {
-			$.changeChecksaveValue('location', $('#location').val());
-		}
-
+		//this._super(false); // sometimes causes JS error with checksave???... not sure what's going on there
+		
 		// correspond page title to navigation label for convenience
 		var blurred = false;
 		
 		var bindFields = function(){
-			
-			/* don't want to automatically fill out a navigation item if nav isn't being used
-			if ($('#vars--page_title').size()){
-				$('#navigation_label').live('keyup', function(){
-					if (!blurred) $('#vars--page_title').val($('#navigation_label').val());
-				}).blur(function(e){
-					blurred = true;
-				});
-			}
-
-			if ($('#vars--page_title').size()){
-				$('#navigation_label').live('keyup', function(){
-					if (!blurred) $('#navigation_label').val($('#vars--page_title').val());
-				}).blur(function(e){
-					blurred = true;
-				});
-			}*/
 			
 			if ($('#vars--page_title').size()){
 				$('#navigation_label').keyup(function(){
@@ -50,12 +25,28 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		}
 		
 		var _this = this;
+
+		var retreiveLayoutVarsCallback = function(){
+			var context = $('#fuel_main_content_inner');
+			_this.initSpecialFields(context);
+			$('#layout_vars').trigger('varsLoaded')
+			if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
+		}
+
+		
+		
 		$('#layout').change(function(e){
-			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val();
-			$('#layout_vars').load(path, {}, function(){
-				_this.initSpecialFields();
+			$('#layout_vars .loader').show();
+			var path = jqx.config.fuelPath + '/pages/layout_fields/' + $('#layout').val() + '/' + $('#id').val() + '/' + $('#language').val();
+			$('#layout_vars').load(path, function(){
+				retreiveLayoutVarsCallback();
 			});
 		});
+		
+		$('#language').change(function(e){
+			$.changeChecksaveValue('#language', $(this).val());
+			window.location = jqx.config.fuelPath + '/pages/edit/' +  $('#id').val() + '?lang=' + $('#language').val();
+		})
 		
 		$('#view_twin_cancel').click(function(){
 			var path = jqx.config.fuelPath + '/pages/import_view_cancel/';
@@ -65,7 +56,8 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 					$('#view_twin_notification').hide();
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		
@@ -74,42 +66,95 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 			var params = $('#form').serialize();
 			$.post(path, params, function(html){
 				if (html != 'error'){
-					var id = '#' + _this.initObj.import_view_key;
-					if ($(id).exists())
-					{
-						$(id).val(html);
-						$(id).addClass('change');
-						if (CKEDITOR.instances[_this.initObj.import_view_key]){
-							CKEDITOR.instances[_this.initObj.import_view_key].setData($(id).val());
-							var scrollTo = '#cke_' + _this.initObj.import_view_key;
-						} else {
-							var scrollTo = id;
-						}
-						$('#main_content').scrollTo($(scrollTo), 800);
+
+					$('#layout_vars').html(html);
+
+					var renderedLayout = $('#vars--__layout__').val();
+
+					if (renderedLayout.length){
+						$('#layout').val(renderedLayout);
 					}
+
+					retreiveLayoutVarsCallback();
 					$('#view_twin_notification').hide();
 				} else {
 					new jqx.Message(_this.lang('error_importing_ajax'));
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		
 		// only change for those that already exist
-		if ($('#id').val().length){
+		if ($('#id').val() && $('#id').val().length){
 			$('#layout').change();
 		} else {
 			bindFields();
-			_this.initSpecialFields();
+			var context = $('#fuel_main_content_inner');
+			_this.initSpecialFields(context);
+			$('#form').formBuilder().initialize();
+			$('#layout_vars').trigger('varsLoaded');
 		}
+
+
+		// add ability to create new navigation inline
+		$('#related_items li a').click(function(e){
+			var url = $(this).attr('href');
+			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+			var label = '';
+			var group = '';
+			var iframeContext = null;
+			var _this = this;
+			var onCloseCallback = function(){
+				if (label.length){
+					var newLabel = label + ' (' + group + ')';
+					$(_this).html(newLabel);
+				}
+			}
+
+			$modal = fuel.modalWindow(html, 'inline_edit_modal', true, null, onCloseCallback);
 		
+			// bind listener here because iframe gets removed on close so we can't grab the id value on close
+			$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
+				var iframeContext = this.contentDocument;
+				label = $('#label', iframeContext).val();
+				group = $('#group_id option:selected', iframeContext).text();
+			})
+			return false;
+		})
+	
+
 	},
 	
 	
 	upload : function(){
-		this._notifications();
-		this._initAddEditInline($('#form'));
+		this.notifications();
+		//this._initAddEditInline($('#form'));
+	},
+
+	select : function(){
+		$urlSelect = $('#url_select');
+		this._initFormTabs();
+		$('#input').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#url_select').attr('disabled', 'disabled');
+			
+		})
+
+		$('#input').bind('blur', function(){
+			$('#url_select').removeAttr('disabled');
+		})
+
+
+		$('#url_select').bind('click focus', function(){
+			$(this).removeAttr('disabled');
+			$('#input').attr('disabled', 'disabled');
+		})
+
+		$('#url_select').bind('blur', function(){
+			$('#input').removeAttr('disabled');
+		})
+
 	}
 		
 });

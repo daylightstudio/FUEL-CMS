@@ -3,15 +3,15 @@ require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Recent extends Fuel_base_controller {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function index()
+	public function index()
 	{
-		$session_key = $this->fuel_auth->get_session_namespace();
-		$user_data = $this->fuel_auth->user_data();
+		$session_key = $this->fuel->auth->get_session_namespace();
+		$user_data = $this->fuel->auth->user_data();
 		if (!empty($user_data['last_page']))
 		{
 			

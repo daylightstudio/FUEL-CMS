@@ -2,67 +2,59 @@
  * Checks form fields to make sure they haven't changed before saving
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
+jQuery.checksave = function(context) {
+	var pageVals = {}
 
-jQuery.checksave = function() {
-	window._pageVals = {};
 	var _this = this;
 	
+	var $elems = jQuery('input:text, input:checked, textarea, select', context);
+
 	// get current values
-	$('input:text, input:checked, textarea, select').each(function(i){
-		var fieldName = $(this).attr('name');
-		if (window._pageVals){
-			if (window._pageVals[fieldName]){
-				if (typeof(window._pageVals[fieldName]) == 'string'){
-					window._pageVals[fieldName] = new Array(window._pageVals[fieldName]);
-				}
-				window._pageVals[fieldName].push($(this).val());
-			} else {
-				window._pageVals[fieldName] = $(this).val();
-			}
-		}
-		
+	$elems.each(function(i){
+		jQuery(this).data('checksaveStartValue', jQuery(this).val());
 	});
-	window.onbeforeunload = $.checkSaveChange;
+	
+	//var oldChecksave = window.onbeforeunload;
+	window.onbeforeunload = function(e){
+		var msg = '';
+		var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
+	    $elems.each(function(i){
+			//console.log(jQuery(this).attr('name') + " ------ " + escape(jQuery(this).data('checksaveStartValue').toString())  + " ------"  + escape(jQuery(this).val().toString()) )
+			if (jQuery(this).data('checksaveStartValue') != undefined && jQuery(this).data('checksaveStartValue').toString() != jQuery(this).val().toString()){
+				msg = changedMsg;
+				return changedMsg;
+			}
+		});
+		if (msg.length){
+			return msg;	
+		}
+	}
 };
 
 jQuery.removeChecksave = function(){
 	window.onbeforeunload = null;
 };
 
-jQuery.changeChecksaveValue = function(inputKey, val){
-	if (window._pageVals){
-		window._pageVals[inputKey] = val;
-	}
+jQuery.removeChecksaveValue = function(elem){
+	jQuery(elem).data('checksaveStartValue', null);
 };
 
-jQuery.checkSaveChange = function(){
-	var msg;
-	var changedMsg = 'You are about to lose unsaved data. Do you want to continue?';
-    $('input:text, input:checked, textarea, select').each(function(i){
-		var fieldName = $(this).attr('name');
-		if (window._pageVals){
-			if (typeof(window._pageVals[fieldName]) != 'string'){
-				var cmp = new Array();
-				var selector = 'input:text[name="' + fieldName + '"],input:checked[name="' + fieldName + '"],textarea[name="' + fieldName + '"],select[name="' + fieldName + '"]';
-				$(selector).each(function(i){
-					var val = $(this).val();
-					if (val){
-						cmp.push(val.toString());
-					}
-				});
-				if (window._pageVals[fieldName] && cmp.toString() != window._pageVals[fieldName].toString()){
-					msg = changedMsg;
-					return false;
-				}
-			
-			} else if (window._pageVals[fieldName] != null && window._pageVals[fieldName].toString() != $(this).val().toString()){
-				msg = changedMsg;
-				return false;
-			}
-		}
-	});
-	return msg;
+jQuery.changeChecksaveValue = function(elem, val){
+	jQuery(elem).data('checksaveStartValue', val);
 };
+
+jQuery.refreshChecksaveValue = function(elem){
+	var val = jQuery(elem).val();
+	jQuery.changeChecksaveValue(elem, val);
+};
+
+;(function($){
+	jQuery.fn.checksave = function(o) {
+		return this.each(function(){
+		});
+	};
+})(jQuery);
+	

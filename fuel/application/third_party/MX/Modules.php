@@ -2,7 +2,7 @@
 
 /* define the module locations and offset */
 Modules::$locations = array(
-	APPPATH.'../modules/' => '../../modules/',
+	MODULES_PATH => MODULES_FROM_APPCONTROLLERS,
 );
 
 /* PHP5 spl_autoload */

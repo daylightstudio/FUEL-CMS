@@ -52,7 +52,11 @@ class MX_Config extends CI_Config
 	public function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE, $_module = NULL) {
 		($file == '') AND $file = 'config';
 
-		if (in_array($file, $this->is_loaded, TRUE))
+		// <!-- FUEL
+		$loaded_name = (!empty($_module)) ? $_module.$file : $file;
+		//  FUEL -->
+
+		if (in_array($loaded_name, $this->is_loaded, TRUE))
 			return $this->item($file);
 
 		$_module OR $_module = CI::$APP->router->fetch_module();
@@ -77,7 +81,10 @@ class MX_Config extends CI_Config
 			} else {
 				$current_config = array_merge($current_config, $config);
 			}
-			$this->is_loaded[] = $file;
+			// <!-- FUEL
+			$this->is_loaded[] = $loaded_name;
+			//  FUEL -->
+			// $this->is_loaded[] = $file;
 			unset($config);
 			return $this->item($file);
 		}

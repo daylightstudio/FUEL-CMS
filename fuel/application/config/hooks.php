@@ -22,5 +22,6 @@ $hook['before_create_projects'] = array(
 // include hooks specific to FUEL
 include(FUEL_PATH.'config/fuel_hooks.php');
 
+
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */

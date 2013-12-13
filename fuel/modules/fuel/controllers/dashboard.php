@@ -2,14 +2,14 @@
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Dashboard extends Fuel_base_controller {
-	
-	function __construct()
+
+	public function __construct()
 	{
 		parent::__construct();
 		$this->js_controller = 'fuel.controller.DashboardController';
 	}
-	
-	function index()
+
+	public function index()
 	{
 		if (is_ajax())
 		{
@@ -17,80 +17,52 @@ class Dashboard extends Fuel_base_controller {
 		}
 		else
 		{
-			$user = $this->fuel_auth->user_data();
-			$vars['change_pwd'] = ($user['password'] == md5($this->config->item('default_pwd', 'fuel')));
+			$this->fuel->load_model('fuel_users');
+			$auth_user = $this->fuel->auth->user_data();
+			$user = $this->fuel_users_model->find_by_key($auth_user['id'], 'array');
+			$vars['change_pwd'] = ($user['password'] == $this->fuel_users_model->salted_password_hash($this->config->item('default_pwd', 'fuel'), $user['salt']));
 
-			$dashboards = array();
-			$dashboards_config = $this->config->item('dashboards', 'fuel');
-			if (!empty($dashboards_config))
-			{
-				
-				if (is_string($dashboards_config) AND strtoupper($dashboards_config) == 'AUTO')
-				{
-					$modules = $this->config->item('modules_allowed', 'fuel');
+			$dashboards = $this->fuel->admin->dashboards();
 
-					foreach($modules as $module)
-					{
-						// check if there is a dashboard controller for each module
-						if ($this->fuel_auth->has_permission($module) AND 
-							file_exists(MODULES_PATH.$module.'/controllers/dashboard.php'))
-						{
-							$dashboards[] = $module;
-						}
-					}
-				}
-				else if(is_array($dashboards_config))
-				{
-					foreach($dashboards_config as $module)
-					{
-						$dashboards[] = $module;
-					}
-				}
-			}
 			$vars['dashboards'] = $dashboards;
-			$this->_render('dashboard', $vars);
+			$crumbs = array('' => 'Dashboard');
+			$this->fuel->admin->set_titlebar($crumbs, 'ico_dashboard');
+			$this->fuel->admin->render('dashboard', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 		}
 
 	}
-	
+
 	/* need to be outside of index so when you click back button it will not show the ajax */
-	function ajax()
+	public function ajax()
 	{
 		if (is_ajax())
 		{
-			$this->load->module_model(FUEL_FOLDER, 'pages_model');
-
-			$vars['recently_modifed_pages'] = $this->pages_model->recently_updated();
-			$vars['latest_activity'] = $this->logs_model->list_items(10);
+			$this->load->helper('simplepie');
+			$this->load->module_model(FUEL_FOLDER, 'fuel_pages_model');
+			$this->load->module_model(FUEL_FOLDER, 'fuel_logs_model');
+			$vars['recently_modifed_pages'] = $this->fuel_pages_model->find_all_array(array(), 'last_modified desc', 10);
+			$vars['latest_activity'] = $this->fuel_logs_model->latest_activity(10);
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{
 				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
 			}
-			$vars['feed'] = $this->_feed();
+			$feed = $this->fuel->config('dashboard_rss');
+
+			$limit = 3;
+			$feed_data = simplepie($feed, $limit);
+
+			// check for latest version
+			if (array_key_exists('latest_fuel_version', $feed_data) AND ((float)$feed_data['latest_fuel_version'] > FUEL_VERSION))
+			{
+				$vars['latest_fuel_version'] = $feed_data['latest_fuel_version'];
+			}
+			unset($feed_data['latest_fuel_version']);
+			$vars['feed'] = $feed_data;
 			$this->load->view('dashboard_ajax', $vars);
 		}
 	}
-	
-	function _feed()
-	{
-		$feed = $this->config->item('dashboard_rss', 'fuel');
-		$limit = 3;
-		if (!empty($feed))
-		{
-			$this->load->library('simplepie');
-			$this->simplepie->set_feed_url($feed);
-			$this->simplepie->set_cache_duration(600);
-			$this->simplepie->enable_order_by_date(TRUE);
-			$this->simplepie->enable_cache(TRUE);
-			$this->simplepie->set_cache_location($this->config->item('cache_path'));
-			@$this->simplepie->init();
-			$this->simplepie->handle_content_type();
-			
-			return $this->simplepie->get_items(0, $limit);
-		}
-	}
-	
-	function recent()
+
+	public function recent()
 	{
 		$recent = $this->session->userdata('recent');
 		if (!empty($recent[0]))
@@ -103,6 +75,6 @@ class Dashboard extends Fuel_base_controller {
 		}
 		redirect($redirect_to);
 	}
-	
-	
+
+
 }

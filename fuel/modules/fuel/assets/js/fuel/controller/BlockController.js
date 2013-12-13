@@ -9,13 +9,15 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 	add_edit : function(){
 
 		// call parent
-		fuel.controller.BaseFuelController.prototype.add_edit.call(this);
-	
+		//fuel.controller.BaseFuelController.prototype.add_edit.call(this);
+		this._super();
+		
 		$('#no_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view_cancel/';
-			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html == 'success'){
-					$('#view_twin_notification').hide();
+					$('#warning_window').hide();
 				}
 			});
 			$('.jqmWindow').jqm().jqmHide();
@@ -24,14 +26,15 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 		
 		$('#yes_modal').click(function(){
 			var path = jqx.config.fuelPath + '/blocks/import_view/';
-			$.post(path, {id:$('#id').val(), name:$('#name').val() }, function(html){
+			var params = $('#form').serialize();
+			$.post(path, params, function(html){
 				if (html != 'error'){
 					var id = '#view';
 					if ($(id).exists())
 					{
 						$(id).val(html);
 						$(id).addClass('change');
-						if (CKEDITOR.instances['view']){
+						if (typeof CKEDITOR != 'undefined' && CKEDITOR.instances['view']){
 							CKEDITOR.instances['view'].setData($('#view').val());
 							var scrollTo = '#cke_' + 'view';
 						} else {
@@ -44,15 +47,17 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 					new jqx.Message('Error importing view file');
 				}
 			});
-			$('.jqmWindow').jqm().jqmHide();
+			
+			//$('.jqmWindow').jqm().jqmHide(); // causes error because of multiple modals
+			$('.jqmOverlay').hide();
 			return false;
 		});
 		
 	},
 	
 	upload : function(){
-		this._notifications();
-		this._initAddEditInline($('#form'));
+		this.notifications();
+//		this._initAddEditInline($('#form'));
 	}
 		
 });

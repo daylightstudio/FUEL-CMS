@@ -18,13 +18,29 @@
 |
 | These are the things you can load automatically:
 |
-| 1. Libraries
-| 2. Helper files
-| 3. Custom config files
-| 4. Language files
-| 5. Models
+| 1. Packages
+| 2. Libraries
+| 3. Helper files
+| 4. Custom config files
+| 5. Language files
+| 6. Models
 |
 */
+
+/*
+| -------------------------------------------------------------------
+|  Auto-load Packges
+| -------------------------------------------------------------------
+| Prototype:
+|
+|  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
+|
+*/
+
+$autoload['packages'] = array(
+	FUEL_PATH
+	);
+
 
 /*
 | -------------------------------------------------------------------
@@ -38,7 +54,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('template', 'asset', 'security');
+$autoload['libraries'] = array('fuel/asset', 'fuel/fuel');
 
 
 /*
@@ -50,7 +66,7 @@ $autoload['libraries'] = array('template', 'asset', 'security');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'string', 'language', 'date', 'asset', 'fuel/fuel', 'utility', 'my', 'html', 'validator');
+$autoload['helper'] = array('my', 'url', 'string', 'language', 'date', 'html', 'fuel/asset', 'fuel/fuel', 'fuel/utility', 'fuel/validator');
 
 
 /*
@@ -82,7 +98,7 @@ $autoload['config'] = array('MY_config');
 |
 */
 
-$autoload['language'] = array('fuel/model');
+$autoload['language'] = array();
 
 
 /*
@@ -96,7 +112,6 @@ $autoload['language'] = array('fuel/model');
 */
 
 $autoload['model'] = array();
-
 
 
 /* End of file autoload.php */

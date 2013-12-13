@@ -28,18 +28,83 @@
  */
 class CI_Output {
 
-	var $final_output;
-	var $cache_expiration	= 0;
-	var $headers			= array();
-	var $enable_profiler	= FALSE;
-	var $parse_exec_vars	= TRUE;	// whether or not to parse variables like {elapsed_time} and {memory_usage}
+	/**
+	 * Current output string
+	 *
+	 * @var string
+	 * @access 	protected
+	 */
+	protected $final_output;
+	/**
+	 * Cache expiration time
+	 *
+	 * @var int
+	 * @access 	protected
+	 */
+	protected $cache_expiration	= 0;
+	/**
+	 * List of server headers
+	 *
+	 * @var array
+	 * @access 	protected
+	 */
+	protected $headers			= array();
+	/**
+	 * List of mime types
+	 *
+	 * @var array
+	 * @access 	protected
+	 */
+	protected $mime_types		= array();
+	/**
+	 * Determines wether profiler is enabled
+	 *
+	 * @var book
+	 * @access 	protected
+	 */
+	protected $enable_profiler	= FALSE;
+	/**
+	 * Determines if output compression is enabled
+	 *
+	 * @var bool
+	 * @access 	protected
+	 */
+	protected $_zlib_oc			= FALSE;
+	/**
+	 * List of profiler sections
+	 *
+	 * @var array
+	 * @access 	protected
+	 */
+	protected $_profiler_sections = array();
+	/**
+	 * Whether or not to parse variables like {elapsed_time} and {memory_usage}
+	 *
+	 * @var bool
+	 * @access 	protected
+	 */
+	protected $parse_exec_vars	= TRUE;
 
-	var $_zlib_oc			= FALSE;
-	var $_profiler_sections = array();
-
+	/**
+	 * Constructor
+	 *
+	 */
 	function __construct()
 	{
 		$this->_zlib_oc = @ini_get('zlib.output_compression');
+
+		// Get mime types for later
+		if (defined('ENVIRONMENT') AND file_exists(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'))
+		{
+		    include APPPATH.'config/'.ENVIRONMENT.'/mimes.php';
+		}
+		else
+		{
+			include APPPATH.'config/mimes.php';
+		}
+
+
+		$this->mime_types = $mimes;
 
 		log_message('debug', "Output Class Initialized");
 	}
@@ -73,6 +138,8 @@ class CI_Output {
 	function set_output($output)
 	{
 		$this->final_output = $output;
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -96,6 +163,8 @@ class CI_Output {
 		{
 			$this->final_output .= $output;
 		}
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -110,6 +179,7 @@ class CI_Output {
 	 *
 	 * @access	public
 	 * @param	string
+	 * @param 	bool
 	 * @return	void
 	 */
 	function set_header($header, $replace = TRUE)
@@ -125,6 +195,42 @@ class CI_Output {
 		}
 
 		$this->headers[] = array($header, $replace);
+
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set Content Type Header
+	 *
+	 * @access	public
+	 * @param	string	extension of the file we're outputting
+	 * @return	void
+	 */
+	function set_content_type($mime_type)
+	{
+		if (strpos($mime_type, '/') === FALSE)
+		{
+			$extension = ltrim($mime_type, '.');
+
+			// Is this extension supported?
+			if (isset($this->mime_types[$extension]))
+			{
+				$mime_type =& $this->mime_types[$extension];
+
+				if (is_array($mime_type))
+				{
+					$mime_type = current($mime_type);
+				}
+			}
+		}
+
+		$header = 'Content-Type: '.$mime_type;
+
+		$this->headers[] = array($header, TRUE);
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -141,6 +247,8 @@ class CI_Output {
 	function set_status_header($code = 200, $text = '')
 	{
 		set_status_header($code, $text);
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -155,6 +263,8 @@ class CI_Output {
 	function enable_profiler($val = TRUE)
 	{
 		$this->enable_profiler = (is_bool($val)) ? $val : TRUE;
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -174,6 +284,8 @@ class CI_Output {
 		{
 			$this->_profiler_sections[$section] = ($enable !== FALSE) ? TRUE : FALSE;
 		}
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -188,6 +300,8 @@ class CI_Output {
 	function cache($time)
 	{
 		$this->cache_expiration = ( ! is_numeric($time)) ? 0 : $time;
+
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -204,6 +318,7 @@ class CI_Output {
 	 * benchmark timer so the page rendering speed and memory usage can be shown.
 	 *
 	 * @access	public
+	 * @param 	string
 	 * @return	mixed
 	 */
 	function _display($output = '')
@@ -340,6 +455,7 @@ class CI_Output {
 	 * Write a Cache File
 	 *
 	 * @access	public
+	 * @param 	string
 	 * @return	void
 	 */
 	function _write_cache($output)
@@ -391,6 +507,8 @@ class CI_Output {
 	 * Update/serve a cached file
 	 *
 	 * @access	public
+	 * @param 	object	config class
+	 * @param 	object	uri class
 	 * @return	void
 	 */
 	function _display_cache(&$CFG, &$URI)

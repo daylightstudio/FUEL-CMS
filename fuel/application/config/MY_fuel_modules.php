@@ -19,4 +19,13 @@ $config['modules']['projects'] = array(
 	'sanitize_images' => FALSE // to prevent false positives with xss_clean image sanitation
 );
 
-*********************** EXAMPLE ***********************************/
+*********************** /EXAMPLE ***********************************/
+
+
+
+/*********************** OVERWRITES ************************************/
+
+$config['module_overwrites']['categories']['hidden'] = TRUE; // change to FALSE if you want to use the generic categories module
+$config['module_overwrites']['tags']['hidden'] = TRUE; // change to FALSE if you want to use the generic tags module
+
+/*********************** /OVERWRITES ************************************/

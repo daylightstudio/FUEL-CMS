@@ -5,7 +5,7 @@
  * A lightweight javascript MVC framework.
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2011, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
 
@@ -57,7 +57,6 @@ jqx.init = function(ctrlName, initObj, path){
 			}
 		});
 		
-		jqx.controllerName = ctrlName;
 		jqx.controllerInitObj = initObj;
 		
 		// set the jsPath value to the path to the controller so that we can include the object
@@ -105,7 +104,12 @@ jqx.initCallback = function(ctrlName, initObj){
 	var controllerObj = eval(ctrlName);
 	if (jqx.extender.classObject) controllerObj = controllerObj.extend(jqx.extender.classObject);
 	if (jqx.extender.initObj) initObj = $.extend(initObj, jqx.extender.initObj);
-	jqx_global[pageVar] = new controllerObj(initObj);
+
+	var controller = new controllerObj(initObj);
+	if (jqx_global[pageVar] == undefined){
+		jqx_global[pageVar] = {};
+	}
+	jqx_global[pageVar] = jQuery.extend(jqx_global[pageVar], controller);
 };
 
 jqx.getControllerPath = function(ctrlName){
@@ -320,7 +324,6 @@ jqx.config.imgPath = jqx.config.basePath + "image/";
 jqx.config.cssPath = jqx.config.basePath + "css/";
 jqx.config.htmlPath = jqx.config.basePath;
 jqx.config.pluginPath = jqx.config.jsPath + "jquery/plugins/";
-jqx.config.helpersPath = jqx.config.jqxPath + "helpers/";
 jqx.config.controllerPath =  jqx.config.jsPath + "controller/";
 jqx.config.preload = ["jqx.lib.Class", "jqx.lib.BaseController"];
 jqx.config.cookieDefaultLifetime = 30;
@@ -343,7 +346,5 @@ jqx.scriptCallbacks = [];
 jqx.extender = {};
 
 if (jqx_config) jqx.config = jQuery.extend({}, jqx.config, jqx_config);
-
-jqx.addPreload(jqx.config.jqxPath + "plugins/util.js");
 
 jqx._includeCache = new jqx.Cache();

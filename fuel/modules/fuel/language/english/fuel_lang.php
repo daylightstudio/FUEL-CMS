@@ -26,14 +26,15 @@ $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
 $lang['error_invalid_email'] = 'The email address provided was not in the system.';
 $lang['error_invalid_password_match'] = 'The passwords don\'t match.';
 $lang['error_empty_email'] = 'Please enter in an email address.';
+$lang['error_folder_not_writable'] = 'You must make the  %1s folder writable.';
+$lang['error_invalid_folder'] = 'Invalid folder %1s';
+$lang['error_file_already_exists'] = 'File %1s already exists.';
+$lang['error_zip'] = 'There was an error creating the zipped file.';
 $lang['error_no_permissions'] = 'You do not have permissions to complete this action.';
-$lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it contains one or more of the following reserved words: %1s';
-$lang['error_invalid_export_dir'] = 'The directory %1s is not a valid export directory. Make sure it is writable.';
-$lang['error_exporting_to_directory'] = 'There was an error writing to one or more directories. View the output below for more information.';
-$lang['error_cache_folder_not_writable'] = 'You must make the cache folder %1s writable.';
-$lang['error_exporting_view'] = 'There was an error in creating the associated view file for the location %1s because the variable with the name <strong><em>%2s</em></strong> does not exist.';
+$lang['error_no_lib_permissions'] = 'You do not have permission to execute methods on the %1s class.';
+$lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it either doesn\'t exist or contains one or more of the following reserved words: %1s';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';
-$lang['error_inline_page_edit'] = 'This variable must be edited in the associated views/_variables file.';
+$lang['error_inline_page_edit'] = 'This variable must either be saved in the admin or edited in the associated views/_variables file.';
 $lang['error_saving'] = 'There was an error saving.';
 $lang['error_cannot_preview'] = 'There was an error in trying to preview this page.';
 $lang['error_cannot_make_api_call'] = 'There was an error making the API call to %1s.';
@@ -43,6 +44,12 @@ $lang['error_create_nav_group'] = 'Please create a Navigation Group';
 $lang['error_requires_string_value'] = 'The name field should be a string value';
 $lang['error_missing_params'] = 'You are missing parameters to view this page';
 $lang['error_invalid_method'] = 'Invalid method name';
+$lang['error_curl_page'] = 'Error loading page with CURL';
+$lang['error_class_property_does_not_exist'] = 'Class property %1s does not exist';
+$lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
+$lang['error_could_not_create_folder'] = 'Could not create folder %1s';
+$lang['error_could_not_create_file'] = 'Could not create file %1s';
+$lang['error_no_build'] = "No build setup for this module.\n";
 
 
 /*
@@ -66,7 +73,14 @@ $lang['dev_pwd_instructions'] = 'This site is currently in development and requi
 $lang['login_forgot_pwd'] = 'Forgot password?';
 $lang['login_reset_pwd'] = 'Reset Password';
 $lang['login_btn'] = 'Login';
+$lang['logout_restore_original_user'] = 'Restore original user';
 
+$lang['auth_log_pass_reset_request'] = "Password reset request for '%1s' from %2s";
+$lang['auth_log_pass_reset'] = "Password reset for '%1s' from %2s";
+$lang['auth_log_cms_pass_reset'] = "Password reset from CMS for '%1s' from %2s";
+$lang['auth_log_login_success'] = "Successful login by '%1s' from %2s";
+$lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
+$lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 
 /*
 |--------------------------------------------------------------------------
@@ -97,10 +111,17 @@ $lang['profile_instructions'] = 'Change your profile information below:';
 
 /*
 |--------------------------------------------------------------------------
+| My Modules
+|--------------------------------------------------------------------------
+*/
+$lang['section_my_modules'] = 'My Modules';
+
+
+/*
+|--------------------------------------------------------------------------
 | Login/Password Reset
 |--------------------------------------------------------------------------
 */
-
 $lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
 $lang['pwd_reset_subject'] = "FUEL admin password reset request";
 $lang['pwd_reset_email'] = "Click the following link to confirm the reset of your FUEL password:\n%1s";
@@ -108,7 +129,6 @@ $lang['pwd_reset_subject_success'] = "FUEL admin password reset success";
 $lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
 $lang['pwd_reset_success'] = 'Your password was successfully reset and an email has been sent to you with the new password.';
 $lang['cache_cleared'] = "Site cache cleared explicitly";
-$lang['module_restored_success'] = 'Previous version successfully restored.';
 
 
 /*
@@ -121,19 +141,27 @@ $lang['module_dashboard'] = 'Dashboard';
 $lang['module_pages'] = 'Pages';
 $lang['module_blocks'] = 'Blocks';
 $lang['module_navigation'] = 'Navigation';
+$lang['module_categories'] = 'Categories';
+$lang['module_tags'] = 'Tags';
 $lang['module_assets'] = 'Assets';
 $lang['module_sitevariables'] = 'Site Variables';
 $lang['module_users'] = 'Users';
 $lang['module_permissions'] = 'Permissions';
+$lang['module_tools'] = 'Tools';
 $lang['module_manage_cache'] = 'Page Cache';
 $lang['module_manage_activity'] = 'Activity Log';
+$lang['module_manage_settings'] = 'Settings';
+$lang['module_generate'] = 'Generated';
+
 
 $lang['section_site'] = 'Site';
 $lang['section_blog'] = 'Blog';
 $lang['section_modules'] = 'Modules';
 $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
+$lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -143,8 +171,12 @@ $lang['section_recently_viewed'] = 'Recently Viewed';
 $lang['module_created']= "%1s item <em>%2s</em> created";
 $lang['module_edited'] = "%1s item <em>%2s</em> edited";
 $lang['module_deleted'] = "%1s item for <em>%2s</em> deleted";
+$lang['module_multiple_deleted'] = "Multiple <em>%1s</em> deleted";
 $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
+$lang['module_restored_success'] = 'Previous version successfully restored.';
+$lang['module_replaced_success'] = 'The contents of this record were successfully replaced.';
+$lang['module_incompatible'] = 'The version of this module is not compatible with the install FUEL version of '.FUEL_VERSION;
 
 $lang['cannot_determine_module'] = "Cannot determine module.";
 $lang['incorrect_route_to_module'] = "Incorrect route to access this module.";
@@ -154,6 +186,38 @@ $lang['data_not_deleted'] = 'Some or all data couldn\'t be deleted.';
 $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
+$lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
+
+// command line
+$lang['module_install'] = "The '%1s' module has successfully been installed.\n";
+$lang['module_install_error'] = "There was an error installing the '%1s' module.\n";
+
+$msg = "The module %1s has been uninstalled in FUEL.\n\n";
+$msg .= "However, removing a module from GIT is a little more work that we haven't automated yet. However, the below steps should help.\n\n";
+$msg .= "1. Delete the relevant section from the .gitmodules file.\n";
+$msg .= "2. Delete the relevant section from .git/config.\n";
+$msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
+$msg .= "4. Commit and delete the now untracked submodule files.\n";
+$lang['module_uninstall'] = $msg;
+
+// build
+$lang['module_build_asset'] = "%1s optimized and ouput to %2s\n";
+
+/*
+|--------------------------------------------------------------------------
+| Migrations
+|--------------------------------------------------------------------------
+*/
+$lang['migrate_success'] = "You have successfully migrated to version %s.\n";
+$lang['migrate_nothing_todo'] = "No migrations were necessary.\n";
+
+/*
+|--------------------------------------------------------------------------
+| List View
+|--------------------------------------------------------------------------
+*/
+$lang['adv_search'] = 'Advanced Search';
+$lang['reset_search'] = 'Reset Search';
 
 
 /*
@@ -164,10 +228,11 @@ $lang['delete_item_message'] = 'You are about to delete the item:';
 
 $lang['page_route_warning'] = 'The location specified has the following routes already specified in the routes file (%1s):';
 $lang['page_controller_assigned'] = 'There is a controller method already assigned to this page.';
-$lang['page_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to import it into the body of your page (if available)?';
+$lang['page_updated_view'] = 'There is an updated view file located at <strong>%1s</strong>. Would you like to upload it into the body of your page (if available)?';
 $lang['page_not_published'] = 'This page is not published.';
-$lang['page_no_import'] = 'No, don\'t import';
-$lang['page_yes_import'] = 'Yes, import';
+
+$lang['page_no_upload'] = 'No, don\'t upload';
+$lang['page_yes_upload'] = 'Yes, upload';
 $lang['page_information'] = 'Page Information';
 $lang['page_layout_vars'] = 'Layout Variables';
 
@@ -175,15 +240,25 @@ $lang['pages_instructions'] = 'Here you can manage the data associated with the 
 $lang['pages_associated_navigation'] = 'Associated Navigation';
 $lang['pages_success_upload'] = 'The page view was successfully uploaded.';
 $lang['pages_upload_instructions'] = 'Select a view file and upload to a page below.';
-
+$lang['pages_select_action'] = 'Select';
 
 // page specific form fields
 $lang['form_label_layout'] = 'Layout';
 $lang['form_label_cache'] = 'Cache';
+$lang['pages_last_updated'] = 'Last updated %1s';
 $lang['pages_last_updated_by'] = 'Last updated %1s by %2s';
 $lang['pages_not_published'] = 'This page is not published.';
 $lang['pages_default_location'] = 'example: company/about';
 
+$lang['form_label_page'] = 'Page';
+$lang['form_label_target'] = 'Target';
+$lang['form_label_class'] = 'Class';
+
+$lang['navigation_related'] = 'Create navigation';
+$lang['navigation_quick_add'] = 'This field lets you quickly add a navigation item for this page. It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.';
+
+$lang['page_select_pages'] = 'Pages';
+$lang['page_select_pdfs'] = 'PDFs';
 
 /*
 |--------------------------------------------------------------------------
@@ -196,21 +271,23 @@ $lang['blocks_upload_instructions'] = 'Select a block view file and upload it be
 
 $lang['form_label_view'] = 'View';
 
-
 /*
 |--------------------------------------------------------------------------
 | Navigation
 |--------------------------------------------------------------------------
 */
+$lang['navigation_import'] = 'Import Navigation';
 $lang['navigation_instructions'] = 'Here you create and edit the top menu items of the page.';
-$lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable <strong>$nav</strong>. For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>';
+$lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable assigned in the variable field below (e.g. <strong>$nav</strong>). For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>.';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
-$lang['form_label_navigation_group'] = 'Navigation Group';
-$lang['form_label_nav_key'] = 'Nav Key';
+$lang['form_label_navigation_group'] = 'Navigation Group:';
+$lang['form_label_nav_key'] = 'Key';
 $lang['form_label_parent_id'] = 'Parent';
 $lang['form_label_attributes'] = 'Attributes';
 $lang['form_label_selected'] = 'Selected';
 $lang['form_label_hidden'] = 'Hidden';
+
+$lang['error_location_parents_match'] = 'Location and parents can\'t match.';
 
 // for upload form
 $lang['form_label_clear_first'] = 'Clear First';
@@ -224,29 +301,35 @@ $lang['form_label_clear_first'] = 'Clear First';
 $lang['assets_instructions'] = 'Here you can upload new assets. Select overwrite if you would like to overwrite a file with the same name.';
 $lang['form_label_preview/kb'] = 'Preview/kb';
 $lang['form_label_link'] = 'Link';
-$lang['form_label_asset_folder'] = 'Asset Folder';
+$lang['form_label_asset_folder'] = 'Asset folder';
 $lang['form_label_new_file_name'] = 'New file name';
 $lang['form_label_subfolder'] = 'Subfolder';
 $lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_create_thumb'] = 'Create thumb';
-$lang['form_label_maintain_ratio'] = 'Maintain ratio';
+$lang['form_label_resize_method'] = 'Resize method';
+$lang['form_label_maintain_ratio'] = 'maintain ratio';
+$lang['form_label_resize_and_crop'] = 'crop if needed';
+$lang['form_label_overwrite'] = 'Overwrite';
 $lang['form_label_width'] = 'Width';
 $lang['form_label_height'] = 'Height';
-$lang['form_label_master_dimension'] = 'Master dimension';
+$lang['form_label_alt'] = 'Alt';
+$lang['form_label_align'] = 'Align';
+$lang['form_label_master_dim'] = 'Master dimension';
+$lang['form_label_unzip'] = 'Unzip zip files';
 $lang['assets_upload_action'] = 'Upload';
+$lang['assets_select_action'] = 'Select';
 $lang['assets_comment_asset_folder'] = 'The asset folder that it will be uploaded to';
 $lang['assets_comment_filename'] = 'If no name is provided, the filename that already exists will be used.';
 $lang['assets_comment_subfolder'] = 'Will attempt to create a new subfolder to place your asset.';
 $lang['assets_comment_overwrite'] = 'Overwrite a file with the same name. If unchecked, a new file will be uploaded with a version number appended to the end of it.';
+$lang['assets_heading_general'] = 'General';
 $lang['assets_heading_image_specific'] = 'Image Specific';
 $lang['assets_comment_thumb'] = 'Create a thumbnail of the image.';
-$lang['assets_comment_aspect_ratio'] = 'Maintain the aspect ratio of the image if resized.';
-$lang['assets_comment_width'] = 'Will change the width of an image to the desired amount.';
-$lang['assets_comment_height'] = 'Will change the height of an image to the desired amount.';
+$lang['assets_comment_resize_method'] = 'Maintains the aspect ratio or resizes and crops the image to fit the provided dimensions. If "Create thumbnail" is selected, it will only effect the size of the thumbnail.';
+$lang['assets_comment_width'] = 'Will change the width of an image to the desired amount. If "Create thumbnail" is selected, then it will only effect the size of the thumbnail.';
+$lang['assets_comment_height'] = 'Will change the height of an image to the desired amount. If "Create thumbnail" is selected, it will only effect the size of the thumbnail.';
 $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
-
-
-
+$lang['assets_comment_unzip'] = 'Unzips a zip file';
 
 /*
 |--------------------------------------------------------------------------
@@ -255,6 +338,7 @@ $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for 
 */
 $lang['sitevariables_instructions'] = 'Here you can manage the site variables for your website.';
 $lang['sitevariables_scope'] = 'Scope';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -268,10 +352,11 @@ $lang['form_label_send_email'] = 'Send Email';
 $lang['btn_send_email'] = 'Send Email';
 $lang['new_user_email_subject'] = 'Your FUEL CMS account has been created';
 $lang['new_user_email'] = 'Your FUEL CMS account has been created. You can login with the following information:
-Login URL:'.site_url('fuel/login').'
-User name: %1s
-Password: %2s';
+Login URL: %1s
+User name: %2s
+Password: %3s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
+$lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 
 
 /*
@@ -280,51 +365,37 @@ $lang['new_user_created_notification'] = 'The user information was successfully 
 |--------------------------------------------------------------------------
 */
 $lang['permissions_instructions'] = 'Here you can manage the permissions for FUEL modules and later assign them to users.';
-
-// permissions
-$lang['perm_assets'] = 'Assets';
-$lang['perm_blocks'] = 'Manage Blocks';
-$lang['perm_blog/categories'] = 'Blog Categories';
-$lang['perm_blog/comments'] = 'Blog Comments';
-$lang['perm_blog/links'] = 'Blog Links';
-$lang['perm_blog/posts'] = 'Blog Posts';
-$lang['perm_blog/settings'] = 'Blog Settings';
-$lang['perm_blog/users'] = 'Blog Authors';
-$lang['perm_google_analytics'] = 'Google Analytics';
-$lang['perm_manage'] = 'View the Manage Dashboard Page';
-$lang['perm_manage/activity'] = 'View activity logs';
-$lang['perm_manage/cache'] = 'Manage the page cache';
-$lang['perm_myPHPadmin'] = 'myPHPadmin';
-$lang['perm_navigation'] = 'Manage navigation';
-$lang['perm_pages'] = 'Manage pages';
-$lang['perm_pages_delete'] = 'Ability to Delete Pages';
-$lang['perm_pages_publish'] = 'Ability to Publish Pages';
-$lang['perm_permissions'] = 'Manage Permissions';
-$lang['perm_projects'] = 'Projects';
-$lang['perm_projects_delete'] = 'Delete Projects';
-$lang['perm_projects_publish'] = 'Publish Projects';
-$lang['perm_quotes'] = 'Quotes';
-$lang['perm_site_docs'] = 'Site Documentation';
-$lang['perm_sitevariables'] = 'Site Variables';
-$lang['perm_tools'] = 'Manage Tools';
-$lang['perm_tools/backup'] = 'Manage database backup';
-$lang['perm_tools/cronjobs'] = 'Cronjobs';
-$lang['perm_tools/seo'] = 'Page Analysis';
-$lang['perm_tools/seo/google_keywords'] = 'Google Keywords';
-$lang['perm_tools/tester'] = 'Tester Module';
-$lang['perm_tools/user_guide'] = 'Access the User Guide';
-$lang['perm_tools/validate'] = 'Validate';
-$lang['perm_users'] = 'Manage users';
-
+$lang['form_label_other_perms'] = 'Generate related simple<br /> module permissions';
 
 /*
 |--------------------------------------------------------------------------
 | Manage Cache
 |--------------------------------------------------------------------------
 */
+$lang['cache_cleared'] = 'The cache has been cleared.';
 $lang['cache_instructions'] = 'You are about to clear the page cache of the site.';
 $lang['cache_no_clear'] = 'No, don\'t clear cache';
 $lang['cache_yes_clear'] = 'Yes, clear cache';
+
+
+/*
+|--------------------------------------------------------------------------
+| Settings
+|--------------------------------------------------------------------------
+*/
+$lang['settings_none'] = 'There are no settings for any advanced modules to manage.';
+$lang['settings_manage'] = 'Manage the settings for the following advanced modules:';
+$lang['settings_problem'] = 'There was a problem with the settings for the advanced module <strong>%1s</strong>. <br />Check that <strong>/fuel/modules/%1s/config/%1s.php</strong> config is configured to handle settings.';
+
+
+/*
+|--------------------------------------------------------------------------
+| Generate
+|--------------------------------------------------------------------------
+*/
+$lang['error_not_cli_request'] = 'This is not a CLI request.';
+$lang['error_not_in_dev_mode'] = 'This will only run in dev mode.';
+$lang['error_missing_generation_files'] = 'There are no generation files to create for %1s.';
 
 
 /*
@@ -335,6 +406,8 @@ $lang['cache_yes_clear'] = 'Yes, clear cache';
 $lang['table_action_edit'] = 'EDIT';
 $lang['table_action_delete'] = 'DELETE';
 $lang['table_action_view'] = 'VIEW';
+$lang['click_to_toggle'] = 'click to toggle';
+$lang['table_action_login_as'] = 'LOGIN AS';
 
 
 /*
@@ -343,8 +416,12 @@ $lang['table_action_view'] = 'VIEW';
 |--------------------------------------------------------------------------
 */
 $lang['label_show'] = 'Show:';
+$lang['label_language'] = 'Language:';
 $lang['label_restore_from_prev'] = 'Restore from previous version...';
 $lang['label_select_another'] = 'Select another...';
+$lang['label_select_one'] = 'Select one...';
+$lang['label_belongs_to'] = 'Belongs to';
+$lang['label_select_a_language'] = 'Select a language...';
 
 
 /*
@@ -365,8 +442,11 @@ $lang['btn_activate'] = 'Activate';
 $lang['btn_deactivate'] = 'Deactivate';
 $lang['btn_delete'] = 'Delete';
 $lang['btn_duplicate'] = 'Duplicate';
+$lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
+$lang['btn_download'] = 'Download';
+$lang['btn_export_data'] = 'Export Data';
 
 $lang['btn_no'] = 'No';
 $lang['btn_yes'] = 'Yes';
@@ -390,30 +470,34 @@ $lang['form_label_location'] = 'Location';
 $lang['form_label_published'] = 'Published';
 $lang['form_label_active'] = 'Active';
 $lang['form_label_precedence'] = 'Precedence';
-$lang['form_label_date_added'] = 'Date Added';
-$lang['form_label_last_updated'] = 'Last Updated';
+$lang['form_label_date_added'] = 'Date added';
+$lang['form_label_last_updated'] = 'Last updated';
 $lang['form_label_file'] = 'File';
 $lang['form_label_value'] = 'Value';
 $lang['form_label_email'] = 'Email';
-$lang['form_label_user_name'] = 'User Name';
-$lang['form_label_first_name'] = 'First Name';
-$lang['form_label_last_name'] = 'Last Name';
-$lang['form_label_super_admin'] = 'Super Admin';
+$lang['form_label_user_name'] = 'User name';
+$lang['form_label_first_name'] = 'First name';
+$lang['form_label_last_name'] = 'Last name';
+$lang['form_label_super_admin'] = 'Super admin';
 $lang['form_label_password'] = 'Password';
-$lang['form_label_confirm_password'] = 'Confirm Password';
-$lang['form_label_new_password'] = 'New Password';
+$lang['form_label_confirm_password'] = 'Confirm password';
+$lang['form_label_new_password'] = 'New password';
 $lang['form_label_description'] = 'Description';
-$lang['form_label_entry_date'] = 'Entry Date';
+$lang['form_label_entry_date'] = 'Entry date';
 $lang['form_label_message'] = 'Message';
-$lang['form_label_image'] = 'Upload Image';
-$lang['form_label_upload_image'] = 'Upload Image';
-$lang['form_label_upload_images'] = 'Upload Images';
+$lang['form_label_image'] = 'Image';
+$lang['form_label_upload_image'] = 'Upload image';
+$lang['form_label_upload_images'] = 'Upload images';
 $lang['form_label_content'] = 'Content';
 $lang['form_label_excerpt'] = 'Excerpt';
 $lang['form_label_permalink'] = 'Permalink';
 $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
+$lang['form_label_link'] = 'Link';
+$lang['form_label_pdf'] = 'PDF';
+
 $lang['form_label_group_id'] = 'Group';
+$lang['form_label_or_select'] = 'OR select';
 
 $lang['form_enum_option_yes'] = 'yes';
 $lang['form_enum_option_no'] = 'no';
@@ -431,12 +515,15 @@ $lang['layout_field_page_title'] = 'Page title';
 $lang['layout_field_meta_description'] = 'Meta description';
 $lang['layout_field_meta_keywords'] = 'Meta keywords';
 $lang['layout_field_body'] = 'Body';
+$lang['layout_field_heading'] = 'Heading';
 $lang['layout_field_body_description'] = 'Main content of the page';
 $lang['layout_field_body_class'] = 'Body class';
 $lang['layout_field_redirect_to'] = 'Redirect to';
 
 $lang['layout_field_301_redirect_copy'] = 'This layout will do a 301 redirect to another page.';
-$lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap.';
+$lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specifiec location is used to render the page.';
+$lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap. For this page to appear, a sitemap.xml must not exist on the server.';
+$lang['layout_field_robots_txt_copy'] = 'This layout is used to generate a robots.txt file. For this page to appear, a robots.txt must not exist on the server.';
 $lang['layout_field_none_copy'] = 'This layout is the equivalent of having no layout assigned.';
 
 $lang['layout_field_frequency'] = 'Frequency';
@@ -451,7 +538,15 @@ $lang['layout_field_frequency_never'] = 'never';
 
 /*
 |--------------------------------------------------------------------------
-| MISC
+| Tooltips
+|--------------------------------------------------------------------------
+*/
+$lang['tooltip_dbl_click_to_open'] = 'Double click to open';
+
+
+/*
+|--------------------------------------------------------------------------
+| Pagination
 |--------------------------------------------------------------------------
 */
 
@@ -460,9 +555,19 @@ $lang['pagination_next_page'] = '&gt;';
 $lang['pagination_first_link'] = '&lsaquo; First';
 $lang['pagination_last_link'] = 'Last &rsaquo;';
 
+
+/*
+|--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
 $lang['action_edit'] = 'Edit';
 $lang['action_create'] = 'Create';
+$lang['action_delete'] = 'Delete';
+$lang['action_upload'] = 'Upload';
+$lang['action_replace'] = 'Replace';
 
+//$lang['import'] = 'Import';
 
 // now include the Javascript specific ones since there is some crossover
 include('fuel_js_lang.php');

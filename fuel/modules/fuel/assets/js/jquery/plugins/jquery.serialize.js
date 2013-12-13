@@ -20,7 +20,7 @@ jQuery.serialize = function(_obj)
 
       // for JSON format, strings need to be wrapped in quotes
       case 'string':
-         return '\'' + _obj + '\'';
+         return '"' + _obj + '"';
          break;
 
       case 'object':
@@ -36,7 +36,7 @@ jQuery.serialize = function(_obj)
          {
             str = '{';
             var key;
-            for (key in _obj) { str += key + ':' + jQuery.serialize(_obj[key]) + ','; }
+            for (key in _obj) { str += '"' + key + '":' + jQuery.serialize(_obj[key]) + ','; }
             str = str.replace(/\,$/, '') + '}';
          }
          return str;

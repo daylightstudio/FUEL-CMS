@@ -1,6 +1,6 @@
 <?php 
 
-// relative to web_root
+// relative to the web root. Can also be absolute to a different server for CDN
 $config['assets_path'] = 'assets/';
 
 // path structure to use for modules relative to web root
@@ -20,7 +20,8 @@ $config['assets_folders'] = array(
 	'pdf' => 'pdf/',
 	'swf' => 'swf/',
 	'media' => 'media/',
-	'captchas' => 'captchas/'
+	'captchas' => 'captchas/',
+	'docs' => 'docs/'
 	);
 
 // makes paths to assets absolute
@@ -55,6 +56,9 @@ js/css function without multiple file in the first parameter
 */
 
 $config['assets_output'] = FALSE;
+
+// force assets to recompile on each load
+$config['force_assets_recompile'] = FALSE;
 
 // cache folder relative to the web root folder... must be writable directory (default is the application/assets/cache folder)
 $config['assets_cache_folder'] = 'cache/';

@@ -2,78 +2,79 @@
 // markItUp!
 // By Jay Salvat - http://markitup.jaysalvat.com/
 // ------------------------------------------------------------------*/
+.markItUpButton a { background: transparent url(../images/markitup/markitup_icons.png) no-repeat; }
+
 .markItUp .bold a {
-	background-image:url(../images/markitup/bold.png);
+	background-position: 0 0;
 }
 .markItUp .italic a {
-	background-image:url(../images/markitup/italic.png);
+	background-position: 0 -456px;
 }
 .markItUp .stroke a {
-	background-image:url(../images/markitup/stroke.png);
+	background-position: 0 -906px;
 }
 .markItUp .p a {
-	background-image:url(../images/markitup/paragraph.png); 
+	background-position: 0 -792px;
 }
 .markItUp .h1 a {
-	background-image:url(../images/markitup/h1.png);
+	background-position: 0 -152px;
 }
 .markItUp .h2 a {
-	background-image:url(../images/markitup/h2.png);
+	background-position: 0 -190px;
 }
 .markItUp .h3 a {
-	background-image:url(../images/markitup/h3.png);
+	background-position: 0 -228px;
 }
 .markItUp .h4 a {
-	background-image:url(../images/markitup/h4.png);
+	background-position: 0 -266px;
+}
+.markItUp .h5 a {
+	background-position: 0 -304px;
+}
+.markItUp .h6 a {
+	background-position: 0 -342px;
 }
 .markItUp .ol a {
-	background-image:url(../images/markitup/list-numeric.png);
+	background-position: 0 -570px;
 }
 .markItUp .ul a {
-	background-image:url(../images/markitup/list-bullet.png);
+	background-position: 0 -1010px;
 }
 .markItUp .li a {
-	background-image:url(../images/markitup/list-item.png);
+	background-position: 0 -532px;
 }
-
 .markItUp .image a {
-	background-image:url(../images/markitup/picture.png); 
+	background-position: 0 -830px;
 }
 .markItUp .link a {
-	background-image:url(../images/markitup/link.png);
+	background-position: 0 -494px;
 }
-
 .markItUp .mailto a {
-	background-image:url(../images/markitup/email.png);
+	background-position: 0 -114px;
 }
-
 .markItUp .clean a {
-	background-image:url(../images/markitup/clean.png);
+	background-position: 0 -38px;
 }
 .markItUp .preview a {
-	background-image:url(../images/markitup/preview.png);
+	background-position: 0 -868px;
 }
 .markItUp .help a {
-	background-image:url(../images/markitup/help.png);
+	background-position: 0 -380px;
 }
 .markItUp .fuel_var a {
-	background-image:url(../images/markitup/page_white_code_red.png);
+	background-position: 0 -717px;
 }
-
 .markItUp .blockquote a {
-	background-image:url(../images/markitup/comment.png);
+	background-position: 0 -76px;
 }
-
 .markItUp .hr a {
-	background-image:url(../images/markitup/text_horizontalrule.png);
+	background-position: 0 -976px;
 }
-
 .markItUp .maximize a {
-	background-image:url(../images/markitup/maximize.png);
+	background-position: 0 -608px;
 }
-
 .markItUp .minimize a {
-	background-image:url(../images/markitup/minimize.png);
+	background-position: 0 -679px;
 }
 
 /* -------------------------------------------------------------------
@@ -90,7 +91,7 @@
 	text-decoration:none;
 }
 .markItUp  {
-	width:550px;
+	min-width:550px;
 	margin:5px 0 5px 0;
 }
 .markItUpContainer  {
@@ -109,7 +110,7 @@
 .markItUpPreviewFrame	{
 	overflow:auto;
 	background-color:#FFFFFF;
-	width:525px;
+	width:100%;
 	height:280px;
 	margin:5px 0;
 	border: 1px solid #ccc;

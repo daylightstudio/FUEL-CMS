@@ -1,4 +1,4 @@
-<?php if ($this->fuel_auth->has_permission('logs')) : ?>
+<?php if ($this->fuel->auth->has_permission('logs')) : ?>
 <?php if (!empty($latest_activity)) : ?>
 <div class="dashboard_pod" style="width: 400px;">
 
@@ -8,7 +8,7 @@
 		<li><strong><?=english_date($val['entry_date'], true)?>:</strong> <?=$val['message']?> - <?=$val['name']?></li>
 		<?php endforeach; ?>
 	</ul>
-	<a href="<?=fuel_url('manage/activity')?>"><?=lang('dashboard_view_all_activity')?></a>
+	<a href="<?=fuel_url('logs')?>"><?=lang('dashboard_view_all_activity')?></a>
 </div>
 <?php endif; ?>
 <?php endif; ?>
@@ -17,6 +17,15 @@
 <div class="dashboard_pod" style="width: 230px;">
 
 	<h3><?=lang('dashboard_hdr_latest_news')?></h3>
+	
+	<?php if (isset($latest_fuel_version) AND ! empty($latest_fuel_version)) : ?>
+		<div class="update_notice">
+			<a href="http://www.getfuelcms.com" target="_blank">FUEL CMS <?php echo $latest_fuel_version; ?></a> is available!<br />
+			You are on version <em><?php echo FUEL_VERSION; ?></em><br />
+			Please update now.
+		</div>
+	<?php endif; ?>
+	
 	<ul class="nobullets">
 		<?php foreach($feed as $item) : ?>
 		<li><a href="<?=$item->get_link(0)?>" target="_blank"><?=$item->get_title()?></a></li>
@@ -39,7 +48,7 @@
 <?php endif; ?>
 
 
-<?php if (!empty($docs) AND $this->fuel_auth->has_permission('site_docs')) : ?>
+<?php if (!empty($docs) AND $this->fuel->auth->has_permission('site_docs')) : ?>
 <div class="dashboard_pod" style="width: 230px;">
 
 	<h3><?=lang('dashboard_hdr_site_docs')?></h3>

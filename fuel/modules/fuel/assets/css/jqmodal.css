@@ -10,17 +10,20 @@
 .jqmWindow {
     display: none;
     position: fixed;
-    top: 20%;
+    top: 50px;
     left: 50%;
-    margin-left: -222px;
+    margin-left: -202px;
     color: #333;
-    padding: 10px 20px;
+/*    padding: 10px 20px;*/
 	width: 400px;
 	border: 2px solid #666;
 	z-index: 300000;
 	background-color: #fff;
 	word-wrap:break-word;
-	
+	border: 1px solid #ccc; display: none; 
+	-moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); 
+	-webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); 
+	box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3);
 }
 
 .jqmOverlay { background-color: #000; }
