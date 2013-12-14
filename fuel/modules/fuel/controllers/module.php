@@ -634,7 +634,7 @@ class Module extends Fuel_base_controller {
 						}
 						$posted[$key] = $date;
 						if (!empty($hr)) $posted[$key] .= " ".$hr.":".$min.$ampm;
-						$posted[$key] = date('Y-m-d H:m:s', strtotime($posted[$key]));
+						$posted[$key] = date('Y-m-d H:i:s', strtotime($posted[$key]));
 					}
 					$this->filters[$key]['value'] = $posted[$key];
 					$extra_filters[$key] = $posted[$key];
