@@ -494,6 +494,7 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->question_keys = array();
 			//$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->label_layout = 'left';
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 			$this->form_builder->set_validator($this->model->get_validation());
 			$this->form_builder->submit_value = NULL;
 			$this->form_builder->use_form_tag = FALSE;
@@ -607,8 +608,38 @@ class Module extends Fuel_base_controller {
 				if (isset($_POST[$key]) OR isset($_GET[$key]))
 				{
 					$posted[$key] = $this->input->get_post($key, TRUE);
+
+					// get the raw key without the comparison operators that the model uses
+					$raw_key = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), '', $key);
+
+					// manipulate the value if it's a date time field
+					$field_type = $this->model->field_type($raw_key);
+					if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
+					{
+						$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
+						$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
+						$min   = ($this->input->get_post($key.'_min') AND is_numeric($this->input->get_post($key.'_min')))  ? $this->input->get_post($key.'_min') : "00";
+						$ampm  = ($this->input->get_post($key.'_am_pm') AND $hr AND $min) ? $this->input->get_post($key.'_am_pm') : "";
+						if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+						{
+							if ($hr > 24) 
+							{
+								$hr = "00";
+							}
+							else
+							{
+								$hr = (int) $hr - 12;
+								$ampm = "pm";
+							}
+						}
+						$posted[$key] = $date;
+						if (!empty($hr)) $posted[$key] .= " ".$hr.":".$min.$ampm;
+						$posted[$key] = date('Y-m-d H:m:s', strtotime($posted[$key]));
+					}
 					$this->filters[$key]['value'] = $posted[$key];
 					$extra_filters[$key] = $posted[$key];
+
+					
 				}
 			}
 			$posted['extra_filters'] = $extra_filters;
