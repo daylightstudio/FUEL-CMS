@@ -55,7 +55,7 @@ class Fuel_users extends Fuel_module {
 		}
 		else
 		{
-			$user = $this->model()->find_one('(user_name = "'.$user_id.' OR email = "'.$user_id.'")', 'id', $return_type);
+			$user = $this->model()->find_one('(user_name = "'.$user_id.'" OR email = "'.$user_id.'")', 'id', $return_type);
 		}
 		return $user;
 	}
