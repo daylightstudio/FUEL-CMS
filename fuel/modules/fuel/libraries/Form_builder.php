@@ -2569,9 +2569,10 @@ class Form_builder {
 	public function create_copy($params)
 	{
 		$params = $this->normalize_params($params);
+		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
 		$copy = $this->simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->copy_tag : $params['tag'];
-		return '<'.$tag.'>'.$copy.'</'.$tag.'>';
+		return '<'.$tag.$id.'>'.$copy.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------
@@ -2652,7 +2653,8 @@ class Form_builder {
 		}
 		else
 		{
-			$str .= $this->form->fieldset_open($legend, $attrs);
+			$id = isset($params['id']) ? $params['id'] : '';
+			$str .= $this->form->fieldset_open($legend, $attrs, $id);
 		}
 		return $str;
 	}
