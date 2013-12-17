@@ -182,7 +182,7 @@ class Module extends Fuel_base_controller {
 		{
 			$this->filters = array_merge($this->filters, $this->model->filters($this->filters));
 		}
-	
+
 		// set the language dropdown if there is a language column
 		if ($this->fuel->language->has_multiple() AND !empty($this->language_col) AND method_exists($this->model, 'get_languages'))
 		{
@@ -602,9 +602,9 @@ class Module extends Fuel_base_controller {
 			// custom module filters
 			$extra_filters = array();
 			
-			
 			foreach($this->filters as $key => $val)
 			{
+
 				if (isset($_POST[$key]) OR isset($_GET[$key]))
 				{
 					$posted[$key] = $this->input->get_post($key, TRUE);
@@ -613,35 +613,40 @@ class Module extends Fuel_base_controller {
 					$raw_key = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), '', $key);
 
 					// manipulate the value if it's a date time field
-					$field_type = $this->model->field_type($raw_key);
-					if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
+					if (method_exists($this->model, 'field_type'))
 					{
-						$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
-						$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
-						$min   = ($this->input->get_post($key.'_min') AND is_numeric($this->input->get_post($key.'_min')))  ? $this->input->get_post($key.'_min') : "00";
-						$ampm  = ($this->input->get_post($key.'_am_pm') AND $hr AND $min) ? $this->input->get_post($key.'_am_pm') : "";
-						if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+						$field_type = $this->model->field_type($raw_key);
+						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
 						{
-							if ($hr > 24) 
+							$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
+							$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
+							$min   = ($this->input->get_post($key.'_min') AND is_numeric($this->input->get_post($key.'_min')))  ? $this->input->get_post($key.'_min') : "00";
+							$ampm  = ($this->input->get_post($key.'_am_pm') AND $hr AND $min) ? $this->input->get_post($key.'_am_pm') : "";
+							if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 							{
-								$hr = "00";
+								if ($hr > 24) 
+								{
+									$hr = "00";
+								}
+								else
+								{
+									$hr = (int) $hr - 12;
+									$ampm = "pm";
+								}
 							}
-							else
-							{
-								$hr = (int) $hr - 12;
-								$ampm = "pm";
-							}
+							$posted[$key] = $date;
+							if (!empty($hr)) $posted[$key] .= " ".$hr.":".$min.$ampm;
+							$posted[$key] = date('Y-m-d H:i:s', strtotime($posted[$key]));
 						}
-						$posted[$key] = $date;
-						if (!empty($hr)) $posted[$key] .= " ".$hr.":".$min.$ampm;
-						$posted[$key] = date('Y-m-d H:i:s', strtotime($posted[$key]));
 					}
+
 					$this->filters[$key]['value'] = $posted[$key];
 					$extra_filters[$key] = $posted[$key];
 
 					
 				}
 			}
+
 			$posted['extra_filters'] = $extra_filters;
 		}
 		$params = array_merge($defaults, $page_state, $posted);
