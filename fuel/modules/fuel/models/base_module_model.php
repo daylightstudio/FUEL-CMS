@@ -342,7 +342,7 @@ class Base_module_model extends MY_Model {
 			{
 				$joiner_arr = 'where_'.$joiner;
 				
-				if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
+				if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE) $key = $this->table_name.'.'.$key;
 				
 				//$method = ($joiner == 'or') ? 'or_where' : 'where';
 				
@@ -624,23 +624,20 @@ class Base_module_model extends MY_Model {
 		{
 			// check for serialization for backwards compatibility
 			$data = (is_serialized_str($archive['data'])) ? @unserialize($archive['data']) : json_decode($archive['data'], TRUE);
-			if (!empty($data) AND is_array($data))
+			foreach($data as $key => $val)
 			{
-				foreach($data as $key => $val)
+				// reformat dates
+				if (is_date_format($val))
 				{
-					// reformat dates
-					if (is_date_format($val))
-					{
-						$date_ts = strtotime($val);
-						$return['data'][$key] = english_date($val);
-						$return['data'][$key.'_hour'] = date('h', $date_ts);
-						$return['data'][$key.'_min'] = date('i', $date_ts);
-						$return['data'][$key.'_ampm'] = date('a', $date_ts);
-					}
-					else
-					{
-						$return['data'][$key] = $val;
-					}
+					$date_ts = strtotime($val);
+					$return['data'][$key] = english_date($val);
+					$return['data'][$key.'_hour'] = date('h', $date_ts);
+					$return['data'][$key.'_min'] = date('i', $date_ts);
+					$return['data'][$key.'_ampm'] = date('a', $date_ts);
+				}
+				else
+				{
+					$return['data'][$key] = $val;
 				}
 			}
 		}
