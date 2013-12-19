@@ -2700,14 +2700,23 @@ class MY_Model extends CI_Model {
 			foreach($this->foreign_keys as $key => $val)
 			{
 				$where = array();
+				$order = TRUE;
 				$model = $this->load_model($val);
-				if (is_array($val) AND !empty($val['where']))
+				if (is_array($val))
 				{
-					$where = $val['where'];
-					unset($val['where']);
+					if (!empty($val['where']))
+					{
+						$where = $val['where'];
+						unset($val['where']);
+					}
+					if (!empty($val['order']))
+					{
+						$order = $val['order'];
+						unset($val['order']);
+					}
 				}
 				$fields[$key]['type'] = 'select';
-				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where);
+				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where, $order);
 				$fields[$key]['first_option'] = lang('label_select_one');
 				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->singular_name(FALSE)));
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
