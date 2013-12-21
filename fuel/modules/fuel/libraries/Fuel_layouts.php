@@ -296,6 +296,7 @@ class Fuel_layouts extends Fuel_base_library {
 			$init['hooks'] = (isset($init['hooks'])) ? $init['hooks'] : NULL;
 			$init['fields'] = (isset($init['fields'])) ? $init['fields'] : array();
 			$init['import_field'] = (isset($init['import_field'])) ? $init['import_field'] : NULL;
+			$init['module'] = (isset($init['module'])) ? $init['module'] : 'app';
 
 			// load custom layout classes
 			if (!empty($init['class']) AND !in_array($init['class'], $loaded_classes))
@@ -309,9 +310,16 @@ class Fuel_layouts extends Fuel_base_library {
 				{
 					$init['filepath'] = 'libraries';
 				}
-				$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
 
-				require_once(APPPATH.$init['filepath'].'/'.$init['filename']);
+				if (isset($init['module']))
+				{
+					$custom_class_path = MODULES_PATH.$init['module'].'/'.$init['filepath'].'/'.$init['filename'];
+				}
+				else
+				{
+					$custom_class_path = APPPATH.$init['filepath'].'/'.$init['filename'];
+				}
+				require_once($custom_class_path);
 			}
 			$class = $init['class'];
 			$layout = new $class($init);
@@ -351,6 +359,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $label = ''; // The label to display with the layout in the select list as seen in the CMS
 	public $description = ''; // A description of the layout which will be rendered as a copy field in the form
 	public $file = ''; // The layout view file name
+	public $module = 'app'; // The module that the layout's view file belongs to
 	public $hooks = array(); // Hooks to run before and after the rendering of a page. Options are "pre_render" and "post_render"
 	public $fields = array(); // The fields to associate with the layout. Must be in the Form_builder array format
 	public $field_values = array(); // The values to assign to the fields
@@ -620,6 +629,37 @@ class Fuel_layout extends Fuel_base_library {
 		return $this->folder;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the module the layout belongs to
+	 *
+	 * @access	public
+	 * @param	string	The name of the folder
+	 * @return	void
+	 */	
+	public function set_module($module)
+	{
+		$this->module = $module;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the module the layout belongs to
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function module()
+	{
+		if (empty($this->module))
+		{
+			$this->module = 'app';
+		}
+		return $this->module;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

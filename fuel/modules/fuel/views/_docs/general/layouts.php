@@ -109,6 +109,7 @@ $config['layouts']['main'] = array(
 	'class'		=> 'Main_layout',
 	'filepath' => 'libraries',
 	'filename' => 'Main_layout.php',
+	'module'  => 'app',
 	'fields'	=> array(
 		'Header' => array('type' => 'fieldset', 'label' => 'Header', 'class' => 'tab'),
 		'page_title' => array('label' => lang('layout_field_page_title')),
