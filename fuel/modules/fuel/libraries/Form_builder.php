@@ -332,13 +332,22 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the fields for the form
+	 * Returns the fields for the form. If a key value is passed, it will only return that one field
 	 * 
 	 * @access	public
+	 * @param	string field key
 	 * @return	array
 	 */
-	public function fields()
+	public function fields($key = NULL)
 	{
+		if (!empty($key))
+		{
+			if (isset($this->_fields[$key]))
+			{
+				return $this->_fields[$key];		
+			}
+			return FALSE;
+		}
 		return $this->_fields;
 	}
 	
