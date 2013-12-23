@@ -160,6 +160,7 @@ class Fuel_users_model extends Base_module_model {
 		$this->add_validation('email', array(&$this, 'user_exists'), 'User does not exist', '{email}');
 		
 		$user = $this->find_one_array(array('email' => $email));
+
 		if (!empty($user))
 		{
 			$reset_key = random_string('alnum', 8);
@@ -199,7 +200,7 @@ class Fuel_users_model extends Base_module_model {
 	 */	
 	public function salt()
 	{
-		return md5(uniqid(rand(), TRUE));
+		return substr(md5(uniqid(rand(), TRUE)), 0, 32);
 	}
 	
 	// --------------------------------------------------------------------
@@ -468,15 +469,18 @@ class Fuel_users_model extends Base_module_model {
 	public function on_before_clean($values)
 	{
 		$has_pwd = FALSE;
-		if (!empty($values['password'])) 
-		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
-		}
+
+		// only do the password hashing if the new password value is set
 		if (!empty($values['new_password']))
 		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+			if (empty($values['salt']))
+			{
+				$values['salt'] = $this->salt();
+			}
+			if (!empty($values['password'])) 
+			{
+				$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
+			}
 		}
 		return $values;
 	}
@@ -592,22 +596,16 @@ class Fuel_users_model extends Base_module_model {
 		if (!empty($id) AND !has_errors() AND isset($_POST['send_email']) AND (!empty($_POST['password']) OR !empty($_POST['new_password'])))
 		{
 			$password = (!empty($_POST['password'])) ? $CI->input->post('password') : $CI->input->post('new_password');
-			// send email to user
-			$CI->load->library('email');
 
-			$config['wordwrap'] = TRUE;
-			$CI->email->initialize($config);
-
-			$CI->email->from($CI->config->item('from_email', 'fuel'), $CI->config->item('site_name', 'fuel'));
-			$CI->email->to($CI->input->post('email')); 
-			$CI->email->subject(lang('new_user_email_subject'));
 			$msg = lang('new_user_email', site_url('fuel/login'), $CI->input->post('user_name'), $password);
-
-			$CI->email->message($msg);
-	
-			if (!$CI->email->send())
+			$params['to'] = $CI->input->post('email');
+			$params['subject'] = lang('new_user_email_subject');
+			$params['message'] = $msg;
+			$params['use_dev_mode'] = FALSE;
+			if (!$CI->fuel->notification->send($params))
 			{
-				add_error(lang('error_sending_email', $this->input->post('email')));
+				$CI->fuel->logs->write($CI->fuel->notification->last_error(), 'debug');
+				add_error(lang('error_sending_email', $CI->input->post('email')));
 			}
 		}
 	}

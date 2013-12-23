@@ -184,9 +184,7 @@ class Login extends CI_Controller {
 				if (!empty($user['email']))
 				{
 					$users = $this->fuel->users;
-					
 					$new_pwd = $this->fuel->users->reset_password($user['email']);
-					
 					if ($new_pwd !== FALSE)
 					{
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
@@ -205,6 +203,7 @@ class Login extends CI_Controller {
 						else
 						{
 							$this->session->set_flashdata('error', lang('error_pwd_reset'));
+							$this->fuel->logs->write($this->fuel->notification->last_error(), 'debug');
 						}
 						redirect(fuel_uri('login'));
 					}
