@@ -180,7 +180,12 @@ class Fuel_custom_fields {
 			$params['folder'] = 'images';
 		}
 		
-		$asset_class = 'asset_select';
+		$asset_class = '';
+		if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
+		{
+			$asset_class .= ' asset_select';
+		}
+
 		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
 		{
 			$asset_class .= ' asset_upload';

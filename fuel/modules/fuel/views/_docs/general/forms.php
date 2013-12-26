@@ -772,6 +772,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Upload Specific</h4>
 	<ul>
 		<li><strong>upload</strong>: determines whether to display the upload button next to the field</li>
+		<li><strong>select</strong>: determines whether to display the select button next to the field</li>
 		<li><strong>folder</strong>: the asset folder to upload the asset (only applies if the upload parameter is not set to FALSE)</li>
 		<li><strong>multiple</strong>: determines whether you can assign more then one asset to the field which would be separated by a comma</li>
 		<li><strong>multiline</strong>: determines whether to use a textarea instead of a normal input field (good if using multiple parameter)</li>
