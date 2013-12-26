@@ -1073,8 +1073,6 @@ class Form_builder {
 			}
 		}
 		if (!empty($this->other_actions)) $str .= $this->other_actions;
-
-		if ( ! empty($this->other_actions)) $str .= $this->other_actions;
 		return $str;
 	}
 	
