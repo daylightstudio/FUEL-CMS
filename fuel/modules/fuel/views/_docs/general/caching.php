@@ -22,7 +22,7 @@ echo fuel_block(array('view' => 'my_block', 'cache' => TRUE));
 
 <h2>Template Compiling</h2>
 <p>Both pages and blocks can take advantage of the <a href="<?=user_guide_url('general/template-parsing')?>">template parsing library</a> to allow users to safely
-use limited PHP funcationality. These template files get compiled and are stored in the <span class="file">fuel/application/cache/dwoo/compiled</span> folder.</p>
+use limited PHP functionality. These template files get compiled and are stored in the <span class="file">fuel/application/cache/dwoo/compiled</span> folder.</p>
 
 <h2>Asset Optimization Caching</h2>
 <p>The <a href="<?=user_guide_url('libraries/asset')?>">Asset class</a> provides several options to speed up your CSS and javascript files of your pages by changing the <dfn>assets_output</dfn>

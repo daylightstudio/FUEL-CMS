@@ -2053,7 +2053,7 @@ class Module extends Fuel_base_controller {
 								}
 								return $return;');
 
-						// hacky but avoids 5.3 funcation syntax (which is nicer but doesn't work with 5.2)
+						// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
 						$GLOBALS['__tmp_transient_posted__'] = $posted;
 
 						$field_value = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $field_value);
