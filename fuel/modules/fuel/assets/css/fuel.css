@@ -214,12 +214,21 @@ textarea[disabled] {
   color: #888;
   cursor: default;
 }
+input[readonly], 
+textarea[readonly], 
+select[readonly] { background-color: transparent; border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;  
+}
 
 textarea,
 select[size],
 select[multiple] {
   height: auto;
 }
+
+input[type="file"] { border: 1px dashed #ccc; border-radius: 3px; padding: 10px; }
 
 /* Tweaks for Safari + Chrome. */
 @media (-webkit-min-device-pixel-ratio: 0) {
