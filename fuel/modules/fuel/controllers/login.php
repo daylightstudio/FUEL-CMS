@@ -90,7 +90,7 @@ class Login extends CI_Controller {
 						
 						$forward = $this->input->post('forward');
 						$forward_uri = uri_safe_decode($forward);
-						if ($forward AND $forward_uri != fuel_uri('dashboard'))
+						if ($forward AND $forward_uri != $this->fuel->config('login_redirect'))
 						{
 							redirect($forward_uri);
 						}
