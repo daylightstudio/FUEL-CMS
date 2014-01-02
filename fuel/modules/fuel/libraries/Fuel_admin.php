@@ -466,8 +466,14 @@ class Fuel_admin extends Fuel_base_library {
 							foreach ($fuel_modules as $fuel_module => $fuel_module_title)
 							{
 								if (array_key_exists($fuel_module, $config['module_overwrites'])
-											AND array_key_exists('hidden', $config['module_overwrites'][$fuel_module])
-											AND $config['module_overwrites'][$fuel_module]['hidden'])
+											AND 
+											((array_key_exists('hidden', $config['module_overwrites'][$fuel_module]) AND 
+												($config['module_overwrites'][$fuel_module]['hidden']))
+											OR 
+											(array_key_exists('disabled', $config['module_overwrites'][$fuel_module]) AND 
+												($config['module_overwrites'][$fuel_module]['disabled']))
+
+											))
 								{
 									unset($config['nav'][$section][$fuel_module]);
 								}
@@ -487,7 +493,7 @@ class Fuel_admin extends Fuel_base_library {
 			{
 				foreach($config['modules'] as $key => $module)
 				{
-					if (isset($module['hidden']) AND $module['hidden'] === TRUE)
+					if ((isset($module['hidden']) AND $module['hidden'] === TRUE) OR (isset($module['disabled']) AND $module['disabled'] === TRUE))
 					{
 						continue;
 					}

@@ -58,6 +58,11 @@ class Module extends Fuel_base_controller {
 			$params = $this->module_obj->info();
 		}
 
+		// stop here if the module is disabled
+		if ($params['disabled'] === TRUE)
+		{
+			show_404();
+		}
 		foreach($params as $key => $val)
 		{
 			$this->$key = $val;
@@ -2105,21 +2110,40 @@ class Module extends Fuel_base_controller {
 				{
 					$file_tmp = current(explode('___', $key));
 
-					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
-					{
-						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-					}
-
 					// get the file name field
 					// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
 					// the model does not have an array key field AND there is a key field value posted
-					if (isset($field_name) AND isset($posted[$field_name]) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
+					if (isset($field_name) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
 					{
 						$id = $posted[$this->model->key_field()];
 						$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
-						$data[$field_name] = $val['file_name'];
-						$this->model->save($data);
+
+						// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+						if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+						{
+							$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+						}
+					
+						if (isset($posted[$field_name]))
+						{
+							$save = TRUE;
+						}
+
+						// look for repeatable values that match
+						if (preg_match('#(.+)_(\d+)_(.+)#', $file_tmp, $matches))
+						{
+							if (isset($posted[$matches[1]][$matches[2]][$matches[3]]) AND isset($data[$matches[1]][$matches[2]][$matches[3]]))
+							{
+								$data[$matches[1]][$matches[2]][$matches[3]] = $posted[$file_tmp];
+								$save = TRUE;
+							}
+						}
+
+						if ($save)
+						{
+							$data[$field_name] = $val['file_name'];
+							$this->model->save($data);
+						}
 					}
 				}
 				
