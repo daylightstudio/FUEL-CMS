@@ -1392,9 +1392,13 @@ class Asset {
 					CURLOPT_FOLLOWLOCATION => 0
 				));
 
-				if (curl_error($ch) == '')
+				if (curl_error($ch) == '' )
 				{
-					$output = curl_exec($ch);	
+					$result = curl_exec($ch);
+					if (!empty($result))
+					{
+						$output = $result;
+					}
 				}
 				else
 				{
