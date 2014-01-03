@@ -636,7 +636,7 @@ div#login ::-webkit-input-placeholder {color: #999; }
 div#login :-moz-placeholder { color: #999; }
 div#login :-ms-input-placeholder { color:  #999; }
 div#login input[type="submit"] { background: #3dbfd9 !important; color: #fff; font-size: 20px; text-shadow: none; }
-div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 320px; margin: auto; }
+div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 340px; margin: auto; }
 a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; color: #999; }
 
 /* assets & modal */
@@ -656,6 +656,7 @@ div#yes_no_modal li { display: inline-block; margin-right: 5px; float: none;}
 
 div#__FUEL_modal__ { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; width: 98%; max-width: 864px; margin-left: -425px; max-height: 508px; background-color: #fff; }
 div#__FUEL_modal__ .add_inline_button, div#__FUEL_modal__ .edit_inline_button { display: none; }
+a.btn_field_right { display: block; float: right; margin-bottom: 5px; margin-right: 3px; }
 div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
 
 
@@ -697,7 +698,7 @@ div.perms_list label { font-weight: bold; }
 .match_class { display: block; position: absolute; z-index: 10; margin-bottom: 0px; min-height: 30px;}
 .match_class span { display: inline-block; cursor: pointer; padding: 3px; background-color: #fcfce6; border: 1px solid #ccc; margin: 3px 0 3px 3px; }
 
-.multi_field { margin-bottom: 10px; }
+.multi_field { margin-bottom: 10px; display: inline-block; padding-top: 2px; }
 
 /* ckeditor */
 .cke_top { min-width: 565px !important; }
