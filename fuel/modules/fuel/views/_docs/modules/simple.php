@@ -260,6 +260,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>If set to TRUE, it will hide the module in the admin menu</td>
 		</tr>
 		<tr>
+			<td><strong>disabled</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If set to TRUE, it will hide the module in the admin menu as well as show a 404</td>
+		</tr>
+		<tr>
 			<td><strong>icon_class</strong></td>
 			<td>None</td>
 			<td>None</td>

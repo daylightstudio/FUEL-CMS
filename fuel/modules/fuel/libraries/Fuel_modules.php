@@ -655,6 +655,7 @@ class Fuel_module extends Fuel_base_library {
 				'language' => '',
 				'language_col' => 'language',
 				'hidden' => FALSE,
+				'disabled' => FALSE,
 				'icon_class' => '',
 				'folder' => '',
 				'exportable' => FALSE,

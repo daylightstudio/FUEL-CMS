@@ -28,29 +28,28 @@ class Users extends Module {
 	 */
 	public function login_as($id, $original_user_hash = '')
 	{
-		$CI =& get_instance();
-		$CI->load->library('session');
-		$change_logged_in_user = $CI->fuel->auth->is_super_admin();
-		if ($original_user_hash AND ($CI->session->userdata('original_user_hash') == $original_user_hash)) {
+		$this->load->library('session');
+		$change_logged_in_user = $this->fuel->auth->is_super_admin();
+		if ($original_user_hash AND ($this->session->userdata('original_user_hash') == $original_user_hash)) {
 			$change_logged_in_user = TRUE;
 		}
 		if ($change_logged_in_user)
 		{
-			$curr_user = $CI->fuel->auth->user_data();
-			$valid_user = $CI->fuel_users_model->find_one_array(array('id' => $id));
-			$CI->fuel->auth->set_valid_user($valid_user);
+			$curr_user = $this->fuel->auth->user_data();
+			$valid_user = $this->fuel_users_model->find_one_array(array('id' => $id));
+			$this->fuel->auth->set_valid_user($valid_user);
 			if ($original_user_hash)
 			{
-				$CI->session->unset_userdata('original_user_id');
-				$CI->session->unset_userdata('original_user_hash');
+				$this->session->unset_userdata('original_user_id');
+				$this->session->unset_userdata('original_user_hash');
 			}
 			else
 			{
-				$CI->session->set_userdata('original_user_id', $curr_user['id']);
-				$CI->session->set_userdata('original_user_hash', random_string('sha1'));
+				$this->session->set_userdata('original_user_id', $curr_user['id']);
+				$this->session->set_userdata('original_user_hash', random_string('sha1'));
 			}
 		}
-		redirect($CI->config->item('fuel_path', 'fuel') . 'dashboard');
+		redirect($this->fuel->config('login_redirect'));
 	}
 
 	protected function _process_create()

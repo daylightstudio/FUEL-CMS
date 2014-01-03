@@ -180,7 +180,12 @@ class Fuel_custom_fields {
 			$params['folder'] = 'images';
 		}
 		
-		$asset_class = 'asset_select';
+		$asset_class = '';
+		if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
+		{
+			$asset_class .= ' asset_select';
+		}
+
 		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
 		{
 			$asset_class .= ' asset_upload';
@@ -1209,6 +1214,7 @@ class Fuel_custom_fields {
 					);
 			}
 		}
+
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;
@@ -1221,8 +1227,15 @@ class Fuel_custom_fields {
 			
 			if (!empty($params['options']))
 			{
+				if (!empty($inline_class))
+				{
+					$data_value = (is_array($params['value'])) ? implode(',', $params['value']) : $params['value'];
+					$str .= ' <span class="'.$inline_class.'" data-module="'.$uri.'" id="'.$params['orig_name'].'" data-value="'.$data_value.'">';
+				}
+
 				foreach($params['options'] as $key => $val)
 				{
+
 					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
 											'readonly' => $params['readonly'], 
@@ -1246,6 +1259,12 @@ class Fuel_custom_fields {
 					$str .= '</'.$params['wrapper_tag'].'>';
 					$i++;
 				}
+
+				if (!empty($inline_class))
+				{
+					'</span>';
+				}
+
 			}
 		}
 		else
@@ -1263,15 +1282,14 @@ class Fuel_custom_fields {
 				$sorting_params['class'] = 'sorting';
 				$str .= $form_builder->create_hidden($sorting_params);
 			}
-
-			// needed to detect when none exists
-			$exists_params['name'] = 'exists_'.$params['orig_name'];
-			$exists_params['value'] = 1;
-			$exists_params['type'] = 'hidden';
-			$exists_params['ignore_representative'] = TRUE;
-			$str .= $form_builder->create_field($exists_params);
-
 		}
+
+		// needed to detect when none exists
+		$exists_params['name'] = 'exists_'.$params['orig_name'];
+		$exists_params['value'] = 1;
+		$exists_params['type'] = 'hidden';
+		$exists_params['ignore_representative'] = TRUE;
+		$str .= $form_builder->create_field($exists_params);
 		
 		return $str;
 	}

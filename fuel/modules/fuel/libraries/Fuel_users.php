@@ -121,18 +121,7 @@ class Fuel_users extends Fuel_module {
 	{
 		// make sure user exists when saving
 		$model = &$this->model();
-		$model->add_validation('email', array($model, 'user_exists'), 'User does not exist', '{email}');
-		$user = $model->find_one('email = "'.$email.'"');
-		if (isset($user->id))
-		{
-			$reset_key = random_string('alnum', 8);
-			$user->reset_key = $reset_key;
-			if ($user->save())
-			{
-				return $reset_key;
-			}
-		}
-		return FALSE;
+		return $model->reset_password($email);
 	}
 	
 	// --------------------------------------------------------------------

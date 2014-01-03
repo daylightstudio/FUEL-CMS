@@ -36,7 +36,7 @@ $nav['about/team'] = array('label' => 'Team', 'parent_id' => 'about');
 $nav['about/what-they-say'] = array('label' => 'What They Say', 'parent_id' => 'about');
 </pre>
 
-<p class="important">For more on the array syntax you can use to create a navigation structure, visit the <a href="http://www.getfuelcms.com/user_guide/libraries/menu" target="_blank">Menu Class Library.</a></p>
+<p class="important">For more on the array syntax you can use to create a navigation structure, visit the <a href="<?=user_guide_url('libraries/menu')?>" target="_blank">Menu Class Library.</a></p>
 
 <br />
 
@@ -49,11 +49,11 @@ it's important to note that navigation in FUEL is not directly associated with p
 
 <h2>Usage Examples</h2>
 <p>The most common way to render a navigation structure is to use the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_nav')?>">fuel_nav()</a> function which is a wrapper around the 
-<a href="http://www.getfuelcms.com/user_guide/libraries/menu" target="_blank">Menu class</a>.</p>
+<a href="<?=user_guide_url('libraries/menu')?>" target="_blank">Menu class</a>.</p>
 
 <h3 id="dr_page_title">Page Titles</h3>
 <p>One of the first places you may want to apply a navigation structure is as a default for the page titles used throughout your site.
-You can do just that by adding it to the <a href="http://www.getfuelcms.com/user_guide/general/opt-in-controllers" target="_blank">global variables file</a>:</p>
+You can do just that by adding it to the <a href="<?=user_guide_url('general/opt-in-controllers')?>" target="_blank">global variables file</a>:</p>
 
 <span class="file">application/views/_variables/global.php (example)</span>
 <pre class="brush: php">
@@ -62,7 +62,7 @@ $vars[&#x27;page_title&#x27;] = fuel_nav(array(&#x27;render_type&#x27; =&gt; &#x
 ...
 </pre>
 
-<p>By adding it to the <a href="http://www.getfuelcms.com/user_guide/general/opt-in-controllers" target="_blank">global variables file</a> you can use it across all pages easily. 
+<p>By adding it to the <a href="<?=user_guide_url('general/opt-in-controllers')?>" target="_blank">global variables file</a> you can use it across all pages easily. 
 You specify the <dfn>render_type</dfn> parameter to be <dfn>page_title</dfn>.
 The <dfn>delimiter</dfn> parameter is the separator used between each level of the page title hierarchy. 
 The <dfn>order</dfn> parameter tells it which direction to render the hierarchy (bottom-to-top or top-to-bottom). 
@@ -96,7 +96,7 @@ $vars[&#x27;sidemenu&#x27;] = fuel_nav(array(&#x27;container_tag_id&#x27; =&gt; 
 </pre>
 
 <p>You can merge the <dfn>$sidemenu</dfn> variable in using a normal merge in your layouts. 
-You do not use the <a href="http://www.getfuelcms.com/user_guide/helpers/fuel_helper" target="_blank">fuel_var()</a> function because it is not an editable variable:</p>
+You do not use the <a href="<?=user_guide_url('helpers/fuel_helper')?>" target="_blank">fuel_var()</a> function because it is not an editable variable:</p>
 
 <span class="file">application/views/_layouts/main.php (example)</span>
 <pre class="brush: php">

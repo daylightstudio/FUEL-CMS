@@ -7,7 +7,7 @@ folder and browse to the index.php file. Next, follow the directions on the
 screen. 
 
 ### Documentation
-To access the documentation, you can visit it [here](http://www.getfuelcms.com/user_guide).
+To access the documentation, you can visit it [here](http://docs.getfuelcms.com).
 
 ### Bugs
 To file a bug report, go to the [issues](http://github.com/daylightstudio/FUEL-CMS/issues) page.

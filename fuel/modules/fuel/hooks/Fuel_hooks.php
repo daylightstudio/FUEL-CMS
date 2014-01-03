@@ -24,7 +24,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide
+ * @link		http://docs.getfuelcms.com
  */
 
 class Fuel_hooks
@@ -59,6 +59,7 @@ class Fuel_hooks
 		$CI =& get_instance();
 		$CI->fuel->redirects->enforce_host();
 		$CI->fuel->redirects->ssl();
+		$CI->fuel->redirects->non_ssl();
 
 		if (!USE_FUEL_ROUTES)
 		{

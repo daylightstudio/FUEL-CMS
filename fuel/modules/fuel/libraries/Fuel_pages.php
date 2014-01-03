@@ -772,7 +772,8 @@ class Fuel_page extends Fuel_base_library {
 			$vars = $this->layout->pre_process($vars);
 			$layout_vars = $vars;
 			$layout_vars['CI'] =& $this->CI;
-			$output = $this->CI->load->view($this->layout->view_path(), $layout_vars, TRUE);
+
+			$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $layout_vars, TRUE);
 
 			// now parse any template like syntax...
 			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
@@ -788,7 +789,7 @@ class Fuel_page extends Fuel_base_library {
 				$ci_vars = $this->CI->load->get_vars();
 
 				// then parse again to get any variables that were set from within a block
-				$output = $this->CI->load->view($this->layout->view_path(), $ci_vars, TRUE);
+				$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $ci_vars, TRUE);
 				$output = $this->CI->parser->parse_string($output, $ci_vars, TRUE);
 				unset($ci_vars);
 			}
@@ -976,7 +977,7 @@ class Fuel_page extends Fuel_base_library {
 				{
 					$layout = $layout_dir.'/'.$layout;
 				}
-				$output = $this->CI->load->view($layout, $vars, TRUE);
+				$output = $this->CI->load->module_view($this->layout->module(), $layout, $vars, TRUE);
 			}
 			else
 			{

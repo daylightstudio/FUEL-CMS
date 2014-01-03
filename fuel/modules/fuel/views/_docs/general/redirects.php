@@ -40,7 +40,7 @@ $config['max_redirects'] = 2;
 </pre>
 <p class="important">The <dfn>max_redirects</dfn> is used to prevent scenarios where it can cause an infinite redirect loop.</p>
 
-<h3>SSL</h3>
+<h3 id="ssl">SSL</h3>
 <p>The <dfn>ssl</dfn> configuration provides an easy way to force SSL encryption (https) for your page URLs. The following example would 
 restrict any url under "store" to use SSL encription when in the "production" environment:</p>
 <pre class="brush:php">
@@ -49,14 +49,23 @@ $config['ssl'] = array('production' => array(
 )); 
 </pre>
 
-<h3>Enforce Host</h3>
+<h3 id="non_ssl">Non SSL</h3>
+<p>The <dfn>non_ssl</dfn> configuration provides an easy way to force pages that are in SSL to not be encrypted (opposite of SSL). If there is an <dfn>ssl</dfn> configuration 
+that conflicts with a <dfn>non_ssl</dfn>, then the <dfn>ssl</dfn> will take precedence and ignore the <dfn>non_ssl</dfn> to prevent infinte redirects.
+The following example would redirect any url under "about" to NOT use SSL encription when in the "production" environment:</p>
+<pre class="brush:php">
+$config['non_ssl'] = array('production' => array(
+	'^about|about/:any'
+)); 
+</pre>
+<h3 id="enforce_host">Enforce Host</h3>
 <p>The <dfn>host</dfn> configuration provides an alternative to .htaccess for redirecting your page if the current $_SERVER['HTTP_HOST'] PHP variable doesn't match what is specified
 	as the "host" value in the redirect configuration. The following example would redirect any requests to "mysite.com" if the HTTP_HOST value doesn't match in the "production" environment (e.g. www.mysite.com):</p>
 <pre class="brush:php">
 $config['host'] = array('production' => 'mysite.com'); 
 </pre>
 
-<h3>Testing Redirects</h3>
+<h3 id="testing_redirects">Testing Redirects</h3>
 <p>If you are needing to check the redirects, you can utilize <a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel_redirects::test method</a> and create a simple view file at <span class="file">fuel/applications/views/redirects_test.php</span> with the following:</p>
 <pre class="brush:php">
 &lt;?php 
@@ -67,7 +76,7 @@ echo '</pre>';
 </pre>
 <p class="important">Regular expressions and shorthand :any will not be properly translated and will return errors.</p>
 
-<h3>Redirect Hooks</h3>
+<h3 id="hooks">Redirect Hooks</h3>
 <ul>
 	<li><strong>pre_redirect</strong>: Called right before a page is redirected</li>
 	<li><strong>pre_404</strong>: Called right before a 404 error page is displayed. You must use the <a href="<?=user_guide_url('helpers/my_url_helper#func_redirect_404')?>">redirect_404()</a> function instead of the show_404() function for this hook to be executed.</li>
