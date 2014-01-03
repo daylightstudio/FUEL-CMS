@@ -560,16 +560,18 @@ fuel.fields.inline_edit_field = function(context){
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
 		var module = $field.data('module');
-		
+
 		var isMulti = ($field.attr('multiple')) ? true : false;
 		
 		var parentModule = fuel.getModuleURI(context);
 		var url = jqx_config.fuelPath + '/' + module + '/inline_';
 		
-		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="btn_field add_inline_button">' + fuel.lang('btn_add') + '</a>');
-		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="btn_field edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
+		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
+		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
 		
 		var refreshField = function($field){
+
 			//$field = (field != undefined) ? field : $field;
 			
 			// redeclared here in case $field is set
@@ -597,14 +599,16 @@ fuel.fields.inline_edit_field = function(context){
 
 			// for sortable fields
 			var fieldName = $field.attr('name');
-			fieldName = fieldName.replace('[', '\\[');
-			fieldName = fieldName.replace(']', '\\]');
+			if (fieldName){
+				fieldName = fieldName.replace('[', '\\[');
+				fieldName = fieldName.replace(']', '\\]');
+				var selector = '[name=' + fieldName + ']';
+			}
 
 			var $form = $field.closest('form');
 
 			$fieldContainer = $('#' + fieldId, context).closest('td.value');
 			$field.closest('form').trigger('form-pre-serialize');
-			var selector = '[name=' + fieldName + ']';
 
 			// refresh value
 			$field = $(selector);
@@ -665,22 +669,37 @@ fuel.fields.inline_edit_field = function(context){
 		});
 
 		$('.edit_inline_button', context).unbind().click(function(e){
-			var $elem = $(this).parent().find('select');
-			var val = $elem.val();
-
-			var fieldName = $elem.attr('name')
-			fieldName = fieldName.replace('[', '');
-			fieldName = fieldName.replace(']', '');
-			var sortName = 'sorting_' + fieldName;
-			var form = $(this).parents('form');
-
+			var $elem = $(this).parent().find('select, input[type="checkbox"], input[type="radio"]');
+			if ($elem.length){
+				if ($elem.is('input[type="checkbox"]')){
+					var valArr = [];
+					$elem.each(function(i){
+						if ($(this).prop('checked')){
+							valArr.push($(this).val());
+						}
+					})
+					val = valArr.join(',');
+				} else {
+					var val = $elem.val();	
+				}
+				
+				var fieldName = $elem.attr('name')
+				fieldName = fieldName.replace('[', '');
+				fieldName = fieldName.replace(']', '');
+				var sortName = 'sorting_' + fieldName;
+				var form = $(this).parents('form');
+			} else {
+				$elem = $(this);
+				var val = $elem.data('value');
+			}
+			
 			if (!val){
 				alert(fuel.lang('edit_multi_select_warning'));
 				return false;
 			}
 			var editIds = val.toString().split(',');
 			var $selected = $elem.parent().find('.supercomboselect_right li.selected:first');
-			
+
 			if ((!editIds.length || editIds.length > 1) && (!$selected.length || $selected.length > 1)) {
 				alert(fuel.lang('edit_multi_select_warning'));
 			} else {
