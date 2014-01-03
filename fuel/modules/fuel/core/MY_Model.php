@@ -357,11 +357,7 @@ class MY_Model extends CI_Model {
 	 * Get the key field(s)
 	 *
 	 <code>
-	$fields = $this->examples_model->fields(); 
-	foreach($fields as $field)
-	{
-		echo $field; // field name
-	}
+	$fields = $this->examples_model->key_field(); 
 	</code>
 	 *
 	 * @access	public
@@ -378,6 +374,11 @@ class MY_Model extends CI_Model {
 	 * Get the fields of the table
 	 *
 	 <code>
+	 $fields = $this->examples_model->fields(); 
+	 foreach($fields as $field)
+	{
+		echo $field; // field name
+	}
 	</code>
 	 *
 	 * @access	public
@@ -493,10 +494,9 @@ class MY_Model extends CI_Model {
 		$result_objects = array();
 		if (!empty($result))
 		{
-			$fields = $query->list_fields();
 			foreach ($result as $row) 
 			{
-				$record = $this->map_to_record_class($row, $fields);
+				$record = $this->map_to_record_class($row);
 				if (!empty($assoc_key))
 				{
 					$result_objects[$row[$assoc_key]] = $record;
@@ -2699,7 +2699,7 @@ class MY_Model extends CI_Model {
 		{
 			foreach($this->foreign_keys as $key => $val)
 			{
-				$where = array();
+				$where = NULL;
 				$order = TRUE;
 				$model = $this->load_model($val);
 				if (is_array($val))
@@ -2707,11 +2707,12 @@ class MY_Model extends CI_Model {
 					if (!empty($val['where']))
 					{
 						$where = $val['where'];
+						$where = $this->_replace_placeholders($where, $values);
 						unset($val['where']);
 					}
 					if (!empty($val['order']))
 					{
-						$order = $val['order'];
+						$order = $val['order'];	
 						unset($val['order']);
 					}
 				}
@@ -2755,13 +2756,14 @@ class MY_Model extends CI_Model {
 			foreach ($this->has_many as $related_field => $rel_config)
 			{
 				$related_model = $this->load_related_model($rel_config);
-				$where = array();
+				$where = NULL;
 				$order = TRUE;
 				if (is_array($rel_config))
 				{
 					if (!empty($rel_config['where']))
 					{
-						$where = $rel_config['where'];	
+						$where = $rel_config['where'];
+						$where = $this->_replace_placeholders($where, $values);
 					}
 					
 					if (!empty($rel_config['order']))
@@ -2779,13 +2781,14 @@ class MY_Model extends CI_Model {
 		{
 			foreach ($this->belongs_to as $related_field => $rel_config)
 			{
-				$where = array();
+				$where = NULL;
 				$order = TRUE;
 				if (is_array($rel_config))
 				{
 					if (!empty($rel_config['where']))
 					{
-						$where = $rel_config['where'];	
+						$where = $rel_config['where'];
+						$where = $this->_replace_placeholders($where, $values);
 					}
 					
 					if (!empty($rel_config['order']))
@@ -4053,7 +4056,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Determins if the value is an array of arrays
+	 * Determines if the value is an array of arrays
 	 *
 	 * @access	protected
 	 * @param	mixed
@@ -4062,6 +4065,39 @@ class MY_Model extends CI_Model {
 	protected function _is_nested_array($record)
 	{
 		return (is_array($record) AND (is_int(key($record)) AND is_array(current($record))));
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Replaces placeholder strings with values in an array
+	 *
+	 * @access	protected
+	 * @param	mixed
+	 * @return	boolean
+	 */	
+	protected function _replace_placeholders($str, $values)
+	{
+		if (is_string($str))
+		{
+			if (strpos($str, '{') !== FALSE)
+			{
+				if (!empty($values))
+				{
+					foreach($values as $key => $val)
+					{
+						$str = str_replace('{'.$key.'}', $val, $str);	
+					}
+				}
+				else
+				{
+					// returns nothing to prevent SQL errors
+					$str = '';
+				}
+			}
+		}
+		return $str;
 	}
 
 	// --------------------------------------------------------------------
@@ -4468,7 +4504,25 @@ class Data_record {
 		if (!is_array($values)) return FALSE;
 		foreach($values as $key => $val)
 		{
-			if ($this->prop_exists($key)) $this->$key = $val;
+
+			if ($this->prop_exists($key))
+			{
+				if ($this->_parent_model->field_type($key) == 'number' AND is_numeric($val))
+				{
+					if ($this->_parent_model->field_info($key) == 'float' OR $this->_parent_model->field_info($key) == 'decimal')
+					{
+						$this->$key = (float) $val;
+					}
+					else
+					{
+						$this->$key = (int) $val;
+					}
+				}
+				else
+				{
+					$this->$key = $val;
+				}
+			}
 		}
 	}
 	
