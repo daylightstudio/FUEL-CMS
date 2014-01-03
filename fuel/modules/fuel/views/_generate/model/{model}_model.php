@@ -43,7 +43,7 @@ class {model_name}_model extends Base_module_model {
 	
 	function on_before_save($values)
 	{
-		parent::on_after_save($values);
+		parent::on_before_save($values);
 		return $values;
 	}
 
