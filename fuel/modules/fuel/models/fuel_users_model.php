@@ -468,10 +468,16 @@ class Fuel_users_model extends Base_module_model {
 	 */	
 	public function on_before_clean($values)
 	{
-		// set a new password and hash after every save
 		if (!empty($values['password']) OR !empty($values['new_password'])) 
 		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
+			if (empty($values['salt']))
+			{
+				$values['salt'] = $this->salt();
+			}
+
+			// make sure the salt is only 32 characters long in case it was passed as a value
+			$values['salt'] = substr($values['salt'], 0, 32);
+
 			$pwd = (!empty($values['new_password'])) ? $values['new_password'] : $values['password'];
 			$values['password'] = $this->salted_password_hash($pwd, $values['salt']);
 		}
