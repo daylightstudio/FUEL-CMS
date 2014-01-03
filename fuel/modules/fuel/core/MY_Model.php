@@ -1477,12 +1477,13 @@ class MY_Model extends CI_Model {
 
 					// execute on_insert/update hook methods
 					$no_key = FALSE;
-					if (!$this->_has_key_field_value($values) AND $this->db->insert_id())
+					$insert_id = $this->db->insert_id();
+					if (!$this->_has_key_field_value($values) AND $insert_id)
 					{
 						$no_key = TRUE;
 						if (is_string($this->key_field))
 						{
-							$values[$this->key_field] = $this->db->insert_id();
+							$values[$this->key_field] = $insert_id;
 						}
 						$this->on_after_insert($values);
 					}
@@ -1514,9 +1515,10 @@ class MY_Model extends CI_Model {
 					$values = $this->serialize_field_values($values);
 					
 					$this->db->insert($this->table_name, $values);
+					$insert_id = $this->db->insert_id();
 					if (is_string($this->key_field))
 					{
-						$values[$this->key_field] = $this->db->insert_id();
+						$values[$this->key_field] = $insert_id;
 					}
 					$this->on_after_insert($values);
 					if ($record instanceof Data_record)
@@ -1552,9 +1554,9 @@ class MY_Model extends CI_Model {
 			}
 			
 			// returns the key value of the record upon save
-			if ($this->db->insert_id())
+			if (isset($insert_id) AND ! empty($insert_id))
 			{
-				$return = $this->db->insert_id();
+				$return = $insert_id;
 			}
 			else
 			{
