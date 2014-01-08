@@ -34,6 +34,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	public $page_id; // The page ID of the most recently queried page
 	public $honor_page_status = FALSE; // Will look at the pages published status as well
 	public $serialized_fields = array('value'); // The "value" field is serialized using JSON
+	public $foreign_keys = array('page_id' => array(FUEL_FOLDER => 'fuel_pages_model')); // Add foreign key relationship to fuel_pages_model
 
 	// --------------------------------------------------------------------
 	

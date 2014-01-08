@@ -151,11 +151,121 @@ class Fuel_custom_fields {
 	public function file($params)
 	{
 		$form_builder =& $params['instance'];
+
+		$file_params = $params;
 		if (!empty($params['multiple']))
 		{
-			$params['class'] = 'multifile '.$params['class'];
+			$file_params['class'] = 'multifile '.$params['class'];
 		}
-		return $form_builder->create_file($params);
+		$file_params['name'] = str_replace(array('[', ']', '__'), array('_', '', '_'), $params['name']);
+		$file_params['id'] = $params['name'].'_upload';
+
+
+		$str = '';
+		$preview = '';
+		$asset_folder = '';
+
+		if (!empty($params['value']) AND (!isset($params['display_preview']) OR $params['display_preview'] === TRUE))
+		{
+
+			// set the image preview containing class
+			if (empty($params['img_container_styles']))
+			{
+				$params['img_container_styles'] = 'overflow: auto; height: 200px; width: 400px; margin-top: 5px;';
+			}
+
+			// set the styles specific to the image
+			if (!isset($params['img_styles']))
+			{
+				$params['img_styles'] = 'float: left; width: 100px;';
+			}
+			if (isset($params['folder']) OR isset($params['upload_path']))
+			{
+				if (isset($params['folder']))
+				{
+					$asset_folder = trim($params['folder'], '/').'/';
+					$asset_path = $asset_folder.$params['value'];
+					$asset_path = assets_path($asset_path);
+				}
+				else
+				{
+					$asset_folder = assets_server_to_web_path($params['upload_path']).'/';
+					$asset_path = $asset_folder.$params['value'];
+				}
+
+				if (!empty($params['replace_values']))
+				{
+					foreach($params['replace_values'] as $key => $val)
+					{
+						if (is_string($val))
+						{
+							$asset_path = str_replace('{'.$key.'}', $val, $asset_path);
+							$asset_folder = str_replace('{'.$key.'}', $val, $asset_folder);
+						}
+					}
+				}
+				
+			}
+			$preview = '';
+			if (!empty($asset_path))
+			{
+				$preview .= '<a href="'.$asset_path.'" target="_blank">';
+				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
+				{
+					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+				}
+				else
+				{
+					$preview .= $asset_path;
+				}
+				$preview .= '</a>';
+			}
+
+		}
+
+		$params['after_html'] = $preview;
+		$str .= $form_builder->create_file($file_params);
+		
+		if (!empty($params['display_input']))
+		{
+			$params['data'] = array(
+			'folder' => $asset_folder,
+			);
+			$asset_class = '';
+			if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
+			{
+				$asset_class = 'asset_select';
+			}
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
+			$params['type'] = '';
+			$str .= '<br><br>'.$form_builder->create_field($params); 
+		}
+		else
+		{
+			$params['type'] = 'hidden';
+			$str .= $form_builder->create_field($params); 
+		}
+
+		// add image altering hidden field values
+		$img_params = array('create_thumb',
+						'thumb_marker',
+						'maintain_ratio',
+						'master_dim', 
+						'width', 
+						'height', 
+						'resize_and_crop',
+						'resize_method');
+
+		foreach($img_params as $img_p)
+		{
+			if (isset($params[$img_p]))
+			{
+
+				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p]);
+			}
+
+		}
+		return $str;
 	}
 
 	// --------------------------------------------------------------------
@@ -183,12 +293,12 @@ class Fuel_custom_fields {
 		$asset_class = '';
 		if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
 		{
-			$asset_class .= ' asset_select';
+			$asset_class .= 'asset_select';
 		}
 
 		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
 		{
-			$asset_class .= ' asset_upload';
+			$asset_class .= 'asset_upload';
 		}
 		$asset_class .= ' '.$params['folder'];
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
@@ -432,49 +542,48 @@ class Fuel_custom_fields {
 	public function inline_edit($params)
 	{
 		$form_builder =& $params['instance'];
-		if (!empty($params['module']))
-		{
-			// hackalicious... used to check for a model's module
-			$modules = $this->CI->fuel->modules->get(NULL, FALSE);
-			foreach($modules as $key => $mod)
-			{
-				$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
-				if (strtolower($params['module']) == $mod_name)
-				{
-					$params['module'] = $key;
-					break;
-				}
-			}
-
-			if (strpos($params['module'], '/') === FALSE)
-			{
-				$CI =& get_instance();
-				$module = $CI->fuel->modules->get($params['module'], FALSE);
-				$uri = (!empty($module)) ? $module->info('module_uri') : '';
-			}
-			else
-			{
-				$uri = $params['module'];
-			}
-
-			$permission = (!empty($module)) ? $module->permission : $uri;
-			if ($this->fuel->auth->has_permission($permission))
-			{
-				$inline_class = 'add_edit '.$uri;
-				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-				$params['data'] = array(
-					'module' => $uri,
-					);
-			}
-		}
-		
 		if (!empty($params['multiple']))
 		{
-			$params['mode'] = 'multi';
-			$field = $form_builder->create_multi($params);
+			$field = $this->multi($params);
 		}
 		else
 		{
+			if (!empty($params['module']))
+			{
+				// hackalicious... used to check for a model's module
+				$modules = $this->CI->fuel->modules->get(NULL, FALSE);
+				foreach($modules as $key => $mod)
+				{
+					$mod_name = preg_replace('#(\w+)_model$#', '$1', strtolower($mod->info('model_name')));
+					if (strtolower($params['module']) == $mod_name)
+					{
+						$params['module'] = $key;
+						break;
+					}
+				}
+
+				if (strpos($params['module'], '/') === FALSE)
+				{
+					$CI =& get_instance();
+					$module = $CI->fuel->modules->get($params['module'], FALSE);
+					$uri = (!empty($module)) ? $module->info('module_uri') : '';
+				}
+				else
+				{
+					$uri = $params['module'];
+				}
+
+				$permission = (!empty($module)) ? $module->permission : $uri;
+				if ($this->fuel->auth->has_permission($permission))
+				{
+					$inline_class = 'add_edit '.$uri;
+					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
+					$params['data'] = array(
+						'module' => $uri,
+						);
+				}
+			}
+		
 			$field = $form_builder->create_select($params);
 		}
 		
@@ -641,15 +750,16 @@ class Fuel_custom_fields {
 					$index = (!isset($params['index'])) ? $i : $params['index'];
 
 					// set file name field types to not use array syntax for name so they can be processed automagically
-					if (isset($field['type']) AND $field['type'] == 'file')
-					{
-						$field['name'] = $params[$field_name_key].'_'.$index.'_'.$key;
-					}
-					else
-					{
-						$field['name'] = $params[$field_name_key].'['.$index.']['.$key.']';
-					}
-					
+					// if (isset($field['type']) AND $field['type'] == 'file')
+					// {
+					// 	$field['name'] = $params[$field_name_key].'_'.$index.'_'.$key;
+					// }
+					// else
+					// {
+					// 	$field['name'] = $params[$field_name_key].'['.$index.']['.$key.']';
+					// }
+					$field['name'] = $params[$field_name_key].'['.$index.']['.$key.']';
+
 					// set the key to be the same of the parent... so post processing will work
 					$field['key'] = $params['key'];
 					$field['subkey'] = $key;

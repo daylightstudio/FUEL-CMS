@@ -176,15 +176,19 @@ class Fuel_pages extends Fuel_base_library {
 	 * Returns an array of view files pages used with opt-in controller method
 	 *
 	 * @access	public
+	 * @param	string name of view subfolder to search
 	 * @return	array
 	 */	
-	public function views()
+	public function views($subfolder = '')
 	{
 		$this->CI->load->helper('directory');
-		$views_path = APPPATH.'views/';
+		if (!empty($subfolder))
+		{
+			$subfolder = trim($subfolder, '/').'/';
+		}
+		$views_path = APPPATH.'views/'.$subfolder;
 		$view_pages = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
 		return $view_pages;
-		
 	}
 	
 	// --------------------------------------------------------------------
@@ -238,6 +242,37 @@ class Fuel_pages extends Fuel_base_library {
 		return $page;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of children page objects based on the root page
+	 *
+	 * @access	public
+	 * @param	string	The root page location value to search from
+	 * @param	boolean	Determines whether to return objects or not
+	 * @return	array
+	 */	
+	public function children($root, $objectify = FALSE)
+	{
+		$this->fuel->load_model('fuel_pages');
+		$cms_children = array_keys($this->CI->fuel_pages_model->children($root));
+
+		$view_children = $this->views($root);
+
+		$children = array_merge($view_children, $cms_children);
+		if (!$objectify)
+		{
+			return $children;
+		}
+		$children_objs = array();
+		foreach($children as $child)
+		{
+			$child = trim($child, '/');
+			$children_objs[$child] = $this->get($child);
+		}
+		return $children_objs;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1291,7 +1326,7 @@ class Fuel_page extends Fuel_base_library {
 				if (!empty($matches[1]))
 				{
 					$head_markers = implode("\n", array_unique($matches[1]));
-					$output = preg_replace('/(<body[^>]*>)/e', '"\\1\n".\$head_markers', $output);
+					$output = preg_replace('/(<body[^>]*>)/', "\\1\n".$head_markers, $output);
 				}
 				// remove the markers from the head now that we've captured them'
 				$cleaned_head = preg_replace('/('.$marker_reg_ex.')/', '', $head[1][0]);
