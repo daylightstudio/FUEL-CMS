@@ -567,6 +567,13 @@ $lang['action_delete'] = 'Delete';
 $lang['action_upload'] = 'Upload';
 $lang['action_replace'] = 'Replace';
 
+/*
+|--------------------------------------------------------------------------
+| Migrations
+|--------------------------------------------------------------------------
+*/
+$lang['database_migration_success'] = 'Successful database migration to version %1s';
+
 //$lang['import'] = 'Import';
 
 // now include the Javascript specific ones since there is some crossover

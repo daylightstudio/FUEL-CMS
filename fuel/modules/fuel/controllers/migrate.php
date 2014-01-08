@@ -85,6 +85,8 @@ class Migrate extends Fuel_base_controller {
 		{
 			echo lang('migrate_success', $version);
 		}
+		$msg = lang('database_migration_success', $version);
+		$this->fuel->logs->write($msg);
 	}
 
 	protected function _show_error($error = '')
