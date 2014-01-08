@@ -293,12 +293,12 @@ class Fuel_custom_fields {
 		$asset_class = '';
 		if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
 		{
-			$asset_class .= 'asset_select';
+			$asset_class .= ' asset_select';
 		}
 
 		if (!isset($params['upload']) OR (isset($params['upload']) AND $params['upload'] !== FALSE))
 		{
-			$asset_class .= 'asset_upload';
+			$asset_class .= ' asset_upload';
 		}
 		$asset_class .= ' '.$params['folder'];
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
