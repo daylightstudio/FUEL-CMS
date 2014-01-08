@@ -420,6 +420,7 @@ fuel.fields.asset_field = function(context, options){
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
+
 				if ($(this).is('.save')){
 					var $activeField = $('#' + activeField);
 					var assetVal = jQuery.trim($activeField.val());
@@ -470,7 +471,7 @@ fuel.fields.asset_field = function(context, options){
 	});
 
 	$('.asset_select_button', context).click(function(e){
-		activeField = $(e.target).parent().find('input,textarea:first').attr('id');
+		activeField = $(e.target).parent().find('input[type="text"],textarea').filter(':first').attr('id');
 		selectedAssetFolder = $(e.target).data('folder');
 
 		// legacy code
@@ -487,7 +488,6 @@ fuel.fields.asset_field = function(context, options){
 	var showAssetUpload = function(url){
 		var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 		$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
-		
 		// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
 			var iframeContext = this.contentDocument;
