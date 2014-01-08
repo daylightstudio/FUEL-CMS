@@ -57,7 +57,7 @@ class Pages extends Module {
 					{
 						show_error(lang('error_saving'));
 					}
-				
+
 					$this->_process_uploads();
 				
 					if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
@@ -131,6 +131,7 @@ class Pages extends Module {
 
 			if ($this->model->save($posted))
 			{
+				
 				$this->_process_uploads();
 				
 				if ($this->_save_page_vars($id, $posted))
@@ -474,6 +475,9 @@ class Pages extends Module {
 			
 			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
 
+			// run layout variable processing
+			$vars = $layout->process_saved_values($vars);
+			
 			$save = array();
 			
 			$lang = $this->input->post('language', TRUE);

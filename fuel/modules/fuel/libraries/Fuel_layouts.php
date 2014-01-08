@@ -311,7 +311,7 @@ class Fuel_layouts extends Fuel_base_library {
 					$init['filepath'] = 'libraries';
 				}
 
-				if (isset($init['module']))
+				if (isset($init['module']) AND ($init['module'] != 'app' AND $init['module'] != 'application'))
 				{
 					$custom_class_path = MODULES_PATH.$init['module'].'/'.$init['filepath'].'/'.$init['filename'];
 				}
@@ -918,6 +918,20 @@ class Fuel_layout extends Fuel_base_library {
 	public function post_process($output)
 	{
 		return $output;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Placeholder hook - used for processing the saved values of the layout
+	 *
+	 * @access	public
+	 * @param	array	process values array
+	 * @return	array
+	 */	
+	public function process_saved_values($values)
+	{
+		return $values;
 	}
 
 	// --------------------------------------------------------------------
