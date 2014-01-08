@@ -449,7 +449,7 @@ fuel.fields.asset_field = function(context, options){
 
 			// legacy code
 			if (!assetFolder) {
-				var assetTypeClasses = ($(this).attr('class') != undefined) ? $(this).data('folder').split(' ') : [];
+				var assetTypeClasses = ($(this).attr('class')) ? $(this).attr('class').split(' ') : [];
 				var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 			}
 			var btnLabel = '';
