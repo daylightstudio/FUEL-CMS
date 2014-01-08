@@ -433,6 +433,23 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>file_name</strong>: the new file name you want to assign</li>
 		<li><strong>encrypt_name</strong>: determines whether to encrypt the uploaded file name to give it a unique value. The default is FALSE</li>
 		<li><strong>multiple</strong>: determines whether to allow multiple files to be uploaded by the same field. The default is FALSE</li>
+		<li><strong>display_preview</strong>: determines whether to to display a preview of the asset</li>
+		<li><strong>replace_values</strong>: an array of key/value pairs that can be used to replace any placeholder values in the upload path</li>
+	</ul>
+
+	<h4>Image Specific</h4>
+	<ul>
+		<li><strong>is_image</strong>: will provide an image preview no matter if the image does not end with jpg, png, gif etc.</li>
+		<li><strong>img_container_styles</strong>: styles to associate with the image preview container (only applies to image assets)</li>
+		<li><strong>img_styles</strong>: styles applied to the actual image that is being previewed</li>
+		<li><strong>create_thumb</strong>: determines whether to create a thumbnail</li>
+		<li><strong>width</strong>: sets the width of the uploaded image</li>
+		<li><strong>height</strong>: sets the height of the uploaded image</li>
+		<li><strong>maintain_ratio</strong>: determines whether to maintain the images aspect ratio when resizing</li>
+		<li><strong>resize_and_crop</strong>: determines whether to crop the image to be forced into the dimensions</li>
+		<li><strong>resize_method</strong>: values can be "maintain_ratio" or "resize_and_crop". This value will trump any value set for the "maintain_ratio" and "resize_and_crop"</li>
+		<li><strong>master_dim</strong>: sets the dimension (height or width) to be the master dimension when resizing and maintaining aspect ratio</li>
+
 	</ul>
 	
 	<h4>Representations</h4>
@@ -772,7 +789,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Upload Specific</h4>
 	<ul>
 		<li><strong>upload</strong>: determines whether to display the upload button next to the field</li>
-		<li><strong>select</strong>: determines whether to display the select button next to the field</li>
 		<li><strong>folder</strong>: the asset folder to upload the asset (only applies if the upload parameter is not set to FALSE)</li>
 		<li><strong>multiple</strong>: determines whether you can assign more then one asset to the field which would be separated by a comma</li>
 		<li><strong>multiline</strong>: determines whether to use a textarea instead of a normal input field (good if using multiple parameter)</li>

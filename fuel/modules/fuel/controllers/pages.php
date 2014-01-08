@@ -57,8 +57,6 @@ class Pages extends Module {
 					{
 						show_error(lang('error_saving'));
 					}
-
-					$this->_process_uploads();
 				
 					if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
 					{
@@ -67,6 +65,8 @@ class Pages extends Module {
 				
 					if ($this->_save_page_vars($id, $posted))
 					{
+						$this->_process_uploads();
+
 						$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 				
 						// run after_create hook
@@ -90,7 +90,6 @@ class Pages extends Module {
 							redirect($url);
 						}
 					}
-					
 				}
 			}
 			
@@ -131,11 +130,12 @@ class Pages extends Module {
 
 			if ($this->model->save($posted))
 			{
-				
-				$this->_process_uploads();
-				
+
 				if ($this->_save_page_vars($id, $posted))
 				{
+
+					$this->_process_uploads();
+
 					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
 				
 					// run after_edit hook
@@ -152,6 +152,7 @@ class Pages extends Module {
 					{
 						$url .= '?lang='.$this->input->post('language');
 					}
+
 					redirect($url);
 				}
 			}
@@ -348,11 +349,7 @@ class Pages extends Module {
 		$this->form_builder->set_fields($fields);
 		
 		$page_vars = array();
-		if (!empty($id))
-		{
-			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id);
-		}
-		else if (!empty($_POST))
+		if (!empty($_POST))
 		{
 			$page_vars = array();
 			foreach($_POST as $key => $val)
@@ -361,7 +358,11 @@ class Pages extends Module {
 				$page_vars[$key] = $val;
 			}
 		}
-		
+		if (!empty($id))
+		{
+			$page_vars = array_merge($page_vars, $this->fuel_pagevariables_model->find_all_by_page_id($id));
+		}
+
 		$this->form_builder->set_field_values($page_vars);
 		
 		$conflict = $this->_has_conflict($fields);
@@ -477,7 +478,14 @@ class Pages extends Module {
 
 			// run layout variable processing
 			$vars = $layout->process_saved_values($vars);
-			
+
+			// validate before deleting
+			if (!$layout->validate($vars))
+			{
+				add_errors($layout->errors());
+				return FALSE;
+			}
+
 			$save = array();
 			
 			$lang = $this->input->post('language', TRUE);
@@ -489,6 +497,7 @@ class Pages extends Module {
 				$delete['language'] = $this->input->post('language', TRUE);
 			}
 			
+
 			$this->fuel_pagevariables_model->delete($delete);
 			$pagevariable_table = $this->db->table_info($this->fuel_pagevariables_model->table_name());
 			$var_types = $pagevariable_table['type']['options'];
@@ -525,18 +534,12 @@ class Pages extends Module {
 					}
 					$where = (!empty($id)) ? $where : array();
 
-					if (!$layout->validate($vars))
-					{
-						add_errors($layout->errors());
-						return FALSE;
-					}
-
+					
 					if (!$this->fuel_pagevariables_model->save($save, $where))
 					{
 						add_error(lang('error_saving'));
 						return FALSE;
 					}
-
 				}
 			}
 
@@ -603,6 +606,23 @@ class Pages extends Module {
 		{
 			return;
 		}
+
+		$pagevars = array();
+		if (!empty($id))
+		{
+			$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
+
+			// the following will pre-populate fields of a different language to the default values
+			if (empty($pagevars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+			{
+				$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+			}
+
+			$pagevars = array_merge($pagevars, $vars);
+
+			$layout->set_field_values($pagevars);
+		}
+		
 		$fields = $layout->fields();
 
 		$fields['__layout__'] = array('type' => 'hidden', 'value' => $layout_name);
@@ -623,22 +643,8 @@ class Pages extends Module {
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
-		
-		if (!empty($id))
-		{
-			$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
+		$this->form_builder->set_field_values($pagevars);
 
-			// the following will pre-populate fields of a different language to the default values
-			if (empty($pagevars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
-			{
-				$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
-			}
-
-			$pagevars = array_merge($pagevars, $vars);
-
-			$this->form_builder->set_field_values($pagevars);
-		}
-		
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}
@@ -1003,6 +1009,53 @@ class Pages extends Module {
 			}
 			
 			$this->output->set_output($output);
+		}
+	}
+
+	protected function _process_upload_data($field_name, $uploaded_data, $posted)
+	{
+		$field_name = end(explode('--', $field_name));
+
+		foreach($uploaded_data as $key => $val)
+		{
+			$file_tmp = current(explode('___', $key));
+
+			// get the file name field
+			// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
+			// the model does not have an array key field AND there is a key field value posted
+			if (isset($field_name) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
+			{
+				$id = $posted[$this->model->key_field()];
+				$where = array($this->fuel_pagevariables_model->table_name().'.page_id'=> $id, 'name' => $field_name);
+				$data = $this->fuel_pagevariables_model->find_one_array($where);
+
+				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+				{
+					$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+				}
+
+				if (isset($posted[$field_name]))
+				{
+					$save = TRUE;
+				}
+
+				// look for repeatable values that match
+				if (preg_match('#(.+)_(\d+)_(.+)#', $file_tmp, $matches))
+				{
+					if (isset($posted[$matches[1]][$matches[2]][$matches[3]]) AND isset($data[$matches[1]][$matches[2]][$matches[3]]))
+					{
+						$data['value'] = $posted[$file_tmp];
+						$save = TRUE;
+					}
+				}
+				if ($save)
+				{
+
+					$data['value'] = $val['file_name'];
+					$this->fuel_pagevariables_model->save($data);
+				}
+			}
 		}
 	}
 	
