@@ -144,7 +144,7 @@ class Fuel_assets_model extends CI_Model {
 					$file['name'] = $key;
 					$file['preview/kb'] = $files[$key]['size'];
 					$file['link'] = NULL;
-					$file['last_updated'] = english_date($files[$key]['date'], true);
+					$file['last_updated'] = date('Y-m-d H:i:s', $files[$key]['date']);
 					$return[] = $file;
 				}
 			}
