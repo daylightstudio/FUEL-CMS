@@ -52,7 +52,7 @@ class Dashboard extends Fuel_base_controller {
 			$feed_data = simplepie($feed, $limit);
 
 			// check for latest version
-			if (array_key_exists('latest_fuel_version', $feed_data) AND ((float)$feed_data['latest_fuel_version'] > FUEL_VERSION))
+			if (array_key_exists('latest_fuel_version', $feed_data) AND version_compare($feed_data['latest_fuel_version'], FUEL_VERSION, '>'))
 			{
 				$vars['latest_fuel_version'] = $feed_data['latest_fuel_version'];
 			}

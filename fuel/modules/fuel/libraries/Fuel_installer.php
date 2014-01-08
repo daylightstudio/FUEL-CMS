@@ -527,9 +527,11 @@ class Fuel_installer extends Fuel_base_library {
 	{
 		if (isset($this->config['compatibility']))
 		{
-			$compatibility = (float) $this->config['compatibility'];
-			$fuel_version = (float) FUEL_VERSION;
-			if ($compatibility < $fuel_version)
+			$compatibility = $this->config['compatibility'];
+			$fuel_version = $this->fuel->version();
+
+			// if the current version of FUEL is greater then or equal to the compatability version, the we are good to go
+			if (version_compare($compatibility, $fuel_version, '>='))
 			{
 				return FALSE;
 			}
