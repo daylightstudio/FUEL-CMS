@@ -35,7 +35,7 @@ class Fuel_pages_model extends Base_module_model {
 	public $unique_fields = array('location'); // The location field is unique
 	public $hidden_fields = array('last_modified', 'last_modified_by'); // The Last modified and Last modified by are hidden fields
 	public $ignore_replacement = array('location'); // The location value will be ignored upon replacement
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -61,7 +61,13 @@ class Fuel_pages_model extends Base_module_model {
 	public function related_items($values = array())
 	{
 		$CI =& get_instance();
+
+		// don't display if it is disabled
+		if ($CI->fuel->modules->get('navigation')->info('disabled') === TRUE) return '';
+
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
+		
+
 		$where['location'] = $values['location'];
 		$related_items = $CI->fuel_navigation_model->find_all_array_assoc('id', $where);
 		$return = array();
@@ -222,6 +228,23 @@ class Fuel_pages_model extends Base_module_model {
 		}
 		$data = $this->find_one_array($where, 'location desc');
 		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns all the children pages basd on the location URI
+	 *
+	 * @access	public
+	 * @param  string URI path to start from (e.g. about would find about/history, about/contact, etc)
+	 * @return	void
+	 */	
+	function children($root)
+	{
+		$root = trim($root, '/').'/';
+		$this->db->like('location', $root, 'after');
+		$children = $this->find_all_assoc('location');
+		return $children;
 	}
 
 	// --------------------------------------------------------------------
@@ -445,4 +468,14 @@ class Fuel_pages_model extends Base_module_model {
 }
 
 class Fuel_page_model extends Base_module_record {
+	
+	function get_variables($language = NULL)
+	{
+		$params =array();
+		if (!empty($language))
+		{
+			$params['where'] = array('language' => $language);
+		}
+		return $this->lazy_load(array('page_id' => $this->id), array(FUEL_FOLDER => 'fuel_pages_model'), TRUE, $params);
+	}
 }
