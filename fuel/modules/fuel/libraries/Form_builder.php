@@ -2530,65 +2530,6 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates a number field for the form... basically a text field
-	 *
-	 * @access	public
-	 * @param	array fields parameters
-	 * @return	string
-	 */
-	public function create_number($params)
-	{
-		$defaults = array(
-			'min' => '0', // sets the minimum number that can be entered
-			'max' => NULL, // sets the maximum number that can be entered
-			'step' => NULL, // specifies the increment that gets applied when pressing the up/down increment arrows
-			'decimal' => 0, // determines whether to allow for decimal numbers
-			'negative' => 0, // determines whether to allow for negative numbers
-		);
-
-		$params = $this->normalize_params($params, $defaults);
-	
-		$attrs = array(
-			'id' => $params['id'],
-			'class' => $params['class'], 
-			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled'],
-			'required' => (!empty($params['required']) ? TRUE : NULL),
-			'min' => (isset($params['min']) ? $params['min'] : '0'),
-			'max' => (isset($params['max']) ? $params['max'] : NULL),
-			'step' => (isset($params['step']) ? $params['step'] : NULL),
-			'data' => $params['data'],
-			'style' => $params['style'],
-			'tabindex' => $params['tabindex'],
-		);
-
-		$numeric_class = 'numeric';
-		$attrs['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
-		$params['type'] = 'number';
-		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
-		$negative = (!empty($params['negative'])) ? 1 : 0;
-		
-		if (empty($params['size']))
-		{
-			$attrs['size'] = 10;
-		}
-
-		if (empty($params['maxlength']))
-		{
-			$attrs['maxlength'] = 10;
-		}
-
-		// set data values for jquery plugin to use
-		$attrs['data'] = array(
-			'decimal' => $decimal,
-			'negative' => $negative,
-			);
-		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
 	 * Creates an email field for the form... supported by modern browsers
 	 *
 	 * @access	public
