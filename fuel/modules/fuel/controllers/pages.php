@@ -458,8 +458,10 @@ class Pages extends Module {
 			// add in block fields
 			foreach($fields as $key => $val)
 			{
+				// check blocks for post processing of variables
 				if (isset($val['type']) AND $val['type'] == 'block' AND isset($posted[$key]['block_name']))
 				{
+
 					$block_layout = $this->fuel->layouts->get($posted[$key]['block_name'], 'block');
 					if ($block_layout)
 					{
@@ -467,15 +469,52 @@ class Pages extends Module {
 						$fields = array_merge($fields, $block_fields);
 					}
 				}
+
+				// check for template layouts that may have nested fields... this is really ugly
+				if (!empty($val['fields']) AND is_array($val['fields']))
+				{
+					//$fields = array_merge($fields, $val['fields']);
+					foreach($val['fields'] as $k => $v)
+					{
+						if (isset($v['type']) AND $v['type'] == 'block' AND isset($posted[$key]))
+						{
+							if (is_array($posted[$key]) AND is_int(key($posted[$key])))
+							{
+								foreach($posted[$key] as $a => $b)
+								{
+									if (is_array($b))
+									{
+										foreach($b as $c => $d)
+										{
+											if (isset($d['block_name']))
+											{
+												$block_layout = $this->fuel->layouts->get($d['block_name'], 'block');
+												if ($block_layout)
+												{
+													$block_fields = $block_layout->fields();
+
+													// now switch out the key to allow it to trigger the post_process_callback...
+													foreach($block_fields as $e => $f)
+													{
+														$block_fields[$e]['subkey'] = $k;
+														$block_fields[$e]['key'] = $key;
+													}
+													$fields = array_merge($fields, $block_fields);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-			
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->set_field_values($vars);
-			
 			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
-
 			// run layout variable processing
 			$vars = $layout->process_saved_values($vars);
 
