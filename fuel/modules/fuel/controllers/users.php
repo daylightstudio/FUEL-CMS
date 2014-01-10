@@ -15,10 +15,17 @@ class Users extends Module {
 		$user = $this->model->find_by_key($id, 'array');
 		if (!empty($user))
 		{
-			if (!$this->fuel->auth->is_super_admin() && is_true_val($user['super_admin']))
+			// security precaution to make sure that you can't edit a super admins profile unless you are one
+			if (!$this->fuel->auth->is_super_admin() AND is_true_val($user['super_admin']))
 			{
 				show_404();
 			}
+		}
+
+		// security precaution to remove permissions from $_POST if you don't have permissions for err... assigning permissions
+		if (!empty($_POST['permissions']) AND !$this->fuel->auth->has_permission('permissions'))
+		{
+			unset($_POST['permissions']);
 		}
 		parent::edit($id, NULL);
 	}
