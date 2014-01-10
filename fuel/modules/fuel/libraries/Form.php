@@ -713,12 +713,20 @@ class Form {
 					continue;
 				}
 
-				// create data fields 
+				// remove the id if set to FALSE
 				if ($key == 'id' AND $val === FALSE)
 				{
 					// this gets stripped out upon rendering if the id is blank so we set it so if the value is FALSE
 					$str .= ' id=""';
 				}
+
+				// simply add this as an attribute string
+				else if ($key == 'attributes' AND is_string($val))
+				{
+					$str .= ' '.$val;
+				}
+				
+				// create data fields 
 				else if (is_array($val))
 				{
 					if ($key == 'data')

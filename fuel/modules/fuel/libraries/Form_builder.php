@@ -1173,6 +1173,7 @@ class Form_builder {
 			'represents' => '', // specifies what other types of fields that this field should represent
 			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
+			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"'
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
 		
@@ -2348,32 +2349,80 @@ class Form_builder {
 
 						if (isset($val["'.$process_key.'"]))
 						{
+							if (is_string($val["'.$process_key.'"]))
+							{
+								$z = $val["'.$process_key.'"];
+							}
+							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							{
+								$z = $val["'.$process_key.'"]["'.$params['name'].'"];
+							}
+
 							$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
 							$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
 							$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
 							$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+							
 
-							if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+							if (is_string($val["'.$process_key.'"]))
 							{
-								if ($hr > 24) 
+								$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
+								$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
+								$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
+								$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+
+								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 								{
-									$hr = "00";
+									if ($hr > 24) 
+									{
+										$hr = "00";
+									}
+									else
+									{
+										$hr = (int) $hr - 12;
+										$ampm = "pm";
+									}
 								}
-								else
+
+								$dateval = $value[$key]["'.$process_key.'"];
+								if ($date != "")
 								{
-									$hr = (int) $hr - 12;
-									$ampm = "pm";
+									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+								}
+								if (!empty($dateval))
+								{
+									$value[$key]["'.$process_key.'"] = $dateval;	
 								}
 							}
+							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							{
+								$date = (!empty($val["'.$process_key.'"]["'.$params['name'].'"]) AND is_date_format($val["'.$process_key.'"]["'.$params['name'].'"])) ? current(explode(" ", $val["'.$process_key.'"]["'.$params['name'].'"])) : "";
+								$hr   = (!empty($val["'.$process_key.'"]["'.$params['name'].'_hour"]) AND  (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] > 0 AND (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] < 24) ? $val["'.$process_key.'"]["'.$params['name'].'_hour"] : "";
+								$min  = (!empty($val["'.$process_key.'"]["'.$params['name'].'_min"]) AND is_numeric($val["'.$process_key.'"]["'.$params['name'].'_min"]))  ? $val["'.$process_key.'"]["'.$params['name'].'_min"] : "00";
+								$ampm = (isset($val["'.$process_key.'"]["'.$params['name'].'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'"]["'.$params['name'].'_am_pm"] : "";
 
-							$dateval = $value[$key]["'.$process_key.'"];
-							if ($date != "")
-							{
-								if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
-							}
-							if (!empty($dateval))
-							{
-								$value[$key]["'.$process_key.'"] = $dateval;	
+								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+								{
+									if ($hr > 24) 
+									{
+										$hr = "00";
+									}
+									else
+									{
+										$hr = (int) $hr - 12;
+										$ampm = "pm";
+									}
+								}
+
+								$dateval = $value[$key]["'.$process_key.'"]["'.$params['name'].'"];
+								if ($date != "")
+								{
+									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+								}
+								if (!empty($dateval))
+								{
+									$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $dateval;	
+								}
 							}
 						}
 					}
@@ -2417,6 +2466,65 @@ class Form_builder {
 		$func = create_function('$value', $func_str);
 		$this->set_post_process($params['key'], $func);
 		return $str;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates a number field for the form... basically a text field
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_number($params)
+	{
+		$defaults = array(
+			'min' => '0', // sets the minimum number that can be entered
+			'max' => NULL, // sets the maximum number that can be entered
+			'step' => NULL, // specifies the increment that gets applied when pressing the up/down increment arrows
+			'decimal' => 0, // determines whether to allow for decimal numbers
+			'negative' => 0, // determines whether to allow for negative numbers
+		);
+
+		$params = $this->normalize_params($params, $defaults);
+	
+		$attrs = array(
+			'id' => $params['id'],
+			'class' => $params['class'], 
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled'],
+			'required' => (!empty($params['required']) ? TRUE : NULL),
+			'min' => (isset($params['min']) ? $params['min'] : '0'),
+			'max' => (isset($params['max']) ? $params['max'] : NULL),
+			'step' => (isset($params['step']) ? $params['step'] : NULL),
+			'data' => $params['data'],
+			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
+		);
+
+		$numeric_class = 'numeric';
+		$attrs['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
+		$params['type'] = 'number';
+		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
+		$negative = (!empty($params['negative'])) ? 1 : 0;
+		
+		if (empty($params['size']))
+		{
+			$attrs['size'] = 10;
+		}
+
+		if (empty($params['maxlength']))
+		{
+			$attrs['maxlength'] = 10;
+		}
+
+		// set data values for jquery plugin to use
+		$attrs['data'] = array(
+			'decimal' => $decimal,
+			'negative' => $negative,
+			);
+		return $this->form->input($params['name'], $params['type'], $params['value'], $attrs);
 	}
 	
 	// --------------------------------------------------------------------

@@ -135,6 +135,7 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 	</li>
 	<li><strong>row_class</strong>: sets a class on the containing table row or container div (depending on the rendering method)</li>
 	<li><strong>tabindex</strong>: sets the tabindex value of a field. If using a mutli select, datetime, time, or enum, the value needs to be an array</li>
+	<li><strong>attributes</strong>: a generic string value of attributes for the form field (e.g. 'class="myclass"'</li>
 </ul>
 
 <h2 id="form_field_types">Form Field Types</h2>
@@ -1046,6 +1047,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		post-processed result is a JSON encoded string:</p>
 	<ul>
 		<li><strong>delimiter</strong>: the delimiter used to separate between a key and a value. The default is a ":" (colon).</li>
+		<li><strong>allow_numeric_indexes</strong>: determines whether to display numeric indexes or not.</li>
+		<li><strong>allow_empty_values</strong>: determines whether to display items that may have no value.</li>
 	</ul>
 	
 	<h4>Example</h4>
