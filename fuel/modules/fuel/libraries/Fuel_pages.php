@@ -809,9 +809,6 @@ class Fuel_page extends Fuel_base_library {
 			$layout_vars['CI'] =& $this->CI;
 
 			$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $layout_vars, TRUE);
-
-			// now parse any template like syntax...
-			$output = $this->CI->parser->parse_string($output, $vars, TRUE);
 			unset($layout_vars);
 
 			// check if the content should be double parsed
