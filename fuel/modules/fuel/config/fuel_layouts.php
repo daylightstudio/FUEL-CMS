@@ -86,7 +86,7 @@ $config['layouts']['alias'] = array(
 $config['layouts']['404_error'] = array(
 	'label' => '404 Error',
 	'fields' => array(
-		'heading' => array('type' => 'copy', 'label' => lang('layout_field_heading')),
+		'heading' => array('label' => lang('layout_field_heading')),
 		'body' => array('label' => lang('layout_field_body')),
 	)
 );
