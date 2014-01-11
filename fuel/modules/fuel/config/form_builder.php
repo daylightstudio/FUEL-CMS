@@ -1,5 +1,6 @@
 <?php 
 $config['js'][] = array(FUEL_FOLDER => array(
+								'jquery/plugins/jquery-migrate-1.1.1.js',
 								'jquery/plugins/jquery.formbuilder',
 								'fuel/custom_fields.js',
 								)
