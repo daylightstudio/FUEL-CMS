@@ -23,6 +23,10 @@ class Manage extends Fuel_base_controller {
 	public function cache()
 	{
 		$this->_validate_user('manage/cache');	
+
+		// to display the logout button in the top right of the admin
+		$load_vars['user'] = $this->fuel->auth->user_data();
+		$this->load->vars($load_vars);
 		
 		$this->fuel->admin->set_nav_selected('manage/cache');
 		
@@ -51,7 +55,7 @@ class Manage extends Fuel_base_controller {
 
 		if ($validate)
 		{
-			$this->_validate_user('manage/cache');	
+			$this->_validate_user('manage/cache');
 		}
 
 		$this->fuel->cache->clear();
