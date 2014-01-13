@@ -685,7 +685,7 @@ class Fuel_module extends Fuel_base_library {
 			}
 			
 			// localize certain fields
-			if ($module_name = lang('module_'.$this->module))
+			if (empty($info['module_name']) AND $module_name = lang('module_'.$this->module))
 			{
 				$info['module_name'] = $module_name;
 			}
