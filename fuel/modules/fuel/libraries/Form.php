@@ -117,7 +117,7 @@ class Form {
 	{
 		if (!empty($attrs)) $this->attrs = $attrs;
 		if (!empty($validator)) $this->validator =& $validator;
-		return "<form".$this->_create_attrs($this->attrs).">";
+		return "<form".$this->create_attrs($this->attrs).">";
 	}
 	
 	// --------------------------------------------------------------------
@@ -194,7 +194,7 @@ class Form {
 		{
 			$fieldset_id = " id=\"".$fieldset_id."\"";
 		}
-		$str = "<fieldset".$fieldset_id." ".$this->_create_attrs($attrs).">\n";
+		$str = "<fieldset".$fieldset_id." ".$this->create_attrs($attrs).">\n";
 		$str .= "<legend>".$legend."</legend>\n";
 		return $str;
 	}
@@ -236,7 +236,7 @@ class Form {
 	 */
 	public function input($name, $type = 'text', $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
+		$attrs = $this->create_attrs($attrs);
 		if (empty($type)) $type = 'text';
 		$elem = new Form_input($type, $name, Form::prep($value), $attrs);
 		return $this->_create_element($elem);
@@ -421,7 +421,7 @@ class Form {
 	 */
 	public function select($name, $options = array(), $value = '', $attrs = '', $first_option = '', $disabled = array())
 	{
-		$attrs = $this->_create_attrs($attrs);
+		$attrs = $this->create_attrs($attrs);
 		settype($options, 'array');
 		$elem = new Form_select($name, $options, $value, $attrs, $first_option, $disabled);
 		return $this->_create_element($elem);
@@ -448,7 +448,7 @@ class Form {
 	 */
 	public function textarea($name, $value = '', $attrs = '')
 	{
-		$attrs = $this->_create_attrs($attrs);
+		$attrs = $this->create_attrs($attrs);
 		$elem = new Form_textarea($name, Form::prep($value), $attrs);
 		return $this->_create_element($elem);
 	}
@@ -507,7 +507,7 @@ class Form {
 		}
 		else
 		{
-			$attrs = $this->_create_attrs($attrs);
+			$attrs = $this->create_attrs($attrs);
 			$btn = new Form_button('button', $name, $value, $attrs);
 			$elem = $btn->render();
 		}
@@ -553,8 +553,8 @@ class Form {
 	 */
 	public function image($src, $name = '', $value = '', $attrs = '')
 	{
-		$src = $this->_create_attrs(array('src' => $src));
-		$attrs = $src.$this->_create_attrs($attrs);
+		$src = $this->create_attrs(array('src' => $src));
+		$attrs = $src.$this->create_attrs($attrs);
 		return $this->input($name, 'image', $value, $attrs);
 	}
 	
@@ -695,11 +695,11 @@ class Form {
 	/**
 	 * Creates form attributes
 	 * 
-	 * @access protected
+	 * @access public
 	 * @param mixed attrs if array then create string
 	 * @return string
 	 */
-	protected function _create_attrs($attrs)
+	public function create_attrs($attrs)
 	{
 		if (is_array($attrs))
 		{

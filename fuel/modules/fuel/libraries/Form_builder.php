@@ -1656,6 +1656,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		
 		if (isset($params['attrs']))
@@ -1708,6 +1709,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
@@ -1755,6 +1757,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		if ($params['checked'])
 		{
@@ -1792,6 +1795,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -1838,6 +1842,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		return $this->form->submit($params['value'], $params['name'], $attrs);
 	}
@@ -1862,6 +1867,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		$use_input_type = (isset($params['use_input']) AND $params['use_input'] === FALSE) ? FALSE : TRUE;
 		return $this->form->button($params['value'], $params['name'], $attrs, $use_input_type);
@@ -1984,6 +1990,7 @@ class Form_builder {
 						'id' => Form::create_id($params['name']).$i,
 						'style' => '', // to overwrite any input width styles
 						'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i - 1])) ? $params['tabindex'][$i - 1] : NULL),
+						'attributes' => $params['attributes'],
 					);
 
 					if (in_array($key, $value))
@@ -2042,6 +2049,7 @@ class Form_builder {
 			'required' => (!empty($params['required']) ? TRUE : NULL),
 			'accept' => str_replace('|', ',', $params['accept']),
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 		
 		if (is_array($this->form_attrs))
@@ -2501,6 +2509,7 @@ class Form_builder {
 			'data' => $params['data'],
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
 		);
 
 		$numeric_class = 'numeric';

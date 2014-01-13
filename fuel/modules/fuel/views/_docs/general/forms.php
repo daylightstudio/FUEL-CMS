@@ -135,7 +135,7 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 	</li>
 	<li><strong>row_class</strong>: sets a class on the containing table row or container div (depending on the rendering method)</li>
 	<li><strong>tabindex</strong>: sets the tabindex value of a field. If using a mutli select, datetime, time, or enum, the value needs to be an array</li>
-	<li><strong>attributes</strong>: a generic string value of attributes for the form field (e.g. 'class="myclass"'</li>
+	<li><strong>attributes</strong>: a generic string value of attributes for the form field (e.g. 'class="myclass"'). WARNING... this may clash with other attributes specified above</li>
 </ul>
 
 <h2 id="form_field_types">Form Field Types</h2>
