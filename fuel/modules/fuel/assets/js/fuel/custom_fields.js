@@ -16,8 +16,17 @@ fuel.fields.datetime_field = function(context){
 		showOn: 'button',
 	    buttonText: 'Click to show the calendar',
 	    buttonImageOnly: true, 
-	    buttonImage: jqx_config.imgPath + 'calendar.png'
 	}
+
+	// first look for jqx variable
+	if (typeof(jqx_config) != 'undefined') {
+		o.buttonImage = jqx_config.imgPath + 'calendar.png'
+
+	// then look for a generic imgPath variable
+	} else if (typeof(imgPath) != 'undefined'){
+		 o.buttonImage = imgPath + 'calendar.png';
+	}
+
 	$('.datepicker', context).each(function(i){
 		var options = {
 			dateFormat : $(this).attr('data-date_format'),
@@ -27,7 +36,8 @@ fuel.fields.datetime_field = function(context){
 			firstDay : $(this).attr('data-first_day')
 		};
 		var opts = $.extend(o, options);
-		$.datepicker.regional[o.region];
+		$.datepicker.regional[o.region];	
+		
 		$(this).datepicker(opts);
 	})
 }
