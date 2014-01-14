@@ -791,7 +791,7 @@ class Base_module_model extends MY_Model {
 	 * Returns CSV data that will be downloaded automatically. Overwrite this method for more specific output
 	 *
 	 * @access	public
-	 * @param	array An array that contains "col", "order", "offset", "limit", "searh_term" to help with the formatting of the output. By default only the "col" and "order" parameters are used (optional)
+	 * @param	array An array that contains "col", "order", "offset", "limit", "search_term" to help with the formatting of the output. By default only the "col" and "order" parameters are used (optional)
 	 * @return	string
 	 */	
 	public function export_data($params = array())
