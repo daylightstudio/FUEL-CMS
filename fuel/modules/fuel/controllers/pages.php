@@ -515,7 +515,9 @@ class Pages extends Module {
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->set_field_values($vars);
 			$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
+
 			// run layout variable processing
+			$vars['page_id'] = $id;
 			$vars = $layout->process_saved_values($vars);
 
 			// validate before deleting
