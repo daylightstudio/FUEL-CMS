@@ -51,4 +51,11 @@ class Fuel_{module} extends Fuel_advanced_module {
 		parent::initialize($params);
 		$this->set_params($this->_config);
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Add your custom methods for this advanced module below.
+	 * You will be able to access it via $this->fuel->{module}->my_method()
+	 */	
 }
