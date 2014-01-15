@@ -147,7 +147,9 @@ fuel.calcHeight = function(context){
 		var elems = '#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions';
 	}
 	$(elems, context).each(function(i){
-		height += $(this).outerHeight();
+		// must use false to get around bug with jQuery 1.8
+		var outerHeight = parseInt($(this).outerHeight(false));
+		if (outerHeight) height += outerHeight;
 	})
 	if (height > 480) {
 		height = 480;
@@ -162,9 +164,8 @@ fuel.adjustIframeWindowSize = function(){
 	if (iframe.length){
 		iframe = iframe[0];
 		var contentDoc = iframe.contentDocument;
-		var height = fuel.calcHeight(contentDoc);
-
-		var width = $('#fuel_main_content_inner .form', contentDoc).width() + 50;
+		var height = parseInt(fuel.calcHeight(contentDoc));
+		var width = parseInt($('#fuel_main_content_inner .form', contentDoc).width()) + 50;
 		$(iframe).height(height);
 		$(iframe).width(width);
 	}

@@ -121,10 +121,9 @@ if (fuel == undefined) var fuel = {};
 				var MIN_WIDTH = 850;
 				var contentDoc = iframe.contentDocument;
 				var docHeight = fuel.calcHeight(contentDoc);
-				
 				if ($('#fuel_main_content_inner .form, #fuel_actions', contentDoc).size()){
-					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth() + 74; // 74 includes the 37 in padding on each side
-					var width2 = $('#fuel_actions', contentDoc).outerWidth();
+					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth(false) + 74; // 74 includes the 37 in padding on each side
+					var width2 = $('#fuel_actions', contentDoc).outerWidth(false);
 					var docWidth = (width1 > width2) ? width1 : width2;
 
 					// check if fuel_actions is there so that we don't make it too wide for single variables being edited
@@ -351,7 +350,6 @@ if (fuel == undefined) var fuel = {};
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
-								
 								$('#' + iframeId).load(function(){
 									var iframe = this;
 									var contentDoc = iframe.contentDocument;
