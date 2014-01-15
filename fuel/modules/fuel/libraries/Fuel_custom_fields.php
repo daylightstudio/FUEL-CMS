@@ -165,7 +165,7 @@ class Fuel_custom_fields {
 		$preview = '';
 		$asset_folder = '';
 
-		if (!empty($params['value']) AND (!isset($params['display_preview']) OR $params['display_preview'] === TRUE))
+		if ((!isset($params['display_preview']) OR $params['display_preview'] === TRUE))
 		{
 
 			// set the image preview containing class
@@ -179,6 +179,12 @@ class Fuel_custom_fields {
 			{
 				$params['img_styles'] = 'float: left; width: 100px;';
 			}
+
+			if (empty($params['value'])) 
+			{
+				$params['value'] = '';
+			}
+
 			if (isset($params['folder']) OR isset($params['upload_path']))
 			{
 				if (isset($params['folder']))
@@ -207,7 +213,7 @@ class Fuel_custom_fields {
 				
 			}
 			$preview = '';
-			if (!empty($asset_path))
+			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= '<a href="'.$asset_path.'" target="_blank">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
