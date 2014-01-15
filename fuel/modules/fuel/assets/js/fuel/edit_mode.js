@@ -87,10 +87,10 @@ if (fuel == undefined) var fuel = {};
 					
 					var contentDoc = iframe.contentDocument;
 
-					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight();
-					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight();
-					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight();
-					var listTableHeight = $('#data_table_container', contentDoc).outerHeight();
+					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight(false);
+					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight(false);
+					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight(false);
+					var listTableHeight = $('#data_table_container', contentDoc).outerHeight(false);
 					docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
 					
 					//docHeight = 100
@@ -121,6 +121,7 @@ if (fuel == undefined) var fuel = {};
 				var MIN_WIDTH = 850;
 				var contentDoc = iframe.contentDocument;
 				var docHeight = fuel.calcHeight(contentDoc);
+				
 				if ($('#fuel_main_content_inner .form, #fuel_actions', contentDoc).size()){
 					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth(false) + 74; // 74 includes the 37 in padding on each side
 					var width2 = $('#fuel_actions', contentDoc).outerWidth(false);
@@ -350,6 +351,7 @@ if (fuel == undefined) var fuel = {};
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
+								
 								$('#' + iframeId).load(function(){
 									var iframe = this;
 									var contentDoc = iframe.contentDocument;
