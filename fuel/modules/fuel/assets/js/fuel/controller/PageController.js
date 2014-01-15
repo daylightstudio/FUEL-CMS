@@ -86,15 +86,15 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		});
 		
 		// only change for those that already exist
-		if ($('#id').val() && $('#id').val().length){
-			$('#layout').change();
-		} else {
+//		if ($('#id').val() && $('#id').val().length){
+//			$('#layout').change();
+//		} else {
 			bindFields();
 			var context = $('#fuel_main_content_inner');
 			_this.initSpecialFields(context);
 			$('#form').formBuilder().initialize();
 			$('#layout_vars').trigger('varsLoaded');
-		}
+//		}
 
 
 		// add ability to create new navigation inline

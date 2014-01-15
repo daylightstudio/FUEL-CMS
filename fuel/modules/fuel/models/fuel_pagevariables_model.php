@@ -320,6 +320,11 @@ class Fuel_pagevariables_model extends Base_module_model {
 			if (isset($page->id))
 			{
 				$layout = $this->fuel->layouts->get($page->layout);
+
+				// grab values from entire set of layout vars to be used with merging (e.g. {page_id})
+				$page_vars = $this->find_all_by_page_id($values['page_id']);
+				$values = array_merge($page_vars, $values);
+				$layout->set_field_values($values);
 				$layout_fields = $layout->fields();
 				if (isset($layout_fields[$values['name']]))
 				{

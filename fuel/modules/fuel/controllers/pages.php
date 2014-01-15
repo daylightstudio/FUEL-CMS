@@ -49,7 +49,7 @@ class Pages extends Module {
 
 				// run before_save hook
 				$this->_run_hook('before_save', $posted);
-
+				
 				if ($id = $this->model->save($posted))
 				{
 
@@ -217,7 +217,6 @@ class Pages extends Module {
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
 		
-		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
 		
@@ -248,18 +247,6 @@ class Pages extends Module {
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
 		
-		// page variables
-		$layout =  $this->fuel->layouts->get($layout);
-		if (!empty($layout))
-		{
-			$fields = $layout->fields();
-			$import_field = $layout->import_field();
-		}
-
-		if (!empty($import_field))
-		{
-			$this->js_controller_params['import_field'] = $import_field;
-		}
 
 		/*****************************************************************************
 		// check for twin view file, controller and extra routing to generate warnings
@@ -268,9 +255,11 @@ class Pages extends Module {
 		$import_view = FALSE;
 		$routes = array();
 		$uses_controller = FALSE;
-		if (!empty($field_values['location'])) {
+		if (!empty($field_values['location']))
+		{
 			$view_twin = APPPATH.'views/'.$field_values['location'].EXT;
 			$import_view = FALSE;
+
 			if (file_exists($view_twin))
 			{
 				$view_twin_info = get_file_info($view_twin);
@@ -343,11 +332,7 @@ class Pages extends Module {
 				}
 			}
 		}
-		
-		$this->form_builder->id = 'layout_fields';
-		$this->form_builder->name_prefix = 'vars';
-		$this->form_builder->set_fields($fields);
-		
+
 		$page_vars = array();
 		if (!empty($_POST))
 		{
@@ -360,24 +345,44 @@ class Pages extends Module {
 		}
 		if (!empty($id))
 		{
-			$page_vars = array_merge($page_vars, $this->fuel_pagevariables_model->find_all_by_page_id($id));
+			$page_vars = array_merge($this->fuel_pagevariables_model->find_all_by_page_id($id), $page_vars);
 		}
 
-		$this->form_builder->set_field_values($page_vars);
 		
+		// page variables
+		$layout =  $this->fuel->layouts->get($layout);
+		$layout->set_field_values($page_vars);
+
+		if (!empty($layout))
+		{
+			$fields = $layout->fields();
+			$import_field = $layout->import_field();
+		}
+
+		if (!empty($import_field))
+		{
+			$this->js_controller_params['import_field'] = $import_field;
+		}
+
+		$this->form_builder->id = 'layout_fields';
+		$this->form_builder->name_prefix = 'vars';
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->set_field_values($page_vars);
+
 		$conflict = $this->_has_conflict($fields);
 
 		if (!empty($conflict))
 		{
 			$vars['layout_fields'] = $conflict;
 		}
-		else if (empty($id))
-		{
-			$vars['layout_fields'] = $this->form_builder->render();
-		}
+		// else if (empty($id))
+		// {
+		// 	$vars['layout_fields'] = $this->form_builder->render();
+		// }
 		else
 		{
-			$vars['layout_fields'] = '';
+			//$vars['layout_fields'] = '';
+			$vars['layout_fields'] = $this->form_builder->render();
 		}
 
 		// other variables
@@ -660,13 +665,13 @@ class Pages extends Module {
 			}
 
 			$pagevars = array_merge($pagevars, $vars);
-
 			$layout->set_field_values($pagevars);
 		}
 		
 		$fields = $layout->fields();
 
 		$fields['__layout__'] = array('type' => 'hidden', 'value' => $layout_name);
+		$fields['__page_id__'] = array('type' => 'hidden', 'value' => $id);
 
 		$conflict = $this->_has_conflict($fields);
 		if (!empty($conflict))
