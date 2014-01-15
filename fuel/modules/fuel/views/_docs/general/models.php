@@ -530,7 +530,7 @@ if (isset($tag->id))
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'), 'fuel_relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key');
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'), 'fuel_relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key'));
 
   function __construct()
   {
