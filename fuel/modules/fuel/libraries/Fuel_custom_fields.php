@@ -438,6 +438,7 @@ class Fuel_custom_fields {
 					{
 						if (isset($val["'.$process_key.'"]))
 						{
+							$z = "";
 							if (is_string($val["'.$process_key.'"]))
 							{
 								$z = $val["'.$process_key.'"];
@@ -1075,6 +1076,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];
@@ -1286,6 +1288,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];
@@ -1597,6 +1600,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];
