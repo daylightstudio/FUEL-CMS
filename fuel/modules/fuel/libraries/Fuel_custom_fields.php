@@ -215,7 +215,7 @@ class Fuel_custom_fields {
 			$preview = '';
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
-				$preview .= '<a href="'.$asset_path.'" target="_blank">';
+				$preview .= '<div class="noclone"><a href="'.$asset_path.'" target="_blank">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
@@ -224,7 +224,7 @@ class Fuel_custom_fields {
 				{
 					$preview .= $asset_path;
 				}
-				$preview .= '</a>';
+				$preview .= '</a></div>';
 			}
 
 		}
