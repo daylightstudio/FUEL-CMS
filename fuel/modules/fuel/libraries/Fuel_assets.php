@@ -322,6 +322,9 @@ class Fuel_assets extends Fuel_base_library {
 
 				$params['source_image']	= $file['full_path'];
 
+				// cast
+				$params['maintain_ratio'] = (bool) $params['maintain_ratio'];
+
 				// to fix issues with resize and crop
 				if (empty($params['create_thumb']))
 				{
@@ -345,7 +348,6 @@ class Fuel_assets extends Fuel_base_library {
 					$this->_add_error($this->CI->image_lib->display_errors());
 				}
 			}
-			
 			// unzip any zip files
 			else if (is_true_val($params['unzip']) AND $file['file_ext'] == '.zip')
 			{
