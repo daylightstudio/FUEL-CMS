@@ -2027,7 +2027,7 @@ class Module extends Fuel_base_controller {
 				if ($file_info['error'] == 0)
 				{
 					$posted[$file] = $file_info['name'];
-					
+
 					$file_tmp = current(explode('___', $file));
 					$field_name = $file_tmp;
 
@@ -2047,6 +2047,16 @@ class Module extends Fuel_base_controller {
 					{
 						$field_value = $file_info['name'];
 					}
+
+					// look for repeatable values that match
+					if (preg_match('#(.+)_(\d+)_(.+)#', $file_tmp, $matches))
+					{
+						if (isset($posted[$matches[1]][$matches[2]][$matches[3]]))
+						{
+							$posted[$matches[1]][$matches[2]][$matches[3]] = $posted[$file];
+						}
+					}
+
 					if (strpos($field_value, '{') !== FALSE )
 					{
 						//e modifier is deprecated so we have to do this

@@ -134,7 +134,6 @@ class Fuel_assets extends Fuel_base_library {
 		// used later
 		$has_empty_filename = (empty($params['file_name'])) ? TRUE : FALSE;
 
-
 		// set defaults
 		foreach($valid as $param => $default)
 		{
@@ -168,6 +167,8 @@ class Fuel_assets extends Fuel_base_library {
 			
 				$non_multi_key = current(explode('___', $key));
 
+				$posted_filename = FALSE;
+
 				// get params based on the posted variables
 				if (empty($params['override_post_params']))
 				{
@@ -195,10 +196,9 @@ class Fuel_assets extends Fuel_base_library {
 								{
 									$posted[$param] = $params['posted'][$input_key];
 								}
-
 								if ($param == 'file_name')
 								{
-									$has_empty_filename = FALSE;
+									$posted_filename = TRUE;
 								}
 							}
 						}
@@ -206,6 +206,7 @@ class Fuel_assets extends Fuel_base_library {
 					$params = array_merge($params, $posted);
 					unset($params['override_post_params'], $params['posted']);
 				}
+
 				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
 
 				// set restrictions 
@@ -251,14 +252,17 @@ class Fuel_assets extends Fuel_base_library {
 				}
 
 				// set file name
-				if ($has_empty_filename AND !empty($params[$field_name.'_file_name']))
+				if (!$posted_filename)
 				{
-					$params['file_name'] = $params[$field_name.'_file_name'];
-				}
-				else if ($has_empty_filename)
-				{
-					$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
-					$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
+					if ($has_empty_filename AND !empty($params[$field_name.'_file_name']) )
+					{
+						$params['file_name'] = $params[$field_name.'_file_name'];
+					}
+					else if ($has_empty_filename)
+					{
+						$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
+						$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
+					}
 				}
 			
 				// set overwrite
@@ -340,6 +344,7 @@ class Fuel_assets extends Fuel_base_library {
 				}
 				else
 				{
+
 					$resize = $this->CI->image_lib->resize();
 				}
 				
