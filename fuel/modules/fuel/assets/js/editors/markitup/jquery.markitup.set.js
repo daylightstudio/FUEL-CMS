@@ -391,7 +391,8 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 		}
 	}
 	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
-	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs}, function(replace){
+	linkFilter = jQuery(markItUp.textarea).attr('data-link_filter');
+	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs, linkFilter: linkFilter}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
@@ -404,6 +405,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
 	url += '&pdfs=' + ((attrs.linkPdfs) ? attrs.linkPdfs : '');
+	url += '&filter=' + ((attrs.linkFilter) ? attrs.linkFilter : '');
 
 	var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
