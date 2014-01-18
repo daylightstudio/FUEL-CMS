@@ -16,7 +16,7 @@ dave@thedaylightstudio.com
 			removeButtonText : 'Remove',
 			repeatableSelector : '.repeatable',
 			repeatableParentSelector : '.repeatable_container',
-			removeSelector : '.remove_repeatable',
+			removeSelector : '.remove',
 			contentSelector : '.repeatable_content',
 			warnBeforeDelete : true,
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
@@ -141,15 +141,16 @@ dave@thedaylightstudio.com
 		
 		var createRemoveButton = function(elem){
 			$elem = $(elem);
-			if (!$elem.find(options.removeButtonClass).length) {
+			if (!$elem.find('.' + options.removeButtonClass).length) {
 				var $remove = $elem.find(options.removeSelector + ':first');
 				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
 					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 				} else {
+					$remove.remove(options.removeSelector);
 					$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 				}
 			}
-			
+
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
 				//var $this = $(this).closest(options.repeatableSelector).parent();
@@ -303,10 +304,12 @@ dave@thedaylightstudio.com
 			
 			// parse the template
 			var $repeatables = $this.children(options.repeatableSelector);
-			$repeatables.each(function(i){
-				parseTemplate(this, i);
-				createRemoveButton(this);
-			});
+			if (!$this.is('.__applied__')){
+				$repeatables.each(function(i){
+					parseTemplate(this, i);
+					createRemoveButton(this);
+				});
+			}
 				
 			// add button
 			$parent = $this.parent();
