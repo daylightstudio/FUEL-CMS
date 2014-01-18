@@ -205,16 +205,50 @@ class Blocks extends Module {
 		{
 			$layout->set_context($_context);
 		}
-		
 		if (!empty($id))
 		{
-			$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
-			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
-
-			// the following will pre-populate fields of a different language to the default values
-			if (empty($page_vars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+			$model = $layout->model();
+			if (empty($model))
 			{
-				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+				$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');	
+				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
+
+				// the following will pre-populate fields of a different language to the default values
+				if (empty($page_vars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+				{
+					$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+				}
+
+			}
+			else
+			{
+				if (is_array($model))
+				{
+					$module = key($model);
+					$model = current($model);
+					$this->load->module_model($module, $model);
+				}
+				else
+				{
+					$this->load->model($model);
+				}
+				
+
+				$method = $layout->method();
+				if (empty($method))
+				{
+					$method = 'find_one_array';
+				}
+				$key_field = $this->$model->key_field();
+				$where[$key_field] = $id;
+				$page_vars = $this->$model->$method($where);
+				if (!empty($page_vars) AND is_array($page_vars))
+				{
+					if (is_json_str($page_vars))
+					{
+						$page_vars = json_decode($page_vars, TRUE);
+					}
+				}
 			}
 
 			// extract variables

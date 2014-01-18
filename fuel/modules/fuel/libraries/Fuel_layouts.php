@@ -283,6 +283,8 @@ class Fuel_layouts extends Fuel_base_library {
 				if (!isset($init['class']) OR $init['class'] == $default_class)
 				{
 					$init['class'] = 'Fuel_block_layout';
+					$init['model'] =  (isset($init['model'])) ? $init['model'] : NULL;
+					$init['method'] = (isset($init['method'])) ? $init['method'] : NULL;
 				}
 				$init['folder'] = $this->fuel->blocks->blocks_folder;
 			}
@@ -1178,6 +1180,9 @@ class Fuel_block_layout extends Fuel_layout
 {
 
 	public $context = NULL;
+	public $model = '';
+	public $method = '';
+	public $field = '';
 
 	// --------------------------------------------------------------------
 	
@@ -1203,6 +1208,58 @@ class Fuel_block_layout extends Fuel_layout
 	public function context()
 	{
 		return $this->context;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the model o retrieve the value data
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function set_model($model)
+	{
+		$this->model = $model;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the model used to retrieve the value data
+	 *
+	 * @access	public
+	 * @return	mixed
+	 */
+	public function model()
+	{
+		return $this->model;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the method used retrieve the data from the model
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function set_method($method)
+	{
+		$this->method = $method;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the method used to retrieve the data from the model
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function method()
+	{
+		return $this->method;
 	}
 
 	// --------------------------------------------------------------------
