@@ -198,6 +198,7 @@ $config['assets_upload_max_height']  = '768';
 
 $config['fuel_javascript'] = array(
 /*
+	'fuel' => array(
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
@@ -228,10 +229,10 @@ $config['fuel_javascript'] = array(
 	// http://stackoverflow.com/questions/10251272/what-could-cause-this-randomly-appearing-error-inside-jquery-itself
 	'jquery/plugins/chrome_pushstack_fix.js',
 	'jqx/plugins/util.js',
-	'fuel/global',*/
+	'fuel/global')*/
 
 
-	'fuel/fuel.min'
+	'fuel' => 'fuel/fuel.min'
 );
 
 

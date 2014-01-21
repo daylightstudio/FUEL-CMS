@@ -938,7 +938,7 @@ class Asset {
 			$path = (array) $path;
 			$files_arr = array();
 			$default_module = $module;
-			
+
 			foreach($path as $key => $val)
 			{
 				if ($ignore_if_loaded AND $this->is_used($type, $val))
@@ -947,6 +947,11 @@ class Asset {
 				}
 				
 				$module = (is_string($key)) ? $key : $default_module;
+				
+				if ($module == 'app' OR $module =='application')
+				{
+					$module = NULL;
+				}
 
 				if (is_array($val))
 				{
