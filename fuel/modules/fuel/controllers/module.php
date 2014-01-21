@@ -442,7 +442,11 @@ class Module extends Fuel_base_controller {
 			$col_txt = "'.$col_txt.'";
 
 			// boolean fields
-			if (!is_true_val($cols[$heading]))
+			if (is_null($cols[$heading]) OR $cols[$heading] == "")
+			{
+				return "";
+			}
+			else if (!is_true_val($cols[$heading]))
 			{
 				$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
 				$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
