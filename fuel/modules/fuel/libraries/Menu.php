@@ -434,10 +434,18 @@ class Menu {
 
 			if (!empty($menu))
 			{
+				$container_class = '';
+				if (!empty($this->container_tag_class) AND $level == -1)
+				{
+					$container_class = $this->container_tag_class;
+				}
+				elseif (!empty($this->subcontainer_tag_class[$level]) AND $level > -1)
+				{
+					$container_class = $this->subcontainer_tag_class[$level];
+				}
 				if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", ($level + 1))."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
 				if (!empty($this->container_tag_id) AND $level == -1) $str .= " id=\"".$this->container_tag_id."\"";
-				if (!empty($this->container_tag_class) AND $level == -1) $str .= " class=\"".$this->container_tag_class."\"";
-				if (!empty($this->subcontainer_tag_class[$level])) $str .= " class=\"".$this->subcontainer_tag_class[$level]."\"";
+				if (!empty($container_class)) $str .= " class=\"".$container_class."\"";
 				if (!empty($this->container_tag)) $str .= ">\n";
 				$active_index = (count($this->_active_items) -1) - $level;
 				$level = $level + 1;
@@ -484,9 +492,18 @@ class Menu {
 		
 		if (!empty($menu))
 		{
+			$container_class = '';
+			if (!empty($this->container_tag_class) AND $level == 0)
+			{
+				$container_class = $this->container_tag_class;
+			}
+			elseif (!empty($this->subcontainer_tag_class[$level]) AND $level > 0)
+			{
+				$container_class = $this->subcontainer_tag_class[$level];
+			}
 			if (!empty($this->container_tag)) $str .= "\n".str_repeat("\t", $level)."<".$this->container_tag.$this->_get_attrs($this->container_tag_attrs);
 			if (!empty($this->container_tag_id) AND $level == 0) $str .= " id=\"".$this->container_tag_id."\"";
-			if (!empty($this->container_tag_class) AND $level == 0) $str .= " class=\"".$this->container_tag_class."\"";
+			if (!empty($container_class)) $str .= " class=\"".$container_class."\"";
 			if (!empty($this->container_tag)) $str .= ">\n";
 			
 			$i = 0;
