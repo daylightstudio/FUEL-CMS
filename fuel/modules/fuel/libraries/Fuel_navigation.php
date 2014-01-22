@@ -103,6 +103,7 @@ class Fuel_navigation extends Fuel_module {
 						'container_tag_attrs' => '',
 						'container_tag_id' => '',
 						'container_tag_class' => '',
+						'subcontainer_tag_class' => array(),
 						'cascade_selected' => TRUE,
 						'include_hidden' => FALSE,
 						'item_tag' => 'li',
