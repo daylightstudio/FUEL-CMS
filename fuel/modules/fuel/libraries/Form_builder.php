@@ -1657,6 +1657,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'disabled' => $params['disabled'],
 		);
 		
 		if (isset($params['attrs']))
