@@ -794,7 +794,7 @@ class Menu {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Get attributes of of the container tag elment
+	 * Get attributes of the container tag element
 	 *
 	 * @access	protected
 	 * @param	mixed takes a string or an array
@@ -932,6 +932,7 @@ class Menu {
 		}
 		return $str;
 	}
+
 	// --------------------------------------------------------------------
 
 	/**
