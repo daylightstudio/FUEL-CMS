@@ -365,7 +365,9 @@ class Pages extends Module {
 		}
 		if (!empty($id))
 		{
-			$page_vars = array_merge($this->fuel_pagevariables_model->find_all_by_page_id($id), $page_vars);
+			$lang = $this->input->get('lang');
+			if (!$lang) $lang = $this->fuel->language->default_option();
+			$page_vars = array_merge($this->fuel_pagevariables_model->find_all_by_page_id($id, $lang), $page_vars);
 		}
 
 		
