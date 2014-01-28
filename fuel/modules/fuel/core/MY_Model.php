@@ -4511,7 +4511,8 @@ class Data_record {
 			{
 				if ($this->_parent_model->field_type($key) == 'number' AND is_numeric($val))
 				{
-					if ($this->_parent_model->field_info($key) == 'float' OR $this->_parent_model->field_info($key) == 'decimal')
+					$field_info = $this->_parent_model->field_info($key);
+					if ($field_info['type'] == 'float' OR $field_info['type'] == 'decimal')
 					{
 						$this->$key = (float) $val;
 					}
