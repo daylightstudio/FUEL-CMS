@@ -939,6 +939,19 @@ class Fuel_layout extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Placeholder hook - used for processing the saved values of the layout after the page has been saved and has an ID
+	 *
+	 * @access	public
+	 * @param	array	process values array
+	 * @return	array
+	 */	
+	public function post_process_saved_values($values)
+	{
+		return $values;
+	}
+	// --------------------------------------------------------------------
+
+	/**
 	 * Placeholder - used for validating layout variables
 	 *
 	 * @access	public

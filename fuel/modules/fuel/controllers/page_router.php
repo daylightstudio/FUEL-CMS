@@ -68,6 +68,11 @@ class Page_router extends CI_Controller {
 					return;
 				}
 			}
+			else
+			{
+				$config['render_mode'] = 'cms';
+				$page = $this->fuel->pages->create($config);
+			}
 			
 			$this->_remap_cms($page);
 		}

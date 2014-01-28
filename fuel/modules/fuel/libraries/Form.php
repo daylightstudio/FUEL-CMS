@@ -574,6 +574,7 @@ class Form {
 	 */
 	public static function prep($str, $double_encode = TRUE)
 	{
+		if (is_array($str)) return '';
 		$str = (string) $str;
 		
 		// clean the string for utf8
