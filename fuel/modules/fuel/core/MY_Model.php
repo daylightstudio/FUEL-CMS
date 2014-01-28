@@ -3960,7 +3960,13 @@ class MY_Model extends CI_Model {
 			foreach($where as $key => $val)
 			{
 				$table_col = explode('.', $key);
-				if (empty($table_col[1])) $key = $this->table_name.'.'.$key;
+				// one less query if we use table_info instead of 
+				// fields method since it's already been called and cached
+				$fields = array_keys($this->table_info());
+				if (empty($table_col[1]) AND in_array($table_col[0], $fields))
+				{
+					$key = $this->table_name.'.'.$key;
+				}
 				$new_where[$key] = $val;
 			}
 			return $new_where;
