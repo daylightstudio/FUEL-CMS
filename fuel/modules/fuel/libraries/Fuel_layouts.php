@@ -853,7 +853,7 @@ class Fuel_layout extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	key		The type of hook (e.g. "pre_render" or "post_render")
-	 * @param	array	An array of hook information including the class/callback function. <a href="http://codeigniter.com/user_guide/general/hooks.html" target="blank">More here</a>
+	 * @param	array	An array of hook information including the class/callback function. <a href="http://ellislab.com/codeigniter/user-guide/general/hooks.html" target="blank">More here</a>
 	 * @return	void
 	 */
 	public function set_hook($type, $hook)

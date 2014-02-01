@@ -384,7 +384,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
+	 * Returns the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
 	 *
 	 * @access	public
 	 * @param	string	The uploaded $_FILE key value (optional)
@@ -402,7 +402,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Normalizes the $_FILES array so that the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
+	 * Normalizes the $_FILES array so that the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
 	 *
 	 * @access	public
 	 * @return	void
