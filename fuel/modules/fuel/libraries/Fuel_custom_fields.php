@@ -156,6 +156,7 @@ class Fuel_custom_fields {
 	 */
 	public function file($params)
 	{
+		$this->CI->load->helper('file');
 		$form_builder =& $params['instance'];
 
 		$file_params = $params;
