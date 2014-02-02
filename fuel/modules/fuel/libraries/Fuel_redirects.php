@@ -679,7 +679,7 @@ class Fuel_redirects extends Fuel_base_library {
 	{
 		$this->CI->load->library('curl');
 
-		if (empty($redirects))
+		if (empty($urls))
 		{
 			$config = $this->config();
 			$urls = array_keys(array_merge($config['passive_redirects'], $config['aggressive_redirects']));
