@@ -692,7 +692,12 @@ class Fuel_redirects extends Fuel_base_library {
 		foreach($urls as $url)
 		{
 			$url = site_url($url);
-			$this->CI->curl->add_session($url, array(CURLOPT_FOLLOWLOCATION => TRUE, CURLOPT_MAXREDIRS => $this->max_redirects));
+			$sess_opts = array(CURLOPT_FOLLOWLOCATION => TRUE);
+			if ($this->max_redirects > 0)
+			{
+				$sess_opts[CURLOPT_MAXREDIRS] = $this->max_redirects;
+			}
+			$this->CI->curl->add_session($url, $sess_opts);
 		}
 		$this->CI->curl->exec_multi();
 		$infos = $this->CI->curl->info(NULL, TRUE);
@@ -701,6 +706,7 @@ class Fuel_redirects extends Fuel_base_library {
 			'valid' => array(),
 			'errors' => array(),
 			);
+
 		foreach($infos as $key => $info)
 		{
 			//echo $info['http_code'] .'<br />';
@@ -713,6 +719,7 @@ class Fuel_redirects extends Fuel_base_library {
 				$return['valid'][] = $urls[$key];
 			}
 		}
+		
 		return $return;
 	}
 
