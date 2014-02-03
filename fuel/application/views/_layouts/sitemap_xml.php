@@ -33,14 +33,14 @@ echo str_replace(';', '', '<?xml version="1.0" encoding="UTF-8"?>');
 <?php foreach($nav as $uri=>$page) : ?>
 	<?php if(is_array($page) AND isset($page['location']) AND $page['location'] != 'sitemap.xml' AND !isset($used[$page['location']])): ?> 
 		<url>
-			<loc><?=site_url($page['location'])?></loc> 
+			<loc><![CDATA[<?=site_url($page['location'])?>]]></loc> 
 			<?php if (!empty($page['last_modified'])) : ?><lastmod><?=$page['last_modified']?></lastmod><?php endif; ?> 
 			<changefreq><?=fuel_var('frequency', $default_frequency)?></changefreq>
 		</url>	
 	<?php $used[$page['location']] = $page['location'];  ?>
 	<?php elseif (is_string($page) AND !isset($used[$page])): ?>
 	<url> 
-		<loc><?=site_url($page)?></loc> 
+		<loc><![CDATA[<?=site_url($page)?>]]></loc> 
 		<changefreq><?=fuel_var('frequency', $default_frequency)?></changefreq>
 	</url>
 	<?php $used[$page] = $page; ?>

@@ -1,8 +1,8 @@
 <h1>Module Hooks</h1>
-<p>FUEL has extended the <a href="http://codeigniter.com/user_guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a> system to provide 
+<p>FUEL has extended the <a href="http://ellislab.com/codeigniter/user-guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a> system to provide 
 extra hooks into creating, editing, and deleting of simple module data. An additional <dfn>module</dfn> hook parameter was added to allow you to add hook files
 in your advanced module folders (e.g. <dfn>fuel/modules/my_module/hooks</dfn>). To add a hook, you modify the <dfn>fuel/application/config/hooks.php</dfn>
-just like the native <a href="http://codeigniter.com/user_guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a>.</p>
+just like the native <a href="http://ellislab.com/codeigniter/user-guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a>.</p>
 
 <p>The hooks currently available are:</p>
 <ul>

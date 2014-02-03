@@ -1,5 +1,5 @@
 <h1>FUEL Constants</h1>
-<p>In addition to the <a href="http://codeigniter.com/user_guide/general/reserved_names.html" target="_blank">CodeIgniter constants</a>, FUEL CMS provides the following:</p>
+<p>In addition to the <a href="http://ellislab.com/codeigniter/user-guide/general/reserved_names.html" target="_blank">CodeIgniter constants</a>, FUEL CMS provides the following:</p>
 
 <ul>
 	<li><strong>FUEL_VERSION</strong>: The current version number of FUEL</li>

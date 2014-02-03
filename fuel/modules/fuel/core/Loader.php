@@ -553,6 +553,11 @@ class Fuel_Loader extends MX_Loader
 		{
 			return $this->_ci_cached_vars;
 		}
+
+		if (!isset($this->_ci_cached_vars[$scope]))
+		{
+			$this->_ci_cached_vars[$scope] = array();
+		}
 		return $this->_ci_cached_vars[$scope];
 	}
 

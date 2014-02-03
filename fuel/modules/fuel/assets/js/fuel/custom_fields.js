@@ -665,9 +665,9 @@ fuel.fields.inline_edit_field = function(context){
 				if ($this.is('select') && $this.find('option').length == 0){
 					$this.hide();
 				}
-				if ($this.is('input, select')) $this.next('.btn_field').hide();
+				if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
 			} else {
-				$this.next('.btn_field').show();
+				$this.parent().find('.edit_inline_button').show();
 			}	
 		}
 		

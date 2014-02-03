@@ -7,8 +7,8 @@ $my_model = $classes['MY_Model'];
 
 <h1>Models</h1>
 <p>There are two main classes FUEL provides for creating models. The first, <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>, 
-extends the <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.
-It was developed to augment the <a href="http://codeigniter.com/user_guide/database/active_record.html" target="_blank">CodeIgniter active record</a> class and <strong>DOES NOT</strong> change any of those methods.
+extends the <a href="http://ellislab.com/codeigniter/user-guide/general/models.html" target="_blank">CI_Model class</a> to provide <a href="<?=user_guide_url('libraries/my_model')?>">common methods</a> for retrieving and manipulating data from the database usually specific to a table.
+It was developed to augment the <a href="http://ellislab.com/codeigniter/user-guide/database/active_record.html" target="_blank">CodeIgniter active record</a> class and <strong>DOES NOT</strong> change any of those methods.
 The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a>, extends <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a> and provides 
 <a href="<?=user_guide_url('modules/simple')?>">simple module</a> specific methods and is the class you will most likely want to extend for your models. </p>
 
@@ -92,7 +92,7 @@ class Quote_model extends Base_module_record {
 	<li><a href="<?=user_guide_url('libraries/validator')?>">Validator Class</a></li>
 	<li><a href="<?=user_guide_url('helpers/my_string_helper')?>">String Helper</a></li>
 	<li><a href="<?=user_guide_url('helpers/my_date_helper')?>">Date Helper</a></li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/security_helper.html">Security Helper</a></li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html">Security Helper</a></li>
 </ul>
 
 <h2 id="table_result_record_field">Table, Result, Record and Field Classes</h2>
@@ -302,7 +302,7 @@ $record->content
 </pre>
 
 <p>There are also two additional variations you can use on a record property &mdash; <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
-<p>Using <dfn>{property}_formatted</dfn> will apply the <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>
+<p>Using <dfn>{property}_formatted</dfn> will apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/typography_helper.html" target="_blank">auto_typography</a>
 function if the property is a string value and if it is a date value will format the date by default to whatever is specified in the <span class="file">fuel/application/config/MY_config.php</span>.
 </p>
 <pre class="brush: php">
@@ -596,7 +596,7 @@ an array of values to be processed and should return the processed array.</p>
 
 <h2 id="formatters">Formatters</h2>
 <p>Formatters allow you to easily modify a value by mapping a function to a suffix value of a property. 
-An example of this is to use the "_formatted" suffix on a string type field which would apply the <a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>.</p>
+An example of this is to use the "_formatted" suffix on a string type field which would apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/typography_helper.html" target="_blank">auto_typography</a>.</p>
 
 <pre class="brush:php">
 echo $record->content;
@@ -644,18 +644,18 @@ $record->format('content', array('stripped', 'formatted');
 <h3>String Field Examples</h3>
 <p>Below are examples of formatters that can be applied to a string fields (char, varchar, text) and links to the functions that they use.</p>
 <ul>
-	<li><a href="http://codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">{string}_formatted</a> (auto_typography CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/typography_helper.html" target="_blank">{string}_formatted</a> (auto_typography CI function)</li>
 	<li><a href="http://php.net/manual/en/function.strip-tags.php" target="_blank">{string}_stripped</a></li>
 	<li><a href="<?=user_guide_url('helpers/markdown_helper')?>">{string}_markdown</a></li>
 	<li><a href="<?=user_guide_url('helpers/my_string_helper#func_parse_template_syntax')?>">{string}_parsed</a></li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_excerpt</a> (word_limiter CI function)</li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_ellipsize</a> (ellipsize CI function)</li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">{string}_highlight</a> (highlight_phrase CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/text_helper.html" target="_blank">{string}_excerpt</a> (word_limiter CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/text_helper.html" target="_blank">{string}_ellipsize</a> (ellipsize CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/text_helper.html" target="_blank">{string}_highlight</a> (highlight_phrase CI function)</li>
 	<li><a href="http://us2.php.net/manual/en/function.htmlentities.php" target="_blank">{string}_entities</a></li>
 	<li><a href="http://us2.php.net/manual/en/function.htmlspecialchars.php" target="_blank">{string}_specialchars</a></li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_humanize</a> (humanize CI function)</li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_underscore</a> (underscore CI function)</li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">{string}_camelize</a> (camelize CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/inflector_helper.html" target="_blank">{string}_humanize</a> (humanize CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/inflector_helper.html" target="_blank">{string}_underscore</a> (underscore CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/inflector_helper.html" target="_blank">{string}_camelize</a> (camelize CI function)</li>
 </ul>
 
 <h3>Number Examples</h3>
@@ -667,8 +667,8 @@ $record->format('content', array('stripped', 'formatted');
 <h3>Special Field Name Examples</h3>
 <p>Below are examples of formatters that can be applied to a number type fields (tinyint, smallint, int, bigint) and links to the functions that they use.</p>
 <ul>
-	<li><a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">{url|link}_path</a> (site_url CI function)</li>
-	<li><a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">{url|link}_prep</a> (prep_url CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">{url|link}_path</a> (site_url CI function)</li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">{url|link}_prep</a> (prep_url CI function)</li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_path')?>">{img|image|thumb|pdf}_path</a></li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_assets_server_path')?>">{img|image|thumb|pdf}_serverpath</a></li>
 	<li><a href="<?=user_guide_url('helpers/asset_helper#func_asset_filesize')?>">{img|image|thumb|pdf}_filesize</a></li>

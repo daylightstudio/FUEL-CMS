@@ -99,5 +99,5 @@ $config['uninstall_sql'] = 'fuel_blog_uninstall.sql';
 $config['repo'] = 'git://github.com/daylightstudio/FUEL-CMS-Blog-Module.git';
 </pre>
 
-<p class="important">Note that you can use <a href="http://codeigniter.com/user_guide/libraries/migration.html" target="_blank">CodeIgniter's migrations</a> for managing SQL versioning as an
+<p class="important">Note that you can use <a href="http://ellislab.com/codeigniter/user-guide/libraries/migration.html" target="_blank">CodeIgniter's migrations</a> for managing SQL versioning as an
 alternative to using install_sql and uninstall_sql parameters.</p>

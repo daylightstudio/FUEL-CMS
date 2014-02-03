@@ -66,9 +66,9 @@ class Fuel_tags extends Fuel_module {
 	 */	
 	public function find_by_category($category)
 	{
-		$this->CI->load->module_model(FUEL_FOLDER, 'relationships_model');
+		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
 		$model =& $this->model();
-		$categories_table = $model->tables('categories');
+		$categories_table = $model->tables('fuel_categories');
 		$tags_table = $model->tables('tags');
 		if (is_int($category))
 		{

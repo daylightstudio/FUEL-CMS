@@ -649,12 +649,12 @@ class MY_Model extends CI_Model {
 	}
 	
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get one record result
 	 *
 	 <code>
-	$example = $this->examples_model->find_one(array('published' => 'yes'), ''asc'); 
+	$example = $this->examples_model->find_one(array('published' => 'yes'), ''asc');
 	</code>
 	 *
 	 * @access	public
@@ -662,18 +662,18 @@ class MY_Model extends CI_Model {
 	 * @param	string	the order by of the query (optional)
 	 * @param	string	return type (object, array, query, auto) (optional)
 	 * @return	array
-	 */	
+	 */
 	public function find_one($where = array(), $order_by = NULL, $return_method = NULL)
 	{
 		$where = $this->_safe_where($where);
-		if (!empty($where)) $this->db->where($where);
+		$this->_handle_where($where);
 		if (!empty($order_by)) $this->db->order_by($order_by);
 		$this->db->limit(1);
 		$query = $this->get(FALSE, $return_method);
 		if ($return_method == 'query') return $query;
-		
+
 		$data = $query->result();
-		
+
 		// unserialize any data
 		if ($return_method == 'array')
 		{
@@ -681,7 +681,7 @@ class MY_Model extends CI_Model {
 		}
 		return $data;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -702,12 +702,12 @@ class MY_Model extends CI_Model {
 	}
 	
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get the results of the query
 	 *
 	 <code>
-	$examples = $this->examples_model->find_all(array('published' => 'yes'), 'date_added desc'); 
+	$examples = $this->examples_model->find_all(array('published' => 'yes'), 'date_added desc');
 	</code>
 	 *
 	 * @access	public
@@ -718,28 +718,13 @@ class MY_Model extends CI_Model {
 	 * @param	string	return type (object, array, query, auto) (optional)
 	 * @param	string	the column to use for an associative key array (optional)
 	 * @return	array
-	 */	
+	 */
 	public function find_all($where = array(), $order_by = NULL, $limit = NULL, $offset = NULL, $return_method = NULL, $assoc_key = NULL)
 	{
 		$where = $this->_safe_where($where);
-		
-		if (!empty($where)) 
-		{
-			if (is_array($where))
-			{
-				foreach($where as $key => $val)
-				{
-					// check for nested array values to use for wherein
-					$method = (!empty($val) AND is_array($val)) ? 'where_in' : 'where';
-					$this->db->$method($key, $val);
-				}
-			}
-			else
-			{
-				$this->db->where($where);
-			}
-		}
-		
+
+		$this->_handle_where($where);
+
 		$params = array('order_by', 'limit', 'offset');
 		foreach($params as $method)
 		{
@@ -747,7 +732,7 @@ class MY_Model extends CI_Model {
 		}
 		$query = $this->get(TRUE, $return_method, $assoc_key);
 		if ($return_method == 'query') return $query;
-		
+
 		$data = $query->result();
 
 		// unserialize any data if the return method is an array. If it is a custom object, then we let the object take care of it
@@ -757,7 +742,7 @@ class MY_Model extends CI_Model {
 		}
 		return $data;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1357,26 +1342,26 @@ class MY_Model extends CI_Model {
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Returns number of query results
 	 *
 	 <code>
-	$where['published'] = 'yes'; 
+	$where['published'] = 'yes';
 	echo $this->examples_model->record_count($where); // dislays the number of records
 	</code>
 	 *
 	 * @access	public
 	 * @param	mixed	where condition (optional)
 	 * @return	int
-	 */	
+	 */
 	public function record_count($where = array())
 	{
-		$this->db->where($where);
+		$this->_handle_where($where);
 		$query = $this->db->get($this->table_name);
 		return $query->num_rows();
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -3975,7 +3960,13 @@ class MY_Model extends CI_Model {
 			foreach($where as $key => $val)
 			{
 				$table_col = explode('.', $key);
-				if (empty($table_col[1])) $key = $this->table_name.'.'.$key;
+				// one less query if we use table_info instead of 
+				// fields method since it's already been called and cached
+				$fields = array_keys($this->table_info());
+				if (empty($table_col[1]) AND in_array($table_col[0], $fields))
+				{
+					$key = $this->table_name.'.'.$key;
+				}
 				$new_where[$key] = $val;
 			}
 			return $new_where;
@@ -3983,6 +3974,34 @@ class MY_Model extends CI_Model {
 		return $where;
 	}
 	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Handle the where params and use where_in when values are arrays
+	 *
+	 * @access	protected
+	 * @param	mixed	where condition
+	 */
+	protected function _handle_where($where = array())
+	{
+		if ( ! empty($where))
+		{
+			if (is_array($where))
+			{
+				foreach($where as $key => $val)
+				{
+					// check for nested array values to use for wherein
+					$method = (!empty($val) AND is_array($val)) ? 'where_in' : 'where';
+					$this->db->$method($key, $val);
+				}
+			}
+			else
+			{
+				$this->db->where($where);
+			}
+		}
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -4511,7 +4530,8 @@ class Data_record {
 			{
 				if ($this->_parent_model->field_type($key) == 'number' AND is_numeric($val))
 				{
-					if ($this->_parent_model->field_info($key) == 'float' OR $this->_parent_model->field_info($key) == 'decimal')
+					$field_info = $this->_parent_model->field_info($key);
+					if ($field_info['type'] == 'float' OR $field_info['type'] == 'decimal')
 					{
 						$this->$key = (float) $val;
 					}

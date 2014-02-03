@@ -178,6 +178,12 @@ class Fuel_assets extends Fuel_base_library {
 						if ($param != 'posted')
 						{
 							$input_key = $non_multi_key.'_'.$param;
+							$input_key_arr = explode('--', $input_key);
+							$input_key = end($input_key_arr);
+
+							$field_name_arr = explode('--', $field_name);
+							$field_name = end($field_name_arr);
+
 							// decode encrypted file path values
 							if (isset($params['posted'][$input_key]))
 							{
@@ -186,11 +192,14 @@ class Fuel_assets extends Fuel_base_library {
 									$posted['upload_path'] = $this->CI->encrypt->decode($params['posted'][$input_key]);
 									foreach($params['posted'] as $k => $p)
 									{
-										if (is_string($p))
+										if (!is_array($p))
 										{
-											$posted['upload_path'] = str_replace('{'.$k.'}', $p ,$posted['upload_path']);	
+											$posted['upload_path'] = str_replace('{'.$k.'}', $p, $posted['upload_path']);
 										}
 									}
+
+									// security check to make sure that no crazy paths are being generated
+									$posted['upload_path'] = str_replace('..'.DIRECTORY_SEPARATOR, '', $posted['upload_path']);
 								}
 								else
 								{
@@ -375,7 +384,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
+	 * Returns the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
 	 *
 	 * @access	public
 	 * @param	string	The uploaded $_FILE key value (optional)
@@ -393,7 +402,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Normalizes the $_FILES array so that the <a href="http://codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
+	 * Normalizes the $_FILES array so that the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
 	 *
 	 * @access	public
 	 * @return	void

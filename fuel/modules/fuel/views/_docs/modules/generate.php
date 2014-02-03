@@ -1,7 +1,7 @@
 <h1>Generate</h1>
 <p>FUEL CMS provides a command line tool to help you auto generate starter files for your simple and advanced modules. To do so, navigate 
 to the folder (e.g. using "cd") where the main bootstrap index.php file exists. Then you can type the commands below which use the
-<a href="http://codeigniter.com/user_guide/general/cli.html" target="_blank">CodeIgniter CLI</a> to generate files automatically.</p>
+<a href="http://ellislab.com/codeigniter/user-guide/general/cli.html" target="_blank">CodeIgniter CLI</a> to generate files automatically.</p>
 
 <h2 id="configuration">Configuration and Templates</h2>
 <p>The default generated template files exist in the <span class="file">fuel/modules/fuel/views/_generated/{type}</span> folder where <dfn>{type}</dfn>

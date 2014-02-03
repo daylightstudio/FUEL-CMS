@@ -942,7 +942,7 @@ class Module extends Fuel_base_controller {
 	function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
 		// check that the action even exists and if not, show a 404
-		if (!$this->fuel->auth->module_has_action('save'))
+		if (!$this->fuel->auth->module_has_action('save') AND  $this->displayonly === FALSE)
 		{
 			show_404();
 		}
@@ -1205,9 +1205,9 @@ class Module extends Fuel_base_controller {
 		
 		// other variables
 		$vars['id'] = $id;
-		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
+		$vars['versions'] = ($this->displayonly === FALSE) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
-		$vars['action'] =  $action;
+		$vars['action'] = $action;
 		
 		$vars['module'] = $this->module;
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);

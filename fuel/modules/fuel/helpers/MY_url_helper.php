@@ -197,6 +197,19 @@ function is_home()
 // --------------------------------------------------------------------
 
 /**
+ * Determines if the page is 404
+ *
+ * @access	public
+ * @return	boolean
+ */
+function is_404()
+{
+	return (http_response_code() == 404);
+}
+
+// --------------------------------------------------------------------
+
+/**
  * Returns the last page you visited
  *
  * @access	public

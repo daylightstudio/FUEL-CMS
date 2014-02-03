@@ -583,12 +583,13 @@ class Form_builder {
 			}
 			else if ((is_array($val['name']) AND in_array($val['name'], $this->displayonly)) OR  $val['displayonly'] OR  (is_string($this->displayonly) AND strtolower($this->displayonly) == 'all'))
 			{
+				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
 				$str .= $this->create_label($val, FALSE);
 				$str .= "</span>";
 				$str .= "<span class=\"field\">";
-				$str .= $this->create_readonly($val, FALSE)."\n";
+				$str .= $val['before_html'].$display_value.$val['after_html'];
 				$str .= "</span>";
 				$str .= "</div>\n";
 			}
@@ -773,16 +774,17 @@ class Form_builder {
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td class=\"label\">";
+				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
 				if ($this->label_layout != 'top')
 				{
 					$str .= $this->create_label($val, FALSE);
-					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$val['value'].$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
+					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
 				}
 				else
 				{
 					$str .= $this->create_label($val, FALSE)."</td></tr>\n";
 					$str .= "<tr".$this->_open_row_attrs($val);
-					$str .= ">\n\t<td class=\"value\">".$this->create_readonly($val, FALSE)."</td>\n</tr>\n";
+					$str .= ">\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."</td>\n</tr>\n";
 				}
 			}
 			else if (!in_array($val['name'], $this->exclude))
@@ -1657,6 +1659,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'disabled' => $params['disabled'],
 		);
 		
 		if (isset($params['attrs']))

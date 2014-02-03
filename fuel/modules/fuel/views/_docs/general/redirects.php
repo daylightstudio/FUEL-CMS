@@ -22,7 +22,7 @@ $config['passive_redirects'] = array(
 									);
 </pre>
 
-<p class="important">Key values can use regular expression syntax similar to <a href="http://codeigniter.com/user_guide/general/routing.html" target="_blank">routes</a>.</p>
+<p class="important">Key values can use regular expression syntax similar to <a href="http://ellislab.com/codeigniter/user-guide/general/routing.html" target="_blank">routes</a>.</p>
 
 <br />
 
