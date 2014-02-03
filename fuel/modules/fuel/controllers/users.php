@@ -36,6 +36,7 @@ class Users extends Module {
 	public function login_as($id, $original_user_hash = '')
 	{
 		$this->load->library('session');
+		$this->load->module_model('fuel', 'fuel_users_model');
 		$change_logged_in_user = $this->fuel->auth->is_super_admin();
 		if ($original_user_hash AND ($this->session->userdata('original_user_hash') == $original_user_hash)) {
 			$change_logged_in_user = TRUE;
