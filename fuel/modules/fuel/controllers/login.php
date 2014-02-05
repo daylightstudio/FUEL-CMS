@@ -260,7 +260,7 @@ class Login extends CI_Controller {
 				add_error(lang('error_invalid_login'));
 			}
 		}
-		$fields['password'] = array('type' => 'password', 'size' => 25);
+		$fields['password'] = array('type' => 'password', 'placeholder' => 'password', 'display_label' => FALSE, 'size' => 25);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
