@@ -463,7 +463,7 @@ class Base_module_model extends MY_Model {
 			$rel_display_field = $rel_module_obj->info('display_field');
 
 
-			$module = $this->table_name();
+			$module = strtolower(get_class($this));
 			$module_obj =  $CI->fuel->modules->get($module, FALSE);
 			if (!$module_obj)
 			{
