@@ -1,4 +1,4 @@
-<h1>Temlate Parsing</h1>
+<h1>Template Parsing</h1>
 
 <h2>Overview</h2>
 <p>By default, FUEL disables PHP code from being saved in your module data 
