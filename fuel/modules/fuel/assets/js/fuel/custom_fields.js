@@ -1,5 +1,5 @@
 //fuel = top.window.initFuelNamespace();
-if (window.fuel == undefined){
+if (typeof(window.fuel) == 'undefined'){
 	window.fuel = {};
 }
 fuel.fields = {};

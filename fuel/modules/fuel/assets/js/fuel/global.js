@@ -13,8 +13,8 @@ function initFuelNamespace(){
 }
 //fuel = initFuelNamespace();
 //console.log(fuel)
-if (fuel == undefined){
-	var fuel = {};
+if (typeof(window.fuel) == 'undefined'){
+	window.fuel = {};
 }
 
 fuel.lang = function(key){
