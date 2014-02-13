@@ -15,7 +15,7 @@ fuel.fields.datetime_field = function(context){
 		showButtonPanel : false,
 		showOn: 'button',
 	    buttonText: 'Click to show the calendar',
-	    buttonImageOnly: true, 
+	    buttonImageOnly: true
 	}
 
 	// first look for jqx variable
