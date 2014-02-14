@@ -445,6 +445,7 @@ class Base_module_model extends MY_Model {
 			}
 
 			$key_field = key($p);
+			$loc_field = $key_field;
 
 			// get related model info
 			$rel_module = current($p);
@@ -479,6 +480,7 @@ class Base_module_model extends MY_Model {
 				$groups = $rel_model->find_all_array(array(), $rel_model->key_field().' asc');
 				$children = $this->find_all_array(array(), $key_field.' asc');
 				$g_key_field = $rel_model->key_field();
+				$loc_field = $g_key_field;
 			}
 			else if ($prop == 'has_many')
 			{
@@ -488,6 +490,7 @@ class Base_module_model extends MY_Model {
 				$key_field = 'foreign_id';
 				$g_key_field = 'candidate_id';
 				$display_field = 'candidate_'.$display_field;
+				$loc_field = $key_field;
 			}
 			else if ($prop == 'belongs_to')
 			{
@@ -497,6 +500,7 @@ class Base_module_model extends MY_Model {
 				$key_field = 'candidate_id';
 				$g_key_field = 'foreign_id';
 				$display_field = 'foreign_'.$display_field;
+				$loc_field = $key_field;
 			}
 
 			// now get this models records
@@ -504,7 +508,7 @@ class Base_module_model extends MY_Model {
 			{
 				$used_groups[$child[$key_field]] = $child[$key_field];
 				$attributes = ((isset($child['published']) AND $child['published'] == 'no') OR (isset($child['active']) AND $child['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->name().'/edit/'.$child[$key_field]), 'attributes' => $attributes);
+				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->info('module_uri').'/edit/'.$child[$loc_field]), 'attributes' => $attributes);
 			}
 
 			foreach($groups as $group)
@@ -512,7 +516,7 @@ class Base_module_model extends MY_Model {
 				if (isset($used_groups[$group[$rel_key_field]]))
 				{
 					$attributes = ((isset($group['published']) AND $group['published'] == 'no') OR (isset($group['active']) AND $group['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-					$return[$group[$rel_key_field]] = array('id' => $group[$rel_key_field], 'parent_id' => 0, 'label' => $group[$rel_display_field], 'location' => fuel_url($rel_module_obj->name().'/edit/'.$group[$rel_key_field]), 'attributes' => $attributes);	
+					$return[$group[$rel_key_field]] = array('id' => $group[$rel_key_field], 'parent_id' => 0, 'label' => $group[$rel_display_field], 'location' => fuel_url($rel_module_obj->info('module_uri').'/edit/'.$group[$rel_key_field]), 'attributes' => $attributes);	
 				}
 				
 			}
