@@ -485,7 +485,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		//$('#form input:first').select();
-		$('#form input:first').focus();
+		$('input,textarea', '#form').filter(':first').focus();
 		
 		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 	},
@@ -660,10 +660,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		
 		$('#data_table .publish_text').parent().addClass('publish_col');
-
-		if (!$('.multi_delete:first', '#fuel_main_content').length){
-			$('a.ico_select_all').parent().remove();
-		}
 		
 		// set up row clicks
 		$("#data_table td[class^='col']").each(function(){
@@ -693,8 +689,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if (!$('#data_table td.actions a:first').length){
 				$('tr.rowaction').removeClass('rowaction');
 			}
-
-				
 		});
 		
 		// setup rearranging precedence
