@@ -165,7 +165,7 @@ class Fuel_custom_fields {
 			$file_params['class'] = 'multifile '.$params['class'];
 		}
 		$file_params['name'] = str_replace(array('[', ']', '__'), array('_', '', '_'), $params['name']);
-		$file_params['id'] = $params['name'].'_upload';
+		$file_params['id'] = $file_params['name'].'_upload';
 
 
 		$str = '';
