@@ -2638,9 +2638,10 @@ class Form_builder {
 	{
 		$params = $this->normalize_params($params);
 		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
+		$class = isset($params['class']) ? ' class="'.$params['class'].'"' : '';
 		$copy = $this->simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->copy_tag : $params['tag'];
-		return '<'.$tag.$id.'>'.$copy.'</'.$tag.'>';
+		return '<'.$tag.$id.$class.'>'.$copy.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------
