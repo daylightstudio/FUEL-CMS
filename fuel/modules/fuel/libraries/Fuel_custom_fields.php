@@ -891,7 +891,17 @@ class Fuel_custom_fields {
 		
 		if (empty($params['template']) AND !empty($params['view']))
 		{
-			$str = $this->CI->load->view($params['view'], $vars, TRUE, '__TEMPLATE_FIELD__');
+			$module = 'app';
+			if (is_array($params['view']))
+			{
+				$module = key($params['view']);
+				$view = current($params['view']);
+			}
+			else
+			{
+				$view = $params['view'];
+			}
+			$str = $this->CI->load->module_view($module, $view, $vars, TRUE, '__TEMPLATE_FIELD__');
 		}
 		else if (!empty($params['template']))
 		{
