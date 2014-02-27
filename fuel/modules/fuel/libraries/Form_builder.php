@@ -1777,6 +1777,45 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates the radio input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_radio($params)
+	{
+		$defaults = array(
+			'checked' => FALSE // for checkbox/radio
+		);
+		$params = $this->normalize_params($params, $defaults);
+
+		$str = '';
+		$attrs = array(
+			'id' => $params['id'],
+			'class' => $params['class'],
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
+			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
+		);
+		if ($params['checked'])
+		{
+			$attrs['checked'] = 'checked';
+		}
+		if (isset($params['value']) AND $params['value'] == '')
+		{
+			$params['value'] = 1;
+		}
+		$str .= $this->form->radio($params['name'], $params['value'], $attrs);
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the textarea input for the form
 	 *
 	 * @access	public
