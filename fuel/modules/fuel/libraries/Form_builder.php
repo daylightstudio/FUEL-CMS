@@ -2546,7 +2546,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
 			'min' => (isset($params['min']) ? $params['min'] : '0'),
-			'max' => (isset($params['max']) ? $params['max'] : NULL),
+			'max' => (isset($params['max']) ? $params['max'] : '10'),
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
@@ -2560,15 +2560,16 @@ class Form_builder {
 		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
 		$negative = (!empty($params['negative'])) ? 1 : 0;
 		
-		if (empty($params['size']))
-		{
-			$attrs['size'] = 10;
-		}
+		// invalid HTML
+		// if (empty($params['size']))
+		// {
+		// 	$attrs['size'] = 10;
+		// }
 
-		if (empty($params['maxlength']))
-		{
-			$attrs['maxlength'] = 10;
-		}
+		// if (empty($params['maxlength']))
+		// {
+		// 	$attrs['maxlength'] = 10;
+		// }
 
 		// set data values for jquery plugin to use
 		$attrs['data'] = array(
