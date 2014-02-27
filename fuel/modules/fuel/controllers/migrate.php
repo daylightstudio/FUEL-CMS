@@ -2,7 +2,7 @@
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Migrate extends Fuel_base_controller {
-	
+
 	protected $module = '';
 
 	public function __construct()
@@ -79,13 +79,14 @@ class Migrate extends Fuel_base_controller {
 	{
 		if ($version === TRUE)
 		{
-			echo lang('migrate_nothing_todo', $version);
+			$msg = lang('migrate_nothing_todo', $version);
+			echo $msg;
 		}
 		else
 		{
 			echo lang('migrate_success', $version);
+			$msg = lang('database_migration_success', $version);
 		}
-		$msg = lang('database_migration_success', $version);
 		$this->fuel->logs->write($msg);
 	}
 
