@@ -754,7 +754,7 @@ function display_errors($ERRORS = NULL, $class = 'error')
 		}
 		$str .= "</ul>\n";
 	}
-	$str .= "<script language=\"JavaScript\" type=\"text/javascript\">\n";
+	$str .= "<script type=\"text/javascript\">\n";
 	$str .= "// <![CDATA[\n";
 	$str .= "try { $(function(){ \$('.".$error_class." input:first').focus(); }); } catch(e){};\n";
 	$str .= "// ]]>\n";
