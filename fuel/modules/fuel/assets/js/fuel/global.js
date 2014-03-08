@@ -13,8 +13,8 @@ function initFuelNamespace(){
 }
 //fuel = initFuelNamespace();
 //console.log(fuel)
-if (fuel == undefined){
-	var fuel = {};
+if (typeof(window.fuel) == 'undefined'){
+	window.fuel = {};
 }
 
 fuel.lang = function(key){
@@ -94,7 +94,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		if (autoResize){
 			setTimeout(function(){
 					docHeight = fuel.calcHeight(contentDoc);
-					$(iframe.contentWindow.parent.document).find('iframe').height(docHeight)
+					$(iframe.contentWindow.parent.document).find('#' + modalId + 'iframe').height(docHeight);
 					fuel.cascadeIframeWindowSize(docHeight);
 					$(iframe).height(docHeight);
 			}, 250);

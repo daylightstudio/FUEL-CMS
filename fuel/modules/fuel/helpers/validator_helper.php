@@ -52,6 +52,11 @@ function required($var)
 	{
 		return !empty($var);
 	}
+	// automatically set integer values to TRUE
+	else if (is_int($var))
+	{
+		return TRUE;
+	}
 	return FALSE;
 
 }
@@ -749,7 +754,7 @@ function display_errors($ERRORS = NULL, $class = 'error')
 		}
 		$str .= "</ul>\n";
 	}
-	$str .= "<script language=\"JavaScript\" type=\"text/javascript\">\n";
+	$str .= "<script type=\"text/javascript\">\n";
 	$str .= "// <![CDATA[\n";
 	$str .= "try { $(function(){ \$('.".$error_class." input:first').focus(); }); } catch(e){};\n";
 	$str .= "// ]]>\n";

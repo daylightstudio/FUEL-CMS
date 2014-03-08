@@ -130,6 +130,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_logs_model')?>">Fuel_logs_model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_navigation_model')?>">Fuel_navigation_model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_navigation_groups_model')?>">Fuel_navigation_groups_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_pages_model')?>">Fuel_pages_model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pagevariables_model')?>">Fuel_pagevariables_model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_permissions_model')?>">Fuel_permissions_model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_relationships_model')?>">Fuel_relationships_model Class</a></li>

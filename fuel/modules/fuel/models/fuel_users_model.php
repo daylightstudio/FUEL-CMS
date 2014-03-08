@@ -673,5 +673,9 @@ class Fuel_users_model extends Base_module_model {
 
 class Fuel_user_model extends Base_module_record {
 
+	function get_name()
+	{
+		return $this->first_name.' '.$this->last_name;
+	}
 	
 }

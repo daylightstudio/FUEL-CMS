@@ -1777,6 +1777,45 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates the radio input for the form
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_radio($params)
+	{
+		$defaults = array(
+			'checked' => FALSE // for checkbox/radio
+		);
+		$params = $this->normalize_params($params, $defaults);
+
+		$str = '';
+		$attrs = array(
+			'id' => $params['id'],
+			'class' => $params['class'],
+			'readonly' => $params['readonly'], 
+			'disabled' => $params['disabled'],
+			'data' => $params['data'],
+			'style' => $params['style'],
+			'tabindex' => $params['tabindex'],
+			'attributes' => $params['attributes'],
+		);
+		if ($params['checked'])
+		{
+			$attrs['checked'] = 'checked';
+		}
+		if (isset($params['value']) AND $params['value'] == '')
+		{
+			$params['value'] = 1;
+		}
+		$str .= $this->form->radio($params['name'], $params['value'], $attrs);
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the textarea input for the form
 	 *
 	 * @access	public
@@ -2507,7 +2546,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
 			'min' => (isset($params['min']) ? $params['min'] : '0'),
-			'max' => (isset($params['max']) ? $params['max'] : NULL),
+			'max' => (isset($params['max']) ? $params['max'] : '10'),
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
@@ -2521,15 +2560,16 @@ class Form_builder {
 		$decimal = (!empty($params['decimal'])) ? (int) $params['decimal'] : 0;
 		$negative = (!empty($params['negative'])) ? 1 : 0;
 		
-		if (empty($params['size']))
-		{
-			$attrs['size'] = 10;
-		}
+		// invalid HTML
+		// if (empty($params['size']))
+		// {
+		// 	$attrs['size'] = 10;
+		// }
 
-		if (empty($params['maxlength']))
-		{
-			$attrs['maxlength'] = 10;
-		}
+		// if (empty($params['maxlength']))
+		// {
+		// 	$attrs['maxlength'] = 10;
+		// }
 
 		// set data values for jquery plugin to use
 		$attrs['data'] = array(
@@ -2638,9 +2678,10 @@ class Form_builder {
 	{
 		$params = $this->normalize_params($params);
 		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
+		$class = isset($params['class']) ? ' class="'.$params['class'].'"' : '';
 		$copy = $this->simple_field_value($params);
 		$tag = (empty($params['tag'])) ? $this->copy_tag : $params['tag'];
-		return '<'.$tag.$id.'>'.$copy.'</'.$tag.'>';
+		return '<'.$tag.$id.$class.'>'.$copy.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------

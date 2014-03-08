@@ -165,7 +165,7 @@ class Fuel_custom_fields {
 			$file_params['class'] = 'multifile '.$params['class'];
 		}
 		$file_params['name'] = str_replace(array('[', ']', '__'), array('_', '', '_'), $params['name']);
-		$file_params['id'] = $params['name'].'_upload';
+		$file_params['id'] = $file_params['name'].'_upload';
 
 
 		$str = '';
@@ -222,7 +222,7 @@ class Fuel_custom_fields {
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= ' ';
-				$preview .= '<a href="'.$asset_path.'" target="_blank">';
+				$preview .= '<a href="'.$asset_path.'" target="_blank" class="noclone">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
@@ -445,6 +445,7 @@ class Fuel_custom_fields {
 					{
 						if (isset($val["'.$process_key.'"]))
 						{
+							$z = "";
 							if (is_string($val["'.$process_key.'"]))
 							{
 								$z = $val["'.$process_key.'"];
@@ -890,7 +891,17 @@ class Fuel_custom_fields {
 		
 		if (empty($params['template']) AND !empty($params['view']))
 		{
-			$str = $this->CI->load->view($params['view'], $vars, TRUE);
+			$module = 'app';
+			if (is_array($params['view']))
+			{
+				$module = key($params['view']);
+				$view = current($params['view']);
+			}
+			else
+			{
+				$view = $params['view'];
+			}
+			$str = $this->CI->load->module_view($module, $view, $vars, TRUE, '__TEMPLATE_FIELD__');
 		}
 		else if (!empty($params['template']))
 		{
@@ -1082,6 +1093,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];
@@ -1293,6 +1305,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];
@@ -1604,6 +1617,7 @@ class Fuel_custom_fields {
 				{
 					if (isset($val["'.$process_key.'"]))
 					{
+						$z = "";
 						if (is_string($val["'.$process_key.'"]))
 						{
 							$z = $val["'.$process_key.'"];

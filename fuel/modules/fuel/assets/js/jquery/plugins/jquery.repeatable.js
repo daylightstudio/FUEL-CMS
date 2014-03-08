@@ -53,6 +53,7 @@ dave@thedaylightstudio.com
 				if (newId && newId.length){
 					newId = newId.replace(/\{index\}/g, i);
 					newId = newId.replace(/([-_a-zA-Z0-9]+_)\d+(_[-_a-zA-Z0-9]+)$/, '$1' + i + '$2');
+
 					$(elem).attr(attr, newId);
 				}
 			}
@@ -73,6 +74,9 @@ dave@thedaylightstudio.com
 				var newName = $(this).attr('name');
 				if (newName && newName.length){
 					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\]([-_a-zA-Z0-9\[\]]+)$/, '$1[' + i + ']$2');
+
+					// for file uploads
+					newName = newName.replace(/([-_a-zA-Z0-9]+)_\d+_([-_a-zA-Z0-9]+)$/, '$1_' + i + '_$2');
 
 					// required for jquery 
 					newName = newName.replace('[', '\[');
@@ -114,6 +118,10 @@ dave@thedaylightstudio.com
 						var newName = $(this).attr('name')
 						if (newName && newName.length && parentIndex != null){
 							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[[-_a-zA-Z0-9]+\])/g, '$1' + parentIndex + '$2');
+
+							// for file uploads
+							newName = newName.replace(/([-_a-zA-Z0-9]+)_\d+_([-_a-zA-Z0-9]+_[-_a-zA-Z0-9]+)/g, '$1_' + parentIndex + '_$2');	
+							
 							// newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\][-_a-zA-Z0-9\[\]]+)$/, '$1' + parentIndex + '$2');
 							
 							// required for jquery 

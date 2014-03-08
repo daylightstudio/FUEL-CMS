@@ -243,13 +243,21 @@ $.fn.removeNumeric = function()
 // Based on code from http://javascript.nwbox.com/cursor_position/ (Diego Perini <dperini@nwbox.com>)
 $.fn.getSelectionStart = function(o)
 {
-	if (o.createTextRange)
-	{
-		var r = document.selection.createRange().duplicate();
-		r.moveEnd('character', o.value.length);
-		if (r.text == '') return o.value.length;
-		return o.value.lastIndexOf(r.text);
-	} else return o.selectionStart;
+	// added try catch to ignore Chrome issue
+	try{
+		if (o.createTextRange)
+		{
+			var r = document.selection.createRange().duplicate();
+			r.moveEnd('character', o.value.length);
+			if (r.text == '') return o.value.length;
+			return o.value.lastIndexOf(r.text);
+	} else {
+		return o.selectionStart;
+	}
+
+	} catch(e){
+
+	}
 }
 
 // set the selection, o is the object (input), p is the position ([start, end] or just start)

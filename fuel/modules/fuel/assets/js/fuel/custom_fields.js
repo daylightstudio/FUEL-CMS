@@ -1,5 +1,5 @@
 //fuel = top.window.initFuelNamespace();
-if (window.fuel == undefined){
+if (typeof(window.fuel) == 'undefined'){
 	window.fuel = {};
 }
 fuel.fields = {};
@@ -15,7 +15,7 @@ fuel.fields.datetime_field = function(context){
 		showButtonPanel : false,
 		showOn: 'button',
 	    buttonText: 'Click to show the calendar',
-	    buttonImageOnly: true, 
+	    buttonImageOnly: true
 	}
 
 	// first look for jqx variable

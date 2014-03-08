@@ -485,7 +485,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		//$('#form input:first').select();
-		$('#form input:first').focus();
+		$('input,textarea', '#form').filter(':first').focus();
 		
 		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 	},
