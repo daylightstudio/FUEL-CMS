@@ -2174,6 +2174,9 @@ class Module extends Fuel_base_controller {
 				{
 
 					$data[$field_name] = $val['file_name'];
+
+					// reset any validation to prevent issues with saving again (e.g. unique fields and the is_new function is problematic)
+					$this->model->remove_all_validation($data);
 					$this->model->save($data);
 				}
 			}
