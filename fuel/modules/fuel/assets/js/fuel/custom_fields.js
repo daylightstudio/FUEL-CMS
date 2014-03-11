@@ -334,7 +334,7 @@ fuel.fields.wysiwyg_field = function(context){
 					var csrf = $('#csrf_test_name').val();
 					$.ajax( {
 						type: 'POST',
-						url: jqx_config.basePath + myMarkItUpSettings.previewParserPath,
+						url: myMarkItUpSettings.previewParserPath,
 						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val) + '&csrf_test_name='+ csrf,
 						success: function(data) {
 							writeInPreview(data); 
