@@ -72,6 +72,7 @@ fuel.fields.multi_field = function(context, inline_edit){
 
 // markItUp! and CKeditor field
 fuel.fields.wysiwyg_field = function(context){
+
 	$editors = $ckEditor = $('textarea', context).not('.no_editor, .markItUpEditor');
 	var module = fuel.getModule();
 	var _previewPath = myMarkItUpSettings.previewParserPath;
@@ -319,7 +320,6 @@ fuel.fields.wysiwyg_field = function(context){
 	
 		// add preview to make it noticable and consistent
 		if ($textarea.parent().find('.editor_preview').length == 0){
-		
 			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
 			if ($previewBtn){
 				$textarea.parent().append(previewButton);
@@ -884,6 +884,7 @@ fuel.fields.template_field = function(context, options){
 			options.min = $attrElem.attr('data-min');
 			options.dblClickBehavior = $attrElem.attr('data-dblclick');
 			options.initDisplay = $attrElem.attr('data-init_display');
+			options.removeable = $attrElem.attr('data-removeable');
 			options.addButtonText = fuel.lang('btn_add_another');
 			options.removeButtonText = fuel.lang('btn_remove');
 			options.warnBeforeDeleteMessage = fuel.lang('warn_before_delete_msg');

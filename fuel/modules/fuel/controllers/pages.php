@@ -390,6 +390,9 @@ class Pages extends Module {
 			$this->js_controller_params['import_field'] = $import_field;
 		}
 
+		// since the form builder is cleared above, we'll add in a script tag to make sure that the initialize code gets executed again
+		$this->form_builder->add_js('<script></script>');
+
 		$this->form_builder->id = 'layout_fields';
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);

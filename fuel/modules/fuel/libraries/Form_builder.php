@@ -1838,6 +1838,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'disabled' => $params['disabled'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
