@@ -2012,6 +2012,7 @@ class Form_builder {
 			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
 			'spacer'        => "&nbsp;&nbsp;&nbsp;",
+			'enum_params'   => array(),
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -2049,6 +2050,9 @@ class Form_builder {
 
 					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
+					if (!empty($params['enum_params']) AND is_array($params['enum_params'])) {
+						$enum_params = array_merge($enum_params, $params['enum_params']);
+					}
 					$str .= ' '.$this->create_label($enum_params);
 					$str .= $params['spacer'];
 					$str .= '</'.$params['wrapper_tag'].'>';
