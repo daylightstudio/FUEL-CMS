@@ -227,6 +227,13 @@ class Fuel_pages_model extends Base_module_model {
 			if ($just_published === TRUE || $just_published == 'yes') $where['published'] = 'yes';
 		}
 		$data = $this->find_one_array($where, 'location desc');
+
+		// case sensitive check
+		if (empty($data) OR $data['location'] != $location)
+		{
+			return array();
+		}
+
 		return $data;
 	}
 
