@@ -341,7 +341,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$use_sql = 'USE '.$db;
 		
 		$CI->db->query($use_sql);
-		$sql_arr = explode(";\n", $sql);
+		$sql_arr = explode(";\n", str_replace("\r\n", "\n", $sql));
 		foreach($sql_arr as $s)
 		{
 			$s = trim($s);
