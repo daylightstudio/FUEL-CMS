@@ -301,6 +301,11 @@ class Fuel_installer extends Fuel_base_library {
 
 		if (is_file($path))
 		{
+			if (empty($this->CI->db))
+			{
+				$this->CI->load->database();	
+			}
+			
 			$this->CI->db->load_sql($path);
 		}
 	}
