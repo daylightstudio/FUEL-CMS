@@ -141,7 +141,7 @@
 
 
 							<ul class="bullets">
-								<li>Need help? Visit the <a href="http://forums.getfuelcms.com" target="_blank">FUEL CMS Forums</a>.</li>
+								<li>Need help? Visit the <a href="http://forum.getfuelcms.com" target="_blank">FUEL CMS Forum</a>.</li>
 								<li>Found a bug? <a href="https://github.com/daylightstudio/FUEL-CMS/issues" target="_blank">Report it on GitHub</a>.</li>
 								<li>Subscribe to our <a href="http://twitter.com/fuelcms">Twitter feed</a> for FUEL CMS notifications.</li>
 								<li>Visit our <a href="http://twitter.com/blog" target="_blank">blog</a> for tips and news.</li>
