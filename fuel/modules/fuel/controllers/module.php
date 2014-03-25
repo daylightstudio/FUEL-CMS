@@ -320,7 +320,7 @@ class Module extends Fuel_base_controller {
 				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
 				{
 					$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
 					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 				}';	
 			}
@@ -338,7 +338,7 @@ class Module extends Fuel_base_controller {
 				$delete_func .= 'if (isset($cols[$CI->model->key_field()]))
 				{
 					$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
 					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 				}';				
 			}
