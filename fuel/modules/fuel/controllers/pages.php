@@ -377,10 +377,10 @@ class Pages extends Module {
 		
 		// page variables
 		$layout =  $this->fuel->layouts->get($layout);
-		$layout->set_field_values($page_vars);
 
 		if (!empty($layout))
 		{
+			$layout->set_field_values($page_vars);
 			$fields = $layout->fields();
 			$import_field = $layout->import_field();
 		}
