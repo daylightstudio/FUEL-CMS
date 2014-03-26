@@ -243,8 +243,9 @@ class Pages extends Module {
 		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
-		
-		if (!empty($field_values['location'])) $this->preview_path = $field_values['location'];
+
+		// substitute data values into preview path
+		$this->preview_path = $this->module_obj->url($field_values);
 		
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
 		
