@@ -29,7 +29,6 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 			})
 			$assetSelect.keyup(function(e) {
 				$assetSelect.change();
-				console.log('change')
 				return(false);
 			});
 			$assetSelect.change();
