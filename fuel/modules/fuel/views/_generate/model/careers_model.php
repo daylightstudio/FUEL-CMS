@@ -24,7 +24,7 @@ class Careers_model extends Base_module_model {
 		{
 			$values['post_date'] = datetime_now();
 		}
-		$values['skillset_requirements'] = strip_tags($values['skillset_requirements']);
+		$values['skills_needed'] = strip_tags($values['skills_needed']);
 		return $values;
 	}
 	
@@ -33,7 +33,6 @@ class Careers_model extends Base_module_model {
 		$fields = parent::form_fields($values, $related);
 		$fields['post_date']['comment'] = 'If blank, will default to current date/time'; 
 		$fields['post_date']['value'] = datetime_now(); 
-		$fields['skillset_requirements']['class'] = 'no_editor'; 
 		return $fields;
 	}
 	
@@ -51,7 +50,7 @@ class Career_model extends Base_module_record {
 	function get_skillset_requirements_formatted()
 	{
 		$this->_CI->load->helper('html');
-		$lis = explode("\n", $this->skillset_requirements);
+		$lis = explode("\n", $this->skills_needed);
 		$lis = array_map('trim', $lis);
 		return ul($lis, array('class' => 'ul'));
 	}
