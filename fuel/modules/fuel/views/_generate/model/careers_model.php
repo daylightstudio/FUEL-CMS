@@ -24,7 +24,6 @@ class Careers_model extends Base_module_model {
 		{
 			$values['post_date'] = datetime_now();
 		}
-		$values['skills_needed'] = strip_tags($values['skills_needed']);
 		return $values;
 	}
 	
