@@ -87,6 +87,7 @@ class Blocks extends Module {
 				'application/php', 
 				'application/x-php', 
 				'text/php', 
+				'text/html', 
 				'text/x-php', 
 				'application/x-httpd-php-source', 
 				'text/plain');

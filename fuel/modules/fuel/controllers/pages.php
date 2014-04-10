@@ -932,7 +932,8 @@ class Pages extends Module {
 				'application/x-httpd-php', 
 				'application/php', 
 				'application/x-php', 
-				'text/php', 
+				'text/php',
+				'text/html', 
 				'text/x-php', 
 				'application/x-httpd-php-source', 
 				'text/plain');
