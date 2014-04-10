@@ -28,7 +28,8 @@ dave@thedaylightstudio.com
 			max : null,
 			min : null,
 			depth : 1,
-			allowCollapsingContent : true
+			allowCollapsingContent : true,
+			removeable : true
 		}, o || {});
 
 		// used for issue when renaming checkboxes
@@ -148,6 +149,7 @@ dave@thedaylightstudio.com
 		}
 		
 		var createRemoveButton = function(elem){
+			if (!options.removeable) return;
 			$elem = $(elem);
 			if (!$elem.find('.' + options.removeButtonClass).length) {
 				var $remove = $elem.find(options.removeSelector + ':first');

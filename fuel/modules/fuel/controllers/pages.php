@@ -243,8 +243,9 @@ class Pages extends Module {
 		
 		$field_values = (!empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
-		
-		if (!empty($field_values['location'])) $this->preview_path = $field_values['location'];
+
+		// substitute data values into preview path
+		$this->preview_path = $this->module_obj->url($field_values);
 		
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
 		
@@ -377,10 +378,10 @@ class Pages extends Module {
 		
 		// page variables
 		$layout =  $this->fuel->layouts->get($layout);
-		$layout->set_field_values($page_vars);
 
 		if (!empty($layout))
 		{
+			$layout->set_field_values($page_vars);
 			$fields = $layout->fields();
 			$import_field = $layout->import_field();
 		}
@@ -389,6 +390,9 @@ class Pages extends Module {
 		{
 			$this->js_controller_params['import_field'] = $import_field;
 		}
+
+		// since the form builder is cleared above, we'll add in a script tag to make sure that the initialize code gets executed again
+		$this->form_builder->add_js('<script></script>');
 
 		$this->form_builder->id = 'layout_fields';
 		$this->form_builder->name_prefix = 'vars';
@@ -928,7 +932,8 @@ class Pages extends Module {
 				'application/x-httpd-php', 
 				'application/php', 
 				'application/x-php', 
-				'text/php', 
+				'text/php',
+				'text/html', 
 				'text/x-php', 
 				'application/x-httpd-php-source', 
 				'text/plain');

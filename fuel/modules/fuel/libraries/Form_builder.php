@@ -1838,6 +1838,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'disabled' => $params['disabled'],
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -1937,6 +1938,7 @@ class Form_builder {
 			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
 			'spacer'        => "&nbsp;&nbsp;&nbsp;",
+			'enum_params'   => array(),
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -1975,6 +1977,9 @@ class Form_builder {
 					$enum_name = $this->name_prefix.'--'.$enum_name;
 				}
 				$enum_params = array('label' => $label, 'name' => $enum_name);
+				if (!empty($params['enum_params']) AND is_array($params['enum_params'])) {
+					$enum_params = array_merge($enum_params, $params['enum_params']);
+				}
 				
 				$str .= ' '.$this->create_label($enum_params);
 				$str .= $params['spacer'];
@@ -2007,6 +2012,7 @@ class Form_builder {
 			'wrapper_tag'   => 'span',// for checkboxes
 			'wrapper_class' => 'multi_field',
 			'spacer'        => "&nbsp;&nbsp;&nbsp;",
+			'enum_params'   => array(),
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -2044,6 +2050,9 @@ class Form_builder {
 
 					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
+					if (!empty($params['enum_params']) AND is_array($params['enum_params'])) {
+						$enum_params = array_merge($enum_params, $params['enum_params']);
+					}
 					$str .= ' '.$this->create_label($enum_params);
 					$str .= $params['spacer'];
 					$str .= '</'.$params['wrapper_tag'].'>';
@@ -2239,6 +2248,8 @@ class Form_builder {
 			$params['ampm'] = TRUE;
 		}
 
+		$key = (isset($params['subkey'])) ? 'subkey' : 'key';
+
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00')
 		{
 			$hour_format = ($params['ampm']) ? 'g' : 'G';
@@ -2246,8 +2257,8 @@ class Form_builder {
 		}
 		$time_params['size'] = 2;
 		$time_params['maxlength'] = 2;
-		$field_name = (empty($params['is_datetime'])) ? $params['key'] : $params['key'].'_hour';
-		$time_params['name'] = str_replace($params['key'], $field_name, $params['orig_name']);
+		$field_name = (empty($params['is_datetime'])) ? $params[$key] : $params[$key].'_hour';
+		$time_params['name'] = str_replace($params[$key], $field_name, $params['orig_name']);
 		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
 		$time_params['placeholder'] = 'hh';
@@ -2258,7 +2269,8 @@ class Form_builder {
 		$str = $this->create_text($this->normalize_params($time_params));
 		$str .= ":";
 		if (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND $params['value'] != '0000-00-00 00:00:00') $time_params['value'] = date('i', strtotime($params['value']));
-		$time_params['name'] = str_replace($params['key'], $params['key'].'_min', $params['orig_name']);
+
+		$time_params['name'] = str_replace($params[$key], $params[$key].'_min', $params['orig_name']);
 		$time_params['class'] = 'datepicker_mm';
 		$time_params['placeholder'] = 'mm';
 
@@ -2271,7 +2283,7 @@ class Form_builder {
 		if (!empty($params['ampm']))
 		{
 			$ampm_params['options'] = array('am' => 'am', 'pm' => 'pm');
-			$ampm_params['name'] = str_replace($params['key'], $params['key'].'_am_pm', $params['orig_name']);
+			$ampm_params['name'] = str_replace($params[$key], $params[$key].'_am_pm', $params['orig_name']);
 			$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 			$ampm_params['disabled'] = $params['disabled'];
 
@@ -2284,7 +2296,7 @@ class Form_builder {
 			$str .= $this->create_enum($this->normalize_params($ampm_params));
 		}
 
-		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+		$process_key = $params[$key];
 
 		// create post processer to recreate date value
 		$func_str = '
@@ -2358,7 +2370,7 @@ class Form_builder {
 		return $str;
 	}
 	
-	// --------------------------------------------------------------------
+		// --------------------------------------------------------------------
 
 	/**
 	 * Creates the date/time input for the form
@@ -2390,23 +2402,15 @@ class Form_builder {
 		$str .= $this->create_time($time_params);
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
+
 		$func_str = '
 				
 				if (is_array($value))
 				{
 					foreach($value as $key => $val)
 					{
-
 						if (isset($val["'.$process_key.'"]))
 						{
-							if (is_string($val["'.$process_key.'"]))
-							{
-								$z = $val["'.$process_key.'"];
-							}
-							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
-							{
-								$z = $val["'.$process_key.'"]["'.$params['name'].'"];
-							}
 
 							$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
 							$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
@@ -2434,7 +2438,7 @@ class Form_builder {
 									}
 								}
 
-								$dateval = $value[$key]["'.$process_key.'"];
+								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]));
 								if ($date != "")
 								{
 									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
@@ -2464,7 +2468,7 @@ class Form_builder {
 									}
 								}
 
-								$dateval = $value[$key]["'.$process_key.'"]["'.$params['name'].'"];
+								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]["'.$params['name'].'"]));
 								if ($date != "")
 								{
 									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
@@ -2476,6 +2480,7 @@ class Form_builder {
 							}
 						}
 					}
+
 					return $value;
 				}
 				else

@@ -86,7 +86,7 @@ class Base_module_model extends MY_Model {
 															'underscore',
 															'camelize',
 															'upper'			=> 'strtoupper',
-															'lower'			=> 'strtlower',
+															'lower'			=> 'strtolower',
 															),
 								'number'			=> array(
 															'currency',

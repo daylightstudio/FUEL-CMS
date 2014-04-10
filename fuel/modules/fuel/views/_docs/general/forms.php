@@ -712,6 +712,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
 		<li><strong>condensed</strong>: if TRUE, this will update there repeatable field to use a condensed styling</li>
 		<li><strong>non_sortable</strong>: if TRUE, this will hide the sorting grabber for repeatable fields</li>
+		<li><strong>removeable</strong>: if determines whether the repeatable sets can be removed</li>
 	</ul>
 
 	<h4>Example</h4>

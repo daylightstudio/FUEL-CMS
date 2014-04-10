@@ -1158,6 +1158,7 @@ class Fuel_page extends Fuel_base_library {
 			'assetsPath' => assets_path(''),
 			);
 		
+		$orig_asset_path = $this->CI->asset->assets_path;
 		$this->CI->asset->assets_path = $this->fuel->config('fuel_assets_path');
 		$this->CI->load->helper('ajax');
 		$this->CI->load->library('form');
@@ -1176,6 +1177,7 @@ class Fuel_page extends Fuel_base_library {
 			$this->CI->config->set_item('assets_path', $this->CI->config->item('assets_path'));
 		}
 		$this->_fuelified_processed = TRUE;
+		$this->CI->asset->assets_path = $orig_asset_path;
 		return $output;
 	}
 	

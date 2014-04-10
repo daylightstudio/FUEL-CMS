@@ -17,7 +17,7 @@ $hook['before_create_projects'] = array(
 								'filename' => 'Test_hooks.php',
 								'filepath' => 'hooks',
 								'params'   => array(),
-								'module' => 'app',
+								'module' => 'app');
 */
 // include hooks specific to FUEL
 include(FUEL_PATH.'config/fuel_hooks.php');

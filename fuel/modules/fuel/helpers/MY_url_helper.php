@@ -284,7 +284,8 @@ function link_target($link, $exts = array())
 	{
 		$exts = array($exts);
 	}
-	$ext = end(explode('.', $link));
+	$link_parts = explode('.', $link);
+	$ext = end($link_parts);
 	
 	// check if an http path and that it is from a different domain
 	if (is_http_path($link) AND $test_domain != $domain OR (!empty($exts) AND in_array($ext, $exts)))

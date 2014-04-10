@@ -27,6 +27,10 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 			$assetSelect.change(function(e){
 				$assetPreview.html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $assetSelect.val() + '" />');
 			})
+			$assetSelect.keyup(function(e) {
+				$assetSelect.change();
+				return(false);
+			});
 			$assetSelect.change();
 			$('.img_only').show();
 		} else {
