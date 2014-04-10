@@ -135,7 +135,7 @@ class Fuel_assets_model extends CI_Model {
 				$key = $tmpfiles[$i];
 				if (empty($this->filters['name']) || 
 					(!empty($this->filters['name']) AND 
-					(strpos($files[$key]['name'], $this->filters['name']) !== FALSE || strpos($key, $this->filters['name']) !== FALSE)))
+					(stripos($files[$key]['name'], $this->filters['name']) !== FALSE || stripos($key, $this->filters['name']) !== FALSE)))
 				{
 
 					$file['id'] = uri_safe_encode(assets_server_to_web_path($files[$tmpfiles[$i]]['server_path'], TRUE));
