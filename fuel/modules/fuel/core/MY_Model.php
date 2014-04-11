@@ -1889,7 +1889,7 @@ class MY_Model extends CI_Model {
 		{
 			$data = $this->find_one_array(array($key => $val));
 		}
-		if (!empty($data)) return FALSE;
+		if (!empty($data) AND $data[$key] == $val) return FALSE;
 		return TRUE;
 	}
 
