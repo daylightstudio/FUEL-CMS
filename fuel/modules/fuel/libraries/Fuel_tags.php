@@ -48,7 +48,7 @@ class Fuel_tags extends Fuel_module {
 		$where['slug'] = $tag;
 		if (!empty($category))
 		{
-			$categories_table = $model->tables('categories');
+			$categories_table = $model->tables('fuel_categories');
 			$where[$categories_table.'.slug'] = $category;
 		}
 		$tag = $model->find_one($where);
@@ -69,7 +69,7 @@ class Fuel_tags extends Fuel_module {
 		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
 		$model =& $this->model();
 		$categories_table = $model->tables('fuel_categories');
-		$tags_table = $model->tables('tags');
+		$tags_table = $model->tables('fuel_tags');
 		if (is_int($category))
 		{
 			$where[$tags_table.'.category_id'] = $category;
