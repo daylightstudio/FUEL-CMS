@@ -256,10 +256,18 @@ function link_target($link, $exts = array())
 	
 	$test_domain = $_SERVER['SERVER_NAME'];
 	$domain = '';
+
+	// get the extension to check
+	if (is_string($exts))
+	{
+		$exts = array($exts);
+	}
+	$link_parts = explode('.', $link);
+	$ext = end($link_parts);
+
 	if (isset($url_parts['host']))
 	{
-		
-		if ($url_parts['host'] == $test_domain)
+		if ($url_parts['host'] == $test_domain AND !in_array($ext, $exts))
 		{
 			return '';
 		}
@@ -279,14 +287,7 @@ function link_target($link, $exts = array())
 		}
 	}
 
-	// get the extension to check
-	if (is_string($exts))
-	{
-		$exts = array($exts);
-	}
-	$link_parts = explode('.', $link);
-	$ext = end($link_parts);
-	
+
 	// check if an http path and that it is from a different domain
 	if (is_http_path($link) AND $test_domain != $domain OR (!empty($exts) AND in_array($ext, $exts)))
 	{
