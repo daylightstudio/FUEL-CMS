@@ -400,8 +400,9 @@ fuel.fields.file_upload_field = function(context){
 		$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
 		$multiFile.removeAttr('accept');// for Chrome bug
 		$multiFile.MultiFile({ namePattern: '$name___$i'});
-	}, 500)
-	
+	}, 500);
+
+	fuel.fields.asset_field(context);
 }
 
 // asset select field
