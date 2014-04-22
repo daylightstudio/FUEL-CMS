@@ -151,7 +151,9 @@ dave@thedaylightstudio.com
 		var createRemoveButton = function(elem){
 			if (!options.removeable) return;
 			$elem = $(elem);
-			if (!$elem.find('.' + options.removeButtonClass).length) {
+			
+			if (!$elem.children('.' + options.removeButtonClass).length) {
+				$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 				var $remove = $elem.find(options.removeSelector + ':first');
 				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
 					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');

@@ -118,13 +118,15 @@ fuel.fields.wysiwyg_field = function(context){
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 		
 		// used in cases where repeatable fields cause issues
-		if ($(elem).hasClass('ckeditor_applied')) {
+		if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 			return;
 		}
+
 		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
+			//$('#cke_' + ckId).remove();
 			//CKEDITOR.instances[ckId].destroy();
 		}
 		var config = jqx_config.ckeditorConfig;
@@ -364,7 +366,7 @@ fuel.fields.wysiwyg_field = function(context){
 		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
-			// createCKEditor(this);
+			//createCKEditor(this);
 			setTimeout(function(){
 				createCKEditor(_this);
 			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
