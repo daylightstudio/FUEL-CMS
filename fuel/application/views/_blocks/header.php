@@ -29,6 +29,6 @@
 	<div class="page">
 		<div class="wrapper">
 			<header class="page_header">
-				<div class="logo"><object type="image/svg+xml" width="160" height="145" data="<?= img_path('_template_icons.svg#fuel') ?>"></object></div>
-				<h1><?=fuel_var('heading')?></h1>
+				<div class="logo"><object type="image/svg+xml" width="160" height="145" data="<?php echo img_path('_template_icons.svg#fuel') ?>"></object></div>
+				<h1><?php echo fuel_var('heading')?></h1>
 			</header>		
