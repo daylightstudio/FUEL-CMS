@@ -245,7 +245,7 @@ class Menu {
 				}
 
 				// Does the RegEx match?
-				else if (preg_match('#^'.$match.'$#', $active))
+				else if (preg_match('!^'.$match.'$!', $active))
 				{
 					$this->active = $s_id;
 				}
