@@ -451,7 +451,7 @@ class Fuel_redirects extends Fuel_base_library {
 			}
 			else
 			{
-				show_404();
+				show_404($uri);
 			}
 		}
 	}
