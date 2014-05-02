@@ -932,7 +932,7 @@ class Base_module_model extends MY_Model {
 
 		if (in_array('publish_date', $fields))
 		{
-			$this->db->where(array('publish_date <=' => datetime_now()));
+			$this->db->where(array($this->table_name.'.publish_date <=' => datetime_now()));
 		}
 	}
 	
