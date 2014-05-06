@@ -1210,7 +1210,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($this->auto_trim AND is_string($original_values[$key])) ? trim($original_values[$key]) : $original_values[$key];
 			}
 			// add the date fields if they don't exist to the values array
-			elseif(!array_key_exists($key, $original_values) AND (in_array($key, $this->auto_date_add) OR in_array($key, $this->auto_date_update)))
+			elseif(is_array($original_values) AND !array_key_exists($key, $original_values) AND (in_array($key, $this->auto_date_add) OR in_array($key, $this->auto_date_update)))
 			{
 				$values[$key] = NULL;
 			}
