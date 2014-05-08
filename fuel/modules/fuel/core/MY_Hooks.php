@@ -75,7 +75,7 @@ class MY_Hooks extends CI_Hooks {
 			// -----------------------------------
 			if (!empty($params))
 			{
-				if (!isset($this->hooks[$which]))
+				if (isset($this->hooks[$which]))
 				{
 					$this->hooks[$which]['params'] = array_merge($this->hooks[$which], $params);
 				}
