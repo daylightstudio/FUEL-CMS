@@ -126,6 +126,7 @@ function fuel_block($params, $vars = array(), $check_db = TRUE, $scope = NULL)
 		<li><strong>container_tag_attrs</strong>: html attributes for the container tag</li>
 		<li><strong>container_tag_id</strong>: html container id</li>
 		<li><strong>container_tag_class</strong>: html container class</li>
+		<li><strong>subcontainer_tag_class</strong>: an array of css classes to apply to subcontainers</li>
 		<li><strong>cascade_selected</strong>: cascade the selected items. Default is TRUE</li>
 		<li><strong>include_hidden</strong>: include menu items with the hidden attribute. Default is FALSE</li>
 		<li><strong>item_tag</strong>: the html list item element. Default is 'li'</li>
