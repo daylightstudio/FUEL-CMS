@@ -134,8 +134,8 @@ fuel.fields.wysiwyg_field = function(context){
 		// add custom configs
 		config = $.extend(config, $(elem).data());
 		var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
+		config.height = $(elem).height();
 
-		
 		CKEDITOR.replace(ckId, config);
 
 		// add this so that we can set that the page has changed
