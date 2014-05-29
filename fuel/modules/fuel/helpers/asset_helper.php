@@ -291,7 +291,7 @@ function jquery($version = '1.7.1', $default = 'jquery')
  * Inserts <script ...></script> tags based on configuration settings for js file path
  *
  * @access	public
- * @param	string	file name of the swf file including extension
+ * @param	string	file name(s) of the JS files (.css extension is not needed). Can be an array or comma separated list.
  * @param	string	module module folder if any
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
@@ -308,7 +308,7 @@ function js($path, $module = '', $options = array())
  * Inserts <link ... /> tags based on configuration settings for css file path
  *
  * @access	public
- * @param	string	file name of the swf file including extension
+ * @param	string	file name(s) of the CSS files (.css extension is not needed). Can be an array or comma separated list.
  * @param	string	module module folder if any
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
