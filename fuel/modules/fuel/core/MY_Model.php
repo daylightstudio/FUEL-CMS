@@ -2605,13 +2605,13 @@ class MY_Model extends CI_Model {
 	 <code>
 	$form_info = $this->examples_model->form_fields(); 
 
-	echo $form_fields['id']['type']; // hidden 
-	echo $table_meta['email']['type']; // text 
-	echo $table_meta['email']['required']; // 1 (TRUE) 
-	echo $table_meta['first_name']['type']; // text 
-	echo $table_meta['description']['type']; // textfield 
-	echo $table_meta['active']['type']; // select or enum 
-	echo $table_meta['date_added']['type']; // datetime (a special field type in the form_builder class) 
+	echo $form_info['id']['type']; // hidden 
+	echo $form_info['email']['type']; // text 
+	echo $form_info['email']['required']; // 1 (TRUE) 
+	echo $form_info['first_name']['type']; // text 
+	echo $form_info['description']['type']; // textfield 
+	echo $form_info['active']['type']; // select or enum 
+	echo $form_info['date_added']['type']; // datetime (a special field type in the form_builder class) 
 	</code>
 	 *
 	 * @access	public
