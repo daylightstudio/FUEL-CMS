@@ -486,6 +486,12 @@ class Fuel_navigation_model extends Base_module_model {
 			$values['location'] = str_replace(array('____', '___', '_X_'), array('/', '#', '.'), $values['location']);
 		}
 
+		// prevents issues where empty location values overwrite existing menu items with empty location values
+		if (empty($values['location']))
+		{
+			$values['location'] = '/';
+		}
+
 		if (empty($values['language']))
 		{
 			$CI =& get_instance();
