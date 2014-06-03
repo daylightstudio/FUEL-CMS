@@ -11,7 +11,7 @@ $config['default_layout'] = 'main';
 
 $config['layouts_folder'] = '_layouts';
 
-$config['hidden'] = array('');
+$config['hidden'] = array();
 
 $config['layouts']['main'] = array(
 	//'file' 		=> $config['layouts_path'].'main',
