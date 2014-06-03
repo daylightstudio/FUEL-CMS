@@ -36,6 +36,7 @@ class Fuel_layouts extends Fuel_base_library {
 	public $layouts_folder = '_layouts'; // layout folder 
 	public $layouts = array(); // layout object initialization parameters
 	public $blocks = array(); // block object initialization parameters
+	public $hidden = array(); // an array of layouts to not display in the CMS dropdown
 
 	protected $_layouts = array(); // layout objects
 	
@@ -114,7 +115,7 @@ class Fuel_layouts extends Fuel_base_library {
 				// we won't show those that have underscores in front of them'
 				if (substr($group, 0, 1) != '_')
 				{
-					if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_')
+					if (empty($this->layouts[$layout]) AND substr($layout, 0, 1) != '_' AND !in_array($layout, $this->hidden))
 					{
 						$this->layouts[$layout] = array('class' => 'Fuel_layout', 'group' => $group);
 					}
