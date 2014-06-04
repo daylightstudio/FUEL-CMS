@@ -2959,10 +2959,10 @@ class Form_builder {
 				}
 				else
 				{
-					$library = strtolower($custom_field['class']);
-					$this->CI->load->library($library);
+					$library = $custom_field['class'];
+					$this->CI->load->library($custom_field['class']);
 				}
-				$library = end(explode('/', $library));
+				$library = end(explode('/', strtolower($library)));
 				$func = array($this->CI->$library, $custom_field['function']);
 			}
 			
