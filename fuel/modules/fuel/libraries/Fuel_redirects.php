@@ -142,7 +142,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	array	
 	 */	
-	public function add_ssl($uri, $redirect = '')
+	public function add_ssl($uri, $environment = '')
 	{
 		$this->_add_ssl_type($uri, $environment, 'ssl');
 	}
