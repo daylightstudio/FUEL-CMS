@@ -136,8 +136,8 @@ $config['languages'] = array(
 						);
 
 // specifies the method in which to look for pages with different languages.
-// values can be "segment", "query_string" or "both"
-$config['language_mode'] = 'segment';
+// values can be "domain", "segment", "query_string" or "both" (which means both "segment" and "query_string")
+$config['language_mode'] = 'domain';
 
 // append the current language value to the site URL automatically
 $config['add_language_to_site_url'] = FALSE;
