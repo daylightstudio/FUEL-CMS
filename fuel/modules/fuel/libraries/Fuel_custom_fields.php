@@ -1008,7 +1008,10 @@ class Fuel_custom_fields {
 					$str .= '</div>';
 					$i++;
 				}
-				$str .= '<div class="clear"></div></div>';
+				if (empty($params['float']))
+				{
+					$str .= '<div class="clear"></div></div>';	
+				}
 			}
 			else
 			{
