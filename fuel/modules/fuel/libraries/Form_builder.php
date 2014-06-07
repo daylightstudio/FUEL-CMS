@@ -1581,7 +1581,13 @@ class Form_builder {
 			}
 			
 		}
-		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
+		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
+		if (($params['type'] == 'enum' OR $params['type'] == 'multi' OR $params['type'] == 'array') AND ($mode == 'radios' OR ($mode == 'auto' AND count($params['options']) <= 2)))
+		{
+			$use_label = FALSE;
+		}
+
+		if ($use_label)
 		{
 			if (!empty($this->name_prefix))
 			{
