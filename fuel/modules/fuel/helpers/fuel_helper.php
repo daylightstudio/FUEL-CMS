@@ -448,13 +448,13 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 {
 	$CI =& get_instance();
 	$page = $CI->fuel->pages->active();
+	$permission = $module;
 	if (empty($page))
 	{
 		$page = $CI->fuel->pages->create();
 	}
 	if (!empty($id) AND (!defined('FUELIFY') OR defined('FUELIFY') AND FUELIFY !== FALSE))
 	{
-		
 		if (is_object($id) AND is_a($id, 'Data_record') AND isset($id->id))
 		{
 			$ref_id = $id->id;
@@ -472,6 +472,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 				if (!empty($mod))
 				{
 					$module = $mod->info('module_uri');
+					$permission = $mod->info('permission');
 				}
 			}
 			
@@ -506,6 +507,7 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 		$marker['id'] = $ref_id;
 		$marker['label'] = $label;
 		$marker['module'] = $module;
+		$marker['permission'] = $permission;
 		$marker['published'] = $is_published;
 		$marker['xoffset'] = $xoffset;
 		$marker['yoffset'] = $yoffset;

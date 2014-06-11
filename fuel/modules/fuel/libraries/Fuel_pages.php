@@ -1243,7 +1243,7 @@ class Fuel_page extends Fuel_base_library {
 		extract($marker);
 
 		// fix for pages permission
-		$perm = ($module == 'pagevariables') ? 'pages' : $module;
+		$perm = ($permission == 'pagevariables') ? 'pages' : $permission;
 		
 		if ($this->fuel->config('admin_enabled') AND 
 			is_fuelified() AND 
