@@ -118,13 +118,15 @@ fuel.fields.wysiwyg_field = function(context){
 		var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 		
 		// used in cases where repeatable fields cause issues
-		if ($(elem).hasClass('ckeditor_applied')) {
+		if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 			return;
 		}
+
 		
 		// cleanup
 		if (CKEDITOR.instances[ckId]) {
 			CKEDITOR.remove(CKEDITOR.instances[ckId]);
+			//$('#cke_' + ckId).remove();
 			//CKEDITOR.instances[ckId].destroy();
 		}
 		var config = jqx_config.ckeditorConfig;
@@ -132,8 +134,8 @@ fuel.fields.wysiwyg_field = function(context){
 		// add custom configs
 		config = $.extend(config, $(elem).data());
 		var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
+		config.height = $(elem).height();
 
-		
 		CKEDITOR.replace(ckId, config);
 
 		// add this so that we can set that the page has changed
@@ -364,7 +366,7 @@ fuel.fields.wysiwyg_field = function(context){
 		var _this = this;
 		var ckId = $(this).attr('id');
 		if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
-			// createCKEditor(this);
+			//createCKEditor(this);
 			setTimeout(function(){
 				createCKEditor(_this);
 			}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
@@ -398,8 +400,9 @@ fuel.fields.file_upload_field = function(context){
 		$multiFile.addClass('accept-' + acceptTypes); // accepts from class as well as attribute so we'll use the class instead
 		$multiFile.removeAttr('accept');// for Chrome bug
 		$multiFile.MultiFile({ namePattern: '$name___$i'});
-	}, 500)
-	
+	}, 500);
+
+	fuel.fields.asset_field(context);
 }
 
 // asset select field

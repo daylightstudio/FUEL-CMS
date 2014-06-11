@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -142,7 +142,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	array	
 	 */	
-	public function add_ssl($uri, $redirect = '')
+	public function add_ssl($uri, $environment = '')
 	{
 		$this->_add_ssl_type($uri, $environment, 'ssl');
 	}
@@ -173,7 +173,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	array	
 	 */	
-	public function add_non_ssl($uri, $redirect = '')
+	public function add_non_ssl($uri, $environment = '')
 	{
 		$this->_add_ssl_type($uri, $environment, 'non_ssl');
 
@@ -451,7 +451,7 @@ class Fuel_redirects extends Fuel_base_library {
 			}
 			else
 			{
-				show_404();
+				show_404($uri);
 			}
 		}
 	}

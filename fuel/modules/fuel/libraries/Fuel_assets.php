@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -614,7 +614,9 @@ class Fuel_assets extends Fuel_base_library {
 	public function dir_files($folder, $recursive = FALSE, $append_path = FALSE)
 	{
 		$dir = assets_server_path($folder);
-		return directory_to_array($dir, $recursive, array(), $append_path);
+		$files = directory_to_array($dir, $recursive, array(), $append_path);
+		sort($files);
+		return $files;
 	}
 	
 	// --------------------------------------------------------------------

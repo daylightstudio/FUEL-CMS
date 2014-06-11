@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -36,6 +36,7 @@ class Fuel_layouts extends Fuel_base_library {
 	public $layouts_folder = '_layouts'; // layout folder 
 	public $layouts = array(); // layout object initialization parameters
 	public $blocks = array(); // block object initialization parameters
+	public $hidden = array(); // an array of layouts to not display in the CMS dropdown
 
 	protected $_layouts = array(); // layout objects
 	
@@ -220,7 +221,7 @@ class Fuel_layouts extends Fuel_base_library {
 		// add all layouts without a group first
 		foreach($layouts as $k => $layout)
 		{
-			if (empty($layout->group))
+			if (empty($layout->group) AND !in_array($k, $this->hidden))
 			{
 				$options[$layout->name] = $layout->label;
 				// reduce array down

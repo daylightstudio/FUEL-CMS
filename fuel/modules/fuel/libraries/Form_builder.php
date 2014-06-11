@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -1581,7 +1581,13 @@ class Form_builder {
 			}
 			
 		}
-		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
+		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
+		if (($params['type'] == 'enum' OR $params['type'] == 'multi' OR $params['type'] == 'array') AND ($mode == 'radios' OR ($mode == 'auto' AND count($params['options']) <= 2)))
+		{
+			$use_label = FALSE;
+		}
+
+		if ($use_label)
 		{
 			if (!empty($this->name_prefix))
 			{
@@ -2959,10 +2965,10 @@ class Form_builder {
 				}
 				else
 				{
-					$library = strtolower($custom_field['class']);
-					$this->CI->load->library($library);
+					$library = $custom_field['class'];
+					$this->CI->load->library($custom_field['class']);
 				}
-				$library = end(explode('/', $library));
+				$library = end(explode('/', strtolower($library)));
 				$func = array($this->CI->$library, $custom_field['function']);
 			}
 			

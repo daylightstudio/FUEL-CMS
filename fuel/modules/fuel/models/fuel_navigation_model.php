@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -484,6 +484,12 @@ class Fuel_navigation_model extends Base_module_model {
 			$values['location'] = str_replace(array('/', '#', '.'), array('____', '___', '_X_'), $values['location']);
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace(array('____', '___', '_X_'), array('/', '#', '.'), $values['location']);
+		}
+
+		// prevents issues where empty location values overwrite existing menu items with empty location values
+		if (empty($values['location']))
+		{
+			$values['location'] = '/';
 		}
 
 		if (empty($values['language']))

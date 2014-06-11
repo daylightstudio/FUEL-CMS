@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| layouts Path 
+| Layouts Path 
 |--------------------------------------------------------------------------
 |
 | The subdirectory in the views folder where the layouts files are stored
@@ -22,21 +22,18 @@ $config['default_layout'] = 'main';
 
 /*
 |--------------------------------------------------------------------------
-| layouts for Pages 
+| Hidden Layouts
 |--------------------------------------------------------------------------
 |
-| A layout can be made up of several view files... or parts. They will 
-| be stacked together in order. The parts array key is the name of the layout.
-| You can also include a'hooks key for'layout_hooks which is code that 
-| gets executed before the rendering of the layout. If set to the keyword
-| "AUTO", then layouts will be read in from the views/_layouts directory
+| An array of layouts to NOT display in the CMS dropdown
+|
 */
-//$config['layouts'] = 'AUTO';
+$config['hidden'] = array();
 
 
 /*
 |--------------------------------------------------------------------------
-| layout variables 
+| Layout variables 
 |--------------------------------------------------------------------------
 |
 | Specifies what variables and form information to display when you select

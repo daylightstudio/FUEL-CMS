@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -1210,7 +1210,7 @@ class MY_Model extends CI_Model {
 				$values[$key] = ($this->auto_trim AND is_string($original_values[$key])) ? trim($original_values[$key]) : $original_values[$key];
 			}
 			// add the date fields if they don't exist to the values array
-			elseif(!array_key_exists($key, $original_values) AND (in_array($key, $this->auto_date_add) OR in_array($key, $this->auto_date_update)))
+			elseif(is_array($original_values) AND !array_key_exists($key, $original_values) AND (in_array($key, $this->auto_date_add) OR in_array($key, $this->auto_date_update)))
 			{
 				$values[$key] = NULL;
 			}
@@ -1889,7 +1889,7 @@ class MY_Model extends CI_Model {
 		{
 			$data = $this->find_one_array(array($key => $val));
 		}
-		if (!empty($data)) return FALSE;
+		if (!empty($data) AND $data[$key] == $val) return FALSE;
 		return TRUE;
 	}
 
@@ -2605,13 +2605,13 @@ class MY_Model extends CI_Model {
 	 <code>
 	$form_info = $this->examples_model->form_fields(); 
 
-	echo $form_fields['id']['type']; // hidden 
-	echo $table_meta['email']['type']; // text 
-	echo $table_meta['email']['required']; // 1 (TRUE) 
-	echo $table_meta['first_name']['type']; // text 
-	echo $table_meta['description']['type']; // textfield 
-	echo $table_meta['active']['type']; // select or enum 
-	echo $table_meta['date_added']['type']; // datetime (a special field type in the form_builder class) 
+	echo $form_info['id']['type']; // hidden 
+	echo $form_info['email']['type']; // text 
+	echo $form_info['email']['required']; // 1 (TRUE) 
+	echo $form_info['first_name']['type']; // text 
+	echo $form_info['description']['type']; // textfield 
+	echo $form_info['active']['type']; // select or enum 
+	echo $form_info['date_added']['type']; // datetime (a special field type in the form_builder class) 
 	</code>
 	 *
 	 * @access	public
@@ -4213,7 +4213,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4367,7 +4367,7 @@ class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -5603,7 +5603,7 @@ class Data_record {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */

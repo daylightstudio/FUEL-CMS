@@ -341,11 +341,13 @@ dave@thedaylightstudio.com
 			if (options.initDisplay && !$this.is('.__applied__')){
 				$this.attr('data-init_display', options.init_display);
 				
+				$toDisplay = $repeatables.find(options.contentSelector).not(options.contentSelector + ' ' + options.contentSelector);
+
 				// hide all but the first
 				if (options.initDisplay == 'first'){
-					$repeatables.find(options.contentSelector).not(':first').hide();
+					$toDisplay.not(':first').hide();
 				} else if (options.initDisplay == 'none' || options.initDisplay == 'closed'){
-					$repeatables.find(options.contentSelector).hide();
+					$toDisplay.hide();	
 				}
 			}
 			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){

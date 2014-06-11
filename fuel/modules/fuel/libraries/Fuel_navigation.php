@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -308,10 +308,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Renders a basic unordered list navigation menu
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function basic($params)
+	public function basic($params = array())
 	{
 		$params['render_type'] = 'basic';
 		return $this->render($params);
@@ -323,10 +323,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Renders a breadcrumb navigation menu
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function breadcrumb($params)
+	public function breadcrumb($params = array())
 	{
 		$params['render_type'] = 'breadcrumb';
 		return $this->render($params);
@@ -338,10 +338,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Renders a collapsible navigation menu
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function collapsible($params)
+	public function collapsible($params = array())
 	{
 		$params['render_type'] = 'collapsible';
 		return $this->render($params);
@@ -353,10 +353,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Renders a page title using the navigation structure
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function page_title($params)
+	public function page_title($params = array())
 	{
 		$params['render_type'] = 'page_title';
 		return $this->render($params);
@@ -368,10 +368,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Renders a delimited menu (e.g. Home | About | Products | Contact)
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function delimited($params)
+	public function delimited($params = array())
 	{
 		$params['render_type'] = 'delimited';
 		return $this->render($params);
@@ -383,10 +383,10 @@ class Fuel_navigation extends Fuel_module {
 	 * Returns a nested array representing the navigation structure
 	 *
 	 * @access	public
-	 * @param	array	config preferences
+	 * @param	array	config preferences (optional)
 	 * @return	string
 	 */	
-	public function data($params)
+	public function data($params = array())
 	{
 		$params['render_type'] = 'array';
 		return $this->render($params);

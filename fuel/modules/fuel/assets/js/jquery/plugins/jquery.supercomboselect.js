@@ -115,7 +115,7 @@
 			$('#' + leftID + ' li').die();
 			$('#' + rightID + ' li').die();
 
-			$('#' + leftID + ' li[class!="option_disabled"]').live('dblclick', function(e){
+			$(document).on('dblclick', '#' + leftID + ' li[class!="option_disabled"]', function(e){
 				addSelectedToRight();
 			});
 
@@ -123,10 +123,8 @@
 				removeSelectedFromRight();
 			});
 
-
-			$('#' + leftID + ' li').live('click', function(e){
-				if ($(this).hasClass('optgrp') === false)
-				{
+			$(document).on('click', '#' + leftID + ' li', function(e){
+				if ($(this).hasClass('optgrp') === false){
 					if (isCtrlDown) {
 						$(this).removeClass(settings.selectedClass);
 					} else {
@@ -134,7 +132,6 @@
 					}
 				}
 			});
-
 
 			$(document).on('click', '#' + rightID + ' li', function(e){
 				if (isCtrlDown) {
@@ -144,11 +141,11 @@
 				}
 			});
 
-			$(document).keydown(function(e){
+			$(document).on('keydown', function(e){
 				if (e.shiftKey) {
 					isShiftDown = true;
 				//} else if (e.metaKey || e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93){ // Safari/Chrome right and left command keys are 91 and 93. Firefox is 224
-				} else if (e.metaKey || e.CtrlKey){
+				} else if (e.metaKey || e.ctrlKey){
 					isCtrlDown = true;
 				} else if (e.keyCode == 38) {
 					if (lastSelected) markForMove($(lastSelected).prev());
@@ -157,7 +154,7 @@
 				}
 			});
 
-			$(document).keyup(function(e){
+			$(document).on('keyup', function(e){
 				isShiftDown = false;
 				isCtrlDown = false;
 			});
@@ -208,6 +205,8 @@
 					.attr('placeholder', settings.defaultSearchBoxString)
 					.keyup(function(e){
 						isShiftDown = false; // reset this to prevent issue with not being able to select
+						isCtrlDown = false;
+
 						if (e.shiftKey || e.metaKey || e.altKey || e.ctrlKey || $.inArray(e.keyCode, nonSearchableChars) != -1) return false;
 						var searchTerm = searchBox.val(),
 							$searchClear = searchBox.siblings('.supercomboselect_search_clear');

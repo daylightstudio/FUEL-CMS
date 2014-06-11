@@ -373,6 +373,13 @@ class Pages extends Module {
 			$lang = $this->input->get('lang');
 			if (!$lang) $lang = $this->fuel->language->default_option();
 			$page_vars = array_merge($this->fuel_pagevariables_model->find_all_by_page_id($id, $lang), $page_vars);
+
+			// the following will pre-populate fields of a different language to the default values
+			if (empty($page_vars) AND $this->fuel->language->has_multiple() AND $lang != $this->fuel->language->default_option())
+			{
+				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
+			}
+
 		}
 
 		

@@ -9,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -139,13 +139,14 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
  * (hidden control characters that the remove_invisible_characters function misses)
  *
  * @param 	string 	string to evaluate
+ * @param 	string 	the value used to replace a gremlin
  * @return	string
  */
-function zap_gremlins($str)
+function zap_gremlins($str, $replace = '')
 {
 	// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
 	// the remove_invisible_characters doesn't seem to remove this
-	$str = preg_replace('/[^\x0A\x0D\x20-\x7E]/','', $str);
+	$str = preg_replace('/[^\x0A\x0D\x20-\x7E]/', $replace, $str);
 	return $str;
 }
 

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -932,7 +932,7 @@ class Base_module_model extends MY_Model {
 
 		if (in_array('publish_date', $fields))
 		{
-			$this->db->where(array('publish_date <=' => datetime_now()));
+			$this->db->where(array($this->table_name.'.publish_date <=' => datetime_now()));
 		}
 	}
 	

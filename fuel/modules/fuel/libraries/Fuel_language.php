@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -41,6 +41,7 @@ class Fuel_language extends Fuel_base_library {
 	public $use_cookies = TRUE; // use cookies to remember a selected language
 	public $detect_user_agent = 'auto'; // will check the user agent during language detection
 	public $default_option = NULL; // the default language to use 
+	public $domains = array('production' => array()); // the domains used for different languages dependent on environment (e.g. mywebsite.de, mywebsite.fr)
 	
 	// --------------------------------------------------------------------
 	
@@ -75,7 +76,7 @@ class Fuel_language extends Fuel_base_library {
 	public function initialize($params = array())
 	{
 		// first set the default to the values in the FUEL config
-		$_fuel_config = array('query_str_param', 'cookie_name', 'cookie_exp', 'use_cookies', 'detect_user_agent', 'default_option');
+		$_fuel_config = array('query_str_param', 'cookie_name', 'cookie_exp', 'use_cookies', 'detect_user_agent', 'default_option', 'domains');
 		foreach($_fuel_config as $p)
 		{
 			$config = $this->fuel->config('language_'.$p);
@@ -291,8 +292,16 @@ class Fuel_language extends Fuel_base_library {
 	{
 		$language = FALSE;
 
+		if($this->is_mode('domain'))
+		{
+			$domain = $_SERVER['SERVER_NAME'];
+			if (isset($this->domains[ENVIRONMENT][$domain]))
+			{
+				return $this->domains[ENVIRONMENT][$domain];	
+			}
+		}
 		// obtain language code from query string if available
-		if ($this->is_mode('query_string') OR ($this->is_mode('both')))
+		elseif ($this->is_mode('query_string') OR ($this->is_mode('both')))
 		{
 			$language = $this->query_str_value();
 		}
