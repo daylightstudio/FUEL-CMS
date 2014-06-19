@@ -1889,7 +1889,12 @@ class MY_Model extends CI_Model {
 		{
 			$data = $this->find_one_array(array($key => $val));
 		}
-		if (!empty($data) AND $data[$key] == $val) return FALSE;
+		if (!empty($data))
+		{
+			if (is_string($key) && ($data[$key] == $val)) return FALSE;
+			// test for compound keys
+			if (is_array($key) && (sizeof(array_intersect($data, $key)) == sizeof($key))) return FALSE;
+		}
 		return TRUE;
 	}
 
