@@ -2189,6 +2189,7 @@ class Form_builder {
 			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
 			'max_date' =>  date($params['date_format'], strtotime('12/31/2030')),
 			'first_day' => 0, 
+			'show_on' => 'button'
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -2204,7 +2205,7 @@ class Form_builder {
 			$params['value'] = '';
 		}
 		$params['maxlength'] = 10;
-		$params['size'] = 11; // extra room for cramped styling
+		$params['size'] = 12; // extra room for cramped styling
 		
 		// create the right format for placeholder display based on the date format
 		$date_arr = preg_split('#-|/#', $params['date_format']);
@@ -2231,6 +2232,7 @@ class Form_builder {
 		$params['data']['min_date'] = $params['min_date'];
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
+		$params['data']['show_on'] = $params['show_on'];
 		$params['placeholder'] = $format;
 		$params['type'] = 'text';
 		return $this->create_text($params);
@@ -2899,7 +2901,7 @@ class Form_builder {
 			$fields = $file;
 		}
 
-		if (is_array($fields))
+		if (!empty($fields) AND is_array($fields))
 		{
 			// setup custom fields
 			foreach($fields as $type => $custom)
@@ -3027,11 +3029,27 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
-	 * @return	string
+	 * @return	void
 	 */
 	public function set_validator(&$validator)
 	{
 		$this->form->validator = $validator;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the validator object on the form object
+	 *
+	 * The validator object is used to determine if the fields have been
+	 * filled out properly and will display any errors at the top of the form
+	 * 
+	 * @access	public
+	 * @return	object
+	 */
+	public function &get_validator()
+	{
+		return $this->form->validator;
 	}
 	
 	// --------------------------------------------------------------------
@@ -3280,6 +3298,7 @@ class Form_builder {
 			if (!empty($field['post_process']) AND isset($posted[$key]))
 			{
 				$this->set_post_process($key, $field['post_process']);
+		
 			}
 		}
 		
@@ -3289,7 +3308,6 @@ class Form_builder {
 			{
 				foreach($functions as $function)
 				{
-
 					if (isset($this->_fields[$key]))
 					{
 						if (isset($posted[$key]))
