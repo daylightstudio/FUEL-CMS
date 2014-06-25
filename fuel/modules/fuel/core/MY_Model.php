@@ -4724,7 +4724,7 @@ class Data_record {
 	$record->email = 'hsolomilleniumfalcon.com'; // note the invalid email address
 	if (!$record->save())
 	{ 
-	    foreach($record->errors as $error)
+	    foreach($record->errors() as $error)
 	    {
 	        echo $error;	
 	    }
@@ -4737,6 +4737,28 @@ class Data_record {
 	public function errors()
 	{
 		return $this->_parent_model->get_errors();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets an error on the parent model from within the context of the record model 
+	 *
+	 <code>
+	$record = $this->examples_model->find_one(array('email' => 'dvader@deathstar.com')); 
+	$record->add_error('Those aren\'t the droids we are looking for');
+    foreach($record->errors() as $error)
+    {
+        echo $error;	
+    }
+	</code>
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	public function add_error($msg, $key = NULL)
+	{
+		return $this->_parent_model->add_error($msg, $key);
 	}
 	
 	// --------------------------------------------------------------------
