@@ -507,7 +507,27 @@ class Fuel_modules extends Fuel_base_library {
 		
 	}
 
-
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Options list for simple modules
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function options_list($advanced = FALSE)
+	{
+		if ($advanced)
+		{
+			$modules = array_keys($this->advanced(FALSE));
+		}
+		else
+		{
+			$modules = array_keys(self::get_all_module_configs());
+		}
+		$options = array_combine($modules, $modules);
+		return $options;
+	}
 }
 
 
