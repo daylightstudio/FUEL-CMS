@@ -235,7 +235,7 @@ class Fuel_layouts extends Fuel_base_library {
 		{
 			foreach($layouts as $k => $layout)
 			{
-				if ($layout->group == $group)
+				if ((is_string($layout->group) AND $layout->group == $group) OR is_array($layout->group) AND in_array($group, $layout->group))
 				{
 					$options[$layout->name] = $layout->label;
 					unset($layouts[$k]);
@@ -249,12 +249,20 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				if (!empty($layout->group))
 				{
-					if (!isset($options[$layout->group]))
+					$group = $layout->group;
+					if (is_string($group))
 					{
-						$options[$layout->group] = array();
+						$group = array($group);
 					}
-					$options[$layout->group][$layout->name] = $layout->label;
-					unset($layouts[$k]);
+					foreach($group as $g)
+					{
+						if (!isset($options[$g]))
+						{
+							$options[$g] = array();
+						}
+						$options[$g][$layout->name] = $layout->label;
+						unset($layouts[$k]);
+					}
 				}
 			}
 		}
