@@ -468,18 +468,10 @@ class Fuel_users_model extends Base_module_model {
 	 */	
 	public function on_before_clean($values)
 	{
-		if (!empty($values['password']) OR !empty($values['new_password'])) 
+		if (!empty($values['new_password'])) 
 		{
-			if (empty($values['salt']))
-			{
-				$values['salt'] = $this->salt();
-			}
-
-			// make sure the salt is only 32 characters long in case it was passed as a value
-			$values['salt'] = substr($values['salt'], 0, 32);
-
-			$pwd = (!empty($values['new_password'])) ? $values['new_password'] : $values['password'];
-			$values['password'] = $this->salted_password_hash($pwd, $values['salt']);
+			// set to blank in order to be picked up on on_before_save
+			$values['password'] = $values['new_password'];
 		}
 		
 		return $values;
@@ -538,6 +530,17 @@ class Fuel_users_model extends Base_module_model {
 		if ((isset($values['id']) AND $valid_user['id'] == $values['id']) AND (isset($values['active']) AND $values['active'] == 'no'))
 		{
 			show_error(lang('error_cannot_deactivate_yourself'));
+		}
+
+
+		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
+		if (!empty($values['password']) OR !empty($values['new_password'])) 
+		{
+
+			$values['salt'] = substr($this->salt(), 0, 32);
+
+			$pwd = (!empty($values['new_password'])) ? $values['new_password'] : $values['password'];
+			$values['password'] = $this->salted_password_hash($pwd, $values['salt']);
 		}
 		return $values;
 	}
