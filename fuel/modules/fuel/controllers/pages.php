@@ -54,7 +54,7 @@ class Pages extends Module {
 				$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 
 				// grab the page variable fields
-				$fields = $this->_page_var_fields($layout, $posted);
+				$fields = $this->_block_processing($layout->fields(), $posted);
 
 				// grab the variables
 				$vars = $this->_process_page_vars(NULL, $posted, $fields, $layout);
@@ -145,7 +145,7 @@ class Pages extends Module {
 			$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 
 			// grab the page variable fields
-			$fields = $this->_page_var_fields($layout, $posted);
+			$fields = $this->_block_processing($layout->fields(), $posted);
 
 			// grab the variables
 			$vars = $this->_process_page_vars($id, $posted, $fields, $layout);
@@ -508,10 +508,8 @@ class Pages extends Module {
 		return $vars;
 	}
 
-	public function _page_var_fields($layout, $posted)
+	public function _block_processing($fields, $posted)
 	{
-		// run any form field post processing hooks
-		$fields = $layout->fields();
 
 		// add in block fields
 		foreach($fields as $key => $val)

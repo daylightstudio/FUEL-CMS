@@ -1424,10 +1424,12 @@ class Module extends Fuel_base_controller {
 		// run any form field post processing hooks
 		$this->load->library('form_builder');
 		
+
 		// use a new instance to prevent problems when duplicating
 		$fb = new Form_builder();
 		$fb->load_custom_fields(APPPATH.'config/custom_fields.php');
-		$fields = $this->model->form_fields($_POST);
+		// $fields = $this->model->form_fields($_POST);
+		$fields = $this->_block_processing($this->model->form_fields(), $_POST);
 		$fb->set_fields($fields);
 		$fb->post_process_field_values();// manipulates the $_POST values directly
 
@@ -1435,6 +1437,66 @@ class Module extends Fuel_base_controller {
 		$posted = $this->_sanitize($_POST);
 
 		return $posted;
+	}
+
+	public function _block_processing($fields, $posted)
+	{
+		// add in block fields
+		foreach($fields as $key => $val)
+		{
+			// check blocks for post processing of variables
+			if (isset($val['type']) AND $val['type'] == 'block' AND isset($posted[$key]['block_name']))
+			{
+
+				$block_layout = $this->fuel->layouts->get($posted[$key]['block_name'], 'block');
+				if ($block_layout)
+				{
+					$block_fields = $block_layout->fields();
+					$fields = array_merge($fields, $block_fields);
+				}
+			}
+
+			// check for template layouts that may have nested fields... this is really ugly
+			if (!empty($val['fields']) AND is_array($val['fields']))
+			{
+				//$fields = array_merge($fields, $val['fields']);
+				foreach($val['fields'] as $k => $v)
+				{
+					if (isset($v['type']) AND $v['type'] == 'block' AND isset($posted[$key]))
+					{
+						if (is_array($posted[$key]) AND is_int(key($posted[$key])))
+						{
+							foreach($posted[$key] as $a => $b)
+							{
+								if (is_array($b))
+								{
+									foreach($b as $c => $d)
+									{
+										if (isset($d['block_name']))
+										{
+											$block_layout = $this->fuel->layouts->get($d['block_name'], 'block');
+											if ($block_layout)
+											{
+												$block_fields = $block_layout->fields();
+
+												// now switch out the key to allow it to trigger the post_process_callback...
+												foreach($block_fields as $e => $f)
+												{
+													$block_fields[$e]['subkey'] = $k;
+													$block_fields[$e]['key'] = $key;
+												}
+												$fields = array_merge($fields, $block_fields);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return $fields;
 	}
 	
 	function form($id = NULL, $field = NULL)
