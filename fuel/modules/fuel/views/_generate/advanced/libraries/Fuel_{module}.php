@@ -39,7 +39,7 @@ class Fuel_{module} extends Fuel_advanced_module {
 	/**
 	 * Initialize the backup object
 	 *
-	 * Accepts an associative array as input, containing backup preferences.
+	 * Accepts an associative array as input, containing preferences.
 	 * Also will set the values in the config as properties of this object
 	 *
 	 * @access	public
