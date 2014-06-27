@@ -65,7 +65,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
     	});
 
 		// // Create a toolbar button that executes the above command.
-		editor.ui.addButton( 'Image', {
+		editor.ui.addButton( 'FUELImage', {
 
 		// 	// The text part of the button (if available) and tooptip.
 			label: 'Insert an Image',

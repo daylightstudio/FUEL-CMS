@@ -22,7 +22,7 @@ a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 option { margin: 0 2px; }
 input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
-textarea { min-height: 40px; overflow: auto; resize: vertical; width: 100%; }
+textarea { min-height: 40px; overflow: auto; resize: vertical; /*width: 100%;*/ }
 
 
 ul { margin-bottom: 10px; }
@@ -41,7 +41,7 @@ Inspired by Zero Design http://www.getfuelcms.com/forums/discussion/470/updated-
 ::-moz-focus-inner { border: 0; padding: 0; }
 input[type="search"]::-webkit-search-decoration { display: none; }
 input, button, select, textarea { margin: 0; }
-input[type="radio"], input[type="checkbox"] { top: 3px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
+input[type="radio"], input[type="checkbox"] { position: relative; top: 1px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
 
 button,
 input[type="reset"],
@@ -702,3 +702,6 @@ div.perms_list label { font-weight: bold; }
 
 /* ckeditor */
 .cke_top { min-width: 565px !important; }
+.cke_button__fuellink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -832px !important; }
+.cke_button__fuelunlink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -864px !important; }
+.cke_button__fuelimage_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -736px !important; }
