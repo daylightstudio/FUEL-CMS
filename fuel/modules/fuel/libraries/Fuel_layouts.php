@@ -130,17 +130,85 @@ class Fuel_layouts extends Fuel_base_library {
 			}
 		}
 
+		// grab layouts from advanced module
+		$advanced_modules = $this->CI->fuel->modules->advanced(FALSE);
+		foreach($advanced_modules as $mod)
+		{
+			$path = $mod->path().'config/'.$mod->name().'_layouts.php';
+			if (file_exists($path))
+			{
+				include($path);
+				if (!empty($config['layouts']))
+				{
+					$this->layouts = array_merge($this->layouts, $config['layouts']);
+				}
+				if (!empty($config['blocks']))
+				{
+					$this->blocks = array_merge($this->blocks, $config['blocks']);
+				}
+			}
+			elseif (method_exists($mod, 'setup_layouts'))
+			{
+				$mod->setup_layouts();
+			}
+		}
+
 		// initialize layout objects
 		foreach($this->layouts as $name => $init)
 		{
-			$layout = $this->create($name, $init);
-			if ($layout)
-			{
-				$this->_layouts[$name] = $layout;	
-			}
+			$this->add($name, $init);
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Adds a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @param	object	A layout object or an array of initialization parameters
+	 * @return	mixed 	Returns the Fuel_layouts object instance for method chaining
+	 */	
+	public function add($name, $layout, $type = NULL)
+	{
+		if (is_array($layout))
+		{
+			if ($type == 'block')
+			{
+				$layout['type'] = 'block';
+			}
+			$layout = $this->create($name, $layout);
+		}
+		if ($layout)
+		{
+			if ($type == 'block')
+			{
+				$this->blocks[$name] = $layout;		
+			}
+			else
+			{
+				$this->_layouts[$name] = $layout;		
+			}
+		}
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	void
+	 */	
+	public function remove($name)
+	{
+		unset($this->_layouts[$name]);
+		return $this;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
