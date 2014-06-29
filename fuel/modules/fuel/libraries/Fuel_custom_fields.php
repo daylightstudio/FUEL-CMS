@@ -1663,6 +1663,7 @@ class Fuel_custom_fields {
 						}
 					}
 				}
+
 				return $value;
 			}
 			else
@@ -1692,7 +1693,6 @@ class Fuel_custom_fields {
 					$first_item = current($json);
 					return  (!empty($first_item)) ? json_encode($json) : "";
 				}
-				
 			}
 			';
 		$func = create_function('$value', $func_str);
@@ -1780,7 +1780,12 @@ class Fuel_custom_fields {
 			$fb->submit_value = '';
 			$fb->cancel_value = '';
 			$fb->use_form_tag = FALSE;
-			$fb->name_prefix = 'vars';
+
+			if (!isset($params['module']) OR (isset($params['module']) AND $params['module'] == 'pages'))
+			{
+				$fb->name_prefix = 'vars';	
+			}
+
 			$fb->set_fields($fields);
 			$fb->display_errors = FALSE;
 
