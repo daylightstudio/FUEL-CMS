@@ -125,7 +125,10 @@ class Fuel_modules extends Fuel_base_library {
 		{
 			foreach($overwrites as $module => $val)
 			{
-				$module_init[$module] = array_merge($module_init[$module], $val);
+				if (isset($module_init[$module]))
+				{
+					$module_init[$module] = array_merge($module_init[$module], $val);	
+				}
 			}
 		}
 		return $module_init;
