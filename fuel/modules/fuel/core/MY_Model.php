@@ -33,8 +33,6 @@
  */
 
 
-require_once(FUEL_PATH.'libraries/Validator.php');
-
 class MY_Model extends CI_Model {
 	
 	public $auto_validate = TRUE; // use auto-validation before saving
@@ -96,6 +94,7 @@ class MY_Model extends CI_Model {
 	{
 		parent::__construct();
 		
+		$this->load->library('validator');
 		$this->load->helper('string');
 		$this->load->helper('date');
 		$this->load->helper('security');

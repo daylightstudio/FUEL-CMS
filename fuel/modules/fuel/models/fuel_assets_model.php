@@ -28,8 +28,6 @@
  */
 
 // not pulling from the database so just extend the normal model
-require_once(FUEL_PATH.'libraries/Validator.php');
-
 class Fuel_assets_model extends CI_Model {
 	
 	public $filters = array('group_id' => 'images'); // the default list view group value for filtering
@@ -52,6 +50,8 @@ class Fuel_assets_model extends CI_Model {
 	{
 		parent::__construct();
 		$CI =& get_instance();
+
+		$CI->load->library('validator');
 		$CI->load->helper('directory');
 		$CI->load->helper('file');
 		
