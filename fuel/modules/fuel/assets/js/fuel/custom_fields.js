@@ -1041,16 +1041,17 @@ fuel.fields.url_field = function(context, options){
 
 fuel.fields.block = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
-		var val = $(this).val();
-		var url = $(this).data('url');
+		var $this = $(this);
+		var val = $this.val();
+		var url = $this.data('url');
 		if (!url) url = '';
 
 		// for pages inline editing
 		var module = $('#__fuel_module__');
-		var context = $(this).attr("name");
+		var context = $this.attr("name");
 		if (module.length && module.val() == 'pagevariables'){
 			var id = $('#page_id').val();
-			var name = $(this).attr("name").replace(/^value/, $('#name').attr("value"));
+			var name = $this.attr("name").replace(/^value/, $('#name').attr("value"));
 		} else {
 			var id = $('#__fuel_id__').val();
 			var name = '';
@@ -1059,7 +1060,7 @@ fuel.fields.block = function(context, options){
 		if (url.length){
 			url = eval(unescape(url));
 		} else {
-			var layout = $(this).val();
+			var layout = $this.val();
 			if (layout && layout.length){
 				//layout = layout.split('/').pop();
 				layout = layout.replace('/', ':');
@@ -1071,7 +1072,7 @@ fuel.fields.block = function(context, options){
 		// if (contextArr.length > 1){
 		// 	context = contextArr.pop();
 		// }
-		$layout_fields = $(this).next('.block_layout_fields');
+		$layout_fields = $this.next('.block_layout_fields');
 		if (url.length){
 			url += '?context=' + context + '&name=' + name;
 
@@ -1081,7 +1082,8 @@ fuel.fields.block = function(context, options){
 				// hide loader
 				$(this).parent().find('.loader').hide();
 				$(this).find('.block_name').val(val);
-				fuel.adjustIframeWindowSize();	
+				fuel.adjustIframeWindowSize();
+				$(document).trigger('blockLoaded', [$this, context]);
 				
 			});
 		} else {
