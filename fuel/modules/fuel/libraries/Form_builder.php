@@ -1964,6 +1964,7 @@ class Form_builder {
 					'disabled' => $params['disabled'],
 					'style' => $params['style'],
 					'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i])) ? $params['tabindex'][$i] : NULL),
+					'data' => $params['data'],
 				);
 
 				if (empty($params['null']) OR (!empty($params['null']) AND (!empty($params['default']) OR !empty($params['value']))))
@@ -2045,6 +2046,7 @@ class Form_builder {
 						'style' => '', // to overwrite any input width styles
 						'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i - 1])) ? $params['tabindex'][$i - 1] : NULL),
 						'attributes' => $params['attributes'],
+						'data' => $params['data'],
 					);
 
 					if (in_array($key, $value))
