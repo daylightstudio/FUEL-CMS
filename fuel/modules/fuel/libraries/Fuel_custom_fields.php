@@ -1854,6 +1854,51 @@ class Fuel_custom_fields {
 		}
 	}
 
+	/**
+	 * A custom field that pulls options for a secondary dropdown via AJAX
+	 * @param string $params['depends_on'] The name of the select that the secondary dropdown depends on
+	 * @param string $params['url'] The URL for the AJAX request
+	 * @param string $params['ajax_data_key_field'] An optional field name to use for the value that will be passed via AJAX
+	 * @param array $params['additional_ajax_data'] An array of additional data that will be passed via AJAX
+	 * @return string
+	 */
+	public function dependent($params)
+	{
+		if (empty($params['depends_on']) || empty($params['url'])) {
+			show_error('The URL and depends_on parameters must be provided for the dependent field.');
+		}
+
+		$form_builder =& $params['instance'];
+		$ajax_data_key_field = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : $params['depends_on'];
+		$additional_ajax_data = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
+
+		$js = '<script>$(function(){
+			var dependent_selector = "select[name=\''.$params['depends_on'].'\']";
+			$(document).on("change", dependent_selector, function(e) {
+				if ($(this).val().length)
+				{
+					var self = this,
+						url = "'.$params['url'].'",
+						data = { '.$ajax_data_key_field.': $(this).val() },
+						additional_ajax_data = '.json_encode($additional_ajax_data).';
+					if ($.isEmptyObject(additional_ajax_data) === false) {
+						$.extend(data, additional_ajax_data);
+					}
+					$.get(url, data, function(html){
+						var $select = $(self).closest("tr").next().find("select");
+						$select.html(html);
+					});
+				}
+			});
+			$(dependent_selector).trigger("change");
+		});</script>';
+
+		$form_builder->add_js($js, 'dependent_field_ajax');
+		$field = $form_builder->create_select($params);
+
+		return $field;
+	}
+
 }
 
 
