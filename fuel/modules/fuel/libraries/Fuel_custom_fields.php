@@ -1854,6 +1854,60 @@ class Fuel_custom_fields {
 		}
 	}
 
+
+	function toggler($params)
+	{
+		$form_builder =& $params['instance'];
+
+		// the parent selector that will be hidden... in most cases it will be the containing "tr" element
+		if (empty($params['selector']))
+		{
+			$params['selector'] = 'tr';
+		}
+		
+		// the jQuery context selector in which to execute the toggle... in most cases it's within the .form class
+		if (empty($params['context']))
+		{
+			$params['context'] = '.form';
+		}
+
+		// the prefix to the name of the classes you are using to identify toggleable regions
+		if (!isset($params['prefix']))
+		{
+			$params['prefix'] = '';
+		}
+
+		// setup data attributes for field
+		$data['context'] = $params['context'];
+		$data['selector'] = $params['selector'];
+		$data['prefix'] = $params['prefix'];
+
+		$params['data'] = array_merge($params['data'], $data);
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' toggler' : 'toggler';
+
+		$str = $form_builder->create_enum($params);
+		return $str;
+
+	}
+
+	function colorpicker($params)
+	{
+		$form_builder =& $params['instance'];
+
+		// normalize value to not have the #
+		if (!empty($params['value']))
+		{
+			$params['value'] = trim($params['value'], '#');
+		}
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' field_type_colorpicker' : 'field_type_colorpicker';
+		$params['type'] = 'text';
+		$params['size'] = 10;
+		$str = '# ';
+		$str .= $form_builder->create_text($params);
+		$bg_color = ' background-color: #'.$params['value'];
+		$str .= '<div class="colorpicker_preview" style="display: inline-block; width: 22px; height: 22px; margin: 0  0 -8px 3px; border: 2px solid #ddd;'.$bg_color.'"></div>';
+		return $str;
+	}
 }
 
 

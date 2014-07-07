@@ -1096,3 +1096,90 @@ fuel.fields.block = function(context, options){
 	$('.block_layout_select', context).change();
 
 }
+
+fuel.fields.toggler = function(context, options){
+	
+	var toggler = function(elem, context){
+		var $elem = $(elem);
+		$elem.addClass('__applied__');
+		if (!context) {
+			var cSelector = ($elem.data('context')) ? $elem.data('context') : '.form';
+			context = $elem.closest(cSelector);
+		}
+
+		var selector = ($elem.data('selector')) ? $elem.data('selector') : 'tr';
+		var prefix = ($elem.data('prefix')) ? $elem.data('prefix') : '';
+		var val = $elem.val();
+
+		var $togglers = $(".toggle", context);
+		if (prefix){
+			var regex = new RegExp(' ' + prefix)
+			$togglers.filter(function() { 
+				return $(this).attr('class').match(regex); 
+			}).closest(selector).hide();
+
+		} else {
+			$(".toggle", context).closest(selector).hide();	
+		}
+		$(".toggle." + prefix + val, context).closest(selector).show();
+	}
+	
+	// kill any previous toggler events 
+	$(document).off('change.toggler');
+
+	$(document).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
+		var context = $(this).closest('.form');
+		toggler(this, context);
+	})
+
+	// for block fields that get ajaxed in
+	$(document).on("blockLoaded", function(e, elem, context){
+		var $togglers = $(elem).parent().find(".toggler").not('.__applied__');
+		$togglers.each(function(){
+			var $this = $(this);
+			if ($(this).is('select') || $(this).is('input:checked')){
+				var context = ($this.attr('context')) ? $this.closest($this.attr('context')) : $this.closest('.form');
+				toggler(this, context);	
+			}
+		})
+		
+	})
+	$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
+
+	// exlude blocks since they get ajaxed in and then run the toggler function
+	$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
+}
+
+
+fuel.fields.colorpicker = function(){
+	var $activeColorPicker = null;
+
+	var setSwatchColor = function(hex, elem){
+		if (!elem) elem = $activeColorPicker;
+		$(elem).parent().find(".colorpicker_preview").css("backgroundColor", "#" + hex);
+	}
+
+	$(".colorpicker_preview").on("click", function(e){
+		$(this).parent().find(".field_type_colorpicker").ColorPickerShow();
+	})
+
+	$(".field_type_colorpicker").ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			$(el).val(hex);
+			$(el).ColorPickerHide();
+		},
+		onBeforeShow: function () {
+			$activeColorPicker = $(this);
+			$(this).ColorPickerSetColor(this.value);
+		},
+		onChange: function (hsb, hex, rgb) {
+			$activeColorPicker.val(hex)
+			setSwatchColor(hex, $activeColorPicker);
+		}
+	})
+	.bind("keyup", function(){
+		$(this).ColorPickerSetColor(this.value);
+		var hex = $(this).val();
+		setSwatchColor(hex, this);
+	});
+}
