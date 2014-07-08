@@ -142,24 +142,13 @@ dave@thedaylightstudio.com
 					})
 				})
 			}
-
-
-
-
 		}
 		
 		var createRemoveButton = function(elem){
 			if (!options.removeable) return;
 			$elem = $(elem);
-			if (!$elem.find('.' + options.removeButtonClass).length) {
-				var $remove = $elem.find(options.removeSelector + ':first');
-				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
-					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
-				} else {
-					$remove.remove(options.removeSelector);
-					$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
-				}
-			}
+			$elem.children(options.removeSelector).remove();
+			$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
