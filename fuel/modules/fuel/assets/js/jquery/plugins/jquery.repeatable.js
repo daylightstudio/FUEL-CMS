@@ -341,8 +341,12 @@ dave@thedaylightstudio.com
 			if (options.initDisplay && !$this.is('.__applied__')){
 				$this.attr('data-init_display', options.init_display);
 				
-				$toDisplay = $repeatables.find(options.contentSelector).not(options.contentSelector + ' ' + options.contentSelector);
-
+				if ($repeatables.closest(options.contentSelector).length){
+					$toDisplay = $repeatables.find(options.contentSelector);
+				} else {
+					$toDisplay = $repeatables.find(options.contentSelector).not(options.contentSelector + ' ' + options.contentSelector);
+				}
+	
 				// hide all but the first
 				if (options.initDisplay == 'first'){
 					$toDisplay.not(':first').hide();
