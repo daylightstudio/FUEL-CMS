@@ -334,7 +334,7 @@ a.btn, div.btn, .btn input, .btn .button  {
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
 .repeatable .remove { position: absolute; top: 15px; right: 15px; }
-.repeatable td .remove { position: static; }
+.repeatable td>.remove { position: static; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { 
   -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
@@ -705,3 +705,6 @@ div.perms_list label { font-weight: bold; }
 .cke_button__fuellink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -832px !important; }
 .cke_button__fuelunlink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -864px !important; }
 .cke_button__fuelimage_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -736px !important; }
+
+/* CI profiler */
+#codeigniter_profiler { position: absolute; bottom: 0; left: 200px; height: 300px; overflow: auto; }
