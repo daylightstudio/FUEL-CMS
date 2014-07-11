@@ -289,7 +289,7 @@ class Fuel_layouts extends Fuel_base_library {
 		// add all layouts without a group first
 		foreach($layouts as $k => $layout)
 		{
-			if (empty($layout->group) AND !in_array($k, $this->hidden))
+			if (empty($layout->group) AND !$layout->is_hidden())
 			{
 				$options[$layout->name] = $layout->label;
 				// reduce array down
@@ -448,6 +448,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $include_pagevar_object = FALSE; // Determines whether to include a single variable of object of $pagevar that includes all the pages variables
 	public $preview_image = ''; // An image for previewing the layout
 	public $double_parse = NULL; // Double parse pages created in the CMS to allow for variables set in the CMS to cascade up to the layout. Valid options are TRUE/FALSE (AUTO only applies to the global FUEL configuration)
+	public $hidden = FALSE; // Determines if the layout should be hidden from the layout dropdown select in the CMS
 	
 	// --------------------------------------------------------------------
 	
@@ -1073,7 +1074,6 @@ class Fuel_layout extends Fuel_base_library {
 	 * Returns the double parse values
 	 *
 	 * @access	public
-	 * @param	string	the preview image
 	 * @return	boolean
 	 */	
 	public function is_double_parse()
@@ -1097,6 +1097,37 @@ class Fuel_layout extends Fuel_base_library {
 	public function set_double_parse($parse)
 	{
 		$this->double_parse = (boolean) $parse;
+	}
+
+		// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether this layout should be hidden from the layout dropdown select
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function is_hidden()
+	{
+		if ($this->hidden == TRUE OR in_array($this->name, $this->fuel->layouts->hidden))
+		{
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets whether this layout should be hidden from the layout dropdown select
+	 *
+	 * @access	public
+	 * @param	boolean	
+	 * @return	boolean
+	 */	
+	public function set_hidden($hidden)
+	{
+		$this->hidden = (boolean) $hidden;
 	}
 }
 

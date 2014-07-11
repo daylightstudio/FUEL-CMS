@@ -93,7 +93,9 @@ At it's core, FUEL is a PHP/MySQL, modular-based development platform built on t
 <ul>
 	<?php $layouts = $this->fuel->layouts->get(); ?>
 	<?php foreach($layouts as $layout) : ?>
+	<?php if (!$layout->is_hidden()) : ?>
 	<li><strong><?=$layout->name()?></strong><?php if ($layout->description()) : ?> - <?=$layout->description()?><?php endif; ?></li>
+	<?php endif; ?>
 	<?php endforeach; ?>
 </ul>
 
