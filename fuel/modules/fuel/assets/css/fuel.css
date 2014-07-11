@@ -683,7 +683,7 @@ div#related_items { float: right; width: 210px; background-color: #ecf1f5; borde
 div#related_items h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
 div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 div#related_items select { max-width: 212px; }
-div#related_items .layout_preview { max-width: 200px; margin: 10px auto; }
+div#related_items .layout_preview { max-width: 210px; margin: 10px auto; }
 
 a.reset { display: block; width: 16px; height: 16px; background: transparent url(../images/fuel_icons.png) no-repeat 0px -146px; margin-right: 5px; }
 
