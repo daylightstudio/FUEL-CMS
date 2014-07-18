@@ -457,13 +457,13 @@ class Fuel_navigation_model extends Base_module_model {
 	 * @param	string The language of the navigation item
 	 * @return	boolean
 	 */
-	public function is_editable_location($location, $group_id, $parent_id, $id, $lang)
-	{
-		if (empty($location)) return TRUE;
-		$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
-		if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
-		return FALSE;
-	}
+	// public function is_editable_location($location, $group_id, $parent_id, $id, $lang)
+	// {
+	// 	if (empty($location)) return TRUE;
+	// 	$data = $this->find_one_array(array('group_id' => $group_id, 'location' => $location, 'parent_id' => $parent_id, 'language' => $lang));
+	// 	if (empty($data) || (!empty($data) && $data['id'] == $id)) return TRUE;
+	// 	return FALSE;
+	// }
 	
 	// --------------------------------------------------------------------
 	
@@ -484,12 +484,6 @@ class Fuel_navigation_model extends Base_module_model {
 			$values['location'] = str_replace(array('/', '#', '.'), array('____', '___', '_X_'), $values['location']);
 			$values['location'] = url_title($values['location']);
 			$values['location'] = str_replace(array('____', '___', '_X_'), array('/', '#', '.'), $values['location']);
-		}
-
-		// prevents issues where empty location values overwrite existing menu items with empty location values
-		if (empty($values['location']))
-		{
-			$values['location'] = '/';
 		}
 
 		if (empty($values['language']))
@@ -517,12 +511,12 @@ class Fuel_navigation_model extends Base_module_model {
 		if (!empty($values['id']))
 		{
 			$this->add_validation('nav_key', array(&$this, 'is_editable_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['id'], $values['language']));
-			$this->add_validation('location', array(&$this, 'is_editable_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['id'], $values['language']));
+			//$this->add_validation('location', array(&$this, 'is_editable_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['id'], $values['language']));
 		}
 		else
 		{
 			$this->add_validation('nav_key', array(&$this, 'is_new_navigation'), lang('error_val_empty_or_already_exists', lang('form_label_nav_key')), array($values['group_id'], $values['language']));
-			$this->add_validation('location', array(&$this, 'is_new_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['language']));
+			//$this->add_validation('location', array(&$this, 'is_new_location'), lang('error_val_empty_or_already_exists', lang('form_label_location')), array($values['group_id'], $values['parent_id'], $values['language']));
 		}
 		return $values;
 	}
