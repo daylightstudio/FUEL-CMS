@@ -2144,17 +2144,17 @@ class Form_builder {
 			{
 				$upload_path = $this->CI->encrypt->encode($params['upload_path']);
 			}
-			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path);
+			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path, 'class="noclear"');
 		}
 		if (isset($params['file_name']) OR isset($params['filename']))
 		{
 			$file_name = (isset($params['file_name'])) ? $params['file_name'] : $params['filename'];
-			$file .= $this->form->hidden($params['name'].'_file_name', $file_name);
+			$file .= $this->form->hidden($params['name'].'_file_name', $file_name, 'class="noclear"');
 		}
 		if (isset($params['encrypt']) OR isset($params['encrypt_name']))
 		{
 			$encrypt_name = (isset($params['encrypt_name'])) ? $params['encrypt_name'] : $params['encrypt'];
-			$file .= $this->form->hidden($params['name'].'_encrypt_name', $encrypt_name);
+			$file .= $this->form->hidden($params['name'].'_encrypt_name', $encrypt_name, 'class="noclear"');
 		}
 		return $file;
 	}

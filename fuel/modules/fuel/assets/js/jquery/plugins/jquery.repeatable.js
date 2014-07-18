@@ -279,7 +279,7 @@ dave@thedaylightstudio.com
 			$this.append($clonecopy);
 
 			// remove values from any form fields
-			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"]').val('');
+			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"], .noclear').val('');
 			$clonecopy.find('.noclone').remove();
 			
 			reOrder($this);

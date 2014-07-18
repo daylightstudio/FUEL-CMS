@@ -274,7 +274,7 @@ class Fuel_custom_fields {
 			if (isset($params[$img_p]))
 			{
 
-				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p]);
+				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p], 'class="noclear"');
 			}
 
 		}
