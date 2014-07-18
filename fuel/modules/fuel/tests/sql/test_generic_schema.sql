@@ -14,7 +14,7 @@ CREATE TABLE `users` (
   `date_added` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `users` (`id`,`user_name`,`password`,`email`,`first_name`,`last_name`,`bio`, `role_id`, `attributes`, `active`, `date_added`)
 VALUES
