@@ -1,30 +1,104 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
-http://codeigniter.com/forums/viewthread/56515/
-* CodeIgniter
-*
-* An open source application development framework for PHP 4.3.2 or newer
-*
-* @package        CodeIgniter
-* @author        Rick Ellis
-* @copyright    Copyright (c) 2006, EllisLab, Inc.
-* @license        http://www.codeignitor.com/user_guide/license.html
-* @link        http://www.codeigniter.com
-* @since        Version 1.0
-* @filesource
-*/
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
+ * @filesource
+ */
 
 // ------------------------------------------------------------------------
 
 /**
-* CodeIgniter GOOGLE Helpers
+ * FUEL Google Helper
+ *
+ * @package		FUEL CMS
+ * @subpackage	Helpers
+ * @category	Helpers
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/helpers/google_helper
+ */
+
+// --------------------------------------------------------------------
+
+/**
+* Google Universal Analytics
 *
-* @package        CodeIgniter
-* @subpackage    Helpers
-* @category    Helpers
-* @author        Todd Perkins with recommendation from Code Arachn!d
-* @link        http://www.undecisive.com
+* Inserts google universal analytics tracking code into view
+* If a tracking code is passed in, then it will use that uacct info
+* Otherwise, it will use the value defined in the google.php config file
+* If both values do not exist, nothing will be inserted.
+*
+* @access    public
+* @param    string	The google account number (optional)
+* @param    mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
+* @param    boolean	Whether to check dev mode before adding it in (optional)
+* @return   string
 */
+function google_uanalytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+
+	if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
+	{
+		return FALSE;
+	}
+
+	$CI =& get_instance();
+	$CI->load->config('google');
+	
+	if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
+	if (!empty($uacct))
+	{
+
+		$params = '';
+
+		 if (!empty($other_params))
+		 {
+			if (is_array($other_params))
+			 {
+			 	$params .= "{\n";
+			 	foreach($other_params as $key => $val)
+			 	{
+			 		$params .= '"'.$key.'": '.(is_numeric($key) ? $val : '"'.$val.'"').'"\n"';
+			 	}
+			 	$params .= "}\n";
+			 	
+			 }
+			 else if (is_string($other_params))
+			 {
+			 	$params .= "'".$other_params."'";
+			 }		 	
+		 }
+		 else
+		 {
+		 	$params = '\'auto\'';
+		 }
+
+		$google_analytics_code = '
+<script>			 
+(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+
+
+ga(\'create\', \''.$uacct.'\', '.$params.');
+ga(\'send\', \'pageview\');
+<script>';
+
+		return $google_analytics_code;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
 
 // ------------------------------------------------------------------------
 
@@ -43,7 +117,16 @@ http://codeigniter.com/forums/viewthread/56515/
 * @return   string
 */
 function google_analytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+	/*
+	 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-2467063-1', 'thedaylightstudio.com');
+  ga('send', 'pageview');
+
+	 */
 	if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
 	{
 		return FALSE;
