@@ -636,7 +636,7 @@ div#login ::-webkit-input-placeholder {color: #999; }
 div#login :-moz-placeholder { color: #999; }
 div#login :-ms-input-placeholder { color:  #999; }
 div#login input[type="submit"] { background: #3dbfd9 !important; color: #fff; font-size: 20px; text-shadow: none; }
-div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 340px; margin: auto; }
+div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 440px; margin: auto; }
 a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; color: #999; }
 
 /* assets & modal */
