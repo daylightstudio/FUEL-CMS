@@ -800,8 +800,7 @@ class Menu {
 				$new_key = (isset($val['nav_key'])) ? $val['nav_key'] : $val['location'];
 				$return[$new_key] = $val;
 				
-				if(in_array($key, $this->_active_items))
-				{
+				if(count($this->_active_items) > 0 AND in_array($key, $this->_active_items)) {
 					$return[$new_key]['active'] = true;
 				}
 				
