@@ -97,6 +97,8 @@ class Form_builder {
 	public $css; // CSS files to associate with the form fields to be executed once per render
 	public $no_css_js = FALSE; // used to not display the CSS and JS when rendering to prevent issues with nested forms and post_processing
 	public $template = ''; // the html template view file to use for rendering the form when using "render_template"
+	public $is_pre_processing = FALSE; // flag set when form builder is pre processing fields
+	public $is_post_processing = FALSE; // flag set when form builder is post processing fields
 
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
@@ -3251,6 +3253,8 @@ class Form_builder {
 	 */
 	public function pre_process_field_values()
 	{
+		$this->is_pre_processing = TRUE;
+
 		// combine field pre processes with those already set
 		foreach($this->_fields as $key => $field)
 		{
@@ -3273,6 +3277,7 @@ class Form_builder {
 				}
 			}
 		}
+		$this->is_pre_processing = FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -3285,6 +3290,7 @@ class Form_builder {
 	 */
 	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
+		$this->is_post_processing = TRUE;
  		$this->no_css_js = TRUE; // set no display so that it won't load the JS and CSS
 
  		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
@@ -3327,7 +3333,7 @@ class Form_builder {
 				}
 			}
 		}
-
+		$this->is_post_processing = FALSE;
 		return $posted;
 	}
 
