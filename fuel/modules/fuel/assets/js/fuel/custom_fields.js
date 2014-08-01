@@ -508,7 +508,15 @@ fuel.fields.asset_field = function(context, options){
 			var iframeContext = this.contentDocument;
 			selected = $('#uploaded_file_name', iframeContext).val();
 			if (selected && selected.length){
-				$('#' + activeField).val(selected);
+				var $activeField = $('#' + activeField);
+				if ($activeField.data('multiple') == '1'){
+					var selectedAssets = $('#' + activeField).val().split(',');
+					selectedAssets.push(selected);
+					$('#' + activeField).val(selectedAssets.join(','))
+				} else {
+					$('#' + activeField).val(selected);	
+				}
+				
 				$modal.jqmHide();
 			}
 		})
