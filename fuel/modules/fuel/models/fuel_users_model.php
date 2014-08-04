@@ -564,10 +564,10 @@ class Fuel_users_model extends Base_module_model {
 		// reset session information... 
 		if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
 		{
-			if (!empty($values['password']))
-			{
-				$CI->fuel->auth->set_user_data('password', $values['password']);
-			}
+			// if (!empty($values['password']))
+			// {
+			// 	$CI->fuel->auth->set_user_data('password', $values['password']);
+			// }
 
 			if (!empty($values['language']))
 			{
