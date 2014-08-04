@@ -510,7 +510,11 @@ fuel.fields.asset_field = function(context, options){
 			if (selected && selected.length){
 				var $activeField = $('#' + activeField);
 				if ($activeField.data('multiple') == '1'){
-					var selectedAssets = $('#' + activeField).val().split(',');
+					var selectedAssetValue = jQuery.trim($('#' + activeField).val());
+					var selectedAssets = [];
+					if (selectedAssetValue.length){
+						selectedAssets = selectedAssetValue.split(',');
+					}
 					selectedAssets.push(selected);
 					$('#' + activeField).val(selectedAssets.join(','))
 				} else {
