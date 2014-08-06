@@ -409,7 +409,11 @@ class Module extends Fuel_base_controller {
 				$this->data_table->row_action = TRUE;
 			}
 			$this->data_table->row_alt_class = 'alt';
-			$this->data_table->only_data_fields = array($this->model->key_field());
+			
+			if ($this->model->has_auto_increment())
+			{
+				$this->data_table->only_data_fields = array($this->model->key_field());
+			}
 
 			// Key and boolean fields are data only
 //			$this->data_table->only_data_fields = array_merge(array($this->model->key_field()), $this->model->boolean_fields);
