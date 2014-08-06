@@ -1325,7 +1325,10 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->submit_value = lang('btn_save');
 			$this->form_builder->question_keys = array();
 			$this->form_builder->use_form_tag = FALSE;
-			$this->form_builder->hidden = (array) $this->model->key_field();
+			if ($this->model->has_auto_increment())
+			{
+				$this->form_builder->hidden = (array) $this->model->key_field();
+			}
 			$this->form_builder->set_fields($fields);
 			$this->form_builder->display_errors = FALSE;
 			$this->form_builder->set_field_values($field_values);

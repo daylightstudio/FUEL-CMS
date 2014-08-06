@@ -301,6 +301,24 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns whether the model uses auto_increment or not
+	 *
+	 <code>
+	echo $this->examples_model->has_auto_increment(); 
+	// TRUE
+	</code>
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function has_auto_increment()
+	{
+		return $this->has_auto_increment;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Sets the aliases to table(s) that you can use in your queries
 	 *
 	 <code>
