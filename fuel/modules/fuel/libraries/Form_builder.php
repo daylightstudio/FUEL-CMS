@@ -1066,13 +1066,14 @@ class Form_builder {
 			else
 			{
 				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
+				$submit_name = (empty($this->submit_name)) ? url_title($this->submit_value, '_') : $this->submit_name;
+				if (empty($submit_name)) $submit_name = 'submit_form';
 				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
 				$submit_id = $submit_name;
-				if (!empty($this->name_prefix))
-				{
-					$submit_id = $this->name_prefix.'--'.$submit_id;
-				}
+				// if (!empty($this->name_prefix))
+				// {
+				// 	$submit_id = $this->name_prefix.'--'.$submit_id;
+				// }
 				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
 			}
 		}
