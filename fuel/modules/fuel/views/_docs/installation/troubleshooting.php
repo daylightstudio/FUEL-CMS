@@ -5,12 +5,12 @@ first want to look at the following places:</p>
 <h2 id="codeignter">CodeIgniter</h2>
 <ul>
 	<li><a href="http://ellislab.com/codeigniter/user-guide/installation/troubleshooting.html" target="_blank">CodeIgniter Troubleshooting page</a></li>
-	<li><a href="http://www.getfuelcms.com/forums/" target="_blank">CodeIgniter User Guide</a></li>
-	<li><a href="http://codeigniter.com/forums/" target="_blank">CodeIgniter Forums</a></li>
+	<li><a href="http://ellislab.com/codeigniter/user-guide/" target="_blank">CodeIgniter User Guide</a></li>
+	<li><a href="https://ellislab.com/forums/" target="_blank">CodeIgniter Forums</a></li>
 </ul>
 
 <h2 id="fuel-cms">FUEL CMS</h2>
 <ul>
-	<li><a href="http://www.getfuelcms.com/forums/" target="_blank">FUEL CMS Forums</a></li>
+	<li><a href="http://forum.getfuelcms.com" target="_blank">FUEL CMS Forums</a></li>
 	<li><a href="https://github.com/daylightstudio/FUEL-CMS/issues" target="_blank">FUEL CMS GitHub Issues</a></li>
 </ul>
