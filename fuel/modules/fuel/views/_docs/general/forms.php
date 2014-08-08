@@ -112,6 +112,8 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 	<li><strong>max_length</strong>: the maxlength parameter to associate with the field</li>
 	<li><strong>comment</strong>: a comment to assicate with the field's label'</li>
 	<li><strong>label</strong>: the label to associate with the field</li>
+	<li><strong>before_label</strong>: displays HTML before the label</li>
+	<li><strong>after_label</strong>: displays HTML before the label</li>
 	<li><strong>required</strong>: puts a required flag next to field label</li>
 	<li><strong>size</strong>: the size attribute of the field</li>
 	<li><strong>class</strong>: the CSS class attribute to associate with the field</li>
