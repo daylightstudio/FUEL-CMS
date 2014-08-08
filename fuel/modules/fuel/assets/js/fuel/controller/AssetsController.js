@@ -22,21 +22,21 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 		$assetPreview = $('#asset_preview');
 		var selectedAssetFolder = this.initObj.folder;
 		
-		var isImg = ($assetSelect.val() && $assetSelect.val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/));
-		if (isImg){
-			$assetSelect.change(function(e){
-				$assetPreview.html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $assetSelect.val() + '" />');
-			})
-			$assetSelect.keyup(function(e) {
-				$assetSelect.change();
-				return(false);
-			});
+		$assetSelect.change(function(e){
+			var isImg = ($assetSelect.val() && $assetSelect.val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/));
+			if (isImg){
+				$assetPreview.show().html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $assetSelect.val() + '" />');
+				$('.img_only').show();
+			} else {
+				$assetPreview.hide();
+				$('.img_only').hide();
+			}
+		})
+		$assetSelect.keyup(function(e) {
 			$assetSelect.change();
-			$('.img_only').show();
-		} else {
-			$assetPreview.hide();
-			$('.img_only').hide();
-		}
+			return(false);
+		});
+		
 		$assetSelect.change();
 	},
 

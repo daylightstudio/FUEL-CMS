@@ -829,6 +829,23 @@ class Base_module_model extends MY_Model {
 		return array();
 	}
 
+	/**
+	 * Will return an HTML string of option tags which can be used dynamically creating select lists like for "dependent" field types
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function ajax_options()
+	{
+		$options = $this->options_list();
+		$str = '';
+		foreach($options as $key => $val)
+		{
+			$str .= "<option value=\"".$key."\" label=\"".$val."\">".$val."</option>\n";
+		}
+		return $str;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

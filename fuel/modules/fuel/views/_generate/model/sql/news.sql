@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS `news` (
   `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

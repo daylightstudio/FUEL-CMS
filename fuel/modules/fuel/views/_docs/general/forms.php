@@ -197,7 +197,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#asset">asset</a></li>
 		<li><a href="#url">url</a></li>
 		<li><a href="#wysiwyg">wysiwyg</a></li>
-		<li><a href="#file">file</a></li>
+		<li><a href="#file">file</a> (overwritten for more functionality)</li>
 		<li><a href="#inline_edit">inline_edit</a></li>
 		<li><a href="#linked">linked</a></li>
 		<li><a href="#currency">currency</a></li>
@@ -207,6 +207,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#langauge">langauge</a></li>
 		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
+		<li><a href="#toggler">toggler</a></li>
+		<li><a href="#colorpicker">colorpicker</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -1061,6 +1063,52 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<?php 
 	$fields = array();
 	$fields['keyval_example'] = array('type' => 'keyval', 'value' => "english:English\ngerman:German\nspanish:Spanish");
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="toggler" class="toggle">toggler</h3>
+<div class="toggle_block_off">
+	<p>This field is essentially an <a href="#enum">enum</a> field that toggles the display of specified fields. 
+		To make a field toggleable, you need to give it a class parameter with a value of "toggle" and an additional class value that correlates to the value selected from the toggle field.
+		 The following additional parameter can be passed to this field type:
+	</p>
+	<ul>
+		<li><strong>prefix</strong>: a value that can be used to prefix class names that are used to identify fields to toggle on and off.</li>
+		<li><strong>selector</strong>: the jQuery context selector in which to execute the toggle. The default is the .form class.</li>
+		<li><strong>context</strong>: the parent jQuery selector that will be hidden. The default is the containing "tr" element.</li>
+	</ul>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['toggler_example'] = array('type' => 'toggler', 'prefix' => 'toggle_', 'options' => array('1' => 'One', '2' => 'Two'));
+	$fields['toggler_field1'] = array('class' => 'toggle toggle_1');
+	$fields['toggler_field2'] = array('type' => 'select', 'class' => 'toggle toggle_2', 'options' => array('1' => 'One', '2' => 'Two'));
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['keyval_example'] = array('type' => 'toggler', 'prefix' => 'toggle_', 'options' => array('1' => 'One', '2' => 'Two'));
+	$fields['toggler_field1'] = array('class' => 'toggle toggle_1');
+	$fields['toggler_field2'] = array('type' => 'select', 'class' => 'toggle toggle_2', 'options' => array('1' => 'One', '2' => 'Two'));
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="colorpicker" class="toggle">colorpicker</h3>
+<div class="toggle_block_off">
+	<p>This field provides a hexidecimal color picker:</p>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
 	form_builder_example($fields);
 	?>
 	

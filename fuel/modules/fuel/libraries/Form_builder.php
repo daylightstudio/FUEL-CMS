@@ -97,6 +97,8 @@ class Form_builder {
 	public $css; // CSS files to associate with the form fields to be executed once per render
 	public $no_css_js = FALSE; // used to not display the CSS and JS when rendering to prevent issues with nested forms and post_processing
 	public $template = ''; // the html template view file to use for rendering the form when using "render_template"
+	public $is_pre_processing = FALSE; // flag set when form builder is pre processing fields
+	public $is_post_processing = FALSE; // flag set when form builder is post processing fields
 
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
@@ -1064,13 +1066,14 @@ class Form_builder {
 			else
 			{
 				$submit_btn = (preg_match("/(.)+\\.(jp(e){0,1}g$|gif$|png$)/i", $this->submit_value)) ? 'image' : 'submit';
-				$submit_name = (empty($this->submit_name)) ? $this->submit_value : $this->submit_name;
+				$submit_name = (empty($this->submit_name)) ? url_title($this->submit_value, '_') : $this->submit_name;
+				if (empty($submit_name)) $submit_name = 'submit_form';
 				$submit_name = (!empty($this->name_prefix) AND $this->names_id_match) ? $this->name_prefix.'--'.$submit_name : $submit_name;
 				$submit_id = $submit_name;
-				if (!empty($this->name_prefix))
-				{
-					$submit_id = $this->name_prefix.'--'.$submit_id;
-				}
+				// if (!empty($this->name_prefix))
+				// {
+				// 	$submit_id = $this->name_prefix.'--'.$submit_id;
+				// }
 				$str .= $this->form->$submit_btn($this->submit_value, $submit_name, array('class' => 'submit', 'id' => $submit_id));
 			}
 		}
@@ -1964,6 +1967,7 @@ class Form_builder {
 					'disabled' => $params['disabled'],
 					'style' => $params['style'],
 					'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i])) ? $params['tabindex'][$i] : NULL),
+					'data' => $params['data'],
 				);
 
 				if (empty($params['null']) OR (!empty($params['null']) AND (!empty($params['default']) OR !empty($params['value']))))
@@ -2045,6 +2049,7 @@ class Form_builder {
 						'style' => '', // to overwrite any input width styles
 						'tabindex' => ((is_array($params['tabindex']) AND isset($params['tabindex'][$i - 1])) ? $params['tabindex'][$i - 1] : NULL),
 						'attributes' => $params['attributes'],
+						'data' => $params['data'],
 					);
 
 					if (in_array($key, $value))
@@ -2142,17 +2147,17 @@ class Form_builder {
 			{
 				$upload_path = $this->CI->encrypt->encode($params['upload_path']);
 			}
-			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path);
+			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path, 'class="noclear"');
 		}
 		if (isset($params['file_name']) OR isset($params['filename']))
 		{
 			$file_name = (isset($params['file_name'])) ? $params['file_name'] : $params['filename'];
-			$file .= $this->form->hidden($params['name'].'_file_name', $file_name);
+			$file .= $this->form->hidden($params['name'].'_file_name', $file_name, 'class="noclear"');
 		}
 		if (isset($params['encrypt']) OR isset($params['encrypt_name']))
 		{
 			$encrypt_name = (isset($params['encrypt_name'])) ? $params['encrypt_name'] : $params['encrypt'];
-			$file .= $this->form->hidden($params['name'].'_encrypt_name', $encrypt_name);
+			$file .= $this->form->hidden($params['name'].'_encrypt_name', $encrypt_name, 'class="noclear"');
 		}
 		return $file;
 	}
@@ -3249,6 +3254,8 @@ class Form_builder {
 	 */
 	public function pre_process_field_values()
 	{
+		$this->is_pre_processing = TRUE;
+
 		// combine field pre processes with those already set
 		foreach($this->_fields as $key => $field)
 		{
@@ -3271,6 +3278,7 @@ class Form_builder {
 				}
 			}
 		}
+		$this->is_pre_processing = FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -3283,6 +3291,7 @@ class Form_builder {
 	 */
 	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
+		$this->is_post_processing = TRUE;
  		$this->no_css_js = TRUE; // set no display so that it won't load the JS and CSS
 
  		// yes... we render the form which is strange, but it executes all the custom field types which may contain post_processing rules
@@ -3325,7 +3334,7 @@ class Form_builder {
 				}
 			}
 		}
-
+		$this->is_post_processing = FALSE;
 		return $posted;
 	}
 

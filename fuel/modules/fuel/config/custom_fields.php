@@ -197,5 +197,28 @@ $fields['block'] = array(
 
 );
 
+
+// toggler field
+$fields['toggler'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'toggler',
+	'filepath'	=> '',
+	'js_function' => 'fuel.fields.toggler',
+
+);
+
+// color picker field
+$fields['colorpicker'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'colorpicker',
+	'filepath'	=> '',
+	'js_function' => 'fuel.fields.colorpicker',
+	'js'		=> array(
+						FUEL_FOLDER => array(
+							'jquery/plugins/colorpicker',
+						)
+	),
+	'css' => array(FUEL_FOLDER => 'colorpicker'),
+);
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

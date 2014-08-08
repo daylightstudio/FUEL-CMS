@@ -458,9 +458,18 @@ class Fuel_assets_model extends CI_Model {
 	{
 		$CI =& get_instance();
 		$uploaded_post = $CI->session->flashdata('uploaded_post');
-		if (!empty($uploaded_post['uploaded_file_webpath']) AND is_image_file($uploaded_post['uploaded_file_webpath']))
+		if (!empty($uploaded_post['uploaded_file_webpath']))
 		{
-			$img = '<a href="'.$uploaded_post['uploaded_file_webpath'].'" target="_blank"><img src="'.$uploaded_post['uploaded_file_webpath'].'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
+			$img = '';
+			foreach($uploaded_post['uploaded_file_webpath'] as $uploaded_image)
+			{
+				if (is_image_file($uploaded_image))
+				{
+					$img .= '<a href="'.$uploaded_image.'" target="_blank"><img src="'.$uploaded_image.'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
+				}
+			}
+
+			
 			return $img;
 		}
 		return '';

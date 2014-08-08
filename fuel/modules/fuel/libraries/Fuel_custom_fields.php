@@ -274,7 +274,7 @@ class Fuel_custom_fields {
 			if (isset($params[$img_p]))
 			{
 
-				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p]);
+				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p], 'class="noclear"');
 			}
 
 		}
@@ -1854,51 +1854,60 @@ class Fuel_custom_fields {
 		}
 	}
 
-	/**
-	 * A custom field that pulls options for a secondary dropdown via AJAX
-	 * @param string $params['depends_on'] The name of the select that the secondary dropdown depends on
-	 * @param string $params['url'] The URL for the AJAX request
-	 * @param string $params['ajax_data_key_field'] An optional field name to use for the value that will be passed via AJAX
-	 * @param array $params['additional_ajax_data'] An array of additional data that will be passed via AJAX
-	 * @return string
-	 */
-	public function dependent($params)
+
+	function toggler($params)
 	{
-		if (empty($params['depends_on']) || empty($params['url'])) {
-			show_error('The URL and depends_on parameters must be provided for the dependent field.');
+		$form_builder =& $params['instance'];
+
+		// the parent selector that will be hidden... in most cases it will be the containing "tr" element
+		if (empty($params['selector']))
+		{
+			$params['selector'] = 'tr';
+		}
+		
+		// the jQuery context selector in which to execute the toggle... in most cases it's within the .form class
+		if (empty($params['context']))
+		{
+			$params['context'] = '.form';
 		}
 
-		$form_builder =& $params['instance'];
-		$ajax_data_key_field = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : $params['depends_on'];
-		$additional_ajax_data = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
+		// the prefix to the name of the classes you are using to identify toggleable regions
+		if (!isset($params['prefix']))
+		{
+			$params['prefix'] = '';
+		}
 
-		$js = '<script>$(function(){
-			var dependent_selector = "select[name=\''.$params['depends_on'].'\']";
-			$(document).on("change", dependent_selector, function(e) {
-				if ($(this).val().length)
-				{
-					var self = this,
-						url = "'.$params['url'].'",
-						data = { '.$ajax_data_key_field.': $(this).val() },
-						additional_ajax_data = '.json_encode($additional_ajax_data).';
-					if ($.isEmptyObject(additional_ajax_data) === false) {
-						$.extend(data, additional_ajax_data);
-					}
-					$.get(url, data, function(html){
-						var $select = $(self).closest("tr").next().find("select");
-						$select.html(html);
-					});
-				}
-			});
-			$(dependent_selector).trigger("change");
-		});</script>';
+		// setup data attributes for field
+		$data['context'] = $params['context'];
+		$data['selector'] = $params['selector'];
+		$data['prefix'] = $params['prefix'];
 
-		$form_builder->add_js($js, 'dependent_field_ajax');
-		$field = $form_builder->create_select($params);
+		$params['data'] = array_merge($params['data'], $data);
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' toggler' : 'toggler';
 
-		return $field;
+		$str = $form_builder->create_enum($params);
+		return $str;
+
 	}
 
+	function colorpicker($params)
+	{
+		$form_builder =& $params['instance'];
+
+		// normalize value to not have the #
+		if (!empty($params['value']))
+		{
+			$params['value'] = trim($params['value'], '#');
+		}
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' field_type_colorpicker' : 'field_type_colorpicker';
+		$params['type'] = 'text';
+		$params['size'] = 10;
+		$str = '# ';
+		$str .= $form_builder->create_text($params);
+		$bg_color = ' background-color: #'.$params['value'];
+		$str .= '<div class="colorpicker_preview" style="display: inline-block; width: 22px; height: 22px; margin: 0  0 -8px 3px; border: 2px solid #ddd;'.$bg_color.'"></div>';
+		return $str;
+	}
 }
 
 

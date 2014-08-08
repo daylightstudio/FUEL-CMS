@@ -19,7 +19,7 @@ CREATE TABLE `fuel_archives` (
   `version_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `archived_user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -37,7 +37,7 @@ CREATE TABLE `fuel_blocks` (
   `last_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`language`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 # Dump of table fuel_categories
 # ------------------------------------------------------------
@@ -52,7 +52,7 @@ CREATE TABLE `fuel_categories` (
   `published` enum('yes','no') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # Dump of table fuel_logs
 # ------------------------------------------------------------
@@ -64,7 +64,7 @@ CREATE TABLE `fuel_logs` (
   `message` text COLLATE utf8_unicode_ci NOT NULL,
   `type` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -85,8 +85,8 @@ CREATE TABLE `fuel_navigation` (
   `language` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'english',
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes' COMMENT 'Determines whether the item is displayed or not',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `group_id` (`group_id`,`location`,`parent_id`, `language`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  UNIQUE KEY `group_id_nav_key_language` (`group_id`,`nav_key`,`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -99,7 +99,7 @@ CREATE TABLE `fuel_navigation_groups` (
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `fuel_navigation_groups` (`id`, `name`, `published`)
 VALUES
@@ -121,7 +121,7 @@ CREATE TABLE `fuel_page_variables` (
   `active` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `page_id` (`page_id`,`name`,`language`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -140,7 +140,7 @@ CREATE TABLE `fuel_pages` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `location` (`location`),
   KEY `layout` (`layout`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -154,7 +154,7 @@ CREATE TABLE `fuel_permissions` (
   `active` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 LOCK TABLES `fuel_permissions` WRITE;
 /*!40000 ALTER TABLE `fuel_permissions` DISABLE KEYS */;
@@ -211,7 +211,7 @@ CREATE TABLE `fuel_relationships` (
   `foreign_table` varchar(100) DEFAULT NULL,
   `foreign_key` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -225,7 +225,7 @@ CREATE TABLE `fuel_settings` (
   `value` longtext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `module` (`module`,`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 
@@ -240,7 +240,7 @@ CREATE TABLE `fuel_site_variables` (
   `active` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 # Dump of table fuel_tags
 # ------------------------------------------------------------
@@ -254,7 +254,7 @@ CREATE TABLE `fuel_tags` (
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 # Dump of table fuel_users
 # ------------------------------------------------------------
@@ -273,7 +273,7 @@ CREATE TABLE `fuel_users` (
   `active` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `fuel_users` (`id`, `user_name`, `password`, `email`, `first_name`, `last_name`, `language`, `reset_key`, `salt`, `super_admin`, `active`)
 VALUES

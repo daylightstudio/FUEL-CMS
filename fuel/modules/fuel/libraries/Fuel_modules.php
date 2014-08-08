@@ -215,7 +215,11 @@ class Fuel_modules extends Fuel_base_library {
 			$fuel_module = new Fuel_module();
 		}
 		$fuel_module->initialize($mod, $init);
-		$this->_modules[$mod] = $fuel_module;
+
+		if (empty($init['disabled']))
+		{
+			$this->_modules[$mod] = $fuel_module;
+		}
 	}
 	
 	// --------------------------------------------------------------------

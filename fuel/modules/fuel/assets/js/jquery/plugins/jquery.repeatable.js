@@ -142,24 +142,13 @@ dave@thedaylightstudio.com
 					})
 				})
 			}
-
-
-
-
 		}
 		
 		var createRemoveButton = function(elem){
 			if (!options.removeable) return;
 			$elem = $(elem);
-			if (!$elem.find('.' + options.removeButtonClass).length) {
-				var $remove = $elem.find(options.removeSelector + ':first');
-				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
-					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
-				} else {
-					$remove.remove(options.removeSelector);
-					$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
-				}
-			}
+			$elem.children(options.removeSelector).remove();
+			$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
 
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
@@ -290,7 +279,7 @@ dave@thedaylightstudio.com
 			$this.append($clonecopy);
 
 			// remove values from any form fields
-			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"]').val('');
+			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"], .noclear').val('');
 			$clonecopy.find('.noclone').remove();
 			
 			reOrder($this);
@@ -341,8 +330,12 @@ dave@thedaylightstudio.com
 			if (options.initDisplay && !$this.is('.__applied__')){
 				$this.attr('data-init_display', options.init_display);
 				
-				$toDisplay = $repeatables.find(options.contentSelector).not(options.contentSelector + ' ' + options.contentSelector);
-
+				if ($repeatables.closest(options.contentSelector).length){
+					$toDisplay = $repeatables.find(options.contentSelector);
+				} else {
+					$toDisplay = $repeatables.find(options.contentSelector).not(options.contentSelector + ' ' + options.contentSelector);
+				}
+	
 				// hide all but the first
 				if (options.initDisplay == 'first'){
 					$toDisplay.not(':first').hide();
