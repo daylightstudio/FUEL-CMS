@@ -468,12 +468,6 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 					$module = $tables[$module];
 				}
 				unset($tables);
-				$mod = $CI->fuel->modules->get($module, FALSE);
-				if (!empty($mod))
-				{
-					$module = $mod->info('module_uri');
-					$permission = $mod->info('permission');
-				}
 			}
 			
 			if (empty($label))
@@ -502,6 +496,13 @@ function fuel_edit($id, $label = NULL, $module = 'pagevariables', $is_published 
 		else
 		{
 			$ref_id = $id;
+		}
+
+		$mod = $CI->fuel->modules->get($module, FALSE);
+		if (!empty($mod))
+		{
+			$module = $mod->info('module_uri');
+			$permission = $mod->info('permission');
 		}
 		
 		$marker['id'] = $ref_id;

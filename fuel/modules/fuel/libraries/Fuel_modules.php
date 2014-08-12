@@ -243,12 +243,12 @@ class Fuel_modules extends Fuel_base_library {
 		}
 
 		// allows you to get a module based on the model name
-		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module))
+		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module) OR $has_uri = (strpos($module, '/') !== FALSE))
 		{
 			$modules = $this->get(NULL, FALSE);
 			foreach($modules as $key => $mod)
 			{
-				if (strtolower($mod->info('model_name')) == $module)
+				if (strtolower($mod->info('model_name')) == $module OR ($has_uri AND $mod->info('module_uri') == $module))
 				{
 					$module = $key;
 					break;
