@@ -588,7 +588,7 @@ class Form_builder {
 				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
-				$str .= $this->create_label($val, FALSE);
+				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
 				$str .= "</span>";
 				$str .= "<span class=\"field\">";
 				$str .= $val['before_html'].$display_value.$val['after_html'];
@@ -779,12 +779,12 @@ class Form_builder {
 				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
 				if ($this->label_layout != 'top')
 				{
-					$str .= $this->create_label($val, FALSE);
+					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
 					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
 				}
 				else
 				{
-					$str .= $this->create_label($val, FALSE)."</td></tr>\n";
+					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label']."</td></tr>\n";
 					$str .= "<tr".$this->_open_row_attrs($val);
 					$str .= ">\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."</td>\n</tr>\n";
 				}
@@ -798,12 +798,12 @@ class Form_builder {
 					$str .= "<td class=\"label\">";
 					if ($this->label_layout != 'top')
 					{
-						$str .= $this->create_label($val, TRUE);
+						$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label'];
 						$str .= "</td>\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 					else
 					{
-						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
+						$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label']."</td></tr>\n";
 						$str .= "<tr".$this->_open_row_attrs($val);
 						$str .= ">\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
@@ -1157,6 +1157,8 @@ class Form_builder {
 			'max_length' => 0, // the maxlength parameter to associate with the field
 			'comment' => '', // a comment to assicate with the field's label'
 			'label' => '', // the label to associate with the field
+			'before_label' => '', // for HTML before the label
+			'after_label' => '', // for HTML after the label
 			'required' => FALSE, // puts a required flag next to field label
 			'size' => '', // the size attribute of the field
 			'class' => '', // the CSS class attribute to associate with the field
