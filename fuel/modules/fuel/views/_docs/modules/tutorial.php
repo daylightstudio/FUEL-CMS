@@ -723,7 +723,7 @@ place that function right inside the &lt;h1&gt; tag in the article view and insi
 &lt;h2&gt;&lt;?=fuel_edit('create', 'Create', 'articles')?&gt;&lt;?=$article-&gt;title?&gt;&lt;/h2&gt;
 </pre>
 <p>Next, make sure the FUEL bar located in the upper right of the page has the pencil icon toggled on. You should now see pencil icons that when clicked, will allow you to edit or add article data from within the context of the page.</p>
-<img src="<?=img_path('screens/page_inline_editing.jpg', FUEL_FOLDER)?>" class="screen" />
+<img src="<?=img_path('screens/inline_editing_form.jpg', FUEL_FOLDER)?>" class="screen" />
 <p class="important"><a href="<?=user_guide_url('general/inline-editing')?>">Click here for more on inline editing</a></p>
 <br />
 
