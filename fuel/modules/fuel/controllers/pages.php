@@ -628,6 +628,28 @@ class Pages extends Module {
 			}
 		}
 
+		// if the page is duplicated, grab all the other language values that should be copied over
+		if ($this->fuel->language->has_multiple() AND (!empty($posted['__fuel_id__']) AND empty($posted['id'])))
+		{
+			$lang_where['page_id'] = $posted['__fuel_id__'];
+			$lang_where['language !='] = $lang;
+			$duped_lang_vars = $this->fuel_pagevariables_model->find_all_array($lang_where);
+
+			if (!empty($duped_lang_vars))
+			{
+				foreach($duped_lang_vars as $duped_var)
+				{
+					$duped_var['id'] = NULL;
+					$duped_var['page_id'] = $id;
+					if (!$this->fuel_pagevariables_model->save($duped_var))
+					{
+						add_error(lang('error_saving'));
+						return FALSE;
+					}
+				}
+			}
+		}
+			
 		$page_variables_archive = $this->fuel_pagevariables_model->find_all_array(array('page_id' => $id));
 
 		// archive
