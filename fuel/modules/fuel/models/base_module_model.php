@@ -835,9 +835,9 @@ class Base_module_model extends MY_Model {
 	 * @access	public
 	 * @return	string
 	 */	
-	public function ajax_options()
+	public function ajax_options($where = array())
 	{
-		$options = $this->options_list();
+		$options = $this->options_list(NULL, NULL, $where);
 		$str = '';
 		foreach($options as $key => $val)
 		{

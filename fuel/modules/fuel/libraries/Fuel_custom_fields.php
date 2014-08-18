@@ -616,9 +616,7 @@ class Fuel_custom_fields {
 				{
 					$inline_class = 'add_edit '.$uri;
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-					$params['data'] = array(
-						'module' => $uri,
-						);
+					$params['data']['module'] = $uri;
 				}
 			}
 		
@@ -1422,9 +1420,7 @@ class Fuel_custom_fields {
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-				$params['data'] = array(
-					'module' => $uri,
-					);
+				$params['data']['module'] = $uri;
 			}
 		}
 
@@ -1855,7 +1851,7 @@ class Fuel_custom_fields {
 	}
 
 
-	function toggler($params)
+	public function toggler($params)
 	{
 		$form_builder =& $params['instance'];
 
@@ -1890,7 +1886,7 @@ class Fuel_custom_fields {
 
 	}
 
-	function colorpicker($params)
+	public function colorpicker($params)
 	{
 		$form_builder =& $params['instance'];
 
@@ -1906,6 +1902,45 @@ class Fuel_custom_fields {
 		$str .= $form_builder->create_text($params);
 		$bg_color = ' background-color: #'.$params['value'];
 		$str .= '<div class="colorpicker_preview" style="display: inline-block; width: 22px; height: 22px; margin: 0  0 -8px 3px; border: 2px solid #ddd;'.$bg_color.'"></div>';
+		return $str;
+	}
+
+	public function dependent($params)
+	{
+		if (empty($params['depends_on']))
+		{
+			show_error('The depends_on parameters must be provided for the dependent field.');
+		}
+
+		$form_builder =& $params['instance'];
+
+		$params['url'] = (empty($params['url']) AND isset($this->CI->module_uri)) ? fuel_url($this->CI->module_uri.'/ajax/options') : $params['url'];
+		$params['ajax_data_key_field'] = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : '';
+		$params['additional_ajax_data'] = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
+		$params['replace_selector'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
+
+		$dependent_class = 'dependent';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$dependent_class : $dependent_class; 
+		$params['data'] = array(
+								'depends_on'          => $params['depends_on'],
+								'ajax_url'            => $params['url'],
+								'ajax_data_key_field' => $params['ajax_data_key_field'],
+								'replace_selector'    => $params['replace_selector'],
+								);
+
+		$str = '';
+		$str .= "<div class=\"dependent_data\" style=\"display: none;\">";
+		$str .= json_encode($params['additional_ajax_data']);
+		$str .= "</div>\n";
+		$params['mode'] = 'select';
+		if (!empty($params['multiple']))
+		{
+			$str .= $this->multi($params);
+		}
+		else
+		{
+			$str .= $this->inline_edit($params);	
+		}
 		return $str;
 	}
 }

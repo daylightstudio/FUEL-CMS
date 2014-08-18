@@ -197,7 +197,8 @@ fuel.fields.wysiwyg_field = function(context){
 
 						// // Output dimensions of images as width and height attributes on src
 						if ( element.name == 'img' && hasCKEditorImagePlugin) {
-							var src = element.attributes['src'];
+							//var src = element.attributes['src'];
+							var src = element.attributes['data-cke-saved-src']; // v4.4 fix
 							img = src.replace(/^\{img_path\('?([^'|"]+?)'?\)\}/, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
@@ -955,7 +956,7 @@ fuel.fields.sortStopped = function(){
 fuel.fields.clonedFunc = function(e){
 	$('#form').formBuilder().initialize(e.clonedNode);
 
-	// Hacktastic to remove any loader icons left on from fuel.fields.block
+	// Hacktastic to remove any loader icons left on from fuel.fields.block_field
 	e.clonedNode.find('.loader').hide();
 
 	// to help with CKEditor issues... UGH!!!
@@ -1051,7 +1052,7 @@ fuel.fields.url_field = function(context, options){
 	
 }
 
-fuel.fields.block = function(context, options){
+fuel.fields.block_field = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
 		var $this = $(this);
 		var val = $this.val();
@@ -1109,7 +1110,7 @@ fuel.fields.block = function(context, options){
 
 }
 
-fuel.fields.toggler = function(context, options){
+fuel.fields.toggler_field = function(context, options){
 	
 	var toggler = function(elem, context){
 		var $elem = $(elem);
@@ -1163,7 +1164,7 @@ fuel.fields.toggler = function(context, options){
 }
 
 
-fuel.fields.colorpicker = function(){
+fuel.fields.colorpicker_field = function(){
 	var $activeColorPicker = null;
 
 	var setSwatchColor = function(hex, elem){
@@ -1194,4 +1195,61 @@ fuel.fields.colorpicker = function(){
 		var hex = $(this).val();
 		setSwatchColor(hex, this);
 	});
+}
+
+fuel.fields.dependent_field = function(context, options){
+	$('.dependent', context).each(function(i){
+
+		var _this = this;
+		var dependsOn = $(this).data('depends_on');
+		if (dependsOn.substr(0, 1) != '.' && dependsOn.substr(0, 1) != '#'){
+			var dependentSelector = "select[name$=" + $(this).data('depends_on') + "], select[name$='" + $(this).data('depends_on') + "\]']";	
+		} else {
+			var dependentSelector = "select" + $(this).data('depends_on');	
+		}
+
+		// for the pages module, we'll prevent conflict with fields that use "language" in their name, 
+		// we change the context to be more specific to exclude the page property fields
+		var module = fuel.getModule();
+		if (module == 'pages') context = '#layout_fields';
+		var $dependent = $(dependentSelector, context);
+
+		$dependent.addClass('dependee');
+		$dependent.on('change', function(){
+			var val = $(this).val();
+			var url = $(_this).data('ajax_url');
+
+			// determine the initial key for the value
+			if ($(_this).data('ajax_data_key_field')){
+				var ajaxDataKeyField = $(_this).data('ajax_data_key_field');
+			} else {
+				var ajaxDataKeyField = $(_this).data('depends_on');
+			}
+			var replaceSelector = ($(_this).data('replace_selector')) ? $(_this).data('replace_selector') : _this;
+			var data = {};
+			data[ajaxDataKeyField] = $(this).val();
+
+			var xtraDataStr = $(_this).closest('.value').find('.dependent_data').text();
+			var xtraData = {};
+			if (xtraDataStr.length){
+				xtraData = eval('(' + xtraDataStr + ')');
+			}
+
+			if ($.isEmptyObject(xtraData) === false) {
+				$.extend(data, xtraData);
+			}
+			if (val.length){
+				$.get(url, data, function(html){
+					$select = $(replaceSelector, this);
+					$select.html(html);
+					if ($select.prop("multiple")){
+						fuel.fields.multi_field(context);
+					}
+				});
+				fuel.fields.inline_edit_field(context);
+			}
+		})
+		
+	})
+	$('.dependee', context).trigger('change');
 }

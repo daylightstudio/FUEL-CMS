@@ -203,7 +203,7 @@ $fields['toggler'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'toggler',
 	'filepath'	=> '',
-	'js_function' => 'fuel.fields.toggler',
+	'js_function' => 'fuel.fields.toggler_field',
 
 );
 
@@ -212,7 +212,7 @@ $fields['colorpicker'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'colorpicker',
 	'filepath'	=> '',
-	'js_function' => 'fuel.fields.colorpicker',
+	'js_function' => 'fuel.fields.colorpicker_field',
 	'js'		=> array(
 						FUEL_FOLDER => array(
 							'jquery/plugins/colorpicker',
@@ -220,5 +220,24 @@ $fields['colorpicker'] = array(
 	),
 	'css' => array(FUEL_FOLDER => 'colorpicker'),
 );
+
+// dependent field
+$fields['dependent'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'dependent',
+	'filepath'	=> '',
+	// 'js'		=> array(
+	// 				FUEL_FOLDER => array(
+	// 					'jquery/plugins/jquery.selso',
+	// 					'jquery/plugins/jquery.disable.text.select.pack',
+	// 					'jquery/plugins/jquery.supercomboselect',
+	// 				)
+	// ),
+	'css' => array(FUEL_FOLDER => 'jquery.supercomboselect'),
+
+	'js_function' => 'fuel.fields.dependent_field',
+
+);
+
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

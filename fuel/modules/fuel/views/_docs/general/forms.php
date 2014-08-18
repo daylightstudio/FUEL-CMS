@@ -211,6 +211,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 		<li><a href="#toggler">toggler</a></li>
 		<li><a href="#colorpicker">colorpicker</a></li>
+		<li><a href="#dependent">dependent</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -1106,6 +1107,31 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="dependent" class="toggle">dependent</h3>
+<div class="toggle_block_off">
+	<p>This field allows you to have one field determine the options of another field:</p>
+	<ul>
+		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on.</li>
+		<li><strong>url</strong>: the URL for the AJAX request.</li>
+		<li><strong>multiple</strong>: determines if the field is a multi-select or not.</li>
+		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field.</li>
+		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX.</li>
+		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select.</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['dependent_example'] = array('type' => 'dependent', 'depends_on' => 'language', 'url' => fuel_url('my_module/ajax/options'), 'multiple' => TRUE, 'replace_selector' => '.language_depends');
 	</pre>
 	
 	<?php 
