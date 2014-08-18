@@ -48,7 +48,10 @@
 
 		<div id="tab_page_variables">
 			<h3><?=lang('page_information')?></h3>
+			
+			<div id="page_property_vars">
 			<?=$form?>
+			</div>
 
 			<h3><?=lang('page_layout_vars')?></h3>
 			<div id="layout_vars"><?=$layout_fields?><div class="loader hidden"></div></div>
