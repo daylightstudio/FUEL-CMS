@@ -103,7 +103,7 @@ CKEDITOR.plugins.add( 'fuellink', {
 
 
 		// // Create a toolbar button that executes the above command.
-		editor.ui.addButton( 'FUELLink', {
+		editor.ui.addButton( 'Link', {
 
 		// 	// The text part of the button (if available) and tooptip.
 			label: 'Insert Link',
@@ -116,7 +116,7 @@ CKEDITOR.plugins.add( 'fuellink', {
 		});
 		
 		// // Create a toolbar button that executes the above command.
-		editor.ui.addButton( 'FUELUnlink', {
+		editor.ui.addButton( 'Unlink', {
 
 		// 	// The text part of the button (if available) and tooptip.
 			label: 'Remove Link',
