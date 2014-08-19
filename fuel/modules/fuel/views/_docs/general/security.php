@@ -5,7 +5,7 @@ CI application.</p>
 <p class="important">FUEL CMS 1.0 improved the security hashing used for storing passwords in the database.</p>
 
 <h2>FUEL Configuration Security Settings</h2>
-<p>The <a href="<?=user_guide_url('general/configuration')?>">FUEL config</a> provides several security settings to:</p>
+<p>The <a href="<?=user_guide_url('installation/configuration')?>">FUEL config</a> provides several security settings to:</p>
 <ul>
 	<li><strong>restrict_to_remote_ip</strong> - restrict FUEL to only certain IP addresses (array only value so can include multiple).</li>
 	<li><strong>default_pwd</strong> - default password to alert against. The default password is <dfn>admin</dfn>.</li>
@@ -22,7 +22,7 @@ CI application.</p>
 		A value of <dfn>TRUE</dfn>, will apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html" target="_blank">xss_clean</a> function. 
 		A value of <dfn>FALSE</dfn>, will apply no sanitation functions.
 		You can use an array to appy more then one function to sanitize your input.
-		The list of functions to sanitize the input is set by the <dfn>module_sanitize_funcs</dfn> <a href="<?=user_guide_url('general/configuration')?>">FUEL configuration</a> value under the security settings.
+		The list of functions to sanitize the input is set by the <dfn>module_sanitize_funcs</dfn> <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration</a> value under the security settings.
 		The default values are listed below:
 		<ul>
 			<li><strong>xss</strong> = xss_clean</li>
