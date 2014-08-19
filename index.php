@@ -22,7 +22,7 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
 
 if (defined('STDIN'))
 {
-	/* if your FUEL installation exists in a subfolder, then you may want to change SCRIPT_NAME to /subfolder/index.php
+	/* if your FUEL installation exists in a subfolder, then you may want to change SCRIPT_NAME to /subfolder/index.php 
 	 (Needed for using Tester module if running via CLI) */
 	$_SERVER['SCRIPT_NAME'] = 'index.php';
 	$_SERVER['SERVER_NAME'] = 'localhost';
