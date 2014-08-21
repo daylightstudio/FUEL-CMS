@@ -27,7 +27,7 @@ fuel.fields.datetime_field = function(context){
 		 o.buttonImage = imgPath + 'calendar.png';
 	}
 
-	$('.datepicker', context).each(function(i){
+	$('.datepicker', context).not('[disabled],[readonly]').each(function(i){
 		var options = {
 			dateFormat : $(this).attr('data-date_format'),
 			region : $(this).attr('data-region'),
