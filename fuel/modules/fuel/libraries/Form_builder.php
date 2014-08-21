@@ -2276,6 +2276,7 @@ class Form_builder {
 		$time_params['name'] = str_replace($params[$key], $field_name, $params['orig_name']);
 		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
+		$time_params['readonly'] = $params['readonly'];
 		$time_params['placeholder'] = 'hh';
 		if (isset($params['tabindex'][0]))
 		{
@@ -2301,6 +2302,7 @@ class Form_builder {
 			$ampm_params['name'] = str_replace($params[$key], $params[$key].'_am_pm', $params['orig_name']);
 			$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 			$ampm_params['disabled'] = $params['disabled'];
+			$ampm_params['readonly'] = $params['readonly'];
 
 			if (isset($params['tabindex']) AND is_array($params['tabindex']))
 			{
