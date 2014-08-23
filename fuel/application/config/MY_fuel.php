@@ -62,9 +62,9 @@ $config['ck_editor_settings'] = "{
 	toolbar:[
 			['Bold','Italic','Strike'],
 			['Format'],
-			['FUELImage','HorizontalRule'],
+			['Image','HorizontalRule'],
 			['NumberedList','BulletedList'],
-			['FUELLink','FUELUnlink'],
+			['Link','Unlink'],
 			['Undo','Redo','RemoveFormat'],
 			['PasteFromWord','PasteText'],
 			['Preview'],
@@ -77,7 +77,8 @@ $config['ck_editor_settings'] = "{
 	protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g],
 	toolbarCanCollapse: false,
 	extraPlugins: 'fuellink,fuelimage',
-	removePlugins: 'link,image'
+	removePlugins: 'link,image',
+	allowedContent: true
 	}";
 
 /* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure
