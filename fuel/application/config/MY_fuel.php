@@ -62,9 +62,9 @@ $config['ck_editor_settings'] = "{
 	toolbar:[
 			['Bold','Italic','Strike'],
 			['Format'],
-			['Image','HorizontalRule'],
+			['FUELImage','HorizontalRule'],
 			['NumberedList','BulletedList'],
-			['Link','Unlink'],
+			['FUELLink','FUELUnlink'],
 			['Undo','Redo','RemoveFormat'],
 			['PasteFromWord','PasteText'],
 			['Preview'],
