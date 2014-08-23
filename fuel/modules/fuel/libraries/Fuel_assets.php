@@ -315,7 +315,7 @@ class Fuel_assets extends Fuel_base_library {
 			}
 		}
 
-		// set maintain ration if it is set to maintain_ratio
+		// set maintain ratio if it is set to maintain_ratio
 		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
 		{
 			$params['maintain_ratio'] = TRUE;
