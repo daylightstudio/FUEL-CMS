@@ -193,7 +193,7 @@ $fields['block'] = array(
 	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function'	=> 'block',
 	'filepath'	=> '',
-	'js_function' => 'fuel.fields.block',
+	'js_function' => 'fuel.fields.block_field',
 
 );
 
