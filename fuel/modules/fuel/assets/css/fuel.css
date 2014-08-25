@@ -22,7 +22,7 @@ a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 option { margin: 0 2px; }
 input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
-textarea { min-height: 40px; overflow: auto; resize: vertical; width: 100%; }
+textarea { min-height: 40px; overflow: auto; resize: vertical; /*width: 100%;*/ }
 
 
 ul { margin-bottom: 10px; }
@@ -41,7 +41,7 @@ Inspired by Zero Design http://www.getfuelcms.com/forums/discussion/470/updated-
 ::-moz-focus-inner { border: 0; padding: 0; }
 input[type="search"]::-webkit-search-decoration { display: none; }
 input, button, select, textarea { margin: 0; }
-input[type="radio"], input[type="checkbox"] { top: 3px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
+input[type="radio"], input[type="checkbox"] { position: relative; top: 1px; /* IE8, IE9, IE10 */ top: 0\0; /* IE7 */ *top: -3px; }
 
 button,
 input[type="reset"],
@@ -334,7 +334,7 @@ a.btn, div.btn, .btn input, .btn .button  {
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
 .repeatable .remove { position: absolute; top: 15px; right: 15px; }
-.repeatable td .remove { position: static; }
+.repeatable td>.remove { position: static; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { 
   -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.1); 
@@ -636,7 +636,7 @@ div#login ::-webkit-input-placeholder {color: #999; }
 div#login :-moz-placeholder { color: #999; }
 div#login :-ms-input-placeholder { color:  #999; }
 div#login input[type="submit"] { background: #3dbfd9 !important; color: #fff; font-size: 20px; text-shadow: none; }
-div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 340px; margin: auto; }
+div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 440px; margin: auto; }
 a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; color: #999; }
 
 /* assets & modal */
@@ -683,7 +683,7 @@ div#related_items { float: right; width: 210px; background-color: #ecf1f5; borde
 div#related_items h3 { background-color: transparent; padding-left: 24px; margin-top: 5px; }
 div#related_items li { list-style: none; padding-left: 5px; margin: 5px 0; }
 div#related_items select { max-width: 212px; }
-div#related_items .layout_preview { max-width: 200px; margin: 10px auto; }
+div#related_items .layout_preview { max-width: 210px; margin: 10px auto; }
 
 a.reset { display: block; width: 16px; height: 16px; background: transparent url(../images/fuel_icons.png) no-repeat 0px -146px; margin-right: 5px; }
 
@@ -702,3 +702,9 @@ div.perms_list label { font-weight: bold; }
 
 /* ckeditor */
 .cke_top { min-width: 565px !important; }
+.cke_button__fuellink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -528px !important; }
+.cke_button__fuelunlink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -552px !important; }
+.cke_button__fuelimage_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -360px !important; }
+
+/* CI profiler */
+#codeigniter_profiler { position: absolute; bottom: 0; left: 200px; height: 300px; overflow: auto; }

@@ -112,6 +112,8 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 	<li><strong>max_length</strong>: the maxlength parameter to associate with the field</li>
 	<li><strong>comment</strong>: a comment to assicate with the field's label'</li>
 	<li><strong>label</strong>: the label to associate with the field</li>
+	<li><strong>before_label</strong>: displays HTML before the label</li>
+	<li><strong>after_label</strong>: displays HTML before the label</li>
 	<li><strong>required</strong>: puts a required flag next to field label</li>
 	<li><strong>size</strong>: the size attribute of the field</li>
 	<li><strong>class</strong>: the CSS class attribute to associate with the field</li>
@@ -197,7 +199,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#asset">asset</a></li>
 		<li><a href="#url">url</a></li>
 		<li><a href="#wysiwyg">wysiwyg</a></li>
-		<li><a href="#file">file</a></li>
+		<li><a href="#file">file</a> (overwritten for more functionality)</li>
 		<li><a href="#inline_edit">inline_edit</a></li>
 		<li><a href="#linked">linked</a></li>
 		<li><a href="#currency">currency</a></li>
@@ -207,6 +209,9 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#langauge">langauge</a></li>
 		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
+		<li><a href="#toggler">toggler</a></li>
+		<li><a href="#colorpicker">colorpicker</a></li>
+		<li><a href="#dependent">dependent</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -1061,6 +1066,77 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<?php 
 	$fields = array();
 	$fields['keyval_example'] = array('type' => 'keyval', 'value' => "english:English\ngerman:German\nspanish:Spanish");
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="toggler" class="toggle">toggler</h3>
+<div class="toggle_block_off">
+	<p>This field is essentially an <a href="#enum">enum</a> field that toggles the display of specified fields. 
+		To make a field toggleable, you need to give it a class parameter with a value of "toggle" and an additional class value that correlates to the value selected from the toggle field.
+		 The following additional parameter can be passed to this field type:
+	</p>
+	<ul>
+		<li><strong>prefix</strong>: a value that can be used to prefix class names that are used to identify fields to toggle on and off.</li>
+		<li><strong>selector</strong>: the jQuery context selector in which to execute the toggle. The default is the .form class.</li>
+		<li><strong>context</strong>: the parent jQuery selector that will be hidden. The default is the containing "tr" element.</li>
+	</ul>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['toggler_example'] = array('type' => 'toggler', 'prefix' => 'toggle_', 'options' => array('1' => 'One', '2' => 'Two'));
+	$fields['toggler_field1'] = array('class' => 'toggle toggle_1');
+	$fields['toggler_field2'] = array('type' => 'select', 'class' => 'toggle toggle_2', 'options' => array('1' => 'One', '2' => 'Two'));
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['keyval_example'] = array('type' => 'toggler', 'prefix' => 'toggle_', 'options' => array('1' => 'One', '2' => 'Two'));
+	$fields['toggler_field1'] = array('class' => 'toggle toggle_1');
+	$fields['toggler_field2'] = array('type' => 'select', 'class' => 'toggle toggle_2', 'options' => array('1' => 'One', '2' => 'Two'));
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="colorpicker" class="toggle">colorpicker</h3>
+<div class="toggle_block_off">
+	<p>This field provides a hexidecimal color picker:</p>
+	
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="dependent" class="toggle">dependent</h3>
+<div class="toggle_block_off">
+	<p>This field allows you to have one field determine the options of another field:</p>
+	<ul>
+		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on.</li>
+		<li><strong>url</strong>: the URL for the AJAX request.</li>
+		<li><strong>multiple</strong>: determines if the field is a multi-select or not.</li>
+		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field.</li>
+		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX.</li>
+		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select.</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['dependent_example'] = array('type' => 'dependent', 'depends_on' => 'language', 'url' => fuel_url('my_module/ajax/options'), 'multiple' => TRUE, 'replace_selector' => '.language_depends');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
 	form_builder_example($fields);
 	?>
 	

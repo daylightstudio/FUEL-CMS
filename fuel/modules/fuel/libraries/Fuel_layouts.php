@@ -130,17 +130,85 @@ class Fuel_layouts extends Fuel_base_library {
 			}
 		}
 
+		// grab layouts from advanced module
+		$advanced_modules = $this->CI->fuel->modules->advanced(FALSE);
+		foreach($advanced_modules as $mod)
+		{
+			$path = $mod->path().'config/'.$mod->name().'_layouts.php';
+			if (file_exists($path))
+			{
+				include($path);
+				if (!empty($config['layouts']))
+				{
+					$this->layouts = array_merge($this->layouts, $config['layouts']);
+				}
+				if (!empty($config['blocks']))
+				{
+					$this->blocks = array_merge($this->blocks, $config['blocks']);
+				}
+			}
+			elseif (method_exists($mod, 'setup_layouts'))
+			{
+				$mod->setup_layouts();
+			}
+		}
+
 		// initialize layout objects
 		foreach($this->layouts as $name => $init)
 		{
-			$layout = $this->create($name, $init);
-			if ($layout)
-			{
-				$this->_layouts[$name] = $layout;	
-			}
+			$this->add($name, $init);
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Adds a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @param	object	A layout object or an array of initialization parameters
+	 * @return	mixed 	Returns the Fuel_layouts object instance for method chaining
+	 */	
+	public function add($name, $layout, $type = NULL)
+	{
+		if (is_array($layout))
+		{
+			if ($type == 'block')
+			{
+				$layout['type'] = 'block';
+			}
+			$layout = $this->create($name, $layout);
+		}
+		if ($layout)
+		{
+			if ($type == 'block')
+			{
+				$this->blocks[$name] = $layout;		
+			}
+			else
+			{
+				$this->_layouts[$name] = $layout;		
+			}
+		}
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes a layout object
+	 *
+	 * @access	public
+	 * @param	string	The name of the layout
+	 * @return	void
+	 */	
+	public function remove($name)
+	{
+		unset($this->_layouts[$name]);
+		return $this;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -221,7 +289,7 @@ class Fuel_layouts extends Fuel_base_library {
 		// add all layouts without a group first
 		foreach($layouts as $k => $layout)
 		{
-			if (empty($layout->group) AND !in_array($k, $this->hidden))
+			if (empty($layout->group) AND !$layout->is_hidden())
 			{
 				$options[$layout->name] = $layout->label;
 				// reduce array down
@@ -235,7 +303,7 @@ class Fuel_layouts extends Fuel_base_library {
 		{
 			foreach($layouts as $k => $layout)
 			{
-				if ($layout->group == $group)
+				if ((is_string($layout->group) AND $layout->group == $group) OR is_array($layout->group) AND in_array($group, $layout->group))
 				{
 					$options[$layout->name] = $layout->label;
 					unset($layouts[$k]);
@@ -249,12 +317,20 @@ class Fuel_layouts extends Fuel_base_library {
 			{
 				if (!empty($layout->group))
 				{
-					if (!isset($options[$layout->group]))
+					$group = $layout->group;
+					if (is_string($group))
 					{
-						$options[$layout->group] = array();
+						$group = array($group);
 					}
-					$options[$layout->group][$layout->name] = $layout->label;
-					unset($layouts[$k]);
+					foreach($group as $g)
+					{
+						if (!isset($options[$g]))
+						{
+							$options[$g] = array();
+						}
+						$options[$g][$layout->name] = $layout->label;
+						unset($layouts[$k]);
+					}
 				}
 			}
 		}
@@ -372,6 +448,7 @@ class Fuel_layout extends Fuel_base_library {
 	public $include_pagevar_object = FALSE; // Determines whether to include a single variable of object of $pagevar that includes all the pages variables
 	public $preview_image = ''; // An image for previewing the layout
 	public $double_parse = NULL; // Double parse pages created in the CMS to allow for variables set in the CMS to cascade up to the layout. Valid options are TRUE/FALSE (AUTO only applies to the global FUEL configuration)
+	public $hidden = FALSE; // Determines if the layout should be hidden from the layout dropdown select in the CMS
 	
 	// --------------------------------------------------------------------
 	
@@ -997,7 +1074,6 @@ class Fuel_layout extends Fuel_base_library {
 	 * Returns the double parse values
 	 *
 	 * @access	public
-	 * @param	string	the preview image
 	 * @return	boolean
 	 */	
 	public function is_double_parse()
@@ -1021,6 +1097,37 @@ class Fuel_layout extends Fuel_base_library {
 	public function set_double_parse($parse)
 	{
 		$this->double_parse = (boolean) $parse;
+	}
+
+		// --------------------------------------------------------------------
+
+	/**
+	 * Returns whether this layout should be hidden from the layout dropdown select
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function is_hidden()
+	{
+		if ($this->hidden == TRUE OR in_array($this->name, $this->fuel->layouts->hidden))
+		{
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets whether this layout should be hidden from the layout dropdown select
+	 *
+	 * @access	public
+	 * @param	boolean	
+	 * @return	boolean
+	 */	
+	public function set_hidden($hidden)
+	{
+		$this->hidden = (boolean) $hidden;
 	}
 }
 

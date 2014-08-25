@@ -274,7 +274,7 @@ class Fuel_custom_fields {
 			if (isset($params[$img_p]))
 			{
 
-				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p]);
+				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p], 'class="noclear"');
 			}
 
 		}
@@ -616,9 +616,7 @@ class Fuel_custom_fields {
 				{
 					$inline_class = 'add_edit '.$uri;
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-					$params['data'] = array(
-						'module' => $uri,
-						);
+					$params['data']['module'] = $uri;
 				}
 			}
 		
@@ -1422,9 +1420,7 @@ class Fuel_custom_fields {
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-				$params['data'] = array(
-					'module' => $uri,
-					);
+				$params['data']['module'] = $uri;
 			}
 		}
 
@@ -1663,6 +1659,7 @@ class Fuel_custom_fields {
 						}
 					}
 				}
+
 				return $value;
 			}
 			else
@@ -1692,7 +1689,6 @@ class Fuel_custom_fields {
 					$first_item = current($json);
 					return  (!empty($first_item)) ? json_encode($json) : "";
 				}
-				
 			}
 			';
 		$func = create_function('$value', $func_str);
@@ -1780,7 +1776,12 @@ class Fuel_custom_fields {
 			$fb->submit_value = '';
 			$fb->cancel_value = '';
 			$fb->use_form_tag = FALSE;
-			$fb->name_prefix = 'vars';
+
+			if (!isset($params['module']) OR (isset($params['module']) AND $params['module'] == 'pages'))
+			{
+				$fb->name_prefix = 'vars';	
+			}
+
 			$fb->set_fields($fields);
 			$fb->display_errors = FALSE;
 
@@ -1849,6 +1850,99 @@ class Fuel_custom_fields {
 		}
 	}
 
+
+	public function toggler($params)
+	{
+		$form_builder =& $params['instance'];
+
+		// the parent selector that will be hidden... in most cases it will be the containing "tr" element
+		if (empty($params['selector']))
+		{
+			$params['selector'] = 'tr';
+		}
+		
+		// the jQuery context selector in which to execute the toggle... in most cases it's within the .form class
+		if (empty($params['context']))
+		{
+			$params['context'] = '.form';
+		}
+
+		// the prefix to the name of the classes you are using to identify toggleable regions
+		if (!isset($params['prefix']))
+		{
+			$params['prefix'] = '';
+		}
+
+		// setup data attributes for field
+		$data['context'] = $params['context'];
+		$data['selector'] = $params['selector'];
+		$data['prefix'] = $params['prefix'];
+
+		$params['data'] = array_merge($params['data'], $data);
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' toggler' : 'toggler';
+
+		$str = $form_builder->create_enum($params);
+		return $str;
+
+	}
+
+	public function colorpicker($params)
+	{
+		$form_builder =& $params['instance'];
+
+		// normalize value to not have the #
+		if (!empty($params['value']))
+		{
+			$params['value'] = trim($params['value'], '#');
+		}
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' field_type_colorpicker' : 'field_type_colorpicker';
+		$params['type'] = 'text';
+		$params['size'] = 10;
+		$str = '# ';
+		$str .= $form_builder->create_text($params);
+		$bg_color = ' background-color: #'.$params['value'];
+		$str .= '<div class="colorpicker_preview" style="display: inline-block; width: 22px; height: 22px; margin: 0  0 -8px 3px; border: 2px solid #ddd;'.$bg_color.'"></div>';
+		return $str;
+	}
+
+	public function dependent($params)
+	{
+		if (empty($params['depends_on']))
+		{
+			show_error('The depends_on parameters must be provided for the dependent field.');
+		}
+
+		$form_builder =& $params['instance'];
+
+		$params['url'] = (empty($params['url']) AND isset($this->CI->module_uri)) ? fuel_url($this->CI->module_uri.'/ajax/options') : $params['url'];
+		$params['ajax_data_key_field'] = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : '';
+		$params['additional_ajax_data'] = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
+		$params['replace_selector'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
+
+		$dependent_class = 'dependent';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$dependent_class : $dependent_class; 
+		$params['data'] = array(
+								'depends_on'          => $params['depends_on'],
+								'ajax_url'            => $params['url'],
+								'ajax_data_key_field' => $params['ajax_data_key_field'],
+								'replace_selector'    => $params['replace_selector'],
+								);
+
+		$str = '';
+		$str .= "<div class=\"dependent_data\" style=\"display: none;\">";
+		$str .= json_encode($params['additional_ajax_data']);
+		$str .= "</div>\n";
+		$params['mode'] = 'select';
+		if (!empty($params['multiple']))
+		{
+			$str .= $this->multi($params);
+		}
+		else
+		{
+			$str .= $this->inline_edit($params);	
+		}
+		return $str;
+	}
 }
 
 

@@ -125,7 +125,10 @@ class Fuel_modules extends Fuel_base_library {
 		{
 			foreach($overwrites as $module => $val)
 			{
-				$module_init[$module] = array_merge($module_init[$module], $val);
+				if (isset($module_init[$module]))
+				{
+					$module_init[$module] = array_merge($module_init[$module], $val);	
+				}
 			}
 		}
 		return $module_init;
@@ -212,7 +215,11 @@ class Fuel_modules extends Fuel_base_library {
 			$fuel_module = new Fuel_module();
 		}
 		$fuel_module->initialize($mod, $init);
-		$this->_modules[$mod] = $fuel_module;
+
+		if (empty($init['disabled']))
+		{
+			$this->_modules[$mod] = $fuel_module;
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -236,12 +243,12 @@ class Fuel_modules extends Fuel_base_library {
 		}
 
 		// allows you to get a module based on the model name
-		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module))
+		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module) OR $has_uri = (strpos($module, '/') !== FALSE))
 		{
 			$modules = $this->get(NULL, FALSE);
 			foreach($modules as $key => $mod)
 			{
-				if (strtolower($mod->info('model_name')) == $module)
+				if (strtolower($mod->info('model_name')) == $module OR ($has_uri AND $mod->info('module_uri') == $module))
 				{
 					$module = $key;
 					break;
@@ -507,7 +514,27 @@ class Fuel_modules extends Fuel_base_library {
 		
 	}
 
-
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Options list for simple modules
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function options_list($advanced = FALSE)
+	{
+		if ($advanced)
+		{
+			$modules = array_keys($this->advanced(FALSE));
+		}
+		else
+		{
+			$modules = array_keys(self::get_all_module_configs());
+		}
+		$options = array_combine($modules, $modules);
+		return $options;
+	}
 }
 
 

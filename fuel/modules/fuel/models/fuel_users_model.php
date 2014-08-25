@@ -284,6 +284,8 @@ class Fuel_users_model extends Base_module_model {
 			$user_id = $values['id'];
 		}
 
+		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
+
 		if (!empty($user_id))
 		{
 			$fields['new_password'] = array('label' => lang('form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
@@ -293,7 +295,9 @@ class Fuel_users_model extends Base_module_model {
 			$pwd_field['type'] = 'password';
 			$pwd_field['size'] = 20;
 			$pwd_field['order'] = 5;
-			$fields['password']= $pwd_field;
+			//$fields['password']= $pwd_field;
+			$fields['new_password'] = array('label' => lang('form_label_password'), 'type' => 'password', 'size' => 20, 'order' => 5, 'required' => TRUE);
+			$fields['confirm_password']['required'] = TRUE;
 		}
 		
 		$lang_dirs = list_directories(FUEL_PATH.'language/', array(), FALSE);
@@ -312,7 +316,6 @@ class Fuel_users_model extends Base_module_model {
 		$fields['email']['order'] = 2;
 		$fields['first_name']['order'] = 3;
 		$fields['last_name']['order'] = 4;
-		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
 		
 		$fields['active']['order'] = 8;
 
@@ -468,18 +471,10 @@ class Fuel_users_model extends Base_module_model {
 	 */	
 	public function on_before_clean($values)
 	{
-		if (!empty($values['password']) OR !empty($values['new_password'])) 
+		if (!empty($values['new_password'])) 
 		{
-			if (empty($values['salt']))
-			{
-				$values['salt'] = $this->salt();
-			}
-
-			// make sure the salt is only 32 characters long in case it was passed as a value
-			$values['salt'] = substr($values['salt'], 0, 32);
-
-			$pwd = (!empty($values['new_password'])) ? $values['new_password'] : $values['password'];
-			$values['password'] = $this->salted_password_hash($pwd, $values['salt']);
+			// set to blank in order to be picked up on on_before_save
+			$values['password'] = $values['new_password'];
 		}
 		
 		return $values;
@@ -505,7 +500,7 @@ class Fuel_users_model extends Base_module_model {
 			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', lang('form_label_email')));
 			if (isset($this->normalized_save_data['confirm_password']))
 			{
-				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['password'], $this->normalized_save_data['confirm_password']));
+				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
 		}
 		
@@ -539,6 +534,16 @@ class Fuel_users_model extends Base_module_model {
 		{
 			show_error(lang('error_cannot_deactivate_yourself'));
 		}
+
+
+		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
+		if (!empty($values['new_password'])) 
+		{
+
+			$values['salt'] = substr($this->salt(), 0, 32);
+			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+		}
+
 		return $values;
 	}
 
@@ -561,10 +566,10 @@ class Fuel_users_model extends Base_module_model {
 		// reset session information... 
 		if (isset($values['id'], $user['id']) AND $values['id'] == $user['id'])
 		{
-			if (!empty($values['password']))
-			{
-				$CI->fuel->auth->set_user_data('password', $values['password']);
-			}
+			// if (!empty($values['password']))
+			// {
+			// 	$CI->fuel->auth->set_user_data('password', $values['password']);
+			// }
 
 			if (!empty($values['language']))
 			{

@@ -1244,11 +1244,12 @@ class Fuel_page extends Fuel_base_library {
 
 		// fix for pages permission
 		$perm = ($permission == 'pagevariables') ? 'pages' : $permission;
-		
+		$perm_type = ($perm == 'create') ? 'create' : 'edit';
+
 		if ($this->fuel->config('admin_enabled') AND 
 			is_fuelified() AND 
 			(is_null($this->CI->load->get_var('fuelified')) OR $this->CI->load->get_var('fuelified') === TRUE)
-			AND $this->CI->fuel->auth->has_permission($perm, 'edit') 
+			AND $this->CI->fuel->auth->has_permission($perm, $perm_type) 
 			)
 		{
 			if (empty($label))

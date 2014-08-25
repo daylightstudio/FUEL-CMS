@@ -87,9 +87,18 @@ class Assets extends Module {
 					$uploaded_data = $this->fuel->assets->uploaded_data();
 					$first_file = current($uploaded_data);
 
-					// set the uploaded file name to the first file
-					$flashdata['uploaded_file_name'] = trim(str_replace(assets_server_path().$dir, '', $first_file['full_path']), '/');
-					$flashdata['uploaded_file_webpath'] = assets_server_to_web_path($first_file['full_path']);
+					$uploaded_file_name_arr = array();
+					$uploaded_file_webpath_arr = array();
+					foreach($uploaded_data as $ud)
+					{
+						$uploaded_file_name_arr[] = trim(str_replace(assets_server_path().$dir, '', $ud['full_path']), '/');
+						$uploaded_file_webpath_arr[] = assets_server_to_web_path($ud['full_path']);
+					}
+					// set the uploaded file name to a concatenated string separated by commas
+					$uploaded_file_name = implode(', ', $uploaded_file_name_arr);
+
+					$flashdata['uploaded_file_name'] = $uploaded_file_name;
+					$flashdata['uploaded_file_webpath'] = $uploaded_file_webpath_arr;
 
 					$this->session->set_flashdata('uploaded_post', $flashdata);
 					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);

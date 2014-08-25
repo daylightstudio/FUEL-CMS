@@ -27,13 +27,14 @@ fuel.fields.datetime_field = function(context){
 		 o.buttonImage = imgPath + 'calendar.png';
 	}
 
-	$('.datepicker', context).each(function(i){
+	$('.datepicker', context).not('[disabled],[readonly]').each(function(i){
 		var options = {
 			dateFormat : $(this).attr('data-date_format'),
 			region : $(this).attr('data-region'),
 			minDate : $(this).attr('data-min_date'),
 			maxDate : $(this).attr('data-max_date'),
-			firstDay : $(this).attr('data-first_day')
+			firstDay : $(this).attr('data-first_day'),
+			showOn : $(this).attr('data-show_on')
 		};
 		var opts = $.extend(o, options);
 		$.datepicker.regional[o.region];	
@@ -193,11 +194,12 @@ fuel.fields.wysiwyg_field = function(context){
 			this.dataProcessor.htmlFilter.addRules( {
 				elements : {
 				    $ : function( element ) {
-				    	
+
 						// // Output dimensions of images as width and height attributes on src
 						if ( element.name == 'img' && hasCKEditorImagePlugin) {
-							var src = element.attributes['src'];
-							img = src.replace(/^\{img_path\(([^\)]+)\)\}/, function(match, contents, offset, s) {
+							//var src = element.attributes['src'];
+							var src = element.attributes['data-cke-saved-src']; // v4.4 fix
+							img = src.replace(/^\{img_path\('?([^'|"]+?)'?\)\}/, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
@@ -292,8 +294,9 @@ fuel.fields.wysiwyg_field = function(context){
 	}
 	
 	var unTranslateImgPath = function(txt){
-		txt = txt.replace(/\{img_path\(([^\)]+)\)\}/g, function(match, contents, offset, s) {
-											contents = contents.replace(/'|"/g, '');
+		
+		txt = txt.replace(/\{img_path\('?([^'|"]+?)'?\)\}/g, function(match, contents, offset, s) {
+											contents = contents.replace(/'|"/, '');
 	   										return jqx_config.assetsImgPath + contents;
     								}
 								);
@@ -305,7 +308,7 @@ fuel.fields.wysiwyg_field = function(context){
 		// translate img_path
 		setTimeout(function(){
 			var txt = editor.getData();
-			txt = txt.replace(/\{img_path\('([^']+)'\)\}/g, function(match, contents, offset, s) {
+			txt = txt.replace(/\{img_path\('([^']+?)'\)\}/g, function(match, contents, offset, s) {
 		   										return jqx_config.assetsImgPath + contents;
 	    								}
 									);
@@ -506,7 +509,19 @@ fuel.fields.asset_field = function(context, options){
 			var iframeContext = this.contentDocument;
 			selected = $('#uploaded_file_name', iframeContext).val();
 			if (selected && selected.length){
-				$('#' + activeField).val(selected);
+				var $activeField = $('#' + activeField);
+				if ($activeField.data('multiple') == '1'){
+					var selectedAssetValue = jQuery.trim($('#' + activeField).val());
+					var selectedAssets = [];
+					if (selectedAssetValue.length){
+						selectedAssets = selectedAssetValue.split(',');
+					}
+					selectedAssets.push(selected);
+					$('#' + activeField).val(selectedAssets.join(','))
+				} else {
+					$('#' + activeField).val(selected);	
+				}
+				
 				$modal.jqmHide();
 			}
 		})
@@ -941,7 +956,7 @@ fuel.fields.sortStopped = function(){
 fuel.fields.clonedFunc = function(e){
 	$('#form').formBuilder().initialize(e.clonedNode);
 
-	// Hacktastic to remove any loader icons left on from fuel.fields.block
+	// Hacktastic to remove any loader icons left on from fuel.fields.block_field
 	e.clonedNode.find('.loader').hide();
 
 	// to help with CKEditor issues... UGH!!!
@@ -1037,18 +1052,19 @@ fuel.fields.url_field = function(context, options){
 	
 }
 
-fuel.fields.block = function(context, options){
+fuel.fields.block_field = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
-		var val = $(this).val();
-		var url = $(this).data('url');
+		var $this = $(this);
+		var val = $this.val();
+		var url = $this.data('url');
 		if (!url) url = '';
 
 		// for pages inline editing
 		var module = $('#__fuel_module__');
-		var context = $(this).attr("name");
+		var context = $this.attr("name");
 		if (module.length && module.val() == 'pagevariables'){
 			var id = $('#page_id').val();
-			var name = $(this).attr("name").replace(/^value/, $('#name').attr("value"));
+			var name = $this.attr("name").replace(/^value/, $('#name').attr("value"));
 		} else {
 			var id = $('#__fuel_id__').val();
 			var name = '';
@@ -1057,7 +1073,7 @@ fuel.fields.block = function(context, options){
 		if (url.length){
 			url = eval(unescape(url));
 		} else {
-			var layout = $(this).val();
+			var layout = $this.val();
 			if (layout && layout.length){
 				//layout = layout.split('/').pop();
 				layout = layout.replace('/', ':');
@@ -1069,7 +1085,7 @@ fuel.fields.block = function(context, options){
 		// if (contextArr.length > 1){
 		// 	context = contextArr.pop();
 		// }
-		$layout_fields = $(this).next('.block_layout_fields');
+		$layout_fields = $this.next('.block_layout_fields');
 		if (url.length){
 			url += '?context=' + context + '&name=' + name;
 
@@ -1079,7 +1095,8 @@ fuel.fields.block = function(context, options){
 				// hide loader
 				$(this).parent().find('.loader').hide();
 				$(this).find('.block_name').val(val);
-				fuel.adjustIframeWindowSize();	
+				fuel.adjustIframeWindowSize();
+				$(document).trigger('blockLoaded', [$this, context]);
 				
 			});
 		} else {
@@ -1091,4 +1108,148 @@ fuel.fields.block = function(context, options){
 	
 	$('.block_layout_select', context).change();
 
+}
+
+fuel.fields.toggler_field = function(context, options){
+	
+	var toggler = function(elem, context){
+		var $elem = $(elem);
+		$elem.addClass('__applied__');
+		if (!context) {
+			var cSelector = ($elem.data('context')) ? $elem.data('context') : '.form';
+			context = $elem.closest(cSelector);
+		}
+
+		var selector = ($elem.data('selector')) ? $elem.data('selector') : 'tr';
+		var prefix = ($elem.data('prefix')) ? $elem.data('prefix') : '';
+		var val = $elem.val();
+
+		var $togglers = $(".toggle", context);
+		if (prefix){
+			var regex = new RegExp(' ' + prefix)
+			$togglers.filter(function() { 
+				return $(this).attr('class').match(regex); 
+			}).closest(selector).hide();
+
+		} else {
+			$(".toggle", context).closest(selector).hide();	
+		}
+		$(".toggle." + prefix + val, context).closest(selector).show();
+	}
+	
+	// kill any previous toggler events 
+	$(document).off('change.toggler');
+
+	$(document).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
+		var context = $(this).closest('.form');
+		toggler(this, context);
+	})
+
+	// for block fields that get ajaxed in
+	$(document).on("blockLoaded", function(e, elem, context){
+		var $togglers = $(elem).parent().find(".toggler").not('.__applied__');
+		$togglers.each(function(){
+			var $this = $(this);
+			if ($(this).is('select') || $(this).is('input:checked')){
+				var context = ($this.attr('context')) ? $this.closest($this.attr('context')) : $this.closest('.form');
+				toggler(this, context);	
+			}
+		})
+		
+	})
+	$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
+
+	// exlude blocks since they get ajaxed in and then run the toggler function
+	$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
+}
+
+
+fuel.fields.colorpicker_field = function(){
+	var $activeColorPicker = null;
+
+	var setSwatchColor = function(hex, elem){
+		if (!elem) elem = $activeColorPicker;
+		$(elem).parent().find(".colorpicker_preview").css("backgroundColor", "#" + hex);
+	}
+
+	$(".colorpicker_preview").on("click", function(e){
+		$(this).parent().find(".field_type_colorpicker").ColorPickerShow();
+	})
+
+	$(".field_type_colorpicker").ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			$(el).val(hex);
+			$(el).ColorPickerHide();
+		},
+		onBeforeShow: function () {
+			$activeColorPicker = $(this);
+			$(this).ColorPickerSetColor(this.value);
+		},
+		onChange: function (hsb, hex, rgb) {
+			$activeColorPicker.val(hex)
+			setSwatchColor(hex, $activeColorPicker);
+		}
+	})
+	.bind("keyup", function(){
+		$(this).ColorPickerSetColor(this.value);
+		var hex = $(this).val();
+		setSwatchColor(hex, this);
+	});
+}
+
+fuel.fields.dependent_field = function(context, options){
+	$('.dependent', context).each(function(i){
+
+		var _this = this;
+		var dependsOn = $(this).data('depends_on');
+		if (dependsOn.substr(0, 1) != '.' && dependsOn.substr(0, 1) != '#'){
+			var dependentSelector = "select[name$=" + $(this).data('depends_on') + "], select[name$='" + $(this).data('depends_on') + "\]']";	
+		} else {
+			var dependentSelector = "select" + $(this).data('depends_on');	
+		}
+
+		// for the pages module, we'll prevent conflict with fields that use "language" in their name, 
+		// we change the context to be more specific to exclude the page property fields
+		var module = fuel.getModule();
+		if (module == 'pages') context = '#layout_fields';
+		var $dependent = $(dependentSelector, context);
+
+		$dependent.addClass('dependee');
+		$dependent.on('change', function(){
+			var val = $(this).val();
+			var url = $(_this).data('ajax_url');
+
+			// determine the initial key for the value
+			if ($(_this).data('ajax_data_key_field')){
+				var ajaxDataKeyField = $(_this).data('ajax_data_key_field');
+			} else {
+				var ajaxDataKeyField = $(_this).data('depends_on');
+			}
+			var replaceSelector = ($(_this).data('replace_selector')) ? $(_this).data('replace_selector') : _this;
+			var data = {};
+			data[ajaxDataKeyField] = $(this).val();
+
+			var xtraDataStr = $(_this).closest('.value').find('.dependent_data').text();
+			var xtraData = {};
+			if (xtraDataStr.length){
+				xtraData = eval('(' + xtraDataStr + ')');
+			}
+
+			if ($.isEmptyObject(xtraData) === false) {
+				$.extend(data, xtraData);
+			}
+			if (val.length){
+				$.get(url, data, function(html){
+					$select = $(replaceSelector, this);
+					$select.html(html);
+					if ($select.prop("multiple")){
+						fuel.fields.multi_field(context);
+					}
+				});
+				fuel.fields.inline_edit_field(context);
+			}
+		})
+		
+	})
+	$('.dependee', context).trigger('change');
 }

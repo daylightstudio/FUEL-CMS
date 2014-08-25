@@ -28,7 +28,7 @@ CREATE TABLE `articles` (
   `date_added` datetime NOT NULL default '0000-00-00 00:00:00',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -44,4 +44,4 @@ CREATE TABLE `authors` (
   `avatar_image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

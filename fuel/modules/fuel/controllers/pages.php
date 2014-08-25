@@ -54,7 +54,7 @@ class Pages extends Module {
 				$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 
 				// grab the page variable fields
-				$fields = $this->_page_var_fields($layout, $posted);
+				$fields = $this->_block_processing($layout->fields(), $posted);
 
 				// grab the variables
 				$vars = $this->_process_page_vars(NULL, $posted, $fields, $layout);
@@ -145,7 +145,7 @@ class Pages extends Module {
 			$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 
 			// grab the page variable fields
-			$fields = $this->_page_var_fields($layout, $posted);
+			$fields = $this->_block_processing($layout->fields(), $posted);
 
 			// grab the variables
 			$vars = $this->_process_page_vars($id, $posted, $fields, $layout);
@@ -508,10 +508,8 @@ class Pages extends Module {
 		return $vars;
 	}
 
-	public function _page_var_fields($layout, $posted)
+	public function _block_processing($fields, $posted)
 	{
-		// run any form field post processing hooks
-		$fields = $layout->fields();
 
 		// add in block fields
 		foreach($fields as $key => $val)
@@ -630,6 +628,28 @@ class Pages extends Module {
 			}
 		}
 
+		// if the page is duplicated, grab all the other language values that should be copied over
+		if ($this->fuel->language->has_multiple() AND (!empty($posted['__fuel_id__']) AND empty($posted['id'])))
+		{
+			$lang_where['page_id'] = $posted['__fuel_id__'];
+			$lang_where['language !='] = $lang;
+			$duped_lang_vars = $this->fuel_pagevariables_model->find_all_array($lang_where);
+
+			if (!empty($duped_lang_vars))
+			{
+				foreach($duped_lang_vars as $duped_var)
+				{
+					$duped_var['id'] = NULL;
+					$duped_var['page_id'] = $id;
+					if (!$this->fuel_pagevariables_model->save($duped_var))
+					{
+						add_error(lang('error_saving'));
+						return FALSE;
+					}
+				}
+			}
+		}
+			
 		$page_variables_archive = $this->fuel_pagevariables_model->find_all_array(array('page_id' => $id));
 
 		// archive

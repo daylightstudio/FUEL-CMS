@@ -195,6 +195,10 @@ class MY_Parser extends CI_Parser {
 
 		foreach ($data as $key => $val)
 		{
+			if (is_object($val))
+			{
+				$val = get_object_vars($val);
+			}
 			if (is_array($val))
 			{
 				$string = $this->_parse_pair($key, $val, $string);

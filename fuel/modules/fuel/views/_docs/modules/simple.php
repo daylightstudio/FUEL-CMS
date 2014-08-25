@@ -226,7 +226,7 @@ on the key value specified in the config (e.g. example):</p>
 		<tr>
 			<td><strong>sanitize_input</strong></td>
 			<td>TRUE</td>
-			<td>Boolean TRUE/FALSE, string of "xss", "php", "template" OR "entities", OR an array for multiple values e.g. array('xss', 'php', 'template', 'entities'). See the FUEL <a href="<?=user_guide_url('general/configuration')?>">configuration</a> for changing the different sanitization callbacks.</td>
+			<td>Boolean TRUE/FALSE, string of "xss", "php", "template" OR "entities", OR an array for multiple values e.g. array('xss', 'php', 'template', 'entities'). See the FUEL <a href="<?=user_guide_url('installation/configuration')?>">configuration</a> for changing the different sanitization callbacks.</td>
 			<td>Cleans the input before inserting or updating the data source</td>
 		</tr>
 		<tr>

@@ -9,7 +9,7 @@ CREATE TABLE `fuel_relationships` (
   PRIMARY KEY (`id`),
   KEY `candidate_table` (`candidate_table`,`candidate_key`),
   KEY `foreign_table` (`foreign_table`,`foreign_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fuel_settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -18,7 +18,7 @@ CREATE TABLE `fuel_settings` (
   `value` longtext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `module` (`module`,`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fuel_categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -29,7 +29,7 @@ CREATE TABLE `fuel_categories` (
   `parent_id` int(11) NOT NULL,
   `published` enum('yes','no') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fuel_tags` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE `fuel_tags` (
   `precedence` int(11) NOT NULL,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
-)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ## Fuel Users
 

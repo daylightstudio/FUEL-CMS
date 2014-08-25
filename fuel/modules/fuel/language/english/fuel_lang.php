@@ -79,6 +79,7 @@ $lang['auth_log_pass_reset_request'] = "Password reset request for '%1s' from %2
 $lang['auth_log_pass_reset'] = "Password reset for '%1s' from %2s";
 $lang['auth_log_cms_pass_reset'] = "Password reset from CMS for '%1s' from %2s";
 $lang['auth_log_login_success'] = "Successful login by '%1s' from %2s";
+$lang['auth_log_failed_updating_login_info'] = "There was an error updating the login information for by '%1s' from %2s";
 $lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
 $lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 

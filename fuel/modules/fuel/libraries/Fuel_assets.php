@@ -213,7 +213,9 @@ class Fuel_assets extends Fuel_base_library {
 						}
 					}
 					$params = array_merge($params, $posted);
-					unset($params['override_post_params'], $params['posted']);
+
+					// removed due to issues with multiple uploads and the need for these values to persist
+					//unset($params['override_post_params'], $params['posted']);
 				}
 
 				$asset_dir = trim(str_replace(assets_server_path(), '', $params['upload_path']), '/');
@@ -313,7 +315,7 @@ class Fuel_assets extends Fuel_base_library {
 			}
 		}
 
-		// set maintain ration if it is set to maintain_ratio
+		// set maintain ratio if it is set to maintain_ratio
 		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
 		{
 			$params['maintain_ratio'] = TRUE;

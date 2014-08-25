@@ -76,7 +76,7 @@ At it's core, FUEL is a PHP/MySQL, modular-based development platform built on t
 </ul>
 
 
-<h2 id="dashboard" class="ico ico_dashboard"><img src="<?=img_path('icons/ico_house.png', 'fuel')?>" alt="Dashboard" /> <a href="<?=fuel_url('dashboard')?>">Dashboard</a></h2>
+<h2 id="dashboard" class="ico ico_dashboard"><img src="<?=img_path('icons/ico_dashboard.png', 'fuel')?>" alt="Dashboard" /> <a href="<?=fuel_url('dashboard')?>">Dashboard</a></h2>
 <p>The FUEL CMS dashboard displays the latest activity within the system, FUEL news as well as a link to this documentation. </p>
 
 
@@ -93,7 +93,9 @@ At it's core, FUEL is a PHP/MySQL, modular-based development platform built on t
 <ul>
 	<?php $layouts = $this->fuel->layouts->get(); ?>
 	<?php foreach($layouts as $layout) : ?>
+	<?php if (!$layout->is_hidden()) : ?>
 	<li><strong><?=$layout->name()?></strong><?php if ($layout->description()) : ?> - <?=$layout->description()?><?php endif; ?></li>
+	<?php endif; ?>
 	<?php endforeach; ?>
 </ul>
 

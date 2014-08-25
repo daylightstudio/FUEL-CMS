@@ -107,14 +107,14 @@ class About extends CI_Controller {
 For this example, we will have a news page that will list all the news items and a news detail page that will show the contents of those news items. 
 This requires the following:</p>
 <ul>
-	<li>A database table</li>
-	<li>A model</li>
-	<li>Modify the <dfn>application/config/MY_fuel_modules.php</dfn> file</li>
-	<li>A view file</li>
-	<li>A variables file</li>
+	<li><a href="#database_table">A database table</a></li>
+	<li><a href="#a_model">A model</a></li>
+	<li><a href="#my_fuel_modules">Modify the <dfn>fuel/application/config/MY_fuel_modules.php</dfn> file</a></li>
+	<li><a href="#view_file">A view file</a></li>
+	<li><a href="#specifying_a_view">A variables file or a modification to the <dfn>fuel/application/config/MY_fuel.php</dfn></a></li>
 </ul>
 
-<h3>SQL Database Table</h3>
+<h3 id="database_table">SQL Database Table</h3>
 <p>Run the following SQL statement to create the news table.</p>
 <pre class="brush: sql">
 CREATE TABLE `news` (
@@ -130,7 +130,7 @@ CREATE TABLE `news` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 </pre>
 
-<h3>News Model</h3>
+<h3 id="a_model">News Model</h3>
 <p>The following is the news model we are using. For a tutorial on creating modules specifically <a href="<?=user_guide_url('modules/tutorial')?>">click here</a>.</p>
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
@@ -212,7 +212,7 @@ class News_item_model extends Base_module_record {
 ?&gt;
 </pre>
 
-<h3>MY_fuel_modules.php Configuration Change</h3>
+<h3 id="my_fuel_modules">MY_fuel_modules.php Configuration Change</h3>
 <p>Add the following module to the <dfn>application/config/MY_fuel_modules.php</dfn> file: </p>
 <pre class="brush: php">
 $config['modules']['news'] = array(
@@ -221,7 +221,7 @@ $config['modules']['news'] = array(
 </pre>
 
 
-<h3>View File</h3>
+<h3 id="view_file">View File</h3>
 <p>You could use a controller to do the url segment logic but for this tutorial, we will just use a single view. 
 The following view file uses the <a href="<?=user_guide_url('helpers/fuel_helper')?>">fuel_model</a> and 
 <a href="<?=user_guide_url('libraries/my_model/data_record_class_functions')?>">custom record objects</a>.</p>
@@ -270,13 +270,38 @@ else
 
 </pre>
 
-<h3>News Variables File</h3>
-<p>The last thing we will do is create a news variables file and use the special variable <dfn>view</dfn>
+<h3 id="specifying_a_view">Specifying a View for an Individual Record</h3>
+<p>The last thing that we need to do is tell FUEL to look for a specific view file. Without this configuration, fuel will look for a
+view file that matches the URI path, which normally doesn't exist (e.g. <dfn>news/{slug}</dfn>). There are several ways to do this:</p>
+
+<h4>Set max_page_params configuration in MY_fuel.php</h4>
+<p>The first method is to specify the number of parameters that can be passed to a specific URI location using the "max_page_params" configuration parameter in the <dfn>fuel/application/config/MY_fuel.php</dfn> file.
+	The default value is "0" but this can be changed to an array like so:</p>
+<pre class="brush: php">
+	$config['max_page_params'] = array('news' => 1);
+</pre>
+
+<h4>Set auto_search_views configuration in MY_fuel.php</h4>
+<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration paramter to TRUE:</p>
+<pre class="brush: php">
+	$config['auto_search_views'] = FALSE;
+</pre>
+
+<h4>News Variables File</h4>
+<p>Another method is to create a news variables file and use the special variable <dfn>view</dfn>
 to specify the news view file for any page under the news section. This will allow us to use the same view file for 
 both the list view and detail view of the news.</p>
 
 <pre class="brush: php">
 &lt;?php 
 $vars['news'] = array('view' => 'news');
+?&gt;
+</pre>
+
+<h4>Global Variables File</h4>
+<p>Alternatively, you can specify a variable to the <dfn>$pages</dfn> array in the <dfn>fuel/application/views/_variables/global.php</dfn> file:</p>
+<pre class="brush: php">
+&lt;?php 
+$pages['news/:any'] = array('view' => 'news');
 ?&gt;
 </pre>

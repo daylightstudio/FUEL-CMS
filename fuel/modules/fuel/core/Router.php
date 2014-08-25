@@ -90,7 +90,8 @@ class Fuel_Router extends MX_Router
 		if ($this->_no_controller)
 		{
 			$fuel_path = explode('/', $this->routes['404_override']);
-			$this->set_class($fuel_path[1]);
+			$controller = end($fuel_path);
+			$this->set_class($controller);
 			$this->uri->rsegments = $segments;
 			return;
 		}
