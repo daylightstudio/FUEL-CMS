@@ -1932,6 +1932,9 @@ class Fuel_custom_fields {
 		$str .= "<div class=\"dependent_data\" style=\"display: none;\">";
 		$str .= json_encode($params['additional_ajax_data']);
 		$str .= "</div>\n";
+		$str .= "<div class=\"orig_value\" style=\"display: none;\">";
+		$str .= json_encode($params['value']);
+		$str .= "</div>\n";
 		$params['mode'] = 'select';
 		if (!empty($params['multiple']))
 		{

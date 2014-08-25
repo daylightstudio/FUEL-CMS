@@ -1230,18 +1230,24 @@ fuel.fields.dependent_field = function(context, options){
 			data[ajaxDataKeyField] = $(this).val();
 
 			var xtraDataStr = $(_this).closest('.value').find('.dependent_data').text();
+			var origValue = $(_this).closest('.value').find('.orig_value').text();
 			var xtraData = {};
 			if (xtraDataStr.length){
 				xtraData = eval('(' + xtraDataStr + ')');
 			}
 
+			if (origValue.length){
+				origValue = eval('(' + origValue + ')');
+			}
 			if ($.isEmptyObject(xtraData) === false) {
 				$.extend(data, xtraData);
 			}
+
 			if (val.length){
 				$.get(url, data, function(html){
-					$select = $(replaceSelector, this);
+					var $select = $(replaceSelector, this);
 					$select.html(html);
+					$select.val(origValue);
 					if ($select.prop("multiple")){
 						fuel.fields.multi_field(context);
 					}
