@@ -854,25 +854,32 @@ class Fuel_module extends Fuel_base_library {
 
 		foreach($records as $record)
 		{
-			// need to put in global namesapce for preg_replace_callback to access
-			preg_match_all('#{(\w+)}#', $info['preview_path'], $matches);
-			$page = $info['preview_path'];
-			$replaced = FALSE;
-			if (!empty($matches[1]))
+			if (is_callable($info['preview_path']))
 			{
-				foreach($matches[1] as $match)
+				$pages[$page] = $info['preview_path']($record);
+			}
+			else
+			{
+				preg_match_all('#{(\w+)}#', $info['preview_path'], $matches);
+				$page = $info['preview_path'];
+				$replaced = FALSE;
+				if (!empty($matches[1]))
 				{
-					if (!empty($record[$match]))
+					foreach($matches[1] as $match)
 					{
-						$page = str_replace('{'.$match.'}', $record[$match], $page);
-						$replaced = TRUE;
+						if (!empty($record[$match]))
+						{
+							$page = str_replace('{'.$match.'}', $record[$match], $page);
+							$replaced = TRUE;
+						}
 					}
 				}
+				if (!empty($replaced))
+				{
+					$pages[$page] = $page;
+				}
 			}
-			if (!empty($replaced))
-			{
-				$pages[$page] = $page;
-			}
+
 		}
 		
 		return $pages;
@@ -896,16 +903,24 @@ class Fuel_module extends Fuel_base_library {
 			return FALSE;
 		}
 		
-		// substitute data values into preview path
-		preg_match_all('#\{(.+)\}+#U', $preview_path, $matches);
-		
-		if (!empty($matches[1]))
+		// check if it is a callable function first		
+		if (is_callable($preview_path))
 		{
-			foreach($matches[1] as $match)
+			$preview_path = $preview_path($data);
+		}
+		else
+		{
+			// substitute data values into preview path
+			preg_match_all('#\{(.+)\}+#U', $preview_path, $matches);
+			
+			if (!empty($matches[1]))
 			{
-				if (!empty($data[$match]))
+				foreach($matches[1] as $match)
 				{
-					$preview_path = str_replace('{'.$match.'}', $data[$match], $preview_path);
+					if (!empty($data[$match]))
+					{
+						$preview_path = str_replace('{'.$match.'}', $data[$match], $preview_path);
+					}
 				}
 			}
 		}

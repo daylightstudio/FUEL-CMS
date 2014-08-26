@@ -987,8 +987,16 @@ class Module extends Fuel_base_controller {
 		$data = $this->_saved_data($id);
 		$action = (!empty($data[$this->model->key_field()])) ? 'edit' : 'create';
 	
-		// substitute data values into preview path
-		$this->preview_path = $this->module_obj->url($data);
+		// check model first for preview path method
+		if (method_exists($this->model, 'preview_path'))
+		{
+			$this->preview_path = $this->model->preview_path($data, $this->preview_path);
+		}
+		else
+		{
+			// otherwise, substitute data values into preview path
+			$this->preview_path = $this->module_obj->url($data);	
+		}
 
 		$shell_vars = $this->_shell_vars($id, $action);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
