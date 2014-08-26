@@ -537,11 +537,11 @@ class Fuel_users_model extends Base_module_model {
 
 
 		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
-		if (!empty($values['new_password'])) 
+		if (!empty($values['password'])) 
 		{
 
 			$values['salt'] = substr($this->salt(), 0, 32);
-			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
+			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
 		}
 
 		return $values;
