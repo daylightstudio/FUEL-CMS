@@ -248,7 +248,7 @@ class Fuel_modules extends Fuel_base_library {
 			$modules = $this->get(NULL, FALSE);
 			foreach($modules as $key => $mod)
 			{
-				if (strtolower($mod->info('model_name')) == $module OR ($has_uri AND $mod->info('module_uri') == $module))
+				if (strtolower($mod->info('model_name')) == $module OR (!empty($has_uri) AND $mod->info('module_uri') == $module))
 				{
 					$module = $key;
 					break;
