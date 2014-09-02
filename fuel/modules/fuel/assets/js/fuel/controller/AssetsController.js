@@ -23,7 +23,7 @@ fuel.controller.AssetsController = jqx.createController(fuel.controller.BaseFuel
 		var selectedAssetFolder = this.initObj.folder;
 		
 		$assetSelect.change(function(e){
-			var isImg = ($assetSelect.val() && $assetSelect.val().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/));
+			var isImg = ($assetSelect.val() && $assetSelect.val().toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/));
 			if (isImg){
 				$assetPreview.show().html('<img src="' + jqx.config.assetsPath + selectedAssetFolder + '/' + $assetSelect.val() + '" />');
 				$('.img_only').show();
