@@ -258,7 +258,6 @@ class Module extends Fuel_base_controller {
 			// must reset these in case a config file has something different
 			$config['full_tag_open'] = NULL;
 			$config['full_tag_close'] = NULL;
-			$config['full_tag_close'] = NULL;
 			$config['num_tag_open'] = '&nbsp;';
 			$config['num_tag_close'] = NULL;
 			$config['cur_tag_open'] = '&nbsp;<strong>';
