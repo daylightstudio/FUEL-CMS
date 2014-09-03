@@ -1146,7 +1146,7 @@ fuel.fields.toggler_field = function(context, options){
 	})
 
 	// for block fields that get ajaxed in
-	$(document).on("blockLoaded", function(e, elem, context){
+	$(document).off("blockLoaded").on("blockLoaded", function(e, elem, context){
 		var $togglers = $(elem).parent().find(".toggler").not('.__applied__');
 		$togglers.each(function(){
 			var $this = $(this);
