@@ -47,7 +47,7 @@ CKEDITOR.plugins.add( 'fuellink', {
 					selected = selectedElem.getOuterHtml();
 				}
 				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs}, function(replace){
-					editor.insertHtml(replace);
+					editor.insertHtml(replace, "unfiltered_html");
 				})
 	        }
     	});

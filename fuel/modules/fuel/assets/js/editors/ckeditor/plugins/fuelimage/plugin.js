@@ -58,7 +58,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
 		   										return img;
 	    								}
 									);
-					editor.insertHtml(imgHtml);
+					editor.insertHtml(imgHtml,"unfiltered_html");
 				});
 				
 	        }
