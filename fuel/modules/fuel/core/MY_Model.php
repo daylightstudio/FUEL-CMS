@@ -4608,7 +4608,7 @@ class Data_record {
 			$reflection = new ReflectionClass(get_class($this));
 			foreach($methods as $method)
 			{
-				if (strncmp($method, 'get_', 4) === 0 AND $reflection->getMethod($method)->getNumberOfParameters() == 0)
+				if (strncmp($method, 'get_', 4) === 0 AND $reflection->getMethod($method)->getNumberOfRequiredParameters() == 0)
 				{
 					$key = substr($method, 4); // remove get_
 					$values[$key] = $this->$method();
