@@ -1962,6 +1962,7 @@ class Form_builder {
 			$default = (isset($params['value'])) ? $params['value'] : FALSE;
 			foreach($params['options'] as $key => $val)
 			{
+				$attrs['data']['orig_checked'] = '0';
 				$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 				$attrs = array(
 					'class' => $params['class'],
@@ -1977,6 +1978,7 @@ class Form_builder {
 					if (($i == 0 AND !$default) OR  ($default == $key))
 					{
 						$attrs['checked'] = 'checked';
+						$attrs['data']['orig_checked'] = '1';
 					}
 				}
 				$str .= $this->form->radio($params['name'], $key, $attrs);
