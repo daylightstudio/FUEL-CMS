@@ -1452,7 +1452,6 @@ class MY_Model extends CI_Model {
 			// clean the data before saving. on_before_clean hook now runs in the clean() method
 			$values = $this->on_before_clean($values);
 			$values = $this->clean($values);
-			$values = $this->on_before_validate($values);
 
 			// now validate. on_before_validate hook now runs inside validate() method
 			$validated = ($validate) ? $this->validate($values) : TRUE;
