@@ -2311,7 +2311,7 @@ class MY_Model extends CI_Model {
 						break;
 					case 'number':
 						$this->validator->add_rule($field, 'is_numeric', lang('error_not_number', $field_name), $value);
-						if ($field_data['type'] != 'float') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
+						if ($field_data['type'] != 'float' AND $field_data['type'] != 'double') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
 						break;
 					case 'date':
 						if (strncmp($value, '0000', 4) !== 0)
