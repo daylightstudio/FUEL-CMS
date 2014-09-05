@@ -1216,7 +1216,7 @@ class Module extends Fuel_base_controller {
 		
 		// other variables
 		$vars['id'] = $id;
-		$vars['versions'] = ($this->displayonly === FALSE) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
+		$vars['versions'] = ($this->displayonly === FALSE AND $this->archivable) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] = $action;
 		
