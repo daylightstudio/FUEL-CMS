@@ -92,7 +92,7 @@ function datetime_now($hms = TRUE){
 function is_date_format($date)
 {
 	return (is_string($date) AND (!empty($date) AND (int)$date != 0) AND 
-	(is_date_english_format($date) OR is_date_db_format($date)));
+	(preg_match('#([0-9]{1,2})[/\-\.]([0-9]{1,2})[/\-\.]([0-9]{4})#', $date) OR is_date_db_format($date)));
 }
 
 // --------------------------------------------------------------------
