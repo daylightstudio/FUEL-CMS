@@ -2207,7 +2207,7 @@ class Form_builder {
 		// check date to format it
 		if ((!empty($params['value']) AND (int) $params['value'] != 0)
 			&& (preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $params['value'], $regs1) 
-			|| preg_match("#([0-9]{1,2})[/\-]([0-9]{1,2})[/\-]([0-9]{4})#", $params['value'], $regs2)))
+			|| preg_match("#([0-9]{1,2})[/\-\.]([0-9]{1,2})[/\-\.]([0-9]{4})#", $params['value'], $regs2)))
 		{
 			$params['value'] = date($params['date_format'], strtotime($params['value']));
 		} else {
