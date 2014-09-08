@@ -436,7 +436,6 @@ fuel.fields.asset_field = function(context, options){
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
-
 				if ($(this).is('.save')){
 					var $activeField = $('#' + activeField);
 					var assetVal = jQuery.trim($activeField.val());
@@ -449,7 +448,11 @@ fuel.fields.asset_field = function(context, options){
 					} else {
 						assetVal = selectedVal;
 					}
-					$('#' + activeField).val(assetVal).trigger("change");
+					$activeField.val(assetVal).trigger("change");
+
+					refreshImage($activeField);
+
+
 				}
 				return false;
 			});
@@ -508,21 +511,24 @@ fuel.fields.asset_field = function(context, options){
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
 			var iframeContext = this.contentDocument;
 			selected = $('#uploaded_file_name', iframeContext).val();
+
 			if (selected && selected.length){
 				var $activeField = $('#' + activeField);
-				if ($activeField.data('multiple') == '1'){
-					var selectedAssetValue = jQuery.trim($('#' + activeField).val());
+				var multiple = parseInt($activeField.attr('data-multiple')) == 1;
+				if (multiple){
+					var selectedAssetValue = jQuery.trim($activeField.val());
 					var selectedAssets = [];
 					if (selectedAssetValue.length){
 						selectedAssets = selectedAssetValue.split(',');
 					}
 					selectedAssets.push(selected);
-					$('#' + activeField).val(selectedAssets.join(','))
+					$activeField.val(selectedAssets.join(','))
 				} else {
-					$('#' + activeField).val(selected);	
+					$activeField.val(selected);	
 				}
 				
 				$modal.jqmHide();
+				refreshImage($activeField);
 			}
 		})
 		return false;
@@ -556,6 +562,49 @@ fuel.fields.asset_field = function(context, options){
 		return false;
 		
 	});
+
+	// refresh any images
+	var refreshImage = function(activeField){
+		$activeField = $(activeField);
+		var folder = $activeField.data('folder')
+		var imgPath = jqx_config.assetsPath + folder + '/';
+		var $preview = $activeField.parent().find('.img_preview');
+		var value =  $activeField.val();
+		var imgValues = value.split(',');
+		var imgStyles = $preview.data('imgstyles');
+		$preview.empty();
+		var previewHTML = '';
+		$.each(imgValues, function(img){
+
+			// check if it is an image 
+			if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/)){
+				var newSrc = (this.toLowerCase().match(/^http(s)?:\/\//)) ? '' : imgPath;
+				newSrc += $.trim(this) + '?c=' + new Date().getTime()
+				previewHTML += '<a href="' + newSrc + '" target="_blank">';
+				previewHTML += '<img src="' + newSrc + '" style="' + imgStyles + '">'
+				previewHTML += '</a>';
+			}
+
+			if (value && $activeField.data('orig') != value){
+				previewHTML += '<br clear="both"><p class="warning" style="white-space: normal;">' + fuel.lang('assets_need_to_save') + '</p>';
+			}
+		})
+
+		if (previewHTML.length){
+			$preview.show().html(previewHTML);	
+		} else {
+			$preview.hide();
+		}
+		
+	}
+
+	$('.asset_select, .asset_upload', context).each(function(){
+		$(this).on('change', function(e){
+			refreshImage(this);	
+		})
+		refreshImage(this);
+	});
+	
 }
 
 // inline editing of another module
