@@ -742,11 +742,23 @@ class MY_Model extends CI_Model {
 
 		$this->_handle_where($where);
 
-		$params = array('order_by', 'limit', 'offset');
-		foreach($params as $method)
+		// set order
+		if (!empty($order_by)) $this->db->order_by($order_by);
+
+		// set limit
+		if (isset($limit))
 		{
-			if (!empty($$method)) $this->db->$method($$method);
+			$limit = (int) $limit;	
+			$this->db->limit($limit);
 		}
+			
+		// set offset
+		if (isset($offset))
+		{
+			$offset = (int) $offset;	
+			$this->db->offset($offset);
+		}
+
 		$query = $this->get(TRUE, $return_method, $assoc_key);
 		if ($return_method == 'query') return $query;
 
