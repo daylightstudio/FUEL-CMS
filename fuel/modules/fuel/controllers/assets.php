@@ -313,11 +313,19 @@ class Assets extends Module {
 			$fields['userfile']['accept'] = $field_values['accept'];	
 		}
 		
-		if (isset($field_values['multiple']) AND (bool)$field_values['multiple'] === FALSE)
+		if (isset($field_values['multiple']))
 		{
-			$fields['userfile']['class'] = '';	
+			if ((bool)$field_values['multiple'] === FALSE)
+			{
+				$fields['userfile']['class'] = '';		
+			}
+			else
+			{
+				// if their are multiple files being uploaded, the new file name won't really work
+				unset($fields['user_file_name']);
+			}
 		}
-		
+
 		// hide certain fields if params were passed
 		if (!empty($not_hidden))
 		{
