@@ -2217,7 +2217,7 @@ class Form_builder {
 		$params['size'] = 12; // extra room for cramped styling
 		
 		// create the right format for placeholder display based on the date format
-		$date_arr = preg_split('#-|/#', $params['date_format']);
+		$date_arr = preg_split('#-|/|\.#', $params['date_format']);
 		$format = '';
 		
 		// order counts here!
