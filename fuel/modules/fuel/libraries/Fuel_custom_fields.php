@@ -350,6 +350,7 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			'folder' => $params['folder'],
+			'orig' => $params['value'],
 			);
 
 		// NO LONGER NEEDED BECAUSE IT'S DONE DYNAMICALLY WITH JAVASCRIPT
@@ -544,7 +545,7 @@ class Fuel_custom_fields {
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
 		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
 		$data_params['multiple'] = (isset($params['multiple'])) ? (bool)$params['multiple'] : '';
-		
+
 		if (isset($params['hide_image_options']))
 		{
 			$data_params['hide_image_options'] = (isset($params['hide_image_options'])) ? (bool)$params['hide_image_options'] : FALSE;
