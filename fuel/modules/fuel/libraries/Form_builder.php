@@ -2207,7 +2207,7 @@ class Form_builder {
 		// check date to format it
 		if ((!empty($params['value']) AND (int) $params['value'] != 0)
 			&& (preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $params['value'], $regs1) 
-			|| preg_match("#([0-9]{1,2})[/\-]([0-9]{1,2})[/\-]([0-9]{4})#", $params['value'], $regs2)))
+			|| preg_match("#([0-9]{1,2})[/\-\.]([0-9]{1,2})[/\-\.]([0-9]{4})#", $params['value'], $regs2)))
 		{
 			$params['value'] = date($params['date_format'], strtotime($params['value']));
 		} else {
@@ -2217,7 +2217,7 @@ class Form_builder {
 		$params['size'] = 12; // extra room for cramped styling
 		
 		// create the right format for placeholder display based on the date format
-		$date_arr = preg_split('#-|/#', $params['date_format']);
+		$date_arr = preg_split('#-|/|\.#', $params['date_format']);
 		$format = '';
 		
 		// order counts here!
