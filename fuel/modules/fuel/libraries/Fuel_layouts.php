@@ -287,7 +287,7 @@ class Fuel_layouts extends Fuel_base_library {
 		}
 		
 		// add all layouts without a group first
-		if (!empty($group))
+		if (empty($group))
 		{
 			foreach($layouts as $k => $layout)
 			{
@@ -299,7 +299,7 @@ class Fuel_layouts extends Fuel_base_library {
 				}
 			}
 		}
-		
+
 		//ksort($options);
 
 		if (!empty($group))
