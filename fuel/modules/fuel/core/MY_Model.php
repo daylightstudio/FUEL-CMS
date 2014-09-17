@@ -5565,7 +5565,7 @@ class Data_record {
 		{
 
 			// maintain the order of the related data
-			if (!empty($rel_ids))
+			if (!empty($rel_ids) AND empty($rel_config['order']))
 			{
 				$rel_ids_flipped = array_flip($rel_ids);
 				foreach ($foreign_data as $row)
