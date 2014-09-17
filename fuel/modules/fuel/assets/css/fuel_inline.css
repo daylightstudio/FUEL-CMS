@@ -1,5 +1,5 @@
 /* generic styles */
-.__fuel__ * { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
+.__fuel__ * { font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
 .__fuel__ h2 { font-size: 14px !important; margin-bottom: 10px !important; }
 .__fuel__ a { color: #0e3e7e !important; text-decoration: none !important; font-weight: normal !important; border: none !important; }
 .__fuel__ a:hover { text-decoration: underline !important; }
