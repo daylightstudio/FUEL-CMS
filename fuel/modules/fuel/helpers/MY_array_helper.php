@@ -197,23 +197,35 @@ function array_group($array, $groups)
  * @access	public
  * @param	string  file name
  * @param	string  the delimiter that separates each column
+ * @param	int     the index for where the header row starts
+ * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
  * @return	array
  */	
-function csv_to_array($filename = '', $delimiter =  ',')
+function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
 {
 	if(!file_exists($filename) || !is_readable($filename))
+	{
 		return FALSE;
+	}
 
 	$header = NULL;
 	$data = array();
 	if (($handle = fopen($filename, 'r')) !== FALSE)
 	{
-		while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE)
+		$i = -1;
+		while (($row = fgetcsv($handle, $length, $delimiter)) !== FALSE)
 		{
-			if(!$header)
-				$header = $row;
-			else
-				$data[] = array_combine($header, $row);
+			$i++;
+			if ($i >= $header_row) {
+				if(!$header)
+				{
+					$header = $row;
+				}
+				else
+				{
+					$data[] = array_combine($header, $row);
+				}
+			}
 		}
 		fclose($handle);
 	}
