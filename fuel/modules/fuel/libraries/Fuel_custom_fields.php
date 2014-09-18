@@ -1748,7 +1748,7 @@ class Fuel_custom_fields {
 			$params['value'] = '';
 		}
 
-		$params['class'] = 'no_editor';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' no_editor': 'no_editor';
 		return $form_builder->create_textarea($params);
 
 	}
