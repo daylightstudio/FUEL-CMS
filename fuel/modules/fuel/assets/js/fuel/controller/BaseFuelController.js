@@ -683,7 +683,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					if (!_this.rearrangeOn){
 						var actionsCol = $(this).parent().find('td.actions');
 						var firstLink = $('a:first', actionsCol[0]).attr('href');
-						if (firstLink){
+						if (firstLink && firstLink){
 							window.location = firstLink;
 						}
 					}

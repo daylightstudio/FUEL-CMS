@@ -287,19 +287,16 @@ class Fuel_layouts extends Fuel_base_library {
 		}
 		
 		// add all layouts without a group first
-		if (empty($group))
+		foreach($layouts as $k => $layout)
 		{
-			foreach($layouts as $k => $layout)
+			if (empty($layout->group) AND !$layout->is_hidden())
 			{
-				if (empty($layout->group) AND !$layout->is_hidden())
-				{
-					$options[$layout->name] = $layout->label;
-					// reduce array down
-					unset($layouts[$k]);
-				}
+				$options[$layout->name] = $layout->label;
+				// reduce array down
+				unset($layouts[$k]);
 			}
 		}
-
+		
 		//ksort($options);
 
 		if (!empty($group))

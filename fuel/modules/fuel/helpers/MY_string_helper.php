@@ -77,11 +77,6 @@ function eval_string($str, $vars = array())
 // 
 function pluralize($num, $str = '', $plural = 's')
 {
-	if (is_array($num))
-	{
-		$num = count($num);
-	}
-	
 	if ($num != 1)
 	{
 		$str .= $plural;

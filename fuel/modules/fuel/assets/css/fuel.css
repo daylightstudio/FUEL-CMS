@@ -11,7 +11,7 @@ IMPORT CSS HERE SO THAT REQUIRE.JS CAN OPTIMIZE IT
 
 * { margin: 0; padding: 0; outline-style: none; }
 html, body { height: 100%; overflow: hidden; }
-body { background-color: #333; font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+body { background-color: #333; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
 h1 { font-size: 20px; margin-bottom: 10px;  }
 h2 { font-size: 16px; margin-bottom: 10px; }
 h3 { font-size: 12px; margin: 15px 0 3px 0; }
@@ -21,7 +21,7 @@ a:hover { text-decoration: underline; }
 a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 option { margin: 0 2px; }
-input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; }
+input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
 textarea { min-height: 40px; overflow: auto; resize: vertical; /*width: 100%;*/ }
 
 

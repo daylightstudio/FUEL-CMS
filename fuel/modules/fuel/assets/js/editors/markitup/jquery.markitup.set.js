@@ -453,7 +453,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				if ($class.length && $class.val().length){
 					replace += ' class="' + $class.val() + '"';
 				}
-				replace += '>' + unescape($selected.val()) + '</a>';
+				replace += '>' + $selected.val() + '</a>';
 
 				callback(replace);
 			}

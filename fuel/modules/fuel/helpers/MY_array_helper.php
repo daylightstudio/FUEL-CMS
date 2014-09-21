@@ -191,46 +191,5 @@ function array_group($array, $groups)
 	return array_chunk($array, $items_in_each_group);
 }
 
-/**
- * Converts a .csv file to an associative array. Must have header row.
- *
- * @access	public
- * @param	string  file name
- * @param	string  the delimiter that separates each column
- * @param	int     the index for where the header row starts
- * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
- * @return	array
- */	
-function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
-{
-	if(!file_exists($filename) || !is_readable($filename))
-	{
-		return FALSE;
-	}
-
-	$header = NULL;
-	$data = array();
-	if (($handle = fopen($filename, 'r')) !== FALSE)
-	{
-		$i = -1;
-		while (($row = fgetcsv($handle, $length, $delimiter)) !== FALSE)
-		{
-			$i++;
-			if ($i >= $header_row) {
-				if(!$header)
-				{
-					$header = $row;
-				}
-				else
-				{
-					$data[] = array_combine($header, $row);
-				}
-			}
-		}
-		fclose($handle);
-	}
-	return $data;
-}
-
 /* End of file MY_array_helper.php */
 /* Location: ./modules/fuel/helpers/MY_array_helper.php */

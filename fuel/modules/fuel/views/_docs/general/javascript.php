@@ -114,7 +114,7 @@ The following are some of the benefits of using JQX instead of simply including 
 <ul>
 	<li><strong>js_controller</strong>: the name of the file and thus controller to use. The default is the BaseFuelController.js</li>
 	<li><strong>js_controller_path</strong>: the object/folder path to the controller. The default is <dfn>fuel.controller.BaseFuelController</dfn> (folder slashes are simply replaced with dots)</li>
-	<li><strong>js_controller_params</strong>: an initialization object of parameters to pass to the controller</li>
+	<li><strong>js_controller_params</strong>: an initialization object of parameters to pass to the controller.</li>
 	<li><strong>js_localized</strong>: an array of localized string keys to be accessible via the <dfn>fuel.lang()</dfn> function</li>
 </ul>
 

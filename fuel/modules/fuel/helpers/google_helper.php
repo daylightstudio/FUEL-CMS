@@ -360,7 +360,7 @@ function google_geolocate($data, $return = 'all')
 	$address = urlencode($address);
 	unset($data);
 
-	$url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
+	$url = "https://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);

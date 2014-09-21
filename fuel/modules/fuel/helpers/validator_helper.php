@@ -53,7 +53,7 @@ function required($var)
 		return !empty($var);
 	}
 	// automatically set integer values to TRUE
-	else if (is_numeric($var))
+	else if (is_int($var))
 	{
 		return TRUE;
 	}
