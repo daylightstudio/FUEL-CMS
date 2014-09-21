@@ -1,0 +1,147 @@
+/* generic styles */
+.__fuel__ * { font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; outline-style: none; color: #000; text-shadow: none !important; background: none; }
+.__fuel__ h2 { font-size: 14px !important; margin-bottom: 10px !important; }
+.__fuel__ a { color: #0e3e7e !important; text-decoration: none !important; font-weight: normal !important; border: none !important; }
+.__fuel__ a:hover { text-decoration: underline !important; }
+.__fuel__ input { color: #000 !important; }
+.__fuel__ label { text-transform: none !important; font-weight: normal !important; }
+/*.__fuel__ a:visited { color: #4679bd; }*/
+/*.__fuel__ h2.module_name { display: none; }*/
+div#__FUEL__add_edit_modal h2.module_name { display: block; }
+.__fuel__ div.buttonbar { float: right; }
+.__fuel__ div.buttonbar ul { float: right !important; color: #000 !important; }
+.__fuel__ div.buttonbar li { padding-right: 3px !important; line-height: 27px !important; border-top: 1px solid #ccc !important; border-right: 1px solid #ccc !important; border-bottom: 1px solid #ccc !important; background: #e6e6e6 url(../images/btn.png) repeat-x !important; float: left !important;list-style: none !important; margin: 0 !important; }
+.__fuel__ div.buttonbar li:hover { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -27px !important; }
+.__fuel__ div.buttonbar li.active { background: #e6e6e6 url(../images/btn.png) repeat-x 0 -54px !important; }
+.__fuel__ div.buttonbar li.active a { color: #000 !important; }
+.__fuel__ div.buttonbar li a { color: #0e3e7e !important; height: 27px !important; line-height: 27px !important; display: block !important; padding: 0 15px 0 28px !important; }
+.__fuel__ div.buttonbar li.spacer { margin-left: 10px;}
+.__fuel__ div.buttonbar li.start { border-left: 1px solid #ccc !important; }
+.__fuel__ div.buttonbar li.end { border-right: 1px solid #ccc !important; }
+.__fuel__ div.buttonbar li.round { border-radius: 0 0 0 7px !important; -moz-border-radius: 0 0 0 7px !important; -webkit-border-bottom-left-radius: 7px !important; border-left: 1px solid #fff !important;}
+.__fuel__ div.buttonbar label { padding-left: 10px !important; font-style: normal !important; font-weight: normal !important; }
+.__fuel__ div.buttonbar select { margin: 0 10px !important; height: auto !important; max-height: 20px !important; line-height: auto !important; max-width: 300px !important; padding: 0!important; background: none !important; }
+.__fuel__ div.buttonbar li.right { float: right !important; }
+
+.__fuel__ div.buttonbar a.fuel_admin { font-weight: bold !important; color: #000 !important; }
+.__fuel__ div.buttonbar_notop li { border-top: none !important; }
+
+/* icos */
+/*.__fuel__ .ico { display: block !important; padding-left: 24px !important; list-style: none !important; background-position: 5px center !important; background-repeat: no-repeat !important; line-height: 27px !important; background-image: url(../images/ico_cog.png); width: auto !important; height: auto !important; background-color: transparent !important; }*/
+.ico { display: block; padding-left: 24px; list-style: none; background-position: 5px 2px; background-repeat: no-repeat; line-height: 20px; background-image: url(../images/fuel_icons.png); min-width: 16px; min-height: 16px; }
+.__fuel__ .ico_fuel { background-position: 7px -587px; }
+.__fuel__ .ico_publish { background-position: 7px -1068px; }
+.__fuel__ .ico_unpublish { background-position: 7px -1142px; }
+.__fuel__ .ico_edit { background-position: 7px -1364px; }
+.__fuel__ .ico_cache {  background-position: 7px -1105px; }
+
+.__fuel__ div.save_cancel { width: 200px !important; height: 35px !important; }
+.__fuel__ div.save_cancel li { margin: 5px 3px !important; }
+.__fuel__ .delete { color: #c30; font-weight: bold; }
+.__fuel__ a.delete { display: block !important; float: left !important; margin: 10px 0 0 30px !important; border: 1px solid #ccc !important; padding: 5px !important; }
+.__fuel__ a.btn_field { display: inline-block; margin-bottom: 5px; background-image: url(../images/btn.png) !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
+.__fuel__ a.btn_field:hover { background-position: 0 -27px !important; }
+.__fuel__ .MultiFile-remove { line-height: 22px !important; padding: 0 3px !important; border: 1px solid #ccc !important; background-color: #f9f9f9 !important; }
+.__fuel__ div.html { padding-top: 10px !important; }
+.__fuel__ a.editor_viewsource { margin: 4px 0 4px 0; display: block; float: left; height: 14px; line-height: 14px !important; }
+
+/* notifications */
+.__fuel__ div.notification>p, div.notification>div, div.notification>ul { margin: 0; min-height: 21px; line-height: 21px; padding-left: 35px !important; list-style: none !important; background-repeat: no-repeat !important; background-position: 15px 3px !important; list-style: none !important; color: #fff !important; }
+#__fuel_notification__ { background-color: #c30 !important; color: #fff !important; position: absolute; top: 0px; left: 0px; right: 0px; }
+#__fuel_notification__ .error li {  color: #fff !important; line-height: 20px !important; border: none !important; }
+.__fuel__ .inline_errors { background-color: #c30 !important; color: #fff !important; background-repeat: no-repeat; line-height: 21px; background-position: 3px 3px;  }
+.__fuel__ .inline_errors ul.error { background-repeat: no-repeat !important; padding-left: 20px; line-height: 21px !important; background-position: 3px 3px !important; }
+.__fuel__ .inline_errors li { color: #fff !important; border: none !important; list-style: none !important; }
+.__fuel__ .inline_errors p { color: #fff !important; }
+
+/* misc styles */
+.__fuel_edit__ .clear { clear: both; font-size: 0px; height: 0px; line-height: 0px; }
+.__fuel__ .fillin { color: #999 !important; }
+.__fuel__ .tooltip { cursor: help; text-decoration: none !important; border-bottom: 1px dotted #0e3e7e !important; color: #000 !important; }
+.__fuel_modal__ table.asset_select td { padding: 0 4px 0 0 !important; }
+
+.__fuel__ a.asset_select_button { background: #e6e6e6 url(../images/btn.png) repeat-x !important; line-height: 12px !important; border: 1px solid #ccc !important; padding: 2px 5px 2px 5px !important; }
+.__fuel__ a.asset_select_button:hover { background-position: 0 -27px !important; }
+
+/* markers for editors */
+.__fuel_marker__ { position: relative !important; z-index: 1000 !important; height: 0px !important; display: block !important; }
+#__fuel_tooltip__ h3 { color: #000 !important; font-weight: bold !important; text-decoration: none !important; font-style: normal !important; border: none !important; }
+
+
+/* editor icons */
+.__fuel_edit__ { font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+.__fuel_edit__ { position: absolute; z-index: 1000; color: #000; }
+.__fuel_edit__ .__fuel_edit_marker__ { text-align: left !important; position: relative !important; display: block; list-style: none !important; background-repeat: no-repeat !important; line-height: 20px !important; background-image: url(../images/fuel_icons.png) !important; background-position: 0px -1367px !important; min-width: 16px !important; height: 20px !important; color: #fff !important; text-decoration: none !important; }
+.__fuel_edit__ .__fuel_edit_marker_unpublished__ { background-position: 0px -1406px !important;  }
+.__fuel_edit__ .__fuel_edit_marker_inner__ { display: none; }
+.__fuel_edit__ .__fuel_edit_marker_new__ { background-position: 0px -37px !important; }
+.__fuel_edit__ .__fuel_edit_marker__ span { cursor: pointer; margin: 0 0 0 20px !important; display: block; background-color: #333; padding: 3px 5px !important; white-space: nowrap; line-height: 16px; color: #fff; }
+.__fuel_edit__ .__fuel_edit_form__ { margin-left: 20px; }
+.__fuel_edit_form__ { color: #000; background-color: #fff; border: 1px solid #ccc; display: none; -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); }
+.__fuel_edit_form__ table.inline_form { border: none; border-spacing: 0; }
+.__fuel_edit_form__ table.inline_form td { text-align: right; padding: 2px 5px 2px 0px !important; font-size: 11px !important; vertical-align: top !important; }
+.__fuel_edit_form__ table.inline_form td.value { padding: 2px 0 2px 0 !important; float: none !important; text-align: left !important; }
+.__fuel_edit_form__ table.inline_form td.label { float: none !important; font-weight: normal !important; white-space: nowrap !important; text-transform: none !important; }
+.__fuel_edit_form__ table.inline_form td.section { text-align: left !important; }
+.__fuel_edit_form__ table.inline_form td.section h3 { background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; font-size: 12px; }
+.__fuel_edit_form__ table.inline_form td.required { text-align: left !important; padding: 10px 0 0 30px !important; }
+.__fuel_edit_form__ table.inline_form input, 
+.__fuel_edit_form__ table.inline_form textarea,
+.__fuel_edit_form__ table.inline_form select { border: auto !important; float: none !important; background: #fff !important; border: 1px solid #ccc !important; padding: 2px !important; color: #333 !important; }
+.__fuel_edit_form__ table.inline_form input.datepicker { float: left !important; }
+.__fuel_edit_form__ table.inline_form input.fillin { color: #ccc !important; }
+.__fuel_edit_form__ table.inline_form textarea { width: 540px !important; height: 238px !important; }
+.__fuel_edit_form__ table.inline_form div.img_display { float: right; overflow: auto; height: 120px; width: 300px; }
+.__fuel_edit_active__ { z-index: 999999; }
+
+/* fuel edit bar */
+div#__fuel_edit_bar__ { display: none; height: 28px; position: fixed; z-index: 999; top: 0px; right: 0; opacity: .9; -moz-opacity: .9; filter:alpha(opacity=90); font-size: 11px; font-family: Arial; }
+div#__fuel_edit_bar__ li.unpublished { text-align: center; height: 27px; background-color: #c30 !important; background-image: none !important; color: #fff; float: left;line-height: 22px; padding: 0 10px; }
+div#__fuel_edit_bar__ li { display: block; }
+
+div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 27px !important; }
+div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
+div#__fuel_edit_bar__ select { appearance: menu !important; -moz-appearance: menu !important; -webkit-appearance: menu !important; border: none !important; background: none !important; color: #000 !important; display: inline !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important; }
+
+.__fuel__ .inline_iframe { border: none; height: 0px; width: 100%; min-width: 350px;}
+.__fuel_edit_marker_close__ { position: absolute; right: 5px; z-index: 1; }
+
+/* modal window */
+div#__FUEL_modal__ .add_inline_button, .__fuel_add_edit_modal__ .edit_inline_button { display: none !important; }
+.__fuel__ .loader { margin: 30px auto; width: 32px; height: 32px; text-align: center; background: #fff url(../images/spinner.gif) no-repeat center center; /*border: 1px solid #ddd;*/ }
+.__fuel__ .loader_sm { margin: auto; width: 16px; height: 16px; text-align: center; background: #fff url(../images/spinner_sm.gif) no-repeat center center !important; }
+
+div#__FUEL_modal__ { width: 98%; max-width: 850px; margin-left: -425px; max-height: 480px; background-color: #fff;  }
+div#__FUEL_modal__ a.modal_close { position: absolute !important; left: -11px !important; top: -11px !important; z-index: 10 !important; background: transparent url(../images/x_close.png) no-repeat center center !important; width: 23px !important; height: 23px !important; text-indent: -10000px !important; overflow:hidden !important; }
+
+
+
+/* jqModal base Styling courtesy of;
+	Brice Burgess <bhb@iceburg.net> */
+
+/* The Window's CSS z-index value is respected (takes priority). If none is supplied,
+	the Window's z-index value will be set to 3000 by default (in jqModal.js). You
+	can change this value by either;
+	  a) supplying one via CSS
+	  b) passing the "zIndex" parameter. E.g.  (window).jqm({zIndex: 500}); */
+	
+.__fuel_inline__ .jqmWindow {
+    display: none;
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    margin-left: -222px;
+    color: #333;
+/*    padding: 10px 20px;*/
+	width: 400px;
+	border: 2px solid #666;
+	z-index: 300000;
+	background-color: #fff;
+	word-wrap:break-word;
+	border: 1px solid #ccc; display: none; 
+	-moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); 
+	-webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3); 
+	box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.3);
+}
+
+.__fuel_inline__ .jqmOverlay { background-color: #000; }

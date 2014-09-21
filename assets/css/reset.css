@@ -1,0 +1,15 @@
+* { outline-style: none; }
+h1,h2,h3,h4,h5,h6,pre,code { font-size:1em; }
+ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset { margin:0; padding:0; }
+input { margin: 0; }
+a img,:link img,:visited img { border: none; }
+ol,ul{list-style:none;}
+th{text-align:left;}
+h1,h2,h3,h4{font-size:100%;}
+q:before,q:after{content:'';}
+pre,code{font:115% monospace; font-size:100%;}
+th{text-align:left;}
+cite,code,th,address{font-style:normal;font-weight:normal;}
+body { font-size:62.5%; }
+table { border-spacing: 0; border: 0; }
+table td { padding: 0; }

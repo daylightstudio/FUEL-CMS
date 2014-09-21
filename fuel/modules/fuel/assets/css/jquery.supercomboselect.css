@@ -1,0 +1,18 @@
+.supercomboselect_wrapper { position: relative; width: 655px; height: 220px; float: left; }
+.supercomboselect_left, .supercomboselect_right { position: absolute; top: 0px; z-index: 2; width: 300px; }
+.supercomboselect_left { left: 0px; }
+.supercomboselect_right { right: 0px; }
+.supercomboselect_btns { position: absolute; left: 50%; top: 30%; margin-left: -20px !important; width: 40px; text-align: center; z-index: 1; }
+.supercomboselect_btns input { display: block; width: 40px; margin: auto; margin-top: 3px; }
+.supercomboselect { height: 180px; overflow-y: auto; overflow-x: hidden; border: 1px solid #ccc; background-color: #fff; }
+.supercomboselect ul { margin: 0; padding: 0; cursor: pointer; }
+.supercomboselect li { -moz-user-select: none; background-color: #fff; margin: 0; padding: 3px 20px 3px 10px; border-bottom: 1px solid #ddd; list-style: none; display: block; overflow: hidden; text-overflow: ellipsis;}
+.supercomboselect li.selected { background-color: #ffc; }
+.supercomboselect_search { margin-top: 3px; }
+.supercomboselect_search_text { width: 294px; }
+.supercomboselect_empty_msg { padding: 80px 5px 5px 5px; text-align: center; font-weight: bold; color: #ccc; }
+.supercomboselect_search_highlight { background-color: #ffff99; }
+.supercomboselect li.ui-sortable-helper { border: 1px solid #ddd;  }
+.supercomboselect ul.ui-sortable li { background-image: url(../images/icons/ico_sortable.png); background-repeat: no-repeat; background-position: left center; padding-left: 16px; }
+.supercomboselect li.option_disabled { background-color: #eee; color: #999; }
+.supercomboselect li.optgrp { background: #DDD; cursor: default; font-weight: bold; padding-left: 5px; }
