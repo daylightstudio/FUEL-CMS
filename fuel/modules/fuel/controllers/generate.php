@@ -464,7 +464,7 @@ class Generate extends Fuel_base_controller {
 		{
 			$crumbs = array(lang('module_generate'));
 			$this->fuel->admin->set_titlebar($crumbs);
-			$this->fuel->admin->render('_generate/results', $vFuears, Fuel_admin::DISPLAY_NO_ACTION, FUEL_FOLDER);
+			$this->fuel->admin->render('_generate/results', $vars, Fuel_admin::DISPLAY_NO_ACTION, FUEL_FOLDER);
 		}
 	}
 
