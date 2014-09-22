@@ -22,19 +22,16 @@ class Migrate extends Fuel_base_controller {
 			$this->fuel->admin->check_login();
 			$this->_validate_user('migrate');
 		}
-
 	}
-
 
 	public function latest($module = NULL)
 	{
 		$this->_init_migrate($module);
 
 		$version = $this->migration->latest();
-		if ( ! $version)
-		{
-			$this->_show_error();
-		}
+
+		if ( ! $version) $this->_show_error();
+
 		$this->_success($version);
 	}
 
@@ -43,10 +40,9 @@ class Migrate extends Fuel_base_controller {
 		$this->_init_migrate($module);
 
 		$version = $this->migration->current();
-		if ( ! $version)
-		{
-			$this->_show_error();
-		}
+
+		if ( ! $version) $this->_show_error();
+
 		$this->_success($version);
 	}
 
@@ -55,16 +51,15 @@ class Migrate extends Fuel_base_controller {
 		$this->_init_migrate($module);
 
 		// must be in dev mode change the version to something uther then the latest or current
-		if (!is_dev_mode())
+		if ( ! is_dev_mode())
 		{
 			$this->_show_error(lang('error_not_in_dev_mode'));
 		}
 
 		$version = $this->migration->version($version);
-		if ( ! $version)
-		{
-			$this->_show_error();
-		}
+
+		if ( ! $version) $this->_show_error();
+
 		$this->_success($version);
 	}
 
@@ -72,6 +67,7 @@ class Migrate extends Fuel_base_controller {
 	{
 		$config['migration_enabled'] = TRUE;
 		$config['module'] = $module;
+
 		$this->load->library('migration', $config);
 	}
 
@@ -87,6 +83,7 @@ class Migrate extends Fuel_base_controller {
 			echo lang('migrate_success', $version);
 			$msg = lang('database_migration_success', $version);
 		}
+
 		$this->fuel->logs->write($msg);
 	}
 
@@ -96,6 +93,7 @@ class Migrate extends Fuel_base_controller {
 		{
 			$error = $this->migration->error_string();
 		}
+
 		echo $error."\n";
 		exit();
 	}

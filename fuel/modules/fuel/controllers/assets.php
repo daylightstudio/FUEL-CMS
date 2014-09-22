@@ -14,6 +14,7 @@ class Assets extends Module {
 	{
 		$dirs = $this->fuel->assets->dirs();
 		$this->filters['group_id']['options'] = $dirs;
+
 		parent::items($inline);
 	}
 
@@ -21,36 +22,31 @@ class Assets extends Module {
 	{
 		$id = NULL;
 
-		if (!empty($dir))
-		{
-			$dir = uri_safe_decode($dir);
-		}
+		if ( ! empty($dir)) $dir = uri_safe_decode($dir);
 
-		if ($inline !== FALSE)
-		{
-			$this->fuel->admin->set_inline(TRUE);
-		}
-		
+		if ($inline !== FALSE) $this->fuel->admin->set_inline(TRUE);
+
 		$inline = $this->fuel->admin->is_inline();
 
-		if (!empty($_POST))
+		if ( ! empty($_POST))
 		{
-			if ((!empty($_FILES['userfile']) AND $_FILES['userfile']['error'] != 4) OR (!empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4))
+			if (( ! empty($_FILES['userfile']) AND $_FILES['userfile']['error'] != 4) OR ( ! empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4))
 			{
-
 				$this->model->on_before_post();
 
 				if ($this->input->post('asset_folder')) 
 				{
 					$dir = $this->input->get_post('asset_folder', TRUE);
-					if (!in_array($dir, array_keys($this->fuel->assets->dirs()))) 
+
+					if ( ! in_array($dir, array_keys($this->fuel->assets->dirs())))
 					{
 						show_404();
 					}
 				}
-				
+
 				$subfolder = ($this->config->item('assets_allow_subfolder_creation', 'fuel')) ? str_replace('..'.DIRECTORY_SEPARATOR, '', $this->input->get_post('subfolder', TRUE)) : ''; // remove any going down the folder structure for protections
 				$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
+
 				$posted['upload_path'] = $upload_path;
 				$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
 				$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
@@ -64,6 +60,7 @@ class Assets extends Module {
 				
 				$redirect_to = uri_safe_decode($this->input->get_post('redirect_to'));
 				$id = $posted['file_name'];
+
 				if ($this->fuel->assets->upload($posted))
 				{
 					foreach($_FILES as $filename => $fileinfo)
@@ -89,11 +86,13 @@ class Assets extends Module {
 
 					$uploaded_file_name_arr = array();
 					$uploaded_file_webpath_arr = array();
+
 					foreach($uploaded_data as $ud)
 					{
 						$uploaded_file_name_arr[] = trim(str_replace(assets_server_path().$dir, '', $ud['full_path']), '/');
 						$uploaded_file_webpath_arr[] = assets_server_to_web_path($ud['full_path']);
 					}
+
 					// set the uploaded file name to a concatenated string separated by commas
 					$uploaded_file_name = implode(', ', $uploaded_file_name_arr);
 
@@ -102,14 +101,14 @@ class Assets extends Module {
 
 					$this->session->set_flashdata('uploaded_post', $flashdata);
 					$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
-					
+
 					$this->model->on_after_post($posted);
 
 					$inline = $this->fuel->admin->is_inline();
 
 					$query_str = query_str(array(), TRUE);
 					
-					if (!empty($redirect_to))
+					if ( ! empty($redirect_to))
 					{
 						$url = $redirect_to;
 					}
@@ -121,36 +120,33 @@ class Assets extends Module {
 					{
 						$url = fuel_uri($this->module.'/create/'.uri_safe_encode($dir).$query_str, FALSE);
 					}
+
 					redirect($url);
-					
 				}
 				else
 				{
 					add_errors($this->fuel->assets->errors());
 				}
-				
 			}
 			else
 			{
 				add_errors(lang('error_upload'));
 			}
 		}
-		
+
 		$form_vars = $this->input->get(NULL, TRUE);
-		if (!empty($dir))
-		{
-			$form_vars['asset_folder'] = $dir;
-		}
-		
+
+		if ( ! empty($dir)) $form_vars['asset_folder'] = $dir;
+
 		$form_vars['asset_folder'] = (!empty($form_vars['asset_folder'])) ? trim($form_vars['asset_folder'], '/') : '';
 		$vars = $this->_form($form_vars, $inline);
 		$vars['related_items'] = $this->model->related_items($vars);
-
 		$list_view = ($inline) ? $this->module_uri.'/inline_items/' : $this->module_uri;
 		$crumbs = array($list_view => $this->module_name, lang('assets_upload_action'));
+
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->set_inline(($inline === TRUE));
-		
+
 		if ($inline === TRUE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_TITLEBAR);
@@ -159,10 +155,10 @@ class Assets extends Module {
 		{
 			$vars['actions'] = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
 		}
-		$this->fuel->admin->render($this->views['create_edit'], $vars);
+
+		$this->fuel->admin->render($this->views['create_edit'], $vars, '', FUEL_FOLDER);
+
 		return $id;
-		
-		
 	}
 	
 	public function inline_create($field = NULL)
@@ -172,10 +168,11 @@ class Assets extends Module {
 	
 	public function select($dir = NULL)
 	{
-		if (!is_numeric($dir))
+		if ( ! is_numeric($dir))
 		{
 			$dir = fuel_uri_string(1, NULL, TRUE);
 			$dirs = $this->fuel->assets->dirs();
+
 			foreach($dirs as $key => $d)
 			{
 				if ($d == $dir)
@@ -187,16 +184,20 @@ class Assets extends Module {
 		}
 
 		$value = '';
+
 		if ($this->session->flashdata('uploaded_post'))
 		{
 			$uploaded_post = $this->session->flashdata('uploaded_post');
+
 			if (isset($uploaded_post))
 			{
 				$subfolder = trim(preg_replace('#^'.preg_quote($dir).'(.*)#', '$1', $uploaded_post['asset_folder']), '/');
-				if (!empty($subfolder))
+
+				if ( ! empty($subfolder))
 				{
 					$subfolder = $subfolder.'/';
 				}
+
 				$value = $subfolder.$uploaded_post['uploaded_file_name'];
 			}
 		}
@@ -204,15 +205,16 @@ class Assets extends Module {
 		{
 			$value = $this->input->get_post('selected', TRUE);	
 		}
-		
+
 		$this->js_controller_params['method'] = 'select';
 		$this->js_controller_params['folder'] = $dir;
-	
+
 		$this->load->helper('array');
 		$this->load->library('form_builder');
 		$this->model->add_filters(array('group_id' => $dir));
 
 		$order = $this->input->get_post('order', TRUE);
+
 		if ($order == 'last_updated')
 		{
 			$by = 'desc';
@@ -222,10 +224,11 @@ class Assets extends Module {
 			$order = 'name';
 			$by = 'asc';
 		}
+
 		$options = options_list($this->model->list_items(NULL, 0, $order, $by), 'name', 'name');
 		$redirect_to = uri_safe_encode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
-
 		$preview = ' OR <a href="'.fuel_url('assets/inline_create?asset_folder='.urlencode($dir).'&redirect_to='.$redirect_to).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
+
 		$field_values['asset_folder']['value'] = $dir;
 		$fields['asset_select'] = array('value' => $value, 'label' => lang('assets_select_action'), 'type' => 'select', 'options' => $options, 'after_html' => $preview);
 
@@ -233,7 +236,7 @@ class Assets extends Module {
 		{
 			$fields['width'] = array('value' => $this->input->get_post('width', TRUE), 'label' => lang('form_label_width'), 'size' => 5, 'row_class' => 'img_only');
 		}
-		
+
 		if (isset($_GET['height']))
 		{
 			$fields['height'] = array('value' => $this->input->get_post('height', TRUE), 'label' => lang('form_label_height'), 'size' => 5, 'row_class' => 'img_only');
@@ -263,14 +266,16 @@ class Assets extends Module {
 		{
 			$fields['class'] = array('value' => $this->input->get_post('class', TRUE), 'label' => lang('form_label_class'), 'size' => 6, 'row_class' => 'img_only');
 		}
-		
+
 		$this->form_builder->css_class = 'asset_select';
 		$this->form_builder->submit_value = NULL;
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
+
 		$vars['form'] = $this->form_builder->render_divs();
+
 		$this->fuel->admin->set_inline(TRUE);
 
 		$crumbs = array('' => $this->module_name, lang('assets_select_action'));
@@ -290,29 +295,30 @@ class Assets extends Module {
 	{
 		$this->load->library('form_builder');
 		$this->load->helper('convert');
-		
+
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
-		
+
 		$fields = $this->model->form_fields();
 
 		$fields['redirect_to'] = array('type' => 'hidden', 'value' => uri_safe_encode($this->input->get_post('redirect_to')));
 
 		$not_hidden = array();
-		if (!empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
+
+		if ( ! empty($field_values['hide_options']) AND is_true_val($field_values['hide_options']))
 		{
 			$not_hidden = array('userfile');
 		}
-		else if (!empty($field_values['hide_image_options']) AND is_true_val($field_values['hide_image_options']))
+		else if ( ! empty($field_values['hide_image_options']) AND is_true_val($field_values['hide_image_options']))
 		{
 			$not_hidden = array('userfile', 'asset_folder', 'subfolder', 'userfile_file_name', 'overwrite', 'unzip');
 		}
 
-		if (!empty($field_values['accept']))
+		if ( ! empty($field_values['accept']))
 		{
 			$fields['userfile']['accept'] = $field_values['accept'];	
 		}
-		
+
 		if (isset($field_values['multiple']))
 		{
 			if ((bool)$field_values['multiple'] === FALSE)
@@ -327,55 +333,52 @@ class Assets extends Module {
 		}
 
 		// hide certain fields if params were passed
-		if (!empty($not_hidden))
+		if ( ! empty($not_hidden))
 		{
 			foreach($fields as $key => $field)
 			{
-				if (!in_array($key, $not_hidden))
+				if ( ! in_array($key, $not_hidden))
 				{
 					$fields[$key]['type'] = 'hidden';
 				}
 			}
 		}
-		
+
 		if ($this->session->flashdata('uploaded_post'))
 		{
 			$field_values = $this->session->flashdata('uploaded_post');
 		}
-		
+
 		// load custom fields
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-
 		$this->form_builder->submit_value = lang('btn_upload');
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->set_field_values($field_values);
 
-
 		/* NOT QUITE WORKING DUE TO CANCEL BUTTON */
 		// if ($this->input->get_post('redirect_to'))
 		// {
 		// 	$this->form_builder->other_actions = $this->form->button('Back', 'back', 'style="margin: 10px 10px 0 0; float: left;" data-url="'.site_url($this->input->get_post('redirect_to')).'"');	
 		// }
-		
 
 		$vars['form'] = $this->form_builder->render();
-		
+
 		// other variables
 		$vars['id'] = (!empty($field_values['asset_folder'])) ? uri_safe_encode($field_values['asset_folder']) : NULL;
 		$vars['data'] = array();
 		$vars['action'] =  'create';
-		
+
 		// $preview_key = preg_replace('#^(.*)\{(.+)\}(.*)$#', "\\2", $this->preview_path);
 		// if (!empty($vars['data'][$preview_key])) $this->preview_path = preg_replace('#^(.*)\{(.+)\}(.*)$#e', "'\\1'.\$vars['data']['\\2'].'\\3'", $this->preview_path);
-		
+
 		// active or publish fields
 		//$vars['publish'] = (!empty($saved['published']) && ($saved['published'] == 'yes')) ? 'Unpublish' : 'Publish';
 		$vars['module'] = $this->module;
 		$vars['actions'] = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
-		
+
 		// setup query string
 		$query_str = query_str();
 
@@ -396,6 +399,4 @@ class Assets extends Module {
 		$url = $this->preview_path.'/'.$id;
 		redirect($url);
 	}
-	
-
 }

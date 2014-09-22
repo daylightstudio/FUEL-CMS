@@ -4,27 +4,29 @@ class Page_router extends CI_Controller {
 	public $segments = array();
 	public $layout = '';
 	public $location;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	public function _remap($method)
 	{
 		$this->location = uri_path(TRUE);
-		
+
 		// if the rerouted file can't be found, look for the non-routed file'
-		if (!file_exists(APPPATH.'views/'.$this->location.EXT))
+		if ( ! file_exists(APPPATH.'views/'.$this->location.EXT))
 		{
 			$non_routed_uri = uri_path(FALSE);
+
 			if (file_exists(APPPATH.'views/'.$non_routed_uri.EXT))
 			{
 				$this->location = $non_routed_uri;
 			}
+
 			unset($non_routed_uri);
 		}
-		
+
 		if (empty($this->location)) $this->location = $this->fuel->config('default_home_view');
 
 		$config = array();
@@ -37,14 +39,13 @@ class Page_router extends CI_Controller {
 			
 			$this->_remap_variables($page);
 		}
-		
 		// using FUEL admin
 		else
 		{
 			if ($this->fuel->pages->mode() != 'cms')
 			{
-				
 				$config['render_mode'] = 'auto';
+
 				if ($this->fuel->config('uri_view_overwrites'))
 				{
 					// loop through the pages array looking for wild-cards
@@ -60,9 +61,10 @@ class Page_router extends CI_Controller {
 						}
 					}
 				}
+
 				$page = $this->fuel->pages->create($config);
-				
-				if ((!$page->has_cms_data() AND $config['render_mode'] == 'auto') OR $config['render_mode'] == 'views')
+
+				if (( ! $page->has_cms_data() AND $config['render_mode'] == 'auto') OR $config['render_mode'] == 'views')
 				{
 					$this->_remap_variables($page);
 					return;
@@ -73,13 +75,11 @@ class Page_router extends CI_Controller {
 				$config['render_mode'] = 'cms';
 				$page = $this->fuel->pages->create($config);
 			}
-			
+
 			$this->_remap_cms($page);
 		}
-		
 	}
-	
-	
+
 	/*
 	* ------------------------------------------------------
 	* Checks database for page variables (FUEL CMS)
@@ -107,9 +107,8 @@ class Page_router extends CI_Controller {
 		}
 		else
 		{
-			if (!empty($page->layout))
+			if ( ! empty($page->layout))
 			{
-				
 				// get output
 				$output = $page->cms_render(TRUE, FALSE);
 
@@ -121,7 +120,6 @@ class Page_router extends CI_Controller {
 				{
 					$this->cache->save($cache_id, $output, $cache_group, $this->fuel->config('page_cache_ttl'));
 				}
-				
 			}
 			else
 			{
@@ -132,15 +130,14 @@ class Page_router extends CI_Controller {
 
 		// fuelify
 		$output = $page->fuelify($output);
-		
+
 		// render output
 		$this->output->set_output($output);
-		
+
 		// call the post render layout hook
 		$page->layout->call_hook($page_data['layout'], 'post_render', $output);
-		
 	}
-	
+
 	/*
 	* ------------------------------------------------------
 	* If a controller method exists then call it. Otherwise, 
@@ -156,36 +153,34 @@ class Page_router extends CI_Controller {
 		// set up cache info 
 		$cache_group = $this->fuel->config('page_cache_group');
 		$cache_id = $this->fuel->cache->create_id();
-		if ($this->fuel->config('use_page_cache') !== 'cms' AND $this->cache->get($cache_id, $cache_group, FALSE) AND !is_fuelified())
+
+		if ($this->fuel->config('use_page_cache') !== 'cms' AND $this->cache->get($cache_id, $cache_group, FALSE) AND ! is_fuelified())
 		{
 			$output = $this->cache->get($cache_id, $cache_group);
 		}
 		else
 		{
-
 			// get the output
 			$output = $page->variables_render(TRUE, FALSE);
-			
+
 			// save to cache but you must not be logged in for it to save
-			if ($this->fuel->config('use_page_cache') !== FALSE AND $this->fuel->config('use_page_cache') !== 'cms' AND !is_fuelified())
+			if ($this->fuel->config('use_page_cache') !== FALSE AND $this->fuel->config('use_page_cache') !== 'cms' AND ! is_fuelified())
 			{
 				$this->fuel->cache->save($cache_id, $output, $cache_group, $this->fuel->config('page_cache_ttl'));
 			}
 		}
-		
+
 		// show 404 if output is explicitly set to FALSE
 		if ($output === FALSE)
 		{
 			// do any redirects... will exit script if any
 			redirect_404();
 		}
-		
+
 		// fuelify output
 		$output = $page->fuelify($output);
-		
+
 		// render output
 		$this->output->set_output($output);
-		
 	}
-
 }

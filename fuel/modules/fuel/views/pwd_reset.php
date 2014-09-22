@@ -9,7 +9,7 @@
 	<?=$css?>
 	<?php endif; ?>
 	<script type="text/javascript">
-	<?=$this->load->module_view('fuel', '_blocks/fuel_header_jqx', array(), true)?>
+	<?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), true)?>
 	</script>
 	<?=js('jquery/jquery', FUEL_FOLDER)?>
 	<?=js('jqx/jqx', FUEL_FOLDER)?>

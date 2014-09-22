@@ -2,24 +2,25 @@
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Manage extends Fuel_base_controller {
-	
+
 	public $nav_selected = 'manage';
 	public $module_uri = 'manage/activity';
-	
+
 	public function __construct()
 	{
 		parent::__construct(FALSE);
 		$this->js_controller = 'fuel.controller.ManageController';
 	}
-	
+
 	public function index()
 	{
 		$this->_validate_user('manage');
 		$crumbs = array(lang('section_manage'));
+
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->render('manage');
+		$this->fuel->admin->render('manage', array(), '', FUEL_FOLDER);
 	}
-	
+
 	public function cache()
 	{
 		$this->_validate_user('manage/cache');	
@@ -27,13 +28,14 @@ class Manage extends Fuel_base_controller {
 		// to display the logout button in the top right of the admin
 		$load_vars['user'] = $this->fuel->auth->user_data();
 		$this->load->vars($load_vars);
-		
+
 		$this->fuel->admin->set_nav_selected('manage/cache');
-		
+
 		if ($this->input->post('action'))
 		{
 			$msg = $this->clear_cache(TRUE);
 			$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_SUCCESS);
+
 			redirect('fuel/manage/cache');
 		}
 		else 
@@ -41,7 +43,7 @@ class Manage extends Fuel_base_controller {
 			$crumbs = array('manage' => lang('section_manage'), lang('module_manage_cache'));
 
 			$this->fuel->admin->set_titlebar($crumbs, 'ico_manage_cache');
-			$this->fuel->admin->render('manage/cache');
+			$this->fuel->admin->render('manage/cache', array(), '', FUEL_FOLDER);
 		}
 	}
 
@@ -53,20 +55,15 @@ class Manage extends Fuel_base_controller {
 		// check if it is CLI or a web hook otherwise we need to validate
 		$validate = (php_sapi_name() == 'cli' OR defined('STDIN') OR $is_web_hook) ? FALSE : TRUE;
 
-		if ($validate)
-		{
-			$this->_validate_user('manage/cache');
-		}
+		if ($validate) $this->_validate_user('manage/cache');
 
 		$this->fuel->cache->clear();
 		$msg = lang('cache_cleared');
 
 		$this->fuel->logs->write($msg);
-		if ($return)
-		{
-			return $msg;	
-		}
+
+		if ($return) return $msg;
+
 		echo $msg."\n";
 	}
-
 }
