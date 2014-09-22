@@ -1,4 +1,4 @@
-<?php $this->load->view('_blocks/related_items'); ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/related_items'); ?>
 
 <div id="notification_extra" class="notification">
 	<?php if (!empty($data['published']) && !is_true_val($data['published'])) : ?>
