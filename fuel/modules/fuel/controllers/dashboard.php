@@ -59,7 +59,8 @@ class Dashboard extends Fuel_base_controller {
 
 			unset($feed_data['latest_fuel_version']);
 			$vars['feed'] = $feed_data;
-			$this->load->moduel_view(FUEL_FOLDER, 'dashboard_ajax', $vars);
+
+			$this->load->module_view(FUEL_FOLDER, 'dashboard_ajax', $vars);
 		}
 	}
 
