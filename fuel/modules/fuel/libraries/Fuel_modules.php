@@ -762,7 +762,7 @@ class Fuel_module extends Fuel_base_library {
 						break;
 					}
 				}
-				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $this->_info[1]; // usually the second field is the display_field... first is the id
+				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $fields[1]; // usually the second field is the display_field... first is the id
 			}
 		}
 		if (empty($prop))

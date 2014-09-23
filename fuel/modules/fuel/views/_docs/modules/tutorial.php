@@ -339,7 +339,7 @@ More on different form field types and parameters can be found under the <a href
 
 <p>There are a few modifications we'd like to make. The first thing we'd like to change is the image selection/upload button on the content field's wysiwyg editor to
   pull from the folder <span class="file">assets/images/articles</span> instead of the default <span class="file">assets/images</span> folder. To make this change,
-  you'll need to create that folder and make sure it is writable by PHP. Then you can add the following parameter to the content field in hte form_fields method:</p>
+  you'll need to create that folder and make sure it is writable by PHP. Then you can add the following parameter to the content field in the form_fields method:</p>
 <pre class="brush: php">
   function form_fields($values = array(), $related = array())
     {

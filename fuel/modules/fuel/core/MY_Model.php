@@ -742,11 +742,23 @@ class MY_Model extends CI_Model {
 
 		$this->_handle_where($where);
 
-		$params = array('order_by', 'limit', 'offset');
-		foreach($params as $method)
+		// set order
+		if (!empty($order_by)) $this->db->order_by($order_by);
+
+		// set limit
+		if (isset($limit))
 		{
-			if (!empty($$method)) $this->db->$method($$method);
+			$limit = (int) $limit;	
+			$this->db->limit($limit);
 		}
+			
+		// set offset
+		if (isset($offset))
+		{
+			$offset = (int) $offset;	
+			$this->db->offset($offset);
+		}
+
 		$query = $this->get(TRUE, $return_method, $assoc_key);
 		if ($return_method == 'query') return $query;
 
@@ -2311,7 +2323,7 @@ class MY_Model extends CI_Model {
 						break;
 					case 'number':
 						$this->validator->add_rule($field, 'is_numeric', lang('error_not_number', $field_name), $value);
-						if ($field_data['type'] != 'float') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
+						if ($field_data['type'] != 'float' AND $field_data['type'] != 'double') $this->validator->add_rule($field, 'length_max', lang('error_value_exceeds_length', $field_name), array($value, $field_data['max_length']));
 						break;
 					case 'date':
 						if (strncmp($value, '0000', 4) !== 0)
@@ -4608,7 +4620,7 @@ class Data_record {
 			$reflection = new ReflectionClass(get_class($this));
 			foreach($methods as $method)
 			{
-				if (strncmp($method, 'get_', 4) === 0 AND $reflection->getMethod($method)->getNumberOfParameters() == 0)
+				if (strncmp($method, 'get_', 4) === 0 AND $reflection->getMethod($method)->getNumberOfRequiredParameters() == 0)
 				{
 					$key = substr($method, 4); // remove get_
 					$values[$key] = $this->$method();
@@ -5553,7 +5565,7 @@ class Data_record {
 		{
 
 			// maintain the order of the related data
-			if (!empty($rel_ids))
+			if (!empty($rel_ids) AND empty($rel_config['order']))
 			{
 				$rel_ids_flipped = array_flip($rel_ids);
 				foreach ($foreign_data as $row)

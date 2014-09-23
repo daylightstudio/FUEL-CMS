@@ -35,7 +35,7 @@ class Assets extends Module {
 
 		if (!empty($_POST))
 		{
-			if (!empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4)
+			if ((!empty($_FILES['userfile']) AND $_FILES['userfile']['error'] != 4) OR (!empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4))
 			{
 
 				$this->model->on_before_post();
@@ -313,7 +313,19 @@ class Assets extends Module {
 			$fields['userfile']['accept'] = $field_values['accept'];	
 		}
 		
-		
+		if (isset($field_values['multiple']))
+		{
+			if ((bool)$field_values['multiple'] === FALSE)
+			{
+				$fields['userfile']['class'] = '';		
+			}
+			else
+			{
+				// if their are multiple files being uploaded, the new file name won't really work
+				unset($fields['user_file_name']);
+			}
+		}
+
 		// hide certain fields if params were passed
 		if (!empty($not_hidden))
 		{
