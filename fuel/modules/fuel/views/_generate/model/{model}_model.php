@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
@@ -23,34 +23,29 @@ class {model_name}_model extends Base_module_model {
 	protected $friendly_name = ''; // a friendlier name of the group of objects
 	protected $singular_name = ''; // a friendly singular name of the object
 
-
 	function __construct()
 	{
 		parent::__construct('{table}'); // table name
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc', $just_count = FALSE)
+	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'asc', $just_count = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
-		return $data;
+		return parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
 	}
 
 	function form_fields($values = array(), $related = array())
 	{	
-		$fields = parent::form_fields($values, $related);
-		return $fields;
+		return parent::form_fields($values, $related);
 	}
 	
 	function on_before_save($values)
 	{
-		parent::on_before_save($values);
-		return $values;
+		return parent::on_before_save($values);
 	}
 
 	function on_after_save($values)
 	{
-		parent::on_after_save($values);
-		return $values;
+		return parent::on_after_save($values);
 	}
 
 	function _common_query()
@@ -60,7 +55,6 @@ class {model_name}_model extends Base_module_model {
 		// remove if no precedence column is provided
 		$this->db->order_by('precedence asc');
 	}
-
 }
 
 class {model_record}_model extends Base_module_record {

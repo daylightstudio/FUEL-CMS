@@ -280,6 +280,16 @@ dave@thedaylightstudio.com
 
 			// remove values from any form fields
 			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"], .noclear').val('');
+			$clonecopy.find('input[type="checkbox"]').not('.noclear').prop('checked', false);
+			$clonecopy.find('input[type="radio"]').not('.noclear').each(function(){
+				if (parseInt($(this).data('orig_checked')) == 1){
+					$(this).prop('checked', true);
+				} else {
+					$(this).prop('checked', false);	
+				}
+				
+			});
+				
 			$clonecopy.find('.noclone').remove();
 			
 			reOrder($this);

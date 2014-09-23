@@ -92,7 +92,7 @@ function datetime_now($hms = TRUE){
 function is_date_format($date)
 {
 	return (is_string($date) AND (!empty($date) AND (int)$date != 0) AND 
-	(is_date_english_format($date) OR is_date_db_format($date)));
+	(preg_match('#([0-9]{1,2})[/\-\.]([0-9]{1,2})[/\-\.]([0-9]{4})#', $date) OR is_date_db_format($date)));
 }
 
 // --------------------------------------------------------------------
@@ -248,7 +248,7 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 	{
 		$hour = 0;
 	}
-	$date_arr = preg_split('#-|/#', $date);
+	$date_arr = preg_split('#-|/|\.#', $date);
 	
 	if (count($date_arr) != 3) return 'invalid';
 	
@@ -268,7 +268,7 @@ function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm =
 		}
 		$new_date = $date_arr[2].'-'.$date_arr[0].'-'.$date_arr[1].' '.$hour.':'.$min.':'.$sec;
 	}
-	else if (preg_match("#([0-9]{1,2})-([0-9]{1,2})-([0-9]{4})#", $date))
+	else if (preg_match("#([0-9]{1,2})[\-\.]([0-9]{1,2})[\-\.]([0-9]{4})#", $date))
 	{
 		if (!checkdate($date_arr[1], $date_arr[0], $date_arr[2]))
 		{

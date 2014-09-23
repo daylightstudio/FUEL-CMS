@@ -12,7 +12,7 @@ $config['fuel_path'] = 'fuel/';
 $config['site_name'] = 'My Website';
 
 // whether the admin backend is enabled or not
-$config['admin_enabled'] = FALSE;
+$config['admin_enabled'] = TRUE;
 
 // options are cms, views, and auto. 
 // cms pulls views and variables from the database,
