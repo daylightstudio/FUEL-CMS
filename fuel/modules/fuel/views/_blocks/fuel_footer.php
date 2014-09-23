@@ -1,18 +1,28 @@
-	<script type="text/javascript">
-		<?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), TRUE)?>
-	</script>
-	<?=js('jqx/jqx', 'fuel')?>
-	<?php $fuel_js = $this->fuel->config('fuel_javascript'); ?>
-	<?php foreach($fuel_js as $m => $j) : echo js(array($m => $j))."\n\t"; endforeach; ?>
+<?php
 
-	<?php foreach($js as $m => $j) : echo js(array($m => $j))."\n\t"; endforeach; ?>
+echo '
+<script type="text/javascript">'.
+	$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), TRUE).'
+</script>';
 
-	<?php if (!empty($this->js_controller)) : ?> 
-	<script type="text/javascript">
-		<?php if ($this->js_controller != 'fuel.controller.BaseFuelController') : ?>
-		jqx.addPreload('fuel.controller.BaseFuelController');
-		<?php endif; ?>
-		jqx.init('<?=$this->js_controller?>', <?=json_encode($this->js_controller_params)?>, '<?=$this->js_controller_path?>');
-	</script>
-	<?php endif; ?>
+echo js('jqx/jqx', 'fuel');
 
+$fuel_js = $this->fuel->config('fuel_javascript');
+
+foreach ($fuel_js as $m => $j) echo js(array($m => $j))."\n\t";
+
+foreach ($js as $m => $j) echo js(array($m => $j))."\n\t";
+
+if ( ! empty($this->js_controller))
+{
+	echo '<script type="text/javascript">';
+
+	if ($this->js_controller != 'fuel.controller.BaseFuelController')
+	{
+		echo "jqx.addPreload('fuel.controller.BaseFuelController');";
+	}
+
+	echo "
+		jqx.init('$this->js_controller', ".json_encode($this->js_controller_params).", '$this->js_controller_path');
+	</script>";
+}

@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 require_once(FUEL_PATH.'models/base_module_model.php');
 
 class Careers_model extends Base_module_model {
@@ -15,15 +15,17 @@ class Careers_model extends Base_module_model {
 	{
 		$this->db->select('id, job_title, post_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
+
 		return $data;
 	}
 	
 	function on_before_save($values)
 	{
-		if($values['post_date'] == '0000-00-00')
+		if ($values['post_date'] == '0000-00-00')
 		{
 			$values['post_date'] = datetime_now();
 		}
+
 		return $values;
 	}
 	
@@ -32,6 +34,7 @@ class Careers_model extends Base_module_model {
 		$fields = parent::form_fields($values, $related);
 		$fields['post_date']['comment'] = 'If blank, will default to current date/time'; 
 		$fields['post_date']['value'] = datetime_now(); 
+
 		return $fields;
 	}
 	
@@ -40,8 +43,6 @@ class Careers_model extends Base_module_model {
 		parent::_common_query();
 		$this->db->order_by('post_date', 'desc');
 	}
-	
-	
 }
 
 class Career_model extends Base_module_record {
@@ -51,7 +52,7 @@ class Career_model extends Base_module_record {
 		$this->_CI->load->helper('html');
 		$lis = explode("\n", $this->skills_needed);
 		$lis = array_map('trim', $lis);
+
 		return ul($lis, array('class' => 'ul'));
 	}
-
 }
