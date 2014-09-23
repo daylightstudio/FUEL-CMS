@@ -12,14 +12,14 @@ $config['fuel_path'] = 'fuel/';
 $config['site_name'] = 'My Website';
 
 // whether the admin backend is enabled or not
-$config['admin_enabled'] = true;
+$config['admin_enabled'] = FALSE;
 
 // options are cms, views, and auto. 
 // cms pulls views and variables from the database,
 // views mode pulls views from the views folder and variables from the _variables folder,
 // and the auto option will first check the database for a page and if it doesn't exist or is 
 // not published, it will then check for the corresponding view file.
-$config['fuel_mode'] = 'auto';
+$config['fuel_mode'] = 'views';
 
 // specifies which modules are allowed to be used in the fuel admin
 $config['modules_allowed'] = array(
