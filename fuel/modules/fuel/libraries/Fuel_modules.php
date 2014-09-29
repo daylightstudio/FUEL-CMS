@@ -474,7 +474,7 @@ class Fuel_modules extends Fuel_base_library {
 		{
 			$module = $this->get($module);
 		}
-		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		$key = Fuel_installer::INSTALLED_SETTINGS_KEY;
 		
 		$installed = $this->fuel->settings->get($module->name(), $key);
 		if (empty($installed))
@@ -503,7 +503,7 @@ class Fuel_modules extends Fuel_base_library {
 			$module = $this->get($module);
 		}
 		
-		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		$key = Fuel_installer::INSTALLED_SETTINGS_KEY;
 		$installed = $this->fuel->settings->get($module->name(), $key);
 		if (empty($installed))
 		{
