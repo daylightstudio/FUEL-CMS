@@ -1082,7 +1082,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 		$this->CI->load->module_config('app', $config, FALSE, TRUE);
 		$app_config = $this->CI->config->item($this->name);
 
-		// now get the blog configuration
+		// now get the module's configuration
 		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
 		$module_config = $this->CI->config->item($this->name);
 
