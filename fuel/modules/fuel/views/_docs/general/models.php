@@ -602,7 +602,7 @@ An example of this is to use the "_formatted" suffix on a string type field whic
 echo $record->content;
 // A long time ago...
 
-echo $record->content_fornatted;
+echo $record->content_formatted;
 // &lt;p&gt;A long time ago...&lt;/p&gt;
 </pre>
 
