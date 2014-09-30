@@ -61,6 +61,12 @@ class Assets extends Module {
 				$redirect_to = uri_safe_decode($this->input->get_post('redirect_to'));
 				$id = $posted['file_name'];
 
+				// run before_create hook
+				$this->_run_hook('before_create', $posted);
+
+				// run before_save hook
+				$this->_run_hook('before_save', $posted);
+
 				if ($this->fuel->assets->upload($posted))
 				{
 					foreach($_FILES as $filename => $fileinfo)
