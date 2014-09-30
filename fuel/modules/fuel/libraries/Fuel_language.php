@@ -728,7 +728,7 @@ class Fuel_language extends Fuel_base_library {
 			$uri = $this->cleaned_uri($uri);
 			
 			// if $lang is set then we will check to see if it is a legit language and use it
-			if (!empty($lang) AND $lang != $this->is_default($lang) AND !in_array($lang_seg, $no_lang))
+			if (!empty($lang) AND ($lang != $this->is_default($lang) OR $this->fuel->config('language_force_default_to_site_url')) AND !in_array($lang_seg, $no_lang))
 			{
 				if (!$this->is_mode('query_string'))
 				{

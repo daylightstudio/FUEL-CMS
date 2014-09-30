@@ -143,6 +143,9 @@ $config['language_mode'] = 'domain';
 // Append the current language value to the site URL automatically
 $config['add_language_to_site_url'] = FALSE;
 
+// force the default language segment, or query string on any URLs created with site_url
+$config['language_force_default_to_site_url'] = FALSE;
+
 // The name of the query string parameter to use for setting the language
 $config['language_query_str_param'] = 'lang';
 
