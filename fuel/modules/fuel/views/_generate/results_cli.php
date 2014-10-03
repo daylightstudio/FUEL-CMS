@@ -1,22 +1,23 @@
-CREATED 
-<?php if (!empty($created)) : ?>
-<?php foreach($created as $val) : ?>
-* <?=$val?> 
-<?php endforeach; ?>
-<?php else: ?>
-There were no files created.
-<?php endif; ?>
+<?php
 
-<?php if (!empty($modifed)) : ?>
-MODIFIED 
-<?php foreach($modified as $val) : ?>
-* <?=$val?> 
-<?php endforeach; ?>
-<?php endif; ?>
+echo 'CREATED';
+if ( ! empty($created))
+{
+	foreach($created as $val) echo '* '.$val;
+}
+else
+{
+	echo 'There were no files created.';
+}
 
-<?php if (!empty($errors)) : ?>
-ERRORS 
-<?php foreach($errors as $val) : ?>
-* <?=$val?> 
-<?php endforeach; ?>
-<?php endif; ?>
+if ( ! empty($modifed))
+{
+	echo 'MODIFIED';
+	foreach ($modified as $val) echo '* '.$val;
+}
+
+if ( ! empty($errors))
+{
+	echo 'ERRORS';
+	foreach ($errors as $val) echo '* '.$val;
+}

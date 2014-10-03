@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
@@ -18,23 +18,24 @@ class News_model extends Base_module_model {
 	{
 		$this->db->select('id, title, slug, publish_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
+
 		return $data;
 	}
 	
 	function find_by_month($limit = NULL, $where = array())
 	{
 		$items = $this->find_all($where, 'publish_date desc', $limit);
-		
 		$return = array();
-		foreach($items as $item)
+
+		foreach ($items as $item)
 		{
 			$key = date('F Y', strtotime($item->publish_date));
-			if (!isset($return[$key]))
-			{
-				$return[$key] = array();
-			}
+
+			if ( ! isset($return[$key])) $return[$key] = array();
+
 			$return[$key][] = $item;
 		}
+
 		return $return;
 	}
 	
@@ -44,6 +45,7 @@ class News_model extends Base_module_model {
 		{
 			$values['slug'] = url_title($values['title'], 'dash', TRUE);
 		}
+
 		return $values;
 	}
 
@@ -55,8 +57,7 @@ class News_model extends Base_module_model {
 	
 	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields($values, $related);
-		return $fields;
+		return parent::form_fields($values, $related);
 	}
 }
 
@@ -64,7 +65,8 @@ class News_item_model extends Base_module_record {
 	
 	function get_url()
 	{
-		if (!empty($this->link)) return prep_url($this->link);
+		if ( ! empty($this->link)) return prep_url($this->link);
+
 		return site_url('news/'.$this->slug);
 	}
 	
@@ -75,21 +77,23 @@ class News_item_model extends Base_module_record {
 		
 		$excerpt = $this->content;
 
-		if (!empty($char_limit))
+		if ( ! empty($char_limit))
 		{
-			// must strip tags to get accruate character count
+			// must strip tags to get accurate character count
 			$excerpt = strip_tags($excerpt);
 			$excerpt = character_limiter($excerpt, $char_limit);
 		}
+
 		$excerpt = auto_typography($excerpt);
 		$excerpt = $this->_parse($excerpt);
-		if (!empty($readmore))
+
+		if ( ! empty($readmore))
 		{
 			$attrs = array('class' => 'readmore');
 			if ($this->type == 'news') $attrs['target'] = '_blank';
 			$excerpt .= ' '.anchor($this->get_url(), $readmore, $attrs);
 		}
+
 		return $excerpt;
 	}
-	
 }

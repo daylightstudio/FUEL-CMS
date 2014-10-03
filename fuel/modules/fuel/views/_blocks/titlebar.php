@@ -1,31 +1,56 @@
+<?php
+
+echo '
 <div id="fuel_main_top_panel">
-	<h2 class="ico <?=$titlebar_icon?>">
-	<?php if (!empty($titlebar)) : ?>
-	<?php if (is_array($titlebar)) : ?>
-	<?php $last_key = array_pop($titlebar);
-		foreach($titlebar as $url => $crumb) : ?>
-			<?php if (!$this->fuel->admin->is_inline()) : ?><a href="<?=fuel_url($url)?>"><?php endif; ?><?=$crumb?><?php if (!$this->fuel->admin->is_inline()) : ?></a><?php endif; ?> &gt;
-		<?php endforeach; ?>
-		<?=$last_key?>
-		<?php else: ?>
-		<?=$titlebar?>
-	<?php endif; ?>
-	<?php endif; ?>
-	</h2>
+	<h2 class="ico '.$titlebar_icon.'">';
 
-	<?php if (!$this->fuel->admin->is_inline() AND !empty($user)) : ?>
-	<div id="fuel_login_logout">
-		<?=lang('logged_in_as')?>
-		<a href="<?=fuel_url('my_profile/edit/')?>"><strong><?=$user['user_name']?></strong></a>
-		<?php if ($this->session->userdata('original_user_id') AND $this->session->userdata('original_user_hash')) : ?>
-		&nbsp;&nbsp;|&nbsp;&nbsp;
-		<a href="<?=fuel_url('users/login_as/' . $this->session->userdata('original_user_id') . '/' . $this->session->userdata('original_user_hash'))?>"><?=lang('logout_restore_original_user')?></a>
-		<?php endif; ?>
-		&nbsp;&nbsp;|&nbsp;&nbsp;
-		<a href="<?=fuel_url('logout')?>"><?=lang('logout')?></a>
-	</div>
-	<?php endif; ?>
+	if ( ! empty($titlebar))
+	{
+		if (is_array($titlebar))
+		{
+			$last_key = array_pop($titlebar);
 
+			foreach ($titlebar as $url => $crumb)
+			{
+				if ( ! $this->fuel->admin->is_inline()) echo '<a href="'.fuel_url($url).'">';
+
+				echo $crumb;
+
+				if ( ! $this->fuel->admin->is_inline()) echo '</a>';
+
+				echo "&gt;";
+			}
+
+			echo $last_key;
+		}
+		else
+		{
+			echo $titlebar;
+		}
+	}
+
+	echo '</h2>';
+
+	if ( ! $this->fuel->admin->is_inline() && ! empty($user))
+	{
+		echo '
+		<div id="fuel_login_logout">'.
+			lang('logged_in_as').'
+			<a href="'.fuel_url('my_profile/edit/').'"><strong>'.$user['user_name'].'</strong></a>';
+
+			if ($this->session->userdata('original_user_id') && $this->session->userdata('original_user_hash'))
+			{
+				echo
+				"&nbsp;&nbsp;|&nbsp;&nbsp;".'
+				<a href="'.fuel_url('users/login_as/'.$this->session->userdata('original_user_id').'/'.$this->session->userdata('original_user_hash')).'">'.lang('logout_restore_original_user').'</a>';
+			}
+
+			echo "
+			&nbsp;&nbsp;|&nbsp;&nbsp;".'
+			<a href="'.fuel_url('logout').'">'.lang('logout').'</a>
+		</div>';
+	}
+
+echo '
 </div>
-
-<div class="clear"></div>
+<div class="clear"></div>';

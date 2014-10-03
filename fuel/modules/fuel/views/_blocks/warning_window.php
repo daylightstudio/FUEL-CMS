@@ -1,4 +1,4 @@
-<?php if (!empty($warning_window)) : ?>
+<?php if ( ! empty($warning_window)) { ?>
 	<div class="warning jqmWindow jqmWindowShow" id="warning_window">
 		<div class="modal_content_inner">
 			<p><?=$warning_window?></p>
@@ -12,4 +12,4 @@
 			<div class="clear"></div>
 		</div>
 	</div>
-<?php endif; ?>
+<?php } ?>

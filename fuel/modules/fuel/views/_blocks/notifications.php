@@ -1,28 +1,34 @@
-<?php if (!empty($error)) :
+<?php
+
+if ( ! empty($error))
+{
 	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $error); // convert script tags
 	echo display_errors($error, 'ico error ico_error');
-?>
-<?php elseif ($this->session->flashdata('error') AND $this->session->flashdata('error') !== TRUE AND $this->session->flashdata('success') !== '1') : 
+}
+else if ($this->session->flashdata('error') && $this->session->flashdata('error') !== TRUE && $this->session->flashdata('success') !== '1')
+{
 	$error = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('error')); // convert script tags
 	echo display_errors($this->session->flashdata('error'), 'ico error ico_error');
-?>
-<?php elseif ($this->session->flashdata('success') AND $this->session->flashdata('success') !== TRUE AND $this->session->flashdata('success') !== '1') : 
-$success = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('success')); // convert script tags
+}
+else if ($this->session->flashdata('success') && $this->session->flashdata('success') !== TRUE && $this->session->flashdata('success') !== '1')
+{
+	$success = str_replace(array('{script}', '{/script}'), array('<script>', '</script>'), $this->session->flashdata('success')); // convert script tags
+	echo '<div class="success ico ico_success">'.$success.'</div>';
+}
+else
+{
+	echo display_errors(NULL, 'ico error ico_error');
+}
 
-?>
-	<div class="success ico ico_success"><?=$success;?></div>
-<?php else: ?>
-	<?php echo display_errors(NULL, 'ico error ico_error')?>
-<?php endif; ?>
-
-<?php if (!empty($last_updated)) : ?>
-<p class="ico ico_info last_updated">
-	<?=$last_updated?>
-</p>
-<?php elseif ($this->session->flashdata('info')) : ?>
-<p class="ico ico_info">
-	<?=$this->session->flashdata('info');?>
-</p>
-<?php elseif (!empty($info)) : ?>
-<p class="ico ico_info"><?=$info?></p>
-<?php endif; ?>
+if ( ! empty($last_updated))
+{
+	echo ' <p class="ico ico_info last_updated">'.$last_updated.'</p>';
+}
+else if ($this->session->flashdata('info'))
+{
+	echo '<p class="ico ico_info">'.$this->session->flashdata('info').'</p>';
+}
+else if ( ! empty($info))
+{
+	echo '<p class="ico ico_info">'.$info.'</p>';
+}

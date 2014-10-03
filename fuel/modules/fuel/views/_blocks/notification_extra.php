@@ -1,9 +1,17 @@
-<div id="notification_extra" class="notification">
-	<?php if (isset($this->model) AND method_exists($this->model, 'notification') AND $this->model->notification($data)) { ?>
-		<div class="warning ico ico_warn"><?=$this->model->notification($data)?></div>
-	<?php } elseif (isset($data['published']) AND !is_true_val($data['published'])) {?>
-			<div class="warning ico ico_warn"><?=lang('warn_not_published')?></div>
-	<?php } else if (isset($data['active']) AND !is_true_val($data['active']) AND isset($this->model)) {?>
-		<div class="warning ico ico_warn"><?=lang('warn_not_active', $this->model->singular_name())?></div>
-	<?php } ?>
-</div>
+<?php
+echo '<div id="notification_extra" class="notification">';
+
+if (isset($this->model) && method_exists($this->model, 'notification') && $this->model->notification($data))
+{
+	echo '<div class="warning ico ico_warn">'.$this->model->notification($data).'</div>';
+}
+else if (isset($data['published']) && ! is_true_val($data['published']))
+{
+	echo '<div class="warning ico ico_warn">'.lang('warn_not_published').'</div>';
+}
+else if (isset($data['active']) && ! is_true_val($data['active']) && isset($this->model))
+{
+	echo '<div class="warning ico ico_warn">'.lang('warn_not_active', $this->model->singular_name()).'</div>';
+}
+
+echo '</div>';

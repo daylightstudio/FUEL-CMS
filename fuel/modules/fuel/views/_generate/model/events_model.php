@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once(FUEL_PATH.'models/base_module_model.php');
 
@@ -16,6 +16,7 @@ class Events_model extends Base_module_model {
 	{
 		$this->db->select('id, name, start_date, end_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
+
 		return $data;
 	}
 	
@@ -25,12 +26,14 @@ class Events_model extends Base_module_model {
 		{
 			$values['slug'] = url_title($values['name'], 'dash', TRUE);
 		}
+
 		return $values;
 	}
 	
 	function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields();
+
 		return $fields;
 	}
 	
@@ -48,7 +51,6 @@ class Event_model extends Base_module_record {
 	{
 		return date($format, strtotime($this->start_date));
 	}
-	
 
 	function get_date_range()
 	{
@@ -60,4 +62,3 @@ class Event_model extends Base_module_record {
 		return img_path($this->image);
 	}
 }
-?>
