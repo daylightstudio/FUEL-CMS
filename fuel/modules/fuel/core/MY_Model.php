@@ -4137,7 +4137,7 @@ class MY_Model extends CI_Model {
 	 * @param	mixed
 	 * @return	boolean
 	 */	
-	protected function _replace_placeholders($str, $values)
+		protected function _replace_placeholders($str, $values)
 	{
 		if (is_string($str))
 		{
@@ -4156,8 +4156,20 @@ class MY_Model extends CI_Model {
 					$str = '';
 				}
 			}
+			$return = $str;
 		}
-		return $str;
+		elseif (is_array($str))
+		{
+			$return = array();
+			foreach($str as $key => $val)
+			{
+				if (isset($values[$key]))
+				{
+					$return[$key] = str_replace('{'.$key.'}', $values[$key], $val);	
+				}
+			}
+		}
+		return $return;
 	}
 
 	// --------------------------------------------------------------------
