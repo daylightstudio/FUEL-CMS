@@ -2733,7 +2733,7 @@ class MY_Model extends CI_Model {
 					if (!empty($val['where']))
 					{
 						$where = $val['where'];
-						$where = $this->_replace_placeholders($where, $values);
+						$where = self::replace_placeholders($where, $values);
 						unset($val['where']);
 					}
 					if (!empty($val['order']))
@@ -2789,7 +2789,7 @@ class MY_Model extends CI_Model {
 					if (!empty($rel_config['where']))
 					{
 						$where = $rel_config['where'];
-						$where = $this->_replace_placeholders($where, $values);
+						$where = self::replace_placeholders($where, $values);
 					}
 					
 					if (!empty($rel_config['order']))
@@ -2814,7 +2814,7 @@ class MY_Model extends CI_Model {
 					if (!empty($rel_config['where']))
 					{
 						$where = $rel_config['where'];
-						$where = $this->_replace_placeholders($where, $values);
+						$where = self::replace_placeholders($where, $values);
 					}
 					
 					if (!empty($rel_config['order']))
@@ -4137,7 +4137,7 @@ class MY_Model extends CI_Model {
 	 * @param	mixed
 	 * @return	boolean
 	 */	
-		protected function _replace_placeholders($str, $values)
+	public static function replace_placeholders($str, $values)
 	{
 		if (is_string($str))
 		{
@@ -5547,7 +5547,7 @@ class Data_record {
 				{
 					if (! empty($rel_config['where']))
 					{
-						$this->_CI->$foreign_model->db()->where($rel_config['where']);
+						$this->_CI->$foreign_model->db()->where(MY_Model::replace_placeholders($rel_config['where'], $this->values()));
 					}
 					
 					if (! empty($rel_config['order']))
