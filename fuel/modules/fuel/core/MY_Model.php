@@ -4665,7 +4665,7 @@ class Data_record {
 		// call on duplicate method
 		$values = $this->_parent_model->on_duplicate($values);
 		
-		$dup->fill($$values);
+		$dup->fill($values);
 		
 		// NULL out key values so as not to overwrite existing objects
 		$key_field = (array) $this->_parent_model->key_field();
