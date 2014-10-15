@@ -1,6 +1,3 @@
-	<script type="text/javascript">
-		<?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), TRUE)?>
-	</script>
 	<?=js('jqx/jqx', 'fuel')?>
 	<?php $fuel_js = $this->fuel->config('fuel_javascript'); ?>
 	<?php foreach($fuel_js as $m => $j) : echo js(array($m => $j))."\n\t"; endforeach; ?>
