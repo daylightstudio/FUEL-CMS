@@ -32,16 +32,17 @@ class Site_docs extends Fuel_base_controller {
 		{
 			// use app module which is the application directory
 			$vars['body'] = $this->load->module_view('app', '_docs/'.$page, $vars, TRUE);
+			$vars['page_title'] = $this->config->item('site_name', 'fuel');
 
 			// get layout page
 			if (file_exists(APPPATH.'views/_layouts/documentation.php'))
 			{
-				$this->load->module_view(NULL, '_layouts/documentation', $vars);
+				define('FUELIFY', FALSE);
+				$this->load->module_view('app', '_layouts/documentation', $vars);
 			}
-			else if (file_exists(FUEL_PATH.'views/_layouts/documentation'.EXT))
+			else if (file_exists(FUEL_PATH.'views/_layouts/documentation'.EXT) AND defined('USER_GUIDE_PATH'))
 			{
-				$vars['page_title'] = $this->config->item('site_name', 'fuel');
-				$this->load->view('_layouts/documentation', $vars);
+				$this->load->module_view(FUEL_FOLDER, '_layouts/documentation', $vars);
 			}
 			else
 			{
