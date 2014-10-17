@@ -232,5 +232,42 @@ function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $lengt
 	return $data;
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Return the value from an associative array or an object.
+ * credit: borrowed from Vanilla forums GetValueR function
+ *
+ * @access	public
+ * @param 	string $key The key or property name of the value.
+ * @param 	mixed $array The array or object to search.
+ * @param 	mixed $default The value to return if the key does not exist.
+ * @return 	mixed The value from the array or object.
+ */
+function array_dot($key, $array, $default = FALSE)
+{
+	$path = explode('.', $key);
+
+	$value = $array;
+	for ($i = 0; $i < count($path); ++$i)
+	{
+		$sub_key = $path[$i];
+
+		if (is_array($value) AND isset($value[$sub_key]))
+		{
+			$value = $value[$sub_key];
+		}
+		elseif (is_object($value) AND isset($value->$sub_key))
+		{
+			$value = $value->$sub_key;
+		}
+		else
+		{
+			return $default;
+		}
+	}
+	return $value;
+}
+
 /* End of file MY_array_helper.php */
 /* Location: ./modules/fuel/helpers/MY_array_helper.php */
