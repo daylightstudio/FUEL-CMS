@@ -210,32 +210,8 @@ class Module extends Fuel_base_controller {
 		// save page state
 		$this->fuel->admin->save_page_state($params);
 		
-		// create search filter
-		$filters[$this->display_field] = trim($params['search_term']);
-		
-		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
-		$this->model->filter_value = trim($params['search_term']);
-
-		foreach($this->filters as $key => $val)
-		{
-			$filters[$key] = $params[$key];
-
-			if ( ! empty($val['filter_join']))
-			{
-				if ( ! is_array($this->model->filter_join[$key]))
-				{
-					settype($this->model->filter_join, 'array');
-				}
-
-				$this->model->filter_join[$key] = $val['filter_join'];
-			}
-		}
-
-		// set model filters before pagination and setting table data
-		if (method_exists($this->model, 'add_filters'))
-		{
-			$this->model->add_filters($filters);
-		}
+		// filter the list
+		$this->_filter_list($params);
 
 		// to prevent it from being called unnecessarily with ajax
 		if ( ! is_ajax())
@@ -681,6 +657,44 @@ class Module extends Fuel_base_controller {
 
 		/* PROCESS PARAMS END */
 		return $params;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds filters to the model
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	function _filter_list($params)
+	{
+		// create search filter
+		$filters[$this->display_field] = trim($params['search_term']);
+		
+		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
+		$this->model->filter_value = trim($params['search_term']);
+
+		foreach($this->filters as $key => $val)
+		{
+			$filters[$key] = $params[$key];
+
+			if ( ! empty($val['filter_join']))
+			{
+				if ( ! is_array($this->model->filter_join[$key]))
+				{
+					settype($this->model->filter_join, 'array');
+				}
+
+				$this->model->filter_join[$key] = $val['filter_join'];
+			}
+		}
+
+		// set model filters before pagination and setting table data
+		if (method_exists($this->model, 'add_filters'))
+		{
+			$this->model->add_filters($filters);
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -1968,6 +1982,7 @@ class Module extends Fuel_base_controller {
 
 			$filename = $this->module.'_'.date('Y-m-d').'.csv';
 			$params = $this->_list_process();
+			$this->_filter_list($params);
 			$data = $this->model->export_data($params);
 
 			force_download($filename, $data);
