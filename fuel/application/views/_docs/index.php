@@ -1,3 +1,7 @@
+<?php 
+$CI = get_instance();
+$CI->load->library('form_builder');
+?>
 <h1>Site Documentation for <?=$this->config->item('site_name', 'fuel')?></h1>
 <p>The following contains documentation regarding your FUEL CMS website. This site is running FUEL CMS <?=FUEL_VERSION?>. Additional FUEL documentation can be found at <a href="http://docs.getfuelcms.com" target="_blank">docs.getfuelcms.com</a>.</p>
 <ul>
@@ -53,10 +57,13 @@ At it's core, FUEL is a PHP/MySQL, modular-based development platform built on t
 </ul>
 
 <h3>Installed Modules</h3>
-<p>The following modules are currently installed for your website:</p>
+<p>The following modules are currently installed for your website with the corresponding fields:</p>
 <?php $modules = $this->fuel->modules->advanced();?>
 <ul>
-<?php foreach($modules as $mod) :  ?>
+<?php foreach($modules as $mod) :
+	$i = 0;
+ ?>
+	<?php if ($this->fuel->auth->has_permission($mod->name())) : ?>
 	<li>
 		<strong><?=$mod->friendly_name()?></strong>
 		<?php if ($mod->install_info('description')) : ?> - <?=$mod->install_info('description')?> <?php endif; ?>
@@ -65,15 +72,40 @@ At it's core, FUEL is a PHP/MySQL, modular-based development platform built on t
 			if (!empty($submodules)) : 
 		?>
 		<ul>
-			<?php  foreach($submodules as $sub) : ?>
-			<li><?=$sub->info('module_name')?></li>
+			<?php foreach($submodules as $sub) : ?>
+			<li>
+				<?php 
+				$sub_model = $sub->model();
+				if (empty($sub_model)) : ?>
+				<?=$sub->info('module_name')?>
+				<?php else: ?>
+				<a href="#" class="show_fields" class="show_fields"><?=$sub->info('module_name')?></a>
+				<ul style="display: none;">
+					<?php 
+					$form_fields = $sub_model->form_fields();
+					foreach($sub_model->form_fields() as $field => $field_params) : ?>
+					<?php if ($field != 'id') : 
+					$label = (!empty($field_params['label'])) ? $field_params['label'] : $CI->form_builder->create_label($field_params);
+					$label = ucfirst(str_replace('_', ' ', $field));
+					?>
+					<li><strong><?=$label?></strong><?php if (!empty($field_params['comment'])) : ?> - <?=$field_params['comment']?><?php endif; ?></li>
+					<?php endif; ?>
+					<?php endforeach;?>
+				</ul>
+				<?php endif; ?>
+
+			</li>
 			<?php endforeach;?>
 		</ul>
 		
 		<?php endif; ?>
 	</li>
+<?php $i++; endif; ?>
 <?php endforeach; ?>
 </ul>
+<?php if ($i === 0) : ?>
+<p>You currently don't have access to any modules</p>
+<?php endif; ?>
 
 
 <h2 id="dashboard" class="ico ico_dashboard"><img src="<?=img_path('icons/ico_dashboard.png', 'fuel')?>" alt="Dashboard" /> <a href="<?=fuel_url('dashboard')?>">Dashboard</a></h2>
@@ -218,3 +250,19 @@ related to the cache which can be <a href="<?=fuel_url('manage/cache')?>">cleare
 <h2 id="settings" class="ico ico_settings"><img src="<?=img_path('icons/ico_table_gear.png', 'fuel')?>" alt="Layouts" /> <a href="<?=fuel_url('settings')?>">Settings</a></h2>
 <p>Although it's unlikely you'll need to worry too much about this, some modules have extra configuration settings you can manage in the CMS. For example, you may have a blog settings area if the blog is installed.</p>
 
+
+
+<?=jquery()?>
+<script type="text/javascript">
+	$(function(){
+		$('.show_fields').on('click', function(e){
+			e.preventDefault();
+			$ul = $(this).next('ul');
+			if ($ul && $ul.is(':hidden')){
+				$ul.show();
+			} else {
+				$ul.hide();
+			}
+		})
+	})
+</script>
