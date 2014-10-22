@@ -22,7 +22,7 @@ $CI->load->library('form_builder');
 
 <h2 id="what">What is FUEL CMS?</h2>
 <p><a href="http://getfuelcms.com" target="_blank">FUEL CMS</a> is a hybrid of a CMS and a framework.
-At it's core, FUEL is a PHP/MySQL, modular-based development platform built on top of the popular <a href="http://www.codeigniter.com" target="_blank">CodeIgniter</a> framework. </p>
+At its core, FUEL is a PHP/MySQL, modular-based development platform built on top of the popular <a href="http://www.codeigniter.com" target="_blank">CodeIgniter</a> framework. </p>
 
 <p>Learn more at <a href="http://getfuelcms.com" target="_blank">getfuelcms.com</a>.</p>
 
