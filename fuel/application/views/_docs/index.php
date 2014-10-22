@@ -29,7 +29,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 <h2 id="modules">Modules</h2>
 <p>The <?=$this->fuel->config('site_name')?> website contains the following modules.</p>
 
-<h3>Core Modules</h3>
+<h3 id="core_modules">Core Modules</h3>
 <ul>
 	<li><strong>Site</strong> - The following modules are part of the core functionality of FUEL CMS:
 		<ul>
@@ -56,7 +56,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 	</li>	
 </ul>
 
-<h3>Installed Modules</h3>
+<h3 id="installed_modules">Installed Modules</h3>
 <p>The following modules are currently installed for your website with the corresponding fields:</p>
 <?php $modules = $this->fuel->modules->advanced();?>
 <ul>
@@ -64,7 +64,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 	$i = 0;
  ?>
 	<?php if ($this->fuel->auth->has_permission($mod->name())) : ?>
-	<li>
+	<li id="adv_module_<?=$mod->name()?>">
 		<strong><?=$mod->friendly_name()?></strong>
 		<?php if ($mod->install_info('description')) : ?> - <?=$mod->install_info('description')?> <?php endif; ?>
 		<?php  
@@ -73,7 +73,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 		?>
 		<ul>
 			<?php foreach($submodules as $sub) : ?>
-			<li>
+			<li id="sub_module_<?=$sub->info('module_name')?>">
 				<?php 
 				$sub_model = $sub->model();
 				if (empty($sub_model)) : ?>
@@ -126,7 +126,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 	<?php $layouts = $this->fuel->layouts->get(); ?>
 	<?php foreach($layouts as $layout) : ?>
 	<?php if (!$layout->is_hidden()) : ?>
-	<li><strong><?=$layout->name()?></strong><?php if ($layout->description()) : ?> - <?=$layout->description()?><?php endif; ?></li>
+	<li id="layout->name()"><strong><?=$layout->label()?></strong><?php if ($layout->description()) : ?> - <?=$layout->description()?><?php endif; ?></li>
 	<?php endif; ?>
 	<?php endforeach; ?>
 </ul>
@@ -150,7 +150,7 @@ provide tooltips as to what each control will add to your content field.
 <p>When inputting content, you can use special template functions to help insert things such 
 as page URLS and image paths. The most common are:</p>
 <ul>
-	<li><strong>{site_url('my_page')}</strong> - inserts a link path relative to the site (e.g. http://www.marchex.com/my_page)/z.</li>
+	<li><strong>{site_url('my_page')}</strong> - inserts a link path relative to the site (e.g. http://www.mysite.com/my_page)/z.</li>
 	<li><strong>{img_path('my_image.jpg')}</strong> - inserts the image path based (e.g. /assets/images/my_image.jpg)/.</li>
 	<li><strong>{pdf_path('my_pdf.pdf')}</strong> - inserts the pdf path based (e.g. /assets/pdf/my_pdf.pdf). Extension (.pdf) is optional.</li>
 	<li><strong>{docs_path('my_doc.doc')}</strong> - inserts the pdf path based (e.g. /assets/pdfs/my_doc.doc).</li>
