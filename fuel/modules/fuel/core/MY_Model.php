@@ -2822,7 +2822,6 @@ class MY_Model extends CI_Model {
 						$order = $rel_config['order'];	
 					}
 				}
-
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
@@ -4139,6 +4138,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public static function replace_placeholders($str, $values)
 	{
+		$return = $str;
+
 		if (is_string($str))
 		{
 			if (strpos($str, '{') !== FALSE)
@@ -4163,9 +4164,24 @@ class MY_Model extends CI_Model {
 			$return = array();
 			foreach($str as $key => $val)
 			{
-				if (isset($values[$key]))
+				if (strpos($val, '{') !== FALSE)
 				{
-					$return[$key] = str_replace('{'.$key.'}', $values[$key], $val);	
+					if (!empty($values))
+					{
+						foreach($values as $k => $v)
+						{
+							$return[$key] = str_replace('{'.$k.'}', $v, $val);	
+						}
+					}
+					else
+					{
+						// returns nothing to prevent SQL errors
+						$return = array();
+					}
+				}
+				else
+				{
+					$return[$key] = $val;
 				}
 			}
 		}
