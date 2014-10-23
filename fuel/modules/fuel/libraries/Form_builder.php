@@ -2198,7 +2198,8 @@ class Form_builder {
 			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
 			'max_date' =>  date($params['date_format'], strtotime('12/31/2030')),
 			'first_day' => 0, 
-			'show_on' => 'button'
+			'show_on' => 'button',
+			'button_image' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -2242,6 +2243,10 @@ class Form_builder {
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
 		$params['data']['show_on'] = $params['show_on'];
+		if (!empty($params['button_image']))
+		{
+			$params['data']['button_image'] = $params['button_image'];	
+		}
 		$params['placeholder'] = $format;
 		$params['type'] = 'text';
 		return $this->create_text($params);
@@ -3524,7 +3529,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	string A CSS file name
-	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed javascript file names
+	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed CSS file names
 	 * @return	void
 	 */
 	public function add_css($css = NULL, $key = NULL)
@@ -3548,15 +3553,10 @@ class Form_builder {
 		{
 			if (empty($key))
 			{
-				if (is_array($css))
-				{
-					$this->css = array_merge($this->css, $css);
-				}
-				else if (!in_array($css, $this->css))
+				if (!in_array($css, $this->css))
 				{
 					$this->css[] = $css;
 				}
-				
 			}
 			else if (!in_array($css, $this->css))
 			{
@@ -3929,7 +3929,6 @@ class Form_builder {
 			foreach($css as $k => $c)
 			{
 				$module = (is_string($k)) ? $k : NULL;
-
 				if (is_array($c))
 				{
 					foreach($c as $file)

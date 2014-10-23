@@ -36,6 +36,9 @@ fuel.fields.datetime_field = function(context){
 			firstDay : $(this).attr('data-first_day'),
 			showOn : $(this).attr('data-show_on')
 		};
+		if ($(this).attr('data-button_image')){
+			options.buttonImage = $(this).attr('data-button_image');
+		}
 		var opts = $.extend(o, options);
 		$.datepicker.regional[o.region];	
 		
