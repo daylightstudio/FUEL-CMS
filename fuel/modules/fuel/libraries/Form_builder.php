@@ -3551,12 +3551,9 @@ class Form_builder {
 		}
 		else
 		{
-			if (empty($key))
+			if (empty($key) AND !in_array($css, $this->css))
 			{
-				if (!in_array($css, $this->css))
-				{
-					$this->css[] = $css;
-				}
+				$this->css[] = $css;
 			}
 			else if (!in_array($css, $this->css))
 			{
