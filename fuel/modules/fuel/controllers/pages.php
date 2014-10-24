@@ -7,8 +7,14 @@ class Pages extends Module {
 
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(FALSE);
 
+		// allow the select URL page to show up regardless of permissions
+		$validate = (fuel_uri_segment(2) == 'select') ? FALSE : TRUE;
+		if ($validate)
+		{
+			$this->_validate_user($this->permission);	
+		}
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
