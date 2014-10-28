@@ -118,6 +118,7 @@ class Fuel_auth extends Fuel_base_library {
 		$session_data['super_admin'] = $valid_user['super_admin'];
 		$session_data['user_name'] = $valid_user['user_name'];
 		$session_data['language'] = $valid_user['language'];
+		$session_data['email'] = $valid_user['email'];
 		$this->CI->session->set_userdata($this->get_session_namespace(), $session_data);
 	}
 
