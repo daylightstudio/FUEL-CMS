@@ -39,7 +39,29 @@ $config['modules']['pages'] = array(
 	'item_actions' => array(
 		'save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create',
 		'others' => array('pages/upload' => lang('btn_upload'))
-	)
+	),
+	'advanced_search' => TRUE,
+	'filters' => array(
+		'layout' => array(
+			'default' => 1,
+			'label' => lang('form_label_layout'),
+			'type' => 'select',
+			'model' => 'fuel_pages_model',
+			'model_params' => array('layout', 'layout'),
+			'hide_if_one' => TRUE,
+			'default' => '',
+			'first_option' => 'Select a layout...',
+		),
+		'published' => array(
+			'default' => 1,
+			'label' => lang('form_label_published'),
+			'type' => 'select',
+			'options' => array('yes' => 'Published', 'no' =>'Unpublished'),
+			'hide_if_one' => TRUE,
+			'default' => '',
+			'first_option' => 'Select only...',
+		),
+	),
 );
 
 // Page module init values
