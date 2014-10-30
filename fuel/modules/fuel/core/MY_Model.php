@@ -1689,11 +1689,11 @@ class MY_Model extends CI_Model {
 	 * @param string $mode, has_many or belongs_to (optional)
 	 * @return array
 	 */
-	public function get_related_keys($values, $related_model, $mode = 'has_many', $rel_config = '')
+	public function get_related_keys($related_field, $values, $related_model, $mode = 'has_many', $rel_config = '')
 	{
 		$CI =& get_instance();
 		$use_rel_tbl = $this->is_using_relationship_table($rel_config);
-		$fields = $this->relationship_field_names($mode);
+		$fields = $this->relationship_field_names($mode, $related_field);
 
 		if (is_array($related_model))
 		{
@@ -2798,7 +2798,7 @@ class MY_Model extends CI_Model {
 					}
 				}
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'has_many', $rel_config) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
 		}
@@ -2824,7 +2824,7 @@ class MY_Model extends CI_Model {
 				}
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'belongs_to', $rel_config) : array();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config, $related_field) : array();
 				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
 		}
@@ -2837,7 +2837,7 @@ class MY_Model extends CI_Model {
 			{
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $this->$related_model->options_list();
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($values, $related_model, 'has_many', $rel_config) : array();
+				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'has_many', $rel_config) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'select', 'options' => $related_options, 'value' => $related_vals, 'first_option' => lang('label_select_one'));
 			}
 		}
@@ -3177,16 +3177,16 @@ class MY_Model extends CI_Model {
 		// handle has_many relationships
 		if ( ! empty($this->has_many))
 		{
-			$fields = $this->relationship_field_names('has_many');
-			$relationships_model = $this->load_model($fields['relationships_model']);
-			
-
+			$rel_fields = $this->relationship_field_names('has_many');
+				
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->has_many as $related_field => $related_model)
 			{
 				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data['exists_'.$related_field])) OR $this->clear_related_on_save === TRUE);
 				if ($clear_on_save)
 				{
+					$fields = $rel_fields[$related_field];
+
 					// remove pre-existing relationships
 					if (!empty($fields['candidate_table']))
 					{
@@ -3196,6 +3196,7 @@ class MY_Model extends CI_Model {
 					{
 						$del_where = array($fields['candidate_key'] => $id);	
 					}
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					$CI->$relationships_model->delete($del_where);	
 				}
 			}
@@ -3205,7 +3206,10 @@ class MY_Model extends CI_Model {
 			{
 				if ( ! empty($this->normalized_save_data[$related_field]))
 				{
+
+					$fields = $rel_fields[$related_field];
 					$related_model = $this->load_related_model($related_model);
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
@@ -3214,18 +3218,21 @@ class MY_Model extends CI_Model {
 					}
 				}
 			}
+
 		}
 		
 		// handle belongs_to relationships
 		if ( ! empty($this->belongs_to))
 		{
-			$fields = $this->relationship_field_names('belongs_to');
-			$relationships_model = $this->load_model($fields['relationships_model']);
 			$related_models = array();
+			$rel_fields = $this->relationship_field_names('belongs_to');
 
 			// first delete in case there are multiple saves to the same relationship table
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
+
+				$fields = $rel_fields[$related_field];
+				$relationships_model = $this->load_model($fields['relationships_model']);
 
 				// cache the loaded models here for reference below
 				$related_models[$related_field] =& $this->load_related_model($related_model);
@@ -3253,6 +3260,8 @@ class MY_Model extends CI_Model {
 			{
 				if ( ! empty($this->normalized_save_data[$related_field]))
 				{
+					$fields = $rel_fields[$related_field];
+
 					$related_model = $related_models[$related_field];
 					
 					// create relationships
@@ -3277,14 +3286,16 @@ class MY_Model extends CI_Model {
 	public function process_relationships_delete($id)
 	{
 		$CI =& get_instance();
-		
+
 		// clear out any relationships
 		if ( ! empty($this->has_many))
 		{
-			$fields = $this->relationship_field_names('has_many');
+			$rel_fields = $this->relationship_field_names('has_many');
 
 			foreach ($this->has_many as $related_field => $related_model)
 			{
+				$fields = $rel_fields[$related_field];
+
 				$relationships_model = $this->load_model($fields['relationships_model']);
 				if (!empty($fields['candidate_table']))
 				{
@@ -3299,9 +3310,13 @@ class MY_Model extends CI_Model {
 		}
 		if ( ! empty($this->belongs_to))
 		{
-			$fields = $this->relationship_field_names('belongs_to');
+
+			$rel_fields = $this->relationship_field_names('belongs_to');
+			
 			foreach ($this->belongs_to as $related_field => $related_model)
 			{
+				$fields = $rel_fields[$related_field];
+
 				$related_model = $this->load_related_model($related_model);
 				$relationships_model = $this->load_model($fields['relationships_model']);
 				if (!empty($fields['foreign_table']) AND !empty($fields['foreign_table']))
@@ -3626,7 +3641,7 @@ class MY_Model extends CI_Model {
 	 * @param	string	relationship type
 	 * @return	array
 	 */	
-	public function relationship_field_names($relationship_type)
+	public function relationship_field_names($relationship_type, $field = NULL)
 	{
 		$valid_rel_types = array('has_many', 'belongs_to');
 		if ( ! in_array($relationship_type, $valid_rel_types))
@@ -3638,30 +3653,37 @@ class MY_Model extends CI_Model {
 		{
 			return FALSE;
 		}
-		
+
+		$return = array();
+
 		$fields = array(
-			'candidate_table'	=> 'candidate_table',
-			'foreign_table'		=> 'foreign_table',
-			'foreign_key'		=> 'foreign_key',
-			'candidate_key'		=> 'candidate_key',
-			'relationships_model'=> array(FUEL_FOLDER => 'fuel_relationships_model'),
-			);
+		'candidate_table'	=> 'candidate_table',
+		'foreign_table'		=> 'foreign_table',
+		'foreign_key'		=> 'foreign_key',
+		'candidate_key'		=> 'candidate_key',
+		'relationships_model'=> array(FUEL_FOLDER => 'fuel_relationships_model'),
+		);
 
 		foreach($this->$relationship_type as $key => $rel_config)
 		{
+			$return[$key] = $fields;
 			if (is_array($rel_config))
 			{
-				// loop
-				foreach($fields as $k => $v)
+				foreach($return[$key] as $k => $v)
 				{
 					if (isset($rel_config[$k]))
 					{
-						$fields[$k] = $rel_config[$k];
+						$return[$key][$k] = $rel_config[$k];
 					}
 				}
 			}
 		}
-		return $fields;
+
+		if (!empty($field))
+		{
+			return $return[$field];
+		}
+		return $return;
 	}
 
 	// --------------------------------------------------------------------
@@ -5505,7 +5527,7 @@ class Data_record {
 		}
 
 		$rel = $this->_parent_model->$relationship_type;
-		$fields = $this->_parent_model->relationship_field_names($relationship_type);
+		$fields = $this->_parent_model->relationship_field_names($relationship_type, $var);
 		$id_field = '';
 		$rel_config = $rel[$var];
 		$use_rel_tbl = $this->_parent_model->is_using_relationship_table($rel_config);
