@@ -233,7 +233,7 @@ foreach($tags as $key => $tag)
   echo $tag->name;
 }
 </pre>
-<p class="important">In the latter example above, the record property <kbd>tags</kbd> can be called as a method as well by pre-pending "get_" in front of the properties name (e.g. get_tags()).
+<p class="important">In the latter example above, the record property <kbd>tags</kbd> can be called as a method as well by pre-appending "get_" in front of the properties name (e.g. get_tags()).
 This allows us to pass additional parameters.</p>
 
 
