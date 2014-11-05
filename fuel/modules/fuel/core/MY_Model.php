@@ -5384,7 +5384,7 @@ class Data_record {
 			$set_method = "set_".$var;
 			$this->$set_method($val);
 		}
-		// set in foreign keys only if it is an object
+		// set any foreign keys only if it is an object
 		else if (is_object($val) AND ($val instanceof Data_record) AND in_array($var.'_id', array_keys($foreign_keys)))
 		{
 			$this->_fields[$var] = $val;
