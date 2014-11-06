@@ -129,6 +129,7 @@ class Validator {
 		if (empty($params))
 		{
 			if (!empty($_POST[$field])) $params = $_POST[$field];
+			if (empty($params[$field]) AND !empty($_FILES[$field])) $params = $_FILES[$field];
 		}
 		$rule = new Validator_Rule($func, $msg, $params);
 		$this->_fields[$field][] = $rule;
