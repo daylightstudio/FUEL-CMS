@@ -206,9 +206,18 @@ class Module extends Fuel_base_controller {
 		// save page state
 		$this->fuel->admin->save_page_state($params);
 		
-		
-		// create search filter
-		$filters[$this->display_field] = trim($params['search_term']);
+		if(is_array($this->display_field))
+		{
+			foreach ($this->display_field as $field)
+			{
+				$filters[$field] = trim($params['search_term']);
+			}
+		}
+		else
+		{
+			// create search filter
+			$filters[$this->display_field] = trim($params['search_term']);
+		}
 		
 		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
 		$this->model->filter_value = trim($params['search_term']);
