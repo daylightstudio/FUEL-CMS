@@ -249,6 +249,30 @@ class Fuel_category_model extends Base_module_record {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Magic method that will allow you to return the model object by doing something like $cateogry->get_products(TRUE);
+	 *
+	 * @access	public
+	 * @param	string	field name
+	 * @param	array	arguments
+	 * @return	mixed
+	 */	
+	public function __call($method, $args)
+	{
+		if (preg_match("/^get_(.*)/", $method, $found))
+		{
+			$model = $this->get($found[1]);
+			if ($model)
+			{
+				$data = (isset($args[0]) AND $args[0] === TRUE) ? $model : $model->find_all();
+				return $data;
+			}
+		}
+		return parent::__call($method, $args);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Magic method to return first property, method, then field values 
 	 *
 	 * @access	public

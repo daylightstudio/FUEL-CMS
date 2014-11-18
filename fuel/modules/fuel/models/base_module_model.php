@@ -690,7 +690,8 @@ class Base_module_model extends MY_Model {
 
 				if (in_array($CI->language_col, $fields))
 				{
-					$display_field = 'CONCAT('.$display_field.', " - ", '.$CI->language_col.') AS val_field';
+					if (strpos($display_field, '.') === FALSE) $display_field = $this->table_name.'.'.$display_field;
+					$display_field = 'CONCAT('.$display_field.', " - ", '.$this->table_name.'.'.$CI->language_col.') AS val_field';
 					$orderby = 'val_field ASC';
 				}
 			}
@@ -731,7 +732,7 @@ class Base_module_model extends MY_Model {
 		{
 			$this->db->distinct($field);
 		}
-
+		if (strpos($field, '.') === FALSE) $field = $this->table_name.'.'.$field;
 		$where[$field.' !='] = '';
 		$options = $this->options_list($field, $field, $where, TRUE, FALSE);
 		return $options;

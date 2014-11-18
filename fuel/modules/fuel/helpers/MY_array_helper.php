@@ -191,5 +191,83 @@ function array_group($array, $groups)
 	return array_chunk($array, $items_in_each_group);
 }
 
+/**
+ * Converts a .csv file to an associative array. Must have header row.
+ *
+ * @access	public
+ * @param	string  file name
+ * @param	string  the delimiter that separates each column
+ * @param	int     the index for where the header row starts
+ * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
+ * @return	array
+ */	
+function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
+{
+	if(!file_exists($filename) || !is_readable($filename))
+	{
+		return FALSE;
+	}
+
+	$header = NULL;
+	$data = array();
+	if (($handle = fopen($filename, 'r')) !== FALSE)
+	{
+		$i = -1;
+		while (($row = fgetcsv($handle, $length, $delimiter)) !== FALSE)
+		{
+			$i++;
+			if ($i >= $header_row) {
+				if(!$header)
+				{
+					$header = $row;
+				}
+				else
+				{
+					$data[] = array_combine($header, $row);
+				}
+			}
+		}
+		fclose($handle);
+	}
+	return $data;
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Return the value from an associative array or an object.
+ * credit: borrowed from Vanilla forums GetValueR function
+ *
+ * @access	public
+ * @param 	string $key The key or property name of the value.
+ * @param 	mixed $array The array or object to search.
+ * @param 	mixed $default The value to return if the key does not exist.
+ * @return 	mixed The value from the array or object.
+ */
+function array_dot($key, $array, $default = FALSE)
+{
+	$path = explode('.', $key);
+
+	$value = $array;
+	for ($i = 0; $i < count($path); ++$i)
+	{
+		$sub_key = $path[$i];
+
+		if (is_array($value) AND isset($value[$sub_key]))
+		{
+			$value = $value[$sub_key];
+		}
+		elseif (is_object($value) AND isset($value->$sub_key))
+		{
+			$value = $value->$sub_key;
+		}
+		else
+		{
+			return $default;
+		}
+	}
+	return $value;
+}
+
 /* End of file MY_array_helper.php */
 /* Location: ./modules/fuel/helpers/MY_array_helper.php */

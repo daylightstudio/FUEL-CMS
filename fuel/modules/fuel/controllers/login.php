@@ -37,7 +37,7 @@ class Login extends CI_Controller {
 			);
 
 	}
-	
+
 	public function index()
 	{
 		// check if it's a password request and redirect'
@@ -51,23 +51,23 @@ class Login extends CI_Controller {
 			$this->dev();
 			return;
 		}
+
 		$this->js_controller_params['method'] = 'add_edit';
-		
+
 		$this->load->helper('convert');
 		$this->load->helper('cookie');
-		
-		$session_key = $this->fuel->auth->get_session_namespace();
-		
-		$user_data = $this->session->userdata($session_key);
-		if (!empty($_POST))
-		{
 
+		$session_key = $this->fuel->auth->get_session_namespace();
+
+		$user_data = $this->session->userdata($session_key);
+
+		if ( ! empty($_POST))
+		{
 			// check if they are locked out out or not
 			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
  				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
-				
 			}
 			else
 			{
@@ -87,9 +87,10 @@ class Login extends CI_Controller {
 						);
 
 						set_cookie($config);
-						
+
 						$forward = $this->input->post('forward');
 						$forward_uri = uri_safe_decode($forward);
+
 						if ($forward AND $forward_uri != $this->fuel->config('login_redirect'))
 						{
 							redirect($forward_uri);
@@ -113,9 +114,8 @@ class Login extends CI_Controller {
 							// add to the number of attempts if it's an invalid login'
 							$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
 							$user_data['failed_login_attempts'] = $num_attempts;
-							
 						}
-						
+
 						// check if they should be locked out
 						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
 						{
@@ -135,11 +135,11 @@ class Login extends CI_Controller {
 					$this->fuel_users_model->add_error(lang('error_empty_user_pwd'));
 				}
 			}
+
 			$this->session->set_userdata($session_key, $user_data);
 		}
 		
 		// build form
-		
 		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
 		$fields['user_name'] = array('size' => 25, 'placeholder' => 'username', 'display_label' => FALSE);
 		$fields['password'] = array('type' => 'password', 'size' => 25, 'placeholder' => 'password', 'display_label' => FALSE);
@@ -168,33 +168,37 @@ class Login extends CI_Controller {
 		$vars['notifications'] = $notifications;
 		$vars['display_forgotten_pwd'] = $this->fuel->config('allow_forgotten_password');
 		$vars['page_title'] = lang('fuel_page_title');
-		$this->load->view('login', $vars);
+
+		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
 	}
-	
+
 	public function pwd_reset()
 	{
-		if (!$this->fuel->config('allow_forgotten_password')) show_404();
+		if ( ! $this->fuel->config('allow_forgotten_password')) show_404();
+
 		$this->js_controller_params['method'] = 'add_edit';
 
-		if (!empty($_POST))
+		if ( ! empty($_POST))
 		{
 			if ($this->input->post('email'))
 			{
 				$user = $this->fuel_users_model->find_one_array(array('email' => $this->input->post('email')));
-				if (!empty($user['email']))
+
+				if ( ! empty($user['email']))
 				{
 					$users = $this->fuel->users;
 					$new_pwd = $this->fuel->users->reset_password($user['email']);
+
 					if ($new_pwd !== FALSE)
 					{
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
 						$msg = lang('pwd_reset_email', fuel_url($url));
-						
+
 						$params['to'] = $this->input->post('email');
 						$params['subject'] = lang('pwd_reset_subject');
 						$params['message'] = $msg;
 						$params['use_dev_mode'] = FALSE;
-						
+
 						if ($this->fuel->notification->send($params))
 						{
 							$this->session->set_flashdata('success', lang('pwd_reset'));
@@ -205,6 +209,7 @@ class Login extends CI_Controller {
 							$this->session->set_flashdata('error', lang('error_pwd_reset'));
 							$this->fuel->logs->write($this->fuel->notification->last_error(), 'debug');
 						}
+
 						redirect(fuel_uri('login'));
 					}
 					else
@@ -222,29 +227,33 @@ class Login extends CI_Controller {
 				$this->fuel_users_model->add_error(lang('error_empty_email'));
 			}
 		}
+
 		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
 		
 		// build form
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
 		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
+
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
+
 		$vars['form'] = $this->form_builder->render();
 		
 		// notifications template
 		$vars['error'] = $this->fuel_users_model->get_errors();
-		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
+		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
-		$this->load->view('pwd_reset', $vars);
+
+		$this->load->module_view(FUEL_FOLDER, 'pwd_reset', $vars);
 	}
-	
-	
+
 	public function dev()
 	{
 		$this->config->set_item('allow_forgotten_password', FALSE);
-		if (!empty($_POST))
+
+		if ( ! empty($_POST))
 		{
-			if (!$this->fuel->config('dev_password'))
+			if ( ! $this->fuel->config('dev_password'))
 			{
 				redirect('');
 			}
@@ -260,20 +269,22 @@ class Login extends CI_Controller {
 				add_error(lang('error_invalid_login'));
 			}
 		}
+
 		$fields['password'] = array('type' => 'password', 'placeholder' => 'password', 'display_label' => FALSE, 'size' => 25);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
+
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
 		$this->form_builder->set_fields($fields);
-		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+
+		if ( ! empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+
 		$vars['form'] = $this->form_builder->render();
-		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
-		
+		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['display_forgotten_pwd'] = FALSE;
 		$vars['instructions'] = lang('dev_pwd_instructions');
 		$vars['page_title'] = lang('fuel_page_title');
-		$this->load->view('login', $vars);
-		
-		
+
+		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
 	}
 }

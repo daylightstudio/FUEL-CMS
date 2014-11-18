@@ -275,7 +275,15 @@ class Fuel_assets extends Fuel_base_library {
 						$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
 					}
 				}
-			
+
+				// replace {file} with placeholder of file name			
+				if (strpos($params['file_name'], '{') !== FALSE )
+				{
+					$params['file_name'] = preg_replace('#(.*)\{file\}(.*)#U', '$1'.pathinfo($file['name'], PATHINFO_FILENAME).'$2', $params['file_name']);
+				}
+
+
+
 				// set overwrite
 				$params['overwrite'] = (is_true_val($params['overwrite']));
 

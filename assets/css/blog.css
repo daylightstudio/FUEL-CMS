@@ -38,7 +38,7 @@ input.search_btn { background-color: #eee; height: 22px; line-height: 12px; marg
 
 /* for form */
 .success { background-color: #cc0; padding: 2px 5px; }
-.error { background-color: #c30; color: #fff; padding: 2px 5px; margin: 0; }
+.error, .comment_error { background-color: #c30; color: #fff; padding: 2px 5px; margin: 0; }
 span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
 
 

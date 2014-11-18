@@ -12,4 +12,8 @@
 	<?php foreach($css as $m => $c) : echo css(array($m => $c))."\n\t"; endforeach; ?>
 	<?=js('jquery/jquery', 'fuel')?>
 
+	<script type="text/javascript">
+		<?=$this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx', array(), TRUE)?>
+	</script>
+
 </head>

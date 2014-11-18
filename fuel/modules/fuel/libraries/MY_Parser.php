@@ -337,6 +337,35 @@ class MY_Parser extends CI_Parser {
 	}
 
 	// --------------------------------------------------------------------
+
+
+	/**
+	 * Returns an array of allowed PHP functions
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function allowed_functions()
+	{
+		return $this->_parser_allowed_php_functions;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns an array of allowed PHP functions
+	 * 1 - Encode tags
+	 * 2 - Remove tags
+	 * 3 - Allow tags
+	 *
+	 * @access	public
+	 * @return	int
+	 */
+	public function allow_php_tags()
+	{
+		return $this->_parser_allow_php_tags;
+	}
+
 }
 
 class MY_Security_Policy extends Dwoo_Security_Policy {

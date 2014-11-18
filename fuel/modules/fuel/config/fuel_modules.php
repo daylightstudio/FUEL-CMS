@@ -9,7 +9,7 @@
 
 $config['modules'] = array();
 
-// page module init values
+// Page module init values
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
 	'model_location' => 'fuel',
@@ -27,15 +27,44 @@ $config['modules']['pages'] = array(
 	'js_controller' => 'fuel.controller.PageController',
 	'js_controller_params' => array('import_field' => 'vars--body'),
 	'preview_path' => '{location}',
-	'permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create', 'publish', 'delete'),
+	'permission' => array(
+		'pages', 'create', 'edit',
+		'pages/upload' => 'pages/create',
+		'publish', 'delete'
+	),
 	'instructions' => lang('pages_instructions'),
 	'archivable' => TRUE,
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('pages/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('pages/upload' => lang('btn_upload'))),
+	'item_actions' => array(
+		'save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create',
+		'others' => array('pages/upload' => lang('btn_upload'))
+	),
+	'advanced_search' => TRUE,
+	'filters' => array(
+		'layout' => array(
+			'default' => 1,
+			'label' => lang('form_label_layout'),
+			'type' => 'select',
+			'model' => 'fuel_pages_model',
+			'model_params' => array('layout', 'layout'),
+			'hide_if_one' => TRUE,
+			'default' => '',
+			'first_option' => 'Select a layout...',
+		),
+		'published' => array(
+			'default' => 1,
+			'label' => lang('form_label_published'),
+			'type' => 'select',
+			'options' => array('yes' => 'Published', 'no' =>'Unpublished'),
+			'hide_if_one' => TRUE,
+			'default' => '',
+			'first_option' => 'Select only...',
+		),
+	),
 );
 
-// page module init values
+// Page module init values
 $config['modules']['pagevariables'] = array(
 	'module_name' => 'Page Variables',
 	'model_location' => 'fuel',
@@ -51,26 +80,36 @@ $config['modules']['pagevariables'] = array(
 	'sanitize_input' => array('template','php'),
 	'default_col' => 'page_id',
 	'default_order' => 'asc',
-	'permission' => array('edit' => 'pages', 'publish' => 'pages/publish', 'delete' => 'pages/delete'),
+	'permission' => array(
+		'edit' => 'pages',
+		'publish' => 'pages/publish',
+		'delete' => 'pages/delete'
+	),
 	'hidden' => TRUE
 );
 
-// navigation module init values
+// Navigation module init values
 $config['modules']['blocks'] = array(
 	'module_name' => 'Blocks',
 	'model_location' => 'fuel',
 	'model_name' => 'fuel_blocks_model',
 	'display_field' => 'name',
-	'permission' => array('blocks', 'create', 'edit', 'blocks/upload' => 'blocks/create', 'publish', 'delete'),
+	'permission' => array(
+		'blocks', 'create', 'edit',
+		'blocks/upload' => 'blocks/create',
+		'publish', 'delete'
+	),
 	'default_col' => 'name',
 	'default_order' => 'asc',
 	'js_controller' => 'fuel.controller.BlockController',
 	'sanitize_input' => array('template','php'),
 	'list_actions' => array('blocks/upload' => lang('btn_upload')),
-	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create', 'others' => array('blocks/upload' => lang('btn_upload'))),
+	'item_actions' => array('save', 'view', 'publish', 'delete', 'duplicate', 'replace', 'create',
+		'others' => array('blocks/upload' => lang('btn_upload'))
+	)
 );
 
-// navigation module init values
+// Navigation module init values
 $config['modules']['navigation'] = array(
 	'module_name' => 'Navigation',
 	'model_location' => 'fuel',
@@ -80,14 +119,29 @@ $config['modules']['navigation'] = array(
 	'default_order' => 'asc',
 	'js_controller' => 'fuel.controller.NavigationController',
 	'preview_path' => '',
-	'permission' => array('navigation', 'create', 'edit', 'navigation/upload' => 'navigation/create', 'publish', 'delete'),
+	'permission' => array(
+		'navigation', 'create', 'edit',
+		'navigation/upload' => 'navigation/create',
+		'publish', 'delete'
+	),
 	'instructions' => lang('navigation_instructions'),
-	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'fuel_navigation_groups_model', 'hide_if_one' => TRUE)),
+	'filters' => array(
+		'group_id' => array(
+			'default' => 1,
+			'label' => lang('form_label_navigation_group'),
+			'type' => 'select',
+			'model' => 'fuel_navigation_groups_model',
+			'hide_if_one' => TRUE
+		)
+	),
 	'archivable' => TRUE,
-	'list_actions' => array('navigation/upload' => lang('btn_upload'), 'navigation/download' => lang('btn_download'))
+	'list_actions' => array(
+		'navigation/upload' => lang('btn_upload'),
+		'navigation/download' => lang('btn_download')
+	)
 );
 
-// navigation module init values
+// Navigation module init values
 $config['modules']['navigation_group'] = array(
 	'module_name' => 'Navigation Groups',
 	'model_location' => 'fuel',
@@ -95,12 +149,12 @@ $config['modules']['navigation_group'] = array(
 	'table_headers' => array(
 		'id', 
 		'name', 
-		'published',
+		'published'
 	),
 	'permission' => 'navigation'
 );
 
-// navigation module init values
+// Navigation module init values
 $config['modules']['tags'] = array(
 	'module_name' => 'Tags',
 	'model_location' => 'fuel',
@@ -109,12 +163,11 @@ $config['modules']['tags'] = array(
 		'id', 
 		'name', 
 		'slug',
-		'published',
-	),
-	//'filters' => array('context' => array('label' => lang('form_label_category'), 'type' => 'select', 'model' => 'fuel_categories_model', 'first_option' => '')),
+		'published'
+	)
 );
 
-// navigation module init values
+// Navigation module init values
 $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
 	'model_location' => 'fuel',
@@ -128,10 +181,21 @@ $config['modules']['categories'] = array(
 		'precedence',
 		'published',
 	),
-	'filters' => array('context' => array('label' => lang('form_label_context'), 'type' => 'select', 'model' => array(FUEL_FOLDER => array('fuel_categories_model' => 'context_options_list')), 'first_option' => 'Select a context...')),
+	'filters' => array(
+		'context' => array(
+			'label' => lang('form_label_context'),
+			'type' => 'select',
+			'model' => array(
+				FUEL_FOLDER => array(
+					'fuel_categories_model' => 'context_options_list'
+				)
+			),
+			'first_option' => 'Select a context...'
+		)
+	)
 );
 
-// assets module init values
+// Assets module init values
 $config['modules']['assets'] = array(
 	'module_name' => 'Assets',
 	'model_location' => 'fuel',
@@ -150,7 +214,17 @@ $config['modules']['assets'] = array(
 	'preview_path' => '',
 	'permission' => 'assets',
 	'instructions' => lang('assets_instructions'),
-	'filters' => array('group_id' => array('default' => 0, 'label' => lang('form_label_asset_folder'), 'type' => 'select', 'options' => array(0 => 'images'), 'default' => 'images')),
+	'filters' => array(
+		'group_id' => array(
+			'default' => 0,
+			'label' => lang('form_label_asset_folder'),
+			'type' => 'select',
+			'options' => array(
+				0 => 'images'
+			),
+			'default' => 'images'
+		)
+	),
 	'archivable' => FALSE,
 	'table_actions' => array('DELETE'),
 	'rows_selectable' => FALSE,
@@ -158,7 +232,7 @@ $config['modules']['assets'] = array(
 	'sanitize_images' => FALSE
 );
 
-// sitevariable module init values
+// Sitevariable module init values
 $config['modules']['sitevariables'] = array(
 	'module_name' => 'Site Variables',
 	'model_location' => 'fuel',
@@ -170,7 +244,6 @@ $config['modules']['sitevariables'] = array(
 		'scope', 
 		'active', 
 	),
-	
 	'display_field' => 'name',
 	'preview_path' => '',
 	'permission' => 'sitevariables',
@@ -180,8 +253,7 @@ $config['modules']['sitevariables'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-
-// users module init values
+// Users module init values
 $config['modules']['users'] = array(
 	'module_name' => 'Users',
 	'model_location' => 'fuel',
@@ -193,14 +265,13 @@ $config['modules']['users'] = array(
 		'first_name', 
 		'last_name', 
 		'super_admin', 
-		'active', 
+		'active'
 	),
 	'language_col' => FALSE, // so it won't render the dropdown filter select
 	'js_controller' => 'fuel.controller.UserController',
 	'display_field' => 'email',
 	'preview_path' => '',
 	'permission' => 'users',
-	//'edit_method' => 'user_info',
 	'instructions' => lang('users_instructions'),
 	'archivable' => FALSE,
 	'table_actions' => array(
@@ -210,7 +281,7 @@ $config['modules']['users'] = array(
 				if ($cols[\'super_admin\'] != "yes") { 
 					$CI =& get_instance();
 					$link = "";
-					if ($CI->fuel->auth->has_permission($CI->permission, "delete") AND isset($cols[$CI->model->key_field()]))
+					if ($CI->fuel->auth->has_permission($CI->permission, "delete") && isset($cols[$CI->model->key_field()]))
 					{
 						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
@@ -224,7 +295,7 @@ $config['modules']['users'] = array(
 				$CI =& get_instance();
 				$link = "";
 				$user = $CI->fuel->auth->user_data();
-				if ($CI->fuel->auth->is_super_admin() AND ($cols[$CI->model->key_field()] != $user["id"]))
+				if ($CI->fuel->auth->is_super_admin() && ($cols[$CI->model->key_field()] != $user["id"]))
 				{
 					$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/login_as/".$cols[$CI->model->key_field()]);
 					$link = "<a href=\"".$url."\">".lang("table_action_login_as")."</a>";
@@ -234,10 +305,10 @@ $config['modules']['users'] = array(
 			),
 		),
 	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
-	'clear_cache_on_save' => FALSE,
+	'clear_cache_on_save' => FALSE
 );
 
-// permissions module init values
+// Permissions module init values
 $config['modules']['permissions'] = array(
 	'module_name' => 'Permissions',
 	'model_location' => 'fuel',
@@ -258,7 +329,7 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-// permissions module init values
+// Permissions module init values
 $config['modules']['logs'] = array(
 	'module_name' => 'Activity Log',
 	'model_location' => 'fuel',
@@ -282,12 +353,19 @@ $config['modules']['logs'] = array(
 	'rows_selectable' => FALSE,
 	'clear_cache_on_save' => FALSE,
 	'filters' => array(
-		'type' => array('type' => 'select', 'label' => 'Type:', 'options' => array('info' => 'info', 'debug' => 'debug'), 'first_option' => lang('label_select_one')),
-		),
+		'type' => array(
+			'type' => 'select',
+			'label' => 'Type:',
+			'options' => array(
+				'info' => 'info',
+				'debug' => 'debug'
+			),
+			'first_option' => lang('label_select_one')
+		)
+	)
 );
 
 //@include(APPPATH.'config/MY_fuel_modules.php');
-
 
 /* End of file fuel_modules.php */
 /* Location: ./modules/fuel/config/fuel_modules.php */

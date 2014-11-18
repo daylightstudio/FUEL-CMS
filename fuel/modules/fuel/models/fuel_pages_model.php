@@ -31,6 +31,7 @@ require_once('base_module_model.php');
 
 class Fuel_pages_model extends Base_module_model {
 
+	public $filter_join = 'and';
 	public $required = array('location'); // The location field is required
 	public $unique_fields = array('location'); // The location field is unique
 	public $hidden_fields = array('last_modified', 'last_modified_by'); // The Last modified and Last modified by are hidden fields

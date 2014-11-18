@@ -4,5 +4,3 @@
 <?=generate_config_info()?>
 
 <?=generate_toc()?>
-
-

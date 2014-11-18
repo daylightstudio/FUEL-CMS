@@ -551,7 +551,7 @@ function fuel_url($uri = '', $query_string = FALSE)
 {
 	$CI =& get_instance();
 	$uri = fuel_uri($uri, $query_string);
-	return site_url($uri);
+	return site_url($uri, NULL, FALSE);
 }
 
 // --------------------------------------------------------------------

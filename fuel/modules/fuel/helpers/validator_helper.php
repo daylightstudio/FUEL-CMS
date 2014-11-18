@@ -53,7 +53,7 @@ function required($var)
 		return !empty($var);
 	}
 	// automatically set integer values to TRUE
-	else if (is_int($var))
+	else if (is_numeric($var))
 	{
 		return TRUE;
 	}
@@ -115,7 +115,8 @@ if ( ! function_exists('valid_email'))
 {
 	function valid_email($email)
 	{
-	    return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
+	    //return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,10}$/ix", $email)) ? FALSE : TRUE;
+	    return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 } 
 // --------------------------------------------------------------------

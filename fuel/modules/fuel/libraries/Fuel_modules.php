@@ -474,7 +474,7 @@ class Fuel_modules extends Fuel_base_library {
 		{
 			$module = $this->get($module);
 		}
-		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		$key = Fuel_installer::INSTALLED_SETTINGS_KEY;
 		
 		$installed = $this->fuel->settings->get($module->name(), $key);
 		if (empty($installed))
@@ -503,7 +503,7 @@ class Fuel_modules extends Fuel_base_library {
 			$module = $this->get($module);
 		}
 		
-		$key = Fuel_install::INSTALLED_SETTINGS_KEY;
+		$key = Fuel_installer::INSTALLED_SETTINGS_KEY;
 		$installed = $this->fuel->settings->get($module->name(), $key);
 		if (empty($installed))
 		{
@@ -762,7 +762,7 @@ class Fuel_module extends Fuel_base_library {
 						break;
 					}
 				}
-				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $this->_info[1]; // usually the second field is the display_field... first is the id
+				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $fields[1]; // usually the second field is the display_field... first is the id
 			}
 		}
 		if (empty($prop))

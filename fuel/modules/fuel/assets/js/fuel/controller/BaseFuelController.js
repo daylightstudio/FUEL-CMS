@@ -184,7 +184,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var itemViewsCookie = $.supercookie(this.uiCookie, itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
-				_this._toggleRearrangeBtn();
 
 				$('#toggle_tree').parent().addClass('active');
 				if ($('#rearrange').parent().hasClass('active')){
@@ -202,6 +201,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				// lazy load tree
 				if (!_this.treeLoaded){
 					_this.redrawTree();
+				} else {
+					_this._toggleRearrangeBtn();
 				}
 				return false;
 			});
@@ -220,6 +221,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				// lazy load table
 				if (!_this.tableLoaded){
 					_this.redrawTable();
+				} else {
+					_this._toggleRearrangeBtn();
 				}
 				return false;
 			});
@@ -603,17 +606,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	_toggleRearrangeBtn : function(){
-
-		// remove the button if no precedence columns
-		if (!$('#precedence').length)
-		{
-			$('.ico_precedence').parent().remove();
-		}
-		
-		if ($('#precedence').val() != 1){
-			$('#rearrange').parent().hide();
-		} else {
+		if (!$('#list_container').is(':hidden') && parseInt($('#precedence').val()) == 1){
 			$('#rearrange').parent().show();
+		} else {
+			$('#rearrange').parent().hide();
 		}
 	},
 	
@@ -645,7 +641,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		if (!_this.treeLoaded) _this.treeLoaded = true;
 		
 		// setup rearranging precedence
-		$('#rearrange').parent().hide();
+		_this._toggleRearrangeBtn();
 		
 	},
 	
@@ -662,7 +658,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.post(_this.modulePath + '/toggle_' + toggleStatus + '/' + id + '/' + field, params, function(html){
 				_this.redrawTable(true, false);
 			});
-			
 		}
 		
 		$('#data_table .publish_text').parent().addClass('publish_col');
@@ -683,7 +678,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 					if (!_this.rearrangeOn){
 						var actionsCol = $(this).parent().find('td.actions');
 						var firstLink = $('a:first', actionsCol[0]).attr('href');
-						if (firstLink && firstLink){
+						if (firstLink){
 							window.location = firstLink;
 						}
 					}

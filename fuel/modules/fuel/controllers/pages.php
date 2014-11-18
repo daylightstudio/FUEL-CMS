@@ -2,40 +2,46 @@
 require_once('module.php');
 
 class Pages extends Module {
-	
+
 	private $_importing = FALSE;
-	
+
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(FALSE);
+
+		// allow the select URL page to show up regardless of permissions
+		$validate = (fuel_uri_segment(2) == 'select') ? FALSE : TRUE;
+		if ($validate)
+		{
+			$this->_validate_user($this->permission);	
+		}
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
 	public function create($field = NULL, $redirect = TRUE)
 	{
-
 		// check that the action even exists and if not, show a 404
-		if (!$this->fuel->auth->module_has_action('save'))
+		if ( ! $this->fuel->auth->module_has_action('save'))
 		{
 			show_404();
 		}
-		
+
 		// check permissions
-		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
 			show_error(lang('error_no_permissions'));
 		}
-		
+
 		if (isset($_POST['id'])) // check for dupes
 		{
 			$posted = $this->_process();
-			
+
 			// set publish status to no if you do not have the ability to publish
-			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
 				$posted['published'] = 'no';
 			}
-			
+
 			// reset dup id
 			if ($_POST['id'] == 'dup')
 			{
@@ -49,7 +55,7 @@ class Pages extends Module {
 
 				// run before_save hook
 				$this->_run_hook('before_save', $posted);
-				
+
 				// grab the layout
 				$layout = $this->fuel->layouts->get($this->input->post('layout', TRUE));
 
@@ -70,25 +76,25 @@ class Pages extends Module {
 					{
 						show_error(lang('error_saving'));
 					}
-				
-					if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+
+					if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
 					{
 						unset($_POST['published']);
 					}
-				
+
 					if ($this->_save_page_vars($id, $vars, $fields))
 					{
 						$this->_process_uploads($vars);
 
 						$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
+
 						// run after_create hook
 						$this->_run_hook('after_create', $data);
 
 						// run after_save hook
 						$this->_run_hook('after_save', $data);
 
-						if (!empty($data))
+						if ( ! empty($data))
 						{
 							$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
 							$url = fuel_uri('pages/edit/'.$id);
@@ -100,28 +106,30 @@ class Pages extends Module {
 							{
 								$url .= '?lang='.$this->input->post('language');
 							}
+
 							redirect($url);
 						}
 					}
 				}
 			}
-			
 		}
+
 		$vars = $this->_form();
 		$crumbs = array($this->module_uri => $this->module_name, '' => 'Create');
+
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->render('pages/page_create_edit', $vars);
+		$this->fuel->admin->render('pages/page_create_edit', $vars, '', FUEL_FOLDER);
 	}
 
 	public function edit($id = NULL, $field = NULL, $redirect = TRUE)
 	{
-		if (!$this->fuel->auth->module_has_action('save'))
+		if ( ! $this->fuel->auth->module_has_action('save'))
 		{
 			show_404();
 		}
 
 		// check permissions
-		if (!$this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
+		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
 			show_error(lang('error_no_permissions'));
 		}
@@ -129,12 +137,12 @@ class Pages extends Module {
 		if ($this->input->post('id'))
 		{
 			$posted = $this->_process();
-			
-			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+
+			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
 				unset($_POST['published']);
 			}
-			
+
 			// run before_edit hook
 			$this->_run_hook('before_edit', $posted);
 
@@ -157,21 +165,20 @@ class Pages extends Module {
 
 				if ($this->_save_page_vars($id, $vars, $fields))
 				{
-
 					$this->_process_uploads($vars);
 
 					$data = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-				
+
 					// run after_edit hook
 					$this->_run_hook('after_edit', $data);
 
 					// run after_save hook
 					$this->_run_hook('after_save', $data);
 
-					
 					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
 					$this->fuel->logs->write($msg);
 					$url = fuel_uri('pages/edit/'.$id);
+
 					if ($this->input->post('language'))
 					{
 						$url .= '?lang='.$this->input->post('language');
@@ -183,72 +190,72 @@ class Pages extends Module {
 		}
 		
 		$vars = $this->_form($id);
-		$this->fuel->admin->render('pages/page_create_edit', $vars);
+
+		$this->fuel->admin->render('pages/page_create_edit', $vars, '', FUEL_FOLDER);
 	}
-	
+
 	public function _form($id = NULL)
 	{
 		$this->load->library('form_builder');
 
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-		
+
 		$this->fuel->load_model('fuel_navigation');
-		
+
 		$this->load->helper('file');
 		$this->js_controller_params['method'] = 'add_edit';
 
 		// get saved data
 		$saved = array();
-		if (!empty($id))
+
+		if ( ! empty($id))
 		{
 			$saved = $this->model->find_one_array(array($this->model->table_name().'.id' => $id));
-			if (empty($saved))
-			{
-				show_404();
-			}
+
+			if (empty($saved)) show_404();
 		}
 
 		if ($this->input->get('lang'))
 		{
 			$saved['language'] = $this->input->get('lang', TRUE);
 		}
+
 		//$this->model->add_required('location');
-		
+
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields($saved);
 		$common_fields = $this->_common_fields($saved);
 		$fields = array_merge($fields, $common_fields);
 
-		if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+		if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
 		{
 			unset($fields['published']);
 		}
-		
+
 		// layout name tweaks
 		if ($this->input->post('layout'))
 		{
 			$layout = $this->input->post('layout', TRUE);
 		} 
-		else if (!empty($saved['layout']))
+		else if ( ! empty($saved['layout']))
 		{
-			$layout =  $saved['layout'];
+			$layout = $saved['layout'];
 		}
 		else 
 		{
 			$layout = $this->fuel->layouts->default_layout;
 		}
-		
+
 		// num uri params
 		$fields['cache']['class'] = 'advanced';
-		
-		$field_values = (!empty($_POST)) ? $_POST : $saved;
+		$field_values = ( ! empty($_POST)) ? $_POST : $saved;
 		$field_values['layout'] = $layout;
 
 		// substitute data values into preview path
 		$this->preview_path = $this->module_obj->url($field_values);
-		
+
 		$sort_arr = (empty($fields['navigation_label'])) ? array('location', 'layout', 'published', 'cache') : array('location', 'layout', 'navigation_label', 'published', 'cache');
-		
+
 		// create page form fields
 		$this->form_builder->set_validator($this->model->get_validation());
 		$this->form_builder->question_keys = array();
@@ -257,7 +264,7 @@ class Pages extends Module {
 		$this->form_builder->set_field_order($sort_arr);
 		$this->form_builder->display_errors = FALSE;
 		$this->form_builder->show_required = FALSE;
-		
+
 		// set this one to FALSE because the layout selection will execute the js again
 		$this->form_builder->auto_execute_js = FALSE;
 		$this->form_builder->set_fields($fields);
@@ -267,11 +274,8 @@ class Pages extends Module {
 
 		// clear the values hear to prevent issues in subsequent calls
 		$this->form_builder->clear();
-
-
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
-		
 
 		/*****************************************************************************
 		// check for twin view file, controller and extra routing to generate warnings
@@ -280,7 +284,8 @@ class Pages extends Module {
 		$import_view = FALSE;
 		$routes = array();
 		$uses_controller = FALSE;
-		if (!empty($field_values['location']))
+
+		if ( ! empty($field_values['location']))
 		{
 			$view_twin = APPPATH.'views/'.$field_values['location'].EXT;
 			$import_view = FALSE;
@@ -288,8 +293,11 @@ class Pages extends Module {
 			if (file_exists($view_twin))
 			{
 				$view_twin_info = get_file_info($view_twin);
-				if (!empty($saved)) {
+
+				if ( ! empty($saved))
+				{
 					$tz = date('T');
+
 					if ($view_twin_info['date'] > strtotime($saved['last_modified'].' '.$tz) OR
 						$saved['last_modified'] == $saved['date_added'])
 					{
@@ -297,11 +305,12 @@ class Pages extends Module {
 					}
 				}
 			}
-			
+
 			// check if there is routing for this page and display warning
 			require(APPPATH.'config/routes.php');
-			
+
 			$page_vars = array();
+
 			foreach ($route as $key => $val)
 			{
 				// Convert wild-cards to RegEx
@@ -316,17 +325,18 @@ class Pages extends Module {
 
 			// check if a controller and method already exists
 			$segments = explode('/', $field_values['location']);
-			
+
 			if (file_exists(APPPATH.'controllers/'.$segments[0].EXT))
 			{
 				require_once(APPPATH.'controllers/'.$segments[0].EXT);
+
 				$controller = $segments[0];
 				$method = (!empty($segments[1])) ? $segments[1] : 'index';
 				$class_methods = get_class_methods($segments[0]);
+
 				if (in_array($method, $class_methods)) $uses_controller = TRUE;
-				
 			}
-			
+
 			if (file_exists(APPPATH.'controllers/'.$segments[0]))
 			{
 				// Is the controller in a sub-folder?
@@ -339,9 +349,11 @@ class Pages extends Module {
 						if ( file_exists(APPPATH.'controllers/'.$segments[0].'/'.$segments[1].EXT))
 						{
 							require_once(APPPATH.'controllers/'.$segments[0].'/'.$segments[1].EXT);
+
 							$controller = $segments[1];
 							$method = (!empty($segments[2])) ? $segments[2] : 'index';
 							$class_methods = get_class_methods($segments[1]);
+
 							if (in_array($method, $class_methods)) $uses_controller = TRUE;
 						}
 					}
@@ -350,7 +362,9 @@ class Pages extends Module {
 						if (file_exists(APPPATH.'controllers/'.$segments[0].$route['default_controller'].EXT))
 						{
 							require_once(APPPATH.'controllers/'.$segments[0].$route['default_controller'].EXT);
+
 							$class_methods = get_class_methods($route['default_controller']);
+
 							if (in_array('index', $class_methods)) $uses_controller = TRUE;
 						}
 					}
@@ -359,19 +373,24 @@ class Pages extends Module {
 		}
 
 		$page_vars = array();
-		if (!empty($_POST))
+
+		if ( ! empty($_POST))
 		{
 			$page_vars = array();
+
 			foreach($_POST as $key => $val)
 			{
 				$key = end(explode('--', $key));
 				$page_vars[$key] = $val;
 			}
 		}
-		if (!empty($id))
+
+		if ( ! empty($id))
 		{
 			$lang = $this->input->get('lang');
-			if (!$lang) $lang = $this->fuel->language->default_option();
+
+			if ( ! $lang) $lang = $this->fuel->language->default_option();
+
 			$page_vars = array_merge($this->fuel_pagevariables_model->find_all_by_page_id($id, $lang), $page_vars);
 
 			// the following will pre-populate fields of a different language to the default values
@@ -379,28 +398,25 @@ class Pages extends Module {
 			{
 				$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $this->fuel->language->default_option());
 			}
-
 		}
 
-		
 		// page variables
 		$layout =  $this->fuel->layouts->get($layout);
 
-		if (!empty($layout))
+		if ( ! empty($layout))
 		{
 			$layout->set_field_values($page_vars);
 			$fields = $layout->fields();
 			$import_field = $layout->import_field();
 		}
 
-		if (!empty($import_field))
+		if ( ! empty($import_field))
 		{
 			$this->js_controller_params['import_field'] = $import_field;
 		}
 
 		// since the form builder is cleared above, we'll add in a script tag to make sure that the initialize code gets executed again
 		$this->form_builder->add_js('<script></script>');
-
 		$this->form_builder->id = 'layout_fields';
 		$this->form_builder->name_prefix = 'vars';
 		$this->form_builder->set_fields($fields);
@@ -408,10 +424,11 @@ class Pages extends Module {
 
 		$conflict = $this->_has_conflict($fields);
 
-		if (!empty($conflict))
+		if ( ! empty($conflict))
 		{
 			$vars['layout_fields'] = $conflict;
 		}
+
 		// else if (empty($id))
 		// {
 		// 	$vars['layout_fields'] = $this->form_builder->render();
@@ -425,37 +442,38 @@ class Pages extends Module {
 		// other variables
 		$vars['id'] = $id;
 		$vars['data'] = $saved;
+		$vars['action'] =  ( ! empty($saved['id'])) ? 'edit' : 'create';
 
-		$vars['action'] =  (!empty($saved['id'])) ? 'edit' : 'create';
 		$action_uri = $vars['action'].'/'.$id.'/';
+
 		$vars['form_action'] = ($this->fuel->admin->is_inline()) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
 		$vars['versions'] = $this->fuel_archives_model->options_list($id, $this->model->table_name());
-		
 		$vars['publish'] = (!empty($saved['published']) && is_true_val($saved['published'])) ? 'Unpublish' : 'Publish';
 		$vars['import_view'] = $import_view;
 		$vars['view_twin'] = $view_twin;
 		$vars['routes'] = $routes;
 		$vars['uses_controller'] = $uses_controller;
 		$vars['others'] = $this->model->get_others('location', $id);
-		if (!empty($saved['location'])) 
+
+		if ( ! empty($saved['location']))
 		{
 			$related = $saved;
 			$related['page_vars'] = $page_vars;
 			$vars['related_items'] = $this->model->related_items($related);
 		}
 
-		$actions = $this->load->view('_blocks/module_create_edit_actions', $vars, TRUE);
+		$actions = $this->load->module_view(FUEL_FOLDER, '_blocks/module_create_edit_actions', $vars, TRUE);
 		$vars['actions'] = $actions;
 		$vars['error'] = $this->model->get_errors();
-		
-		if (!empty($saved['last_modified']))
+
+		if ( ! empty($saved['last_modified']))
 		{
 			$vars['last_updated'] = lang('pages_last_updated_by', english_date($vars['data']['last_modified'], true), $vars['data']['email']);
 		}
-		
-		$notifications = $this->load->view('_blocks/notifications', $vars, TRUE);
+
+		$notifications = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['notifications'] = $notifications;
-		
+
 		if ($vars['action'] == 'edit')
 		{
 			$crumbs = array($this->module_uri => $this->module_name, '' => character_limiter(strip_tags($vars['data'][$this->display_field]), 50));
@@ -464,13 +482,15 @@ class Pages extends Module {
 		{
 			$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_create'));
 		}
+
 		$this->fuel->admin->set_titlebar($crumbs);
 
 		// do this after rendering so it doesn't render current page'
-		if (!empty($vars['data'][$this->display_field]))
+		if ( ! empty($vars['data'][$this->display_field]))
 		{
 			$this->fuel->admin->add_recent_page($this->uri->uri_string(), $vars['data'][$this->display_field], $this->module);
 		}
+
 		return $vars;
 	}
 
@@ -493,13 +513,14 @@ class Pages extends Module {
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($vars);
+
 		$vars = $this->form_builder->post_process_field_values($vars);// manipulates the $_POST values directly
 
 		// run layout variable processing
 		$vars = $layout->process_saved_values($vars);
 
 		// validate before deleting
-		if (!$layout->validate($vars))
+		if ( ! $layout->validate($vars))
 		{
 			add_errors($layout->errors());
 			return FALSE;
@@ -510,15 +531,14 @@ class Pages extends Module {
 
 	public function _block_processing($fields, $posted)
 	{
-
 		// add in block fields
 		foreach($fields as $key => $val)
 		{
 			// check blocks for post processing of variables
 			if (isset($val['type']) AND $val['type'] == 'block' AND isset($posted[$key]['block_name']))
 			{
-
 				$block_layout = $this->fuel->layouts->get($posted[$key]['block_name'], 'block');
+
 				if ($block_layout)
 				{
 					$block_fields = $block_layout->fields();
@@ -527,7 +547,7 @@ class Pages extends Module {
 			}
 
 			// check for template layouts that may have nested fields... this is really ugly
-			if (!empty($val['fields']) AND is_array($val['fields']))
+			if ( ! empty($val['fields']) AND is_array($val['fields']))
 			{
 				//$fields = array_merge($fields, $val['fields']);
 				foreach($val['fields'] as $k => $v)
@@ -545,6 +565,7 @@ class Pages extends Module {
 										if (isset($d['block_name']))
 										{
 											$block_layout = $this->fuel->layouts->get($d['block_name'], 'block');
+
 											if ($block_layout)
 											{
 												$block_fields = $block_layout->fields();
@@ -555,6 +576,7 @@ class Pages extends Module {
 													$block_fields[$e]['subkey'] = $k;
 													$block_fields[$e]['key'] = $key;
 												}
+
 												$fields = array_merge($fields, $block_fields);
 											}
 										}
@@ -566,41 +588,43 @@ class Pages extends Module {
 				}
 			}
 		}
+
 		return $fields;
 	}
 
 	public function _save_page_vars($id, $vars, $fields)
 	{
 		$save = array();
-		
+
 		$lang = $this->input->post('language', TRUE);
-		
+
 		// clear out all other variables
 		$delete = array('page_id' => $id);
+
 		if ($this->input->post('language'))
 		{
 			$delete['language'] = $this->input->post('language', TRUE);
 		}
-		
 
 		$this->fuel_pagevariables_model->delete($delete);
 		$pagevariable_table = $this->db->table_info($this->fuel_pagevariables_model->table_name());
 		$var_types = $pagevariable_table['type']['options'];
 		$page_variables_archive = array();
-		
+
 		// field types that shouldn't be saved
 		$non_recordable_fields = array('section', 'copy', 'fieldset');
-		
+
 		foreach($fields as $key => $val)
 		{
-			if (!isset($val['type']))
+			if ( ! isset($val['type']))
 			{
 				$val['type'] = 'string';
 			}
 
-			if (!in_array($val['type'], $non_recordable_fields))
+			if ( ! in_array($val['type'], $non_recordable_fields))
 			{
 				$value = (!empty($vars[$key])) ? $vars[$key] : NULL;
+
 				if (is_array($value) OR $val['type'] == 'array' OR $val['type'] == 'multi')
 				{
 					//$value = array_map('zap_gremlins', $value);
@@ -608,19 +632,20 @@ class Pages extends Module {
 					$val['type'] = 'array'; // force the type to be an array
 				}
 
-				if (!in_array($val['type'], $var_types)) $val['type'] = 'string';
-				
+				if ( ! in_array($val['type'], $var_types)) $val['type'] = 'string';
+
 				$save = array('page_id' => $id, 'name' => $key, 'value' => $value, 'type' => $val['type']);
 				$where = array('page_id' => $id, 'name' => $key, 'language' => $lang);
+
 				if ($lang)
 				{
 					$save['language'] = $lang;
 					$where['language'] = $lang;
 				}
+
 				$where = (!empty($id)) ? $where : array();
 
-				
-				if (!$this->fuel_pagevariables_model->save($save, $where))
+				if ( ! $this->fuel_pagevariables_model->save($save, $where))
 				{
 					add_error(lang('error_saving'));
 					return FALSE;
@@ -635,13 +660,14 @@ class Pages extends Module {
 			$lang_where['language !='] = $lang;
 			$duped_lang_vars = $this->fuel_pagevariables_model->find_all_array($lang_where);
 
-			if (!empty($duped_lang_vars))
+			if ( ! empty($duped_lang_vars))
 			{
 				foreach($duped_lang_vars as $duped_var)
 				{
 					$duped_var['id'] = NULL;
 					$duped_var['page_id'] = $id;
-					if (!$this->fuel_pagevariables_model->save($duped_var))
+
+					if ( ! $this->fuel_pagevariables_model->save($duped_var))
 					{
 						add_error(lang('error_saving'));
 						return FALSE;
@@ -649,59 +675,64 @@ class Pages extends Module {
 				}
 			}
 		}
-			
+
 		$page_variables_archive = $this->fuel_pagevariables_model->find_all_array(array('page_id' => $id));
 
 		// archive
 		$archive = $this->model->cleaned_data();
 		$archive[$this->model->key_field()] = $id;
 		$archive['variables'] = $page_variables_archive;
-		
+
 		$this->model->archive($id, $archive);
-		
+
 		// save to navigation if config allows it
-		if ($this->input->post('navigation_label')) {
-				
+		if ($this->input->post('navigation_label'))
+		{
 			$this->fuel->load_model('fuel_navigation');
-			
+
 			$save = array();
 			$save['label'] = $this->input->post('navigation_label', TRUE);
 			$save['location'] = $this->input->post('location', TRUE);
 			$save['group_id'] = $this->fuel->config('auto_page_navigation_group_id');
 			$save['parent_id'] = 0;
 			$save['published'] = $this->input->post('published', TRUE);
-			if (!$this->fuel->auth->has_permission($this->permission, 'publish'))
+
+			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
 			{
 			     $save['published'] = 'no';
 			}
+
 			// reset $where and create where clause to try and find an existing navigation item
 			$where = array();
 			$where['location'] = $save['location'];
 			$where['group_id'] = $save['group_id'];
 			$where['parent_id'] = $save['parent_id'];
+
 			$does_it_exist_already = $this->fuel_navigation_model->record_exists($where);
-			if (!$does_it_exist_already)
+
+			if ( ! $does_it_exist_already)
 			{
 				// determine parent based off of location
 				$location_arr = explode('/', $this->input->post('location', TRUE));
 				$parent_location = implode('/', array_slice($location_arr, 0, (count($location_arr) -1)));
-			
-				if (!empty($parent_location)) $parent = $this->fuel_navigation_model->find_by_location($parent_location);
-				if (!empty($parent)) {
-					$save['parent_id'] = $parent['id'];
-				}
+
+				if ( ! empty($parent_location)) $parent = $this->fuel_navigation_model->find_by_location($parent_location);
+
+				if ( ! empty($parent)) $save['parent_id'] = $parent['id'];
+
 				$this->fuel_navigation_model->add_validation('parent_id', array(&$this->fuel_navigation_model, 'no_location_and_parent_match'), lang('error_location_parents_match'), '{location}');
 				$this->fuel_navigation_model->save($save, array('location' => $this->input->post('location', TRUE), 'group_id' => $save['group_id']));
 			}
 		}
 
 		$this->fuel->admin->set_notification(lang('data_saved'), Fuel_admin::NOTIFICATION_SUCCESS);
-		
+
 		// reset cache for that page only
 		if ($this->input->post('location'))
 		{
 			$this->fuel->cache->clear_page($this->input->post('location', TRUE));
 		}
+
 		return TRUE;
 	}
 
@@ -709,13 +740,12 @@ class Pages extends Module {
 	{
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout_name);
-		if (!$layout)
-		{
-			return;
-		}
+
+		if ( ! $layout) return;
 
 		$pagevars = array();
-		if (!empty($id))
+
+		if ( ! empty($id))
 		{
 			$pagevars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
 
@@ -728,21 +758,23 @@ class Pages extends Module {
 			$pagevars = array_merge($pagevars, $vars);
 			$layout->set_field_values($pagevars);
 		}
-		
+
 		$fields = $layout->fields();
 
 		$fields['__layout__'] = array('type' => 'hidden', 'value' => $layout_name);
 		$fields['__page_id__'] = array('type' => 'hidden', 'value' => $id);
 
 		$conflict = $this->_has_conflict($fields);
-		if (!empty($conflict))
+
+		if ( ! empty($conflict))
 		{
 			$this->output->set_output($conflict);
 			return;
 		}
+
 		$this->load->library('form_builder');
+
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-		
 		$this->form_builder->question_keys = array();
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->cancel_value = lang('btn_cancel');
@@ -755,7 +787,7 @@ class Pages extends Module {
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}
-	
+
 	public function _has_conflict($fields)
 	{
 		$page_columns = $this->model->form_fields();
@@ -770,78 +802,85 @@ class Pages extends Module {
 				return '<div class="notification"><p class="notification warning ico_warn">'.lang('error_page_layout_variable_conflict', implode(', ', $reserved_cols)).'</p></div>';
 			}
 		}
+
 		return FALSE;
 	}
 
 	public function import_view()
 	{
-		if (!empty($_POST['id']))
+		if ( ! empty($_POST['id']))
 		{
 			$id = $this->input->post('id', TRUE);
 			$pagevars = $this->fuel->pages->import($this->input->post('id', TRUE), $this->sanitize_input);
 			$layout = $pagevars['layout'];
+
 			unset($pagevars['layout']);
+
 			$this->layout_fields($layout, $id, NULL, $pagevars);
 			return;
 		}
+
 		$out = 'error';
 		$this->output->set_output($out);
 	}
-	
+
 	public function import_view_cancel()
 	{
-		if ($this->input->post('id')){
-
+		if ($this->input->post('id'))
+		{
 			// don't need to pass anything because it will automatically update last_modified'
 			$save['id'] = $this->input->post('id', TRUE);
 			$save['location'] = $this->input->post('location', TRUE);
 			$save['last_modified'] = datetime_now();
 
 			$where['id'] = $save['id'];
+
 			if ($this->model->update($save, $where))
 			{
 				$this->output->set_output('success');
 				return;
 			}
 		}
+
 		$this->output->set_output('error');
 	}
-	
+
 	public function ajax_page_edit()
 	{
 		if (is_ajax())
 		{
-			if (!empty($_POST))
+			if ( ! empty($_POST))
 			{
 				$save = $this->_process();
+
 				if ($this->model->save($save))
 				{
 					$this->output->set_output('success');
 					return;
 				}
-
 			}
 		}
+
 		$this->output->set_output('error');
 	}
 
 	public function select()
 	{
-
 		$value = $this->input->get_post('selected', TRUE);
 		$filter = rawurldecode($this->input->get_post('filter', TRUE));
 
 		// Convert wild-cards to RegEx
 		$filter = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $filter));
 		$this->js_controller_params['method'] = 'select';
-	
+
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
+
 		$pages = $this->fuel->pages->options_list();
 		$pdfs = $this->fuel->assets->dir_files('pdf', TRUE);
  
-		if (!empty($pdfs) AND !empty($_GET['pdfs']))
+		if ( ! empty($pdfs) AND !empty($_GET['pdfs']))
 		{
 			$options[lang('page_select_pages')] = array_combine($pages, $pages);
 			$options[lang('page_select_pdfs')] = array_combine($pdfs, $pdfs);
@@ -852,14 +891,15 @@ class Pages extends Module {
 		}
 
 		// apply filter
-		if (!empty($filter))
+		if ( ! empty($filter))
 		{
 			$filter_callback = create_function('$a', 'return preg_match(\'#^'.$filter.'$#\', $a);');
 			$options = array_filter($options, $filter_callback);
 		}
-		
+
 		// just return the options as json
 		$fields['General'] = array('type' => 'fieldset', 'class' => 'tab');
+
 		if (isset($_GET['options']))
 		{
 			if (isset($_GET['format']) AND strtolower($_GET['format']) == 'json')
@@ -871,23 +911,26 @@ class Pages extends Module {
 			else
 			{
 				$str = '';
+
 				if (isset($_GET['first_option']))
 				{
 					$first_option = $this->input->get('first_option', TRUE);
 					$str .= "<option value=\"\" label=\"".Form::prep($first_option, FALSE)."\">".Form::prep($first_option, FALSE)."</option>\n";
 				}
+
 				foreach($options as $key => $val)
 				{
 					$str .= "<option value=\"".Form::prep($key, FALSE)."\" label=\"".Form::prep($val, FALSE)."\">".Form::prep($val, FALSE)."</option>\n";
 				}
+
 				echo $str;
 				return;
-				
 			}
 		}
 
 		$select_label = lang('form_label_page');
 		$display_label_select = FALSE;
+
 		if (isset($_GET['input']))
 		{
 			$fields['input'] = array('value' => $this->input->get_post('input', TRUE), 'label' => lang('form_label_url'), 'size' => 100);	
@@ -896,16 +939,17 @@ class Pages extends Module {
 		}
 
 		$fields['url_select'] = array('value' => $this->input->get_post('url_select', TRUE), 'label' => $select_label, 'type' => 'select', 'options' => $options, 'first_option' => lang('label_select_one'), 'display_label' => $display_label_select);
-
 		$fields['Advanced'] = array('type' => 'fieldset', 'class' => 'tab');
+
 		if (isset($_GET['target']))
 		{
 			$target_options = array(
-				''        => '', 
+				''        => '',
 				'_blank'  => '_blank',
 				'_parent' => '_parent',
 				'_top'    => '_top',
-				);
+			);
+
 			$fields['target'] = array('value' => $this->input->get_post('target', TRUE), 'label' => lang('form_label_target'), 'type' => 'select', 'options' => array('' => '', '_blank' => '_blank'));	
 			$fields['url_select']['display_label'] = TRUE;
 		}
@@ -928,13 +972,15 @@ class Pages extends Module {
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = FALSE;
+
 		$vars['form'] = $this->form_builder->render();
 		$this->fuel->admin->set_inline(TRUE);
 
 		$crumbs = array('' => $this->module_name, lang('pages_select_action'));
+
 		$this->fuel->admin->set_panel_display('notification', FALSE);
 		$this->fuel->admin->set_titlebar($crumbs);
-		$this->fuel->admin->render('modal_select', $vars);
+		$this->fuel->admin->render('modal_select', $vars, '', FUEL_FOLDER);
 	}
 
 	public function upload()
@@ -943,9 +989,10 @@ class Pages extends Module {
 		$this->load->helper('security');
 		$this->load->library('form_builder');
 		$this->load->library('upload');
+
 		$this->js_controller_params['method'] = 'upload';
 
-		if (!empty($_POST) AND !empty($_FILES))
+		if ( ! empty($_POST) AND !empty($_FILES))
 		{
 			$params['upload_path'] = sys_get_temp_dir();
 			$params['allowed_types'] = 'php|html|txt';
@@ -963,21 +1010,22 @@ class Pages extends Module {
 				'text/html', 
 				'text/x-php', 
 				'application/x-httpd-php-source', 
-				'text/plain');
+				'text/plain'
+			);
 
 			if ($this->upload->do_upload('file'))
 			{
 				$upload_data = $this->upload->data();
 				$error = FALSE;
-				
+
 				// read in the file so we can filter it
 				$file = read_file($upload_data['full_path']);
-				
+
 				// sanitize the file before saving
 				$id = $this->input->post('id', TRUE);
 				$pagevars = $this->fuel->pages->import($id);
 
-				if (!empty($pagevars))
+				if ( ! empty($pagevars))
 				{
 					$layout = $this->fuel->layouts->get($pagevars['layout']);
 					unset($pagevars['layout']);
@@ -986,12 +1034,15 @@ class Pages extends Module {
 					{
 						$where['page_id'] = $id;
 						$where['name'] = $key;
+
 						$page_var = $this->fuel_pagevariables_model->find_one_array($where);
+
 						$save['id'] = (empty($page_var['id'])) ? NULL : $page_var['id'];
 						$save['name'] = $key;
 						$save['page_id'] = $id;
 						$save['value'] = $val;
-						if (!$this->fuel_pagevariables_model->save($save))
+
+						if ( ! $this->fuel_pagevariables_model->save($save))
 						{
 							add_error(lang('error_upload'));
 						}
@@ -1002,14 +1053,13 @@ class Pages extends Module {
 					$page['last_modified'] = date('Y-m-d H:i:s', (time() + 1)); // to prevent window from popping up after upload
 					$this->model->save($page);
 
-					if (!has_errors())
+					if ( ! has_errors())
 					{
 						// change list view page state to show the selected group id
 						$this->fuel->admin->set_notification(lang('pages_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
-						
+
 						redirect(fuel_url('pages/edit/'.$id));
 					}
-
 				}
 				else
 				{
@@ -1022,32 +1072,34 @@ class Pages extends Module {
 				add_error($error_msg);
 			}
 		}
-		
+
 		$fields = array();
 		$pages = $this->model->options_list('id', 'location', array('published' => 'yes'), 'location');
-		
+
 		$fields['id'] = array('label' => lang('form_label_name'), 'type' => 'select', 'options' => $pages, 'class' => 'add_edit pages');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
+
 		$this->form_builder->hidden = array();
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($_POST);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+
 		$vars['instructions'] = lang('pages_upload_instructions');
 		$vars['form'] = $this->form_builder->render();
 		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);
 		//$vars['back_action'] = fuel_uri($this->module_uri);
 		
 		$crumbs = array($this->module_uri => $this->module_name, '' => lang('action_upload'));
+
 		$this->fuel->admin->set_titlebar($crumbs);
-		
-		$this->fuel->admin->render('upload', $vars);
+		$this->fuel->admin->render('upload', $vars, '', FUEL_FOLDER);
 	}
-	
+
 	public function refresh_field()
 	{
 
-		if (is_ajax() AND (!empty($_POST) OR !empty($_GET)))
+		if (is_ajax() AND ( ! empty($_POST) OR ! empty($_GET)))
 		{
 			$layout =  $this->input->get_post('layout', TRUE);
 			$values = $this->input->get_post('values', TRUE);
@@ -1059,11 +1111,11 @@ class Pages extends Module {
 
 			$field_key = end(explode('vars--', $field));
 
-			if (!isset($fields[$field_key])) return;
+			if ( ! isset($fields[$field_key])) return;
 
 			$field_id = $this->input->post('field_id', TRUE);
 			$selected = $this->input->post('selected', TRUE);
-			
+
 			$this->load->library('form_builder');
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
@@ -1073,7 +1125,7 @@ class Pages extends Module {
 				$selected = (array) $selected;
 				$selected = array_merge($values, $selected);
 			}
-			
+
 			$output = '';
 
 			// if template/nested field types, then we need to look at the sub field
@@ -1081,41 +1133,46 @@ class Pages extends Module {
 			{
 				//$fields['return_fields'] = TRUE;
 				require_once(FUEL_PATH.'libraries/Fuel_custom_fields.php');
+
 				$fuel_cf = new Fuel_custom_fields();
 				$index = $this->input->get_post('index', TRUE);
 				$key = $this->input->get_post('key', TRUE);
 				$field_name = $this->input->get_post('field_name', TRUE);
+
 				$params = $fields[$field_key];
 				$params['index'] = $index;
 				$params['name'] = $field_name;
 				$params['key'] = $field_name;
 				$params['value'] = array();
 				$params['value'][0] = $selected;
+
 				$this->form_builder->name_prefix = 'vars';
 				$this->form_builder->name_array = $field_name;
 				//$fb->set_field_values();
 				$params['instance'] =& $this->form_builder;
 				$sub_fields = $fuel_cf->template($params, TRUE);
-				if (!empty($sub_fields[0][$key]))
+
+				if ( ! empty($sub_fields[0][$key]))
 				{
 					$output = $sub_fields[0][$key];
 				}
-				
 			}
 			else
 			{
-				if (!empty($selected)) $fields[$field_key]['value'] = $selected;
+				if ( ! empty($selected)) $fields[$field_key]['value'] = $selected;
+
 				$fields[$field_key]['name'] = $field_id;
-				
+
 				// if the field is an ID, then we will do a select instead of a text field
 				if (isset($fields[$this->model->key_field()]))
 				{
 					$fields['id']['type'] = 'select';
 					$fields['id']['options'] = $this->model->options_list();
 				}
-				$output = $this->form_builder->create_field($fields[$field_key]);	
+
+				$output = $this->form_builder->create_field($fields[$field_key]);
 			}
-			
+
 			$this->output->set_output($output);
 		}
 	}
@@ -1131,9 +1188,8 @@ class Pages extends Module {
 			// get the file name field
 			// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
 			// the model does not have an array key field AND there is a key field value posted
-			if (isset($field_name) AND !is_array($this->model->key_field()) AND isset($posted['page_id']))
+			if (isset($field_name) AND ! is_array($this->model->key_field()) AND isset($posted['page_id']))
 			{
-				
 				$id = $posted['page_id'];
 				$where = array($this->fuel_pagevariables_model->table_name().'.page_id'=> $id, 'name' => $field_name);
 				$data = $this->fuel_pagevariables_model->find_one_array($where);
@@ -1161,12 +1217,10 @@ class Pages extends Module {
 
 				if ($save)
 				{
-
 					$data['value'] = $val['file_name'];
 					$this->fuel_pagevariables_model->save($data);
 				}
 			}
 		}
 	}
-	
 }

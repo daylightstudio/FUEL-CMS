@@ -88,5 +88,12 @@ $lang['warn_before_delete_msg'] = 'Are you sure you want to delete this item?';
 $lang['btn_add_another'] = 'Add Another';
 $lang['btn_remove'] = 'Remove';
 
+/*
+|--------------------------------------------------------------------------
+| Assets
+|--------------------------------------------------------------------------
+*/
+$lang['assets_need_to_save'] = 'Click "Save" to use this image.';
+
 /* End of file fuel_js_lang.php */
 /* Location: ./modules/fuel/language/english/fuel_js_lang.php */
