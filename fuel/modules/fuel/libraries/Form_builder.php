@@ -918,7 +918,7 @@ class Form_builder {
 			$str = $this->CI->parser->parse_simple($str, $vars);
 		}
 
-		$str .= '<div class=\"actions\">';
+		$str .= '<div class="actions">';
 
 		$str .= $this->_render_actions();
 
