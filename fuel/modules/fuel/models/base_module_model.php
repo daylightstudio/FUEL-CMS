@@ -330,7 +330,7 @@ class Base_module_model extends MY_Model {
 			{
 				if (isset($joiner[$key]))
 				{
-					$joiner = $joiner[$key];
+					$joiner = strtolower($joiner[$key]);
 				}
 				else
 				{
