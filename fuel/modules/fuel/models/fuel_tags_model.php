@@ -58,6 +58,35 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Lists the module's items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
+	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
+	{
+		$table = $this->table_name();
+		$CI =& get_instance();
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		else
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Initializes belongs_to relationship
 	 *
 	 * @access	public

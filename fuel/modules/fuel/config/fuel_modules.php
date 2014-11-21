@@ -159,12 +159,12 @@ $config['modules']['tags'] = array(
 	'module_name' => 'Tags',
 	'model_location' => 'fuel',
 	'model_name' => 'fuel_tags_model',
-	'table_headers' => array(
-		'id', 
-		'name', 
-		'slug',
-		'published'
-	)
+	// 'table_headers' => array(
+	// 	'id', 
+	// 	'name', 
+	// 	'slug',
+	// 	'published'
+	// )
 );
 
 // Navigation module init values

@@ -69,7 +69,15 @@ class Fuel_categories_model extends Base_module_model {
 	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$table = $this->table_name();
-		$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
+		$CI =& get_instance();
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		else
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
 		$this->db->join($table.' AS p', $this->tables('fuel_categories').'.parent_id = p.id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
