@@ -131,6 +131,8 @@ class Fuel_categories_model extends Base_module_model {
 		{
 			$this->db->where(array('id != ' => $values['id']));
 		}
+
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE);
 		return $fields;
 	}
 	

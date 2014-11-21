@@ -150,6 +150,7 @@ class Fuel_tags_model extends Base_module_model {
 	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE);
 		return $fields;
 	}
 
