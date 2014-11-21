@@ -506,8 +506,7 @@ class Fuel_custom_fields {
 				';
 			
 
-			$func = create_function('$value', $func_str);
-			$form_builder->set_post_process($params['key'], $func);
+			$func = create_function('$value', $func_str);$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		// unserialize value if it's serialized
@@ -633,6 +632,7 @@ class Fuel_custom_fields {
 					$inline_class = 'add_edit '.$uri;
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 					$params['data']['module'] = $uri;
+					$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
 				}
 			}
 		
