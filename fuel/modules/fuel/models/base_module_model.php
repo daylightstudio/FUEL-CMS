@@ -838,7 +838,27 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function ajax_options($where = array())
 	{
+		if (!empty($where['exclude']))
+		{
+			$ids = explode(',', $where['exclude']);
+			$this->db->where_not_in('id', $ids);
+			unset($where['exclude']);
+		}
+
+		if (!empty($where['language']))
+		{
+			// force the parameter to include the table
+			$new_lang_key = $this->table_name().'.language';
+			$where[$new_lang_key] = $where['language'];
+			unset($where['language']);
+			$this->db->where($where);
+			$where = array();
+			$this->db->or_where($this->table_name().'.language = ""');
+			unset($where[$new_lang_key]);
+		}
+
 		$options = $this->options_list(NULL, NULL, $where);
+
 		$str = '';
 		foreach($options as $key => $val)
 		{
