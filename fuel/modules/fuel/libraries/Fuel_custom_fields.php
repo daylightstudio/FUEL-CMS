@@ -1437,6 +1437,7 @@ class Fuel_custom_fields {
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 				$params['data']['module'] = $uri;
+				$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
 			}
 		}
 
