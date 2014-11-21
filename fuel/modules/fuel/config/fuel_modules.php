@@ -172,15 +172,15 @@ $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
 	'model_location' => 'fuel',
 	'model_name' => 'fuel_categories_model',
-	'table_headers' => array(
-		'id', 
-		'name', 
-		'slug',
-		'context',
-		'parent_id',
-		'precedence',
-		'published',
-	),
+	// 'table_headers' => array(
+	// 	'id', 
+	// 	'name', 
+	// 	'slug',
+	// 	'context',
+	// 	'parent_id',
+	// 	'precedence',
+	// 	'published',
+	// ),
 	'filters' => array(
 		'context' => array(
 			'label' => lang('form_label_context'),
