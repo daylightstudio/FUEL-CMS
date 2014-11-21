@@ -199,8 +199,8 @@ class Fuel_tags_model extends Base_module_model {
 	{
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
-		if (empty($key)) $key = $this->_tables['fuel_categories'].'.id';
-		if (empty($val)) $val = $this->_tables['fuel_categories'].'.name';
+		if (empty($key)) $key = $this->_tables['fuel_tags'].'.id';
+		if (empty($val)) $val = $this->_tables['fuel_tags'].'.name';
 
 		// needed to prevent ambiguity
 		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
