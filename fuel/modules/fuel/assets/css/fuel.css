@@ -11,7 +11,7 @@ IMPORT CSS HERE SO THAT REQUIRE.JS CAN OPTIMIZE IT
 
 * { margin: 0; padding: 0; outline-style: none; }
 html, body { height: 100%; overflow: hidden; }
-body { background-color: #333; font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
+body { background-color: #333; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; margin: 0; padding: 0; font-size: 11px; color: #333; }
 h1 { font-size: 20px; margin-bottom: 10px;  }
 h2 { font-size: 16px; margin-bottom: 10px; }
 h3 { font-size: 12px; margin: 15px 0 3px 0; }
@@ -21,7 +21,7 @@ a:hover { text-decoration: underline; }
 a:visited { color: #4679bd;}
 p { margin: 5px 0 15px 0; }
 option { margin: 0 2px; }
-input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', Verdana, Arial, Helvetica, Sans-serif; }
+input,select,textarea { font-size: 11px; font-family: 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
 textarea { min-height: 40px; overflow: auto; resize: vertical; /*width: 100%;*/ }
 
 
@@ -646,6 +646,7 @@ div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
 div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; margin: 10px 0 20px 0;}
+div#asset_preview img { background-color: #f3f3f3; }
 div.asset_select > div > div { float: left; }
 div.asset_select span.label { padding: 0 5px 0 15px; }
 div.asset_select div.actions { padding-top: 50px; float: left; }
