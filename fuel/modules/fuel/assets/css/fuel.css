@@ -646,7 +646,7 @@ div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
 div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; margin: 10px 0 20px 0;}
-div#asset_preview img { background-color: #f3f3f3; }
+div#asset_preview img, .img_bg { background-color: #f3f3f3; }
 div.asset_select > div > div { float: left; }
 div.asset_select span.label { padding: 0 5px 0 15px; }
 div.asset_select div.actions { padding-top: 50px; float: left; }

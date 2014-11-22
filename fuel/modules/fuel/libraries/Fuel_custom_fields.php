@@ -225,7 +225,7 @@ class Fuel_custom_fields {
 				$preview .= '<a href="'.$asset_path.'" target="_blank" class="noclone">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
-					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
 				}
 				else
 				{
@@ -409,7 +409,7 @@ class Fuel_custom_fields {
 		// 					$preview_str .= '<a href="'.$asset_path.'" target="_blank">';
 		// 					if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset)))
 		// 					{
-		// 						$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+		// 						$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'/>';
 		// 					}
 		// 					else
 		// 					{
