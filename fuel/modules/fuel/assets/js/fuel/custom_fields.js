@@ -589,7 +589,7 @@ fuel.fields.asset_field = function(context, options){
 				var newSrc = (this.toLowerCase().match(/^http(s)?:\/\//)) ? '' : imgPath;
 				newSrc += $.trim(this) + '?c=' + new Date().getTime()
 				previewHTML += '<a href="' + newSrc + '" target="_blank">';
-				previewHTML += '<img src="' + newSrc + '" style="' + imgStyles + '">'
+				previewHTML += '<img src="' + newSrc + '" style="' + imgStyles + '" class="img_bg">';
 				previewHTML += '</a>';
 			}
 
