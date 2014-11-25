@@ -312,11 +312,19 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$this->_data[$key] = $this->CI->upload->data();
 
-					// set the file perm if necessary
-					if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
-						AND is_integer($this->fuel->config('set_upload_file_perms')))
+					// on last check to make sure the file actually does exist on the server
+					if (!file_exists($this->_data[$key]['full_path']))
 					{
-						chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						$this->_add_error(lang('error_upload'));
+					}
+					else
+					{
+						// set the file perm if necessary
+						if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
+							AND is_integer($this->fuel->config('set_upload_file_perms')))
+						{
+							chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						}
 					}
 				}
 				
