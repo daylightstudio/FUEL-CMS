@@ -467,7 +467,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<pre class="brush:php">
 	$fields['file_example'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE, 'file_name' => 'my_file_{id}');
 	</pre>
-	<p class="important">Note the us of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
+	<p class="important">Note the use of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
 	<?php form_builder_example('file_example', array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE)); ?>
 
 </div>
