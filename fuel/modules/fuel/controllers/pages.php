@@ -882,6 +882,7 @@ class Pages extends Module {
  
 		if ( ! empty($pdfs) AND !empty($_GET['pdfs']))
 		{
+			$has_pdfs = TRUE;
 			$options[lang('page_select_pages')] = array_combine($pages, $pages);
 			$options[lang('page_select_pdfs')] = array_combine($pdfs, $pdfs);
 		}
@@ -894,7 +895,15 @@ class Pages extends Module {
 		if ( ! empty($filter))
 		{
 			$filter_callback = create_function('$a', 'return preg_match(\'#^'.$filter.'$#\', $a);');
-			$options = array_filter($options, $filter_callback);
+			if (!empty($has_pdfs))
+			{
+				$options[lang('page_select_pages')] = array_filter($options[lang('page_select_pages')], $filter_callback);
+				$options[lang('page_select_pdfs')] = array_filter($options[lang('page_select_pdfs')], $filter_callback);
+			}
+			else
+			{
+				$options = array_filter($options, $filter_callback);	
+			}
 		}
 
 		// just return the options as json
