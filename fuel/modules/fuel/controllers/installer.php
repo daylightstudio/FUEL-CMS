@@ -8,7 +8,9 @@ class Installer extends Fuel_base_controller {
 	public function __construct()
 	{
 		$validate = (php_sapi_name() == 'cli' OR defined('STDIN')) ? FALSE : TRUE;
-		parent::__construct($validate);
+
+		// only call constructor if we aren't in CLI mode to avoid CI_session error
+		parent::__construct($validate);	
 
 		// must be in dev mode to install modules
 		if ( ! is_dev_mode())
@@ -20,7 +22,7 @@ class Installer extends Fuel_base_controller {
 		if ($validate) $this->_validate_user('installer');
 	}
 
-	public function install($module = NULL)
+	public function install($module = 'fuel')
 	{
 		if (empty($module))
 		{
@@ -40,27 +42,34 @@ class Installer extends Fuel_base_controller {
 			}
 		}
 
-		// need to load it the old fashioned way because it is not enabled by default
-		$module_file = MODULES_PATH.$module.'/libraries/Fuel_'.$module.'.php';
-
-		if (file_exists($module_file))
+		if (strtolower($module) == 'fuel')
 		{
-			$init = array('name' => $module, 'folder' => $module);
-			$this->load->module_library($module, 'fuel_'.$module, $init);
-			$module_lib = 'fuel_'.$module;
-
-			if ( ! $this->$module_lib->install())
-			{
-				echo $this->fuel->installer->last_error()."\n";
-			}
-			else
-			{
-				echo lang('module_install', $module);
-			}
+			$this->fuel->install();
 		}
 		else
 		{
-			echo lang('module_install_error', $module);
+			// need to load it the old fashioned way because it is not enabled by default
+			$module_file = MODULES_PATH.$module.'/libraries/Fuel_'.$module.'.php';
+
+			if (file_exists($module_file))
+			{
+				$init = array('name' => $module, 'folder' => $module);
+				$this->load->module_library($module, 'fuel_'.$module, $init);
+				$module_lib = 'fuel_'.$module;
+
+				if ( ! $this->$module_lib->install())
+				{
+					echo $this->fuel->installer->last_error()."\n";
+				}
+				else
+				{
+					echo lang('module_install', $module);
+				}
+			}
+			else
+			{
+				echo lang('module_install_error', $module);
+			}
 		}
 	}
 
