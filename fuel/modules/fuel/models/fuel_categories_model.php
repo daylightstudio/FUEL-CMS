@@ -94,7 +94,8 @@ class Fuel_categories_model extends Base_module_model {
 	public function context_options_list()
 	{
 		$this->db->group_by('context');
-		return parent::options_list('context', 'context', array('context !=' => ''));
+		$this->db->where('context != ""');
+		return parent::options_list('context', 'context');
 	}
 
 	// --------------------------------------------------------------------
@@ -140,7 +141,7 @@ class Fuel_categories_model extends Base_module_model {
 			$this->db->where(array('id != ' => $values['id']));
 		}
 
-		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE, 'first_option' => lang('label_select_one'));
 		return $fields;
 	}
 	

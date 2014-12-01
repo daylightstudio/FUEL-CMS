@@ -71,14 +71,17 @@ class Fuel_tags_model extends Base_module_model {
 	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
 		$table = $this->table_name();
+		$categories_table = $this->_tables['fuel_categories'];
 		$CI =& get_instance();
+		$this->db->join($categories_table, $categories_table.'.id = '.$table.'.category_id', 'LEFT');
+
 		if ($CI->fuel->language->has_multiple())
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		else
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
@@ -179,7 +182,7 @@ class Fuel_tags_model extends Base_module_model {
 	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
-		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE, 'first_option' => lang('label_select_one'));
 		return $fields;
 	}
 
@@ -199,8 +202,8 @@ class Fuel_tags_model extends Base_module_model {
 	{
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
-		if (empty($key)) $key = $this->_tables['fuel_tags'].'.id';
-		if (empty($val)) $val = $this->_tables['fuel_tags'].'.name';
+		if (empty($key)) $key = $this->_tables['fuel_categories'].'.id';
+		if (empty($val)) $val = $this->_tables['fuel_categories'].'.name';
 
 		// needed to prevent ambiguity
 		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
