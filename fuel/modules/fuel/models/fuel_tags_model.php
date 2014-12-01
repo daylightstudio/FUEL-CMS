@@ -77,13 +77,20 @@ class Fuel_tags_model extends Base_module_model {
 
 		if ($CI->fuel->language->has_multiple())
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		else
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+		if (empty($just_count))
+		{
+			foreach($data as $key => $val)
+			{
+				$data[$key]['description'] = htmlentities($val['description'], ENT_QUOTES, 'UTF-8');
+			}
+		}
 		return $data;
 	}
 
