@@ -2619,9 +2619,13 @@ class Form_builder {
 	 */
 	public function create_email($params)
 	{
-		$email_class = 'email';
+		$params['attrs']['attributes'] = (isset($params['attributes'])) ? $params['attributes'] : '';
 		$params['type'] = 'email';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		if (strpos($params['attrs']['attributes'], 'class=') === FALSE)
+		{
+			$email_class = 'email';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;	
+		}
 		return $this->create_text($params);
 	}
 	
@@ -2636,12 +2640,16 @@ class Form_builder {
 	 */
 	public function create_range($params)
 	{
-		$email_class = 'range';
 		$params['type'] = 'range';
 		$params['attrs'] = array();
 		$params['attrs']['min'] = (isset($params['min'])) ? $params['min'] : 0;
 		$params['attrs']['max'] = (isset($params['max'])) ? $params['max'] : 10;
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		$params['attrs']['attributes'] = (isset($params['attributes'])) ? $params['attributes'] : '';
+		if (strpos($params['attrs']['attributes'], 'class=') === FALSE)
+		{
+			$email_class = 'range';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		}
 		return $this->create_text($params);
 	}
 	
