@@ -767,7 +767,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <div class="toggle_block_off">
 	<p>This field type is used for dynamically pulling in <a href="<?=user_guide_url('general/layouts#layouts_block_layouts')?>">block layout fields</a>:</p>
 
-	<h4>Upload Specific</h4>
 	<ul>
 		<li><strong>folder</strong>: determines which <span class="file">fuel/application/views/_blocks</span> subfolder to look in for displaying</li>
 		<li><strong>filter</strong>: an array or regular expression string to filter out certain files (e.g. those beginning with underscores). The default value is <dfn>^_(.*)|\.html$</dfn></li>
@@ -779,7 +778,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>block_name</strong>: if specified, it will automatically return the fields of that block as opposed to a dropdown list to select from</li>
 		<li><strong>group</strong>: if specified, will filter the options list to only those block layouts with that group name ('folder' must not be specified)</li>
 	</ul>
-
 
 	<h4>Example</h4>
 	<pre class="brush:php">
