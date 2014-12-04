@@ -585,7 +585,7 @@ fuel.fields.asset_field = function(context, options){
 		$.each(imgValues, function(img){
 
 			// check if it is an image 
-			if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/)){
+			if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/i)){
 				var newSrc = (this.toLowerCase().match(/^http(s)?:\/\//)) ? '' : imgPath;
 				newSrc += $.trim(this) + '?c=' + new Date().getTime()
 				previewHTML += '<a href="' + newSrc + '" target="_blank">';
