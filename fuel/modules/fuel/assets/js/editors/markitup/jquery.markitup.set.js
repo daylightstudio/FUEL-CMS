@@ -18,7 +18,6 @@ function markitupLanguage(key)
 	}
 	else if (typeof(window['jqx']) != 'undefined')
 	{
-		console.log(jqx_config.localized)
 		return jqx_config.localized['markitup_' + key];
 	}
 }
