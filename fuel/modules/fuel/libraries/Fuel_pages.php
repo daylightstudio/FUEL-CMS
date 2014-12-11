@@ -94,9 +94,10 @@ class Fuel_pages extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The page to set as active
+	 * @param	array	An array of initializtion parameters
 	 * @return	object
 	 */	
-	public function get($location)
+	public function get($location, $init = array())
 	{
 		$init['location'] = $location;
 		$page = $this->create($init, FALSE);

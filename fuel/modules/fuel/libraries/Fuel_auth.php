@@ -118,6 +118,7 @@ class Fuel_auth extends Fuel_base_library {
 		$session_data['super_admin'] = $valid_user['super_admin'];
 		$session_data['user_name'] = $valid_user['user_name'];
 		$session_data['language'] = $valid_user['language'];
+		$session_data['email'] = $valid_user['email'];
 		$this->CI->session->set_userdata($this->get_session_namespace(), $session_data);
 	}
 
@@ -338,9 +339,16 @@ class Fuel_auth extends Fuel_base_library {
 			if (is_array($permission))
 			{
 				$foreign_module = NULL;
-				if ((isset($permission[0]) AND $permission[0] != $this->CI->module) AND in_array($permission[0], array_keys($this->CI->fuel->modules->get()))) {
-					$foreign_module = $permission[0];
+				
+				if (isset($permission[0]) AND in_array($permission[0], array_keys($this->CI->fuel->modules->get()))) 
+				{
+					// broken out to simplify
+					if (!isset($this->CI->module) OR (isset($this->CI->module) AND $permission[0] != $this->CI->module))
+					{
+						$foreign_module = $permission[0];	
+					}
 				}
+
 				foreach($permission as $key => $val)
 				{
 					if (is_int($key) && !empty($this->CI->module))

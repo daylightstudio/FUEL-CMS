@@ -262,7 +262,7 @@ class Fuel_language extends Fuel_base_library {
 			return TRUE;
 		}
 		// the default is the first option of the list
-		$default = key($this->options);
+		$default = $this->default_option();
 		return $lang == $default;
 	}
 
@@ -606,7 +606,7 @@ class Fuel_language extends Fuel_base_library {
 	 * Cleans a URI string value of any language segements
 	 *
 	 * @access	public
-	 * @param	string The URI string to check. If none provided, will use the regment_array or rsegment_array on the URI object (optional)
+	 * @param	string The URI string to check. If none provided, will use the rsegment_array or rsegment_array on the URI object (optional)
 	 * @param	boolean Determines whether to use a routed (TRUE), non-routed (FALSE) when looking at the URI segment if one is not provided in first argument (optional)
 	 * @return	string
 	 */
@@ -622,7 +622,7 @@ class Fuel_language extends Fuel_base_library {
 	 * Cleans a URI segments of any language segements
 	 *
 	 * @access	public
-	 * @param	string The URI string to check. If none provided, will use the regment_array or rsegment_array on the URI object (optional)
+	 * @param	string The URI string to check. If none provided, will use the rsegment_array or rsegment_array on the URI object (optional)
 	 * @param	boolean Determines whether to use a routed (TRUE), non-routed (FALSE) when looking at the URI segment if one is not provided in first argument (optional)
 	 * @return	string
 	 */
@@ -728,7 +728,7 @@ class Fuel_language extends Fuel_base_library {
 			$uri = $this->cleaned_uri($uri);
 			
 			// if $lang is set then we will check to see if it is a legit language and use it
-			if (!empty($lang) AND $lang != $this->is_default($lang) AND !in_array($lang_seg, $no_lang))
+			if (!empty($lang) AND ($lang != $this->is_default($lang) OR $this->fuel->config('language_force_default_to_site_url')) AND !in_array($lang_seg, $no_lang))
 			{
 				if (!$this->is_mode('query_string'))
 				{

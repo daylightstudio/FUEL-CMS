@@ -245,8 +245,6 @@ class Fuel_assets extends Fuel_base_library {
 					$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
 				}
 
-				$params['remove_spaces'] = TRUE;
-
 				// make directory if it doesn't exist and subfolder creation is allowed'
 				if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))
 				{
@@ -275,7 +273,15 @@ class Fuel_assets extends Fuel_base_library {
 						$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
 					}
 				}
-			
+
+				// replace {file} with placeholder of file name			
+				if (strpos($params['file_name'], '{') !== FALSE )
+				{
+					$params['file_name'] = preg_replace('#(.*)\{file\}(.*)#U', '$1'.pathinfo($file['name'], PATHINFO_FILENAME).'$2', $params['file_name']);
+				}
+
+
+
 				// set overwrite
 				$params['overwrite'] = (is_true_val($params['overwrite']));
 
@@ -294,6 +300,16 @@ class Fuel_assets extends Fuel_base_library {
 					return FALSE;
 				}
 
+				// pull in from config if it exists
+				if (file_exists(APPPATH.'config/upload.php'))
+				{
+					include(APPPATH.'config/upload.php');
+					if (!empty($config))
+					{
+						$params = array_merge($config, $params);
+					}
+				}
+
 				// UPLOAD!!!
 				$this->CI->upload->initialize($params);
 				if (!$this->CI->upload->do_upload($key))
@@ -304,18 +320,26 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$this->_data[$key] = $this->CI->upload->data();
 
-					// set the file perm if necessary
-					if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
-						AND is_integer($this->fuel->config('set_upload_file_perms')))
+					// on last check to make sure the file actually does exist on the server
+					if (!file_exists($this->_data[$key]['full_path']))
 					{
-						chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						$this->_add_error(lang('error_upload'));
+					}
+					else
+					{
+						// set the file perm if necessary
+						if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
+							AND is_integer($this->fuel->config('set_upload_file_perms')))
+						{
+							chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						}
 					}
 				}
 				
 			}
 		}
 
-		// set maintain ration if it is set to maintain_ratio
+		// set maintain ratio if it is set to maintain_ratio
 		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
 		{
 			$params['maintain_ratio'] = TRUE;

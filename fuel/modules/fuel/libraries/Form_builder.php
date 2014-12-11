@@ -918,7 +918,7 @@ class Form_builder {
 			$str = $this->CI->parser->parse_simple($str, $vars);
 		}
 
-		$str .= '<div class=\"actions\">';
+		$str .= '<div class="actions">';
 
 		$str .= $this->_render_actions();
 
@@ -1962,6 +1962,7 @@ class Form_builder {
 			$default = (isset($params['value'])) ? $params['value'] : FALSE;
 			foreach($params['options'] as $key => $val)
 			{
+				$attrs['data']['orig_checked'] = '0';
 				$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 				$attrs = array(
 					'class' => $params['class'],
@@ -1977,6 +1978,7 @@ class Form_builder {
 					if (($i == 0 AND !$default) OR  ($default == $key))
 					{
 						$attrs['checked'] = 'checked';
+						$attrs['data']['orig_checked'] = '1';
 					}
 				}
 				$str .= $this->form->radio($params['name'], $key, $attrs);
@@ -2196,7 +2198,8 @@ class Form_builder {
 			'min_date' => date($params['date_format'], strtotime('01/01/2000')),
 			'max_date' =>  date($params['date_format'], strtotime('12/31/2030')),
 			'first_day' => 0, 
-			'show_on' => 'button'
+			'show_on' => 'button',
+			'button_image' => NULL,
 		);
 
 		$params = $this->normalize_params($params, $defaults);
@@ -2205,7 +2208,7 @@ class Form_builder {
 		// check date to format it
 		if ((!empty($params['value']) AND (int) $params['value'] != 0)
 			&& (preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $params['value'], $regs1) 
-			|| preg_match("#([0-9]{1,2})[/\-]([0-9]{1,2})[/\-]([0-9]{4})#", $params['value'], $regs2)))
+			|| preg_match("#([0-9]{1,2})[/\-\.]([0-9]{1,2})[/\-\.]([0-9]{4})#", $params['value'], $regs2)))
 		{
 			$params['value'] = date($params['date_format'], strtotime($params['value']));
 		} else {
@@ -2215,7 +2218,7 @@ class Form_builder {
 		$params['size'] = 12; // extra room for cramped styling
 		
 		// create the right format for placeholder display based on the date format
-		$date_arr = preg_split('#-|/#', $params['date_format']);
+		$date_arr = preg_split('#-|/|\.#', $params['date_format']);
 		$format = '';
 		
 		// order counts here!
@@ -2240,6 +2243,10 @@ class Form_builder {
 		$params['data']['max_date'] = $params['max_date'];
 		$params['data']['first_day'] = $params['first_day'];
 		$params['data']['show_on'] = $params['show_on'];
+		if (!empty($params['button_image']))
+		{
+			$params['data']['button_image'] = $params['button_image'];	
+		}
 		$params['placeholder'] = $format;
 		$params['type'] = 'text';
 		return $this->create_text($params);
@@ -2276,6 +2283,7 @@ class Form_builder {
 		$time_params['name'] = str_replace($params[$key], $field_name, $params['orig_name']);
 		$time_params['class'] = 'datepicker_hh';
 		$time_params['disabled'] = $params['disabled'];
+		$time_params['readonly'] = $params['readonly'];
 		$time_params['placeholder'] = 'hh';
 		if (isset($params['tabindex'][0]))
 		{
@@ -2301,6 +2309,7 @@ class Form_builder {
 			$ampm_params['name'] = str_replace($params[$key], $params[$key].'_am_pm', $params['orig_name']);
 			$ampm_params['value'] = (!empty($params['value']) AND is_numeric(substr($params['value'], 0, 1)) AND date('H', strtotime($params['value'])) >= 12) ? 'pm' : 'am';
 			$ampm_params['disabled'] = $params['disabled'];
+			$ampm_params['readonly'] = $params['readonly'];
 
 			if (isset($params['tabindex']) AND is_array($params['tabindex']))
 			{
@@ -2610,9 +2619,13 @@ class Form_builder {
 	 */
 	public function create_email($params)
 	{
-		$email_class = 'email';
+		$params['attrs']['attributes'] = (isset($params['attributes'])) ? $params['attributes'] : '';
 		$params['type'] = 'email';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		if (strpos($params['attrs']['attributes'], 'class=') === FALSE)
+		{
+			$email_class = 'email';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;	
+		}
 		return $this->create_text($params);
 	}
 	
@@ -2627,12 +2640,16 @@ class Form_builder {
 	 */
 	public function create_range($params)
 	{
-		$email_class = 'range';
 		$params['type'] = 'range';
 		$params['attrs'] = array();
 		$params['attrs']['min'] = (isset($params['min'])) ? $params['min'] : 0;
 		$params['attrs']['max'] = (isset($params['max'])) ? $params['max'] : 10;
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		$params['attrs']['attributes'] = (isset($params['attributes'])) ? $params['attributes'] : '';
+		if (strpos($params['attrs']['attributes'], 'class=') === FALSE)
+		{
+			$email_class = 'range';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;
+		}
 		return $this->create_text($params);
 	}
 	
@@ -3520,7 +3537,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	string A CSS file name
-	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed javascript file names
+	 * @param	mixed A key value to associate with the CSS file (so it only gets loaded once). Or an associative array of keyed CSS file names
 	 * @return	void
 	 */
 	public function add_css($css = NULL, $key = NULL)
@@ -3542,17 +3559,9 @@ class Form_builder {
 		}
 		else
 		{
-			if (empty($key))
+			if (empty($key) AND !in_array($css, $this->css))
 			{
-				if (is_array($css))
-				{
-					$this->css = array_merge($this->css, $css);
-				}
-				else if (!in_array($css, $this->css))
-				{
-					$this->css[] = $css;
-				}
-				
+				$this->css[] = $css;
 			}
 			else if (!in_array($css, $this->css))
 			{
@@ -3779,7 +3788,6 @@ class Form_builder {
 		if ($this->no_css_js) return '';
 
 		$_js = $this->get_js();
-		if (empty($_js)) return '';
 		
 		$str = '';
 		$str_inline = '';
@@ -3793,45 +3801,49 @@ class Form_builder {
 		$orig_asset_output = $this->CI->asset->assets_output;
 		$this->CI->asset->assets_output = FALSE;
 
-		// loop through to generate javascript
-		foreach($_js as $type => $js)
+		if (!empty($_js))
 		{
-			
-			// if $js is a PHP array and the js asset function exists, then we'll use that to render'
-			if (is_array($js))
+
+			// loop through to generate javascript
+			foreach($_js as $type => $js)
 			{
-				$j = current($js);
-			
-				// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
-				if (is_array($j))
-				{
 				
+				// if $js is a PHP array and the js asset function exists, then we'll use that to render'
+				if (is_array($js))
+				{
+					$j = current($js);
+				
+					// TODO if the value is another array, then the key is the name of the function and the value is the name of a file to load
+					if (is_array($j))
+					{
+					
+					}
+					$str_files .= js($js);
 				}
-				$str_files .= js($js);
-			}
-			// if a string with a slash in it, then we will assume it's just a single file to load'
-			else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') === FALSE)
-			{
-				$str_files .= js($js);
-			}
-			// if it starts with a script tag and does NOT have a src attribute
-			else if (preg_match($script_regex, $js))
-			{
-				$str_files .= $js;
-			}
-		
-			// if it starts with a script tag and DOES have a src attribute
-			else if (strpos($js, '<script') !== FALSE)
-			{
-				$str_inline .= $js;
-			}
-		
-			// else it will simply call a function if it exists
-			else
-			{
-				$str .= "if (".$js." != undefined){\n";
-				$str .= "\t".$js."();\n";
-				$str .= "}\n";
+				// if a string with a slash in it, then we will assume it's just a single file to load'
+				else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') === FALSE)
+				{
+					$str_files .= js($js);
+				}
+				// if it starts with a script tag and does NOT have a src attribute
+				else if (preg_match($script_regex, $js))
+				{
+					$str_files .= $js;
+				}
+			
+				// if it starts with a script tag and DOES have a src attribute
+				else if (strpos($js, '<script') !== FALSE)
+				{
+					$str_inline .= $js;
+				}
+			
+				// else it will simply call a function if it exists
+				else
+				{
+					$str .= "if (".$js." != undefined){\n";
+					$str .= "\t".$js."();\n";
+					$str .= "}\n";
+				}
 			}
 		}
 
@@ -3852,31 +3864,36 @@ class Form_builder {
 			}
 		}
 		
-		
-		// change ignore value on asset back to original
-		$this->CI->asset->ignore_if_loaded = $orig_ignore;
-		$this->CI->asset->assets_output = $orig_asset_output;
-		
-		// sort the javascript
-		$js_exec = $this->_fields_sorter($js_exec, 'order');
-		
-		$out = $str_files;
-		$out .= $str_inline;
-		$out .= "<script type=\"text/javascript\">\n";
-		$out .= "//<![CDATA[\n";
-		$out .= "";
-		$out .= $str."\n";
-		$out .= 'if (jQuery){ jQuery(function(){';
-		$out .= 'if (jQuery.fn.formBuilder) {';
-		$out .= 'if (typeof(window[\'formBuilderFuncs\']) == "undefined") { window[\'formBuilderFuncs\'] = {}; };';
-		$out .= 'window[\'formBuilderFuncs\'] = jQuery.extend(window[\'formBuilderFuncs\'], '.json_encode($js_exec).');';
-		$out .= 'jQuery("#'.$this->id.'").formBuilder(window[\'formBuilderFuncs\']);';
-		if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
-		$out .= '}';
-		$out .= '})}';
-		$out .= "\n//]]>\n";
-		$out .= "</script>\n";
-		return $out;
+		if (!empty($js_exec) OR !empty($str_files) OR !empty($str_inline) OR !empty($str))
+		{
+			// change ignore value on asset back to original
+			$this->CI->asset->ignore_if_loaded = $orig_ignore;
+			$this->CI->asset->assets_output = $orig_asset_output;
+			
+			// sort the javascript
+			$js_exec = $this->_fields_sorter($js_exec, 'order');
+			
+			$out = $str_files;
+			$out .= $str_inline;
+			$out .= "<script type=\"text/javascript\">\n";
+			$out .= "";
+			$out .= $str."\n";
+
+			if (!empty($js_exec))
+			{
+				$out .= 'if (jQuery){ jQuery(function(){';
+				$out .= 'if (jQuery.fn.formBuilder) {';
+				$out .= 'if (typeof(window[\'formBuilderFuncs\']) == "undefined") { window[\'formBuilderFuncs\'] = {}; };';
+				$out .= 'window[\'formBuilderFuncs\'] = jQuery.extend(window[\'formBuilderFuncs\'], '.json_encode($js_exec).');';
+				$out .= 'jQuery("#'.$this->id.'").formBuilder(window[\'formBuilderFuncs\']);';
+				if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
+				$out .= '}';
+				$out .= '})}';
+			}
+
+			$out .= "</script>\n";
+			return $out;
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -3917,7 +3934,6 @@ class Form_builder {
 			foreach($css as $k => $c)
 			{
 				$module = (is_string($k)) ? $k : NULL;
-
 				if (is_array($c))
 				{
 					foreach($c as $file)

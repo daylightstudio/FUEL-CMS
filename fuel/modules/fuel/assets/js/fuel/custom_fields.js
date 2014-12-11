@@ -27,7 +27,7 @@ fuel.fields.datetime_field = function(context){
 		 o.buttonImage = imgPath + 'calendar.png';
 	}
 
-	$('.datepicker', context).each(function(i){
+	$('.datepicker', context).not('[disabled],[readonly]').each(function(i){
 		var options = {
 			dateFormat : $(this).attr('data-date_format'),
 			region : $(this).attr('data-region'),
@@ -36,6 +36,9 @@ fuel.fields.datetime_field = function(context){
 			firstDay : $(this).attr('data-first_day'),
 			showOn : $(this).attr('data-show_on')
 		};
+		if ($(this).attr('data-button_image')){
+			options.buttonImage = $(this).attr('data-button_image');
+		}
 		var opts = $.extend(o, options);
 		$.datepicker.regional[o.region];	
 		
@@ -197,7 +200,8 @@ fuel.fields.wysiwyg_field = function(context){
 
 						// // Output dimensions of images as width and height attributes on src
 						if ( element.name == 'img' && hasCKEditorImagePlugin) {
-							var src = element.attributes['src'];
+							//var src = element.attributes['src'];
+							var src = element.attributes['data-cke-saved-src']; // v4.4 fix
 							img = src.replace(/^\{img_path\('?([^'|"]+?)'?\)\}/, function(match, contents, offset, s) {
 		   										return contents;
 	    								}
@@ -320,8 +324,13 @@ fuel.fields.wysiwyg_field = function(context){
 	var createPreview = function(id){
 
 		var $textarea = $('#' + id);
+
+		if ($textarea.data('preview') != undefined && $textarea.data('preview').length == 0){
+			return;
+		}
+
 		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
-	
+
 		// add preview to make it noticable and consistent
 		if ($textarea.parent().find('.editor_preview').length == 0){
 			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
@@ -435,7 +444,6 @@ fuel.fields.asset_field = function(context, options){
 			$assetPreview = $('#asset_preview', iframeContext);
 			$('.cancel', iframeContext).add('.modal_close').click(function(){
 				$modal.jqmHide();
-
 				if ($(this).is('.save')){
 					var $activeField = $('#' + activeField);
 					var assetVal = jQuery.trim($activeField.val());
@@ -448,7 +456,11 @@ fuel.fields.asset_field = function(context, options){
 					} else {
 						assetVal = selectedVal;
 					}
-					$('#' + activeField).val(assetVal).trigger("change");
+					$activeField.val(assetVal).trigger("change");
+
+					refreshImage($activeField);
+
+
 				}
 				return false;
 			});
@@ -507,21 +519,24 @@ fuel.fields.asset_field = function(context, options){
 		$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
 			var iframeContext = this.contentDocument;
 			selected = $('#uploaded_file_name', iframeContext).val();
+
 			if (selected && selected.length){
 				var $activeField = $('#' + activeField);
-				if ($activeField.data('multiple') == '1'){
-					var selectedAssetValue = jQuery.trim($('#' + activeField).val());
+				var multiple = parseInt($activeField.attr('data-multiple')) == 1;
+				if (multiple){
+					var selectedAssetValue = jQuery.trim($activeField.val());
 					var selectedAssets = [];
 					if (selectedAssetValue.length){
 						selectedAssets = selectedAssetValue.split(',');
 					}
 					selectedAssets.push(selected);
-					$('#' + activeField).val(selectedAssets.join(','))
+					$activeField.val(selectedAssets.join(','))
 				} else {
-					$('#' + activeField).val(selected);	
+					$activeField.val(selected);	
 				}
 				
 				$modal.jqmHide();
+				refreshImage($activeField);
 			}
 		})
 		return false;
@@ -555,6 +570,49 @@ fuel.fields.asset_field = function(context, options){
 		return false;
 		
 	});
+
+	// refresh any images
+	var refreshImage = function(activeField){
+		$activeField = $(activeField);
+		var folder = $activeField.data('folder')
+		var imgPath = jqx_config.assetsPath + folder + '/';
+		var $preview = $activeField.parent().find('.img_preview');
+		var value =  $activeField.val();
+		var imgValues = value.split(',');
+		var imgStyles = $preview.data('imgstyles');
+		$preview.empty();
+		var previewHTML = '';
+		$.each(imgValues, function(img){
+
+			// check if it is an image 
+			if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/i)){
+				var newSrc = (this.toLowerCase().match(/^http(s)?:\/\//)) ? '' : imgPath;
+				newSrc += $.trim(this) + '?c=' + new Date().getTime()
+				previewHTML += '<a href="' + newSrc + '" target="_blank">';
+				previewHTML += '<img src="' + newSrc + '" style="' + imgStyles + '" class="img_bg">';
+				previewHTML += '</a>';
+			}
+
+			if (value && $activeField.data('orig') != value){
+				previewHTML += '<br clear="both"><p class="warning" style="white-space: normal;">' + fuel.lang('assets_need_to_save') + '</p>';
+			}
+		})
+
+		if (previewHTML.length){
+			$preview.show().html(previewHTML);	
+		} else {
+			$preview.hide();
+		}
+		
+	}
+
+	$('.asset_select, .asset_upload', context).each(function(){
+		$(this).on('change', function(e){
+			refreshImage(this);	
+		})
+		refreshImage(this);
+	});
+	
 }
 
 // inline editing of another module
@@ -587,15 +645,15 @@ fuel.fields.inline_edit_field = function(context){
 		var fieldId = $field.attr('id');
 		var $form = $field.closest('form');
 		var module = $field.data('module');
+		var addParams = ($field.data('add_params')) ? '?' + $field.data('add_params') : '';
 
 		var isMulti = ($field.attr('multiple')) ? true : false;
 		
 		var parentModule = fuel.getModuleURI(context);
 		var url = jqx_config.fuelPath + '/' + module + '/inline_';
-		
 		var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
 		if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
+		if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
 		
 		var refreshField = function($field){
 
@@ -955,7 +1013,7 @@ fuel.fields.sortStopped = function(){
 fuel.fields.clonedFunc = function(e){
 	$('#form').formBuilder().initialize(e.clonedNode);
 
-	// Hacktastic to remove any loader icons left on from fuel.fields.block
+	// Hacktastic to remove any loader icons left on from fuel.fields.block_field
 	e.clonedNode.find('.loader').hide();
 
 	// to help with CKEditor issues... UGH!!!
@@ -1051,7 +1109,7 @@ fuel.fields.url_field = function(context, options){
 	
 }
 
-fuel.fields.block = function(context, options){
+fuel.fields.block_field = function(context, options){
 	$(context).on('change', '.block_layout_select', function(e){
 		var $this = $(this);
 		var val = $this.val();
@@ -1109,7 +1167,7 @@ fuel.fields.block = function(context, options){
 
 }
 
-fuel.fields.toggler = function(context, options){
+fuel.fields.toggler_field = function(context, options){
 	
 	var toggler = function(elem, context){
 		var $elem = $(elem);
@@ -1145,7 +1203,7 @@ fuel.fields.toggler = function(context, options){
 	})
 
 	// for block fields that get ajaxed in
-	$(document).on("blockLoaded", function(e, elem, context){
+	$(document).off("blockLoaded").on("blockLoaded", function(e, elem, context){
 		var $togglers = $(elem).parent().find(".toggler").not('.__applied__');
 		$togglers.each(function(){
 			var $this = $(this);
@@ -1163,7 +1221,7 @@ fuel.fields.toggler = function(context, options){
 }
 
 
-fuel.fields.colorpicker = function(){
+fuel.fields.colorpicker_field = function(){
 	var $activeColorPicker = null;
 
 	var setSwatchColor = function(hex, elem){
@@ -1194,4 +1252,67 @@ fuel.fields.colorpicker = function(){
 		var hex = $(this).val();
 		setSwatchColor(hex, this);
 	});
+}
+
+fuel.fields.dependent_field = function(context, options){
+	$('.dependent', context).each(function(i){
+
+		var _this = this;
+		var dependsOn = $(this).data('depends_on');
+		if (dependsOn.substr(0, 1) != '.' && dependsOn.substr(0, 1) != '#'){
+			var dependentSelector = "select[name$=" + $(this).data('depends_on') + "], select[name$='" + $(this).data('depends_on') + "\]']";	
+		} else {
+			var dependentSelector = "select" + $(this).data('depends_on');	
+		}
+
+		// for the pages module, we'll prevent conflict with fields that use "language" in their name, 
+		// we change the context to be more specific to exclude the page property fields
+		var module = fuel.getModule();
+		if (module == 'pages') context = '#layout_fields';
+		var $dependent = $(dependentSelector, context);
+
+		$dependent.addClass('dependee');
+		$dependent.on('change', function(){
+			var val = $(this).val();
+			var url = $(_this).data('ajax_url');
+
+			// determine the initial key for the value
+			if ($(_this).data('ajax_data_key_field')){
+				var ajaxDataKeyField = $(_this).data('ajax_data_key_field');
+			} else {
+				var ajaxDataKeyField = $(_this).data('depends_on');
+			}
+			var replaceSelector = ($(_this).data('replace_selector')) ? $(_this).data('replace_selector') : _this;
+			var data = {};
+			data[ajaxDataKeyField] = $(this).val();
+
+			var xtraDataStr = $(_this).closest('.value').find('.dependent_data').text();
+			var origValue = $(_this).closest('.value').find('.orig_value').text();
+			var xtraData = {};
+			if (xtraDataStr.length){
+				xtraData = eval('(' + xtraDataStr + ')');
+			}
+
+			if (origValue.length){
+				origValue = eval('(' + origValue + ')');
+			}
+			if ($.isEmptyObject(xtraData) === false) {
+				$.extend(data, xtraData);
+			}
+
+			if (val.length){
+				$.get(url, data, function(html){
+					var $select = $(replaceSelector, this);
+					$select.html(html);
+					$select.val(origValue);
+					if ($select.prop("multiple")){
+						fuel.fields.multi_field(context);
+					}
+				});
+				fuel.fields.inline_edit_field(context);
+			}
+		})
+		
+	})
+	$('.dependee', context).trigger('change');
 }

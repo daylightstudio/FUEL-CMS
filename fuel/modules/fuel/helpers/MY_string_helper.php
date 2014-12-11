@@ -77,6 +77,11 @@ function eval_string($str, $vars = array())
 // 
 function pluralize($num, $str = '', $plural = 's')
 {
+	if (is_array($num))
+	{
+		$num = count($num);
+	}
+	
 	if ($num != 1)
 	{
 		$str .= $plural;
@@ -261,10 +266,27 @@ function php_to_template_syntax($str)
 	$str = preg_replace_callback('#'.$l_delim.'(.+)(!)\s*?empty\((.+)\)#U', $callback, $str);
 	
 	// remove paranthesis from within if conditional
-	$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
+	//$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
+	$callback2 = create_function('$matches', '
+		$CI =& get_instance();
+		$allowed_funcs = $CI->parser->allowed_functions();
+		$str = $matches[0];
+		$ldlim = "___<";
+		$rdlim = ">___";
+
+		// loop through all allowed function and escape any paranthis
+		foreach($allowed_funcs as $func)
+		{
+			$regex = "#(.*)".preg_quote($func)."\((.*)\)(.*)#U";
+			$str = preg_replace($regex, "$1".$func.$ldlim."$2".$rdlim."$3", $str);
+		}
+
+		// now replace any other paranthesis
+		$str = str_replace(array("(", ")"), array(" ", ""), $str);
+		$str = str_replace(array($ldlim, $rdlim), array("(", ")"), $str);
+		return $str;');
 	
 	$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
-	
 	// fix arrays
 	$callback = create_function('$matches', '
 		if (strstr($matches[0], "=>"))

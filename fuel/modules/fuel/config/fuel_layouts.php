@@ -67,15 +67,21 @@ $config['hidden'] = array();
 $config['layouts']['301_redirect'] = array(
 	'label' => '301 Redirect',
 	'fields' => array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_301_redirect_copy')),
-		'redirect_to' => array('label' => lang('layout_field_redirect_to')),
+		'copy' => array(
+			'type' => 'copy',
+			'label' => lang('layout_field_301_redirect_copy')
+		),
+		'redirect_to' => array('label' => lang('layout_field_redirect_to'))
 	)
 );
 
 $config['layouts']['alias'] = array(
 	'label' => 'Alias',
 	'fields' => array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_alias_copy')),
+		'copy' => array(
+			'type' => 'copy',
+			'label' => lang('layout_field_alias_copy')
+		),
 		'alias' => array('label' => lang('layout_field_alias')),
 	)
 );
@@ -91,7 +97,10 @@ $config['layouts']['404_error'] = array(
 $config['layouts']['sitemap_xml'] = array(
 	'label' => 'sitemap.xml',
 	'fields' => array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_sitemap_xml_copy')),
+		'copy' => array(
+			'type' => 'copy',
+			'label' => lang('layout_field_sitemap_xml_copy')
+		),
 		'frequency' => array(
 			'type' => 'select',
 			'options' => array(
@@ -104,27 +113,39 @@ $config['layouts']['sitemap_xml'] = array(
 				'never' => lang('layout_field_frequency_never'),
 			),
 			'value' => 'always',
-			'label' => lang('layout_field_frequency')),
+			'label' => lang('layout_field_frequency')
+		)
 	)
 );
 
 $config['layouts']['robots_txt'] = array(
 	'label' => 'robots.txt',
 	'fields' => array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_robots_txt_copy')),
-		'body' => array('type' => 'textarea', 'label' => lang('layout_field_body'), 'value' => "User-agent: *\nDisallow: /fuel/", 'class' => 'no_editor'),
+		'copy' => array(
+			'type' => 'copy',
+			'label' => lang('layout_field_robots_txt_copy')
+		),
+		'body' => array(
+			'type' => 'textarea',
+			'label' => lang('layout_field_body'),
+			'value' => "User-agent: *\nDisallow: /fuel/", 'class' => 'no_editor'
+		)
 	)
 );
 
 $config['layouts']['none'] = array(
 	'label' => 'None',
 	'fields' => array(
-		'copy' => array('type' => 'copy', 'label' => lang('layout_field_none_copy')),
-		'body' => array('type' => 'textarea', 'label' => lang('layout_field_body')),
+		'copy' => array(
+			'type' => 'copy',
+			'label' => lang('layout_field_none_copy')
+		),
+		'body' => array(
+			'type' => 'textarea',
+			'label' => lang('layout_field_body')
+		)
 	)
 );
-
-
 
 /* End of file fuel_layouts.php */
 /* Location: ./modules/fuel/config/fuel_layouts.php */

@@ -225,7 +225,7 @@ class Fuel_custom_fields {
 				$preview .= '<a href="'.$asset_path.'" target="_blank" class="noclone">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
-					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
+					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
 				}
 				else
 				{
@@ -350,87 +350,92 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			'folder' => $params['folder'],
+			'orig' => $params['value'],
 			);
-		if (!empty($params['value']))
-		{
-			if (is_string($params['value']))
-			{
-				// unserialize if it is a serialized string
-				if (is_json_str($params['value']))
-				// if (is_serialized_str($params['value']))
-				{
-					$assets = json_decode($params['value'], TRUE);
-					//$assets = unserialize($params['value']);
-				}
-				else if ($multiple)
-				{
-					// create assoc array with key being the image and the value being either the image name again or the caption
-					$assets = preg_split('#\s*,\s*|\n#', $params['value']);
+
+		// NO LONGER NEEDED BECAUSE IT'S DONE DYNAMICALLY WITH JAVASCRIPT
+
+		// if (!empty($params['value']))
+		// {
+		// 	if (is_string($params['value']))
+		// 	{
+		// 		// unserialize if it is a serialized string
+		// 		if (is_json_str($params['value']))
+		// 		// if (is_serialized_str($params['value']))
+		// 		{
+		// 			$assets = json_decode($params['value'], TRUE);
+		// 			//$assets = unserialize($params['value']);
+		// 		}
+		// 		else if ($multiple)
+		// 		{
+		// 			// create assoc array with key being the image and the value being either the image name again or the caption
+		// 			$assets = preg_split('#\s*,\s*|\n#', $params['value']);
 					
-				}
-				else
-				{
-					$assets = array($params['value']);
-				}
+		// 		}
+		// 		else
+		// 		{
+		// 			$assets = array($params['value']);
+		// 		}
 
-				$preview_str = '';
+		// 		$preview_str = '';
 
-				// loop through all the assets and concatenate them
-				foreach($assets as $asset)
-				{
-					if (!empty($asset))
-					{
-						$asset_path = '';
+		// 		// loop through all the assets and concatenate them
+		// 		foreach($assets as $asset)
+		// 		{
+		// 			if (!empty($asset))
+		// 			{
+		// 				$asset_path = '';
 
-						foreach($editable_filetypes as $folder => $regex)
-						{
-							if (!is_http_path($asset))
-							{
-								if (preg_match('#'.$regex.'#i', $asset))
-								{
-									$path = trim($params['folder'], '/').'/'.$asset;
-									$asset_path = assets_path($path);
-									break;
-								}
-							}
-							else
-							{
-								$asset_path = $asset;
-							}
-						}
+		// 				foreach($editable_filetypes as $folder => $regex)
+		// 				{
+		// 					if (!is_http_path($asset))
+		// 					{
+		// 						if (preg_match('#'.$regex.'#i', $asset))
+		// 						{
+		// 							$path = trim($params['folder'], '/').'/'.$asset;
+		// 							$asset_path = assets_path($path);
+		// 							break;
+		// 						}
+		// 					}
+		// 					else
+		// 					{
+		// 						$asset_path = $asset;
+		// 					}
+		// 				}
 
-						if (!empty($asset_path))
-						{
-							$preview_str .= '<a href="'.$asset_path.'" target="_blank">';
-							if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset)))
-							{
-								$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'"/>';
-							}
-							else
-							{
-								$preview_str .= $asset;
-							}
-							$preview_str .= '</a>';
-						}
-					}
-				}
-			}
-			$preview = '';
-			if (!empty($preview_str))
-			{
-				$img_container_styles = $params['img_container_styles'];
-				if ($multiple == FALSE AND !empty($params['img_styles']))
-				{
-					$img_container_styles = $params['img_styles'];
-				}
+		// 				// NO LONGER NEEDED BECAUSE IT IS DONE DYNAMICALLY
+		// 				if (!empty($asset_path))
+		// 				{
+		// 					$preview_str .= '<a href="'.$asset_path.'" target="_blank">';
+		// 					if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset)))
+		// 					{
+		// 						$preview_str .= '<img src="'.$asset_path.'" style="'.$params['img_styles'].'/>';
+		// 					}
+		// 					else
+		// 					{
+		// 						$preview_str .= $asset;
+		// 					}
+		// 					$preview_str .= '</a>';
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	$preview = '';
+		// 	// if (!empty($preview_str))
+		// 	// {
+		// 		$img_container_styles = $params['img_container_styles'];
+		// 		if ($multiple == FALSE AND !empty($params['img_styles']))
+		// 		{
+		// 			$img_container_styles = $params['img_styles'];
+		// 		}
 				
-				$preview = '<br /><div class="noclone" style="'.$img_container_styles.'">';
-
-				$preview .= $preview_str;
-				$preview .= '</div><div class="clear"></div>';
-			}
-			$params['after_html'] = $preview;
-		}
+		// 		$preview = '<br /><div class="img_preview noclone" style="'.$img_container_styles.'" data-imgStyles="'.$params['img_styles'].'">';
+		// 		// $preview .= $preview_str;
+		// 		$preview .= '</div><div class="clear"></div>';
+		// 	// }
+		// 	$params['after_html'] = $preview;
+		// }
+		// 
 		$params['type'] = '';
 		
 		if ($multiple)
@@ -501,8 +506,7 @@ class Fuel_custom_fields {
 				';
 			
 
-			$func = create_function('$value', $func_str);
-			$form_builder->set_post_process($params['key'], $func);
+			$func = create_function('$value', $func_str);$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		// unserialize value if it's serialized
@@ -539,7 +543,8 @@ class Fuel_custom_fields {
 		$data_params['resize_method'] = (isset($params['resize_method'])) ? $params['resize_method'] : 'maintain_ratio';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
 		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
-		
+		$data_params['multiple'] = (isset($params['multiple'])) ? (bool)$params['multiple'] : '';
+
 		if (isset($params['hide_image_options']))
 		{
 			$data_params['hide_image_options'] = (isset($params['hide_image_options'])) ? (bool)$params['hide_image_options'] : FALSE;
@@ -564,7 +569,17 @@ class Fuel_custom_fields {
 		{
 			$str = $form_builder->create_text($params);
 		}
-		$str .= $params['after_html'];
+		$preview = '';
+		$img_container_styles = $params['img_container_styles'];
+		if ($multiple == FALSE AND !empty($params['img_styles']))
+		{
+			$img_container_styles = $params['img_styles'];
+		}
+		
+		$preview = '<br /><div class="img_preview noclone" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
+		$preview .= '</div><div class="clear"></div>';
+
+		$str .= $preview;
 		return $str;
 	}
 
@@ -616,9 +631,8 @@ class Fuel_custom_fields {
 				{
 					$inline_class = 'add_edit '.$uri;
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-					$params['data'] = array(
-						'module' => $uri,
-						);
+					$params['data']['module'] = $uri;
+					$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
 				}
 			}
 		
@@ -1422,9 +1436,8 @@ class Fuel_custom_fields {
 			{
 				$inline_class = 'add_edit '.$uri;
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
-				$params['data'] = array(
-					'module' => $uri,
-					);
+				$params['data']['module'] = $uri;
+				$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
 			}
 		}
 
@@ -1736,7 +1749,7 @@ class Fuel_custom_fields {
 			$params['value'] = '';
 		}
 
-		$params['class'] = 'no_editor';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' no_editor': 'no_editor';
 		return $form_builder->create_textarea($params);
 
 	}
@@ -1855,7 +1868,7 @@ class Fuel_custom_fields {
 	}
 
 
-	function toggler($params)
+	public function toggler($params)
 	{
 		$form_builder =& $params['instance'];
 
@@ -1890,7 +1903,7 @@ class Fuel_custom_fields {
 
 	}
 
-	function colorpicker($params)
+	public function colorpicker($params)
 	{
 		$form_builder =& $params['instance'];
 
@@ -1906,6 +1919,48 @@ class Fuel_custom_fields {
 		$str .= $form_builder->create_text($params);
 		$bg_color = ' background-color: #'.$params['value'];
 		$str .= '<div class="colorpicker_preview" style="display: inline-block; width: 22px; height: 22px; margin: 0  0 -8px 3px; border: 2px solid #ddd;'.$bg_color.'"></div>';
+		return $str;
+	}
+
+	public function dependent($params)
+	{
+		if (empty($params['depends_on']))
+		{
+			show_error('The depends_on parameters must be provided for the dependent field.');
+		}
+
+		$form_builder =& $params['instance'];
+
+		$params['url'] = (empty($params['url']) AND isset($this->CI->module_uri)) ? fuel_url($this->CI->module_uri.'/ajax/options') : $params['url'];
+		$params['ajax_data_key_field'] = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : '';
+		$params['additional_ajax_data'] = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
+		$params['replace_selector'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
+
+		$dependent_class = 'dependent';
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$dependent_class : $dependent_class; 
+		$params['data'] = array(
+								'depends_on'          => $params['depends_on'],
+								'ajax_url'            => $params['url'],
+								'ajax_data_key_field' => $params['ajax_data_key_field'],
+								'replace_selector'    => $params['replace_selector'],
+								);
+
+		$str = '';
+		$str .= "<div class=\"dependent_data\" style=\"display: none;\">";
+		$str .= json_encode($params['additional_ajax_data']);
+		$str .= "</div>\n";
+		$str .= "<div class=\"orig_value\" style=\"display: none;\">";
+		$str .= json_encode($params['value']);
+		$str .= "</div>\n";
+		$params['mode'] = 'select';
+		if (!empty($params['multiple']))
+		{
+			$str .= $this->multi($params);
+		}
+		else
+		{
+			$str .= $this->inline_edit($params);	
+		}
 		return $str;
 	}
 }

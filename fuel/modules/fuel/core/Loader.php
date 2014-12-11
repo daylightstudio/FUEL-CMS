@@ -217,12 +217,27 @@ class Fuel_Loader extends MX_Loader
 		if ($path === FALSE) {
 			$this->_ci_load_class($library, $params, $object_name);
 			$_alias = $this->_ci_classes[$class];
-		} else {		
+		} else {
+
 			Modules::load_file($_library, $path);
-			
 			$library = ucfirst($_library);
+
+			// look for both upper and lower cased version of the file
+			foreach (array(ucfirst($class), strtolower($class)) as $class)
+			{
+				// FUEL fix due to allow for extending from application folder
+				$subclassfile = APPPATH.'libraries/' . config_item('subclass_prefix') . $class . '.php';
+				$subclass = config_item('subclass_prefix') . $class;
+
+				if (is_file($subclassfile))
+				{
+					Modules::load_file($subclass, APPPATH.'libraries/');
+					$library = config_item('subclass_prefix') . $class;
+					break;
+				}
+			}
 			
-			// FUEL fix due to issue with SImplePie library still seeing a NULL value as a parameter
+			// FUEL fix due to issue with SimplePie library still seeing a NULL value as a parameter
 			if (!empty($params))
 			{
 				CI::$APP->$_alias = new $library($params);
@@ -231,6 +246,7 @@ class Fuel_Loader extends MX_Loader
 			{
 				CI::$APP->$_alias = new $library();
 			}
+
 			$this->_ci_classes[$class] = $_alias;
 		}
 		

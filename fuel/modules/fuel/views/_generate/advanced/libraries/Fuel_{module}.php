@@ -20,7 +20,7 @@
 // ------------------------------------------------------------------------
 
 class Fuel_{module} extends Fuel_advanced_module {
-	
+
 	public $name = "{module}"; // the folder name of the module
 	
 	/**
@@ -33,9 +33,9 @@ class Fuel_{module} extends Fuel_advanced_module {
 		parent::__construct();
 		$this->initialize($params);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Initialize the backup object
 	 *
@@ -53,10 +53,9 @@ class Fuel_{module} extends Fuel_advanced_module {
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Add your custom methods for this advanced module below.
 	 * You will be able to access it via $this->fuel->{module}->my_method()
-	 */	
-	
+	 */
 }

@@ -32,12 +32,12 @@ class Build extends Fuel_base_controller {
 		$params = array('module' => $module);
 		$GLOBALS['EXT']->_call_hook('before_build', $params);
 
-
 		// get the type of build which can either be CSS or JS
 		$type = array_shift($segs);
 
 		$valid_types = array('css', 'js');
-		if (!empty($type) AND in_array($type, $valid_types))
+
+		if ( ! empty($type) AND in_array($type, $valid_types))
 		{	
 			$this->load->helper('file');
 
@@ -65,7 +65,6 @@ class Build extends Fuel_base_controller {
 				$files[] = str_replace($replace, '', trim($file, '/'));
 			}
 
-
 			$output_params['type'] = $type;
 			$output_params['whitespace'] = TRUE;
 			$output_params['destination'] = assets_server_path($filename.'.'.$type, $type, $module);
@@ -76,10 +75,7 @@ class Build extends Fuel_base_controller {
 		{
 			$results = $this->fuel->$module->build();
 
-			if ($results === FALSE)
-			{
-				echo lang('error_no_build');
-			}
+			if ($results === FALSE) echo lang('error_no_build');
 		}
 		else
 		{
@@ -90,10 +86,8 @@ class Build extends Fuel_base_controller {
 
 		// call after build hook
 		$GLOBALS['EXT']->_call_hook('after_build', $params);
-
 	}
 
-	
 	function optimize_js()
 	{
 		$js = array(
@@ -129,8 +123,7 @@ class Build extends Fuel_base_controller {
 			'jqx/plugins/util',
 			'fuel/global',
 		);
-	
-		
+
 		$js_inline = array(
 				'jquery/plugins/jquery.form', 
 				'jquery/plugins/jqModal', 
@@ -141,7 +134,6 @@ class Build extends Fuel_base_controller {
 				'fuel/global', 
 				'fuel/edit_mode'
 		);
-
 
 		// set the folder in which to place the file
 		$output_params['type'] = 'js';
@@ -167,7 +159,7 @@ class Build extends Fuel_base_controller {
 			'jquery-ui-1.8.17.custom',
 			'fuel'
 		);
-	
+
 		// set the folder in which to place the file
 		$output_params['type'] = 'css';
 		$output_params['whitespace'] = TRUE;

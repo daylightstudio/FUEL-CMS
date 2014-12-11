@@ -646,6 +646,7 @@ div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
 
 div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: center; margin: 10px 0 20px 0;}
+div#asset_preview img, .img_bg { background-color: #f3f3f3; }
 div.asset_select > div > div { float: left; }
 div.asset_select span.label { padding: 0 5px 0 15px; }
 div.asset_select div.actions { padding-top: 50px; float: left; }
@@ -702,9 +703,9 @@ div.perms_list label { font-weight: bold; }
 
 /* ckeditor */
 .cke_top { min-width: 565px !important; }
-.cke_button__fuellink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -832px !important; }
-.cke_button__fuelunlink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -864px !important; }
-.cke_button__fuelimage_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -736px !important; }
+.cke_button__fuellink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -528px !important; }
+.cke_button__fuelunlink_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -552px !important; }
+.cke_button__fuelimage_icon { background: url(../js/editors/ckeditor/skins/moono/icons.png) no-repeat 0 -360px !important; }
 
 /* CI profiler */
 #codeigniter_profiler { position: absolute; bottom: 0; left: 200px; height: 300px; overflow: auto; }

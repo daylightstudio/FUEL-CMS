@@ -330,14 +330,7 @@ class Fuel_navigation_model extends Base_module_model {
 		$fields['hidden']['options'] = array('yes' => $yes, 'no' => $no);
 		
 		// set language field
-		if ($CI->fuel->language->has_multiple())
-		{
-			$fields['language'] = array('type' => 'select', 'options' => $CI->fuel->language->options());
-		}
-		else
-		{
-			$fields['language'] = array('type' => 'hidden', 'value' => $CI->fuel->language->default_option());
-		}
+		$fields['language'] = array('type' => 'select', 'options' => $CI->fuel->language->options(), 'value' => $CI->fuel->language->default_option(), 'hide_if_one' => TRUE);
 
 		$fields['nav_key']['type'] = 'linked';
 		$fields['nav_key']['linked_to'] = array('location' => 'mirror');

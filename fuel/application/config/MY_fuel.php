@@ -77,7 +77,8 @@ $config['ck_editor_settings'] = "{
 	protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g],
 	toolbarCanCollapse: false,
 	extraPlugins: 'fuellink,fuelimage',
-	removePlugins: 'link,image'
+	removePlugins: 'link,image',
+	allowedContent: true
 	}";
 
 /* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure

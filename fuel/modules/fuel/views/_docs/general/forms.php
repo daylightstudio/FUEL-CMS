@@ -211,6 +211,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 		<li><a href="#toggler">toggler</a></li>
 		<li><a href="#colorpicker">colorpicker</a></li>
+		<li><a href="#dependent">dependent</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -466,7 +467,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<pre class="brush:php">
 	$fields['file_example'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE, 'file_name' => 'my_file_{id}');
 	</pre>
-	<p class="important">Note the us of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
+	<p class="important">Note the use of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
 	<?php form_builder_example('file_example', array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE)); ?>
 
 </div>
@@ -766,7 +767,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <div class="toggle_block_off">
 	<p>This field type is used for dynamically pulling in <a href="<?=user_guide_url('general/layouts#layouts_block_layouts')?>">block layout fields</a>:</p>
 
-	<h4>Upload Specific</h4>
 	<ul>
 		<li><strong>folder</strong>: determines which <span class="file">fuel/application/views/_blocks</span> subfolder to look in for displaying</li>
 		<li><strong>filter</strong>: an array or regular expression string to filter out certain files (e.g. those beginning with underscores). The default value is <dfn>^_(.*)|\.html$</dfn></li>
@@ -778,7 +778,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>block_name</strong>: if specified, it will automatically return the fields of that block as opposed to a dropdown list to select from</li>
 		<li><strong>group</strong>: if specified, will filter the options list to only those block layouts with that group name ('folder' must not be specified)</li>
 	</ul>
-
 
 	<h4>Example</h4>
 	<pre class="brush:php">
@@ -1106,6 +1105,31 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="dependent" class="toggle">dependent</h3>
+<div class="toggle_block_off">
+	<p>This field allows you to have one field determine the options of another field:</p>
+	<ul>
+		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on.</li>
+		<li><strong>url</strong>: the URL for the AJAX request.</li>
+		<li><strong>multiple</strong>: determines if the field is a multi-select or not.</li>
+		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field.</li>
+		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX.</li>
+		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select.</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['dependent_example'] = array('type' => 'dependent', 'depends_on' => 'language', 'url' => fuel_url('my_module/ajax/options'), 'multiple' => TRUE, 'replace_selector' => '.language_depends');
 	</pre>
 	
 	<?php 

@@ -330,7 +330,7 @@ class Base_module_model extends MY_Model {
 			{
 				if (isset($joiner[$key]))
 				{
-					$joiner = $joiner[$key];
+					$joiner = strtolower($joiner[$key]);
 				}
 				else
 				{
@@ -690,7 +690,8 @@ class Base_module_model extends MY_Model {
 
 				if (in_array($CI->language_col, $fields))
 				{
-					$display_field = 'CONCAT('.$display_field.', " - ", '.$CI->language_col.') AS val_field';
+					if (strpos($display_field, '.') === FALSE) $display_field = $this->table_name.'.'.$display_field;
+					$display_field = 'CONCAT('.$display_field.', " - ", '.$this->table_name.'.'.$CI->language_col.') AS val_field';
 					$orderby = 'val_field ASC';
 				}
 			}
@@ -731,7 +732,7 @@ class Base_module_model extends MY_Model {
 		{
 			$this->db->distinct($field);
 		}
-
+		if (strpos($field, '.') === FALSE) $field = $this->table_name.'.'.$field;
 		$where[$field.' !='] = '';
 		$options = $this->options_list($field, $field, $where, TRUE, FALSE);
 		return $options;
@@ -835,9 +836,29 @@ class Base_module_model extends MY_Model {
 	 * @access	public
 	 * @return	string
 	 */	
-	public function ajax_options()
+	public function ajax_options($where = array())
 	{
-		$options = $this->options_list();
+		if (!empty($where['exclude']))
+		{
+			$ids = explode(',', $where['exclude']);
+			$this->db->where_not_in('id', $ids);
+			unset($where['exclude']);
+		}
+
+		if (!empty($where['language']))
+		{
+			// force the parameter to include the table
+			$new_lang_key = $this->table_name().'.language';
+			$where[$new_lang_key] = $where['language'];
+			unset($where['language']);
+			$this->db->where($where);
+			$where = array();
+			$this->db->or_where($this->table_name().'.language = ""');
+			unset($where[$new_lang_key]);
+		}
+
+		$options = $this->options_list(NULL, NULL, $where);
+
 		$str = '';
 		foreach($options as $key => $val)
 		{

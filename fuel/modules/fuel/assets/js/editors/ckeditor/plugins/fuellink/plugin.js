@@ -41,12 +41,14 @@ CKEDITOR.plugins.add( 'fuellink', {
 					}
 				}
 				linkPdfs = editor.element.getAttribute('data-link_pdfs');
+				linkFilter = editor.element.getAttribute('data-link_filter');
+
 				var selected = selection.getSelectedText();
 				var selectedElem = selection.getSelectedElement();
 				if (selectedElem){
 					selected = selectedElem.getOuterHtml();
 				}
-				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs}, function(replace){
+				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs, linkFilter:linkFilter}, function(replace){
 					editor.insertHtml(replace);
 				})
 	        }

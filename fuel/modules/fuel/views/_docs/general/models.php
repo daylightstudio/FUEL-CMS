@@ -525,12 +525,12 @@ if (isset($tag->id))
 
 <p class="important">
 	By default, FUEL uses the built-in relationships model to save relationship data. However, if you want to change the model, as well as the field names it uses to store the key information, 
-	you can pass the following	parameters in your <dfn>has_many</dfn> or <dfn>belongs_to</dfn> properties array: <dfn>fuel_relationships_model</dfn>, <dfn>foreign_key</dfn>, <dfn>candidate_key</dfn>. An Example is below:
+	you can pass the following	parameters in your <dfn>has_many</dfn> or <dfn>belongs_to</dfn> properties array: <dfn>relationships_model</dfn>, <dfn>foreign_key</dfn>, <dfn>candidate_key</dfn>. An Example is below:
 </p>
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'), 'fuel_relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key'));
+  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model'), 'relationships_model' => 'my_relationship_model', 'foreign_key' => 'my_foreign_key', 'candidate_key' => 'candidate_key'));
 
   function __construct()
   {
@@ -602,7 +602,7 @@ An example of this is to use the "_formatted" suffix on a string type field whic
 echo $record->content;
 // A long time ago...
 
-echo $record->content_fornatted;
+echo $record->content_formatted;
 // &lt;p&gt;A long time ago...&lt;/p&gt;
 </pre>
 
