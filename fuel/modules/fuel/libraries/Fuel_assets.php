@@ -245,8 +245,6 @@ class Fuel_assets extends Fuel_base_library {
 					$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
 				}
 
-				$params['remove_spaces'] = TRUE;
-
 				// make directory if it doesn't exist and subfolder creation is allowed'
 				if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))
 				{
@@ -300,6 +298,16 @@ class Fuel_assets extends Fuel_base_library {
 				if ($this->has_errors())
 				{
 					return FALSE;
+				}
+
+				// pull in from config if it exists
+				if (file_exists(APPPATH.'config/upload.php'))
+				{
+					include(APPPATH.'config/upload.php');
+					if (!empty($config))
+					{
+						$params = array_merge($config, $params);
+					}
 				}
 
 				// UPLOAD!!!

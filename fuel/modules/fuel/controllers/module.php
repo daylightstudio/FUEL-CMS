@@ -2200,7 +2200,8 @@ class Module extends Fuel_base_controller {
 
 					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
 					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
-					$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					//$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					$file_val = $file_name.'.'.$file_ext;
 					$posted[$tmp_field_name] = $file_val;
 					$posted[$field_name] = $file_val;
 					$posted[$file_tmp.'_file_name'] = $file_val;
