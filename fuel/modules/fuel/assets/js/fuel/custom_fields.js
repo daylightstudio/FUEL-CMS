@@ -325,53 +325,41 @@ fuel.fields.wysiwyg_field = function(context){
 
 		var $textarea = $('#' + id);
 
-		if ($textarea.data('preview') != undefined && $textarea.data('preview').length == 0){
+		if ($textarea.data('preview') !== undefined && $textarea.data('preview').length === 0){
 			return;
 		}
 
 		var previewButton = '<a href="#" id="' + id + '_preview" class="btn_field editor_preview">' + fuel.lang('btn_preview') + '</a>';
 
 		// add preview to make it noticable and consistent
-		if ($textarea.parent().find('.editor_preview').length == 0){
+		if ($textarea.parent().find('.editor_preview').length === 0){
 			var $previewBtn = $textarea.parent('.markItUpContainer').find('.markItUpHeader .preview');
 			if ($previewBtn){
 				$textarea.parent().append(previewButton);
 
 				$('#' + id + '_preview').click(function(e){
 					e.preventDefault();
-					var previewOptions = $textarea.data('preview_options');
-					if (!previewOptions.length) previewOptions = 'width=1024,height=768';
-
-					var previewWindow = window.open('', 'preview', previewOptions);
-					var val = (typeof CKEDITOR != 'undefined' && CKEDITOR.instances[id] != undefined && $textarea.css('visibility') != 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
+					var val = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances[id] !== undefined && $textarea.css('visibility') !== 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
 					var csrf = $('#csrf_test_name').val();
+					var editorPreviewModal = function (data) {
+						var editorPreviewIframeHTML = '<iframe name="editor_preview_modal_iframe" id="editor_preview_modal_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 550px;"></iframe>',
+							$editorPreviewModal = fuel.modalWindow(editorPreviewIframeHTML, 'editor_preview_modal'),
+							$editorPreviewIframe = $editorPreviewModal.find('iframe'),
+							$previewIframe = $editorPreviewIframe[0].contentDocument || $editorPreviewIframe[0].contentWindow.document;
+						$previewIframe.write(data);
+						$previewIframe.close();
+					};
 					$.ajax( {
 						type: 'POST',
 						url: myMarkItUpSettings.previewParserPath,
 						data: myMarkItUpSettings.previewParserVar+'='+encodeURIComponent(val) + '&csrf_test_name='+ csrf,
-						success: function(data) {
-							writeInPreview(data); 
-						}
+						success: editorPreviewModal
 					});
-
-					function writeInPreview(data) {
-						if (previewWindow.document) {			
-							try {
-								sp = previewWindow.document.documentElement.scrollTop
-							} catch(e) {
-								sp = 0;
-							}	
-							previewWindow.document.open();
-							previewWindow.document.write(data);
-							previewWindow.document.close();
-							previewWindow.document.documentElement.scrollTop = sp;
-						}
-					}
 				});
 			}
 		}
 
-	}
+	};
 
 	$editors.each(function(i) {
 		var _this = this;
