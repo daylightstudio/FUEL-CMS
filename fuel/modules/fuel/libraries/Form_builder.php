@@ -2003,7 +2003,10 @@ class Form_builder {
 		}
 		else
 		{
-			$params['equalize_key_value'] = TRUE;
+			if (!isset($params['equalize_key_value']))
+			{
+				$params['equalize_key_value'] = TRUE;
+			}
 			$str .= $this->create_select($params);
 		}
 		return $str;
