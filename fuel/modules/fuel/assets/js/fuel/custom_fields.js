@@ -383,7 +383,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						if (!config.previewParserVar) config.previewParserVar = 'data'
 
 						var editorPreviewModal = function (data) {
-							var editorPreviewIframeHTML = '<iframe name="editor_preview_modal_iframe" id="editor_preview_modal_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 550px;"></iframe>',
+							var editorPreviewIframeHTML = '<iframe name="editor_preview_modal_iframe" id="editor_preview_modal_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 508px;"></iframe>',
 								$editorPreviewModal = fuel.modalWindow(editorPreviewIframeHTML, 'editor_preview_modal'),
 								$editorPreviewIframe = $editorPreviewModal.find('iframe'),
 								$previewIframe = $editorPreviewIframe[0].contentDocument || $editorPreviewIframe[0].contentWindow.document;
