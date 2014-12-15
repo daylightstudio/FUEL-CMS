@@ -37,7 +37,7 @@ class Preview extends Fuel_base_controller {
 		$vars['CI'] =& get_instance();
 
 		// parse for template syntax here so it doesn't escape single quotes
-		$vars['body'] = $this->parser->parse_string($data, $vars, TRUE);
+		$vars['body'] = $data;
 		
 		$this->asset->assets_path = $this->config->item('assets_path');
 
