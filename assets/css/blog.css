@@ -8,7 +8,7 @@
 
 /* post content */
 div.post { padding-bottom: 20px; }
-div.post_date { margin-bottom: 10px; }
+div.publish_date { margin-bottom: 10px; }
 div.post_meta .categories { text-transform: uppercase; }
 div.post_content ul { margin-bottom: 20px; }
 div.post_content p, div.post_content li { line-height: 16px; }
