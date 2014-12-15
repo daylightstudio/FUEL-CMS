@@ -496,6 +496,12 @@ $lang['form_label_slug'] = 'Slug';
 $lang['form_label_url'] = 'URL';
 $lang['form_label_link'] = 'Link';
 $lang['form_label_pdf'] = 'PDF';
+$lang['form_label_canonical'] = 'Canonical';
+$lang['form_label_og_title'] = 'Open Graph title';
+$lang['form_label_og_description'] = 'Open Graph description';
+$lang['form_label_og_image'] = 'Open Graph image';
+$lang['form_label_category_id'] = 'Category';
+
 
 $lang['form_label_group_id'] = 'Group';
 $lang['form_label_or_select'] = 'OR select';
