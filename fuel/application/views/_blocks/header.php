@@ -5,7 +5,7 @@
  	<title>
 		<?php 
 			if (!empty($is_blog)) :
-				echo $CI->fuel_blog->page_title($page_title, ' : ', 'right');
+				echo $CI->fuel->blog->page_title($page_title, ' : ', 'right');
 			else:
 				echo fuel_var('page_title', '');
 			endif;
@@ -20,10 +20,10 @@
 		echo css('main').css($css);
 
 		if (!empty($is_blog)):
-			echo $CI->fuel_blog->header();
+			echo $CI->fuel->blog->header();
 		endif;
 	?>
-
+	<?=jquery()?>
 </head>
 <body>
 	<div class="page">
