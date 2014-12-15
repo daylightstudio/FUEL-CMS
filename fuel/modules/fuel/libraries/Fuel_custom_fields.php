@@ -75,7 +75,11 @@ class Fuel_custom_fields {
 				$params['class'] = 'markitup '.$params['class'];
 			}
 		}
-		
+		else
+		{
+			$params['editor'] = 'markitup';
+		}
+
 		if (!isset($params['data']))
 		{
 			$params['data'] = $params['data'] = array();
@@ -119,29 +123,80 @@ class Fuel_custom_fields {
 			$params['data']['markdown'] = 1;
 		}
 
-		// set markitup config
-		if (isset($params['editor_config']) AND is_array($params['editor_config']))
+		static $markitup_config;
+		static $ckeditor_config;
+		if ((empty($markitup_config) OR empty($markitup_config)))
 		{
-			foreach($params['editor_config'] as $key => $val)
+			include(APPPATH.'config/editors.php');
+			$markitup_config = $config['markitup'];
+			$ckeditor_config = $config['ckeditor'];
+		}
+		$editor_set = ($params['editor'] == 'ckeditor') ? $ckeditor_config : $markitup_config;
+
+		if (!empty($params['editor_config']))
+		{
+			if (is_string($params['editor_config']))
 			{
-				$params['data'][$key] = $val;
+				if (strpos($params['editor_config'], '{') === FALSE)
+				{
+					$editor_config = $editor_set[$params['editor_config']];
+					$params['data']['editor_set'] = $params['editor_config'];
+				}
+				else
+				{
+					$params['data']['editor_set'] = 'default';
+					$editor_config = $params['editor_config'];
+	
+				}
 			}
+			elseif (is_array($params['editor_config']))
+			{
+				//$params['editor_config'] = array_merge($editor_config['default'], $params['editor_config']);
+				$params['data']['editor_set'] = 'default';
+				$editor_config = $params['editor_config'];
+			}
+		}
+		else
+		{
+			$params['data']['editor_set'] = 'default';
+			$editor_config = $editor_set[$params['data']['editor_set']];
 		}
 
-		// set ckeditor configs
-		if (isset($params['ckeditor_config']) AND is_array($params['ckeditor_config']))
+		if (is_array($editor_config))
 		{
-			foreach($params['ckeditor_config'] as $key => $val)
+			if (!empty($params['editor_append_toolbar']) AND is_array($editor_config['toolbar']))
 			{
-				$params['data'][$key] = $val;
+				$first_item = current($params['editor_append_toolbar']);
+				if (is_array($first_item))
+				{
+					$editor_config['toolbar'] = array_merge($editor_config['toolbar'], $params['editor_append_toolbar']);
+				}
+				else
+				{
+					$editor_config['toolbar'][] = $params['editor_append_toolbar'];
+				}
+			} 
+
+			if ($params['editor'] == 'markitup' AND !empty($editor_config['toolbar']))
+			{
+				if (empty($editor_config['markupSet']))
+				{
+					$editor_config['markupSet'] = array();
+				}
+
+				if (is_array($editor_config['markupSet']) AND is_array($editor_config['toolbar']))
+				{
+					$editor_config['markupSet'] = array_merge($editor_config['toolbar'], $editor_config['markupSet']);	
+				}
+				unset($editor_config['toolbar']);
 			}
 		}
-		
-		$js = '<script type="text/javascript">
-			myMarkItUpSettings.previewParserPath = "'.fuel_url().'/preview";
-		</script>';
-		$form_builder->add_js($js, 'markitup_preview_path');
-		
+		if (is_array($editor_config))
+		{
+			$editor_config = json_encode($editor_config);
+		}
+		$js = '<script>fuel.fields.setElementData("'.$params['name'].'", "editor", '.$editor_config.');</script>';	
+		$form_builder->add_js($js, 'editor_config_'.$params['name']);
 		return $form_builder->create_textarea($params);
 	}
 	

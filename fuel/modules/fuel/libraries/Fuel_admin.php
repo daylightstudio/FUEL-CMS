@@ -1414,7 +1414,7 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
 		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
-		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
+		// $vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
 		$last_page = uri_path();
 		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);

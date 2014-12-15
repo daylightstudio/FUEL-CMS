@@ -98,28 +98,11 @@ $config['dashboards'] = array('fuel');
 // Dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
 
-// Text editor settings... options are markitup or ckeditor
+// text editor settings  (options are markitup or ckeditor)
+// markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)
+// ckeditor: suitable for clients; shows what the output will look like in the page (http://ckeditor.com/)
+// for more editor settings, look at the config/editors.php configuration file
 $config['text_editor'] = 'markitup';
-
-// CK editor specific settings
-$config['ck_editor_settings'] = array(
-	'toolbar' => array(
-		//array('Source'),
-		array('Bold','Italic','Strike'),
-		array('Format'),
-		array('Image','HorizontalRule'),
-		array('NumberedList','BulletedList'),
-		array('Link','Unlink'),
-		array('Undo','Redo','RemoveFormat'),
-		array('Preview'),
-		array('Maximize'),
-	),
-	'contentsCss' => WEB_PATH.'assets/css/main.css',
-	'htmlEncodeOutput' => FALSE,
-	'entities' => FALSE,
-	'bodyClass' => 'ckeditor',
-	'toolbarCanCollapse' => FALSE,
-);
 
 // An associative array of objects to attach to the fuel object
 $config['attach'] = array();
