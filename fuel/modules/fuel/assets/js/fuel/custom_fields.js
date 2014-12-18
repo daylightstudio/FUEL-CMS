@@ -530,6 +530,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			activeField = $(e.target).parent().find('input[type="text"],textarea').filter(':first').attr('id');
 			selectedAssetFolder = $(e.target).data('folder');
 
+			// now replace any placeholder values in the folder... required for new pages that may not have a value
+			$inputs = $(context).closest('form').find('select, textarea')
+			.add('input[type="radio"]:checked, input[type="checkbox"]:checked', context);
+			
+			var replaceValues = {};
+			$inputs.each(function(i){
+				var nameArr = $(this).attr('name').split('--');
+				var id = ($(this).is('input[type="radio"], input[type="checkbox"]')) ? nameArr[nameArr.length -1] : $(this).attr('id');
+				replaceValues[id] = $(this).val();
+				var regex = new RegExp('\{' + id + '\}', 'g');
+				selectedAssetFolder = selectedAssetFolder.replace(regex, replaceValues[id]);
+			})
+
 			// legacy code
 			if (!selectedAssetFolder){
 				var assetTypeClasses = $(e.target).attr('class').split(' ');
@@ -538,7 +551,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			showAssetsSelect();
 			return false;
 		});
-		
 		
 		// asset upload 
 		var showAssetUpload = function(url){
