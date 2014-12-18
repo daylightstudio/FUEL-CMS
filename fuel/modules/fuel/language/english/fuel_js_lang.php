@@ -93,7 +93,7 @@ $lang['btn_remove'] = 'Remove';
 | Assets
 |--------------------------------------------------------------------------
 */
-$lang['assets_need_to_save'] = 'Click "Save" to use this image.';
+$lang['assets_need_to_save'] = 'Click "Save" to use this file.';
 
 /* End of file fuel_js_lang.php */
 /* Location: ./modules/fuel/language/english/fuel_js_lang.php */
