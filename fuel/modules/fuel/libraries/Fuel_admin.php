@@ -460,6 +460,12 @@ class Fuel_admin extends Fuel_base_library {
 			if (file_exists($nav_path))
 			{
 				include($nav_path);
+
+				$app_nav_path = APPPATH.'config/'.$module.'.php';
+				if (file_exists($app_nav_path))
+				{
+					include($app_nav_path);
+				}
 				
 				if (array_key_exists('module_overwrites', $config) AND ! empty($config['module_overwrites']))
 				{
