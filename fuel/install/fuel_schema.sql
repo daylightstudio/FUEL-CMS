@@ -256,6 +256,7 @@ CREATE TABLE `fuel_tags` (
   `category_id` int(10) unsigned NOT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `context` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `language` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'english',
   `precedence` int(11) NOT NULL,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
