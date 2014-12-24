@@ -2635,6 +2635,27 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Creates a phone field for the form... supported by modern browsers
+	 *
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	public function create_phone($params)
+	{
+		$params['attrs']['attributes'] = (isset($params['attributes'])) ? $params['attributes'] : '';
+		$params['type'] = 'tel';
+		if (strpos($params['attrs']['attributes'], 'class=') === FALSE)
+		{
+			$email_class = 'phone';
+			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$email_class : $email_class;	
+		}
+		return $this->create_text($params);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates a range field for the form... supported by modern browsers
 	 *
 	 * @access	public
