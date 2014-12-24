@@ -215,4 +215,53 @@ class Fuel_Router extends MX_Router
 	public function set_class($class) {
 		$this->class = $class.$this->config->item('controller_suffix');
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 *  Parse Routes
+	 *
+	 * This function matches any routes that may exist in
+	 * the config/routes.php file against the URI to
+	 * determine if the class/method need to be remapped.
+	 *
+	 * @access	private
+	 * @return	void
+	 */
+	function _parse_routes()
+	{
+		// Turn the segment array into a URI string
+		$uri = implode('/', $this->uri->segments);
+
+		// Is there a literal match?  If so we're done
+		if (isset($this->routes[$uri]))
+		{
+			return $this->_set_request(explode('/', $this->routes[$uri]));
+		}
+
+		// Loop through the route array looking for wild-cards
+		foreach ($this->routes as $key => $val)
+		{
+			// Convert wild-cards to RegEx
+			$key = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $key));
+
+			// Does the RegEx match?
+			if (preg_match('#^'.$key.'$#', $uri))
+			{
+				// Do we have a back-reference?
+				if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
+				{
+					$val = preg_replace('#^'.$key.'$#', $val, $uri);
+				}
+
+				// Added by Daylight Studio 2014-12-23 to filter out any duplicate slashes which yeild empty segmeents
+				$segs = array_values(array_filter(explode('/', $val)));
+				return $this->_set_request($segs);
+			}
+		}
+
+		// If we got this far it means we didn't encounter a
+		// matching route so we'll set the site default route
+		$this->_set_request($this->uri->segments);
+	}
 }
