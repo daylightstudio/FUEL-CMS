@@ -84,7 +84,7 @@ $fields['template'] = array(
 // Number field
 $fields['number'] = array(
 	'js_function' => 'fuel.fields.number_field',
-	'represents' => array('int', 'smallint', 'mediumint', 'bigint'),
+	'represents' => array('int', 'tinyint', 'smallint', 'mediumint', 'bigint'),
 );
 
 // Currency field
