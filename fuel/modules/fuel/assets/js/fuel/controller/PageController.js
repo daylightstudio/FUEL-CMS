@@ -135,23 +135,21 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 	select : function(){
 		$urlSelect = $('#url_select');
 		this._initFormTabs();
-		$('#input').bind('focus', function(){
-			$(this).removeAttr('disabled');
+		
+
+		$('#input').on('focus', function(){
 			$('#url_select').attr('disabled', 'disabled');
-			
 		})
 
-		$('#input').bind('blur', function(){
+		$('#input').on('blur', function(){
 			$('#url_select').removeAttr('disabled');
 		})
 
-
-		$('#url_select').bind('focus', function(){
-			$(this).removeAttr('disabled');
+		$('#url_select').on('focus', function(){
 			$('#input').attr('disabled', 'disabled');
 		})
 
-		$('#url_select').bind('blur', function(){
+		$('#url_select').on('blur', function(){
 			$('#input').removeAttr('disabled');
 		})
 
