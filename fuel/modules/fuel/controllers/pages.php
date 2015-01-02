@@ -224,6 +224,13 @@ class Pages extends Module {
 
 		// create fields... start with the table info and go from there
 		$fields = $this->model->form_fields($saved);
+
+		// if it's an object, then extract
+		if ($fields instanceof Base_model_fields)
+		{
+			$fields = $fields->get_fields();
+		}
+
 		$common_fields = $this->_common_fields($saved);
 		$fields = array_merge($fields, $common_fields);
 
@@ -791,6 +798,13 @@ class Pages extends Module {
 	public function _has_conflict($fields)
 	{
 		$page_columns = $this->model->form_fields();
+
+		// if it's an object, then extract
+		if ($page_columns instanceof Base_model_fields)
+		{
+			$page_columns = $page_columns->get_fields();
+		}
+
 		unset($page_columns['id']);
 		$reserved_cols = array_keys($page_columns);
 		$page_variable_cols = array_keys($fields);

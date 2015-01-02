@@ -1293,6 +1293,7 @@ class Module extends Fuel_base_controller {
 	// seperated to make it easier in subclasses to use the form without rendering the page
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
+
 		$this->load->library('form_builder');
 
 		// load custom fields
@@ -1304,6 +1305,12 @@ class Module extends Fuel_base_controller {
 
 		// create fields... start with the table info and go from there
 		$fields = (!empty($values)) ? $this->model->form_fields($values) : $this->model->form_fields($_POST);
+
+		// if it's an object, then extract
+		if ($fields instanceof Base_model_fields)
+		{
+			$fields = $fields->get_fields();
+		}
 
 		// if field parameter is set, then we just display a single field
 		if ( ! empty($field))
