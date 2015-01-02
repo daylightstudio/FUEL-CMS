@@ -690,6 +690,7 @@ class Fuel_module extends Fuel_base_library {
 				'advanced_search' => FALSE,
 				'disable_heading_sort' => FALSE,
 				'description' => '',
+				'pages' => array(),
 				);
 			$info = array();
 

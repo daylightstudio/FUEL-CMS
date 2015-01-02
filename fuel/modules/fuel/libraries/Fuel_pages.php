@@ -766,15 +766,15 @@ class Fuel_page extends Fuel_base_library {
 	public function render($return = FALSE, $fuelify = TRUE)
 	{
 		// check the _page_data to see if it even exists in the CMS
-		if (!isset($this->_page_data['id']))
-		{
-			$this->render_mode = 'views';
-			return $this->variables_render($return, $fuelify);
-		}
-		else
+		if (isset($this->_page_data['id']))
 		{
 			$this->render_mode = 'cms';
 			return $this->cms_render($return, $fuelify);
+		}
+		else
+		{
+			$this->render_mode = 'views';
+			return $this->variables_render($return, $fuelify);
 		}
 	}
 	
@@ -870,6 +870,14 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	public function variables_render($return = FALSE, $fuelify = FALSE)
 	{
+		// check if the page belongs to a module and then return it
+		if($module = $this->fuel->posts->find_module())
+		{
+			$this->fuel->posts->set_module($module);
+			$this->render_mode = 'module';
+			return $this->modules_render($return, $fuelify);
+		}
+
 		// get the location and load page vars
 		$page = $this->location;
 
@@ -1019,7 +1027,11 @@ class Fuel_page extends Fuel_base_library {
 			}
 		}
 		
-		if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
+		//if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
+		if (empty($output))
+		{
+			return FALSE;
+		}
 		
 
 		// call layout hook
@@ -1044,6 +1056,22 @@ class Fuel_page extends Fuel_base_library {
 			return TRUE;
 		}
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a page by checking the modules "pages" config parameter
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to return the value or to echo it out (optional)
+	 * @param	boolean	Determines whether to render any inline editing (optional)
+	 * @return	string
+	 */
+	public function modules_render($return = FALSE, $fuelify = FALSE)
+	{
+		return $this->fuel->posts->render($return, $fuelify);
+	}
+
 	
 	// --------------------------------------------------------------------
 	
