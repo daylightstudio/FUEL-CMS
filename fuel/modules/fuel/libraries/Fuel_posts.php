@@ -663,7 +663,7 @@ class Fuel_posts extends Fuel_base_library {
 		$model = $this->model();
 		$order_by_field = $this->get_order_by_field();
 
-		$posts = $this->get_posts(array($model->table_name().'.'.$order_by_field.' <=' => $current_post->$order_by_field, $model->table_name().".id !=" => $current_post->id), $$order_by_field.' desc, id desc', 1);
+		$posts = $this->get_posts(array($model->table_name().'.'.$order_by_field.' <=' => $current_post->$order_by_field, $model->table_name().".id !=" => $current_post->id), $order_by_field.' desc, id desc', 1);
 		if (!empty($posts))
 		{
 			return $posts[0];
