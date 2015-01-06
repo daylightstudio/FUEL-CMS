@@ -60,7 +60,7 @@ class Fuel_categories extends Fuel_module {
 	public function find_by_context($context)
 	{
 		$model = $this->model();
-		$where['context'] = $context;
+		$where = 'FIND_IN_SET("'.$context.'", '.$model->table_name().'.context)';
 		$data = $model->find_all($where);
 		return $data;
 	}

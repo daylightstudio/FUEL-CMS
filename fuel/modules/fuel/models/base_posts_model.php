@@ -41,27 +41,34 @@ abstract class Base_posts_model extends Base_module_model {
 		$this->record_class = ucfirst($this->name).'_item';
 		if (!empty($this->has_many['tags']))
 		{
-			$this->has_many['tags']['where'] = $this->_tables['fuel_tags'].'.context = "'.$this->name.'"';
+			$this->has_many['tags']['where'] = 'FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context=""';
 		}
 		if (!empty($this->foreign_keys['category_id']))
 		{
-			$this->foreign_keys['category_id']['where'] = 'context = "'.$this->name.'"';
+			$this->foreign_keys['category_id']['where'] = 'FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_categories'].'.context) OR '.$this->_tables['fuel_categories'].'.context=""';
 		}
 	}
 
-	public function list_items($limit = NULL, $offset = NULL, $col = NULL, $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = NULL, $order = NULL, $just_count = FALSE)
 	{
 		if (empty($col))
 		{
 			$col = $this->order_by_field;
 		}
-		$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
-		$this->db->select($this->table_name.'.id, title, fuel_categories.name as category, SUBSTRING(content, 1, 50) as content, '.$this->table_name.'.published', FALSE);
-		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
-		foreach($data as $key => $val)
+
+		if (empty($order))
 		{
-			$data[$key]['content'] = htmlentities($val['content']);
+			$order = $this->order_by_direction;
 		}
+
+
+		$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
+		//$this->db->select($this->table_name.'.id, title, fuel_categories.name as category, SUBSTRING(content, 1, 50) as content, '.$this->table_name.'.published', FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
+		// foreach($data as $key => $val)
+		// {
+		// 	$data[$key]['content'] = htmlentities($val['content']);
+		// }
 		return $data;
 	}
 
@@ -102,10 +109,11 @@ abstract class Base_posts_model extends Base_module_model {
 		
 		if (isset($fields['category_id']))
 		{
-			$fields['category_id']['add_params'] = 'context='.$this->name;
+			//$fields['category_id']['add_params'] = 'context='.$this->name;
 			$fields['category_id']['type'] = 'toggler';
 			$fields['category_id']['prefix'] = 'toggle_';
 			$fields['category_id']['equalize_key_value'] = FALSE;
+			$fields['category_id']['mode'] = 'select';
 		}
 
 		$possible_image_fields = array('image', 'main_image', 'list_image', 'thumbnail_image');
@@ -125,8 +133,12 @@ abstract class Base_posts_model extends Base_module_model {
 			$fields['image']['resize_method'] = 'resize_and_crop';
 		}
 
-		// add the context value automatically if creating a new 
-		$fields['tags']['add_params'] = 'context='.$this->name;
+		// add the context value automatically if creating a new tag
+		// if (!empty($fields['tags']))
+		// {
+		// 	$fields['tags']['add_params'] = 'context='.$this->name;	
+		// }
+		
 		return $fields;
 	}
 	
@@ -237,6 +249,7 @@ class Base_post_item_model extends Base_module_record {
 			$module = $this->_parent_model->get_module();
 			$data = $this->values();
 			$url = $module->url($data);
+			$url = site_url($url);
 		}
 		elseif($this->has_link())
 		{
@@ -250,12 +263,12 @@ class Base_post_item_model extends Base_module_record {
 		return $url;
 	}
 
-	public function get_category_linked($order = 'name asc', $join = ', ')
+	public function get_categories_linked($order = 'name asc', $join = ', ')
 	{
 		$category = $this->category;
 		if ( ! empty($category))
 		{
-			$url = $this->_CI->fuel->posts->url('category/'.$category->slug);
+			$url = $this->_fuel->posts->url('category/'.$category->slug);
 			return anchor($url, $category->name);
 		}
 		return NULL;
@@ -269,7 +282,7 @@ class Base_post_item_model extends Base_module_record {
 			$tags_linked = array();
 			foreach ($tags as $tag)
 			{
-				$url = $this->_CI->fuel->posts->url('tag/'.$tag->slug);
+				$url = $this->_fuel->posts->url('tag/'.$tag->slug);
 				$tags_linked[] = anchor($url, $tag->name);
 			}
 			$return = implode($tags_linked, $join);

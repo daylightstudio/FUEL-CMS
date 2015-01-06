@@ -58,6 +58,32 @@ class Fuel_tags extends Fuel_module {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns multiple/one tag models based on a context value
+	 *
+	 * @access	public
+	 * @param	string	the context value in which to search for a tag
+	 * @param	boolean	determines whether to return just one or not (optional)
+	 * @return	object
+	 */	
+	public function find_by_context($context, $one = FALSE)
+	{
+		$model = $this->model();
+		$model = $this->model();
+		$where = 'FIND_IN_SET("'.$context.'", '.$model->table_name().'.context)';
+		if ($one)
+		{
+			$data = $model->find_one($where);	
+		}
+		else
+		{
+			$data = $model->find_all($where);	
+		}
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Returns a related category model with the active record query already applied
 	 *
 	 * @access	public
