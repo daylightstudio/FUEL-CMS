@@ -41,11 +41,11 @@ abstract class Base_posts_model extends Base_module_model {
 		$this->record_class = ucfirst($this->name).'_item';
 		if (!empty($this->has_many['tags']))
 		{
-			$this->has_many['tags']['where'] = 'FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context=""';
+			$this->has_many['tags']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context="")';
 		}
 		if (!empty($this->foreign_keys['category_id']))
 		{
-			$this->foreign_keys['category_id']['where'] = 'FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_categories'].'.context) OR '.$this->_tables['fuel_categories'].'.context=""';
+			$this->foreign_keys['category_id']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_categories'].'.context) OR '.$this->_tables['fuel_categories'].'.context="")';
 		}
 	}
 
