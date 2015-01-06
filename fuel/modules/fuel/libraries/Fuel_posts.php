@@ -112,6 +112,19 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Returns a URL based on the base_uri value
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function url($uri = '')
+	{
+		return site_url($this->base_uri().'/'.$uri);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Returns the all the segments as a string without the base_uri() value. 
 	 *
 	 * @access	public
@@ -203,13 +216,13 @@ class Fuel_posts extends Fuel_base_library {
 			'search' => $base_uri.'/search(/$q:.+)?',
 			'list' => $base_uri,
 			'post' => $base_uri.'/(\d{4})/(\d{2})/(\d{2})/($slug:.+)',
-			'slug' => $base_uri.'/.+'
+			'slug' => $base_uri.'/($slug:.+)'
 		);
 		$config = $this->module_config(NULL, $module);
 		$routes = array();
 
 		$route_keys = array_keys($config);
-		$invalid_keys = array('base_uri', 'layout');
+		$invalid_keys = array('base_uri', 'layout', 'vars');
 
 		// first add custom routes to give the higher precedence
 		foreach($config as $key => $c)
@@ -496,8 +509,9 @@ class Fuel_posts extends Fuel_base_library {
 			$where[$table_name.'.slug'] = $slug;
 		}
 		$model->db()->where($where);
-		$data = $model->get(FALSE)->result();
-		return $data;
+		$post = $model->get(FALSE)->result();
+		$this->_current_post = $post;
+		return $post;
 
 	}
 
@@ -839,7 +853,6 @@ class Fuel_posts extends Fuel_base_library {
 	{
 		return $this->page_config('view');
 	}
-
 	
 	// --------------------------------------------------------------------
 
@@ -859,11 +872,30 @@ class Fuel_posts extends Fuel_base_library {
 		}
 		if (empty($layout))
 		{
-			$layout = $this->fuel->layouts->default_layout;;
+			$layout = $this->fuel->layouts->default_layout;
 		}
 		return $layout;
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * The name of the layout to use for rendering
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function vars()
+	{
+		// first check the page config
+		$vars = (array) $this->page_config('vars');
+		$module_vars = (array) $this->module_config('vars');
+		if (!empty($module_vars))
+		{
+			$vars = array_merge($module_vars, $vars);
+		}
+		return $vars;
+	}
 
 	// --------------------------------------------------------------------
 
@@ -1276,11 +1308,7 @@ class Fuel_posts extends Fuel_base_library {
 
 		// set the tag object
 		$tag = $this->fuel->tags->find_by_tag($tag);
-		if (!empty($tag->slug))
-		{
-			$slug = $tag->slug;	
-		}
-		else
+		if (empty($tag->slug))
 		{
 			$this->show_404();
 		}
@@ -1322,17 +1350,14 @@ class Fuel_posts extends Fuel_base_library {
 		$slug = $category;
 
 		// set category object
-		$category = $this->fuel->categories->find_by_slug($category);
-		if (!empty($category->slug))
-		{
-			$category = $category->slug;	
-		}
-		else
+		$category = $this->fuel->categories->find_by_slug($slug);
+		if (empty($category->slug))
 		{
 			$this->show_404();
 		}
 
 		$posts = $this->get_category_posts($category, $limit, $offset);
+
 		if (empty($posts))
 		{
 			$this->show_404();
@@ -1441,10 +1466,13 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	protected function _common_vars()
 	{
+		$vars = $this->vars();
 		$vars['CI'] =& get_instance();
 		$vars['is_home'] = $this->is_home();
-		$vars['module'] = $this->get_module();
+		$vars['module'] =& $this->get_module();
+		$vars['model'] =& $this->model();
 		$vars['page_type'] = $this->page_type();
+		
 		return $vars;
 	}
 
