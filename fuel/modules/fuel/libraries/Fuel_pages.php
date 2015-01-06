@@ -871,7 +871,7 @@ class Fuel_page extends Fuel_base_library {
 	public function variables_render($return = FALSE, $fuelify = FALSE)
 	{
 		// check if the page belongs to a module and then return it
-		if($module = $this->fuel->posts->find_module())
+		if($this->fuel->pages->mode() !== 'views' AND $module = $this->fuel->posts->find_module())
 		{
 			$this->fuel->posts->set_module($module);
 			$this->render_mode = 'module';
