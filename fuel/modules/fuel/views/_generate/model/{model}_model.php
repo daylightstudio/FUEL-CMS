@@ -19,7 +19,7 @@ class {model_name}_model extends Base_module_model {
 	public $belongs_to = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 	public $display_unpublished_if_logged_in = FALSE;
-	
+	public $form_fields_class = '';  // a class that can extend Base_model_fields and manipulate the form_fields method
 	protected $friendly_name = ''; // a friendlier name of the group of objects
 	protected $singular_name = ''; // a friendly singular name of the object
 
