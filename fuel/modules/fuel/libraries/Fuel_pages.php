@@ -722,6 +722,13 @@ class Fuel_page extends Fuel_base_library {
 		$init_vars = array('vars_path' => $vars_path, 'lang' => $this->language, 'include_pagevar_object' => $this->include_pagevar_object, 'honor_page_status' => $this->vars_honor_page_status);
 		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
+
+		if ($page_mode !== 'views' AND $module = $this->fuel->posts->find_module())
+		{
+			$this->fuel->posts->set_module($module);
+			$module_vars = $this->fuel->posts->vars();
+			$vars = array_merge($vars, $module_vars);
+		}
 		$this->add_variables($vars);
 	}
 	
@@ -870,14 +877,6 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	public function variables_render($return = FALSE, $fuelify = FALSE)
 	{
-		// check if the page belongs to a module and then return it
-		if($this->fuel->pages->mode() !== 'views' AND $module = $this->fuel->posts->find_module())
-		{
-			$this->fuel->posts->set_module($module);
-			$this->render_mode = 'module';
-			return $this->modules_render($return, $fuelify);
-		}
-
 		// get the location and load page vars
 		$page = $this->location;
 
@@ -1026,13 +1025,12 @@ class Fuel_page extends Fuel_base_library {
 				$output = $body;
 			}
 		}
-		
+
 		//if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
 		if (empty($output))
 		{
 			return FALSE;
 		}
-		
 
 		// call layout hook
 		if ($layout)

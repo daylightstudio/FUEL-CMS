@@ -880,26 +880,6 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * The name of the layout to use for rendering
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function vars()
-	{
-		// first check the page config
-		$vars = (array) $this->page_config('vars');
-		$module_vars = (array) $this->module_config('vars');
-		if (!empty($module_vars))
-		{
-			$vars = array_merge($module_vars, $vars);
-		}
-		return $vars;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
 	 * A custom method on the model to use for variables to pass to the view
 	 *
 	 * @access	public
@@ -1018,15 +998,22 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Will return the rendered and optionally display the module content. 
+	 * Variables to be merged in with the view
 	 *
 	 * @access	public
-	 * @param	boolean
-	 * @param	boolean
-	 * @return	mixed 	If return is TRUE, then it will return the output
+	 * @return	string
 	 */
-	public function render($return = FALSE, $fuelify = FALSE)
-	{	
+	public function vars()
+	{
+		// first check the page config
+		$vars = (array) $this->page_config('vars');
+		$module_vars = (array) $this->module_config('vars');
+		if (!empty($module_vars))
+		{
+			$vars = array_merge($module_vars, $vars);
+		}
+
+
 		// find the module which have a pages configuration that matches the current URI
 		if (!isset($this->module))
 		{
@@ -1040,7 +1027,8 @@ class Fuel_posts extends Fuel_base_library {
 		// if no module is found... redirect
 		if (empty($module))
 		{
-			redirect_404();
+			return $vars;
+			//redirect_404();
 		}
 
 		// set the module on the main Fuel_posts class to kickstart everything
@@ -1092,88 +1080,8 @@ class Fuel_posts extends Fuel_base_library {
 			}
 		}
 
-		$view = $this->page_config('view');
-
 		$vars = array_merge($this->_common_vars(), $vars);
-
-		// must be set here in order to have inline editing
-		$page = $this->fuel->pages->create();
-		$output = $this->_render($view, $vars, $return);
-
-		if ($fuelify)
-		{
-			$output = $page->fuelify($output);	
-		}
-
-		if ($return)
-		{
-			return $output;
-		}
-		else
-		{
-			$this->CI->output->set_output($output);
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns the field to order by. Default will return "publish_date".
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function get_order_by_field()
-	{
-		return $this->_model_prop_value('order_by_field', 'publish_date');
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns the direction in which to order data. Default will return "desc".
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function get_order_by_direction()
-	{
-		return $this->_model_prop_value('order_by_direction', 'desc');
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns the slug field for the posts. Default will return "slug".
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function get_slug_field()
-	{
-		return $this->_model_prop_value('slug_field', 'slug');
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Returns the model property value.
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	string
-	 * @return	string
-	 */
-	protected function _model_prop_value($prop, $default)
-	{
-		if (property_exists($this->module->model(), $prop))
-		{
-			return $this->model()->$prop;
-		}
-		else
-		{
-			return $default;
-		}
+		return $vars;
 	}
 
 	// --------------------------------------------------------------------
@@ -1401,59 +1309,66 @@ class Fuel_posts extends Fuel_base_library {
 		return $vars;
 	}
 
+
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns the rendered output.
+	 * Returns the field to order by. Default will return "publish_date".
 	 *
-	 * @access	protected
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_order_by_field()
+	{
+		return $this->_model_prop_value('order_by_field', 'publish_date');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the direction in which to order data. Default will return "desc".
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_order_by_direction()
+	{
+		return $this->_model_prop_value('order_by_direction', 'desc');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the slug field for the posts. Default will return "slug".
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_slug_field()
+	{
+		return $this->_model_prop_value('slug_field', 'slug');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the model property value.
+	 *
+	 * @access	public
 	 * @param	string
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _render($view = '', $vars = array(), $return = FALSE)
+	protected function _model_prop_value($prop, $default)
 	{
-		// get any variables set in the CMS or variables files
-		$uri_path = trim($this->CI->uri->uri_string(), '/');
-		$_vars = $this->fuel->pagevars->retrieve($uri_path);
-		if (is_array($_vars))
+		if (property_exists($this->module->model(), $prop))
 		{
-			$vars = array_merge($_vars, $vars);
-		}
-		
-		if (is_array($view))
-		{
-			// set the module that the views belong to
-			$view_module = key($view);
-			$view = current($view);
+			return $this->model()->$prop;
 		}
 		else
 		{
-			$view_module = 'app';
+			return $default;
 		}
-
-		// set the layout to hold the view... defaults to main
-		$layout = $this->layout();
-		if (is_array($layout))
-		{
-			// set the module that the views belong to
-			$layout_module = key($layout);
-			$layout = current($layout);
-		}
-		else
-		{
-			$layout_module = 'app';
-		}
-
-		if (!empty($layout))
-		{
-			$vars['body'] = $this->CI->load->module_view($view_module, $view, $vars, TRUE);
-			$view = '_layouts/'.$layout;
-		}
-
-		$vars = array_merge($vars, $this->CI->load->get_vars());
-		$output = $this->CI->load->module_view($layout_module, $view, $vars, TRUE);
-		return $output;
 	}
 	
 	// --------------------------------------------------------------------
@@ -1466,13 +1381,13 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	protected function _common_vars()
 	{
-		$vars = $this->vars();
 		$vars['CI'] =& get_instance();
 		$vars['is_home'] = $this->is_home();
 		$vars['module'] =& $this->get_module();
 		$vars['model'] =& $this->model();
 		$vars['page_type'] = $this->page_type();
-		
+		$vars['layout'] = $this->layout();
+		$vars['view'] = $this->view();
 		return $vars;
 	}
 
