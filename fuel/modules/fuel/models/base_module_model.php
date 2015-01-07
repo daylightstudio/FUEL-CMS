@@ -347,7 +347,7 @@ class Base_module_model extends MY_Model {
 
 			if (!empty($val)) 
 			{
-				$joiner_arr = 'where_'.$joiner;
+				$joiner_arr = 'where_'.strtolower($joiner);
 				
 				if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE) $key = $this->table_name.'.'.$key;
 				
