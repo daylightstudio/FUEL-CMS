@@ -738,9 +738,7 @@ class Asset {
 		
 		if ($options['output'] === 'inline')
 		{
-			$open = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
-			$open .= "\t//<![CDATA[\n";
-			$close = "\n\t//]]>\n";
+			$open = "<script>\n";
 			$close .= "\t</script>";
 		}
 		else
@@ -1070,8 +1068,7 @@ class Asset {
 			$str .= $this->js('swfobject');
 		}
 		$str .= '
-		<script type="text/javascript">
-		//<![CDATA[
+		<script>
 		   var so = new SWFObject("'.$this->swf_path($flash).'", "'.$id.'_swf", "'.$width.'", "'.$height.'", "'.$version.'", "'.$color.'");
 		 ';
 		if(!is_array($vars))
@@ -1091,7 +1088,6 @@ class Asset {
 		}
 
 		$str .= '		so.write("'.$id.'");
-		// ]]>
 		</script>
 	';
 		return $str;
