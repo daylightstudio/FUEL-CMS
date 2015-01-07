@@ -212,10 +212,26 @@ class Social {
 	 */
 	public function og($values = array())
 	{
+		$CI =& get_instance();
+
 		// normalize the values
 		$values = $this->normalize_values($values);
 
 		$str = '';
+
+		$defaults = array('url' => current_url(), 'title' => $CI->load->get_var('page_title'), 'description' => $CI->load->get_var('meta_description'), 'source' => $CI->fuel->config('site_name'));
+
+		// If a post object exists, then we can auto create the information if they have the proper fields
+		if ($values instanceof Base_post_item_model)
+		{
+			$values = array();
+			$values['url'] = $values->url;
+			$values['title'] = $values->title;
+			$values['url'] = $values->url;
+			$values['description'] = $values->get_excerpt(80, '...');
+		}
+
+		$values = array_merge($defaults, $values);
 
 		$valid_types = array('title', 'url', 'description', 'image', 'site_name', 'type');
 		

@@ -37,14 +37,17 @@
  * @param	mixed	Can be an object or an array of values
  * @return	string
  */
-function share($type, $values)
+if (!function_exists('share'))
 {
-	$CI =& get_instance();
-	if (!isset($CI->social))
+	function share($type, $values)
 	{
-		$CI->load->library('social');	
+		$CI =& get_instance();
+		if (!isset($CI->social))
+		{
+			$CI->load->library('social');	
+		}
+		return $CI->social->share($type, $values);
 	}
-	return $CI->social->share($type, $values);
 }
 
 /**
@@ -54,14 +57,17 @@ function share($type, $values)
  * @param	array	An array of values for the open graph which can include array keys of 'title', 'url', 'description', 'image', 'site_name', 'type'
  * @return	string
  */
-function og($values)
+if (!function_exists('og'))
 {
-	$CI =& get_instance();
-	if (!isset($CI->social))
+	function og($values)
 	{
-		$CI->load->library('social');	
+		$CI =& get_instance();
+		if (!isset($CI->social))
+		{
+			$CI->load->library('social');	
+		}
+		return $CI->social->og($values);
 	}
-	return $CI->social->og($values);
 }
 
 /**
@@ -72,28 +78,31 @@ function og($values)
  * @param	int		The height of the popup javascript window
  * @return	string
  */
-function social_popup_js($width = 640, $height = 500)
+if (!function_exists('social_popup_js'))
 {
-	// only write the javascript one time so we create a static variable
-	static $output;
-	if (empty($output)) {
-		$output = '
-		<script>
-		if (typeof(jQuery) != \'undefined\'){
-			jQuery(function(){
-				jQuery(\'.popup\').on(\'click\', function(e){
-					var url = $(this).attr(\'href\');
-					window.open(url,\'popUpWindow\',\'width='.$width.',height='.$height.',left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes\');
-					return false;
+	function social_popup_js($width = 640, $height = 500)
+	{
+		// only write the javascript one time so we create a static variable
+		static $output;
+		if (empty($output)) {
+			$output = '
+			<script>
+			if (typeof(jQuery) != \'undefined\'){
+				jQuery(function(){
+					jQuery(\'.popup\').on(\'click\', function(e){
+						var url = $(this).attr(\'href\');
+						window.open(url,\'popUpWindow\',\'width='.$width.',height='.$height.',left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes\');
+						return false;
+					})
 				})
-			})
+			}
+			</script>';
+			return $output;
 		}
-		</script>';
-		return $output;
-	}
-	return '';
-	
-} 
+		return '';
+		
+	} 
+}
 
 /* End of file social_helper.php */
 /* Location: ./modules/fuel/helpers/social_helper.php */
