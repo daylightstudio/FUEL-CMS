@@ -188,7 +188,7 @@ abstract class Base_posts_model extends Base_module_model {
 
 		$this->db->select($this->table_name.'.*, fuel_categories.slug as category_slug, fuel_categories.id as category_id', FALSE);
 		$this->db->select('YEAR('.$this->table_name.'.'.$this->order_by_field.') as year, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%m") as month, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%d") as day,', FALSE);
-		$this->db->order_by($this->order_by_field.' desc');
+		$this->db->order_by($this->order_by_field.' '.$this->order_by_direction);
 		$this->db->group_by($this->table_name.'.id');
 	}
 
