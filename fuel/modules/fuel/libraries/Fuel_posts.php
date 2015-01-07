@@ -227,7 +227,7 @@ class Fuel_posts extends Fuel_base_library {
 		// first add custom routes to give the higher precedence
 		foreach($config as $key => $c)
 		{
-			if (!empty($c['route']) AND !in_array($key, $invalid_keys))
+			if (is_array($c) AND !empty($c['route']) AND !in_array($key, $invalid_keys))
 			{
 				$routes[$key] = $c['route'];
 			}
