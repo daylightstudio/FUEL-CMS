@@ -1922,7 +1922,7 @@ class MY_Model extends CI_Model {
 		{
 			if (is_string($key) && ($data[$key] == $val)) return FALSE;
 			// test for compound keys
-			if (is_array($key) && (sizeof(array_intersect($data, $key)) == sizeof($key))) return FALSE;
+			if (is_array($key) && (sizeof(array_intersect_assoc($data, $key)) == sizeof($key))) return FALSE;
 		}
 		return TRUE;
 	}
@@ -2148,6 +2148,7 @@ class MY_Model extends CI_Model {
 				foreach($field as $f)
 				{
 					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
+
 					if ($has_key_field)
 					{
 						if (!is_array($key_field))
@@ -2240,7 +2241,6 @@ class MY_Model extends CI_Model {
 			}
 		}
 		$validated = ($this->validator->validate(array_keys($values)));
-		
 		return $validated;
 	}
 	
