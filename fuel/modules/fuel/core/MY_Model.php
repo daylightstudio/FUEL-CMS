@@ -1639,7 +1639,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or object to save to the database
+	 * @param	mixed	the model to save to
 	 * @param	array	key is the column name, and value is the value to save
 	 * @param	array	key is the column name, and the array of data to iterate over and save
 	 * @return	boolean
@@ -1981,7 +1981,11 @@ class MY_Model extends CI_Model {
 			$unique_value = $id;
 		}
 		// if no data then we are new and good
-		if (empty($data)) return TRUE;
+		if (empty($data))
+		{
+			return TRUE;
+		}
+			
 
 		// we are going to ignore multiple keys
 		if (is_string($key_field))
@@ -1995,6 +1999,7 @@ class MY_Model extends CI_Model {
 		{
 			return FALSE;
 		}
+
 		return FALSE;
 	}
     
@@ -2068,7 +2073,6 @@ class MY_Model extends CI_Model {
 		{
 			return FALSE;
 		}
-		
 		$required = $this->required;
 		foreach($this->unique_fields as $unique_field)
 		{
@@ -2148,16 +2152,19 @@ class MY_Model extends CI_Model {
 				foreach($field as $f)
 				{
 					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
-
+					$this->remove_validation($f, array(&$this, 'is_editable'));
+					$this->remove_validation($f, array(&$this, 'is_new'));
 					if ($has_key_field)
 					{
 						if (!is_array($key_field))
 						{
+							
 							$this->add_validation($f, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values));
 						}
 					}
 					else
 					{
+						
 						$this->add_validation($f, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), array($where));
 					}
 				}
@@ -2165,6 +2172,8 @@ class MY_Model extends CI_Model {
 			else
 			{
 				$friendly_field = ucwords(str_replace('_', ' ', $field));
+				$this->remove_validation($field, array(&$this, 'is_editable'));
+				$this->remove_validation($field, array(&$this, 'is_new'));
 				if ($has_key_field)
 				{
 					if (!is_array($key_field))
@@ -4096,8 +4105,8 @@ class MY_Model extends CI_Model {
 		{
 			if (empty($values[$key]))
 			{
-					$return = FALSE;
-					break;
+				$return = FALSE;
+				break;
 			}
 		}
 		return $return;
