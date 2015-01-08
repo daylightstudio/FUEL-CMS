@@ -31,7 +31,7 @@ class {model_name}_model extends Base_module_model {
 
 	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'asc', $just_count = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 

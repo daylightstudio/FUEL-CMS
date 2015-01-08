@@ -64,7 +64,7 @@ abstract class Base_posts_model extends Base_module_model {
 
 		$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
 		//$this->db->select($this->table_name.'.id, title, fuel_categories.name as category, SUBSTRING(content, 1, 50) as content, '.$this->table_name.'.published', FALSE);
-		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		// foreach($data as $key => $val)
 		// {
 		// 	$data[$key]['content'] = htmlentities($val['content']);
