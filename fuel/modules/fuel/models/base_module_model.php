@@ -909,7 +909,7 @@ class Base_module_model extends MY_Model {
 
 		if (!empty($this->form_fields_class))
 		{
-			$fields = new $this->form_fields_class($fields);
+			$fields = new $this->form_fields_class($fields, $values);
 		}
 
 		return $fields;
@@ -1115,15 +1115,18 @@ class Base_module_record extends Data_record {
 class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 
 	protected $fields = array();
+	protected $values = array();
 	protected $CI = NULL;
 	protected $fuel = NULL;
 
-	public function __construct($fields = array())
+	public function __construct($fields = array(), $values = array())
 	{
 		$this->set_fields($fields);
+		$this->set_values($values);
 		$this->CI =& get_instance();
 		$this->fuel =& $this->CI->fuel;
-		$this->initialize();
+		$fields =& $this->get_fields();
+		$this->initialize($this->get_fields(), $values);
 	}
 
 	// --------------------------------------------------------------------
@@ -1134,7 +1137,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function initialize()
+	public function initialize($fields, $values)
 	{
 		// put in your own fields initialization code
 	}
@@ -1147,7 +1150,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @access	public
 	 * @param	array 	The fields to set
 	 * @param	boolean Determines whether or not to remove the order values set for the fields
-	 * @return	object 	instance of Base_model_fields
+	 * @return	object 	Instance of Base_model_fields
 	 */	
 	public function set_fields($fields, $remove_order = TRUE)
 	{
@@ -1185,6 +1188,31 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 		return $this->fields;
 	}
 
+	/**
+	 * Sets the values.
+	 *
+	 * @access	public
+	 * @param	array 	The values to set
+	 * @return	object 	Instance of Base_model_fields
+	 */
+	public function set_values($values)
+	{
+		$this->values = (array) $values;
+		return $this;
+
+	}
+	
+	/**
+	 * Returns the values.
+	 *
+	 * @access  public
+	 * @return	array 	The values
+	 */
+	public function get_values()
+	{
+		return $this->values;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1194,7 +1222,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @param	string 	A field name
 	 * @param	string 	The parameter of the field to set
 	 * @param	mixed 	The value of the parameter to set
-	 * @return	object 	instance of Base_model_fields
+	 * @return	object 	Instance of Base_model_fields
 	 */	
 	public function set($field, $param, $value = NULL)
 	{
@@ -1226,7 +1254,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @access	public
 	 * @param	string 	A field name
 	 * @param	string 	The parameter of the field to set
-	 * @return	object 	instance of Base_model_fields
+	 * @return	object 	Instance of Base_model_fields
 	 */	
 	public function get($field, $param = NULL)
 	{
@@ -1264,7 +1292,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @param	string 	The label of the tab
 	 * @param	array 	The fields to put under the tab
 	 * @param	array 	The order of the fields
-	 * @return	object 	instance of Base_model_fields
+	 * @return	object 	Instance of Base_model_fields
 	 */	
 	public function tab($label, $fields = array(), $order_start = NULL)
 	{
@@ -1303,7 +1331,7 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 *
 	 * @access	public
 	 * @param	array 	The order of the fields
-	 * @return	object 	instance of Base_model_fields
+	 * @return	object 	Instance of Base_model_fields
 	 */	
 	public function reorder($order)
 	{
