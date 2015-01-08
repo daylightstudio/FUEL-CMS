@@ -149,6 +149,11 @@ class Validator {
 	{
 		if (!empty($func))
 		{
+			if (!isset($this->_fields[$field]))
+			{
+				return;
+			}
+			
 			foreach($this->_fields[$field] as $key => $rule)
 			{
 				if ($rule->func == $func)
