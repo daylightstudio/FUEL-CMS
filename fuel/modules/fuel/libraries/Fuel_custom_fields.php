@@ -1022,17 +1022,19 @@ class Fuel_custom_fields {
 
 				foreach($_f as $k => $f)
 				{
+					$heading_tag = 'h3';
 					foreach($f as $kk => $ff)
 					{
 						if (isset($ff['type']) AND $ff['type'] == 'section')
 						{
+							if (!empty($ff['tag'])) $heading_tag = $ff['tag'];
 							$value = $form_builder->simple_field_value($ff);
 							if (isset($params['title_field'], $f[$params['title_field']]))
 							{
 								$header_value = (is_array($f[$params['title_field']]['value'])) ? current($f[$params['title_field']]['value']) : $f[$params['title_field']]['value'];
 								if (is_string($header_value))
 								{
-									$heading = str_replace('{__title__}', $header_value, $value);		
+									$heading = str_replace('{__title__}', $header_value, $value);	
 								}
 								
 							}
@@ -1065,12 +1067,13 @@ class Fuel_custom_fields {
 					$style = (!empty($params['style'])) ? ' style="'.$params['style'].'"' : '';
 					
 					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"'.$style.'>';
-					$str .= '<h3 class="grabber" title="'.lang('tooltip_dbl_click_to_open').'">';
+					$sortable_class = (!empty($params['non_sortable'])) ? 'nonsortable' : 'grabber';
+					$str .= '<'.$heading_tag.' class="'.$sortable_class.'" title="'.lang('tooltip_dbl_click_to_open').'">';
 					if (!empty($heading)) 
 					{
 						$str .= '<span class="title'.$depth_suffix.'">'.$heading.'</span>';
 					}
-					$str .= '</h3>';
+					$str .= '</'.$heading_tag.'>';
 					$str .= '<div class="repeatable_content">';
 					$str .= $form;
 					$str .= '</div>';
