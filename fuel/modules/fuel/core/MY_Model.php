@@ -143,7 +143,7 @@ class MY_Model extends CI_Model {
 		// if a DSN property is set,then we will load that database in
 		if (!empty($this->dsn))
 		{
-			$this->db = $this->load->database($this->dsn, TRUE, TRUE);
+			$this->set_db($this->load->database($this->dsn, TRUE, TRUE));
 		}
 		else
 		{
@@ -157,7 +157,8 @@ class MY_Model extends CI_Model {
 			{
 				// create a copy of the DB object to prevent cross model interference
 				unset($this->db);
-				$this->db = clone $CI->db;
+				$db = clone $CI->db;
+				$this->set_db($db);
 			}
 			else
 			{
@@ -171,6 +172,25 @@ class MY_Model extends CI_Model {
 		// load any additional classes needed for custom fields
 		$this->load_custom_field_classes();
 
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the database object for a model
+	 *
+	 <code>
+	$db = $CI->db;
+	$this->examples_model->set_db($db); 
+	</code>
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	public function set_db($db)
+	{
+		$this->db = $db;
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
