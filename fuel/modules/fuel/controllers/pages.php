@@ -13,6 +13,9 @@ class Pages extends Module {
 		$validate = (fuel_uri_segment(2) == 'select') ? FALSE : TRUE;
 		if ($validate)
 		{
+			$load_vars['user'] = $this->fuel->auth->user_data();
+			$load_vars['session_key'] = $this->fuel->auth->get_session_namespace();
+			$this->load->vars($load_vars);
 			$this->_validate_user($this->permission);	
 		}
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
