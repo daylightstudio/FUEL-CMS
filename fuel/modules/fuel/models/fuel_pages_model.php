@@ -36,6 +36,7 @@ class Fuel_pages_model extends Base_module_model {
 	public $unique_fields = array('location'); // The location field is unique
 	public $hidden_fields = array('last_modified', 'last_modified_by'); // The Last modified and Last modified by are hidden fields
 	public $ignore_replacement = array('location'); // The location value will be ignored upon replacement
+	public $limit_to_user_field = ''; // a user ID field in your model that can be used to limit records based on the logged in user
 
 	// --------------------------------------------------------------------
 	
@@ -383,11 +384,26 @@ class Fuel_pages_model extends Base_module_model {
 	public function on_before_save($values)
 	{
 		$CI = get_instance();
+		$this->_editable_by_user();
 		$user = $CI->fuel->auth->user_data();
 		$values['last_modified_by'] = $user['id'];
 		return $values;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before deleting
+	 *
+	 * @access	public
+	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
+	 * @return	void
+	 */	
+	public function on_before_delete($where)
+	{
+		$this->_editable_by_user();
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -493,6 +509,8 @@ class Fuel_pages_model extends Base_module_model {
 	{
 		$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->_tables['fuel_pages'].'.last_modified_by', 'left');
 		$this->db->select($this->_tables['fuel_pages'].'.*, '.$this->_tables['fuel_users'].'.user_name, '.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name, '.$this->_tables['fuel_users'].'.email, CONCAT('.$this->_tables['fuel_users'].'.first_name, '.$this->_tables['fuel_users'].'.last_name) AS full_name', FALSE);
+
+		$this->_limit_to_user();
 	}
 }
 

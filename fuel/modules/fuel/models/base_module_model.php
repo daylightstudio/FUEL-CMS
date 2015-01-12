@@ -49,7 +49,7 @@ class Base_module_model extends MY_Model {
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
 	public $form_fields_class = ''; // a class that can extend Base_model_fields and manipulate the form_fields method
-
+	public $limit_to_user_field = ''; // a user ID field in your model that can be used to limit records based on the logged in user
 	public static $tables = array(); // cached array of table names that can be accessed statically
 	protected $CI = NULL; // reference to the main CI object
 	protected $fuel = NULL; // reference to the FUEL object
@@ -291,17 +291,20 @@ class Base_module_model extends MY_Model {
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
-		
+
 		if (!empty($col) AND !empty($order)) $this->db->order_by($col, $order);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
 		
+		$this->_limit_to_user();
+
 		$query = $this->db->get();
 		$data = $query->result_array();
+
 		//$this->debug_query();
 		return $data;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -707,6 +710,7 @@ class Base_module_model extends MY_Model {
 				$val_field = $this->table_name.'.'.$this->key_field;	
 			}
 		}
+		$this->_limit_to_user();
 		$others = $this->options_list($val_field, $display_field, NULL, $orderby);
 
 		// COMMENTED OUT BECAUSE WE DISABLE IT IN THE DROPDOWN INSTEAD
@@ -909,7 +913,7 @@ class Base_module_model extends MY_Model {
 
 		if (!empty($this->form_fields_class))
 		{
-			$fields = new $this->form_fields_class($fields, $values);
+			$fields = new $this->form_fields_class($fields, $values, $this);
 		}
 
 		return $fields;
@@ -948,8 +952,9 @@ class Base_module_model extends MY_Model {
 		{
 			$this->_publish_status();
 		}
+
+		$this->_limit_to_user();
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
@@ -993,7 +998,94 @@ class Base_module_model extends MY_Model {
 			$this->db->where(array($this->table_name.'.publish_date <=' => datetime_now()));
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Limit query to a specific fuel user
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _limit_to_user()
+	{
+		if (defined('FUEL_ADMIN') AND !empty($this->limit_to_user_field) AND !$this->fuel->auth->is_super_admin())
+		{
+			$join = TRUE;
+			if (!empty($this->db->ar_join))
+			{
+				foreach($this->db->ar_join as $joiner)
+				{
+					if (strncmp('LEFT JOIN `fuel_users`', $joiner, 22) === 0)
+					{
+						$join = FALSE;
+						break;
+					}
+				}
+			}
+
+			if ($join)
+			{
+				$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field, 'left');	
+			}
+			$this->db->where($this->_tables['fuel_users'].'.id = '.$this->fuel->auth->user_data('id'));
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * A check that the record belongs to a user
+	 *
+	 * @access	protected
+	 * @return	boolean
+	 */	
+	protected function _editable_by_user()
+	{
+		if (!empty($this->limit_to_user_field) AND !$this->fuel->auth->is_super_admin())
+		{
+			$rec = $this->find_one_array($this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field);
+			if ($rec[$this->limit_to_user_field] != $this->fuel->auth->user_data('id'))
+			{
+				$this->add_error(lang('error_no_permissions'));
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before saving
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before saving
+	 * @return	array Returns the values to be saved
+	 */	
+	public function on_before_save($values)
+	{
+		$values = parent::on_before_save($values);
+		$this->_editable_by_user();
+		return $values;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before deleting
+	 *
+	 * @access	public
+	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
+	 * @return	void
+	 */	
+	public function on_before_delete($where)
+	{
+		parent::on_before_delete($where);
+		$this->_editable_by_user();
+	}
+
+
 }
 
 
@@ -1116,17 +1208,19 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 
 	protected $fields = array();
 	protected $values = array();
+	protected $parent_model = NULL;
 	protected $CI = NULL;
 	protected $fuel = NULL;
 
-	public function __construct($fields = array(), $values = array())
+	public function __construct($fields = array(), $values = array(), $parent_model = NULL)
 	{
 		$this->set_fields($fields);
 		$this->set_values($values);
+		$this->set_parent_model($parent_model);
 		$this->CI =& get_instance();
 		$this->fuel =& $this->CI->fuel;
 		$fields =& $this->get_fields();
-		$this->initialize($this->get_fields(), $values);
+		$this->initialize($this->get_fields(), $this->get_values(), $this->get_parent_model());
 	}
 
 	// --------------------------------------------------------------------
@@ -1137,9 +1231,37 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function initialize($fields, $values)
+	public function initialize($fields, $values, $parent_model)
 	{
 		// put in your own fields initialization code
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the parent model.
+	 *
+	 * @access	public
+	 * @param	object 	A reference to the parent model
+	 * @return	object 	Instance of Base_model_fields
+	 */	
+	public function set_parent_model($model)
+	{
+		$this->parent_model = $model;
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the parent model.
+	 *
+	 * @access	public
+	 * @return	object 	A reference to the parent models
+	 */	
+	public function get_parent_model()
+	{
+		return $this->parent_model;
 	}
 
 	// --------------------------------------------------------------------
@@ -1230,6 +1352,13 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 		{
 			$this->fields[$field][$param] = $value;
 		}
+		elseif(is_array($field))
+		{
+			foreach($field as $key => $params)
+			{
+				$this->set($key, $params);
+			}
+		}
 		else
 		{
 			if ($value === TRUE AND isset($this->fields[$field]))
@@ -1240,11 +1369,9 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 			{
 				$this->fields[$field] = $param;
 			}
-			
 		}
 		return $this;
 	}
-
 
 	// --------------------------------------------------------------------
 	
@@ -1281,6 +1408,21 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 		{
 			return NULL;
 		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Clears the fields and values.
+	 *
+	 * @access	public
+	 * @return	object 	Instance of Base_model_fields
+	 */	
+	public function clear()
+	{
+		$this->fields = array();
+		$this->values = array();
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
