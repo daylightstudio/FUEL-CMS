@@ -1128,6 +1128,11 @@ class MY_Model extends CI_Model {
 			{
 				$key = $this->key_field;
 			}
+			
+			if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
+			{
+				$key = $this->table_name().'.'.$key;
+			}
 		}
 
 		if (empty($val))
