@@ -363,16 +363,17 @@ function google_geolocate($data, $return = 'all', $long = TRUE)
 		unset($data);
 
 		$url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
+		$CI =& get_instance();
+		if (!isset($CI->curl))
+		{
+			$CI->load->library('curl');	
+		}
+		
+		$CI->curl->add_session($url, 'get');
+		$response = $CI->curl->exec();
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HEADER,0);
-		curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$response = curl_exec($ch);
-
-		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '200') 
+		$results = array();
+		if($CI->curl->info('http_code') == '200') 
 		{
 			$json = json_decode($response, TRUE);
 
@@ -381,11 +382,17 @@ function google_geolocate($data, $return = 'all', $long = TRUE)
 				$results = $json['results'][0];
 			}
 		}
-		curl_close($ch);
+		$CI->curl->close();
+		//curl_close($ch);
 	}
 	else
 	{
 		$results = $data;
+	}
+
+	if (empty($results['address_components']))
+	{
+		return NULL;
 	}
 
 	$lookup_func = create_function('$data, $key, $single = FALSE', '
