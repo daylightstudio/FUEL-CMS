@@ -1801,12 +1801,8 @@ class Form_builder {
 		
 		if (!empty($params['options']) AND !empty($params['equalize_key_value']))
 		{
-			$options = array();
-			
-			foreach($params['options'] as $key => $val)
-			{
-				$options[$val] = $val;
-			}
+			$options = array_values($params['options']);
+			$options = array_combine($options, $options);
 			$params['options'] = $options;
 		}
 		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option'], $params['disabled_options']);
@@ -2028,6 +2024,8 @@ class Form_builder {
 			$default = (isset($params['value'])) ? $params['value'] : FALSE;
 			foreach($params['options'] as $key => $val)
 			{
+				$v = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+
 				$attrs['data']['orig_checked'] = '0';
 				$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 				$attrs = array(
@@ -2041,18 +2039,17 @@ class Form_builder {
 
 				if (empty($params['null']) OR (!empty($params['null']) AND (!empty($params['default']) OR !empty($params['value']))))
 				{
-					if (($i == 0 AND !$default) OR  ($default == $key))
+					if (($i == 0 AND !$default) OR  ($default == $v))
 					{
 						$attrs['checked'] = 'checked';
 						$attrs['data']['orig_checked'] = '1';
 					}
 				}
 
-				$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
-				$str .= $this->form->radio($params['name'], $value, $attrs);
+				$str .= $this->form->radio($params['name'], $v, $attrs);
 				$name = Form::create_id($params['orig_name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
-				$enum_name = $name.'_'.Form::create_id($key);
+				$enum_name = $name.'_'.Form::create_id($v);
 				$label = ($lang = $this->label_lang($enum_name)) ? $lang : $val;
 				if (!empty($this->name_prefix))
 				{
@@ -2115,6 +2112,8 @@ class Form_builder {
 			{
 				foreach($params['options'] as $key => $val)
 				{
+					$v = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+
 					$tabindex_id = $i -1;
 					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
@@ -2132,9 +2131,7 @@ class Form_builder {
 						$attrs['checked'] = 'checked';
 
 					}
-
-					$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
-					$str .= $this->form->checkbox($params['name'], $value, $attrs);
+					$str .= $this->form->checkbox($params['name'], $v, $attrs);
 
 					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
