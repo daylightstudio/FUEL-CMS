@@ -366,12 +366,13 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		the name of the model and the value is the method (see below). The '_model' suffix is
 		not required when specifying the name of the model.
 		</li>
-		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
+		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options.</li>
 		<li><strong>mode</strong>: Options are 'auto', 'radios' and 'select'. Auto will show radio buttons if there are 2 or less, and will use a single select field if there are more.</li>
 		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the radio and label. Default is the 'span' tag.</li>
 		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
 		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
-		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially</li>
+		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially.</li>
+		<li><strong>equalize_key_value</strong>: If the options array is non-associative (numerically indexed), it will use the value of the array as the value of the radio or select option instead of the key.</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -394,18 +395,19 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field type creates either a series of checkboxes or a multiple select field.
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
-		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE.</li>
+		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE</li>
 		<li><strong>options</strong>: an array of select options</li>
 		<li><strong>model</strong>: The name of a model to use. The default method it will use is <dfn>options_list</dfn>. You can specify
 		an array where the key is the name of the module and the value is either string value for the name of the model, or an array value where the key is
 		the name of the model and the value is the method (see below). The '_model' suffix is
-		not required when specifying the name of the model.
+		not required when specifying the name of the model
 		</li>
 		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
-		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more.</li>
-		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag.</li>
-		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
-		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
+		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more</li>
+		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag</li>
+		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'</li>
+		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces</li>
+		<li><strong>equalize_key_value</strong>: If the options array is non-associative (numerically indexed), it will use the value of the array as the value of the radio or select option instead of the key.</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -435,7 +437,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>overwrite</strong>: sets a paramter to either overwrite or create a new file if one already exists on the server. Default will overwrite</li>
 		<li><strong>display_overwrite</strong>: determines if the overwrite checkbox appears next to the file upload field. Default value is TRUE</li>
 		<li><strong>accept</strong>: specifies which files are acceptable to upload. The default is 'gif|jpg|jpeg|png'</li>
-		<li><strong>upload_path</strong>: the server path to upload the file to. Default will be the asset images folder.</li>
+		<li><strong>upload_path</strong>: the server path to upload the file to. Default will be the asset images folder</li>
 		<li><strong>file_name</strong>: the new file name you want to assign</li>
 		<li><strong>encrypt_name</strong>: determines whether to encrypt the uploaded file name to give it a unique value. The default is FALSE</li>
 		<li><strong>multiple</strong>: determines whether to allow multiple files to be uploaded by the same field. The default is FALSE</li>
