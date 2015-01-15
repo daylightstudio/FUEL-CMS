@@ -1958,7 +1958,14 @@ class Fuel_custom_fields {
 		$params['data'] = array_merge($params['data'], $data);
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' toggler' : 'toggler';
 
-		$str = $form_builder->create_enum($params);
+		if (!empty($params['mode']) AND $params['mode'] == 'radios')
+		{
+			$str = $form_builder->create_enum($params);
+		}
+		else
+		{
+			$str = $this->inline_edit($params);	
+		}
 		return $str;
 
 	}

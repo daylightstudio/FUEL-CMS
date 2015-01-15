@@ -114,6 +114,7 @@ abstract class Base_posts_model extends Base_module_model {
 			$fields['category_id']['prefix'] = 'toggle_';
 			$fields['category_id']['equalize_key_value'] = FALSE;
 			$fields['category_id']['mode'] = 'select';
+			$fields['category_id']['module'] = $this->name;
 		}
 
 		$possible_image_fields = array('image', 'main_image', 'list_image', 'thumbnail_image');
@@ -199,8 +200,12 @@ abstract class Base_posts_model extends Base_module_model {
 			$values = $values->values();
 		}
 		$module = $this->get_module();
-		$rec = $this->find_by_key($values['id']);
-		return $rec->url;
+		if (!empty($values))
+		{
+			$rec = $this->find_by_key($values['id']);
+			return $rec->url;
+		}
+		return '';
 	}
 }
 
