@@ -1522,19 +1522,21 @@ class Fuel_custom_fields {
 
 					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
-											'readonly' => $params['readonly'], 
-											'disabled' => $params['disabled'],
-											'id' => Form::create_id($params['name']).$i,
-											'style' => '' // to overwrite any input width styles
-					
-										);
-					
-										if (in_array($key, $value))
-										{
-											$attrs['checked'] = 'checked';
-					
-										}
-										$str .= $form_builder->form->checkbox($params['name'], $key, $attrs);
+							'readonly' => $params['readonly'], 
+							'disabled' => $params['disabled'],
+							'id' => Form::create_id($params['name']).$i,
+							'style' => '' // to overwrite any input width styles
+	
+						);
+	
+					if (in_array($key, $value))
+					{
+						$attrs['checked'] = 'checked';
+
+					}
+
+					$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+					$str .= $form_builder->form->checkbox($params['name'], $value, $attrs);
 
 					$label = ($lang = $form_builder->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
