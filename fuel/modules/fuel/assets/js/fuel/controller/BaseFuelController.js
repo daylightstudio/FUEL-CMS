@@ -529,11 +529,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends = $('fieldset.tab legend', context).not('fieldset.tab fieldset legend', context);
 			$legends.each(function(i){
 				if ($(this).parent().attr('id') != '') {
-					$(this).parent().attr('id', 'fieldset' + i);
+					$(this).parent().attr('id', 'fieldset' + i).attr('data-index', i);
 				}
 				var id = ($(this).parent().attr('id'));
 				var text = $(this).text();
-				tabs += '<li><a href="#' + id + '">' + text + '</a></li>';
+				tabs += '<li id="fueltab' + i + '"><a href="#' + id + '">' + text + '</a></li>';
 			});
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
@@ -552,7 +552,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#__fuel_selected_tab__').val(index);
 			}
 			$tabs.bind('tabClicked', tabCallback);
-			
+
+			// check if there are any errors and highlight them
+			$legends.parent().find('.error_highlight').each(function(i){
+				var fieldsetIndex = $(this).closest('fieldset').data('index');
+				$('#fueltab' + fieldsetIndex).addClass('taberror');
+			})
 		}
 	},
 	
