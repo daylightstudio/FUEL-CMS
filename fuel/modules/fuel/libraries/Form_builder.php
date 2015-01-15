@@ -102,6 +102,7 @@ class Form_builder {
 
 	protected $_html; // html string
 	protected $_fields; // fields to be used for the form
+	protected $_values; // an array of the field values
 	protected $_cached; // cached parameters
 	protected $_pre_process; // pre_process functions
 	protected $_post_process; // post_process functions
@@ -228,6 +229,7 @@ class Form_builder {
 	public function reset()
 	{
 		$this->_fields = array();
+		$this->_values = array();
 		$this->_html = '';
 		$this->js = array();
 		$this->css = array();
@@ -325,9 +327,19 @@ class Form_builder {
 	 */
 	public function remove_field($key)
 	{
-		if (isset($this->_fields[$key]))
+		if (is_array($key))
 		{
-			unset($this->_fields[$key]);
+			foreach($key as $k)
+			{
+				$this->remove_field($k);
+			}
+		}
+		else
+		{
+			if (isset($this->_fields[$key]))
+			{
+				unset($this->_fields[$key]);
+			}
 		}
 	}
 	
@@ -356,6 +368,28 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Returns the values of the form fields. If a key value is passed, it will only return that one value
+	 * 
+	 * @access	public
+	 * @param	string field key
+	 * @return	array
+	 */
+	public function values($key = NULL)
+	{
+		if (!empty($key))
+		{
+			if (isset($this->_values[$key]))
+			{
+				return $this->_values[$key];		
+			}
+			return FALSE;
+		}
+		return $this->_values;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Sets the value attribute for the fields of the form
 	 * 
 	 * Often times this is database or post data
@@ -370,6 +404,11 @@ class Form_builder {
 		{
 			return FALSE;
 		}
+
+		// set the values in a different array to keep track of them separate from the form field...
+		// this is in case the form field gets removed
+		$this->_values = $values;
+
 		// set values for fields that are arrays
 		foreach($values as $key => $val)
 		{
@@ -574,7 +613,7 @@ class Form_builder {
 				$str .= "<span class=\"label\">";
 				$str .= $this->create_label($val, TRUE);
 				$str .= "</span>";
-				$str .= "<span class=\"field\">";
+				$str .= "<span".$this->_open_field_attrs($val).">";
 				$str .= $val['custom'];
 				$str .= "</span>";
 				$str .= "</div>\n";
@@ -590,7 +629,7 @@ class Form_builder {
 				$str .= "<span class=\"label\">";
 				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
 				$str .= "</span>";
-				$str .= "<span class=\"field\">";
+				$str .= "<span".$this->_open_field_attrs($val).">";
 				$str .= $val['before_html'].$display_value.$val['after_html'];
 				$str .= "</span>";
 				$str .= "</div>\n";
@@ -601,7 +640,7 @@ class Form_builder {
 				$str .= "<span class=\"label\">";
 				$str .= $this->create_label($val, TRUE);
 				$str .= "</span>";
-				$str .= "<span class=\"field\">";
+				$str .= "<span".$this->_open_field_attrs($val).">";
 				$str .= $this->create_field($val, FALSE);
 				$str .= "</span>";
 				$str .= "</div>\n";
@@ -754,13 +793,13 @@ class Form_builder {
 					if ($this->label_layout != 'top')
 					{
 						$str .= $this->create_label($val, TRUE);
-						$str .= "</td>\n\t<td class=\"value\">".$val['custom']."</td>\n</tr>\n";
+						$str .= "</td>\n\t<td".$this->_open_field_attrs($val).">".$this->_open_field_attrs($val).$val['custom']."</td>\n</tr>\n";
 					}
 					else
 					{
 						$str .= $this->create_label($val, TRUE)."</td></tr>\n";
 						$str .= "<tr".$this->_open_row_attrs($val);
-						$str .= ">\n\t<td class=\"value\">".$val['custom']."</td>\n</tr>\n";
+						$str .= ">\n\t<td".$this->_open_field_attrs($val).">".$val['custom']."</td>\n</tr>\n";
 					}
 				}
 				else
@@ -780,13 +819,13 @@ class Form_builder {
 				if ($this->label_layout != 'top')
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
-					$str .= "</td>\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
+					$str .= "</td>\n\t<td".$this->_open_field_attrs($val).">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
 				}
 				else
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label']."</td></tr>\n";
 					$str .= "<tr".$this->_open_row_attrs($val);
-					$str .= ">\n\t<td class=\"value\">".$val['before_html'].$display_value.$val['after_html']."</td>\n</tr>\n";
+					$str .= ">\n\t<td".$this->_open_field_attrs($val).">".$val['before_html'].$display_value.$val['after_html']."</td>\n</tr>\n";
 				}
 			}
 			else if (!in_array($val['name'], $this->exclude))
@@ -799,13 +838,13 @@ class Form_builder {
 					if ($this->label_layout != 'top')
 					{
 						$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label'];
-						$str .= "</td>\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
+						$str .= "</td>\n\t<td".$this->_open_field_attrs($val).">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 					else
 					{
 						$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label']."</td></tr>\n";
 						$str .= "<tr".$this->_open_row_attrs($val);
-						$str .= ">\n\t<td class=\"value\">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
+						$str .= ">\n\t<td".$this->_open_field_attrs($val).">".$this->create_field($val, FALSE)."</td>\n</tr>\n";
 					}
 				}
 				else
@@ -997,7 +1036,7 @@ class Form_builder {
 	 * Creates the opening row TR or div with attrs
 	 * 
 	 * @access	public
-	 * @param	array fields values... will overwrite anything done with the set_fields method previously
+	 * @param	array fields parameters
 	 * @return	string
 	 */
 	protected function _open_row_attrs($val)
@@ -1010,6 +1049,34 @@ class Form_builder {
 		if (!empty($val['row_class']))
 		{
 			$str .= ' class="'.$val['row_class'].'"';
+		}
+		if (!empty($val['row_style']))
+		{
+			$str .= ' style="'.$val['row_style'].'"';
+		}
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Creates the opening field td.value or div.value with attrs
+	 * 
+	 * @access	public
+	 * @param	array fields parameters
+	 * @return	string
+	 */
+	protected function _open_field_attrs($val)
+	{
+		$str = ' class="field';
+		if (!empty($val['field_class']))
+		{
+			$str .= ' '.$val['field_class'];
+		}
+		$str .= '"';
+		if (!empty($val['field_style']))
+		{
+			$str .= ' style="'.$val['field_style'].'"';
 		}
 		return $str;
 	}
@@ -1742,7 +1809,6 @@ class Form_builder {
 			}
 			$params['options'] = $options;
 		}
-		
 		return $this->form->select($name, $params['options'], $params['value'], $attrs, $params['first_option'], $params['disabled_options']);
 	}
 	
@@ -1981,7 +2047,9 @@ class Form_builder {
 						$attrs['data']['orig_checked'] = '1';
 					}
 				}
-				$str .= $this->form->radio($params['name'], $key, $attrs);
+
+				$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+				$str .= $this->form->radio($params['name'], $value, $attrs);
 				$name = Form::create_id($params['orig_name']);
 				//$str .= ' <label for="'.$name.'_'.str_replace(' ', '_', $key).'">'.$val.'</label>';
 				$enum_name = $name.'_'.Form::create_id($key);
@@ -2064,7 +2132,9 @@ class Form_builder {
 						$attrs['checked'] = 'checked';
 
 					}
-					$str .= $this->form->checkbox($params['name'], $key, $attrs);
+
+					$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+					$str .= $this->form->checkbox($params['name'], $value, $attrs);
 
 					$label = ($lang = $this->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
@@ -2578,7 +2648,7 @@ class Form_builder {
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
 			'min' => (isset($params['min']) ? $params['min'] : '0'),
-			'max' => (isset($params['max']) ? $params['max'] : '10'),
+			'max' => (isset($params['max']) ? $params['max'] : '10000'),
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
