@@ -1264,14 +1264,14 @@ class Fuel_posts extends Fuel_base_library {
 			$this->show_404();
 		}
 
-		$posts = $this->get_category_posts($category, $limit, $offset);
+		$posts = $this->get_category_posts($slug, $limit, $offset);
 
 		if (empty($posts))
 		{
 			$this->show_404();
 		}
 
-		$total_rows = count($this->get_category_posts($category));
+		$total_rows = count($this->get_category_posts($slug));
 
 		$vars['pagination'] = $this->pagination($total_rows, $this->url('category/'.$category->slug.'/?'));
 		$vars['posts'] = $posts;
