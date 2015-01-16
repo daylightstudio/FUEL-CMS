@@ -218,6 +218,7 @@ class Fuel_posts extends Fuel_base_library {
 			'post' => $base_uri.'/(\d{4})/(\d{2})/(\d{2})/($slug:.+)',
 			'slug' => $base_uri.'/($slug:.+)'
 		);
+
 		$config = $this->module_config(NULL, $module);
 		$routes = array();
 
@@ -448,6 +449,12 @@ class Fuel_posts extends Fuel_base_library {
 	{
 		$model = $this->model();
 
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_posts'))
+		{
+			return $model->get_posts($where, $order_by, $limit, $offset);
+		}
+
 		if (empty($order_by))
 		{
 			$order_by = $this->get_order_by_field().' '.$this->get_order_by_direction();
@@ -475,6 +482,13 @@ class Fuel_posts extends Fuel_base_library {
 	public function get_posts_count($where = array())
 	{
 		$model = $this->model();
+
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_posts_count'))
+		{
+			return $model->get_posts_count($where);
+		}
+
 		$count = $model->record_count($where);
 		return $count;
 	}
@@ -492,6 +506,12 @@ class Fuel_posts extends Fuel_base_library {
 	public function get_post($slug, $order_by = NULL)
 	{
 		$model = $this->model();
+
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_post'))
+		{
+			return $model->get_post($slug, $order_by);
+		}
 
 		// first check the model if it has it's own method
 		if (method_exists($model, 'get_post'))
@@ -531,6 +551,12 @@ class Fuel_posts extends Fuel_base_library {
 	public function get_category_posts($category, $order_by = NULL, $limit = NULL, $offset = NULL)
 	{
 		$model = $this->model();
+
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_category_posts'))
+		{
+			return $model->get_category_posts($category, $order_by, $limit, $offset);
+		}
 		$tables = $model->tables();
 		
 		if (empty($order_by))
@@ -569,6 +595,13 @@ class Fuel_posts extends Fuel_base_library {
 	public function get_tag_posts($tag, $limit = NULL, $offset = NULL)
 	{
 		$model = $this->model();
+
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_tag_posts'))
+		{
+			return $model->get_tag_posts($tag, $limit, $offset);
+		}
+
 		$tables = $model->tables();
 
 		if (is_int($tag))
@@ -604,6 +637,12 @@ class Fuel_posts extends Fuel_base_library {
 	public function get_archives($year = NULL, $month = NULL, $day = NULL,  $limit = NULL, $offset = NULL, $order_by = NULL)
 	{
 		$model = $this->model();
+
+		// use the method on the model if it exists
+		if (method_exists($model, 'get_archives'))
+		{
+			return $model->get_archives($year, $month, $day,  $limit, $offset, $order_by);
+		}
 
 		$order_by_field = $this->get_order_by_field();
 		if (empty($order_by))
@@ -1100,8 +1139,17 @@ class Fuel_posts extends Fuel_base_library {
 		{
 			$method = $this->vars_method();	
 		}
-		
-		$returned = $this->model()->$method($limit, $offset);
+		$matched = $this->matched_segments();
+		foreach($matched as $key => $val)
+		{
+			if (!is_int($key))
+			{
+				$params[$key] = $val;
+			}
+		}
+		if (!empty($limit)) $params['limit'] = $limit;
+		if (!empty($offset))$params['offset'] = $offset;
+		$returned = call_user_func_array(array($this->model(), $method), $params);
 		if (isset($returned[0]))
 		{
 			$vars['posts'] = $returned;
