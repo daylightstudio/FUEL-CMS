@@ -262,9 +262,9 @@ if ( ! function_exists('csv_to_array'))
  * @param 	mixed $default The value to return if the key does not exist.
  * @return 	mixed The value from the array or object.
  */
-if ( ! function_exists('array_dot'))
+if ( ! function_exists('array_get'))
 {
-	function array_dot($key, $array, $default = FALSE)
+	function array_get($key, $array, $default = FALSE)
 	{
 		$path = explode('.', $key);
 
