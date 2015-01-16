@@ -257,14 +257,14 @@ if ( ! function_exists('csv_to_array'))
  * credit: borrowed from Vanilla forums GetValueR function
  *
  * @access	public
- * @param 	string $key The key or property name of the value.
  * @param 	mixed $array The array or object to search.
+ * @param 	string $key The key or property name of the value.
  * @param 	mixed $default The value to return if the key does not exist.
  * @return 	mixed The value from the array or object.
  */
 if ( ! function_exists('array_get'))
 {
-	function array_get($key, $array, $default = FALSE)
+	function array_get($array, $key, $default = FALSE)
 	{
 		$path = explode('.', $key);
 
