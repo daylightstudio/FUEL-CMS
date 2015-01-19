@@ -77,7 +77,7 @@ class Fuel_custom_fields {
 		}
 		else
 		{
-			$params['editor'] = 'markitup';
+			$params['editor'] = $this->fuel->config('text_editor');
 		}
 
 		if (!isset($params['data']))
@@ -125,7 +125,7 @@ class Fuel_custom_fields {
 
 		static $markitup_config;
 		static $ckeditor_config;
-		if ((empty($markitup_config) OR empty($markitup_config)))
+		if (empty($markitup_config) OR empty($ckeditor_config))
 		{
 			include(APPPATH.'config/editors.php');
 			$markitup_config = $config['markitup'];
