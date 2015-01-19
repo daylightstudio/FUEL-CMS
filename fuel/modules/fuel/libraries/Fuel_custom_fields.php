@@ -1535,8 +1535,8 @@ class Fuel_custom_fields {
 
 					}
 
-					$value = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
-					$str .= $form_builder->form->checkbox($params['name'], $value, $attrs);
+					$val = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+					$str .= $form_builder->form->checkbox($params['name'], $val, $attrs);
 
 					$label = ($lang = $form_builder->label_lang($attrs['id'])) ? $lang : $val;
 					$enum_params = array('label' => $label, 'name' => $attrs['id']);
