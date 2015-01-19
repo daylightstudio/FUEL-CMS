@@ -39,29 +39,32 @@
  * @param 	mixed 	variables to pass to the string
  * @return	string
  */
-function eval_string($str, $vars = array())
+if (!function_exists('eval_string'))
 {
-	$CI =& get_instance();
-	extract($CI->load->get_vars()); // extract cached variables
-	extract($vars);
-
-	// fix XML
-	$str = str_replace('<?xml', '<@xml', $str);
-
-	ob_start();
-	if ((bool) @ini_get('short_open_tag') === FALSE AND $CI->config->item('rewrite_short_tags') == TRUE)
+	function eval_string($str, $vars = array())
 	{
-		$str = eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', $str)).'<?php ');
+		$CI =& get_instance();
+		extract($CI->load->get_vars()); // extract cached variables
+		extract($vars);
+
+		// fix XML
+		$str = str_replace('<?xml', '<@xml', $str);
+
+		ob_start();
+		if ((bool) @ini_get('short_open_tag') === FALSE AND $CI->config->item('rewrite_short_tags') == TRUE)
+		{
+			$str = eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', $str)).'<?php ');
+		}
+		else
+		{
+			$str = eval('?>'.$str.'<?php ');
+		}
+		$str = ob_get_clean();
+		
+		// change XML back
+		$str = str_replace('<@xml', '<?xml', $str);
+		return $str;
 	}
-	else
-	{
-		$str = eval('?>'.$str.'<?php ');
-	}
-	$str = ob_get_clean();
-	
-	// change XML back
-	$str = str_replace('<@xml', '<?xml', $str);
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -74,19 +77,22 @@ function eval_string($str, $vars = array())
  * @param 	string 	plural value to add
  * @return	string
  */
-// 
-function pluralize($num, $str = '', $plural = 's')
-{
-	if (is_array($num))
+//
+if (!function_exists('pluralize'))
+{ 
+	function pluralize($num, $str = '', $plural = 's')
 	{
-		$num = count($num);
+		if (is_array($num))
+		{
+			$num = count($num);
+		}
+		
+		if ($num != 1)
+		{
+			$str .= $plural;
+		}
+		return $str;
 	}
-	
-	if ($num != 1)
-	{
-		$str .= $plural;
-	}
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -97,9 +103,12 @@ function pluralize($num, $str = '', $plural = 's')
  * @param 	string
  * @return	string
  */
-function strip_whitespace($str)
+if (!function_exists('strip_whitespace'))
 {
-	return trim(preg_replace('/\s\s+|\n/m', '', $str));
+	function strip_whitespace($str)
+	{
+		return trim(preg_replace('/\s\s+|\n/m', '', $str));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -110,9 +119,12 @@ function strip_whitespace($str)
  * @param 	string
  * @return	string
  */
-function trim_multiline($str)
+if (!function_exists('trim_multiline'))
 {
-	return trim(implode("\n", array_map('trim', explode("\n", $str))));
+	function trim_multiline($str)
+	{
+		return trim(implode("\n", array_map('trim', explode("\n", $str))));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -124,16 +136,19 @@ function trim_multiline($str)
  * @param 	mixed 	variables to pass to the string
  * @return	string
  */
-function smart_ucwords($str, $exceptions = array('of', 'the'))
+if (!function_exists('smart_ucwords'))
 {
-	$out = "";
-	$i = 0;
-	foreach (explode(" ", $str) as $word)
+	function smart_ucwords($str, $exceptions = array('of', 'the'))
 	{
-		$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word{0}) . substr($word, 1) . " " : $word . " ";
-		$i++;
+		$out = "";
+		$i = 0;
+		foreach (explode(" ", $str) as $word)
+		{
+			$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word{0}) . substr($word, 1) . " " : $word . " ";
+			$i++;
+		}
+		return rtrim($out);
 	}
-	return rtrim($out);
 }
 
 // --------------------------------------------------------------------
@@ -147,12 +162,15 @@ function smart_ucwords($str, $exceptions = array('of', 'the'))
  * @param 	string 	the value used to replace a gremlin
  * @return	string
  */
-function zap_gremlins($str, $replace = '')
+if (!function_exists('zap_gremlins'))
 {
-	// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
-	// the remove_invisible_characters doesn't seem to remove this
-	$str = preg_replace('/[^\x0A\x0D\x20-\x7E]/', $replace, $str);
-	return $str;
+	function zap_gremlins($str, $replace = '')
+	{
+		// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
+		// the remove_invisible_characters doesn't seem to remove this
+		$str = preg_replace('/[^\x0A\x0D\x20-\x7E]/', $replace, $str);
+		return $str;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -163,10 +181,13 @@ function zap_gremlins($str, $replace = '')
  * @param 	string 	string to remove javascript
  * @return	string
  */
-function strip_javascript($str)
+if (!function_exists('strip_javascript'))
 {
-	$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
-	return $str;
+	function strip_javascript($str)
+	{
+		$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
+		return $str;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -178,45 +199,48 @@ function strip_javascript($str)
  * @param 	boolean determines whether to encode the ampersand or not
  * @return	string
  */
-function safe_htmlentities($str, $protect_amp = TRUE)
+if (!function_exists('safe_htmlentities'))
 {
-	// convert all hex single quotes to numeric ... 
-	// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
-	// but was inconsistent across different environments and versions... not sure the issue
-	// may need to look into other hex characters
-	$str = str_replace('&#x27;', '&#39;', $str);
-	
-	// setup temp markers for existing encoded tag brackets 
-	$find = array('&lt;','&gt;');
-	$replace = array('__TEMP_LT__','__TEMP_GT__');
-	$str = str_replace($find,$replace, $str);
-	
-	// encode just &
-	if ($protect_amp)
+	function safe_htmlentities($str, $protect_amp = TRUE)
 	{
-		$str = preg_replace('/&(?![a-z#]+;)/i', '__TEMP_AMP__', $str);
-	}
+		// convert all hex single quotes to numeric ... 
+		// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
+		// but was inconsistent across different environments and versions... not sure the issue
+		// may need to look into other hex characters
+		$str = str_replace('&#x27;', '&#39;', $str);
+		
+		// setup temp markers for existing encoded tag brackets 
+		$find = array('&lt;','&gt;');
+		$replace = array('__TEMP_LT__','__TEMP_GT__');
+		$str = str_replace($find,$replace, $str);
+		
+		// encode just &
+		if ($protect_amp)
+		{
+			$str = preg_replace('/&(?![a-z#]+;)/i', '__TEMP_AMP__', $str);
+		}
 
-	// safely translate now
-	if (version_compare(PHP_VERSION, '5.2.3', '>='))
-	{
-		//$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
-		$str = htmlentities($str, ENT_NOQUOTES, config_item('charset'), FALSE);
+		// safely translate now
+		if (version_compare(PHP_VERSION, '5.2.3', '>='))
+		{
+			//$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
+			$str = htmlentities($str, ENT_NOQUOTES, config_item('charset'), FALSE);
+		}
+		else
+		{
+			$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
+			$str = str_replace(array('<', '>'), array('&lt;', '&gt;'), $str);
+		}
+		
+		// translate everything back
+		$str = str_replace($find, array('<','>'), $str);
+		$str = str_replace($replace, $find, $str);
+		if ($protect_amp)
+		{
+			$str = str_replace('__TEMP_AMP__', '&', $str);
+		}
+		return $str;
 	}
-	else
-	{
-		$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
-		$str = str_replace(array('<', '>'), array('&lt;', '&gt;'), $str);
-	}
-	
-	// translate everything back
-	$str = str_replace($find, array('<','>'), $str);
-	$str = str_replace($replace, $find, $str);
-	if ($protect_amp)
-	{
-		$str = str_replace('__TEMP_AMP__', '&', $str);
-	}
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -227,86 +251,89 @@ function safe_htmlentities($str, $protect_amp = TRUE)
  * @param 	string 	string to evaluate
  * @return	string
  */
-function php_to_template_syntax($str)
+if (!function_exists('php_to_template_syntax'))
 {
-	// order matters!!!
-	$CI = &get_instance();
-	$CI->load->library('parser');
-	
-	$l_delim = $CI->parser->l_delim;
-	$r_delim = $CI->parser->r_delim;
-	
-	$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<?php echo ', '<?php ', '<?=');
-	$replace = array('$', '$', $l_delim.'/foreach', $l_delim.'/if', $l_delim, $l_delim, $l_delim);
+	function php_to_template_syntax($str)
+	{
+		// order matters!!!
+		$CI = &get_instance();
+		$CI->load->library('parser');
+		
+		$l_delim = $CI->parser->l_delim;
+		$r_delim = $CI->parser->r_delim;
+		
+		$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<?php echo ', '<?php ', '<?=');
+		$replace = array('$', '$', $l_delim.'/foreach', $l_delim.'/if', $l_delim, $l_delim, $l_delim);
 
-	// translate HTML comments NOT! Javascript
-	
-	// close ending php
-	$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', $str);
+		// translate HTML comments NOT! Javascript
+		
+		// close ending php
+		$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', $str);
 
-	$str = str_replace($find, $replace, $str);
-	
-	// TODO javascript escape... commented out because it's problematic... will need to revisit if it makes sense'
-	//$str = preg_replace('#((?<!\{literal\}).*)<script(.+)>(.+)<\/script>.*(?!\{\\\literal\})#Us', "$1\n{literal}\n<script$2>$3</script>\n{\literal}\n", $str);
-	
-	// foreach cleanup
-	$str = preg_replace('#'.$l_delim.'\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*'.$r_delim.'#U', $l_delim.'foreach $1 $2 $4'.$r_delim, $str); // with and without keys
+		$str = str_replace($find, $replace, $str);
+		
+		// TODO javascript escape... commented out because it's problematic... will need to revisit if it makes sense'
+		//$str = preg_replace('#((?<!\{literal\}).*)<script(.+)>(.+)<\/script>.*(?!\{\\\literal\})#Us', "$1\n{literal}\n<script$2>$3</script>\n{\literal}\n", $str);
+		
+		// foreach cleanup
+		$str = preg_replace('#'.$l_delim.'\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*'.$r_delim.'#U', $l_delim.'foreach $1 $2 $4'.$r_delim, $str); // with and without keys
 
-	// remove !empty
-	$callback = create_function('$matches', '
-		if (!empty($matches[2]))
-		{
-			return "'.$l_delim.'".$matches[1].$matches[3];
-		}
-		else
-		{
-			return "'.$l_delim.'".$matches[1]."!".$matches[3];
-		}');
-	
-	$str = preg_replace_callback('#'.$l_delim.'(.+)(!)\s*?empty\((.+)\)#U', $callback, $str);
-	
-	// remove paranthesis from within if conditional
-	//$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
-	$callback2 = create_function('$matches', '
-		$CI =& get_instance();
-		$allowed_funcs = $CI->parser->allowed_functions();
-		$str = $matches[0];
-		$ldlim = "___<";
-		$rdlim = ">___";
-
-		// loop through all allowed function and escape any paranthis
-		foreach($allowed_funcs as $func)
-		{
-			$regex = "#(.*)".preg_quote($func)."\((.*)\)(.*)#U";
-			$str = preg_replace($regex, "$1".$func.$ldlim."$2".$rdlim."$3", $str);
-		}
-
-		// now replace any other paranthesis
-		$str = str_replace(array("(", ")"), array(" ", ""), $str);
-		$str = str_replace(array($ldlim, $rdlim), array("(", ")"), $str);
-		return $str;');
-	
-	$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
-	// fix arrays
-	$callback = create_function('$matches', '
-		if (strstr($matches[0], "=>"))
-		{
-			$key_vals = explode(",", $matches[0]);
-			$return_arr = array();
-			foreach($key_vals as $val)
+		// remove !empty
+		$callback = create_function('$matches', '
+			if (!empty($matches[2]))
 			{
-				@list($k, $v) = explode("=>", $val);
-				$k = str_replace(array("\"", "\'"), "", $k);
-				$return_arr[] = trim($k)."=".trim($v);
+				return "'.$l_delim.'".$matches[1].$matches[3];
 			}
-			$return = implode(" ", $return_arr);
-			return $return;
-		}
-		return $matches[0];
-		');
-	
-	$str = preg_replace_callback('#(array\()(.+)(\))#U', $callback, $str);
-	return $str;
+			else
+			{
+				return "'.$l_delim.'".$matches[1]."!".$matches[3];
+			}');
+		
+		$str = preg_replace_callback('#'.$l_delim.'(.+)(!)\s*?empty\((.+)\)#U', $callback, $str);
+		
+		// remove paranthesis from within if conditional
+		//$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
+		$callback2 = create_function('$matches', '
+			$CI =& get_instance();
+			$allowed_funcs = $CI->parser->allowed_functions();
+			$str = $matches[0];
+			$ldlim = "___<";
+			$rdlim = ">___";
+
+			// loop through all allowed function and escape any paranthis
+			foreach($allowed_funcs as $func)
+			{
+				$regex = "#(.*)".preg_quote($func)."\((.*)\)(.*)#U";
+				$str = preg_replace($regex, "$1".$func.$ldlim."$2".$rdlim."$3", $str);
+			}
+
+			// now replace any other paranthesis
+			$str = str_replace(array("(", ")"), array(" ", ""), $str);
+			$str = str_replace(array($ldlim, $rdlim), array("(", ")"), $str);
+			return $str;');
+		
+		$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
+		// fix arrays
+		$callback = create_function('$matches', '
+			if (strstr($matches[0], "=>"))
+			{
+				$key_vals = explode(",", $matches[0]);
+				$return_arr = array();
+				foreach($key_vals as $val)
+				{
+					@list($k, $v) = explode("=>", $val);
+					$k = str_replace(array("\"", "\'"), "", $k);
+					$return_arr[] = trim($k)."=".trim($v);
+				}
+				$return = implode(" ", $return_arr);
+				return $return;
+			}
+			return $matches[0];
+			');
+		
+		$str = preg_replace_callback('#(array\()(.+)(\))#U', $callback, $str);
+		return $str;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -320,20 +347,23 @@ function php_to_template_syntax($str)
  * @param 	string 	the cache ID (for Dwoo only)
  * @return	string
  */
-function parse_template_syntax($str, $vars = array(), $simple = FALSE, $cache_id = NULL)
+if (!function_exists('parse_template_syntax'))
 {
-	$CI =& get_instance();
-	if (!isset($CI->parser))
+	function parse_template_syntax($str, $vars = array(), $simple = FALSE, $cache_id = NULL)
 	{
-		$CI->load->library('parser');
-	}
-	if ($simple)
-	{
-		return $CI->parser->parse_simple($str, $vars, TRUE);
-	}
-	else
-	{
-		return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);	
+		$CI =& get_instance();
+		if (!isset($CI->parser))
+		{
+			$CI->load->library('parser');
+		}
+		if ($simple)
+		{
+			return $CI->parser->parse_simple($str, $vars, TRUE);
+		}
+		else
+		{
+			return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);	
+		}
 	}
 }
 

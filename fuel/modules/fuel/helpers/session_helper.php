@@ -36,13 +36,18 @@
  * @param	string	variable name
  * @return	boolean
  */	
-function session_userdata($key){
-	$CI =& get_instance();
-	if (!isset($CI->session))
+
+if (!function_exists('session_userdata'))
+{
+	function session_userdata($key)
 	{
-		$CI->load->library('session');
+		$CI =& get_instance();
+		if (!isset($CI->session))
+		{
+			$CI->load->library('session');
+		}
+		return $CI->session->userdata($key);
 	}
-	return $CI->session->userdata($key);
 }
 
 // --------------------------------------------------------------------
@@ -54,15 +59,18 @@ function session_userdata($key){
  * @param	string	variable name
  * @return	boolean
  */	
-function session_set_userdata($key, $value){
-	$CI =& get_instance();
-	if (!isset($CI->session))
+if (!function_exists('session_set_userdata'))
+{
+	function session_set_userdata($key, $value)
 	{
-		$CI->load->library('session');
+		$CI =& get_instance();
+		if (!isset($CI->session))
+		{
+			$CI->load->library('session');
+		}
+		return $CI->session->set_userdata($key, $value);
 	}
-	return $CI->session->set_userdata($key, $value);
 }
-
 // --------------------------------------------------------------------
 
 /**
@@ -72,14 +80,18 @@ function session_set_userdata($key, $value){
  * @param	string	variable name
  * @return	boolean
  */	
-function session_flashdata($key){
-	$CI =& get_instance();
-	if (!isset($CI->session))
+if (!function_exists('session_flashdata'))
+{
+	function session_flashdata($key)
 	{
-		$CI->load->library('session');
-	}
+		$CI =& get_instance();
+		if (!isset($CI->session))
+		{
+			$CI->load->library('session');
+		}
 
-	return $CI->session->flashdata($key);
+		return $CI->session->flashdata($key);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -91,14 +103,17 @@ function session_flashdata($key){
  * @param	string	variable name
  * @return	boolean
  */	
-function session_set_flashdata($key, $value){
-	$CI =& get_instance();
-	if (!isset($CI->session))
+if (!function_exists('session_set_flashdata'))
+{
+	function session_set_flashdata($key, $value)
 	{
-		$CI->load->library('session');
+		$CI =& get_instance();
+		if (!isset($CI->session))
+		{
+			$CI->load->library('session');
+		}
+		return $CI->session->set_flashdata($key, $value);
 	}
-	return $CI->session->set_flashdata($key, $value);
 }
-
 /* End of file session_helper.php */
 /* Location: ./modules/fuel/helpers/session_helper.php */

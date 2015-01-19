@@ -40,49 +40,52 @@
  * @param 	string
  * @return	array
  */
-function copyr($source, $dest)
+if (!function_exists('copyr'))
 {
-	// Simple copy for a file
-	if (is_file($source))
+	function copyr($source, $dest)
 	{
-		return copy($source, $dest);
-	}
- 
-	// Make destination directory
-	if (!is_dir($dest))
-	{
-		mkdir($dest);
-	}
-	
-	// If the source is a symlink
-	if (is_link($source))
-	{
-		$link_dest = readlink($source);
-		return symlink($link_dest, $dest);
-	}
- 
-	// Loop through the folder
-	$dir = dir($source);
-	if (!is_object($dir)) return FALSE;
-	
-	while (false !== $entry = $dir->read())
-	{
-		// Skip pointers
-		if ($entry == '.' OR $entry == '..')
+		// Simple copy for a file
+		if (is_file($source))
 		{
-			continue;
+			return copy($source, $dest);
+		}
+	 
+		// Make destination directory
+		if (!is_dir($dest))
+		{
+			mkdir($dest);
+		}
+		
+		// If the source is a symlink
+		if (is_link($source))
+		{
+			$link_dest = readlink($source);
+			return symlink($link_dest, $dest);
+		}
+	 
+		// Loop through the folder
+		$dir = dir($source);
+		if (!is_object($dir)) return FALSE;
+		
+		while (false !== $entry = $dir->read())
+		{
+			// Skip pointers
+			if ($entry == '.' OR $entry == '..')
+			{
+				continue;
+			}
+
+			// Deep copy directories
+			if ($dest !== "$source/$entry")
+			{
+				copyr("$source/$entry", "$dest/$entry");
+			}
 		}
 
-		// Deep copy directories
-		if ($dest !== "$source/$entry")
-		{
-			copyr("$source/$entry", "$dest/$entry");
-		}
+		// Clean up
+		$dir->close();
+		return true;
 	}
-
-	// Clean up
-	$dir->close();
-	return true;
 }
 
 // --------------------------------------------------------------------
@@ -96,42 +99,45 @@ function copyr($source, $dest)
  * @param 	octal
  * @return	boolean
  */
-function chmodr($path, $filemode) { 
-	if (!is_dir($path))
-	{
-		return chmod($path, $filemode); 
-	}
+if (!function_exists('chmodr'))
+{
+	function chmodr($path, $filemode) { 
+		if (!is_dir($path))
+		{
+			return chmod($path, $filemode); 
+		}
 
-	$dh = opendir($path); 
-	while (($file = readdir($dh)) !== false)
-	{ 
-		if($file != '.' AND $file != '..')
+		$dh = opendir($path); 
+		while (($file = readdir($dh)) !== false)
 		{ 
-			$fullpath = $path.'/'.$file; 
-			if(is_link($fullpath))
-			{
-				return FALSE; 
-			}
-			elseif(!is_dir($fullpath) AND !chmod($fullpath, $filemode))
-			{
-				return FALSE; 
-			}
-			elseif(!chmodr($fullpath, $filemode))
-			{
-				return FALSE; 
-			}
+			if($file != '.' AND $file != '..')
+			{ 
+				$fullpath = $path.'/'.$file; 
+				if(is_link($fullpath))
+				{
+					return FALSE; 
+				}
+				elseif(!is_dir($fullpath) AND !chmod($fullpath, $filemode))
+				{
+					return FALSE; 
+				}
+				elseif(!chmodr($fullpath, $filemode))
+				{
+					return FALSE; 
+				}
+			} 
 		} 
-	} 
 
-	closedir($dh); 
+		closedir($dh); 
 
-	if(chmod($path, $filemode))
-	{
-		return TRUE; 
-	}
-	else
-	{
-		return FALSE; 
+		if(chmod($path, $filemode))
+		{
+			return TRUE; 
+		}
+		else
+		{
+			return FALSE; 
+		}
 	}
 }
 
@@ -147,44 +153,47 @@ function chmodr($path, $filemode) {
  * @param 	boolean
  * @return	array
  */
-function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $append_path = TRUE, $no_ext = FALSE, $_first_time = TRUE)
+if (!function_exists('directory_to_array'))
 {
-	static $orig_directory;
-	if ($_first_time) $orig_directory = $directory;
-	$array_items = array();
-	if ($handle = @opendir($directory)) {
-		while (false !== ($file = readdir($handle)))
-		{
-			if (strncmp($file, '.', 1) !== 0  AND 
-				(empty($exclude) OR (is_array($exclude) AND !in_array($file, $exclude))OR (is_string($exclude) AND !preg_match($exclude, $file)))
-				)
+	function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $append_path = TRUE, $no_ext = FALSE, $_first_time = TRUE)
+	{
+		static $orig_directory;
+		if ($_first_time) $orig_directory = $directory;
+		$array_items = array();
+		if ($handle = @opendir($directory)) {
+			while (false !== ($file = readdir($handle)))
 			{
-				if (is_dir($directory. "/" . $file))
+				if (strncmp($file, '.', 1) !== 0  AND 
+					(empty($exclude) OR (is_array($exclude) AND !in_array($file, $exclude))OR (is_string($exclude) AND !preg_match($exclude, $file)))
+					)
 				{
-					if ($recursive)
+					if (is_dir($directory. "/" . $file))
 					{
-						$array_items = array_merge($array_items, directory_to_array($directory."/". $file, $recursive, $exclude, $append_path, $no_ext, FALSE));
+						if ($recursive)
+						{
+							$array_items = array_merge($array_items, directory_to_array($directory."/". $file, $recursive, $exclude, $append_path, $no_ext, FALSE));
+						}
 					}
-				}
-				else
-				{
-					if ($no_ext)
+					else
 					{
-						$period_pos = strrpos($file, '.');
-						if ($period_pos) $file = substr($file, 0, $period_pos);
+						if ($no_ext)
+						{
+							$period_pos = strrpos($file, '.');
+							if ($period_pos) $file = substr($file, 0, $period_pos);
+						}
+						$file_prefix = (!$append_path) ? substr($directory, strlen($orig_directory)) : $directory;
+						$file = $file_prefix."/".$file;
+						$file = str_replace("//", "/", $file); // replace double slash
+						if (substr($file, 0, 1) == '/') $file = substr($file, 1); // remove begining slash
+						if (!empty($file) AND !in_array($file, $array_items)) $array_items[] = $file;
 					}
-					$file_prefix = (!$append_path) ? substr($directory, strlen($orig_directory)) : $directory;
-					$file = $file_prefix."/".$file;
-					$file = str_replace("//", "/", $file); // replace double slash
-					if (substr($file, 0, 1) == '/') $file = substr($file, 1); // remove begining slash
-					if (!empty($file) AND !in_array($file, $array_items)) $array_items[] = $file;
+					
 				}
-				
 			}
+			closedir($handle);
 		}
-		closedir($handle);
+		return $array_items;
 	}
-	return $array_items;
 }
 
 // --------------------------------------------------------------------
@@ -201,67 +210,69 @@ function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $
  * @param 	boolean
  * @return	array
  */
-function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $recursive = TRUE, $_first_time = TRUE)
+if (!function_exists('list_directories'))
 {
-	static $orig_directory;
-	static $dirs;
-	if ($_first_time)
+	function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $recursive = TRUE, $_first_time = TRUE)
 	{
-		$orig_directory = rtrim($directory, '/');
-		$dirs = NULL;
-	}
-
-	if ($handle = opendir($directory)) 
-	{
-		while (FALSE !== ($file = readdir($handle))) 
+		static $orig_directory;
+		static $dirs;
+		if ($_first_time)
 		{
-			if (strncmp($file, '.', 1) !== 0  AND 
-				((is_array($exclude) AND !in_array($file, $exclude)) OR (is_string($exclude) AND !empty($exclude) AND !preg_match($exclude, $file)))
-				)
+			$orig_directory = rtrim($directory, '/');
+			$dirs = NULL;
+		}
+
+		if ($handle = opendir($directory)) 
+		{
+			while (FALSE !== ($file = readdir($handle))) 
 			{
-				$file_path = $directory. "/" . $file;
-
-				if (is_dir($file_path))
+				if (strncmp($file, '.', 1) !== 0  AND 
+					((is_array($exclude) AND !in_array($file, $exclude)) OR (is_string($exclude) AND !empty($exclude) AND !preg_match($exclude, $file)))
+					)
 				{
-					if ($is_writable AND !is_writable($file_path)) 
-					{
-						continue;
-					}
-					if (!$full_path)
-					{
-						$dir_prefix = substr($directory, strlen($orig_directory));
-						$dir = trim($dir_prefix."/".$file, '/');
-					}
-					else
-					{
-						$dir_prefix = $directory;
-						$dir = $dir_prefix."/".$file;
-					}
+					$file_path = $directory. "/" . $file;
 
-					$dir = str_replace("//", "/", $dir); // replace double slash
+					if (is_dir($file_path))
+					{
+						if ($is_writable AND !is_writable($file_path)) 
+						{
+							continue;
+						}
+						if (!$full_path)
+						{
+							$dir_prefix = substr($directory, strlen($orig_directory));
+							$dir = trim($dir_prefix."/".$file, '/');
+						}
+						else
+						{
+							$dir_prefix = $directory;
+							$dir = $dir_prefix."/".$file;
+						}
+
+						$dir = str_replace("//", "/", $dir); // replace double slash
 
 
-					if (!isset($dirs))
-					{
-						$dirs = array();
-					}
-					if (!empty($dir) AND !in_array($dir, $dirs)) 
-					{
-						$dirs[] = $dir;
-					}
-					if ($recursive)
-					{
-						list_directories($file_path, $exclude, $full_path, $is_writable, TRUE, FALSE);	
+						if (!isset($dirs))
+						{
+							$dirs = array();
+						}
+						if (!empty($dir) AND !in_array($dir, $dirs)) 
+						{
+							$dirs[] = $dir;
+						}
+						if ($recursive)
+						{
+							list_directories($file_path, $exclude, $full_path, $is_writable, TRUE, FALSE);	
+						}
+						
 					}
 					
 				}
-				
 			}
+			closedir($handle);
 		}
-		closedir($handle);
+		return $dirs;
 	}
-	return $dirs;
 }
-
 /* End of file MY_directory_helper.php */
 /* Location: ./modules/fuel/helpers/MY_directory_helper.php */
