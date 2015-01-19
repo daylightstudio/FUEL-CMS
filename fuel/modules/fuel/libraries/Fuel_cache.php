@@ -85,8 +85,7 @@ class Fuel_cache extends Fuel_base_library {
 		// set the compile templates path
 		if (empty($this->compiled_path))
 		{
-			include(APPPATH.'config/parser.php');
-			$this->set_compiled_path($config['parser_compile_dir']);
+			$this->set_compiled_path($this->fuel->parser->get_compiled_dir());
 		}
 	}
 	
@@ -285,25 +284,24 @@ class Fuel_cache extends Fuel_base_library {
 		
 		// also delete DWOO compiled files
 		$this->CI->load->helper('file');
-
-		include(APPPATH.'config/parser.php');
-
 		
 		// remove all compiled files
-		$dwoo_compile_path =& $config['parser_compile_dir'];
-		if (is_dir($dwoo_compile_path) AND is_writable($dwoo_compile_path))
+		$parser_compile_path = $this->fuel->parser->get_compiled_dir();
+
+
+		if (is_dir($parser_compile_path) AND is_writable($parser_compile_path))
 		{
-			$this->_delete_files($dwoo_compile_path);
+			$this->_delete_files($parser_compile_path, TRUE);
 		}
 
 		// remove all cache files
-		$dwoo_cache_path =& $config['parser_cache_dir'];
-		if (is_dir($dwoo_cache_path) AND is_writable($dwoo_cache_path))
-		{
-			$compiled_folder = trim(str_replace($dwoo_cache_path, '', $dwoo_compile_path), '/');
-			$ignore = array($compiled_folder, 'index.html');
-			delete_files($dwoo_cache_path, TRUE, $ignore);
-		}
+		// $parser_cache_path =& $config['parser_cache_dir'];
+		// if (is_dir($parser_cache_path) AND is_writable($parser_cache_path))
+		// {
+		// 	$compiled_folder = trim(str_replace($dwoo_cache_path, '', $dwoo_compile_path), '/');
+		// 	$ignore = array($compiled_folder, 'index.html');
+		// 	delete_files($dwoo_cache_path, TRUE, $ignore);
+		// }
 		
 		// remove asset cache files if exist
 		$modules = $this->fuel->config('modules_allowed');
@@ -505,11 +503,12 @@ class Fuel_cache extends Fuel_base_library {
 	 * 
 	 * @access	protected
 	 * @param	string	path to file
+	 * @param	bool	delete the directories (optional)
 	 * @return	void
 	 */
-	protected function _delete_files($path)
+	protected function _delete_files($path, $include_dir = FALSE)
 	{
-		@delete_files($path, FALSE, $this->ignore);
+		@delete_files($path, $include_dir, $this->ignore);
 	}
 }
 
