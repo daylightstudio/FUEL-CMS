@@ -262,9 +262,28 @@ myMarkItUpSettings.parseAttrs = function(str, attr){
 	}
 	return ret;
 }
+myMarkItUpSettings.pregQuote = function(str, delimiter) {
+	return String(str)
+	.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+}
 
+myMarkItUpSettings.parserLeftDelimiter = function(quoted){
+	var delim = jqx_config.parserDelimiters[0];
+	if (quoted){
+		delim = myMarkItUpSettings.pregQuote(delim);
+	}
+	return delim;
+}
+
+myMarkItUpSettings.parserRightDelimiter = function(quoted){
+	var delim = jqx_config.parserDelimiters[1];
+	if (quoted){
+		delim = myMarkItUpSettings.pregQuote(delim);
+	}
+	return delim;
+}
 myMarkItUpSettings.markItUpImageInsert = function (markItUp){
-
+	var self = this;
 	var selected = markItUp.selection;
 
 	var isImgSelected = selected.match(/\<img[^>]+src=[^>]+>/);
@@ -278,7 +297,8 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		var srcArr = selected.match(/ href="([^"]+?)"/);
 		if (srcArr && srcArr.length >= 1) {
 			src = srcArr[1];
-			selected = src.replace(/^\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
+			var regex = "^" + self.parserLeftDelimiter(true) + "img_path\\('(.+)'\\)" + self.parserRightDelimiter(true);
+			selected = src.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
@@ -306,6 +326,8 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 
 
 myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
+
+	var self = this;
 	var folder = 'images';
 	var imgFolder = attrs['imgFolder'];
 	if (imgFolder){
@@ -348,13 +370,13 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 				var selectedVal = $assetSelect.val();
 				var isHTTP = false; // for later
 				var replace = '<img src="';
-				if (!isHTTP) replace += '{img_path(\'';
+				if (!isHTTP) replace +=  self.parserLeftDelimiter() + 'img_path(\'';
 				if (imgFolder && imgFolder.length){
 					replace += imgFolder + '/';	
 				}
 				replace += selectedVal;
 
-				if (!isHTTP) replace += '\')}';
+				if (!isHTTP) replace += '\')' + self.parserRightDelimiter();
 				replace += '"';
 				if ($width.length && $width.val().length){
 					replace += ' width="' + $width.val() + '"';
@@ -387,6 +409,9 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 
 
 myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
+
+	var self = this;
+
 	var selected = markItUp.selection;
 
 	var isAnchorSelected = selected.match(/\<a[^>]+href=[^>]+>(.*)<\/a>/);
@@ -400,7 +425,8 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 		var hrefArr = selected.match(/ href="([^"]+?)"/);
 		if (hrefArr && hrefArr.length >= 1) {
 			href = hrefArr[1];
-			input = href.replace(/^\{site_url\('(.*)'\)\}/g, function(match, contents, offset, s) {
+			var regex = "^" + self.parserLeftDelimiter(true) + "site_url\('(.*)'\)" + self.parserRightDelimiter(true);
+			input = href.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
@@ -424,6 +450,8 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 }
 
 myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
+
+	var self = this;
 	var url = jqx.config.fuelPath + '/pages/select/?nocache=' + new Date().getTime();
 	if (selected) url += '&selected=' + escape(selected);
 	url += '&input=' + ((attrs.input) ? attrs.input : '');
@@ -442,7 +470,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 		$(this).unbind();
 
 		var iframeContext = this.contentDocument;
-			
+		
 		jQuery('.cancel', iframeContext).add('.modal_close').click(function(){
 			$modal.jqmHide();
 			if ($(this).is('.save')){
@@ -456,14 +484,14 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
 				var isHTTP = (selectedUrl.match(/^\w+:\/\//)) ? true : false;
 				var replace = '<a href="';
-				
+
 				if (selectedUrl.substr(0, 1) != '{') {
 					if (selectedUrl.match(/\.pdf$/)){
-						replace += '{pdf_path(\'' + selectedUrl + '\')}';
+						replace += self.parserLeftDelimiter() + 'pdf_path(\'' + selectedUrl + '\')' + self.parserRightDelimiter();
 					} else {
-						if (!isHTTP) replace += '{site_url(\'';
+						if (!isHTTP) replace += self.parserLeftDelimiter() + 'site_url(\'';
 						replace += selectedUrl;
-						if (!isHTTP) replace += '\')}';
+						if (!isHTTP) replace += '\')' +  self.parserRightDelimiter();
 					}
 				} else {
 					replace += selectedUrl;

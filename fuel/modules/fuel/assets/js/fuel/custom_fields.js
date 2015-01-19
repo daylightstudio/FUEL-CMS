@@ -143,6 +143,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$(elem).val(newVal);
 		}
 
+		var lDelim = myMarkItUpSettings.parserLeftDelimiter(true);
+		var rDelim = myMarkItUpSettings.parserRightDelimiter(true);
+
 		var CKEDitor_loaded = false;
 		var createCKEditor = function(elem){
 			if (typeof CKEDITOR == 'undefined') return;
@@ -235,12 +238,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 							if ( element.name == 'img' && hasCKEditorImagePlugin) {
 								//var src = element.attributes['src'];
 								var src = element.attributes['data-cke-saved-src']; // v4.4 fix
-								img = src.replace(/^\{img_path\('?([^'|"]+?)'?\)\}/, function(match, contents, offset, s) {
+								var regex = "^" + lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
+								img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
 			   										return contents;
 		    								}
 										);
 								img = img.replace(jqx_config.assetsImgPath, '');
-								src = "{img_path(" + img + ")}";
+								src = myMarkItUpSettings.parserLeftDelimiter() + "img_path('" + img + "')" + myMarkItUpSettings.parserRightDelimiter();
 								element.attributes.src = src;
 								element.attributes['data-cke-saved-src'] = src;
 					        }
@@ -330,29 +334,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		}
 		
 		var unTranslateImgPath = function(txt){
-			
-			txt = txt.replace(/\{img_path\('?([^'|"]+?)'?\)\}/g, function(match, contents, offset, s) {
+			var regex = lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
+			txt = txt.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 												contents = contents.replace(/'|"/, '');
 		   										return jqx_config.assetsImgPath + contents;
 	    								}
 									);
 			return txt;
 		}	
-		
-
-		var unTranslateImgPath2 = function(editor){
-			// translate img_path
-			setTimeout(function(){
-				var txt = editor.getData();
-				txt = txt.replace(/\{img_path\('([^']+?)'\)\}/g, function(match, contents, offset, s) {
-			   										return jqx_config.assetsImgPath + contents;
-		    								}
-										);
-				editor.setData(txt);
-				editor.updateElement();
-
-			}, 50)
-		}
 
 
 		var createPreview = function(id){

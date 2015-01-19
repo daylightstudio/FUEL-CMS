@@ -30,3 +30,5 @@ jqx_config.editor = '<?=$this->fuel->config('text_editor')?>';
 jqx_config.uiCookie = 'fuel_ui_<?=str_replace('fuel_', '', $this->fuel->auth->get_fuel_trigger_cookie_name())?>';
 var __FUEL_PATH__ = '<?=site_url($this->fuel->config('fuel_path'))?>'; // for preview in markitup settings
 var CKEDITOR_BASEPATH = '<?=js_path('', 'fuel')?>editors/ckeditor/';
+jqx_config.parser = '<?=$this->fuel->parser->name()?>';
+jqx_config.parserDelimiters = <?=json_encode($this->fuel->parser->get_delimiters('variable', TRUE))?>;
