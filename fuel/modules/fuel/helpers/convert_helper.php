@@ -39,15 +39,18 @@
  * @param	string	string containing ascii characters
  * @return	string
  */	
-function ascii_to_hex($ascii)
+if (!function_exists('ascii_to_hex'))
 {
-	$hex = '';
-
-	for($i = 0; $i < strlen($ascii); $i++)
+	function ascii_to_hex($ascii)
 	{
-		$hex .= str_pad(base_convert(ord($ascii[$i]), 10, 16), 2, '0', STR_PAD_LEFT);
+		$hex = '';
+
+		for($i = 0; $i < strlen($ascii); $i++)
+		{
+			$hex .= str_pad(base_convert(ord($ascii[$i]), 10, 16), 2, '0', STR_PAD_LEFT);
+		}
+		return $hex;
 	}
-	return $hex;
 }
 
 // --------------------------------------------------------------------
@@ -59,20 +62,23 @@ function ascii_to_hex($ascii)
  * @param	string	string containing ascii characters
  * @return	string
  */	   
-function hex_to_ascii($hex)
+if (!function_exists('hex_to_ascii'))
 {
-	$ascii = '';
-
-	if (strlen($hex) % 2 == 1)
+	function hex_to_ascii($hex)
 	{
-		$hex = '0'.$hex;
-	}
+		$ascii = '';
 
-	for($i = 0; $i < strlen($hex); $i += 2)
-	{
-		$ascii .= chr(base_convert(substr($hex, $i, 2), 16, 10));
+		if (strlen($hex) % 2 == 1)
+		{
+			$hex = '0'.$hex;
+		}
+
+		for($i = 0; $i < strlen($hex); $i += 2)
+		{
+			$ascii .= chr(base_convert(substr($hex, $i, 2), 16, 10));
+		}
+		return $ascii;
 	}
-	return $ascii;
 }
 
 // --------------------------------------------------------------------
@@ -85,10 +91,13 @@ function hex_to_ascii($hex)
  * @param	boolean	convert to hex value 
  * @return	string
  */
-function uri_safe_encode($str, $hexify = TRUE)
+if (!function_exists('uri_safe_encode'))
 {
-	$str = ($hexify) ? ascii_to_hex(base64_encode($str)) : base64_encode($str);
-	return $str;
+	function uri_safe_encode($str, $hexify = TRUE)
+	{
+		$str = ($hexify) ? ascii_to_hex(base64_encode($str)) : base64_encode($str);
+		return $str;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -101,10 +110,13 @@ function uri_safe_encode($str, $hexify = TRUE)
  * @param	boolean	value is hexified 
  * @return	string
  */
-function uri_safe_decode($str, $hexify = TRUE)
+if (!function_exists('uri_safe_decode'))
 {
-	$str = ($hexify) ? base64_decode(hex_to_ascii($str)) : base64_decode($str);
-	return $str;
+	function uri_safe_decode($str, $hexify = TRUE)
+	{
+		$str = ($hexify) ? base64_decode(hex_to_ascii($str)) : base64_decode($str);
+		return $str;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -117,29 +129,32 @@ function uri_safe_decode($str, $hexify = TRUE)
  * @param	boolean	value is hexified 
  * @return	string
  */
-function uri_safe_batch_encode($uri, $delimiter = '|', $hexify = TRUE)
+if (!function_exists('uri_safe_batch_encode'))
 {
-	$str = '';
-	if (!empty($uri))
+	function uri_safe_batch_encode($uri, $delimiter = '|', $hexify = TRUE)
 	{
-		if (is_string($uri)) {
-			$arr = explode('/', $uri);
-			foreach($arr as $val)
-			{
-				$uri[$val] = next($arr);
-			}
-		}
-		foreach($uri as $key => $val)
+		$str = '';
+		if (!empty($uri))
 		{
-			if (!is_string($val))
-			{
-				$val = '??'.serialize($val);
+			if (is_string($uri)) {
+				$arr = explode('/', $uri);
+				foreach($arr as $val)
+				{
+					$uri[$val] = next($arr);
+				}
 			}
-			$str .= $key.'/'.$val.$delimiter;
+			foreach($uri as $key => $val)
+			{
+				if (!is_string($val))
+				{
+					$val = '??'.serialize($val);
+				}
+				$str .= $key.'/'.$val.$delimiter;
+			}
+			return uri_safe_encode($str, $hexify);
 		}
-		return uri_safe_encode($str, $hexify);
+		return $str;
 	}
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -153,24 +168,27 @@ function uri_safe_batch_encode($uri, $delimiter = '|', $hexify = TRUE)
  * @param	boolean	value is hexified 
  * @return	string
  */
-function uri_safe_batch_decode($str, $delimiter = '|', $hexify = TRUE)
+if (!function_exists('uri_safe_batch_decode'))
 {
-	$str = uri_safe_decode($str, $hexify);
-	$tmp = explode($delimiter, $str);
-	$params = array();
-	foreach($tmp as $val)
+	function uri_safe_batch_decode($str, $delimiter = '|', $hexify = TRUE)
 	{
-		$key_val = explode('/', $val);
-		if (count($key_val) >= 2)
+		$str = uri_safe_decode($str, $hexify);
+		$tmp = explode($delimiter, $str);
+		$params = array();
+		foreach($tmp as $val)
 		{
-			if (strncmp($key_val[1], '??', 2) === 0)
+			$key_val = explode('/', $val);
+			if (count($key_val) >= 2)
 			{
-				$key_val[1] = unserialize(substr($key_val[1], 2));
+				if (strncmp($key_val[1], '??', 2) === 0)
+				{
+					$key_val[1] = unserialize(substr($key_val[1], 2));
+				}
+				$params[$key_val[0]] = $key_val[1];
 			}
-			$params[$key_val[0]] = $key_val[1];
 		}
+		return $params;
 	}
-	return $params;
 }
 
 /* End of file convert_helper.php */

@@ -38,15 +38,18 @@
  * @param	bool	whether to include the cents or not
  * @return	string
  */
-function currency($value, $symbol = '$',  $include_cents = TRUE, $decimal_sep = '.', $thousands_sep = ',')
+if (!function_exists('currency'))
 {
-	if (!isset($value) OR $value === "")
+	function currency($value, $symbol = '$',  $include_cents = TRUE, $decimal_sep = '.', $thousands_sep = ',')
 	{
-		return;
+		if (!isset($value) OR $value === "")
+		{
+			return;
+		}
+		$value = (float) $value;
+		$dec_num = (!$include_cents) ? 0 : 2;
+		return $symbol.number_format($value, $dec_num, $decimal_sep, $thousands_sep);
 	}
-	$value = (float) $value;
-	$dec_num = (!$include_cents) ? 0 : 2;
-	return $symbol.number_format($value, $dec_num, $decimal_sep, $thousands_sep);
 }
 
 /* End of file format_helper.php */

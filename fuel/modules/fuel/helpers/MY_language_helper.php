@@ -40,27 +40,30 @@
  * @param 	mixed
  * @return	string
  */
-function lang($key, $args = NULL)
+if (!function_exists('lang'))
 {
-
-	// must test for this first because we may load a config 
-	// file that uses this function before lang file is loaded
-	if (class_exists('CI_Controller'))
+	function lang($key, $args = NULL)
 	{
-		$CI =& get_instance();
-		if (!is_array($args))
+
+		// must test for this first because we may load a config 
+		// file that uses this function before lang file is loaded
+		if (class_exists('CI_Controller'))
 		{
-			$args = func_get_args();
-			if (isset($CI->lang->language[$key]))
+			$CI =& get_instance();
+			if (!is_array($args))
 			{
-				$args[0] = $CI->lang->line($key);
+				$args = func_get_args();
+				if (isset($CI->lang->language[$key]))
+				{
+					$args[0] = $CI->lang->line($key);
+				}
+				else
+				{
+					$args[0] = FALSE;
+				}
 			}
-			else
-			{
-				$args[0] = FALSE;
-			}
+			return call_user_func_array('sprintf', $args);
 		}
-		return call_user_func_array('sprintf', $args);
 	}
 }
 
@@ -73,54 +76,57 @@ function lang($key, $args = NULL)
  * @param 	boolean
  * @return	string
  */
-function json_lang($js_localized = array(), $return_json = TRUE)
+if (!function_exists('json_lang'))
 {
-	
-	// if $js_localized is a string, then we assume it is the name of a lang file
-	if (is_string($js_localized))
+	function json_lang($js_localized = array(), $return_json = TRUE)
 	{
-		$path_parts = explode('/', $js_localized);
 		
-		// we use english because we know it exists... we just want the keys
-		if (count($path_parts) >= 2)
+		// if $js_localized is a string, then we assume it is the name of a lang file
+		if (is_string($js_localized))
 		{
-			$lang_path = MODULES_PATH.$path_parts[0].'/language/english/'.$path_parts[1].'_lang'.EXT;
-		}
-		else
-		{
-			$lang_path = APPPATH.'language/english/'.$path_parts[0].'_lang'.EXT;
+			$path_parts = explode('/', $js_localized);
+			
+			// we use english because we know it exists... we just want the keys
+			if (count($path_parts) >= 2)
+			{
+				$lang_path = MODULES_PATH.$path_parts[0].'/language/english/'.$path_parts[1].'_lang'.EXT;
+			}
+			else
+			{
+				$lang_path = APPPATH.'language/english/'.$path_parts[0].'_lang'.EXT;
+			}
+			
+			if (file_exists($lang_path))
+			{
+				include($lang_path);
+				$js_localized = array_keys($lang);
+			}
+			else
+			{
+				$js_localized = array();
+			}
 		}
 		
-		if (file_exists($lang_path))
+		$vars = array();
+		foreach($js_localized as $key => $val)
 		{
-			include($lang_path);
-			$js_localized = array_keys($lang);
+			// handle both types of arrays
+			if (is_int($key))
+			{
+				$vars[$val] = lang($val);
+			}
+			else
+			{
+				$vars[$key] = lang($key);
+			}
 		}
-		else
+		
+		if ($return_json)
 		{
-			$js_localized = array();
+			return json_encode($vars);
 		}
+		return $vars;
 	}
-	
-	$vars = array();
-	foreach($js_localized as $key => $val)
-	{
-		// handle both types of arrays
-		if (is_int($key))
-		{
-			$vars[$val] = lang($val);
-		}
-		else
-		{
-			$vars[$key] = lang($key);
-		}
-	}
-	
-	if ($return_json)
-	{
-		return json_encode($vars);
-	}
-	return $vars;
 }
 
 // --------------------------------------------------------------------
@@ -131,10 +137,13 @@ function json_lang($js_localized = array(), $return_json = TRUE)
  * @param 	boolean	Determines whether to set the "langauge" config property
  * @return	string
  */
-function detect_lang($set_config = FALSE)
+if (!function_exists('detect_lang'))
 {
-	$CI =& get_instance();
-	return $CI->fuel->language->detect($set_config);
+	function detect_lang($set_config = FALSE)
+	{
+		$CI =& get_instance();
+		return $CI->fuel->language->detect($set_config);
+	}
 }
 
 /* End of file MY_language_helper.php */

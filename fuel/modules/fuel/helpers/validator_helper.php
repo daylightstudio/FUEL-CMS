@@ -38,29 +38,31 @@
  * @param	mixed	variable of any kind
  * @return	boolean
  */
-function required($var)
+if (!function_exists('required'))
 {
-	if (is_string($var))
+	function required($var)
 	{
-		$var = trim($var);
-		if ($var !== '')  
+		if (is_string($var))
+		{
+			$var = trim($var);
+			if ($var !== '')  
+			{
+				return TRUE;
+			} 
+		}
+		else if (is_array($var))
+		{
+			return !empty($var);
+		}
+		// automatically set integer values to TRUE
+		else if (is_numeric($var))
 		{
 			return TRUE;
-		} 
+		}
+		return FALSE;
 	}
-	else if (is_array($var))
-	{
-		return !empty($var);
-	}
-	// automatically set integer values to TRUE
-	else if (is_numeric($var))
-	{
-		return TRUE;
-	}
-	return FALSE;
-
 }
-   
+
 // --------------------------------------------------------------------
 
 /**
@@ -71,10 +73,13 @@ function required($var)
  * @param	string	regular expression (delimiters excluded)
  * @return	boolean
  */
-function regex($var = null, $regex)
+if (!function_exists('regex'))
 {
-	return preg_match('#'.$regex.'#', $var);
-} 
+	function regex($var = null, $regex)
+	{
+		return preg_match('#'.$regex.'#', $var);
+	} 
+}
 
 // --------------------------------------------------------------------
 
@@ -85,21 +90,24 @@ function regex($var = null, $regex)
  * @param	array	array containing values of indiscriminate size
  * @return	boolean
  */
-function has_one_of_these($args = null)
+if (!function_exists('has_one_of_these'))
 {
-	if(!is_array($args))
+	function has_one_of_these($args = null)
 	{
-		$args = func_get_args();
-	}
-	foreach($args as $val)
-	{
-		if(!empty($val))
+		if(!is_array($args))
 		{
-			return TRUE;
+			$args = func_get_args();
 		}
-	}
-	return FALSE;
-} 
+		foreach($args as $val)
+		{
+			if(!empty($val))
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
+	} 
+}
 
 // --------------------------------------------------------------------
 
@@ -129,13 +137,16 @@ if ( ! function_exists('valid_email'))
  * @param 	int		integer of any length to test against 
  * @return	boolean
  */
-function min_num($var, $limit = 1)
+if (!function_exists('min_num'))
 {
-	if($var < $limit)
+	function min_num($var, $limit = 1)
 	{
-		return FALSE;	
+		if($var < $limit)
+		{
+			return FALSE;	
+		}
+		return TRUE;
 	}
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -148,13 +159,16 @@ function min_num($var, $limit = 1)
  * @param 	int		integer of any length to test against 
  * @return	boolean
  */
-function max_num($var, $limit = 1)
+if (!function_exists('max_num'))
 {
-	if($var > $limit)
+	function max_num($var, $limit = 1)
 	{
-		return FALSE;	
+		if($var > $limit)
+		{
+			return FALSE;	
+		}
+		return TRUE;
 	}
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -168,13 +182,16 @@ function max_num($var, $limit = 1)
  * @param 	int		integer of any length to test high 
  * @return	boolean
  */
-function is_between($var, $lo, $hi)
+if (!function_exists('is_between'))
 {
-	if($var <= $hi AND $var >= $lo)
+	function is_between($var, $lo, $hi)
 	{
-		return TRUE;
+		if($var <= $hi AND $var >= $lo)
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -188,13 +205,16 @@ function is_between($var, $lo, $hi)
  * @param 	int		integer of any length to test high 
  * @return	boolean
  */
-function is_outside($var, $lo, $hi)
+if (!function_exists('is_outside'))
 {
-	if($var >= $hi AND $var <= $lo)
+	function is_outside($var, $lo, $hi)
 	{
-		return TRUE;
+		if($var >= $hi AND $var <= $lo)
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -207,15 +227,18 @@ function is_outside($var, $lo, $hi)
  * @param 	int		integer to test string length against
  * @return	boolean
  */
-function length_max($str, $limit = 1000)
+if (!function_exists('length_max'))
 {
-	if (strlen(strval($str)) > $limit)
+	function length_max($str, $limit = 1000)
 	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
+		if (strlen(strval($str)) > $limit)
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
 	}
 }
 
@@ -229,18 +252,20 @@ function length_max($str, $limit = 1000)
  * @param 	int		integer to test string length against
  * @return	boolean
  */
-function length_min($str, $limit = 1)
+if (!function_exists('length_min'))
 {
-	if (strlen(strval($str)) < $limit)
+	function length_min($str, $limit = 1)
 	{
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
+		if (strlen(strval($str)) < $limit)
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
 	}
 }
-
 // --------------------------------------------------------------------
 
 /**
@@ -250,22 +275,25 @@ function length_min($str, $limit = 1)
  * @param	string	string of any length
  * @return	boolean
  */
-function valid_phone($str)
+if (!function_exists('valid_phone'))
 {
-	$num = $str;
-	$num = preg_replace("#[^0-9]#", null, $str);
-
-	if(!is_numeric($num))
+	function valid_phone($str)
 	{
-		return FALSE;
-	}
+		$num = $str;
+		$num = preg_replace("#[^0-9]#", null, $str);
 
-	if(strlen($num) < 7)
-	{
-		return FALSE;
+		if(!is_numeric($num))
+		{
+			return FALSE;
+		}
+
+		if(strlen($num) < 7)
+		{
+			return FALSE;
+		}
+		
+		return TRUE;
 	}
-	
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -278,14 +306,17 @@ function valid_phone($str)
  * @param	mixed	mixed variable to test equality
  * @return	boolean
  */
-function is_equal_to($val, $val2)
+if (!function_exists('is_equal_to'))
 {
-	if($val == $val2) 
+	function is_equal_to($val, $val2)
 	{
-		return TRUE;
+		if($val == $val2) 
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
-	
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -298,14 +329,17 @@ function is_equal_to($val, $val2)
  * @param	mixed	mixed variable to test equality
  * @return	boolean
  */
-function is_not_equal_to($val, $val2)
+if (!function_exists('is_not_equal_to'))
 {
-	if($val != $val2) 
+	function is_not_equal_to($val, $val2)
 	{
-		return TRUE;
+		if($val != $val2) 
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
-	
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -318,13 +352,16 @@ function is_not_equal_to($val, $val2)
  * @param	array	array to test if value exists
  * @return	boolean
  */
-function is_one_of_these($val, $search_in = array())
+if (!function_exists('is_one_of_these'))
 {
-	if (in_array($val, $search_in))
+	function is_one_of_these($val, $search_in = array())
 	{
-		return TRUE;
+		if (in_array($val, $search_in))
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -337,14 +374,17 @@ function is_one_of_these($val, $search_in = array())
  * @param	array	array to test if value exists
  * @return	boolean
  */
-function is_not_one_of_these($val, $searchIn = array())
+if (!function_exists('is_not_one_of_these'))
 {
-	if(!in_array($val, $searchIn))
+	function is_not_one_of_these($val, $searchIn = array())
 	{
-		return TRUE;
+		if(!in_array($val, $searchIn))
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
-	
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -357,21 +397,24 @@ function is_not_one_of_these($val, $searchIn = array())
  * @param	string	mime value of file to test
  * @return	boolean
  */
-function is_of_file_type($fileName, $fileType)
+if (!function_exists('is_of_file_type'))
 {
-	if($fileType == 'zip') 
+	function is_of_file_type($fileName, $fileType)
 	{
-		$fileType = 'application/zip';
-	}
-	if(!empty($_FILES[$fileName]['type']))
-	{
-		if($_FILES[$fileName]['type'] != $fileType)
+		if($fileType == 'zip') 
 		{
-			return FALSE;
+			$fileType = 'application/zip';
 		}
+		if(!empty($_FILES[$fileName]['type']))
+		{
+			if($_FILES[$fileName]['type'] != $fileType)
+			{
+				return FALSE;
+			}
+		}
+		
+		return TRUE;
 	}
-	
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -383,14 +426,17 @@ function is_of_file_type($fileName, $fileType)
  * @param	string	filename
  * @return	boolean
  */
-function valid_file_upload($file_name)
+if (!function_exists('valid_file_upload'))
 {
-	if(empty($_FILES[$file_name]) OR $_FILES[$file_name]['error'] > 0)
+	function valid_file_upload($file_name)
 	{
-		return FALSE;
-	} 
-	else {
-		return TRUE;
+		if(empty($_FILES[$file_name]) OR $_FILES[$file_name]['error'] > 0)
+		{
+			return FALSE;
+		} 
+		else {
+			return TRUE;
+		}
 	}
 }
 
@@ -404,15 +450,18 @@ function valid_file_upload($file_name)
  * @param	array	list of allowed characters 
  * @return	boolean
  */
-function is_safe_character($val, $allowed = array('_', '-'))
+if (!function_exists('is_safe_character'))
 {
-	$newVal = str_replace($allowed, '', $val);
-	if(ctype_alnum($newVal)) 
+	function is_safe_character($val, $allowed = array('_', '-'))
 	{
-		return TRUE;
+		$newVal = str_replace($allowed, '', $val);
+		if(ctype_alnum($newVal)) 
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
-	
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -426,9 +475,12 @@ function is_safe_character($val, $allowed = array('_', '-'))
  * @param	string	delimiter of date value given for testing 
  * @return	boolean
  */
-function valid_date_time($date, $format = "ymd", $delimiter = "-") 
+if (!function_exists('valid_date_time'))
 {
-	return (valid_date($date, $format, $delimiter) && valid_time($date));
+	function valid_date_time($date, $format = "ymd", $delimiter = "-") 
+	{
+		return (valid_date($date, $format, $delimiter) && valid_time($date));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -442,16 +494,19 @@ function valid_date_time($date, $format = "ymd", $delimiter = "-")
  * @param	string	delimiter of date value given for testing 
  * @return	boolean
  */
-function valid_date($date, $format = "ymd", $delimiter = "-") 
+if (!function_exists('valid_date'))
 {
-	list($d1, $d2, $d3) = sscanf($date, "%d".$delimiter."%d".$delimiter."%d");
-	if($format == "ymd")
+	function valid_date($date, $format = "ymd", $delimiter = "-") 
 	{
-		return checkdate($d2, $d3, $d1);
+		list($d1, $d2, $d3) = sscanf($date, "%d".$delimiter."%d".$delimiter."%d");
+		if($format == "ymd")
+		{
+			return checkdate($d2, $d3, $d1);
+		}
+		return checkdate($d1, $d2, $d3);
 	}
-	return checkdate($d1, $d2, $d3);
 }
- 
+
 // --------------------------------------------------------------------
 
 /**
@@ -461,55 +516,58 @@ function valid_date($date, $format = "ymd", $delimiter = "-")
  * @param	string	date as string value
  * @return	boolean
  */
-function valid_time($date) 
+if (!function_exists('valid_time'))
 {
-	$date = trim($date);
-	$dateArr = explode(" ", $date);
-	
-	if (isset($dateArr[1]))
+	function valid_time($date) 
 	{
-		$time = $dateArr[1];
-		$timeArr = explode(":", $time);
-		if (count($timeArr) == 3)
+		$date = trim($date);
+		$dateArr = explode(" ", $date);
+		
+		if (isset($dateArr[1]))
 		{
-			$hour = $timeArr[0];
-			$min = $timeArr[1];
-			$sec = $timeArr[2];
-			
-			if(!is_numeric($hour))
+			$time = $dateArr[1];
+			$timeArr = explode(":", $time);
+			if (count($timeArr) == 3)
+			{
+				$hour = $timeArr[0];
+				$min = $timeArr[1];
+				$sec = $timeArr[2];
+				
+				if(!is_numeric($hour))
+				{
+					return FALSE;
+				}
+				if(!is_numeric($min))
+				{
+					return FALSE;
+				}
+				if(!is_numeric($sec))
+				{
+					return FALSE;
+				}
+				
+				if($hour < 0 || $hour > 24)
+				{
+					return FALSE;
+				}
+				if($min < 0 || $min > 59)
+				{
+					return FALSE;
+				}
+				if($sec < 0 || $sec > 59)
+				{
+					return FALSE;
+				}
+			}
+			else
 			{
 				return FALSE;
 			}
-			if(!is_numeric($min))
-			{
-				return FALSE;
-			}
-			if(!is_numeric($sec))
-			{
-				return FALSE;
-			}
-			
-			if($hour < 0 || $hour > 24)
-			{
-				return FALSE;
-			}
-			if($min < 0 || $min > 59)
-			{
-				return FALSE;
-			}
-			if($sec < 0 || $sec > 59)
-			{
-				return FALSE;
-			}
+			return TRUE;
 		}
-		else
-		{
-			return FALSE;
-		}
+		
 		return TRUE;
 	}
-	
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -523,22 +581,25 @@ function valid_time($date)
  * @param	string	year value  
  * @return	boolean
  */
-function valid_mdy($m, $d = null, $y = null)
+if (!function_exists('valid_mdy'))
 {
-	if(empty($d) && empty($y))
+	function valid_mdy($m, $d = null, $y = null)
 	{
-		$dateArr = explode("/", $m);
-		if(count($dateArr) == 3)
+		if(empty($d) && empty($y))
 		{
-			$m = $dateArr[0];
-			$d = $dateArr[1];
-			$y = $dateArr[2];
+			$dateArr = explode("/", $m);
+			if(count($dateArr) == 3)
+			{
+				$m = $dateArr[0];
+				$d = $dateArr[1];
+				$y = $dateArr[2];
+			}
 		}
+		$m = (int) $m;
+		$d = (int) $d;
+		$y = (int) $y;
+		return checkdate($m, $d, $y);
 	}
-	$m = (int) $m;
-	$d = (int) $d;
-	$y = (int) $y;
-	return checkdate($m, $d, $y);
 }
 
 // --------------------------------------------------------------------
@@ -551,15 +612,18 @@ function valid_mdy($m, $d = null, $y = null)
  * @param	string	date value as string(should be later date)
  * @return	boolean
  */
-function is_after_date($date1, $date2)
+if (!function_exists('is_after_date'))
 {
-	$date1 = strtotime($date1);
-	$date2 = strtotime($date2);
-	if ($date1 < $date2) 
+	function is_after_date($date1, $date2)
 	{
-		return FALSE;
+		$date1 = strtotime($date1);
+		$date2 = strtotime($date2);
+		if ($date1 < $date2) 
+		{
+			return FALSE;
+		}
+		return TRUE;
 	}
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -572,15 +636,18 @@ function is_after_date($date1, $date2)
  * @param	string	date value as string
  * @return	boolean
  */
-function is_before_date($date1, $date2)
+if (!function_exists('is_before_date'))
 {
-	$date1 = strtotime($date1);
-	$date2 = strtotime($date2);
-	if ($date1 > $date2) 
+	function is_before_date($date1, $date2)
 	{
-		return FALSE;
+		$date1 = strtotime($date1);
+		$date2 = strtotime($date2);
+		if ($date1 > $date2) 
+		{
+			return FALSE;
+		}
+		return TRUE;
 	}
-	return TRUE;
 }
 
 // --------------------------------------------------------------------
@@ -594,16 +661,19 @@ function is_before_date($date1, $date2)
  * @param	string	date value as string(high date)
  * @return	boolean
  */
-function is_between_dates($val, $date1, $date2)
+if (!function_exists('is_between_dates'))
 {
-	$val = strtotime($val);
-	$date1 = strtotime($date1);
-	$date2 = strtotime($date2);
-	if($val > $date1 && $val < $date2) 
+	function is_between_dates($val, $date1, $date2)
 	{
-		return TRUE;
+		$val = strtotime($val);
+		$date1 = strtotime($date1);
+		$date2 = strtotime($date2);
+		if($val > $date1 && $val < $date2) 
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
-	return FALSE;
 }
 
 // --------------------------------------------------------------------
@@ -615,9 +685,12 @@ function is_between_dates($val, $date1, $date2)
  * @param	string	date value as string
  * @return	boolean
  */
-function is_future_date($val)
+if (!function_exists('is_future_date'))
 {
-	return is_after_date($val, date("Y-m-d 00:00:00"));
+	function is_future_date($val)
+	{
+		return is_after_date($val, date("Y-m-d 00:00:00"));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -629,9 +702,12 @@ function is_future_date($val)
  * @param	string	date value as string
  * @return	boolean
  */
-function is_past_date($val)
+if (!function_exists('is_past_date'))
 {
-	return is_before_date($val, date("Y-m-d 23:59:59"));
+	function is_past_date($val)
+	{
+		return is_before_date($val, date("Y-m-d 23:59:59"));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -643,65 +719,68 @@ function is_past_date($val)
  * @param	mixed	collection of errors created by user
  * @return	string
  */
-function display_errors_js($ERRORS = NULL) 
+if (!function_exists('display_errors_js'))
 {
-	if (empty($GLOBALS['__ERRORS_JS__']))
+	function display_errors_js($ERRORS = NULL) 
 	{
-		$GLOBALS['__ERRORS_JS__'] = 0;
-	}
-	$str = "<script>\n";
-	$str .= "
-	function displayErrors".$GLOBALS['__ERRORS_JS__']."() {
-		var msg = \"\";\n";
-	if(!isset($ERRORS) && defined('GLOBAL_ERRORS'))
-	{
-		if(!empty($GLOBALS[GLOBAL_ERRORS]))
+		if (empty($GLOBALS['__ERRORS_JS__']))
 		{
-			$ERRORS = $GLOBALS[GLOBAL_ERRORS];
+			$GLOBALS['__ERRORS_JS__'] = 0;
 		}
-	}
-		
-	if (count($ERRORS))
-	{
-		$msg = "msg = \"ERROR\\n\";";
-		foreach($ERRORS as $key => $value)
+		$str = "<script>\n";
+		$str .= "
+		function displayErrors".$GLOBALS['__ERRORS_JS__']."() {
+			var msg = \"\";\n";
+		if(!isset($ERRORS) && defined('GLOBAL_ERRORS'))
 		{
-			if (is_array($value))
+			if(!empty($GLOBALS[GLOBAL_ERRORS]))
 			{
-				$value = implode("|", $value);
+				$ERRORS = $GLOBALS[GLOBAL_ERRORS];
 			}
-			$grouped_msgs = explode('|', $value);
-			if(is_array($grouped_msgs))
+		}
+			
+		if (count($ERRORS))
+		{
+			$msg = "msg = \"ERROR\\n\";";
+			foreach($ERRORS as $key => $value)
 			{
-				foreach($grouped_msgs as $val)
+				if (is_array($value))
 				{
-					$msg .= "\nmsg = msg + \"".str_replace("|", "", addslashes('* '.$val))."\\n\";";
+					$value = implode("|", $value);
+				}
+				$grouped_msgs = explode('|', $value);
+				if(is_array($grouped_msgs))
+				{
+					foreach($grouped_msgs as $val)
+					{
+						$msg .= "\nmsg = msg + \"".str_replace("|", "", addslashes('* '.$val))."\\n\";";
+					}
+				}
+				else
+				{
+					$msg .= "\nmsg = msg + \"".str_replace("|", "", addslashes('* '.$value))."\\n\";";
 				}
 			}
-			else
-			{
-				$msg .= "\nmsg = msg + \"".str_replace("|", "", addslashes('* '.$value))."\\n\";";
+			$str .= $msg;
+		}
+		
+		$str .= "\t
+			if (msg != \"\") {
+				alert(msg);
 			}
 		}
-		$str .= $msg;
+		  var oldonload = window.onload;
+		    window.onload = function() {
+		      if (oldonload) {
+		        oldonload();
+		      }
+		      setTimeout(displayErrors".$GLOBALS['__ERRORS_JS__'].", 0);
+		    }\n";
+		$str .= "// ]]>\n";
+		$str .= "</script>\n";
+		$GLOBALS['__ERRORS_JS__']++;
+		return $str;
 	}
-	
-	$str .= "\t
-		if (msg != \"\") {
-			alert(msg);
-		}
-	}
-	  var oldonload = window.onload;
-	    window.onload = function() {
-	      if (oldonload) {
-	        oldonload();
-	      }
-	      setTimeout(displayErrors".$GLOBALS['__ERRORS_JS__'].", 0);
-	    }\n";
-	$str .= "// ]]>\n";
-	$str .= "</script>\n";
-	$GLOBALS['__ERRORS_JS__']++;
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -714,53 +793,56 @@ function display_errors_js($ERRORS = NULL)
  * @param	mixed	collection of errors created by user
  * @return	string
  */
-function display_errors($ERRORS = NULL, $class = 'error')
+if (!function_exists('display_errors'))
 {
-	$CI =& get_instance();
-	$CI->load->library('form');
-	
-	$error_class = (!empty($CI->form->error_highlight_cssclass)) ? $CI->form->error_highlight_cssclass : 'error_highlight';
-	$str = '';
-	if (!isset($ERRORS) && defined('GLOBAL_ERRORS'))
+	function display_errors($ERRORS = NULL, $class = 'error')
 	{
-		if(!empty($GLOBALS[GLOBAL_ERRORS]))
+		$CI =& get_instance();
+		$CI->load->library('form');
+		
+		$error_class = (!empty($CI->form->error_highlight_cssclass)) ? $CI->form->error_highlight_cssclass : 'error_highlight';
+		$str = '';
+		if (!isset($ERRORS) && defined('GLOBAL_ERRORS'))
 		{
-			$ERRORS = $GLOBALS[GLOBAL_ERRORS];
-		}
-	}
-	
-	if (!empty($ERRORS) AND is_string($ERRORS))
-	{
-		$ERRORS = (array) $ERRORS;
-	}
-	
-	if (is_array($ERRORS) AND count($ERRORS)) {
-		$str .= "<ul class=\"".$class."\">\n";
-		foreach($ERRORS as $key => $value)
-		{
-			if (is_array($value))
+			if(!empty($GLOBALS[GLOBAL_ERRORS]))
 			{
-				$value = implode("\n", $value);
+				$ERRORS = $GLOBALS[GLOBAL_ERRORS];
 			}
-			$grouped_msgs = explode("\n", $value);
-			if (is_array($grouped_msgs))
+		}
+		
+		if (!empty($ERRORS) AND is_string($ERRORS))
+		{
+			$ERRORS = (array) $ERRORS;
+		}
+		
+		if (is_array($ERRORS) AND count($ERRORS)) {
+			$str .= "<ul class=\"".$class."\">\n";
+			foreach($ERRORS as $key => $value)
 			{
-				foreach($grouped_msgs as $val)
+				if (is_array($value))
 				{
-					$str .= "<li>".$val."</li>";
+					$value = implode("\n", $value);
 				}
-			} else {
-				$str .= "<li>".$value."<li>";
+				$grouped_msgs = explode("\n", $value);
+				if (is_array($grouped_msgs))
+				{
+					foreach($grouped_msgs as $val)
+					{
+						$str .= "<li>".$val."</li>";
+					}
+				} else {
+					$str .= "<li>".$value."<li>";
+				}
 			}
+			$str .= "</ul>\n";
 		}
-		$str .= "</ul>\n";
+		$str .= "<script type=\"text/javascript\">\n";
+		$str .= "// <![CDATA[\n";
+		$str .= "try { $(function(){ \$('.".$error_class." input:first').focus(); }); } catch(e){};\n";
+		$str .= "// ]]>\n";
+		$str .= "</script>\n";
+		return $str;
 	}
-	$str .= "<script type=\"text/javascript\">\n";
-	$str .= "// <![CDATA[\n";
-	$str .= "try { $(function(){ \$('.".$error_class." input:first').focus(); }); } catch(e){};\n";
-	$str .= "// ]]>\n";
-	$str .= "</script>\n";
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -771,9 +853,12 @@ function display_errors($ERRORS = NULL, $class = 'error')
  * @access	public
  * @return	boolean
  */
-function has_errors()
+if (!function_exists('has_errors'))
 {
-	return (defined('GLOBAL_ERRORS') && !empty($GLOBALS[GLOBAL_ERRORS]));
+	function has_errors()
+	{
+		return (defined('GLOBAL_ERRORS') && !empty($GLOBALS[GLOBAL_ERRORS]));
+	}
 }
 
 // --------------------------------------------------------------------
@@ -786,15 +871,18 @@ function has_errors()
  * @param	string key value for error message array
  * @return	boolean
  */
-function add_error($msg, $key = NULL)
+if (!function_exists('add_error'))
 {
-	if(defined('GLOBAL_ERRORS')) 
+	function add_error($msg, $key = NULL)
 	{
-		if(empty($key)) 
+		if(defined('GLOBAL_ERRORS')) 
 		{
-			$key = count($GLOBALS[GLOBAL_ERRORS]);
+			if(empty($key)) 
+			{
+				$key = count($GLOBALS[GLOBAL_ERRORS]);
+			}
+			$GLOBALS[GLOBAL_ERRORS][$key] = $msg;
 		}
-		$GLOBALS[GLOBAL_ERRORS][$key] = $msg;
 	}
 }
 
@@ -808,15 +896,17 @@ function add_error($msg, $key = NULL)
  * @param	string key value for error message array
  * @return	boolean
  */
-function add_errors($errors)
+if (!function_exists('add_errors'))
 {
-	$errors = (array) $errors;
-	foreach($errors as $key => $val)
+	function add_errors($errors)
 	{
-		add_error($val, $key);
+		$errors = (array) $errors;
+		foreach($errors as $key => $val)
+		{
+			add_error($val, $key);
+		}
 	}
 }
-
 // --------------------------------------------------------------------
 
 /**
@@ -826,20 +916,22 @@ function add_errors($errors)
  * @param	string key value for error message array
  * @return	string
  */
-function get_error($key = null)
+if (!function_exists('get_error'))
 {
-	if (defined('GLOBAL_ERRORS')) {
-		if(!empty($GLOBALS[GLOBAL_ERRORS][$key]))
-		{
-			return $GLOBALS[GLOBAL_ERRORS][$key];
-		}
-		else
-		{
-			return array_pop($GLOBALS[GLOBAL_ERRORS]);
+	function get_error($key = null)
+	{
+		if (defined('GLOBAL_ERRORS')) {
+			if(!empty($GLOBALS[GLOBAL_ERRORS][$key]))
+			{
+				return $GLOBALS[GLOBAL_ERRORS][$key];
+			}
+			else
+			{
+				return array_pop($GLOBALS[GLOBAL_ERRORS]);
+			}
 		}
 	}
 }
-
 
 // --------------------------------------------------------------------
 
@@ -849,14 +941,16 @@ function get_error($key = null)
  * @access	public
  * @return	array
  */
-function get_errors()
+if (!function_exists('get_errors'))
 {
-	if (defined('GLOBAL_ERRORS') AND !empty($GLOBALS[GLOBAL_ERRORS]))
+	function get_errors()
 	{
-		return $GLOBALS[GLOBAL_ERRORS];
+		if (defined('GLOBAL_ERRORS') AND !empty($GLOBALS[GLOBAL_ERRORS]))
+		{
+			return $GLOBALS[GLOBAL_ERRORS];
+		}
+		return NULL;
 	}
-	return NULL;
 }
-
 /* End of file validator_helper.php */
 /* Location: ./modules/fuel/helpers/validator_helper.php */

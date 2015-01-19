@@ -38,29 +38,32 @@
  * @param	array	An additional set of CURL options
  * @return	string
  */	
-function scrape_html($url, $post = array(), $opts = array())
+if (!function_exists('scrape_html'))
 {
-	$CI =& get_instance();
-	$CI->load->library('curl');
-	$CI->curl->initialize();
-	if (!empty($post))
+	function scrape_html($url, $post = array(), $opts = array())
 	{
-		$opts[CURLOPT_POST] = TRUE;
-		$opts[CURLOPT_POSTFIELDS] = $post;
-		$opts[CURLOPT_HTTPGET] = FALSE;
-	}
-	if (is_array($url))
-	{
-		foreach($url as $u)
+		$CI =& get_instance();
+		$CI->load->library('curl');
+		$CI->curl->initialize();
+		if (!empty($post))
 		{
-			$CI->curl->add_session($u, $opts);
+			$opts[CURLOPT_POST] = TRUE;
+			$opts[CURLOPT_POSTFIELDS] = $post;
+			$opts[CURLOPT_HTTPGET] = FALSE;
 		}
+		if (is_array($url))
+		{
+			foreach($url as $u)
+			{
+				$CI->curl->add_session($u, $opts);
+			}
+		}
+		else
+		{
+			$CI->curl->add_session($url, $opts);
+		}
+		return $CI->curl->exec();
 	}
-	else
-	{
-		$CI->curl->add_session($url, $opts);
-	}
-	return $CI->curl->exec();
 }
 
 // --------------------------------------------------------------------
@@ -73,38 +76,41 @@ function scrape_html($url, $post = array(), $opts = array())
  * @param	string	an XPath query to pass
  * @return	object
  */	
-function scrape_dom($url, $xpath_query = NULL)
+if (!function_exists('scrape_dom'))
 {
-	if (is_http_path($url))
+	function scrape_dom($url, $xpath_query = NULL)
 	{
-		$url = site_url($url);
-	}
-	
-	// turn off the warnings for bad html
-	$old_setting = libxml_use_internal_errors(TRUE); 
-	libxml_clear_errors(); 
-	$dom = new DOMDocument(); 
-	
-	if (!@$dom->loadHTMLFile($url))
-	{
-		return FALSE;
-	}
-	
-	if ($xpath_query)
-	{
-		$xpath = new DOMXPath($dom); 
-		$results = $xpath->query($xpath_query);
-	}
+		if (is_http_path($url))
+		{
+			$url = site_url($url);
+		}
+		
+		// turn off the warnings for bad html
+		$old_setting = libxml_use_internal_errors(TRUE); 
+		libxml_clear_errors(); 
+		$dom = new DOMDocument(); 
+		
+		if (!@$dom->loadHTMLFile($url))
+		{
+			return FALSE;
+		}
+		
+		if ($xpath_query)
+		{
+			$xpath = new DOMXPath($dom); 
+			$results = $xpath->query($xpath_query);
+		}
 
-	// change errors back to original settings
-	libxml_clear_errors(); 
-	libxml_use_internal_errors($old_setting); 
-	
-	if (isset($results))
-	{
-		return $results;
+		// change errors back to original settings
+		libxml_clear_errors(); 
+		libxml_use_internal_errors($old_setting); 
+		
+		if (isset($results))
+		{
+			return $results;
+		}
+		return $dom;
 	}
-	return $dom;
 }
 
 // --------------------------------------------------------------------
@@ -116,12 +122,14 @@ function scrape_dom($url, $xpath_query = NULL)
  * @param	string	URL of page to check
  * @return	boolean
  */	
-function is_valid_page($url)
+if (!function_exists('is_valid_page'))
 {
-	$CI =& get_instance();
-	$CI->load->library('curl');
-	return $CI->curl->is_valid($url);
+	function is_valid_page($url)
+	{
+		$CI =& get_instance();
+		$CI->load->library('curl');
+		return $CI->curl->is_valid($url);
+	}
 }
-
 /* End of file scraper_helper.php */
 /* Location: ./modules/fuel/helpers/scraper_helper.php */

@@ -36,11 +36,14 @@
  *
  * @return 	object
  */
-function CI() {
-    if (!function_exists('get_instance')) return FALSE;
+if (!function_exists('CI'))
+{
+	function CI() {
+	    if (!function_exists('get_instance')) return FALSE;
 
-    $CI =& get_instance();
-    return $CI;
+	    $CI =& get_instance();
+	    return $CI;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -52,28 +55,31 @@ function CI() {
  * @param	string	if set to 'all', will clear end the buffer and clean it
  * @return 	string	return buffered content
  */
-function capture($on = TRUE, $clean = 'all')
+if (!function_exists('capture'))
 {
-	$str = '';
-	if ($on)
+	function capture($on = TRUE, $clean = 'all')
 	{
-		ob_start();
-	}
-	else
-	{
-		$str = ob_get_contents();
-		if (!empty($str))
+		$str = '';
+		if ($on)
 		{
-			if ($clean == 'all')
-			{
-				ob_end_clean();
-			}
-			else if ($clean)
-			{
-				ob_clean();
-			}
+			ob_start();
 		}
-		return $str;
+		else
+		{
+			$str = ob_get_contents();
+			if (!empty($str))
+			{
+				if ($clean == 'all')
+				{
+					ob_end_clean();
+				}
+				else if ($clean)
+				{
+					ob_clean();
+				}
+			}
+			return $str;
+		}
 	}
 }
 
@@ -85,10 +91,13 @@ function capture($on = TRUE, $clean = 'all')
  * @param	mixed	possible true value
  * @return 	string	formatted true value
  */
-function is_true_val($val)
+if (!function_exists('is_true_val'))
 {
-	$val = strtolower($val);
-	return ($val == 'y' || $val == 'yes' || $val === 1  || $val == '1' || $val== 'true' || $val == 't');
+	function is_true_val($val)
+	{
+		$val = strtolower($val);
+		return ($val == 'y' || $val == 'yes' || $val === 1  || $val == '1' || $val== 'true' || $val == 't');
+	}
 }
 
 // --------------------------------------------------------------------
@@ -99,30 +108,33 @@ function is_true_val($val)
  * @param	mixed	possible serialized string
  * @return 	boolean
  */
-function is_serialized_str($data)
+if (!function_exists('is_serialized_str'))
 {
-	if ( !is_string($data))
-		return false;
-	$data = trim($data);
-	if ( 'N;' == $data )
-		return true;
-	if ( !preg_match('/^([adObis]):/', $data, $badions))
-		return false;
-	switch ( $badions[1] ) :
-	case 'a' :
-	case 'O' :
-	case 's' :
-		if ( preg_match("/^{$badions[1]}:[0-9]+:.*[;}]\$/s", $data))
+	function is_serialized_str($data)
+	{
+		if ( !is_string($data))
+			return false;
+		$data = trim($data);
+		if ( 'N;' == $data )
 			return true;
-		break;
-	case 'b' :
-	case 'i' :
-	case 'd' :
-		if ( preg_match("/^{$badions[1]}:[0-9.E-]+;\$/", $data))
-			return true;
-		break;
-	endswitch;
-	return false;
+		if ( !preg_match('/^([adObis]):/', $data, $badions))
+			return false;
+		switch ( $badions[1] ) :
+		case 'a' :
+		case 'O' :
+		case 's' :
+			if ( preg_match("/^{$badions[1]}:[0-9]+:.*[;}]\$/s", $data))
+				return true;
+			break;
+		case 'b' :
+		case 'i' :
+		case 'd' :
+			if ( preg_match("/^{$badions[1]}:[0-9.E-]+;\$/", $data))
+				return true;
+			break;
+		endswitch;
+		return false;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -133,14 +145,17 @@ function is_serialized_str($data)
  * @param	mixed	possible serialized string
  * @return 	boolean
  */
-function is_json_str($data)
+if (!function_exists('is_json_str'))
 {
-	if (is_string($data))
+	function is_json_str($data)
 	{
-		$json = json_decode($data, TRUE);
-		return ($json !== NULL AND $data != $json);
+		if (is_string($data))
+		{
+			$json = json_decode($data, TRUE);
+			return ($json !== NULL AND $data != $json);
+		}
+		return NULL;
 	}
-	return NULL;
 }
 
 // --------------------------------------------------------------------
@@ -152,39 +167,42 @@ function is_json_str($data)
  * @param	boolean	Return string
  * @return 	string
  */
-function print_obj($obj, $return = FALSE)
+if (!function_exists('print_obj'))
 {
-	$str = "<pre>";
-	if (is_array($obj))
+	function print_obj($obj, $return = FALSE)
 	{
-		// to prevent circular references
-		if (is_a(current($obj), 'Data_record'))
+		$str = "<pre>";
+		if (is_array($obj))
 		{
-			foreach($obj as $key => $val)
+			// to prevent circular references
+			if (is_a(current($obj), 'Data_record'))
 			{
-				$str .= '['.$key.']';
-				$str .= $val;
+				foreach($obj as $key => $val)
+				{
+					$str .= '['.$key.']';
+					$str .= $val;
+				}
+			}
+			else
+			{
+				$str .= print_r($obj, TRUE);
 			}
 		}
 		else
 		{
-			$str .= print_r($obj, TRUE);
+			if (is_a($obj, 'Data_record'))
+			{
+				$str .= $obj;
+			}
+			else
+			{
+				$str .= print_r($obj, TRUE);
+			}
 		}
+		$str .= "</pre>";
+		if ($return) return $str;
+		echo $str;
 	}
-	else
-	{
-		if (is_a($obj, 'Data_record'))
-		{
-			$str .= $obj;
-		}
-		else
-		{
-			$str .= print_r($obj, TRUE);
-		}
-	}
-	$str .= "</pre>";
-	if ($return) return $str;
-	echo $str;
 }
 
 // --------------------------------------------------------------------
@@ -195,8 +213,12 @@ function print_obj($obj, $return = FALSE)
  * @param	string	Error message
  * @return 	void
  */
-function log_error($error) {
-	log_message('error', $error);
+if (!function_exists('log_error'))
+{
+	function log_error($error) 
+	{
+		log_message('error', $error);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -206,9 +228,12 @@ function log_error($error) {
  *
  * @return 	boolean
  */
-function is_dev_mode()
+if (!function_exists('is_dev_mode'))
 {
-	return (ENVIRONMENT != 'production');
+	function is_dev_mode()
+	{
+		return (ENVIRONMENT != 'production');
+	}
 }
 
 // --------------------------------------------------------------------
@@ -218,9 +243,12 @@ function is_dev_mode()
  *
  * @return 	boolean
  */
-function is_environment($environment)
+if (!function_exists('is_environment'))
 {
-	return (strtolower(ENVIRONMENT) == strtolower($environment));
+	function is_environment($environment)
+	{
+		return (strtolower(ENVIRONMENT) == strtolower($environment));
+	}
 }
 
 /* End of file utility_helper.php */
