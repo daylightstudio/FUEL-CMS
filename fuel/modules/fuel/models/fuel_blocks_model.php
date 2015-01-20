@@ -71,7 +71,7 @@ class Fuel_blocks_model extends Base_module_model {
 			$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, published', FALSE);	
 		}
 		
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		if (empty($just_count))
 		{
 			foreach($data as $key => $val)
