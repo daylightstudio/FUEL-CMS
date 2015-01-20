@@ -829,6 +829,7 @@ class Module extends Fuel_base_controller {
 		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
+		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
 
 		$this->fuel->admin->set_titlebar($crumbs);

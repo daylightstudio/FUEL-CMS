@@ -838,6 +838,10 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function related_items($params = array())
 	{
+		if (empty($params))
+		{
+			return '';
+		}
 		return array();
 	}
 
