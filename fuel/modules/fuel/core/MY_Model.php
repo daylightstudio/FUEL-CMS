@@ -1142,7 +1142,7 @@ class MY_Model extends CI_Model {
 		
 		if (strpos($val, '.') === FALSE AND strpos($val, '(') === FALSE)
 		{
-			$key = $this->table_name().'.'.$val;
+			$val = $this->table_name().'.'.$val;
 		}
 
 		// don't need extra model sql stuff so just use normal active record'
