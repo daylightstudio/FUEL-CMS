@@ -1128,11 +1128,10 @@ class MY_Model extends CI_Model {
 			{
 				$key = $this->key_field;
 			}
-			
-			if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
-			{
-				$key = $this->table_name().'.'.$key;
-			}
+		}
+		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
+		{
+			$key = $this->table_name().'.'.$key;
 		}
 
 		if (empty($val))
@@ -1141,6 +1140,11 @@ class MY_Model extends CI_Model {
 			$val = $fields[1];
 		}
 		
+		if (strpos($val, '.') === FALSE AND strpos($val, '(') === FALSE)
+		{
+			$key = $this->table_name().'.'.$val;
+		}
+
 		// don't need extra model sql stuff so just use normal active record'
 		if (!empty($order) AND is_bool($order))
 		{
