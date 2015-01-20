@@ -935,6 +935,20 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * A method that will load arbitrary variables to the create/edit view
+	 *
+	 * @access	public
+	 * @param	array 	An array of data (optional)
+	 * @return	void
+	 */	
+	public function vars($data = array())
+	{
+		return array();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Common query that will automatically hide non-published/active items from view on the front end
 	 *
 	 * @access	public
@@ -1311,6 +1325,22 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Returns the field parameters.
+	 *
+	 * @access  public
+	 * @param	string 	A field name
+	 * @return	mixed 	The field
+	 */
+	public function get_field($key)
+	{
+		if (array_key_exists($key, $this->fields))
+		{
+			return $this->fields[$key];
+		}
+		return NULL;
+	}
+
+	/**
 	 * Sets the values.
 	 *
 	 * @access	public
@@ -1335,6 +1365,22 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 		return $this->values;
 	}
 
+	/**
+	 * Returns the values.
+	 *
+	 * @access  public
+	 * @param	string 	A field name
+	 * @return	mixed 	The value
+	 */
+	public function get_value($key)
+	{
+		if (array_key_exists($key, $this->values))
+		{
+			return $this->values[$key];
+		}
+		return NULL;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1348,15 +1394,23 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	 */	
 	public function set($field, $param, $value = NULL)
 	{
-		if (is_string($param))
+		if (is_string($field) AND is_string($param))
 		{
 			$this->fields[$field][$param] = $value;
 		}
 		elseif(is_array($field))
 		{
-			foreach($field as $key => $params)
+			foreach($field as $key => $val)
 			{
-				$this->set($key, $params);
+				if (isset($value) AND is_int($key))
+				{
+					
+					$this->set($val, $param, $value);
+				}
+				else
+				{
+					$this->set($key, $param, $val);
+				}
 			}
 		}
 		else
@@ -1408,6 +1462,32 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 		{
 			return NULL;
 		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes fields
+	 *
+	 * @access	public
+	 * @param	array 	An array of fields to remove
+	 * @return	object 	Instance of Base_model_fields
+	 */	
+	public function remove($fields)
+	{
+		if (is_string($fields))
+		{
+			$fields = preg_split('#\s*,\s*#', $fields);
+		}
+		$fields = (array) $fields;
+		foreach($fields as $field)
+		{
+			if (isset($this->fields[$field]))
+			{
+				unset($this->fields[$field]);	
+			}
+		}
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -1589,18 +1669,10 @@ class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
 	{
 		if (preg_match( "/^set_(.*)/", $method, $found))
 		{
-			if (is_array($args[0]))
-			{
-				foreach($args[0] as $key => $val)
-				{
-					$this->set($key, $found[1], $val);
-				}
-			}
-			else
-			{
-				$this->set($args[0], $found[1], $args[1]);
-				$this->fields[$found[1]] = $args[0];
-			}
+			$arg1 = $args[0];
+			$arg2 = $found[1];
+			$arg3 = (isset($args[1])) ? $args[1] : NULL;
+			$this->set($arg1, $arg2, $arg3);
 			return $this;
 		}
 		else

@@ -1032,7 +1032,7 @@ class Module extends Fuel_base_controller {
 			$this->preview_path = $this->module_obj->url($data);	
 		}
 
-		$shell_vars = $this->_shell_vars($id, $action);
+		$shell_vars = $this->_shell_vars($id, $action, $data);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
 
 		$vars = array_merge($shell_vars, $form_vars);
@@ -1243,21 +1243,25 @@ class Module extends Fuel_base_controller {
 	 * @access	protected
 	 * @param	int		The ID value of the record to edit
 	 * @param	string	The name of the action to apply to the main form element
+	 * @param	array	An array of data information
 	 * @return	array
 	 */	
-	protected function _shell_vars($id = NULL, $action = 'create')
+	protected function _shell_vars($id = NULL, $action = 'create', $data = array())
 	{
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
 		
 		// other variables
+		if (method_exists($this->model, 'vars'))
+		{
+			$model_vars = $this->model->vars($data);
+			$this->load->vars($model_vars);
+		}
 		$vars['id'] = $id;
 		$vars['versions'] = ($this->displayonly === FALSE AND $this->archivable) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] = $action;
-		
-		$vars['module'] = $this->module;
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		
 		return $vars;
