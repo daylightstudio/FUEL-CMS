@@ -932,7 +932,7 @@ class Menu {
 				$attrs .= ' class="'.$this->active_class.'"';
 			}
 
-			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : site_url($val['location']);
+			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : url_to($val['location']);
 			$str .= '<a href="'.$location.'"'.$attrs.'>'.$label.'</a>';
 		}
 		else

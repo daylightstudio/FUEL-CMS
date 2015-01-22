@@ -31,7 +31,7 @@
 // --------------------------------------------------------------------
 
 /**
- * Site URL
+ * This is just an alias to the normal CI site_url function but was added mainly to prevent conflicts with other systems like Wordpress (yes... sometimes the two need to be integrated)
  * Added simple return if the url begins with http
  *
  * @access	public
@@ -40,9 +40,9 @@
  * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
  * @return	string
  */
-if (!function_exists('site_url'))
+if (!function_exists('url_to'))
 {
-	function site_url($uri = '', $https = NULL, $language = NULL)
+	function url_to($uri = '', $https = NULL, $language = NULL)
 	{
 		if (is_http_path($uri)) return $uri;
 		if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0))
@@ -74,6 +74,26 @@ if (!function_exists('site_url'))
 		}
 	}
 }
+
+// --------------------------------------------------------------------
+
+/**
+ * Site URL which is an alias to the url_to function
+ *
+ * @access	public
+ * @param	string	the URI string
+ * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
+ * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
+ * @return	string
+ */
+if (!function_exists('site_url'))
+{
+	function site_url($uri = '', $https = NULL, $language = NULL)
+	{
+		return url_to($uri, $https, $language);
+	}
+}
+
 // --------------------------------------------------------------------
 
 /**
