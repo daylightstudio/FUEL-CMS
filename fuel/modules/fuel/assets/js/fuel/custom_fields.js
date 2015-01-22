@@ -532,17 +532,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 			// now replace any placeholder values in the folder... required for new pages that may not have a value
 			$inputs = $(context).closest('form').find('select, textarea')
-			.add('input').not('input[type="radio"], input[type="checkbox"]')
+			.add('input', context).not('input[type="radio"], input[type="checkbox"], input[type="button"]')
 			.add('input[type="radio"]:checked, input[type="checkbox"]:checked', context);
 			
 			var replaceValues = {};
 			$inputs.each(function(i){
 				var id = ($(this).is('input[type="radio"], input[type="checkbox"]')) ? $(this).attr('name'): $(this).attr('id');
-				var idArr = id.split('--');
-				id = idArr[idArr.length -1];
-				replaceValues[id] = $(this).val();
-				var regex = new RegExp('\{' + id + '\}', 'g');
-				selectedAssetFolder = selectedAssetFolder.replace(regex, replaceValues[id]);
+				if (id){
+					var idArr = id.split('--');
+					id = idArr[idArr.length -1];
+					replaceValues[id] = $(this).val();
+					var regex = new RegExp('\{' + id + '\}', 'g');
+					selectedAssetFolder = selectedAssetFolder.replace(regex, replaceValues[id]);
+				}
 			})
 
 			// legacy code
