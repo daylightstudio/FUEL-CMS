@@ -385,8 +385,7 @@ class Fuel_pages_model extends Base_module_model {
 	{
 		$CI = get_instance();
 		$this->_editable_by_user();
-		$user = $CI->fuel->auth->user_data();
-		$values['last_modified_by'] = $user['id'];
+		$values['last_modified_by'] = (!empty($this->limit_to_user_field) AND !empty($values['last_modified_by'])) ? $values['last_modified_by'] : $CI->fuel->auth->user_data('id');
 		return $values;
 	}
 	
