@@ -1669,8 +1669,8 @@ class Form_builder {
 			{
 				$id_name = $params['orig_name'];
 			}
-			
-			$str .= "<label for=\"".Form::create_id($id_name)."\" id=\"label_".Form::create_id($id_name)."\">";
+			$styles = (isset($params['nowrap']) AND $params['nowrap'] === TRUE) ? ' style="white-space: nowrap;"' : '';
+			$str .= "<label for=\"".Form::create_id($id_name)."\" id=\"label_".Form::create_id($id_name)."\"".$styles.">";
 		}
 		if ($this->tooltip_labels)
 		{
