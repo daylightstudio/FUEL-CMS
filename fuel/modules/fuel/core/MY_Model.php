@@ -2065,23 +2065,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function validate($record, $run_hook = FALSE)
 	{
-		$values = array();
-		if (is_array($record))
-		{
-			$values = $record;
-		} 
-		else if (is_object($record)) 
-		{
-			if ($record instanceof Data_record)
-			{
-				$values = $record->values();
-			}
-			else
-			{
-				$values = get_object_vars($record);
-			}
-		}
-		
+		$values = $this->normalize_data($record);
+	
 		if ($run_hook)
 		{
 			$values = $this->on_before_validate($values);
