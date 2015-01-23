@@ -223,7 +223,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	boolean	lower case the name (optional)
-	 * @param	boolean return the record clas name (optional)
+	 * @param	boolean return the record class name (optional)
 	 * @return	array
 	 */	
 	public function short_name($lower = FALSE, $record_class = FALSE)
