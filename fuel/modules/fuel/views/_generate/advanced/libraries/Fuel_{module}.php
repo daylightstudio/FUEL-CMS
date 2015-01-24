@@ -28,7 +28,7 @@ class Fuel_{module} extends Fuel_advanced_module {
 	 *
 	 * The constructor can be passed an array of config values
 	 */
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->initialize($params);
@@ -46,7 +46,7 @@ class Fuel_{module} extends Fuel_advanced_module {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function initialize($params)
+	public function initialize($params)
 	{
 		parent::initialize($params);
 		$this->set_params($this->_config);

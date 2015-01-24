@@ -6,19 +6,19 @@ class Careers_model extends Base_module_model {
 	public $required = array('job_title');
 	public $display_unpublished_if_logged_in = TRUE;
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('careers'); // table name
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'publish_date', $order = 'desc')
+	public function list_items($limit = NULL, $offset = NULL, $col = 'publish_date', $order = 'desc')
 	{
 		$this->db->select('id, job_title, publish_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 	
-	function on_before_save($values)
+	public function on_before_save($values)
 	{
 		if($values['publish_date'] == '0000-00-00')
 		{
@@ -27,7 +27,7 @@ class Careers_model extends Base_module_model {
 		return $values;
 	}
 	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
 		$fields['publish_date']['comment'] = 'If blank, will default to current date/time'; 
@@ -35,7 +35,7 @@ class Careers_model extends Base_module_model {
 		return $fields;
 	}
 	
-	function _common_query()
+	public function _common_query()
 	{
 		parent::_common_query();
 		$this->db->order_by('publish_date', 'desc');
@@ -46,7 +46,7 @@ class Careers_model extends Base_module_model {
 
 class Career_model extends Base_module_record {
 	
-	function get_skillset_requirements_formatted()
+	public function get_skillset_requirements_formatted()
 	{
 		$this->_CI->load->helper('html');
 		$lis = explode("\n", $this->skills_needed);
