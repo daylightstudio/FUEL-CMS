@@ -2931,6 +2931,7 @@ class Form_builder {
 		$form_builder->cancel_value = '';
 		$form_builder->reset_value = '';
 		$form_builder->other_actions = '';
+		$form_builder->required_text = '';
 		
 		$form_builder->name_prefix = $this->name_prefix;
 		$form_builder->name_array = $this->name_array;
