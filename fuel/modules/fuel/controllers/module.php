@@ -63,7 +63,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		// stop here if the module is disabled
-		if ($params['disabled'] === TRUE)
+		if (empty($params) OR $params['disabled'] === TRUE)
 		{
 			show_404();
 		}
