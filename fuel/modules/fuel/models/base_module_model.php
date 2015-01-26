@@ -38,6 +38,7 @@
  */
 
 require_once(APPPATH.'core/MY_Model.php');
+require_once('base_model_helpers.php');
 
 class Base_module_model extends MY_Model {
 	
@@ -49,6 +50,9 @@ class Base_module_model extends MY_Model {
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
 	public $form_fields_class = ''; // a class that can extend Base_model_fields and manipulate the form_fields method
+	public $validation_class = ''; // a class that can extend Base_model_validation and manipulate the validate method by adding additional validation to the model
+	public $related_items_class = ''; // a class that can extend Base_model_related_items and manipulate what is displayed in the related items area (right side of page)
+	
 	public $limit_to_user_field = ''; // a user ID field in your model that can be used to limit records based on the logged in user
 	public static $tables = array(); // cached array of table names that can be accessed statically
 	protected $CI = NULL; // reference to the main CI object
@@ -318,6 +322,7 @@ class Base_module_model extends MY_Model {
 		$this->filters = (array) $this->filters;
 		$where_or = array();
 		$where_and = array();
+
 		foreach($this->filters as $key => $val)
 		{
 			if (is_int($key))
@@ -838,7 +843,19 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function related_items($params = array())
 	{
-		return array();
+		if (!empty($this->related_items_class) AND class_exists($this->related_items_class))
+		{
+			$related_items = new $this->related_items_class($params, $this);
+			return $related_items->render();
+		}
+		else
+		{
+			if (empty($params))
+			{
+				return '';
+			}
+			return array();
+		}
 	}
 
 	/**
@@ -911,7 +928,7 @@ class Base_module_model extends MY_Model {
 			$fields['active']['options'] = array('yes' => $yes, 'no' => $no);
 		}
 
-		if (!empty($this->form_fields_class))
+		if (!empty($this->form_fields_class) AND class_exists($this->form_fields_class))
 		{
 			$fields = new $this->form_fields_class($fields, $values, $this);
 		}
@@ -930,6 +947,20 @@ class Base_module_model extends MY_Model {
 	public function get_module()
 	{
 		return $this->fuel->modules->get(strtolower(get_class($this)));
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * A method that will load arbitrary variables to the create/edit view
+	 *
+	 * @access	public
+	 * @param	array 	An array of data (optional)
+	 * @return	void
+	 */	
+	public function vars($data = array())
+	{
+		return array();
 	}
 
 	// --------------------------------------------------------------------
@@ -1085,7 +1116,24 @@ class Base_module_model extends MY_Model {
 		$this->_editable_by_user();
 	}
 
+	// --------------------------------------------------------------------
 
+	/**
+	 * Validate the data before saving. Overwrites the MY_Model::validate() method to look at validation_class property first and run it.
+	 *
+	 * @access	public
+	 * @param	mixed	object or array of values
+	 * @param	boolean	run on_before_validate hook or not (optional)
+	 * @return	array
+	 */	
+	public function validate($record, $run_hook = FALSE)
+	{
+		if (!empty($this->validation_class) AND class_exists($this->validation_class))
+		{
+			$validation = new $this->validation_class($record, $this);
+		}
+		return parent::validate($record, $run_hook);
+	}
 }
 
 
@@ -1192,421 +1240,4 @@ class Base_module_record extends Data_record {
 		return $output;
 	}
 	
-}
-
-// ------------------------------------------------------------------------
-
-/**
- * Module model fields class
- *
- * @package		FUEL CMS
- * @subpackage	Models
- * @category	Models
- * @author		David McReynolds @ Daylight Studio
- */
-class Base_model_fields implements ArrayAccess, Countable, IteratorAggregate {
-
-	protected $fields = array();
-	protected $values = array();
-	protected $parent_model = NULL;
-	protected $CI = NULL;
-	protected $fuel = NULL;
-
-	public function __construct($fields = array(), $values = array(), $parent_model = NULL)
-	{
-		$this->set_fields($fields);
-		$this->set_values($values);
-		$this->set_parent_model($parent_model);
-		$this->CI =& get_instance();
-		$this->fuel =& $this->CI->fuel;
-		$fields =& $this->get_fields();
-		$this->initialize($this->get_fields(), $this->get_values(), $this->get_parent_model());
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * A placeholder for initialization of field data. This method will most likely be overwritten
-	 *
-	 * @access	public
-	 * @return	void
-	 */	
-	public function initialize($fields, $values, $parent_model)
-	{
-		// put in your own fields initialization code
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Sets the parent model.
-	 *
-	 * @access	public
-	 * @param	object 	A reference to the parent model
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function set_parent_model($model)
-	{
-		$this->parent_model = $model;
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns the parent model.
-	 *
-	 * @access	public
-	 * @return	object 	A reference to the parent models
-	 */	
-	public function get_parent_model()
-	{
-		return $this->parent_model;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Sets the fields initially.
-	 *
-	 * @access	public
-	 * @param	array 	The fields to set
-	 * @param	boolean Determines whether or not to remove the order values set for the fields
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function set_fields($fields, $remove_order = TRUE)
-	{
-		if ($fields instanceof Base_model_fields)
-		{
-			$fields = $fields->get_fields();
-		}
-
-		$this->fields = $fields;
-
-		if ($remove_order)
-		{
-			foreach($this->fields as $key => $field)
-			{
-				if (array_key_exists('order', $this->fields[$key]))
-				{
-					unset($this->fields[$key]['order']);
-				}
-			}
-		}
-
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns the fields.
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
-	public function get_fields()
-	{
-		return $this->fields;
-	}
-
-	/**
-	 * Sets the values.
-	 *
-	 * @access	public
-	 * @param	array 	The values to set
-	 * @return	object 	Instance of Base_model_fields
-	 */
-	public function set_values($values)
-	{
-		$this->values = (array) $values;
-		return $this;
-
-	}
-	
-	/**
-	 * Returns the values.
-	 *
-	 * @access  public
-	 * @return	array 	The values
-	 */
-	public function get_values()
-	{
-		return $this->values;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Sets a field's parameter value.
-	 *
-	 * @access	public
-	 * @param	string 	A field name
-	 * @param	string 	The parameter of the field to set
-	 * @param	mixed 	The value of the parameter to set
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function set($field, $param, $value = NULL)
-	{
-		if (is_string($param))
-		{
-			$this->fields[$field][$param] = $value;
-		}
-		elseif(is_array($field))
-		{
-			foreach($field as $key => $params)
-			{
-				$this->set($key, $params);
-			}
-		}
-		else
-		{
-			if ($value === TRUE AND isset($this->fields[$field]))
-			{
-				$this->fields[$field] = array_merge($this->fields[$field], $param);	
-			}
-			else
-			{
-				$this->fields[$field] = $param;
-			}
-		}
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Gets a field's parameter value.
-	 *
-	 * @access	public
-	 * @param	string 	A field name
-	 * @param	string 	The parameter of the field to set
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function get($field, $param = NULL)
-	{
-		if (array_key_exists($field, $this->fields))
-		{
-			if (!empty($param))
-			{
-				if (array_key_exists($param, $this->fields[$field]))
-				{
-					return $this->fields[$field][$param];	
-				}
-				else
-				{
-					return NULL;
-				}
-				
-			}
-			else
-			{
-				return $this->fields[$field];
-			}
-		}
-		else
-		{
-			return NULL;
-		}
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Clears the fields and values.
-	 *
-	 * @access	public
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function clear()
-	{
-		$this->fields = array();
-		$this->values = array();
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Groups fields together to create a tab
-	 *
-	 * @access	public
-	 * @param	string 	The label of the tab
-	 * @param	array 	The fields to put under the tab
-	 * @param	array 	The order of the fields
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function tab($label, $fields = array(), $order_start = NULL)
-	{
-		$this->fields[$label] = array('type' => 'fieldset', 'class' => 'tab');
-		$i = 1;
-		foreach($fields as $key => $field)
-		{
-			// if a string is passed in the array, then we'll assume it's the key to the field
-			if (is_int($key))
-			{
-				$key = $field;
-				$field = $this->fields[$field];
-			}
-
-			// if the field already exists, then we unset it to give it a natural order
-			if (isset($this->fields[$key]))
-			{
-				unset($this->fields[$key]);
-			}
-
-			if (!is_null($order_start))
-			{
-				$field['order'] = $order_start + $i;	
-			}
-			
-			$this->fields[$key] = $field;
-			$i++;
-		}
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Reorder the fields
-	 *
-	 * @access	public
-	 * @param	array 	The order of the fields
-	 * @return	object 	Instance of Base_model_fields
-	 */	
-	public function reorder($order)
-	{
-		foreach($order as $key => $val)
-		{
-			$this->fields[$val]['order'] = $key + 1;
-		}
-		return $this;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Get an iterator for the items.
-	 *
-	 * @access	public
-	 * @return ArrayIterator
-	 */
-	public function getIterator()
-	{
-		return new ArrayIterator($this->fields);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Count the number of items in the collection.
-	 *
-	 * @access	public
-	 * @return int
-	 */
-	public function count()
-	{
-		return count($this->fields);
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Determine if an item exists at an offset.
-	 *
-	 * @access	public
-	 * @param  mixed  $key
-	 * @return bool
-	 */
-	public function offsetExists($key)
-	{
-		return array_key_exists($key, $this->fields);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Get an item at a given offset.
-	 *
-	 * @access	public
-	 * @param  mixed  $key
-	 * @return mixed
-	 */
-	public function &offsetGet($key)
-	{
-		$ref =& $this->fields[$key];
-		return $ref;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Set the item at a given offset.
-	 *
-	 * @access	public
-	 * @param  mixed  $key
-	 * @param  mixed  $value
-	 * @return void
-	 */
-	public function offsetSet($key, $value)
-	{
-		if (is_null($key))
-		{
-			$this->fields[] = $value;
-		}
-		else
-		{
-			$this->fields[$key] = $value;
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Unset the item at a given offset.
-	 *
-	 * @access	public
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function offsetUnset($key)
-	{
-		unset($this->fields[$key]);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Magic method that will allow for mass assignment of a parameter across multiple fields.
-	 *
-	 * @access	public
-	 * @param  string 	Method name
-	 * @param  array 	The arguments to pass to the method   
-	 * @return mixed
-	 */
-	public function __call($method, $args)
-	{
-		if (preg_match( "/^set_(.*)/", $method, $found))
-		{
-			if (is_array($args[0]))
-			{
-				foreach($args[0] as $key => $val)
-				{
-					$this->set($key, $found[1], $val);
-				}
-			}
-			else
-			{
-				$this->set($args[0], $found[1], $args[1]);
-				$this->fields[$found[1]] = $args[0];
-			}
-			return $this;
-		}
-		else
-		{
-			throw new Exception('Invalid method call on Base_model_fields');
-		}
-		
-	}
 }

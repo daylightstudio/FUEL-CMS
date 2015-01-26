@@ -7,19 +7,19 @@ class Events_model extends Base_module_model {
 	public $required = array('name');
 	public $parsed_fields = array('description', 'description_formatted', 'excerpt', 'excerpt_formatted');
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('events'); // table name
 	}
 
-	function list_items($limit = null, $offset = null, $col = 'name', $order = 'asc')
+	public function list_items($limit = null, $offset = null, $col = 'name', $order = 'asc')
 	{
 		$this->db->select('id, name, start_date, end_date, published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
 		return $data;
 	}
 	
-	function on_before_clean($values)
+	public function on_before_clean($values)
 	{
 		if (empty($value['slug']))
 		{
@@ -28,13 +28,13 @@ class Events_model extends Base_module_model {
 		return $values;
 	}
 	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields();
 		return $fields;
 	}
 	
-	function _common_query()
+	public function _common_query()
 	{
 		parent::_common_query();
 		$this->db->order_by('start_date asc');
@@ -44,18 +44,18 @@ class Events_model extends Base_module_model {
 
 class Event_model extends Base_module_record {
 	
-	function get_start_date_formatted($format = 'F')
+	public function get_start_date_formatted($format = 'F')
 	{
 		return date($format, strtotime($this->start_date));
 	}
 	
 
-	function get_date_range()
+	public function get_date_range()
 	{
 		return date_range_string($this->start_date, $this->end_date);
 	}
 	
-	function get_image_path()
+	public function get_image_path()
 	{
 		return img_path($this->image);
 	}

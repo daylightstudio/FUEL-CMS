@@ -223,7 +223,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	boolean	lower case the name (optional)
-	 * @param	boolean return the record clas name (optional)
+	 * @param	boolean return the record class name (optional)
 	 * @return	array
 	 */	
 	public function short_name($lower = FALSE, $record_class = FALSE)
@@ -1128,11 +1128,10 @@ class MY_Model extends CI_Model {
 			{
 				$key = $this->key_field;
 			}
-			
-			if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
-			{
-				$key = $this->table_name().'.'.$key;
-			}
+		}
+		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
+		{
+			$key = $this->table_name().'.'.$key;
 		}
 
 		if (empty($val))
@@ -1141,6 +1140,11 @@ class MY_Model extends CI_Model {
 			$val = $fields[1];
 		}
 		
+		if (strpos($val, '.') === FALSE AND strpos($val, '(') === FALSE)
+		{
+			$val = $this->table_name().'.'.$val;
+		}
+
 		// don't need extra model sql stuff so just use normal active record'
 		if (!empty($order) AND is_bool($order))
 		{
@@ -2061,23 +2065,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function validate($record, $run_hook = FALSE)
 	{
-		$values = array();
-		if (is_array($record))
-		{
-			$values = $record;
-		} 
-		else if (is_object($record)) 
-		{
-			if ($record instanceof Data_record)
-			{
-				$values = $record->values();
-			}
-			else
-			{
-				$values = get_object_vars($record);
-			}
-		}
-		
+		$values = $this->normalize_data($record);
+	
 		if ($run_hook)
 		{
 			$values = $this->on_before_validate($values);

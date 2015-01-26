@@ -63,7 +63,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		// stop here if the module is disabled
-		if ($params['disabled'] === TRUE)
+		if (empty($params) OR $params['disabled'] === TRUE)
 		{
 			show_404();
 		}
@@ -288,23 +288,27 @@ class Module extends Fuel_base_controller {
 			$has_delete_permission = $this->fuel->auth->has_permission($this->permission, "delete") ? '1' : '0';
 
 			// set data table actions... look first for item_actions set in the fuel_modules
-			$edit_func = '
+			/*$edit_func = '
 			$CI =& get_instance();
 			$link = "";';
 
 			if ($has_edit_permission)
 			{
 				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
-				{
-					$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
-					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				{	
+					echo  $cols[$CI->model->limit_to_user_field];
+					if (empty($CI->model->limit_to_user_field) OR (!empty($CI->model->limit_to_user_field) AND (!empty($cols[$CI->model->limit_to_user_field])) AND $cols[$CI->model->limit_to_user_field] = $CI->fuel->auth->user_data("id")))
+					{
+						$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+						$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
+						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+					}
 				}';	
 			}
 
 			$edit_func .= 'return $link;';
 
-			$edit_func = create_function('$cols', $edit_func);
+			$edit_func = create_function('$cols', $edit_func);*/
 
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$delete_func = '
@@ -829,6 +833,7 @@ class Module extends Fuel_base_controller {
 		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
+		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
 
 		$this->fuel->admin->set_titlebar($crumbs);
@@ -1032,7 +1037,7 @@ class Module extends Fuel_base_controller {
 			$this->preview_path = $this->module_obj->url($data);	
 		}
 
-		$shell_vars = $this->_shell_vars($id, $action);
+		$shell_vars = $this->_shell_vars($id, $action, $data);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
 
 		$vars = array_merge($shell_vars, $form_vars);
@@ -1243,21 +1248,25 @@ class Module extends Fuel_base_controller {
 	 * @access	protected
 	 * @param	int		The ID value of the record to edit
 	 * @param	string	The name of the action to apply to the main form element
+	 * @param	array	An array of data information
 	 * @return	array
 	 */	
-	protected function _shell_vars($id = NULL, $action = 'create')
+	protected function _shell_vars($id = NULL, $action = 'create', $data = array())
 	{
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
 		
 		// other variables
+		if (method_exists($this->model, 'vars'))
+		{
+			$model_vars = $this->model->vars($data);
+			$this->load->vars($model_vars);
+		}
 		$vars['id'] = $id;
 		$vars['versions'] = ($this->displayonly === FALSE AND $this->archivable) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] = $action;
-		
-		$vars['module'] = $this->module;
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		
 		return $vars;

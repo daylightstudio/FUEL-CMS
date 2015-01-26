@@ -20,40 +20,42 @@ class {model_name}_model extends Base_module_model {
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 	public $display_unpublished_if_logged_in = FALSE;
 	public $form_fields_class = '';  // a class that can extend Base_model_fields and manipulate the form_fields method
+	public $validation_class = ''; // a class that can extend Base_model_validation and manipulate the validate method by adding additional validation to the model
+	public $related_items_class = ''; // a class that can extend Base_model_related_items and manipulate what is displayed in the related items area (right side of page)
 	protected $friendly_name = ''; // a friendlier name of the group of objects
 	protected $singular_name = ''; // a friendly singular name of the object
 
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('{table}'); // table name
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'asc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'asc', $just_count = FALSE)
 	{
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
 		return $fields;
 	}
 	
-	function on_before_save($values)
+	public function on_before_save($values)
 	{
-		parent::on_before_save($values);
+		$values = parent::on_before_save($values);
 		return $values;
 	}
 
-	function on_after_save($values)
+	public function on_after_save($values)
 	{
 		parent::on_after_save($values);
 		return $values;
 	}
 
-	function _common_query()
+	public function _common_query()
 	{
 		parent::_common_query();
 
