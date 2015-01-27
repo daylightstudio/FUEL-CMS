@@ -737,7 +737,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 				var $form = $field.closest('form');
 
-				$fieldContainer = $('#' + fieldId, context).closest('td.value');
+				$fieldContainer = $('#' + fieldId, context).closest('td.field');
 				$field.closest('form').trigger('form-pre-serialize');
 
 				// refresh value
@@ -939,7 +939,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		$('.linked', context).each(function(i){
 
 			// go all the way up to the value containing element because error messages insert HTML that won't allow us to use prev()
-			var linkedInfo = $(this).closest('.value').find('.linked_info').text();
+			var linkedInfo = $(this).closest('.field').find('.linked_info').text();
 			if (linkedInfo.length){
 				bindLinked($(this).attr('id'), eval('(' + linkedInfo + ')'));
 			}
@@ -1330,8 +1330,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				var data = {};
 				data[ajaxDataKeyField] = $(this).val();
 
-				var xtraDataStr = $(_this).closest('.value').find('.dependent_data').text();
-				var origValue = $(_this).closest('.value').find('.orig_value').text();
+				var xtraDataStr = $(_this).closest('.field').find('.dependent_data').text();
+				var origValue = $(_this).closest('.field').find('.orig_value').text();
 				var xtraData = {};
 				if (xtraDataStr.length){
 					xtraData = eval('(' + xtraDataStr + ')');
