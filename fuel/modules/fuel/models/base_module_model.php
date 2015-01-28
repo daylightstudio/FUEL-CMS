@@ -898,6 +898,69 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Generates an HTML data table of list view data for the embedded list view
+	 * @param  array  $embedded_list_params Params that will be used for filtering & urls
+	 * @param  array  $list_cols            An array of columns to be shown in the data table
+	 * @return string                       The HTML data table
+	 */
+	public function get_embedded_list_items($params, $list_cols = array())
+	{
+		$module =& $this->get_module();
+		if (empty($list_cols))
+		{
+			$list_cols = array($this->key_field(), $module->info('display_field'));
+		}
+		elseif(!in_array($this->key_field(), $list_cols))
+		{
+			$list_cols[] = $this->key_field();
+		}
+		$this->CI->load->library('data_table', array('sort_js_func' => '', 'actions_field' => 'last'));
+		
+		$data_table =& $this->CI->data_table;
+		$data_table->clear();
+
+		if (!empty($params['where']))
+		{
+			$this->db->where($params['where']);
+		}
+
+		$list_items = $this->list_items();
+		if (empty($list_items))
+		{
+			return '';
+		}
+
+		if ($this->has_auto_increment())
+		{
+			$data_table->only_data_fields = array($this->key_field());
+		}
+		if ($this->fuel->auth->has_permission($module->info('permission'), "edit"))
+		{
+			$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}');
+			$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+		}
+
+		$data_table->assign_data($list_items, $list_cols);
+		return $data_table->render();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * The ajax method to be called for the embedded list view
+	 *
+	 * @access	public
+	 * @param  	array  GET and POST arams that will be used for filtering
+	 * @return	string The HTML to display
+	 */	
+	public function ajax_embedded_list($params)
+	{
+		return $this->get_embedded_list_items($params);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Add FUEL specific changes to the form_fields method
 	 *
 	 * @access	public
