@@ -1121,12 +1121,13 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <div class="toggle_block_off">
 	<p>This field allows you to have one field determine the options of another field:</p>
 	<ul>
-		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on.</li>
+		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on</li>
 		<li><strong>url</strong>: the URL for the AJAX request.</li>
-		<li><strong>multiple</strong>: determines if the field is a multi-select or not.</li>
-		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field.</li>
-		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX.</li>
-		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select.</li>
+		<li><strong>multiple</strong>: determines if the field is a multi-select or not</li>
+		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field</li>
+		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX</li>
+		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select</li>
+		<li><strong>func</strong>: a callable function to be used as the field output. The default output will be a dropdown select</li>
 	</ul>
 
 	<h4>Example</h4>
