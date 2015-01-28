@@ -14,6 +14,7 @@ abstract class Abstract_base_model_helper {
 
 	protected $values = array();
 	protected $parent_model = NULL;
+	protected $record = NULL;
 	protected $CI = NULL;
 	protected $fuel = NULL;
 
@@ -96,6 +97,26 @@ abstract class Abstract_base_model_helper {
 		}
 		return NULL;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the record object.
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function record()
+	{
+		if (!isset($this->record))
+		{
+			$key_field = $this->get_parent_model()->key_field();
+			$id = $this->get_value($key_field);
+			$this->record = (!empty($id)) ? $this->get_parent_model()->find_by_key($id) : FALSE;	
+		}
+		return $this->record;
+	}
+
 }
 
 
@@ -753,25 +774,6 @@ class Base_model_related_items extends Abstract_base_model_helper  {
 	}
 
 	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns the record object.
-	 *
-	 * @access	public
-	 * @return	object
-	 */	
-	public function record()
-	{
-		if (!isset($this->record))
-		{
-			$key_field = $this->get_parent_model()->key_field();
-			$id = $this->get_value($key_field);
-			$this->record = (!empty($id)) ? $this->get_parent_model()->find_by_key($id) : FALSE;	
-		}
-		return $this->record;
-	}
-
-		// --------------------------------------------------------------------
 	
 	/**
 	 * Returns the variables for the view.
