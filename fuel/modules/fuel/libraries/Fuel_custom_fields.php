@@ -1991,13 +1991,13 @@ class Fuel_custom_fields {
 
 	public function dependent($params)
 	{
-		if (empty($params['depends_on']))
+		if (empty($params['depends_on']) AND empty($params['func']))
 		{
 			show_error('The depends_on parameters must be provided for the dependent field.');
 		}
 
 		$form_builder =& $params['instance'];
-
+		$params['depends_on'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
 		$params['url'] = (empty($params['url']) AND isset($this->CI->module_uri)) ? fuel_url($this->CI->module_uri.'/ajax/options') : $params['url'];
 		$params['ajax_data_key_field'] = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : '';
 		$params['additional_ajax_data'] = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
@@ -2019,14 +2019,23 @@ class Fuel_custom_fields {
 		$str .= "<div class=\"orig_value\" style=\"display: none;\">";
 		$str .= json_encode($params['value']);
 		$str .= "</div>\n";
-		$params['mode'] = 'select';
-		if (!empty($params['multiple']))
+
+		if (!empty($params['func']))
 		{
-			$str .= $this->multi($params);
+			$params['type'] = 'custom';
+			$str .= $form_builder->create_custom($params['func'], $params);
 		}
 		else
 		{
-			$str .= $this->inline_edit($params);	
+			$params['mode'] = 'select';
+			if (!empty($params['multiple']))
+			{
+				$str .= $this->multi($params);
+			}
+			else
+			{
+				$str .= $this->inline_edit($params);	
+			}
 		}
 		return $str;
 	}
