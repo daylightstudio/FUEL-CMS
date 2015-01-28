@@ -1,15 +1,16 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 /**
- * CodeIgniter
+ * FUEL CMS
+ * http://www.getfuelcms.com
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
  *
- * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
- * @link		http://codeigniter.com
- * @since		Version 1.0
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
  * @filesource
  */
 // ------------------------------------------------------------------------
