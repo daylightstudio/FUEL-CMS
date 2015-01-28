@@ -42,7 +42,7 @@
 <?php endif; ?>
 
 
-<div id="fuel_main_content_inner">
+<div id="fuel_main_content_inner" class="has_related">
 
 	<p class="instructions"><?=$this->instructions?></p>
 
