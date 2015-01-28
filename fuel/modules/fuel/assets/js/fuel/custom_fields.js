@@ -1305,7 +1305,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $dependent = $(dependentSelector, context);
 
 			$dependent.addClass('dependee');
-			$dependent.on('change', function(){
+			$(context).on('change', dependentSelector, function(){
 				var val = $(this).val();
 				var url = $(_this).data('ajax_url');
 
