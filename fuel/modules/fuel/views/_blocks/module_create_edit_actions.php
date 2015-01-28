@@ -27,7 +27,7 @@
 			<?php endif; ?>
 			
 			<?php if ($this->fuel->auth->module_has_action('duplicate')) : ?>
-				<li><a href="<?=fuel_url($this->module_uri.'/create', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
+				<li><a href="<?=fuel_url($this->module_uri.'/duplicate', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
 			<?php endif; ?>
 			
 			<?php if ($this->fuel->auth->module_has_action('replace') AND !empty($others) AND $this->fuel->auth->has_permission($this->permission, 'edit') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
