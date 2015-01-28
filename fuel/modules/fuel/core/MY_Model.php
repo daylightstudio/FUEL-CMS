@@ -1232,6 +1232,30 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Will first look for a record with the past values and if it doesn't exist, will create a new one
+	 *
+	 <code>
+	$example = $this->examples_model->find_or_create(array('slug' => 'the-force'));
+	</code>
+	 *
+	 * @access	public
+	 * @param	array	an array of values to first search for and if they don't exist, will create a new record
+	 * @return	boolean
+	 */	
+	public function find_or_create($values = array())
+	{
+		$record = $this->find_one($values);
+		$key_field = $this->key_field();
+		if (!isset($record->$key_field))
+		{
+			$record = $this->create($values);
+		}
+		return $record;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Clean the data before saving
 	 *
 	 <code>
@@ -3237,6 +3261,11 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
 					{
+						// if it is an object, then we extract it's value
+						if (is_object($foreign_id) AND method_exists($foreign_id, 'key_value'))
+						{
+							$foreign_id = $foreign_id->key_value();
+						}
 						$CI->$relationships_model->save(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id, $fields['foreign_table'] => $CI->$related_model->table_name, $fields['foreign_key'] => $foreign_id));
 					}
 				}
@@ -3290,6 +3319,11 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
 					{
+						// if it is an object, then we extract it's value
+						if (is_object($candidate_id) AND method_exists($candidate_id, 'key_value'))
+						{
+							$candidate_id = $candidate_id->key_value();
+						}
 						$CI->$relationships_model->save(array($fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id, $fields['candidate_table'] => $CI->$related_model->table_name, $fields['candidate_key'] => $candidate_id));
 					}
 				}
@@ -5163,6 +5197,32 @@ class Data_record {
 		return $output;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the key field of the record
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function key_field()
+	{
+		return $this->_parent_model->key_field();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the key value of the record
+	 *
+	 * @access	public
+	 * @return	int 	(usually and integer)
+	 */	
+	public function key_value()
+	{
+		$key_field = $this->_parent_model->key_field();
+		return $this->$key_field;
+	}
 
 	// --------------------------------------------------------------------
 	
