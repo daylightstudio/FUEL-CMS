@@ -31,7 +31,8 @@ CKEDITOR.plugins.add( 'fuellink', {
 					element = element.getAscendant( 'a', true );
 					if (element){
 						var href = element.getAttribute('href');
-						input = href.replace(/^\{site_url\('(.*)'\)\}/g, function(match, contents, offset, s) {
+						var regex = "^" + myMarkItUpSettings.parserLeftDelimiter(true) + "site_url\('(.*)'\)" + myMarkItUpSettings.parserRightDelimiter(true);
+						input = href.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);

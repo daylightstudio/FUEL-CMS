@@ -58,6 +58,7 @@ class Fuel extends Fuel_advanced_module {
 									'navigation',
 									'notification',
 									'pages',
+									'parser',
 									'posts',
 									'pagevars',
 									'permissions',

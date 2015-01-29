@@ -824,21 +824,20 @@ class Fuel_page extends Fuel_base_library {
 			if ($this->layout->is_double_parse())
 			{
 				// first parse any template like syntax
-				$this->CI->parser->parse_string($output, $vars, TRUE);
+				$this->layout->parse($output, $vars);
 
 				// then grab variables again
 				$ci_vars = $this->CI->load->get_vars();
 
 				// then parse again to get any variables that were set from within a block
 				$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $ci_vars, TRUE);
-				$output = $this->CI->parser->parse_string($output, $ci_vars, TRUE);
+				$output = $this->layout->parse($output, $ci_vars);
 				unset($ci_vars);
 			}
 			else
 			{
 				// parse any template like syntax
-				$output = $this->CI->parser->parse_string($output, $vars, TRUE);
-
+				$output = $this->layout->parse($output, $vars);
 			}
 			
 			// call layout hook
@@ -978,7 +977,7 @@ class Fuel_page extends Fuel_base_library {
 
 				// now parse any template like syntax
 				$vars = $this->CI->load->get_vars();
-				$body = $this->CI->parser->parse_string($body, $vars, TRUE);
+				$body = $this->layout->parse($body, $vars);
 			}
 			else
 			{

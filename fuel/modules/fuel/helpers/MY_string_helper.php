@@ -246,125 +246,46 @@ if (!function_exists('safe_htmlentities'))
 // --------------------------------------------------------------------
 
 /**
- * Convert PHP syntax to Dwoo templating syntax
+ * Convert PHP syntax to templating syntax
  *
  * @param 	string 	string to evaluate
  * @return	string
  */
-if (!function_exists('php_to_template_syntax'))
+function php_to_template_syntax($str, $engine = NULL)
 {
-	function php_to_template_syntax($str)
+	$CI =& get_instance();
+	if (empty($engine))
 	{
-		// order matters!!!
-		$CI = &get_instance();
-		$CI->load->library('parser');
-		
-		$l_delim = $CI->parser->l_delim;
-		$r_delim = $CI->parser->r_delim;
-		
-		$find = array('$CI->', '$this->', '<?php endforeach', '<?php endif', '<?php echo ', '<?php ', '<?=');
-		$replace = array('$', '$', $l_delim.'/foreach', $l_delim.'/if', $l_delim, $l_delim, $l_delim);
-
-		// translate HTML comments NOT! Javascript
-		
-		// close ending php
-		$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', $str);
-
-		$str = str_replace($find, $replace, $str);
-		
-		// TODO javascript escape... commented out because it's problematic... will need to revisit if it makes sense'
-		//$str = preg_replace('#((?<!\{literal\}).*)<script(.+)>(.+)<\/script>.*(?!\{\\\literal\})#Us', "$1\n{literal}\n<script$2>$3</script>\n{\literal}\n", $str);
-		
-		// foreach cleanup
-		$str = preg_replace('#'.$l_delim.'\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*'.$r_delim.'#U', $l_delim.'foreach $1 $2 $4'.$r_delim, $str); // with and without keys
-
-		// remove !empty
-		$callback = create_function('$matches', '
-			if (!empty($matches[2]))
-			{
-				return "'.$l_delim.'".$matches[1].$matches[3];
-			}
-			else
-			{
-				return "'.$l_delim.'".$matches[1]."!".$matches[3];
-			}');
-		
-		$str = preg_replace_callback('#'.$l_delim.'(.+)(!)\s*?empty\((.+)\)#U', $callback, $str);
-		
-		// remove paranthesis from within if conditional
-		//$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
-		$callback2 = create_function('$matches', '
-			$CI =& get_instance();
-			$allowed_funcs = $CI->parser->allowed_functions();
-			$str = $matches[0];
-			$ldlim = "___<";
-			$rdlim = ">___";
-
-			// loop through all allowed function and escape any paranthis
-			foreach($allowed_funcs as $func)
-			{
-				$regex = "#(.*)".preg_quote($func)."\((.*)\)(.*)#U";
-				$str = preg_replace($regex, "$1".$func.$ldlim."$2".$rdlim."$3", $str);
-			}
-
-			// now replace any other paranthesis
-			$str = str_replace(array("(", ")"), array(" ", ""), $str);
-			$str = str_replace(array($ldlim, $rdlim), array("(", ")"), $str);
-			return $str;');
-		
-		$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
-		// fix arrays
-		$callback = create_function('$matches', '
-			if (strstr($matches[0], "=>"))
-			{
-				$key_vals = explode(",", $matches[0]);
-				$return_arr = array();
-				foreach($key_vals as $val)
-				{
-					@list($k, $v) = explode("=>", $val);
-					$k = str_replace(array("\"", "\'"), "", $k);
-					$return_arr[] = trim($k)."=".trim($v);
-				}
-				$return = implode(" ", $return_arr);
-				return $return;
-			}
-			return $matches[0];
-			');
-		
-		$str = preg_replace_callback('#(array\()(.+)(\))#U', $callback, $str);
-		return $str;
+		$engine = $CI->fuel->config('parser_engine');
 	}
+	return $CI->fuel->parser->set_engine($engine)->php_to_syntax($str);
 }
 
 // --------------------------------------------------------------------
-
 /**
- * Convert string to Dwoo templating syntax
+ * Convert string to  templating syntax
  *
  * @param 	string 	string to evaluate
  * @param 	array 	variables to parse with string
- * @param 	boolean	whether to use the simple CI parsing or the Dwoo parsing
- * @param 	string 	the cache ID (for Dwoo only)
+ * @param 	string	the templating engine to use
+ * @param 	array 	an array of configuration variables like compile_dir, delimiters, allowed_functions, refs and data
  * @return	string
  */
-if (!function_exists('parse_template_syntax'))
+function parse_template_syntax($str, $vars = array(), $engine = NULL, $config = array())
 {
-	function parse_template_syntax($str, $vars = array(), $simple = FALSE, $cache_id = NULL)
+	$CI =& get_instance();
+
+	// for backwards compatability
+	if ($engine === TRUE)
 	{
-		$CI =& get_instance();
-		if (!isset($CI->parser))
-		{
-			$CI->load->library('parser');
-		}
-		if ($simple)
-		{
-			return $CI->parser->parse_simple($str, $vars, TRUE);
-		}
-		else
-		{
-			return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);	
-		}
+		$engine = 'ci';
 	}
+	elseif (empty($engine))
+	{
+		$engine = $CI->fuel->config('parser_engine');
+	}
+
+	return $CI->fuel->parser->set_engine($engine, $config)->parse_string($str, $vars, TRUE);	
 }
 
 /* End of file MY_string_helper.php */

@@ -36,7 +36,8 @@ CKEDITOR.plugins.add( 'fuelimage', {
 						element.setAttribute('data-cke-saved-src', src);
 
 						// remove the img_path
-						img = src.replace(/^\{img_path\('(.+)'\)\}/, function(match, contents, offset, s) {
+						var regex = "^" + myMarkItUpSettings.parserLeftDelimiter(true) + "img_path\\('(.+)'\\)" + myMarkItUpSettings.parserRightDelimiter(true);
+						img = src.replace(new RexExp(regex), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
@@ -53,7 +54,8 @@ CKEDITOR.plugins.add( 'fuelimage', {
 				imgFolder = editor.element.getAttribute('data-img_folder');
 				imgOrder = editor.element.getAttribute('data-img_order');
 				myMarkItUpSettings.displayAssetInsert(img, {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(imgHtml){
-					imgHtml = imgHtml.replace(/\{img_path\('(.+)'\)\}/g, function(match, contents, offset, s) {
+				var regex = myMarkItUpSettings.parserLeftDelimiter(true) + "img_path\\('(.+)'\\)" + myMarkItUpSettings.parserRightDelimiter(true);
+				imgHtml = imgHtml.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 		   										var img = jqx.config.assetsImgPath + contents;
 		   										return img;
 	    								}

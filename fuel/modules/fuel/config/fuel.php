@@ -386,6 +386,15 @@ $config['page_uri_prefix'] = '';
 // View the page from the admin in a new window or within a modal window
 $config['view_in_new_window'] = TRUE;
 
+/*
+|--------------------------------------------------------------------------
+| Parsing engine settings
+|--------------------------------------------------------------------------
+*/
+
+// The parsing engine to use for FUEL. Options are dwoo, ci and now 'twig'!
+$config['parser_engine'] = 'dwoo';
+
 // Runs the parsing process twice for pages created in the CMS which allows
 // for variables to be set from within blocks and layout fields and can
 // bubble up to the layout view file (takes slightly longer to render
@@ -394,6 +403,30 @@ $config['view_in_new_window'] = TRUE;
 // layout variable. This can also be set as a property of a layout object
 $config['double_parse'] = FALSE;
 
+// The directory to put the parsed compiled files
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
+
+// The delimiters used by the parsing engine
+$config['parser_delimiters'] = array(
+				'tag_comment'   => array('{#', '#}'), // Twig only
+				'tag_block'     => array('{%', '%}'), // Twig only
+				'tag_variable'  => array('{{', '}}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}'
+				'interpolation' => array('#{', '}'), // Twig only
+			);
+
+// Functions allowed by the parsing engine
+$config['parser_allowed_functions'] = array(
+	'strip_tags', 'date', 
+	'detect_lang','lang',
+	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
+	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
+	'quote', 'safe_mailto', // HTML/URL specific
+	'session_flashdata', 'session_userdata', // Session specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment', 'auto_typography', 'current_url' // CI specific
+);
+
+// Object references passed to the parsing engine
+$config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'user_agent');
 
 /*
 |--------------------------------------------------------------------------
