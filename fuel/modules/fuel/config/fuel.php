@@ -410,7 +410,7 @@ $config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
 $config['parser_delimiters'] = array(
 				'tag_comment'   => array('{#', '#}'), // Twig only
 				'tag_block'     => array('{%', '%}'), // Twig only
-				'tag_variable'  => array('{{', '}}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}'
+				'tag_variable'  => array('{', '}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}'
 				'interpolation' => array('#{', '}'), // Twig only
 			);
 

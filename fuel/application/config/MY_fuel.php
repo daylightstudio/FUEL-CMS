@@ -57,29 +57,21 @@ $config['assets_upload_max_height']  = 768;
 // ckeditor: suitable for clients; shows what the output will look like in the page (http://ckeditor.com/)
 $config['text_editor'] = 'markitup';
 
-// ck editor specific settings... if you use a PHP array, it will use json_encode
-$config['ck_editor_settings'] = "{
-	toolbar:[
-			['Bold','Italic','Strike'],
-			['Format'],
-			['FUELImage','HorizontalRule'],
-			['NumberedList','BulletedList'],
-			['FUELLink','FUELUnlink'],
-			['Undo','Redo','RemoveFormat'],
-			['PasteFromWord','PasteText'],
-			['Preview'],
-			['Maximize']
-		],
-	contentsCss: '".WEB_PATH."assets/css/main.css',
-	htmlEncodeOutput: false,
-	entities: false,
-	bodyClass: 'ckeditor',
-	protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g],
-	toolbarCanCollapse: false,
-	extraPlugins: 'fuellink,fuelimage',
-	removePlugins: 'link,image',
-	allowedContent: true
-	}";
+
+// The parsing engine to use for FUEL. Options are dwoo, ci and now 'twig'!
+$config['parser_engine'] = 'dwoo';
+
+// The directory to put the parsed compiled files
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
+
+// The delimiters used by the parsing engine
+$config['parser_delimiters'] = array(
+				'tag_comment'   => array('{#', '#}'), // Twig only
+				'tag_block'     => array('{%', '%}'), // Twig only
+				'tag_variable'  => array('{', '}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}' and Dwoo is '{', '}'
+				'interpolation' => array('#{', '}'), // Twig only
+			);
+
 
 /* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure
 $config['settings'] = array();
