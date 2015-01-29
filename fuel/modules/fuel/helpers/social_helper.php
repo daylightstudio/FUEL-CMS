@@ -74,13 +74,14 @@ if (!function_exists('og'))
  * Creates the popup window javascript for the share links and writes the javascript only once to the page.
  *
  * @access	public
- * @param	int		The width of the popup javascript window
- * @param	int		The height of the popup javascript window
+ * @param	int		The width of the popup javascript window (optional)
+ * @param	int		The height of the popup javascript window (optional)
+ * @param	string	The selector used for the popup window. Default is .popup (optional)
  * @return	string
  */
 if (!function_exists('social_popup_js'))
 {
-	function social_popup_js($width = 640, $height = 500)
+	function social_popup_js($width = 640, $height = 500, $selector = '.popup')
 	{
 		// only write the javascript one time so we create a static variable
 		static $output;
@@ -89,7 +90,7 @@ if (!function_exists('social_popup_js'))
 			<script>
 			if (typeof(jQuery) != \'undefined\'){
 				jQuery(function(){
-					jQuery(\'.popup\').on(\'click\', function(e){
+					jQuery(\'.'.$selector.'\').on(\'click\', function(e){
 						var url = $(this).attr(\'href\');
 						window.open(url,\'popUpWindow\',\'width='.$width.',height='.$height.',left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes\');
 						return false;
