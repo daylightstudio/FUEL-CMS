@@ -3559,7 +3559,7 @@ class Form_builder {
 			{
 				if (is_array($js))
 				{
-					$this->js = array_merge($this->js, $js);
+					$this->js = $this->js + $js;
 				}
 				else if (!in_array($js, $this->js))
 				{
@@ -3895,7 +3895,6 @@ class Form_builder {
 
 		if (!empty($_js))
 		{
-
 			// loop through to generate javascript
 			foreach($_js as $type => $js)
 			{
@@ -3913,7 +3912,7 @@ class Form_builder {
 					$str_files .= js($js);
 				}
 				// if a string with a slash in it, then we will assume it's just a single file to load'
-				else if (strpos($js, '/') !== FALSE AND strpos($js, '<script') === FALSE)
+				else if ((strpos($js, '/') !== FALSE OR preg_match('#.+\.js$#U', $js)) AND strpos($js, '<script') === FALSE)
 				{
 					$str_files .= js($js);
 				}
@@ -3932,7 +3931,7 @@ class Form_builder {
 				// else it will simply call a function if it exists
 				else
 				{
-					$str .= "if (".$js." != undefined){\n";
+					$str .= "if (typeof(".$js.") == 'function'){\n";
 					$str .= "\t".$js."();\n";
 					$str .= "}\n";
 				}
