@@ -1350,4 +1350,26 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		$('.dependee', context).trigger('change');
 	}
 
+	fuel.fields.embedded_list = function(context, options){
+		var $fuel = $("#form");
+
+		var embeddedListModalClose = function() {
+			var $embedded_list = $fuel.find("#"+$embeddedList.attr("id")+" .embedded_list_items");
+			$embedded_list.empty().addClass("loader");
+			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $embeddedList.data("module-url") + "/ajax/embedded_list", $embeddedList.data("embedded-list-params"));
+			embeddedListAjax.done(function(data) {
+				$embedded_list.removeClass("loader").html(data);
+				fuel._initToolTips();
+			});
+		};
+		var embeddedListModalOpen = function(e) {
+			e.preventDefault();
+			$embeddedList = $(this).parents(".embedded_list_container");
+			var iframe_url = $(this).attr("href");
+			var html = '<iframe src="' + iframe_url + '" id="embedded_list_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", embeddedListModalClose);
+		};
+		$fuel.on("click", ".action_edit", embeddedListModalOpen);
+	}
+
 }

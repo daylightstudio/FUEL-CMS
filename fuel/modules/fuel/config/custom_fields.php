@@ -184,5 +184,13 @@ $fields['dependent'] = array(
 	'js_function' => 'fuel.fields.dependent_field'
 );
 
+// Embedded list field
+$fields['embedded_list'] = array(
+	'class'    => array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function' => 'embedded_list',
+	'filepath' => '',
+	'js_function' => 'fuel.fields.embedded_list'
+);
+
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

@@ -212,6 +212,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#toggler">toggler</a></li>
 		<li><a href="#colorpicker">colorpicker</a></li>
 		<li><a href="#dependent">dependent</a></li>
+		<li><a href="#embedded_list">embedded list</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -1122,7 +1123,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field allows you to have one field determine the options of another field:</p>
 	<ul>
 		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on</li>
-		<li><strong>url</strong>: the URL for the AJAX request.</li>
+		<li><strong>url</strong>: the URL for the AJAX request</li>
 		<li><strong>multiple</strong>: determines if the field is a multi-select or not</li>
 		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field</li>
 		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX</li>
@@ -1137,12 +1138,39 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<?php 
 	$fields = array();
-	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	$fields['dependent_example'] = array('type' => 'dependent', 'depends_on' => 'language', 'url' => fuel_url('my_module/ajax/options'), 'multiple' => TRUE, 'replace_selector' => '.language_depends');
 	form_builder_example($fields);
 	?>
 	
 </div>
 
+<h3 id="embedded_list" class="toggle">embedded list</h3>
+<div class="toggle_block_off">
+	<p>This field creates an unsortable list view of another module's data using the <a href="<?=user_guide_url('libraries/data_table')?>">Data_table</a> class. 
+		Each row has an edit button that displays a modal window of the edit screen from that module. The base_module_model has 2 methods on it to help facilitate this class. The
+		first is the <a href="<?=user_guide_url('libraries/base_module_model#func_get_embedded_list_items')?>">get_embedded_list_items</a> method which renders the HTML for the table. 
+		The second is the <a href="<?=user_guide_url('models/base_module_model#func_ajax_embedded_list')?>">ajax_embedded_list</a> method that is called via AJAX to refresh the table after editing data in the modal window.
+	</p>
+	<ul>
+		<li><strong>module</strong>: the module whose data will be displayed</li>
+		<li><strong>create_button_label</strong>: the label of the create button</li>
+		<li><strong>create_url_params</strong>: additional intialization parametrs to pass when creating a new record.</li>
+		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
+		<li><strong>method_params</strong>: a key value array of parameters to pass to the model method. If a key of <dfn>where</dfn> is passed, it will automatically apply the where condition to the list view</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'method_params' => array('where' => array('context' => 'test')));
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'method_params' => array('where' => array('context' => 'test')));
+	//form_builder_example($fields);
+	?>
+	
+</div>
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
 to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:

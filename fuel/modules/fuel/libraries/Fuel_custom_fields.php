@@ -757,6 +757,29 @@ class Fuel_custom_fields {
 		$this->CI->load->library('parser');
 		$form_builder =& $params['instance'];
 
+		if (!empty($params['module']) && empty($params['fields']))
+		{
+			$adv_module = '';
+			$module = $params['module'];
+			if (is_array($module))
+			{
+				// Advanced Module
+				$adv_module = key($module);
+				$module = current($module);
+				$module_url = "{$adv_module}/{$module}";
+			}
+			$module_model = "{$module}_model";
+			$this->CI->load->module_model($adv_module, $module_model);
+			$module_form_fields = $this->CI->$module_model->form_fields();
+			if (!empty($module_form_fields)) {
+				$params['fields'] = $module_form_fields;
+			}
+			$module_data = $this->CI->$module_model->find_all_array(array('module_id' => $params['module_id']));
+			if (!empty($module_data)) {
+				$params['value'] = $module_data;
+			}
+		}
+
 		$str = '';
 		if (empty($params['fields']))
 		{
@@ -2038,6 +2061,42 @@ class Fuel_custom_fields {
 			}
 		}
 		return $str;
+	}
+
+	/**
+	 * Can used to pull a list view from another module.
+	 * @param  array  $params An array of params to create the embedded list view
+	 * @return string         The HTML for the embedded list view
+	 */
+	public function embedded_list($params)
+	{
+		if (empty($params['module'])) 
+		{
+			show_error('Please specify a module for the embedded list view.');
+		}
+
+		$form_builder =& $params['instance'];
+		$CI =& get_instance();
+
+		$adv_module = 'app';
+		$module =& $this->fuel->modules->get($params['module'], FALSE);
+		$model =& $module->model();
+
+		$module_url = $module->info('module_uri');
+		$create_button_label = (!empty($params['create_button_label'])) ? $params['create_button_label'] : lang('btn_create') .' '. $model->singular_name();
+
+		$create_url_params = (!empty($params['create_url_params'])) ? http_build_query($params['create_url_params']) : '';
+		$create_url = fuel_url("{$module_url}/inline_create?{$create_url_params}");
+
+		$embedded_list_model_method = (!empty($params['method']) && method_exists($CI->$model, $params['method'])) ? $params['get_embedded_list_items'] : 'get_embedded_list_items';
+		$embedded_list_params = (!empty($params['method_params'])) ? $params['method_params'] : array();
+		$embedded_list_params['module_url'] = $module_url;
+		$embedded_list_items = $model->$embedded_list_model_method($embedded_list_params);
+
+		$embedlistid = 'embedlist-'.sha1($module->name() . mt_rand());
+		$embedded_list_view = '<div class="embedded_list_container" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'><div class="embedded_list_actions"><a href="'.$create_url.'" class="btn_field action_edit">'.$create_button_label.'</a></div>
+			<div class="embedded_list_items" style="margin-top: 20px;">'.$embedded_list_items.'</div></div>';
+		return $embedded_list_view;
 	}
 }
 
