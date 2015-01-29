@@ -62,6 +62,7 @@ $(function(){
 $this->form_builder->set_fields($fields);
 $this->form_builder->render();
 </pre>
+<p>Lastly, any string value not beginning with "&lt;script" or ending in ".js" will be treated as a javascript function name that will be called upon rendering of the form.</p>
 
 <h3>Custom Field</h3>
 <p>One of the most powerful new features of FUEL 1.0 is the addition of custom form fields with <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>. A custom field is a combination of custom 
