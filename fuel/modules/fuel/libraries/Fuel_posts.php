@@ -86,19 +86,6 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Returns an array of the modules used for the posts advanced module.
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	public function modules()
-	{
-		return array_keys($this->config('modules'));
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
 	 * Returns the base URI for posts.
 	 *
 	 * @access	public
@@ -363,7 +350,7 @@ class Fuel_posts extends Fuel_base_library {
 	public function pagination($total_rows, $base_url)
 	{
 		$this->CI->load->library('pagination');
-		$config = $this->config('pagination');
+		$config = $this->module_config('pagination');
 		$config['per_page'] = $this->per_page();
 		$config['total_rows'] = $total_rows;
 		$config['base_url'] = $base_url;
@@ -876,7 +863,7 @@ class Fuel_posts extends Fuel_base_library {
 	public function per_page()
 	{
 		$per_page = $this->page_config('per_page');
-		$limit = (!empty($per_page)) ? $per_page : $this->config('per_page');
+		$limit = (!empty($per_page)) ? $per_page : $this->module_config('per_page');
 		return $limit;
 	}
 
