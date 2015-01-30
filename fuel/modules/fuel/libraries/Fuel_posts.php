@@ -82,7 +82,7 @@ class Fuel_posts extends Fuel_base_library {
 	{
 		return $this->module;
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -929,7 +929,7 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	public function page_config($key)
 	{
-		$config = $this->module_config($this->page_type);
+		$config = $this->module_config($this->page_type());
 		if (is_string($config))
 		{
 			$config = array('view' => $config);
@@ -1032,13 +1032,9 @@ class Fuel_posts extends Fuel_base_library {
 	public function vars()
 	{
 		// first check the page config
-		$vars = (array) $this->page_config('vars');
+		$page_vars = (array) $this->page_config('vars');
 		$module_vars = (array) $this->module_config('vars');
-		if (!empty($module_vars))
-		{
-			$vars = array_merge($module_vars, $vars);
-		}
-
+		
 
 		// find the module which have a pages configuration that matches the current URI
 		if (!isset($this->module))
@@ -1106,7 +1102,7 @@ class Fuel_posts extends Fuel_base_library {
 			}
 		}
 
-		$vars = array_merge($this->_common_vars(), $vars);
+		$vars = array_merge($this->_common_vars(), $module_vars, $page_vars, $vars);
 		return $vars;
 	}
 
