@@ -1356,7 +1356,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var embeddedListModalClose = function() {
 			var $embedded_list = $fuel.find("#"+$embeddedList.attr("id")+" .embedded_list_items");
 			$embedded_list.empty().addClass("loader");
-			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $embeddedList.data("module-url") + "/ajax/embedded_list", $embeddedList.data("embedded-list-params"));
+			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $embeddedList.data("module-url") + "/ajax/embedded_list_items", $embeddedList.data("embedded-list-params"));
 			embeddedListAjax.done(function(data) {
 				$embedded_list.removeClass("loader").html(data);
 				fuel._initToolTips();

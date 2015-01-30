@@ -918,7 +918,6 @@ class Base_module_model extends MY_Model {
 		
 		$data_table =& $this->CI->data_table;
 		$data_table->clear();
-
 		if (!empty($params['where']))
 		{
 			$this->db->where($params['where']);
@@ -953,7 +952,7 @@ class Base_module_model extends MY_Model {
 	 * @param  	array  GET and POST arams that will be used for filtering
 	 * @return	string The HTML to display
 	 */	
-	public function ajax_embedded_list($params)
+	public function ajax_embedded_list_items($params)
 	{
 		return $this->get_embedded_list_items($params);
 	}
