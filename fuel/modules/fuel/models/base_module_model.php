@@ -1296,9 +1296,8 @@ class Base_module_record extends Data_record {
 	 */	
 	protected function _parse($output)
 	{
-		$this->_CI->load->library('parser');
 		$vars = $this->values();
-		$output = $this->_CI->parser->parse_string($output, $vars, TRUE);
+		$output = $this->_CI->fuel->parser->parse_string($output, $vars, TRUE);
 		return $output;
 	}
 	
