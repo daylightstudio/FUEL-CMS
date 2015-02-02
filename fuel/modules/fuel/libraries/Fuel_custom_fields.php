@@ -1121,7 +1121,7 @@ class Fuel_custom_fields {
 		// parse the string
 		if (!isset($params['parse']) OR $params['parse'] === TRUE)
 		{
-			$str = $this->CI->parser->parse_simple($str, $vars);
+			$str =  parse_template_syntax($str, $vars, 'ci');
 		}
 		
 		return $str;

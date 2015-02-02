@@ -954,7 +954,7 @@ class Form_builder {
 		if ($parse === TRUE)
 		{
 			$this->CI->load->library('parser');
-			$str = $this->CI->parser->parse_simple($str, $vars);
+			$str = parse_template_syntax($str, $vars, 'ci');
 		}
 
 		$str .= '<div class="actions">';
