@@ -178,6 +178,7 @@ class Fuel_assets extends Fuel_base_library {
 						if ($param != 'posted')
 						{
 							$input_key = $non_multi_key.'_'.$param;
+							$is_multiple = (preg_match('#.+_\d+_.+#U', $non_multi_key));
 							$input_key_arr = explode('--', $input_key);
 							$input_key = end($input_key_arr);
 
@@ -207,7 +208,7 @@ class Fuel_assets extends Fuel_base_library {
 								}
 								if ($param == 'file_name')
 								{
-									$posted_filename = TRUE;
+									$posted_filename = $is_multiple;
 								}
 							}
 						}
