@@ -1587,7 +1587,7 @@ class Form_builder {
 					break;
 				default : 
 					$method = 'create_'.$params['type'];
-					if (method_exists($this, $method))
+					if (method_exists($this, $method) AND $params['type'] != 'field')
 					{
 						$str = $this->$method($params);
 					}
