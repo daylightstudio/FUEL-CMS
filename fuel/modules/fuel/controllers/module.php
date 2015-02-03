@@ -2176,7 +2176,7 @@ class Module extends Fuel_base_controller {
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
 					}
 
-					if (isset($posted[$file_tmp.'_file_name']))
+					if (isset($posted[$file_tmp.'_file_name']) AND isset($this->_orig_post[$file_tmp.'_file_name']))
 					{
 						// get file extension
 						$path_info = pathinfo($file_info['name']);
