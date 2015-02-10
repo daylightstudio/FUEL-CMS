@@ -1123,7 +1123,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field allows you to have one field determine the options of another field:</p>
 	<ul>
 		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on</li>
-		<li><strong>url</strong>: the URL for the AJAX request</li>
+		<li><strong>url</strong>: the URL for the AJAX request. The default URL is to <span class="file">fuel/{module}/ajax/options</span> which maps to the <dfn>Base_module_model::ajax_options()</dfn> method which returns a string of HTML form element options. 
+			Any method on your model beginning with <dfn>ajax_{method}</dfn> can be accessed via the fuel/{module}/ajax/{method} and is passed an array of any POST and GET parameters that were passed in the AJAX request.</li>
 		<li><strong>multiple</strong>: determines if the field is a multi-select or not</li>
 		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field</li>
 		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX</li>
@@ -1157,11 +1158,14 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>create_url_params</strong>: additional intialization parametrs to pass when creating a new record.</li>
 		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
 		<li><strong>method_params</strong>: a key value array of parameters to pass to the model method. If a key of <dfn>where</dfn> is passed, it will automatically apply the where condition to the list view</li>
+		<li><strong>cols</strong>: An array of columns to display. The default will be the main display_field column. Additionally, you can overwrite the model's <dfn>get_embedded_list_items()</dfn> method and pass in the columns you want displayed.</li>
+		<li><strong>display_actions</strong>: Determines whether to display the edit actions area</li>
+		<li><strong>tooltip_char_limit</strong>: A key value array with the key being the field name and the value being the character limit of a field in which to display a tooltip. Default is 0 which won't show the tooltip</li>
 	</ul>
 
 	<h4>Example</h4>
 	<pre class="brush:php">
-	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'method_params' => array('where' => array('context' => 'test')));
+	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'cols' => '', method_params' => array('where' => array('context' => 'test')));
 	</pre>
 	
 	<?php 

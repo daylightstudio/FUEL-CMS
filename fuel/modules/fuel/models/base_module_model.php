@@ -899,11 +899,12 @@ class Base_module_model extends MY_Model {
 	
 	/**
 	 * Generates an HTML data table of list view data for the embedded list view
-	 * @param  array  $embedded_list_params Params that will be used for filtering & urls
-	 * @param  array  $list_cols            An array of columns to be shown in the data table
-	 * @return string                       The HTML data table
+	 * @param  array  	Params that will be used for filtering & urls
+	 * @param  array  	An array of columns to be shown in the data table
+	 * @param  boolean  Determines whether to add an actions column
+	 * @return string 	The HTML data table
 	 */
-	public function get_embedded_list_items($params, $list_cols = array())
+	public function get_embedded_list_items($params, $list_cols = array(), $display_action = TRUE, $display_tooltips = FALSE)
 	{
 		$module =& $this->get_module();
 		if (empty($list_cols))
@@ -933,7 +934,30 @@ class Base_module_model extends MY_Model {
 		{
 			$data_table->only_data_fields = array($this->key_field());
 		}
-		if ($this->fuel->auth->has_permission($module->info('permission'), "edit"))
+		if (!empty($display_tooltips) AND is_array($display_tooltips))
+		{
+			foreach($display_tooltips as $field => $limit)
+			{
+				$limit = (int) $limit;
+				$tooltip_func_str = ' 
+						$value = strip_tags($values["'.$field.'"]);
+ 						if (strlen($value) > '.$limit.')
+						{
+							// display tooltip for long notes
+							$trimmed = character_limiter($value, '.$limit.');
+							$data = "<span title=\"" . $value . "\" class=\"tooltip\">" . $trimmed . "</span>";
+						}
+						else
+						{
+							$data = $value;
+						}
+						return $data;';
+				$tooltip_func = create_function('$values', $tooltip_func_str);
+				$data_table->add_field_formatter($field, $tooltip_func);
+			}
+			
+		}
+		if ($this->fuel->auth->has_permission($module->info('permission'), "edit") AND $display_action)
 		{
 			$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}');
 			$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
@@ -954,7 +978,10 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function ajax_embedded_list_items($params)
 	{
-		return $this->get_embedded_list_items($params);
+		$cols = (!empty($params['cols']) AND $params['cols'] != 'null') ? $params['cols'] : array();
+		$display_actions = (is_true_val($params['display_actions'])) ? TRUE : FALSE;
+		$tooltip_char_limit = (!empty($params['tooltip_char_limit']) AND $params['tooltip_char_limit'] != 'false') ? $params['tooltip_char_limit'] : FALSE;
+		return $this->get_embedded_list_items($params, $cols, $display_actions, $tooltip_char_limit);
 	}
 
 	// --------------------------------------------------------------------
