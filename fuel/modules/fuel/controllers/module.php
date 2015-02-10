@@ -1957,7 +1957,7 @@ class Module extends Fuel_base_controller {
 
 			$get = (array) $this->input->get(NULL, TRUE);
 			$post = (array) $this->input->post(NULL, TRUE);
-			$params = array_merge($get, $post);
+			$params = array_filter(array_merge($get, $post));
 			if ( ! method_exists($this->model, $method))
 			{
 				show_error(lang('error_invalid_method'));
