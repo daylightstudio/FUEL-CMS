@@ -67,6 +67,20 @@ abstract class Abstract_base_model_helper {
 		return $this;
 	}
 
+	/**
+	 * Appends to the values instead of overwrites all the values.
+	 *
+	 * @access	public
+	 * @param	array 	The values to set
+	 * @return	object 	Instance of Base_model_validation
+	 */	
+	public function append_values($values)
+	{
+		$values = array_merge($this->get_values(), $values);
+		$this->set_values($values);
+		return $this;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -349,13 +363,15 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 *
 	 * @access	public
 	 * @param	string 	The label of the tab
-	 * @param	array 	The fields to put under the tab
-	 * @param	array 	The order of the fields
+	 * @param	array 	The fields to put under the tab (optional)
+	 * @param	array 	The order of the fields (optional)
+	 * @param	string 	The name of additional class to append to the fieldset (tab container) (optional)
 	 * @return	object 	Instance of Base_model_fields
 	 */	
-	public function tab($label, $fields = array(), $order_start = NULL)
+	public function tab($label, $fields = array(), $order_start = NULL, $other_class = '')
 	{
-		$this->fields[$label] = array('type' => 'fieldset', 'class' => 'tab');
+		$other_class = (!empty($other_class)) ? ' '.$other_class : '';
+		$this->fields[$label] = array('type' => 'fieldset', 'class' => 'tab'.$other_class);
 		$i = 1;
 		foreach($fields as $key => $field)
 		{
@@ -363,22 +379,25 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 			if (is_int($key))
 			{
 				$key = $field;
-				$field = $this->fields[$field];
+				$field = (isset($this->fields[$field])) ? $this->fields[$field] : NULL;
 			}
 
-			// if the field already exists, then we unset it to give it a natural order
-			if (isset($this->fields[$key]))
+			if (!empty($field))
 			{
-				unset($this->fields[$key]);
-			}
+				// if the field already exists, then we unset it to give it a natural order
+				if (isset($this->fields[$key]))
+				{
+					unset($this->fields[$key]);
+				}
 
-			if (!is_null($order_start))
-			{
-				$field['order'] = $order_start + $i;	
+				if (!is_null($order_start))
+				{
+					$field['order'] = $order_start + $i;	
+				}
+				
+				$this->fields[$key] = $field;
+				$i++;
 			}
-			
-			$this->fields[$key] = $field;
-			$i++;
 		}
 		return $this;
 	}
