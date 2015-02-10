@@ -1356,6 +1356,14 @@ class MY_Model extends CI_Model {
 								$values[$key] = ($values[$key] != 'invalid') ? $date_func('Y-m-d H:i:s', strtotime($values[$key])) : $this->default_date;
 							}
 						}
+
+						
+						// set it to an empty string an not a 0 so that it will work with the required validator
+						if (empty($values[$key]))
+						{
+							$values[$key] = '';
+						}
+
 					} 
 				}
 				
@@ -3108,10 +3116,10 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	array of values to be saved
+	 * @param	mixed	array of values to be saved (optional)
 	 * @return	array
 	 */	
-	public function normalize_save_values($record)
+	public function normalize_save_values($record = NULL)
 	{
 		$CI =& get_instance();
 		if (!isset($record)) $record = $CI->input->post();
