@@ -2020,7 +2020,7 @@ class Fuel_custom_fields {
 		}
 
 		$form_builder =& $params['instance'];
-		$params['depends_on'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
+		$params['depends_on'] = ( ! empty($params['depends_on'])) ? $params['depends_on'] : '';
 		$params['url'] = (empty($params['url']) AND isset($this->CI->module_uri)) ? fuel_url($this->CI->module_uri.'/ajax/options') : $params['url'];
 		$params['ajax_data_key_field'] = ( ! empty($params['ajax_data_key_field'])) ? $params['ajax_data_key_field'] : '';
 		$params['additional_ajax_data'] = ( ! empty($params['additional_ajax_data'])) ? $params['additional_ajax_data'] : array();
@@ -2046,7 +2046,7 @@ class Fuel_custom_fields {
 		if (!empty($params['func']))
 		{
 			$params['type'] = 'custom';
-			$str .= $form_builder->create_custom($params['func'], $params);
+			$str .= $form_builder->create_field($params);
 		}
 		else
 		{

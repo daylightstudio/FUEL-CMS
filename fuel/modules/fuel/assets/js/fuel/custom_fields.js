@@ -1319,8 +1319,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				var data = {};
 				data[ajaxDataKeyField] = $(this).val();
 
-				var xtraDataStr = $(_this).closest('.field').find('.dependent_data').text();
-				var origValue = $(_this).closest('.field').find('.orig_value').text();
+				var xtraDataStr = $(_this).closest('.field, .value').find('.dependent_data').text();
+				var origValue = $(_this).closest('.field, .value').find('.orig_value').text();
 				var xtraData = {};
 				if (xtraDataStr.length){
 					xtraData = eval('(' + xtraDataStr + ')');
