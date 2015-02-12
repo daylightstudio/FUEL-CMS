@@ -383,9 +383,9 @@ if (!function_exists('redirect'))
 	{
 		if ( ! preg_match('#^https?://#i', $uri))
 		{
-			if (is_null($use_https))
+			if (is_null($https))
 			{
-				$use_https = is_https();
+				$https = is_https();
 			} 
 			$uri = url_to($uri, $https, $language);
 		}
