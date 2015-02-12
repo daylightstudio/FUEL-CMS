@@ -363,7 +363,7 @@ if (!function_exists('redirect_404'))
 // ------------------------------------------------------------------------
 
 /**
- * Header Redirect (Overwritten to account for adding language path in site_url function)
+ * Header Redirect (Overwritten to account for adding HTTPS and adding language path in site_url function)
  *
  * Header redirect in two flavors
  * For very fine grained control over headers, you could use the Output
@@ -374,11 +374,12 @@ if (!function_exists('redirect_404'))
  * @param	string	the method: location or redirect
  * @param	string	the http response code
  * @param	string	wether to force or not https
+ * @param	boolean	wether add the language to the URI
  * @return	string
  */
 if (!function_exists('redirect'))
 {
-	function redirect($uri = '', $method = 'location', $http_response_code = 302, $use_https = NULL)
+	function redirect($uri = '', $method = 'location', $http_response_code = 302, $https = NULL,  $language = FALSE)
 	{
 		if ( ! preg_match('#^https?://#i', $uri))
 		{
@@ -386,7 +387,7 @@ if (!function_exists('redirect'))
 			{
 				$use_https = is_https();
 			} 
-			$uri = site_url($uri, $use_https, FALSE);
+			$uri = url_to($uri, $https, $language);
 		}
 
 		switch($method)
