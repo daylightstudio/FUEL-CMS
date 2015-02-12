@@ -116,8 +116,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			// add custom configs
 			var editorSet = $elem.data('editor_set');
 			var config = fuel.fields.getElementData($elem.attr('name'), 'editor');
-			if (!config || config.length == 0){
-				if ($elem.hasClass('wysiwyg')){
+			if (!config || config.length == 0 || $elem.hasClass('ckeditor_applied')){
+				if ($elem.hasClass('wysiwyg') || $elem.hasClass('ckeditor_applied')){
 					config = myMarkItUpSettings.sets['default'];
 				} else {
 					config = myMarkItUpSettings.sets[editorSet];
