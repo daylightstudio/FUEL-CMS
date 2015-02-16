@@ -94,7 +94,7 @@ $fields['currency'] = array(
 	'filepath' => '',
 	'js' => array(FUEL_FOLDER => 'jquery/plugins/jquery.autoNumeric'),
 	'js_function' => 'fuel.fields.currency_field',
-	'represents' => array('name' => 'price')
+	'represents' => array('name' => 'price|cost')
 );
 
 // State field
