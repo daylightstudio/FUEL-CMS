@@ -2786,8 +2786,10 @@ class Form_builder {
 	{
 		$params = $this->normalize_params($params);
 		$section = $this->simple_field_value($params);
+		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
+		$class = isset($params['class']) ? ' class="'.$params['class'].'"' : '';
 		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
-		return '<'.$tag.'>'.$section.'</'.$tag.'>';
+		return '<'.$tag.$id.$class.'>'.$section.'</'.$tag.'>';
 	}
 
 	// --------------------------------------------------------------------
