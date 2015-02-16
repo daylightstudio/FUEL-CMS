@@ -394,11 +394,17 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		$editors.each(function(i) {
 			var _this = this;
 			var ckId = $(this).attr('id');
-			if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
+
+			if (jqx_config.editor.toLowerCase() == 'none' && !($(this).hasClass('markItUpEditor') || $(this).hasClass('markItUpEditor'))){
+			
+				return;
+			
+			} else if ((jqx_config.editor.toLowerCase() == 'ckeditor' && !$(this).hasClass('markitup')) || $(this).hasClass('wysiwyg')){
 				//createCKEditor(this);
 				setTimeout(function(){
 					createCKEditor(_this);
 				}, 250) // hackalicious... to prevent CKeditor errors when the content is ajaxed in... this patch didn't seem to work http://dev.ckeditor.com/attachment/ticket/8226/8226_5.patch
+
 			} else {
 				createMarkItUp(this);
 			}
@@ -1369,7 +1375,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var html = '<iframe src="' + iframe_url + '" id="embedded_list_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", embeddedListModalClose);
 		};
-		$fuel.on("click", ".action_edit", embeddedListModalOpen);
+		$fuel.on("click", ".datatable_action", embeddedListModalOpen);
 	}
 
 }
