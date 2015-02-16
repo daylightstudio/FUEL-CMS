@@ -254,7 +254,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('#multi_delete').click(function(){
 			$('#toggle_list').unbind('click');
-			var deleteUrl = _this.modulePath + '/delete/';
+			var deleteUrl = _this.modulePath + '/delete';
 			$('#form').attr('action', deleteUrl).attr('method', 'post').submit();
 			return false;
 		});
