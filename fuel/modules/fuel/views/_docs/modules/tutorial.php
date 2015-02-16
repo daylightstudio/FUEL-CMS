@@ -533,11 +533,11 @@ class Articles_model extends Base_module_model {
 ...
 </pre>
 
-<h3>Filtered FIelds</h3>
+<h3>Filtered Fields</h3>
 <p>The <dfn>filters</dfn> property allows you to specify additional fields that will be search from the list view in the admin. There is also a <dfn>filters_join</dfn> property
 you can specify either "and" or "or" which will determine how the where condition in the search query is formed (e.g. title AND content vs. title OR content). For more complicated 
 where conditions you can specify a key value array with the key being the filter field and the value being either "or" or "and" (e.g. array('title' => 'or', 'content' => 'and')). 
-For this example, we will leave it as the default "or":</p>
+In addition, you can specify <dfn>filters()</dfn> method on your model that can return an array of <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder fields</a>. For this example, we will leave it as the default "or" and not use a <dfn>filters</dfn> method:</p>
 <pre class="brush: php">
 ... 
 class Articles_model extends Base_module_model {

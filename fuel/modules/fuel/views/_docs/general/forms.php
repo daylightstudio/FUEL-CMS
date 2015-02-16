@@ -1155,11 +1155,12 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>module</strong>: the module whose data will be displayed</li>
 		<li><strong>create_button_label</strong>: the label of the create button</li>
-		<li><strong>create_url_params</strong>: additional intialization parametrs to pass when creating a new record.</li>
+		<li><strong>create_url_params</strong>: additional intialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
+		<li><strong>edit_url_params</strong>: similar to <dfn>create_url_params</dfn> but for editing a record.</li>
 		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
 		<li><strong>method_params</strong>: a key value array of parameters to pass to the model method. If a key of <dfn>where</dfn> is passed, it will automatically apply the where condition to the list view</li>
 		<li><strong>cols</strong>: An array of columns to display. The default will be the main display_field column. Additionally, you can overwrite the model's <dfn>get_embedded_list_items()</dfn> method and pass in the columns you want displayed.</li>
-		<li><strong>display_actions</strong>: Determines whether to display the edit actions area</li>
+		<li><strong>actions</strong>: An array of actions to include. Options are "edit", "view", "delete" and "custom" with custom being an array of URI and link text. Default value is the "EDIT" action.</li>
 		<li><strong>tooltip_char_limit</strong>: A key value array with the key being the field name and the value being the character limit of a field in which to display a tooltip. Default is 0 which won't show the tooltip</li>
 	</ul>
 
