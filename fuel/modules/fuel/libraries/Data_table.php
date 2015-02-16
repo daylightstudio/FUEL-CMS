@@ -942,7 +942,7 @@ class Data_table {
 				
 
 				$attrs = (!empty($val['attrs'])) ? ' '.$this->_render_attrs($val['attrs']) : '';
-				$actions[] ='<a href="'.$url.'"'.$attrs.' class="action_'.url_title($key, 'underscore', TRUE).'">'.$key.'</a>';
+				$actions[] ='<a href="'.$url.'"'.$attrs.' class="datatable_action action_'.url_title($key, 'underscore', TRUE).'">'.$key.'</a>';
 			}
 		}
 
