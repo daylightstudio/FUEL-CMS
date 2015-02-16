@@ -2086,11 +2086,23 @@ class Fuel_custom_fields {
 		$create_button_label = (!empty($params['create_button_label'])) ? $params['create_button_label'] : lang('btn_create') .' '. ucwords($model->singular_name());
 
 		$create_url_params = (!empty($params['create_url_params'])) ? http_build_query($params['create_url_params']) : '';
+		$edit_url_params = (!empty($params['edit_url_params'])) ? http_build_query($params['edit_url_params']) : '';
+
 		$create_url = fuel_url("{$module_url}/inline_create?{$create_url_params}");
 
 		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']));
 		$cols = (!empty($params['cols'])) ? $params['cols'] : NULL;
-		$display_actions = ($readonly) ? FALSE : TRUE;
+
+		$actions = array('edit');
+		if ($readonly OR (isset($params['actions']) AND $params['actions'] == FALSE))
+		{
+			$actions = array();
+		}
+		elseif (!empty($params['actions']))
+		{
+			$actions = $params['actions'];
+		}
+
 		$tooltip_char_limit = (!empty($params['tooltip_char_limit'])) ? $params['tooltip_char_limit'] : FALSE;
 
 		$embedded_list_model_method = (!empty($params['method']) && method_exists($CI->$model, $params['method'])) ? $params['get_embedded_list_items'] : 'get_embedded_list_items';
@@ -2098,17 +2110,20 @@ class Fuel_custom_fields {
 		$embedded_list_params['module_url'] = $module_url;
 		$embedded_list_params['field'] = $params['name'];
 		$embedded_list_params['cols'] = $cols;
-		$embedded_list_params['display_actions'] = $display_actions;
+		$embedded_list_params['actions'] = $actions;
+		$embedded_list_params['url_params'] = $create_url_params;
 		$embedded_list_params['tooltip_char_limit'] = !empty($tooltip_char_limit) ? $tooltip_char_limit : FALSE;
+		$embedded_list_params['create_url_params'] = $create_url_params;
+		$embedded_list_params['edit_url_params'] = $edit_url_params;
 		
-		$embedded_list_items = $model->$embedded_list_model_method($embedded_list_params, $cols, $display_actions, $tooltip_char_limit);
+		$embedded_list_items = $model->$embedded_list_model_method($embedded_list_params, $cols, $actions, $tooltip_char_limit);
 
 		$embedlistid = 'embedlist-'.sha1($module->name() . mt_rand());
 		$class = (!empty($params['class'])) ? ' '.$params['class'] : '';
 		$embedded_list_view = '<div class="embedded_list_container'.$class.'" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'>';
 		if (!$readonly)
 		{
-			$embedded_list_view .= '<div class="embedded_list_actions" style="margin-bottom: 20px;"><a href="'.$create_url.'" class="btn_field action_edit">'.$create_button_label.'</a></div>';
+			$embedded_list_view .= '<div class="embedded_list_actions" style="margin-bottom: 20px;"><a href="'.$create_url.'" class="btn_field datatable_action">'.$create_button_label.'</a></div>';
 		}
 		$embedded_list_view .= '<div class="embedded_list_items">'.$embedded_list_items.'</div></div>';
 		return $embedded_list_view;

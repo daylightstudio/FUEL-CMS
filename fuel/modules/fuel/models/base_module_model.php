@@ -899,22 +899,24 @@ class Base_module_model extends MY_Model {
 	
 	/**
 	 * Generates an HTML data table of list view data for the embedded list view
-	 * @param  array  	Params that will be used for filtering & urls
-	 * @param  array  	An array of columns to be shown in the data table
-	 * @param  boolean  Determines whether to add an actions column
+	 * @param  array  	Params that will be used for filtering & urls (optional)
+	 * @param  array  	An array of columns to be shown in the data table (optional)
+	 * @param  array 	Determines what actions to display. Options are edit, view, delete and custom. Custom is an array of URI => labels (optional)
 	 * @return string 	The HTML data table
 	 */
-	public function get_embedded_list_items($params, $list_cols = array(), $display_action = TRUE, $display_tooltips = FALSE)
+	public function get_embedded_list_items($params, $list_cols = array(), $actions = array('edit'))
 	{
 		$module =& $this->get_module();
-		if (empty($list_cols))
+
+		if (empty($list_cols) AND is_string($this->key_field()))
 		{
 			$list_cols = array($this->key_field(), $module->info('display_field'));
 		}
-		elseif(!in_array($this->key_field(), $list_cols))
+		elseif(empty($list_cols) OR (!empty($list_cols) AND !in_array($this->key_field(), $list_cols)))
 		{
 			$list_cols[] = $this->key_field();
 		}
+
 		$this->CI->load->library('data_table', array('sort_js_func' => '', 'actions_field' => 'last'));
 		
 		$data_table =& $this->CI->data_table;
@@ -934,9 +936,9 @@ class Base_module_model extends MY_Model {
 		{
 			$data_table->only_data_fields = array($this->key_field());
 		}
-		if (!empty($display_tooltips) AND is_array($display_tooltips))
+		if (!empty($params['tooltip_char_limit']) AND is_array($params['tooltip_char_limit']))
 		{
-			foreach($display_tooltips as $field => $limit)
+			foreach($params['tooltip_char_limit'] as $field => $limit)
 			{
 				$limit = (int) $limit;
 				$tooltip_func_str = ' 
@@ -957,10 +959,59 @@ class Base_module_model extends MY_Model {
 			}
 			
 		}
-		if ($this->fuel->auth->has_permission($module->info('permission'), "edit") AND $display_action)
+
+		if (!empty($actions))
 		{
-			$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}');
-			$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+			if (!is_array($actions))
+			{
+				$actions = array('edit');
+			}
+
+			foreach($actions as $action => $label)
+			{
+				if (is_int($action))
+				{
+					$action = $label;
+				}
+				if (is_string($action) AND $this->fuel->auth->has_permission($module->info('permission'), $action) OR $action == 'custom')
+				{
+					switch(strtolower($action))
+					{
+						case 'edit':
+							$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}');
+							if (!empty($params['edit_url_params']))
+							{
+								$action_url .= '?'. $params['edit_url_params'];
+							}
+							$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+							break;
+						case 'view':
+							if ($module->info('preview_path'))
+							{
+								$action_url = fuel_url($module->info('module_uri').'/view/{'.$this->key_field().'}');
+								$data_table->add_action(lang('table_action_view'), $action_url, 'url');
+							}
+							break;
+						case 'delete':
+							$action_url = fuel_url($module->info('module_uri').'/inline_delete/{'.$this->key_field().'}');
+							$data_table->add_action(lang('table_action_delete'), $action_url, 'url');
+							break;
+						case 'custom':
+							if (is_array($label))
+							{
+								foreach($label as $key => $val)
+								{
+									if ($this->fuel->auth->has_permission($module->info('permission'), $key))
+									{
+										$action_url = fuel_url($key.'/{'.$this->key_field().'}');
+										$data_table->add_action($val, $action_url, 'url');
+									}
+								}
+							}
+							break;
+					}
+				}
+			}
 		}
 
 		$data_table->assign_data($list_items, $list_cols);
@@ -979,9 +1030,9 @@ class Base_module_model extends MY_Model {
 	public function ajax_embedded_list_items($params)
 	{
 		$cols = (!empty($params['cols']) AND $params['cols'] != 'null') ? $params['cols'] : array();
-		$display_actions = (is_true_val($params['display_actions'])) ? TRUE : FALSE;
+		$actions = (isset($params['actions'])) ? $params['actions'] : array('edit');
 		$tooltip_char_limit = (!empty($params['tooltip_char_limit']) AND $params['tooltip_char_limit'] != 'false') ? $params['tooltip_char_limit'] : FALSE;
-		return $this->get_embedded_list_items($params, $cols, $display_actions, $tooltip_char_limit);
+		return $this->get_embedded_list_items($params, $cols, $actions, $tooltip_char_limit);
 	}
 
 	// --------------------------------------------------------------------
