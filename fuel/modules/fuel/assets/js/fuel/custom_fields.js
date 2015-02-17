@@ -1230,6 +1230,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			} else {
 				$(".toggle", context).closest(selector).hide();	
 			}
+
+			val = val.replace(' ', '.');
 			$(".toggle." + prefix + val, context).closest(selector).show();
 		}
 		
