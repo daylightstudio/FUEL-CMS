@@ -1121,6 +1121,11 @@ class Fuel_custom_fields {
 		// parse the string
 		if (!isset($params['parse']) OR $params['parse'] === TRUE)
 		{
+			if ($vars['fields_config'] instanceof Base_model_fields)
+			{
+				$vars['fields_config'] = $vars['fields_config']->get_fields();
+			}
+
 			$str =  parse_template_syntax($str, $vars, 'ci');
 		}
 		
@@ -2087,9 +2092,27 @@ class Fuel_custom_fields {
 
 		$create_url_params = (!empty($params['create_url_params'])) ? http_build_query($params['create_url_params']) : '';
 		$edit_url_params = (!empty($params['edit_url_params'])) ? http_build_query($params['edit_url_params']) : '';
+		$display_fields = (!empty($params['display_fields'])) ? $params['display_fields'] : NULL;
 
-		$create_url = fuel_url("{$module_url}/inline_create?{$create_url_params}");
-
+		$create_url = "{$module_url}/inline_create";
+		if (!empty($display_fields))
+		{
+			if (is_array($display_fields))
+			{
+				$display_fields = '/'.implode('/', $display_fields);
+			}
+			else
+			{
+				$display_fields = '/'.trim($display_fields, '/');
+			}
+		}
+		if (!empty($display_fields))
+		{
+			$create_url .= $display_fields;
+		}
+		$create_url .= "?{$create_url_params}";
+		$create_url = fuel_url($create_url);
+		
 		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']));
 		$cols = (!empty($params['cols'])) ? $params['cols'] : NULL;
 
@@ -2115,10 +2138,11 @@ class Fuel_custom_fields {
 		$embedded_list_params['tooltip_char_limit'] = !empty($tooltip_char_limit) ? $tooltip_char_limit : FALSE;
 		$embedded_list_params['create_url_params'] = $create_url_params;
 		$embedded_list_params['edit_url_params'] = $edit_url_params;
+		$embedded_list_params['display_fields'] = $display_fields;
 		
 		$embedded_list_items = $model->$embedded_list_model_method($embedded_list_params, $cols, $actions, $tooltip_char_limit);
 
-		$embedlistid = 'embedlist-'.sha1($module->name() . mt_rand());
+		$embedlistid = (!empty($params['id'])) ? $params['id'] : 'embedlist-'.sha1($module->name() . mt_rand());
 		$class = (!empty($params['class'])) ? ' '.$params['class'] : '';
 		$embedded_list_view = '<div class="embedded_list_container'.$class.'" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'>';
 		if (!$readonly)
