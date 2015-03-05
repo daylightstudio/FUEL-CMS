@@ -955,6 +955,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true"){
 				o.negative = true;
 			} else {
+
+				// remove any negative symbol
+				$(this).blur(function(){
+					var val = Math.abs($(this).val());
+					$(this).val(val);
+				})
 				o.negative = false;
 			}
 			$(this).numeric(o);
@@ -1361,23 +1367,31 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	fuel.fields.embedded_list = function(context, options){
 		var $fuel = $("#form");
 
-		var embeddedListModalClose = function() {
-			var $embedded_list = $fuel.find("#"+$embeddedList.attr("id")+" .embedded_list_items");
-			$embedded_list.empty().addClass("loader");
-			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $embeddedList.data("module-url") + "/ajax/embedded_list_items", $embeddedList.data("embedded-list-params"));
+		var embeddedListModalClose = function(activeEmbeddedList) {
+			var $activeEmbeddedList = $(activeEmbeddedList);
+			var $embeddedListItems = $fuel.find("#"+$activeEmbeddedList.attr("id")+" .embedded_list_items");
+			$embeddedListItems.empty().addClass("loader");
+			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $activeEmbeddedList.data("module-url") + "/ajax/embedded_list_items", $activeEmbeddedList.data("embedded-list-params"));
 			embeddedListAjax.done(function(data) {
-				$embedded_list.removeClass("loader").html(data);
+				$embeddedListItems.removeClass("loader").html(data);
 				fuel._initToolTips();
 			});
 		};
 		var embeddedListModalOpen = function(e) {
 			e.preventDefault();
-			$embeddedList = $(this).parents(".embedded_list_container");
+			var $activeEmbeddedList = $(this).closest(".embedded_list_container");
 			var iframe_url = $(this).attr("href");
-			var html = '<iframe src="' + iframe_url + '" id="embedded_list_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
-			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", embeddedListModalClose);
+			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
+				embeddedListModalClose($activeEmbeddedList);
+			});
 		};
 		$fuel.on("click", ".datatable_action", embeddedListModalOpen);
+
+		// added refresh event that can be triggered
+		$('.embedded_list_container').on("refreshEmbedList", function(){
+			embeddedListModalClose(this);
+		});
 	}
 
 }
