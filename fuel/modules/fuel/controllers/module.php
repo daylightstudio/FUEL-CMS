@@ -805,11 +805,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id, TRUE);
 				}
 
 				// save any tab states
@@ -830,7 +830,7 @@ class Module extends Fuel_base_controller {
 		$shell_vars = $this->_shell_vars($id);
 
 		$passed_init_vars = ($this->input->get(NULL, TRUE)) ? $this->input->get(NULL, TRUE) : array();
-		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
+		$form_vars = $this->_form_vars($id, $passed_init_vars, $field, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
 		$vars['related_items'] = $this->model->related_items(array());
@@ -1003,11 +1003,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field, TRUE);
 				}
 
 				if ($redirect)
@@ -1426,7 +1426,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		$action_uri = $action.'/'.$id.'/'.$field;
-		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
+		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri.query_str() : $this->module_uri.'/'.$action_uri.query_str();
 		$vars['form'] = $form;
 		$vars['data'] = $values;
 		$vars['error'] = $this->model->get_errors();
