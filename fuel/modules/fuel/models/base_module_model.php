@@ -923,6 +923,15 @@ class Base_module_model extends MY_Model {
 		$data_table->clear();
 		if (!empty($params['where']))
 		{
+			if (is_array($params['where']))
+			{
+				foreach($params['where'] as $k => $v)
+				{
+					unset($params['where'][$k]);
+					$k = str_replace(':', '.', $k);
+					$params['where'][$k] = str_replace(':', '.', $v);
+				}
+			}
 			$this->db->where($params['where']);
 		}
 
@@ -978,7 +987,19 @@ class Base_module_model extends MY_Model {
 					switch(strtolower($action))
 					{
 						case 'edit':
-							$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}');
+							$display_fields = '';
+							if (!empty($params['display_fields']))
+							{
+								if (is_array($params['display_fields']))
+								{
+									$display_fields = '/'.implode('/', $params['display_fields']);
+								}
+								else
+								{
+									$display_fields = '/'.trim($params['display_fields'], '/');
+								}
+							}
+							$action_url = fuel_url($module->info('module_uri').'/inline_edit/{'.$this->key_field().'}'.$display_fields);
 							if (!empty($params['edit_url_params']))
 							{
 								$action_url .= '?'. $params['edit_url_params'];
@@ -1003,7 +1024,7 @@ class Base_module_model extends MY_Model {
 								{
 									if ($this->fuel->auth->has_permission($module->info('permission'), $key))
 									{
-										$action_url = fuel_url($key.'/{'.$this->key_field().'}');
+										$action_url = fuel_url($key);
 										$data_table->add_action($val, $action_url, 'url');
 									}
 								}
@@ -1031,8 +1052,9 @@ class Base_module_model extends MY_Model {
 	{
 		$cols = (!empty($params['cols']) AND $params['cols'] != 'null') ? $params['cols'] : array();
 		$actions = (isset($params['actions'])) ? $params['actions'] : array('edit');
-		$tooltip_char_limit = (!empty($params['tooltip_char_limit']) AND $params['tooltip_char_limit'] != 'false') ? $params['tooltip_char_limit'] : FALSE;
-		return $this->get_embedded_list_items($params, $cols, $actions, $tooltip_char_limit);
+		$params['display_fields'] = (!empty($params['display_fields']) AND $params['display_fields'] != 'null') ? $params['display_fields'] : array();
+		$params['tooltip_char_limit'] = (!empty($params['tooltip_char_limit']) AND $params['tooltip_char_limit'] != 'null') ? $params['tooltip_char_limit'] : array();
+		return $this->get_embedded_list_items($params, $cols, $actions);
 	}
 
 	// --------------------------------------------------------------------
