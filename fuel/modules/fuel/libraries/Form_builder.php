@@ -2653,6 +2653,9 @@ class Form_builder {
 			'attributes' => $params['attributes'],
 		);
 
+		// force to a string so that it doesn't go to negative number if the value is set to 0
+		setType($attrs['min'], 'string');
+
 		$numeric_class = 'numeric';
 		$attrs['class'] = (!empty($params['class'])) ? $params['class'].' '.$numeric_class : $numeric_class;
 		$params['type'] = 'number';
