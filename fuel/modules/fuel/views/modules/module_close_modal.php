@@ -7,7 +7,7 @@
 		top.window.fuel.setNotification(' &nbsp; ', 'warning');
 
 	// for inline editing on the front end we just refresh the page
-	} else {
+	} else if (top.window != window){
 		top.window.location = top.window.location;
 	}
 //]]>
