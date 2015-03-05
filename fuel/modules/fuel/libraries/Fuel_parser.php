@@ -162,7 +162,14 @@ class Fuel_parser extends Fuel_Base_library {
 	 */
 	public function name()
 	{
-		return $this->engine->name();
+		if (method_exists($this->engine, 'name'))
+		{
+			return $this->engine->name();	
+		}
+		else
+		{
+			return 'ci';
+		}
 	}
 
 	// --------------------------------------------------------------------
