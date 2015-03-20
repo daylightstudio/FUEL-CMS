@@ -192,5 +192,22 @@ $fields['embedded_list'] = array(
 	'js_function' => 'fuel.fields.embedded_list'
 );
 
+// Select2 field
+$fields['select2'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'select2',
+	'js' => array(
+		FUEL_FOLDER => array(
+			'jquery/plugins/select2.min',
+		),
+	),
+	'js_exec_order' => 1,
+	'js_function' => 'fuel.fields.select2',
+	'css' => array(
+		FUEL_FOLDER => array(
+			'select2',
+		)
+	),
+);
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

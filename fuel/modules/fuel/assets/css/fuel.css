@@ -335,7 +335,7 @@ div.btn { border: 1px solid #ccc; float: left; list-style: none;  margin: 0;  pa
 
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
-.repeatable .remove { position: absolute; top: 15px; right: 15px; }
+.repeatable .remove { position: absolute; top: 5px; right: 15px; }
 .repeatable td>.remove { position: static; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { 
@@ -613,6 +613,7 @@ table.data tr.rowaction:hover td { background-color: #edf2f7 !important; cursor:
 table.data th.col1 { min-width: 200px; }
 table.data tr.alt { background-color: #f3f3f3; }
 div.nodata { text-align: center; padding: 10px 0 15px 0;}
+.embedded_list_items table.data th.col1 { min-width: 0; }
 
 /* specific data column classes */
 span.publish_col { width: 100px; display: block; cursor: pointer !important; }
