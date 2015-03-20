@@ -883,7 +883,7 @@ class MY_Model extends CI_Model {
 		}
 
 		// setup wherein for the group
-		$this->db->where_in($this->key_field(), $group);
+		$this->db->where_in($this->table_name.'.'.$this->key_field(), $group);
 
 		// must set protect identifiers to FALSE in order for order by to work
 		$_protect_identifiers = $this->db->_protect_identifiers;
@@ -898,7 +898,7 @@ class MY_Model extends CI_Model {
 		// remove any cached order by
 		$this->db->ar_cache_orderby = array();
 
-		$this->db->order_by('FIELD('.$this->key_field().', '.implode(', ', $group).')');
+		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')');
 
 		// set it _protect_identifiers back to original value
 		$this->db->_protect_identifiers = $_protect_identifiers;
