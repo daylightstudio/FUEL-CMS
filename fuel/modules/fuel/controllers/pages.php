@@ -564,9 +564,10 @@ class Pages extends Module {
 				{
 					if (isset($v['type']) AND $v['type'] == 'block' AND isset($posted[$key]))
 					{
-						if (is_array($posted[$key]) AND is_int(key($posted[$key])))
+						$posted_var = (isset($posted['vars--'.$key])) ? $posted['vars--'.$key] : $posted[$key];
+						if (is_array($posted_var) AND is_int(key($posted_var)))
 						{
-							foreach($posted[$key] as $a => $b)
+							foreach($posted_var as $a => $b)
 							{
 								if (is_array($b))
 								{
