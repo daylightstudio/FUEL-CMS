@@ -952,7 +952,7 @@ class Fuel_custom_fields {
 		}
 		else
 		{
-			$vars = $fields;
+			$vars = array_merge($vars, $fields);
 		}
 
 		// must set $_POST parameter below or else the post_process won't run the serialization'
@@ -1741,7 +1741,7 @@ class Fuel_custom_fields {
 						$rows = preg_split("#\s*\n|,\s*#", $z);
 						foreach($rows as $r)
 						{
-							$vals = preg_split("#'.$split_delimiter.'#", $r);
+							$vals = preg_split("#'.$split_delimiter.'#", $r, 2);
 							if (isset($vals[1]))
 							{
 								$v = $vals[1];
@@ -2151,6 +2151,20 @@ class Fuel_custom_fields {
 		}
 		$embedded_list_view .= '<div class="embedded_list_items">'.$embedded_list_items.'</div></div>';
 		return $embedded_list_view;
+	}
+
+	public function select2($params = array())
+	{
+		$form_builder =& $params['instance'];
+		if (empty($params['width']))
+		{
+			$params['width'] = '225px';
+		}
+		$params['style'] = (!empty($params['style'])) ? $params['style'].'; width: '.$params['width'] : 'width: '.$params['width'];
+
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' select2' : 'select2';
+
+		return $form_builder->create_select($params);
 	}
 }
 

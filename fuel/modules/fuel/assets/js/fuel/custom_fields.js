@@ -680,7 +680,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			return false;
 		}
 		
-		$('.add_edit', context).each(function(i){
+		$('select.add_edit, input.add_edit', context).each(function(i){
 			var $field = $(this);
 			var fieldId = $field.attr('id');
 			var $form = $field.closest('form');
@@ -765,9 +765,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					//console.log($form.formBuilder())
 					//$form.formBuilder().call('inline_edit');
 					// refresh field with formBuilder jquery
-					
 					fuel.fields.multi_field(context)
-					$('#form').formBuilder().initialize($('#' + fieldId, context));
+					$('#form').formBuilder().initialize(context);
 					$('#' + fieldId, context).change(function(){
 						changeField($(this));
 					});
@@ -787,7 +786,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 			
 			$('.add_inline_button', context).unbind().click(function(e){
-				$field = $(this).parent().children(':first');
+				$field = $(this).closest('.field').find('select, input[type="checkbox"], input[type="radio"]:first');
 				editModule($(this).attr('href'), null, function(){ refreshField($('#' + $field.attr('id')))});
 				$(context).scrollTo('body', 800);
 				return false;
@@ -836,8 +835,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					} else {
 						var url = $(this).attr('href') + editIds[0];
 					}
-					$field = $(this).parent().children(':first');
-					editModule(url, null, function(){ refreshField($field)});
+					$field = $(this).closest('.field').find('select, input[type="checkbox"], input[type="radio"]:first');
+						editModule(url, null, function(){ refreshField($field)});
 				}
 				return false;
 			});
@@ -1394,4 +1393,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		});
 	}
 
+	fuel.fields.select2 = function(context, options){
+		if (options){
+			var options = $.extend({}, options);
+		}
+		$('select.select2_applied', context).select2('destroy').removeClass('select2_applied');
+		$('select.select2', context).addClass('select2_applied').select2(options);
+		fuel.fields.inline_edit_field();
+	}
 }

@@ -213,6 +213,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#colorpicker">colorpicker</a></li>
 		<li><a href="#dependent">dependent</a></li>
 		<li><a href="#embedded_list">embedded list</a></li>
+		<li><a href="#select2">select2</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
@@ -720,7 +721,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
 		<li><strong>condensed</strong>: if TRUE, this will update there repeatable field to use a condensed styling</li>
 		<li><strong>non_sortable</strong>: if TRUE, this will hide the sorting grabber for repeatable fields</li>
-		<li><strong>removeable</strong>: if determines whether the repeatable sets can be removed</li>
+		<li><strong>removeable</strong>: determines whether the repeatable sets can be removed</li>
 	</ul>
 
 	<h4>Example</h4>
@@ -1177,6 +1178,28 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	?>
 	
 </div>
+
+<h3 id="select2" class="toggle">select2</h3>
+<div class="toggle_block_off">
+	<p>This field type can be used with any select field and transforms it into a searchable list using the <a href="https://select2.github.io/" target="_blank">Select2 plugin</a>.</p>
+	<ul>
+		<li><strong>width</strong>: the width of the field. The default is 225px</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['select2_example'] = array('type' => 'select2');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['select2_example'] = array('type' => 'select2');
+	form_builder_example($fields);
+	?>
+	
+</div>
+
+
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>
 to the <dfn>$config['custom_fields']</dfn> initialization parameter. The following parameters can be used in the association:
