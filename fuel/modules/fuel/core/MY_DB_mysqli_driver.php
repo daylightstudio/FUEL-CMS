@@ -164,6 +164,25 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			{
 				$max_length = sizeof($matches) > 3 ? $matches[3] : NULL;
 			}
+
+			if ($type == 'float')
+			{
+				if (is_array($max_length))
+				{
+					$max_length = current($max_length);
+				}
+
+				if (strpos($max_length, ',') !== FALSE)
+				{
+					$maxes = explode(',', $max_length);
+					$max_length = 0;
+					foreach($maxes as $max)
+					{
+						$max_length += (int) $max;
+					}
+				}
+			}
+			
 			$f = array();
 			$f['name'] = $field->Field;
 			$f['type'] = ($type == 'char' OR $type =='varchar') ? 'string' : $type;
