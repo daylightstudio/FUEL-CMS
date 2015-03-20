@@ -335,7 +335,7 @@ div.btn { border: 1px solid #ccc; float: left; list-style: none;  margin: 0;  pa
 
 .repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
-.repeatable .remove { position: absolute; top: 5px; right: 15px; }
+.repeatable .remove { position: absolute; top: 13px; right: 15px; }
 .repeatable td>.remove { position: static; }
 .add_another { padding: 10px; float: left; }
 .repeatable.ui-sortable-helper { 
