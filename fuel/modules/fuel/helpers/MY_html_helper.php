@@ -60,7 +60,7 @@ if (!function_exists('tag'))
 		else
 		{
 			$str .= '<'.$tag.html_attrs($attrs).'>';
-			$str .= $val;
+			$str .= $vals;
 			$str .= '</'.$tag.'>';
 		}
 		return $str;
