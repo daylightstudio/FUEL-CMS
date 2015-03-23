@@ -454,7 +454,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 	var self = this;
 	var url = jqx.config.fuelPath + '/pages/select/?nocache=' + new Date().getTime();
 	if (selected) url += '&selected=' + escape(selected);
-	url += '&input=' + ((attrs.input) ? attrs.input : '');
+	url += '&input=' + ((attrs.input) ? encodeURIComponent(attrs.input) : '');
 	url += '&target=' + ((attrs.target) ? attrs.target : '');
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
