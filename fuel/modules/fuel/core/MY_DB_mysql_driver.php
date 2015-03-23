@@ -36,14 +36,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 *
 	 * @access	public
 	 * @param	boolean	will hide the echoed output in a comment
-	 * @param	boolean	will exit the script
-	 * @return	void
+	 * @param	boolean will exit the script
+	 * @param	boolean returns the output
+	 * @return	mixed
 	 */
-	public function debug_query($hidden = FALSE, $exit = FALSE)
+	public function debug_query($hidden = FALSE, $exit = FALSE, $return = FALSE)
 	{
+		
+		$str = '';
+		
 		if (!empty($hidden)) echo '<!--';
-		echo $this->last_query()." \n";
-		if (!empty($hidden)) echo '-->';
+		$str.= $this->last_query()." \n";
+		if (!empty($hidden)) $str.= '-->';
+
+		if (!empty($return))
+		{
+			return $str;
+		}
+		else
+		{
+		echo $str;
+		}
+
 		if (!empty($exit)) exit;
 	}
 

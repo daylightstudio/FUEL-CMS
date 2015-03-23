@@ -3095,11 +3095,18 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @return	void
+	 * @param	boolean	will hide the echoed output in a comment
+	 * @param	boolean will exit the script
+	 * @param	boolean returns the output
+	 * @return	mixed
 	 */	
-	public function debug_query()
+	public function debug_query($hidden = FALSE, $exit = FALSE, $return = FALSE)
 	{
-		$this->db->debug_query();
+		$str = $this->db->debug_query($hidden, $exit, $return);
+		if(!empty($return))
+		{
+			return $str;
+		}
 	}
 	
 	// --------------------------------------------------------------------
