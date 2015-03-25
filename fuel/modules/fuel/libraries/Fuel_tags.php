@@ -90,7 +90,7 @@ class Fuel_tags extends Fuel_module {
 	 * @param	string	the name of the category
 	 * @return	array
 	 */	
-	public function find_by_category($category)
+	public function find_by_category($category, $order = NULL, $limit = NULL, $offset = NULL)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
 		$model =& $this->model();
@@ -104,7 +104,7 @@ class Fuel_tags extends Fuel_module {
 		{
 			$where[$categories_table.'.slug'] = $category;
 		}
-		$data = $model->find_all($where);
+		$data = $model->find_all($where, $order, $limit, $offset);
 		return $data;
 	}
 
