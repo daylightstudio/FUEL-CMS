@@ -13,14 +13,14 @@
 	<div class="page">
 		<div class="wrapper">
 			<header class="page_header">
-				<div class="logo"><object type="image/svg+xml" width="160" height="145" data="<?=img_path('_template_icons.svg#fuel') ?>"></object></div>
+				<div class="logo"><img width="160" height="145" src="<?=img_path('_template_icons.svg#fuel') ?>"></div>
 				<h1>Welcome to Fuel CMS</h1>
 				<h2>Version <?=FUEL_VERSION?></h2>
 			</header>
 			<section>
 				<header>
 					<div class="icon_block">
-						<object type="image/svg+xml" width="74" height="68" data="<?=img_path('_template_icons.svg#clipboard') ?>"></object>
+						<img  width="74" height="68" src="<?=img_path('_template_icons.svg#clipboard') ?>">
 					</div>
 					<div class="content_block">
 						<h3>Getting Started</h3>
@@ -115,7 +115,7 @@
 			<section>
 				<header>
 					<div class="icon_block">
-						<div class="logo"><object type="image/svg+xml" width="74" height="68" data="<?=img_path('_template_icons.svg#signpost') ?>"></object></div>
+						<div class="logo"><img width="74" height="68" src="<?=img_path('_template_icons.svg#signpost') ?>"></div>
 					</div>
 					<div class="content_block">
 						<h3>What's Next?</h3>
@@ -124,16 +124,16 @@
 				<ol>
 					<li>
 						<div class="icon_block">
-							<div class="circle"><object type="image/svg+xml" width="30" height="27" data="<?=img_path('_template_icons.svg#map') ?>"></object></div>
+							<div class="circle"><img width="30" height="27" data="<?=img_path('_template_icons.svg#map') ?>"></div>
 						</div>
 						<div class="content_block">
-							<a class="cta" href="http://docs.getfuelcms.com" target="_blank" style="margin-top: 20px;">User Guide <object type="image/svg+xml" width="30" height="27" data="<?=img_path('_template_icons.svg#rightarrow') ?>"></object></a>
+							<a class="cta" href="http://docs.getfuelcms.com" target="_blank" style="margin-top: 20px;">User Guide <img width="30" height="27" data="<?=img_path('_template_icons.svg#rightarrow') ?>"></a>
 							<h4>Visit the <a href="http://docs.getfuelcms.com" target="_blank">1.0 user guide</a> online</h4>
 						</div>
 					</li>
 					<li>
 						<div class="icon_block">
-							<div class="circle"><object type="image/svg+xml" width="40" height="37" data="<?=img_path('_template_icons.svg#github') ?>"></object></div>
+							<div class="circle"><img width="40" height="37" data="<?=img_path('_template_icons.svg#github') ?>"></div>
 						</div>
 						<div class="content_block">
 							<h4>Get rolling</h4>
@@ -169,7 +169,7 @@
 				<li class="last"><a href="http://getfuelcms.com/blog" target="_blank">Blog</a></li>
 			</ul>
 		</nav>
-		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> <object type="image/svg+xml" width="25" height="25" data="<?=img_path('_template_icons.svg#daylight') ?>"></object> &copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
+		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> <img width="25" height="25" src="<?=img_path('_template_icons.svg#daylight') ?>"> &copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
 	</footer>
 </div>
 </body>
