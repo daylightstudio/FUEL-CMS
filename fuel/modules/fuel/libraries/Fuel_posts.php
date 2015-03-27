@@ -210,7 +210,7 @@ class Fuel_posts extends Fuel_base_library {
 		$routes = array();
 
 		$route_keys = array_keys($config);
-		$invalid_keys = array('base_uri', 'layout', 'vars');
+		$invalid_keys = array('base_uri', 'layout', 'vars', 'per_page');
 
 		// first add custom routes to give the higher precedence
 		foreach($config as $key => $c)
