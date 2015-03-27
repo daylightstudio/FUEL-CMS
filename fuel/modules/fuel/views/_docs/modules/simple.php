@@ -307,6 +307,23 @@ on the key value specified in the config (e.g. example):</p>
 			<td>None</td>
 			<td>A description value that can be used in the site docs</td>
 		</tr>
+		<tr>
+			<td><strong>pages</strong></td>
+			<td>array</td>
+			<td>None</td>
+			<td>Can automatically generate pages for your module including list pages, detail pages, related category and tag pages, search pages and your own custom pages. Leverages
+				by default the fuel/application/views/_posts/ view files but that can be overwritten.
+<pre>'pages' => array(
+'base_uri' => 'media',
+'layout' => 'posts',
+'list' => 'media/list',
+'post' => 'media/detail',
+'archive' => array('route' => 'media/archive(/$year:\d{4})(/$month:\d{1,2})?(/$day:\d{1,2})?', 'view' => 'media/list', 'layout' => 'main', 'method' => 'my_test_method', 'empty_data_show_404' => TRUE),
+'tag' => array('route' => 'media/tag/($tag:.+)', 'layout' => 'main', 'view' => 'media/list', 'empty_data_show_404' => TRUE),
+'custom' =>array('route' => 'media/custom', 'view' => 'media/list', 'method' => 'my_custom_method'));</pre>
+
+			</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -343,4 +360,103 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 you can do so like so:</p>
 <pre class="brush:php">
 $config['module_overwrites']['pages']['model_name'] = 'MY_pages_model';
+</pre>
+
+
+<h2 id="post_pages">Generated Post Pages</h2>
+<p>New to FUEL CMS 1.3 is the ability to create post type pages automatically from your modules. 
+This is a very powerful future that allows you to map routes to post pages that have specific behaviors. 
+This means each module can now have blog like features (minus the commenting). 
+It uses the <a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel_posts</a> class to do so.
+There are a number of types of pages automatically created for you 
+(basically the ones we were tired of creating over and over again) including, slug, archive, list, post, tag and archive pages. 
+For example, if you have a module's model that has a <dfn>foreign_key</dfn> property to the <dfn>fuel_categories_model</dfn> and a <dfn>has_many</dfn> to the <dfn>fuel_tags_model</dfn>,
+tag and category pages can be automatically generated using the <dfn>pages</dfn> parameter. 
+To make it easier, there is a <dfn>Base_posts_model</dfn> class that your module's model can inherit from (which already inherits from the Base_module_model class).
+Below is an example:
+</p>
+
+<p>Below is an example of an "articles" module with the pages parameter being used in a module's configuration:</p>
+
+<p>The articles SQL:</p>
+<pre class="brush:php">
+CREATE TABLE `articles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `excerpt` text COLLATE utf8_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `featured` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
+  `publish_date` datetime NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+</pre>
+
+<p>The module's model (note that it inherits from the Base_posts_model):</p>
+<pre class="brush:php">
+&lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+require_once(FUEL_PATH.'models/base_posts_model.php');
+
+class Articles_model extends Base_posts_model {
+
+	public $name = 'articles';
+
+	
+	function list_items($limit = NULL, $offset = NULL, $col = 'publish_date', $order = 'desc', $just_count = FALSE)
+	{
+		$data  = parent::list_items($limit, $offset, $col, $order, $just_count);
+		return $data;
+	}
+	
+	function form_fields($values = array(), $related = array())
+	{	
+		$fields = parent::form_fields($values, $related);
+		return $fields;
+	}
+}
+
+class Articles_item_model extends Base_post_item_model {
+
+}
+</pre>
+
+<p>The following global page parameters can be used with the pages parameter for your module:</p>
+<ul>
+	<li><strong>base_uri</strong>: the main base URI path to the</li>
+	<li><strong>layout</strong>: the main layout to be used for the pages generated that don't have it explicitly specified </li>
+	<li><strong>vars</strong>: an array of variables to be sent to the generate pages</li>
+	<li><strong>per_page</strong>: how many pages to display per page if pagination is needed</li>
+</ul>
+<br>
+<p>Additionally, each slug, archive, list, post, tag and archive page can have it's own parameters specified like so:</p>
+<ul>
+	<li><strong>route</strong>: the route to the pages. Note in the example below that you can specify the URI parameter variable names by prefixing <dfn>$name:</dfn> in the captured area (e.g. (/$year:\d{4})) </li>
+	<li><strong>view</strong>: the view to use for the page. By default, it will look in the <span class="file">application/views/_posts</span> folder</li>
+	<li><strong>layout</strong>: will overwrite the global layout specified</li>
+	<li><strong>method</strong>: the method on the model to use for getting the data. If nothing is specified it will use the defaults in the <a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel_post class</a></li>
+	<li><strong>vars</strong>: specific page variables to pass to the pages at the specified route</li>
+	<li><strong>per_page</strong>: will overwrite global page parameter setting for many pages to display per page if pagination is needed</li>
+	<li><strong>empty_data_show_404</strong>: determines whether to display a 404 error if the data is empty or not</li>
+</ul>
+<br>
+<p>Lastly, you can of course create your own custom set of pages generated by your module and are not limited to the default.</p>
+
+<p>Below is an example of the pages parameter being used in a module's configuration:</p>
+<pre class="brush:php">
+...
+'pages' => array(
+	'base_uri' => 'media',
+	'per_page' => 10,
+	'layout' => 'posts',
+	'list' => 'media/list',
+	'post' => 'media/detail',
+	'archive' => array('route' => 'media/archive(/$year:\d{4})(/$month:\d{1,2})?(/$day:\d{1,2})?', 'view' => 'media/list', 'layout' => 'main', 'method' => 'my_test_method', 'empty_data_show_404' => TRUE),
+	'tag' => array('view' => 'media/list', 'empty_data_show_404' => TRUE, 'per_page' => 5),
+	'custom' => array('route' => 'media/custom', 'view' => 'media/list', 'method' => 'my_custom_method')
+),
+...
 </pre>

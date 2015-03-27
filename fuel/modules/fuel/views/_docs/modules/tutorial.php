@@ -6,6 +6,8 @@ You can still create pretty powerful modules without the need of creating your o
 We will actually create several simple modules to allow us to create articles and categorize them in the CMS.
 We will be using 3 data models (<dfn>articles_model</dfn>, <dfn>authors_model</dfn>, <dfn>fuel_tags_model</dfn>), and creating 2 modules (articles, authors).</p>
 
+<p class="important">Visit the <a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a> page for more information about the new 1.3 feature to create pages automatically from your module.</p>
+
 
 <h4><strong>These are the steps in the following tutorial:</strong></h4>
 <ol>

@@ -100,6 +100,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_pages')?>">Fuel Pages Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pagevars')?>">Fuel Pagevars Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel Permissions Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel Posts Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel Redirects Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel Sitevars Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_tags')?>">Fuel Tags Class</a></li>
