@@ -4,6 +4,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 html, body {min-height: 100%; padding: 0; margin: 0; width: 100%; }
 html {font-size: 62.5%; background: #3dbfd9; }
 body {font-size: 16px; line-height: 1.5; color: white; font-family: 'Raleway', 'Lucida Grande', 'Gill Sans', Arial, Helvetica, Sans-serif; }
+body > svg, .main_container > svg { display: none; }
 .wrapper { max-width: 1000px; margin: 0 auto; }
 .page { background: #212326; }
 a:link, a:visited { color: #3dbfd9; text-decoration: none; }
@@ -20,14 +21,14 @@ ol li { clear: both; margin: 1em 0; }
 .icon_block { float: left; width: 16%; min-width: 100px; text-align: center; margin-top: 5px; }
 .content_block { overflow: hidden; }
 .circle { margin-top: 0.4em; display: inline-block; font-size: 30px; font-weight: bold; line-height: 55px; background: #3dbfd9; border-radius: 50%; width: 60px; height: 60px; }
-.circle object { margin: 15px; float: left; }
+.circle svg { margin: 15px; float: left; }
 .bullets li { list-style: disc; margin-bottom: 0.74em; }
 .bullets li ul { padding-left: 0; }
 .bullets li li { list-style: none; margin: 0.5em 0; }
 .small { font-size: 14px; }
 .cta, .cta:link, .cta:visited { font-weight: bold; position: relative; float: right; border: 2px solid white; text-transform: uppercase; white-space: nowrap; color: #ffffff; border-radius: 8px; -webkit-border-radius: 8px; line-height: 2; font-size: 20px; padding: 0.3em 3.5em 0.3em 1em; -webkit-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out; background: #ff0000; }
 .cta:hover, .cta:active, .cta:focus {text-decoration: none; background: #333333; }
-.cta object { position: absolute; right: 1em; top: 20%; }
+.cta svg { position: absolute; right: 1em; top: 20%; }
 .writable { padding: 0; list-style: none; }
 .writable li { color: #212326; border-radius: 8px; background: #e2f5f9; padding: 0.75em 1em; }
 .writable .error { border: 2px solid red; }
@@ -46,7 +47,7 @@ ol li { clear: both; margin: 1em 0; }
 .mainnav .first a:after {content: '/'; }
 .footer .left { position: absolute; margin: 0; }
 .colophon {clear: both; text-align: center; margin-top: 3em; font-size: 12px; }
-.colophon object { margin-bottom: -8px; }
-.small object { margin-bottom: -15px; }
+.colophon svg { margin-bottom: -8px; }
+.small svg { margin-bottom: -15px; }
 .callout { color: #f00; }
 #error_404 { padding: 2em; text-align: center; }
