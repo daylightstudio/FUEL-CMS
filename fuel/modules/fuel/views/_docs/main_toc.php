@@ -99,6 +99,7 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_notification')?>">Fuel Notification Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pages')?>">Fuel Pages Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pagevars')?>">Fuel Pagevars Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_parser')?>">Fuel Parser Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel Permissions Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel Posts Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel Redirects Class</a></li>

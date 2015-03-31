@@ -3,23 +3,57 @@
 <h2>Overview</h2>
 <p>By default, FUEL disables PHP code from being saved in your module data 
 (you must change the <a href="<?=user_guide_url('modules/simple')?>">sanitize_input</a> setting for the module).
-FUEL has implemented the <a href="http://dwoo.org/" target="_blank">Dwoo</a> PHP 5 based templating system.
+FUEL has three options to choose from for the parsing engine of <a href="https://ellislab.com/codeigniter/user-guide/libraries/parser.html" target="_blank">ci</a>, 
+<a href="http://dwoo.org" target="_blank">Dwoo</a> and <a href="http://twig.sensiolabs.org" target="_blank">Twig (new!)</a>. 
+The default parsing engine is currently Dwoo for legacy reasons but has been deprecated in favor of Twig. New to FUEL CMS 1.3 are some additional FUEL template configurations
+that can be overwritten in your <span class="file">fuel/application/config/MY_fuel.php</span> file:
 </p>
+<pre class="brush:php">
+// The directory to put the parsed compiled files
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
 
-<h3>MY_Parser</h3>
-<p>FUEL overwrites the default CodeIgniter Parser library with the <a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser</a> 
-library to implement the expanded Dwoo templating syntax.</p>
+// The delimiters used by the parsing engine
+$config['parser_delimiters'] = array(
+				'tag_comment'   => array('{#', '#}'), // Twig only
+				'tag_block'     => array('{%', '%}'), // Twig only
+				'tag_variable'  => array('{', '}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}'
+				'interpolation' => array('#{', '}'), // Twig only
+			);
+
+// Functions allowed by the parsing engine
+$config['parser_allowed_functions'] = array(
+	'strip_tags', 'date', 
+	'detect_lang','lang',
+	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
+	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
+	'quote', 'safe_mailto', // HTML/URL specific
+	'session_flashdata', 'session_userdata', // Session specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment', 'auto_typography', 'current_url' // CI specific
+);
+
+// Object references passed to the parsing engine
+$config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'user_agent');
+</pre>
+
+<p class="important"><strong>Note that the default parsing delimieters are set to "{" and "}" which is different then the default Twig parsing parameters. This is done for legacy reasons.</strong></p>
+
+<h3>Fuel_parser Class</h3>
+<p>New to FUEL CMS 1.3 is the <a href="<?=user_guide_url('libraries/fuel_parser')?>">Fuel_parser</a> class which provides a unified way to dealing with the different parsing engines now available in FUEL.</p>
 
 
 <h3>String Helper Functions</h3>
 <p>FUEL comes with the following <a href="<?=user_guide_url('helpers/my_string_helper')?>">string helper functions</a> to help with parsing and converting from the Dwoo templating syntax:</p>
 <ul>
-	<li>php_to_template_syntax - Convert PHP syntax to <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>. Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</li>
-	<li>parse_template_syntax - Parses a strings <a href="http://dwoo.org" target="_blank">Dwoo templating syntax</a>.</li>
+	<li>php_to_template_syntax - Convert PHP syntax to the specified emplating syntax (as best it can). Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</li>
+	<li>parse_template_syntax - Parses a strings specified templating syntax.</li>
 </ul>
 
+<p class="important"><strong>The below documentation is specific to the Dwoo templating engine. 
+	See the <a href="http://twig.sensiolabs.org" target="_blank">Twig documenation</a> for Twig specific documentation.</strong>
+</p>
+
 <h3>Non-Namespaced Functions</h3>
-<p>The following are non-namespaced functions that can be used in your application and will be translated by the templating system.</p>
+<p>The following are non-namespaced functions that can be used in your application and will be translated by the templating system (below are Dwoo examples).</p>
 <ul>
 	<li>{site_url('/my/path/')}</li>
 	<li>{assets_path('images/my_asset.jpg')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_assets_path')?>">assets_path()</a> function</li>
@@ -34,7 +68,7 @@ library to implement the expanded Dwoo templating syntax.</p>
 </ul>
 
 <h3>Namespaced Functions</h3>
-<p>The following are namespaced functions that can be used in your application and will be translated by the templating system.</p>
+<p>The following are namespaced functions that can be used in your application and will be translated by the templating system (below are Dwoo examples).</p>
 
 <ul>
 	<li>{uri_segment(1, true/false)} - Maps to the <a href="<?=user_guide_url('helpers/my_url_helper#func_uri_segment')?>">uri_segment(n)</a> function.</li>
@@ -74,7 +108,7 @@ $my_data[] = array('name' => 'Han Solo', 'weapon' => 'blaster');
 
 <h3>Conditional Statements</h3>
 <p>FUEL also allows for php like conditional statements to be inserted into the view using <dfn>{if ... }</dfn>, <dfn>{elseif ...}</dfn> and <dfn>{/if}</dfn>.
-For example:
+For example (Dwoo example):
 </p>
 
 <pre class="brush:php">
