@@ -37,7 +37,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
 
 						// remove the img_path
 						var regex = "^" + myMarkItUpSettings.parserLeftDelimiter(true) + "img_path\\('(.+)'\\)" + myMarkItUpSettings.parserRightDelimiter(true);
-						img = src.replace(new RexExp(regex), function(match, contents, offset, s) {
+						img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
