@@ -2545,7 +2545,7 @@ class Form_builder {
 							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
 							{
 								$date = (!empty($val["'.$process_key.'"]["'.$params['name'].'"]) AND is_date_format($val["'.$process_key.'"]["'.$params['name'].'"])) ? current(explode(" ", $val["'.$process_key.'"]["'.$params['name'].'"])) : "";
-								$hr   = (!empty($val["'.$process_key.'"]["'.$params['name'].'_hour"]) AND  (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] > 0 AND (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] < 24) ? $val["'.$process_key.'"]["'.$params['name'].'_hour"] : "";
+								$hr   = (isset($val["'.$process_key.'"]["'.$params['name'].'_hour"]) AND  (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] >= 0 AND (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] < 24) ? $val["'.$process_key.'"]["'.$params['name'].'_hour"] : "";
 								$min  = (!empty($val["'.$process_key.'"]["'.$params['name'].'_min"]) AND is_numeric($val["'.$process_key.'"]["'.$params['name'].'_min"]))  ? $val["'.$process_key.'"]["'.$params['name'].'_min"] : "00";
 								$ampm = (isset($val["'.$process_key.'"]["'.$params['name'].'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'"]["'.$params['name'].'_am_pm"] : "";
 
@@ -2553,7 +2553,8 @@ class Form_builder {
 								{
 									if ($hr > 24) 
 									{
-										$hr = "00";
+										$hr = "12";
+										$ampm = "am";
 									}
 									else
 									{
@@ -2561,11 +2562,16 @@ class Form_builder {
 										$ampm = "pm";
 									}
 								}
+								elseif ((int) $hr === 0)
+								{
+									$hr = "12";
+									$ampm = "am";
+								}
 
 								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]["'.$params['name'].'"]));
 								if ($date != "")
 								{
-									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+									if ($hr !== "") $dateval .= " ".$hr.":".$min.$ampm;
 								}
 								if (!empty($dateval))
 								{
@@ -2580,15 +2586,16 @@ class Form_builder {
 				else
 				{
 					$date  = (!empty($_POST["'.$process_key.'"]) AND is_date_format($_POST["'.$process_key.'"])) ? current(explode(" ", $_POST["'.$process_key.'"])) : "";
-					$hr    = (!empty($_POST["'.$process_key.'_hour"]) AND (int)$_POST["'.$process_key.'_hour"] > 0 AND (int)$_POST["'.$process_key.'_hour"] < 24) ? $_POST["'.$process_key.'_hour"] : "";
+					$hr    = (isset($_POST["'.$process_key.'_hour"]) AND (int)$_POST["'.$process_key.'_hour"] >= 0 AND (int)$_POST["'.$process_key.'_hour"] < 24) ? $_POST["'.$process_key.'_hour"] : "";
 					$min   = (!empty($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
 					$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "";
-					
+
 					if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 					{
 						if ($hr > 24) 
 						{
-							$hr = "00";
+							$hr = "12";
+							$ampm = "am";
 						}
 						else
 						{
@@ -2596,18 +2603,25 @@ class Form_builder {
 							$ampm = "pm";
 						}
 					}
+					elseif ((int) $hr === 0)
+					{
+						$hr = "12";
+						$ampm = "am";
+					}
 
 					$dateval = $value;
-					
+
 					if ($date != "")
 					{
 						$dateval = $date;
-						if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
+
+						if ($hr !== "") $dateval .= " ".$hr.":".$min.$ampm;
 						if (!empty($dateval))
 						{
 							$dateval = date("Y-m-d H:i:s", strtotime($dateval));
 						}
 					}
+
 					return $dateval;
 				}
 			';
