@@ -5,7 +5,7 @@
  * A lightweight javascript MVC framework.
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
 

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -206,15 +206,19 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The type of SSL either redirect... either to https or http (optional)
 	 * @return	array	
 	 */	
-	protected function _add_ssl_type($uri, $redirect = '', $type = 'ssl')
+	protected function _add_ssl_type($uri, $redirect = '', $environment = '', $type = 'ssl')
 	{
+		if (empty($environment))
+		{
+			$environment = ENVIRONMENT;
+		}
 		if (is_array($uri))
 		{
 			if (!isset($this->$type[$redirect]))
 			{
 				$this->$type[$redirect] = array();
 			}
-			$this->$type[$redirect] = array_merge($this->$type[$redirect], $uri);
+			$this->$type[$environment][$redirect] = array_merge($this->$type[$redirect], $uri);
 		}
 		else if (is_string($uri))
 		{
@@ -233,8 +237,13 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The type of SSL either redirect... either to https or http (optional)
 	 * @return	array	
 	 */	
-	protected function _remove_ssl_type($uri, $environment = 'production', $type = 'ssl')
+	protected function _remove_ssl_type($uri, $environment = '', $type = 'ssl')
 	{
+		if (empty($environment))
+		{
+			$environment = ENVIRONMENT;
+		}
+
 		if (isset($this->$type[$environment][$uri]))
 		{
 			unset($this->$type[$environment][$uri]);
