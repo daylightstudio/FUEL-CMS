@@ -686,12 +686,12 @@ a linked list item for each article.
 This is because we still need to tell FUEL to use this view file for any URI location of <strong>articles/{slug}</strong>. 
 There are several ways to do this <strong>and you only need to implement one of them below</strong>:
 <ol>
-  <li><strong>max_page_params</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/views/_variables/MY_fuel.php</span>
+  <li><strong>max_page_params</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/config/MY_fuel.php</span>
     <pre class="brush: php">
     $config['max_page_params'] = array('articles' => 1);
     </pre>
   </li>
-  <li><strong>auto_search_views</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/views/_variables/MY_fuel.php</span>
+  <li><strong>auto_search_views</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/config/MY_fuel.php</span>
     <pre class="brush: php">
     $config['auto_search_views'] = TRUE;
     </pre>
