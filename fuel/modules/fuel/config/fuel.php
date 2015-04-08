@@ -35,7 +35,7 @@
 // The name of the site to be displayed at the top. Also used to generate your session key
 $config['site_name'] = 'MyWebsite';
 
-// path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
+// Path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
 $config['fuel_path'] = FUEL_FOLDER.'/';
 
 // Options are cms, views, auto... cms pulls views and variables from the database,
@@ -466,13 +466,6 @@ $config['generate'] = array(
 
 @include(APPPATH.'config/MY_fuel.php');
 
-// EXAMPLE: Uncomment if you want to control these options from the CMS
-// $config['settings'] = array();
-// $config['settings']['site_name'] = array('value' => $config['site_name']);
-// if ( ! empty($config['modules_allowed']))
-// {
-// 	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
-// }
 
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */
