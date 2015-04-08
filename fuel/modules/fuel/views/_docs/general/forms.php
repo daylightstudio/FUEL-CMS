@@ -220,11 +220,13 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="text" class="toggle">text</h3>
 <div class="toggle_block_off">
-	<p>This field type is the standard text field.</p>
+	<p>This field type is the standard text field and the "type" parameter should be left blank or don't include it all together (it is the default field type if no representatives are used).</p>
+	<p class="important">Note that the type being specified is empty. This is because using 'text' will create a textarea. The reason for this originally had to do with
+		having a table field type of text would map better to a textarea then to a input text field.</p>
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
-	$fields['text_example'] = array('type' => 'text');
+	$fields['text_example'] = array('type' => '');
 	</pre>
 	<?php form_builder_example('text', array()); ?>
 	
