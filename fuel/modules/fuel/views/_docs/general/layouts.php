@@ -123,7 +123,7 @@ $config['layouts']['main'] = array(
 );
 </pre>
 <h3>Layouts As Their Own Class Files</h3>
-<p>Similarly, you can overwite the <dfn>Base_layout</dfn> classes <dfn>fields()</dfn> method to return the fields for your layout:</p>
+<p>Similarly, you can overwite the extended <dfn>Fuel_layout</dfn> classes <dfn>fields()</dfn> method to return the fields for your layout:</p>
 <span class="file">fuel/application/config/MY_fuel_layouts.php</span><br />
 <pre class="brush:php">
 $config['layouts']['home'] = array(
@@ -138,9 +138,9 @@ $config['layouts']['home'] = array(
 
 <span class="file">fuel/application/libraries/_layouts/Home_layout.php </span><br />
 <pre class="brush:php">
-require_once('Base_layout.php');
+require_once('Fuel_layout.php');
 
-class Home_layout extends Base_layout {
+class Home_layout extends Fuel_layout {
 
 	// --------------------------------------------------------------------
 
