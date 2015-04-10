@@ -1512,6 +1512,11 @@ class Module extends Fuel_base_controller {
 
 	public function _block_processing($fields, $posted)
 	{
+		// grab the fields array if using the form fields class
+		if (is_object($fields) && ($fields instanceof Base_model_fields)) {
+			$fields = $fields->get_fields();
+		}
+
 		// add in block fields
 		foreach($fields as $key => $val)
 		{
