@@ -319,6 +319,8 @@ class Base_module_model extends MY_Model {
 	 */	
 	protected function _list_items_query()
 	{
+		$this->_common_joins();
+
 		$this->filters = (array) $this->filters;
 		$where_or = array();
 		$where_and = array();
@@ -857,6 +859,24 @@ class Base_module_model extends MY_Model {
 			return array();
 		}
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrites the MY_Model options_list to insert the _common_joins method as a convenience
+	 *
+	 * @access	public
+	 * @param	string	the column to use for the value (optional)
+	 * @param	string	the column to use for the label (optional)
+	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
+	 * @return	array
+	 */	
+	public function options_list($key = NULL, $val = NULL, $where = array(), $order = TRUE)
+	{
+		$this->_common_joins();
+		return parent::options_list($key, $val, $where, $order);
+	}
 
 	/**
 	 * Will return an HTML string of option tags which can be used dynamically creating select lists like for "dependent" field types
@@ -1146,7 +1166,22 @@ class Base_module_model extends MY_Model {
 			$this->_publish_status();
 		}
 
+		$this->_common_joins();
+
 		$this->_limit_to_user();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Placeholder to be overwritten for common joins to be used by _common_query, options_list and list_items methods
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	public function _common_joins()
+	{
+		
 	}
 	
 	// --------------------------------------------------------------------
