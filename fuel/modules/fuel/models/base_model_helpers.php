@@ -31,7 +31,7 @@ abstract class Abstract_base_model_helper {
 	 *
 	 * @access	public
 	 * @param	object 	A reference to the parent model
-	 * @return	object 	Instance of Base_model_validation
+	 * @return	object
 	 */	
 	public function set_parent_model($model)
 	{
@@ -59,7 +59,7 @@ abstract class Abstract_base_model_helper {
 	 *
 	 * @access	public
 	 * @param	array 	The values to set
-	 * @return	object 	Instance of Base_model_validation
+	 * @return	object
 	 */	
 	public function set_values($values)
 	{
@@ -72,7 +72,7 @@ abstract class Abstract_base_model_helper {
 	 *
 	 * @access	public
 	 * @param	array 	The values to set
-	 * @return	object 	Instance of Base_model_validation
+	 * @return	object
 	 */	
 	public function append_values($values)
 	{
@@ -602,6 +602,19 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	public function get_validator()
 	{
 		return $this->validator;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds an error to the parent models validator object
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function add_error($msg, $key = NULL)
+	{
+		return $this->parent_model->add_error($msg, $key);
 	}
 
 	// --------------------------------------------------------------------
