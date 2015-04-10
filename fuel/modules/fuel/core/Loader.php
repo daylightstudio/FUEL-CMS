@@ -595,6 +595,61 @@ class Fuel_Loader extends MX_Loader
 		}
 		return isset($this->_ci_cached_vars[$scope][$key]) ? $this->_ci_cached_vars[$scope][$key] : NULL;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Fix for mysqli
+	 * http://forum.getfuelcms.com/discussion/2031/mysqli-the-fuel-backup-module#Item_4
+	 * @return	void
+	 */
+	public function dbutil()
+    {
+
+        if (! class_exists('CI_DB'))
+        {
+            $this->database();
+        }
+
+        $CI =& get_instance();
+
+        // for backwards compatibility, load dbforge so we can extend dbutils off it
+        // this use is deprecated and strongly discouraged
+        $CI->load->dbforge();
+
+        require_once(BASEPATH . 'database/DB_utility.php');
+
+        // START custom >>
+
+        // path of default db utility file
+        $default_utility = BASEPATH . 'database/drivers/' . $CI->db->dbdriver . '/' . $CI->db->dbdriver . '_utility.php';
+
+        // path of my custom db utility file
+        $my_utility = APPPATH . 'libraries/MY_DB_' . $CI->db->dbdriver . '_utility.php';
+
+        // set custom db utility file if it exists
+        if (file_exists($my_utility))
+        {
+            $utility = $my_utility;
+            $extend = 'MY_DB_';
+        }
+        else
+        {
+            $utility = $default_utility;
+            $extend = 'CI_DB_';
+        }
+
+        // load db utility file
+        require_once($utility);
+
+        // set the class
+        $class = $extend . $CI->db->dbdriver . '_utility';
+
+        // << END custom
+
+        $CI->dbutil = new $class();
+
+    }
 }
 
 /** load the CI class for Modular Separation **/
