@@ -83,6 +83,7 @@ class MY_Model extends CI_Model {
 	protected $validator = NULL; // the validator object
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
+	protected $_last_saved = NULL; // a reference to the last saved object / ID of record;
 	
 
 	/**
@@ -1637,6 +1638,7 @@ class MY_Model extends CI_Model {
 			if (isset($insert_id) AND ! empty($insert_id))
 			{
 				$return = $insert_id;
+				$this->_last_saved_id = $insert_id;
 			}
 			else
 			{
@@ -1693,6 +1695,31 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns the last saved record
+	 *
+	 <code>
+	 $this->examples_model->save($values);
+	 $record = $this->saved();
+	</code>
+	 *
+	 * @access public
+	 * @return object
+	 */
+	public function saved()
+	{
+		if (!empty($this->_last_saved))
+		{
+			if (!is_object($this->_last_saved) AND !is_array($this->_last_saved))
+			{
+				$this->_last_saved = $this->find_by_key($this->_last_saved);	
+			}
+			return $this->_last_saved;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Save related data to a many to many table. To be used in on_after_save hook
 	 *
 	 <code>
@@ -1735,7 +1762,7 @@ class MY_Model extends CI_Model {
 		}
 		return $return;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
