@@ -618,7 +618,7 @@ class Module extends Fuel_base_controller {
 					{
 						$field_type = $this->model->field_type($raw_key);
 
-						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
+						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date' AND (int) $posted[$key] !== 0)
 						{
 							$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
 							$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
