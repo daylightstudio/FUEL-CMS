@@ -767,7 +767,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					// refresh field with formBuilder jquery
 					fuel.fields.multi_field(context)
 					$('#form').formBuilder().initialize(context);
-					$('#' + fieldId, context).change(function(){
+					$('#' + fieldId, context).off('.addedit').on('change.addedit', function(){
 						changeField($(this));
 					});
 					changeField($('#' + fieldId, context));
@@ -778,10 +778,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if ($this.val() == '' || $this.find('option').length == 0){
 					if ($this.is('select') && $this.find('option').length == 0){
 						$this.hide();
+					} else {
+						$this.show();
 					}
 					if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
 				} else {
 					$this.parent().find('.edit_inline_button').show();
+					$this.show();
 				}	
 			}
 			
@@ -841,7 +844,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				return false;
 			});
 
-			$field.change(function(){
+			$field.off('.addedit').on('change.addedit', function(){
 				changeField($(this));
 			});
 			changeField($field);
@@ -1348,14 +1351,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 				if (val.length){
 					$.get(url, data, function(html){
-						var $select = $(replaceSelector, this);
+						var $select = $(replaceSelector);
 						$select.html(html);
 						$select.val(origValue);
-						if ($select.prop("multiple")){
+						//if ($select.prop("multiple")){
 							fuel.fields.multi_field(context);
-						}
+						//}
 					});
-					fuel.fields.inline_edit_field(context);
 				}
 			})
 			
