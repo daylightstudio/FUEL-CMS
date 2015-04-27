@@ -44,6 +44,10 @@ $lang['replace_warning'] = 'Are you sure you want to replace the contents of thi
 
 $lang['edit_multi_select_warning'] = 'You must have only have one option selected to edit.';
 
+$lang['filters_close'] = '&#8673; Close';
+$lang['filters_open'] = '&#8675; Open';
+
+
 /*
 |--------------------------------------------------------------------------
 | MarkItUp
