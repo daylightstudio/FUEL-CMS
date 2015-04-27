@@ -24,6 +24,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 //		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
 		this.uiCookie = jqx.config.uiCookie;
+		this.ajaxing = false;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
@@ -336,6 +337,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			e.preventDefault();
 			$('.adv_search').toggle();
 		});
+
+		$('.filters_toggle').toggle(
+			function(){
+				var $this = $(this);
+				$(this).html(fuel.lang('filters_open'));
+				$('.filters').slideUp(function(){
+				});
+				
+			},
+			function(){
+				$('.filters').slideDown();
+				$(this).html(fuel.lang('filters_close'));
+			}
+		)
 	},
 	
 	add_edit : function(initSpecFields){
@@ -440,7 +455,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$(document).on('click', '.save, #form input[type="submit"]', function(e){
 			
-			if ($(this).hasClass('disabled')){
+			if ($(this).hasClass('disabled') || this.ajaxing){
 				return false;
 			}
 
@@ -496,6 +511,17 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//$('#form input:first').select();
 		$(':input', '#form').filter(':first').focus();
 		
+		$(document).ajaxStart(function() {
+			this.ajaxing = true;			
+			$( "#fuel_main_content").css('overflow', 'hidden').append('<div id="fuel_loader"><div class="loader"></div></div>');
+		});
+
+		$(document).ajaxStop(function() {
+			this.ajaxing = false;
+			$( "#fuel_main_content").css('overflow', 'auto');
+			$('#fuel_loader').remove();
+		});
+
 		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
 	},
 	
