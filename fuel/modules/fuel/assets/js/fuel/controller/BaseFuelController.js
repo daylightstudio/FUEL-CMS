@@ -25,6 +25,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.localized = jqx.config.localized;
 		this.uiCookie = jqx.config.uiCookie;
 		this.ajaxing = false;
+		this.ajaxingCnt = 0;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
@@ -455,14 +456,17 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$(document).on('click', '.save, #form input[type="submit"]', function(e){
 			
-			if ($(this).hasClass('disabled') || this.ajaxing){
+			$this = $(this);
+
+			if ($this.hasClass('disabled') || _this.ajaxing || $('#form').data('disabled')){
 				return false;
 			}
 
 			$.removeChecksave();
+
 			$('#form').submit();
-			$(this).attr('disabled', true);
-			$(this).addClass('disabled');
+			$this.attr('disabled', true);
+			$this.addClass('disabled');
 			return false;
 		});
 		
@@ -511,18 +515,32 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//$('#form input:first').select();
 		$(':input', '#form').filter(':first').focus();
 		
-		$(document).ajaxStart(function() {
-			this.ajaxing = true;			
-			$( "#fuel_main_content").css('overflow', 'hidden').append('<div id="fuel_loader"><div class="loader"></div></div>');
+		$(document).ajaxSend(function() {
+			_this.ajaxingCnt += 1;
+			_this.displayAjaxLoader(true);
 		});
 
-		$(document).ajaxStop(function() {
-			this.ajaxing = false;
-			$( "#fuel_main_content").css('overflow', 'auto');
-			$('#fuel_loader').remove();
+		$(document).ajaxComplete(function() {
+			_this.ajaxingCnt -= 1;
+			if (_this.ajaxingCnt <= 0){
+				_this.ajaxing = false;
+			}
+			_this.displayAjaxLoader(false);
 		});
 
 		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
+	},
+
+	displayAjaxLoader : function(show){
+		if (show) {
+			if (!$('#fuel_loader').length){
+				$("#fuel_main_content").css('overflow', 'hidden').append('<div id="fuel_loader"><div class="loader"></div></div>');		
+			}
+			
+		} else {
+			$("#fuel_main_content").css('overflow', 'auto');
+			$('#fuel_loader').remove();
+		}
 	},
 	
 	initSpecialFields : function(context){

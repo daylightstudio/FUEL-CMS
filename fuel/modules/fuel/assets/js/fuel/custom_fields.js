@@ -1196,12 +1196,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 				// show loader
 				$(this).parent().find('.loader').show();
+				$('#form').data('disabled', true);
 				$layout_fields.load(url, function(){
 					// hide loader
 					$(this).parent().find('.loader').hide();
 					$(this).find('.block_name').val(val);
 					fuel.adjustIframeWindowSize();
 					$(document).trigger('blockLoaded', [$this, context]);
+					$('#form').data('disabled', false);
 				});
 			} else {
 				$layout_fields.empty();
