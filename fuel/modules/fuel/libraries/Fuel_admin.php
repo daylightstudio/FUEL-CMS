@@ -164,7 +164,7 @@ class Fuel_admin extends Fuel_base_library {
 				'docs' => 'docs/',
 			);
 
-		$this->CI->asset->assets_path = $this->CI->config->item('assets_path');
+		$this->CI->asset->assets_path = 'assets/';
 			
 		$this->main_layout = $this->fuel->config('main_layout');
 		
