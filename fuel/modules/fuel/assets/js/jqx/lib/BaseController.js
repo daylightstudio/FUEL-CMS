@@ -10,7 +10,7 @@ jqx.lib.BaseController = Class.extend({
 	
 	callMethod : function(method){
 		if (!method && this.initObj.method) method = this.initObj.method;
-		if (method) {
+		if (method && typeof(this[method]) != 'undefined') {
 			this[method](this.initObj);
 		}
 	},
