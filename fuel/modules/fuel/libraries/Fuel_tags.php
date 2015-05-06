@@ -38,8 +38,8 @@ class Fuel_tags extends Fuel_module {
 	 * Returns a tag model record object
 	 *
 	 * @access	public
-	 * @param	string	the name of the tag
-	 * @param	string	the name of the category the tag belongs to (optional)
+	 * @param	string	the slug value of the tag
+	 * @param	string	the slug of the category the tag belongs to (optional)
 	 * @return	object
 	 */	
 	public function find_by_tag($tag, $category = NULL)
