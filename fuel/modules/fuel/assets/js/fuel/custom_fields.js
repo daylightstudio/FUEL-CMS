@@ -1306,6 +1306,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	}
 
 	fuel.fields.dependent_field = function(context, options){
+		var firstlaunch = true;
+		
 		$('.dependent', context).each(function(i){
 
 			var _this = this;
@@ -1359,6 +1361,11 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						//if ($select.prop("multiple")){
 							fuel.fields.multi_field(context);
 						//}
+
+						if (firstlaunch){
+							$.changeChecksaveValue($select, $select.val());
+							firstlaunch = false;	
+						}
 					});
 				}
 			})
