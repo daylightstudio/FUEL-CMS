@@ -944,6 +944,7 @@ class Fuel_custom_fields {
 			return $fields;
 		}
 
+		$vars = !empty($params['vars']) ? $params['vars'] : array();
 		$vars['values'] = $params['value'];
 		$vars['fields_config'] = $params['fields'];
 		if ($repeatable)
