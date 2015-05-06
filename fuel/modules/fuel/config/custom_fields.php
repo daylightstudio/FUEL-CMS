@@ -102,7 +102,7 @@ $fields['state'] = array(
 	'class' => array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function' => 'state',
 	'filepath' => '',
-	'represents' => array('name' => 'state')
+	'represents' => array('name' => '^state$')
 );
 
 // Slug field
