@@ -355,7 +355,7 @@ class Base_module_model extends MY_Model {
 				}
 			}
 
-			if (!empty($val)) 
+			if (!empty($val) OR $val === '0')
 			{
 				$joiner_arr = 'where_'.strtolower($joiner);
 				
@@ -886,6 +886,7 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function ajax_options($where = array())
 	{
+
 		if (!empty($where['exclude']))
 		{
 			$ids = explode(',', $where['exclude']);
@@ -905,9 +906,24 @@ class Base_module_model extends MY_Model {
 			unset($where[$new_lang_key]);
 		}
 
-		$options = $this->options_list(NULL, NULL, $where);
 
 		$str = '';
+
+		if (isset($where['first_option']))
+		{
+			if (!empty($where['first_option']))
+			{
+				$str .= "<option value=\"\" label=\"".$where['first_option']."\">".$where['first_option']."</option>\n";
+			}
+			else
+			{
+				$str .= "<option value=\"\" label=\"".lang('label_select_one')."\">".lang('label_select_one')."</option>\n";
+			}
+		}
+
+		unset($where['first_option']);
+		$options = $this->options_list(NULL, NULL, $where);
+
 		foreach($options as $key => $val)
 		{
 			$str .= "<option value=\"".$key."\" label=\"".$val."\">".$val."</option>\n";
