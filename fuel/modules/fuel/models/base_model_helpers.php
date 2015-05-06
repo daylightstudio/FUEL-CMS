@@ -469,7 +469,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @param  mixed  $key
 	 * @return mixed
 	 */
-	public function &offsetGet($key)
+	public function offsetGet($key)
 	{
 		$ref =& $this->fields[$key];
 		return $ref;
