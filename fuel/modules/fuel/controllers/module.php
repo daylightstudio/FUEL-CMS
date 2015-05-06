@@ -48,7 +48,7 @@ class Module extends Fuel_base_controller {
 			$this->module = fuel_uri_segment(2);
 			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 
-			if ($this->module_obj)
+			if ($this->module AND $this->module_obj)
 			{
 				$mod_name = $this->module_obj->name();	
 			}
@@ -829,7 +829,10 @@ class Module extends Fuel_base_controller {
 
 		$shell_vars = $this->_shell_vars($id);
 
-		$passed_init_vars = ($this->input->get(NULL, TRUE)) ? $this->input->get(NULL, TRUE) : array();
+		$get = (array) $this->input->get(NULL, TRUE);
+		$post = (array) $this->input->post(NULL, TRUE);
+		$passed_init_vars = array_filter(array_merge($get, $post));
+
 		$form_vars = $this->_form_vars($id, $passed_init_vars, $field, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
@@ -1855,6 +1858,12 @@ class Module extends Fuel_base_controller {
 		if ( ! empty($_POST))
 		{
 			$fields = $this->model->form_fields();
+
+			if (is_object($fields) AND $fields instanceof Base_model_fields)
+			{
+				$fields = $fields->get_fields();
+			}
+
 			$field = $this->input->post('field', TRUE);
 
 			if ( ! isset($fields[$field])) return;
