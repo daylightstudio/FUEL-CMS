@@ -1791,6 +1791,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'placeholder' => $params['placeholder'],
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
