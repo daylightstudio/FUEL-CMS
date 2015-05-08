@@ -48,7 +48,9 @@ if (!function_exists('currency'))
 		}
 		$value = (float) $value;
 		$dec_num = (!$include_cents) ? 0 : 2;
-		return $symbol.number_format($value, $dec_num, $decimal_sep, $thousands_sep);
+		$is_negative = (strpos($value, '-') === 0) ? '-' : '';
+		$value = abs($value);
+		return $is_negative.$symbol.number_format($value, $dec_num, $decimal_sep, $thousands_sep);
 	}
 }
 
