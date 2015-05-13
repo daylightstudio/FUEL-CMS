@@ -656,11 +656,17 @@ class Form_builder {
 			$str .= $this->_open_div();
 		}
 		
-		$str .= "<div class=\"actions\"><div class=\"actions_inner\">";
+		$actions =  $this->_render_actions();
 
-		$str .= $this->_render_actions();
+		if (!empty($actions))
+		{
+			$str .= "<div class=\"actions\"><div class=\"actions_inner\">";
 
-		$str .= "</div></div>\n";
+			$str .= $actions;
+
+			$str .= "</div></div>\n";
+		}
+
 		if ($this->has_required AND $this->show_required)
 		{
 			$str .= "<div class=\"required\">";
@@ -864,24 +870,29 @@ class Form_builder {
 			$str .= $this->_open_table();
 		}
 
-		if ($this->label_layout != 'top')
+		$actions = $this->_render_actions();
+
+		if (!empty($actions))
 		{
-			$str .= "<tr";
-			if (!empty($this->row_id_prefix))
+			if ($this->label_layout != 'top')
 			{
-				$str .= ' id="'.$this->row_id_prefix.'actions"';
+				$str .= "<tr";
+				if (!empty($this->row_id_prefix))
+				{
+					$str .= ' id="'.$this->row_id_prefix.'actions"';
+				}
+				$str .= ">\n\t<td></td>\n\t<td class=\"actions\"><div class=\"actions_inner\">";
 			}
-			$str .= ">\n\t<td></td>\n\t<td class=\"actions\"><div class=\"actions_inner\">";
+			else
+			{
+				$str .= "<tr>\n\t<td class=\"actions\"><div class=\"actions\">";
+			}
+
+			$str .= $actions;
+
+			$str .= "</div></td>\n</tr>\n";
 		}
-		else
-		{
-			$str .= "<tr>\n\t<td class=\"actions\"><div class=\"actions\">";
-		}
 
-		$str .= $this->_render_actions();
-
-
-		$str .= "</div></td>\n</tr>\n";
 		if ($this->has_required AND $this->show_required)
 		{
 			$str .= "<tr>\n\t<td colspan=\"".$colspan."\" class=\"required\">";
@@ -957,11 +968,16 @@ class Form_builder {
 			$str = parse_template_syntax($str, $vars, 'ci');
 		}
 
-		$str .= '<div class="actions">';
+		$actions =  $this->_render_actions();
 
-		$str .= $this->_render_actions();
+		if (!empty($actions))
+		{
+			$str .= '<div class="actions">';
 
-		$str .= "</div>";
+			$str .= $actions;
+
+			$str .= "</div>";
+		}
 
 		$this->_html = $this->_close_form($str);
 		
