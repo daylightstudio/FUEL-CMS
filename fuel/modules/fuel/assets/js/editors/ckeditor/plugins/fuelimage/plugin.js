@@ -16,7 +16,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
 		editor.on( 'doubleclick', function( evt )
         {
            var element = evt.data.element;
-           if ( element.is( 'img' ) && !element.getAttribute( '_cke_realelement' )){
+           if ( element.is( 'img' ) && !element.getAttribute( 'data-cke-real-element-type' )){
 				editor.execCommand('fuelimage');
            }
            
