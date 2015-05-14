@@ -23,7 +23,8 @@ class News_model extends Base_posts_model {
 	public $display_unpublished_if_logged_in = TRUE;
 	
 	// can extend Base_model_fields with your own class to manipulate the form fields
-	public $form_fields_class = 'Base_model_fields';
+	//public $form_fields_class = 'Base_model_fields';
+	public $form_fields_class = '';
 
 	// special field names
 	public $publish_date_field = 'publish_date'; // field name for the publish date
