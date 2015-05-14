@@ -359,7 +359,7 @@ class Base_module_model extends MY_Model {
 			{
 				$joiner_arr = 'where_'.strtolower($joiner);
 				
-				if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE) $key = $this->table_name.'.'.$key;
+				if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE AND !preg_match('#_having$#', $key)) $key = $this->table_name.'.'.$key;
 				
 				//$method = ($joiner == 'or') ? 'or_where' : 'where';
 				
@@ -369,7 +369,11 @@ class Base_module_model extends MY_Model {
 					//$this->db->where(array($key => $val));
 					array_push($$joiner_arr, $key.'='.$val);
 				}
-				
+				else if (preg_match('#_having$#', $key))
+				{
+					$key = preg_replace('#_having$#', '', $key);
+					$this->db->having($key, $val);
+				}
 				// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
 				//else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
 				else if (preg_match('#_from$#', $key) OR preg_match('#_fromequal$#', $key) OR preg_match('#_to$#', $key) OR preg_match('#_toequal$#', $key) OR preg_match('#_equal$#', $key))
@@ -379,6 +383,22 @@ class Base_module_model extends MY_Model {
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
 					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
+				}
+				else if (is_array($val))
+				{
+					$arrjoiner = array();
+					foreach($val as $v)
+					{
+						if (strlen($v))
+						{
+							array_push($arrjoiner, $key.'='.$v);
+						}
+					}
+					if (!empty($arrjoiner))
+					{
+						$arrjoiner_sql = '('.implode(' OR ', $arrjoiner).')';
+						array_push($$joiner_arr, $arrjoiner_sql);
+					}
 				}
 				else
 				{
@@ -428,6 +448,74 @@ class Base_module_model extends MY_Model {
 		return $cnt;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays friendly text for what is being filtered on the list view
+	 *
+	 * @access	public
+	 * @param	array The values applied to the filters
+	 * @return	string The friendly text string
+	 */	
+	public function friendly_filter_info($values)
+	{
+		$form_filters = $this->CI->filters;
+
+		$filters = array();
+		foreach($values as $key => $val)
+		{
+			if (!empty($val) AND isset($form_filters[$key]))
+			{
+				// Check if there are options for the form
+				if (isset($form_filters[$key]['options']) OR isset($form_filters[$key]['model']))
+				{
+					if (isset($form_filters[$key]['model']))
+					{
+						$model_params = ( !empty($form_filters[$key]['model_params'])) ? $form_filters[$key]['model_params'] : array();
+						$options = $this->CI->form_builder->options_from_model($form_filters[$key]['model'], $model_params);
+					}
+					else
+					{
+						$options = $form_filters[$key]['options'];
+					}
+					
+					$replace = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
+					if (is_array($val))
+					{
+						foreach($val as $k => $v)
+						{
+							if (isset($options[$v]))
+							{
+								$val[$k] = $options[$v];
+							}
+
+							$val[$k] = preg_replace($replace, '', $val[$k]);
+						}
+						$val = implode(', ', $val);
+					}
+					else
+					{
+						if (isset($options[$val]))
+						{
+							$val = $options[$val];
+						}
+
+						$val = preg_replace($replace, '', $val);
+					}
+				}
+
+				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
+				$filters[] = $label.'="'.$val.'"';
+			}
+		}
+
+		$str = '';
+		if (!empty($filters))
+		{
+			$str = '<strong>Filters:</strong> '.$str .= implode(', ', $filters);
+		}
+		return $str;
+	}
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1289,7 +1377,7 @@ class Base_module_model extends MY_Model {
 		if (!empty($this->limit_to_user_field) AND !$this->fuel->auth->is_super_admin())
 		{
 			$rec = $this->find_one_array($this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field);
-			if ($rec[$this->limit_to_user_field] != $this->fuel->auth->user_data('id'))
+			if (!empty($rec) AND ($rec[$this->limit_to_user_field] != $this->fuel->auth->user_data('id')))
 			{
 				$this->add_error(lang('error_no_permissions'));
 				return FALSE;
