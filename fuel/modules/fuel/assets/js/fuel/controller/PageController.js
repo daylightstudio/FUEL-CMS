@@ -49,7 +49,7 @@ fuel.controller.PageController = jqx.createController(fuel.controller.BaseFuelCo
 		})
 		
 		$('#view_twin_cancel').click(function(){
-			var path = jqx.config.fuelPath + '/pages/import_view_cancel/';
+			var path = jqx.config.fuelPath + '/pages/import_view_cancel';
 			var params = $('#form').serialize();
 			$.post(path, params, function(html){
 				if (html == 'success'){
