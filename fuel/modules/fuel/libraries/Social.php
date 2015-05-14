@@ -18,6 +18,8 @@
 /**
  * FUEL Social library
  *
+ * There is a <dfn>fuel/application/config/social.php</dfn> configuration file for the preferred share URLs.
+ *
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
@@ -109,7 +111,7 @@ class Social {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Set a share URL
+	 * Returns a share URL
 	 *
 	 * @access	public
 	 * @param	string	The type (e.g. twitter, facebook, linkedin..etc)
