@@ -195,7 +195,7 @@ class Fuel_custom_fields {
 		{
 			$editor_config = json_encode($editor_config);
 		}
-		$js = '<script>fuel.fields.setElementData("'.$params['name'].'", "editor", '.$editor_config.');</script>';	
+		$js = '<script>jQuery(function(){ fuel.fields.setElementData("'.$params['name'].'", "editor", '.$editor_config.');});</script>';
 		$form_builder->add_js($js, 'editor_config_'.$params['name']);
 		return $form_builder->create_textarea($params);
 	}
@@ -2146,7 +2146,7 @@ class Fuel_custom_fields {
 		$embedlistid = (!empty($params['id'])) ? $params['id'] : 'embedlist-'.sha1($module->name() . mt_rand());
 		$class = (!empty($params['class'])) ? ' '.$params['class'] : '';
 		$embedded_list_view = '<div class="embedded_list_container'.$class.'" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'>';
-		if (!$readonly)
+		if (!$readonly AND (isset($params['create_button_label']) AND $params['create_button_label'] !== FALSE))
 		{
 			$embedded_list_view .= '<div class="embedded_list_actions" style="margin-bottom: 20px;"><a href="'.$create_url.'" class="btn_field datatable_action">'.$create_button_label.'</a></div>';
 		}
