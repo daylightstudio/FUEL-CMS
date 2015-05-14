@@ -341,7 +341,7 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 <ul>
 	<li>list_items()</li>
 	<li>tree()</li>
-	<li>form()</li>
+	<li>form_fields()</li>
 </ul>
 
 <p>Additionally, there are <a href="<?=user_guide_url('libraries/my_model#hooks')?>">several hooks</a> you may want to use that allow you to insert functionality during the saving and deleting process of a modules record.</p>
@@ -355,6 +355,136 @@ Custom record object should extend the <a href="<?=user_guide_url('libraries/bas
 	<li><strong>Preview view (optional)</strong> - the URO to the website to preview the module</li>
 </ul>
 
+<h2 id="filtering">Filtering the List View</h2>
+<p>The list_items() method provides some ways to make it easier to search and filter your list results. 
+By default, a simple module comes with a single search field that will use the module's <dfn>display_field</dfn> configuration parameter to search in. 
+If you want the primary search field to be different then the <dfn>display_field</dfn>, you must specify the <dfn>search_field</dfn> 
+parameter in the module's configuration (most of the time, these will be the same so you will not need to use the <dfn>search_field</dfn> configuration).</p>
+<pre class="brush:php">
+$config['modules']['articles'] = array(
+	...
+	'display_field' => 'title',
+	'search_field' => 'content',
+	...
+);
+</pre>
+
+<p>To search in multiple fields, use the module model's <dfn>filter</dfn> property as shown here:</p>
+<pre class="brush:php">
+	public $filters = array('title', 'slug', 'content');
+</pre>
+
+<h3>Filtering Form Fields</h3>
+<p>If a single search field isn't enough, you can specify a form using the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> array syntax
+in the module's configuration:</p>
+<pre class="brush:php">
+$config['modules']['articles'] = array(
+	...
+	'filters' => array(
+			'post_date' => array('type' => 'datetime'),
+			'published' => array('type' => 'enum', array('yes', 'no')),
+			),
+	...
+);
+</pre>
+<p>Or, you can create a <dfn>filters()</dfn> method on the module's model like so to create the form fields:</p>
+<pre class="brush:php">
+public function filters()
+{
+	$fields['post_date'] = array('type' => 'datetime');
+	$fields['published'] = array('type' => 'enum', array('yes', 'no'));
+	return $fields;
+}
+</pre>
+
+
+<h3>Operator Suffixes</h3>
+<p>The default operator is <dfn>LIKE %{term}%</dfn> however, you can use the following suffixes for your filter names to use different operators:</p>
+<ul>
+	<li><strong>_from</strong>: "&gt;"</li>
+	<li><strong>_fromequal</strong>: "&gt;="</li>
+	<li><strong>_to</strong>: "&lt;"</li>
+	<li><strong>_toequal</strong>: "&lt;="</li>
+	<li><strong>_equal</strong>: "="</li>
+	<li><strong>_id</strong>: "="</li>
+</ul>
+<pre class="brush:php">
+public function filters()
+{
+	$fields['post_date_to'] = array('type' => 'datetime');
+	$fields['post_date_from'] = array('type' => 'datetime');
+	return $fields;
+}
+</pre>
+<p>Additionally, using <dfn>_having</dfn> will perform a having condition on the SQL which is helpful for filtering on values generated in the SELECT of the SQL.</p>
+
+<h3>Advanced Search</h3>
+<p>The filter fields will by default be put to the left of the search box. However, if you have a lot of filter fields that area will get crowded quickly.
+To help with this issue, there is an <dfn>advanced_search</dfn> module configuration that can have the following values:
+</p>
+<ul>
+	<li><strong>FALSE</strong>: Will display filter fields next to the search box</li>
+	<li><strong>TRUE or popup</strong>: Will display a triangle icon in the search box that will display the fields when clicked.</li>
+	<li><strong>collapse</strong>: Will display a collapsible area above the list (new in 1.3).</li>
+</ul>
+<pre class="brush:php">
+$config['modules']['articles'] = array(
+	...
+	'advanced_search' => 'collapse',
+	...
+);
+</pre>
+
+<h3>AND &amp; OR</h3>
+<p>The SQL generated will by default use "OR". To use "AND", change the module model's <dfn>filter_join</dfn> property like so:</p>
+<pre class="brush:php">
+	public $filter_join = 'and';
+</pre>
+<p>To combine AND and OR, you can use an array like so:</p>
+<pre class="brush:php">
+	public $filter_join = array('title' => 'or', 'content' => 'or', published' => 'and');
+</pre>
+
+<h3>Joins</h3>
+<p>Often, you'll need to join one or more tables together. You can use CodeIgniter's active record and add it to the list_items method like so:</p>
+
+<pre class="brush:php">
+public function list_items($limit = NULL, $offset = NULL, $col = 'statement_date', $order = 'asc', $just_count = FALSE)
+{
+	$this->db->join('fuel_categories', 'fuel_categories.id = articles.category_id', 'LEFT');
+	$this->db->select('articles.id, article.title, fuel_categories.name as category, articles.published');
+	$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+	return $data;
+}
+</pre>
+<p>Or you can add a <dfn>_common_joins()</dfn> method (new to 1.3). 
+The <dfn>_common_joins</dfn> method will be used for all "find_", options_list and list_item methods on the module's model.</p>
+<pre class="brush:php">
+public function _common_joins()
+{
+	$this->db->join('fuel_categories', 'fuel_categories.id = articles.category_id', 'LEFT');
+}
+</pre>
+
+<p>Sometimes joins will require you to prefix the field with the table name. Periods can be problematic so you can substitute it using a ":".</p>
+<pre class="brush:php">
+public function filters()
+{
+	$fields['fuel_categories:name'] = array('label' => 'Category name');
+	$fields['post_date_to'] = array('type' => 'datetime');
+	$fields['post_date_from'] = array('type' => 'datetime');
+	return $fields;
+}
+</pre>
+
+<h3>Friendly Filter Text</h3>
+<p>When multiple filters are being used to filter the list view, there is friendly text that appears above the list as of 1.3. 
+This is controlled by the <a href="<?=user_guide_url('libraries/base_module_model#friendly_filter_info')?>">Base_module_model::friendly_filter_info()</a> method.
+To alter the returned value you can simply overwrite this method in your module's model.
+</p>
+
+<p class="important">Remember, you can always simply just overwrite the list_items() method on the module's model with your own logic to filter the results.</p>
+
 <h2 id="overwrites">Module Overwrites</h2>
 <p>Module overwrites allow for you to overwrite existing module parameters. For example, if you'd like to overwrite the built-in FUEL fuel_pages_model to incorporate your own model hook you've added to the MY_pages_model,
 you can do so like so:</p>
@@ -365,7 +495,7 @@ $config['module_overwrites']['pages']['model_name'] = 'MY_pages_model';
 
 <h2 id="post_pages">Generated Post Pages</h2>
 <p>New to FUEL CMS 1.3 is the ability to create post type pages automatically from your modules. 
-This is a very powerful future that allows you to map routes to post pages that have specific behaviors. 
+This is a very powerful feature that allows you to map routes to post pages that have specific behaviors. 
 This means each module can now have blog like features (minus the commenting). 
 It uses the <a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel_posts</a> class to do so.
 There are a number of types of pages automatically created for you 
