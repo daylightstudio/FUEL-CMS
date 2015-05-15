@@ -480,6 +480,11 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						} else {
 							assetVal = selectedVal;
 						}
+	
+						if (! $activeField.data('remove_subfolder')){
+							assetVal = $activeField.data('subfolder') + '/' + assetVal;
+						}
+						assetVal = replacePlaceholders(assetVal, context);
 						$activeField.val(assetVal).trigger("change");
 
 						refreshImage($activeField);
@@ -636,7 +641,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var refreshImage = function(activeField){
 			$activeField = $(activeField);
 			var folder = $activeField.data('folder');
-			if ($activeField.data('remove_folder')){
+			if ($activeField.data('remove_subfolder')){
 				folder += '/' + $activeField.data('subfolder');
 			}
 			folder = replacePlaceholders(folder);
