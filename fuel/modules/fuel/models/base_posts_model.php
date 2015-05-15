@@ -77,6 +77,11 @@ abstract class Base_posts_model extends Base_module_model {
 		$CI =& get_instance();
 		$fields = parent::form_fields($values, $related);
 
+		if (is_object($fields) && ($fields instanceof Base_model_fields))
+		{
+			$fields =& $fields->get_fields();
+		}
+
 		$fields[$this->slug_field]['size'] = 100;
 
 		if (isset($fields['title']))
