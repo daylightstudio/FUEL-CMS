@@ -2159,7 +2159,7 @@ class Fuel_custom_fields {
 		$embedlistid = (!empty($params['id'])) ? $params['id'] : 'embedlist-'.sha1($module->name() . mt_rand());
 		$class = (!empty($params['class'])) ? ' '.$params['class'] : '';
 		$embedded_list_view = '<div class="embedded_list_container'.$class.'" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'>';
-		if (!$readonly AND (isset($params['create_button_label']) AND $params['create_button_label'] !== FALSE))
+		if (!$readonly AND (!isset($params['create_button_label']) OR (isset($params['create_button_label']) AND $params['create_button_label'] !== FALSE)))
 		{
 			$embedded_list_view .= '<div class="embedded_list_actions" style="margin-bottom: 20px;"><a href="'.$create_url.'" class="btn_field datatable_action">'.$create_button_label.'</a></div>';
 		}
