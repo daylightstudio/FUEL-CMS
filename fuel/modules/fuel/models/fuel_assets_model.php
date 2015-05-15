@@ -419,6 +419,7 @@ class Fuel_assets_model extends CI_Model {
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		$fields['hide_options'] = array('type' => 'hidden');
 		$fields['hide_image_options'] = array('type' => 'hidden');
+		$fields['remove_subfolder'] = array('type' => 'hidden');
 		return $fields;
 	}
 	

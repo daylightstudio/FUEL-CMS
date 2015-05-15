@@ -357,7 +357,17 @@ class Fuel_custom_fields {
 		{
 			$params['folder'] = 'images';
 		}
-		
+
+		if (empty($params['subfolder']))
+		{
+			$params['subfolder'] = '';
+		}
+
+		if (empty($params['remove_subfolder']))
+		{
+			$params['remove_subfolder'] = FALSE;
+		}
+
 		$asset_class = '';
 		if (!isset($params['select']) OR (isset($params['select']) AND $params['select'] !== FALSE))
 		{
@@ -405,6 +415,8 @@ class Fuel_custom_fields {
 			'multiple' => $multiple,
 			'separator' => $separator,
 			'folder' => $params['folder'],
+			'subfolder' => $params['subfolder'],
+			'remove_subfolder' => $params['remove_subfolder'],
 			'orig' => $params['value'],
 			);
 
@@ -598,7 +610,8 @@ class Fuel_custom_fields {
 		$data_params['resize_method'] = (isset($params['resize_method'])) ? $params['resize_method'] : 'maintain_ratio';
 		$data_params['hide_options'] = (isset($params['hide_options'])) ? (bool)$params['hide_options'] : FALSE;
 		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
-		$data_params['multiple'] = (isset($params['multiple'])) ? (bool)$params['multiple'] : '';
+		$data_params['multiple'] = (isset($params['multiple'])) ? (bool)$params['multiple'] : FALSE;
+		$data_params['remove_subfolder'] = (isset($params['remove_subfolder'])) ? (bool)$params['remove_subfolder'] : FALSE;
 
 		if (isset($params['hide_image_options']))
 		{

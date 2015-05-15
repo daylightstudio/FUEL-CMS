@@ -492,11 +492,41 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			return false;
 		}
 		
-		
+		var replacePlaceholders = function(folder, context){
+
+			// now replace any placeholder values in the folder... required for new pages that may not have a value
+			var $inputs = $(context).closest('form').find('select, textarea')
+			.add('input').not('input[type="radio"], input[type="checkbox"], input[type="button"]')
+			.add('input[type="radio"]:checked, input[type="checkbox"]:checked');
+			
+			var replaceValues = {};
+			$inputs.each(function(i){
+				var id = ($(this).is('input[type="radio"], input[type="checkbox"]')) ? $(this).attr('name'): $(this).attr('id');
+				if (id){
+					var idArr = id.split('--');
+					id = idArr[idArr.length -1];
+					replaceValues[id] = $(this).val();
+					var regex = new RegExp('\{' + id + '\}', 'g');
+					folder = folder.replace(regex, replaceValues[id]);
+				}
+			})
+			return folder;
+		}
+
+		var convertQueryStringToJSON = function(url) {            
+    		var pairs = url.split('&');
+    		var result = {};
+			pairs.forEach(function(pair) {
+        		pair = pair.split('=');
+        		result[pair[0]] = decodeURIComponent(pair[1] || '');
+    		});
+    		return result;
+    	}
+
 		var _this = this;
 		$('.asset_select', context).each(function(i){
 			if ($(this).parent().find('.asset_upload_button').length == 0){
-				var assetFolder = $(this).data('folder');
+				var assetFolder = $(this).data('folder') + '/' + $(this).data('subfolder');
 
 				// legacy code
 				if (!assetFolder) {
@@ -525,28 +555,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			activeField = $(e.target).parent().find('input[type="text"],textarea').filter(':first').attr('id');
 			selectedAssetFolder = $(e.target).data('folder');
 
-			// now replace any placeholder values in the folder... required for new pages that may not have a value
-			$inputs = $(context).closest('form').find('select, textarea')
-			.add('input', context).not('input[type="radio"], input[type="checkbox"], input[type="button"]')
-			.add('input[type="radio"]:checked, input[type="checkbox"]:checked', context);
-			
-			var replaceValues = {};
-			$inputs.each(function(i){
-				var id = ($(this).is('input[type="radio"], input[type="checkbox"]')) ? $(this).attr('name'): $(this).attr('id');
-				if (id){
-					var idArr = id.split('--');
-					id = idArr[idArr.length -1];
-					replaceValues[id] = $(this).val();
-					var regex = new RegExp('\{' + id + '\}', 'g');
-					selectedAssetFolder = selectedAssetFolder.replace(regex, replaceValues[id]);
-				}
-			})
-
 			// legacy code
 			if (!selectedAssetFolder){
 				var assetTypeClasses = $(e.target).attr('class').split(' ');
 				selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			}
+
+			selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
+
 			showAssetsSelect();
 			return false;
 		});
@@ -604,7 +620,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				var assetTypeClasses = $(e.target).attr('class').split(' ');
 				selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			}
+
 			var params = $(this).attr('data-params');
+			var paramsJSON = convertQueryStringToJSON(params);
+			paramsJSON.asset_folder = replacePlaceholders(selectedAssetFolder, context);
+			paramsJSON.subfolder = replacePlaceholders(paramsJSON.subfolder, context);
+			var params = jQuery.param(paramsJSON);
 			var url = $(this).attr('href') + '?' + params;
 			showAssetUpload(url);
 			return false;
@@ -614,7 +635,11 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		// refresh any images
 		var refreshImage = function(activeField){
 			$activeField = $(activeField);
-			var folder = $activeField.data('folder')
+			var folder = $activeField.data('folder');
+			if ($activeField.data('remove_folder')){
+				folder += '/' + $activeField.data('subfolder');
+			}
+			folder = replacePlaceholders(folder);
 			var imgPath = jqx_config.assetsPath + folder + '/';
 			var $preview = $activeField.parent().find('.img_preview');
 			var value =  $activeField.val();
