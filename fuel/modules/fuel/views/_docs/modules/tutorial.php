@@ -58,7 +58,7 @@ CREATE TABLE `authors` (
   `avatar_image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 </pre>
 
 <p class="important"><strong>Note the column <kbd>published</kbd>.</strong> The enum columns <kbd>published</kbd> and <kbd>active</kbd>
@@ -128,10 +128,12 @@ CREATE TABLE `articles` (
   `slug` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `author_id` tinyint(3) unsigned NOT NULL default '0',
   `content` text collate utf8_unicode_ci NOT NULL,
+  `image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `thumb_image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `date_added` datetime NOT NULL default '0000-00-00 00:00:00',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 </pre>
 
 <h3>Create the Articles Model</h3>
