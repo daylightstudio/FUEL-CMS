@@ -481,7 +481,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 							assetVal = selectedVal;
 						}
 	
-						if (! $activeField.data('remove_subfolder')){
+						if (! $activeField.data('remove_subfolder') && $activeField.data('subfolder')){
 							assetVal = $activeField.data('subfolder') + '/' + assetVal;
 						}
 						assetVal = replacePlaceholders(assetVal, context);
@@ -531,7 +531,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var _this = this;
 		$('.asset_select', context).each(function(i){
 			if ($(this).parent().find('.asset_upload_button').length == 0){
-				var assetFolder = $(this).data('folder') + '/' + $(this).data('subfolder');
+				var assetFolder = $(this).data('folder');
+				if ($(this).data('subfolder')){
+					assetFolder += '/' + $(this).data('subfolder');
+				}
 
 				// legacy code
 				if (!assetFolder) {
@@ -641,7 +644,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var refreshImage = function(activeField){
 			$activeField = $(activeField);
 			var folder = $activeField.data('folder');
-			if ($activeField.data('remove_subfolder')){
+			if ($activeField.data('remove_subfolder') && $activeField.data('subfolder')){
 				folder += '/' + $activeField.data('subfolder');
 			}
 			folder = replacePlaceholders(folder);
