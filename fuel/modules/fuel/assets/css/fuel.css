@@ -536,7 +536,7 @@ a#multi_delete { display: block; }
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
  }
 .filters .more_filters { max-height: 500px; overflow-y: auto; }
-.filters .more_filters div div { float: left; overflow: hidden; margin-bottom: 7px; min-width: 32%; min-height: 32px; }
+.filters .more_filters div div { float: left; overflow: hidden; margin-bottom: 0; min-width: 32%; min-height: 32px; }
 .filters .more_filters .label { font-weight: bold; }
 .filters .more_filters .actions { float: none; }
 .filters .label { width: 75px; }
@@ -649,7 +649,7 @@ table.data th { text-align: left; }
 table.data td.next_last { width: 100%; }
 table.data td.actions { text-align: right; white-space: nowrap; padding-left: 5px; }
 table.data tr.rowaction:hover td { background-color: #edf2f7 !important; cursor: pointer; }
-table.data th.col1 { min-width: 200px; }
+/*table.data th.col1 { min-width: 200px; }*/
 table.data tr.alt { background-color: #f3f3f3; }
 div.nodata { text-align: center; padding: 10px 0 15px 0;}
 .embedded_list_items table.data th.col1 { min-width: 0; }
