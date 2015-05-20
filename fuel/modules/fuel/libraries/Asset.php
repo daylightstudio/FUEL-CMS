@@ -1516,7 +1516,7 @@ class Asset {
 			$str = '';
 			foreach($arr as $key => $val)
 			{
-				$str .= $key.'="'.$val.'"';
+				$str .= $key.'="'.$val.'" ';
 			}
 			return $str;
 		}
