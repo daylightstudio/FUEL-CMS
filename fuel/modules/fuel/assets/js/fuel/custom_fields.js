@@ -808,17 +808,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 			
 			var changeField = function($this){
-				if ($this.val() == '' || $this.find('option').length == 0){
-					if ($this.is('select') && $this.find('option').length == 0){
-						$this.hide();
+				if (!$this.is('[multiple]')){
+					if ($this.val() == '' || $this.find('option').length == 0){
+						if ($this.is('select') && $this.find('option').length == 0){
+							$this.hide();
+						} else {
+							$this.show();
+						}
+						if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
 					} else {
+						$this.parent().find('.edit_inline_button').show();
 						$this.show();
-					}
-					if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
-				} else {
-					$this.parent().find('.edit_inline_button').show();
-					$this.show();
-				}	
+					}	
+				}
 			}
 			
 			$('.add_inline_button', context).unbind().click(function(e){
