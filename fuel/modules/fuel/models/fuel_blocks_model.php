@@ -34,7 +34,8 @@ class Fuel_blocks_model extends Base_module_model {
 	public $required = array('name'); // name is required
 	public $filters = array('description', 'view'); // allows for the description field to be searchable as well as the name field
 	public $ignore_replacement = array('name'); // the name value will be ignored when one record replaces another
-
+	public $parsed_fields = array('view');
+	
 	/**
 	 * Constructor
 	 *

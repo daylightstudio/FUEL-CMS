@@ -379,7 +379,7 @@ class Fuel_layouts extends Fuel_base_library {
 			$init['fields'] = (isset($init['fields'])) ? $init['fields'] : array();
 			$init['import_field'] = (isset($init['import_field'])) ? $init['import_field'] : NULL;
 			$init['module'] = (isset($init['module'])) ? $init['module'] : 'app';
-			$init['double_parse'] = (isset($init['double_parse'])) ? $init['double_parse'] : FALSE;
+			$init['double_parse'] = (isset($init['double_parse'])) ? $init['double_parse'] : NULL;
 			$init['hidden'] = (isset($init['hidden'])) ? $init['hidden'] : FALSE;
 			$init['parser'] = (isset($init['parser'])) ? $init['parser'] : NULL;
 
