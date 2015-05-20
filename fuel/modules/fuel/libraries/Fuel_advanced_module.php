@@ -1142,6 +1142,10 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			$name = $library;
 		}
+
+		$name = explode('/', $name);
+		$name = end($name);
+
 		$this->attach($name, $this->CI->$name);
 	}
 
