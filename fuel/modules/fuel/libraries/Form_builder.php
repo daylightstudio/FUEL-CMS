@@ -3938,6 +3938,7 @@ class Form_builder {
 		$orig_asset_output = $this->CI->asset->assets_output;
 		$this->CI->asset->assets_output = FALSE;
 		$add_js = array();
+
 		if (!empty($_js))
 		{
 			// loop through to generate javascript
@@ -3996,7 +3997,6 @@ class Form_builder {
 			$out = $str_files;
 			$out .= $str_inline;
 			$out .= "<script type=\"text/javascript\">\n";
-			$out .= "";
 			$out .= $str."\n";
 
 			if (!empty($js_exec))
@@ -4008,6 +4008,7 @@ class Form_builder {
 				$out .= 'jQuery("#'.$this->id.'").formBuilder(window[\'formBuilderFuncs\']);';
 				if ($this->auto_execute_js) $out .= 'jQuery("#'.$this->id.'").formBuilder().initialize();';
 				$out .= '}';
+
 				$out .= '})}';
 			}
 
@@ -4041,10 +4042,9 @@ class Form_builder {
 		{
 			$GLOBALS[$global_key] = array();
 		}
-		$add_css = array();
-		$file = '';
-		$out = '';
 
+		$out = '';
+		$to_add = array();
 
 		foreach($files as $module => $asset)
 		{
@@ -4062,7 +4062,9 @@ class Form_builder {
 					foreach($a as $file)
 					{
 						$f = call_user_func($path_func, $file, $module);
-						if (!empty($f) AND !in_array($f, $GLOBALS[$global_key]))
+						$f_arr = explode('?', $f);
+						$f = $f_arr[0];
+						if (!empty($f))
 						{
 							array_push($GLOBALS[$global_key], $f);
 							$to_add[] = $f;
@@ -4072,7 +4074,9 @@ class Form_builder {
 				else
 				{
 					$file = call_user_func($path_func, $a, $module);
-					if (!empty($file) AND !in_array($file, $GLOBALS[$global_key]))
+					$file_arr = explode('?', $file);
+					$file = $file_arr[0];
+					if (!empty($file))
 					{
 						array_push($GLOBALS[$global_key], $file);
 						$to_add[] = $file;
@@ -4084,14 +4088,17 @@ class Form_builder {
 		// must use javascript to do this because forms may get ajaxed in and we need to inject their CSS into the head
 		if (!empty($to_add))
 		{
-			$out .= "<script>\n";
+			$out .= "\n<script>\n";
 			$out .= 'if (jQuery){ (function($) {
+					var currentCacheSetting = $.ajaxSetup()["cache"];
+					$.ajaxSetup({cache: true});
 					var files = '.json_encode($to_add).';
 					var assets = [];
 					jQuery("'.$tag_selector.'").each(function(i){
 						var attr = $(this).attr("'.$tag_attr.'");
 						if (attr){
-							assets.push($(this).attr("'.$tag_attr.'"));	
+							attr = attr.split("?")[0];
+							assets.push(attr);	
 						}
 					});
 					for(var n in files){
@@ -4114,18 +4121,22 @@ class Form_builder {
 			elseif ($type == 'js')
 			{
 				$out .= ';
+				var file = files[n].split("?")[0];
 				var script = document.createElement("script");
-				script.src = files[n];
-				script.async = false;
+				script.src = file;
 
-				document.getElementsByTagName("head")[0].appendChild(script);
+				//document.getElementsByTagName("head")[0].appendChild(script);
+
+				// Strangely doesn\'t appear in the DOM... would like to know why
+				$("head").append(script);
+				$.ajaxSetup({cache: currentCacheSetting});
 				';
 			}
 			$out .= '		
 						}
 					}
 				
-			})(jQuery)}';
+			})(jQuery);}';
 			$out .= "</script>\n";
 		}
 
