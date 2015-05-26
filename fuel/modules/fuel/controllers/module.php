@@ -1326,7 +1326,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		// if field parameter is set, then we just display a single field
-		if ( ! empty($field))
+		if ( ! empty($field) AND ! is_numeric($field))
 		{
 			// added per pierlo in Forum (http://www.getfuelcms.com/forums/discussion/673/fuel_helper-fuel_edit-markers)
 			$columns = explode(':', $field);
