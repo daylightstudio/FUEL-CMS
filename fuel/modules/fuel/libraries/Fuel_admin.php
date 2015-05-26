@@ -961,6 +961,11 @@ class Fuel_admin extends Fuel_base_library {
 			$this->set_panel_display('top', FALSE);
 			$this->set_panel_display('nav', FALSE);
 		}
+		else
+		{
+			$this->set_panel_display('top', TRUE);
+			$this->set_panel_display('nav', TRUE);
+		}
 	}
 	
 	// --------------------------------------------------------------------
