@@ -254,6 +254,7 @@ class Base_post_item_model extends Base_module_record {
 
 	public function get_url()
 	{
+		$url = '';
 		if ($this->has_content())
 		{
 			$module = $this->_parent_model->get_module();
