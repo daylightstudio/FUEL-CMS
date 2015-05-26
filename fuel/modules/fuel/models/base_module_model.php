@@ -49,6 +49,7 @@ class Base_module_model extends MY_Model {
 	public $upload_data = array(); // data about all uploaded files
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
+	public $list_items_class = ''; // a class that can extend Base_model_list_items to help with displaying and filtering the list items
 	public $form_fields_class = ''; // a class that can extend Base_model_fields and manipulate the form_fields method
 	public $validation_class = ''; // a class that can extend Base_model_validation and manipulate the validate method by adding additional validation to the model
 	public $related_items_class = ''; // a class that can extend Base_model_related_items and manipulate what is displayed in the related items area (right side of page)
@@ -205,6 +206,12 @@ class Base_module_model extends MY_Model {
 		{
 			$this->formatters = $this->_formatters;	
 		}		
+
+		// setup this class since it may be used in several methods
+		if (!empty($this->list_items_class) AND class_exists($this->list_items_class))
+		{
+			$this->list_items = new $this->list_items_class($this);
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -284,6 +291,11 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
+		if (!empty($this->list_items))
+		{
+			$this->list_items->run();
+		}
+
 		$this->_list_items_query();
 		
 		if ($just_count)
@@ -304,6 +316,11 @@ class Base_module_model extends MY_Model {
 
 		$query = $this->db->get();
 		$data = $query->result_array();
+
+		if (!empty($this->list_items) AND $just_count == FALSE)
+		{
+			$data = $this->list_items->process($data);
+		}
 
 		//$this->debug_query();
 		return $data;
@@ -451,6 +468,27 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Filter fields to be used to filter the list view data
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	public function filters($values = array())
+	{
+		if (!empty($this->list_items))
+		{
+			$fields = $this->list_items->fields($values);
+			if (! is_null($fields))
+			{
+				return $fields;
+			}
+		}
+		return array();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Displays friendly text for what is being filtered on the list view
 	 *
 	 * @access	public
@@ -459,6 +497,15 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function friendly_filter_info($values)
 	{
+		if (!empty($this->list_items))
+		{
+			$str = $this->list_items->friendly_info($values);
+			if (! is_null($str))
+			{
+				return $str;
+			}
+		}
+
 		$form_filters = $this->CI->filters;
 
 		$filters = array();

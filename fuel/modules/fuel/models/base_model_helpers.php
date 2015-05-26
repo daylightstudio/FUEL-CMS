@@ -782,6 +782,7 @@ class Base_model_related_items extends Abstract_base_model_helper  {
 	protected $record = NULL;
 	protected $vars = array();
 	protected $output = '';
+	protected $display_if_new = TRUE;
 
 	public function __construct($record = array(), $parent_model = NULL)
 	{
@@ -888,11 +889,184 @@ class Base_model_related_items extends Abstract_base_model_helper  {
 	 */	
 	public function render($view = '', $vars = array())
 	{
+		if (empty($this->display_if_new) AND !isset($vars['rec']->id))
+		{
+			return FALSE;
+		}
 		if (!empty($view))
 		{
 			$this->view($view, $vars);
 		}
 		return $this->output;
+	}
+
+}
+
+
+// ------------------------------------------------------------------------
+
+/**
+ * Base related items class
+ *
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ */
+class Base_model_list_items extends Abstract_base_model_helper  {
+
+	protected $display_type = '';
+	protected $filters = NULL;
+	protected $select = NULL;
+	protected $joins = NULL;
+	protected $search_field = NULL;
+	protected $filter_join = NULL;
+	protected $fields = NULL;
+	protected $db;
+
+	public function __construct($parent_model = NULL)
+	{
+		parent::__construct();
+		$this->set_parent_model($parent_model);
+		$this->fields = new Base_model_fields(array(), $this->get_values(), $this->get_parent_model());
+		$this->db =& $this->get_parent_model()->db();
+		if (!empty($this->filters)) $this->get_parent_model()->filters = $this->filters;
+		if (!empty($this->display_type)) $this->CI->advanced_search = $this->display_type;
+		if (!empty($this->search_field)) $this->CI->search_field = $this->search_field;
+		if (!empty($this->filter_join)) $this->get_parent_model()->filter_join = $this->filter_join;
+
+		$this->initialize($this->get_parent_model());
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * A placeholder for initialization of validation. This method will most likely be overwritten
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	public function initialize($parent_model)
+	{
+		
+	}
+
+	public function fields($values = array())
+	{
+		return array();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds a filter for searching
+	 *
+	 * @access	public
+	 * @param	string The name of the field to filter on
+	 * @param	string A key to associate with the filter(optional)
+	 * @return	void
+	 */	
+	public function add_filter($filter, $key = NULL)
+	{
+		$this->get_parent_model()->add_filter($filter, $key);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds multiple filters for searching
+	 *
+	 * @access	public
+	 * @param	array An array of fields to filter on
+	 * @return	void
+	 */	
+	public function add_filters($filters)
+	{
+		$this->get_parent_model()->add_filter($filters);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds a filter join such as "and" or "or" to a particular field
+	 *
+	 * @access	public
+	 * @param	string The name of the field to filter on
+	 * @param	string "and" or "or" (optional)
+	 * @return	void
+	 */	
+	public function add_filter_join($field, $join_type = 'or')
+	{
+		$this->get_parent_model()->add_filter_join($field, $join_type);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds select values to the active record used for the list view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	public function select()
+	{
+
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Adds join values to the active record used for the list view
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	public function join()
+	{
+
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Displays friendly text for what is being filtered on the list view
+	 *
+	 * @access	public
+	 * @param	array The values applied to the filters
+	 * @return	string The friendly text string
+	 */	
+	public function friendly_info($values)
+	{
+		$this->set_values($values);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * A method that can be used to do further manipulation on the data
+	 *
+	 * @access	public
+	 * @param	array The array of data
+	 * @return	array The data to return
+	 */	
+	public function process($data)
+	{
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Runs the select and join methods
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function run()
+	{
+
+		$this->select();
+		$this->join();
 	}
 
 }

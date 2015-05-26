@@ -458,7 +458,19 @@ class Fuel_assets_model extends CI_Model {
 	{
 		return TRUE;
 	}
-		
+	
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @param   array Posted values
+	 * @return	void
+	 */
+	public function filters($values = array())
+	{
+		return array();
+	}
+
 	/**
 	 * Displays the most recently uplloaded 
 	 *
