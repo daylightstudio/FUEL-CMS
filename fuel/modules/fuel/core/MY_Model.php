@@ -3331,7 +3331,7 @@ class MY_Model extends CI_Model {
 				$relationships_model = $this->load_model($fields['relationships_model']);
 
 				// cache the loaded models here for reference below
-				$related_models[$related_field] =& $this->load_related_model($related_model);
+				$related_models[$related_field] = $this->load_related_model($related_model);
 
 				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data['exists_'.$related_field])) OR $this->clear_related_on_save === TRUE);
 
