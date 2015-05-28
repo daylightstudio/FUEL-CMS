@@ -658,7 +658,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$.each(imgValues, function(img){
 
 				// check if it is an image 
-				if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$/i)){
+				if (this.length && this.toLowerCase().match(/\.jpg$|\.jpeg$|\.gif$|\.png$|\.svg$/i)){
 					var newSrc = (this.toLowerCase().match(/^http(s)?:\/\//)) ? '' : imgPath;
 					newSrc += $.trim(this) + '?c=' + new Date().getTime()
 					previewHTML += '<a href="' + newSrc + '" target="_blank">';
