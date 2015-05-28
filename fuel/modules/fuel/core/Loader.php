@@ -190,7 +190,8 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($library)) return $this->libraries($library);		
 		
-		$class = strtolower(end(explode('/', $library))); 
+		$library_parts = explode('/', $library);
+		$class = strtolower(end($library_parts)); 
 
     	($_alias = strtolower($object_name)) OR $_alias = $class;
 
@@ -260,7 +261,8 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($model)) return $this->models($model);
 
-		($_alias = $object_name) OR $_alias = end(explode('/', $model));
+		$model_parts = explode('/', $model);
+		($_alias = $object_name) OR $_alias = end($model_parts);
 
 		if (in_array($_alias, $this->_ci_models, TRUE)) 
 			return CI::$APP->$_alias;
@@ -301,7 +303,8 @@ class Fuel_Loader extends MX_Loader
 			$_ci_file = strpos($_ci_view, '.') ? $_ci_view : $_ci_view.EXT;
 			$_ci_path = $this->_ci_view_path.$_ci_file;
 		} else {
-			$_ci_file = end(explode('/', $_ci_path));
+			$_ci_path_parts = explode('/', $_ci_path);
+			$_ci_file = end($_ci_path_parts);
 		}
 
 		if ( ! file_exists($_ci_path)) 

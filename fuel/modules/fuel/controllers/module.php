@@ -1461,7 +1461,8 @@ class Module extends Fuel_base_controller {
 		// first loop through and create simple non-namespaced $_POST values if they don't exist for convenience'
 		foreach($_POST as $key => $val)
 		{
-			$tmp_key = end(explode('--', $key));
+			$key_parts = explode('--', $key);
+			$tmp_key = end($key_parts);
 			$_POST[$tmp_key] = $val;
 		}
 
@@ -1871,8 +1872,8 @@ class Module extends Fuel_base_controller {
 			$values = $this->input->post('values', TRUE);
 
 			$selected = $this->input->post('selected', TRUE);
-
-			$field_key = end(explode('vars--', $field));
+			$field_parts = explode('vars--', $field);
+			$field_key = end($field_parts);
 
 			$this->load->library('form_builder');
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
@@ -2227,7 +2228,8 @@ class Module extends Fuel_base_controller {
 					}
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
-					$tmp_field_name = end(explode('--', $field_name));
+					$field_name_parts = explode('--', $field_name);
+					$tmp_field_name = end($field_name_parts);
 
 					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
 					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
@@ -2279,11 +2281,13 @@ class Module extends Fuel_base_controller {
 
 	protected function _process_upload_data($field_name, $uploaded_data, $posted)
 	{
-		$field_name = end(explode('--', $field_name));
+		$field_name_parts = explode('--', $field_name);
+		$field_name = end($field_name_parts);
 
 		foreach($uploaded_data as $key => $val)
 		{
-			$file_tmp = current(explode('___', $key));
+			$key_parts = explode('___', $key);
+			$file_tmp = current($key_parts);
 
 			// get the file name field
 			// if the file name field exists AND there is no specified hidden filename field to assign to it AND...

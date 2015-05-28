@@ -2841,11 +2841,13 @@ class MY_Model extends CI_Model {
 				foreach($related as $key => $val)
 				{
 					// related  need to be loaded using slash syntax if model belongs in another module (e.g. my_module/my_model)
-					$related_name = end(explode('/', $key));
+					$key_parts = explode('/', $key);
+					$related_name = end($key_parts);
 					$related_model = $this->load_model($key.$this->suffix);
 					$related_model_name = $related_name.$this->suffix;
 					
-					$lookup_name = end(explode('/', $val));
+					$val_parts = explode('/', $val);
+					$lookup_name = end($val_parts);
 					$lookup_model = $this->load_model($val);
 
 					$options = $CI->$related_model_name->options_list();
@@ -3668,7 +3670,8 @@ class MY_Model extends CI_Model {
 			$CI->load->model($model);
 			$return = $model;
 		}
-		$return = end(explode('/', $return));
+		$return_parts = explode('/', $return);
+		$return = end($return_parts);
 		return $return;
 	}
 	
@@ -5587,7 +5590,8 @@ class Data_record {
 				$model = $custom_class;
 			}
 
-			$model = ucfirst(end(explode('/', $model)));
+			$model_parts = explode('/', $model);
+			$model = ucfirst(end($model_parts));
 			$value = (isset($this->_fields[$var])) ? $this->_fields[$var] : NULL;
 			$output = new $model($var, $value, $this, $init);
 

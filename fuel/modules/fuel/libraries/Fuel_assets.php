@@ -145,7 +145,8 @@ class Fuel_assets extends Fuel_base_library {
 		{
 			if ($file['error'] == 0)
 			{
-				$ext = end(explode('.', $file['name']));
+				$file_parts = explode('.', $file['name']);
+				$ext = end($file_parts);
 				$field_name = current(explode('___', $key)); // extract out multi file upload infor
 			
 				// loop through all the allowed file types that are accepted for the asset directory
@@ -735,7 +736,8 @@ class Fuel_assets extends Fuel_base_library {
 		// add .zip extension so file_name is correct
 		if (empty($file_name))
 		{
-			$file_name = end(explode('/', rtrim($dir, '/')));
+			$dir_parts = explode('/', rtrim($dir, '/'));
+			$file_name = end($dir_parts);
 		}
 		
 		$file_name = $file_name.'.zip';

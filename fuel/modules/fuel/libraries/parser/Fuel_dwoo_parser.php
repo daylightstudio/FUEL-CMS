@@ -259,7 +259,7 @@ class MY_Security_Policy extends Dwoo_Security_Policy {
 		return call_user_func_array(array($obj, $method), $args);
 	}
 
-	public function isMethodAllowed()
+	public function isMethodAllowed($class, $method = null)
 	{
 		return TRUE;
 	}

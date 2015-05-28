@@ -734,7 +734,8 @@ class Fuel_custom_fields {
 			if ($form_builder->is_nested())
 			{
 				$linked_to = $fields[$linked_to_field]['key'];
-				$linked_to = end(explode('vars--', $linked_to));
+				$linked_to_parts = explode('vars--', $linked_to);
+				$linked_to = end($linked_to_parts);
 			}
 			else
 			{

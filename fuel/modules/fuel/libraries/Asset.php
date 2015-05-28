@@ -1302,7 +1302,8 @@ class Asset {
 			$params['type'] = 'js';
 			foreach($files as $file)
 			{
-				$ext =  end(explode('.', $files[0]));
+				$file_parts = explode('.', $files[0]);
+				$ext =  end($file_parts);
 				if (in_array($ext, $valid_exts))
 				{
 					$params['type'] = $ext;

@@ -390,7 +390,8 @@ class Pages extends Module {
 
 			foreach($_POST as $key => $val)
 			{
-				$key = end(explode('--', $key));
+				$key_parts = explode('--', $key);
+				$key = end($key_parts);
 				$page_vars[$key] = $val;
 			}
 		}
@@ -515,7 +516,8 @@ class Pages extends Module {
 		{
 			if (strncmp('vars--', $key, 6) === 0)
 			{
-				$new_key = end(explode('--', $key));
+				$key_parts = explode('--', $key);
+				$new_key = end($key_parts);
 				$vars[$new_key] = $val;
 			}
 		}
@@ -1136,7 +1138,8 @@ class Pages extends Module {
 			$fields = $layout_obj->fields();
 			$field = $this->input->get_post('field', TRUE);
 
-			$field_key = end(explode('vars--', $field));
+			$field_parts = explode('vars--', $field);
+			$field_key = end($field_parts);
 
 			if ( ! isset($fields[$field_key])) return;
 
@@ -1206,7 +1209,8 @@ class Pages extends Module {
 
 	protected function _process_upload_data($field_name, $uploaded_data, $posted)
 	{
-		$field_name = end(explode('--', $field_name));
+		$field_name_parts = explode('--', $field_name);
+		$field_name = end($field_name_parts);
 
 		foreach($uploaded_data as $key => $val)
 		{

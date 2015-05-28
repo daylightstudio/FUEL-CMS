@@ -1683,7 +1683,8 @@ class Form_builder {
 		{
 			if (!empty($this->name_prefix))
 			{
-				$id_name = $this->name_prefix.'--'.end(explode($this->name_prefix.'--', $params['name'])); // ugly... bug needed for nested repeatable fields
+				$name_parts = explode($this->name_prefix.'--', $params['name']);
+				$id_name = $this->name_prefix.'--'.end($name_parts); // ugly... bug needed for nested repeatable fields
 			}
 			else
 			{
@@ -3126,7 +3127,9 @@ class Form_builder {
 					$library = $custom_field['class'];
 					$this->CI->load->library($custom_field['class']);
 				}
-				$library = end(explode('/', strtolower($library)));
+
+				$library_parts = explode('/', strtolower($library));
+				$library = end($library_parts);
 				$func = array($this->CI->$library, $custom_field['function']);
 			}
 			

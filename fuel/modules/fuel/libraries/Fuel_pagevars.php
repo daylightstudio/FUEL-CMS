@@ -45,7 +45,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		$this->initialize($params);
 	}
 	
-	public function initialize($params)
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 

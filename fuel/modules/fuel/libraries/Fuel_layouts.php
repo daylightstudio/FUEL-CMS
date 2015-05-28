@@ -99,13 +99,15 @@ class Fuel_layouts extends Fuel_base_library {
 		{
 			foreach($layout_files as $file)
 			{
-				$layout = end(explode('/', $file));
+				$file_parts = explode('/', $file);
+				$layout = end($file_parts);
 				$layout = substr($layout, 0, -4);
 				$file_dir = ltrim(dirname($file), '/');
 				
 				if ($file_dir != ltrim($layout_path, '/'))
 				{
-					$group = end(explode('/', $file_dir));
+					$file_dir_parts = explode('/', $file_dir);
+					$group = end($file_dir_parts);
 				}
 				else
 				{
