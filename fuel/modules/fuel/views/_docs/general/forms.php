@@ -539,8 +539,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>decimal</strong>: determines whether to allow decimals or not. The default is FALSE</li>
 		<li><strong>negative</strong>: determines whether negative numbers can be inputted. The default is FALSE</li>
-		<li><strong>min</strong>: the minimum number that can be inputted by clicking the number increment buttons</li>
-		<li><strong>max</strong>: the maximum number that can be inputted by clicking the number increment buttons</li>
+		<li><strong>min</strong>: the minimum number that can be inputted by clicking the number increment buttons. Default is 0</li>
+		<li><strong>max</strong>: the maximum number that can be inputted by clicking the number increment buttons. Default is 10</li>
 		<li><strong>step</strong>: determines the step value when increasing or decreasing the number</li>
 	</ul>
 	
