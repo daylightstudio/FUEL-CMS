@@ -287,7 +287,7 @@ class Fuel_navigation_model extends Base_module_model {
 		}
 		$CI->load->helper('array');
 		
-		// $group_options = $CI->fuel_navigation_groups_model->options_list();
+		$group_options = $CI->fuel_navigation_groups_model->options_list();
 		// $group_values = array_keys($group_options);
 		// $group_value = (!empty($group_values)) ? $group_values[0] : 1;
 		$group_value = $this->CI->fuel->config('auto_page_navigation_group_id');
