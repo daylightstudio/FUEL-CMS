@@ -249,7 +249,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 				<li class="last"><a href="http://getfuelcms.com/blog" target="_blank">Blog</a></li>
 			</ul>
 		</nav>
-		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> <img width="25" height="25" src="<?=img_path('_template_icons.svg#daylight') ?>"> &copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
+		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> <?=svg_icon('daylight', 24, 24)?> &copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
 	</footer>
 </div>
 </body>
