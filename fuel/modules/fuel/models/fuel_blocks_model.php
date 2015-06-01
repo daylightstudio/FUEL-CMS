@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -32,9 +32,10 @@ require_once('base_module_model.php');
 class Fuel_blocks_model extends Base_module_model {
 	
 	public $required = array('name'); // name is required
-	public $filters = array('description'); // allows for the description field to be searchable as well as the name field
+	public $filters = array('description', 'view'); // allows for the description field to be searchable as well as the name field
 	public $ignore_replacement = array('name'); // the name value will be ignored when one record replaces another
-
+	public $parsed_fields = array('view');
+	
 	/**
 	 * Constructor
 	 *
@@ -71,7 +72,7 @@ class Fuel_blocks_model extends Base_module_model {
 			$this->db->select('id, name, SUBSTRING(description, 1, 50) as description, SUBSTRING(view, 1, 150) as view, published', FALSE);	
 		}
 		
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		if (empty($just_count))
 		{
 			foreach($data as $key => $val)

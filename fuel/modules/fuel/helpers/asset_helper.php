@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -42,10 +42,13 @@
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function img_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('img_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->img_path($file, $module, $absolute);
+	function img_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->img_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -59,10 +62,13 @@ function img_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function css_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('css_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->css_path($file, $module, $absolute);
+	function css_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->css_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -76,10 +82,13 @@ function css_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function js_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('js_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->js_path($file, $module, $absolute);
+	function js_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->js_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -93,10 +102,13 @@ function js_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function swf_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('swf_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->swf_path($file, $module, $absolute);
+	function swf_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->swf_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -110,10 +122,13 @@ function swf_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function pdf_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('pdf_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->pdf_path($file, $module, $absolute);
+	function pdf_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->pdf_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -127,10 +142,13 @@ function pdf_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function media_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('media_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->media_path($file, $module, $absolute);
+	function media_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->media_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -144,10 +162,13 @@ function media_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function docs_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('docs_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->docs_path($file, $module, $absolute);
+	function docs_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->docs_path($file, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -161,10 +182,13 @@ function docs_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function cache_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('cache_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->cache_path($file, 'assets_cache_folder', $module);
+	function cache_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->cache_path($file, 'assets_cache_folder', $module);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -178,10 +202,13 @@ function cache_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function captcha_path($file = NULL, $module = NULL, $absolute = NULL)
+if (!function_exists('captcha_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->captcha_path($file, $module);
+	function captcha_path($file = NULL, $module = NULL, $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->captcha_path($file, $module);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -196,10 +223,13 @@ function captcha_path($file = NULL, $module = NULL, $absolute = NULL)
  * @param	boolean	whether to include http://... at beginning
  * @return	string
  */	
-function assets_path($file = NULL, $path = NULL, $module = NULL,  $absolute = NULL)
+if (!function_exists('assets_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->assets_path($file, $path, $module, $absolute);
+	function assets_path($file = NULL, $path = NULL, $module = NULL,  $absolute = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->assets_path($file, $path, $module, $absolute);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -213,10 +243,13 @@ function assets_path($file = NULL, $path = NULL, $module = NULL,  $absolute = NU
  * @param	string	module folder if any
  * @return	string
  */	
-function assets_server_path($file = NULL, $path = NULL, $module = NULL)
+if (!function_exists('assets_server_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->assets_server_path($file, $path, $module);
+	function assets_server_path($file = NULL, $path = NULL, $module = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->assets_server_path($file, $path, $module);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -228,10 +261,13 @@ function assets_server_path($file = NULL, $path = NULL, $module = NULL)
  * @param	string	server path to asset file
  * @return	string
  */	
-function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
+if (!function_exists('assets_server_to_web_path'))
 {
-	$CI = _get_assets();
-	return $CI->asset->assets_server_to_web_path($file, $truncate_to_asset_folder);
+	function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
+	{
+		$CI = _get_assets();
+		return $CI->asset->assets_server_to_web_path($file, $truncate_to_asset_folder);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -245,10 +281,13 @@ function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
  * @param	string	module folder if any
  * @return	boolean
  */	
-function asset_exists($file = NULL, $path = NULL, $module = NULL)
+if (!function_exists('asset_exists'))
 {
-	$CI = _get_assets();
-	return $CI->asset->asset_exists($file, $path, $module);
+	function asset_exists($file = NULL, $path = NULL, $module = NULL)
+	{
+		$CI = _get_assets();
+		return $CI->asset->asset_exists($file, $path, $module);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -263,10 +302,13 @@ function asset_exists($file = NULL, $path = NULL, $module = NULL)
  * @param	boolean	format
  * @return	string
  */	
-function asset_filesize($file = NULL, $path = NULL, $module = NULL, $format = FALSE)
+if (!function_exists('asset_filesize'))
 {
-	$CI = _get_assets();
-	return $CI->asset->asset_filesize($file, $path, $module, $format);
+	function asset_filesize($file = NULL, $path = NULL, $module = NULL, $format = FALSE)
+	{
+		$CI = _get_assets();
+		return $CI->asset->asset_filesize($file, $path, $module, $format);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -279,10 +321,13 @@ function asset_filesize($file = NULL, $path = NULL, $module = NULL, $format = FA
  * @param	string	local asset path to default version
  * @return	string
  */	
-function jquery($version = '1.7.1', $default = 'jquery')
+if (!function_exists('jquery'))
 {
-	$CI = _get_assets();
-	return $CI->asset->jquery($version, $default);
+	function jquery($version = '1.7.1', $default = 'jquery')
+	{
+		$CI = _get_assets();
+		return $CI->asset->jquery($version, $default);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -296,10 +341,13 @@ function jquery($version = '1.7.1', $default = 'jquery')
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function js($path, $module = '', $options = array())
+if (!function_exists('js'))
 {
-	$CI = _get_assets();
-	return $CI->asset->js($path, $module, $options);
+	function js($path, $module = '', $options = array())
+	{
+		$CI = _get_assets();
+		return $CI->asset->js($path, $module, $options);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -313,11 +361,13 @@ function js($path, $module = '', $options = array())
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function css($path, $module = '', $options = array())
+if (!function_exists('css'))
 {
-	$CI = _get_assets();
-	return $CI->asset->css($path, $module, $options);
-
+	function css($path, $module = '', $options = array())
+	{
+		$CI = _get_assets();
+		return $CI->asset->css($path, $module, $options);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -331,10 +381,12 @@ function css($path, $module = '', $options = array())
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function swf($flash, $id, $width, $height, $options = array()){
-	$CI = _get_assets();
-	return $CI->asset->swf($flash, $id, $width, $height, $options);
-	
+if (!function_exists('swf'))
+{
+	function swf($flash, $id, $width, $height, $options = array()){
+		$CI = _get_assets();
+		return $CI->asset->swf($flash, $id, $width, $height, $options);
+	}
 }
 
 // --------------------------------------------------------------------
@@ -350,18 +402,21 @@ function swf($flash, $id, $width, $height, $options = array()){
  * @param	boolean	determines whether to wrap it in an image tag or just return the path (optional)
  * @return	string
  */	
-function placeholder($width = 100, $height = '', $text = '', $colors = '', $img_tag = FALSE)
+if (!function_exists('placeholder'))
 {
-	$dimentions = $width.( !empty($height) ? 'x'.$height : '');
-	$text = !empty($text) ? '&text='.urlencode($text) : '';
-	$colors = !empty($colors) ? explode(' ', $colors) : '';
-	$colors = !empty($colors) ? '/'.$colors[0].'/'.$colors[1] : '';
-	$path = 'http://placehold.it/'.$dimentions.$colors.$text;
-	if ($img_tag)
+	function placeholder($width = 100, $height = '', $text = '', $colors = '', $img_tag = FALSE)
 	{
-		return '<img src="'.$path.'" alt="'.$text.'" width="'.$width.'" height="'.$height.'" />';
+		$dimentions = $width.( !empty($height) ? 'x'.$height : '');
+		$text = !empty($text) ? '&text='.urlencode($text) : '';
+		$colors = !empty($colors) ? explode(' ', $colors) : '';
+		$colors = !empty($colors) ? '/'.$colors[0].'/'.$colors[1] : '';
+		$path = 'http://placehold.it/'.$dimentions.$colors.$text;
+		if ($img_tag)
+		{
+			return '<img src="'.$path.'" alt="'.$text.'" width="'.$width.'" height="'.$height.'" />';
+		}
+		return $path;
 	}
-	return $path;
 }
 
 // --------------------------------------------------------------------

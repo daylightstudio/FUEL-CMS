@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -722,6 +722,13 @@ class Fuel_page extends Fuel_base_library {
 		$init_vars = array('vars_path' => $vars_path, 'lang' => $this->language, 'include_pagevar_object' => $this->include_pagevar_object, 'honor_page_status' => $this->vars_honor_page_status);
 		$this->fuel->pagevars->initialize($init_vars);
 		$vars = $this->fuel->pagevars->retrieve($this->location, $page_mode);
+
+		if ($page_mode !== 'views' AND $module = $this->fuel->posts->find_module())
+		{
+			$this->fuel->posts->set_module($module);
+			$module_vars = $this->fuel->posts->vars();
+			$vars = array_merge($vars, $module_vars);
+		}
 		$this->add_variables($vars);
 	}
 	
@@ -766,15 +773,15 @@ class Fuel_page extends Fuel_base_library {
 	public function render($return = FALSE, $fuelify = TRUE)
 	{
 		// check the _page_data to see if it even exists in the CMS
-		if (!isset($this->_page_data['id']))
-		{
-			$this->render_mode = 'views';
-			return $this->variables_render($return, $fuelify);
-		}
-		else
+		if (isset($this->_page_data['id']))
 		{
 			$this->render_mode = 'cms';
 			return $this->cms_render($return, $fuelify);
+		}
+		else
+		{
+			$this->render_mode = 'views';
+			return $this->variables_render($return, $fuelify);
 		}
 	}
 	
@@ -817,21 +824,20 @@ class Fuel_page extends Fuel_base_library {
 			if ($this->layout->is_double_parse())
 			{
 				// first parse any template like syntax
-				$this->CI->parser->parse_string($output, $vars, TRUE);
+				$this->layout->parse($output, $vars);
 
 				// then grab variables again
 				$ci_vars = $this->CI->load->get_vars();
 
 				// then parse again to get any variables that were set from within a block
 				$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $ci_vars, TRUE);
-				$output = $this->CI->parser->parse_string($output, $ci_vars, TRUE);
+				$output = $this->layout->parse($output, $ci_vars);
 				unset($ci_vars);
 			}
 			else
 			{
 				// parse any template like syntax
-				$output = $this->CI->parser->parse_string($output, $vars, TRUE);
-
+				$output = $this->layout->parse($output, $vars);
 			}
 			
 			// call layout hook
@@ -971,7 +977,7 @@ class Fuel_page extends Fuel_base_library {
 
 				// now parse any template like syntax
 				$vars = $this->CI->load->get_vars();
-				$body = $this->CI->parser->parse_string($body, $vars, TRUE);
+				$body = $this->layout->parse($body, $vars);
 			}
 			else
 			{
@@ -1018,9 +1024,12 @@ class Fuel_page extends Fuel_base_library {
 				$output = $body;
 			}
 		}
-		
-		if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
-		
+
+		//if (empty($output) && empty($vars['allow_empty_content'])) return FALSE;
+		if (empty($output))
+		{
+			return FALSE;
+		}
 
 		// call layout hook
 		if ($layout)
@@ -1044,6 +1053,22 @@ class Fuel_page extends Fuel_base_library {
 			return TRUE;
 		}
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Renders a page by checking the modules "pages" config parameter
+	 *
+	 * @access	public
+	 * @param	boolean	Determines whether to return the value or to echo it out (optional)
+	 * @param	boolean	Determines whether to render any inline editing (optional)
+	 * @return	string
+	 */
+	public function modules_render($return = FALSE, $fuelify = FALSE)
+	{
+		return $this->fuel->posts->render($return, $fuelify);
+	}
+
 	
 	// --------------------------------------------------------------------
 	

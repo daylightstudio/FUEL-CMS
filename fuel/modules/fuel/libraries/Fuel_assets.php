@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -145,7 +145,8 @@ class Fuel_assets extends Fuel_base_library {
 		{
 			if ($file['error'] == 0)
 			{
-				$ext = end(explode('.', $file['name']));
+				$file_parts = explode('.', $file['name']);
+				$ext = end($file_parts);
 				$field_name = current(explode('___', $key)); // extract out multi file upload infor
 			
 				// loop through all the allowed file types that are accepted for the asset directory
@@ -178,6 +179,7 @@ class Fuel_assets extends Fuel_base_library {
 						if ($param != 'posted')
 						{
 							$input_key = $non_multi_key.'_'.$param;
+							$is_multiple = (preg_match('#.+_\d+_.+#U', $non_multi_key));
 							$input_key_arr = explode('--', $input_key);
 							$input_key = end($input_key_arr);
 
@@ -207,7 +209,7 @@ class Fuel_assets extends Fuel_base_library {
 								}
 								if ($param == 'file_name')
 								{
-									$posted_filename = TRUE;
+									$posted_filename = $is_multiple;
 								}
 							}
 						}
@@ -244,8 +246,6 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$params['upload_path'] = (!empty($params[$field_name.'_path'])) ? $params[$field_name.'_path'] : assets_server_path().$asset_dir.'/';
 				}
-
-				$params['remove_spaces'] = TRUE;
 
 				// make directory if it doesn't exist and subfolder creation is allowed'
 				if (!is_dir($params['upload_path']) AND $this->fuel->config('assets_allow_subfolder_creation'))
@@ -302,6 +302,16 @@ class Fuel_assets extends Fuel_base_library {
 					return FALSE;
 				}
 
+				// pull in from config if it exists
+				if (file_exists(APPPATH.'config/upload.php'))
+				{
+					include(APPPATH.'config/upload.php');
+					if (!empty($config))
+					{
+						$params = array_merge($config, $params);
+					}
+				}
+
 				// UPLOAD!!!
 				$this->CI->upload->initialize($params);
 				if (!$this->CI->upload->do_upload($key))
@@ -312,11 +322,19 @@ class Fuel_assets extends Fuel_base_library {
 				{
 					$this->_data[$key] = $this->CI->upload->data();
 
-					// set the file perm if necessary
-					if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
-						AND is_integer($this->fuel->config('set_upload_file_perms')))
+					// on last check to make sure the file actually does exist on the server
+					if (!file_exists($this->_data[$key]['full_path']))
 					{
-						chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						$this->_add_error(lang('error_upload'));
+					}
+					else
+					{
+						// set the file perm if necessary
+						if (($this->fuel->config('set_upload_file_perms') !== FALSE) AND function_exists('chmod')
+							AND is_integer($this->fuel->config('set_upload_file_perms')))
+						{
+							chmod($this->_data[$key]['full_path'], $this->fuel->config('set_upload_file_perms'));
+						}
 					}
 				}
 				
@@ -718,7 +736,8 @@ class Fuel_assets extends Fuel_base_library {
 		// add .zip extension so file_name is correct
 		if (empty($file_name))
 		{
-			$file_name = end(explode('/', rtrim($dir, '/')));
+			$dir_parts = explode('/', rtrim($dir, '/'));
+			$file_name = end($dir_parts);
 		}
 		
 		$file_name = $file_name.'.zip';

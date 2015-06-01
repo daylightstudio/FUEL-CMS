@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -35,7 +35,7 @@
 // The name of the site to be displayed at the top. Also used to generate your session key
 $config['site_name'] = 'MyWebsite';
 
-// path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
+// Path to the fuel admin from the web base directory... MUST HAVE TRAILING SLASH!
 $config['fuel_path'] = FUEL_FOLDER.'/';
 
 // Options are cms, views, auto... cms pulls views and variables from the database,
@@ -98,28 +98,11 @@ $config['dashboards'] = array('fuel');
 // Dashboard rss
 $config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
 
-// Text editor settings... options are markitup or ckeditor
+// text editor settings  (options are markitup or ckeditor)
+// markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)
+// ckeditor: suitable for clients; shows what the output will look like in the page (http://ckeditor.com/)
+// for more editor settings, look at the config/editors.php configuration file
 $config['text_editor'] = 'markitup';
-
-// CK editor specific settings
-$config['ck_editor_settings'] = array(
-	'toolbar' => array(
-		//array('Source'),
-		array('Bold','Italic','Strike'),
-		array('Format'),
-		array('Image','HorizontalRule'),
-		array('NumberedList','BulletedList'),
-		array('Link','Unlink'),
-		array('Undo','Redo','RemoveFormat'),
-		array('Preview'),
-		array('Maximize'),
-	),
-	'contentsCss' => WEB_PATH.'assets/css/main.css',
-	'htmlEncodeOutput' => FALSE,
-	'entities' => FALSE,
-	'bodyClass' => 'ckeditor',
-	'toolbarCanCollapse' => FALSE,
-);
 
 // An associative array of objects to attach to the fuel object
 $config['attach'] = array();
@@ -182,10 +165,10 @@ $config['assets_allow_subfolder_creation'] = TRUE;
 
 // Specifies what filetype extensions can be included in the folders
 $config['editable_asset_filetypes'] = array(
-	'images' => 'jpg|jpeg|jpe|gif|png|zip',
+	'images' => 'jpg|jpeg|jpe|gif|png|zip|svg',
 	'pdf' => 'pdf|zip',
 	'media' => 'mov|mp3|aiff|mpeg|zip',
-	'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css|zip'
+	'assets' => 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css|zip|svg'
 );
 
 // Max upload files size for assets
@@ -403,6 +386,15 @@ $config['page_uri_prefix'] = '';
 // View the page from the admin in a new window or within a modal window
 $config['view_in_new_window'] = TRUE;
 
+/*
+|--------------------------------------------------------------------------
+| Parsing engine settings
+|--------------------------------------------------------------------------
+*/
+
+// The parsing engine to use for FUEL. Options are dwoo, ci and now 'twig'!
+$config['parser_engine'] = 'dwoo';
+
 // Runs the parsing process twice for pages created in the CMS which allows
 // for variables to be set from within blocks and layout fields and can
 // bubble up to the layout view file (takes slightly longer to render
@@ -411,6 +403,30 @@ $config['view_in_new_window'] = TRUE;
 // layout variable. This can also be set as a property of a layout object
 $config['double_parse'] = FALSE;
 
+// The directory to put the parsed compiled files
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
+
+// The delimiters used by the parsing engine
+$config['parser_delimiters'] = array(
+				'tag_comment'   => array('{#', '#}'), // Twig only
+				'tag_block'     => array('{%', '%}'), // Twig only
+				'tag_variable'  => array('{', '}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}'
+				'interpolation' => array('#{', '}'), // Twig only
+			);
+
+// Functions allowed by the parsing engine
+$config['parser_allowed_functions'] = array(
+	'strip_tags', 'date', 
+	'detect_lang','lang',
+	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
+	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
+	'quote', 'safe_mailto', // HTML/URL specific
+	'session_flashdata', 'session_userdata', // Session specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment', 'auto_typography', 'current_url' // CI specific
+);
+
+// Object references passed to the parsing engine
+$config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'user_agent');
 
 /*
 |--------------------------------------------------------------------------
@@ -450,13 +466,6 @@ $config['generate'] = array(
 
 @include(APPPATH.'config/MY_fuel.php');
 
-// EXAMPLE: Uncomment if you want to control these options from the CMS
-// $config['settings'] = array();
-// $config['settings']['site_name'] = array('value' => $config['site_name']);
-// if ( ! empty($config['modules_allowed']))
-// {
-// 	$config['settings']['modules_allowed'] = array('type' => 'multi', 'options' => array_combine($config['modules_allowed'], $config['modules_allowed']));
-// }
 
 /* End of file fuel.php */
 /* Location: ./modules/fuel/config/fuel.php */

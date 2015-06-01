@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -40,30 +40,33 @@
  * @param	boolean
  * @return	array
  */
-function array_sorter(&$array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
+if ( ! function_exists('array_sorter'))
 {
-	if(is_array($array) && count($array) > 0)
+	function array_sorter(&$array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
 	{
-		foreach (array_keys($array) as $key)
+		if(is_array($array) && count($array) > 0)
 		{
-			$temp[$key]=$array[$key][$index];
-			if (! $nat_sort)
+			foreach (array_keys($array) as $key)
 			{
-				($order == 'asc') ? asort($temp) : arsort($temp);
-			} 
-			else
-			{
-				($case_sensitive) ? natsort($temp) : natcasesort($temp);
+				$temp[$key]=$array[$key][$index];
+				if (! $nat_sort)
+				{
+					($order == 'asc') ? asort($temp) : arsort($temp);
+				} 
+				else
+				{
+					($case_sensitive) ? natsort($temp) : natcasesort($temp);
+				}
+				if ($order != 'asc') $temp = array_reverse($temp,TRUE);
 			}
-			if ($order != 'asc') $temp = array_reverse($temp,TRUE);
-		}
-		foreach(array_keys($temp) as $key)
-		{
-			(is_numeric($key)) ? $sorted[] = $array[$key] : $sorted[$key] = $array[$key];
-		}
-		return $sorted;
-   }
-	return $array;
+			foreach(array_keys($temp) as $key)
+			{
+				(is_numeric($key)) ? $sorted[] = $array[$key] : $sorted[$key] = $array[$key];
+			}
+			return $sorted;
+	   }
+		return $array;
+	}
 }
 
 // --------------------------------------------------------------------
@@ -78,37 +81,40 @@ function array_sorter(&$array, $index, $order = 'asc', $nat_sort = FALSE, $case_
  * @param	string
  * @return	NULL
  */
-function object_sorter(&$data, $key, $order = 'asc')
+if ( ! function_exists('object_sorter'))
 {
-	for ($i = count($data) - 1; $i >= 0; $i--)
+	function object_sorter(&$data, $key, $order = 'asc')
 	{
-		$swapped = false;
-		for ($j = 0; $j < $i; $j++)
+		for ($i = count($data) - 1; $i >= 0; $i--)
 		{
-			if ($order == 'desc')
+			$swapped = false;
+			for ($j = 0; $j < $i; $j++)
 			{
-				if ($data[$j]->$key < $data[$j + 1]->$key)
-				{ 
-					$tmp = $data[$j];
-					$data[$j] = $data[$j + 1];
-					$data[$j + 1] = $tmp;
-					$swapped = true;
+				if ($order == 'desc')
+				{
+					if ($data[$j]->$key < $data[$j + 1]->$key)
+					{ 
+						$tmp = $data[$j];
+						$data[$j] = $data[$j + 1];
+						$data[$j + 1] = $tmp;
+						$swapped = true;
+					}
 				}
-			}
-			else
-			{
-				if ($data[$j]->$key > $data[$j + 1]->$key)
-				{ 
-					$tmp = $data[$j];
-					$data[$j] = $data[$j + 1];
-					$data[$j + 1] = $tmp;
-					$swapped = true;
+				else
+				{
+					if ($data[$j]->$key > $data[$j + 1]->$key)
+					{ 
+						$tmp = $data[$j];
+						$data[$j] = $data[$j + 1];
+						$data[$j + 1] = $tmp;
+						$swapped = true;
+					}
+					
 				}
 				
 			}
-			
+			if (!$swapped) return;
 		}
-		if (!$swapped) return;
 	}
 }
 
@@ -127,26 +133,29 @@ function object_sorter(&$data, $key, $order = 'asc')
  * @param	boolean
  * @return	array
  */
-function options_list($values, $value = 'id', $label = 'name', $value_as_key = FALSE)
+if ( ! function_exists('options_list'))
 {
-	$return = array();
-	foreach($values as $key => $val)
+	function options_list($values, $value = 'id', $label = 'name', $value_as_key = FALSE)
 	{
-		if (is_array($val))
+		$return = array();
+		foreach($values as $key => $val)
 		{
-			if (is_object($val)) $val = get_object_vars($val);
-			if (!empty($val[$label])) $return[$val[$value]] = $val[$label];
+			if (is_array($val))
+			{
+				if (is_object($val)) $val = get_object_vars($val);
+				if (!empty($val[$label])) $return[$val[$value]] = $val[$label];
+			}
+			else if ($value_as_key)
+			{
+				$return[$val] = $val;
+			}
+			else
+			{
+				$return[$key] = $val;
+			}
 		}
-		else if ($value_as_key)
-		{
-			$return[$val] = $val;
-		}
-		else
-		{
-			$return[$key] = $val;
-		}
+		return $return;
 	}
-	return $return;
 }
 
 // --------------------------------------------------------------------
@@ -158,19 +167,22 @@ function options_list($values, $value = 'id', $label = 'name', $value_as_key = F
  * @param	string
  * @return	array
  */
-function parse_string_to_array($str)
+if ( ! function_exists('parse_string_to_array'))
 {
-	preg_match_all('#(\w+)=([\'"])(.*)\\2#U', $str, $matches);
-	$params = array();
-	foreach($matches[1] as $key => $val)
+	function parse_string_to_array($str)
 	{
-		if (!empty($matches[3]))
+		preg_match_all('#(\w+)=([\'"])(.*)\\2#U', $str, $matches);
+		$params = array();
+		foreach($matches[1] as $key => $val)
 		{
-			$params[$val] = $matches[3][$key];
+			if (!empty($matches[3]))
+			{
+				$params[$val] = $matches[3][$key];
+			}
 		}
+		return $params;
+		
 	}
-	return $params;
-	
 }
 
 /**
@@ -181,14 +193,17 @@ function parse_string_to_array($str)
  * @param	int number of groups to divide the array into
  * @return	array
  */	
-function array_group($array, $groups)
+if ( ! function_exists('array_group'))
 {
-	if (empty($array))
+	function array_group($array, $groups)
 	{
-		return array();
+		if (empty($array))
+		{
+			return array();
+		}
+		$items_in_each_group = ceil(count($array)/$groups);
+		return array_chunk($array, $items_in_each_group);
 	}
-	$items_in_each_group = ceil(count($array)/$groups);
-	return array_chunk($array, $items_in_each_group);
 }
 
 /**
@@ -201,35 +216,38 @@ function array_group($array, $groups)
  * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
  * @return	array
  */	
-function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
+if ( ! function_exists('csv_to_array'))
 {
-	if(!file_exists($filename) || !is_readable($filename))
+	function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
 	{
-		return FALSE;
-	}
-
-	$header = NULL;
-	$data = array();
-	if (($handle = fopen($filename, 'r')) !== FALSE)
-	{
-		$i = -1;
-		while (($row = fgetcsv($handle, $length, $delimiter)) !== FALSE)
+		if(!file_exists($filename) || !is_readable($filename))
 		{
-			$i++;
-			if ($i >= $header_row) {
-				if(!$header)
-				{
-					$header = $row;
-				}
-				else
-				{
-					$data[] = array_combine($header, $row);
+			return FALSE;
+		}
+
+		$header = NULL;
+		$data = array();
+		if (($handle = fopen($filename, 'r')) !== FALSE)
+		{
+			$i = -1;
+			while (($row = fgetcsv($handle, $length, $delimiter)) !== FALSE)
+			{
+				$i++;
+				if ($i >= $header_row) {
+					if(!$header)
+					{
+						$header = $row;
+					}
+					else
+					{
+						$data[] = array_combine($header, $row);
+					}
 				}
 			}
+			fclose($handle);
 		}
-		fclose($handle);
+		return $data;
 	}
-	return $data;
 }
 
 // --------------------------------------------------------------------
@@ -239,34 +257,37 @@ function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $lengt
  * credit: borrowed from Vanilla forums GetValueR function
  *
  * @access	public
- * @param 	string $key The key or property name of the value.
  * @param 	mixed $array The array or object to search.
+ * @param 	string $key The key or property name of the value.
  * @param 	mixed $default The value to return if the key does not exist.
  * @return 	mixed The value from the array or object.
  */
-function array_dot($key, $array, $default = FALSE)
+if ( ! function_exists('array_get'))
 {
-	$path = explode('.', $key);
-
-	$value = $array;
-	for ($i = 0; $i < count($path); ++$i)
+	function array_get($array, $key, $default = FALSE)
 	{
-		$sub_key = $path[$i];
+		$path = explode('.', $key);
 
-		if (is_array($value) AND isset($value[$sub_key]))
+		$value = $array;
+		for ($i = 0; $i < count($path); ++$i)
 		{
-			$value = $value[$sub_key];
+			$sub_key = $path[$i];
+
+			if (is_array($value) AND isset($value[$sub_key]))
+			{
+				$value = $value[$sub_key];
+			}
+			elseif (is_object($value) AND isset($value->$sub_key))
+			{
+				$value = $value->$sub_key;
+			}
+			else
+			{
+				return $default;
+			}
 		}
-		elseif (is_object($value) AND isset($value->$sub_key))
-		{
-			$value = $value->$sub_key;
-		}
-		else
-		{
-			return $default;
-		}
+		return $value;
 	}
-	return $value;
 }
 
 /* End of file MY_array_helper.php */

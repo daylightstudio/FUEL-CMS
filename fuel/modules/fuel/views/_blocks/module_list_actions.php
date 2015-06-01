@@ -11,16 +11,15 @@
 				<?php endif; ?>
 				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>" class="reset"></a></td>
 				<td>
-					<div class="search_input<?php if ( ! empty($this->advanced_search)) : ?> advanced<?php endif; ?>">
+					<div class="search_input<?php if ( $this->advanced_search === TRUE OR $this->advanced_search === 'popover') : ?> advanced<?php endif; ?>">
 						<?=$this->form->search('search_term', $params['search_term'], 'placeholder="'.lang('label_search').'"')?>
-						<?php if ( ! empty($this->advanced_search)) : ?>
-						<a href="#" id="adv-search-btn" title="<?=lang('adv_search')?>"><img src="<?=fuel_url('modules/fuel/assets/images/th_arrow_desc.png')?>" /></a>
+						<?php if ( $this->advanced_search === TRUE OR $this->advanced_search === 'popover') : ?>
+						<a href="#" id="adv-search-btn" title="<?=lang('adv_search')?>"><img src="<?=img_path('th_arrow_desc.png', FUEL_FOLDER)?>" /></a>
 						<div class="adv_search">
 							<p><strong><?=lang('adv_search')?></strong></p>
-							<?php if (!empty($more_filters)) : ?>
-							<?=$more_filters?>
-							<?php endif; ?>
+							<?php $this->load->module_view(FUEL_FOLDER, '_blocks/search_filters'); ?>
 							<p><?=$this->form->submit(lang('btn_search'), 'search')?> &nbsp;&nbsp; <a href="#" id="adv-search-close"><?=lang('viewpage_close')?></a> &nbsp;&nbsp; <a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>"><?=lang('reset_search')?></a></p>
+
 						</div>
 						<?php endif; ?>
 					</div>

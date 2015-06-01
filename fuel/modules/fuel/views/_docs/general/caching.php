@@ -10,7 +10,7 @@ $this->fuel->cache->save('my_cache_id', $data);
 
 <h2>Page Caching</h2>
 <p>FUEL provides several options for caching your pages. The default setting, which can be altered in your <span class="file">fuel/application/config/MY_fuel.php</span> 
-file by changing the <a href="<?=user_guide_url('installation/configuring')?>">$config['use_page_cache']</a> parameter, 
+file by changing the <a href="<?=user_guide_url('installation/configuration')?>">$config['use_page_cache']</a> parameter, 
 is to cache all the pages created in the CMS. In some cases, you may not want to cache the page (e.g. you have a section that you want to be random on each page),
 and in those cases you can set the page's CMS <dfn>cache</dfn> setting to no.</p>
 

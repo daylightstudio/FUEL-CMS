@@ -24,6 +24,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 //		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
 		this.uiCookie = jqx.config.uiCookie;
+		this.ajaxing = false;
+		this.ajaxingCnt = 0;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
@@ -254,7 +256,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$('#multi_delete').click(function(){
 			$('#toggle_list').unbind('click');
-			var deleteUrl = _this.modulePath + '/delete/';
+			var deleteUrl = _this.modulePath + '/delete';
 			$('#form').attr('action', deleteUrl).attr('method', 'post').submit();
 			return false;
 		});
@@ -336,6 +338,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			e.preventDefault();
 			$('.adv_search').toggle();
 		});
+
+		$('.filters_toggle').toggle(
+			function(){
+				var $this = $(this);
+				$(this).html(fuel.lang('filters_open'));
+				$('.filters').slideUp(function(){
+				});
+				
+			},
+			function(){
+				$('.filters').slideDown();
+				$(this).html(fuel.lang('filters_close'));
+			}
+		)
 	},
 	
 	add_edit : function(initSpecFields){
@@ -405,7 +421,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$('.duplicate_action').click(function(e){
-			$('#form').attr('action', _this.modulePath + '/duplicate').submit();
+			$('#form').attr('action', _this.modulePath + '/duplicate?inline=' + $('#fuel_inline').val()).submit();
 			return false;
 		});
 		
@@ -440,14 +456,17 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		$(document).on('click', '.save, #form input[type="submit"]', function(e){
 			
-			if ($(this).hasClass('disabled')){
+			$this = $(this);
+
+			if ($this.hasClass('disabled') || _this.ajaxing || $('#form').data('disabled')){
 				return false;
 			}
 
 			$.removeChecksave();
+
 			$('#form').submit();
-			$(this).attr('disabled', true);
-			$(this).addClass('disabled');
+			$this.attr('disabled', true);
+			$this.addClass('disabled');
 			return false;
 		});
 		
@@ -496,7 +515,32 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		//$('#form input:first').select();
 		$(':input', '#form').filter(':first').focus();
 		
+		$(document).ajaxSend(function() {
+			_this.ajaxingCnt += 1;
+			_this.displayAjaxLoader(true);
+		});
+
+		$(document).ajaxComplete(function() {
+			_this.ajaxingCnt -= 1;
+			if (_this.ajaxingCnt <= 0){
+				_this.ajaxing = false;
+			}
+			_this.displayAjaxLoader(false);
+		});
+
 		if (jqx.config.warnIfModified) $.checksave('#fuel_main_content');
+	},
+
+	displayAjaxLoader : function(show){
+		if (show) {
+			if (!$('#fuel_loader').length){
+				$("#fuel_main_content").css('overflow', 'hidden').append('<div id="fuel_loader"><div class="loader"></div></div>');		
+			}
+			
+		} else {
+			$("#fuel_main_content").css('overflow', 'auto');
+			$('#fuel_loader').remove();
+		}
 	},
 	
 	initSpecialFields : function(context){
@@ -529,11 +573,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$legends = $('fieldset.tab legend', context).not('fieldset.tab fieldset legend', context);
 			$legends.each(function(i){
 				if ($(this).parent().attr('id') != '') {
-					$(this).parent().attr('id', 'fieldset' + i);
+					$(this).parent().attr('id', 'fieldset' + i).attr('data-index', i);
 				}
 				var id = ($(this).parent().attr('id'));
 				var text = $(this).text();
-				tabs += '<li><a href="#' + id + '">' + text + '</a></li>';
+				tabs += '<li id="fueltab' + i + '"><a href="#' + id + '">' + text + '</a></li>';
 			});
 			$legends.hide();
 			tabs += '</ul><div class="clear"></div></div>';
@@ -552,7 +596,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#__fuel_selected_tab__').val(index);
 			}
 			$tabs.bind('tabClicked', tabCallback);
-			
+
+			// check if there are any errors and highlight them
+			$legends.parent().find('.error_highlight').each(function(i){
+				var fieldsetIndex = $(this).closest('fieldset').data('index');
+				$('#fueltab' + fieldsetIndex).addClass('taberror');
+			})
 		}
 	},
 	

@@ -41,7 +41,6 @@
 				<h3>Additional Resources</h3>
 				<ul>
 					<li><a href="http://www.getfuelcms.com/blog">FUEL CMS's Blog</a></li>
-					<li><a href="http://www.thedaylightstudio.com/the-whiteboard/categories/fuel-cms">Daylight's Blog</a></li>
 					<li><a href="http://codeigniter.com">CodeIgniter Website</a></li>
 				</ul>
 
@@ -100,21 +99,13 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_notification')?>">Fuel Notification Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pages')?>">Fuel Pages Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_pagevars')?>">Fuel Pagevars Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_parser')?>">Fuel Parser Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_permissions')?>">Fuel Permissions Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_posts')?>">Fuel Posts Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_redirects')?>">Fuel Redirects Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_sitevars')?>">Fuel Sitevars Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_tags')?>">Fuel Tags Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel Users Class</a></li>
-				</ul>
-
-				<h3>Extended Base Classes</h3>
-				<ul>
-					<li><a href="<?=user_guide_url('libraries/my_db_mysql_driver')?>">MY_DB_mysql_driver Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_db_mysql_result')?>">MY_DB_mysql_result Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_hooks')?>">MY_Hooks Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_image_lib')?>">MY_Image_lib Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser Class</a></li>
 				</ul>
 
 			</td>
@@ -149,16 +140,10 @@
 					<li><a href="<?=user_guide_url('libraries/form_builder')?>">Form Builder Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/inspection')?>">Inspection Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/menu')?>">Menu Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/social')?>">Social Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/validator')?>">Validator Class</a></li>
 				</ul>
 
-				<h3>3rd Party Classes</h3>
-				<ul>
-					<li><a href="<?=user_guide_url('libraries/cache')?>">Cache Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/modular_extensions')?>">Modular Extensions - HMVC Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/simplepie')?>">Simplepie Class</a></li>
-				</ul>
-				
 
 			</td>
 			<td class="td_sep">
@@ -180,6 +165,7 @@
 					<li><a href="<?=user_guide_url('helpers/scraper_helper')?>">Scraper helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/session_helper')?>">Session helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/simplepie_helper')?>">Simplepie helper</a></li>
+					<li><a href="<?=user_guide_url('helpers/social_helper')?>">Social helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/utility_helper')?>">Utility helper</a></li>
 					<li><a href="<?=user_guide_url('helpers/validator_helper')?>">Validator helper</a></li>
 				</ul>
@@ -202,6 +188,26 @@
 				</ul>
 			</td>
 			<td class="td_sep">
+
+
+				<h3>Extended Base Classes</h3>
+				<ul>
+					<li><a href="<?=user_guide_url('libraries/my_db_mysql_driver')?>">MY_DB_mysql_driver Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_db_mysql_result')?>">MY_DB_mysql_result Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_hooks')?>">MY_Hooks Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_image_lib')?>">MY_Image_lib Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser Class</a></li>
+				</ul>
+				
+				<h3>3rd Party Classes</h3>
+				<ul>
+					<li><a href="<?=user_guide_url('libraries/cache')?>">Cache Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/modular_extensions')?>">Modular Extensions - HMVC Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/simplepie')?>">Simplepie Class</a></li>
+				</ul>
+				
+
 				<h3>Modules</h3>
 				<ul>
 					<li><a href="<?=user_guide_url('modules')?>">Modules Overview</a></li>

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -738,9 +738,7 @@ class Asset {
 		
 		if ($options['output'] === 'inline')
 		{
-			$open = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
-			$open .= "\t//<![CDATA[\n";
-			$close = "\n\t//]]>\n";
+			$open = "<script>\n";
 			$close .= "\t</script>";
 		}
 		else
@@ -1070,8 +1068,7 @@ class Asset {
 			$str .= $this->js('swfobject');
 		}
 		$str .= '
-		<script type="text/javascript">
-		//<![CDATA[
+		<script>
 		   var so = new SWFObject("'.$this->swf_path($flash).'", "'.$id.'_swf", "'.$width.'", "'.$height.'", "'.$version.'", "'.$color.'");
 		 ';
 		if(!is_array($vars))
@@ -1091,7 +1088,6 @@ class Asset {
 		}
 
 		$str .= '		so.write("'.$id.'");
-		// ]]>
 		</script>
 	';
 		return $str;
@@ -1306,7 +1302,8 @@ class Asset {
 			$params['type'] = 'js';
 			foreach($files as $file)
 			{
-				$ext =  end(explode('.', $files[0]));
+				$file_parts = explode('.', $files[0]);
+				$ext =  end($file_parts);
 				if (in_array($ext, $valid_exts))
 				{
 					$params['type'] = $ext;
@@ -1520,7 +1517,7 @@ class Asset {
 			$str = '';
 			foreach($arr as $key => $val)
 			{
-				$str .= $key.'="'.$val.'"';
+				$str .= $key.'="'.$val.'" ';
 			}
 			return $str;
 		}

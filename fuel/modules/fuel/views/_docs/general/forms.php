@@ -212,17 +212,21 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#toggler">toggler</a></li>
 		<li><a href="#colorpicker">colorpicker</a></li>
 		<li><a href="#dependent">dependent</a></li>
+		<li><a href="#embedded_list">embedded list</a></li>
+		<li><a href="#select2">select2</a></li>
 	</ul>
 </div>
 <div class="clear"></div>
 
 <h3 id="text" class="toggle">text</h3>
 <div class="toggle_block_off">
-	<p>This field type is the standard text field.</p>
+	<p>This field type is the standard text field and the "type" parameter should be left blank or don't include it all together (it is the default field type if no representatives are used).</p>
+	<p class="important">Note that the type being specified is empty. This is because using 'text' will create a textarea. The reason for this originally had to do with
+		having a table field type of text would map better to a textarea then to a input text field.</p>
 	
 	<h4>Example</h4>
 	<pre class="brush:php">
-	$fields['text_example'] = array('type' => 'text');
+	$fields['text_example'] = array('type' => '');
 	</pre>
 	<?php form_builder_example('text', array()); ?>
 	
@@ -366,12 +370,13 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		the name of the model and the value is the method (see below). The '_model' suffix is
 		not required when specifying the name of the model.
 		</li>
-		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
+		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options.</li>
 		<li><strong>mode</strong>: Options are 'auto', 'radios' and 'select'. Auto will show radio buttons if there are 2 or less, and will use a single select field if there are more.</li>
 		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the radio and label. Default is the 'span' tag.</li>
 		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
 		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
-		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially</li>
+		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially.</li>
+		<li><strong>equalize_key_value</strong>: If the options array is non-associative (numerically indexed), it will use the value of the array as the value of the radio or select option instead of the key.</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -394,18 +399,19 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field type creates either a series of checkboxes or a multiple select field.
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
-		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE.</li>
+		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE</li>
 		<li><strong>options</strong>: an array of select options</li>
 		<li><strong>model</strong>: The name of a model to use. The default method it will use is <dfn>options_list</dfn>. You can specify
 		an array where the key is the name of the module and the value is either string value for the name of the model, or an array value where the key is
 		the name of the model and the value is the method (see below). The '_model' suffix is
-		not required when specifying the name of the model.
+		not required when specifying the name of the model
 		</li>
 		<li><strong>model_params</strong>: Additional parameters to pass to the model method that retrieves the options</li>
-		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more.</li>
-		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag.</li>
-		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
-		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
+		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more</li>
+		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag</li>
+		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'</li>
+		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces</li>
+		<li><strong>equalize_key_value</strong>: If the options array is non-associative (numerically indexed), it will use the value of the array as the value of the radio or select option instead of the key.</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -435,7 +441,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>overwrite</strong>: sets a paramter to either overwrite or create a new file if one already exists on the server. Default will overwrite</li>
 		<li><strong>display_overwrite</strong>: determines if the overwrite checkbox appears next to the file upload field. Default value is TRUE</li>
 		<li><strong>accept</strong>: specifies which files are acceptable to upload. The default is 'gif|jpg|jpeg|png'</li>
-		<li><strong>upload_path</strong>: the server path to upload the file to. Default will be the asset images folder.</li>
+		<li><strong>upload_path</strong>: the server path to upload the file to. Default will be the asset images folder</li>
 		<li><strong>file_name</strong>: the new file name you want to assign</li>
 		<li><strong>encrypt_name</strong>: determines whether to encrypt the uploaded file name to give it a unique value. The default is FALSE</li>
 		<li><strong>multiple</strong>: determines whether to allow multiple files to be uploaded by the same field. The default is FALSE</li>
@@ -467,7 +473,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<pre class="brush:php">
 	$fields['file_example'] = array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE, 'file_name' => 'my_file_{id}');
 	</pre>
-	<p class="important">Note the us of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
+	<p class="important">Note the use of <dfn>"{id}"</dfn> in the <dfn>file_name</dfn> parameter. This will automatically merge in form field values for the name of the file.</p>
 	<?php form_builder_example('file_example', array('type' => 'file', 'overwrite' => TRUE, 'display_overwrite' => TRUE, 'multiple' => FALSE)); ?>
 
 </div>
@@ -533,8 +539,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>decimal</strong>: determines whether to allow decimals or not. The default is FALSE</li>
 		<li><strong>negative</strong>: determines whether negative numbers can be inputted. The default is FALSE</li>
-		<li><strong>min</strong>: the minimum number that can be inputted by clicking the number increment buttons</li>
-		<li><strong>max</strong>: the maximum number that can be inputted by clicking the number increment buttons</li>
+		<li><strong>min</strong>: the minimum number that can be inputted by clicking the number increment buttons. Default is 0</li>
+		<li><strong>max</strong>: the maximum number that can be inputted by clicking the number increment buttons. Default is 10</li>
 		<li><strong>step</strong>: determines the step value when increasing or decreasing the number</li>
 	</ul>
 	
@@ -717,7 +723,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
 		<li><strong>condensed</strong>: if TRUE, this will update there repeatable field to use a condensed styling</li>
 		<li><strong>non_sortable</strong>: if TRUE, this will hide the sorting grabber for repeatable fields</li>
-		<li><strong>removeable</strong>: if determines whether the repeatable sets can be removed</li>
+		<li><strong>removeable</strong>: determines whether the repeatable sets can be removed</li>
 	</ul>
 
 	<h4>Example</h4>
@@ -767,7 +773,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <div class="toggle_block_off">
 	<p>This field type is used for dynamically pulling in <a href="<?=user_guide_url('general/layouts#layouts_block_layouts')?>">block layout fields</a>:</p>
 
-	<h4>Upload Specific</h4>
 	<ul>
 		<li><strong>folder</strong>: determines which <span class="file">fuel/application/views/_blocks</span> subfolder to look in for displaying</li>
 		<li><strong>filter</strong>: an array or regular expression string to filter out certain files (e.g. those beginning with underscores). The default value is <dfn>^_(.*)|\.html$</dfn></li>
@@ -779,7 +784,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>block_name</strong>: if specified, it will automatically return the fields of that block as opposed to a dropdown list to select from</li>
 		<li><strong>group</strong>: if specified, will filter the options list to only those block layouts with that group name ('folder' must not be specified)</li>
 	</ul>
-
 
 	<h4>Example</h4>
 	<pre class="brush:php">
@@ -804,6 +808,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>overwrite</strong>: determines whether to overwrite the uploaded file or create a new file</li>
 		<li><strong>unzip</strong>: determines whether to unzip zip files automatically or not</li>
 		<li><strong>accept</strong>: specifies which files are acceptable to upload. It will default to what is specified in your fuel configuration for "editable_asset_filetypes"</li>
+		<li><strong>remove_subfolder</strong>: removes the subfolder specified from the returned path</li>
 	</ul>
 	
 	<h4>Image Specific</h4>
@@ -1121,12 +1126,14 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <div class="toggle_block_off">
 	<p>This field allows you to have one field determine the options of another field:</p>
 	<ul>
-		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on.</li>
-		<li><strong>url</strong>: the URL for the AJAX request.</li>
-		<li><strong>multiple</strong>: determines if the field is a multi-select or not.</li>
-		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field.</li>
-		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX.</li>
-		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select.</li>
+		<li><strong>depends_on</strong>: the name of the select that the secondary dropdown depends on</li>
+		<li><strong>url</strong>: the URL for the AJAX request. The default URL is to <span class="file">fuel/{module}/ajax/options</span> which maps to the <dfn>Base_module_model::ajax_options()</dfn> method which returns a string of HTML form element options. 
+			Any method on your model beginning with <dfn>ajax_{method}</dfn> can be accessed via the fuel/{module}/ajax/{method} and is passed an array of any POST and GET parameters that were passed in the AJAX request.</li>
+		<li><strong>multiple</strong>: determines if the field is a multi-select or not</li>
+		<li><strong>ajax_data_key_field</strong>: an optional field name to use for the value that will be passed via AJAX. The default is the value of the "depends_on" field</li>
+		<li><strong>additional_ajax_data</strong>: an array of additional data that will be passed via AJAX</li>
+		<li><strong>replace_selector</strong>: the selector used for replacing the HTML after a selection from the drop down. The default will replace the options of the dependent select</li>
+		<li><strong>func</strong>: a callable function to be used as the field output. The default output will be a dropdown select</li>
 	</ul>
 
 	<h4>Example</h4>
@@ -1136,11 +1143,65 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<?php 
 	$fields = array();
-	$fields['colorpicker_example'] = array('type' => 'colorpicker');
+	$fields['dependent_example'] = array('type' => 'dependent', 'depends_on' => 'language', 'url' => fuel_url('my_module/ajax/options'), 'multiple' => TRUE, 'replace_selector' => '.language_depends');
 	form_builder_example($fields);
 	?>
 	
 </div>
+
+<h3 id="embedded_list" class="toggle">embedded list</h3>
+<div class="toggle_block_off">
+	<p>This field creates an unsortable list view of another module's data using the <a href="<?=user_guide_url('libraries/data_table')?>">Data_table</a> class. 
+		Each row has an edit button that displays a modal window of the edit screen from that module. The base_module_model has 2 methods on it to help facilitate this class. The
+		first is the <a href="<?=user_guide_url('libraries/base_module_model#func_get_embedded_list_items')?>">get_embedded_list_items</a> method which renders the HTML for the table. 
+		The second is the <a href="<?=user_guide_url('models/base_module_model#func_ajax_embedded_list')?>">ajax_embedded_list</a> method that is called via AJAX to refresh the table after editing data in the modal window.
+	</p>
+	<ul>
+		<li><strong>module</strong>: the module whose data will be displayed</li>
+		<li><strong>create_button_label</strong>: the label of the create button</li>
+		<li><strong>create_url_params</strong>: additional intialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
+		<li><strong>edit_url_params</strong>: similar to <dfn>create_url_params</dfn> but for editing a record.</li>
+		<li><strong>display_fields</strong>: an array of fields to display when editing or creating.</li>
+		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
+		<li><strong>method_params</strong>: a key value array of parameters to pass to the model method. If a key of <dfn>where</dfn> is passed, it will automatically apply the where condition to the list view</li>
+		<li><strong>cols</strong>: An array of columns to display. The default will be the main display_field column. Additionally, you can overwrite the model's <dfn>get_embedded_list_items()</dfn> method and pass in the columns you want displayed.</li>
+		<li><strong>actions</strong>: An array of actions to include. Options are "edit", "view", "delete" and "custom" with custom being an array of URI and link text. Default value is the "EDIT" action.</li>
+		<li><strong>tooltip_char_limit</strong>: A key value array with the key being the field name and the value being the character limit of a field in which to display a tooltip. Default is 0 which won't show the tooltip</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'cols' => '', method_params' => array('where' => array('context' => 'test')));
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['embedded_list_example'] = array('type' => 'embedded_list', 'module' => array(FUEL_FOLDER => 'fuel_tags_model'), 'method_params' => array('where' => array('context' => 'test')));
+	//form_builder_example($fields);
+	?>
+	
+</div>
+
+<h3 id="select2" class="toggle">select2</h3>
+<div class="toggle_block_off">
+	<p>This field type can be used with any select field and transforms it into a searchable list using the <a href="https://select2.github.io/" target="_blank">Select2 plugin</a>.</p>
+	<ul>
+		<li><strong>width</strong>: the width of the field. The default is 225px</li>
+	</ul>
+
+	<h4>Example</h4>
+	<pre class="brush:php">
+	$fields['select2_example'] = array('type' => 'select2');
+	</pre>
+	
+	<?php 
+	$fields = array();
+	$fields['select2_example'] = array('type' => 'select2');
+	form_builder_example($fields);
+	?>
+	
+</div>
+
 
 <h2 id="association_parameters">Custom Field Type Association Parameters</h2>
 <p>Creating a custom field type requires an association be made in the <span class="file">fuel/application/config/custom_fields.php</span>

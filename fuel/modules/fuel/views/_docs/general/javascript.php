@@ -43,14 +43,16 @@ $this->form_builder->add_js('my_js');
 </pre>
 
 <h3>Using the 'js' Parameter</h3>
-<p>You can add the 'js' parameter to your fields like so:</p>
+<p>You can add the 'js' parameter to your fields like so to load in a my_js javascript file (must be an array or a string ending with ".js"):</p>
 <pre class="brush:php">
 ...
-$fields['my_field'] = array('label' => 'my_field', 'js' => 'my_js');
+$fields['my_field'] = array('label' => 'my_field', 'js' => array('my_js'));
 $this->form_builder->set_fields($fields);
 $this->form_builder->render();
 ...
-
+</pre>
+<p>OR you can define a script tag and it will output it on the page:</p>
+<pre class="brush:php">
 // OR you can define your script tag here
 $fields['my_field'] = array('label' => 'my_field', 'js' => '&lt;script&gt;
 $(function(){
@@ -59,8 +61,8 @@ $(function(){
 &lt;/script&gt;');
 $this->form_builder->set_fields($fields);
 $this->form_builder->render();
-
 </pre>
+<p>Lastly, any string value not beginning with "&lt;script" or ending in ".js" will be treated as a javascript function name that will be called upon rendering of the form.</p>
 
 <h3>Custom Field</h3>
 <p>One of the most powerful new features of FUEL 1.0 is the addition of custom form fields with <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>. A custom field is a combination of custom 

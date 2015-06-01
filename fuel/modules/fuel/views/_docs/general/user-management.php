@@ -33,7 +33,7 @@ The <strong>Pages</strong> module is a good example of this and it's permission 
 permission' => array('pages', 'create', 'edit', 'pages/upload' => 'pages/create', 'publish', 'delete'),
 
 // long hand
-permission' => array('pages', 'pages/create', 'pages/edit', 'pages/upload' => 'pages/create', 'pages/publish', 'pages/delete'),
+permission' => array('pages', 'create' => 'pages/create', 'edit' => 'pages/edit', 'pages/upload' => 'pages/create', 'publish' => 'pages/publish', 'delete' => 'pages/delete'),
 ...
 </pre>
 

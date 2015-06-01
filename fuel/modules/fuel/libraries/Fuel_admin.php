@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -106,20 +106,20 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		parent::initialize($params);
 
+		// check if the admin is even accessible... this method looks at if the admin is enabled and at any remote host or IP restrictions
+		if ($this->validate AND !$this->fuel->auth->can_access())
+		{
+			show_404();
+		}
+
 		// now load the other languages
 		$this->load_languages();
-		
+
 		// load assets config
 		$this->CI->config->load('asset');
 		
 		// load fuel helper
 		$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');
-		
-		// check if the admin is even accessible... this method looks at if the admin is enabled and at any remote host or IP restrictions
-		if (!$this->fuel->auth->can_access() AND $this->validate)
-		{
-			show_404();
-		}
 		
 		// set asset output settings
 		$this->CI->asset->assets_output = $this->fuel->config('fuel_assets_output');
@@ -147,6 +147,7 @@ class Fuel_admin extends Fuel_base_library {
 			$load_vars['user'] = $this->fuel->auth->user_data();
 			$load_vars['session_key'] = $this->fuel->auth->get_session_namespace();
 		}
+
 		$this->CI->js_controller_path = js_path('', FUEL_FOLDER);
 
 		$this->CI->load->vars($load_vars);
@@ -170,7 +171,10 @@ class Fuel_admin extends Fuel_base_library {
 		$this->set_inline($this->CI->input->get('inline'));
 		
 		// set last page
-		$this->last_page = $this->fuel->auth->user_data('fuel_last_page');
+		if ($this->CI->config->item('encryption_key'))
+		{
+			$this->last_page = $this->fuel->auth->user_data('fuel_last_page');
+		}
 		$this->init_display_modes();
 	}
 	
@@ -456,6 +460,12 @@ class Fuel_admin extends Fuel_base_library {
 			if (file_exists($nav_path))
 			{
 				include($nav_path);
+
+				$app_nav_path = APPPATH.'config/'.$module.'.php';
+				if (file_exists($app_nav_path))
+				{
+					include($app_nav_path);
+				}
 				
 				if (array_key_exists('module_overwrites', $config) AND ! empty($config['module_overwrites']))
 				{
@@ -638,9 +648,12 @@ class Fuel_admin extends Fuel_base_library {
 	public function language()
 	{
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
-		$language = $this->fuel->auth->user_data('language');
-		
-		// in case the language field doesn't exist... due to older fersions'
+		if ($this->CI->config->item('encryption_key'))
+		{
+			$language = $this->fuel->auth->user_data('language');	
+		}
+
+		// in case the language field doesn't exist... due to older versions'
 		if (empty($language) OR !is_string($language)) $language = $this->CI->config->item('language');
 
 		return $language;
@@ -658,9 +671,12 @@ class Fuel_admin extends Fuel_base_library {
 	{
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
 		$language = $this->language();
-		
-		// set the usrers language
-		$this->set_language($language);
+
+		// set the users language
+		if ($language AND $this->CI->config->item('encryption_key'))
+		{
+			$this->set_language($language);	
+		}
 
 		// load this language file first because fuel_modules needs it
 		$this->CI->load->module_language(FUEL_FOLDER, 'fuel', $language);
@@ -944,6 +960,11 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			$this->set_panel_display('top', FALSE);
 			$this->set_panel_display('nav', FALSE);
+		}
+		else
+		{
+			$this->set_panel_display('top', TRUE);
+			$this->set_panel_display('nav', TRUE);
 		}
 	}
 	
@@ -1404,7 +1425,7 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['init_params']['cssPath'] = css_path('', 'fuel'); 
 		$vars['init_params']['jsPath'] = js_path('', 'fuel');
 		$vars['init_params']['editor'] = $this->fuel->config('text_editor');
-		$vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
+		// $vars['init_params']['editorConfig'] = $this->fuel->config('ck_editor_settings');
 		$last_page = uri_path();
 		if (empty($last_page)) $last_page = $this->fuel->config('default_home_view');
 		$vars['last_page'] = uri_safe_encode($last_page);

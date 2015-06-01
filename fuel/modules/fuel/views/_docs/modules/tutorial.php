@@ -6,6 +6,8 @@ You can still create pretty powerful modules without the need of creating your o
 We will actually create several simple modules to allow us to create articles and categorize them in the CMS.
 We will be using 3 data models (<dfn>articles_model</dfn>, <dfn>authors_model</dfn>, <dfn>fuel_tags_model</dfn>), and creating 2 modules (articles, authors).</p>
 
+<p class="important">Visit the <a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a> page for more information about the new 1.3 feature to create pages automatically from your module.</p>
+
 
 <h4><strong>These are the steps in the following tutorial:</strong></h4>
 <ol>
@@ -56,7 +58,7 @@ CREATE TABLE `authors` (
   `avatar_image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 </pre>
 
 <p class="important"><strong>Note the column <kbd>published</kbd>.</strong> The enum columns <kbd>published</kbd> and <kbd>active</kbd>
@@ -126,10 +128,12 @@ CREATE TABLE `articles` (
   `slug` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `author_id` tinyint(3) unsigned NOT NULL default '0',
   `content` text collate utf8_unicode_ci NOT NULL,
+  `image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `thumb_image` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `date_added` datetime NOT NULL default '0000-00-00 00:00:00',
   `published` enum('yes','no') collate utf8_unicode_ci NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 </pre>
 
 <h3>Create the Articles Model</h3>
@@ -533,11 +537,11 @@ class Articles_model extends Base_module_model {
 ...
 </pre>
 
-<h3>Filtered FIelds</h3>
+<h3>Filtered Fields</h3>
 <p>The <dfn>filters</dfn> property allows you to specify additional fields that will be search from the list view in the admin. There is also a <dfn>filters_join</dfn> property
 you can specify either "and" or "or" which will determine how the where condition in the search query is formed (e.g. title AND content vs. title OR content). For more complicated 
 where conditions you can specify a key value array with the key being the filter field and the value being either "or" or "and" (e.g. array('title' => 'or', 'content' => 'and')). 
-For this example, we will leave it as the default "or":</p>
+In addition, you can specify <dfn>filters()</dfn> method on your model that can return an array of <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder fields</a>. For this example, we will leave it as the default "or" and not use a <dfn>filters</dfn> method:</p>
 <pre class="brush: php">
 ... 
 class Articles_model extends Base_module_model {
@@ -684,12 +688,12 @@ a linked list item for each article.
 This is because we still need to tell FUEL to use this view file for any URI location of <strong>articles/{slug}</strong>. 
 There are several ways to do this <strong>and you only need to implement one of them below</strong>:
 <ol>
-  <li><strong>max_page_params</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/views/_variables/MY_fuel.php</span>
+  <li><strong>max_page_params</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/config/MY_fuel.php</span>
     <pre class="brush: php">
     $config['max_page_params'] = array('articles' => 1);
     </pre>
   </li>
-  <li><strong>auto_search_views</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/views/_variables/MY_fuel.php</span>
+  <li><strong>auto_search_views</strong>: you can add the following to FUEL configuration parameter to <span class="file">fuel/application/config/MY_fuel.php</span>
     <pre class="brush: php">
     $config['auto_search_views'] = TRUE;
     </pre>

@@ -48,7 +48,7 @@ class Module extends Fuel_base_controller {
 			$this->module = fuel_uri_segment(2);
 			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
 
-			if ($this->module_obj)
+			if ($this->module AND $this->module_obj)
 			{
 				$mod_name = $this->module_obj->name();	
 			}
@@ -63,7 +63,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		// stop here if the module is disabled
-		if ($params['disabled'] === TRUE)
+		if (empty($params) OR $params['disabled'] === TRUE)
 		{
 			show_404();
 		}
@@ -184,12 +184,11 @@ class Module extends Fuel_base_controller {
 	{
 		$this->load->library('data_table');
 	
-		// check the model for a filters method as well and merge it with the property value
-		// added per http://www.getfuelcms.com/forums/discussion/760/filter-dropdown/#Item_2
-		if (method_exists($this->model, 'filters'))
-		{
-			$this->filters = array_merge($this->filters, $this->model->filters($this->filters));
+		$filters = $this->model->filters($this->filters);
+		if (is_object($filters) && ($filters instanceof Base_model_fields)) {
+			$filters = $filters->get_fields();
 		}
+		$this->filters = array_merge($this->filters, $filters);
 
 		// set the language dropdown if there is a language column
 		if ($this->fuel->language->has_multiple() AND !empty($this->language_col) AND method_exists($this->model, 'get_languages'))
@@ -288,23 +287,27 @@ class Module extends Fuel_base_controller {
 			$has_delete_permission = $this->fuel->auth->has_permission($this->permission, "delete") ? '1' : '0';
 
 			// set data table actions... look first for item_actions set in the fuel_modules
-			$edit_func = '
+			/*$edit_func = '
 			$CI =& get_instance();
 			$link = "";';
 
 			if ($has_edit_permission)
 			{
 				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
-				{
-					$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
-					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+				{	
+					echo  $cols[$CI->model->limit_to_user_field];
+					if (empty($CI->model->limit_to_user_field) OR (!empty($CI->model->limit_to_user_field) AND (!empty($cols[$CI->model->limit_to_user_field])) AND $cols[$CI->model->limit_to_user_field] = $CI->fuel->auth->user_data("id")))
+					{
+						$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+						$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
+						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+					}
 				}';	
 			}
 
 			$edit_func .= 'return $link;';
 
-			$edit_func = create_function('$cols', $edit_func);
+			$edit_func = create_function('$cols', $edit_func);*/
 
 			// set data table actions... look first for item_actions set in the fuel_modules
 			$delete_func = '
@@ -614,7 +617,7 @@ class Module extends Fuel_base_controller {
 					{
 						$field_type = $this->model->field_type($raw_key);
 
-						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
+						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date' AND (int) $posted[$key] !== 0)
 						{
 							$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
 							$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
@@ -670,7 +673,8 @@ class Module extends Fuel_base_controller {
 	function _filter_list($params)
 	{
 		// create search filter
-		$filters[$this->display_field] = trim($params['search_term']);
+		$search_key = !empty($this->search_field) ? $this->search_field : $this->display_field;
+		$filters[$search_key] = trim($params['search_term']);
 		
 		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
 		$this->model->filter_value = trim($params['search_term']);
@@ -800,11 +804,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id, TRUE);
 				}
 
 				// save any tab states
@@ -824,10 +828,14 @@ class Module extends Fuel_base_controller {
 
 		$shell_vars = $this->_shell_vars($id);
 
-		$passed_init_vars = ($this->input->get(NULL, TRUE)) ? $this->input->get(NULL, TRUE) : array();
-		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
+		$get = (array) $this->input->get(NULL, TRUE);
+		$post = (array) $this->input->post(NULL, TRUE);
+		$passed_init_vars = array_filter(array_merge($get, $post));
+
+		$form_vars = $this->_form_vars($id, $passed_init_vars, $field, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
+		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
 
 		$this->fuel->admin->set_titlebar($crumbs);
@@ -997,11 +1005,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field, TRUE);
 				}
 
 				if ($redirect)
@@ -1031,7 +1039,7 @@ class Module extends Fuel_base_controller {
 			$this->preview_path = $this->module_obj->url($data);	
 		}
 
-		$shell_vars = $this->_shell_vars($id, $action);
+		$shell_vars = $this->_shell_vars($id, $action, $data);
 		$form_vars = $this->_form_vars($id, $data, $field, $inline);
 
 		$vars = array_merge($shell_vars, $form_vars);
@@ -1242,21 +1250,25 @@ class Module extends Fuel_base_controller {
 	 * @access	protected
 	 * @param	int		The ID value of the record to edit
 	 * @param	string	The name of the action to apply to the main form element
+	 * @param	array	An array of data information
 	 * @return	array
 	 */	
-	protected function _shell_vars($id = NULL, $action = 'create')
+	protected function _shell_vars($id = NULL, $action = 'create', $data = array())
 	{
 		$model = $this->model;
 		$this->js_controller_params['method'] = 'add_edit';
 		$this->js_controller_params['linked_fields'] = $this->model->linked_fields;
 		
 		// other variables
+		if (method_exists($this->model, 'vars'))
+		{
+			$model_vars = $this->model->vars($data);
+			$this->load->vars($model_vars);
+		}
 		$vars['id'] = $id;
 		$vars['versions'] = ($this->displayonly === FALSE AND $this->archivable) ? $this->fuel_archives_model->options_list($id, $this->model->table_name()) : array();
 		$vars['others'] = $this->model->get_others($this->display_field, $id);
 		$vars['action'] = $action;
-		
-		$vars['module'] = $this->module;
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		
 		return $vars;
@@ -1293,6 +1305,7 @@ class Module extends Fuel_base_controller {
 	// seperated to make it easier in subclasses to use the form without rendering the page
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
+
 		$this->load->library('form_builder');
 
 		// load custom fields
@@ -1305,8 +1318,14 @@ class Module extends Fuel_base_controller {
 		// create fields... start with the table info and go from there
 		$fields = (!empty($values)) ? $this->model->form_fields($values) : $this->model->form_fields($_POST);
 
+		// if it's an object, then extract
+		if ($fields instanceof Base_model_fields)
+		{
+			$fields = $fields->get_fields();
+		}
+
 		// if field parameter is set, then we just display a single field
-		if ( ! empty($field))
+		if ( ! empty($field) AND ! is_numeric($field))
 		{
 			// added per pierlo in Forum (http://www.getfuelcms.com/forums/discussion/673/fuel_helper-fuel_edit-markers)
 			$columns = explode(':', $field);
@@ -1409,7 +1428,7 @@ class Module extends Fuel_base_controller {
 		}
 
 		$action_uri = $action.'/'.$id.'/'.$field;
-		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
+		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri.query_str() : $this->module_uri.'/'.$action_uri.query_str();
 		$vars['form'] = $form;
 		$vars['data'] = $values;
 		$vars['error'] = $this->model->get_errors();
@@ -1442,7 +1461,8 @@ class Module extends Fuel_base_controller {
 		// first loop through and create simple non-namespaced $_POST values if they don't exist for convenience'
 		foreach($_POST as $key => $val)
 		{
-			$tmp_key = end(explode('--', $key));
+			$key_parts = explode('--', $key);
+			$tmp_key = end($key_parts);
 			$_POST[$tmp_key] = $val;
 		}
 
@@ -1495,6 +1515,11 @@ class Module extends Fuel_base_controller {
 
 	public function _block_processing($fields, $posted)
 	{
+		// grab the fields array if using the form fields class
+		if (is_object($fields) && ($fields instanceof Base_model_fields)) {
+			$fields = $fields->get_fields();
+		}
+
 		// add in block fields
 		foreach($fields as $key => $val)
 		{
@@ -1833,6 +1858,12 @@ class Module extends Fuel_base_controller {
 		if ( ! empty($_POST))
 		{
 			$fields = $this->model->form_fields();
+
+			if (is_object($fields) AND $fields instanceof Base_model_fields)
+			{
+				$fields = $fields->get_fields();
+			}
+
 			$field = $this->input->post('field', TRUE);
 
 			if ( ! isset($fields[$field])) return;
@@ -1841,8 +1872,8 @@ class Module extends Fuel_base_controller {
 			$values = $this->input->post('values', TRUE);
 
 			$selected = $this->input->post('selected', TRUE);
-
-			$field_key = end(explode('vars--', $field));
+			$field_parts = explode('vars--', $field);
+			$field_key = end($field_parts);
 
 			$this->load->library('form_builder');
 			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
@@ -1938,8 +1969,9 @@ class Module extends Fuel_base_controller {
 			// append ajax to the method name... to prevent any conflicts with default methods
 			$method = 'ajax_'.$method;
 
-			$params = $this->input->get_post(NULL, TRUE);
-
+			$get = (array) $this->input->get(NULL, TRUE);
+			$post = (array) $this->input->post(NULL, TRUE);
+			$params = array_filter(array_merge($get, $post));
 			if ( ! method_exists($this->model, $method))
 			{
 				show_error(lang('error_invalid_method'));
@@ -2158,7 +2190,7 @@ class Module extends Fuel_base_controller {
 						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
 					}
 
-					if (isset($posted[$file_tmp.'_file_name']))
+					if (isset($posted[$file_tmp.'_file_name']) AND isset($this->_orig_post[$file_tmp.'_file_name']))
 					{
 						// get file extension
 						$path_info = pathinfo($file_info['name']);
@@ -2196,11 +2228,13 @@ class Module extends Fuel_base_controller {
 					}
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
-					$tmp_field_name = end(explode('--', $field_name));
+					$field_name_parts = explode('--', $field_name);
+					$tmp_field_name = end($field_name_parts);
 
 					$file_name = pathinfo($field_value, PATHINFO_FILENAME);
 					$file_ext = pathinfo($field_value, PATHINFO_EXTENSION);
-					$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					//$file_val = url_title($file_name, 'underscore', FALSE).'.'.$file_ext;
+					$file_val = $file_name.'.'.$file_ext;
 					$posted[$tmp_field_name] = $file_val;
 					$posted[$field_name] = $file_val;
 					$posted[$file_tmp.'_file_name'] = $file_val;
@@ -2247,11 +2281,13 @@ class Module extends Fuel_base_controller {
 
 	protected function _process_upload_data($field_name, $uploaded_data, $posted)
 	{
-		$field_name = end(explode('--', $field_name));
+		$field_name_parts = explode('--', $field_name);
+		$field_name = end($field_name_parts);
 
 		foreach($uploaded_data as $key => $val)
 		{
-			$file_tmp = current(explode('___', $key));
+			$key_parts = explode('___', $key);
+			$file_tmp = current($key_parts);
 
 			// get the file name field
 			// if the file name field exists AND there is no specified hidden filename field to assign to it AND...

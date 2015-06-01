@@ -17,6 +17,7 @@ dave@thedaylightstudio.com
 			repeatableSelector : '.repeatable',
 			repeatableParentSelector : '.repeatable_container',
 			removeSelector : '.remove',
+			removeParentSelector : '.remove_container',
 			contentSelector : '.repeatable_content',
 			warnBeforeDelete : true,
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
@@ -41,6 +42,7 @@ dave@thedaylightstudio.com
 			var depth = $(elem).parent().attr('data-depth');
 			var titleField = $(elem).parent().attr('data-title_field');
 			var title = $(elem).find('input[name$="[' + titleField + ']"]').val();
+
 			if (!depth) depth = 0;
 			var depthSuffix = (depth > 0) ? '_' + depth : '';
 			$('.num' + depthSuffix, elem).html((i + 1));
@@ -72,7 +74,8 @@ dave@thedaylightstudio.com
 
 
 			$('label,.field_depth_' + depth, elem).each(function(j){
-				var newName = $(this).attr('name');
+				var origName = $(this).attr('name');
+				var newName = origName;
 				if (newName && newName.length){
 					newName = newName.replace(/([-_a-zA-Z0-9\[\]]+)\[\d+\]([-_a-zA-Z0-9\[\]]+)$/, '$1[' + i + ']$2');
 
@@ -101,6 +104,14 @@ dave@thedaylightstudio.com
 					parseAttribute(this, 'id');
 					$(this).attr('data-index', i);
 				}
+
+				// set data values if they exist
+				if (origName){
+					var elemData = fuel.fields.getElementData(origName);
+					if (elemData){
+						fuel.fields.setElementData(newName, elemData);
+					}
+				}
 			})
 			
 			var $parentElem = $(elem).has(options.repeatableSelector + ' ' + options.repeatableSelector);
@@ -116,7 +127,8 @@ dave@thedaylightstudio.com
 				$childRepeatables.each(function(i){
 
 					$(this).find('input,textarea,select').each(function(j){
-						var newName = $(this).attr('name')
+						var origName = $(this).attr('name');
+						var newName = origName;
 						if (newName && newName.length && parentIndex != null){
 							newName = newName.replace(/([-_a-zA-Z0-9]+\[)\d+(\]\[[-_a-zA-Z0-9]+\]\[[-_a-zA-Z0-9]+\])/g, '$1' + parentIndex + '$2');
 
@@ -138,7 +150,14 @@ dave@thedaylightstudio.com
 							$(this).attr('id', newId);
 						}
 
-						
+						// set data values if they exist
+						if (origName){
+							var elemData = fuel.fields.getElementData(origName);
+							if (elemData){
+								fuel.fields.setElementData(newName, elemData);
+							}
+						}
+
 					})
 				})
 			}
@@ -147,8 +166,17 @@ dave@thedaylightstudio.com
 		var createRemoveButton = function(elem){
 			if (!options.removeable) return;
 			$elem = $(elem);
-			$elem.children(options.removeSelector).remove();
-			$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+
+			var removeHTML = '<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>';
+			var $remElem = $elem.find(options.removeParentSelector + ':first');
+
+			if ($remElem.length){
+				$elem.closest(options.repeatableParentSelector).find(options.removeParentSelector).html(removeHTML);
+			} else {
+				$elem.children(options.removeSelector).remove();
+				$elem.append(removeHTML);
+			}
+
 
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
 			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){

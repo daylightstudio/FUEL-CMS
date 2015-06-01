@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -419,6 +419,7 @@ class Fuel_assets_model extends CI_Model {
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		$fields['hide_options'] = array('type' => 'hidden');
 		$fields['hide_image_options'] = array('type' => 'hidden');
+		$fields['remove_subfolder'] = array('type' => 'hidden');
 		return $fields;
 	}
 	
@@ -457,7 +458,19 @@ class Fuel_assets_model extends CI_Model {
 	{
 		return TRUE;
 	}
-		
+	
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @param   array Posted values
+	 * @return	void
+	 */
+	public function filters($values = array())
+	{
+		return array();
+	}
+
 	/**
 	 * Displays the most recently uplloaded 
 	 *

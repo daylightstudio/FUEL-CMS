@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -42,26 +42,29 @@
  * @param	boolean	echo to the screen
  * @return	string
  */
-function tag($tag, $vals)
+if (!function_exists('tag'))
 {
-	$str = '';
-	if (is_array($vals))
+	function tag($tag, $vals, $attrs = array())
 	{
-		foreach($vals as $val)
+		$str = '';
+		if (is_array($vals))
 		{
-			$str .= '<'.$tag.'>';
-			$str .= $val;
-			$str .= '</'.$tag.'>';
-			$str .= "\n";
+			foreach($vals as $val)
+			{
+				$str .= '<'.$tag.html_attrs($attrs).'>';
+				$str .= $val;
+				$str .= '</'.$tag.'>';
+				$str .= "\n";
+			}
 		}
+		else
+		{
+			$str .= '<'.$tag.html_attrs($attrs).'>';
+			$str .= $vals;
+			$str .= '</'.$tag.'>';
+		}
+		return $str;
 	}
-	else
-	{
-		$str .= '<'.$tag.'>';
-		$str .= $val;
-		$str .= '</'.$tag.'>';
-	}
-	return $str;
 }
 
 // --------------------------------------------------------------------
@@ -76,31 +79,33 @@ function tag($tag, $vals)
  * @param 	string 	string css class 
  * @return	string
  */
-function quote($quote, $cite = NULL, $title = NULL, $class = 'quote')
+if (!function_exists('quote'))
 {
-	$str = '<blockquote';
-	if (!empty($class))
+	function quote($quote, $cite = NULL, $title = NULL, $class = 'quote')
 	{
-		$str .= ' class="'.$class.'"';
-	}
-	if (!empty($class))
-	{
-		$str .= '>';
-	}
-	$str .= "<span class=\"quote_left\">&#8220;</span>".$quote."<span class=\"quote_right\">&#8221;</span>";
-	if (!empty($cite))
-	{
-		$str .= "<cite>".$cite;
-		if (!empty($title))
+		$str = '<blockquote';
+		if (!empty($class))
 		{
-			$str .= ", <span class=\"cite_title\">".$title."</span>";
+			$str .= ' class="'.$class.'"';
 		}
-		$str .= "</cite>";
+		if (!empty($class))
+		{
+			$str .= '>';
+		}
+		$str .= "<span class=\"quote_left\">&#8220;</span>".$quote."<span class=\"quote_right\">&#8221;</span>";
+		if (!empty($cite))
+		{
+			$str .= "<cite>".$cite;
+			if (!empty($title))
+			{
+				$str .= ", <span class=\"cite_title\">".$title."</span>";
+			}
+			$str .= "</cite>";
+		}
+		$str .= "</blockquote>";
+		return $str;
 	}
-	$str .= "</blockquote>";
-	return $str;
 }
-
 
 // --------------------------------------------------------------------
 
@@ -111,36 +116,39 @@ function quote($quote, $cite = NULL, $title = NULL, $class = 'quote')
  * @param 	mixed 	HTML attributs
  * @return	string
  */
-function html_attrs($attrs)
+if (!function_exists('html_attrs'))
 {
-	if (is_array($attrs))
+	function html_attrs($attrs)
 	{
-		$str = '';
-		foreach($attrs as $key => $val)
+		if (is_array($attrs))
 		{
-			if (is_array($val) AND $key == 'data')
+			$str = '';
+			foreach($attrs as $key => $val)
 			{
-				foreach($val as $k => $v)
+				if (is_array($val) AND $key == 'data')
 				{
-					if ($v !== '')
+					foreach($val as $k => $v)
 					{
-						$str .= ' data-'.$k.'="'.$v.'"';
+						if ($v !== '')
+						{
+							$str .= ' data-'.$k.'="'.$v.'"';
+						}
+					}
+				}
+				else
+				{
+					if ($val != '')
+					{
+						$str .= ' '.$key.'="'.$val.'"';
 					}
 				}
 			}
-			else
-			{
-				if ($val != '')
-				{
-					$str .= ' '.$key.'="'.$val.'"';
-				}
-			}
+			return $str;
 		}
-		return $str;
-	}
-	else if (!empty($attrs))
-	{
-		return ' '.$attrs;
+		else if (!empty($attrs))
+		{
+			return ' '.$attrs;
+		}
 	}
 }
 

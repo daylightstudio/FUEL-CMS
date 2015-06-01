@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -930,7 +930,8 @@ class Data_table {
 				//e modifier is deprecated so we have to do this
 				$callback = create_function('$match', '
 						$return = "";
-						if (!empty($match[2]))
+	
+						if (!empty($match[2]) && !empty($GLOBALS["__tmp_transient_fields__"][$match[2]]))
 						{
 							$return = $match[1].$GLOBALS["__tmp_transient_fields__"][$match[2]].$match[3];
 						}
@@ -940,9 +941,11 @@ class Data_table {
 				$GLOBALS['__tmp_transient_fields__'] = $fields;
 				$url = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $val['url']);
 				
-
-				$attrs = (!empty($val['attrs'])) ? ' '.$this->_render_attrs($val['attrs']) : '';
-				$actions[] ='<a href="'.$url.'"'.$attrs.' class="action_'.url_title($key, 'underscore', TRUE).'">'.$key.'</a>';
+				if (!empty($url))
+				{
+					$attrs = (!empty($val['attrs'])) ? ' '.$this->_render_attrs($val['attrs']) : '';
+					$actions[] ='<a href="'.$url.'"'.$attrs.' class="datatable_action action_'.url_title($key, 'underscore', TRUE).'">'.$key.'</a>';
+				}
 			}
 		}
 

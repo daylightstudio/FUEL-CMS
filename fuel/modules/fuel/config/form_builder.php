@@ -15,5 +15,10 @@ $config['representatives'] = array(
 	)
 );
 
+if (file_exists(APPPATH.'config/form_builder.php'))
+{
+	include(APPPATH.'config/form_builder.php');
+}
+
 /* End of file form_builder.php */
 /* Location: ./application/config/form_builder.php */

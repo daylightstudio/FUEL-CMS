@@ -258,7 +258,8 @@ class Blocks extends Module {
 
 			// extract variables
 			extract($page_vars);
-			$_name = end(explode('--', $_name));
+			$name_parts = explode('--', $_name);
+			$_name = end($name_parts);
 			$_name_var = str_replace(array('[', ']'), array('["', '"]'), $_name);
 
 			if ( ! empty($_name_var))

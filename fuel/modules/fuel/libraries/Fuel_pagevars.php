@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -45,7 +45,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		$this->initialize($params);
 	}
 	
-	public function initialize($params)
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 
@@ -126,12 +126,11 @@ class Fuel_pagevars extends Fuel_base_library {
 
 		if ($parse)
 		{
-			$this->CI->load->library('parser');
 			foreach($vars as $key => $val)
 			{
 				if (is_string($val))
 				{
-					$vars[$key] = $this->CI->parser->parse_string($val, $vars, TRUE);	
+					$vars[$key] = $this->fuel->parser->parse_string($val, $vars, TRUE);	
 				}
 			}
 		}

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -53,6 +53,45 @@ class Fuel_tags_model extends Base_module_model {
 		parent::__construct('fuel_tags'); // table name
 
 		$this->init_relationships();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the module's items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
+	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
+	{
+		$table = $this->table_name();
+		$categories_table = $this->_tables['fuel_categories'];
+		$CI =& get_instance();
+		$this->db->join($categories_table, $categories_table.'.id = '.$table.'.category_id', 'LEFT');
+
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		else
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+		if (empty($just_count))
+		{
+			foreach($data as $key => $val)
+			{
+				$data[$key]['description'] = htmlentities($val['description'], ENT_QUOTES, 'UTF-8');
+			}
+		}
+		return $data;
 	}
 
 	// --------------------------------------------------------------------
@@ -150,6 +189,7 @@ class Fuel_tags_model extends Base_module_model {
 	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE, 'first_option' => lang('label_select_one'));
 		return $fields;
 	}
 
@@ -169,8 +209,10 @@ class Fuel_tags_model extends Base_module_model {
 	{
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
-		if (empty($key)) $key = $this->_tables['fuel_categories'].'.id';
-		if (empty($val)) $val = $this->_tables['fuel_categories'].'.name';
+		// if (empty($key)) $key = $this->_tables['fuel_categories'].'.id';
+		// if (empty($val)) $val = $this->_tables['fuel_categories'].'.name';
+		if (empty($key)) $key = $this->_tables['fuel_tags'].'.id';
+		if (empty($val)) $val = $this->_tables['fuel_tags'].'.name';
 
 		// needed to prevent ambiguity
 		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)

@@ -524,7 +524,7 @@ class Generate extends Fuel_base_controller {
 			$contents = file_get_contents($template_path);
 
 			// parse
-			$contents = $this->parser->parse_simple($contents, $vars);
+			$contents = parse_template_syntax($contents, $vars, 'ci');
 
 			return $contents;
 		}

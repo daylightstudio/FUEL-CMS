@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -83,6 +83,7 @@ class MY_Model extends CI_Model {
 	protected $validator = NULL; // the validator object
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
+	protected $_last_saved = NULL; // a reference to the last saved object / ID of record;
 	
 
 	/**
@@ -143,7 +144,7 @@ class MY_Model extends CI_Model {
 		// if a DSN property is set,then we will load that database in
 		if (!empty($this->dsn))
 		{
-			$this->db = $this->load->database($this->dsn, TRUE, TRUE);
+			$this->set_db($this->load->database($this->dsn, TRUE, TRUE));
 		}
 		else
 		{
@@ -157,7 +158,8 @@ class MY_Model extends CI_Model {
 			{
 				// create a copy of the DB object to prevent cross model interference
 				unset($this->db);
-				$this->db = clone $CI->db;
+				$db = clone $CI->db;
+				$this->set_db($db);
 			}
 			else
 			{
@@ -171,6 +173,25 @@ class MY_Model extends CI_Model {
 		// load any additional classes needed for custom fields
 		$this->load_custom_field_classes();
 
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Sets the database object for a model
+	 *
+	 <code>
+	$db = $CI->db;
+	$this->examples_model->set_db($db); 
+	</code>
+	 *
+	 * @access	public
+	 * @return	array
+	 */	
+	public function set_db($db)
+	{
+		$this->db = $db;
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -203,7 +224,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	boolean	lower case the name (optional)
-	 * @param	boolean return the record clas name (optional)
+	 * @param	boolean return the record class name (optional)
 	 * @return	array
 	 */	
 	public function short_name($lower = FALSE, $record_class = FALSE)
@@ -455,7 +476,7 @@ class MY_Model extends CI_Model {
 		//Get the data out of the database
 		$query = $this->db->get($this->table_name);
 		
-		if (empty($query)) $query = new MY_DB_mysql_result();
+		if (empty($query)) $query = ($this->db->dbdriver == 'mysql') ? new MY_DB_mysql_result() : new MY_DB_mysqli_result();
 		
 		if ($this->return_method == 'query') 
 		{
@@ -863,7 +884,7 @@ class MY_Model extends CI_Model {
 		}
 
 		// setup wherein for the group
-		$this->db->where_in($this->key_field(), $group);
+		$this->db->where_in($this->table_name.'.'.$this->key_field(), $group);
 
 		// must set protect identifiers to FALSE in order for order by to work
 		$_protect_identifiers = $this->db->_protect_identifiers;
@@ -878,7 +899,7 @@ class MY_Model extends CI_Model {
 		// remove any cached order by
 		$this->db->ar_cache_orderby = array();
 
-		$this->db->order_by('FIELD('.$this->key_field().', '.implode(', ', $group).')');
+		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')');
 
 		// set it _protect_identifiers back to original value
 		$this->db->_protect_identifiers = $_protect_identifiers;
@@ -1109,6 +1130,10 @@ class MY_Model extends CI_Model {
 				$key = $this->key_field;
 			}
 		}
+		if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE)
+		{
+			$key = $this->table_name().'.'.$key;
+		}
 
 		if (empty($val))
 		{
@@ -1116,6 +1141,11 @@ class MY_Model extends CI_Model {
 			$val = $fields[1];
 		}
 		
+		if (strpos($val, '.') === FALSE AND strpos($val, '(') === FALSE)
+		{
+			$val = $this->table_name().'.'.$val;
+		}
+
 		// don't need extra model sql stuff so just use normal active record'
 		if (!empty($order) AND is_bool($order))
 		{
@@ -1200,6 +1230,30 @@ class MY_Model extends CI_Model {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Will first look for a record with the past values and if it doesn't exist, will create a new one
+	 *
+	 <code>
+	$example = $this->examples_model->find_or_create(array('slug' => 'the-force'));
+	</code>
+	 *
+	 * @access	public
+	 * @param	array	an array of values to first search for and if they don't exist, will create a new record
+	 * @return	boolean
+	 */	
+	public function find_or_create($values = array())
+	{
+		$record = $this->find_one($values);
+		$key_field = $this->key_field();
+		if (!isset($record->$key_field))
+		{
+			$record = $this->create($values);
+		}
+		return $record;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1303,6 +1357,14 @@ class MY_Model extends CI_Model {
 								$values[$key] = ($values[$key] != 'invalid') ? $date_func('Y-m-d H:i:s', strtotime($values[$key])) : $this->default_date;
 							}
 						}
+
+						
+						// set it to an empty string an not a 0 so that it will work with the required validator
+						if (empty($values[$key]))
+						{
+							$values[$key] = '';
+						}
+
 					} 
 				}
 				
@@ -1576,6 +1638,7 @@ class MY_Model extends CI_Model {
 			if (isset($insert_id) AND ! empty($insert_id))
 			{
 				$return = $insert_id;
+				$this->_last_saved_id = $insert_id;
 			}
 			else
 			{
@@ -1632,6 +1695,31 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns the last saved record
+	 *
+	 <code>
+	 $this->examples_model->save($values);
+	 $record = $this->saved();
+	</code>
+	 *
+	 * @access public
+	 * @return object
+	 */
+	public function saved()
+	{
+		if (!empty($this->_last_saved))
+		{
+			if (!is_object($this->_last_saved) AND !is_array($this->_last_saved))
+			{
+				$this->_last_saved = $this->find_by_key($this->_last_saved);	
+			}
+			return $this->_last_saved;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Save related data to a many to many table. To be used in on_after_save hook
 	 *
 	 <code>
@@ -1639,7 +1727,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or object to save to the database
+	 * @param	mixed	the model to save to
 	 * @param	array	key is the column name, and value is the value to save
 	 * @param	array	key is the column name, and the array of data to iterate over and save
 	 * @return	boolean
@@ -1674,7 +1762,7 @@ class MY_Model extends CI_Model {
 		}
 		return $return;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1922,7 +2010,7 @@ class MY_Model extends CI_Model {
 		{
 			if (is_string($key) && ($data[$key] == $val)) return FALSE;
 			// test for compound keys
-			if (is_array($key) && (sizeof(array_intersect($data, $key)) == sizeof($key))) return FALSE;
+			if (is_array($key) && (sizeof(array_intersect_assoc($data, $key)) == sizeof($key))) return FALSE;
 		}
 		return TRUE;
 	}
@@ -1981,7 +2069,11 @@ class MY_Model extends CI_Model {
 			$unique_value = $id;
 		}
 		// if no data then we are new and good
-		if (empty($data)) return TRUE;
+		if (empty($data))
+		{
+			return TRUE;
+		}
+			
 
 		// we are going to ignore multiple keys
 		if (is_string($key_field))
@@ -1995,6 +2087,7 @@ class MY_Model extends CI_Model {
 		{
 			return FALSE;
 		}
+
 		return FALSE;
 	}
     
@@ -2031,23 +2124,8 @@ class MY_Model extends CI_Model {
 	 */	
 	public function validate($record, $run_hook = FALSE)
 	{
-		$values = array();
-		if (is_array($record))
-		{
-			$values = $record;
-		} 
-		else if (is_object($record)) 
-		{
-			if ($record instanceof Data_record)
-			{
-				$values = $record->values();
-			}
-			else
-			{
-				$values = get_object_vars($record);
-			}
-		}
-		
+		$values = $this->normalize_data($record);
+	
 		if ($run_hook)
 		{
 			$values = $this->on_before_validate($values);
@@ -2068,7 +2146,6 @@ class MY_Model extends CI_Model {
 		{
 			return FALSE;
 		}
-		
 		$required = $this->required;
 		foreach($this->unique_fields as $unique_field)
 		{
@@ -2148,15 +2225,19 @@ class MY_Model extends CI_Model {
 				foreach($field as $f)
 				{
 					$friendly_field = ucwords(str_replace('_', ' ', implode(', ', $field)));
+					$this->remove_validation($f, array(&$this, 'is_editable'));
+					$this->remove_validation($f, array(&$this, 'is_new'));
 					if ($has_key_field)
 					{
 						if (!is_array($key_field))
 						{
+							
 							$this->add_validation($f, array(&$this, 'is_editable'), lang('error_val_empty_or_already_exists', $friendly_field), array($field, $values));
 						}
 					}
 					else
 					{
+						
 						$this->add_validation($f, array(&$this, 'is_new'), lang('error_val_empty_or_already_exists', $friendly_field), array($where));
 					}
 				}
@@ -2164,6 +2245,8 @@ class MY_Model extends CI_Model {
 			else
 			{
 				$friendly_field = ucwords(str_replace('_', ' ', $field));
+				$this->remove_validation($field, array(&$this, 'is_editable'));
+				$this->remove_validation($field, array(&$this, 'is_new'));
 				if ($has_key_field)
 				{
 					if (!is_array($key_field))
@@ -2240,7 +2323,6 @@ class MY_Model extends CI_Model {
 			}
 		}
 		$validated = ($this->validator->validate(array_keys($values)));
-		
 		return $validated;
 	}
 	
@@ -2759,11 +2841,13 @@ class MY_Model extends CI_Model {
 				foreach($related as $key => $val)
 				{
 					// related  need to be loaded using slash syntax if model belongs in another module (e.g. my_module/my_model)
-					$related_name = end(explode('/', $key));
+					$key_parts = explode('/', $key);
+					$related_name = end($key_parts);
 					$related_model = $this->load_model($key.$this->suffix);
 					$related_model_name = $related_name.$this->suffix;
 					
-					$lookup_name = end(explode('/', $val));
+					$val_parts = explode('/', $val);
+					$lookup_name = end($val_parts);
 					$lookup_model = $this->load_model($val);
 
 					$options = $CI->$related_model_name->options_list();
@@ -3040,11 +3124,18 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @return	void
+	 * @param	boolean	will hide the echoed output in a comment
+	 * @param	boolean will exit the script
+	 * @param	boolean returns the output
+	 * @return	mixed
 	 */	
-	public function debug_query()
+	public function debug_query($hidden = FALSE, $exit = FALSE, $return = FALSE)
 	{
-		$this->db->debug_query();
+		$str = $this->db->debug_query($hidden, $exit, $return);
+		if(!empty($return))
+		{
+			return $str;
+		}
 	}
 	
 	// --------------------------------------------------------------------
@@ -3061,10 +3152,10 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	array of values to be saved
+	 * @param	mixed	array of values to be saved (optional)
 	 * @return	array
 	 */	
-	public function normalize_save_values($record)
+	public function normalize_save_values($record = NULL)
 	{
 		$CI =& get_instance();
 		if (!isset($record)) $record = $CI->input->post();
@@ -3214,6 +3305,11 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $foreign_id)
 					{
+						// if it is an object, then we extract it's value
+						if (is_object($foreign_id) AND method_exists($foreign_id, 'key_value'))
+						{
+							$foreign_id = $foreign_id->key_value();
+						}
 						$CI->$relationships_model->save(array($fields['candidate_table'] => $this->table_name, $fields['candidate_key'] => $id, $fields['foreign_table'] => $CI->$related_model->table_name, $fields['foreign_key'] => $foreign_id));
 					}
 				}
@@ -3235,7 +3331,7 @@ class MY_Model extends CI_Model {
 				$relationships_model = $this->load_model($fields['relationships_model']);
 
 				// cache the loaded models here for reference below
-				$related_models[$related_field] =& $this->load_related_model($related_model);
+				$related_models[$related_field] = $this->load_related_model($related_model);
 
 				$clear_on_save = ((strtoupper($this->clear_related_on_save) == 'AUTO' AND isset($this->normalized_save_data['exists_'.$related_field])) OR $this->clear_related_on_save === TRUE);
 
@@ -3267,6 +3363,11 @@ class MY_Model extends CI_Model {
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
 					{
+						// if it is an object, then we extract it's value
+						if (is_object($candidate_id) AND method_exists($candidate_id, 'key_value'))
+						{
+							$candidate_id = $candidate_id->key_value();
+						}
 						$CI->$relationships_model->save(array($fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id, $fields['candidate_table'] => $CI->$related_model->table_name, $fields['candidate_key'] => $candidate_id));
 					}
 				}
@@ -3569,7 +3670,8 @@ class MY_Model extends CI_Model {
 			$CI->load->model($model);
 			$return = $model;
 		}
-		$return = end(explode('/', $return));
+		$return_parts = explode('/', $return);
+		$return = end($return_parts);
 		return $return;
 	}
 	
@@ -4096,8 +4198,8 @@ class MY_Model extends CI_Model {
 		{
 			if (empty($values[$key]))
 			{
-					$return = FALSE;
-					break;
+				$return = FALSE;
+				break;
 			}
 		}
 		return $return;
@@ -4170,7 +4272,10 @@ class MY_Model extends CI_Model {
 				{
 					foreach($values as $key => $val)
 					{
-						$str = str_replace('{'.$key.'}', $val, $str);	
+						if (is_string($val))
+						{
+							$str = str_replace('{'.$key.'}', $val, $str);
+						}	
 					}
 				}
 				else
@@ -4192,7 +4297,10 @@ class MY_Model extends CI_Model {
 					{
 						foreach($values as $k => $v)
 						{
-							$return[$key] = str_replace('{'.$k.'}', $v, $val);	
+							if (is_string($v))
+							{
+								$return[$key] = str_replace('{'.$k.'}', $v, $val);
+							}	
 						}
 					}
 					else
@@ -4297,7 +4405,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4451,7 +4559,7 @@ class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -5140,6 +5248,32 @@ class Data_record {
 		return $output;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the key field of the record
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function key_field()
+	{
+		return $this->_parent_model->key_field();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the key value of the record
+	 *
+	 * @access	public
+	 * @return	int 	(usually and integer)
+	 */	
+	public function key_value()
+	{
+		$key_field = $this->_parent_model->key_field();
+		return $this->$key_field;
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -5456,7 +5590,8 @@ class Data_record {
 				$model = $custom_class;
 			}
 
-			$model = ucfirst(end(explode('/', $model)));
+			$model_parts = explode('/', $model);
+			$model = ucfirst(end($model_parts));
 			$value = (isset($this->_fields[$var])) ? $this->_fields[$var] : NULL;
 			$output = new $model($var, $value, $this, $init);
 
@@ -5709,7 +5844,7 @@ class Data_record {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */

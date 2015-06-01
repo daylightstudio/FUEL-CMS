@@ -27,7 +27,7 @@
 			<?php endif; ?>
 			
 			<?php if ($this->fuel->auth->module_has_action('duplicate')) : ?>
-				<li><a href="<?=fuel_url($this->module_uri.'/create', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
+				<li><a href="<?=fuel_url($this->module_uri.'/duplicate', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
 			<?php endif; ?>
 			
 			<?php if ($this->fuel->auth->module_has_action('replace') AND !empty($others) AND $this->fuel->auth->has_permission($this->permission, 'edit') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
@@ -37,9 +37,12 @@
 			<?php if ($this->fuel->auth->module_has_action('others')) : ?>
 			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
 				if ($this->fuel->auth->has_permission($this->permission, $other_action)) :
-				$ico_key = str_replace('/', '_', $other_action);
-				$lang_key = url_title($label, 'underscore', TRUE);
-				if ($new_label = lang('btn_'.$lang_key)) $label = $new_label;
+					$ico_key = preg_replace('#(.+)\{.+\}(.*)#U', '$1', $other_action);
+					$ico_key = explode('?', $ico_key);
+					$ico_key = str_replace('/', '_', trim($ico_key[0], '/'));
+					$lang_key = url_title($label, 'underscore', TRUE);
+					$other_action = str_replace('{id}', $id, $other_action);
+					if ($new_label = lang('btn_'.$lang_key)) $label = $new_label;
 			?>
 				<li><?=anchor(fuel_url($other_action, TRUE), $label, array('class' => 'submit_action ico ico_'.$ico_key))?></li>
 			<?php endif; ?>

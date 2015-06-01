@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -36,14 +36,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 *
 	 * @access	public
 	 * @param	boolean	will hide the echoed output in a comment
-	 * @param	boolean	will exit the script
-	 * @return	void
+	 * @param	boolean will exit the script
+	 * @param	boolean returns the output
+	 * @return	mixed
 	 */
-	public function debug_query($hidden = FALSE, $exit = FALSE)
+	public function debug_query($hidden = FALSE, $exit = FALSE, $return = FALSE)
 	{
+		
+		$str = '';
+		
 		if (!empty($hidden)) echo '<!--';
-		echo $this->last_query()." \n";
-		if (!empty($hidden)) echo '-->';
+		$str.= $this->last_query()." \n";
+		if (!empty($hidden)) $str.= '-->';
+
+		if (!empty($return))
+		{
+			return $str;
+		}
+		else
+		{
+		echo $str;
+		}
+
 		if (!empty($exit)) exit;
 	}
 
@@ -164,6 +178,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			{
 				$max_length = sizeof($matches) > 3 ? $matches[3] : NULL;
 			}
+
+			if ($type == 'float')
+			{
+				if (is_array($max_length))
+				{
+					$max_length = current($max_length);
+				}
+
+				if (strpos($max_length, ',') !== FALSE)
+				{
+					$maxes = explode(',', $max_length);
+					$max_length = 0;
+					foreach($maxes as $max)
+					{
+						$max_length += (int) $max;
+					}
+				}
+			}
+
 			$f = array();
 			$f['name'] = $field->Field;
 			$f['type'] = ($type == 'char' OR $type =='varchar') ? 'string' : $type;

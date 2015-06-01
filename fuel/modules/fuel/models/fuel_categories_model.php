@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -66,12 +66,27 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
 	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
+	public function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$table = $this->table_name();
-		$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
+		$CI =& get_instance();
+		if ($CI->fuel->language->has_multiple())
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.context, p.name as parent_id, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
+		else
+		{
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
+		}
 		$this->db->join($table.' AS p', $this->tables('fuel_categories').'.parent_id = p.id', 'left');
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+		if (empty($just_count))
+		{
+			foreach($data as $key => $val)
+			{
+				$data[$key]['description'] = htmlentities($val['description'], ENT_QUOTES, 'UTF-8');
+			}
+		}
 		return $data;
 	}
 
@@ -86,6 +101,7 @@ class Fuel_categories_model extends Base_module_model {
 	public function context_options_list()
 	{
 		$this->db->group_by('context');
+		$this->db->where('context != ""');
 		return parent::options_list('context', 'context');
 	}
 
@@ -131,6 +147,8 @@ class Fuel_categories_model extends Base_module_model {
 		{
 			$this->db->where(array('id != ' => $values['id']));
 		}
+
+		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'value' => $this->fuel->language->default_option(), 'hide_if_one' => TRUE, 'first_option' => lang('label_select_one'));
 		return $fields;
 	}
 	

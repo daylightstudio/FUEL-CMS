@@ -45,41 +45,42 @@ $config['auto_search_views'] = FALSE;
 // max upload files size for assets
 $config['assets_upload_max_size']	= 5000;
 
-// max width for asset images beign uploaded
+// max width for asset images being uploaded
 $config['assets_upload_max_width']  = 1024;
 
-// max height for asset images beign uploaded
+// max height for asset images being uploaded
 $config['assets_upload_max_height']  = 768;
-
 
 // text editor settings  (options are markitup or ckeditor)
 // markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)
 // ckeditor: suitable for clients; shows what the output will look like in the page (http://ckeditor.com/)
+// for more editor settings, look at the config/editors.php configuration file
 $config['text_editor'] = 'markitup';
 
-// ck editor specific settings... if you use a PHP array, it will use json_encode
-$config['ck_editor_settings'] = "{
-	toolbar:[
-			['Bold','Italic','Strike'],
-			['Format'],
-			['FUELImage','HorizontalRule'],
-			['NumberedList','BulletedList'],
-			['FUELLink','FUELUnlink'],
-			['Undo','Redo','RemoveFormat'],
-			['PasteFromWord','PasteText'],
-			['Preview'],
-			['Maximize']
-		],
-	contentsCss: '".WEB_PATH."assets/css/main.css',
-	htmlEncodeOutput: false,
-	entities: false,
-	bodyClass: 'ckeditor',
-	protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g],
-	toolbarCanCollapse: false,
-	extraPlugins: 'fuellink,fuelimage',
-	removePlugins: 'link,image',
-	allowedContent: true
-	}";
+// The parsing engine to use for FUEL. Options are dwoo, ci and now 'twig'!
+$config['parser_engine'] = 'dwoo';
+
+// The directory to put the parsed compiled files
+$config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
+
+// The delimiters used by the parsing engine
+$config['parser_delimiters'] = array(
+				'tag_comment'   => array('{#', '#}'), // Twig only
+				'tag_block'     => array('{%', '%}'), // Twig only
+				'tag_variable'  => array('{', '}'), // Used by Twig, Dwoo and CI. Default for twig is '{{', '}}' and Dwoo is '{', '}'
+				'interpolation' => array('#{', '}'), // Twig only
+			);
+
+// Functions allowed by the parsing engine
+$config['parser_allowed_functions'] = array(
+	'strip_tags', 'date', 
+	'detect_lang','lang',
+	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
+	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
+	'quote', 'safe_mailto', // HTML/URL specific
+	'session_flashdata', 'session_userdata', // Session specific
+	'prep_url', 'site_url', 'show_404', 'redirect', 'uri_segment', 'auto_typography', 'current_url' // CI specific
+);
 
 /* Uncomment if you want to control FUEL settings in the CMS. Below are a couple examples of ones you can configure
 $config['settings'] = array();

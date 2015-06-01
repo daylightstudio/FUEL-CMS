@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -288,8 +288,10 @@ class Fuel_navigation_model extends Base_module_model {
 		$CI->load->helper('array');
 		
 		$group_options = $CI->fuel_navigation_groups_model->options_list();
-		$group_values = array_keys($group_options);
-		$group_value = (!empty($group_values)) ? $group_values[0] : 1;
+		// $group_values = array_keys($group_options);
+		// $group_value = (!empty($group_values)) ? $group_values[0] : 1;
+		$group_value = $this->CI->fuel->config('auto_page_navigation_group_id');
+
 		
 		$fields['group_id'] = array(
 			'type' => 'inline_edit', 
@@ -312,6 +314,10 @@ class Fuel_navigation_model extends Base_module_model {
 		
 		$this->load->helper('array');
 		
+		if (empty($values['group_id']))
+		{
+			$fields['group_id']['value'] = $group_value;
+		}
 		$parent_group = (!empty($values['group_id'])) ? $values['group_id'] : $group_value;
 		$where['group_id'] = $parent_group;
 		if (!empty($values['id']))

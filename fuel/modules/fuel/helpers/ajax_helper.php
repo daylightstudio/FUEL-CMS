@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -37,8 +37,12 @@
  * @access	public
  * @return	boolean
  */	
-function is_ajax(){
-	return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']=="XMLHttpRequest");
+if (!function_exists('is_ajax'))
+{
+	function is_ajax()
+	{
+		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']=="XMLHttpRequest");
+	}
 }
 
 // --------------------------------------------------------------------
@@ -50,14 +54,17 @@ function is_ajax(){
  * @param	boolean	Sets the no cache headers
  * @return	boolean
  */	
-function json_headers($no_cache = TRUE)
+if (!function_exists('json_headers'))
 {
-	if ($no_cache)
+	function json_headers($no_cache = TRUE)
 	{
-		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		if ($no_cache)
+		{
+			header('Cache-Control: no-cache, must-revalidate');
+			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		}
+		header('Content-type: application/json');
 	}
-	header('Content-type: application/json');
 }
 
 /* End of file ajax_helper.php */

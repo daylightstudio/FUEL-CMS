@@ -29,7 +29,7 @@ $mimes = array(	'hqx'	=>	'application/mac-binhex40',
 				'smi'	=>	'application/smil',
 				'smil'	=>	'application/smil',
 				'mif'	=>	'application/vnd.mif',
-				'xls'	=>	array('application/excel', 'application/vnd.ms-excel', 'application/msexcel'),
+				'xls'	=>	array('application/excel', 'application/vnd.ms-excel', 'application/msexcel', 'application/zip'),
 				'ppt'	=>	array('application/powerpoint', 'application/vnd.ms-powerpoint'),
 				'wbxml'	=>	'application/wbxml',
 				'wmlc'	=>	'application/wmlc',
@@ -98,7 +98,8 @@ $mimes = array(	'hqx'	=>	'application/mac-binhex40',
 				'word'	=>	array('application/msword', 'application/octet-stream'),
 				'xl'	=>	'application/excel',
 				'eml'	=>	'message/rfc822',
-				'json' => array('application/json', 'text/json')
+				'json'  => array('application/json', 'text/json'),
+				'svg'   => 'image/svg+xml',
 			);
 
 

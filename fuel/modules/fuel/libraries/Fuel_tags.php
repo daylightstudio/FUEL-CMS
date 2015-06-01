@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -38,8 +38,8 @@ class Fuel_tags extends Fuel_module {
 	 * Returns a tag model record object
 	 *
 	 * @access	public
-	 * @param	string	the name of the tag
-	 * @param	string	the name of the category the tag belongs to (optional)
+	 * @param	string	the slug value of the tag
+	 * @param	string	the slug of the category the tag belongs to (optional)
 	 * @return	object
 	 */	
 	public function find_by_tag($tag, $category = NULL)
@@ -58,13 +58,39 @@ class Fuel_tags extends Fuel_module {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns multiple/one tag models based on a context value
+	 *
+	 * @access	public
+	 * @param	string	the context value in which to search for a tag
+	 * @param	boolean	determines whether to return just one or not (optional)
+	 * @return	object
+	 */	
+	public function find_by_context($context, $one = FALSE)
+	{
+		$model = $this->model();
+		$model = $this->model();
+		$where = 'FIND_IN_SET("'.$context.'", '.$model->table_name().'.context)';
+		if ($one)
+		{
+			$data = $model->find_one($where);	
+		}
+		else
+		{
+			$data = $model->find_all($where);	
+		}
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Returns a related category model with the active record query already applied
 	 *
 	 * @access	public
 	 * @param	string	the name of the category
 	 * @return	array
 	 */	
-	public function find_by_category($category)
+	public function find_by_category($category, $order = NULL, $limit = NULL, $offset = NULL)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
 		$model =& $this->model();
@@ -78,7 +104,7 @@ class Fuel_tags extends Fuel_module {
 		{
 			$where[$categories_table.'.slug'] = $category;
 		}
-		$data = $model->find_all($where);
+		$data = $model->find_all($where, $order, $limit, $offset);
 		return $data;
 	}
 

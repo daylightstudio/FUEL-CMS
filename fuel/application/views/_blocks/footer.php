@@ -11,7 +11,9 @@
 				<li class="last"><a href="http://getfuelcms.com/blog" target="_blank">Blog</a></li>
 			</ul>
 		</nav>
-		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> <object type="image/svg+xml" width="25" height="25" data="<?= img_path('_template_icons.svg#daylight') ?>"></object> &copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
+		<p class="colophon">FUEL CMS is developed with love by <a href="http://thedaylightstudio.com" target="_blank">Daylight Studio</a> 
+			<svg width="25px" height="25px" viewBox="0 0 126.962 115.395" preserveAspectRatio="xMidYMid"><use xlink:href="#daylight"></use></svg>
+			&copy; <?php echo date("Y"); ?> Run for Daylight LLC, All Rights Reserved.</p>
 	</footer>
 </div>
 

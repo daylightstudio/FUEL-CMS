@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -51,6 +51,7 @@ class Fuel_installer extends Fuel_base_library {
 		parent::__construct();
 		$this->CI->load->helper('inflector');
 		$this->CI->load->helper('file');
+		$this->CI->load->library('cli');
 		$this->initialize($params);
 	}
 	
@@ -131,6 +132,7 @@ class Fuel_installer extends Fuel_base_library {
 			$this->migrate_up();
 			$this->install_sql();
 			$this->create_permissions();
+			$this->copy_config();
 		}
 		else
 		{
@@ -259,6 +261,7 @@ class Fuel_installer extends Fuel_base_library {
 	public function install_sql()
 	{
 		$basepath = $this->install_path();
+
 		if (isset($this->config['install_sql']))
 		{
 			$path = $basepath.$this->config['install_sql'];
@@ -270,12 +273,13 @@ class Fuel_installer extends Fuel_base_library {
 
 		if (is_file($path))
 		{
+			// check if the file is a .php file and if so, include it's contents and process the string
+			$data = (pathinfo($path, PATHINFO_EXTENSION) == 'php') ? include($path) : $path;
 			if (empty($this->CI->db))
 			{
 				$this->CI->load->database();	
 			}
-			
-			$this->CI->db->load_sql($path);
+			$this->CI->db->load_sql($data);
 		}
 	}
 
@@ -301,12 +305,15 @@ class Fuel_installer extends Fuel_base_library {
 
 		if (is_file($path))
 		{
+			// check if the file is a .php file and if so, include it's contents and process the string
+			$data = (pathinfo($path, PATHINFO_EXTENSION) == 'php') ? include($path) : $path;
+
 			if (empty($this->CI->db))
 			{
 				$this->CI->load->database();	
 			}
 			
-			$this->CI->db->load_sql($path);
+			$this->CI->db->load_sql($data);
 		}
 	}
 	
@@ -595,6 +602,171 @@ class Fuel_installer extends Fuel_base_library {
 
 		return $this->config;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * CLI prompts the user for a response and then returns the response
+	 *
+	 * @access	public
+	 * @param	int Length of input value to read
+	 * @return	string
+	 */	
+	public function cli_prompt($msg, $length = 4096)
+	{
+		echo $msg;
+
+		if (!isset($GLOBALS['StdinPointer'])) 
+		{ 
+			$GLOBALS['StdinPointer'] = fopen("php://stdin","r"); 
+		} 
+		$line = fgets($GLOBALS['StdinPointer'], $length); 
+		return trim($line); 
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * CLI silent prompt (for passwords) the user for a response and then returns the response
+	 * http://stackoverflow.com/questions/187736/command-line-password-prompt-in-php
+	 * http://stackoverflow.com/questions/297850/is-it-really-not-possible-to-write-a-php-cli-password-prompt-that-hides-the-pass
+	 * And from Laravel CLI
+	 *
+	 * @access	public
+	 * @param	int Length of input value to read
+	 * @return	string
+	 */	
+	public function cli_silent_prompt($prompt = "Enter Password:", $length = 4096)
+	{
+
+		if (defined('PHP_WINDOWS_VERSION_BUILD')) 
+		{
+			$exe = FUEL_PATH.'libraries/resources/hiddeninput.exe';
+
+			// handle code running from a phar
+			if ('phar:' === substr(__FILE__, 0, 5)) {
+			    $tmp_exe = sys_get_temp_dir().'/hiddeninput.exe';
+			    copy($exe, $tmp_exe);
+			    $exe = $tmp_exe;
+			}
+			echo $prompt;
+			$value = rtrim(shell_exec($exe));
+
+			if (isset($tmp_exe))
+			{
+			    unlink($tmp_exe);
+			}
+
+			return $value;
+        }
+		// if (preg_match('/^win/i', PHP_OS))
+		// {
+		// 	$vbscript = sys_get_temp_dir() . 'prompt_password.vbs';
+		// 	file_put_contents($vbscript, 'wscript.echo(InputBox("' . addslashes($prompt) . '", "", "password here"))');
+		// 	$command = "cscript //nologo " . escapeshellarg($vbscript);
+		// 	$value = rtrim(shell_exec($command));
+		// 	unlink($vbscript);
+		// }
+		else
+		{
+			static $has_stty;
+			if (is_null($has_stty))
+			{
+				exec('stty 2>&1', $output, $exitcode);
+				$has_stty = $exitcode === 0;
+			}
+
+			if ($has_stty)
+			{
+				echo $prompt;
+				$stty_mode = shell_exec('stty -g');
+				shell_exec('stty -echo');
+				$value = fgets(STDIN, $length);
+	            shell_exec(sprintf('stty %s', $stty_mode));
+
+	            if (false === $value)
+	            {
+	                return FALSE;
+	            }
+
+	            $value = trim($value);
+			}
+			else
+			{
+				$command = "/usr/bin/env bash -c 'echo OK'";
+				if (rtrim(shell_exec($command)) !== 'OK')
+				{
+					trigger_error("Can't invoke bash");
+					return;
+				}
+				$command = "/usr/bin/env bash -c 'read -s -p \"". addslashes($prompt) . "\" mypassword && echo \$mypassword'";
+				$value = rtrim(shell_exec($command));
+				echo "\n";
+			}
+		}
+		return $value;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Copies a module config file to the fuel/application folder
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function copy_config()
+	{
+		$source_path = $this->install_path().'../config/'.$this->module.'.php';
+		$dest_path = APPPATH.'config/'.$this->module.'.php';
+
+		if (file_exists($source_path) AND !file_exists($dest_path));
+		{
+			@copy($source_path, $dest_path);
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Looks in a config file and changes it's value
+	 *
+	 * @access	public
+	 * @param	string File name in main fuel/application/config folder
+	 * @param	string String to find
+	 * @param	string String to replace
+	 * @return	string
+	 */	
+	public function change_config($file, $find, $replace)
+	{
+		if (empty($replace))
+		{
+			return;
+		}
+		
+		$this->CI->load->helper('file');
+		$filepath = APPPATH.'config/'.$file.'.php';
+		$file = file_get_contents($filepath);
+
+		$file = str_replace($find, $replace, $file);
+		write_file($filepath, $file);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Simply returns a reference to the loaded CLI class
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function &cli()
+	{
+		return $this->CI->cli;
+	}
+
+
 }
 
 /* End of file Fuel_installer.php */

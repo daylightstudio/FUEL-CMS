@@ -29,8 +29,8 @@ This field type provides a couple parameters to control things including:</p>
 	<li><strong>overwrite</strong>: Determines whether to overwrite an image or create a new one</li>
 	<li><strong>create_thumb</strong>: Creates a thumbnail of the uploaded image (Image Specific)</li>
 	<li><strong>maintain_ratio</strong>: Determines whether to maintain the aspect ratio of the image if resized (Image Specific)</li>
-	<li><strong>width</strong>: The thumbnails width (Image Specific)</li>
-	<li><strong>height</strong>: The thumbnails height (Image Specific)</li>
+	<li><strong>width</strong>: The resized image width. If "create_thumb" is set, then this will only effect the thumbnail (Image Specific)</li>
+	<li><strong>height</strong>: The resized image height. If "create_thumb" is set, then this will only effect the thumbnail (Image Specific)</li>
 	<li><strong>master_dim</strong>: The master dimension to use when creating the thumbnail (Image Specific)</li>
 </ul>
 

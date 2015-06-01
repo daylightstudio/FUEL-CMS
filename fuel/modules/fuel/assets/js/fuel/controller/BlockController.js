@@ -13,7 +13,7 @@ fuel.controller.BlockController = jqx.createController(fuel.controller.BaseFuelC
 		this._super();
 		
 		$('#no_modal').click(function(){
-			var path = jqx.config.fuelPath + '/blocks/import_view_cancel/';
+			var path = jqx.config.fuelPath + '/blocks/import_view_cancel';
 			var params = $('#form').serialize();
 			$.post(path, params, function(html){
 				if (html == 'success'){

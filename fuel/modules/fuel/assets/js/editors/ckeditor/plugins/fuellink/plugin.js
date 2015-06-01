@@ -31,7 +31,8 @@ CKEDITOR.plugins.add( 'fuellink', {
 					element = element.getAscendant( 'a', true );
 					if (element){
 						var href = element.getAttribute('href');
-						input = href.replace(/^\{site_url\('(.*)'\)\}/g, function(match, contents, offset, s) {
+						var regex = "^" + myMarkItUpSettings.parserLeftDelimiter(true) + "site_url\('(.*)'\)" + myMarkItUpSettings.parserRightDelimiter(true);
+						input = href.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 		   										return contents;
 	    								}
 									);
@@ -41,12 +42,14 @@ CKEDITOR.plugins.add( 'fuellink', {
 					}
 				}
 				linkPdfs = editor.element.getAttribute('data-link_pdfs');
+				linkFilter = editor.element.getAttribute('data-link_filter');
+
 				var selected = selection.getSelectedText();
 				var selectedElem = selection.getSelectedElement();
 				if (selectedElem){
 					selected = selectedElem.getOuterHtml();
 				}
-				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs}, function(replace){
+				myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, title: title, target: target, className: className, linkPdfs:linkPdfs, linkFilter:linkFilter}, function(replace){
 					editor.insertHtml(replace);
 				})
 	        }

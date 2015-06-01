@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2014, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -42,61 +42,64 @@
 * @param    boolean	Whether to check dev mode before adding it in (optional)
 * @return   string
 */
-function google_uanalytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+if (!function_exists('google_uanalytics'))
+{
+	function google_uanalytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
 
-	if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
-	{
-		return FALSE;
-	}
+		if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
+		{
+			return FALSE;
+		}
 
-	$CI =& get_instance();
-	$CI->load->config('google');
-	
-	if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
-	if (!empty($uacct))
-	{
+		$CI =& get_instance();
+		$CI->load->config('google');
+		
+		if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
+		if (!empty($uacct))
+		{
 
-		$params = '';
+			$params = '';
 
-		 if (!empty($other_params))
-		 {
-			if (is_array($other_params))
+			 if (!empty($other_params))
 			 {
-			 	$params .= "{\n";
-			 	foreach($other_params as $key => $val)
-			 	{
-			 		$params .= '"'.$key.'": '.(is_numeric($key) ? $val : '"'.$val.'"').'"\n"';
-			 	}
-			 	$params .= "}\n";
-			 	
+				if (is_array($other_params))
+				 {
+				 	$params .= "{\n";
+				 	foreach($other_params as $key => $val)
+				 	{
+				 		$params .= '"'.$key.'": '.(is_numeric($key) ? $val : '"'.$val.'"').'"\n"';
+				 	}
+				 	$params .= "}\n";
+				 	
+				 }
+				 else if (is_string($other_params))
+				 {
+				 	$params .= "'".$other_params."'";
+				 }		 	
 			 }
-			 else if (is_string($other_params))
+			 else
 			 {
-			 	$params .= "'".$other_params."'";
-			 }		 	
-		 }
-		 else
-		 {
-		 	$params = '\'auto\'';
-		 }
+			 	$params = '\'auto\'';
+			 }
 
-		$google_analytics_code = '
-<script>			 
-(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+			$google_analytics_code = '
+	<script>			 
+	(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
 
 
-ga(\'create\', \''.$uacct.'\', '.$params.');
-ga(\'send\', \'pageview\');
-<script>';
+	ga(\'create\', \''.$uacct.'\', '.$params.');
+	ga(\'send\', \'pageview\');
+	<script>';
 
-		return $google_analytics_code;
-	}
-	else
-	{
-		return FALSE;
+			return $google_analytics_code;
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 
@@ -116,65 +119,68 @@ ga(\'send\', \'pageview\');
 * @param    boolean	Whether to check dev mode before adding it in (optional)
 * @return   string
 */
-function google_analytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
-	/*
-	 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+if (!function_exists('google_analytics'))
+{
+	function google_analytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+		/*
+		 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-2467063-1', 'thedaylightstudio.com');
-  ga('send', 'pageview');
+	  ga('create', 'UA-2467063-1', 'thedaylightstudio.com');
+	  ga('send', 'pageview');
 
-	 */
-	if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
-	{
-		return FALSE;
-	}
+		 */
+		if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
+		{
+			return FALSE;
+		}
 
-	$CI =& get_instance();
-	$CI->load->config('google');
-	
-	if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
-	if (!empty($uacct))
-	{
-		$google_analytics_code = '
-			<script type="text/javascript">
-			  var _gaq = _gaq || [];
-			  _gaq.push([\'_setAccount\', \''.$uacct.'\']);
-			 ';
+		$CI =& get_instance();
+		$CI->load->config('google');
+		
+		if (empty($uacct)) $uacct = $CI->config->item('google_uacct');
+		if (!empty($uacct))
+		{
+			$google_analytics_code = '
+				<script type="text/javascript">
+				  var _gaq = _gaq || [];
+				  _gaq.push([\'_setAccount\', \''.$uacct.'\']);
+				 ';
 
-			 if (!empty($other_params))
-			 {
-				if (is_array($other_params))
+				 if (!empty($other_params))
 				 {
-				 	foreach($other_params as $key => $val)
-				 	{
-				 		$google_analytics_code .= ' _gaq.push([\''.$key.'\', \''.$val.'\'])';
-				 	}
-				 	
+					if (is_array($other_params))
+					 {
+					 	foreach($other_params as $key => $val)
+					 	{
+					 		$google_analytics_code .= ' _gaq.push([\''.$key.'\', \''.$val.'\'])';
+					 	}
+					 	
+					 }
+					 else if (is_string($other_params))
+					 {
+					 	$google_analytics_code .= "	".$other_params."\n";
+					 }		 	
 				 }
-				 else if (is_string($other_params))
-				 {
-				 	$google_analytics_code .= "	".$other_params."\n";
-				 }		 	
-			 }
 
-		$google_analytics_code .= '			 
-			  _gaq.push([\'_trackPageview\']);
+			$google_analytics_code .= '			 
+				  _gaq.push([\'_trackPageview\']);
 
-			  (function() {
-			    var ga = document.createElement(\'script\'); ga.type = \'text/javascript\'; ga.async = true;
-			    ga.src = (\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\';
-			    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(ga, s);
-			  })();
-			</script>
-		';
-		return $google_analytics_code;
-	}
-	else
-	{
-		return FALSE;
+				  (function() {
+				    var ga = document.createElement(\'script\'); ga.type = \'text/javascript\'; ga.async = true;
+				    ga.src = (\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\';
+				    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(ga, s);
+				  })();
+				</script>
+			';
+			return $google_analytics_code;
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 
@@ -190,22 +196,25 @@ function google_analytics($uacct = '', $other_params = array(), $check_devmode =
 * @param    array	An array of additional map parameter that that includes, "height", "width", hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
 * @return   string
 */
-function google_map($address, $params = array())
+if (!function_exists('google_map'))
 {
-	// get either the custom map url or the standard google url
-	$url = google_map_url($address, $params);
-
-	// set defaults for width and height
-	$defaults = array('width' => 500, 'height' => 300);
-	foreach($defaults as $key => $val)
+	function google_map($address, $params = array())
 	{
-		if (!isset($params[$key]))
+		// get either the custom map url or the standard google url
+		$url = google_map_url($address, $params);
+
+		// set defaults for width and height
+		$defaults = array('width' => 500, 'height' => 300);
+		foreach($defaults as $key => $val)
 		{
-			$params[$key] = $val;
+			if (!isset($params[$key]))
+			{
+				$params[$key] = $val;
+			}
 		}
+		$map = '<iframe width="'.$params['width'].'" height="'.$params['height'].'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="'.$url.'"></iframe>';
+		return $map;
 	}
-	$map = '<iframe width="'.$params['width'].'" height="'.$params['height'].'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="'.$url.'"></iframe>';
-	return $map;
 }
 
 // ------------------------------------------------------------------------
@@ -220,105 +229,108 @@ function google_map($address, $params = array())
 * @param    array	An array of additional map parameter that that includes, "hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
 * @return   string
 */
-function google_map_url($address, $params = array())
+if (!function_exists('google_map_url'))
 {
-	// if a query string is passed, then we parse it into an array form
-	if (is_string($params))
+	function google_map_url($address, $params = array())
 	{
-		$params = parse_str($params);
-	}
-
-	// initialize the parameter array
-	$p = array();
-	
-	// if lat and long supplied in array, then we implode
-	if (is_array($address))
-	{
-		if (isset($address['address']))
+		// if a query string is passed, then we parse it into an array form
+		if (is_string($params))
 		{
-			$p['q'] = $address['address'];
-			if (!empty($address['city']))
+			$params = parse_str($params);
+		}
+
+		// initialize the parameter array
+		$p = array();
+		
+		// if lat and long supplied in array, then we implode
+		if (is_array($address))
+		{
+			if (isset($address['address']))
 			{
-				$p['q'] .= ','.$address['city'];	
+				$p['q'] = $address['address'];
+				if (!empty($address['city']))
+				{
+					$p['q'] .= ','.$address['city'];	
+				}
+				if (!empty($address['state']))
+				{
+					$addr .= ','.$address['state'];	
+				}
+				$p['q'] = $addr;
 			}
-			if (!empty($address['state']))
+			else
 			{
-				$addr .= ','.$address['state'];	
+				array_walk($address, 'trim');
+				$p['q'] = implode(',', $address);	
 			}
-			$p['q'] = $addr;
 		}
 		else
 		{
-			array_walk($address, 'trim');
-			$p['q'] = implode(',', $address);	
+			$p['q'] = urlencode($address);
 		}
-	}
-	else
-	{
-		$p['q'] = urlencode($address);
-	}
 
-	// default parameters
-	$defaults = array('hl' => 'en', 'z' => 15, 't' => 'v', 'om' => TRUE, 'll' => NULL, 'iwloc' => '');
-	foreach($defaults as $key => $val)
-	{
-		if (isset($params[$key]))
+		// default parameters
+		$defaults = array('hl' => 'en', 'z' => 15, 't' => 'v', 'om' => TRUE, 'll' => NULL, 'iwloc' => '');
+		foreach($defaults as $key => $val)
 		{
-			$p[$key] = $params[$key];
+			if (isset($params[$key]))
+			{
+				$p[$key] = $params[$key];
+			}
+			else
+			{
+				$p[$key] = $val;
+			}
 		}
-		else
+		
+		// FRIENDLY NAME "display_info" display the information... convenience because I can never remember iwloc
+		if (isset($params['display_info']) AND $params['display_info'] === TRUE)
 		{
-			$p[$key] = $val;
+			if ($params['display_info'] == TRUE)
+			{
+				$p['iwloc'] = 'A';
+			}
+			else
+			{
+				$p['iwloc'] = '';
+			}
+			unset($p['display_info']);
 		}
-	}
-	
-	// FRIENDLY NAME "display_info" display the information... convenience because I can never remember iwloc
-	if (isset($params['display_info']) AND $params['display_info'] === TRUE)
-	{
-		if ($params['display_info'] == TRUE)
-		{
-			$p['iwloc'] = 'A';
-		}
-		else
-		{
-			$p['iwloc'] = '';
-		}
-		unset($p['display_info']);
-	}
 
-	// FRIENDLY NAME "overview"
-	if (isset($params['overview']) AND $params['overview'] === TRUE)
-	{
-		$p['om'] = '1';
-		unset($p['om']);
-	}
-
-	// FRIENDLY NAME "map_type" set map type value
-	if (isset($params['map_type']))
-	{
-		// "k" satellite, "h" hybrid, "p" terrain, "v" roadmap
-		switch($params['map_type'])
+		// FRIENDLY NAME "overview"
+		if (isset($params['overview']) AND $params['overview'] === TRUE)
 		{
-			case 'satellite':
-				$p['t'] = 'k';
-				break;
-			case 'hybrid':
-				$p['t'] = 'h';
-				break;
-			case 'terrain':
-				$p['t'] = 'p';
-				break;
-			default:
-				$p['t'] = 'v';
+			$p['om'] = '1';
+			unset($p['om']);
 		}
-		unset($p['map_type']);
-	}
 
-	// set output
-	$p['output'] = 'embed';
-	$url = 'http://maps.google.com/maps?'.http_build_query($p, '', '&amp;');
-	$query_str = http_build_query($p, '', '&amp;');
-	return $url;
+		// FRIENDLY NAME "map_type" set map type value
+		if (isset($params['map_type']))
+		{
+			// "k" satellite, "h" hybrid, "p" terrain, "v" roadmap
+			switch($params['map_type'])
+			{
+				case 'satellite':
+					$p['t'] = 'k';
+					break;
+				case 'hybrid':
+					$p['t'] = 'h';
+					break;
+				case 'terrain':
+					$p['t'] = 'p';
+					break;
+				default:
+					$p['t'] = 'v';
+			}
+			unset($p['map_type']);
+		}
+
+		// set output
+		$p['output'] = 'embed';
+		$url = 'http://maps.google.com/maps?'.http_build_query($p, '', '&amp;');
+		$query_str = http_build_query($p, '', '&amp;');
+		return $url;
+	}
 }
 
 // ------------------------------------------------------------------------
@@ -335,122 +347,151 @@ function google_map_url($address, $params = array())
 * @param    mixed	Return type can be 'all' (default), 'address_components', 'formatted_address', 'geometry', 'location', 'street_number', 'route', 'neighborhood', 'city',  'county', 'state', 'country', 'zip' (optional)
 * @return   mixed  usually an array (e.g. array('latitude' => xxxx, 'longitude' => xxxx))
 */
-function google_geolocate($data, $return = 'all')
+if (!function_exists('google_geolocate'))
 {
-	$address = '';
-	
-	$values = array('latitude' => NULL, 'longitude' => NULL);
-	if (is_array($data) AND isset($data['address']))
+	function google_geolocate($data, $return = 'all', $long = TRUE)
 	{
-		$address = $data['address'];
-		if (!empty($data['city']))
+		$address = '';
+		
+		$values = array('latitude' => NULL, 'longitude' => NULL);
+		if (is_array($data) AND isset($data['address']))
 		{
-			$address .= ','.$data['city'];	
-		}
-		if (!empty($data['state']))
-		{
-			$address .= ','.$data['state'];	
-		}
-	}
-	else if (is_string($data))
-	{
-		$address = $data;
-	}
-
-	$address = urlencode($address);
-	unset($data);
-
-	$url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
-
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HEADER,0);
-	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$response = curl_exec($ch);
-	if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '200') 
-	{
-		$json = json_decode($response, TRUE);
-
-		$lookup_func = create_function('$data, $key, $single = FALSE', '
-			$components = $data["address_components"];
-			$return = array("long_name" => "", "short_name" => "");
-
-			foreach($components as $c)
+			$address = $data['address'];
+			if (!empty($data['city']))
 			{
-				if (isset($c["types"]) AND in_array($key, $c["types"]))
+				$address .= ','.$data['city'];	
+			}
+			if (!empty($data['state']))
+			{
+				$address .= ','.$data['state'];	
+			}
+		}
+		else if (is_string($data))
+		{
+			$address = $data;
+		}
+
+		if (empty($data['address_components']))
+		{
+			$address = urlencode($address);
+			unset($data);
+
+			$url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
+			$CI =& get_instance();
+			if (!isset($CI->curl))
+			{
+				$CI->load->library('curl');	
+			}
+			
+			$CI->curl->add_session($url, 'get');
+			$response = $CI->curl->exec();
+
+			$results = array();
+			if($CI->curl->info('http_code') == '200') 
+			{
+				$json = json_decode($response, TRUE);
+
+				if (isset($json['results']) AND $json['status'] == 'OK')
 				{
-					if (isset($c["long_name"]))
-					{
-						$return["long_name"] = $c["long_name"];
-						if ($single)
-						{
-							return $return["long_name"];
-						}
-					}
-					if (isset($c["short_name"]))
-					{
-						$return["short_name"] = $c["short_name"];
-						if ($single)
-						{
-							return $return["long_name"];
-						}
-					}
-					return $return;
+					$results = $json['results'][0];
 				}
 			}
-		');
-		if (isset($json['results']) AND $json['status'] == 'OK')
-		{
-			$results = $json['results'][0];
-			$return = strtolower($return);
-			switch($return)
-			{
-				case 'address_components':
-					$values = $results['address_components'];
-					break;
-				case 'formatted_address':
-					$values = $results['formatted_address'];
-					break;
-				case 'geometry':
-					$values = $results['geometry'];
-					break;
-				case 'location':
-					$values['latitude'] = $results['geometry']['location']['lat'];
-					$values['longitude'] = $results['geometry']['location']['lng'];
-					break;
-				case 'street_number':
-					$values = $lookup_func($results, 'street_number', TRUE);
-					break;
-				case 'route':
-					$values = $lookup_func($results, 'route');
-					break;
-				case 'neighborhood':
-					$values = $lookup_func($results, 'neighborhood', TRUE);
-					break;
-				case 'city': case 'locality':
-					$values = $lookup_func($results, 'locality');
-					break;
-				case 'county': case 'administrative_area_level_2':
-					$values = $lookup_func($results, 'administrative_area_level_2');
-					break;
-				case 'state': case 'administrative_area_level_1':
-					$values = $lookup_func($results, 'administrative_area_level_1');
-					break;
-				case 'country':
-					$values = $lookup_func($results, 'country');
-					break;
-				case 'zip': case 'postal_code':
-					$values = $lookup_func($results, 'postal_code', TRUE);
-					break;
-				default:
-					$values = $results;
-			}
+			$CI->curl->close();
+			//curl_close($ch);
 		}
+		else
+		{
+			$results = $data;
+		}
+
+		if (empty($results['address_components']))
+		{
+			return NULL;
+		}
+
+		$lookup_func = create_function('$data, $key, $single = FALSE', '
+				$components = $data["address_components"];
+				$return = array("long_name" => "", "short_name" => "");
+
+				foreach($components as $c)
+				{
+					if (isset($c["types"]) AND in_array($key, $c["types"]))
+					{
+						if (isset($c["long_name"]))
+						{
+							$return["long_name"] = $c["long_name"];
+							if ($single)
+							{
+								return $return["long_name"];
+							}
+						}
+						if (isset($c["short_name"]))
+						{
+							$return["short_name"] = $c["short_name"];
+							if ($single)
+							{
+								return $return["long_name"];
+							}
+						}
+						return $return;
+					}
+				}
+			');
+
+		$return = strtolower($return);
+		switch($return)
+		{
+			case 'address_components':
+				$values = $results['address_components'];
+				break;
+			case 'formatted_address':
+				$values = $results['formatted_address'];
+				break;
+			case 'geometry':
+				$values = $results['geometry'];
+				break;
+			case 'location':
+				$values['latitude'] = $results['geometry']['location']['lat'];
+				$values['longitude'] = $results['geometry']['location']['lng'];
+				break;
+			case 'street_number':
+				$values = $lookup_func($results, 'street_number', TRUE);
+				break;
+			case 'route':
+				$values = $lookup_func($results, 'route');
+				break;
+			case 'neighborhood':
+				$values = $lookup_func($results, 'neighborhood', TRUE);
+				break;
+			case 'city': case 'locality':
+				$values = $lookup_func($results, 'locality');
+				break;
+			case 'county': case 'administrative_area_level_2':
+				$values = $lookup_func($results, 'administrative_area_level_2');
+				break;
+			case 'state': case 'administrative_area_level_1':
+				$values = $lookup_func($results, 'administrative_area_level_1');
+				break;
+			case 'country':
+				$values = $lookup_func($results, 'country');
+				break;
+			case 'zip': case 'postal_code':
+				$values = $lookup_func($results, 'postal_code', TRUE);
+				break;
+			default:
+				$values = $results;
+		}
+
+		if (isset($values['long_name']) AND $long === TRUE)
+		{
+			$values = $values['long_name'];
+		}
+		elseif (isset($values['short_name']) AND $long === FALSE)
+		{
+			$values = $values['short_name'];
+		}
+		return $values;
 	}
-	curl_close($ch);
-	return $values;
 }
 
 /* End of file google_helper.php */

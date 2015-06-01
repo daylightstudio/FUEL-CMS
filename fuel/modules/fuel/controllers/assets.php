@@ -57,6 +57,7 @@ class Assets extends Module {
 				$posted['master_dim'] = $this->input->get_post('master_dim', TRUE);
 				$posted['file_name'] = $this->input->get_post('userfile_file_name', TRUE);
 				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
+				$posted['remove_subfolder'] = $this->input->get_post('remove_subfolder', TRUE);
 				
 				$redirect_to = uri_safe_decode($this->input->get_post('redirect_to'));
 				$id = $posted['file_name'];
@@ -95,13 +96,18 @@ class Assets extends Module {
 
 					foreach($uploaded_data as $ud)
 					{
-						$uploaded_file_name_arr[] = trim(str_replace(assets_server_path().$dir, '', $ud['full_path']), '/');
+						$uploaded_path = assets_server_path().$dir;
+
+						if (is_true_val($posted['remove_subfolder']))
+						{
+							$uploaded_path = $uploaded_path .'/'.$subfolder;
+						}
+						$uploaded_file_name_arr[] = trim(str_replace($uploaded_path, '', $ud['full_path']), '/');
 						$uploaded_file_webpath_arr[] = assets_server_to_web_path($ud['full_path']);
 					}
 
 					// set the uploaded file name to a concatenated string separated by commas
 					$uploaded_file_name = implode(', ', $uploaded_file_name_arr);
-
 					$flashdata['uploaded_file_name'] = $uploaded_file_name;
 					$flashdata['uploaded_file_webpath'] = $uploaded_file_webpath_arr;
 

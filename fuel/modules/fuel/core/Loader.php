@@ -190,7 +190,8 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($library)) return $this->libraries($library);		
 		
-		$class = strtolower(end(explode('/', $library))); 
+		$library_parts = explode('/', $library);
+		$class = strtolower(end($library_parts)); 
 
     	($_alias = strtolower($object_name)) OR $_alias = $class;
 
@@ -217,12 +218,27 @@ class Fuel_Loader extends MX_Loader
 		if ($path === FALSE) {
 			$this->_ci_load_class($library, $params, $object_name);
 			$_alias = $this->_ci_classes[$class];
-		} else {		
+		} else {
+
 			Modules::load_file($_library, $path);
-			
 			$library = ucfirst($_library);
+
+			// look for both upper and lower cased version of the file
+			foreach (array(ucfirst($class), strtolower($class)) as $class)
+			{
+				// FUEL fix due to allow for extending from application folder
+				$subclassfile = APPPATH.'libraries/' . config_item('subclass_prefix') . $class . '.php';
+				$subclass = config_item('subclass_prefix') . $class;
+
+				if (is_file($subclassfile))
+				{
+					Modules::load_file($subclass, APPPATH.'libraries/');
+					$library = config_item('subclass_prefix') . $class;
+					break;
+				}
+			}
 			
-			// FUEL fix due to issue with SImplePie library still seeing a NULL value as a parameter
+			// FUEL fix due to issue with SimplePie library still seeing a NULL value as a parameter
 			if (!empty($params))
 			{
 				CI::$APP->$_alias = new $library($params);
@@ -231,6 +247,7 @@ class Fuel_Loader extends MX_Loader
 			{
 				CI::$APP->$_alias = new $library();
 			}
+
 			$this->_ci_classes[$class] = $_alias;
 		}
 		
@@ -244,7 +261,8 @@ class Fuel_Loader extends MX_Loader
 		
 		if (is_array($model)) return $this->models($model);
 
-		($_alias = $object_name) OR $_alias = end(explode('/', $model));
+		$model_parts = explode('/', $model);
+		($_alias = $object_name) OR $_alias = end($model_parts);
 
 		if (in_array($_alias, $this->_ci_models, TRUE)) 
 			return CI::$APP->$_alias;
@@ -285,7 +303,8 @@ class Fuel_Loader extends MX_Loader
 			$_ci_file = strpos($_ci_view, '.') ? $_ci_view : $_ci_view.EXT;
 			$_ci_path = $this->_ci_view_path.$_ci_file;
 		} else {
-			$_ci_file = end(explode('/', $_ci_path));
+			$_ci_path_parts = explode('/', $_ci_path);
+			$_ci_file = end($_ci_path_parts);
 		}
 
 		if ( ! file_exists($_ci_path)) 
@@ -579,6 +598,61 @@ class Fuel_Loader extends MX_Loader
 		}
 		return isset($this->_ci_cached_vars[$scope][$key]) ? $this->_ci_cached_vars[$scope][$key] : NULL;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Fix for mysqli
+	 * http://forum.getfuelcms.com/discussion/2031/mysqli-the-fuel-backup-module#Item_4
+	 * @return	void
+	 */
+	public function dbutil()
+    {
+
+        if (! class_exists('CI_DB'))
+        {
+            $this->database();
+        }
+
+        $CI =& get_instance();
+
+        // for backwards compatibility, load dbforge so we can extend dbutils off it
+        // this use is deprecated and strongly discouraged
+        $CI->load->dbforge();
+
+        require_once(BASEPATH . 'database/DB_utility.php');
+
+        // START custom >>
+
+        // path of default db utility file
+        $default_utility = BASEPATH . 'database/drivers/' . $CI->db->dbdriver . '/' . $CI->db->dbdriver . '_utility.php';
+
+        // path of my custom db utility file
+        $my_utility = APPPATH . 'libraries/MY_DB_' . $CI->db->dbdriver . '_utility.php';
+
+        // set custom db utility file if it exists
+        if (file_exists($my_utility))
+        {
+            $utility = $my_utility;
+            $extend = 'MY_DB_';
+        }
+        else
+        {
+            $utility = $default_utility;
+            $extend = 'CI_DB_';
+        }
+
+        // load db utility file
+        require_once($utility);
+
+        // set the class
+        $class = $extend . $CI->db->dbdriver . '_utility';
+
+        // << END custom
+
+        $CI->dbutil = new $class();
+
+    }
 }
 
 /** load the CI class for Modular Separation **/

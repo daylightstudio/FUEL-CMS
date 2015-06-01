@@ -23,7 +23,7 @@ specific to pages that are completely editable (and not just module data).
 &lt;?=fuel_edit($article)?&gt;
 
 // long version
-&lt;?=fuel_edit($article->id, 'Edit article: '.$article->title, 'articles', 10, 10)?&gt;
+&lt;?=fuel_edit($article->id, 'Edit article: '.$article->title, 'articles', TRUE, 10, 10)?&gt;
 
 // with create
 &lt;?=fuel_edit('create', 'articles')?&gt;

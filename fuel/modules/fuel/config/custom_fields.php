@@ -84,7 +84,7 @@ $fields['template'] = array(
 // Number field
 $fields['number'] = array(
 	'js_function' => 'fuel.fields.number_field',
-	'represents' => array('int', 'smallint', 'mediumint', 'bigint'),
+	'represents' => array('int', 'tinyint', 'smallint', 'mediumint', 'bigint'),
 );
 
 // Currency field
@@ -94,7 +94,7 @@ $fields['currency'] = array(
 	'filepath' => '',
 	'js' => array(FUEL_FOLDER => 'jquery/plugins/jquery.autoNumeric'),
 	'js_function' => 'fuel.fields.currency_field',
-	'represents' => array('name' => 'price')
+	'represents' => array('name' => 'price|cost')
 );
 
 // State field
@@ -102,7 +102,7 @@ $fields['state'] = array(
 	'class' => array(FUEL_FOLDER => 'Fuel_custom_fields'),
 	'function' => 'state',
 	'filepath' => '',
-	'represents' => array('name' => 'state')
+	'represents' => array('name' => '^state$')
 );
 
 // Slug field
@@ -184,5 +184,30 @@ $fields['dependent'] = array(
 	'js_function' => 'fuel.fields.dependent_field'
 );
 
+// Embedded list field
+$fields['embedded_list'] = array(
+	'class'    => array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function' => 'embedded_list',
+	'filepath' => '',
+	'js_function' => 'fuel.fields.embedded_list'
+);
+
+// Select2 field
+$fields['select2'] = array(
+	'class'		=> array(FUEL_FOLDER => 'Fuel_custom_fields'),
+	'function'	=> 'select2',
+	'js' => array(
+		FUEL_FOLDER => array(
+			'jquery/plugins/select2.min',
+		),
+	),
+	'js_exec_order' => 1,
+	'js_function' => 'fuel.fields.select2',
+	'css' => array(
+		FUEL_FOLDER => array(
+			'select2',
+		)
+	),
+);
 /* End of file custom_fields.php */
 /* Location: ./modules/fuel/config/custom_fields.php */

@@ -1,95 +1,53 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/base_posts_model.php');
 
-class News_model extends Base_module_model {
+class News_model extends Base_posts_model {
 
-	public $required = array('title');
-	public $record_class = 'News_item';
-	public $parsed_fields = array('content', 'content_formatted');
+	//read more about models in the user guide to get a list of all properties. Below is a subset of the most common:
+	public $filters = array('title', 'content'); // filters to apply to when searching for items
+	public $required = array('title', 'content'); // an array of required fields. If a key => val is provided, the key is name of the field and the value is the error message to display
+	public $foreign_keys = array('category_id' => array(FUEL_FOLDER => 'fuel_categories_model')); // map foreign keys to table models
+	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => arry('name' => 'strtolower')));
+	public $boolean_fields = array('featured'); // fields that are tinyint and should be treated as boolean
+	public $unique_fields = array('slug'); // fields that are not IDs but are unique. Can also be an array of arrays for compound keys
+	public $parsed_fields = array('content', 'content_formatted', 'excerpt', 'excerpt_formatted'); // fields to automatically parse
+	public $serialized_fields = array(); // fields that contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
+	public $has_many = array(
+		'tags' => array(
+			'model' => array(FUEL_FOLDER => 'fuel_tags_model'),
+			), // added in constructor so that the the table name isn't hard coded in query
+		); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
+	public $belongs_to = array(); // keys are model, which can be a key value pair with the key being the module and the value being the model, module (if not specified in model parameter), relationships_model, foreign_key, candidate_key
+	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 	public $display_unpublished_if_logged_in = TRUE;
+	
+	// can extend Base_model_fields with your own class to manipulate the form fields
+	//public $form_fields_class = 'Base_model_fields';
+	public $form_fields_class = '';
+
+	// special field names
+	public $publish_date_field = 'publish_date'; // field name for the publish date
+
+	// base_posts_model specific properties
+	public $name = 'news'; // this property is usually just the same as the table name but can be different and is used for image folders and tag and category contexts
+	public $img_width = 200; // default image width dimensions
+	public $img_height = 200; // default image height dimensions
+
+	protected $friendly_name = ''; // a friendlier name of the group of objects
+	protected $singular_name = ''; // a friendly singular name of the object
 	
 	function __construct()
 	{
 		parent::__construct('news'); // table name
 	}
 
-	function list_items($limit = null, $offset = null, $col = 'title', $order = 'asc')
-	{
-		$this->db->select('id, title, slug, publish_date, published', FALSE);
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
-	}
+	// put your record model code here
 	
-	function find_by_month($limit = NULL, $where = array())
-	{
-		$items = $this->find_all($where, 'publish_date desc', $limit);
-		
-		$return = array();
-		foreach($items as $item)
-		{
-			$key = date('F Y', strtotime($item->publish_date));
-			if (!isset($return[$key]))
-			{
-				$return[$key] = array();
-			}
-			$return[$key][] = $item;
-		}
-		return $return;
-	}
-	
-	function on_before_clean($values)
-	{
-		if (empty($values['slug']))
-		{
-			$values['slug'] = url_title($values['title'], 'dash', TRUE);
-		}
-		return $values;
-	}
-
-	function _common_query()
-	{
-		parent::_common_query();
-		$this->db->order_by('publish_date desc');
-	}
-	
-	function form_fields($values = array(), $related = array())
-	{
-		$fields = parent::form_fields($values, $related);
-		return $fields;
-	}
 }
 
-class News_item_model extends Base_module_record {
+class News_item_model extends Base_post_item_model {
 	
-	function get_url()
-	{
-		if (!empty($this->link)) return prep_url($this->link);
-		return site_url('news/'.$this->slug);
-	}
-	
-	function get_excerpt_formatted($char_limit = NULL, $readmore = '')
-	{
-		$this->_CI->load->helper('typography');
-		$this->_CI->load->helper('text');
-		
-		$excerpt = $this->content;
-
-		if (!empty($char_limit))
-		{
-			// must strip tags to get accruate character count
-			$excerpt = strip_tags($excerpt);
-			$excerpt = character_limiter($excerpt, $char_limit);
-		}
-		$excerpt = auto_typography($excerpt);
-		$excerpt = $this->_parse($excerpt);
-		if (!empty($readmore))
-		{
-			$attrs = array('class' => 'readmore');
-			if ($this->type == 'news') $attrs['target'] = '_blank';
-			$excerpt .= ' '.anchor($this->get_url(), $readmore, $attrs);
-		}
-		return $excerpt;
-	}
+	// put your record model code here
 	
 }
