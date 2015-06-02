@@ -81,7 +81,8 @@ $config['modules']['pagevariables'] = array(
 	'default_col' => 'page_id',
 	'default_order' => 'asc',
 	'permission' => array(
-		'edit' => 'pages',
+		'create' => 'pages/create',
+		'edit' => 'pages/edit',
 		'publish' => 'pages/publish',
 		'delete' => 'pages/delete'
 	),
