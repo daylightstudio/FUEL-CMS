@@ -272,7 +272,8 @@ class Fuel_assets extends Fuel_base_library {
 					else if ($has_empty_filename)
 					{
 						$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
-						$params['file_name'] = url_title($file_name, 'underscore', FALSE);	
+						//$params['file_name'] = url_title($file_name, 'underscore', FALSE);
+						$params['file_name'] = $file_name;
 					}
 				}
 
