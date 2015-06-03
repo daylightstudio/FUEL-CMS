@@ -1681,7 +1681,11 @@ class Form_builder {
 
 		if ($use_label)
 		{
-			if (!empty($this->name_prefix))
+			if (!empty($params['id']))
+			{
+				$id_name = $params['id'];
+			}
+			elseif (!empty($this->name_prefix))
 			{
 				$name_parts = explode($this->name_prefix.'--', $params['name']);
 				$id_name = $this->name_prefix.'--'.end($name_parts); // ugly... bug needed for nested repeatable fields
