@@ -44,8 +44,8 @@ CREATE TABLE `fuel_blocks` (
 
 CREATE TABLE `fuel_categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL DEFAULT '',
-  `slug` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `slug` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `context` varchar(100) NOT NULL DEFAULT '',
   `language` varchar(30) NOT NULL DEFAULT 'english',
