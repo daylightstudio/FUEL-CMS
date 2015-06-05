@@ -1306,14 +1306,7 @@ class MY_Model extends CI_Model {
 		{
 			$field = $fields[$key];
 
-			if ($field['type'] == 'datetime')
-			{
-				if (empty($values[$key]) OR (int)$values[$key] == 0)
-				{
-					$values[$key] = $this->default_date;
-				}
-			}
-			else if ($field['type'] == 'date')
+			if ($field['type'] == 'date' OR $field['type'] == 'datetime')
 			{
 				if (empty($values[$key]) OR (int)$values[$key] == 0) $values[$key] = $this->default_date;
 				if (!empty($values[$key]) AND !is_date_db_format($values[$key])) $values[$key] = english_date_to_db_format($values[$key]);
