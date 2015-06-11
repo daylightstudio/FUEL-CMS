@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -52,7 +52,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	public function __construct($params = array())
 	{
 		parent::__construct();
-		
+
 		// initialize object if any parameters
 		if (!empty($params))
 		{
@@ -74,6 +74,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	public function initialize($params = array())
 	{
 		parent::initialize($params);
+
 
 		// need this here instead of the constructor, because this gets executed by 
 		// the parent Fuel_base_library before the rest of the constructor'

@@ -810,7 +810,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var changeField = function($this){
 				if (!$this.is('[multiple]')){
 					if ($this.val() == '' || $this.find('option').length == 0){
-						if ($this.is('select') && $this.find('option').length == 0){
+						if ($this.is('select') && $this.find('option').length == 0 || $this.is('.select2_applied')){
 							$this.hide();
 						} else {
 							$this.show();
@@ -818,7 +818,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
 					} else {
 						$this.parent().find('.edit_inline_button').show();
-						$this.show();
+						if (!$this.is('.select2_applied')) $this.show();
 					}	
 				}
 			}
