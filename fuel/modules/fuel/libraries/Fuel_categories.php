@@ -27,6 +27,9 @@
  */
 
 // --------------------------------------------------------------------
+
+require_once('Fuel_modules.php');
+
 class Fuel_categories extends Fuel_module {
 	
 	protected $module = 'categories';

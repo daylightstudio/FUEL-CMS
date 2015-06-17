@@ -28,6 +28,8 @@
 
 // --------------------------------------------------------------------
 
+require_once('Fuel_modules.php');
+
 class Fuel_users extends Fuel_module {
 
 	protected $module = 'users';

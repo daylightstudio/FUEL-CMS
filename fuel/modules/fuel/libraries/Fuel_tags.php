@@ -27,6 +27,9 @@
  */
 
 // --------------------------------------------------------------------
+
+require_once('Fuel_modules.php');
+
 class Fuel_tags extends Fuel_module {
 	
 	protected $module = 'tags';

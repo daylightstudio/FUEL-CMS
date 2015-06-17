@@ -27,6 +27,9 @@
  */
 
 // --------------------------------------------------------------------
+
+require_once('Fuel_modules.php');
+
 class Fuel_blocks extends Fuel_module {
 	
 	public $blocks_folder = '_blocks';

@@ -28,6 +28,8 @@
 
 // --------------------------------------------------------------------
 
+require_once('Fuel_modules.php');
+
 class Fuel_permissions extends Fuel_module {
 	
 	protected $module = 'permissions';
