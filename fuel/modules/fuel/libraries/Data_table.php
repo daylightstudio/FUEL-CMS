@@ -509,6 +509,7 @@ class Data_table {
 	{
 		$this->headers = array();
 		$this->rows = array();
+		$this->_actions = array();
 	}
 
 	// --------------------------------------------------------------------
