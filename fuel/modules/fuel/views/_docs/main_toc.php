@@ -3,7 +3,7 @@
 		<tr>
 			<td class="td">
 				
-				<?php if ($site_docs) : ?>
+				<?php if (!empty($site_docs)) : ?>
 				<h3>Site Reference</h3>
 				<ul>
 					<li><a href="<?=user_guide_url('site')?>">Site Documentation</a></li>
