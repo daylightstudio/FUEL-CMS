@@ -119,7 +119,7 @@ abstract class Base_posts_model extends Base_module_model {
 			$fields['category_id']['prefix'] = 'toggle_';
 			$fields['category_id']['equalize_key_value'] = FALSE;
 			$fields['category_id']['mode'] = 'select';
-			$fields['category_id']['module'] = $this->name;
+			$fields['category_id']['module'] = 'categories';
 		}
 
 		$possible_image_fields = array('image', 'main_image', 'list_image', 'thumbnail_image');
