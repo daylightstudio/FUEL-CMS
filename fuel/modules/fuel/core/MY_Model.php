@@ -4265,7 +4265,7 @@ class MY_Model extends CI_Model {
 				{
 					foreach($values as $key => $val)
 					{
-						if (is_string($val))
+						if (is_string($val) OR is_numeric($val))
 						{
 							$str = str_replace('{'.$key.'}', $val, $str);
 						}	
@@ -4290,7 +4290,7 @@ class MY_Model extends CI_Model {
 					{
 						foreach($values as $k => $v)
 						{
-							if (is_string($v))
+							if (is_string($val) OR is_numeric($val))
 							{
 								$return[$key] = str_replace('{'.$k.'}', $v, $val);
 							}	

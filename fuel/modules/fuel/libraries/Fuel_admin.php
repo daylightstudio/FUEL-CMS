@@ -1339,7 +1339,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			foreach($dashboards as $d)
 			{
-				if (!in_array($d, $dashbaords))
+				if (!in_array($d, $dashboards))
 				{
 					$dashboards[] = $d;
 				}
@@ -1347,7 +1347,7 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		else
 		{
-			if (!in_array($d, $dashboard))
+			if (!in_array($dashboard, $dashboards))
 			{
 				$dashboards[] = $dashboard;
 			}
