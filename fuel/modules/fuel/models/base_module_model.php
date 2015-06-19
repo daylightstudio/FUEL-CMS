@@ -96,6 +96,7 @@ class Base_module_model extends MY_Model {
 															'camelize',
 															'upper'			=> 'strtoupper',
 															'lower'			=> 'strtolower',
+															'nl2br',
 															),
 								'number'			=> array(
 															'currency',
