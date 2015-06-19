@@ -521,7 +521,7 @@ CREATE TABLE `articles` (
   `category_id` int(10) unsigned NOT NULL,
   `published` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 </pre>
 
 <p>The module's model (note that it inherits from the Base_posts_model):</p>
@@ -551,7 +551,7 @@ class Articles_model extends Base_posts_model {
 	}
 }
 
-class Articles_item_model extends Base_post_item_model {
+class Article_model extends Base_post_item_model {
 
 }
 </pre>
@@ -582,14 +582,14 @@ on your model to generate the data you want to pass to your view and specify a r
 <pre class="brush:php">
 ...
 'pages' => array(
-	'base_uri' => 'media',
+	'base_uri' => 'articles',
 	'per_page' => 10,
 	'layout' => 'posts',
-	'list' => 'media/list',
-	'post' => 'media/detail',
-	'archive' => array('route' => 'media/archive(/$year:\d{4})(/$month:\d{1,2})?(/$day:\d{1,2})?', 'view' => 'media/list', 'layout' => 'main', 'method' => 'my_test_method', 'empty_data_show_404' => TRUE),
-	'tag' => array('view' => 'media/list', 'empty_data_show_404' => TRUE, 'per_page' => 5),
-	'custom' => array('route' => 'media/custom', 'view' => 'media/list', 'method' => 'my_custom_method')
+	'list' => 'articles/list',
+	'post' => 'articles/detail',
+	'archive' => array('route' => 'articles/archive(/$year:\d{4})(/$month:\d{1,2})?(/$day:\d{1,2})?', 'view' => 'articles/list', 'layout' => 'main', 'method' => 'my_test_method', 'empty_data_show_404' => TRUE),
+	'tag' => array('view' => 'articles/list', 'empty_data_show_404' => TRUE, 'per_page' => 5),
+	'custom' => array('route' => 'articles/custom', 'view' => 'articles/list', 'method' => 'my_custom_method')
 ),
 ...
 </pre>
