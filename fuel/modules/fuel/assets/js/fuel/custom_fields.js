@@ -1253,8 +1253,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 	fuel.fields.toggler_field = function(context, options){
 		
-		var $togglers = $(".toggle", context);
-
 		var toggler = function(elem, context){
 			var $elem = $(elem);
 			$elem.addClass('__applied__');
@@ -1266,6 +1264,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var selector = ($elem.data('selector')) ? $elem.data('selector') : 'tr';
 			var prefix = ($elem.data('prefix')) ? $elem.data('prefix') : '';
 			var val = $elem.val();
+
+			var $togglers = $(".toggle", context);
 
 			if (prefix){
 				var regex = new RegExp(' ' + prefix)
@@ -1284,10 +1284,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		// kill any previous toggler events 
 		$(document).off('change.toggler');
 
-		$selectContenxt = $('select.toggler, input[type="radio"].toggler:checked', context);
-		$(document).on('change.toggler', $selectContenxt, function(e){
-			var context = $(this).closest('.form');
-			toggler(this, context);
+		$(context).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
+			toggler(this);
 		})
 
 		// for block fields that get ajaxed in
