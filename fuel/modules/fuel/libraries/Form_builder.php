@@ -584,7 +584,7 @@ class Form_builder {
 			if ($val['type'] == 'section')
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
-				$str .= "<span class=\"section\">".$this->create_section($val)."</span>\n";
+				$str .= "<div class=\"section\">".$this->create_section($val)."</div>\n";
 				$str .= "</div>\n";
 				continue;
 			}
@@ -596,14 +596,14 @@ class Form_builder {
 			if ($val['type'] == 'copy')
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
-				$str .= "<span class=\"copy\">".$this->create_copy($val)."</span>\n";
+				$str .= "<div class=\"copy\">".$this->create_copy($val)."</div>\n";
 				$str .= "</div>\n";
 				continue;
 			}
 			else if (!empty($val['copy']))
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
-				$str .= "<span class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></span>\n";
+				$str .= "<div class=\"copy\"><".$this->copy_tag.">".$val['copy']."</".$this->copy_tag."></div>\n";
 				$str .= "</div>\n";
 			}
 			
@@ -4053,6 +4053,10 @@ class Form_builder {
 		$out = '';
 		$to_add = array();
 
+		if (is_string($files))
+		{
+			$files = array($files);
+		}
 		foreach($files as $module => $asset)
 		{
 			if (is_string($asset))
@@ -4131,11 +4135,18 @@ class Form_builder {
 				var file = files[n].split("?")[0];
 				var script = document.createElement("script");
 				script.src = file;
+				script.async = false;
+				
+				var attachElement = document.getElementsByTagName("head");
+				if (!attachElement.length){
+					attachElement = document.getElementsByTagName("body");
+				}
+				attachElement[0].appendChild(script);
 
-				//document.getElementsByTagName("head")[0].appendChild(script);
+				// Strangely doesn\'t appear in the DOM... would like to know why... oh... well here we go:
+				// http://stackoverflow.com/questions/610995/cant-append-script-element
+				//$("head").append(script);
 
-				// Strangely doesn\'t appear in the DOM... would like to know why
-				$("head").append(script);
 				$.ajaxSetup({cache: currentCacheSetting});
 				';
 			}
