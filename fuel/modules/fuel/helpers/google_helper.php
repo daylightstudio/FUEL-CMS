@@ -92,7 +92,7 @@ if (!function_exists('google_uanalytics'))
 
 	ga(\'create\', \''.$uacct.'\', '.$params.');
 	ga(\'send\', \'pageview\');
-	<script>';
+	</script>';
 
 			return $google_analytics_code;
 		}
