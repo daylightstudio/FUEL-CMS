@@ -5466,6 +5466,8 @@ class Data_record {
 		}
 		else if (preg_match("/^has_(.*)/", $method, $found))
 		{
+			$foreign_keys = $this->_parent_model->foreign_keys;
+			
 			if (array_key_exists($found[1], $this->_fields))
 			{
 				return !empty($this->_fields[$found[1]]) AND $this->_fields[$found[1]] != '0000-00-00' AND $this->_fields[$found[1]] != '0000-00-00 00:00:00';
