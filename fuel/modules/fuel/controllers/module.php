@@ -1991,7 +1991,7 @@ class Module extends Fuel_base_controller {
 				$this->output->set_header('Content-type: application/json');
 				$output = json_encode($results);
 
-				print($output);
+				echo $output;
 			}
 		}
 	}
