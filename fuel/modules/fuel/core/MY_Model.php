@@ -5466,9 +5466,18 @@ class Data_record {
 		}
 		else if (preg_match("/^has_(.*)/", $method, $found))
 		{
+			$foreign_keys = $this->_parent_model->foreign_keys;
+			
 			if (array_key_exists($found[1], $this->_fields))
 			{
-				return !empty($this->_fields[$found[1]]);
+				return !empty($this->_fields[$found[1]]) AND $this->_fields[$found[1]] != '0000-00-00' AND $this->_fields[$found[1]] != '0000-00-00 00:00:00';
+			}
+			// then look in foreign keys, has_many and belongs_to
+			else if (in_array($found[1].'_id', array_keys($foreign_keys)) OR $this->_is_relationship_property($found[1], 'has_many') OR $this->_is_relationship_property($found[1], 'belongs_to'))
+			{
+				$return_object = $this->$found[1];
+				$key_field = $this->_parent_model->key_field();
+				return (isset($return_object->$key_field));
 			}
 		}
 
