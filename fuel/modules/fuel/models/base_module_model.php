@@ -1347,7 +1347,7 @@ class Base_module_model extends MY_Model {
 	protected function _publish_status()
 	{
 		//$fields = $this->fields();
-		$fields = $fields = array_keys($this->table_info()); // used to prevent an additional query that the fields() method would create
+		$fields = array_keys($this->table_info()); // used to prevent an additional query that the fields() method would create
 
 		if (in_array('published', $fields))
 		{
