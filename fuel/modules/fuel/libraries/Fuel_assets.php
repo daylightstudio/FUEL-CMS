@@ -265,15 +265,18 @@ class Fuel_assets extends Fuel_base_library {
 				// set file name
 				if (!$posted_filename)
 				{
-					if ($has_empty_filename AND !empty($params[$field_name.'_file_name']) )
+					if ($has_empty_filename)
 					{
-						$params['file_name'] = $params[$field_name.'_file_name'];
-					}
-					else if ($has_empty_filename)
-					{
-						$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
-						//$params['file_name'] = url_title($file_name, 'underscore', FALSE);
-						$params['file_name'] = $file_name;
+						if (!empty($params[$field_name.'_file_name']))
+						{
+							$params['file_name'] = $params[$field_name.'_file_name'];	
+						}
+						else if (empty($params['file_name']))
+						{
+							$file_name = pathinfo($file['name'], PATHINFO_FILENAME);
+							//$params['file_name'] = url_title($file_name, 'underscore', FALSE);
+							$params['file_name'] = $file_name;
+						}
 					}
 				}
 
