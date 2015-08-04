@@ -538,6 +538,7 @@ a#multi_delete { display: block; }
 .filters .more_filters { max-height: 500px; overflow-y: auto; }
 .filters .more_filters div div { float: left; overflow: hidden; margin-bottom: 0; min-width: 32%; min-height: 32px; }
 .filters .more_filters .select2-search-choice > div { min-height: 0; }
+.select2-drop-active { margin-top: -5px !important; }
 .filters .more_filters div div div { margin-bottom: 0; }
 .filters .more_filters .label { font-weight: bold; }
 .filters .more_filters .actions { float: none; }
