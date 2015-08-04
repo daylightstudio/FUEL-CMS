@@ -360,6 +360,7 @@ class Fuel_auth extends Fuel_base_library {
 						}
 						else if ($val != $this->CI->module)
 						{
+							$default_key = $val;
 							$permission[$val] = $this->CI->module.'/'.$val;
 						}
 						else
@@ -373,25 +374,33 @@ class Fuel_auth extends Fuel_base_library {
 						unset($permission[$key]);
 					}
 				}
-				
+
 				if (!empty($permission[$type]))
 				{
 					$permission = $permission[$type];
 				}
 				else if (empty($type))
 				{
-					$permission = reset($permission);
+					if (!empty($default_key) AND is_string($default_key))
+					{
+						$permission = $default_key;
+					}
+					else
+					{
+						$permission = reset($permission);
+					}
+					
 				}
 				else
 				{
 					$permission = NULL;
 				}
 			}
+
 			return (!empty($permission) AND !empty($user_perms[$permission]));
 		}
 		return FALSE;
 	}
-	
 
 	// --------------------------------------------------------------------
 	
