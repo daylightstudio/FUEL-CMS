@@ -1,6 +1,6 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '1.3');
+define('FUEL_VERSION', '1.3.1');
 define('MODULES_FOLDER', '../modules');
 define('FUEL_FOLDER', 'fuel');
 define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
@@ -13,6 +13,10 @@ $_SERVER['SCRIPT_NAME'] = preg_replace('#^/(.+)\.php/(.*)#', '/$1.php', $_SERVER
 if (!isset($_SERVER['HTTP_HOST']))
 {
 	$_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'];
+	if (!empty($_SERVER['SERVER_PORT']))
+	{
+		$_SERVER['HTTP_HOST'] .= ':'.$_SERVER['SERVER_PORT'];
+	}
 }
 define('WEB_PATH', str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
 
@@ -63,7 +67,7 @@ foreach ($config['modules_allowed'] as $module)
 
 if ( ! defined('BASE_URL'))
 {
-	$_base_path = $_SERVER['SERVER_NAME'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+	$_base_path = $_SERVER['HTTP_HOST'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 
 	if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' OR $_SERVER['SERVER_PORT'] == 443)
 	{
