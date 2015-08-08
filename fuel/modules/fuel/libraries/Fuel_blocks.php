@@ -129,6 +129,7 @@ class Fuel_blocks extends Fuel_module {
 			$this->CI->load->library('cache');
 			$cache_group = $this->CI->fuel->config('page_cache_group');
 			$cache_id = (!empty($p['view_string'])) ? $p['view_string'] : $p['view'];
+			if (!empty($p['language'])) $cache_id .= $p['language'];
 			$cache_id = md5($cache_id);
 			$cache = $this->CI->cache->get($cache_id, $cache_group);
 			if (!empty($cache))
