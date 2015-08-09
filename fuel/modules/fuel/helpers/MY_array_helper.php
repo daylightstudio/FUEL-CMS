@@ -26,6 +26,38 @@
  * @link		http://docs.getfuelcms.com/helpers/my_array_helper
  */
 
+// --------------------------------------------------------------------
+
+/**
+ * An alternative array sorter that is a bit faster then array_sorter
+ *
+ * @access	public
+ * @param	array 	The array of data
+ * @param	string 	The column to sort by
+ * @param	string 	The direction (asc/desc)
+ * @return	array
+ */
+
+if ( ! function_exists('array_orderby'))
+{
+	// http://php.net/manual/en/function.array-multisort.php
+	function array_orderby()
+	{
+		$args = func_get_args();
+		$data = array_shift($args);
+		foreach ($args as $n => $field) {
+			if (is_string($field)) {
+				$tmp = array();
+				foreach ($data as $key => $row)
+					$tmp[$key] = $row[$field];
+				$args[$n] = $tmp;
+				}
+		}
+		$args[] = &$data;
+		call_user_func_array('array_multisort', $args);
+		return array_pop($args);
+	}
+}
 
 // --------------------------------------------------------------------
 

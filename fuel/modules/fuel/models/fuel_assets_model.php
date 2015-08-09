@@ -151,7 +151,9 @@ class Fuel_assets_model extends CI_Model {
 			
 		}
 		
-		$return = array_sorter($return, $col, $order, TRUE);
+		$order = ($order == 'desc') ? SORT_DESC : SORT_ASC;
+		$return = array_orderby($return, $col, $order);
+		//$return = array_sorter($return, $col, $order, TRUE);
 		
 		// do a check for empty limit values to prevent issues found where an empty $limit value would return nothing in 5.16
 		$return = (empty($limit)) ? array_slice($return, $offset) : array_slice($return, $offset, $limit);
