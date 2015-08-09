@@ -28,6 +28,8 @@
 
 // --------------------------------------------------------------------
 
+require_once('Fuel_modules.php');
+
 class Fuel_navigation extends Fuel_module {
 
 	protected $module = 'navigation'; // value is set to "navigation"
