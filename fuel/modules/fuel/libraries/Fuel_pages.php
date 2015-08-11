@@ -593,8 +593,8 @@ class Fuel_page extends Fuel_base_library {
 		
 		$default_home = $this->fuel->config('default_home_view');
 
-		if (empty($this->location) OR $this->location == 'page_router') $this->location = $default_home;
-		
+		if (empty($this->location) OR $this->location == $this->CI->router->routes['404_override']) $this->location = $default_home;
+
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout' => NULL, 'location' => NULL);
 		$this->_page_data = $page_data;
 
