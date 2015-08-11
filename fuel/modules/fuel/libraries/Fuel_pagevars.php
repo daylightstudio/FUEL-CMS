@@ -56,7 +56,7 @@ class Fuel_pagevars extends Fuel_base_library {
 
 		$default_home = $this->fuel->config('default_home_view');
 		
-		if (empty($this->location) OR $this->location == 'page_router')
+		if (empty($this->location) OR $this->location == $this->CI->router->routes['404_override'])
 		{
 			$this->location = $default_home;
 		}
@@ -162,7 +162,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		
 		// get controller name so that we can load in its corresponding variables file if exists
 		if (empty($controller)) $controller = current(explode('/', $location));
-		if (empty($controller) OR $controller == 'page_router') $controller = 'home';
+		if (empty($controller) OR $controller == $this->CI->router->routes['404_override']) $controller = 'home';
 		
 		$controller_vars =  $this->vars_path.$controller.EXT;
 

@@ -30,7 +30,7 @@ class Logout extends CI_Controller {
 			$redirect = uri_safe_decode($segment);
 		}
 
-		if ($segment == 'page_router' OR $redirect == 'page_router')
+		if ($segment == $this->router->routes['404_override'] OR $redirect == $this->router->routes['404_override'])
 		{
 			$redirect = $this->fuel->config('default_home_view');
 		}
