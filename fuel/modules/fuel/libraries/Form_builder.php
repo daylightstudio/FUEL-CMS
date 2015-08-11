@@ -2907,7 +2907,7 @@ class Form_builder {
 	public function create_readonly($params)
 	{
 		$params = $this->normalize_params($params);
-		$str = $params['value']."\n".$this->create_hidden($val);
+		$str = $params['value']."\n".$this->create_hidden($params);
 		return $str;
 	}
 	
