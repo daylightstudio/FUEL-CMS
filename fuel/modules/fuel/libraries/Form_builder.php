@@ -4137,15 +4137,15 @@ class Form_builder {
 				script.src = file;
 				script.async = false;
 				
-				var attachElement = document.getElementsByTagName("head");
-				if (!attachElement.length){
-					attachElement = document.getElementsByTagName("body");
-				}
-				attachElement[0].appendChild(script);
+				// var attachElement = document.getElementsByTagName("head");
+				// if (!attachElement.length){
+				// 	attachElement = document.getElementsByTagName("body");
+				// }
+				// attachElement[0].appendChild(script);
 
 				// Strangely doesn\'t appear in the DOM... would like to know why... oh... well here we go:
 				// http://stackoverflow.com/questions/610995/cant-append-script-element
-				//$("head").append(script);
+				$("head").append(script);
 
 				$.ajaxSetup({cache: currentCacheSetting});
 				';
