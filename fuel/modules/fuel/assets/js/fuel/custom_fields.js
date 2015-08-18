@@ -1223,7 +1223,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (layout && layout.length){
 					//layout = layout.split('/').pop();
 					layout = layout.replace('/', ':');
-					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+					var language = ($('#language').length) ? $('#language').val() : 'english';
+					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
 				}
 			}
 			
