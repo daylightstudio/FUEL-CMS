@@ -53,7 +53,9 @@
 			<?=$form?>
 			</div>
 
-			<h3><?=lang('page_layout_vars')?></h3>
+			<h3><?=lang('page_layout_vars')?><?php if ($this->fuel->language->has_multiple()) : ?>: <?=$languages[$language]?>
+				<?php endif; ?>
+			</h3>
 			<div id="layout_vars"><?=$layout_fields?><div class="loader hidden"></div></div>
 		</div>
 </div>
