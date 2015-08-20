@@ -455,7 +455,7 @@ class Pages extends Module {
 		$vars['data'] = $saved;
 		$vars['action'] =  ( ! empty($saved['id'])) ? 'edit' : 'create';
 		$vars['languages'] = $this->fuel->config('languages');
-		$vars['language'] = $this->input->get('lang', TRUE);
+		$vars['language'] = ($lang = $this->input->get('lang', TRUE)) ? $lang : key($vars['languages']);
 
 		$action_uri = $vars['action'].'/'.$id.'/';
 
