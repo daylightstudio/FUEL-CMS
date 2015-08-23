@@ -4131,20 +4131,31 @@ class Form_builder {
 			}
 			elseif ($type == 'js')
 			{
+				// $out .= ';
+				// var file = files[n].split("?")[0];
+				// var script = document.createElement("script");
+				// script.src = file;
+				// script.async = false;
+				
+				// // var attachElement = document.getElementsByTagName("head");
+				// // if (!attachElement.length){
+				// // 	attachElement = document.getElementsByTagName("body");
+				// // }
+				// // attachElement[0].appendChild(script);
+
+				// // Strangely doesn\'t appear in the DOM... would like to know why... oh... well here we go:
+				// // http://stackoverflow.com/questions/610995/cant-append-script-element
+				// $("head").append(script);
+
+				// $.ajaxSetup({cache: currentCacheSetting});
+				// ';
+
 				$out .= ';
 				var file = files[n].split("?")[0];
 				var script = document.createElement("script");
 				script.src = file;
 				script.async = false;
 				
-				// var attachElement = document.getElementsByTagName("head");
-				// if (!attachElement.length){
-				// 	attachElement = document.getElementsByTagName("body");
-				// }
-				// attachElement[0].appendChild(script);
-
-				// Strangely doesn\'t appear in the DOM... would like to know why... oh... well here we go:
-				// http://stackoverflow.com/questions/610995/cant-append-script-element
 				$("head").append(script);
 
 				$.ajaxSetup({cache: currentCacheSetting});
