@@ -288,6 +288,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				$('#' + ckId).parent().append(sourceButton);
 
 				$('#' + ckId + '_viewsource').click(function(e){
+					var elem = $(e.currentTarget).closest('.field').find('textarea:first');
+					
 					$elem = $(elem);
 					ckInstance = CKEDITOR.instances[ckId];
 
@@ -446,10 +448,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var selectedAssetFolder = 'images';
 		var activeField = null;
 
-		var showAssetsSelect = function(params){
-			console.log(params)
+		var showAssetsSelect = function(){
 			var winHeight = 450;
-			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
+			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
 			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
@@ -556,7 +557,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					default :
 						btnLabel = fuel.lang('btn_asset');
 				}
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 			}
 		});
 
@@ -570,14 +571,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			}
 
-			var params = $(this).attr('data-params');
-			var paramsJSON = convertQueryStringToJSON(params);
-			paramsJSON.asset_folder = replacePlaceholders(selectedAssetFolder, context);
-			paramsJSON.subfolder = replacePlaceholders(paramsJSON.subfolder, context);
-			var params = jQuery.param(paramsJSON);
+			selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
 
-			//selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
-			showAssetsSelect(params);
+			showAssetsSelect();
 			return false;
 		});
 		
@@ -1223,8 +1219,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (layout && layout.length){
 					//layout = layout.split('/').pop();
 					layout = layout.replace('/', ':');
-					var language = ($('#language').length) ? $('#language').val() : 'english';
-					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
+					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
 				}
 			}
 			
@@ -1273,7 +1268,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var val = $elem.val();
 
 			var $togglers = $(".toggle", context);
-
 			if (prefix){
 				var regex = new RegExp(' ' + prefix)
 				$togglers.filter(function() { 
@@ -1291,8 +1285,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		// kill any previous toggler events 
 		$(document).off('change.toggler');
 
-		$(context).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
-			toggler(this);
+		$(document).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
+			var context = $(this).closest('.form');
+			toggler(this, context);
 		})
 
 		// for block fields that get ajaxed in
@@ -1307,11 +1302,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			})
 			
 		})
-		
-		$("input[type='radio'].toggler:checked", context).not('.__applied__').trigger("change");
+		$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
 
 		// exlude blocks since they get ajaxed in and then run the toggler function
-		$("select.toggler", context).not('.field_type_block, .__applied__').trigger("change");
+		$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
 	}
 
 
