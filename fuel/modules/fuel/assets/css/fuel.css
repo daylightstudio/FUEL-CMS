@@ -527,7 +527,7 @@ a#multi_delete { display: block; }
 .adv_search input[type="text"] { max-width: 217px; }
 .search_input { position: relative; }
 #search_term.advanced { padding-right: 15px; }
-.search_input #adv-search-btn { position: absolute; right: 6px; top: 5px; padding-top: 5px; height: 10px; background-color: #fff; }
+.search_input #adv-search-btn { position: absolute; right: 6px; top: 2px; padding-top: 5px; height: 10px; background-color: #fff; }
 
 #filters_container { position: relative; margin-bottom: 30px; }
 .filters { background: #eee; border-bottom: 1px solid #ccc; padding: 10px 15px; 

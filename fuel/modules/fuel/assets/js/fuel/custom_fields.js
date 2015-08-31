@@ -288,6 +288,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				$('#' + ckId).parent().append(sourceButton);
 
 				$('#' + ckId + '_viewsource').click(function(e){
+					var elem = $(e.currentTarget).closest('.field').find('textarea:first');
+					
 					$elem = $(elem);
 					ckInstance = CKEDITOR.instances[ckId];
 
@@ -1273,7 +1275,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var val = $elem.val();
 
 			var $togglers = $(".toggle", context);
-
 			if (prefix){
 				var regex = new RegExp(' ' + prefix)
 				$togglers.filter(function() { 
@@ -1291,8 +1292,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		// kill any previous toggler events 
 		$(document).off('change.toggler');
 
-		$(context).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
-			toggler(this);
+		$(document).on('change.toggler', 'select.toggler, input[type="radio"].toggler:checked', function(e){
+			var context = $(this).closest('.form');
+			toggler(this, context);
 		})
 
 		// for block fields that get ajaxed in
@@ -1307,11 +1309,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			})
 			
 		})
-		
-		$("input[type='radio'].toggler:checked", context).not('.__applied__').trigger("change");
+		$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
 
 		// exlude blocks since they get ajaxed in and then run the toggler function
-		$("select.toggler", context).not('.field_type_block, .__applied__').trigger("change");
+		$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
 	}
 
 

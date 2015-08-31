@@ -2795,6 +2795,7 @@ class MY_Model extends CI_Model {
 			{
 				$where = NULL;
 				$order = TRUE;
+				$label = NULL;
 				$model = $this->load_model($val);
 				if (is_array($val))
 				{
@@ -2809,9 +2810,14 @@ class MY_Model extends CI_Model {
 						$order = $val['order'];	
 						unset($val['order']);
 					}
+					if (!empty($val['label']))
+					{
+						$label = $val['label'];	
+						unset($val['label']);
+					}
 				}
 				$fields[$key]['type'] = 'select';
-				$fields[$key]['options'] = $CI->$model->options_list(NULL, NULL, $where, $order);
+				$fields[$key]['options'] = $CI->$model->options_list(NULL, $label, $where, $order);
 				$fields[$key]['first_option'] = lang('label_select_one');
 				$fields[$key]['label'] = ucfirst(str_replace('_', ' ', $CI->$model->singular_name(FALSE)));
 				$fields[$key]['module'] = $CI->$model->short_name(TRUE, FALSE);
@@ -2854,6 +2860,7 @@ class MY_Model extends CI_Model {
 				$related_model = $this->load_related_model($rel_config);
 				$where = NULL;
 				$order = TRUE;
+				$label = NULL;
 				if (is_array($rel_config))
 				{
 					if (!empty($rel_config['where']))
@@ -2866,8 +2873,13 @@ class MY_Model extends CI_Model {
 					{
 						$order = $rel_config['order'];	
 					}
+
+					if (!empty($rel_config['label']))
+					{
+						$label = $val['label'];
+					}
 				}
-				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
+				$related_options = $CI->$related_model->options_list(NULL, $label, $where, $order);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'has_many', $rel_config) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
@@ -2879,6 +2891,7 @@ class MY_Model extends CI_Model {
 			{
 				$where = NULL;
 				$order = TRUE;
+				$label = NULL;
 				if (is_array($rel_config))
 				{
 					if (!empty($rel_config['where']))
@@ -2891,9 +2904,14 @@ class MY_Model extends CI_Model {
 					{
 						$order = $rel_config['order'];	
 					}
+
+					if (!empty($rel_config['label']))
+					{
+						$label = $val['label'];
+					}
 				}
 				$related_model = $this->load_related_model($rel_config);
-				$related_options = $CI->$related_model->options_list(NULL, NULL, $where, $order);
+				$related_options = $CI->$related_model->options_list(NULL, $label, $where, $order);
 				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config, $related_field) : array();
 				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
