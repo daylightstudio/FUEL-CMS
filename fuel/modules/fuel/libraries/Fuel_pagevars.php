@@ -162,7 +162,7 @@ class Fuel_pagevars extends Fuel_base_library {
 		
 		// get controller name so that we can load in its corresponding variables file if exists
 		if (empty($controller)) $controller = current(explode('/', $location));
-		if (empty($controller) OR $controller == $this->CI->router->routes['404_override']) $controller = 'home';
+		if (empty($controller) OR is_home($controller)) $controller = 'home';
 		
 		$controller_vars =  $this->vars_path.$controller.EXT;
 

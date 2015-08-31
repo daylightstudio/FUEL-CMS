@@ -227,7 +227,9 @@ if (!function_exists('is_home'))
 	function is_home()
 	{
 		$uri_path = uri_path(FALSE);
-		return ($uri_path == 'home' OR $uri_path == '');
+		$CI =& get_instance();
+		$segs = explode('/', $CI->router->routes['404_override']);
+		return ($uri_path == 'home' OR $uri_path == '' OR $uri_path == end($segs));
 	}
 }
 
