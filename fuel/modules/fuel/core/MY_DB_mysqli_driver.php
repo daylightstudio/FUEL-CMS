@@ -384,6 +384,19 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			}
 		}
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select for specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
 }
 /* End of file MY_DB_mysqli_driver.php */
 /* Location: ./application/libraries/MY_DB_mysqli_driver.php */

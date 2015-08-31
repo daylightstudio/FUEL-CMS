@@ -119,6 +119,20 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 		}
 		return $this->result_assoc;
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select for specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
+
 }
 /* End of file MY_DB_mysql_result.php */
 /* Location: ./application/libraries/MY_DB_mysql_result.php */
