@@ -2898,6 +2898,7 @@ class MY_Model extends CI_Model {
 			{
 				$where = NULL;
 				$order = TRUE;
+				$label = NULL;
 				if (is_array($rel_config))
 				{
 					if (!empty($rel_config['where']))
