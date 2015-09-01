@@ -821,26 +821,30 @@ class Fuel_page extends Fuel_base_library {
 			$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $layout_vars, TRUE);
 			unset($layout_vars);
 
-			// check if the content should be double parsed
-			if ($this->layout->is_double_parse())
+			// should we even parse the template... set to FALSE if you don't want to complie a bunch of template code for dynamic pages
+			if ($this->layout->parser() !== FALSE)
 			{
-				// first parse any template like syntax
-				$this->layout->parse($output, $vars);
+				// check if the content should be double parsed
+				if ($this->layout->is_double_parse())
+				{
+					// first parse any template like syntax
+					$this->layout->parse($output, $vars);
 
-				// then grab variables again
-				$ci_vars = $this->CI->load->get_vars();
+					// then grab variables again
+					$ci_vars = $this->CI->load->get_vars();
 
-				// then parse again to get any variables that were set from within a block
-				$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $ci_vars, TRUE);
-				$output = $this->layout->parse($output, $ci_vars);
-				unset($ci_vars);
+					// then parse again to get any variables that were set from within a block
+					$output = $this->CI->load->module_view($this->layout->module(), $this->layout->view_path(), $ci_vars, TRUE);
+					$output = $this->layout->parse($output, $ci_vars);
+					unset($ci_vars);
+				}
+				else
+				{
+					// parse any template like syntax
+					$output = $this->layout->parse($output, $vars);
+				}
 			}
-			else
-			{
-				// parse any template like syntax
-				$output = $this->layout->parse($output, $vars);
-			}
-			
+
 			// call layout hook
 			$this->layout->call_hook('post_render', array('vars' => $vars, 'output' => $output));
 			

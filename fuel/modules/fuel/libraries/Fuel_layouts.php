@@ -1167,7 +1167,7 @@ class Fuel_layout extends Fuel_base_library {
 	 */	
 	public function parser()
 	{
-		if (empty($this->parser))
+		if ($this->parser !== FALSE && is_null($this->parser))
 		{
 			return $this->fuel->config('parser_engine');
 		}
@@ -1205,7 +1205,11 @@ class Fuel_layout extends Fuel_base_library {
 	 */	
 	public function parse($str, $vars = array())
 	{
-		return $this->fuel->parser->set_engine($this->parser())->parse_string($str, $vars);
+		if ($this->parser() !== FALSE)
+		{
+			return $this->fuel->parser->set_engine($this->parser())->parse_string($str, $vars);	
+		}
+		return $str;
 	}
 }
 
