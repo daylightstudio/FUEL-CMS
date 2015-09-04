@@ -119,6 +119,7 @@ class Fuel_assets extends Fuel_base_library {
 						'encrypt_name' => FALSE,
 						'unzip' => FALSE,
 						'override_post_params' => FALSE,
+						'remove_spaces' => TRUE,
 						'posted' => $_POST,
 						
 						// image manipulation parameters must all be FALSE or NULL or else it will trigger the image_lib image processing
