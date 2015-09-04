@@ -446,6 +446,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>encrypt_name</strong>: determines whether to encrypt the uploaded file name to give it a unique value. The default is FALSE</li>
 		<li><strong>multiple</strong>: determines whether to allow multiple files to be uploaded by the same field. The default is FALSE</li>
 		<li><strong>display_preview</strong>: determines whether to to display a preview of the asset</li>
+		<li><strong>remove_spaces</strong>: will automatically remove spaces from the file name. The default is TRUE</li>
 		<li><strong>replace_values</strong>: an array of key/value pairs that can be used to replace any placeholder values in the upload path</li>
 		<li><strong>display_input</strong>: a boolean value that will display an input field for the name of the file which can be helpful to store the uploaded files name to the database</li>
 	</ul>

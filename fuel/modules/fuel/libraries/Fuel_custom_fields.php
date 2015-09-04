@@ -315,21 +315,22 @@ class Fuel_custom_fields {
 		}
 
 		// add image altering hidden field values
-		$img_params = array('create_thumb',
+		$additional_params = array('create_thumb',
 						'thumb_marker',
 						'maintain_ratio',
 						'master_dim', 
 						'width', 
 						'height', 
 						'resize_and_crop',
+						'remove_spaces',
 						'resize_method');
 
-		foreach($img_params as $img_p)
+		foreach($additional_params as $p)
 		{
-			if (isset($params[$img_p]))
+			if (isset($params[$p]))
 			{
 
-				$str .= $this->CI->form->hidden($file_params['name'].'_'.$img_p, $params[$img_p], 'class="noclear"');
+				$str .= $this->CI->form->hidden($file_params['name'].'_'.$p, $params[$p], 'class="noclear"');
 			}
 
 		}
