@@ -406,7 +406,7 @@ class Articles_model extends Base_module_model {
         $fields = parent::form_fields($values, $related);
         
         // ******************* ADD CUSTOM FORM STUFF HERE ******************* 
-        $fields['content']['img_folder'] = 'images/articles/';
+        $fields['content']['img_folder'] = 'articles/';
         $fields['image']['folder'] = 'images/articles/';
         $fields['thumb_image']['folder'] = 'images/articles/thumbs/';
 
@@ -595,12 +595,12 @@ class Article_model extends Data_record {
 
   public function get_image_path()
   {
-    return img_path('images/articles/'.$this->image);
+    return img_path('articles/'.$this->image);
   }
 
   public function get_thumb_image_path()
   {
-    return img_path('images/articles/'.$this->thumb_image);
+    return img_path('articles/'.$this->thumb_image);
   }
 
 }
