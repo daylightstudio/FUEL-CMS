@@ -466,6 +466,7 @@ class Fuel_navigation extends Fuel_module {
 			// set default navigation group if it doesn't exist'
 			if (!isset($group->id))
 			{
+				$group = $this->CI->fuel_navigation_groups_model->create();
 				$group->name = 'main';
 				$id = $group->save();
 				$group_id = $group->id;
