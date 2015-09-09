@@ -2310,7 +2310,8 @@ class Module extends Fuel_base_controller {
 				{
 					if (isset($posted[$matches[1]][$matches[2]][$matches[3]]) AND isset($data[$matches[1]][$matches[2]][$matches[3]]))
 					{
-						$data[$matches[1]][$matches[2]][$matches[3]] = $posted[$file_tmp];
+						//$data[$matches[1]][$matches[2]][$matches[3]] = $posted[$file_tmp];
+						$data[$matches[1]][$matches[2]][$matches[3]] = $val['file_name'];
 						$save = TRUE;
 					}
 				}
