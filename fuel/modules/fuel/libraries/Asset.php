@@ -408,7 +408,7 @@ class Asset {
 	 */	
 	public function cache_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		return $this->assets_path($file, $this->$this->assets_cache_folder, $module, $absolute);
+		return $this->assets_path($file, $this->assets_cache_folder, $module, $absolute);
 	}
 
 	// --------------------------------------------------------------------
