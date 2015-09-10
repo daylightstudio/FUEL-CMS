@@ -224,11 +224,11 @@ class Fuel_pages extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Finds a Fuel_page object based on either a location or ID value
+	 * Finds a FUEL page based on either a location or ID value and returns an array of properties
 	 *
 	 * @access	public
 	 * @param	mixed	Either the pages location or ID value (CMS only)
-	 * @return	object
+	 * @return	array
 	 */	
 	public function find($id)
 	{
