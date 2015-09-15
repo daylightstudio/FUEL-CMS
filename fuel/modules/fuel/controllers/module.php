@@ -1612,7 +1612,7 @@ class Module extends Fuel_base_controller {
 
 			foreach ($posted as $id)
 			{
-				if ($this->model->delete(array($this->model->key_field() => $id)))
+				if ($this->model->delete(array($this->model->table_name().'.'.$this->model->key_field() => $id)))
 				{
 					$any_success = TRUE;
 				}
