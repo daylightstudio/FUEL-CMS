@@ -81,7 +81,7 @@ if (!function_exists('og'))
  */
 if (!function_exists('social_popup_js'))
 {
-	function social_popup_js($width = 640, $height = 500, $selector = '.popup')
+	function social_popup_js($width = 640, $height = 500, $selector = 'popup')
 	{
 		// only write the javascript one time so we create a static variable
 		static $output;
