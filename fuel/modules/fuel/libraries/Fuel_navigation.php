@@ -40,14 +40,14 @@ class Fuel_navigation extends Fuel_module {
 	 * The <a href="[user_guide_url]helpers/fuel_helper">fuel_nav helper</a> function is an alias to this method.
 	 *
 	<ul>
-		<li><strong>items</strong> - the navigation items to use. By default, this is empty and will look for the nav.php file or the records in the Navigation module</li>
-		<li><strong>file</strong> - the name of the file containing the navigation information</li>
-		<li><strong>var</strong> - the variable name in the file to use</li>
-		<li><strong>parent</strong> - the parent id you would like to start rendering from. This is either the database ID or the nav array key of the menu item</li>
-		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this</li>
-		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
-		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
-		<li><strong>return_normalized</strong> - returns the raw normalized array that gets used to generate the menu</li>
+		<li><strong>items</strong>: the navigation items to use. By default, this is empty and will look for the nav.php file or the records in the Navigation module</li>
+		<li><strong>file</strong>: the name of the file containing the navigation information</li>
+		<li><strong>var</strong>: the variable name in the file to use</li>
+		<li><strong>parent</strong>: the parent id you would like to start rendering from. This is either the database ID or the nav array key of the menu item</li>
+		<li><strong>root</strong>: the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this</li>
+		<li><strong>group_id</strong>: the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
+		<li><strong>exclude</strong>: nav items to exclude from the menu. Can be an array or a regular expression string</li>
+		<li><strong>return_normalized</strong>: returns the raw normalized array that gets used to generate the menu</li>
 		<li><strong>render_type</strong>: options are basic, breadcrumb, page_title, collapsible, delimited, array. Default is 'basic'</li>
 		<li><strong>active_class</strong>: the active css class. Default is 'active'</li>
 		<li><strong>active</strong>: the active menu item</li>
