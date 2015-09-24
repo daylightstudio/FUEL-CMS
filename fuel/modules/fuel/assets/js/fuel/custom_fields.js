@@ -1390,7 +1390,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					$.extend(data, xtraData);
 				}
 
-				if (val.length){
+				if (val && val.length){
 					$.get(url, data, function(html){
 						var $select = $(replaceSelector);
 						$select.html(html);
