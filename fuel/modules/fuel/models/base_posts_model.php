@@ -35,10 +35,11 @@ abstract class Base_posts_model extends Base_module_model {
 	public $img_width = 200; // default image width dimensions
 	public $img_height = 200; // default image height dimensions
 
-	public function __construct()
+	public function __construct($table = null)
 	{
-		parent::__construct($this->name); // table name
-		$this->record_class = ucfirst($this->name).'_item';
+		if (empty($table)) $table = $this->name;
+		parent::__construct($table); // table name
+		$this->record_class = ucfirst($table).'_item';
 		if (!empty($this->has_many['tags']))
 		{
 			$this->has_many['tags']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context="")';
@@ -61,8 +62,11 @@ abstract class Base_posts_model extends Base_module_model {
 			$order = $this->order_by_direction;
 		}
 
+		if (!empty($this->foreign_keys['category_id']))
+		{
+			$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
+		}
 
-		$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
 		//$this->db->select($this->table_name.'.id, title, fuel_categories.name as category, SUBSTRING(content, 1, 50) as content, '.$this->table_name.'.published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		// foreach($data as $key => $val)
@@ -184,18 +188,22 @@ abstract class Base_posts_model extends Base_module_model {
 
 	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
-		parent::_common_query();
-		$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
+		parent::_common_query($display_unpublished_if_logged_in);
 		$rel_join = $this->_tables['fuel_relationships'].'.candidate_key = '.$this->table_name.'.id AND ';
 		$rel_join .= $this->_tables['fuel_relationships'].'.candidate_table = "'.$this->table_name.'" AND ';
 		$rel_join .= $this->_tables['fuel_relationships'].'.foreign_table = "'.$this->_tables['fuel_tags'].'"';
 		$this->db->join($this->_tables['fuel_relationships'], $rel_join, 'left');
 		$this->db->join($this->_tables['fuel_tags'], $this->_tables['fuel_tags'].'.id = '.$this->_tables['fuel_relationships'].'.foreign_key', 'left');
-
-		$this->db->select($this->table_name.'.*, fuel_categories.slug as category_slug, fuel_categories.id as category_id', FALSE);
+		$this->db->select($this->table_name.'.*');
 		$this->db->select('YEAR('.$this->table_name.'.'.$this->order_by_field.') as year, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%m") as month, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%d") as day,', FALSE);
 		$this->db->order_by($this->order_by_field.' '.$this->order_by_direction);
 		$this->db->group_by($this->table_name.'.id');
+
+		if (!empty($this->foreign_keys['category_id']))
+		{
+			$this->db->join('fuel_categories', 'fuel_categories.id = '.$this->table_name.'.category_id', 'LEFT');
+			$this->db->select($this->table_name.'.*, fuel_categories.slug as category_slug, fuel_categories.id as category_id', FALSE);
+		}
 	}
 
 	public function preview_path($values, $path = NULL)
@@ -205,7 +213,8 @@ abstract class Base_posts_model extends Base_module_model {
 			$values = $values->values();
 		}
 		$module = $this->get_module();
-		if (!empty($values))
+
+		if (!empty($values['id']))
 		{
 			$rec = $this->find_by_key($values['id']);
 			return $rec->url;
