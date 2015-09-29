@@ -1391,24 +1391,8 @@ class Base_module_model extends MY_Model {
 	{
 		if (defined('FUEL_ADMIN') AND !empty($this->limit_to_user_field) AND !$this->fuel->auth->is_super_admin())
 		{
-			$join = TRUE;
-			if (!empty($this->db->ar_join))
-			{
-				foreach($this->db->ar_join as $joiner)
-				{
-					if (strncmp('LEFT JOIN `fuel_users`', $joiner, 22) === 0)
-					{
-						$join = FALSE;
-						break;
-					}
-				}
-			}
-
-			if ($join)
-			{
-				$this->db->join($this->_tables['fuel_users'], $this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field, 'left');	
-			}
-			$this->db->where($this->_tables['fuel_users'].'.id = '.$this->fuel->auth->user_data('id'));
+			$this->db->join($this->_tables['fuel_users'].' AS fuser', 'fuser.id = '.$this->limit_to_user_field, 'left');	
+			$this->db->where('fuser.id = '.$this->fuel->auth->user_data('id'));
 		}
 	}
 
