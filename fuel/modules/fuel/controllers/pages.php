@@ -100,6 +100,8 @@ class Pages extends Module {
 						if ( ! empty($data))
 						{
 							$msg = lang('module_created', $this->module_name, $data[$this->display_field]);
+							$this->fuel->logs->write($msg);
+
 							$url = fuel_uri('pages/edit/'.$id);
 
 							// save any tab states
