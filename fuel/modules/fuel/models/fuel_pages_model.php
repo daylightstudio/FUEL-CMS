@@ -291,7 +291,7 @@ class Fuel_pages_model extends Base_module_model {
 		}
 
 		// easy add for navigation
-		if (empty($values['id']))
+		if (empty($values['id']) AND $CI->fuel->auth->has_permission('navigation/create'))
 		{
 			$fields['navigation_label'] = array('comment' => lang('navigation_quick_add'));
 		}
