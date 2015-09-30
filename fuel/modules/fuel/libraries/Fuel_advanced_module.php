@@ -1071,20 +1071,31 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name of config file. Default is the name of the advanced module (optional)
 	 * @return	void
 	 */
-	public function load_config($config = NULL)
+	public function load_config($file = NULL)
 	{
-		if (empty($config))
+		if (empty($file))
 		{
-			$config = $this->name;
+			$file = $this->name;
 		}
 		
 		// last parameter tells it to fail gracefully
 		// check application directory for overwrites
-		$this->CI->load->module_config('app', $config, FALSE, TRUE);
-		$app_config = $this->CI->config->item($this->name);
+		// $this->CI->load->module_config('app', $config, FALSE, TRUE);
+		// $app_config = $this->CI->config->item($this->name);
+
+		// last parameter tells it to fail gracefully
+		// check application directory for overwrites
+		$app_config_path = APPPATH.'/config/'.$file.'.php';
+		$app_config = array();
+		if (file_exists($app_config_path))
+		{
+			//$config = array();
+			include($app_config_path);
+			$app_config = (isset($config[$this->name])) ? $config[$file] : array();
+		}
 
 		// now get the module's configuration
-		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
+		$this->CI->load->module_config($this->folder(), $file, FALSE, TRUE);
 		$module_config = $this->CI->config->item($this->name);
 
 		// if app config exists then merge

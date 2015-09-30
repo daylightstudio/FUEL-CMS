@@ -329,7 +329,7 @@ class Fuel_Loader extends CI_Loader
 	public function module_config($module, $file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
-		return $this->config($file, $use_sections, $fail_gracefully);
+		return $this->config($file, $use_sections, $fail_gracefully, $module);
 	}
 
 	/** Load helper Matchbox style for backwards compatability **/
