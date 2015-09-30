@@ -93,8 +93,7 @@ class About extends CI_Controller {
 <a name="editable"></a>
 <h2>CMS Page - about/team</h2>
 <p>For the create <dfn>about/team</dfn> page we will login to the CMS by going to 
-<dfn>http://mysite.com/fuel</dfn> (where <strong>mysite.com</strong> is your domain) and entering the username of <dfn>admin</dfn> with the password (which is probably <dfn>admin</dfn> as well if you haven't changed it). Click on the <dfn>Pages</dfn> menu item on the left and follow the directions 
-<a href="<?=user_guide_url('modules/fuel/pages')?>">seen here</a> to create a page. For the <dfn>location</dfn> value type in <strong>about/team</strong> and for the <dfn>body</dfn> value, put in the value below, click save and then view the page:</p>
+<dfn>http://mysite.com/fuel</dfn> (where <strong>mysite.com</strong> is your domain) and entering the username of <dfn>admin</dfn> with the password (which is probably <dfn>admin</dfn> as well if you haven't changed it). Click on the <dfn>Pages</dfn> menu item on the left. For the <dfn>location</dfn> value type in <strong>about/team</strong> and for the <dfn>body</dfn> value, put in the value below, click save and then view the page:</p>
 
 <pre class="brush: php">
 <h1>Team</h1>
