@@ -468,7 +468,7 @@ class MY_Model extends CI_Model {
 			$this->_common_query();
 		}
 		
-		if ($this->db->has_select())
+		if (!$this->db->has_select())
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}

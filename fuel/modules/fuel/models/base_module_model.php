@@ -304,7 +304,7 @@ class Base_module_model extends MY_Model {
 			return $this->db->count_all_results();
 		}
 
-		if ($this->db->has_select())
+		if (!$this->db->has_select())
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
