@@ -963,7 +963,8 @@ class Module extends Fuel_base_controller {
 
 				if ( ! empty($data))
 				{
-					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+					$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+					$msg = lang('module_edited', $this->module_name, $msg_data);
 					$this->fuel->logs->write($msg);
 					$this->_clear_cache();
 					return $id;
@@ -1069,9 +1070,10 @@ class Module extends Fuel_base_controller {
 
 		$crumbs = array($this->module_uri => $this->module_name);
 
+		$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
 		if ( ! empty($data[$this->display_field]))
 		{
-			$crumbs[''] = character_limiter(strip_tags($data[$this->display_field]), 50);
+			$crumbs[''] = character_limiter(strip_tags($msg_data), 50);
 		}
 
 		$this->fuel->admin->set_titlebar($crumbs);
@@ -1080,9 +1082,9 @@ class Module extends Fuel_base_controller {
 		$this->fuel->admin->render($this->views['create_edit'], $vars, '', FUEL_FOLDER);
 
 		// do this after rendering so it doesn't render current page'
-		if ( ! empty($data[$this->display_field]) AND $inline !== TRUE)
+		if ( ! empty($msg_data) AND $inline !== TRUE)
 		{
-			$this->fuel->admin->add_recent_page($this->uri->uri_string(), $this->module_name.': '.$data[$this->display_field], $this->module);
+			$this->fuel->admin->add_recent_page($this->uri->uri_string(), $this->module_name.': '.$msg_data, $this->module);
 		}
 	}
 	
@@ -1156,7 +1158,8 @@ class Module extends Fuel_base_controller {
 				// run after_save hook
 				$this->_run_hook('after_save', $data);
 
-				$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+				$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+				$msg = lang('module_edited', $this->module_name, $msg_data);
 				$this->fuel->logs->write($msg);
 				$this->_clear_cache();
 
@@ -2086,7 +2089,8 @@ class Module extends Fuel_base_controller {
 					// run after_save hook
 					$this->_run_hook('after_save', $data);
 
-					$msg = lang('module_edited', $this->module_name, $data[$this->display_field]);
+					$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+					$msg = lang('module_edited', $this->module_name, $msg_data);
 					$this->fuel->logs->write($msg);
 				}
 				else
