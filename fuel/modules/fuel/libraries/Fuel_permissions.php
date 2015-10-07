@@ -61,7 +61,7 @@ class Fuel_permissions extends Fuel_module {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	public function initialize($params = array())
+	public function initialize($params = array(), $add = TRUE)
 	{
 		parent::initialize($params);
 		
@@ -130,7 +130,7 @@ class Fuel_permissions extends Fuel_module {
 	 * @param	array	The description of the permission
 	 * @return	boolean
 	 */
-	public function create($name, $description = NULL)
+	public function create($name = array(), $description = NULL)
 	{
 		$save = array();
 		if (empty($description))
