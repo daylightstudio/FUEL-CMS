@@ -11,10 +11,10 @@ class Careers_model extends Base_module_model {
 		parent::__construct('careers'); // table name
 	}
 
-	public function list_items($limit = NULL, $offset = NULL, $col = 'publish_date', $order = 'desc')
+	public function list_items($limit = NULL, $offset = NULL, $col = 'publish_date', $order = 'desc', $just_count = FALSE)
 	{
 		$this->db->select('id, job_title, publish_date, published', FALSE);
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	
@@ -35,9 +35,9 @@ class Careers_model extends Base_module_model {
 		return $fields;
 	}
 	
-	public function _common_query()
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
-		parent::_common_query();
+		parent::_common_query($display_unpublished_if_logged_in);
 		$this->db->order_by('publish_date', 'desc');
 	}
 	
