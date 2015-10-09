@@ -45,7 +45,7 @@ if (!function_exists('url_to'))
 	function url_to($uri = '', $https = NULL, $language = NULL)
 	{
 		if (is_http_path($uri)) return $uri;
-		if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0) OR (strncmp('tel', $uri, 3) === 0))
+		if ($uri == '#' OR (strncmp('mailto:', $uri, 7) === 0) OR (strncmp('javascript:', $uri, 11) === 0) OR (strncmp('tel:', $uri, 4) === 0))
 		{
 			return $uri;
 		}
