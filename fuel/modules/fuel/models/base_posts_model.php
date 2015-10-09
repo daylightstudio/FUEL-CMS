@@ -186,7 +186,7 @@ abstract class Base_posts_model extends Base_module_model {
 		return $values;
 	}
 
-	public function _common_query()
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
 		parent::_common_query($display_unpublished_if_logged_in);
 		$rel_join = $this->_tables['fuel_relationships'].'.candidate_key = '.$this->table_name.'.id AND ';
