@@ -553,7 +553,7 @@ class Base_module_model extends MY_Model {
 				}
 
 				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
-				$filters[] = $label.'="'.$val.'"';
+				$filters[] = str_replace(':', '', $label).'="'.$val.'"';
 			}
 		}
 
