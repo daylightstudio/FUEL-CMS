@@ -1070,7 +1070,23 @@ class Fuel_custom_fields {
 							$value = $form_builder->simple_field_value($ff);
 							if (isset($params['title_field'], $f[$params['title_field']]))
 							{
-								$header_value = (is_array($f[$params['title_field']]['value'])) ? current($f[$params['title_field']]['value']) : $f[$params['title_field']]['value'];
+								if (is_array($f[$params['title_field']]['value']))
+								{
+									// specific to block field types
+									if (isset($f[$params['title_field']]['value']['block_name']))
+									{
+										$header_value = $f[$params['title_field']]['value']['block_name'];
+									}
+									else
+									{
+										$header_value = current($f[$params['title_field']]['value']);
+									}
+								}
+								else
+								{
+									$header_value = $f[$params['title_field']]['value'];
+								}
+								
 								if (is_string($header_value))
 								{
 									$heading = str_replace('{__title__}', $header_value, $value);	
