@@ -469,8 +469,8 @@ class Fuel_navigation extends Fuel_module {
 				$group = $this->CI->fuel_navigation_groups_model->create();
 				$group->name = 'main';
 				$id = $group->save();
-				$group_id = $group->id;
 			}
+			$group_id = $group->id;
 			
 			// convert string ids to numbers so we can save... must start at last id in db
 			$ids = array();
