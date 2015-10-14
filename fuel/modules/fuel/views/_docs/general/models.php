@@ -514,7 +514,6 @@ $slug = uri_segment(3); // assumption here that the 3rd segment has the slug
 $tag = fuel_model('products', 'one', array('slug', $slug));
 if (isset($tag->id))
 {
-	$tags_model = $product->get_attributes(TRUE); // NOTE THE DIFFERENCE HERE
 	$products = $tag->products;
 	foreach($products as $product)
 	{
