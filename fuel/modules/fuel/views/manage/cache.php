@@ -10,3 +10,5 @@
 </div>
 
 <?=$this->form->hidden('action', 'cache')?>
+
+</div>
