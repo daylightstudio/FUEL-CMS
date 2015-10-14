@@ -1,7 +1,6 @@
 <div id="fuel_main_content_inner">
 
 <p class="instructions"><?=lang('cache_instructions')?></p>
-<?=$this->form->open(array('id' => 'form', 'method' => 'post'))?>
 
 <div class="buttonbar">
 	<ul>
@@ -11,4 +10,3 @@
 </div>
 
 <?=$this->form->hidden('action', 'cache')?>
-<?=$this->form->close()?>
