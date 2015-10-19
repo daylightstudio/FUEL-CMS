@@ -60,6 +60,18 @@ class Fuel_assets_model extends CI_Model {
 		
 	}
 	
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @param	array	Search filters
+	 * @return	void
+	 */	
+	public function table_name()
+	{
+		return '';
+	}
+	
 	// --------------------------------------------------------------------
 
 	/**
