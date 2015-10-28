@@ -1,4 +1,4 @@
-<?php
+1<?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Module extends Fuel_base_controller {
@@ -1070,8 +1070,8 @@ class Module extends Fuel_base_controller {
 
 		$crumbs = array($this->module_uri => $this->module_name);
 
-		$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
-		if ( ! empty($data[$this->display_field]))
+        $msg_data = $this->model->display_name($data);
+        if ( ! empty($msg_data))
 		{
 			$crumbs[''] = character_limiter(strip_tags($msg_data), 50);
 		}
