@@ -796,7 +796,7 @@ class Fuel_custom_fields {
 		}
 
 		$str = '';
-		if (empty($params['fields']))
+		if (empty($params['fields']) AND empty($params['view']))
 		{
 			return $str;
 		}
