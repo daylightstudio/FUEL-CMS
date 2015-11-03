@@ -1568,8 +1568,22 @@ class Base_module_record extends Data_record {
 	protected function _parse($output)
 	{
 		$vars = $this->values();
-		$output = $this->_CI->fuel->parser->parse_string($output, $vars, TRUE);
-		return $output;
+		if (is_array($output))
+		{
+			foreach($output as $key => $val)
+			{
+				if (is_string($val))
+				{
+					$output[$key] = $this->_CI->fuel->parser->parse_string($val, $vars, TRUE);
+				}
+			}
+			return $output;
+		}
+		elseif(is_string($output))
+		{
+			$output = $this->_CI->fuel->parser->parse_string($output, $vars, TRUE);	
+			return $output;
+		}
 	}
 	
 }
