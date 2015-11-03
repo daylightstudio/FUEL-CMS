@@ -2373,7 +2373,7 @@ class Form_builder {
 			$hour_format = ($params['ampm']) ? 'g' : 'G';
 			$time_params['value'] = date($hour_format, strtotime($params['value']));
 		}
-		$time_params['size'] = 2;
+		$time_params['size'] = 3;
 		$time_params['maxlength'] = 2;
 		$field_name = (empty($params['is_datetime'])) ? $params[$key] : $params[$key].'_hour';
 		$time_params['name'] = str_replace($params[$key], $field_name, $params['orig_name']);
