@@ -1421,6 +1421,30 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	* Function to return the display name as defined by the display_field in MY_fuel_modules
+	* @param  array $values The values of the current record
+	* @return string
+	*/
+	public function display_name($values)
+	{
+		$module =& $this->get_module();
+
+		$key = $module->info('display_field');
+
+		if(isset($values[$key]))
+		{
+			return (is_array($values[$key])) ? json_encode($values[$key]) : $values[$key];
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+
+	/**
 	 * Model hook executed right before saving
 	 *
 	 * @access	public
