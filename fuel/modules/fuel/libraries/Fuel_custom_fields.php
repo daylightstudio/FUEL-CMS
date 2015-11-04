@@ -861,6 +861,11 @@ class Fuel_custom_fields {
 		
 		$_f = array();
 		
+		if (empty($params['fields']))
+		{
+			$params['fields'] = array();
+		}
+		
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
