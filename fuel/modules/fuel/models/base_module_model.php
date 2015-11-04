@@ -1429,7 +1429,7 @@ class Base_module_model extends MY_Model {
 	{
 		$module =& $this->get_module();
 
-		$key = $module->info('display_field')
+		$key = $module->info('display_field');
 
 		if(isset($values[$key]))
 		{
