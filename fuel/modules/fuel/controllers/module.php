@@ -1,4 +1,4 @@
-1<?php
+<?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
 class Module extends Fuel_base_controller {
@@ -963,7 +963,7 @@ class Module extends Fuel_base_controller {
 
 				if ( ! empty($data))
 				{
-					$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+					$msg_data = $this->model->display_name($data);
 					$msg = lang('module_edited', $this->module_name, $msg_data);
 					$this->fuel->logs->write($msg);
 					$this->_clear_cache();
@@ -1158,7 +1158,7 @@ class Module extends Fuel_base_controller {
 				// run after_save hook
 				$this->_run_hook('after_save', $data);
 
-				$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+				$msg_data = $this->model->display_name($data);
 				$msg = lang('module_edited', $this->module_name, $msg_data);
 				$this->fuel->logs->write($msg);
 				$this->_clear_cache();
@@ -1700,11 +1700,7 @@ class Module extends Fuel_base_controller {
 			{
 				$data = $this->model->find_by_key($id, 'array');
 				$vars['id'] = $id;
-
-				if (isset($data[$this->display_field]))
-				{
-					$vars['title'] = $data[$this->display_field];
-				}
+				$vars['title'] = $this->model->display_name($data);
 			}
 
 			if (empty($data)) show_404();
@@ -2089,7 +2085,7 @@ class Module extends Fuel_base_controller {
 					// run after_save hook
 					$this->_run_hook('after_save', $data);
 
-					$msg_data = (is_array($data[$this->display_field])) ? json_encode($data[$this->display_field]) : $data[$this->display_field];
+					$msg_data = $this->model->display_name($data);
 					$msg = lang('module_edited', $this->module_name, $msg_data);
 					$this->fuel->logs->write($msg);
 				}
