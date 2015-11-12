@@ -346,7 +346,7 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 	url += '&order=' + ((attrs.imgOrder) ? attrs.imgOrder : '');
 	var loaded = false;
 	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 500px; width: 850px;"></iframe>';
-	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
+	$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 	
 	$modal.find('iframe#asset_inline_iframe').bind('load', function(){
 		if (loaded) return;
