@@ -669,7 +669,7 @@ class Base_module_model extends MY_Model {
 			if ($prop == 'foreign_keys')
 			{
 				$groups = $rel_model->find_all_array(array(), $rel_model->key_field().' asc');
-				$children = $this->find_all_array(array(), $key_field.' asc');
+				$children = $this->find_all_array(array(), $model->table_name().'.'.$key_field.' asc');
 				$g_key_field = $rel_model->key_field();
 				$loc_field = $g_key_field;
 			}
