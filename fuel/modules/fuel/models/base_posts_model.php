@@ -39,7 +39,8 @@ abstract class Base_posts_model extends Base_module_model {
 	{
 		if (empty($table)) $table = $this->name;
 		parent::__construct($table); // table name
-		$this->record_class = ucfirst($table).'_item';
+		if (empty($this->record_class)) $this->record_class = ucfirst($table).'_item';
+
 		if (!empty($this->has_many['tags']))
 		{
 			$this->has_many['tags']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context="")';
@@ -86,7 +87,10 @@ abstract class Base_posts_model extends Base_module_model {
 			$fields =& $fields->get_fields();
 		}
 
-		$fields[$this->slug_field]['size'] = 100;
+		if (isset($fields['slug']))
+		{
+			$fields[$this->slug_field]['size'] = 100;	
+		}
 
 		if (isset($fields['title']))
 		{
