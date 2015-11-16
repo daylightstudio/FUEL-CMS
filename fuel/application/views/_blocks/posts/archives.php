@@ -10,7 +10,7 @@ $archives_by_month = $CI->fuel->posts->get_post_archives(); ?>
 		<?php foreach($archives_by_month as $month => $archives) : 
 			$month_str = date('F Y', strtotime(str_replace('/', '-', $month).'-01'));
 			?>
-		<option value="<?=$this->fuel->posts->url('archives/'.$month)?>"><?=$month_str?></a> (<?=count($archives)?>)</option>
+		<option value="<?=$this->fuel->posts->url('archive/'.$month)?>"><?=$month_str?></a> (<?=count($archives)?>)</option>
 		<?php endforeach; ?>
 	</select>
 </div>
