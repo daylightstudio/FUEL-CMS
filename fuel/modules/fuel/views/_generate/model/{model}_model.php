@@ -33,7 +33,20 @@ class {model_name}_model extends Base_module_model {
 
 	public function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'asc', $just_count = FALSE)
 	{
+		// $this->db->select('{table}.id, {table}.title, {table}.published....'); uncomment and  change to the fields to be displayed
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
+
+		if (!$just_count)
+		{
+			foreach($data as $key => $val)
+			{
+				// format with PHP instead of MySQL so that ordering will still work with MySQL
+				if (!empty($val['publish_date']))
+				{
+					$data[$key]['publish_date'] = date_formatter($val['publish_date'], 'm/d/Y h:ia');	
+				}
+			}
+		}
 		return $data;
 	}
 
@@ -55,9 +68,9 @@ class {model_name}_model extends Base_module_model {
 		return $values;
 	}
 
-	public function _common_query()
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
-		parent::_common_query();
+		parent::_common_query($display_unpublished_if_logged_in);
 
 		// remove if no precedence column is provided
 		$this->db->order_by('precedence asc');
