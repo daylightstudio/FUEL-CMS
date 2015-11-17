@@ -44,7 +44,7 @@ class News_model extends Base_posts_model {
 		parent::__construct('news'); // table name
 	}
 
-	public function list_items($limit = null, $offset = null, $col = 'name', $order = 'asc')
+	public function list_items($limit = null, $offset = null, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$this->db->select('news.id, news.title, news.publish_date, news.published', FALSE);
 		$data = parent::list_items($limit, $offset, $col, $order);
