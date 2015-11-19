@@ -17,7 +17,7 @@ $lang['fuel_copyright'] = 'Copyright &copy; %1s Daylight Studio. All Rights Rese
 | Error Messages
 |--------------------------------------------------------------------------
 */
-$lang['error_no_access'] = "You do not have access to this page.";
+$lang['error_no_access'] = 'You do not have access to this page. <a href="'.fuel_url().'">Try logging in again</a>.';
 $lang['error_missing_module'] = "You are missing the module %1s.";
 $lang['error_invalid_login'] = 'Invalid login.';
 $lang['error_max_attempts'] = 'Sorry, but your login information was incorrect and you are temporarily locked out. Please try again in %s seconds.';
@@ -30,7 +30,7 @@ $lang['error_folder_not_writable'] = 'You must make the %1s folder writable.';
 $lang['error_invalid_folder'] = 'Invalid folder %1s';
 $lang['error_file_already_exists'] = 'File %1s already exists.';
 $lang['error_zip'] = 'There was an error creating the zipped file.';
-$lang['error_no_permissions'] = 'You do not have permissions to complete this action.';
+$lang['error_no_permissions'] = 'You do not have permissions to complete this action. <a href="'.fuel_url().'">Try logging in again</a>.';
 $lang['error_no_lib_permissions'] = 'You do not have permission to execute methods on the %1s class.';
 $lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it either doesn\'t exist or contains one or more of the following reserved words: %1s';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';

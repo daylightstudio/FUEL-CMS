@@ -989,6 +989,10 @@ class Fuel_module extends Fuel_base_library {
 						'module' => '',
 						'params' => array(),
 						);
+
+		$model = $this->model();
+
+		$native = TRUE;
  		if (is_string($params))
 		{
 			if (preg_match('#^(all|one|key|find|by)#', $params))
@@ -998,6 +1002,12 @@ class Fuel_module extends Fuel_base_library {
 				$params['find'] = $find;
 				$params['where'] = $where;
 			}
+			elseif (method_exists($model, 'find_'.$params))
+			{
+				$find = $params;
+				$args = $where;
+				$native = FALSE;
+			}
 			else
 			{
 				$this->CI->load->helper('array');
@@ -1005,12 +1015,13 @@ class Fuel_module extends Fuel_base_library {
 			}
 		}
 		
-		foreach($valid as $p => $default)
+		if ($native)
 		{
-			$$p = (isset($params[$p])) ? $params[$p] : $default;
+			foreach($valid as $p => $default)
+			{
+				$$p = (isset($params[$p])) ? $params[$p] : $default;
+			}
 		}
-
-		$model = $this->model();
 
 		 // to get around escapinng issues we need to add spaces after =
 		if (is_string($where))
@@ -1025,7 +1036,16 @@ class Fuel_module extends Fuel_base_library {
 		}
 
 		// retrieve data based on the method
-		$data = $model->find($find, $where, $order, $limit, $offset, $return_method, $assoc_key);
+		if ($native)
+		{
+			$data = $model->find($find, $where, $order, $limit, $offset, $return_method, $assoc_key);	
+		}
+		else
+		{
+			$args = array_merge(array($find), $args);
+			$data = call_user_func_array(array($model, 'find'), $args);
+		}
+		
 
 		if ($data !== FALSE)
 		{

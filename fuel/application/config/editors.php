@@ -48,7 +48,7 @@ $config['ckeditor']['default'] = array(
 		array('PasteFromWord', 'PasteText'),
 		array('Maximize'),
 	),
-	'contentCss' => WEB_PATH.'assets/css/main.css',
+	'contentsCss' => WEB_PATH.'assets/css/main.css',
 	'htmlEncodeOutput' => FALSE,
 	'entities' => FALSE,
 	'bodyClass' => 'ckeditor',

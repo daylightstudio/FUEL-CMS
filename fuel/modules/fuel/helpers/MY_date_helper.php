@@ -379,12 +379,12 @@ if (!function_exists('date_range_string'))
 	{
 		
 		// set formatting defaults
-		$format['same_day_and_time'] = 'F j, Y h:i a';
-		$format['same_day'] = array('F j, h:i a', 'h:i a');
+		$format['same_day_and_time'] = 'F j, Y h:ia';
+		$format['same_day'] = array('F j, h:ia', 'h:ia');
 		$format['same_month'] = array('F j', 'j, Y');
 		$format['same_year'] = array('F j', 'F j, Y');
 		$format['default'] = 'F j, Y';
-		$format['joiner'] = '-';
+		$format['joiner'] = ' - ';
 
 		$format = array_merge($format, $params);
 

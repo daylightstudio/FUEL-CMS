@@ -28,6 +28,8 @@ class News_model extends Base_posts_model {
 
 	// special field names
 	public $publish_date_field = 'publish_date'; // field name for the publish date
+	public $order_by_field = 'publish_date'; // field to order by
+	public $order_by_direction = 'desc'; // direction to order results
 
 	// base_posts_model specific properties
 	public $name = 'news'; // this property is usually just the same as the table name but can be different and is used for image folders and tag and category contexts
@@ -37,17 +39,59 @@ class News_model extends Base_posts_model {
 	protected $friendly_name = ''; // a friendlier name of the group of objects
 	protected $singular_name = ''; // a friendly singular name of the object
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('news'); // table name
 	}
 
-	// put your record model code here
+	public function list_items($limit = null, $offset = null, $col = 'name', $order = 'asc', $just_count = FALSE)
+	{
+		$this->db->select('news.id, news.title, news.publish_date, news.published', FALSE);
+		$data = parent::list_items($limit, $offset, $col, $order);
+		if (!$just_count)
+		{
+			foreach($data as $key => $val)
+			{
+				// format with PHP instead of MySQL so that ordering will still work with MySQL
+				if (!empty($val['publish_date']))
+				{
+					$data[$key]['publish_date'] = date_formatter($val['publish_date'], 'm/d/Y h:ia');	
+				}
+			}
+		}
+		return $data;
+	}
 	
+	public function form_fields($values = array(), $related = array())
+	{
+		$fields = parent::form_fields($values, $related);
+		$fields['image']['folder'] = 'images/news';  // requires images/news folder to be created
+		return $fields;
+	}
+	
+	public function on_before_save($values)
+	{
+		$values = parent::on_before_save($values);
+		return $values;
+	}
+
+	public function on_after_save($values)
+	{
+		parent::on_after_save($values);
+		return $values;
+	}
+
+	public function _common_query()
+	{
+		parent::_common_query();
+	}
 }
 
 class News_item_model extends Base_post_item_model {
 	
-	// put your record model code here
+	public function get_image_path()
+	{
+		return img_path('news/'.$this->image);
+	}
 	
 }

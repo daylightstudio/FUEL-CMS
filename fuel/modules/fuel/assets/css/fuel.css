@@ -333,7 +333,7 @@ div.btn { border: 1px solid #ccc; float: left; list-style: none;  margin: 0;  pa
 .update_notice a { font-style: italic; text-decoration: underline; }
 .update_notice a:hover { text-decoration: none; }
 
-.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 300px; }
+.repeatable { background-color: #fdfdfd; position: relative; padding: 10px; border: 1px solid #eee; margin: 0 10px 10px 0; min-width: 260px; }
 .repeatable .grabber { min-height: 10px; overflow: hidden; margin: 0 auto 10px auto !important; padding-right: 60px !important; background: transparent url(../images/markitup/handle.png) no-repeat center center; cursor: move; }
 .repeatable .remove { position: absolute; top: 13px; right: 15px; }
 .repeatable td>.remove { position: static; }
@@ -374,7 +374,7 @@ div#fuel_top { z-index: 2; line-height: 28px; height: 30px;  background-color: #
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5d5d5d), color-stop(1, #393939));
   background: -moz-linear-gradient(top center, #5d5d5d  0%, #393939 100%); }
 div#fuel_top a:hover { text-decoration: underline; }
-h1#fuel_site_name { float: left; font-size: 18px; width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+h1#fuel_site_name { float: left; font-size: 18px; width: 172px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 h1#fuel_site_name a { color: #999; text-shadow: #111 0px -1px 0px; text-decoration: none; }
 h1#fuel_site_name a:hover { color: #aaa; text-decoration: none; }
 

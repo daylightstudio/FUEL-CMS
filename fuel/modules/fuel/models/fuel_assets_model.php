@@ -149,9 +149,8 @@ class Fuel_assets_model extends CI_Model {
 					(!empty($this->filters['name']) AND 
 					(stripos($files[$key]['name'], $this->filters['name']) !== FALSE || stripos($key, $this->filters['name']) !== FALSE)))
 				{
-
 					$file['id'] = uri_safe_encode(assets_server_to_web_path($files[$tmpfiles[$i]]['server_path'], TRUE));
-
+					
 					//$file['filename'] = $files[$key]['name'];
 					$file['name'] = $key;
 					$file['preview/kb'] = $files[$key]['size'];
@@ -214,15 +213,9 @@ class Fuel_assets_model extends CI_Model {
 	public function find_by_key($file)
 	{
 		$file = $this->get_file($file);
+		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		$asset_path = $doc_root.$file;
 
-		$CI =& get_instance();
-		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
-		
-		// normalize file path
-		$file = trim(str_replace($assets_folder, '', $file), '/');
-		
-		$asset_path = $assets_folder.$file;
-		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
 		return get_file_info($asset_path);
 	}
 	
@@ -311,13 +304,11 @@ class Fuel_assets_model extends CI_Model {
 		$deleted = FALSE;
 		
 		// cleanup beginning slashes
-		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
-		$file = trim(str_replace($assets_folder, '', $file), '/');
-		
-		// normalize file path
-		$filepath = $assets_folder.$file;
-		$parent_folder = dirname($filepath).'/';
+		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		$filepath = $doc_root.$file;
 
+		// normalize file path
+		$parent_folder = dirname($filepath).'/';
 		if (file_exists($filepath))
 		{
 			$deleted = unlink($filepath);
@@ -352,6 +343,7 @@ class Fuel_assets_model extends CI_Model {
 			
 		}
 		$i++;
+
 		if ($max_depth == $i) $end = TRUE;
 		return $deleted;
 	}
@@ -511,5 +503,41 @@ class Fuel_assets_model extends CI_Model {
 			return $img;
 		}
 		return '';
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the module object for this model
+	 *
+	 * @access	public
+	 * @return	object
+	 */	
+	public function get_module()
+	{
+		return $this->fuel->modules->get(strtolower(get_class($this)));
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	* Function to return the display name as defined by the display_field in MY_fuel_modules
+	* @param  array $values The values of the current record
+	* @return string
+	*/
+	public function display_name($values)
+	{
+		$module =& $this->get_module();
+
+		$key = $module->info('display_field');
+
+		if(isset($values[$key]))
+		{
+			return (is_array($values[$key])) ? json_encode($values[$key]) : $values[$key];
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

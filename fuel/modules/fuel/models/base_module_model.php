@@ -510,6 +510,12 @@ class Base_module_model extends MY_Model {
 		$form_filters = $this->CI->filters;
 
 		$filters = array();
+
+		$find = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
+		$operators = array('>', '>=', '<', '<=', '=');
+
+		$cnt = count($values) - 1;
+		$i = 1;
 		foreach($values as $key => $val)
 		{
 			if (!empty($val) AND isset($form_filters[$key]))
@@ -527,7 +533,7 @@ class Base_module_model extends MY_Model {
 						$options = $form_filters[$key]['options'];
 					}
 					
-					$replace = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
+
 					if (is_array($val))
 					{
 						foreach($val as $k => $v)
@@ -537,7 +543,8 @@ class Base_module_model extends MY_Model {
 								$val[$k] = $options[$v];
 							}
 
-							$val[$k] = preg_replace($replace, '', $val[$k]);
+							$val[$k] = preg_replace($find, '', $val[$k]);
+
 						}
 						$val = implode(', ', $val);
 					}
@@ -548,19 +555,50 @@ class Base_module_model extends MY_Model {
 							$val = $options[$val];
 						}
 
-						$val = preg_replace($replace, '', $val);
+						$val = preg_replace($find, '', $val);
+					}
+				}
+
+				$operator = '=';
+				foreach($find as $i => $f)
+				{
+					if (preg_match($f, $key))
+					{
+						$operator = $operators[$i];
+						break;
+					}
+				}
+				
+				$joiner = $this->filter_join;
+			
+				if (is_array($joiner))
+				{
+					if (isset($joiner[$key]))
+					{
+						$joiner = strtoupper($joiner[$key]);
+					}
+					else
+					{
+						$joiner = 'OR';
 					}
 				}
 
 				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
-				$filters[] = str_replace(':', '', $label).'="'.$val.'"';
+				$filter = str_replace(':', '', $label).' '.$operator.' "'.$val.'"';
+				if ($i < $cnt)
+				{
+					$filter .= ' '.strtoupper($joiner).' ';
+				}
+				$filters[] = $filter;
 			}
+
+			$i++;
 		}
 
 		$str = '';
 		if (!empty($filters))
 		{
-			$str = '<strong>Filters:</strong> '.$str .= implode(', ', $filters);
+			$str = '<strong>Filters:</strong> '.$str .= implode(' ', $filters);
 		}
 		return $str;
 	}
@@ -631,7 +669,7 @@ class Base_module_model extends MY_Model {
 			if ($prop == 'foreign_keys')
 			{
 				$groups = $rel_model->find_all_array(array(), $rel_model->key_field().' asc');
-				$children = $this->find_all_array(array(), $key_field.' asc');
+				$children = $this->find_all_array(array(), $model->table_name().'.'.$key_field.' asc');
 				$g_key_field = $rel_model->key_field();
 				$loc_field = $g_key_field;
 			}
