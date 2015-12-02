@@ -427,14 +427,14 @@ if ( ! function_exists('is_https'))
  * Returns a query string formatted
  *
  * @access	public
- * @param	array	an array of query string parameters to only include
+ * @param	array	an array of query string parameters to exclude
  * @param	boolean	determines whether to include posted variables in the query string
  * @param	boolean	determines whether to include the question mark
  * @return	string
  */
 if (!function_exists('query_str'))
 {
-	function query_str($only = array(), $include_post = FALSE, $include_q = TRUE)
+	function query_str($exclude = array(), $include_post = FALSE, $include_q = TRUE)
 	{
 		$CI =& get_instance();
 		$query_str = '';
@@ -449,9 +449,15 @@ if (!function_exists('query_str'))
 		
 		if (!empty($get_array))
 		{
-			if (!empty($include))
+			if (!empty($exclude))
 			{
-				$get_array = array_intersect($only, $get_array);
+				foreach($exclude as $e)
+				{
+					if (isset($get_array[$e]))
+					{
+						unset($get_array[$e]);
+					}
+				}
 			}
 			$query_str = http_build_query($get_array);
 			if (!empty($query_str) AND $include_q)
