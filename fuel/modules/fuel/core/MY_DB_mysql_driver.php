@@ -385,6 +385,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select for specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
+
 	/** http://stackoverflow.com/questions/6470267/grouping-where-clauses-in-codeigniter
 	 * This function will allow you to do complex group where clauses in to c and (a AND b) or ( d and e)
 	 * This function is needed as else the where clause will append an automatic AND in front of each where Thus if you wanted to do something
