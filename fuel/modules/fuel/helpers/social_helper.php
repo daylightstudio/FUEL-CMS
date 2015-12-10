@@ -39,7 +39,7 @@
  */
 if (!function_exists('share'))
 {
-	function share($type, $values)
+	function share($type, $values = NULL)
 	{
 		$CI =& get_instance();
 		if (!isset($CI->social))

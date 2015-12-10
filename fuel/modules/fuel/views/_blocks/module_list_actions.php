@@ -36,7 +36,7 @@
 	<ul>
 		<?php 
 		$create_url = (!empty($this->model->filters['group_id'])) ? $this->module_uri.'/create/'.$this->model->filters['group_id'] : $this->module_uri.'/create';
-		if (!empty($tree) AND $this->fuel->auth->has_permission($this->permission, 'edit')) : ?>
+		if (!empty($tree)) : ?>
 		<li class="active"><a href="#" id="toggle_list" class="ico ico_table" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_list')?></a></li>
 		<li><a href="#" id="toggle_tree" class="ico ico_tree" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_tree')?></a></li>
 		<?php endif; ?>

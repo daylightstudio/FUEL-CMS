@@ -651,6 +651,7 @@ class Module extends Fuel_base_controller {
 			}
 
 			$posted['extra_filters'] = $extra_filters;
+
 		}
 
 		$params = array_merge($defaults, $page_state, $posted);
@@ -1027,6 +1028,10 @@ class Module extends Fuel_base_controller {
 
 		//$vars = $this->_form($id);
 		$data = $this->_saved_data($id);
+		if (empty($data))
+		{
+			show_error(lang('error_invalid_record'));
+		}
 		$action = ( ! empty($data[$this->model->key_field()])) ? 'edit' : 'create';
 	
 		// check model first for preview path method
@@ -2174,6 +2179,8 @@ class Module extends Fuel_base_controller {
 
 		if ( ! empty($_FILES))
 		{
+			$field_names = array();
+
 			// loop through uploaded files
 			foreach ($_FILES as $file => $file_info)
 			{
@@ -2238,6 +2245,9 @@ class Module extends Fuel_base_controller {
 					$posted[$tmp_field_name] = $file_val;
 					$posted[$field_name] = $file_val;
 					$posted[$file_tmp.'_file_name'] = $file_val;
+
+					$field_names[$field_name] = $field_name;
+
 				}
 			}
 
@@ -2268,24 +2278,30 @@ class Module extends Fuel_base_controller {
 
 				// transfer uploaded data the controller object as well
 				$this->upload_data =& $uploaded_data;
-
 				// now process the data related to upload a file including translated path names
 				if ( ! isset($field_name)) $field_name = '';
 
-				$this->_process_upload_data($field_name, $uploaded_data, $posted);
+				$this->_process_upload_data($field_names, $uploaded_data, $posted);
 			}
 		}
 
 		return ! $errors;
 	}
 
-	protected function _process_upload_data($field_name, $uploaded_data, $posted)
+	protected function _process_upload_data($field_names, $uploaded_data, $posted)
 	{
-		$field_name_parts = explode('--', $field_name);
-		$field_name = end($field_name_parts);
 
 		foreach($uploaded_data as $key => $val)
 		{
+			if (!isset($field_names[$key]))
+			{
+				continue;
+			}
+			$field_name = $field_names[$key];
+			$field_name_parts = explode('--', $field_name);
+			$field_name = end($field_name_parts);
+
+			$save = FALSE;
 			$key_parts = explode('___', $key);
 			$file_tmp = current($key_parts);
 
@@ -2325,7 +2341,9 @@ class Module extends Fuel_base_controller {
 					$this->model->save($data);
 				}
 			}
+
 		}
+	
 	}
 	
 	protected function _run_hook($hook, $params = array())

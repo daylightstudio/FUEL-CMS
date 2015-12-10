@@ -394,7 +394,11 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 					replace += ' class="' + $class.val() + '"';
 				}
 
-				replace += ' alt="' + $alt.val() + '"';
+				if ($alt.length && $alt.val().length){
+					replace += ' alt="' + $alt.val() + '"';
+				} else {
+					replace += ' alt=""';
+				}
 	
 				replace += ' />';
 
