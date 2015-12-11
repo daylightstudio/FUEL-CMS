@@ -1569,6 +1569,7 @@ class Fuel_custom_fields {
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;
+		
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
 			$value = (isset($params['value'])) ? (array)$params['value'] : array();
@@ -1643,7 +1644,7 @@ class Fuel_custom_fields {
 		$exists_params['type'] = 'hidden';
 		$exists_params['ignore_representative'] = TRUE;
 		$str .= $form_builder->create_field($exists_params);
-		
+
 		return $str;
 	}
 
@@ -2202,6 +2203,7 @@ class Fuel_custom_fields {
 		$params['style'] = (!empty($params['style'])) ? $params['style'].'; width: '.$params['width'] : 'width: '.$params['width'];
 
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' select2' : 'select2';
+		$params['mode'] = 'multi';
 		return $this->inline_edit($params);
 		//return $form_builder->create_select($params);
 	}
