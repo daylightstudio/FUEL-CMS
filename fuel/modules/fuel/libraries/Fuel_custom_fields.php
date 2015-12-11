@@ -702,6 +702,7 @@ class Fuel_custom_fields {
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 					$params['data']['module'] = $uri;
 					$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
+					$params['data']['fields'] = (!empty($params['fields'])) ? $params['fields'] : '';
 				}
 			}
 		
@@ -1561,6 +1562,7 @@ class Fuel_custom_fields {
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 				$params['data']['module'] = $uri;
 				$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
+				$params['data']['fields'] = (!empty($params['fields'])) ? $params['fields'] : '';
 			}
 		}
 
@@ -2200,8 +2202,8 @@ class Fuel_custom_fields {
 		$params['style'] = (!empty($params['style'])) ? $params['style'].'; width: '.$params['width'] : 'width: '.$params['width'];
 
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' select2' : 'select2';
-
-		return $form_builder->create_select($params);
+		return $this->inline_edit($params);
+		//return $form_builder->create_select($params);
 	}
 }
 

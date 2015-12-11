@@ -838,11 +838,15 @@ class Module extends Fuel_base_controller {
 		$vars['action'] = 'create';
 		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
-
+		
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->set_inline($inline);
-
-		if ($inline === TRUE)
+		
+		if ( ! empty($field))
+		{
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+		}
+		else if ($inline === TRUE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
