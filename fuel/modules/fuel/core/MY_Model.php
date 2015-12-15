@@ -2281,7 +2281,7 @@ class MY_Model extends CI_Model {
 						{
 							foreach($r_val as $rv)
 							{
-								if (strpos($rv, '{') === 0)
+								if (is_string($rv) AND strpos($rv, '{') === 0)
 								{
 									$val_key = str_replace(array('{', '}'), '', $rv);
 									if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
@@ -2290,7 +2290,7 @@ class MY_Model extends CI_Model {
 						}
 						else
 						{
-							if (strpos($r_val, '{') === 0)
+							if (is_string($r_val) AND strpos($r_val, '{') === 0)
 							{
 								$val_key = str_replace(array('{', '}'), '', $r_val);
 								if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
