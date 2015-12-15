@@ -532,11 +532,11 @@ class Base_module_model extends MY_Model {
 		$form_filters = $this->CI->filters;
 
 		$filters = array();
+		$joiner = '';
 
 		$find = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
 		$operators = array('>', '>=', '<', '<=', '=');
 
-		$cnt = count($values) - 1;
 		$i = 1;
 		foreach($values as $key => $val)
 		{
@@ -582,17 +582,16 @@ class Base_module_model extends MY_Model {
 				}
 
 				$operator = '=';
-				foreach($find as $i => $f)
+				foreach($find as $j => $f)
 				{
 					if (preg_match($f, $key))
 					{
-						$operator = $operators[$i];
+						$operator = $operators[$j];
 						break;
 					}
 				}
 				
 				$joiner = $this->filter_join;
-			
 				if (is_array($joiner))
 				{
 					if (isset($joiner[$key]))
@@ -607,10 +606,7 @@ class Base_module_model extends MY_Model {
 
 				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
 				$filter = str_replace(':', '', $label).' '.$operator.' "'.$val.'"';
-				if ($i < $cnt)
-				{
-					$filter .= ' '.strtoupper($joiner).' ';
-				}
+				$filter .= ' '.strtoupper($joiner).' ';
 				$filters[] = $filter;
 			}
 
@@ -620,10 +616,13 @@ class Base_module_model extends MY_Model {
 		$str = '';
 		if (!empty($filters))
 		{
-			$str = '<strong>Filters:</strong> '.$str .= implode(' ', $filters);
+			$str = '<strong>Filters:</strong> ';
+			$filters_str = implode(' ', $filters);
+			$str .= substr($filters_str, 0, - strlen($joiner) -1);
 		}
 		return $str;
 	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
