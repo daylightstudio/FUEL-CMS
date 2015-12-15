@@ -298,12 +298,25 @@ class Base_module_model extends MY_Model {
 		}
 
 		$this->_list_items_query();
-		
+
 		if ($just_count)
 		{
-			return $this->db->count_all_results();
-		}
+			$has_have = FALSE;
+			foreach($this->filters as $k => $v)
+			{
+				if (preg_match('#.+_having$#', $k))
+				{
+					$has_have = TRUE;
+					break;
+				}
+			}
 
+			if (!$has_have)
+			{
+				return $this->db->count_all_results();
+			}
+		}
+		
 		if (empty($this->db->ar_select))
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
@@ -322,6 +335,13 @@ class Base_module_model extends MY_Model {
 		{
 			$data = $this->list_items->process($data);
 		}
+
+		// has have statement
+		if ($just_count)
+		{
+			return count($data);
+		}
+
 
 		//$this->debug_query();
 		return $data;
@@ -400,6 +420,8 @@ class Base_module_model extends MY_Model {
 					$key_with_comparison_operator = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), array(' >', ' >=', ' <', ' <=', ' ='), $key);
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
+
+
 					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
 				}
 				else if (is_array($val))
@@ -510,11 +532,11 @@ class Base_module_model extends MY_Model {
 		$form_filters = $this->CI->filters;
 
 		$filters = array();
-		$joiner = '';
 
 		$find = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
 		$operators = array('>', '>=', '<', '<=', '=');
 
+		$cnt = count($values) - 1;
 		$i = 1;
 		foreach($values as $key => $val)
 		{
@@ -560,16 +582,17 @@ class Base_module_model extends MY_Model {
 				}
 
 				$operator = '=';
-				foreach($find as $j => $f)
+				foreach($find as $i => $f)
 				{
 					if (preg_match($f, $key))
 					{
-						$operator = $operators[$j];
+						$operator = $operators[$i];
 						break;
 					}
 				}
 				
 				$joiner = $this->filter_join;
+			
 				if (is_array($joiner))
 				{
 					if (isset($joiner[$key]))
@@ -584,7 +607,10 @@ class Base_module_model extends MY_Model {
 
 				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
 				$filter = str_replace(':', '', $label).' '.$operator.' "'.$val.'"';
-				$filter .= ' '.strtoupper($joiner).' ';
+				if ($i < $cnt)
+				{
+					$filter .= ' '.strtoupper($joiner).' ';
+				}
 				$filters[] = $filter;
 			}
 
@@ -594,13 +620,10 @@ class Base_module_model extends MY_Model {
 		$str = '';
 		if (!empty($filters))
 		{
-			$str = '<strong>Filters:</strong> ';
-			$filters_str = implode(' ', $filters);
-			$str .= substr($filters_str, 0, - strlen($joiner) -1);
+			$str = '<strong>Filters:</strong> '.$str .= implode(' ', $filters);
 		}
 		return $str;
 	}
-	
 	// --------------------------------------------------------------------
 	
 	/**
