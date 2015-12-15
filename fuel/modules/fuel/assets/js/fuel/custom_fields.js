@@ -729,6 +729,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $form = $field.closest('form');
 			var module = $field.data('module');
 			var addParams = ($field.data('add_params')) ? '?' + $field.data('add_params') : '';
+			var fields = ($field.data('fields')) ? '/' + $field.data('fields') : '';
 
 			var isMulti = ($field.attr('multiple')) ? true : false;
 			
@@ -736,7 +737,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var url = jqx_config.fuelPath + '/' + module + '/inline_';
 			var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
 			if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
+			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + fields + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
 			
 			var refreshField = function($field){
 
@@ -749,7 +750,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (!selected) return;
 				var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
 				var params = { field:fieldId, field_id: fieldId, selected:selected};
-
 
 				// fix for pages... a bit kludgy
 				if (parentModule == 'pages'){
@@ -775,10 +775,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 				var $form = $field.closest('form');
 
-				$fieldContainer = $('#' + fieldId, context).closest('td.field');
-				$field.closest('form').trigger('form-pre-serialize');
+				var $fieldContainer = $('#' + fieldId, context).closest('td.field');
+
+				// will delete fields if triggered
+				//$field.closest('form').trigger('form-pre-serialize');
 
 				// refresh value
+
 				$field = $(selector);
 				if ($field.length > 1){
 					var val = [];
@@ -870,8 +873,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					return false;
 				}
 				var editIds = val.toString().split(',');
+				var fields = ($elem.data('fields')) ? '/' + $elem.data('fields') : '';
 				var $selected = $elem.parent().find('.supercomboselect_right li.selected:first');
-
 				if ((!editIds.length || editIds.length > 1) && (!$selected.length || $selected.length > 1)) {
 					alert(fuel.lang('edit_multi_select_warning'));
 				} else {
@@ -879,12 +882,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						var id = $selected.attr('id');
 						var idIndex = id.substr(id.lastIndexOf('_') + 1);
 						var val = $elem.find('option').eq(idIndex).attr('value');
-						var url = $(this).attr('href') + val;
+						var url = $(this).attr('href') + val + fields;
 					} else {
-						var url = $(this).attr('href') + editIds[0];
+						var url = $(this).attr('href') + editIds[0] + fields;
 					}
-					$field = $(this).closest('.field').find('select, input[type="checkbox"], input[type="radio"]:first');
-						editModule(url, null, function(){ refreshField($field)});
+					$field = $elem.filter(':first');
+					editModule(url, null, function(){ refreshField($field)});
 				}
 				return false;
 			});

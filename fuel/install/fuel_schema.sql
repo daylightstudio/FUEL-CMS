@@ -209,11 +209,12 @@ UNLOCK TABLES;
 
 CREATE TABLE `fuel_relationships` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `candidate_table` varchar(100) DEFAULT '',
+  `candidate_table` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
   `candidate_key` int(11) NOT NULL,
-  `foreign_table` varchar(100) DEFAULT NULL,
+  `foreign_table` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `foreign_key` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_key` (`candidate_table`,`candidate_key`,`foreign_table`,`foreign_key`),
   KEY `candidate_table` (`candidate_table`,`candidate_key`),
   KEY `foreign_table` (`foreign_table`,`foreign_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

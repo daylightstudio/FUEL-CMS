@@ -805,11 +805,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id, TRUE);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id, TRUE);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field, TRUE);
 				}
 
 				// save any tab states
@@ -838,11 +838,15 @@ class Module extends Fuel_base_controller {
 		$vars['action'] = 'create';
 		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
-
+		
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->set_inline($inline);
 
-		if ($inline === TRUE)
+		if ( ! empty($field) AND strpos($field, ':') === FALSE)
+		{
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+		}
+		else if ($inline === TRUE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
@@ -1064,7 +1068,7 @@ class Module extends Fuel_base_controller {
 			$vars['activate'] = ( ! empty($data['active']) AND is_true_val($data['active'])) ? 'deactivate' : 'activate';
 		}
 
-		if ( ! empty($field))
+		if ( ! empty($field) AND strpos($field, ':') === FALSE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 		}
@@ -1435,7 +1439,7 @@ class Module extends Fuel_base_controller {
 			$form = $this->form_builder->render();
 		}
 
-		$action_uri = $action.'/'.$id.'/'.$field;
+		$action_uri = (!empty($id)) ? $action.'/'.$id.'/'.$field : $action.'/'.$field;
 		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri.query_str() : $this->module_uri.'/'.$action_uri.query_str();
 		$vars['form'] = $form;
 		$vars['data'] = $values;

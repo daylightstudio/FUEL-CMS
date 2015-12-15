@@ -298,12 +298,25 @@ class Base_module_model extends MY_Model {
 		}
 
 		$this->_list_items_query();
-		
+
 		if ($just_count)
 		{
-			return $this->db->count_all_results();
-		}
+			$has_have = FALSE;
+			foreach($this->filters as $k => $v)
+			{
+				if (preg_match('#.+_having$#', $k))
+				{
+					$has_have = TRUE;
+					break;
+				}
+			}
 
+			if (!$has_have)
+			{
+				return $this->db->count_all_results();
+			}
+		}
+		
 		if (!$this->db->has_select())
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
@@ -323,6 +336,11 @@ class Base_module_model extends MY_Model {
 			$data = $this->list_items->process($data);
 		}
 
+		// has have statement
+		if ($just_count)
+		{
+			return count($data);
+		}
 		//$this->debug_query();
 		return $data;
 	}
@@ -400,6 +418,8 @@ class Base_module_model extends MY_Model {
 					$key_with_comparison_operator = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), array(' >', ' >=', ' <', ' <=', ' ='), $key);
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
+
+
 					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
 				}
 				else if (is_array($val))
