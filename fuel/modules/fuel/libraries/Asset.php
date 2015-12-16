@@ -554,6 +554,7 @@ class Asset {
 	</code>
 	 * @access	public
 	 * @param	string	server path to asset file
+	 * @param	bool	determines whether to truncate to the asset folder or not
 	 * @return	string
 	 */	
 	public function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
