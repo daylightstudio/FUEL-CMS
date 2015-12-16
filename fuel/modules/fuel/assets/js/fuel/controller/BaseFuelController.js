@@ -175,6 +175,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		this.notifications();
 		$('#search_term').focus();
+
+		// always reset the offset value back to 0 upon each search
+		$('#search').click(function(e){
+			$('#offset').val('0');
+		});
 		$('#limit').change(function(e){
 			$('#form').submit();
 		});
