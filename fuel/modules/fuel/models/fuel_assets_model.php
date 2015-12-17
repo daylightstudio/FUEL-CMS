@@ -213,8 +213,19 @@ class Fuel_assets_model extends CI_Model {
 	public function find_by_key($file)
 	{
 		$file = $this->get_file($file);
-		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
-		$asset_path = $doc_root.$file;
+
+		$CI =& get_instance();
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		
+		// normalize file path
+		$file = trim(str_replace($assets_folder, '', $file), '/');
+		
+		$asset_path = $assets_folder.$file;
+		$asset_path = str_replace('/', DIRECTORY_SEPARATOR, $asset_path); // for windows
+
+		// Causes issues in some environments like GoDaddy... was originally changed for the assets to potentially be in a parent folder 
+		// $doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		// $asset_path = $doc_root.$file;
 
 		return get_file_info($asset_path);
 	}
@@ -304,10 +315,15 @@ class Fuel_assets_model extends CI_Model {
 		$deleted = FALSE;
 		
 		// cleanup beginning slashes
-		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
-		$filepath = $doc_root.$file;
+		$assets_folder = WEB_ROOT.$CI->config->item('assets_path');
+		$file = trim(str_replace($assets_folder, '', $file), '/');
+	
+		// Causes issues in some environments like GoDaddy... was originally changed for the assets to potentially be in a parent folder 		
+		// $doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		// $filepath = $doc_root.$file;
 
 		// normalize file path
+		$filepath = $assets_folder.$file;
 		$parent_folder = dirname($filepath).'/';
 		if (file_exists($filepath))
 		{
