@@ -4228,9 +4228,16 @@ class MY_Model extends CI_Model {
 			{
 				$id = $where->$id_field;
 			}
-			else if (is_array($where) AND isset($where[$id_field]))
+			else if (is_array($where))
 			{
-				$id = $where[$id_field];
+				if (isset($where[$id_field]))
+				{
+					$id = $where[$id_field];	
+				}
+				elseif(isset($where[$this->table_name().'.'.$id_field]))
+				{
+					$id = $where[$this->table_name().'.'.$id_field];
+				}
 			}
 			else if (!empty($id) AND is_int($id))
 			{
