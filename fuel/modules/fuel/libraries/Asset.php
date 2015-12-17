@@ -560,14 +560,20 @@ class Asset {
 	public function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 	{
 		$file = str_replace('\\', '/', $file); // for windows
-		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
-		$assets_path = str_replace($doc_root, '', $file);
+		$web_path = str_replace(WEB_ROOT, '', '/'.$file);
+	//	$assets_path = str_replace('/', DIRECTORY_SEPARATOR, $this->assets_path); // for windows
+		$assets_path = str_replace($this->assets_path, '', $web_path);
+
+		// Causes issues in some environments like GoDaddy... was originally changed for the assets to potentially be in a parent folder 
+		// $doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		// $assets_path = str_replace($doc_root, '', $assets_path);
 
 		if ($truncate_to_asset_folder)
 		{
 			if (strncmp($assets_path, '/', 1) === 0) $asset_path = substr($assets_path, 1);  // to remove beginning slash
 			return $assets_path;
 		}
+				
 		return str_replace('//', '/', $this->assets_path($assets_path));
 	}
 
