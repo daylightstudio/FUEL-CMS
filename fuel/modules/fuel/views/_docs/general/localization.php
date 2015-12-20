@@ -89,7 +89,7 @@ If you are interested in helping out with language support, just let us know or 
 
 
 <p>To add a language to FUEL, you must <a href="https://github.com/daylightstudio/FUEL-CMS-Languages" target="_blank">download the latest 1.0 language folder (if available).</a> and
-place it's contents in the <span class="file">fuel/modules/fuel/language</span> folder. Then, you can set the <dfn>$config['language']</dfn> in the <span class="file">fuel/application/config.php</span>
+place it's contents in the <span class="file">fuel/modules/fuel/language</span> folder. Then, you can set the <dfn>$config['language']</dfn> in the <span class="file">fuel/application/config/config.php</span>
 file to match the name of the language folder you downloaded. Alternatively, you may click on your user name in the upper right corner of the CMS, and then change the language associated
 with your urser login.</p>
 
