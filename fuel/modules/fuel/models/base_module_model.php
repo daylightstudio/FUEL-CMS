@@ -1337,7 +1337,7 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function get_module()
 	{
-		return $this->fuel->modules->get(strtolower(get_class($this)));
+		return $this->fuel->modules->get(strtolower(get_class($this)), FALSE);
 	}
 
 	// --------------------------------------------------------------------
