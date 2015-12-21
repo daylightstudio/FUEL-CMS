@@ -1763,6 +1763,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'disabled' => $params['disabled'],
+			'pattern' => (!empty($params['pattern']) ? $params['pattern'] : NULL),
 		);
 		
 		if (isset($params['attrs']))
