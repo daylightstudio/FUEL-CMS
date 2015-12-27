@@ -1267,6 +1267,7 @@ class Form_builder {
 			'represents' => '', // specifies what other types of fields that this field should represent
 			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
+			'title' => NULL, // the title attribute
 			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"'
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -2420,7 +2421,7 @@ class Form_builder {
 		$process_key = $params[$key];
 
 		// create post processer to recreate date value
-		$func_str = '
+$func_str = '
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
@@ -2440,11 +2441,14 @@ class Form_builder {
 							$ampm = "pm";
 						}
 					}
-					if ($hr !== "")
+
+					if (empty($hr))
 					{
-						$dateval = $hr.":".$min.$ampm;
-						$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
+						$hr = "00";
 					}
+
+					$dateval = $hr.":".$min.$ampm;
+					$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
 				}
 				return $value;
 			}
@@ -2466,17 +2470,17 @@ class Form_builder {
 					}
 				}
 
-				$dateval = "";
-				if ($hr !== "")
+				if (empty($hr))
 				{
-					$dateval = $hr.":".$min.$ampm;
-					$dateval = date("H:i:s", strtotime($dateval));
+					$hr = "00";
 				}
 
+				$dateval = $hr.":".$min.$ampm;
+				$dateval = date("H:i:s", strtotime($dateval));
 				return $dateval;
 			}
 		';
-
+		
 		// needed for post processing
 		if (!isset($_POST[$params['key']]))
 		{
