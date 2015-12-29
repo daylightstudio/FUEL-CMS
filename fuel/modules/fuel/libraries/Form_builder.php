@@ -629,9 +629,9 @@ class Form_builder {
 				$str .= "<span class=\"label\">";
 				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
 				$str .= "</span>";
-				$str .= "<span".$this->_open_field_attrs($val).">";
+				$str .= "<span".$this->_open_field_attrs($val)."><span class=\"displayonly noclone\">";
 				$str .= $val['before_html'].$display_value.$val['after_html'];
-				$str .= "</span>";
+				$str .= "</span></span>";
 				$str .= "</div>\n";
 			}
 			else if (!in_array($val['name'], $this->exclude))
@@ -825,7 +825,7 @@ class Form_builder {
 				if ($this->label_layout != 'top')
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
-					$str .= "</td>\n\t<td".$this->_open_field_attrs($val).">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
+					$str .= "</td>\n\t<td".$this->_open_field_attrs($val)."><span class=\"displayonly noclone\">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</span></td>\n</tr>\n";
 				}
 				else
 				{
