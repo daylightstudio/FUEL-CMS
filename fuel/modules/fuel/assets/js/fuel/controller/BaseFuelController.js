@@ -376,6 +376,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#published').val('yes');
 			} else {
 				$('#published_yes').attr('checked', true);
+				$('#published_1').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;
@@ -389,6 +390,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#published').val('no');
 			} else {
 				$('#published_no').attr('checked', true);
+				$('#published_0').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;
@@ -404,6 +406,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#active').val('yes');
 			} else {
 				$('#active_yes').attr('checked', true);
+				$('#active_1').attr('checked', true);
 			}
 			
 			$('#form').submit();
@@ -420,6 +423,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#active').val('no');
 			} else {
 				$('#active_no').attr('checked', true);
+				$('#active_0').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;
