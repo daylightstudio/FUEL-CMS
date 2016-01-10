@@ -495,7 +495,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endC
 div#fuel_main_content { overflow: auto; position: absolute; top: 99px; left: 0px; right: 0px; bottom: 0px; }
 div#fuel_main_content .buttonbar li, #fuel_main_content_compact .buttonbar li { margin-right: 15px; }
 div#fuel_main_content_inner { }
-div#fuel_main_content_inner.has_related { position: absolute; top: 0; left: 0; right: 230px; bottom: 0;  }
+div#fuel_main_content_inner.has_related { position: absolute; top: 0; left: 0; right: 230px; bottom: 0; overflow: auto; }
 div#fuel_main_content_inner h3 { background-color: #f6f6f6; padding: 5px; margin-bottom: 10px; }
 div#fuel_main_content_inner { padding: 15px 37px; }
 div#fuel_main_content_inner .bullets { margin-left: 15px; }
