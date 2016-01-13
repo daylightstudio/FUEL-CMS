@@ -805,7 +805,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					//console.log($form.formBuilder())
 					//$form.formBuilder().call('inline_edit');
 					// refresh field with formBuilder jquery
-					fuel.fields.multi_field(context)
+					if (!$('#' + fieldId, context).hasClass('select2')){
+						fuel.fields.multi_field(context);
+					}
+
 					$('#form').formBuilder().initialize(context);
 					$('#' + fieldId, context).off('.addedit').on('change.addedit', function(){
 						changeField($(this));
