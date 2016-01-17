@@ -539,7 +539,10 @@ class Asset {
 		$asset_type = (!empty($assets_folders[$path])) ? $assets_folders[$path] : $CI->config->item($path);
 		$path = WEB_ROOT.$assets_path.$asset_type.$file;
 		//$path = str_replace('/', DIRECTORY_SEPARATOR, $path); // for windows
-		return $path;
+		if(realpath($path))
+			return realpath($path);
+		else
+			return $path;
 	}
 
 	// --------------------------------------------------------------------
