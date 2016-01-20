@@ -21,8 +21,9 @@ $config['assets_folders'] = array(
 	'swf' => 'swf/',
 	'media' => 'media/',
 	'captchas' => 'captchas/',
-	'docs' => 'docs/'
-	);
+	'docs' => 'docs/',
+	'cache' => 'cache/'
+);
 
 // makes paths to assets absolute
 $config['assets_absolute_path'] = FALSE;
@@ -60,8 +61,9 @@ $config['assets_output'] = FALSE;
 // force assets to recompile on each load
 $config['force_assets_recompile'] = FALSE;
 
-// cache folder relative to the web root folder... must be writable directory (default is the application/assets/cache folder)
-$config['assets_cache_folder'] = 'cache/';
+// cache folder relative to the web root folder and is the key to a folder specified under the assets_folders config value
+// ... must be writable directory (default is the application/assets/cache folder)
+$config['assets_cache_folder'] = 'cache';
 
 // time limit on gzip cache file in seconds
 $config['assets_gzip_cache_expiration'] = 3600;
