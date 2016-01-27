@@ -441,6 +441,21 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$multiFile.MultiFile({ namePattern: '$name___$i'});
 		}, 500);
 
+		$('.asset_delete', context).on('click', function(e){
+			e.preventDefault();
+			if (confirm('Are you sure you want to remove this image?')){
+				var deleteId = $(this).attr('href');
+				$(deleteId).val('');
+				$(this).closest('.asset_upload_preview').remove();
+			}
+		});
+
+		$('.deletable a', context).on('mouseover', function(e){
+			$(this).parent().find('.asset_delete').show();
+		}).on('mouseout', function(e){
+			$(this).parent().find('.asset_delete').hide();
+		});
+
 		fuel.fields.asset_field(context);
 	}
 
