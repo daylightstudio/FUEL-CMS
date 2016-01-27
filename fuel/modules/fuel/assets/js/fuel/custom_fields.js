@@ -443,7 +443,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		$('.asset_delete', context).on('click', function(e){
 			e.preventDefault();
-			if (confirm('Are you sure you want to remove this image?')){
+			if (confirm(fuel.lang('confirm_asset_remove'))){
 				var deleteId = $(this).attr('href');
 				$(deleteId).val('');
 				$(this).closest('.asset_upload_preview').remove();
