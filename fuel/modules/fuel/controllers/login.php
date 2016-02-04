@@ -254,7 +254,7 @@ class Login extends CI_Controller {
 	{
 		$token = $this->uri->segment(4);
 
-		if (empty($this->uri->segment(4)))
+		if (empty($token))
 		{
 			$this->session->set_flashdata('error', lang('pwd_reset_missing_token'));
 			redirect(site_url('fuel/login'));
