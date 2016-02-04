@@ -240,6 +240,15 @@ $config['set_upload_file_perms'] = FALSE;
 // Sets the site to offline mode. Uses "offline" view file to render page
 $config['offline'] = FALSE;
 
+// Sets the site password min length. An empty (e.g. NULL/0) value will not require a minimum length
+$config['password_min_length'] = NULL;
+
+// Sets the site password max length. An empty (e.g. NULL/0) value will not require a maximum length
+$config['password_max_length'] = NULL;
+
+// Sets specific patterns that the password must match (e.g. 'upper|lower|numbers|symbols')
+$config['password_pattern_match'] = NULL;
+
 // Restrict fuel to only certain ip addresses (can be string or an array of IP addresses)
 $config['restrict_to_remote_ip'] = array();
 

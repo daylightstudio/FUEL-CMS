@@ -23,6 +23,12 @@ $lang['error_invalid_login'] = 'Invalid login.';
 $lang['error_max_attempts'] = 'Sorry, but your login information was incorrect and you are temporarily locked out. Please try again in %s seconds.';
 $lang['error_empty_user_pwd'] = 'Please enter in a user name and password.';
 $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
+
+$lang['error_pwd_too_short'] = 'Password entered does not meet the %1s character min length requirement.';
+$lang['error_pwd_too_long'] = 'Password entered exceeds the %1s character max length requirement.';
+$lang['error_pwd_invalid'] = 'Please choose a stronger password. Try a mix of %1s.';
+
+
 $lang['error_invalid_email'] = 'The email address provided was not in the system.';
 $lang['error_invalid_password_match'] = 'The passwords don\'t match.';
 $lang['error_empty_email'] = 'Please enter in an email address.';
@@ -124,12 +130,20 @@ $lang['section_my_modules'] = 'My Modules';
 | Login/Password Reset
 |--------------------------------------------------------------------------
 */
-$lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
+//$lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
+$lang['pwd_reset_error'] = 'The email address entered does not have an active reset token, please resubmit the reset password form to get a new reset link.';
+$lang['pwd_reset_success'] = 'Your password has been successfully reset, please login.';
+
+$lang['pwd_reset_error_not_match'] = 'The passwords submitted do not match.';
+
+$lang['pwd_reset_missing_token'] = 'Missing or invalid reset token.';
+$lang['pwd_reset_success'] = 'Your password has been successfully reset, please login with your user name and password.';
+$lang['pwd_reset'] = 'An email with your password reset link has been sent.';
 $lang['pwd_reset_subject'] = "FUEL admin password reset request";
-$lang['pwd_reset_email'] = "Click the following link to confirm the reset of your FUEL password:\n%1s";
+$lang['pwd_reset_email'] = "Click the following link to reset your FUEL password:\n%1s";
 $lang['pwd_reset_subject_success'] = "FUEL admin password reset success";
-$lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
-$lang['pwd_reset_success'] = 'Your password was successfully reset and an email has been sent to you with the new password.';
+//$lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
+$lang['pwd_reset_email_success'] = 'An email with your password reset link has been sent.';
 $lang['cache_cleared'] = "Site cache cleared explicitly";
 
 
@@ -434,7 +448,7 @@ $lang['label_select_a_language'] = 'Select a language...';
 $lang['btn_list'] = 'List';
 $lang['btn_tree'] = 'Tree';
 $lang['btn_create'] = 'Create';
-$lang['btn_delete_multiple'] = 'Delete';
+$lang['btn_delete_multiple'] = 'Delete Multiple';
 $lang['btn_rearrange'] = 'Rearrange';
 $lang['btn_search'] = 'Search';
 $lang['btn_view'] = 'View';
