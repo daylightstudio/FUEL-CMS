@@ -256,7 +256,7 @@ class Fuel_users_model extends Base_module_model {
 			while (($len = strlen($string)) < $length)
 			{
 				$size = $length - $len;
-				$string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+				$string .= substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $size);
 			}
 
 			$reset_key = hash_hmac('sha256', $string, $hash_key);
