@@ -144,13 +144,13 @@ class Fuel_users_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Resets the password with a random value
+	 * Creates a password token for reset
 	 *
 	 * @access	public
 	 * @param	string The email address of the user to reset 
-	 * @return	string The new password
+	 * @return	string The new token or FALSE if no user is found with the provided email address
 	 */	
-	public function reset_password($email)
+	public function get_reset_password_token($email)
 	{
 		// check first to see if they exist in the system
 		$CI =& get_instance();
@@ -163,17 +163,110 @@ class Fuel_users_model extends Base_module_model {
 
 		if (!empty($user))
 		{
-			$reset_key = random_string('alnum', 8);
-			//$user['password'] = $new_pwd;
-			$user['reset_key'] = $reset_key;
+			// We now have a better, more secure way to do this so we aren't resetting the password and emailing it to them
+			//$reset_key = random_string('alnum', 8);
+
+			// Generate a token
+			$token = $this->generate_token();
+
+			//	$user['password'] = $new_pwd;
+			$user['reset_key'] = $token;
 			$where['email'] = $email;
+
 			unset($user['password']);
 			if ($this->save($user, $where))
 			{
-				return $reset_key;
+				return $token;
 			}
 		}
+
 		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validates that a reset token exists
+	 *
+	 * @access	public
+	 * @param	string The reset token
+ 	 * @return	bool
+	 */	
+	public function validate_reset_token($token)
+	{
+		$user = $this->find_one('(reset_key = "' . $token .'")', 'id', 'array');
+		return count($user);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Resets a password given a provided email and token
+	 *
+	 * @access	public
+	 * @param	string The email address of the user
+	 * @param	string The reset token
+	 * @param	string The new user password
+	 * @return	bool
+	 */	
+	public function reset_password_from_token($email, $token, $password)
+	{
+		if ($email && $token)
+		{
+			$user = $this->find_one('(reset_key = "' . $token . '" AND email = "' . $email . '")', 'id', 'array');
+
+			if (count($user))
+			{
+				if ($password)
+				{
+					$user['password'] = $password;
+					$user['reset_key'] = '';
+					$where['email'] = $email;
+
+					if ($this->save($user, $where))
+					{
+						return TRUE;
+					}
+				}
+			} 
+		}
+		
+		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Generates a token used for resetting your password
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function generate_token()
+	{
+		if (function_exists('openssl_random_pseudo_bytes'))
+		{
+			$hash_key =  $this->config->item('encryption_key');
+			$length = 16;      
+			$bytes = openssl_random_pseudo_bytes($length, $strong);
+
+			$length = 40;
+			$string = '';
+
+			while (($len = strlen($string)) < $length)
+			{
+				$size = $length - $len;
+				$string .= substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $size);
+			}
+
+			$reset_key = hash_hmac('sha256', $string, $hash_key);
+		}
+		else
+		{
+			$reset_key = sha1(uniqid($this->config->item('encryption_key'), TRUE));
+		}
+
+		return $reset_key;
 	}
 	
 	// --------------------------------------------------------------------
@@ -513,8 +606,91 @@ class Fuel_users_model extends Base_module_model {
 				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
 		}
+
+		if (!empty($values['password']))
+		{
+			$this->add_validation('password', array(&$this, 'check_password_strength'), lang('error_val_empty_or_already_exists', lang('form_label_password')));
+		}
+					
+
 		unset($values['super_admin']); // can't save from UI as security precaution'
 		return $values;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validates that the password meets the required strength specified in the config (under Security config parameters)
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */	
+	public function check_password_strength($value)
+	{
+		if ($this->CI->fuel->config('password_min_length') AND is_numeric($this->CI->fuel->config('password_min_length')))
+		{
+			if (strlen($value) < $this->CI->fuel->config('password_min_length'))
+			{
+				$this->add_error(lang('error_pwd_too_short', $this->CI->fuel->config('password_min_length')));
+				return FALSE;
+			}
+		}
+
+		if ($this->CI->fuel->config('password_max_length') AND is_numeric($this->CI->fuel->config('password_max_length')))
+		{
+			if (strlen($value) > $this->CI->fuel->config('password_max_length'))
+			{
+				$this->add_error(lang('error_pwd_too_long', $this->CI->fuel->config('password_max_length')));
+				return FALSE;
+			}
+		}
+
+		if ($this->CI->fuel->config('password_pattern_match'))
+		{
+			$rules_array = explode("|", strtolower($this->CI->fuel->config('password_pattern_match')));
+
+			$regex = '/^';
+
+			if (in_array('lower', $rules_array) OR in_array('lowercase', $rules_array))
+			{
+				$regex .= '(?=.*[a-z])';
+			}
+
+			if (in_array('upper', $rules_array) OR in_array('uppercase', $rules_array))
+			{
+				$regex .= '(?=.*[A-Z])';
+			}
+
+			if (in_array('numbers', $rules_array))
+			{
+				$regex .= '(?=.*\d)';
+			}
+
+			if (in_array('symbols', $rules_array))
+			{
+				$regex .= '(?=.*[-+_!@#$%^&*.,?])';
+			}
+
+			$regex .= '.+$/';
+
+			if(!preg_match($regex, $value))
+			{
+
+				if (count($rules_array) > 1)
+				{
+					$rules_array[count($rules_array)-1] = " and " . $rules_array[count($rules_array)-1];
+				}
+
+				$missing = implode(", ", $rules_array);
+				$this->add_error(lang('error_pwd_invalid', $missing));
+				return FALSE;
+
+			}
+		}
+
+		return TRUE;
+
 	}
 
 	// --------------------------------------------------------------------

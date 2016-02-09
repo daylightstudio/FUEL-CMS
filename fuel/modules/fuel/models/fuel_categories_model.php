@@ -200,7 +200,7 @@ class Fuel_category_model extends Base_module_record {
 			$model = $module->model();
 			if (!empty($model->foreign_keys))
 			{
-				// loop through the has_many relationships to see if any have a "tags" relationship
+				// loop through the has_many relationships to see if any have a "categories" relationship
 				foreach($model->foreign_keys as $key => $mod)
 				{
 					$mod_name = $module->name();

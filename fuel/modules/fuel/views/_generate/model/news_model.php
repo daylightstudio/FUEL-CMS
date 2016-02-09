@@ -81,9 +81,9 @@ class News_model extends Base_posts_model {
 		return $values;
 	}
 
-	public function _common_query()
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
-		parent::_common_query();
+		parent::_common_query($display_unpublished_if_logged_in);
 	}
 }
 

@@ -116,7 +116,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	 */	
 	public function form_fields($values = array(), $related = array()){
 		$fields = parent::form_fields($values, $related);
-		$fields['value']['class'] = 'markitup';
+		$fields['value']['editor'] = 'markitup';
 		return $fields;
 	}
 

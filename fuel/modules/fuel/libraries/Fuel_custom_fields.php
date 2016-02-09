@@ -277,7 +277,7 @@ class Fuel_custom_fields {
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= ' ';
-				$preview .= '<a href="'.$asset_path.'" target="_blank" class="noclone">';
+				$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';

@@ -441,6 +441,21 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$multiFile.MultiFile({ namePattern: '$name___$i'});
 		}, 500);
 
+		$('.asset_delete', context).on('click', function(e){
+			e.preventDefault();
+			if (confirm(fuel.lang('confirm_asset_remove'))){
+				var deleteId = $(this).attr('href');
+				$(deleteId).val('');
+				$(this).closest('.asset_upload_preview').remove();
+			}
+		});
+
+		$('.deletable a', context).on('mouseover', function(e){
+			$(this).parent().find('.asset_delete').show();
+		}).on('mouseout', function(e){
+			$(this).parent().find('.asset_delete').hide();
+		});
+
 		fuel.fields.asset_field(context);
 	}
 
@@ -811,7 +826,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					//console.log($form.formBuilder())
 					//$form.formBuilder().call('inline_edit');
 					// refresh field with formBuilder jquery
-					fuel.fields.multi_field(context)
+					if (!$('#' + fieldId, context).hasClass('select2')){
+						fuel.fields.multi_field(context);
+					}
+
 					$('#form').formBuilder().initialize(context);
 					$('#' + fieldId, context).off('.addedit').on('change.addedit', function(){
 						changeField($(this));

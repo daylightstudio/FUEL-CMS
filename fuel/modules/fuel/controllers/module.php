@@ -2020,6 +2020,12 @@ class Module extends Fuel_base_controller {
 			$this->load->dbutil();
 			$this->load->helper('download');
 
+			$filters = $this->model->filters($this->filters);
+			if (is_object($filters) && ($filters instanceof Base_model_fields)) {
+				$filters = $filters->get_fields();
+			}
+			$this->filters = array_merge($this->filters, $filters);
+	
 			$filename = $this->module.'_'.date('Y-m-d').'.csv';
 			$params = $this->_list_process();
 			$this->_filter_list($params);
