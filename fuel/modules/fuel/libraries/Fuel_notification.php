@@ -161,32 +161,6 @@ class Fuel_notification extends Fuel_base_library {
 	{
 		return $this->use_dev_mode == TRUE AND (is_dev_mode());
 	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns an array of error messages if any were set
-	 *
-	 * @access	public
-	 * @return	array
-	 */	
-	public function errors()
-	{
-		return $this->_errors;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Determines whether there are any errors on the object
-	 *
-	 * @access	public
-	 * @return	boolean
-	 */	
-	public function has_errors()
-	{
-		return (count($this->_errors) > 0);
-	}
 
 }
 
