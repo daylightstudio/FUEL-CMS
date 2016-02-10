@@ -151,9 +151,10 @@ class Fuel_tags_model extends Base_module_model {
 							}
 							
 							// test if the instantiated model uses the fuel_tags table or not
-							$model = $this->load->module_model($mod, $model);
+							$this->load->module_model($mod, $model);
+							$model =& $this->CI->$model;
 
-							if ($model->table_name() == $model->tables('fuel_tags'))
+							if (method_exists($model, 'table_name') AND $model->table_name() == $model->tables('fuel_tags'))
 							{
 								$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 							}

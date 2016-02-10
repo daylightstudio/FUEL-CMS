@@ -329,7 +329,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			if ($show_error)
 			{
-				show_error(lang('error_no_access'));
+				show_error(lang('error_no_access', fuel_url()));
 			}
 			else
 			{

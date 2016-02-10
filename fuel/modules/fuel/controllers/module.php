@@ -22,7 +22,7 @@ class Module extends Fuel_base_controller {
 
 		if (empty($this->module))
 		{
-			show_error(lang('cannot_determine_module'));
+			show_error(lang('cannot_determine_module', fuel_url()));
 		}
 		
 		$params = array();
@@ -794,7 +794,7 @@ class Module extends Fuel_base_controller {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -1000,7 +1000,7 @@ class Module extends Fuel_base_controller {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -1607,7 +1607,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'delete'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -1749,7 +1749,7 @@ class Module extends Fuel_base_controller {
 	{
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'edit'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if ( ! empty($_POST['fuel_restore_version']) AND ! empty($_POST['fuel_restore_ref_id']))
@@ -1785,7 +1785,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'edit') OR ! $this->fuel->auth->has_permission($this->permission, 'delete'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$success = FALSE;
@@ -2011,7 +2011,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'export'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if ( ! empty($_POST))
