@@ -638,7 +638,7 @@ class Form_builder {
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
-				$str .= $this->create_label($val, TRUE);
+				$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label'];
 				$str .= "</span>";
 				$str .= "<span".$this->_open_field_attrs($val).">";
 				$str .= $this->create_field($val, FALSE);
