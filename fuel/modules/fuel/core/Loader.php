@@ -551,9 +551,6 @@ class Fuel_Loader extends CI_Loader
 					$CI =& get_instance();
 					if ( ! isset($CI->$object_name))
 					{
-						echo '<pre>';
-						print_r($class);
-						echo '</pre>';
 						return $this->_ci_init_library($class, '', $params, $object_name);
 					}
 				}

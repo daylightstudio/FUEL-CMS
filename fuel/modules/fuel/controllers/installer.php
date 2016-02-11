@@ -50,7 +50,8 @@ class Installer extends Fuel_base_controller {
 		{
 			// need to load it the old fashioned way because it is not enabled by default
 			$module_file = MODULES_PATH.$module.'/libraries/Fuel_'.$module.'.php';
-
+			$this->load->add_package_path(MODULES_PATH.$module);
+			
 			if (file_exists($module_file))
 			{
 				$init = array('name' => $module, 'folder' => $module);
