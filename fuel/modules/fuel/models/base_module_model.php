@@ -1484,7 +1484,7 @@ class Base_module_model extends MY_Model {
 	*/
 	public function display_name($values)
 	{
-		$module =& $this->get_module();
+		$module = $this->get_module();
 
 		$key = $module->info('display_field');
 

@@ -1082,7 +1082,7 @@ class Module extends Fuel_base_controller {
         $msg_data = $this->model->display_name($data);
         if ( ! empty($msg_data))
 		{
-			$crumbs[''] = character_limiter(strip_tags($msg_data), 50);
+			$crumbs[''] = character_limiter(strip_tags($msg_data), 100);
 		}
 
 		$this->fuel->admin->set_titlebar($crumbs);
@@ -1717,7 +1717,7 @@ class Module extends Fuel_base_controller {
 			$vars['error'] = $this->model->get_errors();
 
 			$crumbs = array($this->module_uri => $this->module_name);
-			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 50);
+			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 100);
 
 			$this->fuel->admin->set_titlebar($crumbs);
 
