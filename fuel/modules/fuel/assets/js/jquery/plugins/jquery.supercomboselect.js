@@ -220,10 +220,11 @@
 								// commented out because this can be slow with big lists
 								refreshLists();
 							}
-							var val = $(this).val().toLowerCase();
+							var val = String($(this).val()).toLowerCase();
+
 							if (val.length){
 								var filtered = $('#' + leftID + ' li:not(.optgrp)').filter(function(){
-									var text = $(this).data('label');
+									var text = String($(this).data('label'));
 									if (!text){
 										return false;
 									}
