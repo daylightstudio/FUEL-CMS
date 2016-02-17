@@ -5,10 +5,14 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 	},
 
 	add_edit : function(){
-		//fuel.controller.BaseFuelController.prototype.add_edit.call(this);
 		this._super();
-		var sendEmailHTML = '<label for="send_email" id="send_email_notification">&nbsp; <input id="send_email" name="send_email" type="checkbox" value="1" /> ' + this.lang('form_label_send_email_notification') + '</lael>';
 
+		$('#is_invite').change(function() {
+			$('#new_password').prop('disabled', function(i, v) { return !v; });
+			$('#confirm_password').prop('disabled', function(i, v) { return !v; });
+		});
+		
+		var sendEmailHTML = '<label for="send_email" id="send_email_notification">&nbsp; <input id="send_email" name="send_email" type="checkbox" value="1" /> ' + this.lang('form_label_send_email_notification') + '</lael>';
 		
 		$('#confirm_password').after(sendEmailHTML);
 
