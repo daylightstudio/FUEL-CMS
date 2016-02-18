@@ -34,7 +34,7 @@ class Fuel_users_model extends Base_module_model {
 	public $required = array('user_name', 'email', 'first_name', 'last_name'); // User name, email, first name, and last name are required
 	public $filters = array('first_name', 'last_name', 'user_name'); // Additional fields that will be searched
 	public $unique_fields = array('user_name'); // User name is a unique field
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model'))); // Users have a "has_many" relationship with permissions
+	public $has_many = array('permissions' => array(FUEL_FOLDER => 'fuel_permissions_model')); // Users have a "has_many" relationship with permissions
 	
 	// --------------------------------------------------------------------
 	
