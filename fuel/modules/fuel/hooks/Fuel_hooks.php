@@ -110,7 +110,8 @@ class Fuel_hooks
 	public function post_controller()
 	{
 		$CI =& get_instance();
-		$CI->output->enable_profiler($CI->config->item('enable_profiler'));
+		$enable = $CI->config->item('enable_profiler') || $CI->fuel->config('enable_profiler');
+		$CI->output->enable_profiler($enable);
 	}
 }
 
