@@ -91,7 +91,7 @@ class Fuel_auth extends Fuel_base_library {
 			else
 			{
 				$this->CI->fuel->logs->write(lang('auth_log_failed_updating_login_info', $valid_user['user_name'], $this->CI->input->ip_address()), 'debug');
-				FALSE;
+				return FALSE;
 			}
 		}
 

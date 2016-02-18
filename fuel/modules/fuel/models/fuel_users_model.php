@@ -34,7 +34,7 @@ class Fuel_users_model extends Base_module_model {
 	public $required = array('user_name', 'email', 'first_name', 'last_name'); // User name, email, first name, and last name are required
 	public $filters = array('first_name', 'last_name', 'user_name'); // Additional fields that will be searched
 	public $unique_fields = array('user_name'); // User name is a unique field
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model'))); // Users have a "has_many" relationship with permissions
+	public $has_many = array('permissions' => array(FUEL_FOLDER => 'fuel_permissions_model')); // Users have a "has_many" relationship with permissions
 	
 	// --------------------------------------------------------------------
 	
@@ -377,11 +377,13 @@ class Fuel_users_model extends Base_module_model {
 			$user_id = $values['id'];
 		}
 
+		$fields['is_invite'] = array('label' => lang('form_label_new_invite'), 'type' => 'checkbox', 'id' => 'is_invite');
+
 		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
 
 		if (!empty($user_id))
 		{
-			$fields['new_password'] = array('label' => lang('form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
+			$fields['new_password'] = array('label' => lang(	'form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
 		}
 		else
 		{
@@ -417,6 +419,7 @@ class Fuel_users_model extends Base_module_model {
 		$perm_fields = array();
 		$user = $CI->fuel->auth->user_data();
 
+
 		//if you are a super admin or a user that has permissions to assign permissions and you are not editing yourself, then display the permissions
 		if ($CI->fuel->auth->has_permission('permissions') AND 
 			(($user['id'] != $user_id) AND // can't edit yourself's permissions
@@ -424,6 +427,7 @@ class Fuel_users_model extends Base_module_model {
 			($CI->fuel->auth->has_permission('permissions') AND empty($values['id']))) // for creating new users so as to show permissions if you are a super admin
 			)
 		{
+
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
 			$fields['permissions']['mode'] = 'checkbox';
@@ -589,12 +593,16 @@ class Fuel_users_model extends Base_module_model {
 		// for new 
 		if (empty($values['id']))
 		{
+
+
 			$this->required[] = 'password';
+
 			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', lang('form_label_email')));
 			if (isset($this->normalized_save_data['confirm_password']))
 			{
 				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
+
 		}
 		
 		// for editing
@@ -612,6 +620,11 @@ class Fuel_users_model extends Base_module_model {
 			$this->add_validation('password', array(&$this, 'check_password_strength'), lang('error_val_empty_or_already_exists', lang('form_label_password')));
 		}
 					
+		if (isset($this->normalized_save_data['is_invite']) AND $this->normalized_save_data['is_invite'] == 1)
+		{
+			$this->remove_validation('password');
+			unset($this->required[array_search('password', $this->required)]);
+		}
 
 		unset($values['super_admin']); // can't save from UI as security precaution'
 		return $values;
@@ -706,11 +719,11 @@ class Fuel_users_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
+
 		if ((isset($values['id']) AND $valid_user['id'] == $values['id']) AND (isset($values['active']) AND $values['active'] == 'no'))
 		{
 			show_error(lang('error_cannot_deactivate_yourself'));
 		}
-
 
 		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
 		if (!empty($values['password'])) 
@@ -720,6 +733,8 @@ class Fuel_users_model extends Base_module_model {
 			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
 		}
 
+		$token = $this->generate_token();
+		$values['reset_key'] = $token;
 		return $values;
 	}
 
@@ -746,7 +761,7 @@ class Fuel_users_model extends Base_module_model {
 			// {
 			// 	$CI->fuel->auth->set_user_data('password', $values['password']);
 			// }
-
+		
 			if (!empty($values['language']))
 			{
 				$CI->fuel->auth->set_user_data('language', $values['language']);
@@ -758,7 +773,7 @@ class Fuel_users_model extends Base_module_model {
 			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
 		}
 
-		$this->_send_email($values['id']);
+		$this->_send_email($values['reset_key']);
 		return $values;
 	}
 
@@ -771,24 +786,27 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	int The user ID
 	 * @return	void
 	 */	
-	protected function _send_email($id)
+	protected function _send_email($token)
 	{
 		$CI =& get_instance();
-		if (!empty($id) AND !has_errors() AND isset($_POST['send_email']) AND (!empty($_POST['password']) OR !empty($_POST['new_password'])))
-		{
-			$password = (!empty($_POST['password'])) ? $CI->input->post('password') : $CI->input->post('new_password');
 
-			$msg = lang('new_user_email', site_url('fuel/login'), $CI->input->post('user_name'), $password);
+		if (!has_errors() AND isset($_POST['is_invite']) AND $_POST['is_invite'] == 1 AND isset($_POST['email'])) {
+
+			$msg = lang('new_user_email') . '<a href="'.site_url().'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>';					
+
 			$params['to'] = $CI->input->post('email');
 			$params['subject'] = lang('new_user_email_subject');
 			$params['message'] = $msg;
 			$params['use_dev_mode'] = FALSE;
+			$params['mailtype'] = 'html';
+
 			if (!$CI->fuel->notification->send($params))
 			{
 				$CI->fuel->logs->write($CI->fuel->notification->last_error(), 'debug');
 				add_error(lang('error_sending_email', $CI->input->post('email')));
 			}
-		}
+
+		} 
 	}
 
 	// --------------------------------------------------------------------

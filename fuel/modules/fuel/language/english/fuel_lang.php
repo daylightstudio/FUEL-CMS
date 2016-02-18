@@ -373,7 +373,7 @@ User name: %2s
 Password: %3s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
-
+$lang['new_user_email'] = 'Click the following link to set your FUEL password: ';
 
 /*
 |--------------------------------------------------------------------------
@@ -498,6 +498,7 @@ $lang['form_label_super_admin'] = 'Super admin';
 $lang['form_label_password'] = 'Password';
 $lang['form_label_confirm_password'] = 'Confirm password';
 $lang['form_label_new_password'] = 'New password';
+$lang['form_label_new_invite'] = 'Send new user invite';
 $lang['form_label_description'] = 'Description';
 $lang['form_label_entry_date'] = 'Entry date';
 $lang['form_label_message'] = 'Message';

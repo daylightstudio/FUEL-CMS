@@ -36,6 +36,7 @@ class Fuel_notification extends Fuel_base_library {
 	public $message = ''; // the message
 	public $attachments = array(); // attachments
 	public $use_dev_mode = TRUE; // whether to use dev mode or not which means it will send to the dev_email address in the config
+	public $mailtype = 'text';
 
 	// --------------------------------------------------------------------
 	
@@ -85,6 +86,8 @@ class Fuel_notification extends Fuel_base_library {
 		$this->CI->email->from($this->from, $this->from_name);
 		$this->CI->email->subject($this->subject);
 		$this->CI->email->message($this->message);
+		$this->CI->email->set_mailtype($this->mailtype);
+
 		if (!empty($this->attachments))
 		{
 			if (is_array($this->attachments))

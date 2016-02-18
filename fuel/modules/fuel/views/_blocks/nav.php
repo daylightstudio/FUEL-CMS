@@ -41,8 +41,8 @@
 						$perm = $mods[$key];
 					}
 				}
-				
-				if (($this->fuel->auth->has_permission($perm)) || $perm == 'dashboard')
+
+				if ($this->fuel->auth->has_permission($perm) OR $perm == 'dashboard')
 				{
 					if  (!$header_written)
 					{
