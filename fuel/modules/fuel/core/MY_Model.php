@@ -4363,20 +4363,21 @@ class MY_Model extends CI_Model {
 		$find_where = substr($name, 8);
 
 		$find_and_or = preg_split("/_by_|(_and_)|(_or_)/", $find_where, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$find_and_or = array_values(array_filter($find_and_or));
-		if (!empty($find_and_or) AND strncmp($name, 'find', 4) == 0)
+		$find_and_or_cleaned = array_values(array_filter($find_and_or));
+
+		if (!empty($find_and_or_cleaned) AND strncmp($name, 'find', 4) == 0)
 		{
 			$arg_index = 0;
-			foreach($find_and_or as $key => $find)
+			foreach($find_and_or_cleaned as $key => $find)
 			{
 				if ($find == '_and_')
 				{
-					$this->db->where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 				else if ($find == '_or_')
 				{
-					$this->db->or_where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->or_where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 			}
@@ -4394,7 +4395,7 @@ class MY_Model extends CI_Model {
 			}
 
 			$other_args = array_slice($args, count($find_and_or) -1);
-			
+		
 			if (!empty($other_args[0])) $this->db->order_by($other_args[0]);
 			if (!empty($limit)) $this->db->limit($limit);
 			if (!empty($other_args[1])) $this->db->offset($other_args[2]);
