@@ -78,7 +78,7 @@ $lang['logged_in'] = "%s logged in";
 $lang['logged_out'] = "%s logged out";
 $lang['dev_pwd_instructions'] = 'This site is currently in development and requires a password to view.';
 $lang['login_forgot_pwd'] = 'Forgot password?';
-$lang['login_reset_pwd'] = 'Reset Password';
+$lang['login_reset_pwd'] = 'Set New Password';
 $lang['login_btn'] = 'Login';
 $lang['logout_restore_original_user'] = 'Restore original user';
 
