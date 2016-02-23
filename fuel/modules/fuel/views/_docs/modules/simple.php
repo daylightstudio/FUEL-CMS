@@ -627,7 +627,7 @@ public $related_items_class = ''; // a class that can extend Base_model_related_
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 	...
@@ -693,7 +693,7 @@ class Article_fields extends Base_model_list_items {
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 	...

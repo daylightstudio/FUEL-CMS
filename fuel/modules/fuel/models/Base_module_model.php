@@ -24,7 +24,7 @@
  * 	<code>
  * 	&lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
  * 	
- * 	require_once(FUEL_PATH.'models/base_module_model.php');
+ * 	require_once(FUEL_PATH.'models/Base_module_model.php');
  * 	
  * 	class My_super_model extends Base_module_model {
  * 	...
@@ -38,7 +38,7 @@
  */
 
 require_once(APPPATH.'core/MY_Model.php');
-require_once('base_model_helpers.php');
+require_once('Base_model_helpers.php');
 
 class Base_module_model extends MY_Model {
 	

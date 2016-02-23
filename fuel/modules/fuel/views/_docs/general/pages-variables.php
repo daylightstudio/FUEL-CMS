@@ -133,7 +133,7 @@ CREATE TABLE `news` (
 <p>The following is the news model we are using. For a tutorial on creating modules specifically <a href="<?=user_guide_url('modules/tutorial')?>">click here</a>.</p>
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class News_model extends Base_module_model {
 

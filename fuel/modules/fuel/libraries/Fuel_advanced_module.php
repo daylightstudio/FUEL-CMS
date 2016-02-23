@@ -1114,7 +1114,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 			if (!class_exists('Base_module_model'))
 			{
 				require_once(BASEPATH.'core/Model.php');
-				require_once(FUEL_PATH.'models/base_module_model.php');
+				require_once(FUEL_PATH.'models/Base_module_model.php');
 			}
 			
 			Base_module_model::$tables = array_merge(Base_module_model::$tables, $this->CI->config->item('tables'));

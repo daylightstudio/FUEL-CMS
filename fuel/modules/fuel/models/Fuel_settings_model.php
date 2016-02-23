@@ -27,7 +27,7 @@
  * @link		http://docs.getfuelcms.com/models/fuel_settings_model
  */
 
-require_once('base_module_model.php');
+require_once('Base_module_model.php');
 
 class Fuel_settings_model extends Base_module_model
 {

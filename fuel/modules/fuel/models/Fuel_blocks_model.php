@@ -27,7 +27,7 @@
  * @link		http://docs.getfuelcms.com/models/fuel_blocks_model
  */
 
-require_once('base_module_model.php');
+require_once('Base_module_model.php');
 
 class Fuel_blocks_model extends Base_module_model {
 	

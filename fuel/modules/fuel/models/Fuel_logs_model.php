@@ -27,7 +27,7 @@
  * @link		http://docs.getfuelcms.com/models/fuel_logs_model
  */
 
-require_once('base_module_model.php');
+require_once('Base_module_model.php');
 
 class Fuel_logs_model extends Base_module_model {
 
