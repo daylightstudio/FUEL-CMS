@@ -12,7 +12,7 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 			$('#confirm_password').prop('disabled', function(i, v) { return !v; });
 		});
 		
-		var sendEmailHTML = '<label for="send_email" id="send_email_notification">&nbsp; <input id="send_email" name="send_email" type="checkbox" value="1" /> ' + this.lang('form_label_send_email_notification') + '</lael>';
+		/*var sendEmailHTML = '<label for="send_email" id="send_email_notification">&nbsp; <input id="send_email" name="send_email" type="checkbox" value="1" /> ' + this.lang('form_label_send_email_notification') + '</lael>';
 		
 		$('#confirm_password').after(sendEmailHTML);
 
@@ -27,7 +27,7 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 				$send_email_notification.hide();
 				$send_email.attr('disabled', 'disabled');
 			}
-		});
+		});*/
 		
 		// trigger keyup initially just in case the values are the same
 		$('#password,#confirm_password,#new_password').keyup();
