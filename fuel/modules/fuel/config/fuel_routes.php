@@ -37,9 +37,10 @@ if (USE_FUEL_ROUTES)
 
 	foreach ($modules as $module)
 	{
+		$module_controller = ucfirst($module);
 		// Check FUEL folder for controller first... if not there then we use the default module to map to
-		if ( ! file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)
-				&& ! file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT)
+		if ( ! file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module_controller.'.php')
+				&& ! file_exists($module_folder.$module.'/controllers/'.$module_controller.'_module.php')
 		)
 		{
 			$route[FUEL_ROUTE.$module] = FUEL_FOLDER.'/module';
@@ -47,14 +48,14 @@ if (USE_FUEL_ROUTES)
 		}
 		
 		// Check if controller does exist in FUEL folder and if so, create the proper ROUTE if it does not equal the FUEL_FOLDER
-		else if (file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module.EXT)) 
+		else if (file_exists($module_folder.FUEL_FOLDER.'/controllers/'.$module_controller.'.php')) 
 		{
 			$route[FUEL_ROUTE.$module] = FUEL_FOLDER.'/'.$module;
 			$route[FUEL_ROUTE.$module.'/(.*)'] = FUEL_FOLDER.'/'.$module.'/$1';
 		}
 
 		// Check module specific folder next
-		else if (file_exists($module_folder.$module.'/controllers/'.$module.'_module'.EXT))
+		else if (file_exists($module_folder.$module.'/controllers/'.$module_controller.'_module.php'))
 		{
 			$route[FUEL_ROUTE.$module] = $module.'/'.$module.'_module';
 			$route[FUEL_ROUTE.$module.'/(.*)'] = $module.'/'.$module.'_module/$1';
