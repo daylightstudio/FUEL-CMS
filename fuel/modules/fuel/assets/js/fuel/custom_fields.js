@@ -153,6 +153,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var ckId = $(elem).attr('id');
 			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 			
+			// Hide preview button until the editor fully created
+			$('#'+ckId+'_preview').hide();
+
 			// used in cases where repeatable fields cause issues
 			if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 				return;
@@ -297,14 +300,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 					//if (!$('#cke_' + ckId).is(':hidden')){
 					if (!ckInstance.hidden){
+						// Hide ckEditor
 						ckInstance.hidden = true;
-						if (!$elem.hasClass('markItUpEditor')){
-							createMarkItUp(elem);
-							$elem.show();
-						}
 						$('#cke_' + ckId).hide();
+
+						// Show markItUp editor
 						$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-						//$elem.closest('.html').show();
 					
 						$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 					
@@ -314,8 +315,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 						// update the info
 						ckInstance.updateElement();
-					
-					
 					} else {
 
 						ckInstance.hidden = false;
@@ -332,7 +331,25 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				
 					fixCKEditorOutput(elem);
 					return false;
-				})
+				});
+
+				// Used timeout to wait for ckEditor fully created to prevent error.
+				setTimeout(function(){
+					$elem = $(elem);
+					// Create markItUpEditor
+					if (!$elem.hasClass('markItUpEditor')){
+						createMarkItUp(elem);
+						$elem.show();
+
+						// used instead of show/hide because of issue with it not showing textarea
+						$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'});
+					}
+					
+					fixCKEditorOutput(elem);
+
+					// Show the preview button
+					$('#'+ckId+'_preview').show();
+				},1000);
 			}
 
 		}
