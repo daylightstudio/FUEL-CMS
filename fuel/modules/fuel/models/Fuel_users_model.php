@@ -163,13 +163,10 @@ class Fuel_users_model extends Base_module_model {
 
 		if (!empty($user))
 		{
-			// We now have a better, more secure way to do this so we aren't resetting the password and emailing it to them
-			//$reset_key = random_string('alnum', 8);
-
 			// Generate a token
 			$token = $this->generate_token();
 
-			//	$user['password'] = $new_pwd;
+			// $user['password'] = $new_pwd;
 			$user['reset_key'] = $token;
 			$where['email'] = $email;
 
@@ -728,14 +725,18 @@ class Fuel_users_model extends Base_module_model {
 		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
 		if (!empty($values['password'])) 
 		{
-
 			$values['salt'] = substr($this->salt(), 0, 32);
 			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
 		}
 
-		$token = $this->generate_token();
-		$values['reset_key'] = $token;
+		if ($this->_is_invite())
+		{
+			$token = $this->generate_token();
+			$values['reset_key']= $token;
+		}
+
 		return $values;
+
 	}
 
 	// --------------------------------------------------------------------
@@ -769,28 +770,29 @@ class Fuel_users_model extends Base_module_model {
 			
 		}
 
-		if ( ! empty($this->normalized_save_data['new_password'])) {
+		if ( ! empty($this->normalized_save_data['new_password']))
+		{
 			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
 		}
-
-		$this->_send_email($values['reset_key']);
+	 
+		$this->_send_email($values['reset_key']); 
 		return $values;
 	}
 
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Protected method that will send out a passowrd change email to a user
+	 * Protected method that will send out a password change email to a new user
 	 *
 	 * @access	protected
 	 * @param	int The user ID
 	 * @return	void
 	 */	
-	protected function _send_email($token)
+	protected function _send_email($token) 
 	{
 		$CI =& get_instance();
 
-		if (!has_errors() AND isset($_POST['is_invite']) AND $_POST['is_invite'] == 1 AND isset($_POST['email'])) {
+		if ($this->_is_invite()) {
 
 			$msg = lang('new_user_email') . '<a href="'.site_url().'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>';					
 
@@ -800,6 +802,7 @@ class Fuel_users_model extends Base_module_model {
 			$params['use_dev_mode'] = FALSE;
 			$params['mailtype'] = 'html';
 
+
 			if (!$CI->fuel->notification->send($params))
 			{
 				$CI->fuel->logs->write($CI->fuel->notification->last_error(), 'debug');
@@ -807,6 +810,19 @@ class Fuel_users_model extends Base_module_model {
 			}
 
 		} 
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected method that checks to see if the save request is an invite request
+	 *
+	 * @access	protected
+	 * @return	boolean
+	 */	
+	protected function _is_invite()
+	{
+		return (!has_errors() AND isset($_POST['is_invite']) AND $_POST['is_invite'] == 1 AND isset($_POST['email'])) ? TRUE : FALSE;
 	}
 
 	// --------------------------------------------------------------------

@@ -73,7 +73,13 @@ class Fuel_hooks
 		if (!USE_FUEL_ROUTES)
 		{
 			$CI =& get_instance();
+
 			$CI->load->helper('convert');
+
+			// Offline maintenance page not required password
+			if( preg_match('#^offline(/?)$#', uri_path(FALSE)) ){
+				return;
+			}
 
 			if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
@@ -98,10 +104,37 @@ class Fuel_hooks
 		if (!USE_FUEL_ROUTES)
 		{
 			$CI =& get_instance();
+
+			// Already in offline page
+			if( preg_match('#^offline(/?)$#', uri_path(FALSE)) ){
+				return;
+			}
+
 			if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
-				echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
-				exit();
+
+				// By pass offline page if password inputed.
+				$CI->load->library('session');
+				if ($CI->session->userdata('dev_password'))
+				{
+					return;
+				}
+
+				// Display allowed page
+				$allowed_uri = $CI->fuel->config('offline_allowed_uri');
+				if( !empty( $allowed_uri ) ) {
+					foreach( $allowed_uri as $uri_item ) {
+						if( preg_match('#^'.$uri_item.'(/?)$#', uri_path(FALSE)) ){
+							return;
+						}
+					}
+				}
+
+				// Instead of using render, changed to redirect
+				redirect('offline');
+
+				//echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
+				//exit();
 			}
 		}
 	}

@@ -249,6 +249,12 @@ $config['password_max_length'] = NULL;
 // Sets specific patterns that the password must match (e.g. 'upper|lower|numbers|symbols')
 $config['password_pattern_match'] = NULL;
 
+// List of uri allowed to access when site switched to offline mode.
+// Eg.:
+// To allow "www.example.com/UAT"
+// $config['offline_allowed_uri'] = array('UAT');
+$config['offline_allowed_uri'] = array();
+
 // Restrict fuel to only certain ip addresses (can be string or an array of IP addresses)
 $config['restrict_to_remote_ip'] = array();
 
