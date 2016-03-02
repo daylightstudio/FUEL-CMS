@@ -177,6 +177,7 @@ class Login extends CI_Controller {
 		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
 	}
 
+	// THIS IS A PASSWORD RESET TOKEN CREATION EMAIL SENDING 
 	public function pwd_reset()
 	{
 		if ( ! $this->fuel->config('allow_forgotten_password')) show_404();
@@ -191,7 +192,7 @@ class Login extends CI_Controller {
 
 				if ( ! empty($user['email']))
 				{
-					// $users = $this->fuel->users;
+					// This generates and saves a token to the user model, returns the token string.
 					$token = $this->fuel_users_model->get_reset_password_token($user['email']);
 
 					if ($token !== FALSE)
@@ -250,6 +251,7 @@ class Login extends CI_Controller {
 		$this->load->module_view(FUEL_FOLDER, 'pwd_reset', $vars);
 	}
 
+	// THIS HANDLES A POST REQUEST FOR USER SETTING A NEW PASSWORD
 	public function reset_password() 
 	{
 		$token = $this->uri->segment(4);
