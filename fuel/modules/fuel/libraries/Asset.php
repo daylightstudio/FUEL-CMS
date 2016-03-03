@@ -1131,7 +1131,7 @@ class Asset {
 		$CI =& get_instance();
 		$files = (array) $files;
 		$cache_file_name = '';
-		$cache_dir = $this->assets_server_path($this->assets_cache_folder, 'cache', $module);
+		$cache_dir = $this->assets_server_path($this->assets_cache_folder, '', $module);
 		
 		$return = array();
 	
