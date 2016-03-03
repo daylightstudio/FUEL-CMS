@@ -39,9 +39,6 @@ class My_profile extends Fuel_base_controller {
 		$values = array('id' => $id);
 		$fields = $this->fuel_users_model->form_fields($values);
 
-		// remove permissions
-		unset($fields['permissions']);
-
 		// get saved data
 		$saved = array();
 
@@ -51,7 +48,7 @@ class My_profile extends Fuel_base_controller {
 		}
 
 		// remove active from field list to prevent them from updating it
-		unset($fields['active'], $fields['Permissions']);
+		unset($fields['active'], $fields['Permissions'], $fields['permissions'], $fields['is_invite']);
 
 		if ( ! empty($_POST))
 		{

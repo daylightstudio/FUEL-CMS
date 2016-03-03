@@ -775,7 +775,10 @@ class Fuel_users_model extends Base_module_model {
 			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
 		}
 	 
-		$this->_send_email($values['reset_key']); 
+		if ($this->_is_invite())
+		{
+			$this->_send_email($values['reset_key']);
+		}
 		return $values;
 	}
 
