@@ -1174,8 +1174,7 @@ class Asset {
 		$cache_file_name_md5 = md5($cache_file_name);
 		$ext = ($optimize === TRUE OR $optimize == 'gzip') ? 'php' : $type;
 		$cache_file_name = $cache_file_name_md5.'_'.strtotime($this->assets_last_updated).'.'.$ext;
-		$cache_file = $cache_dir.$cache_file_name;
-
+		$cache_file = rtrim($cache_dir, '/').'/'.$cache_file_name;
 
 
 		// create cache file if it doesn't exist'
