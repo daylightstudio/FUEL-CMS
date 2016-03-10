@@ -310,7 +310,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// automatically set selects to submit
 		$('#export_data').click(function(e){
+			var origPath = $('#form').attr('action');
 			$('#form').attr('action', _this.modulePath + '/export').attr('method', 'post').submit();
+			$('#form').attr('action', origPath);
 			return false;
 		});
 		
