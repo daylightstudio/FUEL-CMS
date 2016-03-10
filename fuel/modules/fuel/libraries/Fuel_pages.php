@@ -597,7 +597,7 @@ class Fuel_page extends Fuel_base_library {
 		{
 			$this->location = $default_home;
 		}
-		if (is_home() AND uri_path() == 'page_router') $this->location = $default_home;
+		if (is_home() AND uri_path() == 'page_router' AND !$this->fuel->config('offline')) $this->location = $default_home;
 
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout' => NULL, 'location' => NULL);
 		$this->_page_data = $page_data;
