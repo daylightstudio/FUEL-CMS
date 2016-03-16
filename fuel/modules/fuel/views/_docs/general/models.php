@@ -469,7 +469,7 @@ class Products_model extends Base_module_model
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model', 'where' => 'category_id = 1'));
+  public $has_many = array('attributes' => array(FUEL_FOLDER => 'fuel_tags_model', 'where' => 'category_id = 1'));
 
   function __construct()
   {
