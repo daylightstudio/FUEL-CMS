@@ -1132,7 +1132,6 @@ class Asset {
 		$files = (array) $files;
 		$cache_file_name = '';
 		$cache_dir = $this->assets_server_path($this->assets_cache_folder, '', $module);
-		
 		$return = array();
 	
 		$default_module = $module;
@@ -1217,7 +1216,7 @@ class Asset {
 			{
 				if (strncmp($dir_file, $cache_file_name_md5, 10) === 0)
 				{
-					 unlink($cache_dir.$dir_file);
+					 unlink(rtrim($cache_dir, '/').'/'.$dir_file);
 				}
 			}
 			write_file($cache_file, $output); // write cache file
