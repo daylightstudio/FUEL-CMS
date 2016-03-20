@@ -546,9 +546,11 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (id){
 					var idArr = id.split('--');
 					id = idArr[idArr.length -1];
-					replaceValues[id] = $(this).val();
-					var regex = new RegExp('\{' + id + '\}', 'g');
-					folder = folder.replace(regex, replaceValues[id]);
+					if (id){
+						replaceValues[id] = $(this).val();
+						var regex = new RegExp('\{' + id + '\}', 'g');
+						folder = folder.replace(regex, replaceValues[id]);
+					}
 				}
 			})
 			return folder;
