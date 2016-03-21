@@ -64,7 +64,22 @@ class Fuel_categories extends Fuel_module {
 		$data = $model->find_all($where);
 		return $data;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns an associative array with the keys being the categories slug value and the values (label), being the name of the category
+	 *
+	 * @access	public
+	 * @param	string	key for option
+	 * @param	string	value for option
+	 * @return	array
+	 */	
+	public function options_list($key = 'slug', $val = 'name')
+	{
+		$model =& $this->model();
+		return $model->options_list($key, $val);
+	}	
 }
 
 /* End of file Fuel_categories.php */
