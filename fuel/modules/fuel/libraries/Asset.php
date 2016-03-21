@@ -408,7 +408,7 @@ class Asset {
 	 */	
 	public function cache_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		return $this->assets_path($file, $this->assets_cache_folder, $module, $absolute);
+		return $this->assets_path($file, trim($this->assets_cache_folder, '/'), $module, $absolute);
 	}
 
 	// --------------------------------------------------------------------
@@ -1202,7 +1202,6 @@ class Asset {
 
 			$output = $this->optimize($this->_cacheable_files, $optimize_params);
 
-
 			// try to create directories if not there
 			if (!is_dir($cache_dir) AND is_writable($cache_dir))
 			{
@@ -1221,6 +1220,7 @@ class Asset {
 			}
 			write_file($cache_file, $output); // write cache file
 		}
+
 		return $this->cache_path($cache_file_name, $module);
 	}
 
@@ -1496,6 +1496,7 @@ class Asset {
 		if (!empty($params['destination']))
 		{
 			$destination_dir = dirname($params['destination']);
+
 			if (is_writable($destination_dir))
 			{
 				write_file($params['destination'], $output);	
