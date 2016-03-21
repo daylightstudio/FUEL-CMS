@@ -546,13 +546,18 @@ class Fuel_Loader extends CI_Loader
 				// return a new instance of the object
 
 				// <!-- FUEL ... causes issues
-				if ($object_name !== NULL)
+				$CI =& get_instance();
+
+				if ( ! is_null($object_name))
 				{
-					$CI =& get_instance();
 					if ( ! isset($CI->$object_name))
 					{
 						return $this->_ci_init_library($class, '', $params, $object_name);
 					}
+				}
+				elseif (!isset($CI->{strtolower($class)}))
+				{
+					return $this->_ci_init_library($class, '', $params, $object_name);
 				}
 				// <!/-- FUEL ... causes issues
 
