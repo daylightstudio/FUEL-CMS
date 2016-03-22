@@ -48,7 +48,7 @@ class My_profile extends Fuel_base_controller {
 		}
 
 		// remove active from field list to prevent them from updating it
-		unset($fields['active'], $fields['Permissions'], $fields['permissions'], $fields['is_invite']);
+		unset($fields['active'], $fields['Permissions'], $fields['permissions'], $fields['is_invite'], $fields['id']);
 
 		if ( ! empty($_POST))
 		{
