@@ -84,6 +84,7 @@ class MY_Model extends CI_Model {
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
 	protected $_last_saved = NULL; // a reference to the last saved object / ID of record;
+	protected $_nested_errors = array(); // used for capturing errors when saving multiple records (an array of records) on a single save method call
 	
 
 	/**
@@ -1489,8 +1490,15 @@ class MY_Model extends CI_Model {
 				if(!$this->save($rec, $validate, $ignore_on_insert, $clear_related))
 				{
 					$saved = FALSE;
+					$this->_nested_errors = $this->get_errors();
 				}
 			}
+			
+			if (!empty($this->_nested_errors))
+			{
+				$this->add_error($this->_nested_errors);
+			}
+
 			return $saved;
 		}
 		else
