@@ -639,13 +639,13 @@ class Fuel_users_model extends Base_module_model {
 		$values = parent::normalize_save_values($record);
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
-		if(!isset($values['id']))
+		if (!isset($values['id']))
 		{
 			$values['id'] = $valid_user['id'];
 		}
 		return $values;
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
