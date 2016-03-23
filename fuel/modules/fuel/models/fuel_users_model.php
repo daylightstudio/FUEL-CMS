@@ -627,6 +627,25 @@ class Fuel_users_model extends Base_module_model {
 		return $values;
 	}
 
+	/**
+	 * Normalize the save data (and add the user ID)
+	 *
+	 * @access	public
+	 * @param	mixed	array of values to be saved (optional)
+	 * @return	array
+	 */
+	public function normalize_save_values($record = NULL)
+	{
+		$values = parent::normalize_save_values($record);
+		$CI =& get_instance();
+		$valid_user = $CI->fuel->auth->valid_user();
+		if (!isset($values['id']))
+		{
+			$values['id'] = $valid_user['id'];
+		}
+		return $values;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
