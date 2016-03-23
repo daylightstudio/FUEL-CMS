@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -39,7 +39,7 @@
  */
 if (!function_exists('share'))
 {
-	function share($type, $values)
+	function share($type, $values = NULL)
 	{
 		$CI =& get_instance();
 		if (!isset($CI->social))

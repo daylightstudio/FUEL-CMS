@@ -78,7 +78,7 @@ returned in an array format by default.</p>
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Authors_model extends Base_module_model {
 
@@ -145,7 +145,7 @@ Now add the following code to that file:
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 
@@ -167,7 +167,7 @@ with the key being the the field name in the table and the value being the model
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
     
@@ -201,7 +201,7 @@ create a <dfn>has_many</dfn> property on the model. Below is an example of how t
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
     
@@ -275,7 +275,7 @@ content column will be truncated to 50 characters and html encoded. This is how 
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 
@@ -372,7 +372,7 @@ we add the <var>folder</var> parameter with the name of the asset folder:</p>
 <pre class="brush: php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
   

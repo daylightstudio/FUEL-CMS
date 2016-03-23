@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -152,7 +152,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	public function table_info($table, $set_field_key = TRUE)
 	{
 		if (!empty($this->_table_info_cache[$table]) AND $set_field_key) return $this->_table_info_cache[$table]; // lazy load
-		$sql = "SHOW FULL COLUMNS FROM ". $this->_escape_identifiers($table);
+		$sql = "SHOW FULL COLUMNS FROM ". $this->escape_identifiers($table);
 		$query = $this->query($sql);
 		$retval = array();
 		foreach ($query->result() as $field) 
@@ -248,7 +248,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		
 		foreach($values as $key => $val)
 		{
-			$sql .= $this->_escape_identifiers($key).", ";
+			$sql .= $this->escape_identifiers($key).", ";
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
 		
@@ -285,11 +285,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		{
 			if ((is_string($primary_key) AND $primary_key == $key) OR (is_array($primary_key) AND in_array($key, $primary_key)))
 			{
-				$sql .=  $this->_escape_identifiers($key).' = LAST_INSERT_ID('.$this->_escape_identifiers($key).'), ';
+				$sql .=  $this->escape_identifiers($key).' = LAST_INSERT_ID('.$this->escape_identifiers($key).'), ';
 			}
 			else
 			{
-				$sql .= $this->_escape_identifiers($key).' = VALUES('.$this->_escape_identifiers($key).'), ';
+				$sql .= $this->escape_identifiers($key).' = VALUES('.$this->escape_identifiers($key).'), ';
 			}
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
@@ -383,6 +383,66 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$CI->db->query($s);
 			}
 		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select for specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
+
+	/** http://stackoverflow.com/questions/6470267/grouping-where-clauses-in-codeigniter
+	 * This function will allow you to do complex group where clauses in to c and (a AND b) or ( d and e)
+	 * This function is needed as else the where clause will append an automatic AND in front of each where Thus if you wanted to do something
+	 * like a AND ((b AND c) OR (d AND e)) you won't be able to as the where would insert it as a AND (AND (b...)) which is incorrect. 
+	 * Usage: start_group_where(key,value)->where(key,value)->close_group_where() or complex queries like
+	 *        open_bracket()->start_group_where(key,value)->where(key,value)->close_group_where()
+	 *        ->start_group_where(key,value,'','OR')->close_group_where()->close_bracket() would produce AND ((a AND b) OR (d))
+	 * @param $key mixed the table columns prefix.columnname
+	 * @param $value mixed the value of the key
+	 * @param $escape string any escape as per CI
+	 * @param $type the TYPE of query. By default it is set to 'AND' 
+	 * @return db object.  
+	 */
+	public function start_group_where($key, $value = NULL, $escape = NULL, $type = "AND")
+	{
+		$this->open_bracket($type); 
+		return parent::_where($key, $value, '' ,$escape); 
+	}
+
+	/**
+	 * Strictly used to have a consistent close function as the start_group_where. This essentially callse the close_bracket() function. 
+	 */
+	public function close_group_where()
+	{
+		return $this->close_bracket();  
+	}
+
+	/**
+	 * Allows to place a simple ( in a query and prepend it with the $type if needed. 
+	 * @param $type string add a ( to a query and prepend it with type. Default is $type. 
+	 * @param $return db object. 
+	 */
+	public function open_bracket($type = "AND")
+	{
+		$this->ar_where[] = $type . " (";
+		return $this;  
+	}   
+
+	/**
+	 * Allows to place a simple ) to a query. 
+	 */
+	public function close_bracket()
+	{
+		$this->ar_where[] = ")"; 
+		return $this;
 	}
 }
 /* End of file MY_DB_mysql_driver.php */

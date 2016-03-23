@@ -175,6 +175,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		this.notifications();
 		$('#search_term').focus();
+
+		// always reset the offset value back to 0 upon each search
+		$('#search').click(function(e){
+			$('#offset').val('0');
+		});
 		$('#limit').change(function(e){
 			$('#form').submit();
 		});
@@ -305,7 +310,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// automatically set selects to submit
 		$('#export_data').click(function(e){
+			var origPath = $('#form').attr('action');
 			$('#form').attr('action', _this.modulePath + '/export').attr('method', 'post').submit();
+			$('#form').attr('action', origPath);
 			return false;
 		});
 		
@@ -371,6 +378,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#published').val('yes');
 			} else {
 				$('#published_yes').attr('checked', true);
+				$('#published_1').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;
@@ -384,6 +392,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#published').val('no');
 			} else {
 				$('#published_no').attr('checked', true);
+				$('#published_0').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;
@@ -399,6 +408,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#active').val('yes');
 			} else {
 				$('#active_yes').attr('checked', true);
+				$('#active_1').attr('checked', true);
 			}
 			
 			$('#form').submit();
@@ -415,6 +425,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#active').val('no');
 			} else {
 				$('#active_no').attr('checked', true);
+				$('#active_0').attr('checked', true);
 			}
 			$('#form').submit();
 			return false;

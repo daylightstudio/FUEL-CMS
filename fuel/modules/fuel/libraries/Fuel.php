@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -33,7 +33,7 @@
 // include base library classes to extend
 require_once('Fuel_base_library.php');
 require_once('Fuel_advanced_module.php');
-require_once('Fuel_modules.php');
+//require_once('Fuel_modules.php');
 
 class Fuel extends Fuel_advanced_module {
 	protected $name = 'FUEL'; // name of the advanced module... usually the same as the folder name
@@ -124,6 +124,12 @@ class Fuel extends Fuel_advanced_module {
 		
 		// merge in any "attach" objects to include on the FUEL object
 		$this->_auto_attach = array_merge($this->_auto_attach, $this->_config['attach']);
+
+		// add package paths
+		foreach($this->_config['modules_allowed'] as $module)
+		{
+			$this->CI->load->add_package_path(MODULES_PATH.$module);
+		}
 	}
 
 	// --------------------------------------------------------------------

@@ -57,6 +57,8 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 </ul>
 
 <h3 id="installed_modules">Installed Modules</h3>
+
+<h4>Advanced Modules</h4>
 <p>The following modules are currently installed for your website with the corresponding fields:</p>
 <?php $modules = $this->fuel->modules->advanced();?>
 <ul>
@@ -104,7 +106,43 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 <?php endforeach; ?>
 </ul>
 <?php if ($i === 0) : ?>
-<p>You currently don't have access to any modules</p>
+<p>You currently don't have access to any advanced modules</p>
+<?php endif; ?>
+
+
+
+<h4>Simple Modules</h4>
+<p>The following simple modules are currently installed for your website with the corresponding fields:</p>
+<?php $modules = $this->fuel->modules->get(NULL, FALSE);?>
+<ul>
+<?php 
+$i = 0;
+foreach($modules as $mod) :
+	$module_location = $mod->info('model_location');
+ ?>
+	<?php if ($this->fuel->auth->has_permission($mod->name()) AND ($mod->info('hidden') != TRUE AND $mod->info('disabled') != TRUE AND empty($module_location) OR $module_location == 'app' OR $module_location == 'application')) : ?>
+	<li id="simple_module_<?=$mod->info('module_name')?>">
+		<a href="#" class="show_fields" class="show_fields"><?=$mod->info('module_name')?></a>
+		<?php if ($mod->info('description')) : ?> - <?=$mod->info('description')?> <?php endif; ?>
+		<ul style="display: none;">
+			<?php 
+			$simple_model = $mod->model();
+			$form_fields = $simple_model->form_fields();
+			foreach($simple_model->form_fields() as $field => $field_params) : ?>
+			<?php if ($field != 'id') : 
+			$label = (!empty($field_params['label'])) ? $field_params['label'] : $CI->form_builder->create_label($field_params);
+			$label = ucfirst(str_replace('_', ' ', $field));
+			?>
+			<li><strong><?=$label?></strong><?php if (!empty($field_params['comment'])) : ?> - <?=$field_params['comment']?><?php endif; ?></li>
+			<?php endif; ?>
+			<?php endforeach;?>
+		</ul>
+	</li>
+	<?php $i++; endif; ?>
+<?php endforeach; ?>
+</ul>
+<?php if ($i === 0) : ?>
+<p>You currently don't have access to any simple modules</p>
 <?php endif; ?>
 
 

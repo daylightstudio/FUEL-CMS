@@ -9,7 +9,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -106,7 +106,12 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	public function url($uri = '')
 	{
-		return site_url($this->base_uri().'/'.$uri);
+		if (!empty($uri))
+		{
+			return site_url($this->base_uri().'/'.$uri);
+		}
+		return site_url($this->base_uri());
+
 	}
 
 	// --------------------------------------------------------------------
@@ -1164,7 +1169,7 @@ class Fuel_posts extends Fuel_base_library {
 		$posts = $this->get_posts(array(), $order_by, $limit, $offset);
 		$total_rows = $this->get_posts_count();
 		$vars['posts'] = $posts;
-		$vars['pagination'] = $this->pagination($total_rows, $this->url('/?'));
+		$vars['pagination'] = $this->pagination($total_rows, $this->url('?'));
 
 		return $vars;
 	}

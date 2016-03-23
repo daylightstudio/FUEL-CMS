@@ -596,8 +596,8 @@ on your model to generate the data you want to pass to your view and specify a r
 
 
 <h2 id="custom_model_classes">Separate Classes for Model Logic</h2>
-<p>For larger models, things like the form_fields method and the validation logic and even the related items area can become a bit much to have in one model. FUEL 1.3 added the ability
-to inherit from three new classes to make it easier to separate that logic out. To add this functionality, there are now three new properties that can be utilized on a module model:</p>
+<p>For larger models, the <dfn>list_items</dfn> method <dfn>form_fields</dfn> method, the validation logic and even the related items area can become a bit much to have in one model. FUEL 1.3 added the ability
+to inherit from four new classes to make it easier to separate that logic out. To add this functionality, there are now four new properties that can be utilized on a module model:</p>
 
 <pre class="brush:php">
 public $list_items_class = '';  // a class that can extend Base_model_list_fields and manipulate the list_items method
@@ -627,7 +627,7 @@ public $related_items_class = ''; // a class that can extend Base_model_related_
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 	...
@@ -693,7 +693,7 @@ class Article_fields extends Base_model_list_items {
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Articles_model extends Base_module_model {
 	...

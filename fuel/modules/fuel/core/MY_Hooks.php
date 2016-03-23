@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2014, Run for Daylight LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -116,7 +116,7 @@ class MY_Hooks extends CI_Hooks {
 		// If the script being called happens to have the same
 		// hook call within it a loop can happen
 
-		if ($this->in_progress == TRUE)
+		if ($this->_in_progress == TRUE)
 		{
 			return;
 		}
@@ -179,7 +179,7 @@ class MY_Hooks extends CI_Hooks {
 		// Set the in_progress flag
 		// -----------------------------------
 
-		$this->in_progress = TRUE;
+		$this->_in_progress = TRUE;
 
 		// -----------------------------------
 		// Call the requested class and/or function
@@ -205,7 +205,7 @@ class MY_Hooks extends CI_Hooks {
 			$function($params);
 		}
 
-		$this->in_progress = FALSE;
+		$this->_in_progress = FALSE;
 		return TRUE;
 	}
 

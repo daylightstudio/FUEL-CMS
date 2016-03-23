@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -84,6 +84,7 @@ class MY_Model extends CI_Model {
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
 	protected $_last_saved = NULL; // a reference to the last saved object / ID of record;
+	protected $_nested_errors = array(); // used for capturing errors when saving multiple records (an array of records) on a single save method call
 	
 
 	/**
@@ -468,7 +469,7 @@ class MY_Model extends CI_Model {
 			$this->_common_query();
 		}
 		
-		if (empty($this->db->ar_select))
+		if (!$this->db->has_select())
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
@@ -886,10 +887,6 @@ class MY_Model extends CI_Model {
 		// setup wherein for the group
 		$this->db->where_in($this->table_name.'.'.$this->key_field(), $group);
 
-		// must set protect identifiers to FALSE in order for order by to work
-		$_protect_identifiers = $this->db->_protect_identifiers;
-		$this->db->_protect_identifiers = FALSE;
-
 		// escape group
 		foreach($group as $key => $val)
 		{
@@ -899,10 +896,7 @@ class MY_Model extends CI_Model {
 		// remove any cached order by
 		$this->db->ar_cache_orderby = array();
 
-		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')');
-
-		// set it _protect_identifiers back to original value
-		$this->db->_protect_identifiers = $_protect_identifiers;
+		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')', '', FALSE);
 
 		// do a normal find all
 		$data = $this->find_all($where, NULL, $limit, $offset, $return_method, $assoc_key);
@@ -1496,8 +1490,15 @@ class MY_Model extends CI_Model {
 				if(!$this->save($rec, $validate, $ignore_on_insert, $clear_related))
 				{
 					$saved = FALSE;
+					$this->_nested_errors = $this->get_errors();
 				}
 			}
+			
+			if (!empty($this->_nested_errors))
+			{
+				$this->add_error($this->_nested_errors);
+			}
+
 			return $saved;
 		}
 		else
@@ -2281,7 +2282,7 @@ class MY_Model extends CI_Model {
 						{
 							foreach($r_val as $rv)
 							{
-								if (strpos($rv, '{') === 0)
+								if (is_string($rv) AND strpos($rv, '{') === 0)
 								{
 									$val_key = str_replace(array('{', '}'), '', $rv);
 									if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
@@ -2290,7 +2291,7 @@ class MY_Model extends CI_Model {
 						}
 						else
 						{
-							if (strpos($r_val, '{') === 0)
+							if (is_string($r_val) AND strpos($r_val, '{') === 0)
 							{
 								$val_key = str_replace(array('{', '}'), '', $r_val);
 								if (isset($values[$val_key])) $rule[3][$r_key] = $values[$val_key];
@@ -4235,9 +4236,16 @@ class MY_Model extends CI_Model {
 			{
 				$id = $where->$id_field;
 			}
-			else if (is_array($where) AND isset($where[$id_field]))
+			else if (is_array($where))
 			{
-				$id = $where[$id_field];
+				if (isset($where[$id_field]))
+				{
+					$id = $where[$id_field];	
+				}
+				elseif(isset($where[$this->table_name().'.'.$id_field]))
+				{
+					$id = $where[$this->table_name().'.'.$id_field];
+				}
 			}
 			else if (!empty($id) AND is_int($id))
 			{
@@ -4363,19 +4371,21 @@ class MY_Model extends CI_Model {
 		$find_where = substr($name, 8);
 
 		$find_and_or = preg_split("/_by_|(_and_)|(_or_)/", $find_where, -1, PREG_SPLIT_DELIM_CAPTURE);
-		if (!empty($find_and_or) AND strncmp($name, 'find', 4) == 0)
+		$find_and_or_cleaned = array_values(array_filter($find_and_or));
+
+		if (!empty($find_and_or_cleaned) AND strncmp($name, 'find', 4) == 0)
 		{
 			$arg_index = 0;
-			foreach($find_and_or as $key => $find)
+			foreach($find_and_or_cleaned as $key => $find)
 			{
-				if (empty($find) OR $find == '_and_')
+				if ($find == '_and_')
 				{
-					$this->db->where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 				else if ($find == '_or_')
 				{
-					$this->db->or_where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->or_where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 			}
@@ -4393,7 +4403,7 @@ class MY_Model extends CI_Model {
 			}
 
 			$other_args = array_slice($args, count($find_and_or) -1);
-			
+		
 			if (!empty($other_args[0])) $this->db->order_by($other_args[0]);
 			if (!empty($limit)) $this->db->limit($limit);
 			if (!empty($other_args[1])) $this->db->offset($other_args[2]);
@@ -4416,7 +4426,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4570,7 +4580,7 @@ class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -5864,7 +5874,7 @@ class Data_record {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */

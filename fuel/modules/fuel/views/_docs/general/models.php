@@ -48,7 +48,7 @@ CREATE TABLE `quotes` (
 
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Quotes_model extends Base_module_model {
 
@@ -240,7 +240,7 @@ This can be done automatically by setting the <dfn>$parsed_fields</dfn> array pr
 
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-require_once(FUEL_PATH.'models/base_module_model.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Quotes_model extends Base_module_model {
 
@@ -469,7 +469,7 @@ class Products_model extends Base_module_model
 <pre class="brush:php">
 class Products_model extends Base_module_model
 {
-  public $has_many = array('attributes' => array('model' => array(FUEL_FOLDER => 'fuel_tags_model', 'where' => 'category_id = 1'));
+  public $has_many = array('attributes' => array(FUEL_FOLDER => 'fuel_tags_model', 'where' => 'category_id = 1'));
 
   function __construct()
   {

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -102,7 +102,7 @@ class Fuel_base_controller extends CI_Controller {
 		{
 			if ($show_error)
 			{
-				show_error(lang('error_no_access'));
+				show_error(lang('error_no_access', fuel_url()));
 			}
 			else
 			{

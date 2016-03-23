@@ -153,6 +153,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var ckId = $(elem).attr('id');
 			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 			
+			// Hide preview button until the editor fully created
+			$('#'+ckId+'_preview').hide();
+
 			// used in cases where repeatable fields cause issues
 			if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 				return;
@@ -297,14 +300,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 					//if (!$('#cke_' + ckId).is(':hidden')){
 					if (!ckInstance.hidden){
+						// Hide ckEditor
 						ckInstance.hidden = true;
-						if (!$elem.hasClass('markItUpEditor')){
-							createMarkItUp(elem);
-							$elem.show();
-						}
 						$('#cke_' + ckId).hide();
+
+						// Show markItUp editor
 						$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
-						//$elem.closest('.html').show();
 					
 						$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 					
@@ -314,8 +315,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 						// update the info
 						ckInstance.updateElement();
-					
-					
 					} else {
 
 						ckInstance.hidden = false;
@@ -332,7 +331,25 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				
 					fixCKEditorOutput(elem);
 					return false;
-				})
+				});
+
+				// Used timeout to wait for ckEditor fully created to prevent error.
+				setTimeout(function(){
+					$elem = $(elem);
+					// Create markItUpEditor
+					if (!$elem.hasClass('markItUpEditor')){
+						createMarkItUp(elem);
+						$elem.show();
+
+						// used instead of show/hide because of issue with it not showing textarea
+						$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'});
+					}
+					
+					fixCKEditorOutput(elem);
+
+					// Show the preview button
+					$('#'+ckId+'_preview').show();
+				},1000);
 			}
 
 		}
@@ -441,6 +458,21 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$multiFile.MultiFile({ namePattern: '$name___$i'});
 		}, 500);
 
+		$('.asset_delete', context).on('click', function(e){
+			e.preventDefault();
+			if (confirm(fuel.lang('confirm_asset_remove'))){
+				var deleteId = $(this).attr('href');
+				$(deleteId).val('');
+				$(this).closest('.asset_upload_preview').remove();
+			}
+		});
+
+		$('.deletable a', context).on('mouseover', function(e){
+			$(this).parent().find('.asset_delete').show();
+		}).on('mouseout', function(e){
+			$(this).parent().find('.asset_delete').hide();
+		});
+
 		fuel.fields.asset_field(context);
 	}
 
@@ -450,9 +482,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var selectedAssetFolder = 'images';
 		var activeField = null;
 
-		var showAssetsSelect = function(){
+		var showAssetsSelect = function(params){
+			console.log(params)
 			var winHeight = 450;
-			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
+			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
 			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
@@ -514,9 +547,11 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (id){
 					var idArr = id.split('--');
 					id = idArr[idArr.length -1];
-					replaceValues[id] = $(this).val();
-					var regex = new RegExp('\{' + id + '\}', 'g');
-					folder = folder.replace(regex, replaceValues[id]);
+					if (id){
+						replaceValues[id] = $(this).val();
+						var regex = new RegExp('\{' + id + '\}', 'g');
+						folder = folder.replace(regex, replaceValues[id]);
+					}
 				}
 			})
 			return folder;
@@ -559,7 +594,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					default :
 						btnLabel = fuel.lang('btn_asset');
 				}
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 			}
 		});
 
@@ -573,9 +608,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			}
 
-			selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
+			var params = $(this).attr('data-params');
+			var paramsJSON = convertQueryStringToJSON(params);
+			paramsJSON.asset_folder = replacePlaceholders(selectedAssetFolder, context);
+			paramsJSON.subfolder = replacePlaceholders(paramsJSON.subfolder, context);
+			var params = jQuery.param(paramsJSON);
 
-			showAssetsSelect();
+			//selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
+			showAssetsSelect(params);
 			return false;
 		});
 		
@@ -723,6 +763,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $form = $field.closest('form');
 			var module = $field.data('module');
 			var addParams = ($field.data('add_params')) ? '?' + $field.data('add_params') : '';
+			var fields = ($field.data('fields')) ? '/' + $field.data('fields') : '';
 
 			var isMulti = ($field.attr('multiple')) ? true : false;
 			
@@ -730,7 +771,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var url = jqx_config.fuelPath + '/' + module + '/inline_';
 			var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
 			if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
+			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + fields + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
 			
 			var refreshField = function($field){
 
@@ -743,7 +784,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (!selected) return;
 				var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
 				var params = { field:fieldId, field_id: fieldId, selected:selected};
-
 
 				// fix for pages... a bit kludgy
 				if (parentModule == 'pages'){
@@ -769,10 +809,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 				var $form = $field.closest('form');
 
-				$fieldContainer = $('#' + fieldId, context).closest('td.field');
-				$field.closest('form').trigger('form-pre-serialize');
+				var $fieldContainer = $('#' + fieldId, context).closest('td.field');
+
+				// will delete fields if triggered
+				//$field.closest('form').trigger('form-pre-serialize');
 
 				// refresh value
+
 				$field = $(selector);
 				if ($field.length > 1){
 					var val = [];
@@ -802,7 +845,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					//console.log($form.formBuilder())
 					//$form.formBuilder().call('inline_edit');
 					// refresh field with formBuilder jquery
-					fuel.fields.multi_field(context)
+					if (!$('#' + fieldId, context).hasClass('select2')){
+						fuel.fields.multi_field(context);
+					}
+
 					$('#form').formBuilder().initialize(context);
 					$('#' + fieldId, context).off('.addedit').on('change.addedit', function(){
 						changeField($(this));
@@ -814,7 +860,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var changeField = function($this){
 				if (!$this.is('[multiple]')){
 					if ($this.val() == '' || $this.find('option').length == 0){
-						if ($this.is('select') && $this.find('option').length == 0){
+						if ($this.is('select') && $this.find('option').length == 0 || $this.is('.select2_applied')){
 							$this.hide();
 						} else {
 							$this.show();
@@ -822,7 +868,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						if ($this.is('input, select')) $this.parent().find('.edit_inline_button').hide();
 					} else {
 						$this.parent().find('.edit_inline_button').show();
-						$this.show();
+						if (!$this.is('.select2_applied')) $this.show();
 					}	
 				}
 			}
@@ -864,8 +910,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					return false;
 				}
 				var editIds = val.toString().split(',');
+				var fields = ($elem.data('fields')) ? '/' + $elem.data('fields') : '';
 				var $selected = $elem.parent().find('.supercomboselect_right li.selected:first');
-
 				if ((!editIds.length || editIds.length > 1) && (!$selected.length || $selected.length > 1)) {
 					alert(fuel.lang('edit_multi_select_warning'));
 				} else {
@@ -873,12 +919,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						var id = $selected.attr('id');
 						var idIndex = id.substr(id.lastIndexOf('_') + 1);
 						var val = $elem.find('option').eq(idIndex).attr('value');
-						var url = $(this).attr('href') + val;
+						var url = $(this).attr('href') + val + fields;
 					} else {
-						var url = $(this).attr('href') + editIds[0];
+						var url = $(this).attr('href') + editIds[0] + fields;
 					}
-					$field = $(this).closest('.field').find('select, input[type="checkbox"], input[type="radio"]:first');
-						editModule(url, null, function(){ refreshField($field)});
+					$field = $elem.filter(':first');
+					editModule(url, null, function(){ refreshField($field)});
 				}
 				return false;
 			});
@@ -1221,7 +1267,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (layout && layout.length){
 					//layout = layout.split('/').pop();
 					layout = layout.replace('/', ':');
-					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+					var language = ($('#language').length) ? $('#language').val() : 'english';
+					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
 				}
 			}
 			
