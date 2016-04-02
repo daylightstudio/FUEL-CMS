@@ -277,7 +277,7 @@ class Fuel_custom_fields {
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= ' ';
-				$preview .= '<a href="'.$asset_path.'" target="_blank" class="noclone">';
+				$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
@@ -702,6 +702,7 @@ class Fuel_custom_fields {
 					$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 					$params['data']['module'] = $uri;
 					$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
+					$params['data']['fields'] = (!empty($params['fields'])) ? $params['fields'] : '';
 				}
 			}
 		
@@ -1561,12 +1562,14 @@ class Fuel_custom_fields {
 				$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$inline_class : $inline_class;
 				$params['data']['module'] = $uri;
 				$params['data']['add_params'] = (!empty($params['add_params'])) ? $params['add_params'] : '';
+				$params['data']['fields'] = (!empty($params['fields'])) ? $params['fields'] : '';
 			}
 		}
 
 		
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;
+		
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
 			$value = (isset($params['value'])) ? (array)$params['value'] : array();
@@ -1641,7 +1644,7 @@ class Fuel_custom_fields {
 		$exists_params['type'] = 'hidden';
 		$exists_params['ignore_representative'] = TRUE;
 		$str .= $form_builder->create_field($exists_params);
-		
+
 		return $str;
 	}
 
@@ -2200,8 +2203,9 @@ class Fuel_custom_fields {
 		$params['style'] = (!empty($params['style'])) ? $params['style'].'; width: '.$params['width'] : 'width: '.$params['width'];
 
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' select2' : 'select2';
-
-		return $form_builder->create_select($params);
+		$params['mode'] = 'multi';
+		return $this->inline_edit($params);
+		//return $form_builder->create_select($params);
 	}
 }
 

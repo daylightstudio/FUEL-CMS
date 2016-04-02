@@ -25,7 +25,7 @@ class Build extends Fuel_base_controller {
 		// Only super admins can execute builds for now
 		if ($validate AND !$this->fuel->auth->is_super_admin())
 		{
-			show_error(lang('error_no_access'));
+			show_error(lang('error_no_access', fuel_url()));
 		}
 
 		// call before build hook

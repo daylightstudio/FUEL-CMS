@@ -240,6 +240,21 @@ $config['set_upload_file_perms'] = FALSE;
 // Sets the site to offline mode. Uses "offline" view file to render page
 $config['offline'] = FALSE;
 
+// Sets the site password min length. An empty (e.g. NULL/0) value will not require a minimum length
+$config['password_min_length'] = NULL;
+
+// Sets the site password max length. An empty (e.g. NULL/0) value will not require a maximum length
+$config['password_max_length'] = NULL;
+
+// Sets specific patterns that the password must match (e.g. 'upper|lower|numbers|symbols')
+$config['password_pattern_match'] = NULL;
+
+// List of uri allowed to access when site switched to offline mode.
+// Eg.:
+// To allow "www.example.com/UAT"
+// $config['offline_allowed_uri'] = array('UAT');
+$config['offline_allowed_uri'] = array();
+
 // Restrict fuel to only certain ip addresses (can be string or an array of IP addresses)
 $config['restrict_to_remote_ip'] = array();
 
@@ -418,7 +433,7 @@ $config['parser_delimiters'] = array(
 $config['parser_allowed_functions'] = array(
 	'strip_tags', 'date', 
 	'detect_lang','lang',
-	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', // assets specific
+	'js', 'css', 'swf', 'img_path', 'css_path', 'js_path', 'swf_path', 'pdf_path', 'media_path', 'cache_path', 'captcha_path', 'assets_path', 'docs_path', // assets specific
 	'fuel_block', 'fuel_model', 'fuel_nav', 'fuel_edit', 'fuel_set_var', 'fuel_var', 'fuel_var_append', 'fuel_form', 'fuel_page', // FUEL specific
 	'quote', 'safe_mailto', // HTML/URL specific
 	'session_flashdata', 'session_userdata', // Session specific

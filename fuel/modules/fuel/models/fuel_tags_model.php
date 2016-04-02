@@ -77,11 +77,11 @@ class Fuel_tags_model extends Base_module_model {
 
 		if ($CI->fuel->language->has_multiple())
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.context, '.$table.'.language, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		else
 		{
-			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.precedence, '.$table.'.published', FALSE);
+			$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$categories_table.'.name as category, SUBSTRING('.$table.'.description, 1, 50) as description, '.$table.'.context, '.$table.'.precedence, '.$table.'.published', FALSE);
 		}
 		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		if (empty($just_count))
@@ -136,6 +136,18 @@ class Fuel_tags_model extends Base_module_model {
 						else if (current($rel) == 'tags' OR current($rel) == 'fuel_tags_model')
 						{
 							$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
+						}
+						else if (!empty($rel['model']))
+						{
+							
+							$model_name = $this->load_model($rel['model']);
+							$model = $this->CI->$model_name;
+
+							// test if the instantiated model uses the fuel_tags table or not
+							if (method_exists($model, 'table_name') AND $model->table_name() == $model->tables('fuel_tags'))
+							{
+								$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
+							}
 						}
 					}
 					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'fuel_tags_model'))

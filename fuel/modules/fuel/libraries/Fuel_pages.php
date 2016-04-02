@@ -593,8 +593,11 @@ class Fuel_page extends Fuel_base_library {
 		
 		$default_home = $this->fuel->config('default_home_view');
 
-		if (empty($this->location) OR $this->location == 'page_router') $this->location = $default_home;
-		if (is_home($this->location)) $this->location = $default_home;
+		if (empty($this->location) OR $this->location == $this->CI->router->routes['404_override'] OR $this->location == $default_home)
+		{
+			$this->location = $default_home;
+		}
+		if (is_home() AND uri_path() == 'page_router' AND !$this->fuel->config('offline')) $this->location = $default_home;
 
 		$page_data = array('id' => NULL, 'cache' => NULL, 'published' => NULL, 'layout' => NULL, 'location' => NULL);
 		$this->_page_data = $page_data;
@@ -886,6 +889,12 @@ class Fuel_page extends Fuel_base_library {
 
 		$vars = $this->variables();
 		
+		// force the view to offline if "offline" is specified in the FUEL config
+		if ($page == 'offline')
+		{
+			unset($vars['view']);
+		}
+
 		$this->load_resources($vars);
 		
 		// for convenience we'll add the $CI object'

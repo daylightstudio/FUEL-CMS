@@ -347,7 +347,6 @@ $config['modules']['logs'] = array(
 	'display_field' => 'message',
 	'preview_path' => '',
 	'permission' => 'logs',
-	'instructions' => lang('permissions_instructions'),
 	'archivable' => FALSE,
 	'item_actions' => array(),
 	'table_actions' => array(),

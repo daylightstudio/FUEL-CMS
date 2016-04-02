@@ -150,9 +150,12 @@ class Fuel_permissions_model extends Base_module_model {
 						$model = $user->get_permissions(TRUE);
 						$user_perms = $model->find_all_array_assoc('id');
 						$user_perm_ids = array_keys($user_perms);
-
 						$user->permissions = array_merge($user_perm_ids, $perm_ids);
-						$user->save();
+
+						// convert to array so we can remove the password value to prevent trigger of password resetting
+						$user_save = $user->values();
+						unset($user_save['password']);
+						$CI->fuel_users_model->save($user_save);
 					}
 				}
 			}

@@ -30,6 +30,7 @@ $lang['comboselect_filter'] = 'Filter your search';
 $lang['tree_orphans'] = '_orphans';
 
 $lang['confirm_delete'] = 'Are you sure you want to delete this?';
+$lang['confirm_asset_remove'] = 'Are you sure you want to remove this file?';
 
 $lang['form_label_send_email_notification'] = 'Send password update email notification?';
 

@@ -629,16 +629,16 @@ class Form_builder {
 				$str .= "<span class=\"label\">";
 				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
 				$str .= "</span>";
-				$str .= "<span".$this->_open_field_attrs($val).">";
+				$str .= "<span".$this->_open_field_attrs($val)."><span class=\"displayonly noclone\">";
 				$str .= $val['before_html'].$display_value.$val['after_html'];
-				$str .= "</span>";
+				$str .= "</span></span>";
 				$str .= "</div>\n";
 			}
 			else if (!in_array($val['name'], $this->exclude))
 			{
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
-				$str .= $this->create_label($val, TRUE);
+				$str .= $val['before_label'].$this->create_label($val, TRUE).$val['after_label'];
 				$str .= "</span>";
 				$str .= "<span".$this->_open_field_attrs($val).">";
 				$str .= $this->create_field($val, FALSE);
@@ -825,7 +825,7 @@ class Form_builder {
 				if ($this->label_layout != 'top')
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
-					$str .= "</td>\n\t<td".$this->_open_field_attrs($val).">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</td>\n</tr>\n";
+					$str .= "</td>\n\t<td".$this->_open_field_attrs($val)."><span class=\"displayonly noclone\">".$val['before_html'].$display_value.$val['after_html']."\n".$this->create_hidden($val)."</span></td>\n</tr>\n";
 				}
 				else
 				{
@@ -1267,6 +1267,7 @@ class Form_builder {
 			'represents' => '', // specifies what other types of fields that this field should represent
 			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
+			'title' => NULL, // the title attribute
 			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"'
 			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
 		);
@@ -1694,8 +1695,14 @@ class Form_builder {
 			{
 				$id_name = $params['orig_name'];
 			}
+			
+			$class = '';
+			if (isset($params['label_class']) AND !empty($params['label_class']))
+			{
+				$class = ' class="'.$params['label_class'].'"';
+			}
 			$styles = (isset($params['nowrap']) AND $params['nowrap'] === TRUE) ? ' style="white-space: nowrap;"' : '';
-			$str .= "<label for=\"".Form::create_id($id_name)."\" id=\"label_".Form::create_id($id_name)."\"".$styles.">";
+			$str .= "<label for=\"".Form::create_id($id_name)."\"".$class." id=\"label_".Form::create_id($id_name)."\"".$styles.">";
 		}
 		if ($this->tooltip_labels)
 		{
@@ -1763,6 +1770,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'disabled' => $params['disabled'],
+			'pattern' => (!empty($params['pattern']) ? $params['pattern'] : NULL),
 		);
 		
 		if (isset($params['attrs']))
@@ -2419,7 +2427,7 @@ class Form_builder {
 		$process_key = $params[$key];
 
 		// create post processer to recreate date value
-		$func_str = '
+$func_str = '
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
@@ -2439,11 +2447,14 @@ class Form_builder {
 							$ampm = "pm";
 						}
 					}
-					if ($hr !== "")
+
+					if (empty($hr))
 					{
-						$dateval = $hr.":".$min.$ampm;
-						$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
+						$hr = "00";
 					}
+
+					$dateval = $hr.":".$min.$ampm;
+					$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
 				}
 				return $value;
 			}
@@ -2465,17 +2476,17 @@ class Form_builder {
 					}
 				}
 
-				$dateval = "";
-				if ($hr !== "")
+				if (empty($hr))
 				{
-					$dateval = $hr.":".$min.$ampm;
-					$dateval = date("H:i:s", strtotime($dateval));
+					$hr = "00";
 				}
 
+				$dateval = $hr.":".$min.$ampm;
+				$dateval = date("H:i:s", strtotime($dateval));
 				return $dateval;
 			}
 		';
-
+		
 		// needed for post processing
 		if (!isset($_POST[$params['key']]))
 		{

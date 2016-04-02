@@ -17,12 +17,18 @@ $lang['fuel_copyright'] = 'Copyright &copy; %1s Daylight Studio. All Rights Rese
 | Error Messages
 |--------------------------------------------------------------------------
 */
-$lang['error_no_access'] = 'You do not have access to this page. <a href="'.fuel_url().'">Try logging in again</a>.';
+$lang['error_no_access'] = 'You do not have access to this page. <a href="%1s">Try logging in again</a>.';
 $lang['error_missing_module'] = "You are missing the module %1s.";
 $lang['error_invalid_login'] = 'Invalid login.';
 $lang['error_max_attempts'] = 'Sorry, but your login information was incorrect and you are temporarily locked out. Please try again in %s seconds.';
 $lang['error_empty_user_pwd'] = 'Please enter in a user name and password.';
 $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
+
+$lang['error_pwd_too_short'] = 'Password entered does not meet the %1s character min length requirement.';
+$lang['error_pwd_too_long'] = 'Password entered exceeds the %1s character max length requirement.';
+$lang['error_pwd_invalid'] = 'Please choose a stronger password. Try a mix of %1s.';
+
+
 $lang['error_invalid_email'] = 'The email address provided was not in the system.';
 $lang['error_invalid_password_match'] = 'The passwords don\'t match.';
 $lang['error_empty_email'] = 'Please enter in an email address.';
@@ -30,7 +36,7 @@ $lang['error_folder_not_writable'] = 'You must make the %1s folder writable.';
 $lang['error_invalid_folder'] = 'Invalid folder %1s';
 $lang['error_file_already_exists'] = 'File %1s already exists.';
 $lang['error_zip'] = 'There was an error creating the zipped file.';
-$lang['error_no_permissions'] = 'You do not have permissions to complete this action. <a href="'.fuel_url().'">Try logging in again</a>.';
+$lang['error_no_permissions'] = 'You do not have permissions to complete this action. <a href="%1s">Try logging in again</a>.';
 $lang['error_no_lib_permissions'] = 'You do not have permission to execute methods on the %1s class.';
 $lang['error_page_layout_variable_conflict'] = 'There is an error with this layout because it either doesn\'t exist or contains one or more of the following reserved words: %1s';
 $lang['error_no_curl_lib'] = 'You must have the curl php extension to use these tools.';
@@ -50,6 +56,7 @@ $lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
 $lang['error_could_not_create_folder'] = 'Could not create folder %1s';
 $lang['error_could_not_create_file'] = 'Could not create file %1s';
 $lang['error_no_build'] = "No build setup for this module.\n";
+$lang['error_invalid_record'] = "The module record does not exists.";
 
 
 /*
@@ -71,7 +78,7 @@ $lang['logged_in'] = "%s logged in";
 $lang['logged_out'] = "%s logged out";
 $lang['dev_pwd_instructions'] = 'This site is currently in development and requires a password to view.';
 $lang['login_forgot_pwd'] = 'Forgot password?';
-$lang['login_reset_pwd'] = 'Reset Password';
+$lang['login_reset_pwd'] = 'Set New Password';
 $lang['login_btn'] = 'Login';
 $lang['logout_restore_original_user'] = 'Restore original user';
 
@@ -123,12 +130,20 @@ $lang['section_my_modules'] = 'My Modules';
 | Login/Password Reset
 |--------------------------------------------------------------------------
 */
-$lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
+//$lang['pwd_reset'] = 'An email to confirm your password reset is on its way.';
+$lang['pwd_reset_error'] = 'The email address entered does not have an active reset token, please resubmit the reset password form to get a new reset link.';
+$lang['pwd_reset_success'] = 'Your password has been successfully reset, please login.';
+
+$lang['pwd_reset_error_not_match'] = 'The passwords submitted do not match.';
+
+$lang['pwd_reset_missing_token'] = 'Missing or invalid reset token.';
+$lang['pwd_reset_success'] = 'Your password has been successfully reset, please login with your user name and password.';
+$lang['pwd_reset'] = 'An email with your password reset link has been sent.';
 $lang['pwd_reset_subject'] = "FUEL admin password reset request";
-$lang['pwd_reset_email'] = "Click the following link to confirm the reset of your FUEL password:\n%1s";
+$lang['pwd_reset_email'] = "Click the following link to reset your FUEL password:\n%1s";
 $lang['pwd_reset_subject_success'] = "FUEL admin password reset success";
-$lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
-$lang['pwd_reset_success'] = 'Your password was successfully reset and an email has been sent to you with the new password.';
+//$lang['pwd_reset_email_success'] = "Your FUEL password has been reset to %1s. To change your password, login to the FUEL CMS admin with this password and click on your login name in the upper right to access your profile information.";
+$lang['pwd_reset_email_success'] = 'An email with your password reset link has been sent.';
 $lang['cache_cleared'] = "Site cache cleared explicitly";
 
 
@@ -358,7 +373,7 @@ User name: %2s
 Password: %3s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
-
+$lang['new_user_email'] = 'Click the following link to set your FUEL password: ';
 
 /*
 |--------------------------------------------------------------------------
@@ -483,6 +498,7 @@ $lang['form_label_super_admin'] = 'Super admin';
 $lang['form_label_password'] = 'Password';
 $lang['form_label_confirm_password'] = 'Confirm password';
 $lang['form_label_new_password'] = 'New password';
+$lang['form_label_new_invite'] = 'Send new user invite';
 $lang['form_label_description'] = 'Description';
 $lang['form_label_entry_date'] = 'Entry date';
 $lang['form_label_message'] = 'Message';

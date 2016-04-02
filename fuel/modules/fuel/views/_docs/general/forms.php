@@ -906,7 +906,10 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>module</strong>: the module to inline edit</li>
+		<li><strong>module_uri</strong>: the URI path to the module if it's different then the module name (e.g. my_module/inline_create/field1:field2)</li>
 		<li><strong>multiple</strong>: whether to display a multi field to associate the inline edited data with</li>
+		<li><strong>add_params</strong>: query string parameters to pass as pre-filled values to the inline module form (e.g. name=Han%20Solo&slug=han-solo)</li>
+		<li><strong>fields</strong>: the name of the fields to display separate by a colon (e.g. name:slug:published)</li>
 	</ul>
 	
 	<h4>Example</h4>

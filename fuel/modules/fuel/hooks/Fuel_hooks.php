@@ -73,6 +73,14 @@ class Fuel_hooks
 		if (!USE_FUEL_ROUTES)
 		{
 			$CI =& get_instance();
+
+			$CI->load->helper('convert');
+
+			// Offline maintenance page not required password
+			if( preg_match('#^offline(/?)$#', uri_path(FALSE)) ){
+				return;
+			}
+
 			if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
 				if (isset($_POST['fuel_dev_password']) AND $_POST['fuel_dev_password'] == md5($CI->fuel->config('dev_password')))
@@ -83,8 +91,8 @@ class Fuel_hooks
 				$CI->load->library('session');
 				if (!$CI->session->userdata('dev_password'))
 				{
-					//redirect('fuel/login/dev');
-                    redirect(FUEL_ROUTE.'login/dev'); //to respect your MY_Fuel $config['fuel_path']
+					$forward = uri_safe_encode(uri_string());
+                    redirect(FUEL_ROUTE.'login/dev/'.$forward); //to respect your MY_Fuel $config['fuel_path']
 				}
 			}
 		}
@@ -96,10 +104,37 @@ class Fuel_hooks
 		if (!USE_FUEL_ROUTES)
 		{
 			$CI =& get_instance();
+
+			// Already in offline page
+			if( preg_match('#^offline(/?)$#', uri_path(FALSE)) ){
+				return;
+			}
+
 			if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
-				echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
-				exit();
+
+				// By pass offline page if password inputed.
+				$CI->load->library('session');
+				if ($CI->session->userdata('dev_password'))
+				{
+					return;
+				}
+
+				// Display allowed page
+				$allowed_uri = $CI->fuel->config('offline_allowed_uri');
+				if( !empty( $allowed_uri ) ) {
+					foreach( $allowed_uri as $uri_item ) {
+						if( preg_match('#^'.$uri_item.'(/?)$#', uri_path(FALSE)) ){
+							return;
+						}
+					}
+				}
+
+				// Instead of using render, changed to redirect
+				redirect('offline');
+
+				//echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
+				//exit();
 			}
 		}
 	}
@@ -108,7 +143,8 @@ class Fuel_hooks
 	public function post_controller()
 	{
 		$CI =& get_instance();
-		$CI->output->enable_profiler($CI->config->item('enable_profiler'));
+		$enable = $CI->config->item('enable_profiler') || $CI->fuel->config('enable_profiler');
+		$CI->output->enable_profiler($enable);
 	}
 }
 

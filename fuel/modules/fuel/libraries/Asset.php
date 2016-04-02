@@ -408,7 +408,7 @@ class Asset {
 	 */	
 	public function cache_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
-		return $this->assets_path($file, $this->assets_cache_folder, $module, $absolute);
+		return $this->assets_path($file, trim($this->assets_cache_folder, '/'), $module, $absolute);
 	}
 
 	// --------------------------------------------------------------------
@@ -500,7 +500,8 @@ class Asset {
 
 		if ($absolute)
 		{
-			$path = 'http://'.$_SERVER['HTTP_HOST'].$path;
+			$protocol = ($_SERVER["SERVER_PORT"] == 443) ? "https://" : "http://";
+			$path = $protocol.$_SERVER['HTTP_HOST'].$path;
 		}
 		return $path;
 	}
@@ -554,19 +555,26 @@ class Asset {
 	</code>
 	 * @access	public
 	 * @param	string	server path to asset file
+	 * @param	bool	determines whether to truncate to the asset folder or not
 	 * @return	string
 	 */	
 	public function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 	{
 		$file = str_replace('\\', '/', $file); // for windows
-		$doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
-		$assets_path = str_replace($doc_root, '', $file);
+		$web_path = str_replace(WEB_ROOT, '', '/'.$file);
+	//	$assets_path = str_replace('/', DIRECTORY_SEPARATOR, $this->assets_path); // for windows
+		$assets_path = str_replace($this->assets_path, '', $web_path);
+
+		// Causes issues in some environments like GoDaddy... was originally changed for the assets to potentially be in a parent folder 
+		// $doc_root = preg_replace("!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER['SCRIPT_FILENAME']);
+		// $assets_path = str_replace($doc_root, '', $assets_path);
 
 		if ($truncate_to_asset_folder)
 		{
 			if (strncmp($assets_path, '/', 1) === 0) $asset_path = substr($assets_path, 1);  // to remove beginning slash
 			return $assets_path;
 		}
+				
 		return str_replace('//', '/', $this->assets_path($assets_path));
 	}
 
@@ -1124,8 +1132,7 @@ class Asset {
 		$CI =& get_instance();
 		$files = (array) $files;
 		$cache_file_name = '';
-		$cache_dir = $this->assets_server_path($this->assets_cache_folder, 'cache', $module);
-		
+		$cache_dir = $this->assets_server_path($this->assets_cache_folder, '', $module);
 		$return = array();
 	
 		$default_module = $module;
@@ -1167,8 +1174,7 @@ class Asset {
 		$cache_file_name_md5 = md5($cache_file_name);
 		$ext = ($optimize === TRUE OR $optimize == 'gzip') ? 'php' : $type;
 		$cache_file_name = $cache_file_name_md5.'_'.strtotime($this->assets_last_updated).'.'.$ext;
-		$cache_file = $cache_dir.$cache_file_name;
-
+		$cache_file = rtrim($cache_dir, '/').'/'.$cache_file_name;
 
 
 		// create cache file if it doesn't exist'
@@ -1197,7 +1203,6 @@ class Asset {
 
 			$output = $this->optimize($this->_cacheable_files, $optimize_params);
 
-
 			// try to create directories if not there
 			if (!is_dir($cache_dir) AND is_writable($cache_dir))
 			{
@@ -1211,11 +1216,12 @@ class Asset {
 			{
 				if (strncmp($dir_file, $cache_file_name_md5, 10) === 0)
 				{
-					 unlink($cache_dir.$dir_file);
+					 unlink(rtrim($cache_dir, '/').'/'.$dir_file);
 				}
 			}
 			write_file($cache_file, $output); // write cache file
 		}
+
 		return $this->cache_path($cache_file_name, $module);
 	}
 
@@ -1491,6 +1497,7 @@ class Asset {
 		if (!empty($params['destination']))
 		{
 			$destination_dir = dirname($params['destination']);
+
 			if (is_writable($destination_dir))
 			{
 				write_file($params['destination'], $output);	

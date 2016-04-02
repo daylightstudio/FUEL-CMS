@@ -218,12 +218,18 @@ abstract class Base_posts_model extends Base_module_model {
 		}
 		$module = $this->get_module();
 
+		$url = '';
 		if (!empty($values['id']))
 		{
 			$rec = $this->find_by_key($values['id']);
-			return $rec->url;
+			$url = $rec->url;
 		}
-		return '';
+
+		if (empty($url))
+		{
+			$url = $module->url($values);
+		}
+		return $url;
 	}
 }
 

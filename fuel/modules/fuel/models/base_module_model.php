@@ -298,12 +298,25 @@ class Base_module_model extends MY_Model {
 		}
 
 		$this->_list_items_query();
-		
+
 		if ($just_count)
 		{
-			return $this->db->count_all_results();
-		}
+			$has_have = FALSE;
+			foreach($this->filters as $k => $v)
+			{
+				if (preg_match('#.+_having$#', $k))
+				{
+					$has_have = TRUE;
+					break;
+				}
+			}
 
+			if (!$has_have)
+			{
+				return $this->db->count_all_results();
+			}
+		}
+		
 		if (empty($this->db->ar_select))
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
@@ -322,6 +335,13 @@ class Base_module_model extends MY_Model {
 		{
 			$data = $this->list_items->process($data);
 		}
+
+		// has have statement
+		if ($just_count)
+		{
+			return count($data);
+		}
+
 
 		//$this->debug_query();
 		return $data;
@@ -400,6 +420,8 @@ class Base_module_model extends MY_Model {
 					$key_with_comparison_operator = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), array(' >', ' >=', ' <', ' <=', ' ='), $key);
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
+
+
 					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
 				}
 				else if (is_array($val))
@@ -510,11 +532,11 @@ class Base_module_model extends MY_Model {
 		$form_filters = $this->CI->filters;
 
 		$filters = array();
+		$joiner = '';
 
 		$find = array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#');
 		$operators = array('>', '>=', '<', '<=', '=');
 
-		$cnt = count($values) - 1;
 		$i = 1;
 		foreach($values as $key => $val)
 		{
@@ -560,17 +582,16 @@ class Base_module_model extends MY_Model {
 				}
 
 				$operator = '=';
-				foreach($find as $i => $f)
+				foreach($find as $j => $f)
 				{
 					if (preg_match($f, $key))
 					{
-						$operator = $operators[$i];
+						$operator = $operators[$j];
 						break;
 					}
 				}
 				
 				$joiner = $this->filter_join;
-			
 				if (is_array($joiner))
 				{
 					if (isset($joiner[$key]))
@@ -585,10 +606,7 @@ class Base_module_model extends MY_Model {
 
 				$label = (isset($form_filters[$key]['label'])) ? $form_filters[$key]['label'] : ucfirst(str_replace('_', ' ', $key));
 				$filter = str_replace(':', '', $label).' '.$operator.' "'.$val.'"';
-				if ($i < $cnt)
-				{
-					$filter .= ' '.strtoupper($joiner).' ';
-				}
+				$filter .= ' '.strtoupper($joiner).' ';
 				$filters[] = $filter;
 			}
 
@@ -598,10 +616,13 @@ class Base_module_model extends MY_Model {
 		$str = '';
 		if (!empty($filters))
 		{
-			$str = '<strong>Filters:</strong> '.$str .= implode(' ', $filters);
+			$str = '<strong>Filters:</strong> ';
+			$filters_str = implode(' ', $filters);
+			$str .= substr($filters_str, 0, - strlen($joiner) -1);
 		}
 		return $str;
 	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1318,7 +1339,7 @@ class Base_module_model extends MY_Model {
 	 */	
 	public function get_module()
 	{
-		return $this->fuel->modules->get(strtolower(get_class($this)));
+		return $this->fuel->modules->get(strtolower(get_class($this)), FALSE);
 	}
 
 	// --------------------------------------------------------------------
@@ -1449,7 +1470,7 @@ class Base_module_model extends MY_Model {
 			$rec = $this->find_one_array($this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field);
 			if (!empty($rec) AND ($rec[$this->limit_to_user_field] != $this->fuel->auth->user_data('id')))
 			{
-				$this->add_error(lang('error_no_permissions'));
+				$this->add_error(lang('error_no_permissions', fuel_url()));
 				return FALSE;
 			}
 		}
@@ -1465,7 +1486,7 @@ class Base_module_model extends MY_Model {
 	*/
 	public function display_name($values)
 	{
-		$module =& $this->get_module();
+		$module = $this->get_module();
 
 		$key = $module->info('display_field');
 

@@ -290,6 +290,7 @@ ul.nobullets li { margin-bottom: 2px; }
 .text_center { text-align: center; margin: auto; }
 .block { display: block; }
 .float_none { float: none !important; }
+.relative { position: relative; }
 
 span.required { color:#c30; }
 .datepicker_hh { margin-right: 2px; }
@@ -689,7 +690,8 @@ div#login_notification { text-overflow: ellipsis; overflow: hidden; width: 440px
 a#forgotten_pwd { text-align: center; display: block; padding-top: 15px; padding-left:20px; color: #999; }
 
 /* assets & modal */
-a.modal_close { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }
+a.modal_close, a.asset_delete { position: absolute; left: -11px; top: -11px; z-index: 10; background: transparent url(../images/x_close.png) no-repeat center center; width: 23px; height: 23px; text-indent: -10000px; overflow:hidden; }
+a.asset_delete { display: none; left: -13px; top: -2px; }
 div.modal_content {  -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;background-color: #fff; width: 100%; height: 100%;/*max-height: 450px;*/ overflow: hidden; }
 div.modal_content iframe { width: 100% !important; }
 div.modal_content_inner { padding: 10px 20px; }
@@ -698,6 +700,7 @@ div#asset_preview { height: 275px; width: 740px; overflow: auto; text-align: cen
 div#asset_preview img, .img_bg { background-color: #f3f3f3; }
 div.asset_select > div > div { float: left; }
 div.asset_select span.label { padding: 0 5px 0 15px; }
+div.asset_upload_preview { position: relative; }
 div.img_crop { max-width: 400px; max-height: 200px; overflow: auto; }
 div#yes_no_modal { text-align: center; margin: 0; }
 div#yes_no_modal ul { float: none; }

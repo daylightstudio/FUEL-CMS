@@ -51,6 +51,11 @@ class Login extends CI_Controller {
 			$this->dev();
 			return;
 		}
+		else if ($this->uri->segment(3) == 'reset')
+		{
+			$this->reset_password();
+			return;
+		}
 
 		$this->js_controller_params['method'] = 'add_edit';
 
@@ -172,6 +177,7 @@ class Login extends CI_Controller {
 		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
 	}
 
+	// THIS IS A PASSWORD RESET TOKEN CREATION EMAIL SENDING 
 	public function pwd_reset()
 	{
 		if ( ! $this->fuel->config('allow_forgotten_password')) show_404();
@@ -186,22 +192,20 @@ class Login extends CI_Controller {
 
 				if ( ! empty($user['email']))
 				{
-					$users = $this->fuel->users;
-					$new_pwd = $this->fuel->users->reset_password($user['email']);
+					// This generates and saves a token to the user model, returns the token string.
+					$token = $this->fuel_users_model->get_reset_password_token($user['email']);
 
-					if ($new_pwd !== FALSE)
+					if ($token !== FALSE)
 					{
-						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
+						$url = 'login/reset/' . $token;
 						$msg = lang('pwd_reset_email', fuel_url($url));
-
 						$params['to'] = $this->input->post('email');
 						$params['subject'] = lang('pwd_reset_subject');
 						$params['message'] = $msg;
 						$params['use_dev_mode'] = FALSE;
-
 						if ($this->fuel->notification->send($params))
 						{
-							$this->session->set_flashdata('success', lang('pwd_reset'));
+							$this->session->set_flashdata('success', lang('pwd_reset_email_success'));
 							$this->fuel->logs->write(lang('auth_log_pass_reset_request', $user['email'], $this->input->ip_address()), 'debug');
 						}
 						else
@@ -245,6 +249,80 @@ class Login extends CI_Controller {
 		$vars['page_title'] = lang('fuel_page_title');
 
 		$this->load->module_view(FUEL_FOLDER, 'pwd_reset', $vars);
+	}
+
+	// THIS HANDLES A POST REQUEST FOR USER SETTING A NEW PASSWORD
+	public function reset_password() 
+	{
+		$token = $this->uri->segment(4);
+
+		if (empty($token))
+		{
+			$this->session->set_flashdata('error', lang('pwd_reset_missing_token'));
+			redirect(site_url('fuel/login'));
+		}
+		else
+		{
+			if( ! $this->fuel_users_model->validate_reset_token($token))
+			{
+				$this->session->set_flashdata('error', lang('pwd_reset_missing_token'));
+				redirect(site_url('fuel/login'));
+			}
+		}
+		
+		if ( ! empty($_POST))
+		{
+			if ($this->input->post('email') && $this->input->post('password') && $this->input->post('password_confirm') && $this->input->post('_token'))
+			{
+				$this->load->library('user_agent');
+			
+				if ($this->input->post('password') == $this->input->post('password_confirm'))
+				{
+				   	$reset = $this->fuel_users_model->reset_password_from_token($this->input->post('email'), $this->input->post('_token'), $this->input->post('password'));
+
+					if ($reset)
+					{
+						$this->session->set_flashdata('success', lang('pwd_reset_success'));
+						redirect(site_url('fuel/login'));
+					}
+					else
+					{
+						if ($this->fuel_users_model->has_error())
+						{
+							$errors = $this->fuel_users_model->get_errors();
+							$this->session->set_flashdata('error',$errors[0]);
+							redirect($this->agent->referrer());
+						}
+
+						$this->session->set_flashdata('error', lang('pwd_reset_error'));
+						redirect(site_url('fuel/login/pwd_reset'));
+					}
+				}
+				else
+				{
+					$this->session->set_flashdata('error', lang('pwd_reset_error_not_match'));
+					redirect($this->agent->referrer());
+				}
+			}
+		}
+		
+		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
+		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
+		$fields['password'] = array('type' => 'password', 'required' => TRUE, 'size' => 30, 'placeholder' => 'password', 'display_label' => FALSE);
+		$fields['password_confirm'] = array('type' => 'password', 'required' => TRUE, 'size' => 30, 'placeholder' => 'confirm password', 'display_label' => FALSE);
+		$fields['_token'] = array('type' => 'hidden', 'value' => $token);
+
+		$this->form_builder->show_required = FALSE;
+		$this->form_builder->set_fields($fields);
+
+		$vars['form'] = $this->form_builder->render();
+		
+		// notifications template
+		$vars['error'] = $this->fuel_users_model->get_errors();
+		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
+		$vars['page_title'] = lang('fuel_page_title');
+
+		$this->load->module_view(FUEL_FOLDER, 'reset', $vars);
 	}
 
 	public function dev()

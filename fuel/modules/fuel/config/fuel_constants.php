@@ -1,7 +1,10 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '1.3.1');
-define('MODULES_FOLDER', '../modules');
+define('FUEL_VERSION', '1.3.2');
+if (!defined('MODULES_FOLDER'))
+{
+	define('MODULES_FOLDER', '../../fuel/modules');
+}
 define('FUEL_FOLDER', 'fuel');
 define('MODULES_PATH', APPPATH.MODULES_FOLDER.'/');
 define('MODULES_FROM_APPCONTROLLERS', '../'.MODULES_FOLDER.'/');

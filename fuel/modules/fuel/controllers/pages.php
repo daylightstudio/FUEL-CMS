@@ -32,7 +32,7 @@ class Pages extends Module {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if (isset($_POST['id'])) // check for dupes
@@ -136,7 +136,7 @@ class Pages extends Module {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND !$this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if ($this->input->post('id'))

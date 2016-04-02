@@ -22,7 +22,7 @@ class Module extends Fuel_base_controller {
 
 		if (empty($this->module))
 		{
-			show_error(lang('cannot_determine_module'));
+			show_error(lang('cannot_determine_module', fuel_url()));
 		}
 		
 		$params = array();
@@ -651,6 +651,7 @@ class Module extends Fuel_base_controller {
 			}
 
 			$posted['extra_filters'] = $extra_filters;
+
 		}
 
 		$params = array_merge($defaults, $page_state, $posted);
@@ -793,7 +794,7 @@ class Module extends Fuel_base_controller {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -804,11 +805,11 @@ class Module extends Fuel_base_controller {
 			{
 				if ($inline === TRUE)
 				{
-					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id, TRUE);
+					$url = fuel_uri($this->module_uri.'/inline_edit/'.$id.'/'.$field, TRUE);
 				}
 				else
 				{
-					$url = fuel_uri($this->module_uri.'/edit/'.$id, TRUE);
+					$url = fuel_uri($this->module_uri.'/edit/'.$id.'/'.$field, TRUE);
 				}
 
 				// save any tab states
@@ -837,11 +838,15 @@ class Module extends Fuel_base_controller {
 		$vars['action'] = 'create';
 		$vars['related_items'] = $this->model->related_items(array());
 		$crumbs = array($this->module_uri => $this->module_name, lang('action_create'));
-
+		
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->set_inline($inline);
 
-		if ($inline === TRUE)
+		if ( ! empty($field) AND strpos($field, ':') === FALSE)
+		{
+			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
+		}
+		else if ($inline === TRUE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT);
 		}
@@ -995,7 +1000,7 @@ class Module extends Fuel_base_controller {
 		// check permissions
 		if ( ! $this->fuel->auth->has_permission($this->module_obj->permission, 'edit') AND ! $this->fuel->auth->has_permission($this->module_obj->permission, 'create'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -1027,6 +1032,10 @@ class Module extends Fuel_base_controller {
 
 		//$vars = $this->_form($id);
 		$data = $this->_saved_data($id);
+		if (empty($data))
+		{
+			show_error(lang('error_invalid_record'));
+		}
 		$action = ( ! empty($data[$this->model->key_field()])) ? 'edit' : 'create';
 	
 		// check model first for preview path method
@@ -1059,7 +1068,7 @@ class Module extends Fuel_base_controller {
 			$vars['activate'] = ( ! empty($data['active']) AND is_true_val($data['active'])) ? 'deactivate' : 'activate';
 		}
 
-		if ( ! empty($field))
+		if ( ! empty($field) AND strpos($field, ':') === FALSE)
 		{
 			$this->fuel->admin->set_display_mode(Fuel_admin::DISPLAY_COMPACT_NO_ACTION);
 		}
@@ -1073,7 +1082,7 @@ class Module extends Fuel_base_controller {
         $msg_data = $this->model->display_name($data);
         if ( ! empty($msg_data))
 		{
-			$crumbs[''] = character_limiter(strip_tags($msg_data), 50);
+			$crumbs[''] = character_limiter(strip_tags($msg_data), 100);
 		}
 
 		$this->fuel->admin->set_titlebar($crumbs);
@@ -1430,7 +1439,7 @@ class Module extends Fuel_base_controller {
 			$form = $this->form_builder->render();
 		}
 
-		$action_uri = $action.'/'.$id.'/'.$field;
+		$action_uri = (!empty($id)) ? $action.'/'.$id.'/'.$field : $action.'/'.$field;
 		$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri.query_str() : $this->module_uri.'/'.$action_uri.query_str();
 		$vars['form'] = $form;
 		$vars['data'] = $values;
@@ -1598,7 +1607,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'delete'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$inline = $this->fuel->admin->is_inline();
@@ -1708,7 +1717,7 @@ class Module extends Fuel_base_controller {
 			$vars['error'] = $this->model->get_errors();
 
 			$crumbs = array($this->module_uri => $this->module_name);
-			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 50);
+			$crumbs[''] = character_limiter(strip_tags(lang('action_delete').' '.$vars['title']), 100);
 
 			$this->fuel->admin->set_titlebar($crumbs);
 
@@ -1740,7 +1749,7 @@ class Module extends Fuel_base_controller {
 	{
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'edit'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if ( ! empty($_POST['fuel_restore_version']) AND ! empty($_POST['fuel_restore_ref_id']))
@@ -1776,7 +1785,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'edit') OR ! $this->fuel->auth->has_permission($this->permission, 'delete'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		$success = FALSE;
@@ -2002,7 +2011,7 @@ class Module extends Fuel_base_controller {
 
 		if ( ! $this->fuel->auth->has_permission($this->permission, 'export'))
 		{
-			show_error(lang('error_no_permissions'));
+			show_error(lang('error_no_permissions', fuel_url()));
 		}
 
 		if ( ! empty($_POST))
@@ -2011,6 +2020,12 @@ class Module extends Fuel_base_controller {
 			$this->load->dbutil();
 			$this->load->helper('download');
 
+			$filters = $this->model->filters($this->filters);
+			if (is_object($filters) && ($filters instanceof Base_model_fields)) {
+				$filters = $filters->get_fields();
+			}
+			$this->filters = array_merge($this->filters, $filters);
+	
 			$filename = $this->module.'_'.date('Y-m-d').'.csv';
 			$params = $this->_list_process();
 			$this->_filter_list($params);
@@ -2174,6 +2189,8 @@ class Module extends Fuel_base_controller {
 
 		if ( ! empty($_FILES))
 		{
+			$field_names = array();
+
 			// loop through uploaded files
 			foreach ($_FILES as $file => $file_info)
 			{
@@ -2238,6 +2255,9 @@ class Module extends Fuel_base_controller {
 					$posted[$tmp_field_name] = $file_val;
 					$posted[$field_name] = $file_val;
 					$posted[$file_tmp.'_file_name'] = $file_val;
+
+					$field_names[$field_name] = $field_name;
+
 				}
 			}
 
@@ -2268,24 +2288,30 @@ class Module extends Fuel_base_controller {
 
 				// transfer uploaded data the controller object as well
 				$this->upload_data =& $uploaded_data;
-
 				// now process the data related to upload a file including translated path names
 				if ( ! isset($field_name)) $field_name = '';
 
-				$this->_process_upload_data($field_name, $uploaded_data, $posted);
+				$this->_process_upload_data($field_names, $uploaded_data, $posted);
 			}
 		}
 
 		return ! $errors;
 	}
 
-	protected function _process_upload_data($field_name, $uploaded_data, $posted)
+	protected function _process_upload_data($field_names, $uploaded_data, $posted)
 	{
-		$field_name_parts = explode('--', $field_name);
-		$field_name = end($field_name_parts);
 
 		foreach($uploaded_data as $key => $val)
 		{
+			if (!isset($field_names[$key]))
+			{
+				continue;
+			}
+			$field_name = $field_names[$key];
+			$field_name_parts = explode('--', $field_name);
+			$field_name = end($field_name_parts);
+
+			$save = FALSE;
 			$key_parts = explode('___', $key);
 			$file_tmp = current($key_parts);
 
@@ -2325,7 +2351,9 @@ class Module extends Fuel_base_controller {
 					$this->model->save($data);
 				}
 			}
+
 		}
+	
 	}
 	
 	protected function _run_hook($hook, $params = array())

@@ -34,7 +34,7 @@ class Fuel_users_model extends Base_module_model {
 	public $required = array('user_name', 'email', 'first_name', 'last_name'); // User name, email, first name, and last name are required
 	public $filters = array('first_name', 'last_name', 'user_name'); // Additional fields that will be searched
 	public $unique_fields = array('user_name'); // User name is a unique field
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model'))); // Users have a "has_many" relationship with permissions
+	public $has_many = array('permissions' => array(FUEL_FOLDER => 'fuel_permissions_model')); // Users have a "has_many" relationship with permissions
 	
 	// --------------------------------------------------------------------
 	
@@ -144,13 +144,13 @@ class Fuel_users_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Resets the password with a random value
+	 * Creates a password token for reset
 	 *
 	 * @access	public
 	 * @param	string The email address of the user to reset 
-	 * @return	string The new password
+	 * @return	string The new token or FALSE if no user is found with the provided email address
 	 */	
-	public function reset_password($email)
+	public function get_reset_password_token($email)
 	{
 		// check first to see if they exist in the system
 		$CI =& get_instance();
@@ -163,17 +163,107 @@ class Fuel_users_model extends Base_module_model {
 
 		if (!empty($user))
 		{
-			$reset_key = random_string('alnum', 8);
-			//$user['password'] = $new_pwd;
-			$user['reset_key'] = $reset_key;
+			// Generate a token
+			$token = $this->generate_token();
+
+			// $user['password'] = $new_pwd;
+			$user['reset_key'] = $token;
 			$where['email'] = $email;
+
 			unset($user['password']);
 			if ($this->save($user, $where))
 			{
-				return $reset_key;
+				return $token;
 			}
 		}
+
 		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validates that a reset token exists
+	 *
+	 * @access	public
+	 * @param	string The reset token
+ 	 * @return	bool
+	 */	
+	public function validate_reset_token($token)
+	{
+		$user = $this->find_one('(reset_key = "' . $token .'")', 'id', 'array');
+		return count($user);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Resets a password given a provided email and token
+	 *
+	 * @access	public
+	 * @param	string The email address of the user
+	 * @param	string The reset token
+	 * @param	string The new user password
+	 * @return	bool
+	 */	
+	public function reset_password_from_token($email, $token, $password)
+	{
+		if ($email && $token)
+		{
+			$user = $this->find_one('(reset_key = "' . $token . '" AND email = "' . $email . '")', 'id', 'array');
+
+			if (count($user))
+			{
+				if ($password)
+				{
+					$user['password'] = $password;
+					$user['reset_key'] = '';
+					$where['email'] = $email;
+
+					if ($this->save($user, $where))
+					{
+						return TRUE;
+					}
+				}
+			} 
+		}
+		
+		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Generates a token used for resetting your password
+	 *
+	 * @access	public
+	 * @return	string
+	 */	
+	public function generate_token()
+	{
+		if (function_exists('openssl_random_pseudo_bytes'))
+		{
+			$hash_key =  $this->config->item('encryption_key');
+			$length = 16;      
+			$bytes = openssl_random_pseudo_bytes($length, $strong);
+
+			$length = 40;
+			$string = '';
+
+			while (($len = strlen($string)) < $length)
+			{
+				$size = $length - $len;
+				$string .= substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $size);
+			}
+
+			$reset_key = hash_hmac('sha256', $string, $hash_key);
+		}
+		else
+		{
+			$reset_key = sha1(uniqid($this->config->item('encryption_key'), TRUE));
+		}
+
+		return $reset_key;
 	}
 	
 	// --------------------------------------------------------------------
@@ -284,11 +374,13 @@ class Fuel_users_model extends Base_module_model {
 			$user_id = $values['id'];
 		}
 
+		$fields['is_invite'] = array('label' => lang('form_label_new_invite'), 'type' => 'checkbox', 'id' => 'is_invite');
+
 		$fields['confirm_password'] = array('label' => lang('form_label_confirm_password'), 'type' => 'password', 'size' => 20, 'order' => 6);
 
 		if (!empty($user_id))
 		{
-			$fields['new_password'] = array('label' => lang('form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
+			$fields['new_password'] = array('label' => lang(	'form_label_new_password'), 'type' => 'password', 'size' => 20, 'order' => 5);
 		}
 		else
 		{
@@ -324,6 +416,7 @@ class Fuel_users_model extends Base_module_model {
 		$perm_fields = array();
 		$user = $CI->fuel->auth->user_data();
 
+
 		//if you are a super admin or a user that has permissions to assign permissions and you are not editing yourself, then display the permissions
 		if ($CI->fuel->auth->has_permission('permissions') AND 
 			(($user['id'] != $user_id) AND // can't edit yourself's permissions
@@ -331,6 +424,7 @@ class Fuel_users_model extends Base_module_model {
 			($CI->fuel->auth->has_permission('permissions') AND empty($values['id']))) // for creating new users so as to show permissions if you are a super admin
 			)
 		{
+
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
 			$fields['permissions']['mode'] = 'checkbox';
@@ -496,12 +590,16 @@ class Fuel_users_model extends Base_module_model {
 		// for new 
 		if (empty($values['id']))
 		{
+
+
 			$this->required[] = 'password';
+
 			$this->add_validation('email', array(&$this, 'is_new_email'), lang('error_val_empty_or_already_exists', lang('form_label_email')));
 			if (isset($this->normalized_save_data['confirm_password']))
 			{
 				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
+
 		}
 		
 		// for editing
@@ -513,8 +611,96 @@ class Fuel_users_model extends Base_module_model {
 				$this->get_validation()->add_rule('password', 'is_equal_to', lang('error_invalid_password_match'), array($this->normalized_save_data['new_password'], $this->normalized_save_data['confirm_password']));
 			}
 		}
+
+		if (!empty($values['password']))
+		{
+			$this->add_validation('password', array(&$this, 'check_password_strength'), lang('error_val_empty_or_already_exists', lang('form_label_password')));
+		}
+					
+		if (isset($this->normalized_save_data['is_invite']) AND $this->normalized_save_data['is_invite'] == 1)
+		{
+			$this->remove_validation('password');
+			unset($this->required[array_search('password', $this->required)]);
+		}
+
 		unset($values['super_admin']); // can't save from UI as security precaution'
 		return $values;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validates that the password meets the required strength specified in the config (under Security config parameters)
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */	
+	public function check_password_strength($value)
+	{
+		if ($this->CI->fuel->config('password_min_length') AND is_numeric($this->CI->fuel->config('password_min_length')))
+		{
+			if (strlen($value) < $this->CI->fuel->config('password_min_length'))
+			{
+				$this->add_error(lang('error_pwd_too_short', $this->CI->fuel->config('password_min_length')));
+				return FALSE;
+			}
+		}
+
+		if ($this->CI->fuel->config('password_max_length') AND is_numeric($this->CI->fuel->config('password_max_length')))
+		{
+			if (strlen($value) > $this->CI->fuel->config('password_max_length'))
+			{
+				$this->add_error(lang('error_pwd_too_long', $this->CI->fuel->config('password_max_length')));
+				return FALSE;
+			}
+		}
+
+		if ($this->CI->fuel->config('password_pattern_match'))
+		{
+			$rules_array = explode("|", strtolower($this->CI->fuel->config('password_pattern_match')));
+
+			$regex = '/^';
+
+			if (in_array('lower', $rules_array) OR in_array('lowercase', $rules_array))
+			{
+				$regex .= '(?=.*[a-z])';
+			}
+
+			if (in_array('upper', $rules_array) OR in_array('uppercase', $rules_array))
+			{
+				$regex .= '(?=.*[A-Z])';
+			}
+
+			if (in_array('numbers', $rules_array))
+			{
+				$regex .= '(?=.*\d)';
+			}
+
+			if (in_array('symbols', $rules_array))
+			{
+				$regex .= '(?=.*[-+_!@#$%^&*.,?])';
+			}
+
+			$regex .= '.+$/';
+
+			if(!preg_match($regex, $value))
+			{
+
+				if (count($rules_array) > 1)
+				{
+					$rules_array[count($rules_array)-1] = " and " . $rules_array[count($rules_array)-1];
+				}
+
+				$missing = implode(", ", $rules_array);
+				$this->add_error(lang('error_pwd_invalid', $missing));
+				return FALSE;
+
+			}
+		}
+
+		return TRUE;
+
 	}
 
 	// --------------------------------------------------------------------
@@ -530,21 +716,27 @@ class Fuel_users_model extends Base_module_model {
 	{
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
+
 		if ((isset($values['id']) AND $valid_user['id'] == $values['id']) AND (isset($values['active']) AND $values['active'] == 'no'))
 		{
 			show_error(lang('error_cannot_deactivate_yourself'));
 		}
 
-
 		// added here instead of on_before_clean in case of any cleaning that may alter the salt and password values
 		if (!empty($values['password'])) 
 		{
-
 			$values['salt'] = substr($this->salt(), 0, 32);
 			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
 		}
 
+		if ($this->_is_invite())
+		{
+			$token = $this->generate_token();
+			$values['reset_key']= $token;
+		}
+
 		return $values;
+
 	}
 
 	// --------------------------------------------------------------------
@@ -570,7 +762,7 @@ class Fuel_users_model extends Base_module_model {
 			// {
 			// 	$CI->fuel->auth->set_user_data('password', $values['password']);
 			// }
-
+		
 			if (!empty($values['language']))
 			{
 				$CI->fuel->auth->set_user_data('language', $values['language']);
@@ -578,41 +770,62 @@ class Fuel_users_model extends Base_module_model {
 			
 		}
 
-		if ( ! empty($this->normalized_save_data['new_password'])) {
+		if ( ! empty($this->normalized_save_data['new_password']))
+		{
 			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
 		}
-
-		$this->_send_email($values['id']);
+	 
+		if ($this->_is_invite())
+		{
+			$this->_send_email($values['reset_key']);
+		}
 		return $values;
 	}
 
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Protected method that will send out a passowrd change email to a user
+	 * Protected method that will send out a password change email to a new user
 	 *
 	 * @access	protected
 	 * @param	int The user ID
 	 * @return	void
 	 */	
-	protected function _send_email($id)
+	protected function _send_email($token) 
 	{
 		$CI =& get_instance();
-		if (!empty($id) AND !has_errors() AND isset($_POST['send_email']) AND (!empty($_POST['password']) OR !empty($_POST['new_password'])))
-		{
-			$password = (!empty($_POST['password'])) ? $CI->input->post('password') : $CI->input->post('new_password');
 
-			$msg = lang('new_user_email', site_url('fuel/login'), $CI->input->post('user_name'), $password);
+		if ($this->_is_invite()) {
+
+			$msg = lang('new_user_email') . '<a href="'.site_url().'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>';					
+
 			$params['to'] = $CI->input->post('email');
 			$params['subject'] = lang('new_user_email_subject');
 			$params['message'] = $msg;
 			$params['use_dev_mode'] = FALSE;
+			$params['mailtype'] = 'html';
+
+
 			if (!$CI->fuel->notification->send($params))
 			{
 				$CI->fuel->logs->write($CI->fuel->notification->last_error(), 'debug');
 				add_error(lang('error_sending_email', $CI->input->post('email')));
 			}
-		}
+
+		} 
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected method that checks to see if the save request is an invite request
+	 *
+	 * @access	protected
+	 * @return	boolean
+	 */	
+	protected function _is_invite()
+	{
+		return (!has_errors() AND isset($_POST['is_invite']) AND $_POST['is_invite'] == 1 AND isset($_POST['email'])) ? TRUE : FALSE;
 	}
 
 	// --------------------------------------------------------------------
