@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.3.1
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	UnitTesting
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/unit_testing.html
+ * @link		https://codeigniter.com/user_guide/libraries/unit_testing.html
  */
 class CI_Unit_test {
 
@@ -55,14 +55,14 @@ class CI_Unit_test {
 	 *
 	 * @var	bool
 	 */
-	public $active			= TRUE;
+	public $active = TRUE;
 
 	/**
 	 * Test results
 	 *
 	 * @var	array
 	 */
-	public $results			= array();
+	public $results = array();
 
 	/**
 	 * Strict comparison flag
@@ -71,21 +71,21 @@ class CI_Unit_test {
 	 *
 	 * @var	bool
 	 */
-	public $strict			= FALSE;
+	public $strict = FALSE;
 
 	/**
 	 * Template
 	 *
 	 * @var	string
 	 */
-	protected $_template		= NULL;
+	protected $_template = NULL;
 
 	/**
 	 * Template rows
 	 *
 	 * @var	string
 	 */
-	protected $_template_rows	= NULL;
+	protected $_template_rows = NULL;
 
 	/**
 	 * List of visible test items
@@ -93,13 +93,13 @@ class CI_Unit_test {
 	 * @var	array
 	 */
 	protected $_test_items_visible	= array(
-			'test_name',
-			'test_datatype',
-			'res_datatype',
-			'result',
-			'file',
-			'line',
-			'notes'
+		'test_name',
+		'test_datatype',
+		'res_datatype',
+		'result',
+		'file',
+		'line',
+		'notes'
 	);
 
 	// --------------------------------------------------------------------
@@ -152,7 +152,7 @@ class CI_Unit_test {
 			return FALSE;
 		}
 
-		if (in_array($expected, array('is_object', 'is_string', 'is_bool', 'is_true', 'is_false', 'is_int', 'is_numeric', 'is_float', 'is_double', 'is_array', 'is_null'), TRUE))
+		if (in_array($expected, array('is_object', 'is_string', 'is_bool', 'is_true', 'is_false', 'is_int', 'is_numeric', 'is_float', 'is_double', 'is_array', 'is_null', 'is_resource'), TRUE))
 		{
 			$expected = str_replace('is_double', 'is_float', $expected);
 			$result = $expected($test);
@@ -167,14 +167,14 @@ class CI_Unit_test {
 		$back = $this->_backtrace();
 
 		$report = array (
-							'test_name'			=> $test_name,
-							'test_datatype'		=> gettype($test),
-							'res_datatype'		=> $extype,
-							'result'			=> ($result === TRUE) ? 'passed' : 'failed',
-							'file'				=> $back['file'],
-							'line'				=> $back['line'],
-							'notes'				=> $notes
-						);
+			'test_name'     => $test_name,
+			'test_datatype' => gettype($test),
+			'res_datatype'  => $extype,
+			'result'        => ($result === TRUE) ? 'passed' : 'failed',
+			'file'          => $back['file'],
+			'line'          => $back['line'],
+			'notes'         => $notes
+		);
 
 		$this->results[] = $report;
 
@@ -291,10 +291,12 @@ class CI_Unit_test {
 				{
 					continue;
 				}
-
-				if (FALSE !== ($line = $CI->lang->line(strtolower('ut_'.$val), FALSE)))
+				elseif (in_array($key, array('test_name', 'test_datatype', 'test_res_datatype', 'result'), TRUE))
 				{
-					$val = $line;
+					if (FALSE !== ($line = $CI->lang->line(strtolower('ut_'.$val), FALSE)))
+					{
+						$val = $line;
+					}
 				}
 
 				$temp[$CI->lang->line('ut_'.$key, FALSE)] = $val;
@@ -334,9 +336,9 @@ class CI_Unit_test {
 	{
 		$back = debug_backtrace();
 		return array(
-				'file' => (isset($back[1]['file']) ? $back[1]['file'] : ''),
-				'line' => (isset($back[1]['line']) ? $back[1]['line'] : '')
-			);
+			'file' => (isset($back[1]['file']) ? $back[1]['file'] : ''),
+			'line' => (isset($back[1]['line']) ? $back[1]['line'] : '')
+		);
 	}
 
 	// --------------------------------------------------------------------

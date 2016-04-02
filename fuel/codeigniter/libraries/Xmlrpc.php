@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -51,7 +51,7 @@ if ( ! function_exists('xml_parser_create'))
  * @subpackage	Libraries
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class CI_Xmlrpc {
 
@@ -559,7 +559,7 @@ class CI_Xmlrpc {
  *
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class XML_RPC_Client extends CI_Xmlrpc
 {
@@ -735,11 +735,31 @@ class XML_RPC_Client extends CI_Xmlrpc
 			.'Content-Length: '.strlen($msg->payload).$r.$r
 			.$msg->payload;
 
-		for ($written = 0, $length = strlen($op); $written < $length; $written += $result)
+		for ($written = $timestamp = 0, $length = strlen($op); $written < $length; $written += $result)
 		{
 			if (($result = fwrite($fp, substr($op, $written))) === FALSE)
 			{
 				break;
+			}
+			// See https://bugs.php.net/bug.php?id=39598 and http://php.net/manual/en/function.fwrite.php#96951
+			elseif ($result === 0)
+			{
+				if ($timestamp === 0)
+				{
+					$timestamp = time();
+				}
+				elseif ($timestamp < (time() - $this->timeout))
+				{
+					$result = FALSE;
+					break;
+				}
+
+				usleep(250000);
+				continue;
+			}
+			else
+			{
+				$timestamp = 0;
 			}
 		}
 
@@ -761,7 +781,7 @@ class XML_RPC_Client extends CI_Xmlrpc
  *
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class XML_RPC_Response
 {
@@ -1010,7 +1030,7 @@ class XML_RPC_Response
  *
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class XML_RPC_Message extends CI_Xmlrpc
 {
@@ -1629,7 +1649,7 @@ class XML_RPC_Message extends CI_Xmlrpc
  *
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class XML_RPC_Values extends CI_Xmlrpc
 {

@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -71,6 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
+
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
@@ -98,8 +100,3 @@ if (defined('TESTING'))
 {
 	@include(TESTER_PATH.'config/tester_database'.EXT);
 }
-
-
-
-/* End of file database.php */
-/* Location: ./application/config/database.php */
