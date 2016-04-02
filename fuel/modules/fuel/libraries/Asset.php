@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2015, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -1307,8 +1307,8 @@ class Asset {
 			$params['type'] = 'js';
 			foreach($files as $file)
 			{
-				$file_parts = explode('.', $files[0]);
-				$ext =  end($file_parts);
+				$file_parts = explode('.', $files[0]); 
+				$ext = end($file_parts);
 				if (in_array($ext, $valid_exts))
 				{
 					$params['type'] = $ext;

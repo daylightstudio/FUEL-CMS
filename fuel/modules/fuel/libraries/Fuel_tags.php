@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2016, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -27,6 +27,9 @@
  */
 
 // --------------------------------------------------------------------
+
+require_once('Fuel_modules.php');
+
 class Fuel_tags extends Fuel_module {
 	
 	protected $module = 'tags';
@@ -114,7 +117,8 @@ class Fuel_tags extends Fuel_module {
 	 * Returns an associative array with the keys being the tags slug value and the values (label), being the name of the tag
 	 *
 	 * @access	public
-	 * @param	string	related slug value
+	 * @param	string	key for option
+	 * @param	string	value for option
 	 * @return	array
 	 */	
 	public function options_list($key = 'slug', $val = 'name')

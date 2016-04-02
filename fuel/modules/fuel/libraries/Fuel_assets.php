@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2016, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -146,8 +146,8 @@ class Fuel_assets extends Fuel_base_library {
 		{
 			if ($file['error'] == 0)
 			{
-				$file_parts = explode('.', $file['name']);
-				$ext = end($file_parts);
+				$name_parts = explode('.', $file['name']);
+				$ext = end($name_parts);
 				$field_name = current(explode('___', $key)); // extract out multi file upload infor
 			
 				// loop through all the allowed file types that are accepted for the asset directory

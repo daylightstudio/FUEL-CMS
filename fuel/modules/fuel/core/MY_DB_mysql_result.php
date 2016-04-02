@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2016, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -56,7 +56,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 			return array();
 		}
 
-		$this->_data_seek(0);
+		$this->data_seek(0);
 		
 		while ($row = $this->_fetch_assoc())
 		{
@@ -100,7 +100,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 			return array();
 		}
 
-		$this->_data_seek(0);
+		$this->data_seek(0);
 		while ($row = $this->_fetch_object())
 		{
 			$row_arr = get_object_vars($row);
@@ -119,6 +119,20 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 		}
 		return $this->result_assoc;
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select for specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
+
 }
 /* End of file MY_DB_mysql_result.php */
 /* Location: ./application/libraries/MY_DB_mysql_result.php */
