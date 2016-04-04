@@ -28,33 +28,33 @@
  * @link
  */
 
-// includes this fix
-// https://github.com/bubbafoley/CodeIgniter/commit/dae42fa65fc65e43d704f1a6c139e985e93486f4
-// as well as the ability to save a subset version (e.g. for modules)
+// Includes change for a subset version (e.g. for modules)
 
 class MY_Migration extends CI_Migration{
 
-	protected $_migration_enabled = FALSE;
-	protected $_migration_path = NULL;
-	protected $_migration_version = 0;
 	protected $_module = '';
 
-	protected $_error_string = '';
-
+	/**
+	 * Initialize Migration Class
+	 * Overwritten to create module field in the database
+	 *
+	 * @param	array	$config
+	 * @return	void
+	 */
 	public function __construct($config = array())
 	{
 		// Only run this constructor on main library load
-		if (get_parent_class($this) !== 'CI_Migration')
+		if ( ! in_array(get_class($this), array('CI_Migration', config_item('subclass_prefix').'Migration'), TRUE))
 		{
 			return;
 		}
 
 		foreach ($config as $key => $val)
 		{
-			$this->{'_' . $key} = $val;
+			$this->{'_'.$key} = $val;
 		}
 
-		log_message('debug', 'Migrations class initialized');
+		log_message('info', 'Migrations Class Initialized');
 
 		// Are they trying to use migrations while it is disabled?
 		if ($this->_migration_enabled !== TRUE)
@@ -86,17 +86,40 @@ class MY_Migration extends CI_Migration{
 		// They'll probably be using dbforge
 		$this->load->dbforge();
 
+		// Make sure the migration table name was set.
+		if (empty($this->_migration_table))
+		{
+			show_error('Migrations configuration file (migration.php) must have "migration_table" set.');
+		}
+
+		// Migration basename regex
+		$this->_migration_regex = ($this->_migration_type === 'timestamp')
+			? '/^\d{14}_(\w+)$/'
+			: '/^\d{3}_(\w+)$/';
+
+		// Make sure a valid migration numbering type was set.
+		if ( ! in_array($this->_migration_type, array('sequential', 'timestamp')))
+		{
+			show_error('An invalid migration numbering type was specified: '.$this->_migration_type);
+		}
+
 		// If the migrations table is missing, make it
-		if ( ! $this->db->table_exists('migrations'))
+		if ( ! $this->db->table_exists($this->_migration_table))
 		{
 			$this->dbforge->add_field(array(
-				'version' => array('type' => 'INT', 'constraint' => 3),
+				'version' => array('type' => 'BIGINT', 'constraint' => 20),
 				'module' => array('type' => 'VARCHAR', 'constraint' => 50),
 			));
 
-			$this->dbforge->create_table('migrations', TRUE);
+			$this->dbforge->create_table($this->_migration_table, TRUE);
 
-			$this->db->insert('migrations', array('version' => 0));
+			$this->db->insert($this->_migration_table, array('version' => 0));
+		}
+
+		// Do we auto migrate to the latest migration?
+		if ($this->_migration_auto_latest === TRUE && ! $this->latest())
+		{
+			show_error($this->error_string());
 		}
 	}
 
@@ -171,30 +194,6 @@ class MY_Migration extends CI_Migration{
 			'module' => $this->_module
 		));
 	}
-
-
-	// THIS IS A FIX FOR A BUG IN CI --------------------------------------------------------------------
-
-	/**
-	 * Set's the schema to the latest migration
-	 *
-	 * @return	mixed	true if already latest, false if failed, int if upgraded
-	 */
-	public function latest()
-	{
-		if ( ! $migrations = $this->find_migrations())
-		{
-			$this->_error_string = $this->lang->line('migration_none_found');
-			return false;
-		}
-
-		$last_migration = basename(end($migrations));
-
-		// Calculate the last migration step from existing migration
-		// filenames and procceed to the standard version migration
-		return $this->version((int) substr($last_migration, 0, 3));
-	}
-
 }
 
 /* End of file Migration.php */
