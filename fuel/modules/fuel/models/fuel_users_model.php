@@ -777,7 +777,7 @@ class Fuel_users_model extends Base_module_model {
 	 
 		if ($this->_is_invite())
 		{
-			$this->_send_email($values['reset_key']);
+			$this->_send_email($values['user_name'], $values['reset_key']);
 		}
 		return $values;
 	}
@@ -791,13 +791,13 @@ class Fuel_users_model extends Base_module_model {
 	 * @param	int The user ID
 	 * @return	void
 	 */	
-	protected function _send_email($token) 
+	protected function _send_email($user_name, $token) 
 	{
 		$CI =& get_instance();
 
 		if ($this->_is_invite()) {
 
-			$msg = lang('new_user_email') . '<a href="'.site_url().'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>';					
+			$msg = lang('new_user_email', $user_name, '<a href="'.site_url().'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>');
 
 			$params['to'] = $CI->input->post('email');
 			$params['subject'] = lang('new_user_email_subject');
