@@ -1,7 +1,7 @@
 <?php
 require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
 
-class {model_name}_module extends Fuel_base_controller {
+class {Module}_module extends Fuel_base_controller {
 	
 	public $nav_selected = '{module}|{module}/:any';
 

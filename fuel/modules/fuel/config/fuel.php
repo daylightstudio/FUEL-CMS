@@ -460,7 +460,7 @@ $config['generate'] = array(
 		'config/{module}.php',
 		'config/{module}_constants.php',
 		'config/{module}_routes.php',
-		'controllers/{module}_module.php',
+		'controllers/{Module}_module.php',
 		'helpers/{module}_helper.php',
 		'install/install.php',
 		'libraries/Fuel_{module}.php',
@@ -474,7 +474,7 @@ $config['generate'] = array(
 	),
 	'simple' => 'MY_fuel_modules.php',
 	'model'  => array(
-		'{model}_model.php',
+		'{Model_name}_model.php',
 		'sql/{table}.sql',
 	)
 );

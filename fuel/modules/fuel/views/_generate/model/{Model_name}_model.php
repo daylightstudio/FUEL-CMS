@@ -2,7 +2,7 @@
 
 require_once(FUEL_PATH.'models/Base_module_model.php');
 
-class {model_name}_model extends Base_module_model {
+class {Model_name}_model extends Base_module_model {
 
 	// read more about models in the user guide to get a list of all properties. Below is a subset of the most common:
 
@@ -78,7 +78,7 @@ class {model_name}_model extends Base_module_model {
 
 }
 
-class {model_record}_model extends Base_module_record {
+class {Model_record}_model extends Base_module_record {
 	
 	// put your record model code here
 }
