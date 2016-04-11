@@ -1264,6 +1264,7 @@ class Base_module_model extends MY_Model {
 			}
 		}
 
+		$data_table->row_action = TRUE;
 		$data_table->assign_data($list_items, $list_cols);
 		return $data_table->render();
 	}

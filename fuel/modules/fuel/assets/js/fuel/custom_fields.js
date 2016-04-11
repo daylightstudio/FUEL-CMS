@@ -1473,17 +1473,24 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				fuel._initToolTips();
 			});
 		};
+
 		var embeddedListModalOpen = function(e) {
 			e.preventDefault();
 			var $activeEmbeddedList = $(this).closest(".embedded_list_container");
-			var iframe_url = $(this).attr("href");
+			var href = $(this).attr("href");
+			if (!href){
+				href = $(this).closest('tr').find("td.actions").find("a:first").attr('href');
+			}
+
+			var iframe_url = href;
 			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
 				embeddedListModalClose($activeEmbeddedList);
 			});
 		};
-		$fuel.on("click", ".datatable_action", embeddedListModalOpen);
 
+		$fuel.on("click", ".datatable_action, #data_table td[class^='col']:not('.actions')", embeddedListModalOpen);
+		
 		// added refresh event that can be triggered
 		$('.embedded_list_container').on("refreshEmbedList", function(){
 			embeddedListModalClose(this);
@@ -1493,6 +1500,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	fuel.fields.select2 = function(context, options){
 		if (options){
 			var options = $.extend({}, options);
+		} else { 
+			options = {};
 		}
 		$('select.select2_applied', context).select2('destroy').removeClass('select2_applied');
 		$('select.select2', context).addClass('select2_applied').select2(options);
