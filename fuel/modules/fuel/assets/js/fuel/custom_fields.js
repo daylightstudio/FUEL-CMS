@@ -106,16 +106,22 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var module = fuel.getModule();
 		//var _previewPath = myMarkItUpSettings.previewParserPath;
 
-		var createMarkItUp = function(elem){
+		var createPreviewParams = function(elem){
 			var $elem = $(elem);
 			var q = 'module=' + escape(module) + '&field=' + escape($elem.attr('name'));
 			if ($elem.attr('data-preview')){
 				q += '&preview=' + escape($elem.attr('data-preview'));
 			}
+			return q;
+		}
+
+		var createMarkItUp = function(elem){
 
 			// add custom configs
 			var editorSet = $elem.data('editor_set');
+			
 			var config = fuel.fields.getElementData($elem.attr('name'), 'editor');
+			
 			if (!config || config.length == 0 || $elem.hasClass('ckeditor_applied')){
 				if ($elem.hasClass('wysiwyg') || $elem.hasClass('ckeditor_applied')){
 					config = myMarkItUpSettings.sets['default'];
@@ -124,7 +130,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				}
 			}
 
-			config.previewParserPath = config.previewParserPath + '?' + q;
+			config.previewParserPath = config.previewParserPath + '?' + createPreviewParams(elem);
+
 			var config = myMarkItUpSettings.processConfig(config, editorSet);
 			$elem.not('.markItUpEditor').markItUp(config);
 			
@@ -153,9 +160,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var ckId = $(elem).attr('id');
 			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 			
-			// Hide preview button until the editor fully created
-			$('#'+ckId+'_preview').hide();
-
 			// used in cases where repeatable fields cause issues
 			if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 				return;
@@ -176,6 +180,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g]
 			};
 			config = $.extend(config, fuel.fields.getElementData($(elem).attr('name'), 'editor'));
+			config.previewParserPath = config.previewParserPath + '?' + createPreviewParams(elem);
+
+			// now set it back so that the preview will work
+			fuel.fields.setElementData($(elem).attr('name'), 'editor', config);
 
 			var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
 			config.height = $(elem).height();
@@ -273,6 +281,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if ($elem.get(0).style.width){
 					$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
 				}
+
+				createPreview(ckId);
 			})
 		
 			// translate image paths
@@ -300,12 +310,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 					//if (!$('#cke_' + ckId).is(':hidden')){
 					if (!ckInstance.hidden){
-						// Hide ckEditor
 						ckInstance.hidden = true;
+						if (!$elem.hasClass('markItUpEditor')){
+							createMarkItUp(elem);
+							$elem.show();
+						}
 						$('#cke_' + ckId).hide();
-
-						// Show markItUp editor
 						$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
+						//$elem.closest('.html').show();
 					
 						$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 					
@@ -315,6 +327,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 						// update the info
 						ckInstance.updateElement();
+					
+					
 					} else {
 
 						ckInstance.hidden = false;
@@ -331,25 +345,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				
 					fixCKEditorOutput(elem);
 					return false;
-				});
-
-				// Used timeout to wait for ckEditor fully created to prevent error.
-				setTimeout(function(){
-					$elem = $(elem);
-					// Create markItUpEditor
-					if (!$elem.hasClass('markItUpEditor')){
-						createMarkItUp(elem);
-						$elem.show();
-
-						// used instead of show/hide because of issue with it not showing textarea
-						$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'});
-					}
-					
-					fixCKEditorOutput(elem);
-
-					// Show the preview button
-					$('#'+ckId+'_preview').show();
-				},1000);
+				})
 			}
 
 		}
@@ -368,7 +364,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var createPreview = function(id){
 
 			var $textarea = $('#' + id);
-
 			if ($textarea.data('preview') !== undefined && $textarea.data('preview').length === 0){
 				return;
 			}
@@ -389,6 +384,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						var csrf = $('#csrf_test_name').val() ? $('#csrf_test_name').val() : '';
 
 						var config = fuel.fields.getElementData($textarea.attr('name'), 'editor');
+						
 						if (!config.previewParserPath || config.previewParserPath == 'preview') config.previewParserPath = __FUEL_PATH__ + '/' + myMarkItUpSettings.sets['default'].previewParserPath;
 						if (!config.previewParserVar) config.previewParserVar = 'data'
 
@@ -428,6 +424,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 			} else {
 				createMarkItUp(this);
+				createPreview(ckId);
 			}
 			
 			// setup update of element on save just in case
@@ -436,7 +433,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					CKEDITOR.instances[ckId].updateElement();
 				}
 			})
-			createPreview(ckId);
+			
 			
 			
 		});
