@@ -116,6 +116,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		}
 
 		var createMarkItUp = function(elem){
+			
+			var $elem = $(elem);
 
 			// add custom configs
 			var editorSet = $elem.data('editor_set');
