@@ -5,7 +5,7 @@
 $config['markitup']['default'] = array(
 	// 'root' => 'skins/simple/',
 	// 'namespace' => 'html',
-	'previewParserPath' => fuel_url('preview'),
+	// 'previewParserPath' => fuel_url('preview'),
 	// 'previewInWindow' => TRUE,
 	// 'previewInWindow' => TRUE,
 	// 'previewParserVar' => 'data',
@@ -57,7 +57,7 @@ $config['ckeditor']['default'] = array(
 	'extraPlugins' => 'fuellink,fuelimage',
 	'removePlugins' => 'link,image',
 	'allowedContent' => TRUE,
-	'previewParserPath' => fuel_url('preview'),
+	// 'previewParserPath' => fuel_url('preview'),
 );
 
 // An example of the above as simply a JSON string
