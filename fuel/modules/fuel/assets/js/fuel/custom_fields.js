@@ -482,7 +482,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var activeField = null;
 
 		var showAssetsSelect = function(params){
-			console.log(params)
 			var winHeight = 450;
 			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
 			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
