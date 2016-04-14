@@ -2124,8 +2124,8 @@ class Fuel_custom_fields {
 		$CI =& get_instance();
 
 		$adv_module = 'app';
-		$module =& $this->fuel->modules->get($params['module'], FALSE);
-		$model =& $module->model();
+		$module = $this->fuel->modules->get($params['module'], FALSE);
+		$model = $module->model();
 
 		$module_url = $module->info('module_uri');
 		$create_button_label = (!empty($params['create_button_label'])) ? $params['create_button_label'] : lang('btn_create') .' '. ucwords($model->singular_name());

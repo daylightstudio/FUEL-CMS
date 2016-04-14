@@ -1135,7 +1135,7 @@ class Base_module_model extends MY_Model {
 	 */
 	public function get_embedded_list_items($params, $list_cols = array(), $actions = array('edit'))
 	{
-		$module =& $this->get_module();
+		$module = $this->get_module();
 
 		if (empty($list_cols) AND is_string($this->key_field()))
 		{

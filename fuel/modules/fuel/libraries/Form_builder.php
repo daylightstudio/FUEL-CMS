@@ -3134,7 +3134,7 @@ $func_str = '
 				if (is_array($custom_field['class']))
 				{
 					$module = key($custom_field['class']);
-					$library = strtolower(current($custom_field['class']));
+					$library = current($custom_field['class']);
 					$this->CI->load->module_library($module, $library);
 				}
 				else
