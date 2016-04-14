@@ -631,7 +631,7 @@ $lang['update_cli_intro'] = "FUEL CMS 1.4x is built on CodeIgniter 3. If you are
 $lang['update_cli_intro'] .= "1) Upper-case first letter for models, libraries and controller file names.\n";
 $lang['update_cli_intro'] .= "2) Will upper case common references to Base_module_model.php within model files.\n";
 $lang['update_cli_intro'] .= "3) Update common method signatures in models and libraries like form_fields and _common_query and initialize to match their parents.\n";
-$lang['update_cli_intro'] .= "Run this ONLY if you are using GIT in case you need to roll back!\n";
+$lang['update_cli_intro'] .= "WARNING: Run this ONLY if you are using GIT in case you need to roll back!\n";
 $lang['update_cli_intro'] .= "Do you wish to continue (y/n)";
 
 // now include the Javascript specific ones since there is some crossover
