@@ -1158,10 +1158,19 @@ class Base_module_model extends MY_Model {
 				{
 					unset($params['where'][$k]);
 					$k = str_replace(':', '.', $k);
-					$params['where'][$k] = str_replace(':', '.', $v);
+					if (is_string($v))
+					{
+						$params['where'][$k] = str_replace(':', '.', $v);	
+					}
+
+					$method = (is_array($v)) ? 'where_in' : 'where';
+					$this->db->$method($k, $v);
 				}
 			}
-			$this->db->where($params['where']);
+			else
+			{
+				$this->db->where($params['where']);
+			}
 		}
 
 		$list_items = $this->list_items();
