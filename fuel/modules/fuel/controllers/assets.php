@@ -103,7 +103,7 @@ class Assets extends Module {
 							$uploaded_path = $uploaded_path .'/'.$subfolder;
 						}
 						$uploaded_file_name_arr[] = trim(str_replace($uploaded_path, '', $ud['full_path']), '/');
-						$uploaded_file_webpath_arr[] = assets_server_to_web_path($ud['full_path'], TRUE);
+						$uploaded_file_webpath_arr[] = trim(assets_server_to_web_path($ud['full_path'], TRUE), '/');
 					}
 
 					// set the uploaded file name to a concatenated string separated by commas
