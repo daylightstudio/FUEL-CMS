@@ -645,7 +645,7 @@ class Fuel_custom_fields {
 			$img_container_styles = $params['img_styles'];
 		}
 		
-		$preview = '<br /><div class="img_preview noclone" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
+		$preview = '<br /><div class="img_preview" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
 		$preview .= '</div><div class="clear"></div>';
 
 		$str .= $preview;
