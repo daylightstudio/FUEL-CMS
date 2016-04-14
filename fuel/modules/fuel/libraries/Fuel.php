@@ -196,7 +196,7 @@ class Fuel extends Fuel_advanced_module {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Installs the modules
+	 * Installs FUEL via the command line
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -213,17 +213,21 @@ class Fuel extends Fuel_advanced_module {
 		// $intro = array(
 		// 	"The FUEL CMS installer is an easy way to setup the CMS with common configurations. It will do the following:",
 		// 	"1) Automatically generate an encryption key for the fuel/application/config/config.php.",
-		// 	"2) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.",
-		// 	"3) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.",
-		// 	"4) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.",
-		// 	"5) Setup your evironments fuel/application/config/environments.php.",
-		// 	"6) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.",
-		// 	"7) Update the fuel/application/config/database.php file with the inputted values.",
-		// 	"8) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n",
-
+		//  "2) Set the session save path in fuel/application/config/config.php.",
+		// 	"3) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.",
+		// 	"4) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.",
+		// 	"5) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.",
+		// 	"6) Setup your evironments fuel/application/config/environments.php.",
+		// 	"7) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.",
+		// 	"8) Update the fuel/application/config/database.php file with the inputted values.",
+		// 	"9) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n",
 		// );
 		
 		$cli->write(lang('install_cli_intro'));
+
+		// add the session_path key
+		$session_path = $cli->prompt(lang('install_session_path'));
+		if (!empty($session_path)) $this->installer->change_config('config', '$config[\'sess_save_path\'] = NULL;', '$config[\'sess_save_path\'] = \''.$session_path.'\';');	
 
 		// add the encryption key
 		$this->installer->change_config('config', '$config[\'encryption_key\'] = \'\';', '$config[\'encryption_key\'] = \''.md5(uniqid()).'\';');
@@ -312,7 +316,129 @@ class Fuel extends Fuel_advanced_module {
 		return TRUE;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Updates FUEL to v1.4
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function update()
+	{
+		$cli = $this->installer->cli();
 
+		if (!$cli->is_cli()) return FALSE;
+
+		if (!($this->version('major') == '1' AND $this->version('minor') == '4'))
+		{
+			$cli->write('You must be using version 1.4x to run the updater.');
+			exit(); 
+		}
+		
+		$this->CI->load->helper('directory');
+		$this->CI->load->helper('file');
+
+		// $intro = array(
+		// 	"FUEL CMS 1.4x is built on CodeIgniter 3. If you are upgrading from 1.3x or earlier, this updater will help fix some of the common issues when upgrading including:",
+		// 	"1) Upper-cased first letter for models, libraries and controller file names.",
+		// 	"2) Will upper case common references to Base_module_model.php.",
+		// 	"3) Update common method signatures in models and libraries like form_fields and _common_query and initialize to match their parents.",
+		// 	"Run this ONLY if you are using GIT in case you need to roll back!"
+		// 	"Do you wish to continue (y/n)",
+		// );
+		$continue = $cli->prompt(lang('update_cli_intro'));
+
+		if (strtolower($continue) == 'y' || strtolower($continue) == 'yes')
+		{
+			$modules_path = MODULES_PATH;
+			$module_paths = list_directories(MODULES_PATH, array(), TRUE, FALSE, FALSE);
+			foreach($module_paths as $module_path)
+			{
+				// ucfirst file names
+				$folders = array('controllers', 'libraries', 'models');
+
+				foreach($folders as $folder)
+				{
+					// change controller file names to be ucfirst
+					$path = $module_path.'/'.$folder;
+					$files = get_filenames($path, TRUE);
+					$cmd1 = "git mv -f ";
+					$cmd2 = "mv "; // in case GIT isn't being used
+					foreach($files as $file)
+					{
+						if (pathinfo($file, PATHINFO_EXTENSION) == 'php')
+						{
+
+							// first ucfirst file names
+							$mv = $file . " " .pathinfo($file, PATHINFO_DIRNAME) .'/'. ucfirst(pathinfo($file, PATHINFO_BASENAME));
+							exec($cmd1 . $mv);
+							exec($cmd2 . $mv);
+
+							//  now search and replace common issues
+							if ($folder == 'controllers')
+							{
+								// public function initialize($params = array())
+								$find = array(
+									'/controllers/module.php'
+									);
+								$replace = array(
+									'/controllers/Module.php'
+									);
+								$f = read_file($file);
+								$f = str_replace($find, $replace, $f);
+							}
+							elseif ($folder == 'models')
+							{
+								$find = array(
+									'models/base_module_model.php', 
+									'function form_fields()',
+									'function form_fields($values = array())',
+									'function _common_query()',
+									);
+								$replace = array(
+									'models/Base_module_model.php', 
+									'function form_fields($values = array(), $related = array())',
+									'function form_fields($values = array(), $related = array())',
+									'function _common_query($display_unpublished_if_logged_in = NULL)',
+									);
+								$f = read_file($file);
+								$f = str_replace($find, $replace, $f);
+								echo $f;
+								exit('END');
+							}
+							elseif ($folder == 'libraries')
+							{
+								$find = array(
+									'function initialize($params)', 
+									);
+								$replace = array(
+									'function initialize($params = array())', 
+									);
+								$f = read_file($file);
+								$f = str_replace($find, $replace, $f);
+								echo $f;
+								exit('END');
+							}
+
+
+							// public function initialize($params = array())
+						}
+					}
+				}
+				
+
+				$models_path = $module_path.'/models';
+				$model_files = get_filenames($models_path);
+
+			}
+		}
+		
+		exit();
+
+
+		return TRUE;
+	}
 	// --------------------------------------------------------------------
 	
 	/**

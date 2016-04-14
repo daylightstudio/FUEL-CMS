@@ -146,7 +146,8 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 
 						<?php  if ($this->config->item('encryption_key') == '' OR
 								$this->config->item('fuel_mode', 'fuel') == 'views' OR
-								!$this->config->item('admin_enabled', 'fuel')
+								!$this->config->item('admin_enabled', 'fuel') OR
+								!$this->config->item('sess_save_path')
 
 					) : ?>
 					<li>
@@ -164,6 +165,9 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 								<?php endif; ?>
 								<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
 								<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
+								<?php endif; ?>
+								<?php if (!$this->config->item('sess_save_path')) : ?>
+								<li>In the <strong>fuel/application/config/config.php</strong> file, change the <code>$config['sess_save_path']</code> configuration property to a writable folder above the web root to save session files OR leave it set to <strong>NULL</strong> to use the default PHP setting.</li>
 								<?php endif; ?>
 							</ul>
 						</div>

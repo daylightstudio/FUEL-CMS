@@ -42,9 +42,17 @@ class Installer extends Fuel_base_controller {
 			}
 		}
 
-		if (strtolower($module) == 'fuel')
+		$module = strtolower($module);
+		if ($module == 'fuel' OR $module == 'update' OR $module == 'upgrade')
 		{
-			$this->fuel->install();
+			if ($module == 'update' OR $module == 'upgrade')
+			{
+				$this->fuel->update();
+			}
+			else
+			{
+				$this->fuel->install();	
+			}
 		}
 		else
 		{
