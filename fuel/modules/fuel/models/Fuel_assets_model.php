@@ -511,7 +511,7 @@ class Fuel_assets_model extends CI_Model {
 			{
 				if (is_image_file($uploaded_image))
 				{
-					$img .= '<a href="'.$uploaded_image.'" target="_blank"><img src="'.$uploaded_image.'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
+					$img .= '<a href="'.assets_path($uploaded_image).'" target="_blank"><img src="'.assets_path($uploaded_image).'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
 				}
 			}
 
