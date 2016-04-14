@@ -575,7 +575,7 @@ class Asset {
 			return $assets_path;
 		}
 				
-		return str_replace('//', '/', $this->assets_path($assets_path));
+		return $this->assets_path(str_replace('//', '/', $assets_path));
 	}
 
 	// --------------------------------------------------------------------
