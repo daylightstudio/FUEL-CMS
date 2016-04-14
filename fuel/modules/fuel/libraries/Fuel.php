@@ -387,6 +387,7 @@ class Fuel extends Fuel_advanced_module {
 									);
 								$f = read_file($file);
 								$f = str_replace($find, $replace, $f);
+								write_file($file, $f);
 							}
 							elseif ($folder == 'models')
 							{
@@ -404,8 +405,7 @@ class Fuel extends Fuel_advanced_module {
 									);
 								$f = read_file($file);
 								$f = str_replace($find, $replace, $f);
-								echo $f;
-								exit('END');
+								write_file($file, $f);
 							}
 							elseif ($folder == 'libraries')
 							{
@@ -417,8 +417,7 @@ class Fuel extends Fuel_advanced_module {
 									);
 								$f = read_file($file);
 								$f = str_replace($find, $replace, $f);
-								echo $f;
-								exit('END');
+								write_file($file, $f);
 							}
 
 
