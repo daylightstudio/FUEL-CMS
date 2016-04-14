@@ -95,7 +95,8 @@ class Data_table {
 		// load localization helper if not already
 		if (!function_exists('lang'))
 		{
-			$this->_CI->load->helper('language');
+			$CI =& get_instance();
+			$CI->load->helper('language');
 		}
 		
 		$this->set_params($params);
