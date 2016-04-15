@@ -43,16 +43,9 @@ class Installer extends Fuel_base_controller {
 		}
 
 		$module = strtolower($module);
-		if ($module == 'fuel' OR $module == 'update' OR $module == 'upgrade')
+		if ($module == 'fuel')
 		{
-			if ($module == 'update' OR $module == 'upgrade')
-			{
-				$this->fuel->update();
-			}
-			else
-			{
-				$this->fuel->install();	
-			}
+			$this->fuel->install();	
 		}
 		else
 		{
@@ -128,6 +121,32 @@ class Installer extends Fuel_base_controller {
 		{
 			$module_folder = MODULES_WEB_PATH.$module;
 			echo lang('module_uninstall', $module, $module_folder);
+		}
+	}
+
+	public function update($module = 'fuel')
+	{
+		if ($module == 'fuel')
+		{
+			$this->fuel->update();	
+		}
+		else
+		{
+			if ( ! $this->fuel->modules->exists($module) OR !method_exists($this->fuel->$module, 'update'))
+			{
+				echo lang('cannot_determine_module')."\n";
+				return;
+			}
+
+			// update
+			if ( ! $this->fuel->$module->update())
+			{
+				echo $this->fuel->installer->last_error();
+			}
+			else
+			{
+				echo lang('module_update', $module);
+			}
 		}
 	}
 }
