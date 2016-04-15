@@ -374,6 +374,7 @@ class Fuel extends Fuel_advanced_module {
 
 					foreach($files as $file)
 					{
+						$file = DIRECTORY_SEPARATOR.ltrim($file, '/');
 						if (pathinfo($file, PATHINFO_EXTENSION) == 'php')
 						{
 							if ($folder == 'controllers' OR $folder == 'models')
