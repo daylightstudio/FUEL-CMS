@@ -353,27 +353,40 @@ class Fuel extends Fuel_advanced_module {
 		{
 			$modules_path = MODULES_PATH;
 			$module_paths = list_directories(MODULES_PATH, array(), TRUE, FALSE, FALSE);
+
 			foreach($module_paths as $module_path)
 			{
+				$module = pathinfo($module_path, PATHINFO_BASENAME);
+				if ($module == 'fuel') continue;
+
 				// ucfirst file names
 				$folders = array('controllers', 'libraries', 'models');
 
 				foreach($folders as $folder)
 				{
+
 					// change controller file names to be ucfirst
 					$path = $module_path.'/'.$folder;
-					$files = get_filenames($path, TRUE);
+					// $files = get_filenames($path, TRUE, FALSE);
+					$files = directory_to_array($path, FALSE);
 					$cmd1 = "git mv -f ";
 					$cmd2 = "mv "; // in case GIT isn't being used
+
 					foreach($files as $file)
 					{
 						if (pathinfo($file, PATHINFO_EXTENSION) == 'php')
 						{
-
-							// first ucfirst file names
-							$mv = $file . " " .pathinfo($file, PATHINFO_DIRNAME) .'/'. ucfirst(pathinfo($file, PATHINFO_BASENAME));
-							exec($cmd1 . $mv);
-							exec($cmd2 . $mv);
+							if ($folder == 'controllers' OR $folder == 'models')
+							{
+								// first ucfirst file names
+								$newFile = pathinfo($file, PATHINFO_DIRNAME) .'/'. ucfirst(pathinfo($file, PATHINFO_BASENAME));
+								if ($file != $newFile)
+								{
+									$mv = $file . " " .$newFile;
+									exec($cmd1 . $mv);
+									exec($cmd2 . $mv);
+								}
+							}
 
 							//  now search and replace common issues
 							if ($folder == 'controllers')
@@ -385,9 +398,8 @@ class Fuel extends Fuel_advanced_module {
 								$replace = array(
 									'/controllers/Module.php'
 									);
-								$f = read_file($file);
-								$f = str_replace($find, $replace, $f);
-								write_file($file, $f);
+
+								$this->_update_search_replace($file, $find, $replace);
 							}
 							elseif ($folder == 'models')
 							{
@@ -403,9 +415,7 @@ class Fuel extends Fuel_advanced_module {
 									'function form_fields($values = array(), $related = array())',
 									'function _common_query($display_unpublished_if_logged_in = NULL)',
 									);
-								$f = read_file($file);
-								$f = str_replace($find, $replace, $f);
-								write_file($file, $f);
+								$this->_update_search_replace($file, $find, $replace);
 							}
 							elseif ($folder == 'libraries')
 							{
@@ -415,13 +425,8 @@ class Fuel extends Fuel_advanced_module {
 								$replace = array(
 									'function initialize($params = array())', 
 									);
-								$f = read_file($file);
-								$f = str_replace($find, $replace, $f);
-								write_file($file, $f);
+								$this->_update_search_replace($file, $find, $replace);
 							}
-
-
-							// public function initialize($params = array())
 						}
 					}
 				}
@@ -432,12 +437,26 @@ class Fuel extends Fuel_advanced_module {
 
 			}
 		}
-		
-		exit();
-
-
+		$cli->write(lang('update_success')); 
 		return TRUE;
 	}
+
+	protected function _update_search_replace($file, $find, $replace)
+	{
+		$f = read_file($file);
+
+		foreach($find as $i => $_f)
+		{
+			if (strpos($f, $_f) !== FALSE)
+			{
+				$f = str_replace($find[$i], $replace[$i], $f);
+				echo "REPLACED: ".$find[$i]." => ".$replace[$i]."\n";
+			}
+		}
+		
+		write_file($file, $f);
+	}
+	
 	// --------------------------------------------------------------------
 	
 	/**
