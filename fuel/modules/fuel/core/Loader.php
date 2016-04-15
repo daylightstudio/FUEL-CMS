@@ -166,6 +166,7 @@ class Fuel_Loader extends CI_Loader
 	/** Load a module library **/
 	public function library($library, $params = NULL, $object_name = NULL, $module = NULL) 
 	{
+
 		if (!isset($module)) $module = $this->_module; // FUEL
 		if (is_array($library)) return $this->libraries($library);		
 		
@@ -183,6 +184,13 @@ class Fuel_Loader extends CI_Loader
 		{
 			list($path2, $file) = Modules::find($_alias, $this->_module, 'config/');	
 			($path2) && $params = Modules::load_file($file, $path2, 'config');
+			
+			// FUEL check application directory
+			if ($params == NULL AND file_exists(APPPATH.'/config/'.$file.EXT))
+			{
+				$path3 = APPPATH.'/config/';
+				$params = Modules::load_file($file, $path3, 'config');
+			}
 		}	
 		
 		if ($path === FALSE) 
