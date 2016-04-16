@@ -135,4 +135,193 @@ class Fuel_Router extends MX_Router
 		// matching route so we'll set the site default route
 		$this->_set_request(array_values($this->uri->segments));
 	}
+
+	protected function _set_request($segments = array())
+	{
+		if ($this->translate_uri_dashes === TRUE)
+		{
+			foreach(range(0, 2) as $v)
+			{
+				isset($segments[$v]) && $segments[$v] = str_replace('-', '_', $segments[$v]);
+			}
+		}
+
+		$newsegments = $this->locate($segments);
+		
+		if($this->located == -1)
+		{
+			// <-- FUEL
+			$fuel_path = explode('/', $this->routes['404_override']);
+			$controller = end($fuel_path);
+			$this->set_class($controller);
+			$this->_set_rsegments($segments);
+			// FUEL -->
+			$this->_set_404override_controller();
+			return;
+		}
+
+		$segments = $newsegments;
+
+		if(empty($segments))
+		{
+			$this->_set_default_controller();
+			return;
+		}
+		
+		$this->set_class($segments[0]);
+		
+		if (isset($segments[1]))
+		{
+			$this->set_method($segments[1]);
+		}
+		else
+		{
+			$segments[1] = 'index';
+		}
+       
+       // <-- FUEL
+       $this->_set_rsegments($segments);
+       // FUEL -->
+
+	}
+
+	protected function _set_rsegments($segments)
+	{
+		array_unshift($segments, NULL);
+		unset($segments[0]);
+		$this->uri->rsegments = $segments;
+	}
+	
+	/** Locate the controller **/
+	public function locate($segments)
+	{
+		$this->located = 0;
+		$ext = $this->config->item('controller_suffix').EXT;
+
+		/* use module route if available */
+		if (isset($segments[0]) && $routes = Modules::parse_routes($segments[0], implode('/', $segments)))
+		{
+			$segments = $routes;
+		}
+
+		/* get the segments array elements */
+		list($module, $directory, $controller) = array_pad($segments, 3, NULL);
+
+		/* check modules */
+		foreach (Modules::$locations as $location => $offset)
+		{
+			/* module exists? */
+			if (is_dir($source = $location.$module.'/controllers/'))
+			{
+				$this->module = $module;
+				$this->directory = $offset.$module.'/controllers/';
+
+				/* module sub-controller exists? */
+				if($directory)
+				{
+					/* module sub-directory exists? */
+					if(is_dir($source.$directory.'/'))
+					{	
+						$source .= $directory.'/';
+						$this->directory .= $directory.'/';
+
+						/* module sub-directory controller exists? */
+						if($controller)
+						{
+							if(is_file($source.ucfirst($controller).$ext))
+							{
+								$this->located = 3;
+								return array_slice($segments, 2);
+							}
+							else $this->located = -1;
+						}
+					}
+					else
+					if(is_file($source.ucfirst($directory).$ext))
+					{
+						$this->located = 2;
+						return array_slice($segments, 1);
+					}
+					else $this->located = -1;
+				}
+
+				/* module controller exists? */
+				if(is_file($source.ucfirst($module).$ext))
+				{
+					$this->located = 1;
+					return $segments;
+				}
+			}
+		}
+
+		if( ! empty($this->directory)) return;
+
+		/* application sub-directory controller exists? */
+		if($directory)
+		{
+			if(is_file(APPPATH.'controllers/'.$module.'/'.ucfirst($directory).$ext))
+			{
+				$this->directory = $module.'/';
+				return array_slice($segments, 1);
+			}
+
+			/* application sub-sub-directory controller exists? */
+			if($controller)
+			{ 
+				if(is_file(APPPATH.'controllers/'.$module.'/'.$directory.'/'.ucfirst($controller).$ext))
+				{
+					$this->directory = $module.'/'.$directory.'/';
+					return array_slice($segments, 2);
+				}
+			}
+		}
+
+		/* application controllers sub-directory exists? */
+		if (is_dir(APPPATH.'controllers/'.$module.'/'))
+		{
+			$this->directory = $module.'/';
+			return array_slice($segments, 1);
+		}
+
+		/* application controller exists? */
+		if (is_file(APPPATH.'controllers/'.ucfirst($module).$ext))
+		{
+			return $segments;
+		}
+		
+		$this->located = -1;
+	}
+
+	/* set module path */
+	protected function _set_module_path(&$_route)
+	{
+		if ( ! empty($_route))
+		{
+			// Are module/directory/controller/method segments being specified?
+			$sgs = sscanf($_route, '%[^/]/%[^/]/%[^/]/%s', $module, $directory, $class, $method);
+			
+			// set the module/controller directory location if found
+			if ($this->locate(array($module, $directory, $class)))
+			{
+				//reset to class/method
+				switch ($sgs)
+				{
+					case 1:	$_route = $module.'/index';
+						break;
+					case 2: $_route = ($this->located < 2) ? $module.'/'.$directory : $directory.'/index';
+						break;
+					case 3: $_route = ($this->located == 2) ? $directory.'/'.$class : $class.'/index';
+						break;
+					case 4: $_route = ($this->located == 3) ? $class.'/'.$method : $method.'/index';
+						break;
+				}
+			}
+		}
+	}
+
+	public function set_class($class)
+	{
+		$class = $class.$this->config->item('controller_suffix');
+		parent::set_class($class);
+	}
 }
