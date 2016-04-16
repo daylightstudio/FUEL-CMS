@@ -77,6 +77,13 @@ class Fuel_Router extends MX_Router
 		// Turn the segment array into a URI string
 		$uri = implode('/', $this->uri->segments);
 
+		// <!-- FUEL where did this go in CI 3?
+		// Is there a literal match?  If so we're done
+		if (isset($this->routes[$uri]))
+		{
+			return $this->_set_request(explode('/', $this->routes[$uri]));
+		}
+		
 		// Get HTTP verb
 		$http_verb = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'cli';
 
