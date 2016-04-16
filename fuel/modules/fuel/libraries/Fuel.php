@@ -353,7 +353,8 @@ class Fuel extends Fuel_advanced_module {
 		{
 			$modules_path = MODULES_PATH;
 			$module_paths = list_directories(MODULES_PATH, array(), TRUE, FALSE, FALSE);
-
+			$module_paths[] = APPPATH;
+			
 			foreach($module_paths as $module_path)
 			{
 				$module = pathinfo($module_path, PATHINFO_BASENAME);
