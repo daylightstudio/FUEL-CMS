@@ -3371,6 +3371,7 @@ class MY_Model extends CI_Model {
 					$fields = $rel_fields[$related_field];
 
 					$related_model = $related_models[$related_field];
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
