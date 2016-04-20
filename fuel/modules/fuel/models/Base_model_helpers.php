@@ -571,7 +571,7 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	 * @access	public
 	 * @return	void
 	 */	
-	public function initialize($fields, $values, $parent_model)
+	public function initialize($values, $parent_model)
 	{
 
 	}
