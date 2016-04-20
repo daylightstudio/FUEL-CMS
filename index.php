@@ -119,6 +119,11 @@ else
 			}
 		}
 	}
+
+	if (!defined('ENVIRONMENT'))
+	{
+		define('ENVIRONMENT', 'development');
+	}
 }
 	
 
