@@ -978,7 +978,7 @@ class Data_table_body {
 	public $rows = array();
 	public $attrs = array();
 	
-	public function Data_table_body($rows, $attrs = array())
+	public function __construct($rows, $attrs = array())
 	{
 		$this->rows = $rows;
 		$this->attrs = $attrs;
