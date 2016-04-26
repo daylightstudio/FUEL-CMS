@@ -388,7 +388,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Helps determine if there is currently a select for specified for the active record
+	 * Helps determine if there is currently a select specified for the active record
 	 *
 	 * @access	public
 	 * @return	boolean
