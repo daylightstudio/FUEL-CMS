@@ -165,7 +165,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @access	public
 	 * @return	void
 	 */	
-	public function initialize($values, $parent_model)
+	public function initialize($fields, $values, $parent_model)
 	{
 		// put in your own fields initialization code
 	}
