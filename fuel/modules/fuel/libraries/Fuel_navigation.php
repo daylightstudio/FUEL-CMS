@@ -167,7 +167,7 @@ class Fuel_navigation extends Fuel_module {
 				}
 				else
 				{
-					$$p['var'] = array();
+					${$p['var']} = array();
 				}
 			}
 
@@ -212,7 +212,8 @@ class Fuel_navigation extends Fuel_module {
 				// if menu items isn't empty, then we overwrite the variable with those menu items and change any parent value'
 				if (!empty($menu_items)) 
 				{
-					$$p['var'] = $menu_items;
+
+					${$p['var']} = $menu_items;
 
 					// if parent exists, then assume it is a uri location and you need to convert it to a database id value
 					if (!empty($p['parent']) AND is_string($p['parent']))
@@ -239,7 +240,7 @@ class Fuel_navigation extends Fuel_module {
 		}
 		else
 		{
-			$$p['var'] = $p['items'];
+			${$p['var']} = $p['items'];
 		}
 		if (!empty($params['root'])) $p['root_value'] = $params['root'];
 
@@ -247,7 +248,7 @@ class Fuel_navigation extends Fuel_module {
 		$this->CI->menu->initialize($p);
 		
 
-		$items = (!empty($$p['var'])) ? $$p['var'] : array();
+		$items = (!empty(${$p['var']})) ? ${$p['var']} : array();
 		
 		// append additional values
 		if (!empty($p['append']))
