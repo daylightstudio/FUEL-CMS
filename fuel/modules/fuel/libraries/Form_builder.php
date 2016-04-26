@@ -1833,7 +1833,7 @@ class Form_builder {
 			$name = $params['name'].'[]';
 		}
 		
-		if (!empty($params['options']) AND !empty($params['equalize_key_value']))
+		if (!empty($params['options']) AND !empty($params['equalize_key_value']) AND is_array($params['options']))
 		{
 			$options = array_values($params['options']);
 			$options = array_combine($options, $options);
