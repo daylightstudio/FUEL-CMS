@@ -149,7 +149,7 @@ if (!function_exists('is_json_str'))
 {
 	function is_json_str($data)
 	{
-		if (is_string($data) AND !preg_match('#"[^\{\[]+"#', $data))
+		if (is_string($data))
 		{
 			$json = json_decode($data, TRUE);
 			return ($json !== NULL AND $data != $json);
