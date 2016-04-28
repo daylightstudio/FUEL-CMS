@@ -440,11 +440,11 @@ if (!function_exists('query_str'))
 		$query_str = '';
 		if ($include_post)
 		{
-			$get_array = $CI->input->get(NULL, TRUE);
+			$get_array = $CI->input->get_post(NULL, TRUE);
 		}
 		else
 		{
-			$get_array = $CI->input->get_post(NULL, TRUE);
+			$get_array = $CI->input->get(NULL, TRUE);
 		}
 		
 		if (!empty($get_array))
