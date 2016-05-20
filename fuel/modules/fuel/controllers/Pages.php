@@ -18,6 +18,7 @@ class Pages extends Module {
 			$this->load->vars($load_vars);
 			$this->_validate_user($this->permission);	
 		}
+
 		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 	}
 
@@ -890,6 +891,8 @@ class Pages extends Module {
 
 	public function select()
 	{
+		$this->load->library('session');
+		
 		$value = $this->input->get_post('selected', TRUE);
 		$filter = rawurldecode($this->input->get_post('filter', TRUE));
 
