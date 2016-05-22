@@ -3352,7 +3352,7 @@ class MY_Model extends CI_Model {
 					// remove pre-existing relationships
 					if (!empty($fields['foreign_table']))
 					{
-						$del_where = array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
+						$del_where = array($fields['candidate_table'] => $CI->{$related_models[$related_field]}->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
 					}
 					else
 					{
