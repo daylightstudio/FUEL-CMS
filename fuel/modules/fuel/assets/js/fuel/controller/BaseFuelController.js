@@ -544,7 +544,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 
 	displayAjaxLoader : function(show){
 		if (show) {
-			if (!$('#fuel_loader').length){
+			if (!$('#fuel_loader').length && !$('.loader:visible').length){
 				$("#fuel_main_content").css('overflow', 'hidden').append('<div id="fuel_loader"><div class="loader"></div></div>');		
 			}
 			
