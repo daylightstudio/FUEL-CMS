@@ -667,7 +667,7 @@ class Form_builder {
 			$str .= "</div></div>\n";
 		}
 		
-		if ($this->has_required AND $this->show_required)
+		if ($this->has_required AND ($this->show_required AND strtolower($this->show_required) != 'top'))
 		{
 			$str .= "<div class=\"required\">";
 			$str .= str_replace('{required_indicator}', $this->required_indicator, $this->required_text);
@@ -893,7 +893,7 @@ class Form_builder {
 			$str .= "</div></td>\n</tr>\n";
 		}
 
-		if ($this->has_required AND $this->show_required)
+		if ($this->has_required AND ($this->show_required AND strtolower($this->show_required) != 'top'))
 		{
 			$str .= "<tr>\n\t<td colspan=\"".$colspan."\" class=\"required\">";
 			$str .= str_replace('{required_indicator}', $this->required_indicator, $this->required_text);
@@ -1675,6 +1675,7 @@ class Form_builder {
 			
 		}
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
+
 		if (($params['type'] == 'enum' OR $params['type'] == 'multi' OR $params['type'] == 'array') AND ($mode == 'radios' OR ($mode == 'auto' AND count($params['options']) <= 2)))
 		{
 			$use_label = FALSE;
@@ -1718,7 +1719,8 @@ class Form_builder {
 			$this->has_required = TRUE;
 		}
 		if ($params['label_colons']) $str .= ':';
-		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
+
+		if ($use_label)
 		{
 			$str .= "</label>";
 		}
