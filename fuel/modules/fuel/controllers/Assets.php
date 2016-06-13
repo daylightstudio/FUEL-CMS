@@ -32,12 +32,14 @@ class Assets extends Module {
 		{
 			if (( ! empty($_FILES['userfile']) AND $_FILES['userfile']['error'] != 4) OR ( ! empty($_FILES['userfile___0']) AND $_FILES['userfile___0']['error'] != 4))
 			{
+
+				// cleanup $dir name with any trailing slashes
+				$dir = trim($this->input->get_post('asset_folder', TRUE), '/');
+
 				$this->model->on_before_post();
 
 				if ($this->input->post('asset_folder')) 
 				{
-					$dir = $this->input->get_post('asset_folder', TRUE);
-
 					if ( ! in_array($dir, array_keys($this->fuel->assets->dirs())))
 					{
 						show_404();
