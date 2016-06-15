@@ -241,24 +241,24 @@ class Assets extends Module {
 
 		$options = options_list($this->model->list_items(NULL, 0, $order, $by), 'name', 'name');
 		$redirect_to = uri_safe_encode(fuel_uri(fuel_uri_string(), TRUE)); // added back to make it refresh
-		$allowed_q = array(
-				'subfolder', 
-				'userfile_file_name', 
-				'overwrite', 
-				'unzip',
-				'create_thumb', 
-				'maintain_ration', 
-				'width', 
-				'height', 
-				'master_dim', 
-				'resize_and_crop', 
-				'resize_method', 
-				'hide_options',' 
-				accept',
-				'multiple', 
-				'remove_subfolder'
-				);
-		$query_str = query_str($allowed_q, FALSE, FALSE);
+		// $allowed_q = array(
+		// 		'subfolder', 
+		// 		'userfile_file_name', 
+		// 		'overwrite', 
+		// 		'unzip',
+		// 		'create_thumb', 
+		// 		'maintain_ration', 
+		// 		'width', 
+		// 		'height', 
+		// 		'master_dim', 
+		// 		'resize_and_crop', 
+		// 		'resize_method', 
+		// 		'hide_options',
+		// 		'accept',
+		// 		'multiple', 
+		// 		'remove_subfolder'
+		// 		);
+		$query_str = query_str(array(), FALSE, FALSE);
 		$preview = ' OR <a href="'.fuel_url('assets/inline_create?asset_folder='.urlencode($dir).'&redirect_to='.$redirect_to.'&'.$query_str).'" class="btn_field">Upload</a><div id="asset_preview"></div>';
 
 		$field_values['asset_folder']['value'] = $dir;
