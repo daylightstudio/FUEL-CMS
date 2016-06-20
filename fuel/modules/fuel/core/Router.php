@@ -321,7 +321,6 @@ class Fuel_Router extends MX_Router
 
 	public function set_class($class)
 	{
-		$class = $class.$this->config->item('controller_suffix');
 		parent::set_class($class);
 	}
 }
