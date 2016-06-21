@@ -179,6 +179,7 @@ class Modules
 				$fullpath = $location.$module.'/'.$base.$subpath;
 				
 				if (is_file($fullpath.$file_ext)) return array($fullpath, $file);
+				if (is_file($fullpath.ucfirst($file_ext))) return array($fullpath, ucfirst($file));
 				
 				if ($base == 'libraries/' AND is_file($fullpath.ucfirst($file_ext))) 
 					return array($fullpath, ucfirst($file));
@@ -187,7 +188,8 @@ class Modules
 		
 		/* is the file in an application directory? */
 		if ($base == 'views/' OR $base == 'models/' OR $base == 'plugins/') {
-			if (is_file(APPPATH.$base.$path.$file_ext)) return array(APPPATH.$base.$path, $file);	
+			if (is_file(APPPATH.$base.$path.$file_ext)) return array(APPPATH.$base.$path, $file);
+			if (is_file(APPPATH.$base.$path.ucfirst($file_ext))) return array(APPPATH.$base.$path, ucfirst($file));
 			show_error("Unable to locate the file: {$path}{$file_ext}");
 		}
 
