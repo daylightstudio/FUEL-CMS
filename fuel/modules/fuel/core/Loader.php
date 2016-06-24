@@ -312,7 +312,7 @@ class Fuel_Loader extends CI_Loader
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
 
-		list($path, $_view) = Modules::find($view, $this->_module, 'views/');
+		list($path, $_view) = Modules::find($view, $module, 'views/');
 		
 		if ($path != FALSE) 
 		{
@@ -372,7 +372,7 @@ class Fuel_Loader extends CI_Loader
 	public function module_view($module, $view, $vars = array(), $return = FALSE, $scope = NULL)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
-		return $this->view($view, $vars, $return, $scope);
+		return $this->view($view, $vars, $return, $scope, $module);
 	}
 
 
