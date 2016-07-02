@@ -63,7 +63,7 @@ if (USE_FUEL_ROUTES)
 	}
 
 	// Catch all
-	$route[FUEL_ROUTE.'(:any)'] = FUEL_FOLDER."/$1";
+	$route[FUEL_ROUTE.'(.+)'] = FUEL_FOLDER."/$1";
 }
 
 /* End of file fuel_routes.php */
