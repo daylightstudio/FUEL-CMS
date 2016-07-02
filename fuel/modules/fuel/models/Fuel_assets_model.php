@@ -543,7 +543,7 @@ class Fuel_assets_model extends CI_Model {
 	*/
 	public function display_name($values)
 	{
-		$module =& $this->get_module();
+		$module = $this->get_module();
 
 		$key = $module->info('display_field');
 
