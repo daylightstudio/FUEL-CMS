@@ -36,7 +36,7 @@ class Manage extends Fuel_base_controller {
 			$msg = $this->clear_cache(TRUE);
 			$this->fuel->admin->set_notification($msg, Fuel_admin::NOTIFICATION_SUCCESS);
 
-			redirect('fuel/manage/cache');
+			redirect(fuel_uri('manage/cache'));
 		}
 		else 
 		{
