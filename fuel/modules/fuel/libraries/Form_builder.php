@@ -2490,7 +2490,7 @@ $func_str = '
 		';
 		
 		// needed for post processing
-		if (!isset($_POST[$params['key']]))
+		if (!empty($_POST) AND !isset($_POST[$params['key']]))
 		{
 			$_POST[$time_params['name']] = '';
 		}
