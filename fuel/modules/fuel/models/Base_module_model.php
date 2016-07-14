@@ -718,7 +718,7 @@ class Base_module_model extends MY_Model {
 			{
 				$used_groups[$child[$key_field]] = $child[$key_field];
 				$attributes = ((isset($child['published']) AND $child['published'] == 'no') OR (isset($child['active']) AND $child['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
-				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->info('module_uri').'/edit/'.$child[$loc_field]), 'attributes' => $attributes);
+				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->info('module_uri').'/edit/'.$child[$g_key_field]), 'attributes' => $attributes);
 			}
 
 			foreach($groups as $group)
