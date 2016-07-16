@@ -1114,8 +1114,11 @@ class Base_module_model extends MY_Model {
 			}
 		}
 
-		unset($where['first_option']);
-		$options = $this->options_list(NULL, NULL, $where);
+		$__key__ = (!empty($where['__key__'])) ? $where['__key__'] : NULL;
+		$__label__ = (!empty($where['__label__'])) ? $where['__label__'] : NULL;
+		unset($where['__key__'], $where['__label__'], $where['first_option']);
+
+		$options = $this->options_list($__key__, $__label__, $where);
 
 		foreach($options as $key => $val)
 		{
