@@ -1055,7 +1055,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	// create currency field
 	fuel.fields.currency_field = function(context, options){
 		$('.currency', context).each(function(i){
-			var o = {aSep: ',', aDec: '.',  dGroup: 3, vMin: 0.00, vMax: 999999999.99}
+			var o = {aSep: ',', aDec: '.',  dGroup: 3, vMin: -999999999.99, vMax: 999999999.99}
 			o = $.extend(o, options);
 			if ($(this).attr('data-separator')){
 				o.aSep = $(this).attr('data-separator');
