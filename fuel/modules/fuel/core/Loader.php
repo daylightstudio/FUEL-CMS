@@ -316,6 +316,9 @@ class Fuel_Loader extends CI_Loader
 		
 		if ($path != FALSE) 
 		{
+			// <!-- FUEL ... so it will look in the "application" folder first
+			krsort($this->_ci_view_paths);
+
 			$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
 			$view = $_view;
 		}
@@ -419,9 +422,6 @@ class Fuel_Loader extends CI_Loader
 			/* add file extension if not provided */
 			$_ci_file = (pathinfo($_ci_view, PATHINFO_EXTENSION)) ? $_ci_view : $_ci_view.EXT;
 			
-			// <!-- FUEL ... so it will look in the "application" folder first
-			krsort($this->_ci_view_paths);
-
 			foreach ($this->_ci_view_paths as $path => $cascade) 
 			{				
 				if (file_exists($view = $path.$_ci_file)) 
