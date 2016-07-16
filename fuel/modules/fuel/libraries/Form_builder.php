@@ -3783,6 +3783,14 @@ $func_str = '
 	 */
 	public function options_from_model($model, $params = array())
 	{
+		// can't think of a good reason to grab options when post processing 
+		// so will just return an empty array to speed things up on post processing
+		if ($this->is_post_processing)
+		{
+			return array();
+		}
+
+
 		if (is_array($model))
 		{
 			$val = current($model);
