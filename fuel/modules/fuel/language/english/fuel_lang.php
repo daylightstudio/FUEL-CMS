@@ -90,6 +90,14 @@ $lang['auth_log_failed_updating_login_info'] = "There was an error updating the 
 $lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
 $lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 
+$lang['pwd_requirements'] = '<p style="text-align: left; margin: 10px 0 5px 0;"><strong>Password must be:</strong></p>';
+$lang['pwd_min_length_required'] = 'A minimum of %1s characters';
+$lang['pwd_max_length_required'] = 'A maximum of %1s characters';
+$lang['pwd_lowercase_required'] = 'One or more lower case letters';
+$lang['pwd_uppercase_required'] = 'One or more upper case letters';
+$lang['pwd_numbers_required'] = 'Contain one or more numbers';
+$lang['pwd_symbols_required'] = 'Contain one or more symbols';
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard

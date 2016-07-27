@@ -678,7 +678,9 @@ div#tree_loader { position: absolute; top: 20px; left: 50%; margin-left: -25px; 
 
 /* #login */
 div#login { padding: 15% 0 0 0; border: none; background-color: transparent; margin: 0 auto; }
+div#login h3 { margin: 0; }
 div#login h3, div#login p { color: #fff; text-align: center; }
+div#login ul li { margin-left: 20px; color: #fff; }
 div#login form { width: 270px; margin: 0 auto; }
 div#login input { background-color: #1d1d1d; color: #fff; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; border: 2px solid #444; height: 40px;  width: 270px; padding: 0 1em; }
 .login_logo { background: transparent url(../images/fuel_logo.png) no-repeat; background-size: 100%; width: 233px; height: 46px; overflow: hidden; margin: 0 auto 1.5em auto; }

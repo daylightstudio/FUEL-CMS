@@ -348,6 +348,20 @@ class Fuel_users_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Displays related password information in the right related box
+	 *
+	 * @access	public
+	 * @param	array Values
+	 * @return	string
+	 */	
+	public function related_items($values = array())
+	{
+		return $this->fuel->users->get_password_strength_text();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * User form fields
 	 *
 	 * @access	public

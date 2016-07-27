@@ -165,6 +165,65 @@ class Fuel_users extends Fuel_module {
 		}
 		return TRUE;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the required password strength in an HTML format
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_password_strength_text()
+	{
+		$str_arr = array();
+		if ($this->fuel->config('password_min_length') AND is_numeric($this->fuel->config('password_min_length')))
+		{
+			$str_arr[] = lang('pwd_min_length_required', $this->fuel->config('password_min_length'));
+		}
+
+		if ($this->fuel->config('password_max_length') AND is_numeric($this->fuel->config('password_max_length')))
+		{
+			$str_arr[] = lang('pwd_max_length_required', $this->fuel->config('password_max_length'));
+		}
+
+		if ($this->CI->fuel->config('password_pattern_match'))
+		{
+			$rules_array = explode("|", strtolower($this->CI->fuel->config('password_pattern_match')));
+
+			if (in_array('lower', $rules_array) OR in_array('lowercase', $rules_array))
+			{
+				$str_arr[] = lang('pwd_lowercase_required');
+			}
+
+			if (in_array('upper', $rules_array) OR in_array('uppercase', $rules_array))
+			{
+				$str_arr[] = lang('pwd_uppercase_required');
+			}
+
+			if (in_array('numbers', $rules_array))
+			{
+				$str_arr[] = lang('pwd_numbers_required');
+			}
+
+			if (in_array('symbols', $rules_array))
+			{
+				$str_arr[] = lang('pwd_symbols_required').' (e.g. +_!@#$\%^&*.,?-)'; // broken out to preven sprintf error
+			}
+		}
+
+		if (!empty($str_arr))
+		{
+			$str = lang('pwd_requirements');
+			$str .= '<ul>';
+			foreach($str_arr as $arr)
+			{
+				$str .= '<li>'.$arr.'</li>';
+			}
+			$str .= '</ul>';
+			return $str;
+		}
+	}
 	
 }
 

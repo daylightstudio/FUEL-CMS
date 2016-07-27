@@ -307,6 +307,7 @@ class Login extends CI_Controller {
 		}
 		
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
+		$fields['Directions'] = array('type' => 'copy', 'label' => $this->fuel->users->get_password_strength_text());
 		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
 		$fields['password'] = array('type' => 'password', 'required' => TRUE, 'size' => 30, 'placeholder' => 'password', 'display_label' => FALSE);
 		$fields['password_confirm'] = array('type' => 'password', 'required' => TRUE, 'size' => 30, 'placeholder' => 'confirm password', 'display_label' => FALSE);
