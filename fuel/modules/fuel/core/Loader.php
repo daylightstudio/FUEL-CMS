@@ -316,9 +316,6 @@ class Fuel_Loader extends CI_Loader
 		
 		if ($path != FALSE) 
 		{
-			// <!-- FUEL ... so it will look in the "application" folder first
-			krsort($this->_ci_view_paths);
-
 			$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
 			$view = $_view;
 		}

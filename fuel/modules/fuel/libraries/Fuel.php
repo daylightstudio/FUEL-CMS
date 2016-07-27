@@ -130,6 +130,8 @@ class Fuel extends Fuel_advanced_module {
 		{
 			$this->CI->load->add_package_path(MODULES_PATH.$module);
 		}
+		// needed to add this here so views will load correctly
+		$this->CI->load->add_package_path(APPPATH);
 	}
 
 	// --------------------------------------------------------------------
