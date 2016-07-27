@@ -95,8 +95,8 @@ $lang['pwd_min_length_required'] = 'A minimum of %1s characters';
 $lang['pwd_max_length_required'] = 'A maximum of %1s characters';
 $lang['pwd_lowercase_required'] = 'One or more lower case letters';
 $lang['pwd_uppercase_required'] = 'One or more upper case letters';
-$lang['pwd_numbers_required'] = 'Contain one or more numbers';
-$lang['pwd_symbols_required'] = 'Contain one or more symbols';
+$lang['pwd_numbers_required'] = 'One or more numbers';
+$lang['pwd_symbols_required'] = 'One or more symbols';
 
 /*
 |--------------------------------------------------------------------------
