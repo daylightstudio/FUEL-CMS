@@ -874,7 +874,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn> and wysiwyg being <a href="http://www.ckeditor.com" target="_blank">CKEditor</a></li>
 		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
-		<li><strong>preview_options</strong>: preview popup window options (used as the third parameter of <a href="http://www.w3schools.com/jsref/met_win_open.asp" target="_blank">window.open</a> . The default is <dfn>width=1024,height=768</dfn></li>
 		<li><strong>img_folder</strong>: the image folder to pull from when inserting an image</li>
 		<li><strong>img_order</strong>: the image order displayed in the dropdown select. Options are <dfn>name</dfn> and <dfn>last_updated</dfn>. Default is <dfn>name</dfn></li>
 		<li><strong>link_pdfs</strong>: a boolean value that determines whether to display PDFs along with the list of URLs when inserting a link. Default is set to FALSE which will not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
