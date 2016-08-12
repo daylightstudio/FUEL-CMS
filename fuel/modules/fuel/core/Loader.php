@@ -310,19 +310,17 @@ class Fuel_Loader extends CI_Loader
 	/** Load a module view **/
 	public function view($view, $vars = array(), $return = FALSE, $scope = NULL, $module = NULL) 
 	{
-		if (!isset($module)) $module = $this->_module; // FUEL
+		if (!isset($module)) $module = $this->_module; // <!-- FUEL
 
 		list($path, $_view) = Modules::find($view, $module, 'views/');
-		
-		// <!-- FUEL Causes issues if you have 2 view files with the same name in different modules... it may load the other one
-		// if ($path != FALSE) 
-		// {
-		// 	$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
-		// 	$view = $_view;
-		// }
-		
-		$this->_ci_view_path = array($path => TRUE);
-		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return), $scope);
+
+		if ($path != FALSE) 
+		{
+			$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
+			$view = $_view;
+		}
+		$this->_ci_view_path = $path; // <!-- FUEL
+		return $this->_ci_load(array('_ci_view' => $view, '_ci_path' => $path, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return), $scope);
 	}
 
 	public function _ci_load($_ci_data, $scope = NULL) 
@@ -335,20 +333,21 @@ class Fuel_Loader extends CI_Loader
 			
 			/* add file extension if not provided */
 			$_ci_file = (pathinfo($_ci_view, PATHINFO_EXTENSION)) ? $_ci_view : $_ci_view.EXT;
+			$_ci_path = $this->_ci_view_path.$_ci_file;
 
-			foreach ($this->_ci_view_paths as $path => $cascade) 
-			{				
-				if (file_exists($view = $path.$_ci_file)) 
-				{
-					$_ci_path = $view;
-					break;
-				}
-				if ( ! $cascade) break;
-			}	
+			// <!-- FUEL...will call issues if you have the same view file in different modules
+			// foreach ($this->_ci_view_paths as $path => $cascade) 
+			// {				
+			// 	if (file_exists($view = $path.$_ci_file)) 
+			// 	{
+			// 		$_ci_path = $view;
+			// 		break;
+			// 	}
+			// 	if ( ! $cascade) break;
+			// }
 		} 
 		elseif (isset($_ci_path)) 
 		{
-			
 			$_ci_file = basename($_ci_path);
 			if( ! file_exists($_ci_path)) $_ci_path = '';
 		}

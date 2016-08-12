@@ -190,24 +190,41 @@ class Modules
 		if ( ! empty($segments)) 
 		{
 			$modules[array_shift($segments)] = ltrim(implode('/', $segments).'/','/');
-		}	
+		}
 
 		foreach (Modules::$locations as $location => $offset) 
-		{					
+		{
 			foreach($modules as $module => $subpath) 
-			{			
-				$fullpath = $location.$module.'/'.$base.$subpath;
-				
-				if ($base == 'libraries/' OR $base == 'models/')
+			{
+				// <!-- FUEL 
+				if (empty($module) OR $module == 'app')
 				{
-					if(is_file($fullpath.ucfirst($file_ext))) return array($fullpath, ucfirst($file));
+					$fullpath = APPPATH.$base.$subpath;
 				}
 				else
-				/* load non-class files */
-				if (is_file($fullpath.$file_ext)) return array($fullpath, $file);
+				{
+					$fullpath = $location.$module.'/'.$base.$subpath;	
+				}
+				// <!-- /FUEL 
+
+				if ($base == 'libraries/' OR $base == 'models/')
+				{
+					if(is_file($fullpath.ucfirst($file_ext)))
+					{
+						return array($fullpath, ucfirst($file));
+					}
+				}
+				else
+				{
+					/* load non-class files */
+					if (is_file($fullpath.$file_ext))
+					{
+						return array($fullpath, $file);
+					}
+				}
 			}
 		}
-		
+
 		return array(FALSE, $file);	
 	}
 	

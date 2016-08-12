@@ -44,7 +44,7 @@ class Dashboard extends Fuel_base_controller {
 
 			if (file_exists(APPPATH.'/views/_docs/fuel'.EXT))
 			{
-				$vars['docs'] = $this->load->module_view(NULL, '_docs/fuel', $vars, TRUE);
+				$vars['docs'] = $this->load->module_view('app', '_docs/fuel', $vars, TRUE);
 			}
 
 			$feed = $this->fuel->config('dashboard_rss');

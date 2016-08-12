@@ -25,7 +25,7 @@ foreach ($config['modules_allowed'] as $module)
 // To prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants
 if (USE_FUEL_ROUTES)
 {
-	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/:any'] = "fuel/login"; // so we can pass forward param
+	$route[FUEL_ROUTE.'login|'.FUEL_ROUTE.'login/.+'] = "fuel/login"; // so we can pass forward param
 
 	$module_folder = MODULES_PATH;
 
