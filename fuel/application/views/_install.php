@@ -13,6 +13,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
  	<title>Welcome to FUEL CMS</title>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
 	<?php echo css('main')?>
+	<?=jquery()?>
 </head>
 <body>
 
