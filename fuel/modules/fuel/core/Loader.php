@@ -335,16 +335,20 @@ class Fuel_Loader extends CI_Loader
 			$_ci_file = (pathinfo($_ci_view, PATHINFO_EXTENSION)) ? $_ci_view : $_ci_view.EXT;
 			$_ci_path = $this->_ci_view_path.$_ci_file;
 
-			// <!-- FUEL...will call issues if you have the same view file in different modules
-			// foreach ($this->_ci_view_paths as $path => $cascade) 
-			// {				
-			// 	if (file_exists($view = $path.$_ci_file)) 
-			// 	{
-			// 		$_ci_path = $view;
-			// 		break;
-			// 	}
-			// 	if ( ! $cascade) break;
-			// }
+			if ( ! file_exists($_ci_path))
+			{
+				// <!-- FUEL...will call issues if you have the same view file in different modules
+				foreach ($this->_ci_view_paths as $path => $cascade) 
+				{
+					if (file_exists($view = $path.$_ci_file)) 
+					{
+						$_ci_path = $view;
+						break;
+					}
+					if ( ! $cascade) break;
+				}
+			}
+			
 		} 
 		elseif (isset($_ci_path)) 
 		{
