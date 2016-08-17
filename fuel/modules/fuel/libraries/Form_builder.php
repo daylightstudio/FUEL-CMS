@@ -1004,7 +1004,7 @@ class Form_builder {
 				return $field;
 			}
 		}
-		return current($this->_fields);
+		return reset($this->_fields);
 	}
 
 
