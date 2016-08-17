@@ -528,7 +528,7 @@ class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$first = reset($this->_fields);
+		$first = $this->_find_first_renderable_field();;
 
 		$is_fieldset_first = FALSE;
 		if ($first['type'] != 'fieldset')
@@ -713,7 +713,8 @@ class Form_builder {
 		}
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
-		$first = reset($this->_fields);
+
+		$first = $this->_find_first_renderable_field();
 
 		$is_fieldset_first = FALSE;
 		if ($first['type'] != 'fieldset')
@@ -724,6 +725,7 @@ class Form_builder {
 		{
 			$is_fieldset_first = TRUE;
 		}
+
 
 		$fieldset_on = FALSE;
 		foreach($this->_fields as $key => $val)
@@ -987,9 +989,31 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Finds the first field that is not hidden and renderable
+	 * 
+	 * @access	protected
+	 * @return	array
+	 */
+	protected function _find_first_renderable_field()
+	{
+		foreach($this->_fields as $key => $field)
+		{
+			$invalid_types = array('hidden');
+			if ( ! in_array($field['type'], $invalid_types) AND ! in_array($key, $this->hidden))
+			{
+				return $field;
+			}
+		}
+		return current($this->_fields);
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the opening div element that contains the form fields
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _open_div()
@@ -1004,7 +1028,7 @@ class Form_builder {
 	/**
 	 * Creates the opening table element
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _open_table()
@@ -1020,7 +1044,7 @@ class Form_builder {
 	/**
 	 * Creates the closing element
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _close_div()
@@ -1035,7 +1059,7 @@ class Form_builder {
 	/**
 	 * Creates the closing table elements
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _close_table()
@@ -1051,7 +1075,7 @@ class Form_builder {
 	/**
 	 * Creates the opening row TR or div with attrs
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
@@ -1078,7 +1102,7 @@ class Form_builder {
 	/**
 	 * Creates the opening field td.value or div.value with attrs
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
@@ -1101,7 +1125,7 @@ class Form_builder {
 	/**
 	 * Outputs the actions for the form
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	string	
 	 * @return	void
 	 */
@@ -1168,7 +1192,7 @@ class Form_builder {
 	/**
 	 * Outputs the last part of the form rendering for both a table and div
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	string	
 	 * @return	void
 	 */
@@ -1227,7 +1251,7 @@ class Form_builder {
 	/**
 	 * Normalize the fields so that the other methods can expect certain field attributes
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	array
 	 */
@@ -1458,7 +1482,7 @@ class Form_builder {
 	/**
 	 * Renders the custom field
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	array
 	 */
@@ -1522,7 +1546,7 @@ class Form_builder {
 	/**
 	 * Checks to see if the array to initialize a field is normalized or not
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
