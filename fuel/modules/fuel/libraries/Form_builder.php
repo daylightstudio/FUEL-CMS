@@ -1035,6 +1035,10 @@ class Form_builder {
 	{
 		$str = '';
 		$str .= "<table>\n";
+		$str .= "<colgroup>\n";
+		$str .= "<col class=\"label_column\">\n";
+		$str .= "<col class=\"field_column\">\n";
+		$str .= "</colgroup>\n";
 		$str .= "<tbody>\n";
 		return $str;
 	}
