@@ -89,7 +89,10 @@ class Fuel_custom_fields {
 		{
 			$params['data']['preview'] = $params['preview'];
 		}
-				
+		
+		// the dimensions for the preview window		
+		$params['data']['preview_options'] = (!empty($params['preview_options'])) ? $params['preview_options'] : 'width=1024,height=768';
+		
 		// set the image folder for inserting assets
 		if (isset($params['img_folder']))
 		{
@@ -245,7 +248,12 @@ class Fuel_custom_fields {
 			}
 			if (isset($params['folder']) OR isset($params['upload_path']))
 			{
-				if (isset($params['folder']))
+				if (isset($params['preview_path']))
+				{
+					$asset_folder = pathinfo($params['preview_path'], PATHINFO_DIRNAME);
+					$asset_path = $params['preview_path'];
+				}
+				elseif (isset($params['folder']))
 				{
 					$asset_folder = trim($params['folder'], '/').'/';
 					$asset_path = $asset_folder.$params['value'];
@@ -271,17 +279,19 @@ class Fuel_custom_fields {
 				
 			}
 			$preview = '';
+
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= ' ';
 				$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
+
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
 				}
 				else
 				{
-					$preview .= $asset_path;
+					$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
 				}
 				$preview .= '</a>';
 			}
@@ -867,7 +877,7 @@ class Fuel_custom_fields {
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
-			
+
 			foreach($params['fields'] as $key => $field)
 			{
 				if (!empty($value[$key]))
@@ -930,6 +940,10 @@ class Fuel_custom_fields {
 					$field['data']['index'] = $index;
 					$field['data']['key'] = $key;
 					$field['data']['field_name'] = $params['key'];
+					if (empty($field['replace_values']))
+					{
+						$field['replace_values'] = $value;	
+					}
 
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
 					//$field['id'] = FALSE;
@@ -941,13 +955,16 @@ class Fuel_custom_fields {
 				}
 				else
 				{
-					if (!empty($form_builder->name_array))
+					if (empty($params['ignore_name_array']))
 					{
-						$field['name'] = $params['name'].'['.$key.']';
-					}
-					else
-					{
-						$field['name'] = $params['orig_name'].'['.$key.']';
+						if (!empty($form_builder->name_array))
+						{
+							$field['name'] = $params['name'].'['.$key.']';
+						}
+						else
+						{
+							$field['name'] = $params['orig_name'].'['.$key.']';
+						}
 					}
 					$field['display_label'] = $params['display_sub_label'];
 					$_f[$key] = $field;
