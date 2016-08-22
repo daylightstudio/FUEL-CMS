@@ -220,7 +220,8 @@ textarea[readonly],
 select[readonly] { background-color: transparent; border: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
-    box-shadow: none;  
+    box-shadow: none;
+    background-image: none;
 }
 
 textarea,
