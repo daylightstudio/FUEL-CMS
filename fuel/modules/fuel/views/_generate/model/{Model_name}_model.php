@@ -6,7 +6,7 @@ class {Model_name}_model extends Base_module_model {
 
 	// read more about models in the user guide to get a list of all properties. Below is a subset of the most common:
 
-	public $record_class = '{model_record}'; // the name of the record class (if it can't be determined)
+	public $record_class = '{Model_record}'; // the name of the record class (if it can't be determined)
 	public $filters = array(); // filters to apply to when searching for items
 	public $required = array(); // an array of required fields. If a key => val is provided, the key is name of the field and the value is the error message to display
 	public $foreign_keys = array(); // map foreign keys to table models
