@@ -34,9 +34,9 @@ class Fuel_users extends Fuel_module {
 
 	protected $module = 'users';
 
-	public function initialize($params = array())
+	public function initialize($params = array(), $init = array())
 	{
-		parent::initialize($params);
+		parent::initialize($params, $init);
 	}
 	
 	// --------------------------------------------------------------------
