@@ -1317,7 +1317,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $togglers = $(".toggle", context);
 			if (prefix){
 				var regex = new RegExp(' ' + prefix)
-				$togglers.filter(function() { 
+				$togglers.filter(function() {
 					return $(this).attr('class').match(regex); 
 				}).closest(selector).hide();
 
@@ -1349,10 +1349,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			})
 			
 		})
-		$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
 
 		// exlude blocks since they get ajaxed in and then run the toggler function
-		$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
+		$("select.toggler", context).not('.field_type_block, .__applied__').trigger("change");
+
+		$("input[type='radio'].toggler:checked", context).not('.__applied__').trigger("change");
+
 	}
 
 
