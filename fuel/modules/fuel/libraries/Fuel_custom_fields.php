@@ -1353,9 +1353,12 @@ class Fuel_custom_fields {
 				$names = array_values($states);
 				$states = array_combine($names, $names);
 			}
-
 		}
-		$params['options'] = $states;
+
+		if (empty($params['options']))
+		{
+			$params['options'] = $states;	
+		}
 		
 		// set data values for jquery plugin to use
 		return $form_builder->create_select($params);
