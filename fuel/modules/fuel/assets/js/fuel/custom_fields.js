@@ -1032,12 +1032,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		$('.numeric', context).each(function(i){
 			var o = {decimal: false, negative: false}
 			o = $.extend(o, options);
-			if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes" || $(this).attr('data-decimal').toLowerCase() == "true"){
+			if ($(this).attr('data-decimal') && ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes" || $(this).attr('data-decimal').toLowerCase() == "true")){
 				o.decimal = '.';
 			} else {
 				o.decimal = false;
 			}
-			if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true"){
+			if ($(this).attr('data-negative') && ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true")){
 				o.negative = true;
 			} else {
 
@@ -1048,6 +1048,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				})
 				o.negative = false;
 			}
+			console.log(o)
 			$(this).numeric(o);
 		});
 	}
