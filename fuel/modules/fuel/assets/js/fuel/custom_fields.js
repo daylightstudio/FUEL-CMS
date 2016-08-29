@@ -1048,7 +1048,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				})
 				o.negative = false;
 			}
-			console.log(o)
 			$(this).numeric(o);
 		});
 	}
