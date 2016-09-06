@@ -1761,6 +1761,11 @@ class Fuel_custom_fields {
 			$params['delimiter'] = ":";
 		}
 
+		if (!isset($params['row_delimiter']))
+		{
+			$params['row_delimiter'] = "\n|,";
+		}
+
 		if (!isset($params['allow_numeric_indexes']))
 		{
 			$params['allow_numeric_indexes'] = FALSE;
@@ -1771,6 +1776,7 @@ class Fuel_custom_fields {
 			$params['allow_empty_values'] = FALSE;
 		}
 
+		$row_delimiter = "\s*".$params['row_delimiter']."\s*";
 		$split_delimiter = "\s*".$params['delimiter']."\s*";
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
@@ -1795,7 +1801,7 @@ class Fuel_custom_fields {
 						}
 
 						$json = array();
-						$rows = preg_split("#\s*\n|,\s*#", $z);
+						$rows = preg_split("#'.$row_delimiter.'#", $z);
 						foreach($rows as $r)
 						{
 							$vals = preg_split("#'.$split_delimiter.'#", $r, 2);
@@ -1830,7 +1836,7 @@ class Fuel_custom_fields {
 
 				if (is_string($value))
 				{
-					$rows = preg_split("#\s*\n|,\s*#", $value);
+					$rows = preg_split("#'.$row_delimiter.'#", $value);
 					foreach($rows as $r)
 					{
 						if (is_string($r))

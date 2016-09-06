@@ -1065,6 +1065,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field allows you go create a key / value array by separating keys and values with a delimiter. Each key/value goes on it's own line. The
 		post-processed result is a JSON encoded string:</p>
 	<ul>
+		<li><strong>row_delimiter</strong>: the row delimiter used to separate between key/value pairs. The default is a "\n|," (return, pipe, comma).</li>
 		<li><strong>delimiter</strong>: the delimiter used to separate between a key and a value. The default is a ":" (colon).</li>
 		<li><strong>allow_numeric_indexes</strong>: determines whether to display numeric indexes or not.</li>
 		<li><strong>allow_empty_values</strong>: determines whether to display items that may have no value.</li>
