@@ -10,7 +10,7 @@
 				</td>
 				<?php endif; ?>
 
-				<?php if ( $this->advanced_search != 'collapse') : ?>
+				<?php if ( $this->advanced_search !== 'collapse') : ?>
 				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>" class="reset"></a></td>
 				<td>
 					<div class="search_input<?php if ( $this->advanced_search === TRUE OR $this->advanced_search === 'popover') : ?> advanced<?php endif; ?>">
