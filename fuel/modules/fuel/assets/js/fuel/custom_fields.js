@@ -1312,7 +1312,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 			var selector = ($elem.data('selector')) ? $elem.data('selector') : 'tr';
 			var prefix = ($elem.data('prefix')) ? $elem.data('prefix') : '';
-			var val = $elem.val();
 
 			var $togglers = $(".toggle", context);
 			if (prefix){
@@ -1324,8 +1323,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			} else {
 				$(".toggle", context).closest(selector).hide();	
 			}
-
-			val = val.replace(' ', '.');
+			var val = $elem.val();
+			val = val.replace(/ /g, '-');
 			$(".toggle." + prefix + val, context).closest(selector).show();
 		}
 		
