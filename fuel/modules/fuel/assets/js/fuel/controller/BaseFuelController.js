@@ -132,7 +132,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 
 	_submit : function(){
-		$('#submit').click(function(){
+		$('#submit').click(function(e){
+			e.preventDefault();
 			$('#form').submit();
 			return false;
 		});
