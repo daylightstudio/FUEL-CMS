@@ -54,6 +54,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
 	
+
 	$context.append(modalHTML);
 	$modal = $('#' + modalId, $context);
 	$modal.attr('class', '__fuel__ __fuel_modal__ jqmWindow ' + cssClass)
@@ -65,13 +66,12 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		$('.modal_content').empty();
 		$modal.jqmHide();
 	})
-	
+
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
 		$('.jqmOverlay', $context).remove();
 		if (onCloseCallback) onCloseCallback();
 	}	
-	
 	
 	var modalWidth = $modal.outerWidth();
 	var centerWidth = -((modalWidth/2));
@@ -93,10 +93,10 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
 
-		// $('.cancel', contentDoc).add('.modal_close').click(function(e){
-		// 	e.preventDefault();
-		// 	$modal.jqmHide();
-		// })
+		$('.cancel', contentDoc).add('.modal_close').click(function(e){
+			e.preventDefault();
+			$modal.jqmHide();
+		})
 
 		if (autoResize){
 			setTimeout(function(){
@@ -116,7 +116,12 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 
 fuel.closeModal = function(){
 	var modalId = '__FUEL_modal__';
-	$('#' + modalId).jqmHide();
+	$modal = $('#' + modalId, document.top);
+	if ($modal.find('.modal_close').length){
+		$modal.find('.modal_close').trigger('mousedown');
+	} else {
+		$('#' + modalId).jqmHide();	
+	}
 }
 
 fuel.getModule = function(context){
