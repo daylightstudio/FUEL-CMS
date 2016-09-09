@@ -54,7 +54,18 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		$('#' + modalId, $context).html('<div class="loader"></div><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>');
 	}
 	
+	$context.append(modalHTML);
+	$modal = $('#' + modalId, $context);
+	$modal.attr('class', '__fuel__ __fuel_modal__ jqmWindow ' + cssClass)
 
+	// Hack to prevent the iframe from refreshing on close	
+	$(document).off('mousedown', '.modal_close');
+	$(document).on('mousedown', '.modal_close', function(e){
+		console.log('xxx')
+		e.preventDefault();
+		$('.modal_content').empty();
+		$modal.jqmHide();
+	})
 	
 	var modalOnHide = function(){
 		$('#' + modalId, $context).hide();
@@ -62,9 +73,6 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		if (onCloseCallback) onCloseCallback();
 	}	
 	
-	$context.append(modalHTML);
-	$modal = $('#' + modalId, $context);
-	$modal.attr('class', '__fuel__ __fuel_modal__ jqmWindow ' + cssClass)
 	
 	var modalWidth = $modal.outerWidth();
 	var centerWidth = -((modalWidth/2));
@@ -86,17 +94,19 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
 
-		$('.cancel', contentDoc).add('.modal_close').click(function(e){
-			e.preventDefault();
-			$modal.jqmHide();
-		})
+		// $('.cancel', contentDoc).add('.modal_close').click(function(e){
+		// 	e.preventDefault();
+		// 	$modal.jqmHide();
+		// })
 
 		if (autoResize){
 			setTimeout(function(){
 					docHeight = fuel.calcHeight(contentDoc);
-					$(iframe.contentWindow.parent.document).find('#' + modalId + 'iframe').height(docHeight);
-					fuel.cascadeIframeWindowSize(docHeight);
-					$(iframe).height(docHeight);
+					if (iframe.contentWindow){
+						$(iframe.contentWindow.parent.document).find('#' + modalId + 'iframe').height(docHeight);
+						fuel.cascadeIframeWindowSize(docHeight);
+						$(iframe).height(docHeight);
+					}
 			}, 250);
 		}
 		
@@ -144,15 +154,15 @@ fuel.calcHeight = function(context){
 	if ($('#login', context).length){
 		var elems = '#login'; 
 	} else {
-		var elems = '#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions';
+		var elems = '#fuel_main_top_panel, #fuel_actions, #fuel_notification, #fuel_main_content_inner, #list_container, .instructions, .modal_height';
 	}
 	$(elems, context).each(function(i){
 		// must use false to get around bug with jQuery 1.8
 		var outerHeight = parseInt($(this).outerHeight(false));
 		if (outerHeight) height += outerHeight;
 	})
-	if (height > 480) {
-		height = 480;
+	if (height > 600) {
+		height = 600;
 	} else {
 		height += 30;
 	}

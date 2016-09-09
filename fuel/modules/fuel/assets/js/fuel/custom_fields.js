@@ -1488,6 +1488,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			});
 		};
 
+		$fuel.off("click", ".datatable_action, #data_table td[class^='col']:not('.actions')");
 		$fuel.on("click", ".datatable_action, #data_table td[class^='col']:not('.actions')", embeddedListModalOpen);
 		
 		// added refresh event that can be triggered
