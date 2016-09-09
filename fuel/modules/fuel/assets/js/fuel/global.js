@@ -61,7 +61,6 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	// Hack to prevent the iframe from refreshing on close	
 	$(document).off('mousedown', '.modal_close');
 	$(document).on('mousedown', '.modal_close', function(e){
-		console.log('xxx')
 		e.preventDefault();
 		$('.modal_content').empty();
 		$modal.jqmHide();
