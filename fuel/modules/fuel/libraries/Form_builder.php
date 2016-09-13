@@ -1976,6 +1976,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'disabled' => $params['disabled'],
+			'maxlength' => (!empty($params['max_length']) ? $params['max_length'] : NULL),
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
