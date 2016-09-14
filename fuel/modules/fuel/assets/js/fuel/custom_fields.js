@@ -1391,7 +1391,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	}
 
 	fuel.fields.dependent_field = function(context, options){
-		var firstlaunch = true;
 		
 		$('.dependent', context).each(function(i){
 
@@ -1437,19 +1436,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if ($.isEmptyObject(xtraData) === false) {
 					$.extend(data, xtraData);
 				}
-
 				if (val && val.length){
 					$.get(url, data, function(html){
 						var $select = $(replaceSelector);
+
 						$select.html(html);
 						$select.val(origValue);
 						//if ($select.prop("multiple")){
 							fuel.fields.multi_field(context);
 						//}
 
-						if (firstlaunch){
+						if (!$select.data('checksave')){
 							$.changeChecksaveValue($select, $select.val());
-							firstlaunch = false;	
+							$select.data('checksave', true);	
 						}
 					});
 				}
