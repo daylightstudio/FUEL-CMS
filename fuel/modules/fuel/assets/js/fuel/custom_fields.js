@@ -89,7 +89,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			return comboOpts;
 		}
 		// set up supercomboselects
-		$('select[multiple]', context).not('.no_combo').each(function(i){
+		$('select[multiple]', context).not('.no_combo, .field_type_select2').each(function(i){
 			var comboOpts = comboOptions(this);
 			$(this).supercomboselect(comboOpts);
 		});
