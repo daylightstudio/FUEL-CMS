@@ -1870,16 +1870,18 @@ class MY_Model extends CI_Model {
 	 * @param	mixed	where condition
 	 * @return	boolean
 	 */	
-	public function update($values, $where)
+	public function update($values, $where = array())
 	{
 		$this->_check_readonly();
 		$values = $this->on_before_update($values);
 		$values = $this->serialize_field_values($values);
-		$this->db->where($where);
+		if (!empty($where))
+		{
+			$this->db->where($where);
+		}
 		$return = $this->db->update($this->table_name, $values);
 		$this->on_after_update($values);
 		return $return;
-		
 	}
 	
 	// --------------------------------------------------------------------
