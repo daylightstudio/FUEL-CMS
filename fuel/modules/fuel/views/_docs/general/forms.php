@@ -957,7 +957,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>currency</strong>: the currency value to display next to the field. The default is '$'</li>
-		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is 3</li>
+		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is ','</li>
 		<li><strong>decimal</strong>: the decimal separator. The default is "." </li>
 		<li><strong>grouping</strong>: the number of ...err numbers to group by. The default is 3</li>
 		<li><strong>min</strong>: the min number to allow for the field (including negative numbers). The default is 0.00</li>
