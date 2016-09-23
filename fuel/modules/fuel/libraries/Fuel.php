@@ -470,7 +470,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	The object
 	 * @return	object
 	 */	
-	public function &__get($var)
+	public function __get($var)
 	{
 		if (!isset($this->_attached[$var]))
 		{
