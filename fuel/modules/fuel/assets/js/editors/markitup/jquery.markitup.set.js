@@ -448,7 +448,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 	}
 	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
 	linkFilter = jQuery(markItUp.textarea).attr('data-link_filter');
-	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs, linkFilter: linkFilter}, function(replace){
+	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs, linkFilter: linkFilter}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
@@ -457,7 +457,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 
 	var self = this;
 	var url = jqx.config.fuelPath + '/pages/select/?nocache=' + new Date().getTime();
-	if (selected) url += '&selected=' + escape(selected);
+	if (selected) url += '&selected=' + encodeURIComponent(selected);
 	url += '&input=' + ((attrs.input) ? encodeURIComponent(attrs.input) : '');
 	url += '&target=' + ((attrs.target) ? attrs.target : '');
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
