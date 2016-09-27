@@ -449,10 +449,6 @@ class Fuel_redirects extends Fuel_base_library {
 				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE); 
 			}
 
-			if (empty($error_404))
-			{
-				$error_404 = $this->fuel->pages->render('404_error', array(), array('render_mode' => 'views'), TRUE);
-			}
 			if (!empty($error_404))
 			{
 				echo $error_404;

@@ -34,25 +34,6 @@ class Fuel_hooks
 	{
 	}
 		
-	// this hook allows us to route the the fuel controller if the method 
-	// on a controller doesn't exist... not just the controller itself'
-	public function pre_controller()
-	{
-		// if called from same Wordpress, the the global scope will not work
-		global $method, $class, $RTR;
-		$class_methods = get_class_methods($class);
-		// for pages without methods defined
-		if ((isset($class_methods) AND !in_array($method, $class_methods) AND !in_array('_remap', $class_methods))  AND !empty($RTR->default_controller))
-		{
-			$fuel_path = explode('/', $RTR->routes['404_override']);
-			if (!empty($fuel_path[1]))
-			{
-				require_once(FUEL_PATH.'/controllers/'.$fuel_path[1].'.php');
-				$class = $fuel_path[1];
-			}
-		}
-	}
-
 	// this hook performs redirects before trying to find the page (vs. passive redirects which will only happen if no page is found by FUEL)
 	public function redirects()
 	{
