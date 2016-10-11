@@ -572,7 +572,7 @@ class Module extends Fuel_base_controller {
 		
 		$defaults = array();
 		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
-		$defaults['order'] = (!empty($this->default_order)) ? $this->default_order : 'asc';
+		$defaults['order'] = (isset($this->default_order)) ? $this->default_order : 'asc';
 		$defaults['offset'] = 0;
 		$defaults['limit'] = key($this->limit_options);
 		$defaults['search_term'] = '';

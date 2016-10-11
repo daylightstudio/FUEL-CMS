@@ -322,7 +322,7 @@ class Base_module_model extends MY_Model {
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
 
-		if (!empty($col) AND !empty($order)) $this->db->order_by($col, $order);
+		if (!empty($col) AND !empty($order)) $this->db->order_by($col, $order, FALSE);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
 		
