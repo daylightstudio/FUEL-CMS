@@ -748,7 +748,7 @@ class Pages extends Module {
 		// reset cache for that page only
 		if ($this->input->post('location'))
 		{
-			$this->fuel->cache->clear_page($this->input->post('location', TRUE));
+			$this->fuel->cache->clear_page($this->fuel->cache->create_id($this->input->post('location', TRUE)));
 		}
 
 		return TRUE;

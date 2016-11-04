@@ -131,22 +131,27 @@ class Fuel_cache extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	Location used in creating the ID (optional)
+	 * @param	string	Language of page (optional)
 	 * @return	string
 	 */
-	public function create_id($location = NULL)
+	public function create_id($location = NULL, $lang = NULL)
 	{
-		$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
+		if (empty($lang))
+		{
+			$lang = ($this->fuel->language->has_multiple()) ? $this->fuel->language->detect() : $this->fuel->language->default_option();
+		}
+		
 		if (empty($location))
 		{
-			$segs = $this->CI->uri->segment_array();
-
-			if (empty($segs)) 
+			// $segs = $this->CI->uri->segment_array();
+			$uri = str_replace('/', '.', uri_path());
+			if (empty($uri)) 
 			{
 				return 'home.'.$lang;
 			}
-			return implode('.', $segs).'.'.$lang;
+			return $lang.'.'.$uri;
 		}
-		$id = $location.'.'.$lang;
+		$id = $lang.'.'.$location;
 		return str_replace('/', '.', $id);
 	}
 	
