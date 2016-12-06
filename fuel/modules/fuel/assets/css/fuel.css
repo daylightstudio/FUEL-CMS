@@ -521,7 +521,7 @@ a#multi_delete { display: block; }
 .adv_search { position: absolute; min-width: 360px; background: white; border: 1px solid #b6b6b6; z-index: 1000; left: -120px; padding: 10px 15px; display: none;
   -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.3); 
   -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.3);
-  box-shadow: 2px 2px 10px 1px rgba(0,0,0,0.3); }
+  box-shadow: 2px 2px 10px 1px rgba(0,0,0,0.3);
  }
 .adv_search .more_filters { max-height: 500px; overflow-y: auto; }
 .adv_search .more_filters div div { float: none; overflow: hidden; margin-bottom: 7px; }
