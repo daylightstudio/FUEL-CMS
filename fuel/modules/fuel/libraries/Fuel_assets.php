@@ -287,10 +287,9 @@ class Fuel_assets extends Fuel_base_library {
 					$params['file_name'] = preg_replace('#(.*)\{file\}(.*)#U', '$1'.pathinfo($file['name'], PATHINFO_FILENAME).'$2', $params['file_name']);
 				}
 
-
-
-				// set overwrite
+				// explicitly set as booleans because the 1 value will not work
 				$params['overwrite'] = (is_true_val($params['overwrite']));
+				$params['encrypt_name'] = (is_true_val($params['encrypt_name']));
 
 				if (is_image_file($params['file_name']) AND !empty($params['xss_clean']))
 				{
