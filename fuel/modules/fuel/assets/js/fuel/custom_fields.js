@@ -1465,10 +1465,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $activeEmbeddedList = $(activeEmbeddedList);
 			var $embeddedListItems = $fuel.find("#"+$activeEmbeddedList.attr("id")+" .embedded_list_items");
 			$embeddedListItems.empty().addClass("loader");
+			$activeEmbeddedList.trigger('refreshEmbedListBegin');
 			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $activeEmbeddedList.data("module-url") + "/ajax/embedded_list_items", $activeEmbeddedList.data("embedded-list-params"));
 			embeddedListAjax.done(function(data) {
 				$embeddedListItems.removeClass("loader").html(data);
 				fuel._initToolTips();
+				$activeEmbeddedList.trigger('refreshEmbedListEnd');
 			});
 		};
 
