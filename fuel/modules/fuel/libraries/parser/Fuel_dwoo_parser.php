@@ -32,6 +32,7 @@ require_once(FUEL_PATH . 'libraries/parser/Fuel_abstract_parser.php');
 class Fuel_dwoo_parser extends Fuel_abstract_parser {
 
 	protected $name = 'dwoo'; // name of the parsing engine
+	protected $compile_file_perms = FILE_WRITE_MODE; // the file permissions for the compiled string
 
 	/**
 	 * Spawns a new instance of Dwoo.
@@ -85,6 +86,8 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 		{
 			// Object of the template
 			$tpl = new Dwoo_Template_String($string, NULL, NULL, NULL);
+
+			$tpl->setChmod($this->compile_file_perms);
 
 			$dwoo = !isset($this->engine) ? $this->spawn() : $this->engine;
 			

@@ -421,6 +421,12 @@ $config['double_parse'] = FALSE;
 // The directory to put the parsed compiled files
 $config['parser_compile_dir'] = APPPATH.'cache/dwoo/compiled/';
 
+// The folder permissions to put the parsed compiled files
+$config['parser_compile_dir_perms'] = DIR_WRITE_MODE;
+
+// The file permissions for the parsed compiled files (Dwoo only)
+$config['parser_compile_file_perms'] = FILE_WRITE_MODE;
+
 // The delimiters used by the parsing engine
 $config['parser_delimiters'] = array(
 				'tag_comment'   => array('{#', '#}'), // Twig only
