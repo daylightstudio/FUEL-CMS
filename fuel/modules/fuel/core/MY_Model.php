@@ -2706,6 +2706,25 @@ class MY_Model extends CI_Model {
 	}
 	
 	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the table's comment
+	 *
+	 <code>
+	 $model->comment();
+	</code>
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function comment()
+	{
+		$sql = "SELECT table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='". $this->db->database ."' AND table_name='" . $this->table_name . "'";
+		$query = $this->db->query($sql);
+		return $query->row()->table_comment;
+	}
+
+	// --------------------------------------------------------------------
 
 	/**
 	 * Returns an array of information that can be used for building a form (e.g. Form_builder). 
