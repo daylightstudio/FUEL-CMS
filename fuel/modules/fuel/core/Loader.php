@@ -320,7 +320,7 @@ class Fuel_Loader extends CI_Loader
 			$view = $_view;
 		}
 		$this->_ci_view_path = $path; // <!-- FUEL
-		return $this->_ci_load(array('_ci_view' => $view, '_ci_path' => $path, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return), $scope);
+		return $this->_ci_load(array('_ci_view' => $view, '_ci_path' => $path, '_ci_vars' => $this->_ci_prepare_view_vars($vars), '_ci_return' => $return), $scope);
 	}
 
 	public function _ci_load($_ci_data, $scope = NULL) 
@@ -815,7 +815,7 @@ class Fuel_Loader extends CI_Loader
 			$vars = array($vars => $val);
 		}
 
-		$vars = $this->_ci_object_to_array($vars);
+		$vars = $this->_ci_prepare_view_vars($vars);
 		if (is_array($vars) AND count($vars) > 0)
 		{
 			if (!isset($this->_ci_cached_vars[$scope]))
