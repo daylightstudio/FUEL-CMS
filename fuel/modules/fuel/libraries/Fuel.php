@@ -1,4 +1,4 @@
-'<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -537,4 +537,4 @@ class Fuel extends Fuel_advanced_module {
 
 
 /* End of file Fuel.php */
-/* Location: ./modules/fuel/libraries/Fuel.php */'
+/* Location: ./modules/fuel/libraries/Fuel.php */
