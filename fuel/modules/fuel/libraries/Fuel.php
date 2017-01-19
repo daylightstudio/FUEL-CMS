@@ -537,4 +537,4 @@ class Fuel extends Fuel_advanced_module {
 
 
 /* End of file Fuel.php */
-/* Location: ./modules/fuel/libraries/Fuel.php */'
+/* Location: ./modules/fuel/libraries/Fuel.php */
