@@ -1420,8 +1420,8 @@ class Fuel_posts extends Fuel_base_library {
 	{
 		$vars['CI'] =& get_instance();
 		$vars['is_home'] = $this->is_home();
-		$vars['module'] =& $this->get_module();
-		$vars['model'] =& $this->model();
+		$vars['module'] = $this->get_module();
+		$vars['model'] = $this->model();
 		$vars['page_type'] = $this->page_type();
 		$vars['layout'] = $this->layout();
 		$vars['view'] = $this->view();
