@@ -9,7 +9,6 @@
  */
 define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fuel/');
 
-
 /*
  *---------------------------------------------------------------
  * FUEL CLI (Command Line Interface)
@@ -20,7 +19,7 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
  * So if your output requires the correct site_url() path, you will need to change these.
  */
 
-if (defined('STDIN'))
+if (PHP_SAPI === 'cli' OR defined('STDIN'))
 {
 	/* if your FUEL installation exists in a subfolder, then you may want to change SCRIPT_NAME to /subfolder/index.php 
 	 (Needed for using Tester module if running via CLI) */
