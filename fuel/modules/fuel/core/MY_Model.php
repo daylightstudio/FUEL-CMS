@@ -591,7 +591,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the type of find to perform. Options are "key", "one", "options", "all" and find_"{your_method}". By default it will perform a find_all (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -697,7 +697,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	string	return type (object, array, query, auto) (optional)
 	 * @return	array
@@ -731,7 +731,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
+	 * @param	mixed	an array or string containing the where parameters of a query
 	 * @param	string	the order by of the query (optional)
 	 * @return	array
 	 */	
@@ -750,7 +750,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -804,7 +804,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -826,7 +826,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the column to use for an associative key array (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -848,7 +848,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the column to use for an associative key array (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -870,7 +870,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	group	an array of keys to limit the search results to
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
 	 * @param	string	return type (object, array, query, auto) (optional)
@@ -1111,7 +1111,7 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @param	string	the column to use for the value (optional)
 	 * @param	string	the column to use for the label (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
 	 * @return	array
 	 */	
@@ -1183,7 +1183,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
+	 * @param	mixed	an array or string containing the where parameters of a query
 	 * @return	boolean
 	 */	
 	public function record_exists($where)
