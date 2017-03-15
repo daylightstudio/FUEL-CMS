@@ -39,8 +39,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			region : '',
 			showButtonPanel : false,
 			showOn: 'button',
-		    buttonText: 'Click to show the calendar',
-		    buttonImageOnly: true
+			buttonText: 'Click to show the calendar',
+			buttonImageOnly: true
 		}
 
 		// first look for jqx variable
@@ -246,23 +246,25 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				// process image paths
 				this.dataProcessor.htmlFilter.addRules( {
 					elements : {
-					    $ : function( element ) {
+						$ : function( element ) {
 
 							// // Output dimensions of images as width and height attributes on src
 							if ( element.name == 'img' && hasCKEditorImagePlugin) {
 								//var src = element.attributes['src'];
 								var src = element.attributes['data-cke-saved-src']; // v4.4 fix
-								var regex = "^" + lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
-								img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
-			   										return contents;
-		    								}
-										);
-								img = img.replace(jqx_config.assetsImgPath, '');
-								src = myMarkItUpSettings.parserLeftDelimiter() + "img_path('" + img + "')" + myMarkItUpSettings.parserRightDelimiter();
-								element.attributes.src = src;
-								element.attributes['data-cke-saved-src'] = src;
-					        }
-					    }
+								if (src.substr(0, 4) != 'http') {
+									var regex = "^" + lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
+									img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
+														return contents;
+												}
+											);
+									img = img.replace(jqx_config.assetsImgPath, '');
+									src = myMarkItUpSettings.parserLeftDelimiter() + "img_path('" + img + "')" + myMarkItUpSettings.parserRightDelimiter();
+									element.attributes.src = src;
+									element.attributes['data-cke-saved-src'] = src;
+								}
+							}
+						}
 					}
 				});
 				
@@ -356,8 +358,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var regex = lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
 			txt = txt.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 												contents = contents.replace(/'|"/, '');
-		   										return jqx_config.assetsImgPath + contents;
-	    								}
+												return jqx_config.assetsImgPath + contents;
+										}
 									);
 			return txt;
 		}	
@@ -556,14 +558,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		}
 
 		var convertQueryStringToJSON = function(url) {            
-    		var pairs = url.split('&');
-    		var result = {};
+			var pairs = url.split('&');
+			var result = {};
 			pairs.forEach(function(pair) {
-        		pair = pair.split('=');
-        		result[pair[0]] = decodeURIComponent(pair[1] || '');
-    		});
-    		return result;
-    	}
+				pair = pair.split('=');
+				result[pair[0]] = decodeURIComponent(pair[1] || '');
+			});
+			return result;
+		}
 
 		var _this = this;
 		$('.asset_select', context).each(function(i){
