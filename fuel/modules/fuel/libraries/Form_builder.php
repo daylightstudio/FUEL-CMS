@@ -1898,6 +1898,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'required' => (!empty($params['required']) ? TRUE : NULL),
 		);
 		if ($params['checked'])
 		{
@@ -1937,6 +1938,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'required' => (!empty($params['required']) ? TRUE : NULL),
 		);
 		if ($params['checked'])
 		{
