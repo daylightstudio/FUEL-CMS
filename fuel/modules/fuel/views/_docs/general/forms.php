@@ -449,6 +449,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>remove_spaces</strong>: will automatically remove spaces from the file name. The default is TRUE</li>
 		<li><strong>replace_values</strong>: an array of key/value pairs that can be used to replace any placeholder values in the upload path</li>
 		<li><strong>display_input</strong>: a boolean value that will display an input field for the name of the file which can be helpful to store the uploaded files name to the database</li>
+		<li><strong>preview_path</strong>: A direct web path to the asset file. If not provided, it will default to either the folder or upload path values to determine the preview path</li>
 	</ul>
 
 	<h4>Image Specific</h4>
@@ -726,6 +727,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>condensed</strong>: if TRUE, this will update there repeatable field to use a condensed styling</li>
 		<li><strong>non_sortable</strong>: if TRUE, this will hide the sorting grabber for repeatable fields</li>
 		<li><strong>removeable</strong>: determines whether the repeatable sets can be removed</li>
+		<li><strong>ignore_name_array</strong>: ignores the name array value that gets applied to the names of the form to create the nested array on post (e.g. array(0 =&gt; array("title" =&gt; "My Title",....) </li>
 	</ul>
 
 	<h4>Example</h4>
@@ -955,7 +957,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>currency</strong>: the currency value to display next to the field. The default is '$'</li>
-		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is 3</li>
+		<li><strong>separator</strong>: the separator to use for the grouping of numbers. The default is ','</li>
 		<li><strong>decimal</strong>: the decimal separator. The default is "." </li>
 		<li><strong>grouping</strong>: the number of ...err numbers to group by. The default is 3</li>
 		<li><strong>min</strong>: the min number to allow for the field (including negative numbers). The default is 0.00</li>
@@ -1063,6 +1065,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field allows you go create a key / value array by separating keys and values with a delimiter. Each key/value goes on it's own line. The
 		post-processed result is a JSON encoded string:</p>
 	<ul>
+		<li><strong>row_delimiter</strong>: the row delimiter used to separate between key/value pairs. The default is a "\n|," (return, pipe, comma).</li>
 		<li><strong>delimiter</strong>: the delimiter used to separate between a key and a value. The default is a ":" (colon).</li>
 		<li><strong>allow_numeric_indexes</strong>: determines whether to display numeric indexes or not.</li>
 		<li><strong>allow_empty_values</strong>: determines whether to display items that may have no value.</li>

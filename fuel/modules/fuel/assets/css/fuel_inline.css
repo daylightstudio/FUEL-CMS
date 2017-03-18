@@ -19,7 +19,7 @@ div#__FUEL__add_edit_modal h2.module_name { display: block; }
 .__fuel__ div.buttonbar li.start { border-left: 1px solid #ccc !important; }
 .__fuel__ div.buttonbar li.end { border-right: 1px solid #ccc !important; }
 .__fuel__ div.buttonbar li.round { border-radius: 0 0 0 7px !important; -moz-border-radius: 0 0 0 7px !important; -webkit-border-bottom-left-radius: 7px !important; border-left: 1px solid #fff !important;}
-.__fuel__ div.buttonbar label { padding-left: 10px !important; font-style: normal !important; font-weight: normal !important; }
+.__fuel__ div.buttonbar label { padding-left: 10px !important; font-style: normal !important; font-weight: normal !important; display: inline; }
 .__fuel__ div.buttonbar select { margin: 0 10px !important; height: auto !important; max-height: 20px !important; line-height: auto !important; max-width: 300px !important; padding: 0!important; background: none !important; }
 .__fuel__ div.buttonbar li.right { float: right !important; }
 
@@ -101,7 +101,7 @@ div#__fuel_edit_bar__ li { display: block; }
 
 div#__fuel_edit_bar__ li a { display: block !important; padding: 0 !important; height: 27px !important; min-width: 27px !important; }
 div#__fuel_edit_bar__ li.txt { padding: 0 10px !important; }
-div#__fuel_edit_bar__ select { appearance: menu !important; -moz-appearance: menu !important; -webkit-appearance: menu !important; border: none !important; background: none !important; color: #000 !important; display: inline !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important; }
+div#__fuel_edit_bar__ select { appearance: menu !important; -moz-appearance: menu !important; -webkit-appearance: menu !important; border: 1px solid #bbb !important; background: none !important; color: #000 !important; display: inline !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important; }
 
 .__fuel__ .inline_iframe { border: none; height: 0px; width: 100%; min-width: 350px;}
 .__fuel_edit_marker_close__ { position: absolute; right: 5px; z-index: 1; }

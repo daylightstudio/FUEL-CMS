@@ -1,7 +1,6 @@
 <script type="text/javascript">
-//<![CDATA[
 	if (top.window.fuel && top.window.fuel.closeModal){
-		top.window.fuel.closeModal();	
+		top.window.fuel.closeModal();
 	}
 	if (top.window.fuel && top.window.fuel.setNotification){
 		top.window.fuel.setNotification(' &nbsp; ', 'warning');
@@ -10,5 +9,4 @@
 	} else if (top.window != window){
 		top.window.location = top.window.location;
 	}
-//]]>
 </script>

@@ -2,7 +2,7 @@
  * Checks form fields to make sure they haven't changed before saving
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
 jQuery.checksave = function(context) {

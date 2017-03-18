@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -440,11 +440,11 @@ if (!function_exists('query_str'))
 		$query_str = '';
 		if ($include_post)
 		{
-			$get_array = $CI->input->get(NULL, TRUE);
+			$get_array = $CI->input->get_post(NULL, TRUE);
 		}
 		else
 		{
-			$get_array = $CI->input->get_post(NULL, TRUE);
+			$get_array = $CI->input->get(NULL, TRUE);
 		}
 		
 		if (!empty($get_array))

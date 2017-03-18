@@ -14,5 +14,5 @@
 */
 
 $environments = array(
-				'development' => array('localhost*', '192.*', '*.dev'),
+				'development' => array('localhost*', '192.*', '*.dev', 'local.*'),
 				);

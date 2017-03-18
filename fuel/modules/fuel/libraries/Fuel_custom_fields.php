@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -248,7 +248,12 @@ class Fuel_custom_fields {
 			}
 			if (isset($params['folder']) OR isset($params['upload_path']))
 			{
-				if (isset($params['folder']))
+				if (isset($params['preview_path']))
+				{
+					$asset_folder = pathinfo($params['preview_path'], PATHINFO_DIRNAME);
+					$asset_path = $params['preview_path'];
+				}
+				elseif (isset($params['folder']))
 				{
 					$asset_folder = trim($params['folder'], '/').'/';
 					$asset_path = $asset_folder.$params['value'];
@@ -274,17 +279,19 @@ class Fuel_custom_fields {
 				
 			}
 			$preview = '';
+
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
 				$preview .= ' ';
 				$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
+
 				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 				{
 					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
 				}
 				else
 				{
-					$preview .= $asset_path;
+					$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
 				}
 				$preview .= '</a>';
 			}
@@ -645,7 +652,7 @@ class Fuel_custom_fields {
 			$img_container_styles = $params['img_styles'];
 		}
 		
-		$preview = '<br /><div class="img_preview noclone" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
+		$preview = '<br /><div class="img_preview" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
 		$preview .= '</div><div class="clear"></div>';
 
 		$str .= $preview;
@@ -870,7 +877,7 @@ class Fuel_custom_fields {
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
-			
+
 			foreach($params['fields'] as $key => $field)
 			{
 				if (!empty($value[$key]))
@@ -933,6 +940,10 @@ class Fuel_custom_fields {
 					$field['data']['index'] = $index;
 					$field['data']['key'] = $key;
 					$field['data']['field_name'] = $params['key'];
+					if (empty($field['replace_values']))
+					{
+						$field['replace_values'] = $value;	
+					}
 
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
 					//$field['id'] = FALSE;
@@ -944,13 +955,16 @@ class Fuel_custom_fields {
 				}
 				else
 				{
-					if (!empty($form_builder->name_array))
+					if (empty($params['ignore_name_array']))
 					{
-						$field['name'] = $params['name'].'['.$key.']';
-					}
-					else
-					{
-						$field['name'] = $params['orig_name'].'['.$key.']';
+						if (!empty($form_builder->name_array))
+						{
+							$field['name'] = $params['name'].'['.$key.']';
+						}
+						else
+						{
+							$field['name'] = $params['orig_name'].'['.$key.']';
+						}
 					}
 					$field['display_label'] = $params['display_sub_label'];
 					$_f[$key] = $field;
@@ -1339,9 +1353,12 @@ class Fuel_custom_fields {
 				$names = array_values($states);
 				$states = array_combine($names, $names);
 			}
-
 		}
-		$params['options'] = $states;
+
+		if (empty($params['options']))
+		{
+			$params['options'] = $states;	
+		}
 		
 		// set data values for jquery plugin to use
 		return $form_builder->create_select($params);
@@ -1744,6 +1761,11 @@ class Fuel_custom_fields {
 			$params['delimiter'] = ":";
 		}
 
+		if (!isset($params['row_delimiter']))
+		{
+			$params['row_delimiter'] = "\n|,";
+		}
+
 		if (!isset($params['allow_numeric_indexes']))
 		{
 			$params['allow_numeric_indexes'] = FALSE;
@@ -1754,6 +1776,7 @@ class Fuel_custom_fields {
 			$params['allow_empty_values'] = FALSE;
 		}
 
+		$row_delimiter = "\s*".$params['row_delimiter']."\s*";
 		$split_delimiter = "\s*".$params['delimiter']."\s*";
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
@@ -1778,7 +1801,7 @@ class Fuel_custom_fields {
 						}
 
 						$json = array();
-						$rows = preg_split("#\s*\n|,\s*#", $z);
+						$rows = preg_split("#'.$row_delimiter.'#", $z);
 						foreach($rows as $r)
 						{
 							$vals = preg_split("#'.$split_delimiter.'#", $r, 2);
@@ -1813,7 +1836,7 @@ class Fuel_custom_fields {
 
 				if (is_string($value))
 				{
-					$rows = preg_split("#\s*\n|,\s*#", $value);
+					$rows = preg_split("#'.$row_delimiter.'#", $value);
 					foreach($rows as $r)
 					{
 						if (is_string($r))
@@ -2124,8 +2147,8 @@ class Fuel_custom_fields {
 		$CI =& get_instance();
 
 		$adv_module = 'app';
-		$module =& $this->fuel->modules->get($params['module'], FALSE);
-		$model =& $module->model();
+		$module = $this->fuel->modules->get($params['module'], FALSE);
+		$model = $module->model();
 
 		$module_url = $module->info('module_uri');
 		$create_button_label = (!empty($params['create_button_label'])) ? $params['create_button_label'] : lang('btn_create') .' '. ucwords($model->singular_name());

@@ -90,6 +90,14 @@ $lang['auth_log_failed_updating_login_info'] = "There was an error updating the 
 $lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
 $lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 
+$lang['pwd_requirements'] = '<p style="text-align: left; margin: 10px 0 5px 0;"><strong>Password must be:</strong></p>';
+$lang['pwd_min_length_required'] = 'A minimum of %1s characters';
+$lang['pwd_max_length_required'] = 'A maximum of %1s characters';
+$lang['pwd_lowercase_required'] = 'One or more lower case letters';
+$lang['pwd_uppercase_required'] = 'One or more upper case letters';
+$lang['pwd_numbers_required'] = 'One or more numbers';
+$lang['pwd_symbols_required'] = 'One or more symbols';
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard
@@ -215,6 +223,8 @@ $msg .= "2. Delete the relevant section from .git/config.\n";
 $msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
 $msg .= "4. Commit and delete the now untracked submodule files.\n";
 $lang['module_uninstall'] = $msg;
+
+$lang['module_update'] = "The module %1s has been updated in FUEL.\n";
 
 // build
 $lang['module_build_asset'] = "%1s optimized and ouput to %2s\n";
@@ -603,14 +613,16 @@ $lang['database_migration_success'] = 'Successful database migration to version 
 */
 $lang['install_cli_intro'] = "The FUEL CMS installer is an easy way to setup the CMS with common configurations. It will do the following:\n";
 $lang['install_cli_intro'] .= "1) Automatically generate an encryption key in fuel/application/config/config.php.\n";
-$lang['install_cli_intro'] .= "2) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.\n";
-$lang['install_cli_intro'] .= "3) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.\n";
-$lang['install_cli_intro'] .= "4) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.\n";
-$lang['install_cli_intro'] .= "5) Setup your evironments fuel/application/config/environments.php.\n";
-$lang['install_cli_intro'] .= "6) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.\n";
-$lang['install_cli_intro'] .= "7) Update the fuel/application/config/database.php file with the inputted values.\n";
-$lang['install_cli_intro'] .= "8) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n";
+$lang['install_cli_intro'] .= "2) Set the session save path in fuel/application/config/config.php.\n";
+$lang['install_cli_intro'] .= "3) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.\n";
+$lang['install_cli_intro'] .= "4) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.\n";
+$lang['install_cli_intro'] .= "5) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.\n";
+$lang['install_cli_intro'] .= "6) Setup your evironments fuel/application/config/environments.php.\n";
+$lang['install_cli_intro'] .= "7) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.\n";
+$lang['install_cli_intro'] .= "8) Update the fuel/application/config/database.php file with the inputted values.\n";
+$lang['install_cli_intro'] .= "9) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n";
 
+$lang['install_session_path'] = 'By default, FUEL CMS saves sessions using the default "file" setting in the fuel/application/config/config.php file. Where would you like the session files be stored (leave blank to keep it as the default)?';
 $lang['install_site_name'] = 'What would you like the site name to be for this FUEL CMS installation?';
 $lang['install_environments_testing'] = 'What are the domains for your TESTING environment (e.g. myserver.com *.mystagingserver.com)?';
 $lang['install_environments_production'] = 'What are the domains for your PRODUCTION environment (e.g. myserver.com *.myserver.com)?';
@@ -624,6 +636,14 @@ $lang['install_success_with_errors'] = "Your FUEL CMS installation is complete b
 $lang['install_further_info'] = "Now, to access the FUEL CMS admin, browse to your installation folder in your browser enter '/fuel' (e.g. localhost/fuel) in your location bar.\n";
 $lang['install_further_info'] .= "For additional configuration options, go to http://docs.getfuelcms.com/installation/configuration.\n";
 $lang['install_further_info'] .= "For questions, or bug reports, go to https://github.com/daylightstudio/FUEL-CMS/issues or visit us at http://forums.getfuelcms.com.\n";
+
+$lang['update_cli_intro'] = "FUEL CMS 1.4x is built on CodeIgniter 3. If you are upgrading from 1.3x or earlier, this updater will help fix some of the common issues when upgrading including:\n";
+$lang['update_cli_intro'] .= "1) Upper-case first letter for models, libraries and controller file names.\n";
+$lang['update_cli_intro'] .= "2) Will upper case common references to Base_module_model.php within model files.\n";
+$lang['update_cli_intro'] .= "3) Update common method signatures in models and libraries like form_fields, _common_query and initialize to match their parent's signature.\n";
+$lang['update_cli_intro'] .= "WARNING: Run this ONLY if you are using GIT in case you need to roll back!\n";
+$lang['update_cli_intro'] .= "Do you wish to continue (y/n)";
+$lang['update_success'] = 'Update complete!';
 
 // now include the Javascript specific ones since there is some crossover
 include('fuel_js_lang.php');
