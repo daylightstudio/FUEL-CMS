@@ -159,7 +159,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 							<h4>Make configuration changes</h4>
 							<ul class="writable">
 								<?php if ($this->config->item('encryption_key') == '') : ?>
-								<li>In the <strong>fuel/application/config/config.php</strong>, <a href="http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/" target="_blank">change the <code>$config['encryption_key']</code> to your own unique key</a>.</li></li>
+								<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li></li>
 								<?php endif; ?>
 								<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 								<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
