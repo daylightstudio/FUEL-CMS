@@ -371,7 +371,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		// select the database
 		$db = $db[$active_group]['database'];
 
-		$use_sql = 'USE '.$db;
+		$use_sql = 'USE `'.$db.'`';
 
 		$CI->db->query($use_sql);
 		$sql_arr = explode(";\n", str_replace("\r\n", "\n", $sql));
