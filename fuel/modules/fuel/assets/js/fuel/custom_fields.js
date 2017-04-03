@@ -486,7 +486,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var showAssetsSelect = function(params){
 			var winHeight = 450;
 			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
-			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -621,7 +621,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		// asset upload 
 		var showAssetUpload = function(url){
-			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 			$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
@@ -746,7 +746,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var $modal = null;
 		var selected = null;
 		var editModule = function(url, onLoadCallback, onCloseCallback){
-			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true, onLoadCallback, onCloseCallback);
 			
 			// bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -1180,7 +1180,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			if ($activeField.data('filter')){
 				url += '&filter=' + $activeField.data('filter');	;	
 			}
-			var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 			
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -1485,7 +1485,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 
 			var iframe_url = href;
-			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
 			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
 				embeddedListModalClose($activeEmbeddedList);
 			});
