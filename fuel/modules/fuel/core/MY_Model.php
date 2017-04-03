@@ -5859,7 +5859,7 @@ class Data_record {
 	public function __isset($key)
 	{
 		$obj_vars = get_object_vars($this);
-		return (isset($this->_fields[$key]) OR isset($obj_vars[$key]) OR method_exists($this, 'get_'.$key));
+		return ($this->__get($key) OR isset($this->_fields[$key]) OR isset($obj_vars[$key]) OR method_exists($this, 'get_'.$key));
 	}
 	
 	// --------------------------------------------------------------------
