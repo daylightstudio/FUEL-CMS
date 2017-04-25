@@ -13,7 +13,7 @@ It will also automatically assign the <dfn>belongs_to</dfn> relationship to your
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once('base_module_model.php');
+require_once('Base_module_model.php');
 
 class Widgets_model extends Base_module_model {
 	....
@@ -53,7 +53,7 @@ a particular context (if needed) and associate a single category to a particular
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once('base_module_model.php');
+require_once('Base_module_model.php');
 
 class Widgets_model extends Base_module_model {
 	....

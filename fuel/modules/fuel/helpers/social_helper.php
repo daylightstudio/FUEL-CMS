@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -30,7 +30,7 @@
 // --------------------------------------------------------------------
 
 /**
- * Uses <a href="[user_guide_url]libraries/social">Social</a> class's share method to return social links
+ * Uses <a href="../libraries/social">Social</a> class's share method to return social links
  *
  * @access	public
  * @param	string	The type of social URL. A list of supported URLs can be found in the fuel/application/config/social.php file under the $config['share_url']
@@ -51,7 +51,7 @@ if (!function_exists('share'))
 }
 
 /**
- * Uses <a href="[user_guide_url]libraries/social">Social</a> class's og method to create open graph links
+ * Uses <a href="../libraries/social">Social</a> class's og method to create open graph links
  *
  * @access	public
  * @param	array	An array of values for the open graph which can include array keys of 'title', 'url', 'description', 'image', 'site_name', 'type'

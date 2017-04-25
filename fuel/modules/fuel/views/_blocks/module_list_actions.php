@@ -9,6 +9,8 @@
 					<?php endif; ?>
 				</td>
 				<?php endif; ?>
+
+				<?php if ( $this->advanced_search !== 'collapse') : ?>
 				<td><a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>" class="reset"></a></td>
 				<td>
 					<div class="search_input<?php if ( $this->advanced_search === TRUE OR $this->advanced_search === 'popover') : ?> advanced<?php endif; ?>">
@@ -21,10 +23,12 @@
 							<p><?=$this->form->submit(lang('btn_search'), 'search')?> &nbsp;&nbsp; <a href="#" id="adv-search-close"><?=lang('viewpage_close')?></a> &nbsp;&nbsp; <a href="<?=fuel_url($this->module_uri.'/reset_page_state', FALSE)?>"><?=lang('reset_search')?></a></p>
 
 						</div>
-						<?php endif; ?>
 					</div>
+					<?php endif ?>
 				</td>
 				<td class="search"><?=$this->form->submit(lang('btn_search'), 'search')?></td>
+				<?php endif; ?>
+				
 				<td class="show"><label for="limit"><?=lang('label_show')?></label> <?=$this->form->select('limit', $this->limit_options, $params['limit'])?></td>
 			</tr>
 		</tbody>
@@ -35,7 +39,7 @@
 
 	<ul>
 		<?php 
-		$create_url = (!empty($this->model->filters['group_id'])) ? $this->module_uri.'/create/'.$this->model->filters['group_id'] : $this->module_uri.'/create';
+		$create_url = (!empty($this->model->filters['group_id'])) ? $this->module_uri.'/create/?group_id='.$this->model->filters['group_id'] : $this->module_uri.'/create';
 		if (!empty($tree)) : ?>
 		<li class="active"><a href="#" id="toggle_list" class="ico ico_table" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_list')?></a></li>
 		<li><a href="#" id="toggle_tree" class="ico ico_tree" title="<?=$keyboard_shortcuts['toggle_view']?> to toggle view"><?=lang('btn_tree')?></a></li>

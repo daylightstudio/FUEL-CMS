@@ -62,7 +62,7 @@ $config['assets_output'] = FALSE;
 $config['force_assets_recompile'] = FALSE;
 
 // cache folder relative to the web root folder and is the key to a folder specified under the assets_folders config value
-// ... must be writable directory (default is the application/assets/cache folder)
+// ... must be writable directory (default is the /assets/cache folder)
 $config['assets_cache_folder'] = 'cache';
 
 // time limit on gzip cache file in seconds

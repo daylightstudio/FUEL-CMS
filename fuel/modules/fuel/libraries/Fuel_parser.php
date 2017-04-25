@@ -32,6 +32,7 @@ class Fuel_parser extends Fuel_Base_library {
 
 	protected $compile_dir = ''; // the directory to compile to
 	protected $compile_dir_perms = DIR_WRITE_MODE; // the compile directory permissions
+	protected $compile_file_perms = FILE_WRITE_MODE; // the compiled file permissions
 	protected $allowed_functions = array(); // functions that are allowed by the parsing engine
 	protected $delimiters = array(); // the delimiters used for parsing
 	protected $refs = array(); // object references that get passed to the parsing engine
@@ -70,7 +71,7 @@ class Fuel_parser extends Fuel_Base_library {
 	public function initialize($params = array())
 	{
 		parent::initialize($params);
-		$_fuel_config = array('compile_dir', 'delimiters', 'allowed_functions', 'refs');
+		$_fuel_config = array('compile_dir', 'delimiters', 'allowed_functions', 'compile_dir_perms', 'compile_file_perms', 'refs');
 		foreach($_fuel_config as $p)
 		{
 			$config = $this->fuel->config('parser_'.$p);
@@ -125,6 +126,7 @@ class Fuel_parser extends Fuel_Base_library {
 					$this->engine = new Fuel_twig_parser($config);
 					break;
 				default:
+					$config['compile_file_perms'] = $this->compile_file_perms;
 					$this->engine = new Fuel_dwoo_parser($config);
 			}
 		}

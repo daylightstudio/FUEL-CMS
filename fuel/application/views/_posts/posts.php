@@ -60,6 +60,9 @@ $config['modules']['articles'] = array(
 		<div class="clear"></div>
 		<?php endforeach; ?>
 		
+		<?php if (!empty($pagination)) : ?>
+		<div class="pagination"><?=$pagination?></div>
+		<?php endif; ?>
 
 	<?php else: ?>
 	<div class="no_posts">

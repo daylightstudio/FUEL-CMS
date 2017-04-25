@@ -80,10 +80,11 @@ php index.php fuel/generate/simple my_model examples
 <p>The following variables are available to be used in your generation templates:</p>
 <ul>
 	<li><strong>{module}</strong>: the module name (lowercased)</li>
+	<li><strong>{Module}</strong>: the module name (ucfirst)</li>
 	<li><strong>{model}</strong>: the model name without the "_model" suffix (lowercased)</li>
 	<li><strong>{table}</strong>: the table name</li>
 	<li><strong>{module_name}</strong>: the name of the module with the first letter of each word upper cased (e.g. My Module)</li>
-	<li><strong>{model_name}</strong>: the model name with the first letter upper cased and without the suffix (e.g. News)</li>
+	<li><strong>{Model_name}</strong>: the model name with the first letter upper cased and without the suffix (e.g. News)</li>
 	<li><strong>{model_record}</strong>: The model records name which will remove any pluralization</li>
 	<li><strong>{ModuleName}</strong>: A camel-cased version of the module name</li>
 	<li><strong>{MODULE_NAME}</strong>: An all upper cased version of the module's name (used for constants)</li>

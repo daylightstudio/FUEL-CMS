@@ -156,19 +156,6 @@ $config['modules']['navigation_group'] = array(
 );
 
 // Navigation module init values
-$config['modules']['tags'] = array(
-	'module_name' => 'Tags',
-	'model_location' => 'fuel',
-	'model_name' => 'fuel_tags_model',
-	// 'table_headers' => array(
-	// 	'id', 
-	// 	'name', 
-	// 	'slug',
-	// 	'published'
-	// )
-);
-
-// Navigation module init values
 $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
 	'model_location' => 'fuel',
@@ -194,6 +181,19 @@ $config['modules']['categories'] = array(
 			'first_option' => 'Select a context...'
 		)
 	)
+);
+
+// Navigation module init values
+$config['modules']['tags'] = array(
+	'module_name' => 'Tags',
+	'model_location' => 'fuel',
+	'model_name' => 'fuel_tags_model',
+	// 'table_headers' => array(
+	// 	'id', 
+	// 	'name', 
+	// 	'slug',
+	// 	'published'
+	// )
 );
 
 // Assets module init values

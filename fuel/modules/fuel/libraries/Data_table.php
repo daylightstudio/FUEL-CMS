@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -95,7 +95,8 @@ class Data_table {
 		// load localization helper if not already
 		if (!function_exists('lang'))
 		{
-			$this->_CI->load->helper('language');
+			$CI =& get_instance();
+			$CI->load->helper('language');
 		}
 		
 		$this->set_params($params);
@@ -977,7 +978,7 @@ class Data_table_body {
 	public $rows = array();
 	public $attrs = array();
 	
-	public function Data_table_body($rows, $attrs = array())
+	public function __construct($rows, $attrs = array())
 	{
 		$this->rows = $rows;
 		$this->attrs = $attrs;

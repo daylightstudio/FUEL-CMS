@@ -32,6 +32,7 @@ $config['layouts']['main'] = array(
 	)
 );
 
+
 /* End of file MY_fuel_layouts.php */
 /* Location: ./application/config/MY_fuel_layouts.php */
 

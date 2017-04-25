@@ -39,8 +39,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			region : '',
 			showButtonPanel : false,
 			showOn: 'button',
-		    buttonText: 'Click to show the calendar',
-		    buttonImageOnly: true
+			buttonText: 'Click to show the calendar',
+			buttonImageOnly: true
 		}
 
 		// first look for jqx variable
@@ -89,7 +89,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			return comboOpts;
 		}
 		// set up supercomboselects
-		$('select[multiple]', context).not('.no_combo').each(function(i){
+		$('select[multiple]', context).not('.no_combo, .field_type_select2').each(function(i){
 			var comboOpts = comboOptions(this);
 			$(this).supercomboselect(comboOpts);
 		});
@@ -106,16 +106,24 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var module = fuel.getModule();
 		//var _previewPath = myMarkItUpSettings.previewParserPath;
 
-		var createMarkItUp = function(elem){
+		var createPreviewParams = function(elem){
 			var $elem = $(elem);
 			var q = 'module=' + escape(module) + '&field=' + escape($elem.attr('name'));
 			if ($elem.attr('data-preview')){
 				q += '&preview=' + escape($elem.attr('data-preview'));
 			}
+			return q;
+		}
+
+		var createMarkItUp = function(elem){
+			
+			var $elem = $(elem);
 
 			// add custom configs
 			var editorSet = $elem.data('editor_set');
+			
 			var config = fuel.fields.getElementData($elem.attr('name'), 'editor');
+			
 			if (!config || config.length == 0 || $elem.hasClass('ckeditor_applied')){
 				if ($elem.hasClass('wysiwyg') || $elem.hasClass('ckeditor_applied')){
 					config = myMarkItUpSettings.sets['default'];
@@ -124,7 +132,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				}
 			}
 
-			config.previewParserPath = config.previewParserPath + '?' + q;
+			config.previewParserPath = config.previewParserPath + '?' + createPreviewParams(elem);
+
 			var config = myMarkItUpSettings.processConfig(config, editorSet);
 			$elem.not('.markItUpEditor').markItUp(config);
 			
@@ -153,9 +162,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var ckId = $(elem).attr('id');
 			var sourceButton = '<a href="#" id="' + ckId + '_viewsource" class="btn_field editor_viewsource">' + fuel.lang('btn_view_source') + '</a>';
 			
-			// Hide preview button until the editor fully created
-			$('#'+ckId+'_preview').hide();
-
 			// used in cases where repeatable fields cause issues
 			if ($(elem).hasClass('ckeditor_applied') || $('#cke_' + ckId).length != 0) {
 				return;
@@ -176,6 +182,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				protectedSource: [/\{fuel_\w+\(.+\)\}/g, /<\?[\s\S]*?\?>/g]
 			};
 			config = $.extend(config, fuel.fields.getElementData($(elem).attr('name'), 'editor'));
+			config.previewParserPath = config.previewParserPath + '?' + createPreviewParams(elem);
+
+			// now set it back so that the preview will work
+			fuel.fields.setElementData($(elem).attr('name'), 'editor', config);
 
 			var hasCKEditorImagePlugin = (config.extraPlugins && config.extraPlugins.indexOf('fuelimage') != -1);
 			config.height = $(elem).height();
@@ -236,23 +246,25 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				// process image paths
 				this.dataProcessor.htmlFilter.addRules( {
 					elements : {
-					    $ : function( element ) {
+						$ : function( element ) {
 
 							// // Output dimensions of images as width and height attributes on src
 							if ( element.name == 'img' && hasCKEditorImagePlugin) {
 								//var src = element.attributes['src'];
 								var src = element.attributes['data-cke-saved-src']; // v4.4 fix
-								var regex = "^" + lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
-								img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
-			   										return contents;
-		    								}
-										);
-								img = img.replace(jqx_config.assetsImgPath, '');
-								src = myMarkItUpSettings.parserLeftDelimiter() + "img_path('" + img + "')" + myMarkItUpSettings.parserRightDelimiter();
-								element.attributes.src = src;
-								element.attributes['data-cke-saved-src'] = src;
-					        }
-					    }
+								if (src.substr(0, 4) != 'http') {
+									var regex = "^" + lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
+									img = src.replace(new RegExp(regex), function(match, contents, offset, s) {
+														return contents;
+												}
+											);
+									img = img.replace(jqx_config.assetsImgPath, '');
+									src = myMarkItUpSettings.parserLeftDelimiter() + "img_path('" + img + "')" + myMarkItUpSettings.parserRightDelimiter();
+									element.attributes.src = src;
+									element.attributes['data-cke-saved-src'] = src;
+								}
+							}
+						}
 					}
 				});
 				
@@ -273,6 +285,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if ($elem.get(0).style.width){
 					$elem.after('<div style="width:' + $elem.get(0).style.width+ '"></div>');
 				}
+
+				createPreview(ckId);
 			})
 		
 			// translate image paths
@@ -300,12 +314,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 					//if (!$('#cke_' + ckId).is(':hidden')){
 					if (!ckInstance.hidden){
-						// Hide ckEditor
 						ckInstance.hidden = true;
+						if (!$elem.hasClass('markItUpEditor')){
+							createMarkItUp(elem);
+							$elem.show();
+						}
 						$('#cke_' + ckId).hide();
-
-						// Show markItUp editor
 						$elem.css({visibility: 'visible'}).closest('.html').css({position: 'static'}); // used instead of show/hide because of issue with it not showing textarea
+						//$elem.closest('.html').show();
 					
 						$('#' + ckId + '_viewsource').text(fuel.lang('btn_view_editor'));
 					
@@ -315,6 +331,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 						// update the info
 						ckInstance.updateElement();
+					
+					
 					} else {
 
 						ckInstance.hidden = false;
@@ -331,25 +349,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				
 					fixCKEditorOutput(elem);
 					return false;
-				});
-
-				// Used timeout to wait for ckEditor fully created to prevent error.
-				setTimeout(function(){
-					$elem = $(elem);
-					// Create markItUpEditor
-					if (!$elem.hasClass('markItUpEditor')){
-						createMarkItUp(elem);
-						$elem.show();
-
-						// used instead of show/hide because of issue with it not showing textarea
-						$elem.closest('.html').css({position: 'absolute', 'left': '-100000px', overflow: 'hidden'});
-					}
-					
-					fixCKEditorOutput(elem);
-
-					// Show the preview button
-					$('#'+ckId+'_preview').show();
-				},1000);
+				})
 			}
 
 		}
@@ -358,8 +358,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var regex = lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
 			txt = txt.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
 												contents = contents.replace(/'|"/, '');
-		   										return jqx_config.assetsImgPath + contents;
-	    								}
+												return jqx_config.assetsImgPath + contents;
+										}
 									);
 			return txt;
 		}	
@@ -368,7 +368,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var createPreview = function(id){
 
 			var $textarea = $('#' + id);
-
 			if ($textarea.data('preview') !== undefined && $textarea.data('preview').length === 0){
 				return;
 			}
@@ -389,6 +388,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 						var csrf = $('#csrf_test_name').val() ? $('#csrf_test_name').val() : '';
 
 						var config = fuel.fields.getElementData($textarea.attr('name'), 'editor');
+						
 						if (!config.previewParserPath || config.previewParserPath == 'preview') config.previewParserPath = __FUEL_PATH__ + '/' + myMarkItUpSettings.sets['default'].previewParserPath;
 						if (!config.previewParserVar) config.previewParserVar = 'data'
 
@@ -428,6 +428,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 			} else {
 				createMarkItUp(this);
+				createPreview(ckId);
 			}
 			
 			// setup update of element on save just in case
@@ -436,7 +437,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					CKEDITOR.instances[ckId].updateElement();
 				}
 			})
-			createPreview(ckId);
+			
 			
 			
 		});
@@ -482,9 +483,9 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var selectedAssetFolder = 'images';
 		var activeField = null;
 
-		var showAssetsSelect = function(){
+		var showAssetsSelect = function(params){
 			var winHeight = 450;
-			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val());
+			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
 			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
@@ -557,14 +558,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		}
 
 		var convertQueryStringToJSON = function(url) {            
-    		var pairs = url.split('&');
-    		var result = {};
+			var pairs = url.split('&');
+			var result = {};
 			pairs.forEach(function(pair) {
-        		pair = pair.split('=');
-        		result[pair[0]] = decodeURIComponent(pair[1] || '');
-    		});
-    		return result;
-    	}
+				pair = pair.split('=');
+				result[pair[0]] = decodeURIComponent(pair[1] || '');
+			});
+			return result;
+		}
 
 		var _this = this;
 		$('.asset_select', context).each(function(i){
@@ -593,7 +594,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					default :
 						btnLabel = fuel.lang('btn_asset');
 				}
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 			}
 		});
 
@@ -607,9 +608,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				selectedAssetFolder = (assetTypeClasses.length > 0) ? assetTypeClasses[(assetTypeClasses.length - 1)] : 'images';
 			}
 
-			selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
+			var params = $(this).attr('data-params');
+			var paramsJSON = convertQueryStringToJSON(params);
+			paramsJSON.asset_folder = replacePlaceholders(selectedAssetFolder, context);
+			paramsJSON.subfolder = replacePlaceholders(paramsJSON.subfolder, context);
+			var params = jQuery.param(paramsJSON);
 
-			showAssetsSelect();
+			//selectedAssetFolder = replacePlaceholders(selectedAssetFolder, context);
+			showAssetsSelect(params);
 			return false;
 		});
 		
@@ -764,8 +770,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var parentModule = fuel.getModuleURI(context);
 			var url = jqx_config.fuelPath + '/' + module + '/inline_';
 			var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
-			if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button">' + fuel.lang('btn_edit') + '</a>');
-			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + fields + addParams + '" class="' + btnClasses+ ' add_inline_button">' + fuel.lang('btn_add') + '</a>');
+			if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button" tabindex="-1">' + fuel.lang('btn_edit') + '</a>');
+			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + fields + addParams + '" class="' + btnClasses+ ' add_inline_button" tabindex="-1">' + fuel.lang('btn_add') + '</a>');
 			
 			var refreshField = function($field){
 
@@ -1028,12 +1034,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		$('.numeric', context).each(function(i){
 			var o = {decimal: false, negative: false}
 			o = $.extend(o, options);
-			if ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes" || $(this).attr('data-decimal').toLowerCase() == "true"){
+			if ($(this).attr('data-decimal') && ($(this).attr('data-decimal') == "1" || $(this).attr('data-decimal').toLowerCase() == "yes" || $(this).attr('data-decimal').toLowerCase() == "true")){
 				o.decimal = '.';
 			} else {
 				o.decimal = false;
 			}
-			if ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true"){
+			if ($(this).attr('data-negative') && ($(this).attr('data-negative') == "1" || $(this).attr('data-negative').toLowerCase() == "yes" || $(this).attr('data-negative').toLowerCase() == "true")){
 				o.negative = true;
 			} else {
 
@@ -1051,7 +1057,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	// create currency field
 	fuel.fields.currency_field = function(context, options){
 		$('.currency', context).each(function(i){
-			var o = {aSep: ',', aDec: '.',  dGroup: 3, vMin: 0.00, vMax: 999999999.99}
+			var o = {aSep: ',', aDec: '.',  dGroup: 3, vMin: -999999999.99, vMax: 999999999.99}
 			o = $.extend(o, options);
 			if ($(this).attr('data-separator')){
 				o.aSep = $(this).attr('data-separator');
@@ -1261,7 +1267,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if (layout && layout.length){
 					//layout = layout.split('/').pop();
 					layout = layout.replace('/', ':');
-					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/english/';
+					var language = ($('#language').length) ? $('#language').val() : 'english';
+					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
 				}
 			}
 			
@@ -1307,20 +1314,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 			var selector = ($elem.data('selector')) ? $elem.data('selector') : 'tr';
 			var prefix = ($elem.data('prefix')) ? $elem.data('prefix') : '';
-			var val = $elem.val();
 
 			var $togglers = $(".toggle", context);
 			if (prefix){
 				var regex = new RegExp(' ' + prefix)
-				$togglers.filter(function() { 
+				$togglers.filter(function() {
 					return $(this).attr('class').match(regex); 
 				}).closest(selector).hide();
 
 			} else {
 				$(".toggle", context).closest(selector).hide();	
 			}
-
-			val = val.replace(' ', '.');
+			var val = $elem.val();
+			val = val.replace(/ /g, '-');
 			$(".toggle." + prefix + val, context).closest(selector).show();
 		}
 		
@@ -1344,10 +1350,12 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			})
 			
 		})
-		$("input[type='radio'].toggler:checked").not('.__applied__').trigger("change");
 
 		// exlude blocks since they get ajaxed in and then run the toggler function
-		$("select.toggler").not('.field_type_block, .__applied__').trigger("change");
+		$("select.toggler", context).not('.field_type_block, .__applied__').trigger("change");
+
+		$("input[type='radio'].toggler:checked", context).not('.__applied__').trigger("change");
+
 	}
 
 
@@ -1385,7 +1393,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	}
 
 	fuel.fields.dependent_field = function(context, options){
-		var firstlaunch = true;
 		
 		$('.dependent', context).each(function(i){
 
@@ -1431,19 +1438,19 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				if ($.isEmptyObject(xtraData) === false) {
 					$.extend(data, xtraData);
 				}
-
 				if (val && val.length){
 					$.get(url, data, function(html){
 						var $select = $(replaceSelector);
+
 						$select.html(html);
 						$select.val(origValue);
 						//if ($select.prop("multiple")){
 							fuel.fields.multi_field(context);
 						//}
 
-						if (firstlaunch){
+						if (!$select.data('checksave')){
 							$.changeChecksaveValue($select, $select.val());
-							firstlaunch = false;	
+							$select.data('checksave', true);	
 						}
 					});
 				}
@@ -1460,23 +1467,33 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var $activeEmbeddedList = $(activeEmbeddedList);
 			var $embeddedListItems = $fuel.find("#"+$activeEmbeddedList.attr("id")+" .embedded_list_items");
 			$embeddedListItems.empty().addClass("loader");
+			$activeEmbeddedList.trigger('refreshEmbedListBegin');
 			var embeddedListAjax = $.post(__FUEL_PATH__ + "/" + $activeEmbeddedList.data("module-url") + "/ajax/embedded_list_items", $activeEmbeddedList.data("embedded-list-params"));
 			embeddedListAjax.done(function(data) {
 				$embeddedListItems.removeClass("loader").html(data);
 				fuel._initToolTips();
+				$activeEmbeddedList.trigger('refreshEmbedListEnd');
 			});
 		};
+
 		var embeddedListModalOpen = function(e) {
 			e.preventDefault();
 			var $activeEmbeddedList = $(this).closest(".embedded_list_container");
-			var iframe_url = $(this).attr("href");
+			var href = $(this).attr("href");
+			if (!href){
+				href = $(this).closest('tr').find("td.actions").find("a:first").attr('href');
+			}
+
+			var iframe_url = href;
 			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
 				embeddedListModalClose($activeEmbeddedList);
 			});
 		};
-		$fuel.on("click", ".datatable_action", embeddedListModalOpen);
 
+		$fuel.off("click", ".datatable_action, #data_table td[class^='col']:not('.actions')");
+		$fuel.on("click", ".datatable_action, #data_table td[class^='col']:not('.actions')", embeddedListModalOpen);
+		
 		// added refresh event that can be triggered
 		$('.embedded_list_container').on("refreshEmbedList", function(){
 			embeddedListModalClose(this);
@@ -1486,6 +1503,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 	fuel.fields.select2 = function(context, options){
 		if (options){
 			var options = $.extend({}, options);
+		} else { 
+			options = {};
 		}
 		$('select.select2_applied', context).select2('destroy').removeClass('select2_applied');
 		$('select.select2', context).addClass('select2_applied').select2(options);

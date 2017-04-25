@@ -13,6 +13,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
  	<title>Welcome to FUEL CMS</title>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
 	<?php echo css('main')?>
+	<?=jquery()?>
 </head>
 <body>
 
@@ -146,7 +147,8 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 
 						<?php  if ($this->config->item('encryption_key') == '' OR
 								$this->config->item('fuel_mode', 'fuel') == 'views' OR
-								!$this->config->item('admin_enabled', 'fuel')
+								!$this->config->item('admin_enabled', 'fuel') OR
+								!$this->config->item('sess_save_path')
 
 					) : ?>
 					<li>
@@ -157,13 +159,16 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 							<h4>Make configuration changes</h4>
 							<ul class="writable">
 								<?php if ($this->config->item('encryption_key') == '') : ?>
-								<li>In the <strong>fuel/application/config/config.php</strong>, <a href="http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/" target="_blank">change the <code>$config['encryption_key']</code> to your own unique key</a>.</li></li>
+								<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li></li>
 								<?php endif; ?>
 								<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 								<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
 								<?php endif; ?>
 								<?php if ($this->config->item('fuel_mode', 'fuel') == 'views') : ?>
 								<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['fuel_mode']</code> configuration property to <code>AUTO</code>. This must be done only if you want to view pages created in the CMS.</li>
+								<?php endif; ?>
+								<?php if (!$this->config->item('sess_save_path')) : ?>
+								<li>In the <strong>fuel/application/config/config.php</strong> file, change the <code>$config['sess_save_path']</code> configuration property to a writable folder above the web root to save session files OR leave it set to <strong>NULL</strong> to use the default PHP setting.</li>
 								<?php endif; ?>
 							</ul>
 						</div>

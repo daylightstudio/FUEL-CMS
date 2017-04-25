@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -469,7 +469,7 @@ class MY_Model extends CI_Model {
 			$this->_common_query();
 		}
 		
-		if (empty($this->db->ar_select))
+		if (!$this->db->has_select())
 		{
 			$this->db->select($this->table_name.'.*'); // make select table specific
 		}
@@ -591,7 +591,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the type of find to perform. Options are "key", "one", "options", "all" and find_"{your_method}". By default it will perform a find_all (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -697,7 +697,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	string	return type (object, array, query, auto) (optional)
 	 * @return	array
@@ -731,7 +731,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
+	 * @param	mixed	an array or string containing the where parameters of a query
 	 * @param	string	the order by of the query (optional)
 	 * @return	array
 	 */	
@@ -750,7 +750,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -804,7 +804,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -826,7 +826,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the column to use for an associative key array (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -848,7 +848,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the column to use for an associative key array (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	string	the order by of the query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
@@ -870,7 +870,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	group	an array of keys to limit the search results to
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	int		the number of records to limit in the results (optional)
 	 * @param	int		the offset value for the results (optional)
 	 * @param	string	return type (object, array, query, auto) (optional)
@@ -887,10 +887,6 @@ class MY_Model extends CI_Model {
 		// setup wherein for the group
 		$this->db->where_in($this->table_name.'.'.$this->key_field(), $group);
 
-		// must set protect identifiers to FALSE in order for order by to work
-		$_protect_identifiers = $this->db->_protect_identifiers;
-		$this->db->_protect_identifiers = FALSE;
-
 		// escape group
 		foreach($group as $key => $val)
 		{
@@ -900,10 +896,7 @@ class MY_Model extends CI_Model {
 		// remove any cached order by
 		$this->db->ar_cache_orderby = array();
 
-		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')');
-
-		// set it _protect_identifiers back to original value
-		$this->db->_protect_identifiers = $_protect_identifiers;
+		$this->db->order_by('FIELD('.$this->table_name.'.'.$this->key_field().', '.implode(', ', $group).')', '', FALSE);
 
 		// do a normal find all
 		$data = $this->find_all($where, NULL, $limit, $offset, $return_method, $assoc_key);
@@ -1118,7 +1111,7 @@ class MY_Model extends CI_Model {
 	 * @access	public
 	 * @param	string	the column to use for the value (optional)
 	 * @param	string	the column to use for the label (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
 	 * @return	array
 	 */	
@@ -1190,7 +1183,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @param	mixed	an array or string containg the where paramters of a query
+	 * @param	mixed	an array or string containing the where parameters of a query
 	 * @return	boolean
 	 */	
 	public function record_exists($where)
@@ -1877,16 +1870,18 @@ class MY_Model extends CI_Model {
 	 * @param	mixed	where condition
 	 * @return	boolean
 	 */	
-	public function update($values, $where)
+	public function update($values, $where = array())
 	{
 		$this->_check_readonly();
 		$values = $this->on_before_update($values);
 		$values = $this->serialize_field_values($values);
-		$this->db->where($where);
+		if (!empty($where))
+		{
+			$this->db->where($where);
+		}
 		$return = $this->db->update($this->table_name, $values);
 		$this->on_after_update($values);
 		return $return;
-		
 	}
 	
 	// --------------------------------------------------------------------
@@ -2711,6 +2706,25 @@ class MY_Model extends CI_Model {
 	}
 	
 	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the table's comment
+	 *
+	 <code>
+	 $model->comment();
+	</code>
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function comment()
+	{
+		$sql = "SELECT table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='". $this->db->database ."' AND table_name='" . $this->table_name . "'";
+		$query = $this->db->query($sql);
+		return $query->row()->table_comment;
+	}
+
+	// --------------------------------------------------------------------
 
 	/**
 	 * Returns an array of information that can be used for building a form (e.g. Form_builder). 
@@ -3359,7 +3373,7 @@ class MY_Model extends CI_Model {
 					// remove pre-existing relationships
 					if (!empty($fields['foreign_table']))
 					{
-						$del_where = array($fields['candidate_table'] => $CI->$related_models[$related_field]->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
+						$del_where = array($fields['candidate_table'] => $CI->{$related_models[$related_field]}->table_name, $fields['foreign_table'] => $this->table_name, $fields['foreign_key'] => $id);
 					}
 					else
 					{
@@ -3378,6 +3392,7 @@ class MY_Model extends CI_Model {
 					$fields = $rel_fields[$related_field];
 
 					$related_model = $related_models[$related_field];
+					$relationships_model = $this->load_model($fields['relationships_model']);
 					
 					// create relationships
 					foreach ($this->normalized_save_data[$related_field] as $candidate_id)
@@ -4323,7 +4338,7 @@ class MY_Model extends CI_Model {
 					{
 						foreach($values as $k => $v)
 						{
-							if (is_string($val) OR is_numeric($val))
+							if ((is_string($val) AND is_string($v)) OR is_numeric($val))
 							{
 								$return[$key] = str_replace('{'.$k.'}', $v, $val);
 							}	
@@ -4378,19 +4393,25 @@ class MY_Model extends CI_Model {
 		$find_where = substr($name, 8);
 
 		$find_and_or = preg_split("/_by_|(_and_)|(_or_)/", $find_where, -1, PREG_SPLIT_DELIM_CAPTURE);
-		if (!empty($find_and_or) AND strncmp($name, 'find', 4) == 0)
+		$find_and_or_cleaned = array_values(array_filter($find_and_or));
+		if (!empty($find_and_or_cleaned) AND strncmp($name, 'find', 4) == 0)
 		{
 			$arg_index = 0;
-			foreach($find_and_or as $key => $find)
+			foreach($find_and_or_cleaned as $key => $find)
 			{
-				if (empty($find) OR $find == '_and_')
+				if ($arg_index == 0)
 				{
-					$this->db->where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->where(array($find_and_or_cleaned[0] => $args[0]));
+					$arg_index++;
+				}
+				elseif ($find == '_and_')
+				{
+					$this->db->where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 				else if ($find == '_or_')
 				{
-					$this->db->or_where(array($find_and_or[$key + 1] => $args[$arg_index]));
+					$this->db->or_where(array($find_and_or_cleaned[$key + 1] => $args[$arg_index]));
 					$arg_index++;
 				}
 			}
@@ -4408,7 +4429,7 @@ class MY_Model extends CI_Model {
 			}
 
 			$other_args = array_slice($args, count($find_and_or) -1);
-			
+
 			if (!empty($other_args[0])) $this->db->order_by($other_args[0]);
 			if (!empty($limit)) $this->db->limit($limit);
 			if (!empty($other_args[1])) $this->db->offset($other_args[2]);
@@ -4431,7 +4452,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4585,7 +4606,7 @@ class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -5879,7 +5900,7 @@ class Data_record {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */

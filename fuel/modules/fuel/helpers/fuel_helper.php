@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -34,8 +34,7 @@
  * Returns the instance of the FUEL object
  *
  * @access	public
- * @param	mixed
- * @return	string
+ * @return	object
  */
 function &fuel_instance()
 {
@@ -46,8 +45,7 @@ function &fuel_instance()
  * Returns the instance of the FUEL object just like fuel_instance but with a similar syntax to the CI() function which returns the CI object.
  * 
  * @access	public
- * @param	mixed
- * @return	string
+ * @return	object
  */
 function &FUEL()
 {
@@ -86,7 +84,10 @@ function &FUEL()
 </ul>
  *
  * @access	public
- * @param	mixed
+ * @param	array
+ * @param	array
+ * @param	boolean
+ * @param	string
  * @return	string
  */
 function fuel_block($params, $vars = array(), $check_db = TRUE, $scope = NULL)
@@ -148,7 +149,7 @@ function fuel_block($params, $vars = array(), $check_db = TRUE, $scope = NULL)
 <p class="important">For more information see the <a href="<?=user_guide_url('libraries/menu')?>">Menu class</a>.</p>
  *
  * @access	public
- * @param	mixed
+ * @param	array
  * @return	string
  */
 function fuel_nav($params = array())
@@ -234,7 +235,7 @@ function fuel_form($fields, $values = array(), $params = array())
  * @param	string
  * @param	mixed
  * @param	mixed
- * @return	string
+ * @return	mixed
  */
 function fuel_model($module, $params = array(), $where = array())
 {
@@ -257,7 +258,7 @@ function fuel_model($module, $params = array(), $where = array())
  * @access	public
  * @param	string
  * @param	array
- * @return	string
+ * @return	void
  */
 function fuel_set_var($key, $val = NULL)
 {
@@ -561,6 +562,7 @@ function fuel_url($uri = '', $query_string = FALSE)
  *
  * @access	public
  * @param	string
+ * @param	boolean
  * @return	string
  */
 function fuel_uri($uri = '', $query_string = FALSE)
@@ -704,7 +706,7 @@ function in_fuel_admin()
  * Returns the user language of the person logged in... used for inline editing
  *
  * @access	public
- * @return	boolean
+ * @return	string
  */
 function fuel_user_lang()
 {

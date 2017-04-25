@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -152,7 +152,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	public function table_info($table, $set_field_key = TRUE)
 	{
 		if (!empty($this->_table_info_cache[$table]) AND $set_field_key) return $this->_table_info_cache[$table]; // lazy load
-		$sql = "SHOW FULL COLUMNS FROM ". $this->_escape_identifiers($table);
+		$sql = "SHOW FULL COLUMNS FROM ". $this->escape_identifiers($table);
 		$query = $this->query($sql);
 		$retval = array();
 		foreach ($query->result() as $field)
@@ -248,7 +248,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 
 		foreach($values as $key => $val)
 		{
-			$sql .= $this->_escape_identifiers($key).", ";
+			$sql .= $this->escape_identifiers($key).", ";
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
 
@@ -285,11 +285,11 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		{
 			if ((is_string($primary_key) AND $primary_key == $key) OR (is_array($primary_key) AND in_array($key, $primary_key)))
 			{
-				$sql .=  $this->_escape_identifiers($key).' = LAST_INSERT_ID('.$this->_escape_identifiers($key).'), ';
+				$sql .=  $this->escape_identifiers($key).' = LAST_INSERT_ID('.$this->escape_identifiers($key).'), ';
 			}
 			else
 			{
-				$sql .= $this->_escape_identifiers($key).' = VALUES('.$this->_escape_identifiers($key).'), ';
+				$sql .= $this->escape_identifiers($key).' = VALUES('.$this->escape_identifiers($key).'), ';
 			}
 		}
 		$sql = substr($sql, 0, -2); // get rid of last comma
@@ -371,7 +371,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		// select the database
 		$db = $db[$active_group]['database'];
 
-		$use_sql = 'USE '.$db;
+		$use_sql = 'USE `'.$db.'`';
 
 		$CI->db->query($use_sql);
 		$sql_arr = explode(";\n", str_replace("\r\n", "\n", $sql));
@@ -385,7 +385,20 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		}
 	}
 
-	/** http://stackoverflow.com/questions/6470267/grouping-where-clauses-in-codeigniter
+	// --------------------------------------------------------------------
+
+	/**
+	 * Helps determine if there is currently a select specified for the active record
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function has_select()
+	{
+		return !empty($this->qb_select);
+	}
+
+		/** http://stackoverflow.com/questions/6470267/grouping-where-clauses-in-codeigniter
 	 * This function will allow you to do complex group where clauses in to c and (a AND b) or ( d and e)
 	 * This function is needed as else the where clause will append an automatic AND in front of each where Thus if you wanted to do something
 	 * like a AND ((b AND c) OR (d AND e)) you won't be able to as the where would insert it as a AND (AND (b...)) which is incorrect. 

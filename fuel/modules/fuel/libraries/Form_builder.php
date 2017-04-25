@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2015, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2017, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -528,7 +528,7 @@ class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$first = reset($this->_fields);
+		$first = $this->_find_first_renderable_field();;
 
 		$is_fieldset_first = FALSE;
 		if ($first['type'] != 'fieldset')
@@ -667,7 +667,7 @@ class Form_builder {
 			$str .= "</div></div>\n";
 		}
 		
-		if ($this->has_required AND $this->show_required)
+		if ($this->has_required AND ($this->show_required AND strtolower($this->show_required) != 'top'))
 		{
 			$str .= "<div class=\"required\">";
 			$str .= str_replace('{required_indicator}', $this->required_indicator, $this->required_text);
@@ -713,7 +713,8 @@ class Form_builder {
 		}
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
-		$first = reset($this->_fields);
+
+		$first = $this->_find_first_renderable_field();
 
 		$is_fieldset_first = FALSE;
 		if ($first['type'] != 'fieldset')
@@ -724,6 +725,7 @@ class Form_builder {
 		{
 			$is_fieldset_first = TRUE;
 		}
+
 
 		$fieldset_on = FALSE;
 		foreach($this->_fields as $key => $val)
@@ -893,7 +895,7 @@ class Form_builder {
 			$str .= "</div></td>\n</tr>\n";
 		}
 
-		if ($this->has_required AND $this->show_required)
+		if ($this->has_required AND ($this->show_required AND strtolower($this->show_required) != 'top'))
 		{
 			$str .= "<tr>\n\t<td colspan=\"".$colspan."\" class=\"required\">";
 			$str .= str_replace('{required_indicator}', $this->required_indicator, $this->required_text);
@@ -987,9 +989,31 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Finds the first field that is not hidden and renderable
+	 * 
+	 * @access	protected
+	 * @return	array
+	 */
+	protected function _find_first_renderable_field()
+	{
+		foreach($this->_fields as $key => $field)
+		{
+			$invalid_types = array('hidden');
+			if ( ! in_array($field['type'], $invalid_types) AND ! in_array($key, $this->hidden))
+			{
+				return $field;
+			}
+		}
+		return reset($this->_fields);
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Creates the opening div element that contains the form fields
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _open_div()
@@ -1004,13 +1028,17 @@ class Form_builder {
 	/**
 	 * Creates the opening table element
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _open_table()
 	{
 		$str = '';
 		$str .= "<table>\n";
+		$str .= "<colgroup>\n";
+		$str .= "<col class=\"label_column\">\n";
+		$str .= "<col class=\"field_column\">\n";
+		$str .= "</colgroup>\n";
 		$str .= "<tbody>\n";
 		return $str;
 	}
@@ -1020,7 +1048,7 @@ class Form_builder {
 	/**
 	 * Creates the closing element
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _close_div()
@@ -1035,7 +1063,7 @@ class Form_builder {
 	/**
 	 * Creates the closing table elements
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @return	string
 	 */
 	protected function _close_table()
@@ -1051,7 +1079,7 @@ class Form_builder {
 	/**
 	 * Creates the opening row TR or div with attrs
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
@@ -1078,7 +1106,7 @@ class Form_builder {
 	/**
 	 * Creates the opening field td.value or div.value with attrs
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
@@ -1101,7 +1129,7 @@ class Form_builder {
 	/**
 	 * Outputs the actions for the form
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	string	
 	 * @return	void
 	 */
@@ -1168,7 +1196,7 @@ class Form_builder {
 	/**
 	 * Outputs the last part of the form rendering for both a table and div
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	string	
 	 * @return	void
 	 */
@@ -1227,7 +1255,7 @@ class Form_builder {
 	/**
 	 * Normalize the fields so that the other methods can expect certain field attributes
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	array
 	 */
@@ -1458,7 +1486,7 @@ class Form_builder {
 	/**
 	 * Renders the custom field
 	 * 
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields values... will overwrite anything done with the set_fields method previously
 	 * @return	array
 	 */
@@ -1522,7 +1550,7 @@ class Form_builder {
 	/**
 	 * Checks to see if the array to initialize a field is normalized or not
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @param	array fields parameters
 	 * @return	string
 	 */
@@ -1675,6 +1703,7 @@ class Form_builder {
 			
 		}
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $this->single_select_mode;
+
 		if (($params['type'] == 'enum' OR $params['type'] == 'multi' OR $params['type'] == 'array') AND ($mode == 'radios' OR ($mode == 'auto' AND count($params['options']) <= 2)))
 		{
 			$use_label = FALSE;
@@ -1718,7 +1747,8 @@ class Form_builder {
 			$this->has_required = TRUE;
 		}
 		if ($params['label_colons']) $str .= ':';
-		if ($use_label AND ($params['type'] != 'enum' AND $params['type'] != 'multi' AND $params['type'] != 'array'))
+
+		if ($use_label)
 		{
 			$str .= "</label>";
 		}
@@ -1833,7 +1863,7 @@ class Form_builder {
 			$name = $params['name'].'[]';
 		}
 		
-		if (!empty($params['options']) AND !empty($params['equalize_key_value']))
+		if (!empty($params['options']) AND !empty($params['equalize_key_value']) AND is_array($params['options']))
 		{
 			$options = array_values($params['options']);
 			$options = array_combine($options, $options);
@@ -1868,6 +1898,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'required' => (!empty($params['required']) ? TRUE : NULL),
 		);
 		if ($params['checked'])
 		{
@@ -1907,6 +1938,7 @@ class Form_builder {
 			'style' => $params['style'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
+			'required' => (!empty($params['required']) ? TRUE : NULL),
 		);
 		if ($params['checked'])
 		{
@@ -1946,6 +1978,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'disabled' => $params['disabled'],
+			'maxlength' => (!empty($params['max_length']) ? $params['max_length'] : NULL),
 		);
 		return $this->form->textarea($params['name'], $params['value'], $attrs);
 	}
@@ -2488,7 +2521,7 @@ $func_str = '
 		';
 		
 		// needed for post processing
-		if (!isset($_POST[$params['key']]))
+		if (!empty($_POST) AND !isset($_POST[$params['key']]))
 		{
 			$_POST[$time_params['name']] = '';
 		}
@@ -2695,8 +2728,8 @@ $func_str = '
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
-			'min' => (isset($params['min']) ? $params['min'] : '0'),
-			'max' => (isset($params['max']) ? $params['max'] : '10000'),
+			'min' => (isset($params['min']) ? $params['min'] : NULL),
+			'max' => (isset($params['max']) ? $params['max'] : NULL),
 			'step' => (isset($params['step']) ? $params['step'] : NULL),
 			'data' => $params['data'],
 			'style' => $params['style'],
@@ -3134,7 +3167,7 @@ $func_str = '
 				if (is_array($custom_field['class']))
 				{
 					$module = key($custom_field['class']);
-					$library = strtolower(current($custom_field['class']));
+					$library = current($custom_field['class']);
 					$this->CI->load->module_library($module, $library);
 				}
 				else
@@ -3781,6 +3814,14 @@ $func_str = '
 	 */
 	public function options_from_model($model, $params = array())
 	{
+		// can't think of a good reason to grab options when post processing 
+		// so will just return an empty array to speed things up on post processing
+		if ($this->is_post_processing)
+		{
+			return array();
+		}
+
+
 		if (is_array($model))
 		{
 			$val = current($model);
