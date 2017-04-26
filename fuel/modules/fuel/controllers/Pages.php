@@ -1216,8 +1216,11 @@ class Pages extends Module {
 
 	protected function _process_upload_data($field_name, $uploaded_data, $posted)
 	{
-		$field_name_parts = explode('--', $field_name);
-		$field_name = end($field_name_parts);
+		if ( ! is_array($field_name))
+		{
+			$field_name_parts = explode('--', $field_name);
+			$field_name = end($field_name_parts);
+		}
 
 		foreach($uploaded_data as $key => $val)
 		{
