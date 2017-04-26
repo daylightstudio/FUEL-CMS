@@ -46,7 +46,7 @@ class Fuel_{module} extends Fuel_advanced_module {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	public function initialize($params)
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 		$this->set_params($this->_config);
