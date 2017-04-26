@@ -5605,6 +5605,9 @@ class Data_record {
 	public function __get($var)
 	{
 		$output = NULL;
+
+		if (!isset($this->_parent_model)) return;
+		
 		$foreign_keys = $this->_parent_model->foreign_keys;
 		$custom_fields = $this->_parent_model->custom_fields;
 		
