@@ -691,6 +691,7 @@ class Fuel_module extends Fuel_base_library {
 				'disable_heading_sort' => FALSE,
 				'description' => '',
 				'search_field' => '',
+				'single_item_navigate' => FALSE,
 				'pages' => array(),
 				);
 			$info = array();

@@ -215,6 +215,14 @@ class Module extends Fuel_base_controller {
 		// to prevent it from being called unnecessarily with ajax
 		if ( ! is_ajax())
 		{
+			$item_total = $this->model->list_items_total();
+			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $this->model->list_items_total() == 1)
+			{
+				$items = $this->model->list_items();
+				$edit_url = fuel_url($this->module_uri.'/edit/'.$items[0][$this->model->key_field()]);
+				redirect($edit_url);
+			}
+
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
@@ -224,7 +232,7 @@ class Module extends Fuel_base_controller {
 
 			$config['base_url'] = fuel_url($this->module_uri).'/items/?'.$query_str;
 			$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
-			$config['total_rows'] = $this->model->list_items_total();
+			$config['total_rows'] = $item_total;
 			$config['uri_segment'] = fuel_uri_index($uri_segment);
 			$config['per_page'] = (int) $params['limit'];
 			$config['query_string_segment'] = 'offset';
