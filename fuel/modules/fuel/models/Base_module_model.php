@@ -1022,8 +1022,18 @@ class Base_module_model extends MY_Model {
 			}
 		}
 		
+		$data = array();
 		$items = $this->list_items(NULL, NULL, $params['col'], $params['order']);
-		$data = $this->csv($items);
+
+		// clean up any HTML
+		foreach($items as $key => $val)
+		{
+			foreach($val as $k => $v)
+			{
+				$data[$key][$k] = strip_tags($v);
+			}
+		}
+		$data = $this->csv($data);
 		return $data;
 	}
 
