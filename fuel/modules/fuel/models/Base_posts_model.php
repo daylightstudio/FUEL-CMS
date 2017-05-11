@@ -193,7 +193,7 @@ abstract class Base_posts_model extends Base_module_model {
 	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
 		parent::_common_query($display_unpublished_if_logged_in);
-		$rel_join = $this->_tables['fuel_relationships'].'.candidate_key = '.$this->table_name.'.id AND ';
+		$rel_join = $this->_tables['fuel_relationships'].'.candidate_key = '.$this->table_name.'.'.$this->key_field.' AND ';
 		$rel_join .= $this->_tables['fuel_relationships'].'.candidate_table = "'.$this->table_name.'" AND ';
 		$rel_join .= $this->_tables['fuel_relationships'].'.foreign_table = "'.$this->_tables['fuel_tags'].'"';
 		$this->db->join($this->_tables['fuel_relationships'], $rel_join, 'left');
@@ -201,7 +201,7 @@ abstract class Base_posts_model extends Base_module_model {
 		$this->db->select($this->table_name.'.*');
 		$this->db->select('YEAR('.$this->table_name.'.'.$this->order_by_field.') as year, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%m") as month, DATE_FORMAT('.$this->table_name.'.'.$this->order_by_field.', "%d") as day,', FALSE);
 		$this->db->order_by($this->order_by_field.' '.$this->order_by_direction);
-		$this->db->group_by($this->table_name.'.id');
+		$this->db->group_by($this->table_name.'.'.$this->key_field);
 
 		if (!empty($this->foreign_keys['category_id']))
 		{
@@ -219,9 +219,9 @@ abstract class Base_posts_model extends Base_module_model {
 		$module = $this->get_module();
 
 		$url = '';
-		if (!empty($values['id']))
+		if (!empty($values[$this->key_field]))
 		{
-			$rec = $this->find_by_key($values['id']);
+			$rec = $this->find_by_key($values[$this->key_field]);
 			$url = $rec->url;
 		}
 
