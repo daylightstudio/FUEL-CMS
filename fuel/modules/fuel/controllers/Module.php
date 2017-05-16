@@ -216,7 +216,7 @@ class Module extends Fuel_base_controller {
 		if ( ! is_ajax())
 		{
 			$item_total = $this->model->list_items_total();
-			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $this->model->list_items_total() == 1)
+			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $item_total == 1)
 			{
 				$items = $this->model->list_items();
 				$edit_url = fuel_url($this->module_uri.'/edit/'.$items[0][$this->model->key_field()]);
