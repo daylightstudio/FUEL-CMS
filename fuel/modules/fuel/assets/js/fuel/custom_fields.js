@@ -383,7 +383,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					$('#' + id + '_preview').click(function(e){
 						e.preventDefault();
 						var val = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances[id] !== undefined && $textarea.css('visibility') !== 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
-						var csrf = $('#csrf_test_name').val();
 
 						var csrf = $('#csrf_test_name').val() ? $('#csrf_test_name').val() : '';
 
@@ -745,6 +744,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		var $modal = null;
 		var selected = null;
+		var csrf = null;
 		var editModule = function(url, onLoadCallback, onCloseCallback){
 			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true, onLoadCallback, onCloseCallback);
@@ -753,6 +753,8 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
 				var iframeContext = this.contentDocument;
 				selected = $('#id', iframeContext).val();
+				csrf = $('#csrf_test_name', iframeContext).val() ? $('#csrf_test_name', iframeContext).val() : '';
+
 			})
 			return false;
 		}
@@ -783,7 +785,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				// if no value added,then no need to refresh
 				if (!selected) return;
 				var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
-				var params = { field:fieldId, field_id: fieldId, selected:selected};
+				var params = { field:fieldId, field_id: fieldId, selected:selected, csrf_test_name: csrf };
 
 				// fix for pages... a bit kludgy
 				if (parentModule == 'pages'){
