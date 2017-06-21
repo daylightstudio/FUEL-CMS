@@ -1136,7 +1136,7 @@ class Inspection_comment {
 		}
 		
 		// auto link
-		$desc = auto_link($desc);
+		// $desc = auto_link($desc);
 		
 		// trim white space
 		$desc = trim($desc);
