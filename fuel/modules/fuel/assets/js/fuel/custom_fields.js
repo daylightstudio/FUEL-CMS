@@ -535,6 +535,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		var replacePlaceholders = function(folder, context){
 
+			if (! folder) return;
 			// now replace any placeholder values in the folder... required for new pages that may not have a value
 			var $inputs = $(context).closest('form').find('select, textarea')
 			.add('input').not('input[type="radio"], input[type="checkbox"], input[type="button"]')
@@ -568,7 +569,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		var _this = this;
 		$('.asset_select', context).each(function(i){
-			if ($(this).parent().find('.asset_upload_button').length == 0){
+			if ($(this).parent().find('.asset_select_button').length == 0){
 				var assetFolder = $(this).data('folder');
 				if ($(this).data('subfolder')){
 					assetFolder += '/' + $(this).data('subfolder');
