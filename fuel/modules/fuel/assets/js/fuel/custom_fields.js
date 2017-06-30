@@ -569,7 +569,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		var _this = this;
 		$('.asset_select', context).each(function(i){
-			if ($(this).parent().find('.asset_select_button').length == 0){
+			if ($(this).closest('.field').find('.asset_select_button').length == 0){
 				var assetFolder = $(this).data('folder');
 				if ($(this).data('subfolder')){
 					assetFolder += '/' + $(this).data('subfolder');
