@@ -247,7 +247,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				this.dataProcessor.htmlFilter.addRules( {
 					elements : {
 						$ : function( element ) {
-
 							// // Output dimensions of images as width and height attributes on src
 							if ( element.name == 'img' && hasCKEditorImagePlugin) {
 								//var src = element.attributes['src'];
@@ -357,8 +356,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var unTranslateImgPath = function(txt){
 			var regex = lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
 			txt = txt.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
-												contents = contents.replace(/'|"/, '');
-												return jqx_config.assetsImgPath + contents;
+												if (contents.substr(0, 4) != 'http') {
+													return jqx_config.assetsImgPath + contents;
+												}
+												return contents;
 										}
 									);
 			return txt;
