@@ -1214,16 +1214,18 @@ class Pages extends Module {
 		}
 	}
 
-	protected function _process_upload_data($field_name, $uploaded_data, $posted)
+	protected function _process_upload_data($field_names, $uploaded_data, $posted)
 	{
-		if ( ! is_array($field_name))
-		{
-			$field_name_parts = explode('--', $field_name);
-			$field_name = end($field_name_parts);
-		}
-
 		foreach($uploaded_data as $key => $val)
 		{
+			if (!isset($field_names[$key]))
+			{
+				continue;
+			}
+			$field_name = $field_names[$key];
+			$field_name_parts = explode('--', $field_name);
+			$field_name = end($field_name_parts);
+
 			$file_tmp = current(explode('___', $key));
 
 			// get the file name field
@@ -1231,6 +1233,7 @@ class Pages extends Module {
 			// the model does not have an array key field AND there is a key field value posted
 			if (isset($field_name) AND ! is_array($this->model->key_field()) AND isset($posted['page_id']))
 			{
+				$save = FALSE;
 				$id = $posted['page_id'];
 				$where = array($this->fuel_pagevariables_model->table_name().'.page_id'=> $id, 'name' => $field_name);
 				$data = $this->fuel_pagevariables_model->find_one_array($where);
