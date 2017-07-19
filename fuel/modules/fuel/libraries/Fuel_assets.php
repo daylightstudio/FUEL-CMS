@@ -110,7 +110,7 @@ class Fuel_assets extends Fuel_base_library {
 	{
 		$this->CI->load->library('upload');
 		$this->CI->load->library('image_lib');
-		$this->CI->load->library('encrypt');
+		$this->CI->load->library('encryption');
 
 		$valid = array( 'upload_path' => '',
 						'file_name' => '',
@@ -192,7 +192,7 @@ class Fuel_assets extends Fuel_base_library {
 							{
 								if ($input_key == $field_name.'_upload_path')
 								{
-									$posted['upload_path'] = $this->CI->encrypt->decode($params['posted'][$input_key]);
+									$posted['upload_path'] = $this->CI->encryption->decrypt($params['posted'][$input_key]);
 									foreach($params['posted'] as $k => $p)
 									{
 										if (!is_array($p))
