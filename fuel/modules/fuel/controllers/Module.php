@@ -2210,9 +2210,9 @@ class Module extends Fuel_base_controller {
 					$field_name = $file_tmp;
 
 					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') 
+					if (substr($file_tmp, strlen($file_tmp) - 7) == '_upload') 
 					{
-						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+						$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 					}
 
 					if (isset($posted[$file_tmp.'_file_name']) AND isset($this->_orig_post[$file_tmp.'_file_name']))
@@ -2334,7 +2334,7 @@ class Module extends Fuel_base_controller {
 				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
 				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
 				{
-					$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+					$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 				}
 
 				if (isset($posted[$field_name])) $save = TRUE;
