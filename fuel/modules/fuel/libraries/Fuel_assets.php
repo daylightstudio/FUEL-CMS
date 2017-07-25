@@ -130,6 +130,7 @@ class Fuel_assets extends Fuel_base_library {
 						'width' => NULL, 
 						'height' => NULL, 
 						'resize_and_crop' => FALSE, 
+						'resize_method' => FALSE,
 						);
 
 		// used later
