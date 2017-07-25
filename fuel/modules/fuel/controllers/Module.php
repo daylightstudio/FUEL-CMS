@@ -2332,7 +2332,7 @@ class Module extends Fuel_base_controller {
 				$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 
 				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+				if (substr($file_tmp, strlen($file_tmp) - 7) == '_upload')
 				{
 					$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 				}
