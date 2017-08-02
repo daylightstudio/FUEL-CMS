@@ -1038,7 +1038,7 @@ class Pages extends Module {
 
 			// Hackery to ensure that a proper php mimetype is set. 
 			// Would set in mimes.php config but that may be updated with the next version of CI which does not include the text/plain
-			$this->upload->mimes['php'] =  array(
+			/*$this->upload->mimes['php'] =  array(
 				'application/x-httpd-php', 
 				'application/php', 
 				'application/x-php', 
@@ -1047,7 +1047,7 @@ class Pages extends Module {
 				'text/x-php', 
 				'application/x-httpd-php-source', 
 				'text/plain'
-			);
+			);*/
 
 			if ($this->upload->do_upload('file'))
 			{
