@@ -536,7 +536,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		var replacePlaceholders = function(folder, context){
 
-			if (! folder) return;
+			if (! folder) return '';
 			// now replace any placeholder values in the folder... required for new pages that may not have a value
 			var $inputs = $(context).closest('form').find('select, textarea')
 			.add('input').not('input[type="radio"], input[type="checkbox"], input[type="button"]')
