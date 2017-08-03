@@ -1349,7 +1349,7 @@ class MY_Model extends CI_Model {
 						// set it to an empty string an not a 0 so that it will work with the required validator
 						if (empty($values[$key]))
 						{
-							$values[$key] = '';
+							$values[$key] = NULL;
 						}
 
 					} 
