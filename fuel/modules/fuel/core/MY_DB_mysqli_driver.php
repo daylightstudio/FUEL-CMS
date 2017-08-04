@@ -365,7 +365,15 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		$sql = preg_replace('/^#(.+)$/U', '', $sql);
 
 		// load database config
-		include(APPPATH.'config/database.php');
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/database.php'))
+		{
+			include(APPPATH.'config/'.ENVIRONMENT.'/database.php');
+		}
+		else
+		{
+			include(APPPATH.'config/database.php');	
+		}
+		
 		$CI->load->database();
 
 		// select the database
