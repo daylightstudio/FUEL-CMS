@@ -956,7 +956,7 @@ class Fuel_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	public function &model()
+	public function model()
 	{
 		$model = $this->info('model_name');
 		$module = $this->info('model_location');
@@ -968,7 +968,11 @@ class Fuel_module extends Fuel_base_library {
 		{
 			$this->CI->load->module_model($module, $model);
 		}
-		return $this->CI->$model;
+
+		if ($model)
+		{
+			return $this->CI->$model;
+		}
 	}
 	
 	// --------------------------------------------------------------------
