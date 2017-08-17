@@ -295,7 +295,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string 	The name of a model. If no name is provided, it will assume a model's name the same as the advanced module's (optional)
 	 * @return	array
 	 */	
-	public function &model($model = NULL)
+	public function model($model = NULL)
 	{
 		$models = $this->models(TRUE);
 		if (empty($model))
