@@ -294,7 +294,16 @@ class Base_module_model extends MY_Model {
 	{
 		if (!empty($this->list_items))
 		{
+			$filter_params = array('limit', 'offset', 'col', 'order');
+			foreach ($filter_params as $param)
+			{
+				$this->list_items->$param = $$param;
+			}
 			$this->list_items->run();
+
+			 // in case it changed with run method
+			$col = $this->list_items->col;
+			$order = $this->list_items->order;
 		}
 
 		$this->_list_items_query();
@@ -1163,6 +1172,8 @@ class Base_module_model extends MY_Model {
 		
 		$data_table =& $this->CI->data_table;
 		$data_table->clear();
+
+		$wherein = FALSE;
 		if (!empty($params['where']))
 		{
 			if (is_array($params['where']))
