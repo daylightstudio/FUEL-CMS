@@ -300,7 +300,7 @@ class Fuel_assets extends Fuel_base_library {
 						$this->_add_error(lang('upload_invalid_filetype'));
 					}
 				}
-			
+				
 				// if errors, then we simply return FALSE at this point and don't continue any further processing'
 				if ($this->has_errors())
 				{
@@ -412,6 +412,25 @@ class Fuel_assets extends Fuel_base_library {
 		}
 		
 		return TRUE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes periods from the file name to mimic the CI Upload class and 
+	 * runs the security sanitize_filename on the passed string
+	 *
+	 * @access	public
+	 * @param	string	The file name to clean
+	 * @return	string
+	 */	
+	public function sanitize_filename($file_name)
+	{
+		$ext_pos = strrpos($file_name, '.');
+		$ext = substr($file_name, $ext_pos);
+		$filename = substr($file_name, 0, $ext_pos);
+		$file_name = str_replace('.', '_', $filename).$ext;
+		return $this->CI->security->sanitize_filename($file_name);
 	}
 	
 	// --------------------------------------------------------------------
