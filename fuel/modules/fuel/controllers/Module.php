@@ -1897,12 +1897,13 @@ class Module extends Fuel_base_controller {
 			// for multi select
 			if (is_array($values))
 			{
-				$selected = (array) $selected;
-
-				foreach($values as $v)
+				$selectedValues = $values;
+				if ( ! in_array($selected, $selectedValues))
 				{
-					if ( ! in_array($v, $selected)) $selected[] = $v;
+					$selectedValues[] = $selected;
 				}
+
+				$selected = $selectedValues;
 			}
 
 			if ( ! empty($selected)) $fields[$field]['value'] = $selected;
