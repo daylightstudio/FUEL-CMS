@@ -982,4 +982,4 @@ class Fuel_Loader extends CI_Loader
 }
 
 /** load the CI class for Modular Separation **/
-(class_exists('CI', FALSE)) OR require dirname(__FILE__).'/Ci.php';
+(class_exists('CI', FALSE)) OR require APPPATH.'third_party/MX/Ci.php';
