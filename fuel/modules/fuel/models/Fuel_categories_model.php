@@ -206,7 +206,7 @@ class Fuel_category_model extends Base_module_record {
 					$mod_name = $module->name();
 					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'fuel_categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
 					{
-						$mod['model'] =& $module->model();
+						$mod['model'] = $module->model();
 						$mod['key'] = $key;
 						$belongs_to[$mod_name] = $mod;
 					}

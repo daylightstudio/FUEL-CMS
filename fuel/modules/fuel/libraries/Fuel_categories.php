@@ -80,7 +80,7 @@ class Fuel_categories extends Fuel_module {
 	 */	
 	public function options_list($key = 'slug', $val = 'name')
 	{
-		$model =& $this->model();
+		$model = $this->model();
 		return $model->options_list($key, $val);
 	}	
 }
