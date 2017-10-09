@@ -880,6 +880,12 @@ class Fuel_custom_fields {
 
 			foreach($params['fields'] as $key => $field)
 			{
+				if ($field['type'] == 'checkbox')
+				{
+					$checked_value = (!empty($field['value'])) ? $field['value'] : 1;
+					$field['checked'] = (!empty($value[$key]) AND $value[$key] == $checked_value) ? TRUE : FALSE;
+				}
+
 				if (!empty($value[$key]))
 				{
 					$field['value'] = $value[$key];
