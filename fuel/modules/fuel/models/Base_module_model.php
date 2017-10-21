@@ -308,6 +308,8 @@ class Base_module_model extends MY_Model {
 
 		$this->_list_items_query();
 
+		$this->_limit_to_user();
+
 		if ($just_count)
 		{
 			$has_have = FALSE;
@@ -334,8 +336,6 @@ class Base_module_model extends MY_Model {
 		if (!empty($col)) $this->db->order_by($col, $order, FALSE);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
-		
-		$this->_limit_to_user();
 
 		$query = $this->db->get();
 		$data = $query->result_array();
