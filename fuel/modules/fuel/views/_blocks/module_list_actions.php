@@ -47,7 +47,9 @@
 		<?php if (!empty($this->list_actions)) : ?>
 			<?php 
 			foreach($this->list_actions as $action => $label) : 
-			$lang_key = str_replace('/', '_', $action);
+				$action_arr = explode('?', $action);
+				$action = current($action_arr);
+				$lang_key = str_replace('/', '_', $action);
 			?>
 			<?php if ($this->fuel->auth->has_permission($this->permission, $action)) : ?>
 			<li><?=anchor(fuel_url($action), $label, array('class' => 'ico ico_'.$lang_key))?></li>
