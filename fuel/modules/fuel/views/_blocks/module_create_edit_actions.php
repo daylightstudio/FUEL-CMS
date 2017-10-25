@@ -36,10 +36,12 @@
 			
 			<?php if ($this->fuel->auth->module_has_action('others')) : ?>
 			<?php foreach($this->item_actions['others'] as $other_action => $label) : 
-				$ico_key = trim(preg_replace('#(.+)\{.+\}(.*)#U', '$1', $other_action), '/');
+				$ico_key = trim(preg_replace('#(.+)\{.+\}(.*)#', '$1', $other_action), '/');
 				$other_action_parts = explode('/', $ico_key);
 				$other_action_permissions = end($other_action_parts);
-
+				$other_action_permissions_arr = explode('?', $other_action_permissions);
+				$other_action_permissions = current($other_action_permissions_arr);
+				
 				if ($this->fuel->auth->has_permission($this->permission, $other_action_permissions)) :
 					// $ico_key = preg_replace('#(.+)\{.+\}(.*)#U', '$1', $other_action);
 					$ico_key = explode('?', $ico_key);
