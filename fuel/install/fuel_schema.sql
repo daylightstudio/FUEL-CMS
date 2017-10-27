@@ -158,9 +158,6 @@ CREATE TABLE `fuel_permissions` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-LOCK TABLES `fuel_permissions` WRITE;
-/*!40000 ALTER TABLE `fuel_permissions` DISABLE KEYS */;
-
 INSERT INTO `fuel_permissions` (`id`, `description`, `name`, `active`)
 VALUES
   (NULL,'Pages','pages','yes'),
@@ -198,10 +195,6 @@ VALUES
   (NULL,'Logs','logs','yes'),
   (NULL,'Settings','settings','yes'),
   (NULL,'Generate Code','generate','yes');
-	
-
-/*!40000 ALTER TABLE `fuel_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table fuel_relationships
