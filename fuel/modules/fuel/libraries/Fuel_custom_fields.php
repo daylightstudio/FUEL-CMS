@@ -1204,7 +1204,12 @@ class Fuel_custom_fields {
 		$this->CI->load->helper('format');
 
 		$form_builder =& $params['instance'];
-		
+
+		if ( ! empty($params['value']))
+		{
+			$params['value'] = str_replace(',', '', $params['value']);	
+		}
+
 		if (empty($params['size']))
 		{
 			$params['size'] = '10';
