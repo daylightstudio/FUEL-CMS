@@ -139,12 +139,12 @@ class Fuel_tags_model extends Base_module_model {
 						}
 						else if (!empty($rel['model']))
 						{
-							
-							$model_name = $this->load_model($rel['model']);
-							$model = $this->CI->$model_name;
+	
+							$rel_model_name = $this->load_model($rel['model']);
+							$rel_model = $this->CI->$rel_model_name;
 
 							// test if the instantiated model uses the fuel_tags table or not
-							if (method_exists($model, 'table_name') AND $model->table_name() == $model->tables('fuel_tags'))
+							if (method_exists($rel_model, 'table_name') AND $rel_model->table_name() == $rel_model->tables('fuel_tags'))
 							{
 								$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 							}
