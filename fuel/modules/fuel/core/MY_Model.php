@@ -67,7 +67,11 @@ class MY_Model extends CI_Model {
 	public $custom_fields = array(); // an array of field names/types that map to a specific class
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 
-	protected $db; // CI database object
+    /**
+     * @var CI_DB_query_builder CI database query builder
+     */
+    protected $db;
+
 	protected $table_name; // the table name to associate the model with
 	protected $key_field = 'id'; // usually the tables primary key(s)... can be an array if compound key
 	protected $normalized_save_data = NULL; // the saved data before it is cleaned
