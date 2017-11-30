@@ -283,12 +283,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Boolean Value TRUE/FALSE</td>
 			<td>Will display an "Export" button on the list view page that will allow users to export the currently filtered list data</td>
 		</tr>
-        <tr>
-            <td><strong>export_utf8_bom</strong></td>
-            <td>FALSE</td>
-            <td>Boolean Value TRUE/FALSE</td>
-            <td>If TRUE, writes a Byte Order Mark (BOM) to CSV files before data. A BOM is needed in order to display UTF-8 characters correctly in applications such as Microsoft Excel</td>
-        </tr>
+		<tr>
+			<td><strong>export_utf8_bom</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If TRUE, writes a Byte Order Mark (BOM) to CSV files before data. A BOM is needed in order to display UTF-8 characters correctly in applications such as Microsoft Excel</td>
+		</tr>
 		<tr>
 			<td><strong>limit_options</strong></td>
 			<td>array('25' => '25', '50' => '50', '100' => '100')</td>

@@ -107,9 +107,6 @@ $config['text_editor'] = 'markitup';
 // An associative array of objects to attach to the fuel object
 $config['attach'] = array();
 
-// Indicates whether a UTF-8 Byte Order Mark should be added to exported CSVs
-$config['export_utf8_bom'] = FALSE;
-
 /*
 |--------------------------------------------------------------------------
 | Language settings 
