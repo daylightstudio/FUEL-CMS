@@ -686,6 +686,7 @@ class Fuel_module extends Fuel_base_library {
 				'icon_class' => '',
 				'folder' => '',
 				'exportable' => FALSE,
+				'export_utf8_bom' => FALSE,
 				'limit_options' => array('50' => '50', '100' => '100', '200' => '200'),
 				'advanced_search' => FALSE,
 				'disable_heading_sort' => FALSE,

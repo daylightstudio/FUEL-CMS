@@ -2040,7 +2040,7 @@ class Module extends Fuel_base_controller {
 			$this->_filter_list($params);
 			$data = $this->model->export_data($params);
 
-			if ($this->fuel->config('export_utf8_bom')) {
+			if ($this->export_utf8_bom) {
 				// Add Byte Order Mark to fix UTF-8 in Excel
 				$utf8bom = chr(239) . chr(187) . chr(191);
 				$data = $utf8bom.$data;
