@@ -34,7 +34,7 @@ class Assets extends Module {
 			{
 
 				// cleanup $dir name with any trailing slashes
-				$dir = trim($this->input->get_post('asset_folder', TRUE), '/');
+				$dir = trim($this->input->post_get('asset_folder', TRUE), '/');
 
 				$this->model->on_before_post();
 
@@ -50,18 +50,18 @@ class Assets extends Module {
 				$upload_path = $this->config->item('assets_server_path').$this->fuel->assets->dir($dir).DIRECTORY_SEPARATOR.$subfolder; //assets_server_path is in assets config
 
 				$posted['upload_path'] = $upload_path;
-				$posted['overwrite'] = ($this->input->get_post('overwrite')) ? TRUE : FALSE;
-				$posted['create_thumb'] = ($this->input->get_post('create_thumb')) ? TRUE : FALSE;
-				$posted['resize_method'] = ($this->input->get_post('resize_method')) ? $this->input->get_post('resize_method', TRUE) : 'maintain_ratio';
-				$posted['resize_and_crop'] = $this->input->get_post('resize_and_crop', TRUE);
-				$posted['width'] = $this->input->get_post('width', TRUE);
-				$posted['height'] = $this->input->get_post('height', TRUE);
-				$posted['master_dim'] = $this->input->get_post('master_dim', TRUE);
-				$posted['file_name'] = $this->input->get_post('userfile_file_name', TRUE);
-				$posted['unzip'] = ($this->input->get_post('unzip')) ? TRUE : FALSE;
-				$posted['remove_subfolder'] = $this->input->get_post('remove_subfolder', TRUE);
+				$posted['overwrite'] = ($this->input->post_get('overwrite')) ? TRUE : FALSE;
+				$posted['create_thumb'] = ($this->input->post_get('create_thumb')) ? TRUE : FALSE;
+				$posted['resize_method'] = ($this->input->post_get('resize_method')) ? $this->input->post_get('resize_method', TRUE) : 'maintain_ratio';
+				$posted['resize_and_crop'] = $this->input->post_get('resize_and_crop', TRUE);
+				$posted['width'] = $this->input->post_get('width', TRUE);
+				$posted['height'] = $this->input->post_get('height', TRUE);
+				$posted['master_dim'] = $this->input->post_get('master_dim', TRUE);
+				$posted['file_name'] = $this->input->post_get('userfile_file_name', TRUE);
+				$posted['unzip'] = ($this->input->post_get('unzip')) ? TRUE : FALSE;
+				$posted['remove_subfolder'] = $this->input->post_get('remove_subfolder', TRUE);
 				
-				$redirect_to = uri_safe_decode($this->input->get_post('redirect_to'));
+				$redirect_to = uri_safe_decode($this->input->post_get('redirect_to'));
 				$id = $posted['file_name'];
 
 				// run before_create hook
