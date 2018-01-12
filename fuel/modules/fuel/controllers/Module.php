@@ -261,6 +261,8 @@ class Module extends Fuel_base_controller {
 			$config['last_tag_close'] = NULL;
 			$this->pagination->initialize($config);
 
+			$this->fuel->admin->set_notification(number_format($item_total).' '.pluralize($item_total, lang('num_items')), 'info');
+
 			if (method_exists($this->model, 'tree'))
 			{
 				$vars['tree'] = "\n<ul></ul>\n";
