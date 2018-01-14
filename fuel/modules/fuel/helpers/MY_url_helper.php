@@ -224,9 +224,13 @@ if (!function_exists('is_http_path'))
  */
 if (!function_exists('is_home'))
 {
-	function is_home()
+	function is_home($uri_path = NULL)
 	{
-		$uri_path = uri_path(FALSE);
+		if (is_null($uri_path))
+		{
+			$uri_path = uri_path(FALSE);	
+		}
+		
 		$CI =& get_instance();
 		$segs = explode('/', $CI->router->routes['404_override']);
 		return ($uri_path == 'home' OR $uri_path == '' OR $uri_path == end($segs));
