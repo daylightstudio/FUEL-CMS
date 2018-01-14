@@ -49,7 +49,7 @@ class Events_model extends Base_posts_model {
 		return $data;
 	}
 
-	public function related_items($params)
+	public function related_items($params = array())
 	{
 		if (!empty($params['id']))
 		{
