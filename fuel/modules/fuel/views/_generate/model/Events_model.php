@@ -63,6 +63,7 @@ class Events_model extends Base_posts_model {
 			}
 			return $str;
 		}
+		return array();
 	}
 
 	public function find_upcoming($limit = NULL)
