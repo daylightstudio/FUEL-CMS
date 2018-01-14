@@ -134,7 +134,7 @@ class Event_model extends Base_post_item_model {
 		// if a query string is passed, then we parse it into an array form
 		if (is_string($params))
 		{
-			$params = parse_str($params);
+			parse_str($params, $params);
 		}
 		
 		// defaults
