@@ -81,16 +81,18 @@ if (fuel == undefined) var fuel = {};
 
 				$modal = $('#' + modalId, $context);
 				$modal.find('.modal_content').empty().append(html);
-				$modal.find('iframe').load(function(){
+				$modal.find('iframe').on('load', function(e){
+
 					$('.jqmWindow .loader', $context).remove();
 					var iframe = this;
 					
 					var contentDoc = iframe.contentDocument;
 
-					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight(false);
-					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight(false);
-					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight(false);
-					var listTableHeight = $('#data_table_container', contentDoc).outerHeight(false);
+					var actionsHeight = $('#fuel_actions', contentDoc).length ? $('#fuel_actions', contentDoc).outerHeight(false) : 0;
+					var notificationsHeight = $('#fuel_notification', contentDoc).length ? $('#fuel_notification', contentDoc).outerHeight(false) : 0;
+					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).length ? $('#fuel_main_content_inner', contentDoc).outerHeight(false) : 0;
+					var listTableHeight = $('#data_table_container', contentDoc).length ? $('#data_table_container', contentDoc).outerHeight(false) : 0;
+
 					docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
 					
 					//docHeight = 100
@@ -100,6 +102,7 @@ if (fuel == undefined) var fuel = {};
 					//console.log(docHeight)
 					if (docHeight > 450) docHeight = 450;
 					var docWidth = 850; // 74 includes the 37 in padding on each side
+
 					$(iframe).height(docHeight);
 					$(iframe).width(docWidth);
 					
@@ -449,7 +452,7 @@ if (fuel == undefined) var fuel = {};
 				if (url == '') return;
 				var html = '<iframe src="' + url +'?id=' + pageId + '&amp;location=' + pageLocation + '" id="tool_output_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 				fuel.modalWindow(html);
-				$(this).val('  '); // reset it back to top
+				$(this).val(''); // reset it back to top
 				return false;
 			});
 
