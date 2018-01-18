@@ -355,7 +355,7 @@ if (fuel == undefined) var fuel = {};
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
 								
-								$('#' + iframeId).load(function(){
+								$('#' + iframeId).on('load', function(){
 									var iframe = this;
 									var contentDoc = iframe.contentDocument;
 									
