@@ -1599,7 +1599,7 @@ class Fuel_custom_fields {
 		
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
-			$value = (isset($params['value'])) ? (array)$params['value'] : array();
+			$value = (!empty($params['value'])) ? (array)$params['value'] : array();
 
 			$params['name'] = $params['name'].'[]';
 			$i = 1;
