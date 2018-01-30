@@ -1330,7 +1330,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				$(".toggle", context).closest(selector).hide();	
 			}
 			var val = $elem.val();
-			val = val.replace(/ /g, '-');
+			if (val) {
+				val = val.replace(/ /g, '-');	
+			}
+			
 			$(".toggle." + prefix + val, context).closest(selector).show();
 		}
 		
