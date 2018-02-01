@@ -1855,6 +1855,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
