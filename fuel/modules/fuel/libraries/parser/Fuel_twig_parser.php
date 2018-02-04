@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -26,7 +26,7 @@
  */
 
 // https://github.com/geevcookie/CI-Twig-Parser/blob/master/libraries/MY_Parser.php
-require_once(FUEL_PATH . 'libraries/parser/twig/Autoloader.php');
+require_once(FUEL_PATH . 'libraries/parser/Twig/Autoloader.php');
 require_once(FUEL_PATH . 'libraries/parser/Fuel_abstract_parser.php');
 
 class Fuel_twig_parser extends Fuel_abstract_parser {

@@ -324,6 +324,7 @@ span.warning, p.warning, div.warning { padding: 2px 5px; }
 span.error_highlight input, span.error_highlight textarea, span.error_highlight select { border: 2px solid #c30; }
 .taberror { background-color: rgb(238, 96, 96) !important; }
 .taberror a { color: #fff !important; }
+.tabwarn { background-color: #ff1 !important; }
 .change { background: #ffe; }
 .delete { color: #c30; font-weight: bold;  }
 a.delete { color: #c30; display: block; float: left; margin-top: 10px; border: 1px solid #ccc; padding: 5px; }

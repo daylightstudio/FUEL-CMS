@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -206,7 +206,7 @@ class Fuel_category_model extends Base_module_record {
 					$mod_name = $module->name();
 					if (is_array($mod) AND isset($mod[FUEL_FOLDER]) AND ($mod[FUEL_FOLDER] == 'fuel_categories_model' OR $mod[FUEL_FOLDER] == 'categories'))
 					{
-						$mod['model'] =& $module->model();
+						$mod['model'] = $module->model();
 						$mod['key'] = $key;
 						$belongs_to[$mod_name] = $mod;
 					}

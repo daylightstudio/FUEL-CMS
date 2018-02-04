@@ -4,7 +4,7 @@
 Don't let the word <em>simple</em> fool you though. 
 You can still create pretty powerful modules without the need of creating your own views and controllers which is what <a href="<?=user_guide_url('modules/advanced')?>"><strong>advanced</strong></a> modules are for.
 We will actually create several simple modules to allow us to create articles and categorize them in the CMS.
-We will be using 3 data models (<dfn>articles_model</dfn>, <dfn>authors_model</dfn>, <dfn>fuel_tags_model</dfn>), and creating 2 modules (articles, authors).</p>
+We will be using 3 data models (<dfn>Articles_model</dfn>, <dfn>Authors_model</dfn>, <dfn>Fuel_tags_model</dfn>), and creating 2 modules (articles, authors).</p>
 
 <p class="important">Visit the <a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a> page for more information about the new 1.3 feature to create pages automatically from your module.</p>
 
@@ -67,11 +67,11 @@ carry special meaning in FUEL and will determine whether to display the content 
 
 <h3>Create the Authors Model</h3>
 <p>After creating the table, we will create the model that links to that table. To do that, create a file in your 
-<dfn>fuel/application/model</dfn> directory and name it <dfn>authors_model.php</dfn>. In that file we will be 
+<dfn>fuel/application/model</dfn> directory and name it <dfn>Authors_model.php</dfn>. In that file we will be 
 creating two classes. The first class, <dfn>Authors_model</dfn>, will extend the <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model</a> 
 (which is an extension of <a href="<?=user_guide_url('libraries/my_model')?>">MY_Model</a>).</p>
 
-<p>The second class we will create in the <dfn>authors_model.php</dfn> file is the custom record class, <dfn>Author_model</dfn> (note the singular name).
+<p>The second class we will create in the <dfn>Authors_model.php</dfn> file is the custom record class, <dfn>Author_model</dfn> (note the singular name).
 This class is not required, but it will give us some extra functionality at the record level later on. If this class is not included, the data will be 
 returned in an array format by default.</p>
 
@@ -138,7 +138,7 @@ CREATE TABLE `articles` (
 
 <h3>Create the Articles Model</h3>
 <p>Now that the table is created, we will follow similar steps as above to create the articles model. So
-create a new file in the <dfn>fuel/application/model</dfn> folder and call it <dfn>articles_model.php</dfn>.
+create a new file in the <dfn>fuel/application/model</dfn> folder and call it <dfn>Articles_model.php</dfn>.
 Now add the following code to that file:
 </p>
 

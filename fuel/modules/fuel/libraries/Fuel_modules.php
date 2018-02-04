@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -691,6 +691,7 @@ class Fuel_module extends Fuel_base_library {
 				'disable_heading_sort' => FALSE,
 				'description' => '',
 				'search_field' => '',
+				'single_item_navigate' => FALSE,
 				'pages' => array(),
 				);
 			$info = array();
@@ -753,18 +754,23 @@ class Fuel_module extends Fuel_base_library {
 			// must be done after the above 
 			if (empty($this->_info['display_field']))
 			{
-				$fields = $this->model()->fields();
-				
-				// loop through the fields and find the first column that doesn't have id or _id at the end of it
-				for ($i = 1; $i < count($fields); $i++)
+				$model = $this->model();
+
+				if ($model)
 				{
-					if (substr($fields[$i], -3) != '_id')
+					$fields = $model->fields();
+					
+					// loop through the fields and find the first column that doesn't have id or _id at the end of it
+					for ($i = 1; $i < count($fields); $i++)
 					{
-						$this->_info['display_field'] = $fields[$i];
-						break;
+						if (substr($fields[$i], -3) != '_id')
+						{
+							$this->_info['display_field'] = $fields[$i];
+							break;
+						}
 					}
+					if (empty($this->_info['display_field'])) $this->_info['display_field'] = $fields[1]; // usually the second field is the display_field... first is the id
 				}
-				if (empty($this->_info['display_field'])) $this->_info['display_field'] = $fields[1]; // usually the second field is the display_field... first is the id
 			}
 		}
 		if (empty($prop))
@@ -950,7 +956,7 @@ class Fuel_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	public function &model()
+	public function model()
 	{
 		$model = $this->info('model_name');
 		$module = $this->info('model_location');
@@ -958,11 +964,15 @@ class Fuel_module extends Fuel_base_library {
 		{
 			$module = 'app';
 		}
-		if (!isset($this->CI->$model) AND !empty($module))
+		if ($model !== FALSE AND !isset($this->CI->$model) AND !empty($module))
 		{
 			$this->CI->load->module_model($module, $model);
 		}
-		return $this->CI->$model;
+
+		if ($model)
+		{
+			return $this->CI->$model;
+		}
 	}
 	
 	// --------------------------------------------------------------------

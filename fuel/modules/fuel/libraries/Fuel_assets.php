@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -110,7 +110,7 @@ class Fuel_assets extends Fuel_base_library {
 	{
 		$this->CI->load->library('upload');
 		$this->CI->load->library('image_lib');
-		$this->CI->load->library('encrypt');
+		$this->CI->load->library('encryption');
 
 		$valid = array( 'upload_path' => '',
 						'file_name' => '',
@@ -130,6 +130,7 @@ class Fuel_assets extends Fuel_base_library {
 						'width' => NULL, 
 						'height' => NULL, 
 						'resize_and_crop' => FALSE, 
+						'resize_method' => FALSE,
 						);
 
 		// used later
@@ -192,7 +193,7 @@ class Fuel_assets extends Fuel_base_library {
 							{
 								if ($input_key == $field_name.'_upload_path')
 								{
-									$posted['upload_path'] = $this->CI->encrypt->decode($params['posted'][$input_key]);
+									$posted['upload_path'] = $this->CI->encryption->decrypt($params['posted'][$input_key]);
 									foreach($params['posted'] as $k => $p)
 									{
 										if (!is_array($p))
@@ -299,7 +300,7 @@ class Fuel_assets extends Fuel_base_library {
 						$this->_add_error(lang('upload_invalid_filetype'));
 					}
 				}
-			
+				
 				// if errors, then we simply return FALSE at this point and don't continue any further processing'
 				if ($this->has_errors())
 				{
@@ -411,6 +412,25 @@ class Fuel_assets extends Fuel_base_library {
 		}
 		
 		return TRUE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Removes periods from the file name to mimic the CI Upload class and 
+	 * runs the security sanitize_filename on the passed string
+	 *
+	 * @access	public
+	 * @param	string	The file name to clean
+	 * @return	string
+	 */	
+	public function sanitize_filename($file_name)
+	{
+		$ext_pos = strrpos($file_name, '.');
+		$ext = substr($file_name, $ext_pos);
+		$filename = substr($file_name, 0, $ext_pos);
+		$file_name = str_replace('.', '_', $filename).$ext;
+		return $this->CI->security->sanitize_filename($file_name);
 	}
 	
 	// --------------------------------------------------------------------

@@ -17,9 +17,11 @@ include(FUEL_PATH.'config/fuel.php');
 // Load any public routes for advanced modules
 foreach ($config['modules_allowed'] as $module)
 {
-	$routes_path = $module_folder.$module.'/config/'.$module.'_routes.php';
-
-	if (file_exists($routes_path)) include($routes_path);
+	if ($module != FUEL_FOLDER) // Avoid infinite recursion
+	{
+		$routes_path = $module_folder.$module.'/config/'.$module.'_routes.php';
+		if (file_exists($routes_path)) include($routes_path);
+	}
 }
 
 // To prevent the overhead of this on every request, we do a quick check of the path... USE_FUEL_ROUTES is defined in fuel_constants

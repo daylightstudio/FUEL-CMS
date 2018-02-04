@@ -67,7 +67,7 @@ if (fuel == undefined) var fuel = {};
 				var $context = $('body', top.window.document);
 				
 				var modalHtml = '<a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div>';
-				if (!$('#' + modalId).size()){
+				if (!$('#' + modalId).length){
 					var modalHTML = '<div id="' + modalId + '" class="__fuel__ __fuel_modal__ jqmWindow ' + cssClass + '"><a href="#" class="modal_close jqmClose"></a><div class="modal_content"></div></div>';
 					$context.append(modalHTML);
 				}
@@ -81,16 +81,18 @@ if (fuel == undefined) var fuel = {};
 
 				$modal = $('#' + modalId, $context);
 				$modal.find('.modal_content').empty().append(html);
-				$modal.find('iframe').load(function(){
+				$modal.find('iframe').on('load', function(e){
+
 					$('.jqmWindow .loader', $context).remove();
 					var iframe = this;
 					
 					var contentDoc = iframe.contentDocument;
 
-					var actionsHeight = $('#fuel_actions', contentDoc).outerHeight(false);
-					var notificationsHeight = $('#fuel_notification', contentDoc).outerHeight(false);
-					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).outerHeight(false);
-					var listTableHeight = $('#data_table_container', contentDoc).outerHeight(false);
+					var actionsHeight = $('#fuel_actions', contentDoc).length ? $('#fuel_actions', contentDoc).outerHeight(false) : 0;
+					var notificationsHeight = $('#fuel_notification', contentDoc).length ? $('#fuel_notification', contentDoc).outerHeight(false) : 0;
+					var mainContentHeight =  $('#fuel_main_content_inner', contentDoc).length ? $('#fuel_main_content_inner', contentDoc).outerHeight(false) : 0;
+					var listTableHeight = $('#data_table_container', contentDoc).length ? $('#data_table_container', contentDoc).outerHeight(false) : 0;
+
 					docHeight = actionsHeight + notificationsHeight + mainContentHeight + listTableHeight + 30; // 30 is a fudge factor
 					
 					//docHeight = 100
@@ -100,6 +102,7 @@ if (fuel == undefined) var fuel = {};
 					//console.log(docHeight)
 					if (docHeight > 450) docHeight = 450;
 					var docWidth = 850; // 74 includes the 37 in padding on each side
+
 					$(iframe).height(docHeight);
 					$(iframe).width(docWidth);
 					
@@ -122,14 +125,14 @@ if (fuel == undefined) var fuel = {};
 				var contentDoc = iframe.contentDocument;
 				var docHeight = fuel.calcHeight(contentDoc);
 				
-				if ($('#fuel_main_content_inner .form, #fuel_actions', contentDoc).size()){
+				if ($('#fuel_main_content_inner .form, #fuel_actions', contentDoc).length){
 					var width1 = $('#fuel_main_content_inner .form', contentDoc).outerWidth(false) + 74; // 74 includes the 37 in padding on each side
 					var width2 = $('#fuel_actions', contentDoc).outerWidth(false);
 					var docWidth = (width1 > width2) ? width1 : width2;
 
 					// check if fuel_actions is there so that we don't make it too wide for single variables being edited
-					if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).size()) docWidth = MIN_WIDTH;
-				} else if ($('#login', contentDoc).size()){
+					if (docWidth < MIN_WIDTH && $('#fuel_actions', contentDoc).length) docWidth = MIN_WIDTH;
+				} else if ($('#login', contentDoc).length){
 					docWidth = $('#login', contentDoc).width();
 				} else {
 					docWidth = $(contentDoc).width();
@@ -150,7 +153,7 @@ if (fuel == undefined) var fuel = {};
 			$('.__fuel_edit__').remove();
 			var markers = $(".__fuel_marker__");
 			var toggleEditOff = true;
-			if (markers.size() > 0){
+			if (markers.length > 0){
 				$body = $('body');
 				markers.each(function(i){
 					var $this = $(this);
@@ -199,7 +202,7 @@ if (fuel == undefined) var fuel = {};
 				$('#__fuel_edit__' + i).css({left: coords.x, top: coords.y});
 				
 				// determine if it is visible so that we can filter out the hidden to speed things up
-				if ($this.filter(':hidden').size() != 0) {
+				if ($this.filter(':hidden').length != 0) {
 					$('#__fuel_edit__' + i).hide();
 				} else {
 					$('#__fuel_edit__' + i).show();
@@ -259,7 +262,7 @@ if (fuel == undefined) var fuel = {};
 					var iframe = activeEditor.find('iframe')[0];
 					var contentDoc = iframe.contentDocument;
 					// if there was a successful save, then we need to refresh the page
-					if ($('.success', contentDoc).size()){
+					if ($('.success', contentDoc).length){
 						top.window.location.reload();
 					} else {
 						activeEditor.removeClass('__fuel_edit_active__');
@@ -327,7 +330,7 @@ if (fuel == undefined) var fuel = {};
 					if (!activeEditor || activeEditor != $this){
 						
 						
-						if ($('.__fuel_edit_form__', $this).children().not('img').size() == 0){
+						if ($('.__fuel_edit_form__', $this).children().not('img').length == 0){
 							
 							var relArr = $(this).attr('rel').split('|');
 							var param1 = relArr[0];
@@ -348,11 +351,11 @@ if (fuel == undefined) var fuel = {};
 							}
 							
 
-							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
+							if (_anchor.next('.__fuel_edit_form__').find('iframe').length == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
 								
-								$('#' + iframeId).load(function(){
+								$('#' + iframeId).on('load', function(){
 									var iframe = this;
 									var contentDoc = iframe.contentDocument;
 									
@@ -449,7 +452,7 @@ if (fuel == undefined) var fuel = {};
 				if (url == '') return;
 				var html = '<iframe src="' + url +'?id=' + pageId + '&amp;location=' + pageLocation + '" id="tool_output_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
 				fuel.modalWindow(html);
-				$(this).val('  '); // reset it back to top
+				$(this).val(''); // reset it back to top
 				return false;
 			});
 

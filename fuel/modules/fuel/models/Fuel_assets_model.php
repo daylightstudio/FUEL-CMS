@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -105,7 +105,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	order
 	 * @return	array
 	 */	
-	public function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc')
+	public function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->helper('array');
@@ -131,12 +131,14 @@ class Fuel_assets_model extends CI_Model {
 		$exclude = $CI->fuel->config('assets_excluded_dirs');
 		$exclude[] = 'index.html';
 		$tmpfiles = directory_to_array($assets_path, TRUE, $exclude, FALSE);
-		
-		$files = get_dir_file_info($assets_path, FALSE, TRUE);
-
 		$cnt = count($tmpfiles);
+		if ($just_count)
+		{
+			return $cnt;
+		}
+
+		$files = get_dir_file_info($assets_path, FALSE, TRUE);
 		$return = array();
-		
 		$asset_type_path = WEB_PATH.$CI->config->item('assets_path').$asset_dir.'/';
 		
 		//for ($i = $offset; $i < $cnt - 1; $i++)
@@ -159,7 +161,6 @@ class Fuel_assets_model extends CI_Model {
 					$return[] = $file;
 				}
 			}
-			
 		}
 		
 		$order = ($order == 'desc') ? SORT_DESC : SORT_ASC;
@@ -176,7 +177,6 @@ class Fuel_assets_model extends CI_Model {
 			{
 				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'?c='.time().'" border="0"></a></div>';
 				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.'/'.$return[$key]['name'].'</a>';
-				
 			}
 			else
 			{
@@ -198,7 +198,7 @@ class Fuel_assets_model extends CI_Model {
 	 */	
 	public function list_items_total()
 	{
-		return count($this->list_items());
+		return $this->list_items(NULL, 0, 'name', 'asc', TRUE);
 	}
 
 	// --------------------------------------------------------------------
@@ -438,10 +438,10 @@ class Fuel_assets_model extends CI_Model {
 		$fields['width'] = array('label' => lang('form_label_width'), 'comment' => lang('assets_comment_width'), 'size' => '3');
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dim'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
-		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		$fields['hide_options'] = array('type' => 'hidden');
 		$fields['hide_image_options'] = array('type' => 'hidden');
 		$fields['remove_subfolder'] = array('type' => 'hidden');
+		$fields['uploaded_file_name'] = array('type' => 'hidden');
 		return $fields;
 	}
 	

@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -721,9 +721,14 @@ class Fuel_installer extends Fuel_base_library {
 		$source_path = $this->install_path().'../config/'.$this->module.'.php';
 		$dest_path = APPPATH.'config/'.$this->module.'.php';
 
-		if (file_exists($source_path) AND !file_exists($dest_path));
+		if (file_exists($source_path) AND !file_exists($dest_path))
 		{
-			@copy($source_path, $dest_path);
+			$results = copy($source_path, $dest_path);
+
+			if (!$results)
+			{
+				$this->_add_error(lang('error_could_not_create_file', $dest_path));
+			}
 		}
 	}
 

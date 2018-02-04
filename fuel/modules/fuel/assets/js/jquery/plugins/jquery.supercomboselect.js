@@ -445,6 +445,8 @@
 					var src = $(getOptionSourceRef(getIdNum(this)));
 					$(this).prepend('<input type="hidden" name="' + $('#' + selectID).attr('name') + '" value="' + src.attr('value') + '"" class="sorted_val" />');
 				});
+
+				// This causes issues if a form is AJAXed
 				$('#' + selectID).remove();
 			}
 

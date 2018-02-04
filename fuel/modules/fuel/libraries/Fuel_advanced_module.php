@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -295,7 +295,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string 	The name of a model. If no name is provided, it will assume a model's name the same as the advanced module's (optional)
 	 * @return	array
 	 */	
-	public function &model($model = NULL)
+	public function model($model = NULL)
 	{
 		$models = $this->models(TRUE);
 		if (empty($model))

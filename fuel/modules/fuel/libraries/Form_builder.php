@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -154,7 +154,7 @@ class Form_builder {
 		if (is_null($this->form))
 		{
 			$this->CI->load->library('form');
-			$this->CI->load->library('encrypt');
+			$this->CI->load->library('encryption');
 			$this->form = new Form();
 			
 			// load localization helper if not already
@@ -1855,6 +1855,7 @@ class Form_builder {
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
+			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 		);
 		$name = $params['name'];
 		if (!empty($params['multiple']))
@@ -2282,11 +2283,11 @@ class Form_builder {
 		{
 			if (isset($params['folder']))
 			{
-				$upload_path = $this->CI->encrypt->encode(assets_server_path($params['folder']));
+				$upload_path = $this->CI->encryption->encrypt(assets_server_path($params['folder']));
 			}
 			else
 			{
-				$upload_path = $this->CI->encrypt->encode($params['upload_path']);
+				$upload_path = $this->CI->encryption->encrypt($params['upload_path']);
 			}
 			$file .= $this->form->hidden($params['name'].'_upload_path', $upload_path, 'class="noclear"');
 		}

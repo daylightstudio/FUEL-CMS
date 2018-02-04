@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -80,7 +80,7 @@ class Fuel_categories extends Fuel_module {
 	 */	
 	public function options_list($key = 'slug', $val = 'name')
 	{
-		$model =& $this->model();
+		$model = $this->model();
 		return $model->options_list($key, $val);
 	}	
 }

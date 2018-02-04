@@ -247,7 +247,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				this.dataProcessor.htmlFilter.addRules( {
 					elements : {
 						$ : function( element ) {
-
 							// // Output dimensions of images as width and height attributes on src
 							if ( element.name == 'img' && hasCKEditorImagePlugin) {
 								//var src = element.attributes['src'];
@@ -357,8 +356,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var unTranslateImgPath = function(txt){
 			var regex = lDelim + "img_path\\('?([^'|\"]+?)'?\\)" + rDelim;
 			txt = txt.replace(new RegExp(regex, 'g'), function(match, contents, offset, s) {
-												contents = contents.replace(/'|"/, '');
-												return jqx_config.assetsImgPath + contents;
+												if (contents.substr(0, 4) != 'http') {
+													return jqx_config.assetsImgPath + contents;
+												}
+												return contents;
 										}
 									);
 			return txt;
@@ -383,7 +384,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					$('#' + id + '_preview').click(function(e){
 						e.preventDefault();
 						var val = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances[id] !== undefined && $textarea.css('visibility') !== 'visible') ? CKEDITOR.instances[id].getData() : $textarea.val();
-						var csrf = $('#csrf_test_name').val();
 
 						var csrf = $('#csrf_test_name').val() ? $('#csrf_test_name').val() : '';
 
@@ -486,7 +486,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var showAssetsSelect = function(params){
 			var winHeight = 450;
 			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
-			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -536,6 +536,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		var replacePlaceholders = function(folder, context){
 
+			if (! folder) return '';
 			// now replace any placeholder values in the folder... required for new pages that may not have a value
 			var $inputs = $(context).closest('form').find('select, textarea')
 			.add('input').not('input[type="radio"], input[type="checkbox"], input[type="button"]')
@@ -569,7 +570,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		var _this = this;
 		$('.asset_select', context).each(function(i){
-			if ($(this).parent().find('.asset_upload_button').length == 0){
+			if ($(this).closest('.field').find('.asset_select_button').length == 0){
 				var assetFolder = $(this).data('folder');
 				if ($(this).data('subfolder')){
 					assetFolder += '/' + $(this).data('subfolder');
@@ -621,7 +622,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		// asset upload 
 		var showAssetUpload = function(url){
-			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
 			$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
@@ -745,14 +746,17 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		
 		var $modal = null;
 		var selected = null;
+		var csrf = null;
 		var editModule = function(url, onLoadCallback, onCloseCallback){
-			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 0px; width: 0px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="add_edit_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true, onLoadCallback, onCloseCallback);
 			
 			// bind listener here because iframe gets removed on close so we can't grab the id value on close
 			$modal.find('iframe#add_edit_inline_iframe').bind('load', function(){
 				var iframeContext = this.contentDocument;
 				selected = $('#id', iframeContext).val();
+				csrf = $('#csrf_test_name', iframeContext).val() ? $('#csrf_test_name', iframeContext).val() : '';
+
 			})
 			return false;
 		}
@@ -783,7 +787,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				// if no value added,then no need to refresh
 				if (!selected) return;
 				var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
-				var params = { field:fieldId, field_id: fieldId, selected:selected};
+				var params = { field:fieldId, field_id: fieldId, selected:selected, csrf_test_name: csrf };
 
 				// fix for pages... a bit kludgy
 				if (parentModule == 'pages'){
@@ -1180,7 +1184,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			if ($activeField.data('filter')){
 				url += '&filter=' + $activeField.data('filter');	;	
 			}
-			var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
 			
 			// // bind listener here because iframe gets removed on close so we can't grab the id value on close
@@ -1326,7 +1330,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				$(".toggle", context).closest(selector).hide();	
 			}
 			var val = $elem.val();
-			val = val.replace(/ /g, '-');
+			if (val) {
+				val = val.replace(/ /g, '-');	
+			}
+			
 			$(".toggle." + prefix + val, context).closest(selector).show();
 		}
 		
@@ -1485,7 +1492,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 
 			var iframe_url = href;
-			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
+			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
 			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
 				embeddedListModalClose($activeEmbeddedList);
 			});

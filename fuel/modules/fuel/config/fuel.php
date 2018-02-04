@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -182,7 +182,7 @@ $config['assets_upload_max_height']  = '768';
 
 // Javascript files (mostly jquery plugins) to be included other then the controller js files
 $config['fuel_javascript'] = array(
-	/*
+	
 	'fuel' => array(
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
@@ -215,8 +215,8 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/chrome_pushstack_fix.js',
 	'jqx/plugins/util.js',
 	'fuel/global')
-	*/
-	'fuel' => 'fuel/fuel.min'
+	
+	//'fuel' => 'fuel/fuel.min'
 );
 
 // CSS other then the fuel.css file which automatically gets loaded

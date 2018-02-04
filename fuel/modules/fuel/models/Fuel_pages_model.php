@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -221,7 +221,6 @@ class Fuel_pages_model extends Base_module_model {
 			{
 				$where .= ' AND published = "yes"';
 			}
-
 		}
 		else
 		{
@@ -231,7 +230,7 @@ class Fuel_pages_model extends Base_module_model {
 		$data = $this->find_one_array($where, 'location desc');
 
 		// case sensitive check
-		if (empty($data) OR $data['location'] != $location)
+		if (empty($data) OR ($data['location'] != $location AND $data['location'] != $wildcard_location.'/:any'))
 		{
 			return array();
 		}

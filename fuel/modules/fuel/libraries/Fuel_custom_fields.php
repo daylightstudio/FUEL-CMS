@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -877,9 +877,14 @@ class Fuel_custom_fields {
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
-
 			foreach($params['fields'] as $key => $field)
 			{
+				if (isset($field['type']) AND $field['type'] == 'checkbox')
+				{
+					$checked_value = (!empty($field['value'])) ? $field['value'] : 1;
+					$field['checked'] = (!empty($value[$key]) AND $value[$key] == $checked_value) ? TRUE : FALSE;
+				}
+
 				if (!empty($value[$key]))
 				{
 					$field['value'] = $value[$key];
@@ -1198,7 +1203,12 @@ class Fuel_custom_fields {
 		$this->CI->load->helper('format');
 
 		$form_builder =& $params['instance'];
-		
+
+		if ( ! empty($params['value']))
+		{
+			$params['value'] = str_replace(',', '', $params['value']);	
+		}
+
 		if (empty($params['size']))
 		{
 			$params['size'] = '10';
@@ -1589,7 +1599,7 @@ class Fuel_custom_fields {
 		
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
-			$value = (isset($params['value'])) ? (array)$params['value'] : array();
+			$value = (!empty($params['value'])) ? (array)$params['value'] : array();
 
 			$params['name'] = $params['name'].'[]';
 			$i = 1;

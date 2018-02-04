@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
@@ -354,9 +354,9 @@ class CI_Security {
 		// Is the string an array?
 		if (is_array($str))
 		{
-			while (list($key) = each($str))
+			foreach ($str as $key => &$value)
 			{
-				$str[$key] = $this->xss_clean($str[$key]);
+				$str[$key] = $this->xss_clean($value);
 			}
 
 			return $str;
@@ -869,7 +869,7 @@ class CI_Security {
 			// Each iteration filters a single attribute
 			do
 			{
-				// Strip any non-alpha characters that may preceed an attribute.
+				// Strip any non-alpha characters that may precede an attribute.
 				// Browsers often parse these incorrectly and that has been a
 				// of numerous XSS issues we've had.
 				$matches['attributes'] = preg_replace('#^[^a-z]+#i', '', $matches['attributes']);

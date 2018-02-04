@@ -6,7 +6,7 @@
 */
 $lang['inline_edit_toggle_toolbar'] = 'Toggle toolbar display';
 $lang['inline_edit_toggle_editable'] = 'Toggle editable areas';
-$lang['inline_edit_toggle_publish'] = 'Toggle the pages publish status';
+$lang['inline_edit_toggle_publish'] = "Toggle page publish status";
 $lang['inline_edit_toggle_cache'] = 'Toggle page cache settings';
 
 $lang['inline_edit_tools'] = 'Tools...';

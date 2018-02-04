@@ -215,6 +215,14 @@ class Module extends Fuel_base_controller {
 		// to prevent it from being called unnecessarily with ajax
 		if ( ! is_ajax())
 		{
+			$item_total = $this->model->list_items_total();
+			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $item_total == 1)
+			{
+				$items = $this->model->list_items();
+				$edit_url = fuel_url($this->module_uri.'/edit/'.$items[0][$this->model->key_field()]);
+				redirect($edit_url);
+			}
+
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
@@ -224,7 +232,7 @@ class Module extends Fuel_base_controller {
 
 			$config['base_url'] = fuel_url($this->module_uri).'/items/?'.$query_str;
 			$uri_segment = 4 + (count(explode('/', $this->module_uri)) - 1);
-			$config['total_rows'] = $this->model->list_items_total();
+			$config['total_rows'] = $item_total;
 			$config['uri_segment'] = fuel_uri_index($uri_segment);
 			$config['per_page'] = (int) $params['limit'];
 			$config['query_string_segment'] = 'offset';
@@ -252,6 +260,8 @@ class Module extends Fuel_base_controller {
 			$config['last_tag_open'] = NULL;
 			$config['last_tag_close'] = NULL;
 			$this->pagination->initialize($config);
+
+			$this->fuel->admin->set_notification(number_format($item_total).' '.pluralize($item_total, lang('num_items')), 'info');
 
 			if (method_exists($this->model, 'tree'))
 			{
@@ -1889,12 +1899,13 @@ class Module extends Fuel_base_controller {
 			// for multi select
 			if (is_array($values))
 			{
-				$selected = (array) $selected;
-
-				foreach($values as $v)
+				$selectedValues = $values;
+				if ( ! in_array($selected, $selectedValues))
 				{
-					if ( ! in_array($v, $selected)) $selected[] = $v;
+					$selectedValues[] = $selected;
 				}
+
+				$selected = $selectedValues;
 			}
 
 			if ( ! empty($selected)) $fields[$field]['value'] = $selected;
@@ -2202,9 +2213,9 @@ class Module extends Fuel_base_controller {
 					$field_name = $file_tmp;
 
 					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload') 
+					if (substr($file_tmp, strlen($file_tmp) - 7) == '_upload') 
 					{
-						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+						$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 					}
 
 					if (isset($posted[$file_tmp.'_file_name']) AND isset($this->_orig_post[$file_tmp.'_file_name']))
@@ -2324,9 +2335,9 @@ class Module extends Fuel_base_controller {
 				$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
 
 				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+				if (substr($file_tmp, strlen($file_tmp) - 7) == '_upload')
 				{
-					$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+					$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 				}
 
 				if (isset($posted[$field_name])) $save = TRUE;

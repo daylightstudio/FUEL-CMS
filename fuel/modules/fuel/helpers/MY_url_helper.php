@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
@@ -224,9 +224,13 @@ if (!function_exists('is_http_path'))
  */
 if (!function_exists('is_home'))
 {
-	function is_home()
+	function is_home($uri_path = NULL)
 	{
-		$uri_path = uri_path(FALSE);
+		if (is_null($uri_path))
+		{
+			$uri_path = uri_path(FALSE);	
+		}
+		
 		$CI =& get_instance();
 		$segs = explode('/', $CI->router->routes['404_override']);
 		return ($uri_path == 'home' OR $uri_path == '' OR $uri_path == end($segs));
@@ -440,11 +444,11 @@ if (!function_exists('query_str'))
 		$query_str = '';
 		if ($include_post)
 		{
-			$get_array = $CI->input->get_post(NULL, TRUE);
+			$get_array = $CI->input->get_post(NULL, FALSE);
 		}
 		else
 		{
-			$get_array = $CI->input->get(NULL, TRUE);
+			$get_array = $CI->input->get(NULL, FALSE);
 		}
 		
 		if (!empty($get_array))

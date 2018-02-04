@@ -915,6 +915,11 @@ class Base_model_related_items extends Abstract_base_model_helper  {
  */
 class Base_model_list_items extends Abstract_base_model_helper  {
 
+	public $limit = NULL;
+	public $offset = 0;
+	public $col = 'id';
+	public $order = 'asc';
+
 	protected $display_type = '';
 	protected $filters = NULL;
 	protected $select = NULL;
@@ -1047,6 +1052,10 @@ class Base_model_list_items extends Abstract_base_model_helper  {
 	 *
 	 * @access	public
 	 * @param	array The array of data
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
 	 * @return	array The data to return
 	 */	
 	public function process($data)
@@ -1064,7 +1073,6 @@ class Base_model_list_items extends Abstract_base_model_helper  {
 	 */	
 	public function run()
 	{
-
 		$this->select();
 		$this->join();
 	}

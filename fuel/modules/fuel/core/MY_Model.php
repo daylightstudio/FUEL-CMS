@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -67,7 +67,11 @@ class MY_Model extends CI_Model {
 	public $custom_fields = array(); // an array of field names/types that map to a specific class
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 
-	protected $db; // CI database object
+	/**
+	 * @var CI_DB_query_builder CI database query builder
+	 */
+	protected $db;
+
 	protected $table_name; // the table name to associate the model with
 	protected $key_field = 'id'; // usually the tables primary key(s)... can be an array if compound key
 	protected $normalized_save_data = NULL; // the saved data before it is cleaned
@@ -1349,7 +1353,7 @@ class MY_Model extends CI_Model {
 						// set it to an empty string an not a 0 so that it will work with the required validator
 						if (empty($values[$key]))
 						{
-							$values[$key] = '';
+							$values[$key] = NULL;
 						}
 
 					} 
@@ -2909,7 +2913,7 @@ class MY_Model extends CI_Model {
 					}
 				}
 				$related_options = $CI->$related_model->options_list(NULL, $label, $where, $order);
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'has_many', $rel_config) : array();
+				$related_vals = ( ! empty($values[$this->key_field])) ? $this->get_related_keys($related_field, $values, $related_model, 'has_many', $rel_config) : array();
 				$fields[$related_field] = array('label' => humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
 		}
@@ -2941,7 +2945,7 @@ class MY_Model extends CI_Model {
 				}
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, $label, $where, $order);
-				$related_vals = ( ! empty($values['id'])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config, $related_field) : array();
+				$related_vals = ( ! empty($values[$this->key_field])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config, $related_field) : array();
 				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
 		}
@@ -4452,7 +4456,7 @@ class MY_Model extends CI_Model {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -4606,7 +4610,7 @@ class Data_set {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -5605,6 +5609,9 @@ class Data_record {
 	public function __get($var)
 	{
 		$output = NULL;
+
+		if (!isset($this->_parent_model)) return;
+		
 		$foreign_keys = $this->_parent_model->foreign_keys;
 		$custom_fields = $this->_parent_model->custom_fields;
 		
@@ -5859,7 +5866,7 @@ class Data_record {
 	public function __isset($key)
 	{
 		$obj_vars = get_object_vars($this);
-		return (isset($this->_fields[$key]) OR isset($obj_vars[$key]) OR method_exists($this, 'get_'.$key));
+		return ($this->__get($key) OR isset($this->_fields[$key]) OR isset($obj_vars[$key]) OR method_exists($this, 'get_'.$key));
 	}
 	
 	// --------------------------------------------------------------------
@@ -5900,7 +5907,7 @@ class Data_record {
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */

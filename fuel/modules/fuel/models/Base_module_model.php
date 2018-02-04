@@ -8,7 +8,7 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2017, Daylight Studio LLC.
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
  * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
@@ -294,10 +294,21 @@ class Base_module_model extends MY_Model {
 	{
 		if (!empty($this->list_items))
 		{
+			$filter_params = array('limit', 'offset', 'col', 'order');
+			foreach ($filter_params as $param)
+			{
+				$this->list_items->$param = $$param;
+			}
 			$this->list_items->run();
+
+			 // in case it changed with run method
+			$col = $this->list_items->col;
+			$order = $this->list_items->order;
 		}
 
 		$this->_list_items_query();
+
+		$this->_limit_to_user();
 
 		if ($just_count)
 		{
@@ -325,8 +336,6 @@ class Base_module_model extends MY_Model {
 		if (!empty($col)) $this->db->order_by($col, $order, FALSE);
 		if (!empty($limit)) $this->db->limit($limit);
 		$this->db->offset($offset);
-		
-		$this->_limit_to_user();
 
 		$query = $this->db->get();
 		$data = $query->result_array();
@@ -1022,8 +1031,18 @@ class Base_module_model extends MY_Model {
 			}
 		}
 		
+		$data = array();
 		$items = $this->list_items(NULL, NULL, $params['col'], $params['order']);
-		$data = $this->csv($items);
+
+		// clean up any HTML
+		foreach($items as $key => $val)
+		{
+			foreach($val as $k => $v)
+			{
+				$data[$key][$k] = strip_tags($v);
+			}
+		}
+		$data = $this->csv($data);
 		return $data;
 	}
 
@@ -1153,6 +1172,8 @@ class Base_module_model extends MY_Model {
 		
 		$data_table =& $this->CI->data_table;
 		$data_table->clear();
+
+		$wherein = FALSE;
 		if (!empty($params['where']))
 		{
 			if (is_array($params['where']))

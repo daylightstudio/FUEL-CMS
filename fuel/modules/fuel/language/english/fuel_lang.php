@@ -244,7 +244,7 @@ $lang['migrate_nothing_todo'] = "No migrations were necessary.\n";
 */
 $lang['adv_search'] = 'Advanced Search';
 $lang['reset_search'] = 'Reset Search';
-
+$lang['num_items'] = 'item';
 
 /*
 |--------------------------------------------------------------------------

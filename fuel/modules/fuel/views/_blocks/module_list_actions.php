@@ -47,9 +47,17 @@
 		<?php if (!empty($this->list_actions)) : ?>
 			<?php 
 			foreach($this->list_actions as $action => $label) : 
-			$lang_key = str_replace('/', '_', $action);
+				$ico_key = trim(preg_replace('#(.+)\{.+\}(.*)#', '$1', $action), '/');
+				$action_parts = explode('/', $ico_key);
+				$action_permissions = end($action_parts);
+				$action_permissions_arr = explode('?', $action_permissions);
+				$action_perm = current($action_permissions_arr);
+				$lang_key = str_replace('/', '_', $action);
+
+				// $action_arr = explode('?', $action);
+				// $action = current($action_arr);
 			?>
-			<?php if ($this->fuel->auth->has_permission($this->permission, $action)) : ?>
+			<?php if ($this->fuel->auth->has_permission($this->permission, $action_perm)) : ?>
 			<li><?=anchor(fuel_url($action), $label, array('class' => 'ico ico_'.$lang_key))?></li>
 			<?php endif; ?>
 			<?php endforeach; ?>

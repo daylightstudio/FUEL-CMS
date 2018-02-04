@@ -88,7 +88,7 @@ fuel.modalWindow = function(html, cssClass, autoResize, onLoadCallback, onCloseC
 	
 	$modal.jqm(jqmOpts).jqmShow();
 	$modal.find('.modal_content').empty().append(html);
-	$modal.find('iframe').load(function(){
+	$modal.find('iframe').on('load', function(){
 		$('.jqmWindow .loader', $context).hide();
 		var iframe = this;
 		var contentDoc = iframe.contentDocument;
