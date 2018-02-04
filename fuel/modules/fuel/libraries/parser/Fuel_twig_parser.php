@@ -26,7 +26,7 @@
  */
 
 // https://github.com/geevcookie/CI-Twig-Parser/blob/master/libraries/MY_Parser.php
-require_once(FUEL_PATH . 'libraries/parser/Twig/Autoloader.php');
+require_once(FUEL_PATH . 'libraries/parser/twig/Autoloader.php');
 require_once(FUEL_PATH . 'libraries/parser/Fuel_abstract_parser.php');
 
 class Fuel_twig_parser extends Fuel_abstract_parser {
