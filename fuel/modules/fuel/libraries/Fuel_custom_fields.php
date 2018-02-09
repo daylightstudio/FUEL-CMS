@@ -1601,6 +1601,7 @@ class Fuel_custom_fields {
 		{
 			$value = (!empty($params['value'])) ? (array)$params['value'] : array();
 
+
 			$params['name'] = $params['name'].'[]';
 			$i = 1;
 			
@@ -1623,14 +1624,15 @@ class Fuel_custom_fields {
 							'style' => '' // to overwrite any input width styles
 	
 						);
-	
-					if (in_array($key, $value))
+
+					$v = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
+					
+					if (in_array($v, $value))
 					{
 						$attrs['checked'] = 'checked';
 
 					}
 
-					$v = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
 					$str .= $form_builder->form->checkbox($params['name'], $v, $attrs);
 
 					$label = ($lang = $form_builder->label_lang($attrs['id'])) ? $lang : $val;
