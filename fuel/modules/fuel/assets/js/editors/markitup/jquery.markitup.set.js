@@ -454,10 +454,9 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 }
 
 myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
-
 	var self = this;
 	var url = jqx.config.fuelPath + '/pages/select/?nocache=' + new Date().getTime();
-	if (selected) url += '&selected=' + escape(selected);
+	if (selected) url += '&selected=' + encodeURIComponent(selected);
 	url += '&input=' + ((attrs.input) ? encodeURIComponent(attrs.input) : '');
 	url += '&target=' + ((attrs.target) ? attrs.target : '');
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
@@ -511,7 +510,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				if ($class.length && $class.val().length){
 					replace += ' class="' + $class.val() + '"';
 				}
-				replace += '>' + unescape($selected.val()) + '</a>';
+				replace += '>' + decodeURIComponent($selected.val()) + '</a>';
 
 				callback(replace);
 			}
