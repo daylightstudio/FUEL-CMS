@@ -4783,6 +4783,10 @@ class Data_record {
 					{
 						$this->$key = (float) $val;
 					}
+					else if ($field_info['type'] == 'double')
+					{
+						$this->$key = (double) $val;
+					}
 					else
 					{
 						$this->$key = (int) $val;
