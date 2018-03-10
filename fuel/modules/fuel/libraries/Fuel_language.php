@@ -304,6 +304,10 @@ class Fuel_language extends Fuel_base_library {
 		elseif ($this->is_mode('query_string') OR ($this->is_mode('both')))
 		{
 			$language = $this->query_str_value();
+			if (!$language)
+			{
+				$language = $this->default_option();
+			}
 		}
 
 		// get the preferred mode for obtaining the language if no language value is set yet from query string (if allowed)
