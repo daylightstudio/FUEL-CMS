@@ -115,6 +115,7 @@ $config['attach'] = array();
 */
 
 // Languages for pages. The key is saved to the page variables
+// The first key is the default
 $config['languages'] = array(
 	'english' => 'English'
 );
