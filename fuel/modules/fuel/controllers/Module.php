@@ -921,7 +921,7 @@ class Module extends Fuel_base_controller {
 			$posted = $this->_process();
 
 			// set publish status to no if you do not have the ability to publish
-			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
+			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish') AND ! $this->fuel->auth->has_permission($this->permission, 'activate'))
 			{
 				$posted['published'] = 'no';
 				$posted['active'] = 'no';
