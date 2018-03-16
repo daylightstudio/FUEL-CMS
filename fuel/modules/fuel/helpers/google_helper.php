@@ -236,7 +236,7 @@ if (!function_exists('google_map_url'))
 		// if a query string is passed, then we parse it into an array form
 		if (is_string($params))
 		{
-			$params = parse_str($params);
+			parse_str($params, $params);
 		}
 
 		// initialize the parameter array
