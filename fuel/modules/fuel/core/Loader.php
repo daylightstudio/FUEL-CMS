@@ -16,7 +16,7 @@
 /**
  * Some additions to the Awesome Modular Extension Library mostly for Matchbox compatibility
  *
- * This Library overides the original MX Loader library
+ * This Library overrides the original MX Loader library
  *
  * @package		FUEL CMS
  * @subpackage	Third Party
@@ -121,7 +121,7 @@ class Fuel_Loader extends CI_Loader
 	public function config($file, $use_sections = FALSE, $fail_gracefully = FALSE, $module = NULL) 
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
-		return CI::$APP->config->load($file, $use_sections, $fail_gracefully, $this->_module);
+		return CI::$APP->config->load($file, $use_sections, $fail_gracefully, $module);
 	}
 
 	
@@ -133,7 +133,7 @@ class Fuel_Loader extends CI_Loader
 		
 		if (isset($this->_ci_helpers[$helper]))	return;
 
-		list($path, $_helper) = Modules::find($helper.'_helper', $this->_module, 'helpers/');
+		list($path, $_helper) = Modules::find($helper.'_helper', $module, 'helpers/');
 
 		if ($path === FALSE) return parent::helper($helper);
 
@@ -177,12 +177,12 @@ class Fuel_Loader extends CI_Loader
 			
 		($_alias = strtolower($object_name)) OR $_alias = $class;
 		
-		list($path, $_library) = Modules::find($library, $this->_module, 'libraries/');
+		list($path, $_library) = Modules::find($library, $module, 'libraries/');
 		
 		/* load library config file as params */
 		if ($params == NULL) 
 		{
-			list($path2, $file) = Modules::find($_alias, $this->_module, 'config/');	
+			list($path2, $file) = Modules::find($_alias, $module, 'config/');
 			($path2) && $params = Modules::load_file($file, $path2, 'config');
 			
 			// FUEL check application directory
@@ -229,7 +229,7 @@ class Fuel_Loader extends CI_Loader
 			return $this;
 			
 		/* check module */
-		list($path, $_model) = Modules::find(strtolower($model), $this->_module, 'models/');
+		list($path, $_model) = Modules::find(strtolower($model), $module, 'models/');
 		
 		if ($path == FALSE)
 		{
@@ -420,42 +420,42 @@ class Fuel_Loader extends CI_Loader
 	METHODS FOR MATCHBOX COMPATIBILITY
 	****************************************************************************/
 	
-	/** Load config Matchbox style for backwards compatability **/
+	/** Load config Matchbox style for backwards compatibility **/
 	public function module_config($module, $file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
 		return $this->config($file, $use_sections, $fail_gracefully, $module);
 	}
 
-	/** Load helper Matchbox style for backwards compatability **/
+	/** Load helper Matchbox style for backwards compatibility **/
 	public function module_helper($module, $helper)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
 		return $this->helper($helper, $module);
 	}
 
-	/** Load Language Matchbox style for backwards compatability **/
+	/** Load Language Matchbox style for backwards compatibility **/
 	public function module_language($module, $langfile, $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '')
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
 		return $this->language($langfile, $idiom, $return, $add_suffix, $alt_path, $module);
 	}
 
-	/** Load Library Matchbox style for backwards compatability **/
+	/** Load Library Matchbox style for backwards compatibility **/
 	public function module_library($module, $library, $params = NULL, $object_name = NULL)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
-		return $this->library($library, $params, $object_name);
+		return $this->library($library, $params, $object_name, $module);
 	}
 	
-	/** Load Model Matchbox style for backwards compatability **/
+	/** Load Model Matchbox style for backwards compatibility **/
 	public function module_model($module, $model, $object_name = NULL, $connect = FALSE)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
-		return $this->model($model, $object_name, $connect);
+		return $this->model($model, $object_name, $connect, $module);
 	}
 
-	/** Load view Matchbox style for backwards compatability **/
+	/** Load view Matchbox style for backwards compatibility **/
 	public function module_view($module, $view, $vars = array(), $return = FALSE, $scope = NULL)
 	{
 		if (!isset($module)) $module = $this->_module; // FUEL
