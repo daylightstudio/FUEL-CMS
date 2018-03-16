@@ -254,9 +254,8 @@ if (!function_exists('google_map_url'))
 				}
 				if (!empty($address['state']))
 				{
-					$addr .= ','.$address['state'];	
+					$p['q'] .= ','.$address['state'];
 				}
-				$p['q'] = $addr;
 			}
 			else
 			{
