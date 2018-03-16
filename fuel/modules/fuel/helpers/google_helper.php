@@ -254,9 +254,8 @@ if (!function_exists('google_map_url'))
 				}
 				if (!empty($address['state']))
 				{
-					$addr .= ','.$address['state'];	
+					$p['q'] .= ','.$address['state'];
 				}
-				$p['q'] = $addr;
 			}
 			else
 			{
@@ -328,7 +327,6 @@ if (!function_exists('google_map_url'))
 		// set output
 		$p['output'] = 'embed';
 		$url = 'http://maps.google.com/maps?'.http_build_query($p, '', '&amp;');
-		$query_str = http_build_query($p, '', '&amp;');
 		return $url;
 	}
 }
