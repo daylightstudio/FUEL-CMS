@@ -43,7 +43,6 @@ $config['modules']['pages'] = array(
 	'advanced_search' => TRUE,
 	'filters' => array(
 		'layout' => array(
-			'default' => 1,
 			'label' => lang('form_label_layout'),
 			'type' => 'select',
 			'model' => 'fuel_pages_model',
@@ -53,7 +52,6 @@ $config['modules']['pages'] = array(
 			'first_option' => 'Select a layout...',
 		),
 		'published' => array(
-			'default' => 1,
 			'label' => lang('form_label_published'),
 			'type' => 'select',
 			'options' => array('yes' => 'Published', 'no' =>'Unpublished'),
@@ -217,7 +215,6 @@ $config['modules']['assets'] = array(
 	'instructions' => lang('assets_instructions'),
 	'filters' => array(
 		'group_id' => array(
-			'default' => 0,
 			'label' => lang('form_label_asset_folder'),
 			'type' => 'select',
 			'options' => array(
