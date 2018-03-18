@@ -31,15 +31,15 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Check for variable solvency
- *
- * @access	public
- * @param	mixed	variable of any kind
- * @return	boolean
- */
 if (!function_exists('required'))
 {
+	/**
+	 * Check for variable solvency
+	 *
+	 * @access	public
+	 * @param	mixed	variable of any kind
+	 * @return	boolean
+	 */
 	function required($var)
 	{
 		if (is_string($var))
@@ -65,16 +65,16 @@ if (!function_exists('required'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check for matches within a string
- *
- * @access	public
- * @param	string	string containing content to be matched against
- * @param	string	regular expression (delimiters excluded)
- * @return	boolean
- */
 if (!function_exists('regex'))
 {
+	/**
+	 * Check for matches within a string
+	 *
+	 * @access	public
+	 * @param	string	string containing content to be matched against
+	 * @param	string	regular expression (delimiters excluded)
+	 * @return	boolean
+	 */
 	function regex($var = null, $regex)
 	{
 		return preg_match('#'.$regex.'#', $var);
@@ -83,15 +83,15 @@ if (!function_exists('regex'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure at least one array variable contains content
- *
- * @access	public
- * @param	array	array containing values of indiscriminate size
- * @return	boolean
- */
 if (!function_exists('has_one_of_these'))
 {
+	/**
+	 * Ensure at least one array variable contains content
+	 *
+	 * @access	public
+	 * @param	array	array containing values of indiscriminate size
+	 * @return	boolean
+	 */
 	function has_one_of_these($args = null)
 	{
 		if(!is_array($args))
@@ -111,16 +111,16 @@ if (!function_exists('has_one_of_these'))
 
 // --------------------------------------------------------------------
 
-/**
- * Validate email address against standard email address form
- *
- * @access	public
- * @param	string	string containing email address
- * @return	boolean
- */
 // to prevent issue with email helpers function
 if ( ! function_exists('valid_email'))
 {
+	/**
+	 * Validate email address against standard email address form
+	 *
+	 * @access	public
+	 * @param	string	string containing email address
+	 * @return	boolean
+	 */
 	function valid_email($email)
 	{
 		if (function_exists('filter_var'))
@@ -135,16 +135,16 @@ if ( ! function_exists('valid_email'))
 } 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a numeric value is greater than given size
- *
- * @access	public
- * @param	int		integer of any length
- * @param 	int		integer of any length to test against 
- * @return	boolean
- */
 if (!function_exists('min_num'))
 {
+	/**
+	 * Ensure a numeric value is greater than given size
+	 *
+	 * @access	public
+	 * @param	int		integer of any length
+	 * @param 	int		integer of any length to test against
+	 * @return	boolean
+	 */
 	function min_num($var, $limit = 1)
 	{
 		if($var < $limit)
@@ -157,16 +157,16 @@ if (!function_exists('min_num'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a numeric value is less than given size
- *
- * @access	public
- * @param	int		integer of any length
- * @param 	int		integer of any length to test against 
- * @return	boolean
- */
 if (!function_exists('max_num'))
 {
+	/**
+	 * Ensure a numeric value is less than given size
+	 *
+	 * @access	public
+	 * @param	int		integer of any length
+	 * @param 	int		integer of any length to test against
+	 * @return	boolean
+	 */
 	function max_num($var, $limit = 1)
 	{
 		if($var > $limit)
@@ -179,17 +179,17 @@ if (!function_exists('max_num'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a numeric value exists between a given size
- *
- * @access	public
- * @param	int		integer of any length
- * @param 	int		integer of any length to test low
- * @param 	int		integer of any length to test high 
- * @return	boolean
- */
 if (!function_exists('is_between'))
 {
+	/**
+	 * Ensure a numeric value exists between a given size
+	 *
+	 * @access	public
+	 * @param	int		integer of any length
+	 * @param 	int		integer of any length to test low
+	 * @param 	int		integer of any length to test high
+	 * @return	boolean
+	 */
 	function is_between($var, $lo, $hi)
 	{
 		if($var <= $hi AND $var >= $lo)
@@ -202,17 +202,17 @@ if (!function_exists('is_between'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a numeric value exists outside a given range
- *
- * @access	public
- * @param	int		integer of any length
- * @param 	int		integer of any length to test low
- * @param 	int		integer of any length to test high 
- * @return	boolean
- */
 if (!function_exists('is_outside'))
 {
+	/**
+	 * Ensure a numeric value exists outside a given range
+	 *
+	 * @access	public
+	 * @param	int		integer of any length
+	 * @param 	int		integer of any length to test low
+	 * @param 	int		integer of any length to test high
+	 * @return	boolean
+	 */
 	function is_outside($var, $lo, $hi)
 	{
 		if($var >= $hi AND $var <= $lo)
@@ -225,16 +225,16 @@ if (!function_exists('is_outside'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a string's size exists within a certain limited range
- *
- * @access	public
- * @param	string	string of any length
- * @param 	int		integer to test string length against
- * @return	boolean
- */
 if (!function_exists('length_max'))
 {
+	/**
+	 * Ensure a string's size exists within a certain limited range
+	 *
+	 * @access	public
+	 * @param	string	string of any length
+	 * @param 	int		integer to test string length against
+	 * @return	boolean
+	 */
 	function length_max($str, $limit = 1000)
 	{
 		if (strlen(strval($str)) > $limit)
@@ -250,16 +250,16 @@ if (!function_exists('length_max'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure a string exists within a given limit
- *
- * @access	public
- * @param	string	string of any length
- * @param 	int		integer to test string length against
- * @return	boolean
- */
 if (!function_exists('length_min'))
 {
+	/**
+	 * Ensure a string exists within a given limit
+	 *
+	 * @access	public
+	 * @param	string	string of any length
+	 * @param 	int		integer to test string length against
+	 * @return	boolean
+	 */
 	function length_min($str, $limit = 1)
 	{
 		if (strlen(strval($str)) < $limit)
@@ -274,15 +274,15 @@ if (!function_exists('length_min'))
 }
 // --------------------------------------------------------------------
 
-/**
- * Ensure a valid phone number
- *
- * @access	public
- * @param	string	string of any length
- * @return	boolean
- */
 if (!function_exists('valid_phone'))
 {
+	/**
+	 * Ensure a valid phone number
+	 *
+	 * @access	public
+	 * @param	string	string of any length
+	 * @return	boolean
+	 */
 	function valid_phone($str)
 	{
 		$num = $str;
@@ -304,16 +304,16 @@ if (!function_exists('valid_phone'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure to variables are equal
- *
- * @access	public
- * @param	mixed	mixed variable to test equality
- * @param	mixed	mixed variable to test equality
- * @return	boolean
- */
 if (!function_exists('is_equal_to'))
 {
+	/**
+	 * Ensure to variables are equal
+	 *
+	 * @access	public
+	 * @param	mixed	mixed variable to test equality
+	 * @param	mixed	mixed variable to test equality
+	 * @return	boolean
+	 */
 	function is_equal_to($val, $val2)
 	{
 		if($val == $val2) 
@@ -327,16 +327,16 @@ if (!function_exists('is_equal_to'))
 
 // --------------------------------------------------------------------
 
-/**
- * Ensure to variables are not equal
- *
- * @access	public
- * @param	mixed	mixed variable to test equality
- * @param	mixed	mixed variable to test equality
- * @return	boolean
- */
 if (!function_exists('is_not_equal_to'))
 {
+	/**
+	 * Ensure to variables are not equal
+	 *
+	 * @access	public
+	 * @param	mixed	mixed variable to test equality
+	 * @param	mixed	mixed variable to test equality
+	 * @return	boolean
+	 */
 	function is_not_equal_to($val, $val2)
 	{
 		if($val != $val2) 
@@ -350,16 +350,16 @@ if (!function_exists('is_not_equal_to'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test array to see if value exists
- *
- * @access	public
- * @param	mixed	mixed variable
- * @param	array	array to test if value exists
- * @return	boolean
- */
 if (!function_exists('is_one_of_these'))
 {
+	/**
+	 * Test array to see if value exists
+	 *
+	 * @access	public
+	 * @param	mixed	mixed variable
+	 * @param	array	array to test if value exists
+	 * @return	boolean
+	 */
 	function is_one_of_these($val, $search_in = array())
 	{
 		if (in_array($val, $search_in))
@@ -372,16 +372,16 @@ if (!function_exists('is_one_of_these'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test array to see if value does not exist
- *
- * @access	public
- * @param	mixed	mixed variable
- * @param	array	array to test if value exists
- * @return	boolean
- */
 if (!function_exists('is_not_one_of_these'))
 {
+	/**
+	 * Test array to see if value does not exist
+	 *
+	 * @access	public
+	 * @param	mixed	mixed variable
+	 * @param	array	array to test if value exists
+	 * @return	boolean
+	 */
 	function is_not_one_of_these($val, $searchIn = array())
 	{
 		if(!in_array($val, $searchIn))
@@ -395,16 +395,16 @@ if (!function_exists('is_not_one_of_these'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test array to see if a file is of a given type
- *
- * @access	public
- * @param	string	filename
- * @param	string	mime value of file to test
- * @return	boolean
- */
 if (!function_exists('is_of_file_type'))
 {
+	/**
+	 * Test array to see if a file is of a given type
+	 *
+	 * @access	public
+	 * @param	string	filename
+	 * @param	string	mime value of file to test
+	 * @return	boolean
+	 */
 	function is_of_file_type($fileName, $fileType)
 	{
 		if($fileType == 'zip') 
@@ -425,15 +425,15 @@ if (!function_exists('is_of_file_type'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test array to see if a file is of a given type
- *
- * @access	public
- * @param	string	filename
- * @return	boolean
- */
 if (!function_exists('valid_file_upload'))
 {
+	/**
+	 * Test array to see if a file is of a given type
+	 *
+	 * @access	public
+	 * @param	string	filename
+	 * @return	boolean
+	 */
 	function valid_file_upload($file_name)
 	{
 		if(empty($_FILES[$file_name]) OR $_FILES[$file_name]['error'] > 0)
@@ -448,16 +448,16 @@ if (!function_exists('valid_file_upload'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test string for valid characters
- *
- * @access	public
- * @param	mixed	string value
- * @param	array	list of allowed characters 
- * @return	boolean
- */
 if (!function_exists('is_safe_character'))
 {
+	/**
+	 * Test string for valid characters
+	 *
+	 * @access	public
+	 * @param	mixed	string value
+	 * @param	array	list of allowed characters
+	 * @return	boolean
+	 */
 	function is_safe_character($val, $allowed = array('_', '-'))
 	{
 		$newVal = str_replace($allowed, '', $val);
@@ -472,17 +472,17 @@ if (!function_exists('is_safe_character'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test date and time for proper format
- *
- * @access	public
- * @param	string	date as string value
- * @param	string	format of date to test against
- * @param	string	delimiter of date value given for testing 
- * @return	boolean
- */
 if (!function_exists('valid_date_time'))
 {
+	/**
+	 * Test date and time for proper format
+	 *
+	 * @access	public
+	 * @param	string	date as string value
+	 * @param	string	format of date to test against
+	 * @param	string	delimiter of date value given for testing
+	 * @return	boolean
+	 */
 	function valid_date_time($date, $format = "ymd", $delimiter = "-") 
 	{
 		return (valid_date($date, $format, $delimiter) && valid_time($date));
@@ -491,17 +491,17 @@ if (!function_exists('valid_date_time'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test date for proper format
- *
- * @access	public
- * @param	string	date as string value
- * @param	string	format of date to test against
- * @param	string	delimiter of date value given for testing 
- * @return	boolean
- */
 if (!function_exists('valid_date'))
 {
+	/**
+	 * Test date for proper format
+	 *
+	 * @access	public
+	 * @param	string	date as string value
+	 * @param	string	format of date to test against
+	 * @param	string	delimiter of date value given for testing
+	 * @return	boolean
+	 */
 	function valid_date($date, $format = "ymd", $delimiter = "-") 
 	{
 		list($d1, $d2, $d3) = sscanf($date, "%d".$delimiter."%d".$delimiter."%d");
@@ -515,15 +515,15 @@ if (!function_exists('valid_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test time for proper format
- *
- * @access	public
- * @param	string	date as string value
- * @return	boolean
- */
 if (!function_exists('valid_time'))
 {
+	/**
+	 * Test time for proper format
+	 *
+	 * @access	public
+	 * @param	string	date as string value
+	 * @return	boolean
+	 */
 	function valid_time($date) 
 	{
 		$date = trim($date);
@@ -578,17 +578,17 @@ if (!function_exists('valid_time'))
 
 // --------------------------------------------------------------------
 
-/**
- * Validate date passed
- *
- * @access	public
- * @param	string	month value or current date value
- * @param	string	day value
- * @param	string	year value  
- * @return	boolean
- */
 if (!function_exists('valid_mdy'))
 {
+	/**
+	 * Validate date passed
+	 *
+	 * @access	public
+	 * @param	string	month value or current date value
+	 * @param	string	day value
+	 * @param	string	year value
+	 * @return	boolean
+	 */
 	function valid_mdy($m, $d = null, $y = null)
 	{
 		if(empty($d) && empty($y))
@@ -610,16 +610,16 @@ if (!function_exists('valid_mdy'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check to dates to ensure one is after the other
- *
- * @access	public
- * @param	string	date value as string
- * @param	string	date value as string(should be later date)
- * @return	boolean
- */
 if (!function_exists('is_after_date'))
 {
+	/**
+	 * Check to dates to ensure one is after the other
+	 *
+	 * @access	public
+	 * @param	string	date value as string
+	 * @param	string	date value as string(should be later date)
+	 * @return	boolean
+	 */
 	function is_after_date($date1, $date2)
 	{
 		$date1 = strtotime($date1);
@@ -634,16 +634,16 @@ if (!function_exists('is_after_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check to dates to ensure one is before the other
- *
- * @access	public
- * @param	string	date value as string(should be later date)
- * @param	string	date value as string
- * @return	boolean
- */
 if (!function_exists('is_before_date'))
 {
+	/**
+	 * Check to dates to ensure one is before the other
+	 *
+	 * @access	public
+	 * @param	string	date value as string(should be later date)
+	 * @param	string	date value as string
+	 * @return	boolean
+	 */
 	function is_before_date($date1, $date2)
 	{
 		$date1 = strtotime($date1);
@@ -658,17 +658,17 @@ if (!function_exists('is_before_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check to validate date exists between two others
- *
- * @access	public
- * @param	string	date value as string
- * @param	string	date value as string(low date)
- * @param	string	date value as string(high date)
- * @return	boolean
- */
 if (!function_exists('is_between_dates'))
 {
+	/**
+	 * Check to validate date exists between two others
+	 *
+	 * @access	public
+	 * @param	string	date value as string
+	 * @param	string	date value as string(low date)
+	 * @param	string	date value as string(high date)
+	 * @return	boolean
+	 */
 	function is_between_dates($val, $date1, $date2)
 	{
 		$val = strtotime($val);
@@ -684,15 +684,15 @@ if (!function_exists('is_between_dates'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check to see if date is a future date
- *
- * @access	public
- * @param	string	date value as string
- * @return	boolean
- */
 if (!function_exists('is_future_date'))
 {
+	/**
+	 * Check to see if date is a future date
+	 *
+	 * @access	public
+	 * @param	string	date value as string
+	 * @return	boolean
+	 */
 	function is_future_date($val)
 	{
 		return is_after_date($val, date("Y-m-d 00:00:00"));
@@ -701,15 +701,15 @@ if (!function_exists('is_future_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check to see if date is past date
- *
- * @access	public
- * @param	string	date value as string
- * @return	boolean
- */
 if (!function_exists('is_past_date'))
 {
+	/**
+	 * Check to see if date is past date
+	 *
+	 * @access	public
+	 * @param	string	date value as string
+	 * @return	boolean
+	 */
 	function is_past_date($val)
 	{
 		return is_before_date($val, date("Y-m-d 23:59:59"));
@@ -718,15 +718,15 @@ if (!function_exists('is_past_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Display user-defined errors via javascript
- *
- * @access	public
- * @param	mixed	collection of errors created by user
- * @return	string
- */
 if (!function_exists('display_errors_js'))
 {
+	/**
+	 * Display user-defined errors via javascript
+	 *
+	 * @access	public
+	 * @param	mixed	collection of errors created by user
+	 * @return	string
+	 */
 	function display_errors_js($ERRORS = NULL) 
 	{
 		if (empty($GLOBALS['__ERRORS_JS__']))
@@ -791,16 +791,16 @@ if (!function_exists('display_errors_js'))
 
 // --------------------------------------------------------------------
 
-/**
- * Display user-defined errors via javascript and html
- *
- * @access	public
- * @param	string  css class to define error styling
- * @param	mixed	collection of errors created by user
- * @return	string
- */
 if (!function_exists('display_errors'))
 {
+	/**
+	 * Display user-defined errors via javascript and html
+	 *
+	 * @access	public
+	 * @param	string  css class to define error styling
+	 * @param	mixed	collection of errors created by user
+	 * @return	string
+	 */
 	function display_errors($ERRORS = NULL, $class = 'error')
 	{
 		$CI =& get_instance();
@@ -853,14 +853,14 @@ if (!function_exists('display_errors'))
 
 // --------------------------------------------------------------------
 
-/**
- * Check if any user defined errors have been defined
- *
- * @access	public
- * @return	boolean
- */
 if (!function_exists('has_errors'))
 {
+	/**
+	 * Check if any user defined errors have been defined
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function has_errors()
 	{
 		return (defined('GLOBAL_ERRORS') && !empty($GLOBALS[GLOBAL_ERRORS]));
@@ -869,16 +869,16 @@ if (!function_exists('has_errors'))
 
 // --------------------------------------------------------------------
 
-/**
- * Add a user-defined error message
- *
- * @access	public
- * @param	string error message
- * @param	string key value for error message array
- * @return	boolean
- */
 if (!function_exists('add_error'))
 {
+	/**
+	 * Add a user-defined error message
+	 *
+	 * @access	public
+	 * @param	string error message
+	 * @param	string key value for error message array
+	 * @return	boolean
+	 */
 	function add_error($msg, $key = NULL)
 	{
 		if(defined('GLOBAL_ERRORS')) 
@@ -894,16 +894,16 @@ if (!function_exists('add_error'))
 
 // --------------------------------------------------------------------
 
-/**
- * Add a user-defined error message
- *
- * @access	public
- * @param	string error message
- * @param	string key value for error message array
- * @return	boolean
- */
 if (!function_exists('add_errors'))
 {
+	/**
+	 * Add a user-defined error message
+	 *
+	 * @access	public
+	 * @param	string error message
+	 * @param	string key value for error message array
+	 * @return	boolean
+	 */
 	function add_errors($errors)
 	{
 		$errors = (array) $errors;
@@ -915,15 +915,15 @@ if (!function_exists('add_errors'))
 }
 // --------------------------------------------------------------------
 
-/**
- * Get a user-defined error message
- *
- * @access	public
- * @param	string key value for error message array
- * @return	string
- */
 if (!function_exists('get_error'))
 {
+	/**
+	 * Get a user-defined error message
+	 *
+	 * @access	public
+	 * @param	string key value for error message array
+	 * @return	string
+	 */
 	function get_error($key = null)
 	{
 		if (defined('GLOBAL_ERRORS')) {
@@ -941,14 +941,14 @@ if (!function_exists('get_error'))
 
 // --------------------------------------------------------------------
 
-/**
- * Get all global error messages
- *
- * @access	public
- * @return	array
- */
 if (!function_exists('get_errors'))
 {
+	/**
+	 * Get all global error messages
+	 *
+	 * @access	public
+	 * @return	array
+	 */
 	function get_errors()
 	{
 		if (defined('GLOBAL_ERRORS') AND !empty($GLOBALS[GLOBAL_ERRORS]))

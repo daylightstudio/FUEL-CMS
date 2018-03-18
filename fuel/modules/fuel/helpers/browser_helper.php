@@ -29,16 +29,16 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Returns an array of browser information
- * Originally from: http://us3.php.net/function.get-browser
- * 
- * @access	public
- * @param	string	browser agant (optional)
- * @return	array
- */	
 if (!function_exists('browser_info'))
 {
+	/**
+	 * Returns an array of browser information
+	 * Originally from: http://us3.php.net/function.get-browser
+	 *
+	 * @access	public
+	 * @param	string	browser agant (optional)
+	 * @return	array
+	 */
 	function browser_info($agent = NULL)
 	{
 	 	// Declare known browsers to look for

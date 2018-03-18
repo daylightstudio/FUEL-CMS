@@ -30,17 +30,17 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Used for older versions of PHP that don't support json_encode.
- * another option http://derekallard.com/blog/post/using-json-on-servers-without-native-support/
- * Original function found here: http://php.net/manual/en/function.json-encode.php
- *
- * @access	public
- * @param	mixed	php value to encode into JSON format
- * @return	string
- */
 if (!function_exists('json_encode'))
 {
+	/**
+	 * Used for older versions of PHP that don't support json_encode.
+	 * another option http://derekallard.com/blog/post/using-json-on-servers-without-native-support/
+	 * Original function found here: http://php.net/manual/en/function.json-encode.php
+	 *
+	 * @access	public
+	 * @param	mixed	php value to encode into JSON format
+	 * @return	string
+	 */
 	function json_encode($a=FALSE)
 	{
 		if (is_null($a)) return 'null';
@@ -87,16 +87,17 @@ if (!function_exists('json_encode'))
 
 // --------------------------------------------------------------------
 
-/**
- * Used for older versions of PHP that don't support json_decode.
- * another option http://derekallard.com/blog/post/using-json-on-servers-without-native-support/
- * Original function found here: http://php.net/manual/en/function.json-decode.php
- *
- * @access	public
- * @param	string	json formatted string
- * @return	mixed
- */
-if ( !function_exists('json_decode')){ 
+if ( !function_exists('json_decode'))
+{
+	/**
+	 * Used for older versions of PHP that don't support json_decode.
+	 * another option http://derekallard.com/blog/post/using-json-on-servers-without-native-support/
+	 * Original function found here: http://php.net/manual/en/function.json-decode.php
+	 *
+	 * @access	public
+	 * @param	string	json formatted string
+	 * @return	mixed
+	 */
 	function json_decode($json) 
 	{  
 		// Author: walidator.info 2009 
@@ -140,19 +141,19 @@ if ( !function_exists('json_decode')){
 
 // ------------------------------------------------------------------------
 
-/**
- * Used for older versions of PHP that don't support str_getcsv.
- * Original function found here: http://php.net/manual/en/function.str-getcsv.php
- *
- * @access	public
- * @param	string
- * @param	string
- * @param	string
- * @param	string
- * @return	mixed
- */
 if (!function_exists('str_getcsv'))
-{ 
+{
+	/**
+	 * Used for older versions of PHP that don't support str_getcsv.
+	 * Original function found here: http://php.net/manual/en/function.str-getcsv.php
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @param	string
+	 * @param	string
+	 * @return	mixed
+	 */
 	function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\")
 	{ 
 		$fiveMBs = 5 * 1024 * 1024; 
@@ -169,19 +170,19 @@ if (!function_exists('str_getcsv'))
 
 // --------------------------------------------------------------------
 
-/**
- * Not really a compatibility function since it doesn't exist natively in PHP.
- * However it probably should so we provide it here.
- * A version of the original function found here: http://glossword.googlecode.com/svn-history/r600/trunk/core/gw_includes/functions.php
- *
- * @access	public
- * @param	string
- * @param	string
- * @param	string
- * @return	mixed
- */
 if(!function_exists('str_putcsv'))
 {
+	/**
+	 * Not really a compatibility function since it doesn't exist natively in PHP.
+	 * However it probably should so we provide it here.
+	 * A version of the original function found here: http://glossword.googlecode.com/svn-history/r600/trunk/core/gw_includes/functions.php
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @param	string
+	 * @return	mixed
+	 */
 	function str_putcsv($input, $delimiter = ',', $enclosure = '"')
 	{
 		// Open a memory "file" for read/write...

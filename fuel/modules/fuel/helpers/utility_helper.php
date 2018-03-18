@@ -48,15 +48,15 @@ if (!function_exists('CI'))
 
 // --------------------------------------------------------------------
 
-/**
- * Capture content via an output buffer
- *
- * @param	boolean	turn on output buffering
- * @param	string	if set to 'all', will clear end the buffer and clean it
- * @return 	string	return buffered content
- */
 if (!function_exists('capture'))
 {
+	/**
+	 * Capture content via an output buffer
+	 *
+	 * @param	boolean	turn on output buffering
+	 * @param	string	if set to 'all', will clear end the buffer and clean it
+	 * @return 	string	return buffered content
+	 */
 	function capture($on = TRUE, $clean = 'all')
 	{
 		$str = '';
@@ -85,14 +85,14 @@ if (!function_exists('capture'))
 
 // --------------------------------------------------------------------
 
-/**
- * Format true value
- *
- * @param	mixed	possible true value
- * @return 	string	formatted true value
- */
 if (!function_exists('is_true_val'))
 {
+	/**
+	 * Format true value
+	 *
+	 * @param	mixed	possible true value
+	 * @return 	string	formatted true value
+	 */
 	function is_true_val($val)
 	{
 		$val = strtolower($val);
@@ -102,14 +102,14 @@ if (!function_exists('is_true_val'))
 
 // --------------------------------------------------------------------
 
-/**
- * Boolean check to determine string content is serialized
- *
- * @param	mixed	possible serialized string
- * @return 	boolean
- */
 if (!function_exists('is_serialized_str'))
 {
+	/**
+	 * Boolean check to determine string content is serialized
+	 *
+	 * @param	mixed	possible serialized string
+	 * @return 	boolean
+	 */
 	function is_serialized_str($data)
 	{
 		if ( !is_string($data))
@@ -139,14 +139,14 @@ if (!function_exists('is_serialized_str'))
 
 // --------------------------------------------------------------------
 
-/**
- * Boolean check to determine string content is a JSON object string
- *
- * @param	mixed	possible serialized string
- * @return 	boolean
- */
 if (!function_exists('is_json_str'))
 {
+	/**
+	 * Boolean check to determine string content is a JSON object string
+	 *
+	 * @param	mixed	possible serialized string
+	 * @return 	boolean
+	 */
 	function is_json_str($data)
 	{
 		if (is_string($data))
@@ -160,15 +160,15 @@ if (!function_exists('is_json_str'))
 
 // --------------------------------------------------------------------
 
-/**
- * Print object in human-readible format
- * 
- * @param	mixed	The variable to dump
- * @param	boolean	Return string
- * @return 	string
- */
 if (!function_exists('print_obj'))
 {
+	/**
+	 * Print object in human-readible format
+	 *
+	 * @param	mixed	The variable to dump
+	 * @param	boolean	Return string
+	 * @return 	string
+	 */
 	function print_obj($obj, $return = FALSE)
 	{
 		$str = "<pre>";
@@ -207,14 +207,14 @@ if (!function_exists('print_obj'))
 
 // --------------------------------------------------------------------
 
-/**
- * Logs an error message to logs file
- *
- * @param	string	Error message
- * @return 	void
- */
 if (!function_exists('log_error'))
 {
+	/**
+	 * Logs an error message to logs file
+	 *
+	 * @param	string	Error message
+	 * @return 	void
+	 */
 	function log_error($error) 
 	{
 		log_message('error', $error);
@@ -223,13 +223,13 @@ if (!function_exists('log_error'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns whether the current environment is set for development
- *
- * @return 	boolean
- */
 if (!function_exists('is_dev_mode'))
 {
+	/**
+	 * Returns whether the current environment is set for development
+	 *
+	 * @return 	boolean
+	 */
 	function is_dev_mode()
 	{
 		return (ENVIRONMENT != 'production');
@@ -238,13 +238,13 @@ if (!function_exists('is_dev_mode'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns whether the current environment is equal to the passed environment
- *
- * @return 	boolean
- */
 if (!function_exists('is_environment'))
 {
+	/**
+	 * Returns whether the current environment is equal to the passed environment
+	 *
+	 * @return 	boolean
+	 */
 	function is_environment($environment)
 	{
 		return (strtolower(ENVIRONMENT) == strtolower($environment));

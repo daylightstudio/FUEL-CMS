@@ -30,16 +30,16 @@
 
 // ------------------------------------------------------------------------
 
-/**
- * Formats value into a currency string
- *
- * @access	public
- * @param	string
- * @param	bool	whether to include the cents or not
- * @return	string
- */
 if (!function_exists('currency'))
 {
+	/**
+	 * Formats value into a currency string
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	bool	whether to include the cents or not
+	 * @return	string
+	 */
 	function currency($value, $symbol = '$',  $include_cents = TRUE, $decimal_sep = '.', $thousands_sep = ',')
 	{
 		if (!isset($value) OR $value === "")

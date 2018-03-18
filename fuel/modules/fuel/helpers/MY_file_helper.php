@@ -32,17 +32,17 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Gets the directory file info.
- *
- * @access	public
- * @param 	string
- * @param 	boolean
- * @param 	boolean
- * @return	array
- */
 if (!function_exists('get_dir_file_info'))
 {
+	/**
+	 * Gets the directory file info.
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	boolean
+	 * @param 	boolean
+	 * @return	array
+	 */
 	function get_dir_file_info($source_dir, $top_level_only = TRUE, $include_path = FALSE, $_recursion = FALSE)
 	{
 		static $_filedata = array();
@@ -95,18 +95,18 @@ if (!function_exists('get_dir_file_info'))
 
 // --------------------------------------------------------------------
 
-/**
- * Deletes files in a directory with the added option to exclude certain files
- *
- * @access	public
- * @param 	string
- * @param 	boolean
- * @param 	mixed
- * @param 	int
- * @return	void
- */
 if (!function_exists('delete_files'))
 {
+	/**
+	 * Deletes files in a directory with the added option to exclude certain files
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	boolean
+	 * @param 	mixed
+	 * @param 	int
+	 * @return	void
+	 */
 	function delete_files($path, $del_dir = FALSE, $exclude = NULL, $level = 0)
 	{	
 		// Trim the trailing slash
@@ -145,17 +145,17 @@ if (!function_exists('delete_files'))
 
 // --------------------------------------------------------------------
 
-/**
- * Deletes files in a directory older then a certain date with the added option to exclude certain files
- *
- * @access	public
- * @param 	string
- * @param 	string
- * @param 	mixed
- * @return	void
- */
 if (!function_exists('delete_old_files'))
 {
+	/**
+	 * Deletes files in a directory older then a certain date with the added option to exclude certain files
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	string
+	 * @param 	mixed
+	 * @return	void
+	 */
 	function delete_old_files($dir, $older_than, $exclude = array())
 	{
 		$files = get_dir_file_info($dir);
@@ -178,15 +178,15 @@ if (!function_exists('delete_old_files'))
 
 // --------------------------------------------------------------------
 
-/**
- * Determines if the file is an image
- *
- * @access	public
- * @param 	string
- * @return	boolean
- */
 if (!function_exists('is_image_file'))
 {
+	/**
+	 * Determines if the file is an image
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @return	boolean
+	 */
 	function is_image_file($path)
 	{
 		if (preg_match("/.+\\.(jpg|jpeg|jpe|gif|png)$/i",$path))

@@ -32,15 +32,15 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Convert ascii characters to hex values
- *
- * @access	public
- * @param	string	string containing ascii characters
- * @return	string
- */	
 if (!function_exists('ascii_to_hex'))
 {
+	/**
+	 * Convert ascii characters to hex values
+	 *
+	 * @access	public
+	 * @param	string	string containing ascii characters
+	 * @return	string
+	 */
 	function ascii_to_hex($ascii)
 	{
 		$hex = '';
@@ -55,15 +55,15 @@ if (!function_exists('ascii_to_hex'))
 
 // --------------------------------------------------------------------
 
-/**
- * Convert ascii characters to hex values
- *
- * @access	public
- * @param	string	string containing ascii characters
- * @return	string
- */	   
 if (!function_exists('hex_to_ascii'))
 {
+	/**
+	 * Convert ascii characters to hex values
+	 *
+	 * @access	public
+	 * @param	string	string containing ascii characters
+	 * @return	string
+	 */
 	function hex_to_ascii($hex)
 	{
 		$ascii = '';
@@ -83,16 +83,16 @@ if (!function_exists('hex_to_ascii'))
 
 // --------------------------------------------------------------------
 
-/**
- * Convert a string into a safe, encoded uri value
- *
- * @access	public
- * @param	string	string to be converted
- * @param	boolean	convert to hex value 
- * @return	string
- */
 if (!function_exists('uri_safe_encode'))
 {
+	/**
+	 * Convert a string into a safe, encoded uri value
+	 *
+	 * @access	public
+	 * @param	string	string to be converted
+	 * @param	boolean	convert to hex value
+	 * @return	string
+	 */
 	function uri_safe_encode($str, $hexify = TRUE)
 	{
 		$str = ($hexify) ? ascii_to_hex(base64_encode($str)) : base64_encode($str);
@@ -102,16 +102,16 @@ if (!function_exists('uri_safe_encode'))
 
 // --------------------------------------------------------------------
 
-/**
- * Decode a base64 encoded string
- *
- * @access	public
- * @param	string	string to be converted
- * @param	boolean	value is hexified 
- * @return	string
- */
 if (!function_exists('uri_safe_decode'))
 {
+	/**
+	 * Decode a base64 encoded string
+	 *
+	 * @access	public
+	 * @param	string	string to be converted
+	 * @param	boolean	value is hexified
+	 * @return	string
+	 */
 	function uri_safe_decode($str, $hexify = TRUE)
 	{
 		$str = ($hexify) ? base64_decode(hex_to_ascii($str)) : base64_decode($str);
@@ -121,16 +121,16 @@ if (!function_exists('uri_safe_decode'))
 
 // --------------------------------------------------------------------
 
-/**
- * Encode a key/value array or string into a URI safe value
- *
- * @access	public
- * @param	string	string to be converted
- * @param	boolean	value is hexified 
- * @return	string
- */
 if (!function_exists('uri_safe_batch_encode'))
 {
+	/**
+	 * Encode a key/value array or string into a URI safe value
+	 *
+	 * @access	public
+	 * @param	string	string to be converted
+	 * @param	boolean	value is hexified
+	 * @return	string
+	 */
 	function uri_safe_batch_encode($uri, $delimiter = '|', $hexify = TRUE)
 	{
 		$str = '';
@@ -159,17 +159,17 @@ if (!function_exists('uri_safe_batch_encode'))
 
 // --------------------------------------------------------------------
 
-/**
- * Decode a key/value array or string into a URI safe value
- *
- * @access	public
- * @param	string	string to be converted
- * @param	string	delimiter to split string 
- * @param	boolean	value is hexified 
- * @return	string
- */
 if (!function_exists('uri_safe_batch_decode'))
 {
+	/**
+	 * Decode a key/value array or string into a URI safe value
+	 *
+	 * @access	public
+	 * @param	string	string to be converted
+	 * @param	string	delimiter to split string
+	 * @param	boolean	value is hexified
+	 * @return	string
+	 */
 	function uri_safe_batch_decode($str, $delimiter = '|', $hexify = TRUE)
 	{
 		$str = uri_safe_decode($str, $hexify);

@@ -32,16 +32,16 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Recursively copies from one directory to another
- *
- * @access	public
- * @param 	string
- * @param 	string
- * @return	array
- */
 if (!function_exists('copyr'))
 {
+	/**
+	 * Recursively copies from one directory to another
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	string
+	 * @return	array
+	 */
 	function copyr($source, $dest)
 	{
 		// Simple copy for a file
@@ -90,17 +90,17 @@ if (!function_exists('copyr'))
 
 // --------------------------------------------------------------------
 
-/**
- * Recursively changes the permissions of a folder structure
- *
- *  from php.net/chmod
- * @access	public
- * @param 	string
- * @param 	octal
- * @return	boolean
- */
 if (!function_exists('chmodr'))
 {
+	/**
+	 * Recursively changes the permissions of a folder structure
+	 *
+	 *  from php.net/chmod
+	 * @access	public
+	 * @param 	string
+	 * @param 	octal
+	 * @return	boolean
+	 */
 	function chmodr($path, $filemode) { 
 		if (!is_dir($path))
 		{
@@ -143,18 +143,18 @@ if (!function_exists('chmodr'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns an array of file names from a directory
- *
- * @access	public
- * @param 	string
- * @param 	boolean
- * @param 	mixed
- * @param 	boolean
- * @return	array
- */
 if (!function_exists('directory_to_array'))
 {
+	/**
+	 * Returns an array of file names from a directory
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	boolean
+	 * @param 	mixed
+	 * @param 	boolean
+	 * @return	array
+	 */
 	function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $append_path = TRUE, $no_ext = FALSE, $_first_time = TRUE)
 	{
 		static $orig_directory;
@@ -198,20 +198,20 @@ if (!function_exists('directory_to_array'))
 
 // --------------------------------------------------------------------
 
-/**
- * Lists the directories only from a give directory
- *
- * @access	public
- * @param 	string
- * @param 	mixed
- * @param 	boolean
- * @param 	boolean
- * @param 	boolean
- * @param 	boolean
- * @return	array
- */
 if (!function_exists('list_directories'))
 {
+	/**
+	 * Lists the directories only from a give directory
+	 *
+	 * @access	public
+	 * @param 	string
+	 * @param 	mixed
+	 * @param 	boolean
+	 * @param 	boolean
+	 * @param 	boolean
+	 * @param 	boolean
+	 * @return	array
+	 */
 	function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $recursive = TRUE, $_first_time = TRUE)
 	{
 		static $orig_directory;

@@ -29,16 +29,15 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a session variable
- *
- * @access	public
- * @param	string	variable name
- * @return	boolean
- */	
-
 if (!function_exists('session_userdata'))
 {
+	/**
+	 * Returns a session variable
+	 *
+	 * @access	public
+	 * @param	string	variable name
+	 * @return	boolean
+	 */
 	function session_userdata($key)
 	{
 		$CI =& get_instance();
@@ -52,15 +51,15 @@ if (!function_exists('session_userdata'))
 
 // --------------------------------------------------------------------
 
-/**
- * Sets a session variable
- *
- * @access	public
- * @param	string	variable name
- * @return	boolean
- */	
 if (!function_exists('session_set_userdata'))
 {
+	/**
+	 * Sets a session variable
+	 *
+	 * @access	public
+	 * @param	string	variable name
+	 * @return	boolean
+	 */
 	function session_set_userdata($key, $value)
 	{
 		$CI =& get_instance();
@@ -73,15 +72,15 @@ if (!function_exists('session_set_userdata'))
 }
 // --------------------------------------------------------------------
 
-/**
- * Returns a session flash variable
- *
- * @access	public
- * @param	string	variable name
- * @return	boolean
- */	
 if (!function_exists('session_flashdata'))
 {
+	/**
+	 * Returns a session flash variable
+	 *
+	 * @access	public
+	 * @param	string	variable name
+	 * @return	boolean
+	 */
 	function session_flashdata($key)
 	{
 		$CI =& get_instance();
@@ -96,15 +95,15 @@ if (!function_exists('session_flashdata'))
 
 // --------------------------------------------------------------------
 
-/**
- * Sets a session flash variable
- *
- * @access	public
- * @param	string	variable name
- * @return	boolean
- */	
 if (!function_exists('session_set_flashdata'))
 {
+	/**
+	 * Sets a session flash variable
+	 *
+	 * @access	public
+	 * @param	string	variable name
+	 * @return	boolean
+	 */
 	function session_set_flashdata($key, $value)
 	{
 		$CI =& get_instance();
