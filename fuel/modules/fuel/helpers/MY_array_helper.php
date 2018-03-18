@@ -216,6 +216,8 @@ if ( ! function_exists('parse_string_to_array'))
 	}
 }
 
+// --------------------------------------------------------------------
+
 if ( ! function_exists('array_group'))
 {
 	/**
@@ -236,6 +238,8 @@ if ( ! function_exists('array_group'))
 		return array_chunk($array, $items_in_each_group);
 	}
 }
+
+// --------------------------------------------------------------------
 
 if ( ! function_exists('csv_to_array'))
 {

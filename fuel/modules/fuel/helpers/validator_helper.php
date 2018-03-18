@@ -28,7 +28,6 @@
  * @link		http://docs.getfuelcms.com/helpers/validator_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('required'))
@@ -133,6 +132,7 @@ if ( ! function_exists('valid_email'))
 		}
 	}
 } 
+
 // --------------------------------------------------------------------
 
 if (!function_exists('min_num'))
@@ -272,6 +272,7 @@ if (!function_exists('length_min'))
 		}
 	}
 }
+
 // --------------------------------------------------------------------
 
 if (!function_exists('valid_phone'))
@@ -913,6 +914,7 @@ if (!function_exists('add_errors'))
 		}
 	}
 }
+
 // --------------------------------------------------------------------
 
 if (!function_exists('get_error'))
@@ -958,5 +960,6 @@ if (!function_exists('get_errors'))
 		return NULL;
 	}
 }
+
 /* End of file validator_helper.php */
 /* Location: ./modules/fuel/helpers/validator_helper.php */

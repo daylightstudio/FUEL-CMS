@@ -29,7 +29,6 @@
  * @link		http://docs.getfuelcms.com/helpers/my_language_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('lang'))

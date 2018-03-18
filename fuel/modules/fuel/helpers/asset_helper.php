@@ -30,7 +30,6 @@
  * @link		http://docs.getfuelcms.com/helpers/asset_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('img_path'))

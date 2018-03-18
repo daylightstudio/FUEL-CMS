@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/social_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('share'))
@@ -50,6 +49,8 @@ if (!function_exists('share'))
 	}
 }
 
+// --------------------------------------------------------------------
+
 if (!function_exists('og'))
 {
 	/**
@@ -69,6 +70,8 @@ if (!function_exists('og'))
 		return $CI->social->og($values);
 	}
 }
+
+// --------------------------------------------------------------------
 
 if (!function_exists('social_popup_js'))
 {

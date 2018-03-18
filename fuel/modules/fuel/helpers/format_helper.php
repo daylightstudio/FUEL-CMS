@@ -26,8 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/format_helper
  */
 
-
-
 // ------------------------------------------------------------------------
 
 if (!function_exists('currency'))

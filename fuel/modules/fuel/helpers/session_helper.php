@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/session_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('session_userdata'))
@@ -70,6 +69,7 @@ if (!function_exists('session_set_userdata'))
 		return $CI->session->set_userdata($key, $value);
 	}
 }
+
 // --------------------------------------------------------------------
 
 if (!function_exists('session_flashdata'))
@@ -114,5 +114,6 @@ if (!function_exists('session_set_flashdata'))
 		return $CI->session->set_flashdata($key, $value);
 	}
 }
+
 /* End of file session_helper.php */
 /* Location: ./modules/fuel/helpers/session_helper.php */

@@ -29,7 +29,6 @@
  * @link		http://docs.getfuelcms.com/helpers/my_file_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('get_dir_file_info'))

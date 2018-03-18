@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/scraper_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('scrape_html'))
@@ -131,5 +130,6 @@ if (!function_exists('is_valid_page'))
 		return $CI->curl->is_valid($url);
 	}
 }
+
 /* End of file scraper_helper.php */
 /* Location: ./modules/fuel/helpers/scraper_helper.php */

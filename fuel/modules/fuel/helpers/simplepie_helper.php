@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/simplepie_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('simplepie'))
