@@ -35,9 +35,9 @@ if ( ! function_exists('array_orderby'))
 	 * An alternative array sorter that is a bit faster then array_sorter
 	 *
 	 * @access	public
-	 * @param	array 	The array of data
-	 * @param	string 	The column to sort by
-	 * @param	string 	The direction (asc/desc)
+	 * @param	array	The array of data
+	 * @param	string	The column to sort by
+	 * @param	string	The direction (asc/desc)
 	 * @return	array
 	 */
 	function array_orderby()
@@ -246,10 +246,10 @@ if ( ! function_exists('csv_to_array'))
 	 * Converts a .csv file to an associative array. Must have header row.
 	 *
 	 * @access	public
-	 * @param	string  file name
-	 * @param	string  the delimiter that separates each column
-	 * @param	int     the index for where the header row starts
-	 * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
+	 * @param	string	file name
+	 * @param	string	the delimiter that separates each column
+	 * @param	int		the index for where the header row starts
+	 * @param	int		must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
 	 * @return	array
 	 */
 	function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
@@ -293,10 +293,10 @@ if ( ! function_exists('array_get'))
 	 * credit: borrowed from Vanilla forums GetValueR function
 	 *
 	 * @access	public
-	 * @param 	mixed $array The array or object to search.
-	 * @param 	string $key The key or property name of the value.
-	 * @param 	mixed $default The value to return if the key does not exist.
-	 * @return 	mixed The value from the array or object.
+	 * @param	mixed	$array		The array or object to search.
+	 * @param	string	$key		The key or property name of the value.
+	 * @param	mixed	$default	The value to return if the key does not exist.
+	 * @return	mixed				The value from the array or object.
 	 */
 	function array_get($array, $key, $default = FALSE)
 	{

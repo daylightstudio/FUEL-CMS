@@ -34,7 +34,7 @@
 /**
  * Returns the global CI object
  *
- * @return 	object
+ * @return	object
  */
 if (!function_exists('CI'))
 {
@@ -55,7 +55,7 @@ if (!function_exists('capture'))
 	 *
 	 * @param	boolean	turn on output buffering
 	 * @param	string	if set to 'all', will clear end the buffer and clean it
-	 * @return 	string	return buffered content
+	 * @return	string	return buffered content
 	 */
 	function capture($on = TRUE, $clean = 'all')
 	{
@@ -91,7 +91,7 @@ if (!function_exists('is_true_val'))
 	 * Format true value
 	 *
 	 * @param	mixed	possible true value
-	 * @return 	string	formatted true value
+	 * @return	string	formatted true value
 	 */
 	function is_true_val($val)
 	{
@@ -108,7 +108,7 @@ if (!function_exists('is_serialized_str'))
 	 * Boolean check to determine string content is serialized
 	 *
 	 * @param	mixed	possible serialized string
-	 * @return 	boolean
+	 * @return	boolean
 	 */
 	function is_serialized_str($data)
 	{
@@ -145,7 +145,7 @@ if (!function_exists('is_json_str'))
 	 * Boolean check to determine string content is a JSON object string
 	 *
 	 * @param	mixed	possible serialized string
-	 * @return 	boolean
+	 * @return	boolean
 	 */
 	function is_json_str($data)
 	{
@@ -167,7 +167,7 @@ if (!function_exists('print_obj'))
 	 *
 	 * @param	mixed	The variable to dump
 	 * @param	boolean	Return string
-	 * @return 	string
+	 * @return	string
 	 */
 	function print_obj($obj, $return = FALSE)
 	{
@@ -213,7 +213,7 @@ if (!function_exists('log_error'))
 	 * Logs an error message to logs file
 	 *
 	 * @param	string	Error message
-	 * @return 	void
+	 * @return	void
 	 */
 	function log_error($error) 
 	{
@@ -228,7 +228,7 @@ if (!function_exists('is_dev_mode'))
 	/**
 	 * Returns whether the current environment is set for development
 	 *
-	 * @return 	boolean
+	 * @return	boolean
 	 */
 	function is_dev_mode()
 	{
@@ -243,9 +243,9 @@ if (!function_exists('is_environment'))
 	/**
 	 * Returns whether the current environment is equal to the passed environment
 	 *
-	 * @access  public
-	 * @param   string   environment to test
-	 * @return 	boolean
+	 * @access	public
+	 * @param	string	environment to test
+	 * @return	boolean
 	 */
 	function is_environment($environment)
 	{

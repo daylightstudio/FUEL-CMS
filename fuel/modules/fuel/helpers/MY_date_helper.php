@@ -213,7 +213,7 @@ if (!function_exists('time_verbose'))
 	/**
 	 * Returns the time into a verbose format (e.g. 12hrs 10mins 10secs)
 	 *
-	 * must be passed a string in hh:mm format
+	 * Must be passed a string in hh:mm format
 	 *
 	 * @access	public
 	 * @param	string
@@ -570,7 +570,7 @@ if (!function_exists('timestamp'))
 	 * Returns a timestamp from the provided time
 	 *
 	 * @access	public
-	 * @param	string date (optional)
+	 * @param	string	date (optional)
 	 * @return	string
 	 */
 	function timestamp($date = NULL)
@@ -592,8 +592,8 @@ if (!function_exists('month'))
 	 * Returns the month value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
 	 * @return	string
 	 */
 	function month($date = NULL, $format = 'M')
@@ -621,8 +621,8 @@ if (!function_exists('day'))
 	 * Returns the day value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'd/leading', 'j' <- default  (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'd/leading', 'j' <- default  (optional)
 	 * @return	string
 	 */
 	function day($date = NULL, $format = 'j')
@@ -645,8 +645,8 @@ if (!function_exists('weekday'))
 	 * Returns the weekday value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'l/full', 'N/numeric', 'D' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'l/full', 'N/numeric', 'D' <- default (optional)
 	 * @return	string
 	 */
 	function weekday($date = NULL, $format = 'D')
@@ -672,8 +672,8 @@ if (!function_exists('year'))
 	 * Returns the year value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'y/short', 'Y/long' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'y/short', 'Y/long' <- default (optional)
 	 * @return	string
 	 */
 	function year($date = NULL, $format = 'Y')
@@ -697,8 +697,8 @@ if (!function_exists('hour'))
 	 * Returns the hour value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are '24/military', '12' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are '24/military', '12' <- default (optional)
 	 * @return	string
 	 */
 	function hour($date = NULL, $format = '12')
@@ -722,8 +722,8 @@ if (!function_exists('minute'))
 	 * Returns the minute value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'noleading', 'leading' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'noleading', 'leading' <- default (optional)
 	 * @return	string
 	 */
 	function minute($date = NULL, $format = 'leading')
@@ -745,8 +745,8 @@ if (!function_exists('second'))
 	 * Returns the second value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'noleading', 'leading' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'noleading', 'leading' <- default (optional)
 	 * @return	string
 	 */
 	function second($date = NULL, $format = 'leading')
@@ -768,8 +768,8 @@ if (!function_exists('ampm'))
 	 * Returns the ampm value of a provided date
 	 *
 	 * @access	public
-	 * @param	string date (optional)
-	 * @param	string options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
+	 * @param	string	date (optional)
+	 * @param	string	options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
 	 * @return	string
 	 */
 	function ampm($date = NULL, $format = 'a')
@@ -793,7 +793,7 @@ if (!function_exists('is_midnight'))
 	 * Determines whether the time is midnight or not. Helps with dates that are set without time values
 	 *
 	 * @access	public
-	 * @param	string date
+	 * @param	string	date
 	 * @return	string
 	 */
 	function is_midnight($date)

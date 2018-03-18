@@ -37,8 +37,8 @@ if (!function_exists('eval_string'))
 	/**
 	 * Evaluates a strings PHP code. Used especially for outputing FUEL page data
 	 *
-	 * @param 	string 	string to evaluate
-	 * @param 	mixed 	variables to pass to the string
+	 * @param	string	string to evaluate
+	 * @param	mixed	variables to pass to the string
 	 * @return	string
 	 */
 	function eval_string($str, $vars = array())
@@ -74,9 +74,9 @@ if (!function_exists('pluralize'))
 	/**
 	 * Add an s to the end of s string based on the number
 	 *
-	 * @param 	int 	number to compare against to determine if it needs to be plural
-	 * @param 	string 	string to evaluate
-	 * @param 	string 	plural value to add
+	 * @param	int		number to compare against to determine if it needs to be plural
+	 * @param	string	string to evaluate
+	 * @param	string	plural value to add
 	 * @return	string
 	 */
 	function pluralize($num, $str = '', $plural = 's')
@@ -101,7 +101,7 @@ if (!function_exists('strip_whitespace'))
 	/**
 	 * Strips extra whitespace from a string
 	 *
-	 * @param 	string
+	 * @param	string
 	 * @return	string
 	 */
 	function strip_whitespace($str)
@@ -117,7 +117,7 @@ if (!function_exists('trim_multiline'))
 	/**
 	 * Trims extra whitespace from the end and beginning of a string on multiple lines
 	 *
-	 * @param 	string
+	 * @param	string
 	 * @return	string
 	 */
 	function trim_multiline($str)
@@ -133,8 +133,8 @@ if (!function_exists('smart_ucwords'))
 	/**
 	 * Converts words to title case and allows for exceptions
 	 *
-	 * @param 	string 	string to evaluate
-	 * @param 	mixed 	variables to pass to the string
+	 * @param	string	string to evaluate
+	 * @param	mixed	variables to pass to the string
 	 * @return	string
 	 */
 	function smart_ucwords($str, $exceptions = array('of', 'the'))
@@ -159,8 +159,8 @@ if (!function_exists('zap_gremlins'))
 	 *
 	 * (hidden control characters that the remove_invisible_characters function misses)
 	 *
-	 * @param 	string 	string to evaluate
-	 * @param 	string 	the value used to replace a gremlin
+	 * @param	string	string to evaluate
+	 * @param	string	the value used to replace a gremlin
 	 * @return	string
 	 */
 	function zap_gremlins($str, $replace = '')
@@ -179,7 +179,7 @@ if (!function_exists('strip_javascript'))
 	/**
 	 * Removes javascript from a string
 	 *
-	 * @param 	string 	string to remove javascript
+	 * @param	string	string to remove javascript
 	 * @return	string
 	 */
 	function strip_javascript($str)
@@ -196,8 +196,8 @@ if (!function_exists('safe_htmlentities'))
 	/**
 	 * Safely converts a string's entities without encoding HTML tags and quotes
 	 *
-	 * @param 	string 	string to evaluate
-	 * @param 	boolean determines whether to encode the ampersand or not
+	 * @param	string	string to evaluate
+	 * @param	boolean	determines whether to encode the ampersand or not
 	 * @return	string
 	 */
 	function safe_htmlentities($str, $protect_amp = TRUE)
@@ -247,8 +247,8 @@ if (!function_exists('safe_htmlentities'))
 /**
  * Convert PHP syntax to templating syntax
  *
- * @param 	string 	string to evaluate
- * @param   string  the templating engine to use
+ * @param	string	string to evaluate
+ * @param	string	the templating engine to use
  * @return	string
  */
 function php_to_template_syntax($str, $engine = NULL)
@@ -265,10 +265,10 @@ function php_to_template_syntax($str, $engine = NULL)
 /**
  * Convert string to  templating syntax
  *
- * @param 	string 	string to evaluate
- * @param 	array 	variables to parse with string
- * @param 	string	the templating engine to use
- * @param 	array 	an array of configuration variables like compile_dir, delimiters, allowed_functions, refs and data
+ * @param	string	string to evaluate
+ * @param	array	variables to parse with string
+ * @param	string	the templating engine to use
+ * @param	array	an array of configuration variables like compile_dir, delimiters, allowed_functions, refs and data
  * @return	string
  */
 function parse_template_syntax($str, $vars = array(), $engine = NULL, $config = array())

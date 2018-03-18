@@ -38,11 +38,11 @@ if (!function_exists('google_uanalytics'))
 	* Otherwise, it will use the value defined in the google.php config file
 	* If both values do not exist, nothing will be inserted.
 	*
-	* @access   public
-	* @param    string	The google account number (optional)
-	* @param    mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
-	* @param    boolean	Whether to check dev mode before adding it in (optional)
-	* @return   string
+	* @access	public
+	* @param	string	The google account number (optional)
+	* @param	mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
+	* @param	boolean	Whether to check dev mode before adding it in (optional)
+	* @return	string
 	*/
 	function google_uanalytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
 
@@ -115,11 +115,11 @@ if (!function_exists('google_analytics'))
 	* Otherwise, it will use the value defined in the google.php config file
 	* If both values do not exist, nothing will be inserted.
 	*
-	* @access   public
-	* @param    string	The google account number (optional)
-	* @param    mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
-	* @param    boolean	Whether to check dev mode before adding it in (optional)
-	* @return   string
+	* @access	public
+	* @param	string	The google account number (optional)
+	* @param	mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
+	* @param	boolean	Whether to check dev mode before adding it in (optional)
+	* @return	string
 	*/
 	function google_analytics($uacct = '', $other_params = array(), $check_devmode = TRUE) {
 		/*
@@ -193,10 +193,10 @@ if (!function_exists('google_map'))
 	*
 	* Returns an iframed Google map
 	*
-	* @access   public
-	* @param    mixed	address can be either an array with "address", "city", "state" or simply a string
-	* @param    array	additional map parameters that include "height", "width", hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
-	* @return   string
+	* @access	public
+	* @param	mixed	address can be either an array with "address", "city", "state" or simply a string
+	* @param	array	additional map parameters that include "height", "width", hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
+	* @return	string
 	*/
 	function google_map($address, $params = array())
 	{
@@ -226,10 +226,10 @@ if (!function_exists('google_map_url'))
 	*
 	* Returns a google map URL (used by the google_map function too)
 	*
-	* @access   public
-	* @param    mixed	address can be either an array with "address", "city", "state" or simply a string. You can also pass lat and lng values as an array
-	* @param    array	additional map parameters that include "hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
-	* @return   string
+	* @access	public
+	* @param	mixed	address can be either an array with "address", "city", "state" or simply a string. You can also pass lat and lng values as an array
+	* @param	array	additional map parameters that include "hl" (language), "z" (zoom), "t" (map type), "om", (overview map), "iwloc" (display info bubble), "ll" (lat,lng). Friendly names of "display_info" (iwloc), "map_type" (t), and "overview" (om) can be used. (optional)
+	* @return	string
 	*/
 	function google_map_url($address, $params = array())
 	{
@@ -342,11 +342,11 @@ if (!function_exists('google_geolocate'))
 	* Use sleep() or usleep() functions to meter multiple requests (10/s is limit I believe)
 	* More on the return types here: https://developers.google.com/maps/documentation/geocoding/
 	*
-	* @access   public
-	* @param    mixed	address can be either an array with "address", "city", "state" or simply a string
-	* @param    mixed	return type can be 'all' (default), 'address_components', 'formatted_address', 'geometry', 'location', 'street_number', 'route', 'neighborhood', 'city',  'county', 'state', 'country', 'zip' (optional)
-	* @param    bool    whether to return value under 'short_name' or 'long_name' if defined in result
-	* @return   mixed   usually an array (e.g. array('latitude' => xxxx, 'longitude' => xxxx))
+	* @access	public
+	* @param	mixed	address can be either an array with "address", "city", "state" or simply a string
+	* @param	mixed	return type can be 'all' (default), 'address_components', 'formatted_address', 'geometry', 'location', 'street_number', 'route', 'neighborhood', 'city',  'county', 'state', 'country', 'zip' (optional)
+	* @param	bool	whether to return value under 'short_name' or 'long_name' if defined in result
+	* @return	mixed	usually an array (e.g. array('latitude' => xxxx, 'longitude' => xxxx))
 	*/
 	function google_geolocate($data, $return = 'all', $long = TRUE)
 	{

@@ -258,10 +258,10 @@ if (!function_exists('assets_server_to_web_path'))
 	/**
 	 * Convert a server path to a web path
 	 *
-	 * @access  public
-	 * @param   string  server path to asset file
-	 * @param   bool    truncate to asset folder
-	 * @return  string
+	 * @access	public
+	 * @param	string	server path to asset file
+	 * @param	bool	truncate to asset folder
+	 * @return	string
 	 */
 	function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 	{

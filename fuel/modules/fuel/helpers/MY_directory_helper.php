@@ -37,8 +37,8 @@ if (!function_exists('copyr'))
 	 * Recursively copies from one directory to another
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	string
+	 * @param	string
+	 * @param	string
 	 * @return	boolean|array
 	 */
 	function copyr($source, $dest)
@@ -96,8 +96,8 @@ if (!function_exists('chmodr'))
 	 *
 	 *  from php.net/chmod
 	 * @access	public
-	 * @param 	string
-	 * @param 	int      file mode (octal value)
+	 * @param	string
+	 * @param	int		file mode (octal value)
 	 * @return	boolean
 	 */
 	function chmodr($path, $filemode) { 
@@ -148,10 +148,10 @@ if (!function_exists('directory_to_array'))
 	 * Returns an array of file names from a directory
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	boolean
-	 * @param 	mixed
-	 * @param 	boolean
+	 * @param	string
+	 * @param	boolean
+	 * @param	mixed
+	 * @param	boolean
 	 * @return	array
 	 */
 	function directory_to_array($directory, $recursive = TRUE, $exclude = array(), $append_path = TRUE, $no_ext = FALSE, $_first_time = TRUE)
@@ -203,12 +203,12 @@ if (!function_exists('list_directories'))
 	 * Lists the directories only from a given directory
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	mixed
-	 * @param 	boolean
-	 * @param 	boolean
-	 * @param 	boolean
-	 * @param 	boolean
+	 * @param	string
+	 * @param	mixed
+	 * @param	boolean
+	 * @param	boolean
+	 * @param	boolean
+	 * @param	boolean
 	 * @return	array
 	 */
 	function list_directories($directory, $exclude = array(), $full_path = TRUE, $is_writable = FALSE, $recursive = TRUE, $_first_time = TRUE)

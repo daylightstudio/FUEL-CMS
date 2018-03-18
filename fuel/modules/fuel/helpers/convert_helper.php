@@ -128,7 +128,7 @@ if (!function_exists('uri_safe_batch_encode'))
 	 *
 	 * @access	public
 	 * @param	string	string to be converted
-	 * @param   string  delimiter to join values with
+	 * @param	string	delimiter to join values with
 	 * @param	boolean	value is hexified
 	 * @return	string
 	 */

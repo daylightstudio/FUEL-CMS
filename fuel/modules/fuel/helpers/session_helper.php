@@ -102,7 +102,7 @@ if (!function_exists('session_set_flashdata'))
 	 *
 	 * @access	public
 	 * @param	string	variable name
-	 * @param   string  value
+	 * @param	string	value
 	 * @return	boolean
 	 */
 	function session_set_flashdata($key, $value)

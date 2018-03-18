@@ -35,7 +35,7 @@ if (!function_exists('browser_info'))
 	 * Originally from: http://us3.php.net/function.get-browser
 	 *
 	 * @access	public
-	 * @param	string	browser agant (optional)
+	 * @param	string	browser agent (optional)
 	 * @return	array
 	 */
 	function browser_info($agent = NULL)

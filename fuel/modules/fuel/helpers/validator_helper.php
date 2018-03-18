@@ -142,7 +142,7 @@ if (!function_exists('min_num'))
 	 *
 	 * @access	public
 	 * @param	int		integer of any length
-	 * @param 	int		integer of any length to test against
+	 * @param	int		integer of any length to test against
 	 * @return	boolean
 	 */
 	function min_num($var, $limit = 1)
@@ -164,7 +164,7 @@ if (!function_exists('max_num'))
 	 *
 	 * @access	public
 	 * @param	int		integer of any length
-	 * @param 	int		integer of any length to test against
+	 * @param	int		integer of any length to test against
 	 * @return	boolean
 	 */
 	function max_num($var, $limit = 1)
@@ -186,8 +186,8 @@ if (!function_exists('is_between'))
 	 *
 	 * @access	public
 	 * @param	int		integer of any length
-	 * @param 	int		integer of any length to test low
-	 * @param 	int		integer of any length to test high
+	 * @param	int		integer of any length to test low
+	 * @param	int		integer of any length to test high
 	 * @return	boolean
 	 */
 	function is_between($var, $lo, $hi)
@@ -209,8 +209,8 @@ if (!function_exists('is_outside'))
 	 *
 	 * @access	public
 	 * @param	int		integer of any length
-	 * @param 	int		integer of any length to test low
-	 * @param 	int		integer of any length to test high
+	 * @param	int		integer of any length to test low
+	 * @param	int		integer of any length to test high
 	 * @return	boolean
 	 */
 	function is_outside($var, $lo, $hi)
@@ -232,7 +232,7 @@ if (!function_exists('length_max'))
 	 *
 	 * @access	public
 	 * @param	string	string of any length
-	 * @param 	int		integer to test string length against
+	 * @param	int		integer to test string length against
 	 * @return	boolean
 	 */
 	function length_max($str, $limit = 1000)
@@ -257,7 +257,7 @@ if (!function_exists('length_min'))
 	 *
 	 * @access	public
 	 * @param	string	string of any length
-	 * @param 	int		integer to test string length against
+	 * @param	int		integer to test string length against
 	 * @return	boolean
 	 */
 	function length_min($str, $limit = 1)
@@ -798,7 +798,7 @@ if (!function_exists('display_errors'))
 	 * Display user-defined errors via javascript and html
 	 *
 	 * @access	public
-	 * @param	string  css class to define error styling
+	 * @param	string	css class to define error styling
 	 * @param	mixed	collection of errors created by user
 	 * @return	string
 	 */
@@ -876,8 +876,8 @@ if (!function_exists('add_error'))
 	 * Add a user-defined error message
 	 *
 	 * @access	public
-	 * @param	string error message
-	 * @param	string key value for error message array
+	 * @param	string	error message
+	 * @param	string	key value for error message array
 	 * @return	void
 	 */
 	function add_error($msg, $key = NULL)
@@ -901,8 +901,8 @@ if (!function_exists('add_errors'))
 	 * Add a user-defined error message
 	 *
 	 * @access	public
-	 * @param	string error message
-	 * @param	string key value for error message array
+	 * @param	string	error message
+	 * @param	string	key value for error message array
 	 * @return	void
 	 */
 	function add_errors($errors)
@@ -923,7 +923,7 @@ if (!function_exists('get_error'))
 	 * Get a user-defined error message
 	 *
 	 * @access	public
-	 * @param	string key value for error message array
+	 * @param	string	key value for error message array
 	 * @return	string
 	 */
 	function get_error($key = null)

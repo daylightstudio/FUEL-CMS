@@ -129,7 +129,7 @@ if (!function_exists('uri_path'))
 	 *
 	 * @access	public
 	 * @param	boolean	use the rerouted URI string?
-	 * @param	int	    the start index to build the uri path
+	 * @param	int		the start index to build the uri path
 	 * @param	boolean	determines whether to strip any language segments
 	 * @return	string
 	 */
@@ -168,7 +168,7 @@ if (!function_exists('uri_segment'))
 	 * Returns the uri segment
 	 *
 	 * @access	public
-	 * @param	int	the segment number
+	 * @param	int		the segment number
 	 * @param	string	the default value if the segment doesn't exist
 	 * @param	boolean	whether to use the rerouted uri
 	 * @param	boolean	determines whether to strip any language segments
@@ -222,7 +222,7 @@ if (!function_exists('is_home'))
 	 * Determines if the page is the homepage or not
 	 *
 	 * @access	public
-	 * @param   string
+	 * @param	string
 	 * @return	boolean
 	 */
 	function is_home($uri_path = NULL)
@@ -382,8 +382,8 @@ if (!function_exists('redirect'))
 	 * @param	string	the URL
 	 * @param	string	the method: location or redirect
 	 * @param	int		the http response code
-	 * @param	string	wether to force or not https
-	 * @param	boolean	wether add the language to the URI
+	 * @param	string	whether to force or not https
+	 * @param	boolean	whether add the language to the URI
 	 * @return	string
 	 */
 	function redirect($uri = '', $method = 'location', $http_response_code = 302, $https = NULL,  $language = FALSE)

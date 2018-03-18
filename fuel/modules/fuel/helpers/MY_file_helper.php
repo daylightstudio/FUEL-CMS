@@ -37,9 +37,9 @@ if (!function_exists('get_dir_file_info'))
 	 * Gets the directory file info.
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	boolean
-	 * @param 	boolean
+	 * @param	string
+	 * @param	boolean
+	 * @param	boolean
 	 * @return	array
 	 */
 	function get_dir_file_info($source_dir, $top_level_only = TRUE, $include_path = FALSE, $_recursion = FALSE)
@@ -100,10 +100,10 @@ if (!function_exists('delete_files'))
 	 * Deletes files in a directory with the added option to exclude certain files
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	boolean
-	 * @param 	mixed
-	 * @param 	int
+	 * @param	string
+	 * @param	boolean
+	 * @param	mixed
+	 * @param	int
 	 * @return	void
 	 */
 	function delete_files($path, $del_dir = FALSE, $exclude = NULL, $level = 0)
@@ -150,9 +150,9 @@ if (!function_exists('delete_old_files'))
 	 * Deletes files in a directory older then a certain date with the added option to exclude certain files
 	 *
 	 * @access	public
-	 * @param 	string
-	 * @param 	string
-	 * @param 	mixed
+	 * @param	string
+	 * @param	string
+	 * @param	mixed
 	 * @return	void
 	 */
 	function delete_old_files($dir, $older_than, $exclude = array())
@@ -183,7 +183,7 @@ if (!function_exists('is_image_file'))
 	 * Determines if the file is an image
 	 *
 	 * @access	public
-	 * @param 	string
+	 * @param	string
 	 * @return	boolean
 	 */
 	function is_image_file($path)
