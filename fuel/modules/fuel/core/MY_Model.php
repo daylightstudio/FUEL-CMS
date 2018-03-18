@@ -372,7 +372,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the table name (optional)
-	 * @return	string
+	 * @return	string|array|null
 	 */	
 	public function tables($table = NULL)
 	{
@@ -391,7 +391,6 @@ class MY_Model extends CI_Model {
 		{
 			return $this->_tables;
 		}
-		return NULL;
 	}
 
 	// --------------------------------------------------------------------

@@ -198,7 +198,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 		}
 		
 		$data = $this->find_all_array($where);
-		return $this->_process_casting($data);;
+		return $this->_process_casting($data);
 	}
 	
 	// --------------------------------------------------------------------
