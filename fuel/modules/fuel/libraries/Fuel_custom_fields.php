@@ -1645,7 +1645,7 @@ class Fuel_custom_fields {
 
 				if (!empty($inline_class))
 				{
-					'</span>';
+					$str .= '</span>';
 				}
 
 			}
@@ -1674,7 +1674,7 @@ class Fuel_custom_fields {
 		$exists_params['ignore_representative'] = TRUE;
 		$str .= $form_builder->create_field($exists_params);
 
-		return $str;
+		return $str;$str .= 
 	}
 
 	// --------------------------------------------------------------------
