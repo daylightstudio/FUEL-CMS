@@ -27,7 +27,6 @@
  * @link		http://docs.getfuelcms.com/helpers/compatibility_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('json_encode'))

@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/browser_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('browser_info'))
@@ -60,5 +59,6 @@ if (!function_exists('browser_info'))
 		return array($matches['browser'][$i] => $matches['version'][$i]);
 	}
 }
+
 /* End of file browser_helper.php */
 /* Location: ./modules/fuel/helpers/browser_helper.php */

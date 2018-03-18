@@ -26,7 +26,6 @@
  * @link		http://docs.getfuelcms.com/helpers/my_date_helper
  */
 
-
 // --------------------------------------------------------------------
 
 if (!function_exists('date_formatter'))
@@ -191,7 +190,7 @@ if (!function_exists('english_date_verbose'))
 	 *
 	 * @access	public
 	 * @param	string
-	 * @return	boolean
+	 * @return	boolean|string
 	 */
 	function english_date_verbose($date)
 	{
@@ -377,7 +376,6 @@ if (!function_exists('date_range_string'))
 	 */
 	function date_range_string($date1, $date2, $params = array())
 	{
-		
 		// set formatting defaults
 		$format['same_day_and_time'] = 'F j, Y h:ia';
 		$format['same_day'] = array('F j, h:ia', 'h:ia');
@@ -440,7 +438,7 @@ if (!function_exists('pretty_date'))
 	 *
 	 * @access	public
 	 * @param	string
-	 * @param	booelan
+	 * @param	boolean
 	 * @return	string
 	 */
 	function pretty_date($timestamp, $use_gmt = FALSE)
@@ -591,7 +589,7 @@ if (!function_exists('timestamp'))
 if (!function_exists('month'))
 {
 	/**
-	 * Returns a the month value of a provided date
+	 * Returns the month value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -620,7 +618,7 @@ if (!function_exists('month'))
 if (!function_exists('day'))
 {
 	/**
-	 * Returns a the day value of a provided date
+	 * Returns the day value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -644,7 +642,7 @@ if (!function_exists('day'))
 if (!function_exists('weekday'))
 {
 	/**
-	 * Returns a the weekday value of a provided date
+	 * Returns the weekday value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -671,7 +669,7 @@ if (!function_exists('weekday'))
 if (!function_exists('year'))
 {
 	/**
-	 * Returns a the year value of a provided date
+	 * Returns the year value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -696,7 +694,7 @@ if (!function_exists('year'))
 if (!function_exists('hour'))
 {
 	/**
-	 * Returns a the weekday value of a provided date
+	 * Returns the hour value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -721,7 +719,7 @@ if (!function_exists('hour'))
 if (!function_exists('minute'))
 {
 	/**
-	 * Returns a the weekday value of a provided date
+	 * Returns the minute value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -744,7 +742,7 @@ if (!function_exists('minute'))
 if (!function_exists('second'))
 {
 	/**
-	 * Returns a the weekday value of a provided date
+	 * Returns the second value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)
@@ -767,7 +765,7 @@ if (!function_exists('second'))
 if (!function_exists('ampm'))
 {
 	/**
-	 * Returns a the ampm value of a provided date
+	 * Returns the ampm value of a provided date
 	 *
 	 * @access	public
 	 * @param	string date (optional)

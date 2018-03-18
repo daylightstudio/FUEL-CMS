@@ -212,7 +212,6 @@ if ( ! function_exists('parse_string_to_array'))
 			}
 		}
 		return $params;
-		
 	}
 }
 

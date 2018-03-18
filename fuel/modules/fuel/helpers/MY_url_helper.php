@@ -129,7 +129,7 @@ if (!function_exists('uri_path'))
 	 *
 	 * @access	public
 	 * @param	boolean	use the rerouted URI string?
-	 * @param	boolean	the start index to build the uri path
+	 * @param	int	    the start index to build the uri path
 	 * @param	boolean	determines whether to strip any language segments
 	 * @return	string
 	 */
@@ -222,6 +222,7 @@ if (!function_exists('is_home'))
 	 * Determines if the page is the homepage or not
 	 *
 	 * @access	public
+	 * @param   string
 	 * @return	boolean
 	 */
 	function is_home($uri_path = NULL)
@@ -380,7 +381,7 @@ if (!function_exists('redirect'))
 	 * @access	public
 	 * @param	string	the URL
 	 * @param	string	the method: location or redirect
-	 * @param	string	the http response code
+	 * @param	int		the http response code
 	 * @param	string	wether to force or not https
 	 * @param	boolean	wether add the language to the URI
 	 * @return	string

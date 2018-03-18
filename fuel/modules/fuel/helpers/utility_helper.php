@@ -243,6 +243,8 @@ if (!function_exists('is_environment'))
 	/**
 	 * Returns whether the current environment is equal to the passed environment
 	 *
+	 * @access  public
+	 * @param   string   environment to test
 	 * @return 	boolean
 	 */
 	function is_environment($environment)

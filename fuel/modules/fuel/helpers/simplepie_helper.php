@@ -35,8 +35,8 @@ if (!function_exists('simplepie'))
 	 *
 	 * @access	public
 	 * @param	string	Feed URL
-	 * @param	string	The number of results to return
-	 * @param	string	Additional parameters which include, cache_duration, enable_order_by_date, enable_cache and cache_location
+	 * @param	int		The number of results to return
+	 * @param	array	Additional parameters which include, cache_duration, enable_order_by_date, enable_cache and cache_location
 	 * @return	object
 	 */
 	function simplepie($feed, $limit = 5, $params = array())

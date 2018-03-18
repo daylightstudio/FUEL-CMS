@@ -39,7 +39,7 @@ if (!function_exists('copyr'))
 	 * @access	public
 	 * @param 	string
 	 * @param 	string
-	 * @return	array
+	 * @return	boolean|array
 	 */
 	function copyr($source, $dest)
 	{
@@ -83,7 +83,7 @@ if (!function_exists('copyr'))
 
 		// Clean up
 		$dir->close();
-		return true;
+		return TRUE;
 	}
 }
 
@@ -97,7 +97,7 @@ if (!function_exists('chmodr'))
 	 *  from php.net/chmod
 	 * @access	public
 	 * @param 	string
-	 * @param 	octal
+	 * @param 	int      file mode (octal value)
 	 * @return	boolean
 	 */
 	function chmodr($path, $filemode) { 
@@ -200,7 +200,7 @@ if (!function_exists('directory_to_array'))
 if (!function_exists('list_directories'))
 {
 	/**
-	 * Lists the directories only from a give directory
+	 * Lists the directories only from a given directory
 	 *
 	 * @access	public
 	 * @param 	string
@@ -273,5 +273,6 @@ if (!function_exists('list_directories'))
 		return $dirs;
 	}
 }
+
 /* End of file MY_directory_helper.php */
 /* Location: ./modules/fuel/helpers/MY_directory_helper.php */

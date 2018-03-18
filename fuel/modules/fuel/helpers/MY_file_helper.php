@@ -195,5 +195,6 @@ if (!function_exists('is_image_file'))
 		return FALSE;
 	}
 }
+
 /* End of file MY_file_helper.php */
 /* Location: ./modules/fuel/helpers/MY_file_helper.php */

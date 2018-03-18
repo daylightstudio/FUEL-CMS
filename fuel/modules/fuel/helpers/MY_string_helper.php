@@ -248,6 +248,7 @@ if (!function_exists('safe_htmlentities'))
  * Convert PHP syntax to templating syntax
  *
  * @param 	string 	string to evaluate
+ * @param   string  the templating engine to use
  * @return	string
  */
 function php_to_template_syntax($str, $engine = NULL)

@@ -3,7 +3,7 @@
  * FUEL CMS
  * http://www.getfuelcms.com
  *
- * An open source Content Management System based on the 
+ * An open source Content Management System based on the
  * Codeigniter framework (http://codeigniter.com)
  *
  * @package		FUEL CMS
@@ -19,8 +19,8 @@
 /**
  * FUEL Asset Helper
  *
- * This helper allows you to output css, js links and/or files as well as 
- * allows you to compress and cache them. Also has convenience methods for 
+ * This helper allows you to output css, js links and/or files as well as
+ * allows you to compress and cache them. Also has convenience methods for
  * paths to assets. It is essentially an alias to the Asset Class.
  *
  * @package		FUEL CMS
@@ -258,9 +258,10 @@ if (!function_exists('assets_server_to_web_path'))
 	/**
 	 * Convert a server path to a web path
 	 *
-	 * @access	public
-	 * @param	string	server path to asset file
-	 * @return	string
+	 * @access  public
+	 * @param   string  server path to asset file
+	 * @param   bool    truncate to asset folder
+	 * @return  string
 	 */
 	function assets_server_to_web_path($file, $truncate_to_asset_folder = FALSE)
 	{
@@ -378,8 +379,10 @@ if (!function_exists('swf'))
 	 *
 	 * @access	public
 	 * @param	string	file name of the swf file including extension
-	 * @param	string	module module folder if any
-	 * @param	array	additional parameter to include (attrs, ie_conditional, and output)
+	 * @param	string	html id that the flash will replace with swfobject
+	 * @param	int		width of the flash file
+	 * @param	int		height of the flash file
+	 * @param	array	additional parameter to include (vars, version, and color, params)
 	 * @return	string
 	 */
 	function swf($flash, $id, $width, $height, $options = array()){

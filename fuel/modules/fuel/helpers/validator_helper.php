@@ -878,11 +878,11 @@ if (!function_exists('add_error'))
 	 * @access	public
 	 * @param	string error message
 	 * @param	string key value for error message array
-	 * @return	boolean
+	 * @return	void
 	 */
 	function add_error($msg, $key = NULL)
 	{
-		if(defined('GLOBAL_ERRORS')) 
+		if(defined('GLOBAL_ERRORS'))
 		{
 			if(empty($key)) 
 			{
@@ -903,7 +903,7 @@ if (!function_exists('add_errors'))
 	 * @access	public
 	 * @param	string error message
 	 * @param	string key value for error message array
-	 * @return	boolean
+	 * @return	void
 	 */
 	function add_errors($errors)
 	{
