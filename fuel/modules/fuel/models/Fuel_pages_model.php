@@ -230,7 +230,7 @@ class Fuel_pages_model extends Base_module_model {
 		$data = $this->find_one_array($where, 'location desc');
 
 		// case sensitive check
-		if (empty($data) OR ($data['location'] != $location AND (!empty($wildcard_location) AND $data['location'] != $wildcard_location.'/:any'))
+		if (empty($data) OR ($data['location'] != $location AND (!empty($wildcard_location) AND $data['location'] != $wildcard_location.'/:any')))
 		{
 			return array();
 		}
