@@ -63,7 +63,6 @@ class Fuel_twig_parser extends Fuel_abstract_parser {
 			}
 
 			$twig = new Twig_Environment($loader, array(
-				'autoescape' => FALSE,
 				'cache' => $this->compile_dir,
 				'debug' => $this->debug,
 				'charset' => $this->charset,

@@ -746,7 +746,7 @@ class Asset {
 		if ($options['output'] === 'inline')
 		{
 			$open = "<script>\n";
-			$close .= "\t</script>";
+			$close = "\t</script>";
 		}
 		else
 		{
@@ -756,7 +756,6 @@ class Asset {
 
 		$str = $this->_output('js', $module, $open, $close, $path, $options);
 		if (!empty($options['echo'])) echo $str;
-		$str = $str;
 		return $str;
 	}
 

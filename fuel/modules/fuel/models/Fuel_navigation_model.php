@@ -294,7 +294,6 @@ class Fuel_navigation_model extends Base_module_model {
 
 		
 		$fields['group_id'] = array(
-			'type' => 'inline_edit', 
 			'module' => 'navigation_group',
 			'options' => $group_options,
 			'type' => 'select',

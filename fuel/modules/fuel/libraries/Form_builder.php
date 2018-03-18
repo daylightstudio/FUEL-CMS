@@ -1791,7 +1791,6 @@ class Form_builder {
 			'maxlength' => $params['max_length'], 
 			'size' => $size, 
 			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled'],
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? TRUE : NULL),
