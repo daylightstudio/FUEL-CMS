@@ -3,7 +3,7 @@
  * FUEL CMS
  * http://www.getfuelcms.com
  *
- * An open source Content Management System based on the 
+ * An open source Content Management System based on the
  * Codeigniter framework (http://codeigniter.com)
  *
  * @package		FUEL CMS
@@ -31,14 +31,14 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a boolean value based on whether the page was requested via AJAX or not
- *
- * @access	public
- * @return	boolean
- */	
 if (!function_exists('is_ajax'))
 {
+	/**
+	 * Returns a boolean value based on whether the page was requested via AJAX or not
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function is_ajax()
 	{
 		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']=="XMLHttpRequest");
@@ -47,15 +47,15 @@ if (!function_exists('is_ajax'))
 
 // --------------------------------------------------------------------
 
-/**
- * Sets the HTTP headers for 
- *
- * @access	public
- * @param	boolean	Sets the no cache headers
- * @return	boolean
- */	
 if (!function_exists('json_headers'))
 {
+	/**
+	 * Sets the HTTP headers for
+	 *
+	 * @access	public
+	 * @param	boolean	Sets the no cache headers
+	 * @return	void
+	 */
 	function json_headers($no_cache = TRUE)
 	{
 		if ($no_cache)

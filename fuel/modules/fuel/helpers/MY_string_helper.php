@@ -32,15 +32,15 @@
 
 // --------------------------------------------------------------------
 
-/**
- * Evaluates a strings PHP code. Used especially for outputing FUEL page data
- *
- * @param 	string 	string to evaluate
- * @param 	mixed 	variables to pass to the string
- * @return	string
- */
 if (!function_exists('eval_string'))
 {
+	/**
+	 * Evaluates a strings PHP code. Used especially for outputing FUEL page data
+	 *
+	 * @param	string	string to evaluate
+	 * @param	mixed	variables to pass to the string
+	 * @return	string
+	 */
 	function eval_string($str, $vars = array())
 	{
 		$CI =& get_instance();
@@ -69,17 +69,16 @@ if (!function_exists('eval_string'))
 
 // --------------------------------------------------------------------
 
-/**
- * Add an s to the end of s string based on the number 
- *
- * @param 	int 	number to compare against to determine if it needs to be plural
- * @param 	string 	string to evaluate
- * @param 	string 	plural value to add
- * @return	string
- */
-//
 if (!function_exists('pluralize'))
-{ 
+{
+	/**
+	 * Add an s to the end of s string based on the number
+	 *
+	 * @param	int		number to compare against to determine if it needs to be plural
+	 * @param	string	string to evaluate
+	 * @param	string	plural value to add
+	 * @return	string
+	 */
 	function pluralize($num, $str = '', $plural = 's')
 	{
 		if (is_array($num))
@@ -97,14 +96,14 @@ if (!function_exists('pluralize'))
 
 // --------------------------------------------------------------------
 
-/**
- * Strips extra whitespace from a string
- *
- * @param 	string
- * @return	string
- */
 if (!function_exists('strip_whitespace'))
 {
+	/**
+	 * Strips extra whitespace from a string
+	 *
+	 * @param	string
+	 * @return	string
+	 */
 	function strip_whitespace($str)
 	{
 		return trim(preg_replace('/\s\s+|\n/m', '', $str));
@@ -113,14 +112,14 @@ if (!function_exists('strip_whitespace'))
 
 // --------------------------------------------------------------------
 
-/**
- * Trims extra whitespace from the end and beginning of a string on multiple lines
- *
- * @param 	string
- * @return	string
- */
 if (!function_exists('trim_multiline'))
 {
+	/**
+	 * Trims extra whitespace from the end and beginning of a string on multiple lines
+	 *
+	 * @param	string
+	 * @return	string
+	 */
 	function trim_multiline($str)
 	{
 		return trim(implode("\n", array_map('trim', explode("\n", $str))));
@@ -129,15 +128,15 @@ if (!function_exists('trim_multiline'))
 
 // --------------------------------------------------------------------
 
-/**
- * Converts words to title case and allows for exceptions
- *
- * @param 	string 	string to evaluate
- * @param 	mixed 	variables to pass to the string
- * @return	string
- */
 if (!function_exists('smart_ucwords'))
 {
+	/**
+	 * Converts words to title case and allows for exceptions
+	 *
+	 * @param	string	string to evaluate
+	 * @param	mixed	variables to pass to the string
+	 * @return	string
+	 */
 	function smart_ucwords($str, $exceptions = array('of', 'the'))
 	{
 		$out = "";
@@ -153,17 +152,17 @@ if (!function_exists('smart_ucwords'))
 
 // --------------------------------------------------------------------
 
-/**
- * Removes "Gremlin" characters 
- *
- * (hidden control characters that the remove_invisible_characters function misses)
- *
- * @param 	string 	string to evaluate
- * @param 	string 	the value used to replace a gremlin
- * @return	string
- */
 if (!function_exists('zap_gremlins'))
 {
+	/**
+	 * Removes "Gremlin" characters
+	 *
+	 * (hidden control characters that the remove_invisible_characters function misses)
+	 *
+	 * @param	string	string to evaluate
+	 * @param	string	the value used to replace a gremlin
+	 * @return	string
+	 */
 	function zap_gremlins($str, $replace = '')
 	{
 		// there is a hidden bullet looking thingy that photoshop likes to include in it's text'
@@ -175,14 +174,14 @@ if (!function_exists('zap_gremlins'))
 
 // --------------------------------------------------------------------
 
-/**
- * Removes javascript from a string
- *
- * @param 	string 	string to remove javascript
- * @return	string
- */
 if (!function_exists('strip_javascript'))
 {
+	/**
+	 * Removes javascript from a string
+	 *
+	 * @param	string	string to remove javascript
+	 * @return	string
+	 */
 	function strip_javascript($str)
 	{
 		$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
@@ -192,15 +191,15 @@ if (!function_exists('strip_javascript'))
 
 // --------------------------------------------------------------------
 
-/**
- * Safely converts a string's entities without encoding HTML tags and quotes
- *
- * @param 	string 	string to evaluate
- * @param 	boolean determines whether to encode the ampersand or not
- * @return	string
- */
 if (!function_exists('safe_htmlentities'))
 {
+	/**
+	 * Safely converts a string's entities without encoding HTML tags and quotes
+	 *
+	 * @param	string	string to evaluate
+	 * @param	boolean	determines whether to encode the ampersand or not
+	 * @return	string
+	 */
 	function safe_htmlentities($str, $protect_amp = TRUE)
 	{
 		// convert all hex single quotes to numeric ... 
@@ -248,7 +247,8 @@ if (!function_exists('safe_htmlentities'))
 /**
  * Convert PHP syntax to templating syntax
  *
- * @param 	string 	string to evaluate
+ * @param	string	string to evaluate
+ * @param	string	the templating engine to use
  * @return	string
  */
 function php_to_template_syntax($str, $engine = NULL)
@@ -265,10 +265,10 @@ function php_to_template_syntax($str, $engine = NULL)
 /**
  * Convert string to  templating syntax
  *
- * @param 	string 	string to evaluate
- * @param 	array 	variables to parse with string
- * @param 	string	the templating engine to use
- * @param 	array 	an array of configuration variables like compile_dir, delimiters, allowed_functions, refs and data
+ * @param	string	string to evaluate
+ * @param	array	variables to parse with string
+ * @param	string	the templating engine to use
+ * @param	array	an array of configuration variables like compile_dir, delimiters, allowed_functions, refs and data
  * @return	string
  */
 function parse_template_syntax($str, $vars = array(), $engine = NULL, $config = array())
