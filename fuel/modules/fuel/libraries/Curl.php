@@ -600,7 +600,7 @@ class Curl {
 	{
 		if (is_array($cookie))
 		{
-			$cookie = http_build_query($params, NULL, '&amp;');
+			$cookie = http_build_query($cookie, NULL, '&amp;');
 		}
 		$opts = $this->_opts('cookie', $cookie);
 		$this->add_session($url, $opts);
