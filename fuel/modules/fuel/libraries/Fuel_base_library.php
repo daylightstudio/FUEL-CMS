@@ -50,7 +50,7 @@ class Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	public function __construct()
+	public function __construct($config = array())
 	{
 		$this->CI =& get_instance();
 		if (isset($this->CI->fuel))

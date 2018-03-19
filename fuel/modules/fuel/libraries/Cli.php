@@ -96,7 +96,7 @@ class Cli
 	public function prompt($msg, $length = 4096)
 	{
 		$this->write($msg." ", FALSE);
-		$line = $this->input($length, $length);
+		$line = $this->input($length);
 		return trim($line); 
 	}
 
