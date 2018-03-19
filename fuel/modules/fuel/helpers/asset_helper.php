@@ -186,7 +186,7 @@ if (!function_exists('cache_path'))
 	function cache_path($file = NULL, $module = NULL, $absolute = NULL)
 	{
 		$CI = _get_assets();
-		return $CI->asset->cache_path($file, $CI->asset->assets_cache_folder, $module);
+		return $CI->asset->cache_path($file, $module, $absolute);
 	}
 }
 
