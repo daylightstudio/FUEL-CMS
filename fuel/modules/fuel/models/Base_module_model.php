@@ -954,7 +954,7 @@ class Base_module_model extends MY_Model {
 		}
 		if (strpos($field, '.') === FALSE) $field = $this->table_name.'.'.$field;
 		$where[$field.' !='] = '';
-		$options = $this->options_list($field, $field, $where, TRUE, FALSE);
+		$options = $this->options_list($field, $field, $where, TRUE);
 		return $options;
 	}
 	

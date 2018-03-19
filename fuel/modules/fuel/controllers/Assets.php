@@ -10,12 +10,12 @@ class Assets extends Module {
 		parent::__construct();
 	}
 	
-	public function items($inline = FALSE)
+	public function items()
 	{
 		$dirs = $this->fuel->assets->dirs();
 		$this->filters['group_id']['options'] = $dirs;
 
-		parent::items($inline);
+		parent::items();
 	}
 
 	public function create($dir = NULL, $inline = FALSE)

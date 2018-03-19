@@ -277,14 +277,14 @@ class Unzip {
 	 *
 	 * @access    Public
 	 * @param     string, boolean
-	 * @return    Unziped file.
+	 * @return    Unzipped file.
 	 */
 	private function _extract_file($compressed_file_name, $target_file_name = FALSE)
 	{
 		if ( ! sizeof($this->compressed_list))
 		{
 			$this->set_debug('Trying to unzip before loading file list... Loading it!');
-			$this->_list_files(FALSE, $compressed_file_name);
+			$this->_list_files(FALSE);
 		}
 
 		$fdetails = &$this->compressed_list[$compressed_file_name];
