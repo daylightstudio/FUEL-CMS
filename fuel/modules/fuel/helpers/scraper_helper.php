@@ -26,20 +26,19 @@
  * @link		http://docs.getfuelcms.com/helpers/scraper_helper
  */
 
-
 // --------------------------------------------------------------------
 
-/**
- * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to scrape the contents of a URL
- *
- * @access	public
- * @param	string	URL of page to scrape contents
- * @param	array	POST parameters to pass along in the request
- * @param	array	An additional set of CURL options
- * @return	string
- */	
 if (!function_exists('scrape_html'))
 {
+	/**
+	 * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to scrape the contents of a URL
+	 *
+	 * @access	public
+	 * @param	string	URL of page to scrape contents
+	 * @param	array	POST parameters to pass along in the request
+	 * @param	array	An additional set of CURL options
+	 * @return	string
+	 */
 	function scrape_html($url, $post = array(), $opts = array())
 	{
 		$CI =& get_instance();
@@ -68,16 +67,16 @@ if (!function_exists('scrape_html'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a DOM object of a page or a result object if an XPath query was passed
- *
- * @access	public
- * @param	string	URL of page to scrape contents
- * @param	string	an XPath query to pass
- * @return	object
- */	
 if (!function_exists('scrape_dom'))
 {
+	/**
+	 * Returns a DOM object of a page or a result object if an XPath query was passed
+	 *
+	 * @access	public
+	 * @param	string	URL of page to scrape contents
+	 * @param	string	an XPath query to pass
+	 * @return	object
+	 */
 	function scrape_dom($url, $xpath_query = NULL)
 	{
 		if (is_http_path($url))
@@ -115,15 +114,15 @@ if (!function_exists('scrape_dom'))
 
 // --------------------------------------------------------------------
 
-/**
- * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to determine if a page exists or not
- *
- * @access	public
- * @param	string	URL of page to check
- * @return	boolean
- */	
 if (!function_exists('is_valid_page'))
 {
+	/**
+	 * Uses <a href="[user_guide_url]libraries/curl">CURL</a> to determine if a page exists or not
+	 *
+	 * @access	public
+	 * @param	string	URL of page to check
+	 * @return	boolean
+	 */
 	function is_valid_page($url)
 	{
 		$CI =& get_instance();
@@ -131,5 +130,6 @@ if (!function_exists('is_valid_page'))
 		return $CI->curl->is_valid($url);
 	}
 }
+
 /* End of file scraper_helper.php */
 /* Location: ./modules/fuel/helpers/scraper_helper.php */
