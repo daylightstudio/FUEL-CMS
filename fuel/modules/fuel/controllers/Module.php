@@ -216,11 +216,30 @@ class Module extends Fuel_base_controller {
 		if ( ! is_ajax())
 		{
 			$item_total = $this->model->list_items_total();
-			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $item_total == 1)
+
+			if ($this->single_item_navigate AND $item_total == 1)
 			{
 				$items = $this->model->list_items();
-				$edit_url = fuel_url($this->module_uri.'/edit/'.$items[0][$this->model->key_field()]);
-				redirect($edit_url);
+				$id = $items[0][$this->model->key_field()];
+
+				// lets check a few permissions
+				if ($this->fuel->auth->has_permission($this->permission, "edit"))
+				{
+					$url = fuel_url($this->module_uri.'/edit/'.$id);
+				}
+				elseif ($this->fuel->auth->has_permission($this->permission, "view"))
+				{
+					$url = fuel_url($this->module_uri.'/view/'.$id);
+				}
+				elseif ($this->fuel->auth->has_permission($this->permission, "show"))
+				{
+					$url = fuel_url($this->module_uri.'/show/'.$id);
+				}
+				
+				if (!empty($url))
+				{
+					redirect($url);	
+				}
 			}
 
 			$this->config->set_item('enable_query_strings', FALSE);
