@@ -84,7 +84,7 @@ class Installer extends Fuel_base_controller {
 
 		$uri = trim($this->uri->uri_string(), '/');
 		$uri = str_replace('-at-', '@', $uri);
-		$segs = explode('/', trim($this->uri->uri_string(), '/'));
+		$segs = explode('/', $uri);
 		$segs = array_slice($segs, 3);
 		$module = array_pop($segs);
 		$repo = implode('/', $segs);
