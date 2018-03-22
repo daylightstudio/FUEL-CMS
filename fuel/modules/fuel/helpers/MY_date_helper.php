@@ -331,7 +331,7 @@ if (!function_exists('format_db_date'))
 	{
 		if (empty($m) AND !empty($y))
 		{
-			$dates = convert_date_to_array($y);
+			$dates = date_parse($y);
 			$str = $dates['year'].'-'.$dates['month'].'-'.$dates['day'].' '.$dates['hour'].':'.$dates['min'].':'.$dates['sec'];
 		}
 		else
