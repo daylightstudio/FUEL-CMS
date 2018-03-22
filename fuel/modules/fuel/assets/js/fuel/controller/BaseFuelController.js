@@ -11,7 +11,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.assetFolder = 'images';
 		this.pageVals = {};
 		this.cache = new jqx.Cache();
-		this.modulePath = jqx.config.fuelPath + '/' + this.module;
+		this.modulePath = jqx.config.fuelPath + this.module;
 		this.inline = parseInt($('#fuel_inline').val());
 		this.tableAjaxURL = this.modulePath + '/items/';
 		if (this.inline != 0) this.tableAjaxURL += '/?inline=' + this.inline;
