@@ -52,8 +52,7 @@ class Fuel_assets_model extends CI_Model {
 		$CI =& get_instance();
 
 		$CI->load->library('validator');
-		$CI->load->helper('directory');
-		$CI->load->helper('file');
+		$CI->load->helper(array('directory', 'file', 'number'));
 		
 		$this->validator = new Validator();
 		$this->validator->register_to_global_errors = FALSE;
@@ -155,7 +154,7 @@ class Fuel_assets_model extends CI_Model {
 					
 					//$file['filename'] = $files[$key]['name'];
 					$file['name'] = $key;
-					$file['preview/kb'] = $files[$key]['size'];
+					$file['preview/kb'] = round($files[$key]['size'] / 1024, 2);
 					$file['link'] = NULL;
 					$file['last_updated'] = date('Y-m-d H:i:s', $files[$key]['date']);
 					$return[] = $file;
@@ -175,7 +174,7 @@ class Fuel_assets_model extends CI_Model {
 		{
 			if (is_image_file($return[$key]['name']))
 			{
-				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'?c='.time().'" border="0"></a></div>';
+				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kB <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'?c='.time().'" border="0"></a></div>';
 				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.'/'.$return[$key]['name'].'</a>';
 			}
 			else
