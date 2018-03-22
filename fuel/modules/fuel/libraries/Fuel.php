@@ -503,6 +503,8 @@ class Fuel extends Fuel_advanced_module {
 			}
 			else
 			{
+				// To resolve issue when called outside of admin
+				$this->load_language('fuel', 'fuel');
 				throw new Exception(lang('error_class_property_does_not_exist', $var));
 			}
 		}
