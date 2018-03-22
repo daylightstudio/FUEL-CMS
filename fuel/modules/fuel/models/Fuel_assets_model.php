@@ -261,7 +261,7 @@ class Fuel_assets_model extends CI_Model {
 	{
 		$CI =& get_instance();
 		$assets_path = WEB_ROOT.$CI->config->item('assets_path').$dir.'/';
-		$files = dir_files($assets_path, false, false);
+		$files = $CI->fuel->assets->dir_files($assets_path, false, false);
 		return count($files);
 	}
 	
