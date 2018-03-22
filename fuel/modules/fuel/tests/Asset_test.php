@@ -55,7 +55,7 @@ class Asset_test extends Tester_base {
 			$this->_reset($config);
 			$test = $this->CI->asset->{$t['func']}($t['file']);
 			$expected = 'http://'.$_SERVER['HTTP_HOST'].$p;
-			$this->run($test, $expected, 'Asset '.$t['func'].'() test 2');
+			$this->run($test, $expected, 'Asset '.$t['func'].'() test 3');
 		}
 	}
 	
