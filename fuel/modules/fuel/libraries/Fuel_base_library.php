@@ -31,9 +31,16 @@
 // --------------------------------------------------------------------
 
 class Fuel_base_library {
-	
+
 	protected $CI = NULL; // reference to the CI super object
-	protected $fuel = NULL; // reference to the fuel object
+
+	/**
+	 * The FUEL master object
+	 *
+	 * @var Fuel
+	 */
+	protected $fuel = NULL;
+
 	protected $permission = ''; // permission required to run
 	protected $init_permission_check = FALSE; // whether to check permissions on initialization or not
 	protected $_errors = array(); // array to keep track of errors
@@ -186,6 +193,7 @@ class Fuel_base_library {
 	 *
 	 * @access	protected
 	 * @param	string	Error message
+	 * @param	boolean	Indicates whether the values in $error correspond to language file keys
 	 * @return	void
 	 */	
 	protected function _add_error($error, $use_lang = FALSE)
@@ -220,7 +228,7 @@ class Fuel_base_library {
 	 * Checks if the logged in user is authenticated to use this item based on specified permission
 	 *
 	 * @access	protected
-	 * @return	void
+	 * @return	boolean
 	 */	
 	protected function _has_permission()
 	{

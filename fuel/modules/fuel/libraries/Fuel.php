@@ -116,7 +116,7 @@ class Fuel extends Fuel_advanced_module {
 	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
 	 *
 	 * @access	public
-	 * @return	object	
+	 * @return	Fuel
 	 */	
 	public static function &get_instance()
 	{

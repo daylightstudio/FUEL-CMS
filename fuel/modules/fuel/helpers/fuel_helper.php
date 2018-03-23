@@ -34,7 +34,7 @@
  * Returns the instance of the FUEL object
  *
  * @access	public
- * @return	object
+ * @return	Fuel
  */
 function &fuel_instance()
 {
@@ -45,7 +45,7 @@ function &fuel_instance()
  * Returns the instance of the FUEL object just like fuel_instance but with a similar syntax to the CI() function which returns the CI object.
  * 
  * @access	public
- * @return	object
+ * @return	Fuel
  */
 function &FUEL()
 {

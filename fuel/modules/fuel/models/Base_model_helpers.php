@@ -16,6 +16,12 @@ abstract class Abstract_base_model_helper {
 	protected $parent_model = NULL;
 	protected $record = NULL;
 	protected $CI = NULL;
+
+	/**
+	 * The FUEL master object
+	 *
+	 * @var Fuel
+	 */
 	protected $fuel = NULL;
 
 	public function __construct($record = array(), $parent_model = NULL)

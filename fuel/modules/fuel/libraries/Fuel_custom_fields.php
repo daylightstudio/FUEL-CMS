@@ -32,6 +32,12 @@ class Fuel_custom_fields {
 	
 
 	protected $CI;
+
+	/**
+	 * The FUEL master object
+	 *
+	 * @var Fuel
+	 */
 	protected $fuel;
 	
 	// --------------------------------------------------------------------
