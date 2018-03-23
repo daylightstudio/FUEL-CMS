@@ -68,7 +68,9 @@ class MY_Model extends CI_Model {
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
 
 	/**
-	 * @var CI_DB_query_builder CI database query builder
+	 * CI database query builder
+	 *
+	 * @var CI_DB_query_builder
 	 */
 	protected $db;
 
@@ -84,7 +86,14 @@ class MY_Model extends CI_Model {
 	protected $rules = array(); // validation rules
 	protected $fields = array(); // fields in the table
 	protected $use_common_query = TRUE; // include the _common_query method for each query
-	protected $validator = NULL; // the validator object
+
+	/**
+	 * The validator object
+	 *
+	 * @var Validator
+	 */
+	protected $validator = NULL;
+
 	protected $clear_related_on_save = 'AUTO'; // clears related records before saving
 	protected $_tables = array(); // an array of table names with the key being the alias and the value being the actual table
 	protected $_last_saved = NULL; // a reference to the last saved object / ID of record;
@@ -2572,7 +2581,7 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access	public
-	 * @return	object
+	 * @return	Validator
 	 */	
 	public function &get_validation()
 	{

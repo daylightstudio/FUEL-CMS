@@ -33,7 +33,14 @@
 class Form {
 	
 	public $attrs = 'method="post" action=""'; // form html attributes
-	public $validator; // the validator object
+
+	/**
+	 * The validator object
+	 *
+	 * @var Validator
+	 */
+	public $validator;
+
 	public $focus_highlight_cssclass = "field_highlight"; // the focus css class
 	public $error_highlight_cssclass = "error_highlight"; // the error highlight class
 	

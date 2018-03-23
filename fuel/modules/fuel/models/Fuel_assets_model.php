@@ -35,8 +35,13 @@ class Fuel_assets_model extends CI_Model {
 	public $key_field = 'id'; // placed here to prevent errors since we are not extended Base_module_model
 	public $boolean_fields = array(); // placed here to prevent errors since we are not extended Base_module_model
 	public $default_file_types = 'jpg|jpeg|jpe|png|gif|mov|mpeg|mp3|wav|aiff|pdf|css'; // default file types to associate to folders without associations
-	
-	protected $validator = NULL; // the validator object
+
+	/**
+	 * The validator object
+	 *
+	 * @var Validator
+	 */
+	protected $validator = NULL;
 
 	private $_encoded = FALSE;
 
@@ -56,7 +61,6 @@ class Fuel_assets_model extends CI_Model {
 		
 		$this->validator = new Validator();
 		$this->validator->register_to_global_errors = FALSE;
-		
 	}
 	
 	/**
