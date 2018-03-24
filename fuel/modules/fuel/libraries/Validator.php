@@ -293,7 +293,7 @@ class Validator {
 	 * Retrieve errors
 	 *
 	 * @access public
-	 * @return assoc array of errors and messages
+	 * @return array	assoc array of errors and messages
 	 */
 	public function get_errors()
 	{

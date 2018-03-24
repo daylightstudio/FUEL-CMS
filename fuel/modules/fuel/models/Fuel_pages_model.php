@@ -193,8 +193,7 @@ class Fuel_pages_model extends Base_module_model {
 	 */	
 	public function find_by_location($location, $just_published = 'yes')
 	{
-		
-		if (substr($location, 0, 4) == 'http')
+		if (strpos($location, 'http://') === 0 || strpos($location, 'https://') === 0)
 		{
 			$location = substr($location, strlen(site_url()));
 		}

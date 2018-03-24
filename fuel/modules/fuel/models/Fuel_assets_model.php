@@ -64,7 +64,7 @@ class Fuel_assets_model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	array	Search filters
-	 * @return	void
+	 * @return	string
 	 */	
 	public function table_name()
 	{
@@ -99,10 +99,10 @@ class Fuel_assets_model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	int		limit
-	 * @param	string	offset
+	 * @param	int		offset
 	 * @param	string	column
 	 * @param	string	order
-	 * @return	array
+	 * @return	array|int
 	 */	
 	public function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc', $just_count = FALSE)
 	{
@@ -185,7 +185,6 @@ class Fuel_assets_model extends CI_Model {
 		}
 		return $return;
 	}
-	
 
 	// --------------------------------------------------------------------
 
@@ -260,8 +259,7 @@ class Fuel_assets_model extends CI_Model {
 	public function record_count($dir = 'images')
 	{
 		$CI =& get_instance();
-		$assets_path = WEB_ROOT.$CI->config->item('assets_path').$dir.'/';
-		$files = dir_files($assets_path, false, false);
+		$files = $CI->fuel->assets->dir_files($dir, FALSE, FALSE);
 		return count($files);
 	}
 	
@@ -276,8 +274,6 @@ class Fuel_assets_model extends CI_Model {
 	 */	
 	public function delete($file)
 	{
-		$CI =& get_instance();
-
 		if (is_array($file))
 		{
 			$valid = TRUE;
@@ -426,7 +422,7 @@ class Fuel_assets_model extends CI_Model {
 		{
 			$fields['subfolder'] = array('label' => lang('form_label_subfolder'), 'comment' => lang('assets_comment_subfolder'));
 		}
-		$fields['overwrite'] = array('label' => lang('form_label_overwrite'), 'type' => 'checkbox', 'comment' => lang('assets_comment_overwrite'), 'checked' => true, 'value' => '1');
+		$fields['overwrite'] = array('label' => lang('form_label_overwrite'), 'type' => 'checkbox', 'comment' => lang('assets_comment_overwrite'), 'checked' => TRUE, 'value' => '1');
 		$fields['unzip'] = array('type' => 'checkbox', 'label' => lang('form_label_unzip'), 'comment' => lang('assets_comment_unzip'), 'value' => 1);
 
 		$fields[lang('assets_heading_image_specific')] = array('type' => 'fieldset', 'class' => 'tab');
@@ -472,8 +468,7 @@ class Fuel_assets_model extends CI_Model {
 	 * Placeholder function (not used)
 	 *
 	 * @access	public
-	 * @param   array Posted values
-	 * @return	void
+	 * @return	boolean
 	 */
 	public function has_auto_increment()
 	{
@@ -485,7 +480,7 @@ class Fuel_assets_model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param   array Posted values
-	 * @return	void
+	 * @return	array
 	 */
 	public function filters($values = array())
 	{
