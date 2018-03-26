@@ -568,9 +568,10 @@ class Form {
 	// will echo the following
 	This will safely prep the form field text with entities like &amp;amp; in it
 	</code>
-	 * @access public
-	 * @param string elements value
-	 * @return string
+	 * @access	public
+	 * @param	string	elements value
+	 * @param	boolean
+	 * @return	string
 	 */
 	public static function prep($str, $double_encode = TRUE)
 	{
@@ -581,24 +582,7 @@ class Form {
 		$CI =& get_instance();
 		$str = $CI->utf8->clean_string($str);
 
-		if ($double_encode === TRUE)
-		{
-			$str = htmlspecialchars($str, ENT_QUOTES, config_item('charset'));
-		}
-		else
-		{
-			// Do not encode existing HTML entities
-			// From PHP 5.2.3 this functionality is built-in, otherwise use a regex
-			if (version_compare(PHP_VERSION, '5.2.3', '>='))
-			{
-				$str = htmlspecialchars($str, ENT_QUOTES, config_item('charset'), FALSE);
-			}
-			else
-			{
-				$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
-				//$str = str_replace(array(''\'', '"'), array('&#39;', '&quot;'), $str);
-			}
-		}
+		$str = htmlspecialchars($str, ENT_QUOTES, config_item('charset'), $double_encode);
 		return $str;
 	}
 	
