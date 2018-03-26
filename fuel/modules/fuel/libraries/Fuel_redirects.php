@@ -755,6 +755,9 @@ class Fuel_redirects extends Fuel_base_library {
 	 */
 	protected function _session_init($uri)
 	{
+		// Load this here to prevent errors if logged into CMS and a session_start() has already been called
+		$this->CI->load->library('session');
+
 		$this->has_session = session_id();
 
 		if (!$this->has_session)
@@ -780,7 +783,6 @@ class Fuel_redirects extends Fuel_base_library {
 		{
 			$_SESSION[self::REDIRECT_COUNT] = 0;
 		}
-
 	}
 
 	/**
