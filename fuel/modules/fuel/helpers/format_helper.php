@@ -43,10 +43,6 @@ if (!function_exists('currency'))
 	 */
 	function currency($value, $symbol = '$',  $include_cents = TRUE, $decimal_sep = '.', $thousands_sep = ',')
 	{
-		if (!isset($value) OR $value === "")
-		{
-			return;
-		}
 		$value = (float) $value;
 		$dec_num = (!$include_cents) ? 0 : 2;
 		$is_negative = (strpos($value, '-') === 0) ? '-' : '';
