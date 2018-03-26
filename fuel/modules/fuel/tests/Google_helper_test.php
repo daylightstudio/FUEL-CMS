@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once('Fuel_test_base.php');
 
@@ -9,11 +9,11 @@ require_once('Fuel_test_base.php');
  * An open source Content Management System based on the
  * Codeigniter framework (http://codeigniter.com)
  *
- * @package        FUEL CMS
- * @author        David McReynolds @ Daylight Studio
- * @copyright    Copyright (c) 2018, Daylight Studio LLC.
- * @license        http://docs.getfuelcms.com/general/license
- * @link        http://www.getfuelcms.com
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2018, Daylight Studio LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
  * @filesource
  */
 
@@ -22,11 +22,11 @@ require_once('Fuel_test_base.php');
 /**
  * FUEL Google Helper Test
  *
- * @package        FUEL CMS
- * @subpackage    Helpers
- * @category    Helpers
- * @author        David McReynolds @ Daylight Studio
- * @link        http://docs.getfuelcms.com/helpers/format_helper
+ * @package		FUEL CMS
+ * @subpackage	Helpers
+ * @category	Helpers
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/helpers/format_helper
  */
 
 // ------------------------------------------------------------------------
