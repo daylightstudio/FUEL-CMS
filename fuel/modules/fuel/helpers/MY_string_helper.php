@@ -203,7 +203,7 @@ if (!function_exists('safe_htmlentities'))
 	function safe_htmlentities($str, $protect_amp = TRUE)
 	{
 		// convert all hex single quotes to numeric ... 
-		// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
+		// this was due to an issue we saw with htmlentities still encoding it's ampersand again...
 		// but was inconsistent across different environments and versions... not sure the issue
 		// may need to look into other hex characters
 		$str = str_replace('&#x27;', '&#39;', $str);
@@ -220,17 +220,8 @@ if (!function_exists('safe_htmlentities'))
 		}
 
 		// safely translate now
-		if (version_compare(PHP_VERSION, '5.2.3', '>='))
-		{
-			//$str = htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8', FALSE);
-			$str = htmlentities($str, ENT_NOQUOTES, config_item('charset'), FALSE);
-		}
-		else
-		{
-			$str = preg_replace('/&(?!(?:#\d++|[a-z]++);)/ui', '&amp;', $str);
-			$str = str_replace(array('<', '>'), array('&lt;', '&gt;'), $str);
-		}
-		
+		$str = htmlentities($str, ENT_NOQUOTES, config_item('charset'), FALSE);
+
 		// translate everything back
 		$str = str_replace($find, array('<','>'), $str);
 		$str = str_replace($replace, $find, $str);
