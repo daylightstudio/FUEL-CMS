@@ -1054,9 +1054,6 @@ class Pages extends Module {
 				$upload_data = $this->upload->data();
 				$error = FALSE;
 
-				// read in the file so we can filter it
-				$file = read_file($upload_data['full_path']);
-
 				// sanitize the file before saving
 				$id = $this->input->post('id', TRUE);
 				$pagevars = $this->fuel->pages->import($id);
