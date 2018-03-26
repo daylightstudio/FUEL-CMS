@@ -66,6 +66,8 @@ class Format_helper_test extends Tester_base {
 		$this->run($actual, $expected, 'include_cents FALSE');
 	}
 
+	// ------------------------------------------------------------------------
+
 	public function test_currency_includeCentsNull()
 	{
 		$actual = currency('5', '$', NULL);
