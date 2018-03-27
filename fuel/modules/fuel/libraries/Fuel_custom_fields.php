@@ -293,7 +293,7 @@ class Fuel_custom_fields {
 				{
 					$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
 				}
-				$preview .= '</a>';
+				$preview .= '</a></div>';
 			}
 
 		}
