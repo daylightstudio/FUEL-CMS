@@ -396,7 +396,6 @@ if (!function_exists('google_geolocate'))
 				}
 			}
 			$CI->curl->close();
-			//curl_close($ch);
 		}
 		else
 		{
@@ -408,34 +407,34 @@ if (!function_exists('google_geolocate'))
 			return NULL;
 		}
 
-		$lookup_func = create_function('$data, $key, $single = FALSE', '
-				$components = $data["address_components"];
-				$return = array("long_name" => "", "short_name" => "");
+		$lookup_func = function($data, $key, $single = FALSE) {
+			$components = $data['address_components'];
+			$return = array('long_name' => '', 'short_name' => '');
 
-				foreach($components as $c)
+			foreach($components as $c)
+			{
+				if (isset($c['types']) AND in_array($key, $c['types']))
 				{
-					if (isset($c["types"]) AND in_array($key, $c["types"]))
+					if (isset($c['long_name']))
 					{
-						if (isset($c["long_name"]))
+						$return['long_name'] = $c['long_name'];
+						if ($single)
 						{
-							$return["long_name"] = $c["long_name"];
-							if ($single)
-							{
-								return $return["long_name"];
-							}
+							return $return['long_name'];
 						}
-						if (isset($c["short_name"]))
-						{
-							$return["short_name"] = $c["short_name"];
-							if ($single)
-							{
-								return $return["long_name"];
-							}
-						}
-						return $return;
 					}
+					if (isset($c['short_name']))
+					{
+						$return['short_name'] = $c['short_name'];
+						if ($single)
+						{
+							return $return['long_name'];
+						}
+					}
+					return $return;
 				}
-			');
+			}
+		};
 
 		$return = strtolower($return);
 		switch($return)
