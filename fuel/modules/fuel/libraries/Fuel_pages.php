@@ -801,9 +801,6 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	public function cms_render($return = FALSE, $fuelify = FALSE)
 	{
-
-		$this->CI->load->library('parser');
-
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{
@@ -984,9 +981,6 @@ class Fuel_page extends Fuel_base_library {
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
 			{
-				// load here to save on execution time... 
-				$this->CI->load->library('parser');
-				
 				$body = file_get_contents($check_file);
 
 				// now parse any template like syntax
