@@ -451,6 +451,7 @@ class Fuel_redirects extends Fuel_base_library {
 
 			if (!empty($error_404))
 			{
+				set_status_header(404);
 				echo $error_404;
 				exit();
 			}
