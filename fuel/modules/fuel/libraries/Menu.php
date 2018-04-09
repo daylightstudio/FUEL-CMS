@@ -673,6 +673,10 @@ class Menu {
 		}
 
 		$str = '';
+		if (is_null($this->_active_items))
+		{
+			$this->_active_items = array();
+		}
 		$num = count($this->_active_items) -1;
 		$home_link = '';
 		if (!empty($this->home_link)){

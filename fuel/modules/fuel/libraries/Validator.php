@@ -63,7 +63,7 @@ class Validator {
 			$CI->load->helper('validator');
 		}
 	
-		if (count($params) > 0)
+		if ($params AND count($params) > 0)
 		{
 			$this->initialize($params);
 		}

@@ -64,7 +64,7 @@ class Form {
 	 */
 	public function initialize($params = array())
 	{
-		if (count($params) > 0)
+		if ($params AND count($params) > 0)
 		{
 			foreach ($params as $key => $val)
 			{
