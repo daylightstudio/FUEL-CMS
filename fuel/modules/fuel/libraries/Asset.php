@@ -711,11 +711,10 @@ class Asset {
 		// if the path is an associative array, than we assume the key is the module
 		if (is_array($path))
 		{
-			$path_arr = each($path);
-			if (!is_numeric($path_arr['key']))
+			if (!is_numeric(key($path)))
 			{
-				$module = $path_arr['key'];
-				$path = $path_arr['value'];
+				$module = key($path);
+				$path = current($path);
 			}
 		}
 		
@@ -810,11 +809,10 @@ class Asset {
 		// if the path is an associative array, than we assume the key is the module
 		if (is_array($path))
 		{
-			$path_arr = each($path);
-			if (!is_numeric($path_arr['key']))
+			if (!is_numeric(key($path)))
 			{
-				$module = $path_arr['key'];
-				$path = $path_arr['value'];
+				$module = key($path);
+				$path = current($path);
 			}
 		}
 		
@@ -1429,13 +1427,14 @@ class Asset {
 					}
 				}
 
-				$callback = create_function('$matches', '
+				$callback = function($matches) {
 					if (isset($matches[2]))
 					{
 						return $GLOBALS["__TMP_CSS_IMPORT__"][$matches[2]];	
 					} else {
 						return "";
-					}');
+					}
+				};
 
 				// remove calls to the import since they are combined into the same css
 				if (!empty($import_files))

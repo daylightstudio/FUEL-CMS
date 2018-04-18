@@ -532,17 +532,16 @@ class Data_table {
 
 	<pre class="brush: php">
 	// with a function
-	$delete_func = '
-	$CI =& get_instance();
-	$link = "";
-	if ($CI->auth->has_permission("delete"))
-	{
-		$url = site_url("example/delete/".$cols["id"]);
-		$link = "<a href=\"".$url."\">DELETE</a>";
-	}
-	return $link;';
-
-	$delete_func = create_function('$cols', $delete_func);
+	$delete_func = function($cols){
+		$CI =& get_instance();
+		$link = "";
+		if ($CI->auth->has_permission("delete"))
+		{
+			$url = site_url("example/delete/".$cols["id"]);
+			$link = "<a href=\"".$url."\">DELETE</a>";
+		}
+		return $link;
+	};
 	$this->data_table->add_action($field, $action);
 	</code>
 	 * @access	public
@@ -799,13 +798,14 @@ class Data_table {
 				{
 
 					//e modifier is deprecated so we have to do this
-					$callback = create_function('$match', '
+					$callback = function($match){
 							$return = $match[0];
 							if (!empty($match[2]))
 							{
 								$return = $match[1].$GLOBALS["__tmp_transient_columns__"][$match[2]].$match[3];
 							}
-							return $return;');
+							return $return;
+						};
 
 					// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
 					$GLOBALS['__tmp_transient_columns__'] = $columns;
@@ -929,19 +929,15 @@ class Data_table {
 			}
 			else
 			{
-				//e modifier is deprecated so we have to do this
-				$callback = create_function('$match', '
+				$url = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', function($match) use ($fields) {
 						$return = "";
 	
-						if (!empty($match[2]) && !empty($GLOBALS["__tmp_transient_fields__"][$match[2]]))
+						if (!empty($match[2]) && !empty($fields[$match[2]]))
 						{
-							$return = $match[1].$GLOBALS["__tmp_transient_fields__"][$match[2]].$match[3];
+							$return = $match[1].$fields[$match[2]].$match[3];
 						}
-						return $return;');
-
-				// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
-				$GLOBALS['__tmp_transient_fields__'] = $fields;
-				$url = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $val['url']);
+						return $return;
+				}, $val['url']);
 				
 				if (!empty($url))
 				{
@@ -949,12 +945,6 @@ class Data_table {
 					$actions[] ='<a href="'.$url.'"'.$attrs.' class="datatable_action action_'.url_title($key, 'underscore', TRUE).'">'.$key.'</a>';
 				}
 			}
-		}
-
-		// hacky cleanup to avoid using 5.3 syntax
-		if (isset($GLOBALS["__tmp_transient_fields__"]))
-		{
-			unset($GLOBALS["__tmp_transient_fields__"]);
 		}
 
 		if (!empty($actions)) $str = implode('&nbsp; '.$this->action_delimiter.'  &nbsp;', $actions);

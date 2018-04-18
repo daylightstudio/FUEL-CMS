@@ -316,45 +316,21 @@ class Module extends Fuel_base_controller {
 			$has_delete_permission = $this->fuel->auth->has_permission($this->permission, "delete") ? '1' : '0';
 
 			// set data table actions... look first for item_actions set in the fuel_modules
-			/*$edit_func = '
-			$CI =& get_instance();
-			$link = "";';
+			$delete_func = function($cols) use ($has_delete_permission) {
+				$CI =& get_instance();
+				$link = "";
 
-			if ($has_edit_permission)
-			{
-				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
-				{	
-					echo  $cols[$CI->model->limit_to_user_field];
-					if (empty($CI->model->limit_to_user_field) OR (!empty($CI->model->limit_to_user_field) AND (!empty($cols[$CI->model->limit_to_user_field])) AND $cols[$CI->model->limit_to_user_field] = $CI->fuel->auth->user_data("id")))
+				if ($has_delete_permission)
+				{
+					if (!empty($cols[$CI->model->key_field()]))
 					{
-						$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+						$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
-				}';	
-			}
-
-			$edit_func .= 'return $link;';
-
-			$edit_func = create_function('$cols', $edit_func);*/
-
-			// set data table actions... look first for item_actions set in the fuel_modules
-			$delete_func = '
-			$CI =& get_instance();
-			$link = "";';
-
-			if ($has_delete_permission)
-			{
-				$delete_func .= 'if (!empty($cols[$CI->model->key_field()]))
-				{
-					$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
-					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
-				}';				
-			}
-
-			$delete_func .= 'return $link;';
-			$delete_func = create_function('$cols', $delete_func);
+				}
+				return $link;
+			};
 
 			foreach($this->table_actions as $key => $val)
 			{
@@ -444,39 +420,34 @@ class Module extends Fuel_base_controller {
 			$has_publish_permission = ($this->fuel->auth->has_permission($this->permission, 'publish')) ? '1' : '0';
 			$has_edit_permission = $this->fuel->auth->has_permission($this->permission, 'edit') ? '1' : '0';
 
-			$no = lang("form_enum_option_no");
-			$yes = lang("form_enum_option_yes");
-			$col_txt = lang('click_to_toggle');
-			$key_field = $this->model->key_field();
-
-			$_publish_toggle_callback = '
-			$can_publish = (($heading == "published" OR $heading == "active") AND '.$has_publish_permission.' OR
+			$_publish_toggle_callback = function($cols, $heading) {
+				$can_publish = (($heading == "published" OR $heading == "active") AND '.$has_publish_permission.' OR
 				(($heading != "published" AND $heading != "active") AND '.$has_edit_permission.'));
 
-			$no = "'.$no.'";
-			$yes = "'.$yes.'";
-			$col_txt = "'.$col_txt.'";
+				$no = lang("form_enum_option_no");
+				$yes = lang("form_enum_option_yes");
+				$col_txt = lang('click_to_toggle');
+				$key_field = $this->model->key_field();
 
-			// boolean fields
-			if (is_null($cols[$heading]) OR $cols[$heading] == "")
-			{
-				return "";
-			}
-			else if (!is_true_val($cols[$heading]))
-			{
-				$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
-				$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$no.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
-			}
-			else
-			{
-				$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
-				$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$yes.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
-				
-			}';
-
-			$_publish_toggle_callback = create_function('$cols, $heading', $_publish_toggle_callback);
+				// boolean fields
+				if (is_null($cols[$heading]) OR $cols[$heading] == "")
+				{
+					return "";
+				}
+				else if (!is_true_val($cols[$heading]))
+				{
+					$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
+					$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+					return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$key_field].'" data-field="'.$heading.'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+				}
+				else
+				{
+					$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
+					$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+					return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$key_field].'" data-field="'.$heading.'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+					
+				}
+			};
 
 			foreach($boolean_fields as $bool)
 			{
@@ -1487,7 +1458,7 @@ class Module extends Fuel_base_controller {
 		$this->_orig_post = $_POST;
 
 		// filter placeholder $_POST values 
-		$callback = create_function('$matches', '
+		$callback = function($matches){
 			if (isset($_POST[$matches["2"]]))
 			{
 				$str = $matches[1].$_POST[$matches["2"]].$matches[3];
@@ -1497,7 +1468,7 @@ class Module extends Fuel_base_controller {
 				$str = $matches[0];
 			}
 			return $str;
-		');
+		};
 
 		// first loop through and create simple non-namespaced $_POST values if they don't exist for convenience'
 		foreach($_POST as $key => $val)
@@ -2260,13 +2231,14 @@ class Module extends Fuel_base_controller {
 					if (strpos($field_value, '{') !== FALSE )
 					{
 						//e modifier is deprecated so we have to do this
-						$callback = create_function('$match', '
+						$callback = function($match){
 								$return = "";
 								if (!empty($match[2]))
 								{
 									$return = $match[1].$GLOBALS["__tmp_transient_posted__"][$match[2]].$match[3];
 								}
-								return $return;');
+								return $return;
+							};
 
 						// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
 						$GLOBALS['__tmp_transient_posted__'] = $posted;

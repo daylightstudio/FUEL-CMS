@@ -921,7 +921,7 @@ class Pages extends Module {
 		// apply filter
 		if ( ! empty($filter))
 		{
-			$filter_callback = create_function('$a', 'return preg_match(\'#^'.$filter.'$#\', $a);');
+			$filter_callback = function($a) use ($filter) { return preg_match('#^'.$filter.'$#', $a); };
 			if (!empty($has_pdfs))
 			{
 				$options[lang('page_select_pages')] = array_filter($options[lang('page_select_pages')], $filter_callback);

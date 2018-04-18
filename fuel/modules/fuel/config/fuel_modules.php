@@ -275,21 +275,22 @@ $config['modules']['users'] = array(
 	'table_actions' => array(
 		'EDIT',
 		'DELETE' => array(
-			'func' => create_function('$cols', '
-				if ($cols[\'super_admin\'] != "yes") { 
-					$CI =& get_instance();
-					$link = "";
-					if ($CI->fuel->auth->has_permission($CI->permission, "delete") && isset($cols[$CI->model->key_field()]))
-					{
-						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
-						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
-						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+			'func' => function($cols){
+					if ($cols['super_admin'] != "yes") { 
+						$CI =& get_instance();
+						$link = "";
+						if ($CI->fuel->auth->has_permission($CI->permission, "delete") && isset($cols[$CI->model->key_field()]))
+						{
+							$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+							$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+							$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+						}
+						return $link;
 					}
-					return $link;
-				}')
+				}
 			),
 		'LOGIN' => array(
-			'func' => create_function('$cols', '
+			'func' => function($cols){
 				$CI =& get_instance();
 				$link = "";
 				$user = $CI->fuel->auth->user_data();
@@ -299,7 +300,7 @@ $config['modules']['users'] = array(
 					$link = "<a href=\"".$url."\">".lang("table_action_login_as")."</a>";
 				}
 				return $link;
-				'),
+				},
 			),
 		),
 	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),

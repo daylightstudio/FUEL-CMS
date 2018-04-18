@@ -1631,7 +1631,7 @@ class Form_builder {
 					$str = '';
 					break;
 				case 'custom':
-					$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
+					$func = (isset($params['func'])) ? $params['func'] : function($params) { return (isset($params["value"])) ? $params["value"] : "" ; };
 					$str = $this->create_custom($func, $params);
 					break;
 				default : 
@@ -2459,15 +2459,52 @@ class Form_builder {
 
 		$process_key = $params[$key];
 
-		// create post processer to recreate date value
-$func_str = '
-			if (is_array($value))
-			{
-				foreach($value as $key => $val)
+		
+		// needed for post processing
+		if (!empty($_POST) AND !isset($_POST[$params['key']]))
+		{
+			$_POST[$time_params['name']] = '';
+		}
+
+		if (empty($params['is_datetime']))
+		{
+			// create post processer to recreate date value
+			$func = function($value) use ($process_key){
+				if (is_array($value))
 				{
-					$hr   = (isset($val["'.$process_key.'"]) AND (int)$val["'.$process_key.'"] > 0 AND (int)$val["'.$process_key.'"] < 24) ? $val["'.$process_key.'"] : "";
-					$min  = (isset($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-					$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+					foreach($value as $key => $val)
+					{
+						$hr   = (isset($val[$process_key]) AND (int)$val[$process_key] > 0 AND (int)$val[$process_key] < 24) ? $val[$process_key] : "";
+						$min  = (isset($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+						$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
+						if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+						{
+							if ($hr > 24) 
+							{
+								$hr = "00";
+							}
+							else
+							{
+								$hr = (int) $hr - 12;
+								$ampm = "pm";
+							}
+						}
+
+						if (empty($hr))
+						{
+							$hr = "00";
+						}
+
+						$dateval = $hr.":".$min.$ampm;
+						$value[$key][$process_key] = date("H:i:s", strtotime($dateval));
+					}
+					return $value;
+				}
+				else
+				{
+					$hr    = (isset($_POST[$process_key]) AND (int)$_POST[$process_key] > 0 AND (int)$_POST[$process_key] < 24) ? $_POST[$process_key] : "";
+					$min   = (isset($_POST[$process_key.'_min']) AND is_numeric($_POST[$process_key.'_min']))  ? $_POST[$process_key.'_min'] : "00";
+					$ampm  = (isset($_POST[$process_key.'_am_pm']) AND $hr AND $min) ? $_POST[$process_key.'_am_pm'] : "";
 					if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 					{
 						if ($hr > 24) 
@@ -2487,48 +2524,10 @@ $func_str = '
 					}
 
 					$dateval = $hr.":".$min.$ampm;
-					$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
+					$dateval = date("H:i:s", strtotime($dateval));
+					return $dateval;
 				}
-				return $value;
-			}
-			else
-			{
-				$hr    = (isset($_POST["'.$process_key.'"]) AND (int)$_POST["'.$process_key.'"] > 0 AND (int)$_POST["'.$process_key.'"] < 24) ? $_POST["'.$process_key.'"] : "";
-				$min   = (isset($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
-				$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "";
-				if (!empty($ampm) AND !empty($hr) AND $hr > 12)
-				{
-					if ($hr > 24) 
-					{
-						$hr = "00";
-					}
-					else
-					{
-						$hr = (int) $hr - 12;
-						$ampm = "pm";
-					}
-				}
-
-				if (empty($hr))
-				{
-					$hr = "00";
-				}
-
-				$dateval = $hr.":".$min.$ampm;
-				$dateval = date("H:i:s", strtotime($dateval));
-				return $dateval;
-			}
-		';
-		
-		// needed for post processing
-		if (!empty($_POST) AND !isset($_POST[$params['key']]))
-		{
-			$_POST[$time_params['name']] = '';
-		}
-
-		if (empty($params['is_datetime']))
-		{
-			$func = create_function('$value', $func_str);
+			};
 			$this->set_post_process($params['key'], $func);
 		}
 		return $str;
@@ -2567,27 +2566,26 @@ $func_str = '
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-		$func_str = '
-				
-				if (is_array($value))
+		$func = function($value) use ($process_key) {
+			if (is_array($value))
 				{
 					foreach($value as $key => $val)
 					{
-						if (isset($val["'.$process_key.'"]))
+						if (isset($val[$process_key]))
 						{
 
-							$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
-							$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
-							$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-							$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+							$date = (!empty($val[$process_key]) AND is_date_format($val[$process_key])) ? current(explode(" ", $val[$process_key])) : "";
+							$hr   = (!empty($val[$process_key.'_hour']) AND  (int)$val[$process_key.'_hour'] > 0 AND (int)$val[$process_key.'_hour'] < 24) ? $val[$process_key.'_hour'] : "";
+							$min  = (!empty($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+							$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
 							
 
-							if (is_string($val["'.$process_key.'"]))
+							if (is_string($val[$process_key]))
 							{
-								$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
-								$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
-								$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-								$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+								$date = (!empty($val[$process_key]) AND is_date_format($val[$process_key])) ? current(explode(" ", $val[$process_key])) : "";
+								$hr   = (!empty($val[$process_key.'_hour']) AND  (int)$val[$process_key.'_hour'] > 0 AND (int)$val[$process_key.'_hour'] < 24) ? $val[$process_key.'_hour'] : "";
+								$min  = (!empty($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+								$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
 
 								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 								{
@@ -2602,22 +2600,22 @@ $func_str = '
 									}
 								}
 
-								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]));
+								$dateval = current(explode(" ", $value[$key][$process_key]));
 								if ($date != "")
 								{
 									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
 								}
 								if (!empty($dateval))
 								{
-									$value[$key]["'.$process_key.'"] = $dateval;	
+									$value[$key][$process_key] = $dateval;	
 								}
 							}
-							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 							{
-								$date = (!empty($val["'.$process_key.'"]["'.$params['name'].'"]) AND is_date_format($val["'.$process_key.'"]["'.$params['name'].'"])) ? current(explode(" ", $val["'.$process_key.'"]["'.$params['name'].'"])) : "";
-								$hr   = (isset($val["'.$process_key.'"]["'.$params['name'].'_hour"]) AND  (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] >= 0 AND (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] < 24) ? $val["'.$process_key.'"]["'.$params['name'].'_hour"] : "";
-								$min  = (!empty($val["'.$process_key.'"]["'.$params['name'].'_min"]) AND is_numeric($val["'.$process_key.'"]["'.$params['name'].'_min"]))  ? $val["'.$process_key.'"]["'.$params['name'].'_min"] : "00";
-								$ampm = (isset($val["'.$process_key.'"]["'.$params['name'].'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'"]["'.$params['name'].'_am_pm"] : "";
+								$date = (!empty($val[$process_key][$params['name']]) AND is_date_format($val[$process_key][$params['name']])) ? current(explode(" ", $val[$process_key][$params['name']])) : "";
+								$hr   = (isset($val[$process_key][$params['name'].'_hour']) AND  (int)$val[$process_key][$params['name'].'_hour'] >= 0 AND (int)$val[$process_key][$params['name'].'_hour'] < 24) ? $val[$process_key][$params['name'].'_hour'] : "";
+								$min  = (!empty($val[$process_key][$params['name'].'_min']) AND is_numeric($val[$process_key][$params['name'].'_min']))  ? $val[$process_key][$params['name'].'_min'] : "00";
+								$ampm = (isset($val[$process_key][$params['name'].'_am_pm']) AND $hr AND $min) ? $val[$process_key][$params['name'].'_am_pm'] : "";
 
 								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 								{
@@ -2638,14 +2636,14 @@ $func_str = '
 									$ampm = "am";
 								}
 
-								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]["'.$params['name'].'"]));
+								$dateval = current(explode(" ", $value[$key][$process_key][$params['name']]));
 								if ($date != "")
 								{
 									if ($hr !== "") $dateval .= " ".$hr.":".$min.$ampm;
 								}
 								if (!empty($dateval))
 								{
-									$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $dateval;	
+									$value[$key][$process_key][$params['name']] = $dateval;	
 								}
 							}
 						}
@@ -2655,10 +2653,10 @@ $func_str = '
 				}
 				else
 				{
-					$date  = (!empty($_POST["'.$process_key.'"]) AND is_date_format($_POST["'.$process_key.'"])) ? current(explode(" ", $_POST["'.$process_key.'"])) : "";
-					$hr    = (isset($_POST["'.$process_key.'_hour"]) AND (int)$_POST["'.$process_key.'_hour"] >= 0 AND (int)$_POST["'.$process_key.'_hour"] < 24) ? $_POST["'.$process_key.'_hour"] : "";
-					$min   = (!empty($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
-					$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "";
+					$date  = (!empty($_POST[$process_key]) AND is_date_format($_POST[$process_key])) ? current(explode(" ", $_POST[$process_key])) : "";
+					$hr    = (isset($_POST[$process_key.'_hour']) AND (int)$_POST[$process_key.'_hour'] >= 0 AND (int)$_POST[$process_key.'_hour'] < 24) ? $_POST[$process_key.'_hour'] : "";
+					$min   = (!empty($_POST[$process_key.'_min']) AND is_numeric($_POST[$process_key.'_min']))  ? $_POST[$process_key.'_min'] : "00";
+					$ampm  = (isset($_POST[$process_key.'_am_pm']) AND $hr AND $min) ? $_POST[$process_key.'_am_pm'] : "";
 
 					if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 					{
@@ -2694,9 +2692,8 @@ $func_str = '
 
 					return $dateval;
 				}
-			';
 
-		$func = create_function('$value', $func_str);
+		};
 		$this->set_post_process($params['key'], $func);
 		return $str;
 	}
@@ -3578,7 +3575,7 @@ $func_str = '
 		// shorthand if the function name is remove or clear, then we return an empty string
 		if ($func == 'remove' OR $func == 'clear')
 		{
-			$func = create_function('$value', 'return "";');
+			$func = function($value){ return ""; };
 		}
 		
 		return array('func' => $func, 'params' => $params);
