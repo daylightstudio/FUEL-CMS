@@ -115,8 +115,8 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string key in processing array to assign to rule. Often times its the same name as the field input
-	 * @param string error message
 	 * @param string function for processing
+	 * @param string error message
 	 * @param mixed function arguments with the first usually being the posted value. If multiple arguments need to be passed, then you can use an array.
 	 * @return void
 	 */
