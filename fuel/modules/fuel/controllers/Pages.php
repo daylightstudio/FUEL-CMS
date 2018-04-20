@@ -1236,9 +1236,9 @@ class Pages extends Module {
 				$data = $this->fuel_pagevariables_model->find_one_array($where);
 
 				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+				if (substr($file_tmp, strlen($file_tmp) - 7) == '_upload')
 				{
-					$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+					$field_name = substr($file_tmp, 0, strlen($file_tmp) - 7);
 				}
 
 				if (isset($posted[$field_name]))
