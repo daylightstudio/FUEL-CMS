@@ -66,20 +66,23 @@ class Fuel_tags extends Fuel_module {
 	 * @access	public
 	 * @param	string	the context value in which to search for a tag
 	 * @param	boolean	determines whether to return just one or not (optional)
+	 * @param	string	$order (optional)
+	 * @param	int	$limit (optional)
+	 * @param	int	$offset (optional)
 	 * @return	object
 	 */	
-	public function find_by_context($context, $one = FALSE)
+	public function find_by_context($context, $one = FALSE, $order = NULL, $limit = NULL, $offset = NULL)
 	{
 		$model = $this->model();
 		$model = $this->model();
 		$where = 'FIND_IN_SET("'.$context.'", '.$model->table_name().'.context)';
 		if ($one)
 		{
-			$data = $model->find_one($where);	
+			$data = $model->find_one($where);
 		}
 		else
 		{
-			$data = $model->find_all($where);	
+			$data = $model->find_all($where, $order, $limit, $offset);
 		}
 		return $data;
 	}
@@ -91,6 +94,9 @@ class Fuel_tags extends Fuel_module {
 	 *
 	 * @access	public
 	 * @param	string	the name of the category
+	 * @param	string	$order (optional)
+	 * @param	int	$limit (optional)
+	 * @param	int	$offset (optional)
 	 * @return	array
 	 */	
 	public function find_by_category($category, $order = NULL, $limit = NULL, $offset = NULL)
