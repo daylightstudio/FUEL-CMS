@@ -103,14 +103,13 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 				$r_delim = $delimiters[1];
 
 				$compiler->setDelimiters($l_delim, $r_delim);
-
 				
 				//Add a pre-processor to help fix javascript {}
 				// added by David McReynolds @ Daylight Studio 11/04/10
 				$callback = function($compiler) use ($l_delim) {
 					$string = $compiler->getTemplateSource();
 					
-					$callback = function($matches){
+					$callback = function($matches) use ($l_delim){
 						if (isset($matches[1]))
 						{
 							$str = "<script";
