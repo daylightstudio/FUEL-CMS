@@ -1504,7 +1504,7 @@ class Fuel_custom_fields {
 			{
 				$lis = explode("\n", $value);
 				$lis = array_map("trim", $lis);
-				return '.$list_type.'($lis, "'.$output_class.'");
+				return $list_type($lis, $output_class);
 			}
 
 		};
