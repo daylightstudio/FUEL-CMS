@@ -967,6 +967,15 @@ class Module extends Fuel_base_controller {
 			if ( ! is_array($this->model->key_field()))
 			{
 				$posted[$this->model->key_field()] = $id;
+
+				// replace any {id} placeholder values
+				foreach ($posted as $key => $val)
+				{
+					if (is_string($val))
+					{
+						$posted[$key] = str_replace('{'.$this->model->key_field().'}', $id, $val);
+					}
+				}
 			}
 
 			// process $_FILES
