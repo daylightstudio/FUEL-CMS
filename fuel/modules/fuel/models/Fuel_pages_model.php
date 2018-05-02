@@ -193,6 +193,7 @@ class Fuel_pages_model extends Base_module_model {
 	 */	
 	public function find_by_location($location, $just_published = 'yes')
 	{
+		$wildcard_location = '';
 		
 		if (substr($location, 0, 4) == 'http')
 		{
