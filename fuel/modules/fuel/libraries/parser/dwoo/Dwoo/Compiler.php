@@ -2527,7 +2527,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$breaker = false;
-		while (list($k,$char) = each($breakChars)) {
+		foreach($breakChars as $k => $char) {
 			$test = strpos($substr, $char);
 			if ($test !== false && $test < $end) {
 				$end = $test;
