@@ -30,6 +30,7 @@
 class Fuel_notification extends Fuel_base_library {
 
 	public $to = ''; // the to address to send the notification
+	public $cc = ''; // the CC address to send the notification
 	public $from = ''; // the from address of the sender
 	public $from_name = ''; // the from name of the sender
 	public $subject = ''; // the subject line of the notification
@@ -111,6 +112,11 @@ class Fuel_notification extends Fuel_base_library {
 		else
 		{
 			$this->CI->email->to($this->to);
+		}
+
+		if ($this->cc)
+		{
+			$this->CI->email->cc($this->cc);
 		}
 		
 		if (!$this->CI->email->send())
