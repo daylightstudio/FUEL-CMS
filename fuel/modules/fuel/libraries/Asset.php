@@ -1461,35 +1461,40 @@ class Asset {
 		}
 		
 		// gzip if enabled in config and the server
-		if (($params['gzip'] == TRUE) AND extension_loaded('zlib'))
+		if ((($params['gzip'] == TRUE) AND extension_loaded('zlib')) AND (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE))
 		{
-			if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
+			$gzip = "<?php".PHP_EOL;
+			$gzip .= "ob_start();".PHP_EOL;
+		
+			// start an inner buffer so we can get the content length
+			$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
+			$gzip .= "\n?>";
+			$gzip .= $output;
+			$gzip .= "<?php".PHP_EOL;
+			$gzip .= "ob_end_flush();".PHP_EOL;
+		
+			// now begin inner buffer headers
+			if (!empty($mime))
 			{
-				$gzip = "<?php".PHP_EOL;
-				$gzip .= "ob_start();".PHP_EOL;
-			
-				// start an inner buffer so we can get the content length
-				$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
-				$gzip .= "\n?>";
-				$gzip .= $output;
-				$gzip .= "<?php".PHP_EOL;
-				$gzip .= "ob_end_flush();".PHP_EOL;
-			
-				// now begin inner buffer headers
-				if (!empty($mime))
-				{
-					$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;	
-				}
-				$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
-				$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
-				$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
-				$gzip .= "header(\$exp);".PHP_EOL;
-				$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
-				$gzip .= "header(\$size);".PHP_EOL;
-				$gzip .= 'ob_end_flush();';
-				$gzip .= "\n?>".PHP_EOL;
-				$output = $gzip;
+				$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;	
 			}
+			$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
+			$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
+			$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
+			$gzip .= "header(\$exp);".PHP_EOL;
+			$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
+			$gzip .= "header(\$size);".PHP_EOL;
+			$gzip .= 'ob_end_flush();';
+			$gzip .= "\n?>".PHP_EOL;
+			$output = $gzip;
+		}
+		else
+		{
+			$out = "<?php".PHP_EOL;
+			$out .= "header(\"Content-type: ".$mime."; charset: UTF-8\");";
+			$out .= "\n?>".PHP_EOL;
+			$out .= $output;
+			$output = $out;
 		}
 
 		// write contents to file
