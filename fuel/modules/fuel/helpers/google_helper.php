@@ -326,7 +326,7 @@ if (!function_exists('google_map_url'))
 
 		// set output
 		$p['output'] = 'embed';
-		$url = 'http://maps.google.com/maps?'.http_build_query($p, '', '&amp;');
+		$url = (is_https() ? 'https': 'http').'://maps.google.com/maps?'.http_build_query($p, '', '&amp;');
 		return $url;
 	}
 }
