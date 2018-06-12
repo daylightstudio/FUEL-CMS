@@ -2169,7 +2169,8 @@ class Fuel_custom_fields {
 		$edit_url_params = (!empty($params['edit_url_params'])) ? http_build_query($params['edit_url_params']) : '';
 		$display_fields = (!empty($params['display_fields'])) ? $params['display_fields'] : NULL;
 
-		$create_url = "{$module_url}/inline_create";
+		$create_url = (!empty($params['create_url'])) ? $params['create_url'] : "{$module_url}/inline_create";
+		
 		if (!empty($display_fields))
 		{
 			if (is_array($display_fields))
