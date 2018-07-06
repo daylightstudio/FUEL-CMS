@@ -1420,10 +1420,6 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->hidden = (array) $this->model->key_field();
 			}
 
-			$this->form_builder->set_fields($fields);
-			$this->form_builder->display_errors = FALSE;
-			$this->form_builder->set_field_values($field_values);
-
 			if ($this->config->item('date_format'))
 			{
 				$this->form_builder->date_format = $this->config->item('date_format');
@@ -1437,6 +1433,10 @@ class Module extends Fuel_base_controller {
 			{
 				$this->form_builder->cancel_value = lang('btn_cancel');
 			}
+
+			$this->form_builder->set_fields($fields);
+			$this->form_builder->display_errors = FALSE;
+			$this->form_builder->set_field_values($field_values);
 
 			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
 			//$this->form_builder->auto_execute_js = FALSE;

@@ -624,7 +624,15 @@ class Form_builder {
 			}
 			else if ((is_array($val['name']) AND in_array($val['name'], $this->displayonly)) OR  $val['displayonly'] OR  (is_string($this->displayonly) AND strtolower($this->displayonly) == 'all'))
 			{
-				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
+				if (isset($val['displayonly']) AND !is_bool($val['displayonly']))
+				{
+					$display_value = $val['displayonly'];
+				}
+				else
+				{
+					$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];	
+				}
+
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
 				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
@@ -823,7 +831,15 @@ class Form_builder {
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td class=\"label\">";
-				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
+				if (isset($val['displayonly']) AND !is_bool($val['displayonly']))
+				{
+					$display_value = $val['displayonly'];
+				}
+				else
+				{
+					$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];	
+				}
+				
 				if ($this->label_layout != 'top')
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
