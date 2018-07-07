@@ -13,9 +13,22 @@
 abstract class Abstract_base_model_helper {
 
 	protected $values = array();
+
+	/**
+	 * Parent model object
+	 *
+	 * @var MY_Model
+	 */
 	protected $parent_model = NULL;
+
 	protected $record = NULL;
 	protected $CI = NULL;
+
+	/**
+	 * The FUEL master object
+	 *
+	 * @var Fuel
+	 */
 	protected $fuel = NULL;
 
 	public function __construct($record = array(), $parent_model = NULL)
@@ -552,8 +565,21 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
  */
 class Base_model_validation extends Abstract_base_model_helper  {
 
+	/**
+	 * The validator object
+	 *
+	 * @var Validator
+	 */
 	protected $validator = NULL;
 
+	/**
+	 * Constructor
+	 *
+	 * @access	public
+	 * @param	array		$record
+	 * @param	MY_Model	$parent_model
+	 * @return	void
+	 */
 	public function __construct($record = array(), $parent_model = NULL)
 	{
 		parent::__construct();
@@ -582,8 +608,8 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	 * Sets the validator object initially.
 	 *
 	 * @access	public
-	 * @param	array 	The validator to set
-	 * @return	object 	Instance of Base_model_validation
+	 * @param	Validator	The validator to set
+	 * @return	object		Instance of Base_model_validation
 	 */	
 	public function set_validator($validator)
 	{
@@ -597,7 +623,7 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	 * Returns the validator object.
 	 *
 	 * @access	public
-	 * @return	object
+	 * @return	Validator
 	 */	
 	public function get_validator()
 	{
@@ -610,11 +636,13 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	 * Adds an error to the parent models validator object
 	 *
 	 * @access	public
-	 * @return	object
+	 * @param	string	error message
+	 * @param	string	key value of error message (optional)
+	 * @return	void
 	 */	
 	public function add_error($msg, $key = NULL)
 	{
-		return $this->parent_model->add_error($msg, $key);
+		$this->parent_model->add_error($msg, $key);
 	}
 
 	// --------------------------------------------------------------------
@@ -626,6 +654,7 @@ class Base_model_validation extends Abstract_base_model_helper  {
 	 * @param	string	field name
 	 * @param	mixed	function name OR array($object_instance, $method)
 	 * @param	string	error message to display
+	 * @param	array
 	 * @return	object 	Instance of Base_model_validation
 	 */	
 	public function add($field, $rule, $msg = '', $params = array())

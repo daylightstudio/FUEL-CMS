@@ -37,7 +37,13 @@ class Fuel_base_controller extends CI_Controller {
 	public $js_controller_params = array(); // jQX controller parameters
 	public $js_controller_path = ''; // The path to the jQX controllers. If blank it will load from the fuel/modules/fuel/assets/js/jqx/ directory
 	public $nav_selected; // the navigation item in the left menu to show selected
-	public $fuel; // the FUEL master object
+
+	/**
+	 * The FUEL master object
+	 *
+	 * @var Fuel
+	 */
+	public $fuel;
 	
 	// --------------------------------------------------------------------
 	

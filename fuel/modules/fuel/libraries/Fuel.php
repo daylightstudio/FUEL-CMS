@@ -33,8 +33,32 @@
 // include base library classes to extend
 require_once('Fuel_base_library.php');
 require_once('Fuel_advanced_module.php');
-//require_once('Fuel_modules.php');
 
+/**
+ * @property Fuel_admin			admin
+ * @property Fuel_assets		assets
+ * @property Fuel_auth			auth
+ * @property Fuel_blocks		blocks
+ * @property Fuel_cache			cache
+ * @property Fuel_categories	categories
+ * @property Fuel_installer		installer
+ * @property Fuel_language		language
+ * @property Fuel_layouts		layouts
+ * @property Fuel_logs			logs
+ * @property Fuel_modules		modules
+ * @property Fuel_navigation	navigation
+ * @property Fuel_notification	notification
+ * @property Fuel_pages			pages
+ * @property Fuel_parser		parser
+ * @property Fuel_posts			posts
+ * @property Fuel_pagevars		pagevars
+ * @property Fuel_permissions	permissions
+ * @property Fuel_redirects		redirects
+ * @property Fuel_settings		settings
+ * @property Fuel_sitevars		sitevars
+ * @property Fuel_tags			tags
+ * @property Fuel_users			users
+ */
 class Fuel extends Fuel_advanced_module {
 	protected $name = 'FUEL'; // name of the advanced module... usually the same as the folder name
 	protected $folder = 'fuel'; // name of the folder for the advanced module
@@ -92,7 +116,7 @@ class Fuel extends Fuel_advanced_module {
 	 * This object is auto-loaded and so you will most likely use $this->fuel instead of this method
 	 *
 	 * @access	public
-	 * @return	object	
+	 * @return	Fuel
 	 */	
 	public static function &get_instance()
 	{
