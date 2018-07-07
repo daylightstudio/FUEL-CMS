@@ -107,7 +107,6 @@ $config['text_editor'] = 'markitup';
 // An associative array of objects to attach to the fuel object
 $config['attach'] = array();
 
-
 /*
 |--------------------------------------------------------------------------
 | Language settings 
