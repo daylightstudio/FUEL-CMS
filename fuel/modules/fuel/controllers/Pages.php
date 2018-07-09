@@ -900,6 +900,7 @@ class Pages extends Module {
 		$filter = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $filter));
 		$this->js_controller_params['method'] = 'select';
 
+
 		$this->load->helper('array');
 		$this->load->helper('form');
 		$this->load->library('form_builder');
@@ -921,7 +922,7 @@ class Pages extends Module {
 		// apply filter
 		if ( ! empty($filter))
 		{
-			$filter_callback = function($a) use ($filter) { return preg_match('#^'.$filter.'$#', $a); };
+			$filter_callback = function($a) use ($filter) { return preg_match('#^'.addslashes($filter).'$#', $a); };
 			if (!empty($has_pdfs))
 			{
 				$options[lang('page_select_pages')] = array_filter($options[lang('page_select_pages')], $filter_callback);
@@ -929,7 +930,7 @@ class Pages extends Module {
 			}
 			else
 			{
-				$options = array_filter($options, $filter_callback);	
+				$options = array_filter($options, $filter_callback);
 			}
 		}
 
