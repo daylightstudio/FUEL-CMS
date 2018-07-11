@@ -342,8 +342,9 @@ class Fuel_assets extends Fuel_base_library {
 						}
 					}
 				}
-				
 			}
+
+			$_params[$key] = $params;
 		}
 
 		// set maintain ratio if it is set to maintain_ratio
@@ -353,18 +354,19 @@ class Fuel_assets extends Fuel_base_library {
 		}
 
 		// now loop through the uploaded files to do any further image processing
-		foreach($this->_data as $file)
+		foreach($this->_data as $key => $file)
 		{
 			if (is_image_file($file['file_name']) AND 
-					(isset($params['create_thumb']) OR 
-					isset($params['maintain_ratio']) OR 
-					!empty($params['width']) OR 
-					!empty($params['height']) OR
-					!empty($params['master_dim']) OR
-					!empty($params['resize_and_crop']) OR
-					!empty($params['resize_method'])
+					(isset($_params[$key]['create_thumb']) OR 
+					isset($_params[$key]['maintain_ratio']) OR 
+					!empty($_params[$key]['width']) OR 
+					!empty($_params[$key]['height']) OR
+					!empty($_params[$key]['master_dim']) OR
+					!empty($_params[$key]['resize_and_crop']) OR
+					!empty($_params[$key]['resize_method'])
 					))
 			{
+				$params = $_params[$key];
 
 				$params['source_image']	= $file['full_path'];
 

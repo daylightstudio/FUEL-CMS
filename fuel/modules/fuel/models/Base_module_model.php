@@ -1238,12 +1238,15 @@ class Base_module_model extends MY_Model {
 				$actions = array('edit');
 			}
 
+			$valid_actions = array();
+		
 			foreach($actions as $action => $label)
 			{
 				if (is_int($action))
 				{
 					$action = $label;
 				}
+
 				if (is_string($action) AND $this->fuel->auth->has_permission($module->info('permission'), $action) OR $action == 'custom')
 				{
 					switch(strtolower($action))
@@ -1267,17 +1270,20 @@ class Base_module_model extends MY_Model {
 								$action_url .= '?'. $params['edit_url_params'];
 							}
 							$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+							$valid_actions[] = $action;
 							break;
 						case 'view':
 							if ($module->info('preview_path'))
 							{
 								$action_url = fuel_url($module->info('module_uri').'/view/{'.$this->key_field().'}');
 								$data_table->add_action(lang('table_action_view'), $action_url, 'url');
+								$valid_actions[] = $action;
 							}
 							break;
 						case 'delete':
 							$action_url = fuel_url($module->info('module_uri').'/inline_delete/{'.$this->key_field().'}');
 							$data_table->add_action(lang('table_action_delete'), $action_url, 'url');
+							$valid_actions[] = $action;
 							break;
 						case 'custom':
 							if (is_array($label))
@@ -1288,6 +1294,7 @@ class Base_module_model extends MY_Model {
 									{
 										$action_url = fuel_url($key);
 										$data_table->add_action($val, $action_url, 'url');
+										$valid_actions[] = $action;
 									}
 								}
 							}
@@ -1296,8 +1303,9 @@ class Base_module_model extends MY_Model {
 				}
 			}
 		}
+		
+		$data_table->row_action = (!empty($valid_actions)) ? TRUE : FALSE;
 
-		$data_table->row_action = TRUE;
 		$data_table->assign_data($list_items, $list_cols);
 		return $data_table->render();
 	}
