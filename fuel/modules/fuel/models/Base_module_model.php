@@ -451,7 +451,7 @@ class Base_module_model extends MY_Model {
 				{
 					//$method = ($joiner == 'or') ? 'or_like' : 'like';
 					//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
-					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.strtolower($this->db->escape($val)).'%"');
+					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.strtolower(addslashes($val)).'%"');
 				}
 			}
 		}
