@@ -344,14 +344,15 @@ class Fuel_assets extends Fuel_base_library {
 				}
 			}
 
+			// set maintain ratio if it is set to maintain_ratio
+			if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
+			{
+				$params['maintain_ratio'] = TRUE;
+			}
+			
 			$_params[$key] = $params;
 		}
 
-		// set maintain ratio if it is set to maintain_ratio
-		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
-		{
-			$params['maintain_ratio'] = TRUE;
-		}
 
 		// now loop through the uploaded files to do any further image processing
 		foreach($this->_data as $key => $file)
