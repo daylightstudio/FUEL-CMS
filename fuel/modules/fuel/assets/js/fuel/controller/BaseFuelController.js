@@ -833,6 +833,15 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	
 	lang : function(key){
 		return this.localized[key];
+	},
+
+	editModule: function(url, callback){
+		var _this = this;
+
+		var html = '<iframe src="' + url +'" id="add_round_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: 0px; width: 0px;"></iframe>';
+		var $modal = fuel.modalWindow(html, 'inline_edit_modal', true, null, callback);
+
+		return false;
 	}
 	
 	
