@@ -1197,6 +1197,13 @@ class Base_module_model extends MY_Model {
 			}
 		}
 
+		if (!empty($params['like']))
+		{
+			$key = key($params['like']);
+			$val = current($params['like']);
+			$this->db->like($key, $val, 'both');
+		}
+		
 		$list_items = $this->list_items();
 		if (empty($list_items))
 		{
