@@ -174,7 +174,7 @@ class Menu {
 	 *
 	 * @access	protected
 	 * @param	array menu item data
-	 * @param	boolean wether or not to use the nav_key field instead of the array key for the unique ID
+	 * @param	boolean whether or not to use the nav_key field instead of the array key for the unique ID
 	 * @return	array
 	 */
 	public function normalize_items($items)
@@ -429,7 +429,7 @@ class Menu {
 		$str = '';
 		if (!empty($menu) AND (isset($this->depth) AND $level < $this->depth) OR !isset($this->depth))
 		{
-			// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
+			// filter out hidden ones first. Need to do in separate loop in case there is a hidden one at the end
 			$menu = $this->_filter_hidden($menu);
 
 			if (!empty($menu))
@@ -485,7 +485,7 @@ class Menu {
 	 */
 	protected function _render_collabsible($menu, $level = 0)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
+		// filter out hidden ones first. Need to do in separate loop in case there is a hidden one at the end
 		$menu = $this->_filter_hidden($menu);
 		
 		$str = '';
@@ -736,7 +736,7 @@ class Menu {
 	 */
 	protected function _render_delimited($menu)
 	{
-		// filter out hidden ones first. Need to do in seperate loop in case there is a hidden one at the end
+		// filter out hidden ones first. Need to do in separate loop in case there is a hidden one at the end
 		$menu = $this->_filter_hidden($menu);
 		
 		if ($this->container_tag !== FALSE)

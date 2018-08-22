@@ -21,7 +21,7 @@ echo $this->fuel->navigation->data();
 
 <h2>Navigation Structures</h2>
 <p>There are two ways to create navigation structures in FUEL. The first way, is to create a 
-<dfn>$nav</dfn> array in the file located at <span class="file">fuel/applicaiton/views/_variables/nav.php</span> like below:</p>
+<dfn>$nav</dfn> array in the file located at <span class="file">fuel/application/views/_variables/nav.php</span> like below:</p>
  
 <span class="file">fuel/application/views/_variables/nav.php</span>
 <pre class="brush: php">

@@ -112,7 +112,7 @@ class Fuel_categories_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	public function tree($just_published = FALSE)
 	{
@@ -267,7 +267,7 @@ class Fuel_category_model extends Base_module_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Magic method that will allow you to return the model object by doing something like $cateogry->get_products(TRUE);
+	 * Magic method that will allow you to return the model object by doing something like $category->get_products(TRUE);
 	 *
 	 * @access	public
 	 * @param	string	field name

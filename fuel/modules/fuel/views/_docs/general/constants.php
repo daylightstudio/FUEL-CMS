@@ -21,7 +21,7 @@
 </ul>
 
 <h2>Constants for Advanced Modules</h2>
-<p>When creating an advanced module, you should also create a constants file at <span class="file">/fuel/modules/{module}/config/{module}_constnats.php</span> 
+<p>When creating an advanced module, you should also create a constants file at <span class="file">/fuel/modules/{module}/config/{module}_constants.php</span>
 with at least the following constants:</p>
 <pre class="brush:php">
 define('{MY_MODULE}_VERSION', '1.0');

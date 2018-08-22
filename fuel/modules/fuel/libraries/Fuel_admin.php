@@ -640,7 +640,7 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returs the logged in users display language
+	 * Returns the logged in users display language
 	 *
 	 * @access	public
 	 * @return	string
@@ -696,7 +696,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * Loads the localized language files used for javascript (e.g. markItUp!)
 	 *
 	 * @access	public
-	 * @param	array 	An array of javascript languange files (optional)
+	 * @param	array 	An array of javascript language files (optional)
 	 * @param	boolean	"Private" parameter so that the file will only be loaded once (optional)
 	 * @return	array
 	 */	
@@ -1162,7 +1162,7 @@ class Fuel_admin extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The text to display in the titlebar
-	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
+	 * @param	string	The icon to display to the left of the title bar breadcrumb (optional)
 	 * @return	void
 	 */	
 	public function set_titlebar($title, $icon = '')
@@ -1198,7 +1198,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * Sets the title bar icon
 	 *
 	 * @access	public
-	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
+	 * @param	string	The icon to display to the left of the title bar breadcrumb (optional)
 	 * @return	void
 	 */	
 	public function set_titlebar_icon($icon = '')
@@ -1238,7 +1238,7 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns a nofication flash message to display
+	 * Returns a notification flash message to display
 	 *
 	 * @access	public
 	 * @param	type	The type of message to display. Options are error, success and info. (optional)
@@ -1253,7 +1253,7 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Sets the nofication flash message to display
+	 * Sets the notification flash message to display
 	 *
 	 * @access	public
 	 * @param	string	Notification message to display
