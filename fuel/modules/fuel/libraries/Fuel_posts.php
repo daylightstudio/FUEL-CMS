@@ -298,7 +298,7 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Normalizes the route by removing placedholers (e.g. :any and ($name:....)).
+	 * Normalizes the route by removing placeholders (e.g. :any and ($name:....)).
 	 *
 	 * @access	protected
 	 * @param	string 	The route to normalize

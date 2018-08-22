@@ -227,7 +227,7 @@ $lang['module_uninstall'] = $msg;
 $lang['module_update'] = "The module %1s has been updated in FUEL.\n";
 
 // build
-$lang['module_build_asset'] = "%1s optimized and ouput to %2s\n";
+$lang['module_build_asset'] = "%1s optimized and output to %2s\n";
 
 /*
 |--------------------------------------------------------------------------
@@ -551,7 +551,7 @@ $lang['layout_field_body_class'] = 'Body class';
 $lang['layout_field_redirect_to'] = 'Redirect to';
 
 $lang['layout_field_301_redirect_copy'] = 'This layout will do a 301 redirect to another page.';
-$lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specifiec location is used to render the page.';
+$lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specified location is used to render the page.';
 $lang['layout_field_sitemap_xml_copy'] = 'This layout is used to generate a sitemap. For this page to appear, a sitemap.xml must not exist on the server.';
 $lang['layout_field_robots_txt_copy'] = 'This layout is used to generate a robots.txt file. For this page to appear, a robots.txt must not exist on the server.';
 $lang['layout_field_none_copy'] = 'This layout is the equivalent of having no layout assigned.';
@@ -617,7 +617,7 @@ $lang['install_cli_intro'] .= "2) Set the session save path in fuel/application/
 $lang['install_cli_intro'] .= "3) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.\n";
 $lang['install_cli_intro'] .= "4) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.\n";
 $lang['install_cli_intro'] .= "5) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.\n";
-$lang['install_cli_intro'] .= "6) Setup your evironments fuel/application/config/environments.php.\n";
+$lang['install_cli_intro'] .= "6) Setup your environments fuel/application/config/environments.php.\n";
 $lang['install_cli_intro'] .= "7) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.\n";
 $lang['install_cli_intro'] .= "8) Update the fuel/application/config/database.php file with the inputted values.\n";
 $lang['install_cli_intro'] .= "9) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n";

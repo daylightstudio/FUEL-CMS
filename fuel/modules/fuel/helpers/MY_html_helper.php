@@ -19,7 +19,7 @@
 /**
  * FUEL HTML Helper
  *
- * This helper is designed to provide assistence building custom html tags.
+ * This helper is designed to provide assistance in building custom HTML tags.
  * 
  *
  * @package		FUEL CMS
@@ -114,7 +114,7 @@ if (!function_exists('html_attrs'))
 	 * Create HTML attributes
 	 *
 	 * @access	public
-	 * @param	mixed	HTML attributs
+	 * @param	mixed	HTML attributes
 	 * @return	string
 	 */
 	function html_attrs($attrs)

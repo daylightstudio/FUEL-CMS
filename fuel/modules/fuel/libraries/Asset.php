@@ -21,7 +21,7 @@
  *
  * This class allows you to output css, js links and/or files as well as
  * allows you to compress and cache them. It also has convenience methods for 
- * paths to different assets like images, pdfs, javascript css etc.
+ * paths to different assets like images, PDFs, javascript css etc.
  * 
  * Additionally, you can use the <a href="[user_guide_url]helpers/asset">asset helper</a>
  * which provides a shortcut for many of the methods of the Asset class. 
@@ -1440,7 +1440,7 @@ class Asset {
 				// remove calls to the import since they are combined into the same css
 				if (!empty($import_files))
 				{
-					// temporarily put it in the global space so the anonymoous function can grab it
+					// temporarily put it in the global space so the anonymous function can grab it
 					$GLOBALS["__TMP_CSS_IMPORT__"] = $import_files;
 					$output = preg_replace_callback('/@import url\(([\'|"])*(.+)\\1\);/U', $callback, $output);
 					unset($GLOBALS["__TMP_CSS_IMPORT__"]);

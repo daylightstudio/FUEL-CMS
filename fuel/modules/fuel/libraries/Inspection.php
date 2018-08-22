@@ -21,7 +21,7 @@
  *
  * This class can be used to inspect other files and will return objects that can be 
  * further used to generate for example, this page and many of the other pages found in this User Guide.
- * It is essentially a wrapper around many of the convenient objects and methods of the <a href="http://php.net/manual/en/class.reflectionclass.php" target="_blank">PHP Refelction class</a>
+ * It is essentially a wrapper around many of the convenient objects and methods of the <a href="http://php.net/manual/en/class.reflectionclass.php" target="_blank">PHP Reflection class</a>
  * but provides extra functionality for parsing out comment information. Below is a list of related classes used by the Inspection class:
  <ul>
  	<li><a href="#inspection_class">Inspection_class</a></li>
@@ -527,7 +527,7 @@ class Inspection_class extends Inspection_base {
 	 * @access	public
 	 * @param	array	The type of properties to include. Options are 'public', 'protected', and 'private. Default will only show public'(optional)
 	 * @param	boolean	Determines whether to include any parent properties. Default is FALSE (optional)
-	 * @param	boolean	Determines whether to include the contstructor method. Default is FALSE (optional)
+	 * @param	boolean	Determines whether to include the constructor method. Default is FALSE (optional)
 	 * @return	array
 	 */	
 	public function methods($types = array(), $include_parent = FALSE, $include_constructor = FALSE)
@@ -563,7 +563,7 @@ class Inspection_class extends Inspection_base {
 		$methods = array();
 		foreach($this->_methods as $name => $m)
 		{
-			// filter out contstructors
+			// filter out constructors
 			if (!$include_constructor AND ($name == '__construct' OR $name == $this->name))
 			{
 				continue;
@@ -1207,7 +1207,7 @@ class Inspection_comment {
 	 * Adds a filter to be used for processing comments (e.g. the [ user_guide_url ] is rendered using a filter)
 	 *
 	 * @access	public
-	 * @param	string	The name of the function or a lamda
+	 * @param	string	The name of the function or a lambda
 	 * @param	string	A key value to assign to the filter which can be used in removing filters later
 	 * @return	boolean
 	 */	

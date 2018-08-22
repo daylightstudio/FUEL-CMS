@@ -35,7 +35,7 @@ if (!function_exists('lang'))
 {
 	/**
 	 * Get translated local strings with arguments.
-	 * Overwrites CI langauge_helper to have a more useful args
+	 * Overwrites CI language_helper to have a more useful args
 	 *
 	 * @param	string
 	 * @param	mixed
@@ -71,7 +71,7 @@ if (!function_exists('lang'))
 if (!function_exists('json_lang'))
 {
 	/**
-	 * Creates an array or JSON aobject for your javascript files that need localization
+	 * Creates an array or JSON object for your javascript files that need localization
 	 *
 	 * @param	array
 	 * @param	boolean
@@ -135,7 +135,7 @@ if (!function_exists('detect_lang'))
 	/**
 	 * Detects any specified language settings pulling from the URI, query string and then the user's browser settings
 	 *
-	 * @param	boolean	Determines whether to set the "langauge" config property
+	 * @param	boolean	Determines whether to set the "language" config property
 	 * @return	string
 	 */
 	function detect_lang($set_config = FALSE)

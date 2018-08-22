@@ -28,7 +28,7 @@ class Login extends CI_Controller {
 
 		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 
-		// set configuration paths for assets in case they are differernt from front end
+		// set configuration paths for assets in case they are different from front end
 		$this->asset->assets_module ='fuel';
 		$this->asset->assets_folders = array(
 				'images' => 'images/',

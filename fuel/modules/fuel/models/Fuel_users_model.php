@@ -136,7 +136,7 @@ class Fuel_users_model extends Base_module_model {
 		$user = $this->find_one(array('id' => $user_id));
 		$user_data = $user->values();
 		
-		// load user permisisons
+		// load user permissions
 		$user_data['permissions'] = $user->permissions;
 		return $user_data;
 	}
@@ -315,7 +315,7 @@ class Fuel_users_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	string The key value for the options list (optional)
-	 * @param	string The value (lable) value for the options list (optional)
+	 * @param	string The value (label) value for the options list (optional)
 	 * @param	string A where condition to apply to options list data
 	 * @param	string The order to return the options list data
 	 * @return	array 
@@ -875,7 +875,7 @@ class Fuel_users_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Validation callback to check if an existing user's email address doen't already exist in the system
+	 * Validation callback to check if an existing user's email address doesn't already exist in the system
 	 *
 	 * @access	public
 	 * @param	string The email address

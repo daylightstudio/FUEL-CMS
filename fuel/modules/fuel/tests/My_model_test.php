@@ -51,7 +51,7 @@ class My_model_test extends Tester_base {
 		$test_custom_records_model->add_formatter('datetime', array('date_formatter', 'm-Y'), 'formatted');
 		$test = $user->date_added_formatted;
 		$expected = '01-2012';
-		$this->run($test, $expected, 'formatter test of date formatting with configuration argments set #3');
+		$this->run($test, $expected, 'formatter test of date formatting with configuration arguments set #3');
 
 		$test_custom_records_model->remove_formatter('datetime', 'formatted');
 		$test_custom_records_model->add_formatter('datetime', 'date_formatter', 'formatted');

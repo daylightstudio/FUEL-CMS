@@ -63,7 +63,7 @@ class Fuel_installer extends Fuel_base_library {
 	 * Accepts an associative array as input, containing object preferences.
 	 *
 	 * @access	public
-	 * @param	array	Array of initalization parameters  (optional)
+	 * @param	array	Array of initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array())
@@ -530,7 +530,7 @@ class Fuel_installer extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Checks that the module is comptable with the installed version of FUEL
+	 * Checks that the module is compatible with the installed version of FUEL
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -542,7 +542,7 @@ class Fuel_installer extends Fuel_base_library {
 			$compatibility = $this->config['compatibility'];
 			$fuel_version = $this->fuel->version();
 
-			// if the current version of FUEL is greater then or equal to the compatability version, the we are good to go
+			// if the current version of FUEL is greater then or equal to the compatibility version, the we are good to go
 			if (version_compare($compatibility, $fuel_version, '>='))
 			{
 				return FALSE;

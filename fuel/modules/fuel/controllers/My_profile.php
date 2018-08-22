@@ -37,7 +37,7 @@ class My_profile extends Fuel_base_controller {
 		$this->_form($id);
 	}
 
-	// seperated to make it easier in subclasses to use the form without rendering the page
+	// separated to make it easier in subclasses to use the form without rendering the page
 	public function _form($id = null)
 	{
 		$this->load->library('form_builder');

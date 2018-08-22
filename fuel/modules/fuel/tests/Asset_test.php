@@ -38,12 +38,12 @@ class Asset_test extends Tester_base {
 			
 			$p = $expected = WEB_PATH.$this->init['assets_path'].$this->init['assets_folders'][$type].$t['file'];
 
-			// test 1 WITHOUT timestampe cache breaker
+			// test 1 WITHOUT timestamp cache breaker
 			$test = $this->CI->asset->{$t['func']}($t['file']);
 			$expected = $p;
 			$this->run($test, $expected, 'Asset '.$t['func'].'() test 1');
 
-			// test 2 WITH timestampe cache breaker
+			// test 2 WITH timestamp cache breaker
 			$config = array('asset_append_cache_timestamp' => array($type));
 			$this->_reset($config);
 			$test = $this->CI->asset->{$t['func']}($t['file']);

@@ -14,7 +14,7 @@
 <h2>Static Page - about</h2>
 
 <h3>Opt-In Controller Method</h3>
-<p>There are several ways to create a page in FUEL. The easest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a> Method. This allows you to create pages without the need for a controller. A URI path of <strong>about/contact</strong> would have a view file created at <strong>views/about/contact.php</strong>. The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.</p>
+<p>There are several ways to create a page in FUEL. The easiest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a> Method. This allows you to create pages without the need for a controller. A URI path of <strong>about/contact</strong> would have a view file created at <strong>views/about/contact.php</strong>. The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.</p>
 
 <p>For this tutorial we will make the <dfn>about</dfn> page a static view file. To do that, create the following file at <dfn>application/views/about.php</dfn>: </p>
 
@@ -281,7 +281,7 @@ view file that matches the URI path, which normally doesn't exist (e.g. <dfn>new
 </pre>
 
 <h4>Set auto_search_views configuration in MY_fuel.php</h4>
-<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration paramter to TRUE:</p>
+<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration parameter to TRUE:</p>
 <pre class="brush: php">
 	$config['auto_search_views'] = FALSE;
 </pre>

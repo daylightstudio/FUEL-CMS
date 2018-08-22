@@ -271,7 +271,7 @@ class Form {
 	<code>
 	echo $this->form->hidden('password', 'abc134', 'class="txt_field"');
 	// will echo the following
-	<input type="passowrd" name="pwd" id="pwd"  value="" class="txt_field" />
+	<input type="password" name="pwd" id="pwd"  value="" class="txt_field" />
 	</code>
 	 * @access public
 	 * @param string name of the input element
