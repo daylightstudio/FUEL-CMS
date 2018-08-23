@@ -29,6 +29,7 @@ $config['layouts']['main'] = array(
 		'heading' => array('label' => lang('layout_field_heading')),
 		'body' => array('label' => lang('layout_field_body'), 'type' => 'textarea', 'description' => lang('layout_field_body_description')),
 		'body_class' => array('label' => lang('layout_field_body_class')),
+		'template' => array('type' => 'template', 'repeatable' => TRUE, 'fields' => array('subtemplate' => array('type' => 'template', 'fields' => array('test1'=> array('type' => 'keyval')))))
 	)
 );
 
