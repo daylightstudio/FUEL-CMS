@@ -1167,7 +1167,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>module</strong>: the module whose data will be displayed</li>
 		<li><strong>create_button_label</strong>: the label of the create button</li>
-		<li><strong>create_url_params</strong>: additional intialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
+		<li><strong>create_url_params</strong>: additional initialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
 		<li><strong>edit_url_params</strong>: similar to <dfn>create_url_params</dfn> but for editing a record.</li>
 		<li><strong>display_fields</strong>: an array of fields to display when editing or creating.</li>
 		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>

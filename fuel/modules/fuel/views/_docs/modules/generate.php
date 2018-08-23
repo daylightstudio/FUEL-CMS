@@ -57,12 +57,12 @@ php index.php fuel/generate/model my_model examples
 <p class="important">Separating module names with a colon will generate multiple models.</p>
 
 <h2 id="simple">Simple Modules</h2>
-<p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify), add the permisions to manage it in the CMS,  and will add it to the <span class="file">fuel/application/config/MY_fuel_modules.php</span>:</p>
+<p>The following will create a model named "examples_model.php", generate a placeholder table (you'll need to modify), add the permissions to manage it in the CMS,  and will add it to the <span class="file">fuel/application/config/MY_fuel_modules.php</span>:</p>
 <pre class="brush:php">
 php index.php fuel/generate/simple examples
 </pre>
 
-<h2 id="advaned">Advanced Modules</h2>
+<h2 id="advanced">Advanced Modules</h2>
 <p>The following will create a directory named "test" in the <span class="file">fuel/modules/</span> folder, as well as create a permission and add it to the "modules_allowed" FUEL configuration.
 It will generate by default the files specified in the
 <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration file</a> under the <dfn>generated</dfn> parameter:</p>

@@ -286,7 +286,7 @@ view file that matches the URI path, which normally doesn't exist (e.g. <dfn>new
 </pre>
 
 <h4>Set auto_search_views configuration in MY_fuel.php</h4>
-<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration paramter to TRUE:</p>
+<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration parameter to TRUE:</p>
 <pre class="brush: php">
 	$config['auto_search_views'] = FALSE;
 </pre>

@@ -183,7 +183,7 @@ if (!function_exists('directory_to_array'))
 						$file_prefix = (!$append_path) ? substr($directory, strlen($orig_directory)) : $directory;
 						$file = $file_prefix."/".$file;
 						$file = str_replace("//", "/", $file); // replace double slash
-						if (substr($file, 0, 1) == '/') $file = substr($file, 1); // remove begining slash
+						if (substr($file, 0, 1) == '/') $file = substr($file, 1); // remove beginning slash
 						if (!empty($file) AND !in_array($file, $array_items)) $array_items[] = $file;
 					}
 					

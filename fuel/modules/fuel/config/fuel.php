@@ -348,7 +348,7 @@ $config['page_cache_ttl'] = 0;
 // The name of the group the cache is associated with (so you can just remove the group)
 $config['page_cache_group'] = 'pages';
 
-// Maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
+// Maximum number of parameters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:
 // $config['max_page_params'] = array('about/news/' => 1);
 $config['max_page_params'] = 0;

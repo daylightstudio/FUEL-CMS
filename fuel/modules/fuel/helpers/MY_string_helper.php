@@ -35,7 +35,7 @@
 if (!function_exists('eval_string'))
 {
 	/**
-	 * Evaluates a strings PHP code. Used especially for outputing FUEL page data
+	 * Evaluates a strings PHP code. Used especially for outputting FUEL page data
 	 *
 	 * @param	string	string to evaluate
 	 * @param	mixed	variables to pass to the string
@@ -275,7 +275,7 @@ function parse_template_syntax($str, $vars = array(), $engine = NULL, $config = 
 {
 	$CI =& get_instance();
 
-	// for backwards compatability
+	// for backwards compatibility
 	if ($engine === TRUE)
 	{
 		$engine = 'ci';

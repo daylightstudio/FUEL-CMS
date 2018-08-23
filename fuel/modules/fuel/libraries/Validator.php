@@ -125,7 +125,7 @@ class Validator {
 		if (empty($fields[$field])) $fields[$field] = array();
 		settype($params, 'array');
 		
-		// if params are emtpy then we will look in the $_POST
+		// if params are empty then we will look in the $_POST
 		if (empty($params))
 		{
 			if (!empty($_POST[$field])) $params = $_POST[$field];

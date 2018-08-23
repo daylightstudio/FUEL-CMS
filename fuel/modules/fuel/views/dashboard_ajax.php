@@ -35,11 +35,11 @@
 </div>
 <?php endif; ?>
 
-<?php if (!empty($recently_modifed_pages)) : ?>
+<?php if (!empty($recently_modified_pages)) : ?>
 <div class="dashboard_pod" style="width: 230px;">
 	<h3><?=lang('dashboard_hdr_modified')?></h3>
 		<ul class="nobullets">
-			<?php foreach($recently_modifed_pages as $val) : ?>
+			<?php foreach($recently_modified_pages as $val) : ?>
 			<li><a href="<?=fuel_url('pages/edit/'.$val['id'])?>"><?=$val['location']?></a></li>
 			<?php endforeach; ?>
 		</ul>

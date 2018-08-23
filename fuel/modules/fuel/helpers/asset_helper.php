@@ -408,11 +408,11 @@ if (!function_exists('placeholder'))
 	 */
 	function placeholder($width = 100, $height = '', $text = '', $colors = '', $img_tag = FALSE)
 	{
-		$dimentions = $width.( !empty($height) ? 'x'.$height : '');
+		$dimensions = $width.( !empty($height) ? 'x'.$height : '');
 		$text = !empty($text) ? '&text='.urlencode($text) : '';
 		$colors = !empty($colors) ? explode(' ', $colors) : '';
 		$colors = !empty($colors) ? '/'.$colors[0].'/'.$colors[1] : '';
-		$path = 'http://placehold.it/'.$dimentions.$colors.$text;
+		$path = 'http://placehold.it/'.$dimensions.$colors.$text;
 		if ($img_tag)
 		{
 			return '<img src="'.$path.'" alt="'.$text.'" width="'.$width.'" height="'.$height.'" />';

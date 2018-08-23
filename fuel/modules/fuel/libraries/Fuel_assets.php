@@ -67,7 +67,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * Also will set the values in the parameters array as properties of this object
 	 *
 	 * @access	public
-	 * @param	array	Array of initalization parameters  (optional)
+	 * @param	array	Array of initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array())
@@ -730,7 +730,7 @@ class Fuel_assets extends Fuel_base_library {
 		if (is_string($dir))
 		{
 			// if string is a directory path, then we read the directory... 
-			// may be too presumptious but it's convenient'
+			// may be too presumptuous but it's convenient
 			if (is_dir($dir))
 			{
 				$this->CI->zip->read_dir($dir);

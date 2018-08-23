@@ -159,7 +159,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 							<h4>Make configuration changes</h4>
 							<ul class="writable">
 								<?php if ($this->config->item('encryption_key') == '') : ?>
-								<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li></li>
+								<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li>
 								<?php endif; ?>
 								<?php if (!$this->config->item('admin_enabled', 'fuel')) : ?>
 								<li>In the <strong>fuel/application/config/MY_fuel.php</strong> file, change the <code>$config['admin_enabled']</code> configuration property to <code>TRUE</code>. If you do not want the CMS accessible, leave it as <strong>FALSE</strong>.</li>
@@ -222,7 +222,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 						</div>
 						<div class="content_block">
 							<h4>Get rolling</h4>
-							<p>FUEL CMS is open source and on GitHub for a good reason. The communities involvement is an important part of it's success.
+							<p>FUEL CMS is open source and on GitHub for a good reason. The communities involvement is an important part of its success.
 							If you have any ideas for improvement, or even better, a <a href="https://help.github.com/articles/creating-a-pull-request" target="_blank">GitHub pull request</a>, please let us know.</p>
 
 

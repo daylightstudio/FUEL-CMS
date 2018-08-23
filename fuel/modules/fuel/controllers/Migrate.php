@@ -50,7 +50,7 @@ class Migrate extends Fuel_base_controller {
 	{
 		$this->_init_migrate($module);
 
-		// must be in dev mode change the version to something uther then the latest or current
+		// must be in dev mode change the version to something other then the latest or current
 		if ( ! is_dev_mode())
 		{
 			$this->_show_error(lang('error_not_in_dev_mode'));

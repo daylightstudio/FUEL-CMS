@@ -161,7 +161,7 @@ class Fuel_navigation_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	boolean Determines whether to return just published navigation items or not (optional... and ignored in the admin)
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	public function tree($just_published = FALSE)
 	{
@@ -539,14 +539,14 @@ class Fuel_navigation_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Overwritten: Allows for grouping of menu items with last paramter
+	 * Overwritten: Allows for grouping of menu items with last parameter
 	 *
 	 * @access	public
 	 * @param	string	The column to use for the value (optional)
 	 * @param	string	The column to use for the label (optional)
-	 * @param	mixed	An array or string containg the where paramters of a query (optional)
+	 * @param	mixed	An array or string containing the where parameters of a query (optional)
 	 * @param	string	The order by of the query. defaults to $val asc (optional)
-	 * @param	boolean	Determines whether it will group the options together based on the menu troup (optional)
+	 * @param	boolean	Determines whether it will group the options together based on the menu group (optional)
 	 * @return	array	 */	
 	public function options_list($key = 'id', $val = 'label', $where = array(), $order = TRUE, $group = TRUE)
 	{
@@ -577,7 +577,7 @@ class Fuel_navigation_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Overwritten: Allows for grouping of menu items with last paramter
+	 * Overwritten: Allows for grouping of menu items with last parameter
 	 *
 	 * @access	public
 	 * @param	string The field name used as the label

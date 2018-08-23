@@ -12,7 +12,7 @@ just like the native <a href="http://ellislab.com/codeigniter/user-guide/general
 	<li><strong>after_edit_{module}</strong> - executed right AFTER saving the edited module information. The edited module item information is passed as an array to the hook class/function.</li>
 	<li><strong>before_save_{module}</strong> - executed right BEFORE saving module information (for both create and edit). The new/edited posted module item information is passed as an array to the hook class/function.</li>
 	<li><strong>after_save_{module}</strong> - executed right AFTER saving module information (for both create and edit). The new/edited module item information is passed as an array to the hook class/function.</li>
-	<li><strong>before_delete_{module}</strong> - executed right BEFPRE deleting of module item(s). The posted IDs of the items to delete are passed as an array to the hook class/function.</li>
+	<li><strong>before_delete_{module}</strong> - executed right BEFORE deleting of module item(s). The posted IDs of the items to delete are passed as an array to the hook class/function.</li>
 	<li><strong>after_delete_{module}</strong> - executed right AFTER deleting of module item(s). The IDs of the items deleted are passed as an array to the hook class/function.</li>
 </ul>
 

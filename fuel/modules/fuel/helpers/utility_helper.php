@@ -163,7 +163,7 @@ if (!function_exists('is_json_str'))
 if (!function_exists('print_obj'))
 {
 	/**
-	 * Print object in human-readible format
+	 * Print object in human-readable format
 	 *
 	 * @param	mixed	The variable to dump
 	 * @param	boolean	Return string
