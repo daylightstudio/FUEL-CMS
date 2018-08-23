@@ -1488,15 +1488,7 @@ class Asset {
 			$gzip .= "\n?>".PHP_EOL;
 			$output = $gzip;
 		}
-		else
-		{
-			$out = "<?php".PHP_EOL;
-			$out .= "header(\"Content-type: ".$mime."; charset: UTF-8\");";
-			$out .= "\n?>".PHP_EOL;
-			$out .= $output;
-			$output = $out;
-		}
-
+		
 		// write contents to file
 		if (!empty($params['destination']))
 		{
