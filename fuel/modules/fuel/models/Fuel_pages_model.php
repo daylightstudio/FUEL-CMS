@@ -124,7 +124,7 @@ class Fuel_pages_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	public function tree($just_published = FALSE)
 	{
@@ -240,7 +240,7 @@ class Fuel_pages_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns all the children pages basd on the location URI
+	 * Returns all the children pages based on the location URI
 	 *
 	 * @access	public
 	 * @param  string URI path to start from (e.g. about would find about/history, about/contact, etc)

@@ -23,7 +23,7 @@ php index.php fuel/generate/advanced examples
 				<dfn>$config['nav']['tools']['tools/{module_name}'] = '{module_name}';</dfn><br />
 				This will create a menu <dfn>{module_name}</dfn> in the admin left navigation with a FUEL admin link of <dfn>tools/{module_name}</dfn>.<p>
 
-				As another example, let's look at the blogs configuration file found under <dfn>fuel/modules/blog/config/blog.php</dfn>:</p>
+				As another example, let's look at the blog's configuration file found under <dfn>fuel/modules/blog/config/blog.php</dfn>:</p>
 				
 <pre class="brush: php">
 $config['nav']['blog'] = array(

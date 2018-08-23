@@ -81,7 +81,7 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	public function set_active(&$page)
 	{
-		// for backwards compatability
+		// for backwards compatibility
 		$this->CI->fuel_page = $page;
 		$this->CI->fuel->attach('page', $page);
 		$this->_active = $page;
@@ -94,7 +94,7 @@ class Fuel_pages extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The page to set as active
-	 * @param	array	An array of initializtion parameters
+	 * @param	array	An array of initialization parameters
 	 * @return	object
 	 */	
 	public function get($location, $init = array())
@@ -211,7 +211,7 @@ class Fuel_pages extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns an array of pages created by a module. The module must have a prevew path
+	 * Returns an array of pages created by a module. The module must have a preview path
 	 *
 	 * @access	public
 	 * @return	array
@@ -545,7 +545,7 @@ class Fuel_page extends Fuel_base_library {
 			$params = array('location' => $params);
 		}
 		
-		// setup any intialized variables
+		// setup any initialized variables
 		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key))
@@ -1262,7 +1262,7 @@ class Fuel_page extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Renders a marker on the page which is used on the front end to create the inline editng pencil icons with some javascript
+	 * Renders a marker on the page which is used on the front end to create the inline editing pencil icons with some javascript
 	 *
 	 * @access	public
 	 * @param	string	The markers key value used to identify it on the apge

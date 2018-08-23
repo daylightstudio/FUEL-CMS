@@ -2,8 +2,8 @@
 
 <p>This helper has the markdown function originally developed by 
 <a href="http://daringfireball.net/projects/markdown/" target="_blank">John Gruber</a> 
-and modifed by <a href="http://www.michelf.com/projects/php-markdown/">Michel Fortin</a>
-to be used for PHP. It has some similar characteristics to the autotypography function in the
+and modified by <a href="http://www.michelf.com/projects/php-markdown/">Michel Fortin</a>
+to be used for PHP. It has some similar characteristics to the auto_typography function in the
 typography helper. 
 
 <p>This helper is loaded using the following code:</p>

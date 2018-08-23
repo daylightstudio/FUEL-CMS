@@ -42,7 +42,7 @@ installation directory (where the index.php CodeIgniter bootstrap file exists al
 <p>Phil Sturgeon of PyroCMS fame has a good <a href="http://philsturgeon.co.uk/blog/2011/09/managing-codeigniter-packages-with-git-submodules" target="_blank">article on using submodules</a>.</p>
 
 <h3>Finalizing the Installation</h3>
-<p>After adding the folder to your <span class="file">fuel/modules</span> folder either manually or via GIT, you may need to finalize the istallation by running some 
+<p>After adding the folder to your <span class="file">fuel/modules</span> folder either manually or via GIT, you may need to finalize the installation by running some
 additional SQL statements. These SQL statements can be found in your modules "install" folder. FUEL provides a simpler way to install both the SQL and any necessary permissions 
 for the module that can be assigned to other users. To do so, you need to open up a terminal window and "<a href="http://en.wikipedia.org/wiki/Cd_(command)" target="_blank">cd</a>" (change directory) to the 
 to the installation directory (similar to above). Then run the following:</p>

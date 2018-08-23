@@ -5,7 +5,7 @@
  The intention is to get you generally oriented with the interface.</p>
 
 <h2>Dashboard</h2>
-<p>Below is a standrd FUEL Dashboard that will appear right after you login.
+<p>Below is a standard FUEL Dashboard that will appear right after you login.
 Different modules can hook into the dashboard view so it may look slightly different
 for you based on the modules you have installed.
 </p>

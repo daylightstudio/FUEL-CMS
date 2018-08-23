@@ -10,7 +10,7 @@ class {Model_name}_model extends Base_module_model {
 	public $filters = array(); // filters to apply to when searching for items
 	public $required = array(); // an array of required fields. If a key => val is provided, the key is name of the field and the value is the error message to display
 	public $foreign_keys = array(); // map foreign keys to table models
-	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => arry('name' => 'strtolower')));
+	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => array('name' => 'strtolower')));
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
 	public $unique_fields = array(); // fields that are not IDs but are unique. Can also be an array of arrays for compound keys
 	public $parsed_fields = array(); // fields to automatically parse

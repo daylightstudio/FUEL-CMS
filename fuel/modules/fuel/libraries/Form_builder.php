@@ -76,7 +76,7 @@ class Form_builder {
 	public $tooltip_labels = TRUE; // use tooltip labels?
 	public $single_select_mode = 'auto'; // auto will use enum if 2 or less and a single select if greater than 2. Other values are enum or select 
 	public $multi_select_mode = 'auto'; // auto will use a series of checkboxes if 5 or less and a multiple select if greater than 5. Other values are multi or checkbox 
-	public $boolean_mode = 'checkbox'; // booleon mode can be checkbox or enum (which will display radio inputs)
+	public $boolean_mode = 'checkbox'; // boolean mode can be checkbox or enum (which will display radio inputs)
 	public $display_errors_func = 'display_errors'; // the function used to generate errors... usually display_errors is the name
 	public $display_errors = FALSE; // displays errors at the top of the form if TRUE
 	public $question_keys = array('how', 'do', 'when', 'what', 'why', 'where', 'how', 'is', 'which', 'did', 'any','would', 'should', 'could'); // adds question marks to the label if has these words in the label
@@ -89,7 +89,7 @@ class Form_builder {
 	public $row_id_prefix = ''; // the row id prefix
 	public $lang_prefix = 'form_label_'; // language prefix to be applied before a label
 	public $custom_fields = array(); // custom fields
-	public $auto_execute_js = TRUE; // autmoatically execute the javascript for the form
+	public $auto_execute_js = TRUE; // automatically execute the javascript for the form
 	public $html_prepend = ''; // prepended HTML to the form HINT: Can include JS script tags
 	public $html_append = ''; // appended HTML to the form HINT: Can include JS script tags
 	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
@@ -507,7 +507,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -701,7 +701,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -940,7 +940,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -1286,7 +1286,7 @@ class Form_builder {
 			'type' => '', // the type attribute of the field (e.g. text, select, password, etc.)
 			'default' => '', // the default value of the field
 			'max_length' => 0, // the maxlength parameter to associate with the field
-			'comment' => '', // a comment to assicate with the field's label'
+			'comment' => '', // a comment to associate with the field's label
 			'label' => '', // the label to associate with the field
 			'before_label' => '', // for HTML before the label
 			'after_label' => '', // for HTML after the label
@@ -1312,8 +1312,8 @@ class Form_builder {
 			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
 			'title' => NULL, // the title attribute
-			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"'
-			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
+			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"')
+			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again
 		);
 		
 		$params = array_merge($defaults, $val);
@@ -1584,7 +1584,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
-	 * @param	boolean shoud the normalization be ran again?
+	 * @param	boolean should the normalization be ran again?
 	 * @return	string
 	 */
 	public function create_field($params, $normalize = TRUE)
@@ -1603,7 +1603,7 @@ class Form_builder {
 			{
 				$matched = FALSE;
 				
-				// if the represntative is an associative array with keys being parameters to match (e.g. type and name), then we loop through those parameters to find a match
+				// if the representative is an associative array with keys being parameters to match (e.g. type and name), then we loop through those parameters to find a match
 				if (is_array($val) AND is_string(key($val)))
 				{
 					foreach($val as $k => $v)
@@ -1685,7 +1685,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
-	 * @param	boolean shoud the label be displayed?
+	 * @param	boolean should the label be displayed?
 	 * @return	string
 	 */
 	public function create_label($params, $use_label = TRUE)
@@ -2163,7 +2163,7 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionaltity)
+	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionality)
 	 *
 	 * @access	public
 	 * @param	array fields parameters

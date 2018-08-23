@@ -637,7 +637,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	protected
 	 * @param	string The name of the model's property to use to generate the tree. Options are 'foreign_keys', 'has_many' or 'belongs_to'
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	protected function _tree($prop = NULL)
 	{
@@ -1080,7 +1080,7 @@ class Base_module_model extends MY_Model {
 	 * @access	public
 	 * @param	string	the column to use for the value (optional)
 	 * @param	string	the column to use for the label (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
 	 * @return	array
 	 */	
@@ -1199,9 +1199,29 @@ class Base_module_model extends MY_Model {
 
 		if (!empty($params['like']))
 		{
-			$key = key($params['like']);
-			$val = current($params['like']);
-			$this->db->like($key, $val, 'both');
+			$this->db->group_start();
+			if (is_array($params['like']))
+			{
+				foreach($params['like'] as $k => $v)
+				{
+					unset($params['like'][$k]);
+					$k = str_replace(':', '.', $k);
+					if (is_string($v))
+					{
+						$params['like'][$k] = str_replace(':', '.', $v);
+					}
+
+					$this->db->or_like($k, $v, 'both');
+				}
+			}
+			else
+			{
+				$key = key($params['like']);
+				$val = current($params['like']);
+				$this->db->like($key, $val, 'both');
+			}
+
+			$this->db->group_end();
 		}
 		
 		$list_items = $this->list_items();
@@ -1323,7 +1343,7 @@ class Base_module_model extends MY_Model {
 	 * The ajax method to be called for the embedded list view
 	 *
 	 * @access	public
-	 * @param  	array  GET and POST arams that will be used for filtering
+	 * @param  	array  GET and POST params that will be used for filtering
 	 * @return	string The HTML to display
 	 */	
 	public function ajax_embedded_list_items($params)
@@ -1616,7 +1636,7 @@ class Base_module_record extends Data_record {
 	protected $_fuel = NULL;
 	
 	/**
-	 * Constructor - overwritten to add _fuel object for reference for convinience
+	 * Constructor - overwritten to add _fuel object for reference for convenience
 	 * @param	object	parent object
 	 */
 	public function __construct(&$parent = NULL)

@@ -1,9 +1,9 @@
 <h1>Pages &amp; Variables</h1>
 <p>FUEL CMS provides several ways for creating pages. To help illustrate, we'll pretend we are creating a simple website. Our website will have the following pages:</p>
 <ul>
-	<li><a href="#static"><strong>about</strong>: static page</a></li>
-	<li><a href="#editable"><strong>about/team</strong>: editable page</a></li>
-	<li><a href="#controller"><strong>about/contact</strong>: controller page</a></li>
+	<li><a href="#static"><strong>home</strong>: static page</a></li>
+	<li><a href="#controller"><strong>contact</strong>: controller page</a></li>
+	<li><a href="#editable"><strong>about</strong>: editable page</a></li>
 	<li><a href="#news"><strong>news</strong>: module page</a></li>
 </ul>
 
@@ -11,21 +11,21 @@
 
 
 <a name="static"></a>
-<h2>Static Page - about</h2>
+<h2>Static Page - home</h2>
 
 <h3>Opt-In Controller Method</h3>
-<p>There are several ways to create a page in FUEL. The easest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a> Method. This allows you to create pages without the need for a controller. A URI path of <strong>about/contact</strong> would have a view file created at <strong>views/about/contact.php</strong>. The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.</p>
+<p>There are several ways to create a page in FUEL. The easest way is to simply create a view file. We call this method the <a href="<?=user_guide_url('general/opt-in-controllers')?>">Opt-In Controller</a> Method. 
+	This allows you to create pages without the need for a controller. 
+	A URI path of <strong>about/history</strong> would have a view file created at <strong>application/views/about/history.php</strong>. 
+	The method has some extra benefits like having deep path structures and hyphens in the path without the need of routing.
+</p>
 
-<p>For this tutorial we will make the <dfn>about</dfn> page a static view file. To do that, create the following file at <dfn>application/views/about.php</dfn>: </p>
+<p>For this tutorial we will open up the <dfn>application/views/home.php</dfn> view file and replace the contents of that page with the following: </p>
 
 <pre class="brush: xml">
 <h1>Hello World</h1>
-<p>This is our about page</p>
+<p>This is our home page</p>
 </pre>
-
-<p>Note how the <dfn>about</dfn> page should automatically have a header and footer applied to it. This is because the <dfn>application/views/_variables/global.php</dfn> file specifies the <dfn>main</dfn> layout file to be applied to it (more about passing variables below). Layout files exist in the <dfn>application/views/_layouts/</dfn> folder (more about layouts below as well).
-Often times you'll see <dfn>fuel_set_var('body', '');</dfn> in a layout. This is because the variable <dfn>$body</dfn> holds the contents of the view file (in this case the 'about' page).
-</p>
 
 <p class="important">The <kbd>home</kbd> view file is reserved as the index page for the site.</p>
 
@@ -64,11 +64,15 @@ $pages = array();
 $vars['bigpic'] = 'about_bigpic.jpg';
 </pre>
 
+<p class="important">Note that this page should automatically have a header and footer applied to it when viewed. This is because the <dfn>application/views/_variables/global.php</dfn> 
+	file specifies the <dfn>main</dfn> layout file to be applied to it. Layout files exist in the <dfn>application/views/_layouts/</dfn> folder (more about layouts below as well).
+	Often times you'll see <dfn>fuel_set_var('body', '');</dfn> in a layout. This is because the variable <dfn>$body</dfn> holds the contents of the view file (in this case the 'about' page).
+</p>
 
 
 <a name="controller"></a>
-<h2>Controller Page - about/contact</h2>
-<p>FUEL still allows you to create pages using the standard MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>about/contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>application/views/_variables/</dfn> file like so:</p>
+<h2>Controller Page - contact</h2>
+<p>FUEL still allows you to create pages using the standard MVC way in CodeIgniter. For the purposes of this tutorial, we will use a controller for the <dfn>contact</dfn> because it has a webform we may want to use for processing. We can also leverage the variables specified in the <dfn>application/views/_variables/</dfn> file like so:</p>
 
 <pre class="brush:php">
 class About extends CI_Controller {
@@ -84,20 +88,21 @@ class About extends CI_Controller {
 		$vars = array('page_title' => 'Contact : My Website');
 
 		//... form code goes here
-		$this->fuel->pages->render('about/contact', $vars);
+		$this->fuel->pages->render('contact', $vars);
 	}
 }
 </pre>
 
 
 <a name="editable"></a>
-<h2>CMS Page - about/team</h2>
-<p>For the create <dfn>about/team</dfn> page we will login to the CMS by going to 
-<dfn>http://mysite.com/fuel</dfn> (where <strong>mysite.com</strong> is your domain) and entering the username of <dfn>admin</dfn> with the password (which is probably <dfn>admin</dfn> as well if you haven't changed it). Click on the <dfn>Pages</dfn> menu item on the left. For the <dfn>location</dfn> value type in <strong>about/team</strong> and for the <dfn>body</dfn> value, put in the value below, click save and then view the page:</p>
+<h2>CMS Page - about</h2>
+<p>For the <dfn>about</dfn> page we will login to the CMS by going to 
+<dfn>http://mysite.com/fuel</dfn> (where <strong>mysite.com</strong> is your domain) and entering the username of <dfn>admin</dfn> with the password (which is probably <dfn>admin</dfn> as well if you haven't changed it). 
+Click on the <dfn>Pages</dfn> menu item on the left. For the <dfn>location</dfn> value type in <strong>about</strong> and for the <dfn>body</dfn> value, put in the value below, click save and then view the page:</p>
 
 <pre class="brush: php">
-<h1>Team</h1>
-<p>This is our team page</p>
+<h1>About</h1>
+<p>This is our about page</p>
 </pre>
 
 <a name="news"></a>
@@ -281,7 +286,7 @@ view file that matches the URI path, which normally doesn't exist (e.g. <dfn>new
 </pre>
 
 <h4>Set auto_search_views configuration in MY_fuel.php</h4>
-<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration paramter to TRUE:</p>
+<p>In the <dfn>fuel/application/config/MY_fuel.php</dfn>, set the "auto_search_views" configuration parameter to TRUE:</p>
 <pre class="brush: php">
 	$config['auto_search_views'] = FALSE;
 </pre>

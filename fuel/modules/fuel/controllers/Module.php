@@ -777,7 +777,7 @@ class Module extends Fuel_base_controller {
 	 * Displays the fields to create a record (form view)
 	 *
 	 * @access	public
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -863,7 +863,7 @@ class Module extends Fuel_base_controller {
 	 * The same as the create method but does not show the left menu
 	 *
 	 * @access	public
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -994,7 +994,7 @@ class Module extends Fuel_base_controller {
 	 *
 	 * @access	public
 	 * @param	int		The ID value of the record to edit
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -1113,7 +1113,7 @@ class Module extends Fuel_base_controller {
 	 *
 	 * @access	public
 	 * @param	int		The ID value of the record to edit
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @return	void
 	 */	
 	function inline_edit($id = NULL, $field = NULL)
@@ -1231,7 +1231,7 @@ class Module extends Fuel_base_controller {
 						}
 						else
 						{
-							// loop through sanitzation functions 
+							// loop through sanitization functions 
 							foreach($sanitize_input as $func)
 							{
 								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
@@ -1246,7 +1246,7 @@ class Module extends Fuel_base_controller {
 				}
 				else
 				{
-					// loop through sanitzation functions 
+					// loop through sanitization functions 
 					foreach($sanitize_input as $key => $val)
 					{
 						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
@@ -1323,7 +1323,7 @@ class Module extends Fuel_base_controller {
 		return $saved;
 	}
 	
-	// seperated to make it easier in subclasses to use the form without rendering the page
+	// separated to make it easier in subclasses to use the form without rendering the page
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
 
@@ -2045,13 +2045,13 @@ class Module extends Fuel_base_controller {
 		}
 	}
 
-	// used in list view to quickly unpublish (if they have permisison)
+	// used in list view to quickly unpublish (if they have permission)
 	function toggle_on($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'on');
 	}
 
-	// used in list view to quickly publish (if they have permisison)
+	// used in list view to quickly publish (if they have permission)
 	function toggle_off($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'off');

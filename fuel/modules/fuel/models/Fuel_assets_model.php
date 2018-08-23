@@ -18,7 +18,7 @@
 /**
  * Extends CI_Model
  *
- * <strong>Fuel_assets_model</strong> is used for managing asset data with the file system which includes retrieving and deleting images, pdfs, etc.
+ * <strong>Fuel_assets_model</strong> is used for managing asset data with the file system which includes retrieving and deleting images, PDFs, etc.
  * 
  * @package		FUEL CMS
  * @subpackage	Models
@@ -488,7 +488,7 @@ class Fuel_assets_model extends CI_Model {
 	}
 
 	/**
-	 * Displays the most recently uplloaded 
+	 * Displays the most recently uploaded
 	 *
 	 * @access	public
 	 * @param	array View variable data (optional)

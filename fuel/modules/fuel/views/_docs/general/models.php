@@ -100,7 +100,7 @@ class Quote_model extends Base_module_record {
 <ul>
 	<li><a href="<?=user_guide_url('libraries/my_model#my_model')?>"><strong>Table Class</strong> - in charge of retrieving, validating and saving data to the data source</a></li>
 	<li><a href="<?=user_guide_url('libraries/my_model#data_set')?>"><strong>Data Set Class</strong> - the result object returned by the table class after retrieving data (normally not directly used)</a></li>
-	<li><a href="<?=user_guide_url('libraries/my_model#data_record')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attibutes of the table</a></li>
+	<li><a href="<?=user_guide_url('libraries/my_model#data_record')?>"><strong>Record Class (optional)</strong> - the custom object(s) returned by a retrieving query that contains at a minimum the column attributes of the table</a></li>
 	<li><a href="<?=user_guide_url('libraries/my_model#data_field')?>"><strong>Field Class (optional)</strong> - the custom object for a specific field. By default, it will simply return the value in the database</a></li>
 </ul>
 
@@ -264,7 +264,7 @@ magic method property.</p>
 <p>Sometimes, but not as often, you may want a field to be a specific object instead just a string or integer value. 
 MY_Model provides a <dfn>custom_fields</dfn> property that allows you to map specific classes to fields. 
 The value can be an array with the keys being the field name, and the values can either be string values, referencing the class name,
-or an array specfying the module (key) and the class name (value). You can also pass in initialization parameters to the class with the <dfn>init</dfn>
+or an array specifying the module (key) and the class name (value). You can also pass in initialization parameters to the class with the <dfn>init</dfn>
 parameter. Below are some examples:</p>
 
 <pre class="brush:php">
@@ -376,7 +376,7 @@ $this->db->find_all(array('published' => 'yes'))
 this method in your model and have one of these relationships assigned to your model, you must call parent::on_after_save($values); to properly save the relationship information.
 </p>
 <h3>Foreign Keys</h3>
-<p>The <dfn>foreign_key</dfn> model property will dynamically bind the foriegn key's record object to the declared model's record object. So for example,
+<p>The <dfn>foreign_key</dfn> model property will dynamically bind the foreign key's record object to the declared model's record object. So for example,
 say you have a products model. Each product can belong to only one category. In this case, we can use FUEL's built in <a href="<?=user_guide_url('general/tags-categories#categories')?>">Categories</a>
 module to make the relationship like so:</p>
 <pre class="brush:php">
@@ -577,7 +577,7 @@ an array of values to be processed and should return the processed array.</p>
 	<li><strong>on_after_save</strong> - executed after saving and passed an array of cleaned data</li>
 	<li><strong>on_before_delete</strong> - executed before deleting</li>
 	<li><strong>on_after_delete</strong> - executed after deleting</li>
-	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data and passed the $_POST variables. Simple modules have this hook implemented and you can add this hook to manupulate $_POST values before being saved</li>
+	<li><strong>on_before_post</strong> - to be called from within your own code right before processing post data and passed the $_POST variables. Simple modules have this hook implemented and you can add this hook to manipulate $_POST values before being saved</li>
 	<li><strong>on_after_post</strong> - to be called from within your own code after posting data. Simple modules have this hook implemented and the values passed to it is the processed $_POST array after placeholder substitutions and <a href="<?=user_guide_url('general/forms#pre_post_processing')?>">Form_builder post_processing hooks have been run</a>. An example of using this hook would be to access images after they've been uploaded for further manipulation. </li>
 	<li><strong>on_duplicate</strong> - executed when a record class is duplicated</li>
 	<li><strong>on_created</strong> - executed when a record class is created</li>

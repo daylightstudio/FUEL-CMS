@@ -78,7 +78,7 @@ class Fuel_layouts extends Fuel_base_library {
 	 */	
 	public function initialize($config = array())
 	{
-		// setup any intialized variables
+		// setup any initialized variables
 		foreach ($config as $key => $val)
 		{
 			if (isset($this->$key))
@@ -499,7 +499,7 @@ class Fuel_layout extends Fuel_base_library {
 			$params = array('name' => $params);
 		}
 
-		// setup any intialized variables
+		// setup any initialized variables
 		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key) AND isset($val))

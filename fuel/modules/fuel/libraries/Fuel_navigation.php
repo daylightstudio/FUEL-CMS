@@ -176,7 +176,7 @@ class Fuel_navigation extends Fuel_module {
 			{
 				if ($this->CI->fuel->navigation->mode() != 'cms')
 				{
-					// load in navigation file as a starting poing
+					// load in navigation file as a starting point
 					if (file_exists(APPPATH.'views/_variables/'.$p['file'].'.php'))
 					{
 						$p['root_value'] = NULL;

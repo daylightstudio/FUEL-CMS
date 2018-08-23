@@ -167,7 +167,7 @@ class Fuel_tags_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	boolean 	Determines whether to return just published pages or not (optional... and ignored in the admin)
-	 * @return	array 		An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array 		An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	public function tree($just_published = FALSE)
 	{
