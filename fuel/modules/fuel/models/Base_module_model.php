@@ -1199,9 +1199,29 @@ class Base_module_model extends MY_Model {
 
 		if (!empty($params['like']))
 		{
-			$key = key($params['like']);
-			$val = current($params['like']);
-			$this->db->like($key, $val, 'both');
+			$this->db->group_start();
+			if (is_array($params['like']))
+			{
+				foreach($params['like'] as $k => $v)
+				{
+					unset($params['like'][$k]);
+					$k = str_replace(':', '.', $k);
+					if (is_string($v))
+					{
+						$params['like'][$k] = str_replace(':', '.', $v);
+					}
+
+					$this->db->or_like($k, $v, 'both');
+				}
+			}
+			else
+			{
+				$key = key($params['like']);
+				$val = current($params['like']);
+				$this->db->like($key, $val, 'both');
+			}
+
+			$this->db->group_end();
 		}
 		
 		$list_items = $this->list_items();
