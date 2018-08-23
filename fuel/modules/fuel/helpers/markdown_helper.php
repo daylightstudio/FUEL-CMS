@@ -1628,9 +1628,13 @@ class Markdown_Parser {
 	# regular expression.
 	#
 		if (function_exists($this->utf8_strlen)) return;
-		$this->utf8_strlen = create_function('$text', 'return preg_match_all(
+
+		// Changed 2018-04-17 David McReynolds to make PHP 7.2 compliant
+		$this->utf8_strlen = function($text) {
+			return preg_match_all(
 			"/[\\\\x00-\\\\xBF]|[\\\\xC0-\\\\xFF][\\\\x80-\\\\xBF]*/", 
-			$text, $m);');
+			$text, $m);
+		};
 	}
 
 

@@ -518,46 +518,46 @@ class Fuel_custom_fields {
 			$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
 			// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-			$func_str = '
+			$func = function($value) use ($process_key, $params) {
 				if (is_array($value))
 				{
 					foreach($value as $key => $val)
 					{
-						if (isset($val["'.$process_key.'"]))
+						if (isset($val[$process_key]))
 						{
 							$z = "";
-							if (is_string($val["'.$process_key.'"]))
+							if (is_string($val[$process_key]))
 							{
-								$z = $val["'.$process_key.'"];
+								$z = $val[$process_key];
 							}
-							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 							{
-								$z = $val["'.$process_key.'"]["'.$params['name'].'"];
+								$z = $val[$process_key][$params['name']];
 							}
 							$z = trim($z);
 							$assets = array();
 							$assets_arr = preg_split("#\s*,\s*|\n#", $z);
 
-							if (is_string($val["'.$process_key.'"]))
+							if (is_string($val[$process_key]))
 							{
 								if (count($assets_arr) > 1)
 								{
-									$value[$key]["'.$process_key.'"] = json_encode($assets_arr);
+									$value[$key][$process_key] = json_encode($assets_arr);
 								}
 								else
 								{
-									$value[$key]["'.$process_key.'"] = $z;
+									$value[$key][$process_key] = $z;
 								}
 							}
-							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 							{
 								if (count($assets_arr) > 1)
 								{
-									$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = json_encode($assets_arr);
+									$value[$key][$process_key][$params['name']] = json_encode($assets_arr);
 								}
 								else
 								{
-									$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $z;
+									$value[$key][$process_key][$params['name']] = $z;
 								}
 							}
 							
@@ -578,10 +578,9 @@ class Fuel_custom_fields {
 						return $value;
 					}
 				}
-				';
-			
-
-			$func = create_function('$value', $func_str);$form_builder->set_post_process($params['key'], $func);
+				
+			};
+			$form_builder->set_post_process($params['key'], $func);
 		}
 		
 		// unserialize value if it's serialized
@@ -1004,26 +1003,26 @@ class Fuel_custom_fields {
 
 		if (!empty($params['serialize']))
 		{
-			
-			$func_str = '$CI =& get_instance();
-			$val = $CI->input->post("'.$params['key'].'");
-			if (isset($_POST["'.$params['key'].'"]) AND is_array($val))
-			{
-				//return serialize($val); // issues with multibyte characters
-				// foreach($_POST["'.$params['key'].'"] as $key => $val)
-				// {
-				// 	$CI->form_builder->post_process_field_values($val);
-				// }
-				return json_encode($val);
-			}
-			else
-			{
-				$_POST["'.$params['key'].'"] = "";
-				return "";
-			}
-			';
 
-			$func = create_function('$value', $func_str);
+
+			$func = function($value) use ($params) {
+				$CI =& get_instance();
+				$val = $CI->input->post($params['key']);
+				if (isset($_POST[$params['key']]) AND is_array($val))
+				{
+					//return serialize($val); // issues with multibyte characters
+					// foreach($_POST["'.$params['key'].'"] as $key => $val)
+					// {
+					// 	$CI->form_builder->post_process_field_values($val);
+					// }
+					return json_encode($val);
+				}
+				else
+				{
+					$_POST[$params['key']] = "";
+					return "";
+				}
+			};
 			$form_builder->set_post_process($params['key'], $func);
 		}
 		
@@ -1256,22 +1255,23 @@ class Fuel_custom_fields {
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-		// check if it's a nested form
-		$func_str = '
+		// unformat number
+		$func = function($value) use ($process_key, $params) {
+			// check if it's a nested form
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
 				{
-					if (isset($val["'.$process_key.'"]))
+					if (isset($val[$process_key]))
 					{
 						$z = "";
-						if (is_string($val["'.$process_key.'"]))
+						if (is_string($val[$process_key]))
 						{
-							$z = $val["'.$process_key.'"];
+							$z = $val[$process_key];
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$z = $val["'.$process_key.'"]["'.$params['name'].'"];
+							$z = $val[$process_key][$params['name']];
 						}
 
 						if ($z == "")
@@ -1280,23 +1280,23 @@ class Fuel_custom_fields {
 						}
 						else
 						{
-							$value_parts = explode("'.$params['decimal'].'", $z);
+							$value_parts = explode($params['decimal'], $z);
 							$curval = current($value_parts);
 							$decimal = "00";
 							if (count($value_parts) > 1)
 							{
 								$decimal = end($value_parts);
 							}
-							$curval = str_replace("'.$params['separator'].'", "", $curval);
+							$curval = str_replace($params['separator'], "", $curval);
 							$curval = (float) $curval.".".$decimal;
 						}
-						if (is_string($val["'.$process_key.'"]))
+						if (is_string($val[$process_key]))
 						{
-							$value[$key]["'.$process_key.'"] = $curval;
+							$value[$key][$process_key] = $curval;
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $curval;
+							$value[$key][$process_key][$params['name']] = $curval;
 						}
 						
 					}
@@ -1311,22 +1311,19 @@ class Fuel_custom_fields {
 				}
 				else
 				{
-					$value_parts = explode("'.$params['decimal'].'", $value);
+					$value_parts = explode($params['decimal'], $value);
 					$value = current($value_parts);
 					$decimal = "00";
 					if (count($value_parts) > 1)
 					{
 						$decimal = end($value_parts);
 					}
-					$value = str_replace("'.$params['separator'].'", "", $value);
+					$value = str_replace($params['separator'], "", $value);
 					$value = (float) $value.".".$decimal;
 				}
 				return $value;
 			}
-			';
-		
-		// unformat number
-		$func = create_function('$value', $func_str);	
+		};
 		$form_builder->set_post_process($params['key'], $func);
 
 		// preformat the currency 
@@ -1407,22 +1404,22 @@ class Fuel_custom_fields {
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-		$func_str = '
+		$func = function($value) use ($process_key, $params) {
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
 				{
 
-					if (isset($val["'.$params['linked_to'].'"]))
+					if (isset($val[$params['linked_to']]))
 					{
-						$v = url_title($val["'.$params['linked_to'].'"], "dash", TRUE);
-						if (is_string($val["'.$process_key.'"]))
+						$v = url_title($val[$params['linked_to']], "dash", TRUE);
+						if (is_string($val[$process_key]))
 						{
-							$value[$key]["'.$process_key.'"] = $v;
+							$value[$key][$process_key] = $v;
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $v;
+							$value[$key][$process_key][$params['name']] = $v;
 						}
 						
 					}
@@ -1432,16 +1429,15 @@ class Fuel_custom_fields {
 			else
 			{
 				$CI =& get_instance();
-				$slug_val = $CI->input->post("'.$params['name'].'");
-				$linked_value = $CI->input->post("'.$params['linked_to'].'");
+				$slug_val = $CI->input->post($params['name']);
+				$linked_value = $CI->input->post($params['linked_to']);
 				if ( ! $slug_val AND $linked_value)
 				{
 					return url_title($linked_value, "dash", TRUE);
 				}
 				return $slug_val;
 			}
-			';
-		$func = create_function('$value', $func_str);
+		};
 		$form_builder->set_post_process($params['key'], $func);
 		
 		$params['type'] = 'text';
@@ -1472,32 +1468,32 @@ class Fuel_custom_fields {
 
 		$list_type = (!empty($params['list_type']) AND $params['list_type'] == 'ol') ? 'ol' : 'ul';
 
-		$func_str = '
+		$func = function($value) use ($process_key, $params, $output_class, $list_type){
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
 				{
-					if (isset($val["'.$process_key.'"]))
+					if (isset($val[$process_key]))
 					{
 						$z = "";
-						if (is_string($val["'.$process_key.'"]))
+						if (is_string($val[$process_key]))
 						{
-							$z = $val["'.$process_key.'"];
+							$z = $val[$process_key];
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$z = $val["'.$process_key.'"]["'.$params['name'].'"];
+							$z = $val[$process_key][$params['name']];
 						}
 						$lis = explode("\n", $z);
 						$lis = array_map("trim", $lis);
-						$newval = '.$list_type.'($lis, "'.$output_class.'");
-						if (is_string($val["'.$process_key.'"]))
+						$newval = $list_type($lis, $output_class);
+						if (is_string($val[$process_key]))
 						{
-							$value[$key]["'.$process_key.'"] = $newval;
+							$value[$key][$process_key] = $newval;
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $newval;
+							$value[$key][$process_key][$params['name']] = $newval;
 						}
 						
 					}
@@ -1508,12 +1504,10 @@ class Fuel_custom_fields {
 			{
 				$lis = explode("\n", $value);
 				$lis = array_map("trim", $lis);
-				return '.$list_type.'($lis, "'.$output_class.'");
+				return $list_type($lis, $output_class);
 			}
-			';
-		
-		
-		$func = create_function('$value', $func_str);
+
+		};
 		$form_builder->set_post_process($params['key'], $func);
 		$params['class'] = 'no_editor';
 		return $form_builder->create_textarea($params);
@@ -1795,21 +1789,21 @@ class Fuel_custom_fields {
 
 	
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-		$func_str = '
+		$func = function($value) use ($process_key, $params) {
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
 				{
-					if (isset($val["'.$process_key.'"]))
+					if (isset($val[$process_key]))
 					{
 						$z = "";
-						if (is_string($val["'.$process_key.'"]))
+						if (is_string($val[$process_key]))
 						{
-							$z = $val["'.$process_key.'"];
+							$z = $val[$process_key];
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$z = $val["'.$process_key.'"]["'.$params['name'].'"];
+							$z = $val[$process_key][$params['name']];
 						}
 
 						$json = array();
@@ -1829,13 +1823,13 @@ class Fuel_custom_fields {
 							}
 						}
 						$first_item = current($json);
-						if (is_string($val["'.$process_key.'"]))
+						if (is_string($val[$process_key]))
 						{
-							$value[$key]["'.$process_key.'"] = (!empty($first_item)) ? json_encode($json) : "";
+							$value[$key][$process_key] = (!empty($first_item)) ? json_encode($json) : "";
 						}
-						else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+						else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 						{
-							$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = (!empty($first_item)) ? json_encode($json) : "";
+							$value[$key][$process_key][$params['name']] = (!empty($first_item)) ? json_encode($json) : "";
 						}
 					}
 				}
@@ -1870,8 +1864,8 @@ class Fuel_custom_fields {
 					return  (!empty($first_item)) ? json_encode($json) : "";
 				}
 			}
-			';
-		$func = create_function('$value', $func_str);
+
+		};
 		$form_builder->set_post_process($params['key'], $func);
 
 		if (!empty($params['value']))

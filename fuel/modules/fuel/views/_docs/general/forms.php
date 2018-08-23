@@ -1317,6 +1317,6 @@ $this->form_builder->remove_representative('url');
 <h2 id="pre_post_processing">Pre &amp; Post Processing Fields</h2>
 <p>If you need a field that does additional processing before being set as the value of the field or after posting, you can create a pre-processing or post-processing function to handle it. 
 	To register that function with the field, you specify the <dfn>pre_process</dfn> or <dfn>post_process</dfn> parameter respectively.
-	The value assigned to the the pre/post_process parameters is the name of the function (as a string), a lambda function (from create_function), 
+	The value assigned to the the pre/post_process parameters is the name of the function (as a string), a lambda function, 
 	or an array with the first value being the instance of an object and the second value being the name of the method on that object. There are several
 	custom functions that take advantage of this feature including the <a href="#asset">asset</a>, <a href="#slug">slug</a> <a href="#template">template</a>, <a href="#currency">currency</a> and <a href="#keyval">keyval</a> field types.</p>

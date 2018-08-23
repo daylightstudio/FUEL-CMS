@@ -1328,11 +1328,7 @@ class Fuel_page extends Fuel_base_library {
 		{	
 
 			// move all edit markers in attributes to before the node
-			$callback = create_function(
-			            // single quotes are essential here,
-			            // or alternative escape all $ as \$
-			            '$matches',
-			            '
+			$callback = function($matches){
 						$CI =& get_instance();
 						$marker_reg_ex = $CI->fuel->page->get_marker_regex();
 						$output = $matches[0];
@@ -1343,8 +1339,8 @@ class Fuel_page extends Fuel_base_library {
 							$output = $CI->fuel->page->remove_markers($matches[0]);
 							$output = implode($tagmatches[0], " ").$output;
 						}
-						return $output;'
-			        );
+						return $output;
+			        };
 
 			$output = preg_replace_callback('#<[^>]+=["\'][^<]*'.$marker_reg_ex.'.*(?<!--)>#Ums', $callback, $output);
 			//$output = preg_replace('#(=["\'][^<]*)('.$marker_reg_ex.')#Ums', '${2}${1}', $output);  // doesn't work with fuel_var in multiple tag attributes

@@ -1239,20 +1239,20 @@ class Base_module_model extends MY_Model {
 			foreach($params['tooltip_char_limit'] as $field => $limit)
 			{
 				$limit = (int) $limit;
-				$tooltip_func_str = ' 
-						$value = strip_tags($values["'.$field.'"]);
- 						if (strlen($value) > '.$limit.')
+				$tooltip_func = function($values) use ($field, $limit) {
+					$value = strip_tags($values[$field]);
+ 						if (strlen($value) > $limit)
 						{
 							// display tooltip for long notes
-							$trimmed = character_limiter($value, '.$limit.');
+							$trimmed = character_limiter($value, $limit);
 							$data = "<span title=\"" . $value . "\" class=\"tooltip\">" . $trimmed . "</span>";
 						}
 						else
 						{
 							$data = $value;
 						}
-						return $data;';
-				$tooltip_func = create_function('$values', $tooltip_func_str);
+						return $data;
+				};
 				$data_table->add_field_formatter($field, $tooltip_func);
 			}
 			
