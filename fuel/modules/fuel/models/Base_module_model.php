@@ -1239,7 +1239,7 @@ class Base_module_model extends MY_Model {
 			foreach($params['tooltip_char_limit'] as $field => $limit)
 			{
 				$limit = (int) $limit;
-				$tooltip_func = function($values) use ($field) {
+				$tooltip_func = function($values) use ($field, $limit) {
 					$value = strip_tags($values[$field]);
  						if (strlen($value) > $limit)
 						{
