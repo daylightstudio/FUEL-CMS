@@ -96,7 +96,7 @@ you can load it like so:
 <pre class="brush:php">
 class About extends CI_Controller {
 	
-	function About()
+	function __construct()
 	{
 		parent::__construct();
 	}
