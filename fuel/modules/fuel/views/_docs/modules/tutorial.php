@@ -257,7 +257,7 @@ $config['modules']['articles'] = array(
     second field in your table, so in our case, we really don't need to specify this value since "title" is the second field in our table but we do so 
     for demonstration purposes.</li>
     <li><strong>sanitize_input</strong>: The <dfn>sanitize_input</dfn> parameter is used to clean input before it gets inserted into the database table.
-    The default value is <var>TRUE</var> which means it will apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html" target="_blank">xss_clean</a> 
+    The default value is <var>TRUE</var> which means it will apply the <a href="https://www.codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a>
     function. In some cases, this default value is too restrictive and will not allow you to input javascript or iframe code. So instead, you 
     can specify an array of options that are available from FUEL's <a href="<?=user_guide_url('installation/configuration')?>">module_sanitize_funcs</a> config parameter. In this case, we will use
     the <var>template</var> and <var>php</var> value that maps to FUEL's <a href="<?=user_guide_url('helpers/my_string_helper#func_php_to_template_syntax')?>">php_to_template_syntax</a> and <a href="http://php.net/manual/en/function.htmlentities.php" target="_blank">htmlentities</a> function respectively.</li>

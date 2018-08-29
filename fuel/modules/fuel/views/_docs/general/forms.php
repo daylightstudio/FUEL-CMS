@@ -998,7 +998,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="slug" class="toggle">slug</h3>
 <div class="toggle_block_off">
-	<p>This field type can be used for creating slug or permalink values for a field using the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">url_title</a> function.
+	<p>This field type can be used for creating slug or permalink values for a field using the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#url_title" target="_blank">url_title</a> function.
 	The following additional parameter can be passed to this field type:</p>
 	<ul>
 		<li><strong>linked_to</strong>: the field whose value to use if no value is provided.
