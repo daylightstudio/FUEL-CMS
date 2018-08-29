@@ -59,7 +59,7 @@ $config['my_module']['settings']['my_config'] = array();
 	<li><strong>hooks:</strong> the <a href="https://www.codeigniter.com/user_guide/general/hooks.html" target="_blank">CodeIgniter Hooks</a> configuration. By default it includes the <span class="file">fuel/modules/fuel/config/fuel_hooks.php</span>
 		file which contains FUEL specific hooks. </li>
 	<li><strong>migration:</strong> the <a href="https://www.codeigniter.com/user_guide/libraries/migration.html" target="_blank">CodeIgniter Migration</a> configuration. </li>
-	<li><strong>mimes:</strong> the <a href="https://www.codeigniter.com/user_guide/libraries/migration.html" target="_blank">CodeIgniter mimes</a> configuration used by such classes
+	<li><strong>mimes:</strong> the <a href="https://www.codeigniter.com/user_guide/helpers/file_helper.html#get_mime_by_extension" target="_blank">CodeIgniter mimes</a> configuration used by such classes
 			as the CodeIgniter <a href="https://www.codeigniter.com/user_guide/libraries/output.html" target="_blank">Output class</a>, the <a href="https://www.codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">Upload class</a>,
 			the <a href="https://www.codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">file helper</a> and the <a href="https://www.codeigniter.com/user_guide/helpers/download_helper.html" target="_blank">download helper</a>.</li>
 	<li><strong>routes:</strong> the <a href="https://www.codeigniter.com/user_guide/general/routing.html" target="_blank">CodeIgniter Routing</a> configuration</li>
