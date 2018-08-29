@@ -9,7 +9,7 @@ can then be used to help set and retrieve language information.</p>
 <p>There are a few different ways to add multi-language support to your website:</p>
 
 <h3>CodIgniter's Language Class</h3>
-<p>CodeIgniter comes with a <a href="http://ellislab.com/codeigniter/user-guide/libraries/language.html" target="_blank">Language class</a> which can is fully available for you to leverage in your site.</p>
+<p>CodeIgniter comes with a <a href="https://www.codeigniter.com/user_guide/libraries/language.html" target="_blank">Language class</a> which can is fully available for you to leverage in your site.</p>
 
 <h3>CMS Pages</h3>
 <p>When multiple languages are configured in the <a href="<?=user_guide_url('installation/configuration')?>">FUEL config</a>, you will see an additional drop down when editing or creating a page in the CMS.

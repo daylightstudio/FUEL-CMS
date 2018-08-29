@@ -62,9 +62,9 @@ $config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'use
 	<li>{swf_path('my_swf.swf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_swf_path')?>">swf_path()</a> function. The <dfn>.swf</dfn> extension is optional.</li>
 	<li>{media_path('my_movie.mov')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_media_path')?>">media_path()</a> function.</li>
 	<li>{pdf_path('my_pdf.pdf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_pdf_path')?>">pdf_path()</a> function. The <dfn>.pdf</dfn> extension is optional.</li>
-	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">safe_mailto()</a> function.</li>
-	<li>{redirect('my_redirect_page')} - Maps to the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">redirect()</a> function.</li>
-	<li>{show_404} - Maps to the <a href="http://ellislab.com/codeigniter/user-guide/general/errors.html" target="_blank">show_404()</a> function.</li>
+	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#safe_mailto" target="_blank">safe_mailto()</a> function.</li>
+	<li>{redirect('my_redirect_page')} - Maps to the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#redirect" target="_blank">redirect()</a> function.</li>
+	<li>{show_404} - Maps to the <a href="https://www.codeigniter.com/user_guide/general/errors.html#show_404" target="_blank">show_404()</a> function.</li>
 </ul>
 
 <h3>Namespaced Functions</h3>

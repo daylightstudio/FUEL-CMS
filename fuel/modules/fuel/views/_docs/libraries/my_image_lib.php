@@ -1,5 +1,5 @@
 <h1>MY_Image_lib Class</h1>
-<p>The <dfn>MY_Image_lib Class</dfn> extends <a href="http://ellislab.com/codeigniter/user-guide/libraries/image_lib.html" target="_blank">CI_Image_lib</a> result class.
+<p>The <dfn>MY_Image_lib Class</dfn> extends <a href="https://www.codeigniter.com/user_guide/libraries/image_lib.html" target="_blank">CI_Image_lib</a> result class.
 It adds a couple methods listed below:
 </p>
 
