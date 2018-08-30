@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://docs.getfuelcms.com/library/form_builder
+ * @link		http://docs.getfuelcms.com/libraries/form_builder
  * @autodoc		FALSE
  */
 
