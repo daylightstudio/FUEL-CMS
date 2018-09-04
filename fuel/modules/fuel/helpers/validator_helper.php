@@ -208,11 +208,7 @@ if (!function_exists('is_outside'))
 	 */
 	function is_outside($var, $lo, $hi)
 	{
-		if($var >= $hi AND $var <= $lo)
-		{
-			return TRUE;
-		}
-		return FALSE;
+		return $var < $lo || $var > $hi;
 	}
 }
 
