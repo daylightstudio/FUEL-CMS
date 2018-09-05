@@ -796,19 +796,15 @@ class Data_table {
 				if (empty($action)) $action = $this->default_field_action;
 				if (!empty($action))
 				{
+					$callback = function($match) use ($columns) {
+						$return = $match[0];
+						if (!empty($match[2]))
+						{
+							$return = $match[1].$columns[$match[2]].$match[3];
+						}
+						return $return;
+					};
 
-					//e modifier is deprecated so we have to do this
-					$callback = function($match){
-							$return = $match[0];
-							if (!empty($match[2]))
-							{
-								$return = $match[1].$GLOBALS["__tmp_transient_columns__"][$match[2]].$match[3];
-							}
-							return $return;
-						};
-
-					// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
-					$GLOBALS['__tmp_transient_columns__'] = $columns;
 					$action = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $action);
 					$fields[] = new Data_table_field($key, $val, array(), $action);
 				}
@@ -824,14 +820,8 @@ class Data_table {
 					$i++;
 				}
 			}
-
-			// hacky cleanup to avoid using 5.3 syntax
-			if (isset($GLOBALS["__tmp_transient_columns__"]))
-			{
-				unset($GLOBALS["__tmp_transient_columns__"]);
-			}
-
 		}
+		
 		$attrs['id'] = (!empty($columns[$this->row_id_key])) ? $this->id.'_row'.$columns[$this->row_id_key] : $this->id.'_row'.$index;
 		$this->rows[$index] = new Data_table_row($fields, $attrs, $col_attrs);
 		return $this->rows[$index];
