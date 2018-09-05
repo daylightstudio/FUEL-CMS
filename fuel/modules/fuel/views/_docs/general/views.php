@@ -1,5 +1,5 @@
 <h1>Views</h1>
-<p>Views within FUEL work just like <a href="http://ellislab.com/codeigniter/user-guide/general/views.html" target="_blank">CodeIgniter views</a> but with some extra functionality. 
+<p>Views within FUEL work just like <a href="https://www.codeigniter.com/user_guide/general/views.html" target="_blank">CodeIgniter views</a> but with some extra functionality.
 For example, you can render a page automatically without creating a controller method by using the <a href="<?=user_guide_url('general/opt-in-controllers')?>">opt-in controller method</a>.</p>
 
 <h2>Hiding Views</h2>

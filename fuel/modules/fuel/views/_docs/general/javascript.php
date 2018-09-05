@@ -161,7 +161,7 @@ Essentially, you can swap out the folder "/" with object ".".</p>
 <h3>jQX Configuration Parameters</h3>
 <p>The following jqx config parameters are available for you to use in your jQX controller:</p>
 <ul>
-	<li><strong>jqx.config.basePath:</strong> The equivalent value to the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">site_url()</a> CI function </li>
+	<li><strong>jqx.config.basePath:</strong> The equivalent value to the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#site_url" target="_blank">site_url()</a> CI function </li>
 	<li><strong>jqx.config.jsPath:</strong> The path to the fuel modules javascript folder which is <span class="file">/fuel/modules/fuel/assets/js/</span></li>
 	<li><strong>jqx.config.imgPath:</strong> The path to the fuel modules images folder which is <span class="file">/fuel/modules/fuel/assets/images/</span></li>
 	<li><strong>jqx.config.uriPath:</strong> The equivalent to the <a href="<?=user_guide_url('helpers/my_url_helper')?>">uri_path()</a> function</li>

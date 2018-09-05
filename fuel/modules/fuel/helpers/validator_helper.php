@@ -122,14 +122,7 @@ if ( ! function_exists('valid_email'))
 	 */
 	function valid_email($email)
 	{
-		if (function_exists('filter_var'))
-		{
-			return filter_var($email, FILTER_VALIDATE_EMAIL);
-		}
-		else
-		{
-			return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,10}$/ix", $email)) ? FALSE : TRUE;
-		}
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 } 
 
@@ -215,11 +208,7 @@ if (!function_exists('is_outside'))
 	 */
 	function is_outside($var, $lo, $hi)
 	{
-		if($var >= $hi AND $var <= $lo)
-		{
-			return TRUE;
-		}
-		return FALSE;
+		return $var < $lo || $var > $hi;
 	}
 }
 

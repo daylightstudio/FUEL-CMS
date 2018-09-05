@@ -96,7 +96,7 @@ you can load it like so:
 <pre class="brush:php">
 class About extends CI_Controller {
 	
-	function About()
+	function __construct()
 	{
 		parent::__construct();
 	}
@@ -110,9 +110,9 @@ class About extends CI_Controller {
 		
 		// use Fuel_page to render so it will grab all opt-in variables and do any necessary parsing
 		$this->fuel->pages->render('about/contact', $vars);
-		
-		
 	}
+
+}
 </pre>
 
 
