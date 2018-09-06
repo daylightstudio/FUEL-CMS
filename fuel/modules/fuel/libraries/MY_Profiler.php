@@ -110,7 +110,7 @@ class MY_Profiler extends CI_Profiler {
 				{
 					$time = number_format($db->query_times[$key], 4);
 
-					$val = highlight_code($val, ENT_QUOTES);
+					$val = highlight_code($val);
 
 					foreach ($highlight as $bold)
 					{
