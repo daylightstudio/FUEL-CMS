@@ -9,7 +9,7 @@
 
 $config['modules'] = array();
 
-// Page module init values
+// Pages module init values
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
 	'model_location' => 'fuel',
@@ -62,7 +62,7 @@ $config['modules']['pages'] = array(
 	),
 );
 
-// Page module init values
+// Pagevariables module init values
 $config['modules']['pagevariables'] = array(
 	'module_name' => 'Page Variables',
 	'model_location' => 'fuel',
@@ -87,7 +87,7 @@ $config['modules']['pagevariables'] = array(
 	'hidden' => TRUE
 );
 
-// Navigation module init values
+// Blocks module init values
 $config['modules']['blocks'] = array(
 	'module_name' => 'Blocks',
 	'model_location' => 'fuel',
@@ -153,7 +153,7 @@ $config['modules']['navigation_group'] = array(
 	'permission' => 'navigation'
 );
 
-// Navigation module init values
+// Categories module init values
 $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
 	'model_location' => 'fuel',
@@ -181,7 +181,7 @@ $config['modules']['categories'] = array(
 	)
 );
 
-// Navigation module init values
+// Tags module init values
 $config['modules']['tags'] = array(
 	'module_name' => 'Tags',
 	'model_location' => 'fuel',
@@ -230,7 +230,7 @@ $config['modules']['assets'] = array(
 	'sanitize_images' => FALSE
 );
 
-// Sitevariable module init values
+// Sitevariables module init values
 $config['modules']['sitevariables'] = array(
 	'module_name' => 'Site Variables',
 	'model_location' => 'fuel',
@@ -328,7 +328,7 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-// Permissions module init values
+// Logs module init values
 $config['modules']['logs'] = array(
 	'module_name' => 'Activity Log',
 	'model_location' => 'fuel',
@@ -362,8 +362,6 @@ $config['modules']['logs'] = array(
 		)
 	)
 );
-
-//@include(APPPATH.'config/MY_fuel_modules.php');
 
 /* End of file fuel_modules.php */
 /* Location: ./modules/fuel/config/fuel_modules.php */
