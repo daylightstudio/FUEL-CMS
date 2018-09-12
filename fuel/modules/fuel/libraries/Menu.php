@@ -1061,7 +1061,7 @@ class Menu {
 		}
 		else
 		{
-			return $active_items;
+			return array();
 		}
 		
 		if (!in_array($active, $active_items)) $active_items[] = $active;
