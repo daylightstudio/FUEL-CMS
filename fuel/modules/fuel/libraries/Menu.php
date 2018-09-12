@@ -1038,7 +1038,7 @@ class Menu {
 	 * @access	public
 	 * @param	string active element
 	 * @param	boolean first time iterating through?
-	 * @return	string
+	 * @return	array
 	 */
 	public function get_items_in_path($active, $first_time = TRUE){
 		static $active_items = array();
@@ -1061,7 +1061,7 @@ class Menu {
 		}
 		else
 		{
-			return;
+			return $active_items;
 		}
 		
 		if (!in_array($active, $active_items)) $active_items[] = $active;
