@@ -528,7 +528,7 @@ CREATE TABLE `articles` (
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_posts_model.php');
+require_once(FUEL_PATH.'models/Base_posts_model.php');
 
 class Articles_model extends Base_posts_model {
 
