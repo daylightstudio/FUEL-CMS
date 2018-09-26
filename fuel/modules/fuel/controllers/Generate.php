@@ -49,9 +49,6 @@ class Generate extends Fuel_base_controller {
 
 		foreach($names as $name) $this->_advanced($name);
 
-		// create a generic permission for the advanced module
-		$this->fuel->permissions->create($name);
-
 		$vars['created'] = $this->created;
 		$vars['errors'] = $this->errors;
 		$vars['modified'] = $this->modified;
