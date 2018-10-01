@@ -15,7 +15,7 @@ The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_mo
 <p>Both classes allow you to create <a href="<?=user_guide_url('general/forms')?>">simple to complex form interfaces</a> with the model's <dfn>MY_Model::form_fields()</dfn>
 method, which gets passed to the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> object to generate the forms in the CMS.</p>
 
-<p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record">API documentation for both table and record model classes</a> (explained below).</p>
+<p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record_field">API documentation for both table and record model classes</a> (explained below).</p>
 <ul>
 	<li><a href="#example">Example</a></li>
 	<li><a href="#table_result_record_field">Table, Result, Record and Field Classes</a></li>
