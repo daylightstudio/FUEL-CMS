@@ -301,7 +301,7 @@ $record->get_content()
 $record->content
 </pre>
 
-<p>There are also additional <a href="#formattters">formatter</a> variations you can use on a record property &mdash; such as <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
+<p>There are also additional <a href="#formatters">formatter</a> variations you can use on a record property &mdash; such as <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
 <p>Using <dfn>{property}_formatted</dfn> will apply the <a href="https://www.codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>
 function if the property is a string value and if it is a date value will format the date by default to whatever is specified in the <span class="file">fuel/application/config/MY_config.php</span>.
 </p>
