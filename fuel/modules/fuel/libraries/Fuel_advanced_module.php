@@ -277,8 +277,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 				// removes '_model'... must have this suffix to work!!!
 				if ($remove_suffix)
 				{
-					$mod_name = substr($models[$key], 0, -6);
-					$models[$key] = substr($models[$key], 0, -6);
+					$model_name = substr($models[$key], 0, -6);
+					$models[$key] = $model_name;
 				}
 			}
 			
