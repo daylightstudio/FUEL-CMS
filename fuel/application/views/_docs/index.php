@@ -39,7 +39,7 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 			<li><strong><a href="#blocks">Blocks</a></strong> - create reusable block elements (e.g. headers, footers, callouts, etc).</li>
 			<li><strong><a href="#categories">Categories</a></strong> - create categories to group records together.</li>
 			<li><strong><a href="#tags">Tags</a></strong> - create tags to associate with one or more other module records to allow for easy filtering.</li>
-			<li><strong><a href="sitevariables">Site Variables</a></strong> - create variables that can be used throughout your website (e.g. a contact email address).</li>
+			<li><strong><a href="#sitevariables">Site Variables</a></strong> - create variables that can be used throughout your website (e.g. a contact email address).</li>
 			<li><strong><a href="#users">Users</a></strong> - create users and associate permissions with them.</li>
 			<li><strong><a href="#permissions">Permissions</a></strong> - create permissions to associate with other users.</li>
 		</ul>

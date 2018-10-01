@@ -206,7 +206,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
-		<li><a href="#langauge">langauge</a></li>
+		<li><a href="#language">language</a></li>
 		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 		<li><a href="#toggler">toggler</a></li>
