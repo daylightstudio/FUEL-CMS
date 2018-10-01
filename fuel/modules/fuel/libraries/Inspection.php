@@ -1330,6 +1330,7 @@ class Inspection_base {
 		if (method_exists($this->reflection, 'getParameters'))
 		{
 			$params = $this->reflection->getParameters();
+			$this->params = array();
 			foreach($params as $param)
 			{
 				$p = new Inspection_param($param);
