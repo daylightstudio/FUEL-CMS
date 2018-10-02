@@ -80,7 +80,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The page to redirect to or the type of redirect if the first parameter is an array (optional)
 	 * @param	boolean	Determines whether it is a passive redirect or not. Default is TRUE(optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function add($uri, $redirect = '', $passive = TRUE)
 	{
@@ -117,7 +117,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @access	public
 	 * @param	string	The URI location of the page to remove
 	 * @param	boolean	Determines whether it is a passive redirect or not. Default is TRUE(optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function remove($uri, $passive = TRUE)
 	{
@@ -140,7 +140,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function add_ssl($uri, $environment = '')
 	{
@@ -155,7 +155,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @access	public
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function remove_ssl($uri, $environment = 'production')
 	{
@@ -171,12 +171,11 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function add_non_ssl($uri, $environment = '')
 	{
 		$this->_add_ssl_type($uri, $environment, 'non_ssl');
-
 	}
 	
 	// --------------------------------------------------------------------
@@ -187,7 +186,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @access	public
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	public function remove_non_ssl($uri, $environment = 'production')
 	{
@@ -204,7 +203,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @param	string	The type of SSL either redirect... either to https or http (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	protected function _add_ssl_type($uri, $redirect = '', $environment = '', $type = 'ssl')
 	{
@@ -235,7 +234,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * @param	string	The URI location of the page to remove
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @param	string	The type of SSL either redirect... either to https or http (optional)
-	 * @return	array	
+	 * @return	void
 	 */	
 	protected function _remove_ssl_type($uri, $environment = '', $type = 'ssl')
 	{
@@ -300,7 +299,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	boolean	Determines whether only redirect those pages that are deemed "passive"
-	 * @return	array	
+	 * @return	array
 	 */	
 	public function redirects($only_passive = TRUE)
 	{
@@ -318,6 +317,7 @@ class Fuel_redirects extends Fuel_base_library {
 			return $this->aggressive_redirects;
 		}
 
+		return array();
 	}
 
 	// --------------------------------------------------------------------
