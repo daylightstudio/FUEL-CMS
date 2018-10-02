@@ -531,9 +531,9 @@ class Fuel_navigation_model extends Base_module_model {
 	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
-		$this->db->select($this->_tables['fuel_navigation'].'.*, '.$this->_tables['fuel_navigation_groups'].'.id group_id, '.$this->_tables['fuel_navigation_groups'].'.name group_name');
+		$this->db->select($this->_tables['fuel_navigation'].'.*, '.$this->_tables['fuel_navigation_groups'].'.id AS group_id, '.$this->_tables['fuel_navigation_groups'].'.name group_name');
 		$this->db->join($this->_tables['fuel_navigation_groups'], $this->_tables['fuel_navigation_groups'].'.id='.$this->_tables['fuel_navigation'].'.group_id', 'left');
-		$this->db->order_by('precedence, location asc');
+		$this->db->order_by('precedence asc, location asc');
 	}
 	
 	// --------------------------------------------------------------------
