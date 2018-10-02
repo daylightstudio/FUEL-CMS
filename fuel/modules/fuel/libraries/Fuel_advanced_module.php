@@ -774,7 +774,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function css_path()
 	{
-		$this->web_path().'assets/'.strtolower($this->name).'.css';
+		return $this->web_path().'/assets/'.strtolower($this->name).'.css';
 	}
 
 	// --------------------------------------------------------------------

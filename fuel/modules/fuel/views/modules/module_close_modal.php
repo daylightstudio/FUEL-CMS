@@ -7,6 +7,6 @@
 
 	// for inline editing on the front end we just refresh the page
 	} else if (top.window != window){
-		top.window.location = top.window.location;
+		top.window.location = window.location;
 	}
 </script>
