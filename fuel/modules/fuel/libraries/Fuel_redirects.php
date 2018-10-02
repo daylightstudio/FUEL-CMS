@@ -316,6 +316,8 @@ class Fuel_redirects extends Fuel_base_library {
 			$this->add($config['aggressive_redirects'], FALSE);
 			return $this->aggressive_redirects;
 		}
+
+		return array();
 	}
 
 	// --------------------------------------------------------------------
