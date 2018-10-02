@@ -5186,7 +5186,7 @@ class Data_record {
 	 */	
 	public function is_empty()
 	{
-		return empty($this->_fields) AND get_class_vars(__CLASS_);
+		return empty($this->_fields) AND get_class_vars(__CLASS__);
 	}
 
 	// --------------------------------------------------------------------
