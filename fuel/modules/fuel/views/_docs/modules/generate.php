@@ -53,7 +53,7 @@ php index.php fuel/generate/model examples:examples2
 php index.php fuel/generate/model my_model examples
 </pre>
 
-<p class="important">If you are on a MAC and having trouble where the script is outputting nothing, you may need to make sure you are calling the right php binary. In my case, I needed to call to a /Applications/MAMP/bin/php5/bin/php. Here is a thread that talks about it more: http://codeigniter.com/forums/viewthread/130383/ Hopefully it saves you some time too!</p>
+<p class="important">If you are on a MAC and having trouble where the script is outputting nothing, you may need to make sure you are calling the right php binary. In my case, I needed to call to a /Applications/MAMP/bin/php5/bin/php. Here is a thread that talks about it more: <a href="https://forum.codeigniter.com/thread-23025.html" target="_blank">https://forum.codeigniter.com/thread-23025.html</a> Hopefully it saves you some time too!</p>
 <p class="important">Separating module names with a colon will generate multiple models.</p>
 
 <h2 id="simple">Simple Modules</h2>

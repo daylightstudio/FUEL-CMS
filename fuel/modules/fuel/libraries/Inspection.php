@@ -1127,6 +1127,7 @@ class Inspection_comment {
 						$lines = preg_replace('#(.+[^\.|>]\s*)$#', '$1. ', trim($lines));
 						
 						$desc = $lines;
+						break;
 					case 'ucfirst':
 						$desc = ucfirst($desc);
 						break;
