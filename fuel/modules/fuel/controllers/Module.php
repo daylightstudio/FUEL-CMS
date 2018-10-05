@@ -547,7 +547,7 @@ class Module extends Fuel_base_controller {
 	 */	
 	function inline_items()
 	{
-		$this->items(TRUE);
+		$this->items();
 	}
 
 	// --------------------------------------------------------------------
