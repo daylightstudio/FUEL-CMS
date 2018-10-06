@@ -1416,7 +1416,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	public
 	 * @param	array 	An array of data (optional)
-	 * @return	void
+	 * @return	array
 	 */	
 	public function vars($data = array())
 	{

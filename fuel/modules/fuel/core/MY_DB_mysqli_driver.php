@@ -329,7 +329,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * Clears the compiled query string
 	 *
 	 * @access	public
-	 * @return	string
+	 * @return	void
 	 */
 	public function clear_query_string()
 	{

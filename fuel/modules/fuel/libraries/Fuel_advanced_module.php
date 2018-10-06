@@ -906,7 +906,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function clear_cache()
 	{
-		return $this->fuel->cache->clear_module($this->folder());
+		$this->fuel->cache->clear_module($this->folder());
 	}
 
 	// --------------------------------------------------------------------
