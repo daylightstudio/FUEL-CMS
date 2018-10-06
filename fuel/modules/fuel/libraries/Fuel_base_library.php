@@ -220,7 +220,7 @@ class Fuel_base_library {
 	 * Checks if the logged in user is authenticated to use this item based on specified permission
 	 *
 	 * @access	protected
-	 * @return	void
+	 * @return	boolean
 	 */	
 	protected function _has_permission()
 	{

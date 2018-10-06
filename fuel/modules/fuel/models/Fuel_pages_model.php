@@ -244,7 +244,7 @@ class Fuel_pages_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param  string URI path to start from (e.g. about would find about/history, about/contact, etc)
-	 * @return	void
+	 * @return	array
 	 */	
 	function children($root)
 	{

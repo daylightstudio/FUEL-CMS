@@ -306,7 +306,7 @@ class Cache
 	 * 
 	 * 	@param	Cache ID
 	 * 	@param 	Cache group ID (optional)
-	 * 	@return void
+	 * 	@return int
 	 */
 	protected function _get_expiry($cache_id, $cache_group = NULL)
 	{
@@ -322,7 +322,7 @@ class Cache
 	 * 
 	 * 	@param	Cache ID
 	 * 	@param 	Cache group ID (optional)
-	 * 	@return void
+	 * 	@return string
 	 */
 	protected function _file($cache_id, $cache_group = NULL)
 	{

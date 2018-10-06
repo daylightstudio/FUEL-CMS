@@ -82,7 +82,6 @@ class Fuel_parser extends Fuel_Base_library {
 		}
 		$this->set_engine($this->fuel->config('parser_engine'));
 		$this->create_compile_dir();
-		return $this;
 	}
 
 	// --------------------------------------------------------------------

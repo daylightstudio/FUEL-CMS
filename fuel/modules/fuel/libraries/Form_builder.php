@@ -1147,7 +1147,7 @@ class Form_builder {
 	 * 
 	 * @access	protected
 	 * @param	string	
-	 * @return	void
+	 * @return	string
 	 */
 	protected function _render_actions()
 	{
@@ -1214,7 +1214,7 @@ class Form_builder {
 	 * 
 	 * @access	protected
 	 * @param	string	
-	 * @return	void
+	 * @return	string
 	 */
 	protected function _close_form($str)
 	{
@@ -3502,7 +3502,7 @@ class Form_builder {
 	 * Alters all the field post values that have post_process attribute specified
 	 *
 	 * @access	public
-	 * @return	void
+	 * @return	array
 	 */
 	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
@@ -4307,7 +4307,7 @@ class Form_builder_field {
 	 *
 	 * @access	public
 	 * @param	array
-	 * @return	void
+	 * @return	string
 	 */
 	public function render($params = array())
 	{

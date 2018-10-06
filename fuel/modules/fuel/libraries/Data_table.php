@@ -899,7 +899,7 @@ class Data_table {
 	 * @access	protected
 	 * @param	array actions
 	 * @param	array columns
-	 * @return	void
+	 * @return	string
 	 */
 	protected function _render_actions($actions, $fields)
 	{
