@@ -145,8 +145,8 @@ class Fuel_auth extends Fuel_base_library {
 	 * Sets session data for the currently logged in user
 	 *
 	 * @access	public
-	 * @access	string	The array key to associate the session data
-	 * @access	mixed	The session data to save
+	 * @param	string	The array key to associate the session data
+	 * @param	mixed	The session data to save
 	 * @return	void
 	 */	
 	public function set_user_data($key, $value)

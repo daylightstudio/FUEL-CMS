@@ -170,7 +170,7 @@ class Fuel extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	string	Value of what part of the version number to return. Options are "major", "minor", or "patch" (optional)
-	 * @return	void
+	 * @return	string
 	 */	
 	public function version($part = NULL)
 	{

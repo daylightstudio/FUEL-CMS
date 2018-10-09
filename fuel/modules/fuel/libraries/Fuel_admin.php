@@ -1329,7 +1329,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * Adds a dashboard to the FUEL configuration settings which will be displayed on the dashboard page
 	 *
 	 * @access	public
-	 * @access	string	The name of the module that has the dashboard you want to add
+	 * @param	string	The name of the module that has the dashboard you want to add
 	 * @return	void
 	 */	
 	public function add_dashboard($dashboard)

@@ -308,10 +308,10 @@ class Fuel_pages extends Fuel_base_library {
 	 * The 3rd parameter can contain Fuel_page class properties (e.g. array('render_mode' => 'cms'))
 	 *
 	 * @access	public
-	 * @access	string	The location value of the page
-	 * @access	array	Variables to pass to the page
-	 * @access	array	Additional initialization parameters to pass to the page
-	 * @access	boolean	Return the result or echo it out
+	 * @param	string	The location value of the page
+	 * @param	array	Variables to pass to the page
+	 * @param	array	Additional initialization parameters to pass to the page
+	 * @param	boolean	Return the result or echo it out
 	 * @return	string
 	 */	
 	public function render($location, $vars = array(), $params = array(), $return = FALSE)

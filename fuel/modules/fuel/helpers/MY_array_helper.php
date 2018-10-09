@@ -112,7 +112,7 @@ if ( ! function_exists('object_sorter'))
 	 * @param	mixed
 	 * @param	string
 	 * @param	string
-	 * @return	NULL
+	 * @return	void
 	 */
 	function object_sorter(&$data, $key, $order = 'asc')
 	{
@@ -250,7 +250,7 @@ if ( ! function_exists('csv_to_array'))
 	 * @param	string	the delimiter that separates each column
 	 * @param	int		the index for where the header row starts
 	 * @param	int		must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
-	 * @return	array
+	 * @return	array|false
 	 */
 	function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
 	{
