@@ -1815,11 +1815,11 @@ class Fuel_custom_fields {
 							{
 								$v = $vals[1];
 								$k = $vals[0];
-								$json[$k] = $v;
+								$json[$k] = trim($v);
 							}
 							else
 							{
-								$json[] = $vals[0];
+								$json[] = trim($vals[0]);
 							}
 						}
 						$first_item = current($json);
@@ -1852,11 +1852,11 @@ class Fuel_custom_fields {
 							{
 								$val = $vals[1];
 								$key = $vals[0];
-								$json[$key] = $val;
+								$json[$key] = trim($val);
 							}
 							else
 							{
-								$json[] = $vals[0];
+								$json[] = trim($vals[0]);
 							}
 						}
 					}
@@ -1870,6 +1870,11 @@ class Fuel_custom_fields {
 
 		if (!empty($params['value']))
 		{
+			// Normalize hard returns
+			// $params['value'] = str_replace("\r\n", "\n", $params['value']);
+
+			// $params['value'] = str_replace("\r", "\n", $params['value']);
+
 			if (is_json_str($params['value']))
 			{
 				$params['value'] = json_decode($params['value'], TRUE);
