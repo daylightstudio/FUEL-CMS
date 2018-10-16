@@ -1789,7 +1789,7 @@ class Fuel_custom_fields {
 
 	
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-		$func = function($value) use ($process_key, $params) {
+		$func = function($value) use ($process_key, $params, $row_delimiter, $split_delimiter) {
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
