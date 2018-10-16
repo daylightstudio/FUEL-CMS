@@ -1769,7 +1769,7 @@ class Fuel_custom_fields {
 
 		if (!isset($params['row_delimiter']))
 		{
-			$params['row_delimiter'] = "\n|,";
+			$params['row_delimiter'] = "\r\n|\n|,";
 		}
 
 		if (!isset($params['allow_numeric_indexes']))
