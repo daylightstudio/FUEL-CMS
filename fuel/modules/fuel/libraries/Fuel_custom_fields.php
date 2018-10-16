@@ -1842,12 +1842,12 @@ class Fuel_custom_fields {
 
 				if (is_string($value))
 				{
-					$rows = preg_split("#'.$row_delimiter.'#", $value);
+					$rows = preg_split("#".$row_delimiter."#", $value);
 					foreach($rows as $r)
 					{
 						if (is_string($r))
 						{
-							$vals = preg_split("#'.$split_delimiter.'#", $r);
+							$vals = preg_split("#".$split_delimiter."#", $r);
 							if (isset($vals[1]))
 							{
 								$val = $vals[1];
@@ -1870,11 +1870,6 @@ class Fuel_custom_fields {
 
 		if (!empty($params['value']))
 		{
-			// Normalize hard returns
-			// $params['value'] = str_replace("\r\n", "\n", $params['value']);
-
-			// $params['value'] = str_replace("\r", "\n", $params['value']);
-
 			if (is_json_str($params['value']))
 			{
 				$params['value'] = json_decode($params['value'], TRUE);
@@ -1896,6 +1891,7 @@ class Fuel_custom_fields {
 						}
 					}
 				}
+
 				if (!empty($new_value))
 				{
 					$params['value'] = implode("\n", $new_value);	
