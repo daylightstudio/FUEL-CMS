@@ -118,9 +118,9 @@ class Fuel_custom_fields {
 		}
 
 		// adds markdown controlls to the markItUp!  editor
-		if (isset($params['markdown']) AND $params['markdown'] === TRUE)
+		if (isset($params['markdown']) AND $params['markdown'] === TRUE AND empty($params['editor_config']))
 		{
-			$params['data']['markdown'] = 1;
+			$params['editor_config'] = 'markdown';
 		}
 
 		static $markitup_config;
