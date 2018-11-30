@@ -145,7 +145,7 @@ class Cache
 
 		//
 		//	Ok, so setting ttl = 0 is not quite forever, but 1000 years
-		//	Is your PHP code going to be running for 1000 years? If so dont use this library (or just regenerate the cache then)!
+		//	Is your PHP code going to be running for 1000 years? If so don't use this library (or just regenerate the cache then)!
 		//
 		if ($ttl == 0) $ttl = 31536000000; //1000 years in seconds
 				
@@ -235,7 +235,7 @@ class Cache
 		
 		closedir($dh);
 		
-		//	Delete the dir for tidyness
+		//	Delete the dir for tidiness
 		@rmdir($group_dir);
 		
 	}
@@ -306,7 +306,7 @@ class Cache
 	 * 
 	 * 	@param	Cache ID
 	 * 	@param 	Cache group ID (optional)
-	 * 	@return void
+	 * 	@return int
 	 */
 	protected function _get_expiry($cache_id, $cache_group = NULL)
 	{
@@ -322,7 +322,7 @@ class Cache
 	 * 
 	 * 	@param	Cache ID
 	 * 	@param 	Cache group ID (optional)
-	 * 	@return void
+	 * 	@return string
 	 */
 	protected function _file($cache_id, $cache_group = NULL)
 	{

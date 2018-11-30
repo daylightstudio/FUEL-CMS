@@ -222,7 +222,7 @@ class Curl {
 	 *
 	 * @access	public
 	 * @param	string	The key value of a CURL session. If none provided, it will execute all sessions in the stack (optional)
-	 * @param	boolean	Wether to clear out the sessions after execution. Default is TRUE (optional)
+	 * @param	boolean	Whether to clear out the sessions after execution. Default is TRUE (optional)
 	 * @return	string
 	 */	
 	public function exec($key = FALSE, $clear = TRUE)
@@ -259,7 +259,7 @@ class Curl {
 	 *
 	 * @access	public
 	 * @param	int	The key value of a CURL session. If none provided, it will execute all sessions in the stack (optional)
-	 * @param	boolean	Wether to clear out the sessions after execution. Default is TRUE (optional)
+	 * @param	boolean	Whether to clear out the sessions after execution. Default is TRUE (optional)
 	 * @return	string
 	 */	
 	public function exec_single($key = 0, $clear = TRUE)
@@ -300,7 +300,7 @@ class Curl {
 	 * Can be more efficient when doing a lot of CURL requests at once.
 	 *
 	 * @access	public
-	 * @param	boolean	Wether to clear out the sessions after execution. Default is TRUE (optional)
+	 * @param	boolean	Whether to clear out the sessions after execution. Default is TRUE (optional)
 	 * @param	int	The number to execute simultaneously. Default is 5 (optional)
 	 * @return	string
 	 */	
@@ -406,7 +406,7 @@ class Curl {
 	 * Returns information of an executed session.
 	 *
 	 * @access	public
-	 * @param	string	The name of the parameter to return. If no value is proviced, then all values will be returned (optional)
+	 * @param	string	The name of the parameter to return. If no value is provided, then all values will be returned (optional)
 	 * @param	mixed	The key value of a CURL session. If set to TRUE, then it will return all the infos from a mult-session (optional)
 	 * @return	mixed
 	 */	
@@ -600,7 +600,7 @@ class Curl {
 	{
 		if (is_array($cookie))
 		{
-			$cookie = http_build_query($params, NULL, '&amp;');
+			$cookie = http_build_query($cookie, NULL, '&amp;');
 		}
 		$opts = $this->_opts('cookie', $cookie);
 		$this->add_session($url, $opts);
@@ -657,7 +657,7 @@ class Curl {
 	 *
 	 * @access	public
 	 * @param	string	The URL to use for the CURL session
-	 * @return	void
+	 * @return	boolean
 	 */	
 	public function is_valid($url)
 	{

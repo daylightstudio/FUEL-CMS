@@ -68,7 +68,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * Accepts an associative array as input, containing object preferences.
 	 *
 	 * @access	public
-	 * @param	array	Array of initalization parameters  (optional)
+	 * @param	array	Array of initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array())
@@ -277,8 +277,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 				// removes '_model'... must have this suffix to work!!!
 				if ($remove_suffix)
 				{
-					$mod_name = substr($models[$key], 0, -6);
-					$models[$key] = substr($models[$key], 0, -6);
+					$model_name = substr($models[$key], 0, -6);
+					$models[$key] = $model_name;
 				}
 			}
 			
@@ -326,7 +326,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 				$this->_attached[$key] =& $obj;
 			}
 			
-			// if it's an array, then we use the key as the module value if it is a string and the value is the library to laod
+			// if it's an array, then we use the key as the module value if it is a string and the value is the library to load
 			else if (is_array($obj))
 			{
 				$module = key($obj);
@@ -388,7 +388,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 				// first look for a Fuel_$key library in the module's folder'
 				if (file_exists($this->server_path('libraries/Fuel_'.$key.'.php')))
 				{
-					// this was added to prevent the loading of config files auotmatically
+					// this was added to prevent the loading of config files automatically
 					$init = array('name' => $key);
 					$this->load_library('fuel_'.$key, $init);
 					$this->_attached[$key] =& $this->CI->{'fuel_'.$key};
@@ -774,7 +774,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function css_path()
 	{
-		$this->web_path().'assets/'.strtolower($this->name).'.css';
+		return $this->web_path().'/assets/'.strtolower($this->name).'.css';
 	}
 
 	// --------------------------------------------------------------------
@@ -793,7 +793,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the navigaiton items for the advanced module
+	 * Returns the navigation items for the advanced module
 	 *
 	 * @access	public
 	 * @return	mixed (returns an array of navigation menu items or FALSE if none)
@@ -840,7 +840,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns whether documenation exists for the advanced module
+	 * Returns whether documentation exists for the advanced module
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -906,7 +906,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function clear_cache()
 	{
-		return $this->fuel->cache->clear_module($this->folder());
+		$this->fuel->cache->clear_module($this->folder());
 	}
 
 	// --------------------------------------------------------------------
@@ -967,7 +967,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns whether documenation exists for the advanced module
+	 * Returns whether documentation exists for the advanced module
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -979,7 +979,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns whether documenation exists for the advanced module
+	 * Returns whether documentation exists for the advanced module
 	 *
 	 * @access	public
 	 * @return	boolean

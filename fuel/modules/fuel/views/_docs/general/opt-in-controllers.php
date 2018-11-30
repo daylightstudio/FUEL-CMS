@@ -48,7 +48,7 @@ $vars['body_class'] = uri_segment(1).' '.uri_segment(2);
 <p><strong>Controller variables</strong> are applied to what would normally be the controller level of a website. For example,
 If you have an <strong>about</strong> section of your website at http://www.mysite.com/about, you can create a <dfn>views/_variables/about.php</dfn>
 a variables file at <dfn>views/_variables/about.php</dfn> can be used. Variables in this file will overwrite any global variable with the same key.
-The variables will be extened automatically to all sub pages of the about section (e.g. http://www.mysite.com/about/contact) .
+The variables will be extended automatically to all sub pages of the about section (e.g. http://www.mysite.com/about/contact) .
 Variables at the controller level use the same <dfn>$vars</dfn> variable as global variables.
 </p>
 <pre class="brush:php">
@@ -78,7 +78,7 @@ $pages['about/contact$|about/careers$'] = array('layout' => 'special');
 
 <h2>Adding Variables from Within the View</h2>
 <p>An alternative to creating <dfn>$pages</dfn> variables is to simply declare the variable in the view file using the 
-fuel helper function <dfn>fuel_set_var</dfn>. By setting the varialbe this way, you will ensure that the variable will also get
+fuel helper function <dfn>fuel_set_var</dfn>. By setting the variable this way, you will ensure that the variable will also get
 passed to the layout file containing the view file.
 </p>
 
@@ -96,7 +96,7 @@ you can load it like so:
 <pre class="brush:php">
 class About extends CI_Controller {
 	
-	function About()
+	function __construct()
 	{
 		parent::__construct();
 	}
@@ -110,9 +110,9 @@ class About extends CI_Controller {
 		
 		// use Fuel_page to render so it will grab all opt-in variables and do any necessary parsing
 		$this->fuel->pages->render('about/contact', $vars);
-		
-		
 	}
+
+}
 </pre>
 
 

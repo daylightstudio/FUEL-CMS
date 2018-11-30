@@ -81,7 +81,7 @@ class Fuel_pages extends Fuel_base_library {
 	 */	
 	public function set_active(&$page)
 	{
-		// for backwards compatability
+		// for backwards compatibility
 		$this->CI->fuel_page = $page;
 		$this->CI->fuel->attach('page', $page);
 		$this->_active = $page;
@@ -94,7 +94,7 @@ class Fuel_pages extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	The page to set as active
-	 * @param	array	An array of initializtion parameters
+	 * @param	array	An array of initialization parameters
 	 * @return	object
 	 */	
 	public function get($location, $init = array())
@@ -211,7 +211,7 @@ class Fuel_pages extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns an array of pages created by a module. The module must have a prevew path
+	 * Returns an array of pages created by a module. The module must have a preview path
 	 *
 	 * @access	public
 	 * @return	array
@@ -308,10 +308,10 @@ class Fuel_pages extends Fuel_base_library {
 	 * The 3rd parameter can contain Fuel_page class properties (e.g. array('render_mode' => 'cms'))
 	 *
 	 * @access	public
-	 * @access	string	The location value of the page
-	 * @access	array	Variables to pass to the page
-	 * @access	array	Additional initialization parameters to pass to the page
-	 * @access	boolean	Return the result or echo it out
+	 * @param	string	The location value of the page
+	 * @param	array	Variables to pass to the page
+	 * @param	array	Additional initialization parameters to pass to the page
+	 * @param	boolean	Return the result or echo it out
 	 * @return	string
 	 */	
 	public function render($location, $vars = array(), $params = array(), $return = FALSE)
@@ -545,7 +545,7 @@ class Fuel_page extends Fuel_base_library {
 			$params = array('location' => $params);
 		}
 		
-		// setup any intialized variables
+		// setup any initialized variables
 		foreach ($params as $key => $val)
 		{
 			if (isset($this->$key))
@@ -801,9 +801,6 @@ class Fuel_page extends Fuel_base_library {
 	 */
 	public function cms_render($return = FALSE, $fuelify = FALSE)
 	{
-
-		$this->CI->load->library('parser');
-
 		// render template with page variables if data exists
 		if (!empty($this->layout))
 		{
@@ -984,9 +981,6 @@ class Fuel_page extends Fuel_base_library {
 			// load the file so we can parse it 
 			if (!empty($vars['parse_view']))
 			{
-				// load here to save on execution time... 
-				$this->CI->load->library('parser');
-				
 				$body = file_get_contents($check_file);
 
 				// now parse any template like syntax
@@ -1268,7 +1262,7 @@ class Fuel_page extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Renders a marker on the page which is used on the front end to create the inline editng pencil icons with some javascript
+	 * Renders a marker on the page which is used on the front end to create the inline editing pencil icons with some javascript
 	 *
 	 * @access	public
 	 * @param	string	The markers key value used to identify it on the apge
@@ -1334,11 +1328,7 @@ class Fuel_page extends Fuel_base_library {
 		{	
 
 			// move all edit markers in attributes to before the node
-			$callback = create_function(
-			            // single quotes are essential here,
-			            // or alternative escape all $ as \$
-			            '$matches',
-			            '
+			$callback = function($matches){
 						$CI =& get_instance();
 						$marker_reg_ex = $CI->fuel->page->get_marker_regex();
 						$output = $matches[0];
@@ -1349,8 +1339,8 @@ class Fuel_page extends Fuel_base_library {
 							$output = $CI->fuel->page->remove_markers($matches[0]);
 							$output = implode($tagmatches[0], " ").$output;
 						}
-						return $output;'
-			        );
+						return $output;
+			        };
 
 			$output = preg_replace_callback('#<[^>]+=["\'][^<]*'.$marker_reg_ex.'.*(?<!--)>#Ums', $callback, $output);
 			//$output = preg_replace('#(=["\'][^<]*)('.$marker_reg_ex.')#Ums', '${2}${1}', $output);  // doesn't work with fuel_var in multiple tag attributes

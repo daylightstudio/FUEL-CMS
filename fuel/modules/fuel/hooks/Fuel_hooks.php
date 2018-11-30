@@ -94,7 +94,7 @@ class Fuel_hooks
 			if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
 
-				// By pass offline page if password inputed.
+				// By pass offline page if password inputted.
 				$CI->load->library('session');
 				if ($CI->session->userdata('dev_password'))
 				{

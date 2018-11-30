@@ -1,5 +1,5 @@
 <h1>Migrations</h1>
-<p>FUEL CMS provides a command line utility for using <a href="http://ellislab.com/codeigniter/user-guide/libraries/migration.html" target="_blank">CodeIgniter's migrations</a>.</p>
+<p>FUEL CMS provides a command line utility for using <a href="https://www.codeigniter.com/user_guide/libraries/migration.html" target="_blank">CodeIgniter's migrations</a>.</p>
 
 <pre class="brush:php">
 // updates to the latest migration file regardless of what is specified in the migrations table

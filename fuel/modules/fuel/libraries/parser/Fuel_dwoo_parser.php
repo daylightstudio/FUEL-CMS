@@ -103,18 +103,17 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 				$r_delim = $delimiters[1];
 
 				$compiler->setDelimiters($l_delim, $r_delim);
-
 				
 				//Add a pre-processor to help fix javascript {}
 				// added by David McReynolds @ Daylight Studio 11/04/10
-				$callback = create_function('$compiler', '
+				$callback = function($compiler) use ($l_delim) {
 					$string = $compiler->getTemplateSource();
 					
-					$callback = create_function(\'$matches\',
-						\'if (isset($matches[1]))
+					$callback = function($matches) use ($l_delim){
+						if (isset($matches[1]))
 						{
 							$str = "<script";
-							$str .= preg_replace("#\\'.$l_delim.'([^s])#ms", "'.$l_delim.' $1", $matches[1]);
+							$str .= preg_replace('#'.$l_delim.'([^s])#ms', $l_delim.' $1', $matches[1]);
 							$str .= "</script>";
 							return $str;
 						}
@@ -122,13 +121,12 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 						{
 							return $matches[0];
 						}
-						\'
-						);
+					};
 
 					$string = preg_replace_callback("#<script(.+)</script>#Ums", $callback, $string);
 					$compiler->setTemplateSource($string);
 					return $string;
-				');
+				};
 				$compiler->addPreProcessor($callback);
 
 				// render the template
@@ -197,21 +195,21 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 		$str = preg_replace('#'.$l_delim.'\s*foreach\s*\((\$\w+)\s+as\s+\$(\w+)\s*(=>\s*\$(\w+))?\)\s*'.$r_delim.'#U', $l_delim.'foreach $1 $2 $4'.$r_delim, $str); // with and without keys
 
 		// remove !empty
-		$callback = create_function('$matches', '
+		$callback = function($matches) use ($l_delim) {
 			if (!empty($matches[2]))
 			{
-				return "'.$l_delim.'".$matches[1].$matches[3];
+				return $l_delim.$matches[1].$matches[3];
 			}
 			else
 			{
-				return "'.$l_delim.'".$matches[1]."!".$matches[3];
-			}');
+				return $l_delim.$matches[1]."!".$matches[3];
+			}
+		};
 		
 		$str = preg_replace_callback('#'.$l_delim.'(.+)(!)\s*?empty\((.+)\)#U', $callback, $str);
 		
 		// remove parenthesis from within if conditional
-		//$callback2 = create_function('$matches', 'return str_replace(array("(", ")"), array(" ", ""), $matches[0]);');
-		$callback2 = create_function('$matches', '
+		$callback2 = function($matches) {
 			$CI =& get_instance();
 			$allowed_funcs = $CI->fuel->config("parser_allowed_functions");
 			$str = $matches[0];
@@ -228,11 +226,12 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 			// now replace any other parenthesis
 			$str = str_replace(array("(", ")"), array(" ", ""), $str);
 			$str = str_replace(array($ldlim, $rdlim), array("(", ")"), $str);
-			return $str;');
+			return $str;
+		};
 		
 		$str = preg_replace_callback('#'.$l_delim.'if.+'.$r_delim.'#U', $callback2, $str);
 		// fix arrays
-		$callback = create_function('$matches', '
+		$callback = function($matches){
 			if (strstr($matches[0], "=>"))
 			{
 				$key_vals = explode(",", $matches[0]);
@@ -247,7 +246,7 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 				return $return;
 			}
 			return $matches[0];
-			');
+			};
 		
 		$str = preg_replace_callback('#(array\()(.+)(\))#U', $callback, $str);
 		return $str;

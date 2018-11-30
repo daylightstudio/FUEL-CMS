@@ -298,7 +298,7 @@ class Fuel_posts extends Fuel_base_library {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Normalizes the route by removing placedholers (e.g. :any and ($name:....)).
+	 * Normalizes the route by removing placeholders (e.g. :any and ($name:....)).
 	 *
 	 * @access	protected
 	 * @param	string 	The route to normalize
@@ -582,18 +582,19 @@ class Fuel_posts extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string 	The tag slug or ID value to search -- can also be a Fuel_tag_model object (optional)
+	 * @param	string 	The order of the results
 	 * @param	int The limit of results
 	 * @param	int The offset of the results
 	 * @return	array
 	 */
-	public function get_tag_posts($tag, $limit = NULL, $offset = NULL)
+	public function get_tag_posts($tag, $order_by = NULL, $limit = NULL, $offset = NULL)
 	{
 		$model = $this->model();
 
 		// use the method on the model if it exists
 		if (method_exists($model, 'get_tag_posts'))
 		{
-			return $model->get_tag_posts($tag, $limit, $offset);
+			return $model->get_tag_posts($tag, $order_by, $limit, $offset);
 		}
 
 		$tables = $model->tables();
@@ -611,7 +612,7 @@ class Fuel_posts extends Fuel_base_library {
 			$where[$tables['fuel_tags'].'.slug'] = $tag;	
 		}
 		
-		$posts = $model->find_all($where, NULL, $limit, $offset);
+		$posts = $model->find_all($where, $order_by, $limit, $offset);
 		return $posts;
 	}
 	// --------------------------------------------------------------------

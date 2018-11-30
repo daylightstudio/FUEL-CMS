@@ -82,7 +82,6 @@ class Fuel_parser extends Fuel_Base_library {
 		}
 		$this->set_engine($this->fuel->config('parser_engine'));
 		$this->create_compile_dir();
-		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -288,7 +287,7 @@ class Fuel_parser extends Fuel_Base_library {
 	 *
 	 * @access	public
 	 * @param	mixed 	Can be an array or a string (but if string must pass the second $value parameter)
-	 * @param	mised 	A value to associate with the $data (which is the $variable name... optional)
+	 * @param	mixed 	A value to associate with the $data (which is the $variable name... optional)
 	 * @return	object 	A reference to the Fuel_parser object
 	 */
 	public function add_data($data, $value = NULL)

@@ -63,7 +63,7 @@ class Validator {
 			$CI->load->helper('validator');
 		}
 	
-		if (count($params) > 0)
+		if ($params AND count($params) > 0)
 		{
 			$this->initialize($params);
 		}
@@ -115,8 +115,8 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string key in processing array to assign to rule. Often times its the same name as the field input
-	 * @param string error message
 	 * @param string function for processing
+	 * @param string error message
 	 * @param mixed function arguments with the first usually being the posted value. If multiple arguments need to be passed, then you can use an array.
 	 * @return void
 	 */
@@ -125,7 +125,7 @@ class Validator {
 		if (empty($fields[$field])) $fields[$field] = array();
 		settype($params, 'array');
 		
-		// if params are emtpy then we will look in the $_POST
+		// if params are empty then we will look in the $_POST
 		if (empty($params))
 		{
 			if (!empty($_POST[$field])) $params = $_POST[$field];
@@ -293,7 +293,7 @@ class Validator {
 	 * Retrieve errors
 	 *
 	 * @access public
-	 * @return assoc array of errors and messages
+	 * @return array	assoc array of errors and messages
 	 */
 	public function get_errors()
 	{

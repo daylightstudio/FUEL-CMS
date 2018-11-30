@@ -98,7 +98,7 @@ $(function(){
 $this->form_builder->set_fields($fields);
 $this->form_builder->render();
 </pre>
-<p class="important">Addtional parameters for the AJAX method can be passed via query pamareters (e.g. ?state=OR)</p>
+<p class="important">Additional parameters for the AJAX method can be passed via query parameters (e.g. ?state=OR)</p>
 
 
 <h2 id="jqx">jQX Framework</h2>
@@ -112,7 +112,7 @@ The following are some of the benefits of using JQX instead of simply including 
 </ul>
 
 <h3>jQX Module Initialization Parameters</h3>
-<p>There are additional module initialization parameters you can set in your <span class="file">fuel/application/confg/MY_fuel_modules.php</span>.if you are using a jQX controller which include:</p>
+<p>There are additional module initialization parameters you can set in your <span class="file">fuel/application/config/MY_fuel_modules.php</span>.if you are using a jQX controller which include:</p>
 <ul>
 	<li><strong>js_controller</strong>: the name of the file and thus controller to use. The default is the BaseFuelController.js</li>
 	<li><strong>js_controller_path</strong>: the object/folder path to the controller. The default is <dfn>fuel.controller.BaseFuelController</dfn> (folder slashes are simply replaced with dots)</li>
@@ -161,9 +161,9 @@ Essentially, you can swap out the folder "/" with object ".".</p>
 <h3>jQX Configuration Parameters</h3>
 <p>The following jqx config parameters are available for you to use in your jQX controller:</p>
 <ul>
-	<li><strong>jqx.config.basePath:</strong> The equivalent value to the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">site_url()</a> CI function </li>
-	<li><strong>jqx.config.jsPath:</strong> The path to the fuel modoules javascript folder which is <span class="file">/fuel/modules/fuel/assets/js/</span></li>
-	<li><strong>jqx.config.imgPath:</strong> The path to the fuel modoules images folder which is <span class="file">/fuel/modules/fuel/assets/images/</span></li>
+	<li><strong>jqx.config.basePath:</strong> The equivalent value to the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#site_url" target="_blank">site_url()</a> CI function </li>
+	<li><strong>jqx.config.jsPath:</strong> The path to the fuel modules javascript folder which is <span class="file">/fuel/modules/fuel/assets/js/</span></li>
+	<li><strong>jqx.config.imgPath:</strong> The path to the fuel modules images folder which is <span class="file">/fuel/modules/fuel/assets/images/</span></li>
 	<li><strong>jqx.config.uriPath:</strong> The equivalent to the <a href="<?=user_guide_url('helpers/my_url_helper')?>">uri_path()</a> function</li>
 	<li><strong>jqx.config.assetsImgPath:</strong> The path the sites images (e.g. <span class="file">/assets/images/</span>)</li>
 	<li><strong>jqx.config.assetsPath:</strong> The path the sites images (e.g. <span class="file">/assets/</span>)</li>

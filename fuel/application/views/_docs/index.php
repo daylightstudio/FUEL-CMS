@@ -39,16 +39,14 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 			<li><strong><a href="#blocks">Blocks</a></strong> - create reusable block elements (e.g. headers, footers, callouts, etc).</li>
 			<li><strong><a href="#categories">Categories</a></strong> - create categories to group records together.</li>
 			<li><strong><a href="#tags">Tags</a></strong> - create tags to associate with one or more other module records to allow for easy filtering.</li>
-			<li><strong><a href="sitevariables">Site Variables</a></strong> - create variables that can be used throughout your website (e.g. a contact email address).</li>
-			<li><strong><a href="#users">Users</a></strong> - create users and associate permissions with them.</li>
-			<li><strong><a href="#permissions">Permissions</a></strong> - create permissions to associate with other users.</li>
+			<li><strong><a href="#sitevariables">Site Variables</a></strong> - create variables that can be used throughout your website (e.g. a contact email address).</li>
+			<li><strong><a href="#users">Users &amp; Permissions</a></strong> - create users and associate permissions with them.</li>
 		</ul>
 	</li>
 	
 	<li><strong>Manage</strong> - The following modules are used to manage various aspects of the site:
 		<ul>
-			<li><strong><a href="#users">Users</a></strong> - allows you to create and manage permissions of FUEL CMS users.</li>
-			<li><strong><a href="#permissions">Permissions</a></strong> - used to manage permissions and associate to users.</li>
+			<li><strong><a href="#users">Users &amp; Permissions</a></strong> - allows you to create and manage permissions of FUEL CMS users.</li>
 			<li><strong><a href="#cache">Page Cache</a></strong> - used to clear the cache of the site.</li>
 			<li><strong>Activity Log</strong> - allows you to view the activity logs within FUEL CMS.</li>
 			<li><strong><a href="#settings">Settings</a></strong> - used to manage module specific configurations.</li>

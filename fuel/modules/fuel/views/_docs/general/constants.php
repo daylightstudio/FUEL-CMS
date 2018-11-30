@@ -1,5 +1,5 @@
 <h1>FUEL Constants</h1>
-<p>In addition to the <a href="http://ellislab.com/codeigniter/user-guide/general/reserved_names.html" target="_blank">CodeIgniter constants</a>, FUEL CMS provides the following:</p>
+<p>In addition to the <a href="https://www.codeigniter.com/user_guide/general/reserved_names.html" target="_blank">CodeIgniter constants</a>, FUEL CMS provides the following:</p>
 
 <ul>
 	<li><strong>FUEL_VERSION</strong>: The current version number of FUEL</li>
@@ -21,7 +21,7 @@
 </ul>
 
 <h2>Constants for Advanced Modules</h2>
-<p>When creating an advanced module, you should also create a constants file at <span class="file">/fuel/modules/{module}/config/{module}_constnats.php</span> 
+<p>When creating an advanced module, you should also create a constants file at <span class="file">/fuel/modules/{module}/config/{module}_constants.php</span>
 with at least the following constants:</p>
 <pre class="brush:php">
 define('{MY_MODULE}_VERSION', '1.0');

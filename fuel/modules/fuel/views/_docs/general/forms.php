@@ -206,7 +206,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
-		<li><a href="#langauge">langauge</a></li>
+		<li><a href="#language">language</a></li>
 		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 		<li><a href="#toggler">toggler</a></li>
@@ -883,7 +883,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>link_filter</strong>: a regular expression value that can be used to filter the page list down to only the pages you need</li>
 		<li><strong>editor_config</strong>: sets the editor's (markItUp! or CKEditor) configuration values for a particular field. Camel-cased attributes need to be converted to lowercase with hyphens (e.g. extraPlugins should be extra-plugins). These configuration values are attached to the textarea field so you can use
 			Javascript to set more complex object values as long they are set on the textarea field before markItUp! or CKEditor initialization (e.g. $('.mytextarea').data('toolbar', [['Bold','Italic','Strike']]).</li>
-		<li><strong>markdown</strong>: changes toolbar to use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> formatting instead of HTML. Must have editor set to use markItUp!</li>
+		<li><strong>markdown</strong>: changes toolbar to use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> formatting instead of HTML. Must have editor set to use markItUp! (NOTE: This is only the editor. You must use the <dfn>markdown()</dfn> function for display in your views.</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -998,7 +998,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="slug" class="toggle">slug</h3>
 <div class="toggle_block_off">
-	<p>This field type can be used for creating slug or permalink values for a field using the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">url_title</a> function.
+	<p>This field type can be used for creating slug or permalink values for a field using the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#url_title" target="_blank">url_title</a> function.
 	The following additional parameter can be passed to this field type:</p>
 	<ul>
 		<li><strong>linked_to</strong>: the field whose value to use if no value is provided.
@@ -1167,7 +1167,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>module</strong>: the module whose data will be displayed</li>
 		<li><strong>create_button_label</strong>: the label of the create button</li>
-		<li><strong>create_url_params</strong>: additional intialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
+		<li><strong>create_url_params</strong>: additional initialization parameters to pass when creating a new record. This is often used to pre-populate form field values. Also, since they are passed as query string parameters, you can use $this->CI->input->get('my_param') to dyanmically change elements in your form (e.g. make some fields hidden).</li>
 		<li><strong>edit_url_params</strong>: similar to <dfn>create_url_params</dfn> but for editing a record.</li>
 		<li><strong>display_fields</strong>: an array of fields to display when editing or creating.</li>
 		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
@@ -1317,6 +1317,6 @@ $this->form_builder->remove_representative('url');
 <h2 id="pre_post_processing">Pre &amp; Post Processing Fields</h2>
 <p>If you need a field that does additional processing before being set as the value of the field or after posting, you can create a pre-processing or post-processing function to handle it. 
 	To register that function with the field, you specify the <dfn>pre_process</dfn> or <dfn>post_process</dfn> parameter respectively.
-	The value assigned to the the pre/post_process parameters is the name of the function (as a string), a lambda function (from create_function), 
+	The value assigned to the the pre/post_process parameters is the name of the function (as a string), a lambda function, 
 	or an array with the first value being the instance of an object and the second value being the name of the method on that object. There are several
 	custom functions that take advantage of this feature including the <a href="#asset">asset</a>, <a href="#slug">slug</a> <a href="#template">template</a>, <a href="#currency">currency</a> and <a href="#keyval">keyval</a> field types.</p>

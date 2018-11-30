@@ -38,24 +38,24 @@ class Asset_test extends Tester_base {
 			
 			$p = $expected = WEB_PATH.$this->init['assets_path'].$this->init['assets_folders'][$type].$t['file'];
 
-			// test 1 WITHOUT timestampe cache breaker
-			$test = $this->CI->asset->$t['func']($t['file']);
+			// test 1 WITHOUT timestamp cache breaker
+			$test = $this->CI->asset->{$t['func']}($t['file']);
 			$expected = $p;
 			$this->run($test, $expected, 'Asset '.$t['func'].'() test 1');
 
-			// test 2 WITH timestampe cache breaker
+			// test 2 WITH timestamp cache breaker
 			$config = array('asset_append_cache_timestamp' => array($type));
 			$this->_reset($config);
-			$test = $this->CI->asset->$t['func']($t['file']);
+			$test = $this->CI->asset->{$t['func']}($t['file']);
 			$expected = $p.'?c='.strtotime($this->init['assets_last_updated']);
 			$this->run($test, $expected, 'Asset '.$t['func'].'() test 2');
 
 			// test 3 absolute path
 			$config = array('assets_absolute_path' => TRUE);
 			$this->_reset($config);
-			$test = $this->CI->asset->$t['func']($t['file']);
+			$test = $this->CI->asset->{$t['func']}($t['file']);
 			$expected = 'http://'.$_SERVER['HTTP_HOST'].$p;
-			$this->CI->unit->run($test, $expected, 'Asset '.$t['func'].'() test 2');
+			$this->run($test, $expected, 'Asset '.$t['func'].'() test 3');
 		}
 	}
 	

@@ -76,7 +76,7 @@ class Form_builder {
 	public $tooltip_labels = TRUE; // use tooltip labels?
 	public $single_select_mode = 'auto'; // auto will use enum if 2 or less and a single select if greater than 2. Other values are enum or select 
 	public $multi_select_mode = 'auto'; // auto will use a series of checkboxes if 5 or less and a multiple select if greater than 5. Other values are multi or checkbox 
-	public $boolean_mode = 'checkbox'; // booleon mode can be checkbox or enum (which will display radio inputs)
+	public $boolean_mode = 'checkbox'; // boolean mode can be checkbox or enum (which will display radio inputs)
 	public $display_errors_func = 'display_errors'; // the function used to generate errors... usually display_errors is the name
 	public $display_errors = FALSE; // displays errors at the top of the form if TRUE
 	public $question_keys = array('how', 'do', 'when', 'what', 'why', 'where', 'how', 'is', 'which', 'did', 'any','would', 'should', 'could'); // adds question marks to the label if has these words in the label
@@ -89,7 +89,7 @@ class Form_builder {
 	public $row_id_prefix = ''; // the row id prefix
 	public $lang_prefix = 'form_label_'; // language prefix to be applied before a label
 	public $custom_fields = array(); // custom fields
-	public $auto_execute_js = TRUE; // autmoatically execute the javascript for the form
+	public $auto_execute_js = TRUE; // automatically execute the javascript for the form
 	public $html_prepend = ''; // prepended HTML to the form HINT: Can include JS script tags
 	public $html_append = ''; // appended HTML to the form HINT: Can include JS script tags
 	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
@@ -507,7 +507,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -624,7 +624,15 @@ class Form_builder {
 			}
 			else if ((is_array($val['name']) AND in_array($val['name'], $this->displayonly)) OR  $val['displayonly'] OR  (is_string($this->displayonly) AND strtolower($this->displayonly) == 'all'))
 			{
-				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
+				if (isset($val['displayonly']) AND !is_bool($val['displayonly']))
+				{
+					$display_value = $val['displayonly'];
+				}
+				else
+				{
+					$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];	
+				}
+
 				$str .= "<div".$this->_open_row_attrs($val).'>';
 				$str .= "<span class=\"label\">";
 				$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
@@ -693,7 +701,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -823,7 +831,15 @@ class Form_builder {
 			{
 				$str .= "<tr".$this->_open_row_attrs($val);
 				$str .= ">\n\t<td class=\"label\">";
-				$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];
+				if (isset($val['displayonly']) AND !is_bool($val['displayonly']))
+				{
+					$display_value = $val['displayonly'];
+				}
+				else
+				{
+					$display_value = (is_array($val['value'])) ? print_r($val['value'], TRUE) : $val['value'];	
+				}
+				
 				if ($this->label_layout != 'top')
 				{
 					$str .= $val['before_label'].$this->create_label($val, FALSE).$val['after_label'];
@@ -924,7 +940,7 @@ class Form_builder {
 	{
 		if (!empty($fields)) $this->set_fields($fields);
 
-		// reoarder
+		// reorder
 		$this->set_field_order();
 		
 		// pre process field values
@@ -1131,7 +1147,7 @@ class Form_builder {
 	 * 
 	 * @access	protected
 	 * @param	string	
-	 * @return	void
+	 * @return	string
 	 */
 	protected function _render_actions()
 	{
@@ -1198,7 +1214,7 @@ class Form_builder {
 	 * 
 	 * @access	protected
 	 * @param	string	
-	 * @return	void
+	 * @return	string
 	 */
 	protected function _close_form($str)
 	{
@@ -1270,7 +1286,7 @@ class Form_builder {
 			'type' => '', // the type attribute of the field (e.g. text, select, password, etc.)
 			'default' => '', // the default value of the field
 			'max_length' => 0, // the maxlength parameter to associate with the field
-			'comment' => '', // a comment to assicate with the field's label'
+			'comment' => '', // a comment to associate with the field's label
 			'label' => '', // the label to associate with the field
 			'before_label' => '', // for HTML before the label
 			'after_label' => '', // for HTML after the label
@@ -1296,8 +1312,8 @@ class Form_builder {
 			'ignore_representative' => FALSE, // ignores any representative
 			'data' => array(), // data attributes
 			'title' => NULL, // the title attribute
-			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"'
-			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again'
+			'attributes' => '', // a generic string value of attributes for the form field (e.g. 'class="myclass"')
+			'__DEFAULTS__' => TRUE // set so that we no that the array has been processed and we can check it so it won't process it again
 		);
 		
 		$params = array_merge($defaults, $val);
@@ -1568,7 +1584,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
-	 * @param	boolean shoud the normalization be ran again?
+	 * @param	boolean should the normalization be ran again?
 	 * @return	string
 	 */
 	public function create_field($params, $normalize = TRUE)
@@ -1587,7 +1603,7 @@ class Form_builder {
 			{
 				$matched = FALSE;
 				
-				// if the represntative is an associative array with keys being parameters to match (e.g. type and name), then we loop through those parameters to find a match
+				// if the representative is an associative array with keys being parameters to match (e.g. type and name), then we loop through those parameters to find a match
 				if (is_array($val) AND is_string(key($val)))
 				{
 					foreach($val as $k => $v)
@@ -1631,7 +1647,7 @@ class Form_builder {
 					$str = '';
 					break;
 				case 'custom':
-					$func = (isset($params['func'])) ? $params['func'] : create_function('$params', 'return (isset($params["value"])) ? $params["value"] : "" ;');
+					$func = (isset($params['func'])) ? $params['func'] : function($params) { return (isset($params["value"])) ? $params["value"] : "" ; };
 					$str = $this->create_custom($func, $params);
 					break;
 				default : 
@@ -1669,7 +1685,7 @@ class Form_builder {
 	 * 
 	 * @access	public
 	 * @param	array fields parameters
-	 * @param	boolean shoud the label be displayed?
+	 * @param	boolean should the label be displayed?
 	 * @return	string
 	 */
 	public function create_label($params, $use_label = TRUE)
@@ -1791,7 +1807,6 @@ class Form_builder {
 			'maxlength' => $params['max_length'], 
 			'size' => $size, 
 			'readonly' => $params['readonly'], 
-			'disabled' => $params['disabled'],
 			'autocomplete' => (!empty($params['autocomplete']) ? $params['autocomplete'] : NULL),
 			'placeholder' => (!empty($params['placeholder']) ? $params['placeholder'] : NULL),
 			'required' => (!empty($params['required']) ? TRUE : NULL),
@@ -2148,7 +2163,7 @@ class Form_builder {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionaltity)
+	 * Creates the multi select input for the form (this is overwritten by the Fuel_custom_fields to give more functionality)
 	 *
 	 * @access	public
 	 * @param	array fields parameters
@@ -2460,15 +2475,52 @@ class Form_builder {
 
 		$process_key = $params[$key];
 
-		// create post processer to recreate date value
-$func_str = '
-			if (is_array($value))
-			{
-				foreach($value as $key => $val)
+		
+		// needed for post processing
+		if (!empty($_POST) AND !isset($_POST[$params['key']]))
+		{
+			$_POST[$time_params['name']] = '';
+		}
+
+		if (empty($params['is_datetime']))
+		{
+			// create post processer to recreate date value
+			$func = function($value) use ($process_key){
+				if (is_array($value))
 				{
-					$hr   = (isset($val["'.$process_key.'"]) AND (int)$val["'.$process_key.'"] > 0 AND (int)$val["'.$process_key.'"] < 24) ? $val["'.$process_key.'"] : "";
-					$min  = (isset($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-					$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+					foreach($value as $key => $val)
+					{
+						$hr   = (isset($val[$process_key]) AND (int)$val[$process_key] > 0 AND (int)$val[$process_key] < 24) ? $val[$process_key] : "";
+						$min  = (isset($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+						$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
+						if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+						{
+							if ($hr > 24) 
+							{
+								$hr = "00";
+							}
+							else
+							{
+								$hr = (int) $hr - 12;
+								$ampm = "pm";
+							}
+						}
+
+						if (empty($hr))
+						{
+							$hr = "00";
+						}
+
+						$dateval = $hr.":".$min.$ampm;
+						$value[$key][$process_key] = date("H:i:s", strtotime($dateval));
+					}
+					return $value;
+				}
+				else
+				{
+					$hr    = (isset($_POST[$process_key]) AND (int)$_POST[$process_key] > 0 AND (int)$_POST[$process_key] < 24) ? $_POST[$process_key] : "";
+					$min   = (isset($_POST[$process_key.'_min']) AND is_numeric($_POST[$process_key.'_min']))  ? $_POST[$process_key.'_min'] : "00";
+					$ampm  = (isset($_POST[$process_key.'_am_pm']) AND $hr AND $min) ? $_POST[$process_key.'_am_pm'] : "";
 					if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 					{
 						if ($hr > 24) 
@@ -2488,48 +2540,10 @@ $func_str = '
 					}
 
 					$dateval = $hr.":".$min.$ampm;
-					$value[$key]["'.$process_key.'"] = date("H:i:s", strtotime($dateval));
+					$dateval = date("H:i:s", strtotime($dateval));
+					return $dateval;
 				}
-				return $value;
-			}
-			else
-			{
-				$hr    = (isset($_POST["'.$process_key.'"]) AND (int)$_POST["'.$process_key.'"] > 0 AND (int)$_POST["'.$process_key.'"] < 24) ? $_POST["'.$process_key.'"] : "";
-				$min   = (isset($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
-				$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "";
-				if (!empty($ampm) AND !empty($hr) AND $hr > 12)
-				{
-					if ($hr > 24) 
-					{
-						$hr = "00";
-					}
-					else
-					{
-						$hr = (int) $hr - 12;
-						$ampm = "pm";
-					}
-				}
-
-				if (empty($hr))
-				{
-					$hr = "00";
-				}
-
-				$dateval = $hr.":".$min.$ampm;
-				$dateval = date("H:i:s", strtotime($dateval));
-				return $dateval;
-			}
-		';
-		
-		// needed for post processing
-		if (!empty($_POST) AND !isset($_POST[$params['key']]))
-		{
-			$_POST[$time_params['name']] = '';
-		}
-
-		if (empty($params['is_datetime']))
-		{
-			$func = create_function('$value', $func_str);
+			};
 			$this->set_post_process($params['key'], $func);
 		}
 		return $str;
@@ -2568,27 +2582,26 @@ $func_str = '
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-		$func_str = '
-				
-				if (is_array($value))
+		$func = function($value) use ($process_key) {
+			if (is_array($value))
 				{
 					foreach($value as $key => $val)
 					{
-						if (isset($val["'.$process_key.'"]))
+						if (isset($val[$process_key]))
 						{
 
-							$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
-							$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
-							$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-							$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+							$date = (!empty($val[$process_key]) AND is_date_format($val[$process_key])) ? current(explode(" ", $val[$process_key])) : "";
+							$hr   = (!empty($val[$process_key.'_hour']) AND  (int)$val[$process_key.'_hour'] > 0 AND (int)$val[$process_key.'_hour'] < 24) ? $val[$process_key.'_hour'] : "";
+							$min  = (!empty($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+							$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
 							
 
-							if (is_string($val["'.$process_key.'"]))
+							if (is_string($val[$process_key]))
 							{
-								$date = (!empty($val["'.$process_key.'"]) AND is_date_format($val["'.$process_key.'"])) ? current(explode(" ", $val["'.$process_key.'"])) : "";
-								$hr   = (!empty($val["'.$process_key.'_hour"]) AND  (int)$val["'.$process_key.'_hour"] > 0 AND (int)$val["'.$process_key.'_hour"] < 24) ? $val["'.$process_key.'_hour"] : "";
-								$min  = (!empty($val["'.$process_key.'_min"]) AND is_numeric($val["'.$process_key.'_min"]))  ? $val["'.$process_key.'_min"] : "00";
-								$ampm = (isset($val["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'_am_pm"] : "";
+								$date = (!empty($val[$process_key]) AND is_date_format($val[$process_key])) ? current(explode(" ", $val[$process_key])) : "";
+								$hr   = (!empty($val[$process_key.'_hour']) AND  (int)$val[$process_key.'_hour'] > 0 AND (int)$val[$process_key.'_hour'] < 24) ? $val[$process_key.'_hour'] : "";
+								$min  = (!empty($val[$process_key.'_min']) AND is_numeric($val[$process_key.'_min']))  ? $val[$process_key.'_min'] : "00";
+								$ampm = (isset($val[$process_key.'_am_pm']) AND $hr AND $min) ? $val[$process_key.'_am_pm'] : "";
 
 								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 								{
@@ -2603,22 +2616,22 @@ $func_str = '
 									}
 								}
 
-								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]));
+								$dateval = current(explode(" ", $value[$key][$process_key]));
 								if ($date != "")
 								{
 									if (!empty($hr)) $dateval .= " ".$hr.":".$min.$ampm;
 								}
 								if (!empty($dateval))
 								{
-									$value[$key]["'.$process_key.'"] = $dateval;	
+									$value[$key][$process_key] = $dateval;	
 								}
 							}
-							else if (is_array($val["'.$process_key.'"]) AND isset($val["'.$process_key.'"]["'.$params['name'].'"]))
+							else if (is_array($val[$process_key]) AND isset($val[$process_key][$params['name']]))
 							{
-								$date = (!empty($val["'.$process_key.'"]["'.$params['name'].'"]) AND is_date_format($val["'.$process_key.'"]["'.$params['name'].'"])) ? current(explode(" ", $val["'.$process_key.'"]["'.$params['name'].'"])) : "";
-								$hr   = (isset($val["'.$process_key.'"]["'.$params['name'].'_hour"]) AND  (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] >= 0 AND (int)$val["'.$process_key.'"]["'.$params['name'].'_hour"] < 24) ? $val["'.$process_key.'"]["'.$params['name'].'_hour"] : "";
-								$min  = (!empty($val["'.$process_key.'"]["'.$params['name'].'_min"]) AND is_numeric($val["'.$process_key.'"]["'.$params['name'].'_min"]))  ? $val["'.$process_key.'"]["'.$params['name'].'_min"] : "00";
-								$ampm = (isset($val["'.$process_key.'"]["'.$params['name'].'_am_pm"]) AND $hr AND $min) ? $val["'.$process_key.'"]["'.$params['name'].'_am_pm"] : "";
+								$date = (!empty($val[$process_key][$params['name']]) AND is_date_format($val[$process_key][$params['name']])) ? current(explode(" ", $val[$process_key][$params['name']])) : "";
+								$hr   = (isset($val[$process_key][$params['name'].'_hour']) AND  (int)$val[$process_key][$params['name'].'_hour'] >= 0 AND (int)$val[$process_key][$params['name'].'_hour'] < 24) ? $val[$process_key][$params['name'].'_hour'] : "";
+								$min  = (!empty($val[$process_key][$params['name'].'_min']) AND is_numeric($val[$process_key][$params['name'].'_min']))  ? $val[$process_key][$params['name'].'_min'] : "00";
+								$ampm = (isset($val[$process_key][$params['name'].'_am_pm']) AND $hr AND $min) ? $val[$process_key][$params['name'].'_am_pm'] : "";
 
 								if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 								{
@@ -2639,14 +2652,14 @@ $func_str = '
 									$ampm = "am";
 								}
 
-								$dateval = current(explode(" ", $value[$key]["'.$process_key.'"]["'.$params['name'].'"]));
+								$dateval = current(explode(" ", $value[$key][$process_key][$params['name']]));
 								if ($date != "")
 								{
 									if ($hr !== "") $dateval .= " ".$hr.":".$min.$ampm;
 								}
 								if (!empty($dateval))
 								{
-									$value[$key]["'.$process_key.'"]["'.$params['name'].'"] = $dateval;	
+									$value[$key][$process_key][$params['name']] = $dateval;	
 								}
 							}
 						}
@@ -2656,10 +2669,10 @@ $func_str = '
 				}
 				else
 				{
-					$date  = (!empty($_POST["'.$process_key.'"]) AND is_date_format($_POST["'.$process_key.'"])) ? current(explode(" ", $_POST["'.$process_key.'"])) : "";
-					$hr    = (isset($_POST["'.$process_key.'_hour"]) AND (int)$_POST["'.$process_key.'_hour"] >= 0 AND (int)$_POST["'.$process_key.'_hour"] < 24) ? $_POST["'.$process_key.'_hour"] : "";
-					$min   = (!empty($_POST["'.$process_key.'_min"]) AND is_numeric($_POST["'.$process_key.'_min"]))  ? $_POST["'.$process_key.'_min"] : "00";
-					$ampm  = (isset($_POST["'.$process_key.'_am_pm"]) AND $hr AND $min) ? $_POST["'.$process_key.'_am_pm"] : "";
+					$date  = (!empty($_POST[$process_key]) AND is_date_format($_POST[$process_key])) ? current(explode(" ", $_POST[$process_key])) : "";
+					$hr    = (isset($_POST[$process_key.'_hour']) AND (int)$_POST[$process_key.'_hour'] >= 0 AND (int)$_POST[$process_key.'_hour'] < 24) ? $_POST[$process_key.'_hour'] : "";
+					$min   = (!empty($_POST[$process_key.'_min']) AND is_numeric($_POST[$process_key.'_min']))  ? $_POST[$process_key.'_min'] : "00";
+					$ampm  = (isset($_POST[$process_key.'_am_pm']) AND $hr AND $min) ? $_POST[$process_key.'_am_pm'] : "";
 
 					if (!empty($ampm) AND !empty($hr) AND $hr > 12)
 					{
@@ -2695,9 +2708,8 @@ $func_str = '
 
 					return $dateval;
 				}
-			';
 
-		$func = create_function('$value', $func_str);
+		};
 		$this->set_post_process($params['key'], $func);
 		return $str;
 	}
@@ -3490,7 +3502,7 @@ $func_str = '
 	 * Alters all the field post values that have post_process attribute specified
 	 *
 	 * @access	public
-	 * @return	void
+	 * @return	array
 	 */
 	public function post_process_field_values($posted = array(), $set_post = TRUE)
 	{
@@ -3579,7 +3591,7 @@ $func_str = '
 		// shorthand if the function name is remove or clear, then we return an empty string
 		if ($func == 'remove' OR $func == 'clear')
 		{
-			$func = create_function('$value', 'return "";');
+			$func = function($value){ return ""; };
 		}
 		
 		return array('func' => $func, 'params' => $params);
@@ -4295,7 +4307,7 @@ class Form_builder_field {
 	 *
 	 * @access	public
 	 * @param	array
-	 * @return	void
+	 * @return	string
 	 */
 	public function render($params = array())
 	{

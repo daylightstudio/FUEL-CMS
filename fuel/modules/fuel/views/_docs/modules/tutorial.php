@@ -14,7 +14,7 @@ We will be using 3 data models (<dfn>Articles_model</dfn>, <dfn>Authors_model</d
   <li><a href="#setup">Download and Setup</a></li>
   <li><a href="#authors_module">The Authors Module</a></li>
   <li><a href="#articles_module">The Articles Module</a></li>
-  <li><a href="#categories_module">The FUEL Tags Module</a></li>
+  <li><a href="#fuel_tags_module">The FUEL Tags Module</a></li>
   <li><a href="#permissions">Setting Up Permissions</a></li>
   <li><a href="#polishing">A Little Polishing</a></li>
   <li><a href="#views">Bringing it All Into View</a></li>
@@ -41,7 +41,7 @@ php index.php fuel/generate/simple authors
   <li><strong>create table</strong>: creates a generic table based on the name (last parameter) in the database for you with basic fields you will need to edit to fit your model's requirements.</li>
   <li><strong>created model</strong>: creates a basic model as a starting point to add your code.</li>
   <li><strong>add entry to MY_fuel_modules</strong>: will add an entry in the fuel/application/config/MY_fuel_modules.php file so it will appear in the CMS under the Modules area in the left menu.</li>
-  <li><strong>add permissions</strong>: permissions for the module get automically generated.</li>
+  <li><strong>add permissions</strong>: permissions for the module get automatically generated.</li>
 </ul>
 
 <p>However, since this is a tutorial to learn about the creation of simple modules, we will skip the generate functionality and do these tasks by manually.</p>
@@ -257,7 +257,7 @@ $config['modules']['articles'] = array(
     second field in your table, so in our case, we really don't need to specify this value since "title" is the second field in our table but we do so 
     for demonstration purposes.</li>
     <li><strong>sanitize_input</strong>: The <dfn>sanitize_input</dfn> parameter is used to clean input before it gets inserted into the database table.
-    The default value is <var>TRUE</var> which means it will apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html" target="_blank">xss_clean</a> 
+    The default value is <var>TRUE</var> which means it will apply the <a href="https://www.codeigniter.com/user_guide/helpers/security_helper.html" target="_blank">xss_clean</a>
     function. In some cases, this default value is too restrictive and will not allow you to input javascript or iframe code. So instead, you 
     can specify an array of options that are available from FUEL's <a href="<?=user_guide_url('installation/configuration')?>">module_sanitize_funcs</a> config parameter. In this case, we will use
     the <var>template</var> and <var>php</var> value that maps to FUEL's <a href="<?=user_guide_url('helpers/my_string_helper#func_php_to_template_syntax')?>">php_to_template_syntax</a> and <a href="http://php.net/manual/en/function.htmlentities.php" target="_blank">htmlentities</a> function respectively.</li>
@@ -333,7 +333,7 @@ More on different form field types and parameters can be found under the <a href
   <li><strong>id</strong>: <a href="<?=user_guide_url('general/forms#hidden')?>">hidden field</a> (Form_builder is set by default to render all fields with the name of "id" as hidden)</li>
   <li><strong>title</strong>: <a href="<?=user_guide_url('general/forms#hidden')?>">title field</a> (a varchar field type gets mapped to a normal input text field)</li>
   <li><strong>slug</strong>: <a href="<?=user_guide_url('general/forms#slug')?>">slug field</a> (a field with the name of "slug" is <a href="<?=user_guide_url('general/forms#representatives')?>">represented</a> by the field type "slug"). </li>
-  <li><strong>author_id</strong>: <a href="<?=user_guide_url('general/forms#select')?>">select field</a> (the select field is set by the model's <dfn>foriegn_keys</dfn> property</li>
+  <li><strong>author_id</strong>: <a href="<?=user_guide_url('general/forms#select')?>">select field</a> (the select field is set by the model's <dfn>foreign_keys</dfn> property</li>
   <li><strong>content</strong>: <a href="<?=user_guide_url('general/forms#wysiwyg')?>">wysiwyg field</a> (text field type gets <a href="<?=user_guide_url('general/forms#representatives')?>">represented</a> by the field type "wysiwyg")</li>
   <li><strong>image</strong>: <a href="<?=user_guide_url('general/forms#asset')?>">asset field</a> (a field containing "image" or "img" in it's name gets <a href="<?=user_guide_url('general/forms#representatives')?>">represented</a> by the field type "asset")</li>
   <li><strong>thumb_image</strong>: <a href="<?=user_guide_url('general/forms#asset')?>">asset field</a> (a field containing "image" or "img" in it's name gets <a href="<?=user_guide_url('general/forms#representatives')?>">represented</a> by the field type "asset")</li>
@@ -519,7 +519,7 @@ class Articles_model extends Base_module_model {
 <p class="important">If you have a combination of fields that need to be unique (e.g. a compound key), you can specify an array value instead containing all the fields that need to be unique.</p>
 
 
-<h3>Parsed FIelds</h3>
+<h3>Parsed Fields</h3>
 <p>By default, FUEL will not parse the data for <a href="<?=user_guide_url('general/template-parsing')?>">templating syntax</a>. 
   To fix this you add the <dfn>$parsed_fields</dfn> model array property with the array values the names of fields that should be parsed upon retrieval.
   In this example, we'll want the article model's <dfn>content</dfn> field to be parsed so we add the following:
@@ -675,7 +675,7 @@ $article = $CI->articles_model->find_one(array('slug' => $slug));
 </pre>
 
 <p>If an article with the passed slug value doesn't exist in the table, then it will call the <a href="<?=user_guide_url('helpers/my_url_helper#redirect_404')?>">redirect_404 function</a> which will first look for any <a href="<?=user_guide_url('general/redirects')?>">redirects</a> and if none are
-found, will display the 404 error page. If an article does exist, then it continues down the page and displays the contents of the article by outputing the title, image, author name and content.</p>
+found, will display the 404 error page. If an article does exist, then it continues down the page and displays the contents of the article by outputting the title, image, author name and content.</p>
 
 <p>If no slug value is passed to the page, then a simple <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_model')?>">fuel_model</a> call will be used which will automatically grab all tags associated with articles.
 We then loop through those tags and because of the <dfn>has_many</dfn> association with the tags module, we are able to easily grab all articles associated with that tag which allows us to create 

@@ -47,7 +47,7 @@ class Build extends Fuel_base_controller {
 			// explode on colon to separate the folder name from the file name
 			$seg_parts = explode(':', $segs_str);
 
-			// set the folder name to lookin
+			// set the folder name to look in
 			$folder = $seg_parts[0];
 
 			// set the file name if one exists

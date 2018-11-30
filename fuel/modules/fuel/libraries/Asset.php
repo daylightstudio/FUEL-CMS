@@ -21,7 +21,7 @@
  *
  * This class allows you to output css, js links and/or files as well as
  * allows you to compress and cache them. It also has convenience methods for 
- * paths to different assets like images, pdfs, javascript css etc.
+ * paths to different assets like images, PDFs, javascript css etc.
  * 
  * Additionally, you can use the <a href="[user_guide_url]helpers/asset">asset helper</a>
  * which provides a shortcut for many of the methods of the Asset class. 
@@ -711,11 +711,10 @@ class Asset {
 		// if the path is an associative array, than we assume the key is the module
 		if (is_array($path))
 		{
-			$path_arr = each($path);
-			if (!is_numeric($path_arr['key']))
+			if (!is_numeric(key($path)))
 			{
-				$module = $path_arr['key'];
-				$path = $path_arr['value'];
+				$module = key($path);
+				$path = current($path);
 			}
 		}
 		
@@ -746,7 +745,7 @@ class Asset {
 		if ($options['output'] === 'inline')
 		{
 			$open = "<script>\n";
-			$close .= "\t</script>";
+			$close = "\t</script>";
 		}
 		else
 		{
@@ -756,7 +755,6 @@ class Asset {
 
 		$str = $this->_output('js', $module, $open, $close, $path, $options);
 		if (!empty($options['echo'])) echo $str;
-		$str = $str;
 		return $str;
 	}
 
@@ -811,11 +809,10 @@ class Asset {
 		// if the path is an associative array, than we assume the key is the module
 		if (is_array($path))
 		{
-			$path_arr = each($path);
-			if (!is_numeric($path_arr['key']))
+			if (!is_numeric(key($path)))
 			{
-				$module = $path_arr['key'];
-				$path = $path_arr['value'];
+				$module = key($path);
+				$path = current($path);
 			}
 		}
 		
@@ -1430,18 +1427,19 @@ class Asset {
 					}
 				}
 
-				$callback = create_function('$matches', '
+				$callback = function($matches) {
 					if (isset($matches[2]))
 					{
 						return $GLOBALS["__TMP_CSS_IMPORT__"][$matches[2]];	
 					} else {
 						return "";
-					}');
+					}
+				};
 
 				// remove calls to the import since they are combined into the same css
 				if (!empty($import_files))
 				{
-					// temporarily put it in the global space so the anonymoous function can grab it
+					// temporarily put it in the global space so the anonymous function can grab it
 					$GLOBALS["__TMP_CSS_IMPORT__"] = $import_files;
 					$output = preg_replace_callback('/@import url\(([\'|"])*(.+)\\1\);/U', $callback, $output);
 					unset($GLOBALS["__TMP_CSS_IMPORT__"]);
@@ -1462,37 +1460,34 @@ class Asset {
 		}
 		
 		// gzip if enabled in config and the server
-		if (($params['gzip'] == TRUE) AND extension_loaded('zlib'))
+		if ((($params['gzip'] == TRUE) AND extension_loaded('zlib')) AND (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE))
 		{
-			if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
+			$gzip = "<?php".PHP_EOL;
+			$gzip .= "ob_start();".PHP_EOL;
+		
+			// start an inner buffer so we can get the content length
+			$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
+			$gzip .= "\n?>";
+			$gzip .= $output;
+			$gzip .= "<?php".PHP_EOL;
+			$gzip .= "ob_end_flush();".PHP_EOL;
+		
+			// now begin inner buffer headers
+			if (!empty($mime))
 			{
-				$gzip = "<?php".PHP_EOL;
-				$gzip .= "ob_start();".PHP_EOL;
-			
-				// start an inner buffer so we can get the content length
-				$gzip .= "ob_start (\"ob_gzhandler\");".PHP_EOL;
-				$gzip .= "\n?>";
-				$gzip .= $output;
-				$gzip .= "<?php".PHP_EOL;
-				$gzip .= "ob_end_flush();".PHP_EOL;
-			
-				// now begin inner buffer headers
-				if (!empty($mime))
-				{
-					$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;	
-				}
-				$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
-				$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
-				$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
-				$gzip .= "header(\$exp);".PHP_EOL;
-				$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
-				$gzip .= "header(\$size);".PHP_EOL;
-				$gzip .= 'ob_end_flush();';
-				$gzip .= "\n?>".PHP_EOL;
-				$output = $gzip;
+				$gzip .= "header(\"Content-type: ".$mime."; charset: UTF-8\");".PHP_EOL;	
 			}
+			$gzip .= "header(\"Cache-Control: must-revalidate\");".PHP_EOL;
+			$gzip .= "\$offset = ".$this->assets_gzip_cache_expiration.";".PHP_EOL;
+			$gzip .= "\$exp = \"Expires: \".gmdate(\"D, d M Y H:i:s\",time() + \$offset).\" GMT\";".PHP_EOL;
+			$gzip .= "header(\$exp);".PHP_EOL;
+			$gzip .= "\$size = \"Content-Length: \".ob_get_length();".PHP_EOL;
+			$gzip .= "header(\$size);".PHP_EOL;
+			$gzip .= 'ob_end_flush();';
+			$gzip .= "\n?>".PHP_EOL;
+			$output = $gzip;
 		}
-
+		
 		// write contents to file
 		if (!empty($params['destination']))
 		{

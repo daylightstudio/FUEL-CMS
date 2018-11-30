@@ -29,19 +29,18 @@
  * @link		http://docs.getfuelcms.com/helpers/my_language_helper
  */
 
-
 // --------------------------------------------------------------------
 
-/**
- * Get translated local strings with arguments. 
- * Overwrites CI langauge_helper to have a more useful args
- *
- * @param 	string
- * @param 	mixed
- * @return	string
- */
 if (!function_exists('lang'))
 {
+	/**
+	 * Get translated local strings with arguments.
+	 * Overwrites CI language_helper to have a more useful args
+	 *
+	 * @param	string
+	 * @param	mixed
+	 * @return	string
+	 */
 	function lang($key, $args = NULL)
 	{
 
@@ -69,15 +68,15 @@ if (!function_exists('lang'))
 
 // --------------------------------------------------------------------
 
-/**
- * Creates an array or JSON aobject for your javascript files that need localization
- *
- * @param 	array
- * @param 	boolean
- * @return	string
- */
 if (!function_exists('json_lang'))
 {
+	/**
+	 * Creates an array or JSON object for your javascript files that need localization
+	 *
+	 * @param	array
+	 * @param	boolean
+	 * @return	string
+	 */
 	function json_lang($js_localized = array(), $return_json = TRUE)
 	{
 		
@@ -131,14 +130,14 @@ if (!function_exists('json_lang'))
 
 // --------------------------------------------------------------------
 
-/**
- * Detects any specified language settings pulling from the URI, query string and then the user's browser settings
- *
- * @param 	boolean	Determines whether to set the "langauge" config property
- * @return	string
- */
 if (!function_exists('detect_lang'))
 {
+	/**
+	 * Detects any specified language settings pulling from the URI, query string and then the user's browser settings
+	 *
+	 * @param	boolean	Determines whether to set the "language" config property
+	 * @return	string
+	 */
 	function detect_lang($set_config = FALSE)
 	{
 		$CI =& get_instance();

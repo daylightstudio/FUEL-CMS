@@ -147,7 +147,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @access	public
 	 * @param	string	name of table
 	 * @param	string	field name
-	 * @return	string
+	 * @return	array
 	 */
 	public function table_info($table, $set_field_key = TRUE)
 	{

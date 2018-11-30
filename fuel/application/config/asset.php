@@ -45,7 +45,7 @@ You can still use this, but just turn of optimizing in the js function call that
 YOU MUST use the assets_last_updated to refresh the cache file
 
 options: 
-* FALSE - no optimation
+* FALSE - no optimization
 * TRUE - will combine files, strip whitespace, and gzip
 * "inline" - will render the files inline
 * "gzip" - will combine files (if multiple) and gzip without stripping whitespace

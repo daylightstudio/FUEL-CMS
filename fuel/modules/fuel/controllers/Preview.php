@@ -19,7 +19,7 @@ class Preview extends Fuel_base_controller {
 		define('FUELIFY', FALSE);
 
 		// check for posted data
-		$data = $this->input->get_post('data', FALSE);
+		$data = $this->input->get_post('data', TRUE);
 
 		//if (empty($data)) show_error(lang('error_cannot_preview'));
 

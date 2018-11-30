@@ -350,7 +350,7 @@ class Base_module_model extends MY_Model {
 		{
 			return count($data);
 		}
-		//$this->debug_query();
+		
 		return $data;
 	}
 
@@ -438,7 +438,7 @@ class Base_module_model extends MY_Model {
 					{
 						if (strlen($v))
 						{
-							array_push($arrjoiner, $key.'='.$v);
+							array_push($arrjoiner, $key.'='.$this->db->escape($v));
 						}
 					}
 					if (!empty($arrjoiner))
@@ -451,7 +451,7 @@ class Base_module_model extends MY_Model {
 				{
 					//$method = ($joiner == 'or') ? 'or_like' : 'like';
 					//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
-					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.strtolower($val).'%"');
+					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.mb_strtolower(addslashes($val)).'%"');
 				}
 			}
 		}
@@ -637,7 +637,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	protected
 	 * @param	string The name of the model's property to use to generate the tree. Options are 'foreign_keys', 'has_many' or 'belongs_to'
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	protected function _tree($prop = NULL)
 	{
@@ -954,7 +954,7 @@ class Base_module_model extends MY_Model {
 		}
 		if (strpos($field, '.') === FALSE) $field = $this->table_name.'.'.$field;
 		$where[$field.' !='] = '';
-		$options = $this->options_list($field, $field, $where, TRUE, FALSE);
+		$options = $this->options_list($field, $field, $where, TRUE);
 		return $options;
 	}
 	
@@ -1080,7 +1080,7 @@ class Base_module_model extends MY_Model {
 	 * @access	public
 	 * @param	string	the column to use for the value (optional)
 	 * @param	string	the column to use for the label (optional)
-	 * @param	mixed	an array or string containg the where paramters of a query (optional)
+	 * @param	mixed	an array or string containing the where parameters of a query (optional)
 	 * @param	mixed	the order by of the query. Defaults to TRUE which means it will sort by $val asc (optional)
 	 * @return	array
 	 */	
@@ -1197,6 +1197,33 @@ class Base_module_model extends MY_Model {
 			}
 		}
 
+		if (!empty($params['like']))
+		{
+			$this->db->group_start();
+			if (is_array($params['like']))
+			{
+				foreach($params['like'] as $k => $v)
+				{
+					unset($params['like'][$k]);
+					$k = str_replace(':', '.', $k);
+					if (is_string($v))
+					{
+						$params['like'][$k] = str_replace(':', '.', $v);
+					}
+
+					$this->db->or_like($k, $v, 'both');
+				}
+			}
+			else
+			{
+				$key = key($params['like']);
+				$val = current($params['like']);
+				$this->db->like($key, $val, 'both');
+			}
+
+			$this->db->group_end();
+		}
+		
 		$list_items = $this->list_items();
 		if (empty($list_items))
 		{
@@ -1212,20 +1239,20 @@ class Base_module_model extends MY_Model {
 			foreach($params['tooltip_char_limit'] as $field => $limit)
 			{
 				$limit = (int) $limit;
-				$tooltip_func_str = ' 
-						$value = strip_tags($values["'.$field.'"]);
- 						if (strlen($value) > '.$limit.')
+				$tooltip_func = function($values) use ($field, $limit) {
+					$value = strip_tags($values[$field]);
+ 						if (strlen($value) > $limit)
 						{
 							// display tooltip for long notes
-							$trimmed = character_limiter($value, '.$limit.');
+							$trimmed = character_limiter($value, $limit);
 							$data = "<span title=\"" . $value . "\" class=\"tooltip\">" . $trimmed . "</span>";
 						}
 						else
 						{
 							$data = $value;
 						}
-						return $data;';
-				$tooltip_func = create_function('$values', $tooltip_func_str);
+						return $data;
+				};
 				$data_table->add_field_formatter($field, $tooltip_func);
 			}
 			
@@ -1238,12 +1265,15 @@ class Base_module_model extends MY_Model {
 				$actions = array('edit');
 			}
 
+			$valid_actions = array();
+		
 			foreach($actions as $action => $label)
 			{
 				if (is_int($action))
 				{
 					$action = $label;
 				}
+
 				if (is_string($action) AND $this->fuel->auth->has_permission($module->info('permission'), $action) OR $action == 'custom')
 				{
 					switch(strtolower($action))
@@ -1267,17 +1297,20 @@ class Base_module_model extends MY_Model {
 								$action_url .= '?'. $params['edit_url_params'];
 							}
 							$data_table->add_action(lang('table_action_edit'), $action_url, 'url');
+							$valid_actions[] = $action;
 							break;
 						case 'view':
 							if ($module->info('preview_path'))
 							{
 								$action_url = fuel_url($module->info('module_uri').'/view/{'.$this->key_field().'}');
 								$data_table->add_action(lang('table_action_view'), $action_url, 'url');
+								$valid_actions[] = $action;
 							}
 							break;
 						case 'delete':
 							$action_url = fuel_url($module->info('module_uri').'/inline_delete/{'.$this->key_field().'}');
 							$data_table->add_action(lang('table_action_delete'), $action_url, 'url');
+							$valid_actions[] = $action;
 							break;
 						case 'custom':
 							if (is_array($label))
@@ -1288,6 +1321,7 @@ class Base_module_model extends MY_Model {
 									{
 										$action_url = fuel_url($key);
 										$data_table->add_action($val, $action_url, 'url');
+										$valid_actions[] = $action;
 									}
 								}
 							}
@@ -1296,8 +1330,9 @@ class Base_module_model extends MY_Model {
 				}
 			}
 		}
+		
+		$data_table->row_action = (!empty($valid_actions)) ? TRUE : FALSE;
 
-		$data_table->row_action = TRUE;
 		$data_table->assign_data($list_items, $list_cols);
 		return $data_table->render();
 	}
@@ -1308,7 +1343,7 @@ class Base_module_model extends MY_Model {
 	 * The ajax method to be called for the embedded list view
 	 *
 	 * @access	public
-	 * @param  	array  GET and POST arams that will be used for filtering
+	 * @param  	array  GET and POST params that will be used for filtering
 	 * @return	string The HTML to display
 	 */	
 	public function ajax_embedded_list_items($params)
@@ -1381,7 +1416,7 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	public
 	 * @param	array 	An array of data (optional)
-	 * @return	void
+	 * @return	array
 	 */	
 	public function vars($data = array())
 	{
@@ -1601,7 +1636,7 @@ class Base_module_record extends Data_record {
 	protected $_fuel = NULL;
 	
 	/**
-	 * Constructor - overwritten to add _fuel object for reference for convinience
+	 * Constructor - overwritten to add _fuel object for reference for convenience
 	 * @param	object	parent object
 	 */
 	public function __construct(&$parent = NULL)

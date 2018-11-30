@@ -208,7 +208,7 @@ class Fuel_users extends Fuel_module {
 
 			if (in_array('symbols', $rules_array))
 			{
-				$str_arr[] = lang('pwd_symbols_required').' (e.g. +_!@#$\%^&*.,?-)'; // broken out to preven sprintf error
+				$str_arr[] = lang('pwd_symbols_required').' (e.g. +_!@#$\%^&*.,?-)'; // broken out to prevent sprintf error
 			}
 		}
 

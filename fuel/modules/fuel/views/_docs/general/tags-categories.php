@@ -46,7 +46,7 @@ foreach($tag->widgets as $widget) {
 
 
 <h2 id="categories">Categories</h2>
-<p>The category module is helpful for categorizing records. A catgory's <dfn>context</dfn> value can be used to further group categories together.
+<p>The category module is helpful for categorizing records. A category's <dfn>context</dfn> value can be used to further group categories together.
 You can use the a model's <dfn>foreign_key</dfn> property as well as the addition of the <dfn>where</dfn> parameter to target 
 a particular context (if needed) and associate a single category to a particular record. This will create a dropdown select for the module form in the CMS:</p>
 

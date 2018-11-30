@@ -36,10 +36,10 @@ $pages['home'] = array('layout' => 'home');
 
 <h2 id="layouts_cms">Using Layouts in the CMS</h2>
 <p>For a layout to appear in the FUEL admin, a layout view file must exist in the <span class="file">fuel/application/views/_layouts/</span> folder AND 
-there must be an entry in the <span class="file">fuel/application/config/MY_fuel_layouts.php</span> file. The latter, assigns the variable fields to the layout and signals that the layout can be used to create pages in the admin.<p>
+there must be an entry in the <span class="file">fuel/application/config/MY_fuel_layouts.php</span> file. The latter assigns the variable fields to the layout and signals that the layout can be used to create pages in the admin.<p>
 
 <p>As of version 1.0, there are two ways to assign layouts in the <span class="file">MY_fuel_layouts.php</span> file. The first being the old way of assigning the layout variables to the 
-<dfn>fields</dfn> key which is a multi-demensional array that will be used by <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>.</p>
+<dfn>fields</dfn> key which is a multi-dimensional array that will be used by <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a>.</p>
 
 <p class="important">Note that there was a change in version 1.0 that all layout information exists under a single key in the <dfn>$config['layouts']</dfn> array and all fields now exist as a child under the "fields" key.</p>
 
@@ -78,7 +78,7 @@ $main_layout->set_label('Main');
 $main_layout->add_fields($common_meta);
 $main_layout->add_field('Sections',  array('type' => 'fieldset', 'label' => 'Sections', 'class' => 'tab'));
 $main_layout->add_field('section_description', array('type' => 'copy', 'label' => 'The following fields control the sections of the legal page.'));
-$main_layout->add_field('sections', array('display_label' => FALSE, 'add_extra' => FALSE, 'init_display' => 'none', 'dblclick' => 'accordian', 'repeatable' => TRUE, 'style' => 'width: 900px;', 'type' => 'template', 'label' => 'Page sections', 'title_field' => 'title',
+$main_layout->add_field('sections', array('display_label' => FALSE, 'add_extra' => FALSE, 'init_display' => 'none', 'dblclick' => 'accordion', 'repeatable' => TRUE, 'style' => 'width: 900px;', 'type' => 'template', 'label' => 'Page sections', 'title_field' => 'title',
 											'fields' => array(
 												'sections' => array('type' => 'section', 'label' => '{__title__}'),
 												'title' => array('style' => 'width: 800px'),
@@ -90,7 +90,7 @@ $config['layouts']['main'] = $main_layout;
 
 <p class="important"><strong>What is all this other stuff in the "Sections area"?</strong> We added this to the example just to show how complicated you can get with the layouts. The above is using 
 several new features including the addition of the class "tabs" which can be applied to a "type" of "fieldset" and creates tabs for your forms automatically. We are also
-displaying the new field type of "template", which gives you the power to easilty create complicated repeatable forms that you can reorder and nest inside other forms. 
+displaying the new field type of "template", which gives you the power to easily create complicated repeatable forms that you can reorder and nest inside other forms.
 For more details visit the <a href="#">Form_builder</a> page.</p>
 
 
@@ -123,7 +123,7 @@ $config['layouts']['main'] = array(
 );
 </pre>
 <h3>Layouts As Their Own Class Files</h3>
-<p>Similarly, you can overwite the extended <dfn>Fuel_layout</dfn> classes <dfn>fields()</dfn> method to return the fields for your layout:</p>
+<p>Similarly, you can overwrite the extended <dfn>Fuel_layout</dfn> classes <dfn>fields()</dfn> method to return the fields for your layout:</p>
 <span class="file">fuel/application/config/MY_fuel_layouts.php</span><br />
 <pre class="brush:php">
 $config['layouts']['home'] = array(

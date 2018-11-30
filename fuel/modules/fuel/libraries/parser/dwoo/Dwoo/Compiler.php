@@ -2527,7 +2527,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$breaker = false;
-		while (list($k,$char) = each($breakChars)) {
+		foreach($breakChars as $k => $char) {
 			$test = strpos($substr, $char);
 			if ($test !== false && $test < $end) {
 				$end = $test;
@@ -3041,7 +3041,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// loops over the param map and assigns values from the template or default value for unset optional params
-		while (list($k,$v) = each($map)) {
+		// while (list($k,$v) = each($map)) {
+
+		// Modified by David McReynolds 2018
+		foreach ($map as $k => $v) {
 			if ($v[0] === '*') {
 				// "rest" array parameter, fill every remaining params in it and then break
 				if (count($ps) === 0) {

@@ -124,7 +124,7 @@ class Fuel_pages_model extends Base_module_model {
 	 *
 	 * @access	public
 	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
-	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 * @return	array An array that can be used by the Menu class to create a hierarchical structure
 	 */	
 	public function tree($just_published = FALSE)
 	{
@@ -193,8 +193,7 @@ class Fuel_pages_model extends Base_module_model {
 	 */	
 	public function find_by_location($location, $just_published = 'yes')
 	{
-		
-		if (substr($location, 0, 4) == 'http')
+		if (strpos($location, 'http://') === 0 || strpos($location, 'https://') === 0)
 		{
 			$location = substr($location, strlen(site_url()));
 		}
@@ -230,7 +229,7 @@ class Fuel_pages_model extends Base_module_model {
 		$data = $this->find_one_array($where, 'location desc');
 
 		// case sensitive check
-		if (empty($data) OR ($data['location'] != $location AND $data['location'] != $wildcard_location.'/:any'))
+		if (empty($data) OR ($data['location'] != $location AND (!empty($wildcard_location) AND $data['location'] != $wildcard_location.'/:any')))
 		{
 			return array();
 		}
@@ -241,11 +240,11 @@ class Fuel_pages_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns all the children pages basd on the location URI
+	 * Returns all the children pages based on the location URI
 	 *
 	 * @access	public
 	 * @param  string URI path to start from (e.g. about would find about/history, about/contact, etc)
-	 * @return	void
+	 * @return	array
 	 */	
 	function children($root)
 	{

@@ -67,7 +67,7 @@ class Unzip {
 	// --------------------------------------------------------------------
 
 	/**
-	 * re inizilize all variables
+	 * re initialize all variables
 	 * @access	Private
 	 * @param		none
 	 * @return	none
@@ -133,7 +133,7 @@ class Unzip {
 
 						if ( ! @mkdir($this->_target_dir . '/' . $str))
 						{
-							$this->set_error('Desitnation path is not writable.');
+							$this->set_error('Destination path is not writable.');
 							return FALSE;
 						}
 
@@ -277,14 +277,14 @@ class Unzip {
 	 *
 	 * @access    Public
 	 * @param     string, boolean
-	 * @return    Unziped file.
+	 * @return    Unzipped file.
 	 */
 	private function _extract_file($compressed_file_name, $target_file_name = FALSE)
 	{
 		if ( ! sizeof($this->compressed_list))
 		{
 			$this->set_debug('Trying to unzip before loading file list... Loading it!');
-			$this->_list_files(FALSE, $compressed_file_name);
+			$this->_list_files(FALSE);
 		}
 
 		$fdetails = &$this->compressed_list[$compressed_file_name];

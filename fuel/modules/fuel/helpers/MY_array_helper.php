@@ -28,19 +28,18 @@
 
 // --------------------------------------------------------------------
 
-/**
- * An alternative array sorter that is a bit faster then array_sorter
- *
- * @access	public
- * @param	array 	The array of data
- * @param	string 	The column to sort by
- * @param	string 	The direction (asc/desc)
- * @return	array
- */
-
 if ( ! function_exists('array_orderby'))
 {
 	// http://php.net/manual/en/function.array-multisort.php
+	/**
+	 * An alternative array sorter that is a bit faster then array_sorter
+	 *
+	 * @access	public
+	 * @param	array	The array of data
+	 * @param	string	The column to sort by
+	 * @param	string	The direction (asc/desc)
+	 * @return	array
+	 */
 	function array_orderby()
 	{
 		$args = func_get_args();
@@ -61,19 +60,19 @@ if ( ! function_exists('array_orderby'))
 
 // --------------------------------------------------------------------
 
-/**
- * Array sorter that will sort on an array's key and allows for asc/desc order
- *
- * @access	public
- * @param	array
- * @param	string
- * @param	string
- * @param	boolean
- * @param	boolean
- * @return	array
- */
 if ( ! function_exists('array_sorter'))
 {
+	/**
+	 * Array sorter that will sort on an array's key and allows for asc/desc order
+	 *
+	 * @access	public
+	 * @param	array
+	 * @param	string
+	 * @param	string
+	 * @param	boolean
+	 * @param	boolean
+	 * @return	array
+	 */
 	function array_sorter(&$array, $index, $order = 'asc', $nat_sort = FALSE, $case_sensitive = FALSE)
 	{
 		if(is_array($array) && count($array) > 0)
@@ -103,18 +102,18 @@ if ( ! function_exists('array_sorter'))
 
 // --------------------------------------------------------------------
 
-/**
- * Array sorter that will sort an array of objects based on an objects 
- * property and allows for asc/desc order. Changes the original object
- *
- * @access	public
- * @param	mixed
- * @param	string
- * @param	string
- * @return	NULL
- */
 if ( ! function_exists('object_sorter'))
 {
+	/**
+	 * Array sorter that will sort an array of objects based on an objects
+	 * property and allows for asc/desc order. Changes the original object
+	 *
+	 * @access	public
+	 * @param	mixed
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
 	function object_sorter(&$data, $key, $order = 'asc')
 	{
 		for ($i = count($data) - 1; $i >= 0; $i--)
@@ -152,21 +151,21 @@ if ( ! function_exists('object_sorter'))
 
 // --------------------------------------------------------------------
 
-/**
- * Creates a key/value array based on an original array.
- *
- * Can be used in conjunction with the Form library class 
- * (e.g. $this->form->select('countries, option_list($options)))
- *
- * @access	public
- * @param	array
- * @param	string
- * @param	string
- * @param	boolean
- * @return	array
- */
 if ( ! function_exists('options_list'))
 {
+	/**
+	 * Creates a key/value array based on an original array.
+	 *
+	 * Can be used in conjunction with the Form library class
+	 * (e.g. $this->form->select('countries, option_list($options)))
+	 *
+	 * @access	public
+	 * @param	array
+	 * @param	string
+	 * @param	string
+	 * @param	boolean
+	 * @return	array
+	 */
 	function options_list($values, $value = 'id', $label = 'name', $value_as_key = FALSE)
 	{
 		$return = array();
@@ -192,15 +191,15 @@ if ( ! function_exists('options_list'))
 
 // --------------------------------------------------------------------
 
-/**
- * Parses a string in the format of key1="val1" key2="val2" into an array
- *
- * @access	public
- * @param	string
- * @return	array
- */
 if ( ! function_exists('parse_string_to_array'))
 {
+	/**
+	 * Parses a string in the format of key1="val1" key2="val2" into an array
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	array
+	 */
 	function parse_string_to_array($str)
 	{
 		preg_match_all('#(\w+)=([\'"])(.*)\\2#U', $str, $matches);
@@ -213,20 +212,21 @@ if ( ! function_exists('parse_string_to_array'))
 			}
 		}
 		return $params;
-		
 	}
 }
 
-/**
- * Returns an array of arrays.
- *
- * @access	public
- * @param	array an array to be divided
- * @param	int number of groups to divide the array into
- * @return	array
- */	
+// --------------------------------------------------------------------
+
 if ( ! function_exists('array_group'))
 {
+	/**
+	 * Returns an array of arrays.
+	 *
+	 * @access	public
+	 * @param	array an array to be divided
+	 * @param	int number of groups to divide the array into
+	 * @return	array
+	 */
 	function array_group($array, $groups)
 	{
 		if (empty($array))
@@ -238,18 +238,20 @@ if ( ! function_exists('array_group'))
 	}
 }
 
-/**
- * Converts a .csv file to an associative array. Must have header row.
- *
- * @access	public
- * @param	string  file name
- * @param	string  the delimiter that separates each column
- * @param	int     the index for where the header row starts
- * @param	int     must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
- * @return	array
- */	
+// --------------------------------------------------------------------
+
 if ( ! function_exists('csv_to_array'))
 {
+	/**
+	 * Converts a .csv file to an associative array. Must have header row.
+	 *
+	 * @access	public
+	 * @param	string	file name
+	 * @param	string	the delimiter that separates each column
+	 * @param	int		the index for where the header row starts
+	 * @param	int		must be greater then the maximum line length. Setting to 0 is slightly slower, but works for any length
+	 * @return	array|false
+	 */
 	function csv_to_array($filename = '', $delimiter =  ',', $header_row = 0, $length = 0)
 	{
 		if(!file_exists($filename) || !is_readable($filename))
@@ -284,18 +286,18 @@ if ( ! function_exists('csv_to_array'))
 
 // --------------------------------------------------------------------
 
-/**
- * Return the value from an associative array or an object.
- * credit: borrowed from Vanilla forums GetValueR function
- *
- * @access	public
- * @param 	mixed $array The array or object to search.
- * @param 	string $key The key or property name of the value.
- * @param 	mixed $default The value to return if the key does not exist.
- * @return 	mixed The value from the array or object.
- */
 if ( ! function_exists('array_get'))
 {
+	/**
+	 * Return the value from an associative array or an object.
+	 * credit: borrowed from Vanilla forums GetValueR function
+	 *
+	 * @access	public
+	 * @param	mixed	$array		The array or object to search.
+	 * @param	string	$key		The key or property name of the value.
+	 * @param	mixed	$default	The value to return if the key does not exist.
+	 * @return	mixed				The value from the array or object.
+	 */
 	function array_get($array, $key, $default = FALSE)
 	{
 		$path = explode('.', $key);

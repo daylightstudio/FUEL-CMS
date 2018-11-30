@@ -1,5 +1,5 @@
 <h1>Extending FUEL CMS</h1>
-<p>FUEL CMS provides a number of ways for you to expand and customize it's functionality. This page just provides a consolodation of the most common ways:</p>
+<p>FUEL CMS provides a number of ways for you to expand and customize it's functionality. This page just provides a consolidation of the most common ways:</p>
 
 <ul>
 	<li><a href="<?=user_guide_url('libraries/my_model')?>">Model Hooks</a>: Create custom callbacks after inserting, updating, saving (inserting or updating) and deleting model data</li>

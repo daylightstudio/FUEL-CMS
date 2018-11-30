@@ -26,20 +26,19 @@
  * @link		http://docs.getfuelcms.com/helpers/simplepie_helper
  */
 
-
 // --------------------------------------------------------------------
 
-/**
- * Uses <a href="[user_guide_url]libraries/simplepie">SimplePie</a> class to retrieve an RSS Feed
- *
- * @access	public
- * @param	string	Feed URL
- * @param	string	The number of results to return
- * @param	string	Additional parameters which include, cache_duration, enable_order_by_date, enable_cache and cache_location
- * @return	object
- */
 if (!function_exists('simplepie'))
 {
+	/**
+	 * Uses <a href="[user_guide_url]libraries/simplepie">SimplePie</a> class to retrieve an RSS Feed
+	 *
+	 * @access	public
+	 * @param	string	Feed URL
+	 * @param	int		The number of results to return
+	 * @param	array	Additional parameters which include, cache_duration, enable_order_by_date, enable_cache and cache_location
+	 * @return	object
+	 */
 	function simplepie($feed, $limit = 5, $params = array())
 	{
 		$CI =& get_instance();

@@ -19,7 +19,7 @@
 /**
  * FUEL HTML Helper
  *
- * This helper is designed to provide assistence building custom html tags.
+ * This helper is designed to provide assistance in building custom HTML tags.
  * 
  *
  * @package		FUEL CMS
@@ -29,21 +29,20 @@
  * @link		http://docs.getfuelcms.com/helpers/my_html_helper
  */
 
-
 // --------------------------------------------------------------------
 
-/**
- * Wrap an string or array of values in opening and closing tag
- *
- * @access	public
- * @param 	string 	opening tag element
- * @param 	string 	closing tag element
- * @param 	mixed 	array of values to be enclosed by tags  
- * @param	boolean	echo to the screen
- * @return	string
- */
 if (!function_exists('tag'))
 {
+	/**
+	 * Wrap an string or array of values in opening and closing tag
+	 *
+	 * @access	public
+	 * @param	string	opening tag element
+	 * @param	string	closing tag element
+	 * @param	mixed	array of values to be enclosed by tags
+	 * @param	boolean	echo to the screen
+	 * @return	string
+	 */
 	function tag($tag, $vals, $attrs = array())
 	{
 		$str = '';
@@ -69,18 +68,18 @@ if (!function_exists('tag'))
 
 // --------------------------------------------------------------------
 
-/**
- * Wrap a string into an HTML blockquote with quotes and cite added
- *
- * @access	public
- * @param 	string 	string to be enclosed by quote elements
- * @param 	string 	string source value
- * @param 	string 	string company/position value 
- * @param 	string 	string css class 
- * @return	string
- */
 if (!function_exists('quote'))
 {
+	/**
+	 * Wrap a string into an HTML blockquote with quotes and cite added
+	 *
+	 * @access	public
+	 * @param	string	string to be enclosed by quote elements
+	 * @param	string	string source value
+	 * @param	string	string company/position value
+	 * @param	string	string css class
+	 * @return	string
+	 */
 	function quote($quote, $cite = NULL, $title = NULL, $class = 'quote')
 	{
 		$str = '<blockquote';
@@ -109,15 +108,15 @@ if (!function_exists('quote'))
 
 // --------------------------------------------------------------------
 
-/**
- * Create HTML attributes
- *
- * @access	public
- * @param 	mixed 	HTML attributs
- * @return	string
- */
 if (!function_exists('html_attrs'))
 {
+	/**
+	 * Create HTML attributes
+	 *
+	 * @access	public
+	 * @param	mixed	HTML attributes
+	 * @return	string
+	 */
 	function html_attrs($attrs)
 	{
 		if (is_array($attrs))

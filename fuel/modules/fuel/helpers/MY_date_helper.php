@@ -26,19 +26,18 @@
  * @link		http://docs.getfuelcms.com/helpers/my_date_helper
  */
 
-
 // --------------------------------------------------------------------
 
-/**
- * Returns the date into a specified format. Will look at the configuration
- *
- * @access	public'
- * @param	string
- * @param	mixed
- * @return	string
- */
 if (!function_exists('date_formatter'))
 {
+	/**
+	 * Returns the date into a specified format. Will look at the configuration
+	 *
+	 * @access	public'
+	 * @param	string
+	 * @param	mixed
+	 * @return	string
+	 */
 	function date_formatter($date, $format = FALSE)
 	{
 		$date_ts = strtotime($date);
@@ -65,15 +64,15 @@ if (!function_exists('date_formatter'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns the current datetime value in MySQL format
- *
- * @access	public
- * @param	boolean
- * @return	string
- */
 if (!function_exists('datetime_now'))
 {
+	/**
+	 * Returns the current datetime value in MySQL format
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	string
+	 */
 	function datetime_now($hms = TRUE)
 	{
 		if ($hms)
@@ -89,15 +88,15 @@ if (!function_exists('datetime_now'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test for common date format
- *
- * @access	public
- * @param	string
- * @return	boolean
- */
 if (!function_exists('is_date_format'))
 {
+	/**
+	 * Test for common date format
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */
 	function is_date_format($date)
 	{
 		return (is_string($date) AND (!empty($date) AND (int)$date != 0) AND 
@@ -107,15 +106,15 @@ if (!function_exists('is_date_format'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test for MySQL date format
- *
- * @access	public
- * @param	string
- * @return	boolean
- */
 if (!function_exists('is_date_db_format'))
 {
+	/**
+	 * Test for MySQL date format
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */
 	function is_date_db_format($date)
 	{
 		return preg_match("#([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})#", $date);
@@ -124,15 +123,15 @@ if (!function_exists('is_date_db_format'))
 
 // --------------------------------------------------------------------
 
-/**
- * Test for mm/dd/yyyy format
- *
- * @access	public
- * @param	string
- * @return	boolean
- */
 if (!function_exists('is_date_english_format'))
 {
+	/**
+	 * Test for mm/dd/yyyy format
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */
 	function is_date_english_format($date)
 	{
 		return preg_match("#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#", $date) OR preg_match("#([0-9]{1,2})-([0-9]{1,2})-([0-9]{4})#", $date);
@@ -141,19 +140,19 @@ if (!function_exists('is_date_english_format'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns date in mm/dd/yyy format by default
- * Can be configured with a date_format config value
- *
- * @access	public
- * @param	string
- * @param	boolean
- * @param	string
- * @param	string
- * @return	string
- */
 if (!function_exists('english_date'))
 {
+	/**
+	 * Returns date in mm/dd/yyy format by default
+	 * Can be configured with a date_format config value
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @param	string
+	 * @param	string
+	 * @return	string
+	 */
 	function english_date($date, $long = FALSE, $timezone = NULL, $delimiter = '/')
 	{
 		if (!is_numeric($date) AND !preg_match("/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/", $date, $regs))
@@ -183,16 +182,16 @@ if (!function_exists('english_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns date in 'verbose' (e.g. Jan. 1, 2010) format
- * Can be configured with a date_format_verbose config value
- *
- * @access	public
- * @param	string
- * @return	boolean
- */
 if (!function_exists('english_date_verbose'))
 {
+	/**
+	 * Returns date in 'verbose' (e.g. Jan. 1, 2010) format
+	 * Can be configured with a date_format_verbose config value
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean|string
+	 */
 	function english_date_verbose($date)
 	{
 		$date_ts = (!is_numeric($date)) ? strtotime($date) : $date;
@@ -209,18 +208,18 @@ if (!function_exists('english_date_verbose'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns the time into a verbose format (e.g. 12hrs 10mins 10secs)
- *
- * must be passed a string in hh:mm format
- *
- * @access	public
- * @param	string
- * @param	boolean
- * @return	boolean
- */
 if (!function_exists('time_verbose'))
 {
+	/**
+	 * Returns the time into a verbose format (e.g. 12hrs 10mins 10secs)
+	 *
+	 * Must be passed a string in hh:mm format
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @return	boolean
+	 */
 	function time_verbose($time, $include_seconds = FALSE)
 	{
 		if (is_date_format($time))
@@ -247,19 +246,19 @@ if (!function_exists('time_verbose'))
 
 // --------------------------------------------------------------------
 
-/**
- * Converts a date from english (e.g. mm/dd/yyyy) to db format (e.g yyyy-mm-dd)
- *
- * @access	public
- * @param	string
- * @param	int
- * @param	int
- * @param	int
- * @param	string
- * @return	string
- */
 if (!function_exists('english_date_to_db_format'))
 {
+	/**
+	 * Converts a date from english (e.g. mm/dd/yyyy) to db format (e.g yyyy-mm-dd)
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	int
+	 * @param	int
+	 * @param	int
+	 * @param	string
+	 * @return	string
+	 */
 	function english_date_to_db_format($date, $hour = 0, $min = 0, $sec = 0, $ampm = 'am')
 	{
 		$hour = (int) $hour;
@@ -313,27 +312,27 @@ if (!function_exists('english_date_to_db_format'))
 
 // --------------------------------------------------------------------
 
-/**
- * Formats a date into yyyy-mm-dd hh:mm:ss format
- *
- * @access	public
- * @param	int
- * @param	int
- * @param	int
- * @param	int
- * @param	int
- * @param	int
- * @return	string
- */
 // formats a date into a mysql date
 if (!function_exists('format_db_date'))
 {
+	/**
+	 * Formats a date into yyyy-mm-dd hh:mm:ss format
+	 *
+	 * @access	public
+	 * @param	int
+	 * @param	int
+	 * @param	int
+	 * @param	int
+	 * @param	int
+	 * @param	int
+	 * @return	string
+	 */
 	function format_db_date($y = NULL, $m = NULL, $d = NULL, $h = NULL, $i = NULL, $s = NULL)
 	{
 		if (empty($m) AND !empty($y))
 		{
-			$dates = convert_date_to_array($y);
-			$str = $dates['year'].'-'.$dates['month'].'-'.$dates['day'].' '.$dates['hour'].':'.$dates['min'].':'.$dates['sec'];
+			$dates = date_parse($y);
+			$str = $dates['year'].'-'.$dates['month'].'-'.$dates['day'].' '.$dates['hour'].':'.$dates['minute'].':'.$dates['second'];
 		}
 		else
 		{
@@ -364,20 +363,19 @@ if (!function_exists('format_db_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Creates a date range string (e.g. January 1-10, 2010)
- *
- * @access	public
- * @param	string start date
- * @param	string end date
- * @param	array formatting parameters
- * @return	string
- */
 if (!function_exists('date_range_string'))
 {
+	/**
+	 * Creates a date range string (e.g. January 1-10, 2010)
+	 *
+	 * @access	public
+	 * @param	string start date
+	 * @param	string end date
+	 * @param	array formatting parameters
+	 * @return	string
+	 */
 	function date_range_string($date1, $date2, $params = array())
 	{
-		
 		// set formatting defaults
 		$format['same_day_and_time'] = 'F j, Y h:ia';
 		$format['same_day'] = array('F j, h:ia', 'h:ia');
@@ -431,18 +429,18 @@ if (!function_exists('date_range_string'))
 
 // --------------------------------------------------------------------
 
-/**
- * Creates a string based on how long from the current time the date provided.
- * 
- * (e.g. 10 minutes ago)
- *
- * @access	public
- * @param	string
- * @param	booelan
- * @return	string
- */
 if (!function_exists('pretty_date'))
 {
+	/**
+	 * Creates a string based on how long from the current time the date provided.
+	 *
+	 * (e.g. 10 minutes ago)
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @return	string
+	 */
 	function pretty_date($timestamp, $use_gmt = FALSE)
 	{
 		if (is_string($timestamp))
@@ -496,16 +494,16 @@ if (!function_exists('pretty_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Calculate the age between 2 dates
- *
- * @access	public
- * @param	int
- * @param	int
- * @return	string
- */
 if (!function_exists('get_age'))
 {
+	/**
+	 * Calculate the age between 2 dates
+	 *
+	 * @access	public
+	 * @param	int
+	 * @param	int
+	 * @return	string
+	 */
 	function get_age($bday_ts, $at_time_ts = NULL)  
 	{ 
 		if (empty($at_time_ts)) $at_time_ts = time();
@@ -528,19 +526,19 @@ if (!function_exists('get_age'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Standard Date.. OVERWRITE CI version due to bugs
- *
- * Returns a date formatted according to the submitted standard.
- * http://codeigniter.com/forums/viewthread/171906/
- *
- * @access	public
- * @param	string	the chosen format
- * @param	int	Unix timestamp
- * @return	string
- */
 if (!function_exists('standard_date'))
 {
+	/**
+	 * Standard Date.. OVERWRITE CI version due to bugs
+	 *
+	 * Returns a date formatted according to the submitted standard.
+	 * http://codeigniter.com/forums/viewthread/171906/
+	 *
+	 * @access	public
+	 * @param	string	the chosen format
+	 * @param	int	Unix timestamp
+	 * @return	string
+	 */
 	function standard_date($fmt = 'DATE_RFC822', $time = '')
 	{
 		$formats = array(
@@ -566,15 +564,15 @@ if (!function_exists('standard_date'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a timestamp from the provided time
- *
- * @access	public
- * @param	string date (optional)
- * @return	string
- */
 if (!function_exists('timestamp'))
 {
+	/**
+	 * Returns a timestamp from the provided time
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @return	string
+	 */
 	function timestamp($date = NULL)
 	{
 		if (empty($date))
@@ -588,16 +586,16 @@ if (!function_exists('timestamp'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the month value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
- * @return	string
- */
 if (!function_exists('month'))
 {
+	/**
+	 * Returns the month value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
+	 * @return	string
+	 */
 	function month($date = NULL, $format = 'M')
 	{
 		$ts = timestamp($date);
@@ -617,16 +615,16 @@ if (!function_exists('month'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the day value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'd/leading', 'j' <- default  (optional)
- * @return	string
- */
 if (!function_exists('day'))
 {
+	/**
+	 * Returns the day value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'd/leading', 'j' <- default  (optional)
+	 * @return	string
+	 */
 	function day($date = NULL, $format = 'j')
 	{
 		switch($format)
@@ -641,16 +639,16 @@ if (!function_exists('day'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the weekday value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'l/full', 'N/numeric', 'D' <- default (optional)
- * @return	string
- */
 if (!function_exists('weekday'))
 {
+	/**
+	 * Returns the weekday value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'l/full', 'N/numeric', 'D' <- default (optional)
+	 * @return	string
+	 */
 	function weekday($date = NULL, $format = 'D')
 	{
 		$ts = timestamp($date);
@@ -668,16 +666,16 @@ if (!function_exists('weekday'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the year value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'y/short', 'Y/long' <- default (optional)
- * @return	string
- */
 if (!function_exists('year'))
 {
+	/**
+	 * Returns the year value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'y/short', 'Y/long' <- default (optional)
+	 * @return	string
+	 */
 	function year($date = NULL, $format = 'Y')
 	{
 		$ts = timestamp($date);
@@ -693,16 +691,16 @@ if (!function_exists('year'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the weekday value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are '24/military', '12' <- default (optional)
- * @return	string
- */
 if (!function_exists('hour'))
 {
+	/**
+	 * Returns the hour value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are '24/military', '12' <- default (optional)
+	 * @return	string
+	 */
 	function hour($date = NULL, $format = '12')
 	{
 		$ts = timestamp($date);
@@ -718,16 +716,16 @@ if (!function_exists('hour'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the weekday value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'noleading', 'leading' <- default (optional)
- * @return	string
- */
 if (!function_exists('minute'))
 {
+	/**
+	 * Returns the minute value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'noleading', 'leading' <- default (optional)
+	 * @return	string
+	 */
 	function minute($date = NULL, $format = 'leading')
 	{
 		$min = date('i', timestamp($date));
@@ -741,16 +739,16 @@ if (!function_exists('minute'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the weekday value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'noleading', 'leading' <- default (optional)
- * @return	string
- */
 if (!function_exists('second'))
 {
+	/**
+	 * Returns the second value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'noleading', 'leading' <- default (optional)
+	 * @return	string
+	 */
 	function second($date = NULL, $format = 'leading')
 	{
 		$sec = date('s', timestamp($date));
@@ -764,16 +762,16 @@ if (!function_exists('second'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns a the ampm value of a provided date
- *
- * @access	public
- * @param	string date (optional)
- * @param	string options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
- * @return	string
- */
 if (!function_exists('ampm'))
 {
+	/**
+	 * Returns the ampm value of a provided date
+	 *
+	 * @access	public
+	 * @param	string	date (optional)
+	 * @param	string	options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
+	 * @return	string
+	 */
 	function ampm($date = NULL, $format = 'a')
 	{
 		$ts = timestamp($date);
@@ -789,15 +787,15 @@ if (!function_exists('ampm'))
 
 // --------------------------------------------------------------------
 
-/**
- * Determines whether the time is midnight or not. Helps with dates that are set without time values
- *
- * @access	public
- * @param	string date
- * @return	string
- */
 if (!function_exists('is_midnight'))
 {
+	/**
+	 * Determines whether the time is midnight or not. Helps with dates that are set without time values
+	 *
+	 * @access	public
+	 * @param	string	date
+	 * @return	string
+	 */
 	function is_midnight($date)
 	{
 		$ts = timestamp($date);

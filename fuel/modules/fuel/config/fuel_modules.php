@@ -9,7 +9,7 @@
 
 $config['modules'] = array();
 
-// Page module init values
+// Pages module init values
 $config['modules']['pages'] = array(
 	'module_name' => 'Pages',
 	'model_location' => 'fuel',
@@ -43,7 +43,6 @@ $config['modules']['pages'] = array(
 	'advanced_search' => TRUE,
 	'filters' => array(
 		'layout' => array(
-			'default' => 1,
 			'label' => lang('form_label_layout'),
 			'type' => 'select',
 			'model' => 'fuel_pages_model',
@@ -53,7 +52,6 @@ $config['modules']['pages'] = array(
 			'first_option' => 'Select a layout...',
 		),
 		'published' => array(
-			'default' => 1,
 			'label' => lang('form_label_published'),
 			'type' => 'select',
 			'options' => array('yes' => 'Published', 'no' =>'Unpublished'),
@@ -64,7 +62,7 @@ $config['modules']['pages'] = array(
 	),
 );
 
-// Page module init values
+// Pagevariables module init values
 $config['modules']['pagevariables'] = array(
 	'module_name' => 'Page Variables',
 	'model_location' => 'fuel',
@@ -89,7 +87,7 @@ $config['modules']['pagevariables'] = array(
 	'hidden' => TRUE
 );
 
-// Navigation module init values
+// Blocks module init values
 $config['modules']['blocks'] = array(
 	'module_name' => 'Blocks',
 	'model_location' => 'fuel',
@@ -155,7 +153,7 @@ $config['modules']['navigation_group'] = array(
 	'permission' => 'navigation'
 );
 
-// Navigation module init values
+// Categories module init values
 $config['modules']['categories'] = array(
 	'module_name' => 'Categories',
 	'model_location' => 'fuel',
@@ -183,7 +181,7 @@ $config['modules']['categories'] = array(
 	)
 );
 
-// Navigation module init values
+// Tags module init values
 $config['modules']['tags'] = array(
 	'module_name' => 'Tags',
 	'model_location' => 'fuel',
@@ -217,7 +215,6 @@ $config['modules']['assets'] = array(
 	'instructions' => lang('assets_instructions'),
 	'filters' => array(
 		'group_id' => array(
-			'default' => 0,
 			'label' => lang('form_label_asset_folder'),
 			'type' => 'select',
 			'options' => array(
@@ -233,7 +230,7 @@ $config['modules']['assets'] = array(
 	'sanitize_images' => FALSE
 );
 
-// Sitevariable module init values
+// Sitevariables module init values
 $config['modules']['sitevariables'] = array(
 	'module_name' => 'Site Variables',
 	'model_location' => 'fuel',
@@ -278,21 +275,22 @@ $config['modules']['users'] = array(
 	'table_actions' => array(
 		'EDIT',
 		'DELETE' => array(
-			'func' => create_function('$cols', '
-				if ($cols[\'super_admin\'] != "yes") { 
-					$CI =& get_instance();
-					$link = "";
-					if ($CI->fuel->auth->has_permission($CI->permission, "delete") && isset($cols[$CI->model->key_field()]))
-					{
-						$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
-						$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
-						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+			'func' => function($cols){
+					if ($cols['super_admin'] != "yes") { 
+						$CI =& get_instance();
+						$link = "";
+						if ($CI->fuel->auth->has_permission($CI->permission, "delete") && isset($cols[$CI->model->key_field()]))
+						{
+							$url = site_url("/".$CI->config->item("fuel_path", "fuel").$CI->module_uri."/delete/".$cols[$CI->model->key_field()]);
+							$link = "<a href=\"".$url."\">".lang("table_action_delete")."</a>";
+							$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
+						}
+						return $link;
 					}
-					return $link;
-				}')
+				}
 			),
 		'LOGIN' => array(
-			'func' => create_function('$cols', '
+			'func' => function($cols){
 				$CI =& get_instance();
 				$link = "";
 				$user = $CI->fuel->auth->user_data();
@@ -302,7 +300,7 @@ $config['modules']['users'] = array(
 					$link = "<a href=\"".$url."\">".lang("table_action_login_as")."</a>";
 				}
 				return $link;
-				'),
+				},
 			),
 		),
 	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
@@ -330,7 +328,7 @@ $config['modules']['permissions'] = array(
 	'clear_cache_on_save' => FALSE
 );
 
-// Permissions module init values
+// Logs module init values
 $config['modules']['logs'] = array(
 	'module_name' => 'Activity Log',
 	'model_location' => 'fuel',
@@ -364,8 +362,6 @@ $config['modules']['logs'] = array(
 		)
 	)
 );
-
-//@include(APPPATH.'config/MY_fuel_modules.php');
 
 /* End of file fuel_modules.php */
 /* Location: ./modules/fuel/config/fuel_modules.php */

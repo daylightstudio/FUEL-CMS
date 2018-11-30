@@ -22,7 +22,7 @@ $config['passive_redirects'] = array(
 									);
 </pre>
 
-<p class="important">Key values can use regular expression syntax similar to <a href="http://ellislab.com/codeigniter/user-guide/general/routing.html" target="_blank">routes</a>.</p>
+<p class="important">Key values can use regular expression syntax similar to <a href="https://www.codeigniter.com/user_guide/general/routing.html" target="_blank">routes</a>.</p>
 
 <br />
 
@@ -42,7 +42,7 @@ $config['max_redirects'] = 2;
 
 <h3 id="ssl">SSL</h3>
 <p>The <dfn>ssl</dfn> configuration provides an easy way to force SSL encryption (https) for your page URLs. The following example would 
-restrict any url under "store" to use SSL encription when in the "production" environment:</p>
+restrict any url under "store" to use SSL encryption when in the "production" environment:</p>
 <pre class="brush:php">
 $config['ssl'] = array('production' => array(
 	'^store|store/:any'
@@ -51,8 +51,8 @@ $config['ssl'] = array('production' => array(
 
 <h3 id="non_ssl">Non SSL</h3>
 <p>The <dfn>non_ssl</dfn> configuration provides an easy way to force pages that are in SSL to not be encrypted (opposite of SSL). If there is an <dfn>ssl</dfn> configuration 
-that conflicts with a <dfn>non_ssl</dfn>, then the <dfn>ssl</dfn> will take precedence and ignore the <dfn>non_ssl</dfn> to prevent infinte redirects.
-The following example would redirect any url under "about" to NOT use SSL encription when in the "production" environment:</p>
+that conflicts with a <dfn>non_ssl</dfn>, then the <dfn>ssl</dfn> will take precedence and ignore the <dfn>non_ssl</dfn> to prevent infinite redirects.
+The following example would redirect any url under "about" to NOT use SSL encryption when in the "production" environment:</p>
 <pre class="brush:php">
 $config['non_ssl'] = array('production' => array(
 	'^about|about/:any'

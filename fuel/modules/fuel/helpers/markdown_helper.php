@@ -193,7 +193,7 @@ if (strcasecmp(substr(__FILE__, -16), "classTextile.php") == 0) {
 class Markdown_Parser {
 
 	# Regex to match balanced [brackets].
-	# Needed to insert a maximum bracked depth while converting to PHP.
+	# Needed to insert a maximum bracket depth while converting to PHP.
 	var $nested_brackets_depth = 6;
 	var $nested_brackets_re;
 	
@@ -558,7 +558,7 @@ class Markdown_Parser {
 	#
 		# We need to escape raw HTML in Markdown source before doing anything 
 		# else. This need to be done for each block, and not only at the 
-		# begining in the Markdown function since hashed blocks can be part of
+		# beginning in the Markdown function since hashed blocks can be part of
 		# list items and could have been indented. Indented blocks would have 
 		# been seen as a code block in a previous pass of hashHTMLBlocks.
 		$text = $this->hashHTMLBlocks($text);
@@ -568,7 +568,7 @@ class Markdown_Parser {
 	
 	function runBasicBlockGamut($text) {
 	#
-	# Run block gamut tranformations, without hashing HTML blocks. This is 
+	# Run block gamut transformations, without hashing HTML blocks. This is
 	# useful when HTML blocks are known to be already hashed, like in the first
 	# whole-document pass.
 	#
@@ -627,7 +627,7 @@ class Markdown_Parser {
 
 	function runSpanGamut($text) {
 	#
-	# Run span gamut tranformations.
+	# Run span gamut transformations.
 	#
 		foreach ($this->span_gamut as $method => $priority) {
 			$text = $this->$method($text);
@@ -937,7 +937,7 @@ class Markdown_Parser {
 			);
 
 		foreach ($markers_relist as $marker_re => $other_marker_re) {
-			# Re-usable pattern to match any entirel ul or ol list:
+			# Re-usable pattern to match any entirely ul or ol list:
 			$whole_list_re = '
 				(								# $1 = whole list
 				  (								# $2
@@ -1166,7 +1166,7 @@ class Markdown_Parser {
 		
 		while (1) {
 			#
-			# Get prepared regular expression for seraching emphasis tokens
+			# Get prepared regular expression for searching emphasis tokens
 			# in current context.
 			#
 			$token_re = $this->em_strong_prepared_relist["$em$strong"];
@@ -1529,8 +1529,8 @@ class Markdown_Parser {
 
 		while (1) {
 			#
-			# Each loop iteration seach for either the next tag, the next 
-			# openning code span marker, or the next escaped character. 
+			# Each loop iteration searches for either the next tag, the next
+			# opening code span marker, or the next escaped character.
 			# Each token is then passed to handleSpanToken.
 			#
 			$parts = preg_split($span_re, $str, 2, PREG_SPLIT_DELIM_CAPTURE);
@@ -1587,14 +1587,14 @@ class Markdown_Parser {
 
 
 	# String length function for detab. `_initDetab` will create a function to 
-	# hanlde UTF-8 if the default function does not exist.
+	# handle UTF-8 if the default function does not exist.
 	var $utf8_strlen = 'mb_strlen';
 	
 	function detab($text) {
 	#
 	# Replace tabs with the appropriate amount of space.
 	#
-		# For each line we separate the line in blocks delemited by
+		# For each line we separate the line in blocks delimited by
 		# tab characters. Then we reconstruct every line by adding the 
 		# appropriate number of space between each blocks.
 		
@@ -1628,9 +1628,13 @@ class Markdown_Parser {
 	# regular expression.
 	#
 		if (function_exists($this->utf8_strlen)) return;
-		$this->utf8_strlen = create_function('$text', 'return preg_match_all(
+
+		// Changed 2018-04-17 David McReynolds to make PHP 7.2 compliant
+		$this->utf8_strlen = function($text) {
+			return preg_match_all(
 			"/[\\\\x00-\\\\xBF]|[\\\\xC0-\\\\xFF][\\\\x80-\\\\xBF]*/", 
-			$text, $m);');
+			$text, $m);
+		};
 	}
 
 

@@ -64,7 +64,7 @@ class Fuel_modules extends Fuel_base_library {
 	 * Accepts an associative array as input, containing module initialization preferences.
 	 *
 	 * @access	public
-	 * @param	array	Array of additional module initialiation parameters  (optional)
+	 * @param	array	Array of additional module initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array(), $add = TRUE)
@@ -231,7 +231,7 @@ class Fuel_modules extends Fuel_base_library {
 	 *
 	 * @access	public
 	 * @param	string	Module name (optional)
-	 * @param	boolean	Whether to include advanced modules in the search. Defeault is TRUE. (optional)
+	 * @param	boolean	Whether to include advanced modules in the search. Default is TRUE. (optional)
 	 * @return	object	Fuel_module object
 	 */	
 	public function get($module = NULL, $include_advanced = TRUE)
@@ -583,7 +583,7 @@ class Fuel_module extends Fuel_base_library {
 	 */	
 	public function initialize($params = array(), $init = array())
 	{
-		// setup any intialized variables
+		// setup any initialized variables
 		if (is_array($params))
 		{
 			if (!empty($params['module']))
@@ -899,7 +899,7 @@ class Fuel_module extends Fuel_base_library {
 	 * Returns the url based on the preview_path configuration of the simple module
 	 *
 	 * @access	public
-	 * @param	array	data to be merged in with perview path URL
+	 * @param	array	data to be merged in with preview path URL
 	 * @return	string
 	 */	
 	public function url($data = array())
@@ -1033,7 +1033,7 @@ class Fuel_module extends Fuel_base_library {
 			}
 		}
 
-		 // to get around escapinng issues we need to add spaces after =
+		 // to get around escaping issues we need to add spaces after =
 		if (is_string($where))
 		{
 			$where = preg_replace('#([^>|<|!])=#', '$1 = ', $where);
@@ -1085,7 +1085,7 @@ class Fuel_module extends Fuel_base_library {
 	 * An alias to the modules model to save
 	 *
 	 * @access	public
-	 * @param	arrray	An array of values to save to the module's model
+	 * @param	array	An array of values to save to the module's model
 	 * @return	boolean
 	 */
 	public function save($values)
@@ -1099,7 +1099,7 @@ class Fuel_module extends Fuel_base_library {
 	 * An alias to the module's model t create a new record
 	 *
 	 * @access	public
-	 * @param	arrray	An array of values to save to the module's model (optional)
+	 * @param	array	An array of values to save to the module's model (optional)
 	 * @return	object	Record_class object
 	 */
 	public function create($values = array())

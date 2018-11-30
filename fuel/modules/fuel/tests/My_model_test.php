@@ -26,7 +26,7 @@ class My_model_test extends Tester_base {
 		$record = $test_custom_records_model->find_one(array('email' => 'dave@thedaylightstudio.com'));
 
 		$test = $record->to_json();
-		$expected = '{"id":"2","user_name":"dave","password":"21232f297a57a5a743894a0e4a801fc3","email":"dave@thedaylightstudio.com","first_name":"Dave","last_name":"McReynolds","bio":"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.","role_id":"2","attributes":"","active":"yes","date_added":"2012-01-01 00:00:00","full_name":"Dave McReynolds"}';
+		$expected = '{"id":2,"user_name":"dave","password":"21232f297a57a5a743894a0e4a801fc3","email":"dave@thedaylightstudio.com","first_name":"Dave","last_name":"McReynolds","bio":"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.","role_id":2,"attributes":"","active":"yes","date_added":"2012-01-01 00:00:00","full_name":"Dave McReynolds"}';
 		$this->run($test, $expected, 'to_json custom record object test');
 	}
 
@@ -51,7 +51,7 @@ class My_model_test extends Tester_base {
 		$test_custom_records_model->add_formatter('datetime', array('date_formatter', 'm-Y'), 'formatted');
 		$test = $user->date_added_formatted;
 		$expected = '01-2012';
-		$this->run($test, $expected, 'formatter test of date formatting with configuration argments set #3');
+		$this->run($test, $expected, 'formatter test of date formatting with configuration arguments set #3');
 
 		$test_custom_records_model->remove_formatter('datetime', 'formatted');
 		$test_custom_records_model->add_formatter('datetime', 'date_formatter', 'formatted');

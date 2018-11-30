@@ -96,7 +96,7 @@ $config['keyboard_shortcuts'] = array(
 $config['dashboards'] = array('fuel');
 
 // Dashboard rss
-$config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
+$config['dashboard_rss'] = 'https://www.getfuelcms.com/blog/feed/rss';
 
 // text editor settings  (options are markitup or ckeditor)
 // markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)
@@ -216,6 +216,7 @@ $config['fuel_javascript'] = array(
 	'jqx/plugins/util.js',
 	'fuel/global')
 	
+	// This is actually slower it appears now???
 	//'fuel' => 'fuel/fuel.min'
 );
 
@@ -348,7 +349,7 @@ $config['page_cache_ttl'] = 0;
 // The name of the group the cache is associated with (so you can just remove the group)
 $config['page_cache_group'] = 'pages';
 
-// Maximum number of paramters that can be passed to the page. Used to cut down on queries to the db.
+// Maximum number of parameters that can be passed to the page. Used to cut down on queries to the db.
 // If it is an array, then it will loop through the array using the keys to match against a regular expression:
 // $config['max_page_params'] = array('about/news/' => 1);
 $config['max_page_params'] = 0;

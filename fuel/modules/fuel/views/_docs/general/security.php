@@ -19,9 +19,9 @@ CI application.</p>
 <p>Additionally, the following module specific security settings exist:</p>
 <ul>
 	<li><strong>sanitize_input</strong> - cleans the input before inserting or updating the data source. 
-		A value of <dfn>TRUE</dfn>, will apply the <a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html" target="_blank">xss_clean</a> function. 
+		A value of <dfn>TRUE</dfn>, will apply the <a href="https://www.codeigniter.com/user_guide/helpers/security_helper.html#xss_clean" target="_blank">xss_clean</a> function.
 		A value of <dfn>FALSE</dfn>, will apply no sanitation functions.
-		You can use an array to appy more then one function to sanitize your input.
+		You can use an array to apply more than one function to sanitize your input.
 		The list of functions to sanitize the input is set by the <dfn>module_sanitize_funcs</dfn> <a href="<?=user_guide_url('installation/configuration')?>">FUEL configuration</a> value under the security settings.
 		The default values are listed below:
 		<ul>
@@ -30,6 +30,6 @@ CI application.</p>
 			<li><strong>template</strong> = php_to_template_syntax</li>
 			<li><strong>entities</strong> = entities</li>
 		</ul>
-	<li><strong>sanitize_files</strong> (was sanitize_images) - uses <a href="http://ellislab.com/codeigniter/user-guide/helpers/security_helper.html" target="_blank">xss_clean</a> function on images.</li>
+	<li><strong>sanitize_files</strong> (was sanitize_images) - uses <a href="https://www.codeigniter.com/user_guide/helpers/security_helper.html#xss_clean" target="_blank">xss_clean</a> function on images.</li>
 </ul>
 

@@ -94,7 +94,7 @@
 
 <h3>Base_module_model</h3>
 <ul>
-	<li>Added ability to set related items panels information (e.g. related permssions in the permissions module)</li>
+	<li>Added ability to set related items panels information (e.g. related permissions in the permissions module)</li>
 	<li>Simplified the ability to create tree structures for models that have has_many, belongs_to or foreign_key relationships</li>
 	<li>Added ability to export data from module by adding an "export_data" method to your module's model</li>
 	<li>Added ability to replace record values with existing ones. This is useful in situations where you have say a published page at the location
@@ -152,7 +152,7 @@
 <ul>
 	<li>Added inline editing tools in the toolbar that other modules can take advantage of (e.g. the page_analysis module and validation module)</li>
 	<li>Ability to add more then one field to display to edit if separated by a ":" (e.g. <dfn>&lt;?=fuel_edit($item->id.'|title:slug', 'Edit:'.$item->title, 'news')?&gt;</dfn></li>
-	<li>Ability to pass additional parameters (e.g. foriegn key values) when creating a new record (e.g. <dfn>&lt;?=fuel_edit('create?title=TITLE%20GOES%20SHERE', 'Add', 'news')?&gt;</dfn></li>
+	<li>Ability to pass additional parameters (e.g. foreign key values) when creating a new record (e.g. <dfn>&lt;?=fuel_edit('create?title=TITLE%20GOES%20HERE', 'Add', 'news')?&gt;</dfn></li>
 	<li>Allow for displaying unpublished content on the front end if you are logged in. Will display a slightly different icon if unpublished or not active (display_unpublished_if_logged_in property on model is set to TRUE)</li>
 </ul>
 

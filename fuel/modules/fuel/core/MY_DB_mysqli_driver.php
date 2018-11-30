@@ -329,7 +329,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * Clears the compiled query string
 	 *
 	 * @access	public
-	 * @return	string
+	 * @return	void
 	 */
 	public function clear_query_string()
 	{
@@ -426,7 +426,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	}
 
 	/**
-	 * Strictly used to have a consistent close function as the start_group_where. This essentially callse the close_bracket() function. 
+	 * Strictly used to have a consistent close function as the start_group_where. This essentially calls the close_bracket() function.
 	 */
 	public function close_group_where()
 	{

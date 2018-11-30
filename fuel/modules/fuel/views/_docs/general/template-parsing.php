@@ -35,7 +35,7 @@ $config['parser_allowed_functions'] = array(
 $config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'user_agent');
 </pre>
 
-<p class="important"><strong>Note that the default parsing delimieters are set to "{" and "}" which is different then the default Twig parsing parameters. This is done for legacy reasons.</strong></p>
+<p class="important"><strong>Note that the default parsing delimiters are set to "{" and "}" which is different then the default Twig parsing parameters. This is done for legacy reasons.</strong></p>
 
 <h3>Fuel_parser Class</h3>
 <p>New to FUEL CMS 1.3 is the <a href="<?=user_guide_url('libraries/fuel_parser')?>">Fuel_parser</a> class which provides a unified way to dealing with the different parsing engines now available in FUEL.</p>
@@ -44,12 +44,12 @@ $config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'use
 <h3>String Helper Functions</h3>
 <p>FUEL comes with the following <a href="<?=user_guide_url('helpers/my_string_helper')?>">string helper functions</a> to help with parsing and converting from the Dwoo templating syntax:</p>
 <ul>
-	<li>php_to_template_syntax - Convert PHP syntax to the specified emplating syntax (as best it can). Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</li>
+	<li>php_to_template_syntax - Convert PHP syntax to the specified templating syntax (as best it can). Must use the PHP alternative syntax for if and foreach loops to be translated correctly.</li>
 	<li>parse_template_syntax - Parses a strings specified templating syntax.</li>
 </ul>
 
 <p class="important"><strong>The below documentation is specific to the Dwoo templating engine. 
-	See the <a href="http://twig.sensiolabs.org" target="_blank">Twig documenation</a> for Twig specific documentation.</strong>
+	See the <a href="http://twig.sensiolabs.org" target="_blank">Twig documentation</a> for Twig specific documentation.</strong>
 </p>
 
 <h3>Non-Namespaced Functions</h3>
@@ -62,9 +62,9 @@ $config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'use
 	<li>{swf_path('my_swf.swf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_swf_path')?>">swf_path()</a> function. The <dfn>.swf</dfn> extension is optional.</li>
 	<li>{media_path('my_movie.mov')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_media_path')?>">media_path()</a> function.</li>
 	<li>{pdf_path('my_pdf.pdf')} - Maps to the <a href="<?=user_guide_url('helpers/asset_helper#func_pdf_path')?>">pdf_path()</a> function. The <dfn>.pdf</dfn> extension is optional.</li>
-	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">safe_mailto()</a> function.</li>
-	<li>{redirect('my_redirect_page')} - Maps to the <a href="http://ellislab.com/codeigniter/user-guide/helpers/url_helper.html" target="_blank">redirect()</a> function.</li>
-	<li>{show_404} - Maps to the <a href="http://ellislab.com/codeigniter/user-guide/general/errors.html" target="_blank">show_404()</a> function.</li>
+	<li>{safe_mailto('my@email.com', 'text')} - Maps to the  <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#safe_mailto" target="_blank">safe_mailto()</a> function.</li>
+	<li>{redirect('my_redirect_page')} - Maps to the <a href="https://www.codeigniter.com/user_guide/helpers/url_helper.html#redirect" target="_blank">redirect()</a> function.</li>
+	<li>{show_404} - Maps to the <a href="https://www.codeigniter.com/user_guide/general/errors.html#show_404" target="_blank">show_404()</a> function.</li>
 </ul>
 
 <h3>Namespaced Functions</h3>
@@ -78,7 +78,7 @@ $config['parser_refs'] = array('config', 'load', 'session', 'uri', 'input', 'use
 	<li>{fuel_nav(array(key="val"...))} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_nav')?>">fuel_nav()</a> function.</li>
 	<li>{fuel_edit(id, label, module, xOffset, yOffset)} - Maps to the <a href="<?=user_guide_url('helpers/fuel_helper#func_fuel_edit')?>">fuel_edit()</a> function.</li>
 </ul>
-<p class="important">Note that several of the functions require an associative array paramter with the <dfn>key="val"</dfn> syntax.</p>
+<p class="important">Note that several of the functions require an associative array parameter with the <dfn>key="val"</dfn> syntax.</p>
 
 <h3>Blocks</h3>
 <p>Tag pairs allow you to loop through arrays of data. The syntax requires an opening <dfn>{my_var}</dfn> and closing <dfn>{/my_var}</dfn> tag. 

@@ -60,14 +60,14 @@ class Fuel_permissions extends Fuel_module {
 	 * Accepts an associative array as input, containing object preferences.
 	 *
 	 * @access	public
-	 * @param	array	Array of initalization parameters  (optional)
+	 * @param	array	Array of initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array(), $add = TRUE)
 	{
 		parent::initialize($params);
 		
-		// can't use because contstructor hasn't initialized
+		// can't use because constructor hasn't initialized
 		$this->_perms = $this->model()->find_all_array_assoc('name');
 	}
 

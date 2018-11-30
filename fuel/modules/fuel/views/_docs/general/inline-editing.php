@@ -33,7 +33,7 @@ specific to pages that are completely editable (and not just module data).
 </pre>
 
 <p>For inline editing to work, you must be logged into FUEL and have the proper permissions to edit the page or module information. 
-A <span style="background: transparent url(<?=img_path('ico_pencil.png', FUEL_FOLDER)?>) no-repeat; display: inline-block; height: 16px; width: 16px;"></span> pencil icon
+A <span style="background: transparent url(<?=img_path('icons/ico_pencil.png', FUEL_FOLDER)?>) no-repeat; display: inline-block; height: 16px; width: 16px;"></span> pencil icon
 will appear over editable areas when the editing for the page is toggled on. Clicking on the icon will overlay a form over your page to edit the values in context.</p>
 
 <h2>Page Inline Editing</h2>
@@ -43,7 +43,7 @@ the ability to toggle inline editing, publish status and caching. Clicking the i
 <img src="<?=img_path('screens/inline_editing_toolbar.jpg', FUEL_FOLDER)?>" class="screen" />
 
 <h2>Module Inline Editing</h2>
-<p>For those pages that may not be editible, you can still allow for module data to be edited (e.g. news items).
+<p>For those pages that may not be editable, you can still allow for module data to be edited (e.g. news items).
 The top right area <strong>will not</strong> have the controls for page publish status, caching or layouts and will look like the following:</p>
 <img src="<?=img_path('screens/inline_editing.jpg', FUEL_FOLDER)?>" class="screen" />
 

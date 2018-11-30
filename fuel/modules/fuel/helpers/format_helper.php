@@ -26,26 +26,23 @@
  * @link		http://docs.getfuelcms.com/helpers/format_helper
  */
 
-
-
 // ------------------------------------------------------------------------
 
-/**
- * Formats value into a currency string
- *
- * @access	public
- * @param	string
- * @param	bool	whether to include the cents or not
- * @return	string
- */
 if (!function_exists('currency'))
 {
+	/**
+	 * Formats value into a currency string
+	 *
+	 * @access	public
+	 * @param	string	value to format
+	 * @param	string	currency symbol
+	 * @param	bool	whether to include the cents or not
+	 * @param	string	decimal separator
+	 * @param	string	thousands separator
+	 * @return	string
+	 */
 	function currency($value, $symbol = '$',  $include_cents = TRUE, $decimal_sep = '.', $thousands_sep = ',')
 	{
-		if (!isset($value) OR $value === "")
-		{
-			return;
-		}
 		$value = (float) $value;
 		$dec_num = (!$include_cents) ? 0 : 2;
 		$is_negative = (strpos($value, '-') === 0) ? '-' : '';

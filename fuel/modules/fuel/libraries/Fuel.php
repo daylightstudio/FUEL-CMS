@@ -170,7 +170,7 @@ class Fuel extends Fuel_advanced_module {
 	 *
 	 * @access	public
 	 * @param	string	Value of what part of the version number to return. Options are "major", "minor", or "patch" (optional)
-	 * @return	void
+	 * @return	string
 	 */	
 	public function version($part = NULL)
 	{
@@ -219,7 +219,7 @@ class Fuel extends Fuel_advanced_module {
 		// 	"3) Enable the CMS admin by changing the 'admin_enabled' config value in fuel/application/config/MY_fuel.php.",
 		// 	"4) Change the 'fuel_mode' config value in in fuel/application/config/MY_fuel.php to allow for pages to be created in the CMS.",
 		// 	"5) Change the 'site_name' config value in the fuel/application/config/MY_fuel.php.",
-		// 	"6) Setup your evironments fuel/application/config/environments.php.",
+		// 	"6) Setup your environments fuel/application/config/environments.php.",
 		// 	"7) Will make the fuel/application/logs, fuel/application/cache and assets/images folders writable.",
 		// 	"8) Update the fuel/application/config/database.php file with the inputted values.",
 		// 	"9) Create a database and install the fuel_schema.sql file using your local MySQL connection.\n",
@@ -503,6 +503,8 @@ class Fuel extends Fuel_advanced_module {
 			}
 			else
 			{
+				// To resolve issue when called outside of admin
+				$this->load_language('fuel');
 				throw new Exception(lang('error_class_property_does_not_exist', $var));
 			}
 		}

@@ -216,11 +216,30 @@ class Module extends Fuel_base_controller {
 		if ( ! is_ajax())
 		{
 			$item_total = $this->model->list_items_total();
-			if ($this->single_item_navigate AND $this->fuel->auth->has_permission($this->permission, "edit") AND $item_total == 1)
+
+			if ($this->single_item_navigate AND $item_total == 1)
 			{
 				$items = $this->model->list_items();
-				$edit_url = fuel_url($this->module_uri.'/edit/'.$items[0][$this->model->key_field()]);
-				redirect($edit_url);
+				$id = $items[0][$this->model->key_field()];
+
+				// lets check a few permissions
+				if ($this->fuel->auth->has_permission($this->permission, "edit"))
+				{
+					$url = fuel_url($this->module_uri.'/edit/'.$id);
+				}
+				elseif ($this->fuel->auth->has_permission($this->permission, "view"))
+				{
+					$url = fuel_url($this->module_uri.'/view/'.$id);
+				}
+				elseif ($this->fuel->auth->has_permission($this->permission, "show"))
+				{
+					$url = fuel_url($this->module_uri.'/show/'.$id);
+				}
+				
+				if (!empty($url))
+				{
+					redirect($url);	
+				}
 			}
 
 			$this->config->set_item('enable_query_strings', FALSE);
@@ -297,45 +316,21 @@ class Module extends Fuel_base_controller {
 			$has_delete_permission = $this->fuel->auth->has_permission($this->permission, "delete") ? '1' : '0';
 
 			// set data table actions... look first for item_actions set in the fuel_modules
-			/*$edit_func = '
-			$CI =& get_instance();
-			$link = "";';
+			$delete_func = function($cols) use ($has_delete_permission) {
+				$CI =& get_instance();
+				$link = "";
 
-			if ($has_edit_permission)
-			{
-				$edit_func .= 'if (isset($cols[$CI->model->key_field()]))
-				{	
-					echo  $cols[$CI->model->limit_to_user_field];
-					if (empty($CI->model->limit_to_user_field) OR (!empty($CI->model->limit_to_user_field) AND (!empty($cols[$CI->model->limit_to_user_field])) AND $cols[$CI->model->limit_to_user_field] = $CI->fuel->auth->user_data("id")))
+				if ($has_delete_permission)
+				{
+					if (!empty($cols[$CI->model->key_field()]))
 					{
-						$url = fuel_url("'.$this->module_uri.'/edit/".$cols[$CI->model->key_field()]);
+						$url = fuel_url($this->module_uri."/delete/".$cols[$CI->model->key_field()]);
 						$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
 						$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
 					}
-				}';	
-			}
-
-			$edit_func .= 'return $link;';
-
-			$edit_func = create_function('$cols', $edit_func);*/
-
-			// set data table actions... look first for item_actions set in the fuel_modules
-			$delete_func = '
-			$CI =& get_instance();
-			$link = "";';
-
-			if ($has_delete_permission)
-			{
-				$delete_func .= 'if (!empty($cols[$CI->model->key_field()]))
-				{
-					$url = fuel_url("'.$this->module_uri.'/delete/".$cols[$CI->model->key_field()]);
-					$link = "<a href=\"".$url."\" class=\"action_delete\">".lang("table_action_delete")."</a>";
-					$link .= " <input type=\"checkbox\" name=\"delete[".$cols[$CI->model->key_field()]."]\" value=\"1\" id=\"delete_".$cols[$CI->model->key_field()]."\" class=\"multi_delete\"/>";
-				}';				
-			}
-
-			$delete_func .= 'return $link;';
-			$delete_func = create_function('$cols', $delete_func);
+				}
+				return $link;
+			};
 
 			foreach($this->table_actions as $key => $val)
 			{
@@ -425,39 +420,34 @@ class Module extends Fuel_base_controller {
 			$has_publish_permission = ($this->fuel->auth->has_permission($this->permission, 'publish')) ? '1' : '0';
 			$has_edit_permission = $this->fuel->auth->has_permission($this->permission, 'edit') ? '1' : '0';
 
-			$no = lang("form_enum_option_no");
-			$yes = lang("form_enum_option_yes");
-			$col_txt = lang('click_to_toggle');
-			$key_field = $this->model->key_field();
-
-			$_publish_toggle_callback = '
-			$can_publish = (($heading == "published" OR $heading == "active") AND '.$has_publish_permission.' OR
+			$_publish_toggle_callback = function($cols, $heading) {
+				$can_publish = (($heading == "published" OR $heading == "active") AND '.$has_publish_permission.' OR
 				(($heading != "published" AND $heading != "active") AND '.$has_edit_permission.'));
 
-			$no = "'.$no.'";
-			$yes = "'.$yes.'";
-			$col_txt = "'.$col_txt.'";
+				$no = lang("form_enum_option_no");
+				$yes = lang("form_enum_option_yes");
+				$col_txt = lang('click_to_toggle');
+				$key_field = $this->model->key_field();
 
-			// boolean fields
-			if (is_null($cols[$heading]) OR $cols[$heading] == "")
-			{
-				return "";
-			}
-			else if (!is_true_val($cols[$heading]))
-			{
-				$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
-				$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
-				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$no.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
-			}
-			else
-			{
-				$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
-				$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
-				return \'<span class="publish_hover"><span class="\'.$text_class.\'" id="row_published_\'.$cols["'.$key_field.'"].\'" data-field="\'.$heading.\'">\'.$yes.\'</span><span class="\'.$action_class.\'">\'.$col_txt.\'</span></span>\';
-				
-			}';
-
-			$_publish_toggle_callback = create_function('$cols, $heading', $_publish_toggle_callback);
+				// boolean fields
+				if (is_null($cols[$heading]) OR $cols[$heading] == "")
+				{
+					return "";
+				}
+				else if (!is_true_val($cols[$heading]))
+				{
+					$text_class = ($can_publish) ? "publish_text unpublished toggle_on" : "unpublished";
+					$action_class = ($can_publish) ? "publish_action unpublished hidden" : "unpublished hidden";
+					return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$key_field].'" data-field="'.$heading.'">'.$no.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+				}
+				else
+				{
+					$text_class = ($can_publish) ? "publish_text published toggle_off" : "published";
+					$action_class = ($can_publish) ? "publish_action published hidden" : "published hidden";
+					return '<span class="publish_hover"><span class="'.$text_class.'" id="row_published_'.$cols[$key_field].'" data-field="'.$heading.'">'.$yes.'</span><span class="'.$action_class.'">'.$col_txt.'</span></span>';
+					
+				}
+			};
 
 			foreach($boolean_fields as $bool)
 			{
@@ -557,7 +547,7 @@ class Module extends Fuel_base_controller {
 	 */	
 	function inline_items()
 	{
-		$this->items(TRUE);
+		$this->items();
 	}
 
 	// --------------------------------------------------------------------
@@ -787,7 +777,7 @@ class Module extends Fuel_base_controller {
 	 * Displays the fields to create a record (form view)
 	 *
 	 * @access	public
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -873,7 +863,7 @@ class Module extends Fuel_base_controller {
 	 * The same as the create method but does not show the left menu
 	 *
 	 * @access	public
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -921,7 +911,7 @@ class Module extends Fuel_base_controller {
 			$posted = $this->_process();
 
 			// set publish status to no if you do not have the ability to publish
-			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish'))
+			if ( ! $this->fuel->auth->has_permission($this->permission, 'publish') AND ! $this->fuel->auth->has_permission($this->permission, 'activate'))
 			{
 				$posted['published'] = 'no';
 				$posted['active'] = 'no';
@@ -948,6 +938,15 @@ class Module extends Fuel_base_controller {
 			if ( ! is_array($this->model->key_field()))
 			{
 				$posted[$this->model->key_field()] = $id;
+
+				// replace any {id} placeholder values
+				foreach ($posted as $key => $val)
+				{
+					if (is_string($val))
+					{
+						$posted[$key] = str_replace('{'.$this->model->key_field().'}', $id, $val);
+					}
+				}
 			}
 
 			// process $_FILES
@@ -995,7 +994,7 @@ class Module extends Fuel_base_controller {
 	 *
 	 * @access	public
 	 * @param	int		The ID value of the record to edit
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @param	string	Determines whether to redirect the page after save or not
 	 * @return	void
 	 */	
@@ -1114,7 +1113,7 @@ class Module extends Fuel_base_controller {
 	 *
 	 * @access	public
 	 * @param	int		The ID value of the record to edit
-	 * @param	string	The name of a field, or fields spearated by colon to display in the form (optional)
+	 * @param	string	The name of a field, or fields separated by colon to display in the form (optional)
 	 * @return	void
 	 */	
 	function inline_edit($id = NULL, $field = NULL)
@@ -1232,7 +1231,7 @@ class Module extends Fuel_base_controller {
 						}
 						else
 						{
-							// loop through sanitzation functions 
+							// loop through sanitization functions 
 							foreach($sanitize_input as $func)
 							{
 								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
@@ -1247,7 +1246,7 @@ class Module extends Fuel_base_controller {
 				}
 				else
 				{
-					// loop through sanitzation functions 
+					// loop through sanitization functions 
 					foreach($sanitize_input as $key => $val)
 					{
 						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
@@ -1324,7 +1323,7 @@ class Module extends Fuel_base_controller {
 		return $saved;
 	}
 	
-	// seperated to make it easier in subclasses to use the form without rendering the page
+	// separated to make it easier in subclasses to use the form without rendering the page
 	protected function _form_vars($id = NULL, $values = array(), $field = NULL, $inline = FALSE)
 	{
 
@@ -1421,10 +1420,6 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->hidden = (array) $this->model->key_field();
 			}
 
-			$this->form_builder->set_fields($fields);
-			$this->form_builder->display_errors = FALSE;
-			$this->form_builder->set_field_values($field_values);
-
 			if ($this->config->item('date_format'))
 			{
 				$this->form_builder->date_format = $this->config->item('date_format');
@@ -1438,6 +1433,10 @@ class Module extends Fuel_base_controller {
 			{
 				$this->form_builder->cancel_value = lang('btn_cancel');
 			}
+
+			$this->form_builder->set_fields($fields);
+			$this->form_builder->display_errors = FALSE;
+			$this->form_builder->set_field_values($field_values);
 
 			// we will set this in the BaseFuelController.js file so that the jqx page variable is available upon execution of any form field js
 			//$this->form_builder->auto_execute_js = FALSE;
@@ -1468,7 +1467,7 @@ class Module extends Fuel_base_controller {
 		$this->_orig_post = $_POST;
 
 		// filter placeholder $_POST values 
-		$callback = create_function('$matches', '
+		$callback = function($matches){
 			if (isset($_POST[$matches["2"]]))
 			{
 				$str = $matches[1].$_POST[$matches["2"]].$matches[3];
@@ -1478,7 +1477,7 @@ class Module extends Fuel_base_controller {
 				$str = $matches[0];
 			}
 			return $str;
-		');
+		};
 
 		// first loop through and create simple non-namespaced $_POST values if they don't exist for convenience'
 		foreach($_POST as $key => $val)
@@ -2046,13 +2045,13 @@ class Module extends Fuel_base_controller {
 		}
 	}
 
-	// used in list view to quickly unpublish (if they have permisison)
+	// used in list view to quickly unpublish (if they have permission)
 	function toggle_on($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'on');
 	}
 
-	// used in list view to quickly publish (if they have permisison)
+	// used in list view to quickly publish (if they have permission)
 	function toggle_off($id = NULL, $field = 'published')
 	{
 		$this->_toggle($id, $field, 'off');
@@ -2241,13 +2240,14 @@ class Module extends Fuel_base_controller {
 					if (strpos($field_value, '{') !== FALSE )
 					{
 						//e modifier is deprecated so we have to do this
-						$callback = create_function('$match', '
+						$callback = function($match){
 								$return = "";
 								if (!empty($match[2]))
 								{
 									$return = $match[1].$GLOBALS["__tmp_transient_posted__"][$match[2]].$match[3];
 								}
-								return $return;');
+								return $return;
+							};
 
 						// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
 						$GLOBALS['__tmp_transient_posted__'] = $posted;

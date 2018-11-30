@@ -46,7 +46,7 @@ on the key value specified in the config (e.g. example):</p>
 		</tr>
 		<tr>
 			<td><strong>module_name</strong></td>
-			<td>The default value is a <a href="http://ellislab.com/codeigniter/user-guide/helpers/inflector_helper.html" target="_blank">humanized</a> version of the module key (e.g. a key of example = Example)</td>
+			<td>The default value is a <a href="https://www.codeigniter.com/user_guide/helpers/inflector_helper.html" target="_blank">humanized</a> version of the module key (e.g. a key of example = Example)</td>
 			<td>None</td>
 			<td>the friendly name of the module.</td>
 		</tr>
@@ -528,7 +528,7 @@ CREATE TABLE `articles` (
 <pre class="brush:php">
 &lt;?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_posts_model.php');
+require_once(FUEL_PATH.'models/Base_posts_model.php');
 
 class Articles_model extends Base_posts_model {
 
@@ -609,7 +609,7 @@ public $related_items_class = ''; // a class that can extend Base_model_related_
 <h3>Custom Classes</h3>
 <p>All custom classes come with the following methods that can be used with the class</p>
 <ul>
-	<li><strong>set_parent_model</strong>: Sets the main parent model (done upon initilaization)</li>
+	<li><strong>set_parent_model</strong>: Sets the main parent model (done upon initialization)</li>
 	<li><strong>get_parent_model</strong>: Returns the main parent model</li>
 	<li><strong>set_values</strong>: Sets the current record's values (if any... done upon initialization)</li>
 	<li><strong>append_values</strong>: Appends values to the existing values store.</li>
@@ -778,7 +778,7 @@ Below is an example of how to hide multiple fields at once:</p>
 </ul>
 
 <h3>Custom Related Items Class</h3>
-<p>The custom relatd items class can be used to display information that appears to the right of the form fields.</p>
+<p>The custom related items class can be used to display information that appears to the right of the form fields.</p>
 <ul>
 	<li><strong>vars</strong>: By default the following variables are passed to the view file:
 		<ul>

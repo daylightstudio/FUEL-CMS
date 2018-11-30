@@ -7,7 +7,7 @@ only use the CMS part when and if you need it. It's a hybrid of a framework and 
 
 <p>FUEL CMS evolved out of the need for having a development platform that
 was a framework first and a CMS second. CodeIgniter was chosen as the framework because it is
-a popular, well-documentated, lightweight, PHP framework and allows you to cleanly structure your code
+a popular, well-documented, lightweight, PHP framework and allows you to cleanly structure your code
 using MVC principles.
 </p>
 

@@ -4,8 +4,8 @@ creating web applications. You can create your models, views and controllers and
 only use the CMS part when and if you need it. It's a hybrid of a framework and a CMS.</p>
 
 <p>FUEL CMS evolved out of the need for having a development platform that
-was a framework first and a CMS second. <a href="http://ellislab.com/codeigniter" target="_blank">CodeIgniter</a> was chosen as the framework because it is
-a popular, well-documentated, lightweight, PHP framework and allows you to cleanly structure your code
+was a framework first and a CMS second. <a href="https://www.codeigniter.com/" target="_blank">CodeIgniter</a> was chosen as the framework because it is
+a popular, well-documented, lightweight, PHP framework and allows you to cleanly structure your code
 using MVC principles.
 </p>
 

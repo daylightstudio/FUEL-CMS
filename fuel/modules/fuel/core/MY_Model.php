@@ -55,7 +55,7 @@ class MY_Model extends CI_Model {
 	public $readonly = FALSE; // sets the model to readonly mode where you can't save or delete data
 	public $hidden_fields = array(); // fields to hide when creating a form
 	public $unique_fields = array(); // fields that are not IDs but are unique. Can also be an array of arrays for compound keys
-	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => arry('name' => 'strtolower')));
+	public $linked_fields = array(); // fields that are linked meaning one value helps to determine another. Key is the field, value is a function name to transform it. (e.g. array('slug' => 'title'), or array('slug' => array('name' => 'strtolower')));
 	public $serialized_fields = array(); // fields that contain serialized data. This will automatically serialize before saving and unserialize data upon retrieving
 	public $default_serialization_method = 'json'; // the default serialization method. Options are 'json' and 'serialize'
 	public $boolean_fields = array(); // fields that are tinyint and should be treated as boolean
@@ -250,7 +250,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Gets the name of the model object. By default it will be the same as the short_name(FALSE, FALSE) if no "friendly_name" value is specfied on the model
+	 * Gets the name of the model object. By default it will be the same as the short_name(FALSE, FALSE) if no "friendly_name" value is specified on the model
 	 *
 	 <code>
 	echo $this->examples_model->friendly_name(TRUE); 
@@ -279,7 +279,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Gets the singular name of the model object. By default it will be the same as the short_name(FALSE, TRUE) if no "singular_name" value is specfied on the model
+	 * Gets the singular name of the model object. By default it will be the same as the short_name(FALSE, TRUE) if no "singular_name" value is specified on the model
 	 *
 	 <code>
 	echo $this->examples_model->singular_name(TRUE); 
@@ -372,7 +372,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param	string	the table name (optional)
-	 * @return	string
+	 * @return	string|array|null
 	 */	
 	public function tables($table = NULL)
 	{
@@ -391,7 +391,6 @@ class MY_Model extends CI_Model {
 		{
 			return $this->_tables;
 		}
-		return NULL;
 	}
 
 	// --------------------------------------------------------------------
@@ -481,7 +480,7 @@ class MY_Model extends CI_Model {
 		//Get the data out of the database
 		$query = $this->db->get($this->table_name);
 		
-		if (empty($query)) $query = ($this->db->dbdriver == 'mysql') ? new MY_DB_mysql_result() : new MY_DB_mysqli_result();
+		if (empty($query)) $query = ($this->db->dbdriver == 'mysql') ? new MY_DB_mysql_result($this->db) : new MY_DB_mysqli_result($this->db);
 		
 		if ($this->return_method == 'query') 
 		{
@@ -1435,7 +1434,7 @@ class MY_Model extends CI_Model {
 	 *
 	 <code>
 	$where['published'] = 'yes';
-	echo $this->examples_model->record_count($where); // dislays the number of records
+	echo $this->examples_model->record_count($where); // displays the number of records
 	</code>
 	 *
 	 * @access	public
@@ -2735,7 +2734,7 @@ class MY_Model extends CI_Model {
 	 *
 	 * Somewhat similar to the table_info method with difference being that the returned array has information for creating a form.
 	 * The related parameter is used to conveniently map other model information with this form to create a many to many multi-select form element.
-	 * This method is usally used with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class.
+	 * This method is usually used with the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> class.
 	 *
 	 <code>
 	$form_info = $this->examples_model->form_fields(); 
@@ -2945,7 +2944,7 @@ class MY_Model extends CI_Model {
 				}
 				$related_model = $this->load_related_model($rel_config);
 				$related_options = $CI->$related_model->options_list(NULL, $label, $where, $order);
-				$related_vals = ( ! empty($values[$this->key_field])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config, $related_field) : array();
+				$related_vals = ( ! empty($values[$this->key_field])) ? $this->get_related_keys($related_field, $values, $related_model, 'belongs_to', $rel_config) : array();
 				$fields[$related_field] = array('label' => lang('label_belongs_to').'<br />' . humanize($related_field), 'type' => 'multi', 'options' => $related_options, 'value' => $related_vals, 'mode' => 'multi', 'module' => $CI->$related_model->short_name(TRUE));
 			}
 		}
@@ -3205,7 +3204,7 @@ class MY_Model extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Normailzes the data passed to it so that it becomes an array (used by the normalize_save_values)
+	 * Normalizes the data passed to it so that it becomes an array (used by the normalize_save_values)
 	 *
 	 <code>
 	$record = $this->examples_model->create(); 
@@ -4622,7 +4621,7 @@ class Data_set {
  * 
  * The Data_record class is used to create custom record objects for a Table class (MY_Model). 
  * Data_record objects provides a greater level of flexibility with your models by allowing you to create not only
- * methods on your model to retreive records from your datasource, but also the ability to create
+ * methods on your model to retrieve records from your datasource, but also the ability to create
  * derived attributes and lazy load other objects with each record returned.
  * This class is <strong>optional</strong>. If it it doesn't exist, then the Table Class parent model
  * will use either a standard generic class or an array depending on the return method specified.
@@ -4694,7 +4693,7 @@ class Data_record {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the record class has been properly intialized.
+	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the record class has been properly initialized.
 	 *
 	 <code>
 	$record = $this->examples_model->create(); 
@@ -4812,7 +4811,7 @@ class Data_record {
 	</code>
 	 *
 	 * @access	public
-	 * @param	boolean Determins whether to include derived attributes (those starting with get_)
+	 * @param	boolean Determines whether to include derived attributes (those starting with get_)
 	 * @return	array
 	 */	
 	public function values($include_derived = FALSE)
@@ -5187,7 +5186,7 @@ class Data_record {
 	 */	
 	public function is_empty()
 	{
-		return empty($this->_fields) AND get_class_vars(__CLASS_);
+		return empty($this->_fields) AND get_class_vars(__CLASS__);
 	}
 
 	// --------------------------------------------------------------------
@@ -6006,7 +6005,7 @@ class Data_record_field {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the field class has been properly intialized.
+	 * This method returns either <dfn>TRUE</dfn> or <dfn>FALSE</dfn> depending on if the field class has been properly initialized.
 	 *
 	 * @access	public
 	 * @return	boolean
@@ -6061,7 +6060,7 @@ class Data_record_field {
 	 * Placeholder - to execute after a magic method get
 	 *
 	 * @access	public
-	 * @param	string	output from get comand
+	 * @param	string	output from get command
 	 * @param	string	field name
 	 * @return	mixed
 	 */	

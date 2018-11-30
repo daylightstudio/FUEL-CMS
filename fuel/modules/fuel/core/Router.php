@@ -16,7 +16,7 @@
 /**
  * Some additions to the Awesome Modular Extension Library mostly for Matchbox compatibility
  *
- * This Library overides the original MX Loader library
+ * This Library overrides the original MX Loader library
  *
  * @package		FUEL CMS
  * @subpackage	Third Party
@@ -83,7 +83,8 @@ class Fuel_Router extends MX_Router
 		// Is there a literal match?  If so we're done
 		if (isset($this->routes[$uri]))
 		{
-			return $this->_set_request(explode('/', $this->routes[$uri]));
+			$this->_set_request(explode('/', $this->routes[$uri]));
+			return;
 		}
 		
 		// Get HTTP verb
@@ -126,7 +127,7 @@ class Fuel_Router extends MX_Router
 				{
 					$val = preg_replace('#^'.$key.'$#', $val, $uri);
 				}
-				// Added by Daylight Studio 2014-12-23 to filter out any duplicate slashes which yeild empty segmeents
+				// Added by Daylight Studio 2014-12-23 to filter out any duplicate slashes which yield empty segments
 				$segs = array_values(array_filter(explode('/', $val)));
 				$this->_set_request($segs);
 				return;

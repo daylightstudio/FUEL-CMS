@@ -30,18 +30,18 @@
 
 // --------------------------------------------------------------------
 
-/**
- * This is just an alias to the normal CI site_url function but was added mainly to prevent conflicts with other systems like Wordpress (yes... sometimes the two need to be integrated)
- * Added simple return if the url begins with http
- *
- * @access	public
- * @param	string	the URI string
- * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
- * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
- * @return	string
- */
 if (!function_exists('url_to'))
 {
+	/**
+	 * This is just an alias to the normal CI site_url function but was added mainly to prevent conflicts with other systems like Wordpress (yes... sometimes the two need to be integrated)
+	 * Added simple return if the url begins with http
+	 *
+	 * @access	public
+	 * @param	string	the URI string
+	 * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
+	 * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
+	 * @return	string
+	 */
 	function url_to($uri = '', $https = NULL, $language = NULL)
 	{
 		if (is_http_path($uri)) return $uri;
@@ -77,17 +77,17 @@ if (!function_exists('url_to'))
 
 // --------------------------------------------------------------------
 
-/**
- * Site URL which is an alias to the url_to function
- *
- * @access	public
- * @param	string	the URI string
- * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
- * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
- * @return	string
- */
 if (!function_exists('site_url'))
 {
+	/**
+	 * Site URL which is an alias to the url_to function
+	 *
+	 * @access	public
+	 * @param	string	the URI string
+	 * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
+	 * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
+	 * @return	string
+	 */
 	function site_url($uri = '', $https = NULL, $language = NULL)
 	{
 		return url_to($uri, $https, $language);
@@ -96,17 +96,17 @@ if (!function_exists('site_url'))
 
 // --------------------------------------------------------------------
 
-/**
- * Current URL
- * Added show_query_str parameter
- *
- * @access	public
- * @param	boolean	determines whether to include query string parameters
- * @param	boolean	determines whether to change the language value
- * @return	string
- */
 if (!function_exists('current_url'))
 {
+	/**
+	 * Current URL
+	 * Added show_query_str parameter
+	 *
+	 * @access	public
+	 * @param	boolean	determines whether to include query string parameters
+	 * @param	boolean	determines whether to change the language value
+	 * @return	string
+	 */
 	function current_url($show_query_str = FALSE, $lang = NULL)
 	{
 		$CI =& get_instance();
@@ -122,17 +122,17 @@ if (!function_exists('current_url'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns the uri path normalized
- *
- * @access	public
- * @param	boolean	use the rerouted URI string?
- * @param	boolean	the start index to build the uri path
- * @param	boolean	determines whether to strip any language segments
- * @return	string
- */
 if (!function_exists('uri_path'))
 {
+	/**
+	 * Returns the uri path normalized
+	 *
+	 * @access	public
+	 * @param	boolean	use the rerouted URI string?
+	 * @param	int		the start index to build the uri path
+	 * @param	boolean	determines whether to strip any language segments
+	 * @return	string
+	 */
 	function uri_path($rerouted = TRUE, $start_index = 0, $strip_lang = TRUE)
 	{
 		$CI =& get_instance();
@@ -162,18 +162,18 @@ if (!function_exists('uri_path'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns the uri segment
- *
- * @access	public
- * @param	int	the segment number
- * @param	string	the default value if the segment doesn't exist
- * @param	boolean	whether to use the rerouted uri
- * @param	boolean	determines whether to strip any language segments
- * @return	string
- */
 if (!function_exists('uri_segment'))
 {
+	/**
+	 * Returns the uri segment
+	 *
+	 * @access	public
+	 * @param	int		the segment number
+	 * @param	string	the default value if the segment doesn't exist
+	 * @param	boolean	whether to use the rerouted uri
+	 * @param	boolean	determines whether to strip any language segments
+	 * @return	string
+	 */
 	function uri_segment($n, $default = FALSE, $rerouted = TRUE, $strip_lang = TRUE)
 	{
 		$CI =& get_instance();
@@ -199,15 +199,15 @@ if (!function_exists('uri_segment'))
 
 // --------------------------------------------------------------------
 
-/**
- * Helper function to determine if it is a local path
- *
- * @access	public
- * @param	string	URL
- * @return	string
- */
 if (!function_exists('is_http_path'))
 {
+	/**
+	 * Helper function to determine if it is a local path
+	 *
+	 * @access	public
+	 * @param	string	URL
+	 * @return	string
+	 */
 	function is_http_path($path)
 	{
 		return (preg_match('!^\w+://! i', $path));
@@ -216,14 +216,15 @@ if (!function_exists('is_http_path'))
 
 // --------------------------------------------------------------------
 
-/**
- * Determines if the page is the homepage or not
- *
- * @access	public
- * @return	boolean
- */
 if (!function_exists('is_home'))
 {
+	/**
+	 * Determines if the page is the homepage or not
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	boolean
+	 */
 	function is_home($uri_path = NULL)
 	{
 		if (is_null($uri_path))
@@ -239,14 +240,14 @@ if (!function_exists('is_home'))
 
 // --------------------------------------------------------------------
 
-/**
- * Determines if the page is 404
- *
- * @access	public
- * @return	boolean
- */
 if (!function_exists('is_404'))
 {
+	/**
+	 * Determines if the page is 404
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
 	function is_404()
 	{
 		return (http_response_code() == 404);
@@ -255,16 +256,16 @@ if (!function_exists('is_404'))
 
 // --------------------------------------------------------------------
 
-/**
- * Returns the last page you visited
- *
- * @access	public
- * @param	string	Default value if no last page exists
- * @param	boolean	Whether to return only the URI part of the the URL
- * @return	boolean
- */
 if (!function_exists('last_url'))
 {
+	/**
+	 * Returns the last page you visited
+	 *
+	 * @access	public
+	 * @param	string	Default value if no last page exists
+	 * @param	boolean	Whether to return only the URI part of the the URL
+	 * @return	boolean
+	 */
 	function last_url($default = FALSE, $only_uri = FALSE)
 	{
 		$back_url = (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != current_url()) ? $_SERVER['HTTP_REFERER'] : $default;
@@ -291,16 +292,16 @@ if (!function_exists('last_url'))
 
 // --------------------------------------------------------------------
 
-/**
- * Will return a target="_blank" if the link is not from the same domain.
- *
- * @access	public
- * @param	string	URL
- * @param	array	An array of extensions to check to force it to target="_blank"
- * @return	boolean
- */
 if (!function_exists('link_target'))
 {
+	/**
+	 * Will return a target="_blank" if the link is not from the same domain.
+	 *
+	 * @access	public
+	 * @param	string	URL
+	 * @param	array	An array of extensions to check to force it to target="_blank"
+	 * @return	boolean
+	 */
 	function link_target($link, $exts = array())
 	{
 		$url_parts = parse_url($link);
@@ -350,15 +351,15 @@ if (!function_exists('link_target'))
 
 // --------------------------------------------------------------------
 
-/**
- * Checks the redirects before showing a 404
- *
- * @access	public
- * @param	boolean	Whether to redirect or not
- * @return	void
- */
 if (!function_exists('redirect_404'))
 {
+	/**
+	 * Checks the redirects before showing a 404
+	 *
+	 * @access	public
+	 * @param	boolean	Whether to redirect or not
+	 * @return	void
+	 */
 	function redirect_404($redirect = TRUE)
 	{
 		$CI =& get_instance();
@@ -368,23 +369,23 @@ if (!function_exists('redirect_404'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Header Redirect (Overwritten to account for adding HTTPS and adding language path in site_url function)
- *
- * Header redirect in two flavors
- * For very fine grained control over headers, you could use the Output
- * Library's set_header() function.
- *
- * @access	public
- * @param	string	the URL
- * @param	string	the method: location or redirect
- * @param	string	the http response code
- * @param	string	wether to force or not https
- * @param	boolean	wether add the language to the URI
- * @return	string
- */
 if (!function_exists('redirect'))
 {
+	/**
+	 * Header Redirect (Overwritten to account for adding HTTPS and adding language path in site_url function)
+	 *
+	 * Header redirect in two flavors
+	 * For very fine grained control over headers, you could use the Output
+	 * Library's set_header() function.
+	 *
+	 * @access	public
+	 * @param	string	the URL
+	 * @param	string	the method: location or redirect
+	 * @param	int		the http response code
+	 * @param	string	whether to force or not https
+	 * @param	boolean	whether add the language to the URI
+	 * @return	string
+	 */
 	function redirect($uri = '', $method = 'location', $http_response_code = 302, $https = NULL,  $language = FALSE)
 	{
 		if ( ! preg_match('#^https?://#i', $uri))
@@ -408,17 +409,17 @@ if (!function_exists('redirect'))
 }
 // ------------------------------------------------------------------------
 
-/**
- * Returns whether the current page is using SSL (https)
- *
- * @access	public
- * @param	string	the URL
- * @param	string	the method: location or redirect
- * @return	string
- */
 // used function exists to future proof it https://github.com/IT-Can/CodeIgniter/commit/98bc5d985b7119ff71b9f50a1b226559f647797a
 if ( ! function_exists('is_https'))
 {
+	/**
+	 * Returns whether the current page is using SSL (https)
+	 *
+	 * @access	public
+	 * @param	string	the URL
+	 * @param	string	the method: location or redirect
+	 * @return	string
+	 */
 	function is_https()
 	{
 		return ((!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off'));
@@ -427,17 +428,17 @@ if ( ! function_exists('is_https'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Returns a query string formatted
- *
- * @access	public
- * @param	array	an array of query string parameters to exclude
- * @param	boolean	determines whether to include posted variables in the query string
- * @param	boolean	determines whether to include the question mark
- * @return	string
- */
 if (!function_exists('query_str'))
 {
+	/**
+	 * Returns a query string formatted
+	 *
+	 * @access	public
+	 * @param	array	an array of query string parameters to exclude
+	 * @param	boolean	determines whether to include posted variables in the query string
+	 * @param	boolean	determines whether to include the question mark
+	 * @return	string
+	 */
 	function query_str($exclude = array(), $include_post = FALSE, $include_q = TRUE)
 	{
 		$CI =& get_instance();

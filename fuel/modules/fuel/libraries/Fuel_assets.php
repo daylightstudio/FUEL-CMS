@@ -67,7 +67,7 @@ class Fuel_assets extends Fuel_base_library {
 	 * Also will set the values in the parameters array as properties of this object
 	 *
 	 * @access	public
-	 * @param	array	Array of initalization parameters  (optional)
+	 * @param	array	Array of initialization parameters  (optional)
 	 * @return	void
 	 */	
 	public function initialize($params = array())
@@ -342,29 +342,32 @@ class Fuel_assets extends Fuel_base_library {
 						}
 					}
 				}
-				
 			}
+
+			// set maintain ratio if it is set to maintain_ratio
+			if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
+			{
+				$params['maintain_ratio'] = TRUE;
+			}
+			
+			$_params[$key] = $params;
 		}
 
-		// set maintain ratio if it is set to maintain_ratio
-		if ((!empty($params['resize_method']) AND $params['resize_method'] == 'maintain_ratio'))
-		{
-			$params['maintain_ratio'] = TRUE;
-		}
 
 		// now loop through the uploaded files to do any further image processing
-		foreach($this->_data as $file)
+		foreach($this->_data as $key => $file)
 		{
 			if (is_image_file($file['file_name']) AND 
-					(isset($params['create_thumb']) OR 
-					isset($params['maintain_ratio']) OR 
-					!empty($params['width']) OR 
-					!empty($params['height']) OR
-					!empty($params['master_dim']) OR
-					!empty($params['resize_and_crop']) OR
-					!empty($params['resize_method'])
+					(isset($_params[$key]['create_thumb']) OR 
+					isset($_params[$key]['maintain_ratio']) OR 
+					!empty($_params[$key]['width']) OR 
+					!empty($_params[$key]['height']) OR
+					!empty($_params[$key]['master_dim']) OR
+					!empty($_params[$key]['resize_and_crop']) OR
+					!empty($_params[$key]['resize_method'])
 					))
 			{
+				$params = $_params[$key];
 
 				$params['source_image']	= $file['full_path'];
 
@@ -436,7 +439,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
+	 * Returns the <a href="https://www.codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">uploaded file information</a>.
 	 *
 	 * @access	public
 	 * @param	string	The uploaded $_FILE key value (optional)
@@ -454,7 +457,7 @@ class Fuel_assets extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Normalizes the $_FILES array so that the <a href="http://ellislab.com/codeigniter/user-guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
+	 * Normalizes the $_FILES array so that the <a href="https://www.codeigniter.com/user_guide/libraries/file_uploading.html" target="_blank">CI File Upload Class</a> will work correctly
 	 *
 	 * @access	public
 	 * @return	void
@@ -727,7 +730,7 @@ class Fuel_assets extends Fuel_base_library {
 		if (is_string($dir))
 		{
 			// if string is a directory path, then we read the directory... 
-			// may be too presumptious but it's convenient'
+			// may be too presumptuous but it's convenient
 			if (is_dir($dir))
 			{
 				$this->CI->zip->read_dir($dir);
