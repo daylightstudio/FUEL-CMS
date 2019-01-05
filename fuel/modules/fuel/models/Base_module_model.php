@@ -1534,7 +1534,7 @@ class Base_module_model extends MY_Model {
 	{
 		if (!empty($this->limit_to_user_field) AND !$this->fuel->auth->is_super_admin())
 		{
-			$rec = $this->find_one_array($this->_tables['fuel_users'].'.id = '.$this->limit_to_user_field);
+			$rec = $this->find_one_array('fuser.id = '.$this->limit_to_user_field);
 			if (!empty($rec) AND ($rec[$this->limit_to_user_field] != $this->fuel->auth->user_data('id')))
 			{
 				$this->add_error(lang('error_no_permissions', fuel_url()));
