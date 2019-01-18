@@ -1,3 +1,5 @@
 .idea
 .DS_Store
 fuel/application/cache/
+!fuel/application/cache/.htaccess
+!fuel/application/cache/index.html
