@@ -277,8 +277,8 @@ class Fuel_advanced_module extends Fuel_base_library {
 				// removes '_model'... must have this suffix to work!!!
 				if ($remove_suffix)
 				{
-					$mod_name = substr($models[$key], 0, -6);
-					$models[$key] = substr($models[$key], 0, -6);
+					$model_name = substr($models[$key], 0, -6);
+					$models[$key] = $model_name;
 				}
 			}
 			
@@ -774,7 +774,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function css_path()
 	{
-		$this->web_path().'assets/'.strtolower($this->name).'.css';
+		return $this->web_path().'/assets/'.strtolower($this->name).'.css';
 	}
 
 	// --------------------------------------------------------------------
@@ -906,7 +906,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 */
 	public function clear_cache()
 	{
-		return $this->fuel->cache->clear_module($this->folder());
+		$this->fuel->cache->clear_module($this->folder());
 	}
 
 	// --------------------------------------------------------------------

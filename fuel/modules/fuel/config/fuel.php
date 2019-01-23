@@ -96,7 +96,7 @@ $config['keyboard_shortcuts'] = array(
 $config['dashboards'] = array('fuel');
 
 // Dashboard rss
-$config['dashboard_rss'] = 'http://www.getfuelcms.com/blog/feed/rss';
+$config['dashboard_rss'] = 'https://www.getfuelcms.com/blog/feed/rss';
 
 // text editor settings  (options are markitup or ckeditor)
 // markitup: allows you to visualize the code in its raw format - not wysiwyg (http://markitup.jaysalvat.com/)

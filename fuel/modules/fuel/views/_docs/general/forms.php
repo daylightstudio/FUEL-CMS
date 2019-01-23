@@ -206,7 +206,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><a href="#state">state</a></li>
 		<li><a href="#slug">slug</a></li>
 		<li><a href="#list_items">list_items</a></li>
-		<li><a href="#langauge">langauge</a></li>
+		<li><a href="#language">language</a></li>
 		<li><a href="#keyval">keyval</a></li>
 		<li><a href="#multi">multi</a> (overwritten for more functionality)</li>
 		<li><a href="#toggler">toggler</a></li>
@@ -883,7 +883,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>link_filter</strong>: a regular expression value that can be used to filter the page list down to only the pages you need</li>
 		<li><strong>editor_config</strong>: sets the editor's (markItUp! or CKEditor) configuration values for a particular field. Camel-cased attributes need to be converted to lowercase with hyphens (e.g. extraPlugins should be extra-plugins). These configuration values are attached to the textarea field so you can use
 			Javascript to set more complex object values as long they are set on the textarea field before markItUp! or CKEditor initialization (e.g. $('.mytextarea').data('toolbar', [['Bold','Italic','Strike']]).</li>
-		<li><strong>markdown</strong>: changes toolbar to use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> formatting instead of HTML. Must have editor set to use markItUp!</li>
+		<li><strong>markdown</strong>: changes toolbar to use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> formatting instead of HTML. Must have editor set to use markItUp! (NOTE: This is only the editor. You must use the <dfn>markdown()</dfn> function for display in your views.</li>
 	</ul>
 	
 	<h4>Example</h4>

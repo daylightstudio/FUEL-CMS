@@ -118,9 +118,9 @@ class Fuel_custom_fields {
 		}
 
 		// adds markdown controlls to the markItUp!  editor
-		if (isset($params['markdown']) AND $params['markdown'] === TRUE)
+		if (isset($params['markdown']) AND $params['markdown'] === TRUE AND empty($params['editor_config']))
 		{
-			$params['data']['markdown'] = 1;
+			$params['editor_config'] = 'markdown';
 		}
 
 		static $markitup_config;
@@ -1769,7 +1769,7 @@ class Fuel_custom_fields {
 
 		if (!isset($params['row_delimiter']))
 		{
-			$params['row_delimiter'] = "\n|,";
+			$params['row_delimiter'] = "\r\n|\n|,";
 		}
 
 		if (!isset($params['allow_numeric_indexes']))
@@ -1789,7 +1789,7 @@ class Fuel_custom_fields {
 
 	
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
-		$func = function($value) use ($process_key, $params) {
+		$func = function($value) use ($process_key, $params, $row_delimiter, $split_delimiter) {
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
@@ -1815,11 +1815,11 @@ class Fuel_custom_fields {
 							{
 								$v = $vals[1];
 								$k = $vals[0];
-								$json[$k] = $v;
+								$json[$k] = trim($v);
 							}
 							else
 							{
-								$json[] = $vals[0];
+								$json[] = trim($vals[0]);
 							}
 						}
 						$first_item = current($json);
@@ -1842,21 +1842,21 @@ class Fuel_custom_fields {
 
 				if (is_string($value))
 				{
-					$rows = preg_split("#'.$row_delimiter.'#", $value);
+					$rows = preg_split("#".$row_delimiter."#", $value);
 					foreach($rows as $r)
 					{
 						if (is_string($r))
 						{
-							$vals = preg_split("#'.$split_delimiter.'#", $r);
+							$vals = preg_split("#".$split_delimiter."#", $r);
 							if (isset($vals[1]))
 							{
 								$val = $vals[1];
 								$key = $vals[0];
-								$json[$key] = $val;
+								$json[$key] = trim($val);
 							}
 							else
 							{
-								$json[] = $vals[0];
+								$json[] = trim($vals[0]);
 							}
 						}
 					}
@@ -1891,6 +1891,7 @@ class Fuel_custom_fields {
 						}
 					}
 				}
+
 				if (!empty($new_value))
 				{
 					$params['value'] = implode("\n", $new_value);	

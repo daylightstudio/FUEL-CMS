@@ -657,7 +657,7 @@ class Curl {
 	 *
 	 * @access	public
 	 * @param	string	The URL to use for the CURL session
-	 * @return	void
+	 * @return	boolean
 	 */	
 	public function is_valid($url)
 	{

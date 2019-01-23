@@ -480,7 +480,7 @@ class MY_Model extends CI_Model {
 		//Get the data out of the database
 		$query = $this->db->get($this->table_name);
 		
-		if (empty($query)) $query = ($this->db->dbdriver == 'mysql') ? new MY_DB_mysql_result() : new MY_DB_mysqli_result();
+		if (empty($query)) $query = ($this->db->dbdriver == 'mysql') ? new MY_DB_mysql_result($this->db) : new MY_DB_mysqli_result($this->db);
 		
 		if ($this->return_method == 'query') 
 		{
@@ -5186,7 +5186,7 @@ class Data_record {
 	 */	
 	public function is_empty()
 	{
-		return empty($this->_fields) AND get_class_vars(__CLASS_);
+		return empty($this->_fields) AND get_class_vars(__CLASS__);
 	}
 
 	// --------------------------------------------------------------------

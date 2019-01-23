@@ -107,7 +107,7 @@ You do not use the <a href="<?=user_guide_url('helpers/fuel_helper')?>" target="
 
 <h3 id="hdr_footermenu">Footer Menu</h3>
 <p>Another place you may want to add a list of menu items is at the footer of your layout. This can be done similar to both the <a href="#hdr_topmenu">Top Menu</a> and 
-the <a href="#sidemenu">Side Menu</a>:</p>
+the <a href="#hdr_sidemenu">Side Menu</a>:</p>
 
 <span class="file">application/views/_variables/global.php (example)</span>
 <pre class="brush: php">

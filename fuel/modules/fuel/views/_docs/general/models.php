@@ -15,7 +15,7 @@ The second, <a href="<?=user_guide_url('libraries/base_module_model')?>">Base_mo
 <p>Both classes allow you to create <a href="<?=user_guide_url('general/forms')?>">simple to complex form interfaces</a> with the model's <dfn>MY_Model::form_fields()</dfn>
 method, which gets passed to the <a href="<?=user_guide_url('libraries/form_builder')?>">Form_builder</a> object to generate the forms in the CMS.</p>
 
-<p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record">API documentation for both table and record model classes</a> (explained below).</p>
+<p>There's a lot to cover for model's. Below is an overview of the main features but it is recommended that you look at the <a href="#table_result_record_field">API documentation for both table and record model classes</a> (explained below).</p>
 <ul>
 	<li><a href="#example">Example</a></li>
 	<li><a href="#table_result_record_field">Table, Result, Record and Field Classes</a></li>
@@ -301,7 +301,7 @@ $record->get_content()
 $record->content
 </pre>
 
-<p>There are also additional <a href="#formattters">formatter</a> variations you can use on a record property &mdash; such as <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
+<p>There are also additional <a href="#formatters">formatter</a> variations you can use on a record property &mdash; such as <dfn>{property}_formatted</dfn> and <dfn>{property}_stripped</dfn>.</p>
 <p>Using <dfn>{property}_formatted</dfn> will apply the <a href="https://www.codeigniter.com/user_guide/helpers/typography_helper.html" target="_blank">auto_typography</a>
 function if the property is a string value and if it is a date value will format the date by default to whatever is specified in the <span class="file">fuel/application/config/MY_config.php</span>.
 </p>

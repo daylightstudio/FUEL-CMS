@@ -83,7 +83,8 @@ class Fuel_Router extends MX_Router
 		// Is there a literal match?  If so we're done
 		if (isset($this->routes[$uri]))
 		{
-			return $this->_set_request(explode('/', $this->routes[$uri]));
+			$this->_set_request(explode('/', $this->routes[$uri]));
+			return;
 		}
 		
 		// Get HTTP verb

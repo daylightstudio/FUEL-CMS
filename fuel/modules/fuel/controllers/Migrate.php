@@ -24,7 +24,7 @@ class Migrate extends Fuel_base_controller {
 		}
 	}
 
-	public function latest($module = NULL)
+	public function latest($module = '')
 	{
 		$this->_init_migrate($module);
 
@@ -35,7 +35,7 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	public function current($module = NULL)
+	public function current($module = '')
 	{
 		$this->_init_migrate($module);
 
@@ -46,7 +46,7 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	public function version($version = 1, $module = NULL)
+	public function version($version = 1, $module = '')
 	{
 		$this->_init_migrate($module);
 

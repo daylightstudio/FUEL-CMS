@@ -14,7 +14,7 @@ We will be using 3 data models (<dfn>Articles_model</dfn>, <dfn>Authors_model</d
   <li><a href="#setup">Download and Setup</a></li>
   <li><a href="#authors_module">The Authors Module</a></li>
   <li><a href="#articles_module">The Articles Module</a></li>
-  <li><a href="#categories_module">The FUEL Tags Module</a></li>
+  <li><a href="#fuel_tags_module">The FUEL Tags Module</a></li>
   <li><a href="#permissions">Setting Up Permissions</a></li>
   <li><a href="#polishing">A Little Polishing</a></li>
   <li><a href="#views">Bringing it All Into View</a></li>

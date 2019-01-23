@@ -303,7 +303,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		// automatically set selects to submit
-		$('.more_filters select').change(function(e){
+		$('.more_filters select').not('[multiple]').change(function(e){
 			if ($(this).parents().hasClass('adv_search') === false) {
 				$('#form').submit();
 			}

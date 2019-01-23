@@ -32,7 +32,9 @@ if (USE_FUEL_ROUTES)
 	$module_folder = MODULES_PATH;
 
 	include(FUEL_PATH.'config/fuel_modules.php');
-	@include(APPPATH.'/config/MY_fuel_modules.php');
+	if(file_exists(APPPATH.'/config/MY_fuel_modules.php')){
+		include(APPPATH.'/config/MY_fuel_modules.php');
+	}
 
 	$modules = array_keys($config['modules']);
 	$modules = array_merge($config['modules_allowed'], $modules);

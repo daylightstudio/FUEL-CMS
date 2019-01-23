@@ -447,7 +447,7 @@ class Menu {
 				if (!empty($this->container_tag_id) AND $level == -1) $str .= " id=\"".$this->container_tag_id."\"";
 				if (!empty($container_class)) $str .= " class=\"".$container_class."\"";
 				if (!empty($this->container_tag)) $str .= ">\n";
-				$active_index = (count($this->_active_items) -1) - $level;
+				$active_index = (count((array)$this->_active_items) -1) - $level;
 				$level = $level + 1;
 				$i = 0;
 				

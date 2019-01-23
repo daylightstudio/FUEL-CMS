@@ -84,12 +84,13 @@ class Fuel_notification extends Fuel_base_library {
 		
 		// load email and set notification properties
 		$this->CI->load->library('email');
+		$this->CI->email->clear(TRUE);
 		$this->CI->email->set_wordwrap(TRUE);
 		$this->CI->email->from($this->from, $this->from_name);
 		$this->CI->email->subject($this->subject);
 		$this->CI->email->message($this->message);
 		$this->CI->email->set_mailtype($this->mailtype);
-
+		
 		if (!empty($this->attachments))
 		{
 			if (is_array($this->attachments))
