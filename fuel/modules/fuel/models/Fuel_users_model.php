@@ -811,7 +811,7 @@ class Fuel_users_model extends Base_module_model {
 
 		if ($this->_is_invite()) {
 
-			$msg = lang('new_user_email', $user_name, '<a href="'.site_url().$CI->fuel->config('fuel_path').'fuel/login/reset/'.$token.'">'.site_url().'fuel/login/reset/'.$token.'</a>');
+			$msg = lang('new_user_email', $user_name, '<a href="'.fuel_url('login/reset/'.$token).'">'.fuel_url('login/reset/'.$token).'</a>');
 
 			$params['to'] = $CI->input->post('email');
 			$params['subject'] = lang('new_user_email_subject');
