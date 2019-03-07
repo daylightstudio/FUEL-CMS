@@ -77,7 +77,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Adds to the redirects list
 	 *
 	 * @access	public
-	 * @param	string	The URI location of the page to remove
+	 * @param	string	The URI location of the page to add
 	 * @param	string	The page to redirect to or the type of redirect if the first parameter is an array (optional)
 	 * @param	boolean	Determines whether it is a passive redirect or not. Default is TRUE(optional)
 	 * @return	void
@@ -137,7 +137,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Adds to the ssl redirect list
 	 *
 	 * @access	public
-	 * @param	string	The URI location of the page to remove
+	 * @param	string	The URI location of the page to add
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	void
@@ -168,7 +168,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Adds to the NON ssl redirect list
 	 *
 	 * @access	public
-	 * @param	string	The URI location of the page to remove
+	 * @param	string	The URI location of the page to add
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @return	void
@@ -199,7 +199,7 @@ class Fuel_redirects extends Fuel_base_library {
 	 * Adds to the ssl redirect list
 	 *
 	 * @access	protected
-	 * @param	string	The URI location of the page to remove
+	 * @param	string	The URI location of the page to add
 	 * @param	string	The page to redirect to or the name of the environment if the first parameter is an array(optional)
 	 * @param	string	The name of the environment key that the redirect applies to (optional)
 	 * @param	string	The type of SSL either redirect... either to https or http (optional)
