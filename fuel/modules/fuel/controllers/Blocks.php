@@ -119,7 +119,8 @@ class Blocks extends Module {
 
 				if (empty($name))
 				{
-					$name = current(explode('.', $file_info['name']));
+					$name_parts = explode('.', $upload_data['file_name']);
+					$name = current($name_parts);
 				}
 
 				if ($id) $save['id'] = $id;
