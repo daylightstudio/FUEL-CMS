@@ -5741,6 +5741,7 @@ class Data_record {
 			$relationships_model = $this->_parent_model->load_model($fields['relationships_model']);
 			$id_field = $this->_parent_model->key_field();
 			$related_table_name = $this->_CI->$foreign_model->table_name();
+			$related_id_field = $this->_CI->$foreign_model->key_field();
 		}
 
 		// check that the id field is not an array
@@ -5779,7 +5780,7 @@ class Data_record {
 			if ( ! empty($rel_ids))
 			{
 				// construct the method name
-				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
+				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$related_id_field, $rel_ids);
 
 				// check if there is a where condition an apply that too
 				if (is_array($rel_config))
