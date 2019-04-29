@@ -325,7 +325,7 @@ class Fuel_navigation_model extends Base_module_model {
 			$where['parent_id !='] = $values['id'];
 		}
 		$parent_options = $this->options_list('id', 'nav_key', $where, TRUE, FALSE);
-		$fields['parent_id']['label'] = lang('navigation_model_parent_id');
+		$fields['parent_id']['label'] = lang('form_label_parent_id');
 		$fields['parent_id']['type'] = 'select';
 		$fields['parent_id']['options'] = $parent_options;
 		$fields['parent_id']['first_option'] = array('0' => 'None');

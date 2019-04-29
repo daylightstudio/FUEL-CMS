@@ -211,6 +211,7 @@ $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
 $lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
+$lange['error_select_replacement'] = 'There was an error replacing your module record.';
 
 // command line
 $lang['module_install'] = "The '%1s' module has successfully been installed.\n";
@@ -524,7 +525,7 @@ $lang['form_label_og_title'] = 'Open Graph title';
 $lang['form_label_og_description'] = 'Open Graph description';
 $lang['form_label_og_image'] = 'Open Graph image';
 $lang['form_label_category_id'] = 'Category';
-
+$lang['form_label_context'] = 'Context';
 
 $lang['form_label_group_id'] = 'Group';
 $lang['form_label_or_select'] = 'OR select';
@@ -549,6 +550,7 @@ $lang['layout_field_heading'] = 'Heading';
 $lang['layout_field_body_description'] = 'Main content of the page';
 $lang['layout_field_body_class'] = 'Body class';
 $lang['layout_field_redirect_to'] = 'Redirect to';
+$lang['layout_field_alias'] = 'Alias';
 
 $lang['layout_field_301_redirect_copy'] = 'This layout will do a 301 redirect to another page.';
 $lang['layout_field_alias_copy'] = 'This layout is similar to a 301 redirect but the location of the page does not change and <br />the page content from the specified location is used to render the page.';
