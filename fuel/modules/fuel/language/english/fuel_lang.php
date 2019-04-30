@@ -211,7 +211,7 @@ $lang['no_data'] = 'No data to display.';
 $lang['no_preview_path'] = 'There is no preview path assigned to this module.';
 $lang['delete_item_message'] = 'You are about to delete the item:';
 $lang['replace_item_message'] = 'Select a record from the list below that you would like to replace. Replacing will transfer the data from one record to the other and then delete the old record.';
-$lange['error_select_replacement'] = 'There was an error replacing your module record.';
+$lang['error_select_replacement'] = 'There was an error replacing your module record.';
 
 // command line
 $lang['module_install'] = "The '%1s' module has successfully been installed.\n";
