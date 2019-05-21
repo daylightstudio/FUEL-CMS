@@ -2184,7 +2184,7 @@ class Fuel_custom_fields {
 		$create_url .= "?{$create_url_params}";
 		$create_url = fuel_url($create_url);
 		
-		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']));
+		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']) OR !$this->fuel->auth->has_permission($module->info('permission'), 'create'));
 		$cols = (!empty($params['cols'])) ? $params['cols'] : NULL;
 
 		$actions = array('edit');
