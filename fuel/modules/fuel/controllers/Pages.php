@@ -10,7 +10,8 @@ class Pages extends Module {
 		parent::__construct(FALSE);
 
 		// allow the select URL page to show up regardless of permissions
-		$validate = (fuel_uri_segment(2) == 'select') ? FALSE : TRUE;
+		//$validate = (fuel_uri_segment(2) == 'select') ? FALSE : TRUE;
+		$validate = TRUE;
 		if ($validate)
 		{
 			$load_vars['user'] = $this->fuel->auth->user_data();
