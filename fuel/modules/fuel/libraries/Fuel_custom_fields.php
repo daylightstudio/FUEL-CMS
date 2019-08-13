@@ -2184,11 +2184,14 @@ class Fuel_custom_fields {
 		$create_url .= "?{$create_url_params}";
 		$create_url = fuel_url($create_url);
 		
-		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']) OR !$this->fuel->auth->has_permission($module->info('permission'), 'create'));
+		$can_create = $this->fuel->auth->has_permission($module->info('permission'), 'create');
+		$can_edit = $this->fuel->auth->has_permission($module->info('permission'), 'edit');
+		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']));
 		$cols = (!empty($params['cols'])) ? $params['cols'] : NULL;
 
 		$actions = array('edit');
-		if ($readonly OR (isset($params['actions']) AND $params['actions'] == FALSE))
+		
+		if ($readonly OR !$can_edit OR (isset($params['actions']) AND $params['actions'] == FALSE))
 		{
 			$actions = array();
 		}
@@ -2216,7 +2219,7 @@ class Fuel_custom_fields {
 		$embedlistid = (!empty($params['id'])) ? $params['id'] : 'embedlist-'.sha1($module->name() . mt_rand());
 		$class = (!empty($params['class'])) ? ' '.$params['class'] : '';
 		$embedded_list_view = '<div class="embedded_list_container'.$class.'" id="'.$embedlistid.'" data-module-url="'.$module_url.'" data-embedded-list-params=\''.json_encode($embedded_list_params).'\'>';
-		if (!$readonly AND (!isset($params['create_button_label']) OR (isset($params['create_button_label']) AND $params['create_button_label'] !== FALSE)))
+		if (!$readonly AND $can_create AND (!isset($params['create_button_label']) OR (isset($params['create_button_label']) AND $params['create_button_label'] !== FALSE)))
 		{
 			$embedded_list_view .= '<div class="embedded_list_actions" style="margin-bottom: 20px;"><a href="'.$create_url.'" class="btn_field datatable_action">'.$create_button_label.'</a></div>';
 		}
