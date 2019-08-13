@@ -1491,11 +1491,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				href = $(this).closest('tr').find("td.actions").find("a:first").attr('href');
 			}
 
-			var iframe_url = href;
-			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
-			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
-				embeddedListModalClose($activeEmbeddedList);
-			});
+			if (href) {
+				var iframe_url = href;
+				var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
+				var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
+					embeddedListModalClose($activeEmbeddedList);
+				});
+			}
 		};
 
 		$fuel.off("click", ".datatable_action, #data_table td[class^='col']:not('.actions')");
