@@ -297,4 +297,12 @@ class Blocks extends Module {
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}
+
+	// For block field type
+	public function invalidate_session()
+	{
+		session_write_close();
+		echo 'OK';
+	}
+
 }
