@@ -110,7 +110,7 @@ else
 				$path = str_replace(array(':any', '*'), '.*', str_replace(':num', '[0-9]+', $path));
 
 				// Does the RegEx match?
-				if (preg_match('#^'.$path.'$#', $_SERVER['HTTP_HOST']))
+				if (!empty($_SERVER['HTTP_HOST']) AND preg_match('#^'.$path.'$#', $_SERVER['HTTP_HOST']))
 				{
 					define('ENVIRONMENT', $env);
 					break 2;
