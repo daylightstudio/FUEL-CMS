@@ -7,7 +7,7 @@
 	<li><a href="#news"><strong>news</strong>: module page</a></li>
 </ul>
 
-<p class="important">Make sure the configuration of <kbd>fuel_mode</kbd> is set to <dfn>AUTO</dfn> in the <dfn>application/config/MY_fuel.php</dfn> file.</p>
+<p class="important">Make sure the configuration of <kbd>fuel_mode</kbd> is set to <dfn>auto</dfn> in the <dfn>application/config/MY_fuel.php</dfn> file.</p>
 
 
 <a name="static"></a>

@@ -115,7 +115,7 @@ class Fuel_parser extends Fuel_Base_library {
 			{
 				case 'ci':
 					$this->CI->load->library('parser');
-					$this->engine =& $this->CI->parser;
+					$this->engine = new CI_Parser();
 					$delimiters = (isset($config['delimiters']['tag_variable'])) ? $config['delimiters']['tag_variable'] : $config['delimiters'];
 					$l_delim = $delimiters[0];
 					$r_delim = $delimiters[1];

@@ -374,9 +374,10 @@ if (!function_exists('google_geolocate'))
 		{
 			$address = urlencode($address);
 			unset($data);
-
-			$url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$address."&sensor=false";
 			$CI =& get_instance();
+			$CI->load->config('google');
+			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=".$address."&key=".$CI->config->item('google_maps_api_key');
+			
 			if (!isset($CI->curl))
 			{
 				$CI->load->library('curl');	

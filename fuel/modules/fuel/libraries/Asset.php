@@ -1334,11 +1334,10 @@ class Asset {
 			
 			if (is_array($file))
 			{
-				$path_arr = each($file);
-				if (!is_numeric($path_arr['key']))
+				if (!is_numeric(key($file)))
 				{
-					$module = $path_arr['key'];
-					$file = $path_arr['value'];
+					$module = key($file);
+					$file = current($file);
 				}
 			}
 

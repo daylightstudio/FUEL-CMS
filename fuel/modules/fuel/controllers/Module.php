@@ -930,7 +930,7 @@ class Module extends Fuel_base_controller {
 
 			if (empty($id))
 			{
-				add_error(lang('error_invalid_id'));
+				add_error(lang('error_invalid_record'));
 				return FALSE;
 			}
 
