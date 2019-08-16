@@ -116,6 +116,7 @@ class Fuel_navigation extends Fuel_module {
 						'delimiter' => FALSE,
 						'arrow_class' => 'arrow',
 						'display_current' => TRUE,
+			       			'display_current_anchor' => FALSE,
 						'home_link' => 'Home',
 						'order' => 'asc',
 						'exclude' => array(),
