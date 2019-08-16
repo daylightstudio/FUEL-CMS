@@ -60,6 +60,7 @@ class Menu {
 	// for breadcrumb AND/OR page_title
 	public $delimiter = FALSE; // the html element between the links 
 	public $display_current = TRUE; // display the current active breadcrumb item?
+	public $display_current_anchor = FALSE; // display the current active breadcrumb item as link?
 	public $home_link = 'Home'; // the root home link
 
 	// for breadcrumb ONLY
