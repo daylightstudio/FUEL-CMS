@@ -1304,7 +1304,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		// This is due to session blocking issue after save introduced in CI 3
 		if (!window['invalidatedSession']) {
-			var invalidateUrl = url = jqx_config.fuelPath + 'pages/invalidate_session';
+			var invalidateUrl = url = jqx_config.fuelPath + 'blocks/invalidate_session';
 			$.get(invalidateUrl, {}, function(){
 				$('.block_layout_select', context).change();
 				window.invalidatedSession = true;
