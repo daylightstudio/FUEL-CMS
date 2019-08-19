@@ -806,11 +806,11 @@ class Data_table {
 					};
 
 					$action = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $action);
-					$fields[] = new Data_table_field($key, $val, array(), $action);
+					$fields[] = new Data_table_field($key, xss_clean($val), array(), $action);
 				}
 				else
 				{
-					$fields[] = new Data_table_field($key, $val, $col_attrs);
+					$fields[] = new Data_table_field($key, xss_clean($val), $col_attrs);
 				}
 
 				$i++;
@@ -1021,7 +1021,7 @@ class Data_table_header {
 	public function __construct($col_key, $name, $sorting_param, $attrs = array())
 	{
 		$this->col_key = $col_key;
-		$this->name = $name;
+		$this->name = xss_clean($name);
 		$this->sorting_param = $sorting_param;
 		$this->attrs = $attrs;
 	}
@@ -1052,6 +1052,7 @@ class Data_table_field {
 		$this->attrs = $attrs;
 		$this->action = $action;
 	}
+
 }
 
 /* End of file Data_table.php */
