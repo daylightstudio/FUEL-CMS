@@ -107,7 +107,7 @@ class Fuel_logs_model extends Base_module_model {
 			}
 		}
 
-		$save['message'] = $msg;
+		$save['message'] = xss_clean($msg);
 		$save['type'] = $type;
 		$save['user_id'] = $user_id;
 		$save['entry_date'] = datetime_now();
