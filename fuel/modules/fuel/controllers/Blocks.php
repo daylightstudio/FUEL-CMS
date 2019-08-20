@@ -119,7 +119,8 @@ class Blocks extends Module {
 
 				if (empty($name))
 				{
-					$name = current(explode('.', $file_info['name']));
+					$name_parts = explode('.', $upload_data['file_name']);
+					$name = current($name_parts);
 				}
 
 				if ($id) $save['id'] = $id;
@@ -296,4 +297,12 @@ class Blocks extends Module {
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}
+
+	// For block field type
+	public function invalidate_session()
+	{
+		session_write_close();
+		echo 'OK';
+	}
+
 }

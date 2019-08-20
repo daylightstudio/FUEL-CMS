@@ -188,7 +188,7 @@ class Fuel_pages extends Fuel_base_library {
 			$subfolder = trim($subfolder, '/').'/';
 		}
 		$views_path = APPPATH.'views/'.$subfolder;
-		$view_pages = directory_to_array($views_path, TRUE, '/^_(.*)|\.html$/', FALSE, TRUE);
+		$view_pages = directory_to_array($views_path, TRUE, '/^_(.*)|^errors|\.html$/', FALSE, TRUE);
 		sort($view_pages);
 		return $view_pages;
 	}

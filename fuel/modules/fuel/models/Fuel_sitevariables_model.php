@@ -101,7 +101,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 	public function retrieve_one($name = null)
 	{
 		$vars = $this->find_one_array(array('active' => 'yes', 'name' => $name));
-		return $vars['value'];
+		return !empty($vars) ? $vars['value'] : NULL;
 	}
 	
 	// --------------------------------------------------------------------

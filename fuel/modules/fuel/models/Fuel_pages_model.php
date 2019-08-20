@@ -65,7 +65,7 @@ class Fuel_pages_model extends Base_module_model {
 		$CI =& get_instance();
 
 		// don't display if it is disabled
-		if ($CI->fuel->modules->get('navigation')->info('disabled') === TRUE) return '';
+		if ($CI->fuel->modules->get('navigation')  AND $CI->fuel->modules->get('navigation')->info('disabled') === TRUE) return '';
 
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_navigation_model');
 		

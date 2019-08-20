@@ -4,7 +4,7 @@
 </div>
 <?php endif; ?>
 
-<?php if ($this->advanced_search === 'collapse') : ?>
+<?php if ($this->advanced_search === 'collapse' OR $this->advanced_search === 'collapse_with_searchbox') : ?>
 <div id="filters_container">
 	<div id="" class="filters clearfix">
 		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/search_filters'); ?>

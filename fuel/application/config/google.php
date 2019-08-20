@@ -10,6 +10,7 @@
 */
 
 $config['google_uacct'] = "";
+$config['google_maps_api_key'] = "";
 
 /* End of file strings.php */
 /* Location: ./application/config/google.php */

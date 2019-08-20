@@ -5779,7 +5779,7 @@ class Data_record {
 			if ( ! empty($rel_ids))
 			{
 				// construct the method name
-				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$id_field, $rel_ids);
+				$this->_CI->$foreign_model->db()->where_in("{$related_table_name}.".$this->_CI->$foreign_model->key_field(), $rel_ids);
 
 				// check if there is a where condition an apply that too
 				if (is_array($rel_config))

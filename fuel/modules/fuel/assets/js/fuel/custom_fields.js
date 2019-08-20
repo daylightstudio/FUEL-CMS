@@ -485,7 +485,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		var showAssetsSelect = function(params){
 			var winHeight = 450;
-			var url = jqx_config.fuelPath + '/assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
+			var url = jqx_config.fuelPath + 'assets/select/' + selectedAssetFolder + '/?selected=' + escape($('#' + activeField).val()) + '&' + params;
 			var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; height: ' + winHeight + 'px; width: 850px;"></iframe>';
 			$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 			
@@ -595,7 +595,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					default :
 						btnLabel = fuel.lang('btn_asset');
 				}
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + 'assets/select/' + assetFolder + '" class="btn_field asset_select_button ' + assetFolder + '" data-folder="' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + fuel.lang('btn_select') + ' ' + btnLabel + '</a>');
 			}
 		});
 
@@ -660,7 +660,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					var assetFolder = (assetTypeClasses.length > 1) ? assetTypeClasses[assetTypeClasses.length - 1] : 'images';
 				}
 				var btnLabel = fuel.lang('btn_upload_asset');
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + 'assets/inline_create/" class="btn_field asset_upload_button ' + assetFolder + '" data-params="' + $(this).attr('data-params') + '">' + btnLabel + '</a>');
 			}
 		});
 		
@@ -772,7 +772,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			var isMulti = ($field.attr('multiple')) ? true : false;
 			
 			var parentModule = fuel.getModuleURI(context);
-			var url = jqx_config.fuelPath + '/' + module + '/inline_';
+			var url = jqx_config.fuelPath + module + '/inline_';
 			var btnClasses = ($field.attr('multiple')) ? 'btn_field btn_field_right ' : 'btn_field';
 			if (!$field.parent().find('.edit_inline_button').length) $field.after('&nbsp;<a href="' + url + 'edit/" class="' + btnClasses+ ' edit_inline_button" tabindex="-1">' + fuel.lang('btn_edit') + '</a>');
 			if (!$field.parent().find('.add_inline_button').length) $field.after('&nbsp;<a href="' + url + 'create' + fields + addParams + '" class="' + btnClasses+ ' add_inline_button" tabindex="-1">' + fuel.lang('btn_add') + '</a>');
@@ -786,7 +786,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				
 				// if no value added,then no need to refresh
 				if (!selected) return;
-				var refreshUrl = jqx_config.fuelPath + '/' + parentModule + '/refresh_field';
+				var refreshUrl = jqx_config.fuelPath + parentModule + '/refresh_field';
 				var params = { field:fieldId, field_id: fieldId, selected:selected, csrf_test_name: csrf };
 
 				// fix for pages... a bit kludgy
@@ -1157,7 +1157,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		setTimeout(function(){
 			fuel.fields.sortStarted();
 			fuel.fields.sortStopped();
-		}, 300)
+		}, 5000)
 	}
 
 	// url select field
@@ -1167,7 +1167,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 
 		var showUrlSelect = function(){
 			$activeField = $('#' + activeField);
-			var url = jqx_config.fuelPath + '/pages/select/?selected=' + escape($activeField.val());
+			var url = jqx_config.fuelPath + 'pages/select/?selected=' + escape($activeField.val());
 			
 			if ($activeField.data('input')){
 				url += '&input=' + $activeField.val();
@@ -1234,7 +1234,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 		var _this = this;
 		$('.url_select', context).not('.no_url').each(function(i){
 			if ($(this).parent().find('.url_select_button').length == 0){
-				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + '/pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
+				$(this).after('&nbsp;<a href="'+ jqx_config.fuelPath + 'pages/select" class="btn_field url_select_button">' + fuel.lang('btn_select') + '</a>');
 			}
 		});
 
@@ -1272,7 +1272,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					//layout = layout.split('/').pop();
 					layout = layout.replace('/', ':');
 					var language = ($('#language').length) ? $('#language').val() : 'english';
-					url = jqx_config.fuelPath + '/blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
+					url = jqx_config.fuelPath + 'blocks/layout_fields/' + layout + '/' + id+ '/' + language + '/';
 				}
 			}
 			
@@ -1280,12 +1280,14 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			// if (contextArr.length > 1){
 			// 	context = contextArr.pop();
 			// }
-			$layout_fields = $this.next('.block_layout_fields');
+			
 			if (url.length){
-				url += '?context=' + context + '&name=' + name;
+				url += '?context=' + context + '&name=' + name + '&t=' + new Date().getTime();
+
+				$layout_fields = $this.next('.block_layout_fields');
 
 				// show loader
-				$(this).parent().find('.loader').show();
+				$this.parent().find('.loader').show();
 				$('#form').data('disabled', true);
 				$layout_fields.load(url, function(){
 					// hide loader
@@ -1298,11 +1300,16 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			} else {
 				$layout_fields.empty();
 			}
-
-
 		})
-		
-		$('.block_layout_select', context).change();
+
+		// This is due to session blocking issue after save introduced in CI 3
+		if (!window['invalidatedSession']) {
+			var invalidateUrl = url = jqx_config.fuelPath + 'blocks/invalidate_session';
+			$.get(invalidateUrl, {}, function(){
+				$('.block_layout_select', context).change();
+				window.invalidatedSession = true;
+			});
+		}
 
 	}
 
@@ -1491,11 +1498,13 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				href = $(this).closest('tr').find("td.actions").find("a:first").attr('href');
 			}
 
-			var iframe_url = href;
-			var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
-			var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
-				embeddedListModalClose($activeEmbeddedList);
-			});
+			if (href) {
+				var iframe_url = href;
+				var html = '<iframe src="' + iframe_url + '" class="inline_iframe" frameborder="0" scrolling="auto" style="border: none; width: 850px;"></iframe>';
+				var $modal = fuel.modalWindow(html, "embedded_list_item_modal", true, "", function(){
+					embeddedListModalClose($activeEmbeddedList);
+				});
+			}
 		};
 
 		$fuel.off("click", ".datatable_action, #data_table td[class^='col']:not('.actions')");
