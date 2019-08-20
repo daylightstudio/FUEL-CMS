@@ -618,6 +618,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<ul>
 		<li><strong>fields</strong>: the fields to pass to the nested Form_builder object</li>
 		<li><strong>init</strong>: an array of initialization parameters to be passed to the Form_builder object</li>
+		<li><strong>value</strong>: an array of field values to be passed to the Form_builder object</li>
 	</ul>
 	
 	<h4>Example</h4>
