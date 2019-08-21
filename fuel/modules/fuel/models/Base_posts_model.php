@@ -45,7 +45,7 @@ abstract class Base_posts_model extends Base_module_model {
 		{
 			$this->has_many['tags']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_tags'].'.context) OR '.$this->_tables['fuel_tags'].'.context="")';
 		}
-		if (!empty($this->foreign_keys['category_id']))
+		if (!empty($this->foreign_keys['category_id']) AND empty($this->foreign_keys['category_id']['where']))
 		{
 			$this->foreign_keys['category_id']['where'] = '(FIND_IN_SET("'.$this->name.'", '.$this->_tables['fuel_categories'].'.context) OR '.$this->_tables['fuel_categories'].'.context="")';
 		}
