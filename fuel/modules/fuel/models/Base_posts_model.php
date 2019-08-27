@@ -315,7 +315,7 @@ class Base_post_item_model extends Base_module_record {
 				$url = $this->_fuel->posts->url('tag/'.$tag->slug);
 				$tags_linked[] = anchor($url, $tag->name);
 			}
-			$return = implode($tags_linked, $join);
+			$return = implode($join, $tags_linked);
 			return $return;
 		}
 		return NULL;
