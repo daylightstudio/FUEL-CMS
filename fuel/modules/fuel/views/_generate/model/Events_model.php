@@ -119,8 +119,8 @@ class Event_model extends Base_post_item_model {
 	{
 		// normalize map params
 		$params = $this->_map_params($params);
-		//http://maps.google.com/maps?q=37.771008,+-122.41175+(You+can+insert+your+text+here)&amp;hl=en&amp;t=v&amp;vpsrc=0&amp;ie=UTF8&amp;z=14&amp;iwloc=A&amp;ll=38.287602,-122.036186&amp;output=embed
-		$url = 'http://maps.google.com/maps?q=';
+		//https://maps.google.com/maps?q=37.771008,+-122.41175+(You+can+insert+your+text+here)&amp;hl=en&amp;t=v&amp;vpsrc=0&amp;ie=UTF8&amp;z=14&amp;iwloc=A&amp;ll=38.287602,-122.036186&amp;output=embed
+		$url = 'https://maps.google.com/maps?q=';
 		$url .= $this->location;
 		$url .= '&amp;hl=en&amp;ie=UTF8&amp;vpsrc=0&amp;iwloc=&amp;';
 		$url .= '&amp;t='.$this->_google_map_type($params['map_type']);
@@ -179,7 +179,7 @@ class Event_model extends Base_post_item_model {
 	{
 		if ($this->has_location())
 		{
-			$gmap = 'http://maps.google.com/maps?q='.$this->location;
+			$gmap = 'https://maps.google.com/maps?q='.$this->location;
 			return $gmap;
 		}
 		return FALSE;
@@ -189,8 +189,8 @@ class Event_model extends Base_post_item_model {
 	{
 		if ($this->has_location())
 		{
-			//http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=14&size=512x512&maptype=roadmap&sensor=true
-			$gmap = 'http://maps.googleapis.com/maps/api/staticmap?center='.$this->location.'&amp;size='.$width.'x'.$height.'&amp;maptype='.$type.'&amp;zoom='.$zoom.'&amp;markers='.$this->location.'&amp;sensor=false';
+			//https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=14&size=512x512&maptype=roadmap&sensor=true
+			$gmap = 'https://maps.googleapis.com/maps/api/staticmap?center='.$this->location.'&amp;size='.$width.'x'.$height.'&amp;maptype='.$type.'&amp;zoom='.$zoom.'&amp;markers='.$this->location.'&amp;sensor=false';
 			return $gmap;
 		}
 		return FALSE;
