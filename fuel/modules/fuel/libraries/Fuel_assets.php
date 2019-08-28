@@ -131,6 +131,7 @@ class Fuel_assets extends Fuel_base_library {
 						'height' => NULL, 
 						'resize_and_crop' => FALSE, 
 						'resize_method' => FALSE,
+						'upscale' => TRUE
 						);
 
 		// used later
@@ -364,7 +365,8 @@ class Fuel_assets extends Fuel_base_library {
 					!empty($_params[$key]['height']) OR
 					!empty($_params[$key]['master_dim']) OR
 					!empty($_params[$key]['resize_and_crop']) OR
-					!empty($_params[$key]['resize_method'])
+					!empty($_params[$key]['resize_method']) OR
+					!empty($_params[$key]['upscale'])
 					))
 			{
 				$params = $_params[$key];
@@ -389,8 +391,17 @@ class Fuel_assets extends Fuel_base_library {
 				}
 				else
 				{
-
-					$resize = $this->CI->image_lib->resize();
+					$resize = true;
+					
+					if ($params['upscale']) 
+					{
+						$resize = $this->CI->image_lib->resize();
+					} 
+					// resize only if image is taller  or wider than $params['width']
+					elseif ($this->CI->image_lib->orig_width > $params['width'] OR $this->CI->image_lib->orig_height > $params['height'])
+					{
+						$resize = $this->CI->image_lib->resize();
+					}
 				}
 				
 				if (!$resize)

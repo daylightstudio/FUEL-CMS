@@ -3,7 +3,7 @@
  * FUEL CMS
  * http://www.getfuelcms.com
  *
- * An open source Content Management System based on the 
+ * An open source Content Management System based on the
  * Codeigniter framework (http://codeigniter.com)
  *
  * @package		FUEL CMS
@@ -29,19 +29,19 @@
 // --------------------------------------------------------------------
 
 class Fuel_custom_fields {
-	
+
 
 	protected $CI;
 	protected $fuel;
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 * @return	void
-	 */	
+	 */
 	public function __construct()
 	{
 		$this->CI =& get_instance();
@@ -84,15 +84,15 @@ class Fuel_custom_fields {
 		{
 			$params['data'] = $params['data'] = array();
 		}
-		
+
 		if (isset($params['preview']))
 		{
 			$params['data']['preview'] = $params['preview'];
 		}
-		
-		// the dimensions for the preview window		
+
+		// the dimensions for the preview window
 		$params['data']['preview_options'] = (!empty($params['preview_options'])) ? $params['preview_options'] : 'width=1024,height=768';
-		
+
 		// set the image folder for inserting assets
 		if (isset($params['img_folder']))
 		{
@@ -146,7 +146,7 @@ class Fuel_custom_fields {
 				{
 					$params['data']['editor_set'] = 'default';
 					$editor_config = $params['editor_config'];
-	
+
 				}
 			}
 			elseif (is_array($params['editor_config']))
@@ -175,7 +175,7 @@ class Fuel_custom_fields {
 				{
 					$editor_config['toolbar'][] = $params['editor_append_toolbar'];
 				}
-			} 
+			}
 
 			if ($params['editor'] == 'markitup' AND !empty($editor_config['toolbar']))
 			{
@@ -186,7 +186,7 @@ class Fuel_custom_fields {
 
 				if (is_array($editor_config['markupSet']) AND is_array($editor_config['toolbar']))
 				{
-					$editor_config['markupSet'] = array_merge($editor_config['toolbar'], $editor_config['markupSet']);	
+					$editor_config['markupSet'] = array_merge($editor_config['toolbar'], $editor_config['markupSet']);
 				}
 				unset($editor_config['toolbar']);
 			}
@@ -199,7 +199,7 @@ class Fuel_custom_fields {
 		$form_builder->add_js($js, 'editor_config_'.$params['name']);
 		return $form_builder->create_textarea($params);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -242,7 +242,7 @@ class Fuel_custom_fields {
 				$params['img_styles'] = 'float: left; width: 100px;';
 			}
 
-			if (empty($params['value'])) 
+			if (empty($params['value']))
 			{
 				$params['value'] = '';
 			}
@@ -276,7 +276,7 @@ class Fuel_custom_fields {
 						}
 					}
 				}
-				
+
 			}
 			$preview = '';
 
@@ -300,7 +300,7 @@ class Fuel_custom_fields {
 
 		$params['after_html'] = $preview;
 		$str .= $form_builder->create_file($file_params);
-		
+
 		if (!empty($params['display_input']))
 		{
 			$params['data'] = array(
@@ -313,24 +313,26 @@ class Fuel_custom_fields {
 			}
 			$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
 			$params['type'] = '';
-			$str .= '<br><br>'.$form_builder->create_field($params); 
+			$str .= '<br><br>'.$form_builder->create_field($params);
 		}
 		else
 		{
 			$params['type'] = 'hidden';
-			$str .= $form_builder->create_field($params); 
+			$str .= $form_builder->create_field($params);
 		}
 
 		// add image altering hidden field values
 		$additional_params = array('create_thumb',
 						'thumb_marker',
 						'maintain_ratio',
-						'master_dim', 
-						'width', 
-						'height', 
+						'master_dim',
+						'width',
+						'height',
 						'resize_and_crop',
 						'remove_spaces',
-						'resize_method');
+						'resize_method',
+						'upscale'
+					);
 
 		foreach($additional_params as $p)
 		{
@@ -360,7 +362,7 @@ class Fuel_custom_fields {
 		$this->CI->load->helper('html');
 
 		$form_builder =& $params['instance'];
-		
+
 		if (empty($params['folder']))
 		{
 			$params['folder'] = 'images';
@@ -388,7 +390,7 @@ class Fuel_custom_fields {
 		}
 		$asset_class .= ' '.$params['folder'];
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$asset_class : $asset_class;
-		
+
 		// set the image preview containing class
 		if (empty($params['img_container_styles']))
 		{
@@ -400,12 +402,12 @@ class Fuel_custom_fields {
 		{
 			$params['img_styles'] = 'float: left; width: 100px;';
 		}
-		
+
 		// folders and intended contents
 		$editable_filetypes = $this->fuel->config('editable_asset_filetypes');
-		
+
 		// set data parameters so that we can use them with the JS
-		
+
 		// set multiple and separator data attributes so can be used by javascript
 		if (!isset($params['multiple']))
 		{
@@ -415,7 +417,7 @@ class Fuel_custom_fields {
 		{
 			$multiple = $params['multiple'];
 		}
-		
+
 		// set the separator based on if it is multiple lines or just a single line
 		$separator = (isset($params['multiline']) AND $params['multiline'] === TRUE) ? "\n" : ', ';
 
@@ -445,7 +447,7 @@ class Fuel_custom_fields {
 		// 		{
 		// 			// create assoc array with key being the image and the value being either the image name again or the caption
 		// 			$assets = preg_split('#\s*,\s*|\n#', $params['value']);
-					
+
 		// 		}
 		// 		else
 		// 		{
@@ -503,16 +505,16 @@ class Fuel_custom_fields {
 		// 		{
 		// 			$img_container_styles = $params['img_styles'];
 		// 		}
-				
+
 		// 		$preview = '<br /><div class="img_preview noclone" style="'.$img_container_styles.'" data-imgStyles="'.$params['img_styles'].'">';
 		// 		// $preview .= $preview_str;
 		// 		$preview .= '</div><div class="clear"></div>';
 		// 	// }
 		// 	$params['after_html'] = $preview;
 		// }
-		// 
+		//
 		$params['type'] = '';
-		
+
 		if ($multiple)
 		{
 			$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
@@ -560,7 +562,7 @@ class Fuel_custom_fields {
 									$value[$key][$process_key][$params['name']] = $z;
 								}
 							}
-							
+
 						}
 					}
 					return $value;
@@ -578,11 +580,11 @@ class Fuel_custom_fields {
 						return $value;
 					}
 				}
-				
+
 			};
 			$form_builder->set_post_process($params['key'], $func);
 		}
-		
+
 		// unserialize value if it's serialized
 		//$value = (is_serialized_str($params['value'])) ? unserialize($params['value']) : $params['value'];
 		$value = (is_string($params['value']) AND is_json_str($params['value'])) ? json_decode($params['value'], TRUE) : $params['value'];
@@ -600,8 +602,8 @@ class Fuel_custom_fields {
 		}
 		$params['value'] = trim($params['value'], ",\n ");
 		//$params['comment'] = 'Add a caption value to your image by inserting a colon after the image name and then enter your caption like so: my_img.jpg:My caption goes here.';
-		
-		
+
+
 		// data params
 		$data_params['asset_folder'] = $params['folder'];
 		$data_params['subfolder'] = (isset($params['subfolder'])) ? $params['subfolder'] : '';
@@ -619,6 +621,7 @@ class Fuel_custom_fields {
 		$data_params['accept'] = (isset($params['accept'])) ? $params['accept'] : '';
 		$data_params['multiple'] = (isset($params['multiple'])) ? (bool)$params['multiple'] : FALSE;
 		$data_params['remove_subfolder'] = (isset($params['remove_subfolder'])) ? (bool)$params['remove_subfolder'] : FALSE;
+		$data_params['upscale'] = (isset($params['upscale'])) ? (bool)$params['upscale'] : TRUE;
 
 		if (isset($params['hide_image_options']))
 		{
@@ -630,7 +633,7 @@ class Fuel_custom_fields {
 		}
 
 		$params['data']['params'] = http_build_query($data_params);
-		
+
 		if (!empty($params['multiline']))
 		{
 			$params['class'] = 'no_editor '.$params['class'];
@@ -650,7 +653,7 @@ class Fuel_custom_fields {
 		{
 			$img_container_styles = $params['img_styles'];
 		}
-		
+
 		$preview = '<br /><div class="img_preview" style="'.$img_container_styles.'" data-imgstyles="'.$params['img_styles'].'">';
 		$preview .= '</div><div class="clear"></div>';
 
@@ -711,10 +714,10 @@ class Fuel_custom_fields {
 					$params['data']['fields'] = (!empty($params['fields'])) ? $params['fields'] : '';
 				}
 			}
-		
+
 			$field = $form_builder->create_select($params);
 		}
-		
+
 		return $field;
 	}
 
@@ -811,10 +814,10 @@ class Fuel_custom_fields {
 		// set the ID to have a placehoder that the js can handle
 		$repeatable = (isset($params['repeatable']) AND $params['repeatable'] === TRUE) ? TRUE : FALSE;
 		$add_extra = (isset($params['add_extra']) AND $params['add_extra'] === TRUE) ? TRUE : FALSE;
-		
+
 		$fields = array();
 		$i = 0;
-		
+
 		if (!isset($params['depth']))
 		{
 			$params['depth'] = 0;
@@ -825,19 +828,19 @@ class Fuel_custom_fields {
 		{
 			$params['value'] = json_decode($params['value'], TRUE);
 		}
-		
+
 		// set maximum limit
 		if (!isset($params['max']))
 		{
 			$params['max'] = NULL;
 		}
-		
+
 		// set minimum limit
 		if (!isset($params['min']))
 		{
 			$params['min'] = NULL;
 		}
-		
+
 		if (!is_array($params['value']))
 		{
 			$params['value'] = array();
@@ -846,9 +849,9 @@ class Fuel_custom_fields {
 		{
 			$params['value'] = array();
 		}
-		
+
 		$num = ($add_extra) ? count($params['value']) + 1 : count($params['value']);
-		
+
 		if (isset($params['min']) AND $num < $params['min'])
 		{
 			$num = $params['min'];
@@ -865,14 +868,14 @@ class Fuel_custom_fields {
 		}
 
 		if ($num == 0) $num = 1;
-		
+
 		$_f = array();
-		
+
 		if (empty($params['fields']))
 		{
 			$params['fields'] = array();
 		}
-		
+
 		for ($i = 0; $i < $num; $i++)
 		{
 			$value = (isset($params['value'][$i])) ? $params['value'][$i] : $params['value'];
@@ -898,7 +901,7 @@ class Fuel_custom_fields {
 				{
 					continue;
 				}
-				
+
 				if (empty($field['label']))
 				{
 					if ($lang = $form_builder->label_lang($key))
@@ -910,11 +913,11 @@ class Fuel_custom_fields {
 						$field['label'] = ucfirst(str_replace('_', ' ', $key));
 					}
 				}
-				
+
 				if ($repeatable)
 				{
 					$field_name_key = (!empty($form_builder->name_array)) ? 'name' : 'orig_name';
-					
+
 					$index = (!isset($params['index'])) ? $i : $params['index'];
 
 					// set file name field types to not use array syntax for name so they can be processed automagically
@@ -934,7 +937,7 @@ class Fuel_custom_fields {
 					$field['depth'] = $params['depth'] + 1;
 					$depth_css_class = ' field_depth_'.$params['depth'];
 					$field['class'] = (!empty($field['class'])) ? $field['class'].' '.$depth_css_class : $depth_css_class;
-					
+
 					// set placeholders in field ids for javascript to translate... must be last occurence of the digit
 					$field['id'] = preg_replace('#([-_a-zA-Z0-9\[\]]+)\[\d+\](\[[-_a-zA-Z0-9]+\])$#U', '$1[{index}]$2', $field['name']);
 					$field['id'] = $field['name'];
@@ -946,7 +949,7 @@ class Fuel_custom_fields {
 					$field['data']['field_name'] = $params['key'];
 					if (empty($field['replace_values']))
 					{
-						$field['replace_values'] = $value;	
+						$field['replace_values'] = $value;
 					}
 
 					// need IDS for some plugins like CKEditor... not sure yet how to clone an element with a different ID
@@ -1025,8 +1028,8 @@ class Fuel_custom_fields {
 			};
 			$form_builder->set_post_process($params['key'], $func);
 		}
-		
-		
+
+
 		if (empty($params['template']) AND !empty($params['view']))
 		{
 			$module = 'app';
@@ -1048,7 +1051,7 @@ class Fuel_custom_fields {
 		else
 		{
 			$form_params['init'] = (!empty($params['form_builder_params'])) ? $params['form_builder_params'] : array();
-			
+
 			// auto fill properties from parent form builder
 			$init = array('name_array', 'name_prefix');
 			foreach($init as $in)
@@ -1110,16 +1113,16 @@ class Fuel_custom_fields {
 								{
 									$header_value = $f[$params['title_field']]['value'];
 								}
-								
+
 								if (is_string($header_value))
 								{
-									$heading = str_replace('{__title__}', $header_value, $value);	
+									$heading = str_replace('{__title__}', $header_value, $value);
 								}
-								
+
 							}
 							else
 							{
-								$heading = $value;	
+								$heading = $value;
 							}
 							unset($f[$kk]);
 							//$f[$kk]['label'] = $heading;
@@ -1128,7 +1131,7 @@ class Fuel_custom_fields {
 					$form_params['fields'] = $f;
 
 					$form_params['value'] = '';
-					if ( ! empty($params['value'][$k])) 
+					if ( ! empty($params['value'][$k]))
 					{
 						$form_params['value'] = $params['value'][$k];
 					}
@@ -1144,11 +1147,11 @@ class Fuel_custom_fields {
 					$depth_suffix = ($params['depth'] > 0) ? '_'.$params['depth'] : '';
 
 					$style = (!empty($params['style'])) ? ' style="'.$params['style'].'"' : '';
-					
+
 					$str .= '<div class="repeatable'.$css_class.'" data-index="'.$i.'"'.$style.'>';
 					$sortable_class = (!empty($params['non_sortable'])) ? 'nonsortable' : 'grabber';
 					$str .= '<'.$heading_tag.' class="'.$sortable_class.'" title="'.lang('tooltip_dbl_click_to_open').'">';
-					if (!empty($heading)) 
+					if (!empty($heading))
 					{
 						$str .= '<span class="title'.$depth_suffix.'">'.$heading.'</span>';
 					}
@@ -1161,7 +1164,7 @@ class Fuel_custom_fields {
 				}
 				if (empty($params['float']))
 				{
-					$str .= '<div class="clear"></div></div>';	
+					$str .= '<div class="clear"></div></div>';
 				}
 			}
 			else
@@ -1173,7 +1176,7 @@ class Fuel_custom_fields {
 			}
 			return $str;
 		}
-		
+
 		// parse the string
 		if (!isset($params['parse']) OR $params['parse'] === TRUE)
 		{
@@ -1184,10 +1187,10 @@ class Fuel_custom_fields {
 
 			$str =  parse_template_syntax($str, $vars, 'ci');
 		}
-		
+
 		return $str;
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -1205,7 +1208,7 @@ class Fuel_custom_fields {
 
 		if ( ! empty($params['value']))
 		{
-			$params['value'] = str_replace(',', '', $params['value']);	
+			$params['value'] = str_replace(',', '', $params['value']);
 		}
 
 		if (empty($params['size']))
@@ -1217,7 +1220,7 @@ class Fuel_custom_fields {
 		{
 			$params['max_length'] = '10';
 		}
-		
+
 		if (empty($params['separator']))
 		{
 			$params['separator'] = ',';
@@ -1229,12 +1232,12 @@ class Fuel_custom_fields {
 		}
 
 		$currency = (isset($params['currency'])) ? $params['currency'] : '$';
-		
+
 		$data_vals = array('separator', 'decimal', 'grouping', 'min', 'max');
 
 		if (!isset($params['data']))
 		{
-			$params['data'] = array();	
+			$params['data'] = array();
 		}
 		foreach($data_vals as $val)
 		{
@@ -1243,9 +1246,9 @@ class Fuel_custom_fields {
 				$params['data'][$val] = $params[$val];
 			}
 		}
-		
+
 		$params['class'] = (!empty($params['class'])) ? 'currency '.$params['class'] : 'currency';
-		
+
 		$params['type'] = 'text';
 
 		if (!isset($_POST[$params['key']]))
@@ -1298,7 +1301,7 @@ class Fuel_custom_fields {
 						{
 							$value[$key][$process_key][$params['name']] = $curval;
 						}
-						
+
 					}
 				}
 				return $value;
@@ -1326,14 +1329,14 @@ class Fuel_custom_fields {
 		};
 		$form_builder->set_post_process($params['key'], $func);
 
-		// preformat the currency 
+		// preformat the currency
 		$params['value'] = (!isset($params['value'])) ? NULL : currency($params['value'], '', TRUE, $params['decimal'], $params['separator']);
 		//$params['value'] = (!isset($params['value'])) ? NULL : $params['value'];
 
 		// set data values for jquery plugin to use
 		return $currency.' '.$form_builder->create_text($params);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -1347,7 +1350,7 @@ class Fuel_custom_fields {
 	{
 		include(APPPATH.'config/states.php');
 		$form_builder =& $params['instance'];
-		
+
 		if (isset($params['format']))
 		{
 			if (strtolower($params['format']) == 'short')
@@ -1364,9 +1367,9 @@ class Fuel_custom_fields {
 
 		if (empty($params['options']))
 		{
-			$params['options'] = $states;	
+			$params['options'] = $states;
 		}
-		
+
 		// set data values for jquery plugin to use
 		return $form_builder->create_select($params);
 	}
@@ -1383,7 +1386,7 @@ class Fuel_custom_fields {
 	public function slug($params)
 	{
 		$form_builder =& $params['instance'];
-	
+
 			// assume a default is either name or title
 		if (empty($params['linked_to']))
 		{
@@ -1398,7 +1401,7 @@ class Fuel_custom_fields {
 			}
 			else
 			{
-				$params['linked_to'] = NULL;			
+				$params['linked_to'] = NULL;
 			}
 		}
 
@@ -1421,7 +1424,7 @@ class Fuel_custom_fields {
 						{
 							$value[$key][$process_key][$params['name']] = $v;
 						}
-						
+
 					}
 				}
 				return $value;
@@ -1439,9 +1442,9 @@ class Fuel_custom_fields {
 			}
 		};
 		$form_builder->set_post_process($params['key'], $func);
-		
+
 		$params['type'] = 'text';
-		
+
 		// set data values for jquery plugin to use
 		return $this->linked($params);
 	}
@@ -1458,12 +1461,12 @@ class Fuel_custom_fields {
 	public function list_items($params)
 	{
 		$form_builder =& $params['instance'];
-		
+
 		// ugly... just strips the whitespace on multilines ... http://stackoverflow.com/questions/1655159/php-how-to-trim-each-line-in-a-heredoc-long-string
 		$params['value'] = trim_multiline(strip_tags($params['value']));
-		
+
 		$output_class = (!empty($params['output_class'])) ? 'class="'.$params['output_class'].'"' : '';
-		
+
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
 		$list_type = (!empty($params['list_type']) AND $params['list_type'] == 'ol') ? 'ol' : 'ul';
@@ -1495,7 +1498,7 @@ class Fuel_custom_fields {
 						{
 							$value[$key][$process_key][$params['name']] = $newval;
 						}
-						
+
 					}
 				}
 				return $value;
@@ -1512,7 +1515,7 @@ class Fuel_custom_fields {
 		$params['class'] = 'no_editor';
 		return $form_builder->create_textarea($params);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -1525,7 +1528,7 @@ class Fuel_custom_fields {
 	public function multi($params)
 	{
 		$form_builder =& $params['instance'];
-		
+
 		$defaults = array(
 			'sorting'       => NULL,
 			'options'       => array(),
@@ -1539,7 +1542,7 @@ class Fuel_custom_fields {
 		);
 
 		$params = $form_builder->normalize_params($params, $defaults);
-		
+
 		// force to multi if sorting is selected
 		if ($params['sorting'] === TRUE)
 		{
@@ -1587,10 +1590,10 @@ class Fuel_custom_fields {
 			}
 		}
 
-		
+
 		$str = '';
 		$mode = (!empty($params['mode'])) ? $params['mode'] : $form_builder->multi_select_mode;
-		
+
 		if ($mode == 'checkbox' OR ($mode == 'auto' AND (isset($params['options']) AND count($params['options']) <= 5)))
 		{
 			$value = (!empty($params['value'])) ? (array)$params['value'] : array();
@@ -1598,7 +1601,7 @@ class Fuel_custom_fields {
 
 			$params['name'] = $params['name'].'[]';
 			$i = 1;
-			
+
 			if (!empty($params['options']))
 			{
 				if (!empty($inline_class))
@@ -1612,15 +1615,15 @@ class Fuel_custom_fields {
 
 					$str .= '<'.$params['wrapper_tag'].' class="'.$params['wrapper_class'].'">';
 					$attrs = array(
-							'readonly' => $params['readonly'], 
+							'readonly' => $params['readonly'],
 							'disabled' => $params['disabled'],
 							'id' => Form::create_id($params['name']).$i,
 							'style' => '' // to overwrite any input width styles
-	
+
 						);
 
 					$v = (!empty($params['equalize_key_value']) AND is_int($key)) ? $val : $key;
-					
+
 					if (in_array($v, $value))
 					{
 						$attrs['checked'] = 'checked';
@@ -1683,7 +1686,7 @@ class Fuel_custom_fields {
 	public function url($params)
 	{
 		$form_builder =& $params['instance'];
-		
+
 		$url_class = 'url_select';
 		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$url_class : $url_class;
 		if (empty($params['size']))
@@ -1707,15 +1710,15 @@ class Fuel_custom_fields {
 		}
 		if (isset($params['pdfs']))
 		{
-			$data['pdfs'] = 1;	
+			$data['pdfs'] = 1;
 		}
 		if (isset($params['filter']))
 		{
-			$data['filter'] = rawurlencode($params['filter']);	
+			$data['filter'] = rawurlencode($params['filter']);
 		}
 		if (!empty($params['data']))
 		{
-			$params['data'] = array_merge($params['data'], $data);	
+			$params['data'] = array_merge($params['data'], $data);
 		}
 		else
 		{
@@ -1724,7 +1727,7 @@ class Fuel_custom_fields {
 		$params['type'] = 'text';
 		return $form_builder->create_text($params);
 
-	}	
+	}
 
 	// --------------------------------------------------------------------
 
@@ -1739,7 +1742,7 @@ class Fuel_custom_fields {
 	{
 		$form_builder =& $params['instance'];
 		if ((isset($this->CI->language_col) AND $params['key'] == $this->CI->language_col)
-			OR 
+			OR
 			(!isset($this->CI->language_col) AND $params['key'] == 'language')
 			)
 		{
@@ -1787,7 +1790,7 @@ class Fuel_custom_fields {
 
 		$process_key = (isset($params['subkey'])) ? $params['subkey'] : $params['key'];
 
-	
+
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
 		$func = function($value) use ($process_key, $params, $row_delimiter, $split_delimiter) {
 			if (is_array($value))
@@ -1883,18 +1886,18 @@ class Fuel_custom_fields {
 					{
 						if (is_numeric($key) AND $params['allow_numeric_indexes'] === FALSE)
 						{
-							$new_value[] = $val;	
+							$new_value[] = $val;
 						}
 						else
 						{
-							$new_value[] = $key.$params['delimiter'].$val;	
+							$new_value[] = $key.$params['delimiter'].$val;
 						}
 					}
 				}
 
 				if (!empty($new_value))
 				{
-					$params['value'] = implode("\n", $new_value);	
+					$params['value'] = implode("\n", $new_value);
 				}
 				else
 				{
@@ -1946,7 +1949,7 @@ class Fuel_custom_fields {
 
 			$fb = new Form_builder();
 			$fb->load_custom_fields(APPPATH.'config/custom_fields.php');
-			
+
 			$fb->question_keys = array();
 			$fb->submit_value = '';
 			$fb->cancel_value = '';
@@ -1954,7 +1957,7 @@ class Fuel_custom_fields {
 
 			if (!isset($params['module']) OR (isset($params['module']) AND $params['module'] == 'pages'))
 			{
-				$fb->name_prefix = 'vars';	
+				$fb->name_prefix = 'vars';
 			}
 
 			$fb->set_fields($fields);
@@ -1962,9 +1965,9 @@ class Fuel_custom_fields {
 
 			if (!empty($params['value']))
 			{
-				$fb->set_field_values($params['value']);	
+				$fb->set_field_values($params['value']);
 			}
-			
+
 			$form = $fb->render();
 			return $form;
 		}
@@ -1989,7 +1992,7 @@ class Fuel_custom_fields {
 						$params['order'] = TRUE;
 					}
 
-					// set options_list to not be recursive since block layout names won't have slashes in them (e.g. sections/right_image... it would just be right_image)			
+					// set options_list to not be recursive since block layout names won't have slashes in them (e.g. sections/right_image... it would just be right_image)
 					if (!isset($params['recursive']))
 					{
 						$params['recursive'] = FALSE;
@@ -2035,7 +2038,7 @@ class Fuel_custom_fields {
 		{
 			$params['selector'] = 'tr';
 		}
-		
+
 		// the jQuery context selector in which to execute the toggle... in most cases it's within the .form class
 		if (empty($params['context']))
 		{
@@ -2062,7 +2065,7 @@ class Fuel_custom_fields {
 		}
 		else
 		{
-			$str = $this->inline_edit($params);	
+			$str = $this->inline_edit($params);
 		}
 		return $str;
 
@@ -2102,7 +2105,7 @@ class Fuel_custom_fields {
 		$params['replace_selector'] = ( ! empty($params['replace_selector'])) ? $params['replace_selector'] : '';
 
 		$dependent_class = 'dependent';
-		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$dependent_class : $dependent_class; 
+		$params['class'] = (!empty($params['class'])) ? $params['class'].' '.$dependent_class : $dependent_class;
 		$params['data'] = array(
 								'depends_on'          => $params['depends_on'],
 								'ajax_url'            => $params['url'],
@@ -2132,7 +2135,7 @@ class Fuel_custom_fields {
 			}
 			else
 			{
-				$str .= $this->inline_edit($params);	
+				$str .= $this->inline_edit($params);
 			}
 		}
 		return $str;
@@ -2145,7 +2148,7 @@ class Fuel_custom_fields {
 	 */
 	public function embedded_list($params)
 	{
-		if (empty($params['module'])) 
+		if (empty($params['module']))
 		{
 			show_error('Please specify a module for the embedded list view.');
 		}
@@ -2165,7 +2168,7 @@ class Fuel_custom_fields {
 		$display_fields = (!empty($params['display_fields'])) ? $params['display_fields'] : NULL;
 
 		$create_url = (!empty($params['create_url'])) ? $params['create_url'] : "{$module_url}/inline_create";
-		
+
 		if (!empty($display_fields))
 		{
 			if (is_array($display_fields))
@@ -2183,14 +2186,14 @@ class Fuel_custom_fields {
 		}
 		$create_url .= "?{$create_url_params}";
 		$create_url = fuel_url($create_url);
-		
+
 		$can_create = $this->fuel->auth->has_permission($module->info('permission'), 'create');
 		$can_edit = $this->fuel->auth->has_permission($module->info('permission'), 'edit');
 		$readonly = (!empty($params['readonly']) OR !empty($params['displayonly']) OR !empty($params['disabled']));
 		$cols = (!empty($params['cols'])) ? $params['cols'] : NULL;
 
 		$actions = array('edit');
-		
+
 		if ($readonly OR !$can_edit OR (isset($params['actions']) AND $params['actions'] == FALSE))
 		{
 			$actions = array();
@@ -2213,7 +2216,7 @@ class Fuel_custom_fields {
 		$embedded_list_params['create_url_params'] = $create_url_params;
 		$embedded_list_params['edit_url_params'] = $edit_url_params;
 		$embedded_list_params['display_fields'] = $display_fields;
-		
+
 		$embedded_list_items = $model->$embedded_list_model_method($embedded_list_params, $cols, $actions, $tooltip_char_limit);
 
 		$embedlistid = (!empty($params['id'])) ? $params['id'] : 'embedlist-'.sha1($module->name() . mt_rand());

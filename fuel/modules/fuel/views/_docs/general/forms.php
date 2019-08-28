@@ -464,7 +464,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>resize_and_crop</strong>: determines whether to crop the image to be forced into the dimensions</li>
 		<li><strong>resize_method</strong>: values can be "maintain_ratio" or "resize_and_crop". This value will trump any value set for the "maintain_ratio" and "resize_and_crop"</li>
 		<li><strong>master_dim</strong>: sets the dimension (height or width) to be the master dimension when resizing and maintaining aspect ratio</li>
-
+		<li><strong>upscale</strong>: set to <code>false</code> if image should not be upscaled when smaller than image target "width" or "height". Applies only if "maintain_ratio" method is choosen.  The default is TRUE (always resize image)</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -828,6 +828,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>resize_and_crop</strong>: determines whether to crop the image to be forced into the dimensions</li>
 		<li><strong>resize_method</strong>: values can be "maintain_ratio" or "resize_and_crop". This value will trump any value set for the "maintain_ratio" and "resize_and_crop"</li>
 		<li><strong>master_dim</strong>: sets the dimension (height or width) to be the master dimension when resizing and maintaining aspect ratio</li>
+		<li><strong>upscale</strong>: set to <code>false</code> if image should not be upscaled when smaller than image target "width" or "height". Applies only if "maintain_ratio" method is choosen.  The default is TRUE (always resize image)</li>
 		<li><strong>hide_options</strong>: hides all of the upload options</li>
 		<li><strong>hide_image_options</strong>: hides only the image specific upload options</li>
 	</ul>
