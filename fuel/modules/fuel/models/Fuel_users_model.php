@@ -854,7 +854,7 @@ class Fuel_users_model extends Base_module_model {
 	public function delete($where)
 	{
 		//prevent the deletion of the super admins
-		$where['super_admin'] = 'no';
+		$this->db->where(array('super_admin' => 'no'));
 		return parent::delete($where);
 	}
 
