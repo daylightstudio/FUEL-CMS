@@ -60,6 +60,7 @@ class Assets extends Module {
 				$posted['file_name'] = $this->input->post_get('userfile_file_name', TRUE);
 				$posted['unzip'] = ($this->input->post_get('unzip')) ? TRUE : FALSE;
 				$posted['remove_subfolder'] = $this->input->post_get('remove_subfolder', TRUE);
+				$posted['upscale'] = $this->input->post_get('upscale', TRUE);
 				
 				$redirect_to = uri_safe_decode($this->input->post_get('redirect_to'));
 				$id = $posted['file_name'];
@@ -89,6 +90,7 @@ class Assets extends Module {
 					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
 					$flashdata['master_dim'] = $this->input->post('master_dim', TRUE);
 					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
+					$flashdata['upscale'] = $this->input->post('upscale', TRUE);
 
 					$uploaded_data = $this->fuel->assets->uploaded_data();
 					$first_file = current($uploaded_data);
