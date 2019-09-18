@@ -380,6 +380,8 @@ $lang['btn_send_email'] = 'Send Email';
 $lang['new_user_email_subject'] = 'Your FUEL CMS account has been created';
 $lang['new_user_email'] = 'Your FUEL CMS account has been created with the user name of "%1s". Click the following link to set your FUEL password: 
 %2s';
+$lang['new_user_account_email'] = 'Your FUEL CMS account has been created with the user name of "%2s" and the password "%3s". 
+Click the following link to login: %1s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 

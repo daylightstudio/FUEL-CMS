@@ -154,7 +154,7 @@ class Fuel_users extends Fuel_module {
 		$user = $this->get($user_id, 'array');
 		
 		$params['to'] = $user['email'];
-		$params['message'] = lang('new_user_email', site_url('fuel/login'), $user['user_name'], $user['password']);
+		$params['message'] = lang('new_user_account_email', site_url('fuel/login'), $user['user_name'], $user['password']);
 		$params['subject'] = lang('new_user_email_subject');
 		$params['use_dev_mode'] = FALSE; // must be set for emails to always go
 
