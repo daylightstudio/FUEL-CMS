@@ -90,6 +90,7 @@ class Assets extends Module {
 					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
 					$flashdata['master_dim'] = $this->input->post('master_dim', TRUE);
 					$flashdata['resize_method'] = $this->input->post('resize_method', TRUE);
+					$flashdata['upscale'] = $this->input->post('upscale', TRUE);
 
 					$uploaded_data = $this->fuel->assets->uploaded_data();
 					$first_file = current($uploaded_data);
