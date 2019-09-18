@@ -60,6 +60,7 @@ class Assets extends Module {
 				$posted['file_name'] = $this->input->post_get('userfile_file_name', TRUE);
 				$posted['unzip'] = ($this->input->post_get('unzip')) ? TRUE : FALSE;
 				$posted['remove_subfolder'] = $this->input->post_get('remove_subfolder', TRUE);
+				$posted['upscale'] = $this->input->post_get('upscale', TRUE);
 				
 				$redirect_to = uri_safe_decode($this->input->post_get('redirect_to'));
 				$id = $posted['file_name'];
