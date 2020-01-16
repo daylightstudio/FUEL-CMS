@@ -1467,8 +1467,6 @@ class Module extends Fuel_base_controller {
 		$this->load->library('form_builder');
 
 		// XSS key check
-		$this->form_builder->key_check_name = $this->security->get_csrf_token_name();
-
 		if (!$this->_is_valid_csrf())
 		{
 			add_error(lang('error_saving'));
