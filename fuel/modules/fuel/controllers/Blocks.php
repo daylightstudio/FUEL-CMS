@@ -84,71 +84,65 @@ class Blocks extends Module {
 
 		if ( ! empty($_POST) AND ! empty($_FILES))
 		{
-			$params['upload_path'] = sys_get_temp_dir();
-			$params['allowed_types'] = 'php|html|txt';
-
-			// to ensure we check the proper mime types
-			$this->upload->initialize($params);
-
-			// Hackery to ensure that a proper php mimetype is set. 
-			// Would set in mimes.php config but that may be updated with the next version of CI which does not include the text/plain
-			$this->upload->mimes['php'] =  array(
-				'application/x-httpd-php', 
-				'application/php', 
-				'application/x-php', 
-				'text/php', 
-				'text/html', 
-				'text/x-php', 
-				'application/x-httpd-php-source', 
-				'text/plain'
-			);
-
-			if ($this->upload->do_upload('file'))
+			if (!$this->_is_valid_csrf())
 			{
-				$upload_data = $this->upload->data();
-				$error = FALSE;
-
-				// read in the file so we can filter it
-				$file = read_file($upload_data['full_path']);
-
-				// sanitize the file before saving
-				$file = $this->_sanitize($file);
-				$id = $this->input->post('id', TRUE);
-				$name =  $this->input->post('name', TRUE);
-				$language =  $this->input->post('language', TRUE);
-
-				if (empty($name))
-				{
-					$name_parts = explode('.', $upload_data['file_name']);
-					$name = current($name_parts);
-				}
-
-				if ($id) $save['id'] = $id;
-
-				$save['name'] = $name;
-				$save['view'] = $file;
-				$save['language'] = $language;
-				$save['date_added'] = datetime_now();
-				$save['last_modified'] = date('Y-m-d H:i:s', (time() + 1)); // to prevent window from popping up after upload
-
-				$id  = $this->model->save($save);
-
-				if ( ! $id)
-				{
-					add_error(lang('error_upload'));
-				}
-				else
-				{
-					// change list view page state to show the selected group id
-					$this->fuel->admin->set_notification(lang('blocks_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
-
-					redirect(fuel_url('blocks/edit/'.$id));
-				}
+				add_error(lang('error_saving'));
 			}
 			else
 			{
-				$error_msg = $this->upload->display_errors('', '');
-				add_error($error_msg);
+				$params['upload_path'] = sys_get_temp_dir();
+				$params['allowed_types'] = 'php|html|txt';
+
+				// to ensure we check the proper mime types
+				$this->upload->initialize($params);
+
+				if ($this->upload->do_upload('file'))
+				{
+					$upload_data = $this->upload->data();
+					$error = FALSE;
+
+					// read in the file so we can filter it
+					$file = read_file($upload_data['full_path']);
+
+					// sanitize the file before saving
+					$file = $this->_sanitize($file);
+					$id = $this->input->post('id', TRUE);
+					$name =  $this->input->post('name', TRUE);
+					$language =  $this->input->post('language', TRUE);
+
+					if (empty($name))
+					{
+						$name_parts = explode('.', $upload_data['file_name']);
+						$name = current($name_parts);
+					}
+
+					if ($id) $save['id'] = $id;
+
+					$save['name'] = $name;
+					$save['view'] = $file;
+					$save['language'] = $language;
+					$save['date_added'] = datetime_now();
+					$save['last_modified'] = date('Y-m-d H:i:s', (time() + 1)); // to prevent window from popping up after upload
+
+					$id  = $this->model->save($save);
+
+					if ( ! $id)
+					{
+						add_error(lang('error_upload'));
+					}
+					else
+					{
+						// change list view page state to show the selected group id
+						$this->fuel->admin->set_notification(lang('blocks_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
+
+						redirect(fuel_url('blocks/edit/'.$id));
+					}
+				}
+				else
+				{
+					$error_msg = $this->upload->display_errors('', '');
+					add_error($error_msg);
+				}
 			}
 		}
 
@@ -169,6 +163,7 @@ class Blocks extends Module {
 		$this->form_builder->set_field_values($_POST);
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
+		$this->_prep_csrf();
 
 		$vars['instructions'] = lang('blocks_upload_instructions');
 		$vars['form'] = $this->form_builder->render();

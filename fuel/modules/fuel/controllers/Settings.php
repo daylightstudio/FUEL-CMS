@@ -91,18 +91,25 @@ class Settings extends Fuel_base_controller {
 
 		if ( ! empty($_POST))
 		{
-			$new_settings = $this->input->post('settings', TRUE);
-
-			$fields = $settings;
-			$this->form_builder->set_fields($fields);
-			$new_settings = $this->form_builder->post_process_field_values($new_settings);// manipulates the $_POST values directly
-
-			if ($this->fuel->settings->process($module, $settings, $new_settings))
+			if (!$this->_is_valid_csrf())
 			{
-				$this->fuel->cache->clear_module($module);
-				$this->session->set_flashdata('success', lang('data_saved'));
+				add_error(lang('error_saving'));
+			}
+			else
+			{
+				$new_settings = $this->input->post('settings', TRUE);
 
-				redirect($this->uri->uri_string());
+				$fields = $settings;
+				$this->form_builder->set_fields($fields);
+				$new_settings = $this->form_builder->post_process_field_values($new_settings);// manipulates the $_POST values directly
+	
+				if ($this->fuel->settings->process($module, $settings, $new_settings))
+				{
+					$this->fuel->cache->clear_module($module);
+					$this->session->set_flashdata('success', lang('data_saved'));
+	
+					redirect($this->uri->uri_string());
+				}
 			}
 		}
 
@@ -116,7 +123,8 @@ class Settings extends Fuel_base_controller {
 		$this->form_builder->name_array = 'settings';
 		$this->form_builder->submit_value = 'Save';
 		$this->form_builder->set_field_values($field_values);
-		
+		$this->_prep_csrf();
+
 		$vars = array();
 		$vars['module'] = $mod->friendly_name();
 		$vars['form'] = $this->form_builder->render();
