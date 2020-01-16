@@ -7,6 +7,7 @@ class My_profile extends Fuel_base_controller {
 	{
 		parent::__construct();
 		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
+		$this->load->library('form_builder');
 	}
 	
 	public function edit()
@@ -16,7 +17,11 @@ class My_profile extends Fuel_base_controller {
 
 		if ( ! empty($_POST))
 		{
-			if ($id)
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_saving'));
+			}
+			else if ($id)
 			{
 				// make sure they are only 
 				if ($id != $this->fuel->auth->user_data('id'))
@@ -40,7 +45,7 @@ class My_profile extends Fuel_base_controller {
 	// separated to make it easier in subclasses to use the form without rendering the page
 	public function _form($id = null)
 	{
-		$this->load->library('form_builder');
+		$this->load->helper('security');
 		$this->js_controller_params['method'] = 'add_edit';
 
 		// create fields... start with the table info and go from there
@@ -67,12 +72,15 @@ class My_profile extends Fuel_base_controller {
 			$field_values = $saved;
 		}
 
+		// XSS key check
 		$this->form_builder->form->validator = &$this->fuel_users_model->get_validation();
 		$this->form_builder->submit_value = lang('btn_save');
 		$this->form_builder->use_form_tag = false;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->display_errors = false;
 		$this->form_builder->set_field_values($field_values);
+
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 
@@ -91,4 +99,5 @@ class My_profile extends Fuel_base_controller {
 		$this->fuel->admin->set_titlebar($crumbs);
 		$this->fuel->admin->render('my_profile', $vars, '', FUEL_FOLDER);
 	}
+
 }

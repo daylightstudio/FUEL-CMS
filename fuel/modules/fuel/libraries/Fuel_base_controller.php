@@ -90,7 +90,7 @@ class Fuel_base_controller extends CI_Controller {
 	/**
 	 * Validates that the currently logged in user has the proper permissions to view the current page
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @param	string The name of the permission to check for the currently logged in user
 	 * @param	string The type of permission (e.g. publish, edit, delete) (optional)
 	 * @param	boolean Determines whether to show a 404 error or to just exit. Default is to show a 404 error(optional)
@@ -109,6 +109,61 @@ class Fuel_base_controller extends CI_Controller {
 				exit();
 			}
 		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Generates a CSRF token in case xss is not turned on in CI
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _generate_csrf_token()
+	{
+		return md5(uniqid(mt_rand(), TRUE));
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Generates a CSRF token in case xss is not turned on in CI
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _get_csrf_token_name()
+	{
+		return $this->security->get_csrf_token_name();
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Sets an XSS session variable to be able to check on posts
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _prep_csrf()
+	{
+		$hash = $this->_generate_csrf_token();
+		$this->form_builder->key_check_name = $this->_get_csrf_token_name();
+		$this->form_builder->key_check = $hash;
+		$_SESSION[$this->form_builder->key_check_name] = $hash;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Validates a submission based on the CSRF tokent
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _is_valid_csrf()
+	{
+		return !empty($_SESSION[$this->_get_csrf_token_name()]) AND $_SESSION[$this->_get_csrf_token_name()] == $this->input->post($this->_get_csrf_token_name());
 	}
 }
 

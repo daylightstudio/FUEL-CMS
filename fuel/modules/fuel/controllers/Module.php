@@ -2377,19 +2377,6 @@ class Module extends Fuel_base_controller {
 	
 	}
 	
-	protected function _prep_csrf()
-	{
-		$hash = md5(uniqid(mt_rand(), TRUE));
-		$this->form_builder->key_check_name = $this->security->get_csrf_token_name();
-		$this->form_builder->key_check = $hash;
-		$_SESSION[$this->form_builder->key_check_name] = $hash;
-	}
-	
-	protected function _is_valid_csrf()
-	{
-		return !empty($_SESSION[$this->form_builder->key_check_name]) AND $_SESSION[$this->form_builder->key_check_name] == $this->input->post($this->form_builder->key_check_name);
-	}
-
 	protected function _run_hook($hook, $params = array())
 	{
 		// call module specific hook
