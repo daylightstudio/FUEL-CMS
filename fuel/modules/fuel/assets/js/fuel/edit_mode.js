@@ -340,8 +340,9 @@ if (fuel == undefined) var fuel = {};
 								var param2 = (relArr.length >= 2) ? relArr[1] : '';
 							}
 							if (param1.substr(0, 6) == 'create'){
-								var qString = (param2.length) ? '?' + param2 : param1;
+								var qString = (param2.length) ? '?' + param2 : '';
 								var url = $(this).attr('href') + qString;
+								console.log(url)
 							} else {
 								var url = $(this).attr('href') + param1 + '/' + param2;
 							}

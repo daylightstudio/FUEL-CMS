@@ -43,7 +43,7 @@ return array(
 	'gtar'	=>	'application/x-gtar',
 	'gz'	=>	'application/x-gzip',
 	'gzip'  =>	'application/x-gzip',
-	'php'	=>	array('application/x-httpd-php', 'application/php', 'application/x-php', 'text/php', 'text/x-php', 'application/x-httpd-php-source'),
+	'php'	=>	array('application/x-httpd-php', 'application/php', 'application/x-php', 'text/php', 'text/x-php', 'application/x-httpd-php-source', 'text/plain'),
 	'php4'	=>	'application/x-httpd-php',
 	'php3'	=>	'application/x-httpd-php',
 	'phtml'	=>	'application/x-httpd-php',

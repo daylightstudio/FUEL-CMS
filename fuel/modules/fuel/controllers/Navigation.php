@@ -29,7 +29,7 @@ class Navigation extends Module {
 				$params['var'] = $this->input->post('variable') ? $this->input->post('variable', TRUE) : 'nav';
 				$params['language'] = $this->input->post('language', TRUE);
 
-				if ( ! $this->fuel->navigation->upload($params))
+				if ( ! $this->fuel->navigation->upload($params) OR !$this->_is_valid_csrf())
 				{
 					$error = TRUE;
 				}
@@ -76,7 +76,7 @@ class Navigation extends Module {
 		$this->form_builder->submit_value = '';
 		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_field_values($_POST);
-
+		$this->_prep_csrf();
 		$vars['instructions'] = lang('navigation_import_instructions');
 		$vars['form'] = $this->form_builder->render();
 		$vars['back_action'] = ($this->fuel->admin->last_page() AND $this->fuel->admin->is_inline()) ? $this->fuel->admin->last_page() : fuel_uri($this->module_uri);

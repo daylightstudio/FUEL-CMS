@@ -26,10 +26,10 @@ specific to pages that are completely editable (and not just module data).
 &lt;?=fuel_edit($article->id, 'Edit article: '.$article->title, 'articles', TRUE, 10, 10)?&gt;
 
 // with create
-&lt;?=fuel_edit('create', 'articles')?&gt;
+&lt;?=fuel_edit('create', 'Create', 'articles')?&gt;
 
 // with create and initialization values
-&lt;?=fuel_edit('create|author_id=1', 'articles')?&gt;
+&lt;?=fuel_edit('create|author_id=1', 'Create', 'articles')?&gt;
 </pre>
 
 <p>For inline editing to work, you must be logged into FUEL and have the proper permissions to edit the page or module information. 

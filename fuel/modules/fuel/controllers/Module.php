@@ -1445,9 +1445,7 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->displayonly = $this->displayonly;
 			}
 			
-			$hash = $this->security->get_csrf_hash();
-			$this->form_builder->key_check = $hash;
-			$_SESSION[$this->form_builder->key_check_name] = $hash;
+			$this->_prep_csrf();
 			$form = $this->form_builder->render();
 		}
 
@@ -1469,7 +1467,7 @@ class Module extends Fuel_base_controller {
 		$this->load->library('form_builder');
 
 		// XSS key check
-		if ($_SESSION[$this->form_builder->key_check_name] != $this->input->post($this->form_builder->key_check_name))
+		if (!$this->_is_valid_csrf())
 		{
 			add_error(lang('error_saving'));
 		}

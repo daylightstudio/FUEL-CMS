@@ -284,6 +284,8 @@ class Pages extends Module {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->set_field_values($field_values);
 
+		$this->_prep_csrf();
+
 		$vars['form'] = $this->form_builder->render();
 
 		// clear the values hear to prevent issues in subsequent calls
@@ -538,7 +540,7 @@ class Pages extends Module {
 		$vars = $layout->process_saved_values($vars);
 
 		// validate before deleting
-		if ( ! $layout->validate($vars))
+		if (!$this->_is_valid_csrf() OR ! $layout->validate($vars))
 		{
 			add_errors($layout->errors());
 			return FALSE;
