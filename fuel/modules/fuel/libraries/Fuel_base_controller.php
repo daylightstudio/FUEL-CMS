@@ -121,7 +121,7 @@ class Fuel_base_controller extends CI_Controller {
 	 */	
 	protected function _generate_csrf_token()
 	{
-		return md5(uniqid(mt_rand(), TRUE));
+		return $this->security->xss_hash();
 	}
 
 	// --------------------------------------------------------------------
@@ -134,7 +134,7 @@ class Fuel_base_controller extends CI_Controller {
 	 */	
 	protected function _get_csrf_token_name()
 	{
-		return $this->security->get_csrf_token_name();
+		return $this->security->get_csrf_token_name().'_FUEL';
 	}
 
 	// --------------------------------------------------------------------
@@ -147,23 +147,72 @@ class Fuel_base_controller extends CI_Controller {
 	 */	
 	protected function _prep_csrf()
 	{
-		$hash = $this->_generate_csrf_token();
+		// The session CSRF is only created once otherwise we'll 
+		// have issues with inline module editing and elsewhere
+		if (!$this->_has_session_csrf())
+		{
+			$hash = $this->_generate_csrf_token();
+			$this->_set_session_csrf($hash);
+		}
+		else
+		{
+			$hash = $this->_session_csrf();
+		}
+
 		$this->form_builder->key_check_name = $this->_get_csrf_token_name();
 		$this->form_builder->key_check = $hash;
-		$_SESSION[$this->form_builder->key_check_name] = $hash;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Determines if the session CSRF exists
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _has_session_csrf()
+	{
+		return isset($_SESSION[$this->fuel->auth->get_session_namespace()][$this->_get_csrf_token_name()]);
 	}
 	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Validates a submission based on the CSRF tokent
+	 * Sets the session CSRF
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _set_session_csrf($hash)
+	{
+		$_SESSION[$this->fuel->auth->get_session_namespace()][$this->_get_csrf_token_name()] = $hash;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the session CSRF
+	 *
+	 * @access	protected
+	 * @return	void
+	 */	
+	protected function _session_csrf()
+	{
+		return !empty($_SESSION[$this->fuel->auth->get_session_namespace()][$this->_get_csrf_token_name()]) ? $_SESSION[$this->fuel->auth->get_session_namespace()][$this->_get_csrf_token_name()] : NULL;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Validates a submission based on the CSRF token
 	 *
 	 * @access	protected
 	 * @return	void
 	 */	
 	protected function _is_valid_csrf()
 	{
-		return !empty($_SESSION[$this->_get_csrf_token_name()]) AND $_SESSION[$this->_get_csrf_token_name()] == $this->input->post($this->_get_csrf_token_name());
+		return !empty($this->_session_csrf()) AND $this->_session_csrf() === $this->input->post($this->_get_csrf_token_name());
 	}
 }
 
