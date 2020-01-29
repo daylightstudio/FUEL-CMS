@@ -212,7 +212,7 @@ class Fuel_base_controller extends CI_Controller {
 	 */	
 	protected function _is_valid_csrf()
 	{
-		return !empty($this->_session_csrf()) AND $this->_session_csrf() === $this->input->post($this->_get_csrf_token_name());
+		return $this->_session_csrf() AND $this->_session_csrf() === $this->input->post($this->_get_csrf_token_name());
 	}
 }
 
