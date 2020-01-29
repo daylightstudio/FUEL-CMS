@@ -235,6 +235,8 @@ class Form_builder {
 		$this->css = array();
 		$this->_pre_process = array();
 		$this->_post_process = array();
+		$this->key_check = NULL;
+		$this->key_check_name = NULL;
 	}
 	
 	// --------------------------------------------------------------------
