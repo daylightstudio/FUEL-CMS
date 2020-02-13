@@ -35,6 +35,7 @@ fuel.controller.NavigationController = jqx.createController(fuel.controller.Base
 	
 	upload : function(){
 		this.notifications();
+		this._initToolTips();
 		//this._initAddEditInline($('#form'));
 	}
 	

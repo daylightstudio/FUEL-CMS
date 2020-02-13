@@ -410,7 +410,7 @@ class Fuel_navigation extends Fuel_module {
 		$this->CI->load->helper('file');
 		$this->CI->load->helper('security');
 		
-		$valid = array( 'file_path' => APPPATH.'views/_variables/nav.php',
+		$defaults = array( 'file_path' => APPPATH.'views/_variables/nav.php',
 						'group_id' => 'main',
 						'var' => 'nav',
 						'clear_first' => TRUE,
@@ -424,7 +424,7 @@ class Fuel_navigation extends Fuel_module {
 		}
 
 		$p = array();
-		foreach($valid as $param => $default)
+		foreach($defaults as $param => $default)
 		{
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
@@ -439,20 +439,25 @@ class Fuel_navigation extends Fuel_module {
 		
 		// read in the file so we can filter it
 		$file = read_file($file_path);
-		
+
+		// if the file_path is set and not the default, then we will assume it's JSON and decode it
+		if ($p['file_path'] != $defaults['file_path'])
+		{
+			$$var = json_decode($file, TRUE);
+		}
+		else
+		{
+			// strip any php tags
+			$file = str_replace('<?php', '', $file);
+
+			// now evaluate the string to get the nav array
+			@eval($file);
+		}
+
 		if (empty($file))
 		{
 			return FALSE;
 		}
-
-		// strip any php tags
-		$file = str_replace('<?php', '', $file);
-		
-		// run xss_clean on it 
-		$file = xss_clean($file);
-		
-		// now evaluate the string to get the nav array
-		@eval($file);
 
 		if (!empty($$var))
 		{

@@ -20,38 +20,35 @@ class Navigation extends Module {
 		{
 			$params = $this->input->post();
 
+			$error = FALSE;
 			if ( ! empty($_FILES['file']['name']))
 			{
-				$error = FALSE;
 				$file_info = $_FILES['file'];
 
 				$params['file_path'] = $file_info['tmp_name'];
-				$params['var'] = $this->input->post('variable') ? $this->input->post('variable', TRUE) : 'nav';
-				$params['language'] = $this->input->post('language', TRUE);
-
-				if ( ! $this->fuel->navigation->upload($params) OR !$this->_is_valid_csrf())
-				{
-					$error = TRUE;
-				}
-
-				if ($error)
-				{
-					add_error(lang('error_upload'));
-				}
-				else
-				{
-					// change list view page state to show the selected group id
-					$this->fuel->admin->set_notification(lang('navigation_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
-
-					redirect(fuel_url('navigation?group_id='.$params['group_id']));
-				}
 			}
-			else
+
+			$params['var'] = $this->input->post('variable') ? $this->input->post('variable', TRUE) : 'nav';
+			$params['language'] = $this->input->post('language', TRUE);
+
+			if ( ! $this->fuel->navigation->upload($params) OR !$this->_is_valid_csrf())
+			{
+				$error = TRUE;
+			}
+
+			if ($error)
 			{
 				add_error(lang('error_upload'));
 			}
-		}
+			else
+			{
+				// change list view page state to show the selected group id
+				$this->fuel->admin->set_notification(lang('navigation_success_upload'), Fuel_admin::NOTIFICATION_SUCCESS);
 
+				redirect(fuel_url('navigation?group_id='.urlencode($params['group_id'])));
+			}
+		}
+		
 		$fields = array();
 		$nav_groups = $this->fuel_navigation_groups_model->options_list('id', 'name', array('published' => 'yes'), 'id asc');
 
@@ -61,8 +58,8 @@ class Navigation extends Module {
 		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 
 		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
-		$fields['file'] = array('type' => 'file', 'accept' => '');
-		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable', TRUE) : 'nav'), 'size' => 10);
+		$fields['variable'] = array('label' => 'Variable (for nav.php file)', 'value' => (($this->input->post('variable')) ? $this->input->post('variable', TRUE) : 'nav'), 'size' => 10);
+		$fields['file'] = array('type' => 'file', 'accept' => '', 'label' => 'OR upload JSON file', 'comment' => lang('navigation_import_file_comment'));
 		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'first_option' => lang('label_select_one'));
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$fields['__fuel_module__'] = array('type' => 'hidden');

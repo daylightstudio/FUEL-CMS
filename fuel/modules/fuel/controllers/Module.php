@@ -1208,53 +1208,45 @@ class Module extends Fuel_base_controller {
 
 			if ($this->sanitize_input === TRUE)
 			{
-				foreach($data as $key => $val)
+				$this->sanitize_input = array('xss');
+			}
+
+			// force to array to normalize
+			$sanitize_input = (array) $this->sanitize_input;
+
+			if (is_array($data))
+			{
+				foreach($data as $key => $post)
 				{
-					if ( ! empty($val))
+					if (is_array($post))
 					{
-						$posted[$key] = xss_clean($val);	
+						$posted[$key] = $this->_sanitize($post);
+					}
+					else
+					{
+						// loop through sanitization functions 
+						foreach($sanitize_input as $func)
+						{
+							$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
+
+							if ($func)
+							{
+								$posted[$key] = $func($posted[$key]);
+							}
+						}
 					}
 				}
 			}
 			else
 			{
-				// force to array to normalize
-				$sanitize_input = (array) $this->sanitize_input;
-
-				if (is_array($data))
+				// loop through sanitization functions 
+				foreach($sanitize_input as $key => $val)
 				{
-					foreach($data as $key => $post)
-					{
-						if (is_array($post))
-						{
-							$posted[$key] = $this->_sanitize($data[$key]);
-						}
-						else
-						{
-							// loop through sanitization functions 
-							foreach($sanitize_input as $func)
-							{
-								$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
+					$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
 
-								if ($func)
-								{
-									$posted[$key] = $func($posted[$key]);
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					// loop through sanitization functions 
-					foreach($sanitize_input as $key => $val)
+					if ($func)
 					{
-						$func = (isset($valid_funcs[$val])) ? $valid_funcs[$val] : FALSE;
-
-						if ($func)
-						{
-							$posted = $func($posted);
-						}
+						$posted = $func($posted);
 					}
 				}
 			}
