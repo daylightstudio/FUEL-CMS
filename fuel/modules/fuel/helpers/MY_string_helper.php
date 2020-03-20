@@ -143,7 +143,7 @@ if (!function_exists('smart_ucwords'))
 		$i = 0;
 		foreach (explode(" ", $str) as $word)
 		{
-			$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word{0}) . substr($word, 1) . " " : $word . " ";
+			$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word[0]) . substr($word, 1) . " " : $word . " ";
 			$i++;
 		}
 		return rtrim($out);
