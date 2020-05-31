@@ -104,7 +104,7 @@ class Fuel_pages_model extends Base_module_model {
 			{
 				$parent_id = $parent['id'];
 			}
-			$return['navigation']['inline_create?location='.urlencode($values['location']).'&label='.$label.'&group_id='.$group_id.'&parent_id='.$parent_id] = lang('navigation_related');
+			$return['navigation']['inline_create?location='.urlencode($values['location']).'&label='.htmlentities($label).'&group_id='.$group_id.'&parent_id='.$parent_id] = lang('navigation_related');
 		}
 		$view = $this->load->module_view(FUEL_FOLDER, '_blocks/related_items_array', array('related_items' => $return), TRUE);
 		$layout = $CI->fuel->layouts->get($values['layout']);

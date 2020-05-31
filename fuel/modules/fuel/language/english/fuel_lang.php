@@ -305,7 +305,8 @@ $lang['form_label_view'] = 'View';
 */
 $lang['navigation_import'] = 'Import Navigation';
 $lang['navigation_instructions'] = 'Here you create and edit the top menu items of the page.';
-$lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable assigned in the variable field below (e.g. <strong>$nav</strong>). For a reference of the array format, please consult the <a href="http://docs.getfuelcms.com/general/navigation" target="_blank">user guide</a>.';
+$lang['navigation_import_instructions'] = 'The following allows you to import your <code>views/_variables/nav.php</code> file OR a JSON file that represents your navigation array. For a reference of the array format, please consult the <a href="http://docs.getfuelcms.com/general/navigation" target="_blank">user guide</a>.';
+$lang['navigation_import_file_comment'] = 'If no file is uploaded, it will default to the views/_variables/nav.php file. The file must be a JSON file';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
 $lang['form_label_navigation_group'] = 'Navigation Group:';
 $lang['form_label_nav_key'] = 'Key';

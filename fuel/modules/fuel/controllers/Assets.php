@@ -58,7 +58,7 @@ class Assets extends Module {
 				$posted['height'] = $this->input->post_get('height', TRUE);
 				$posted['master_dim'] = $this->input->post_get('master_dim', TRUE);
 				$posted['file_name'] = $this->input->post_get('userfile_file_name', TRUE);
-				$posted['unzip'] = ($this->input->post_get('unzip')) ? TRUE : FALSE;
+				//$posted['unzip'] = ($this->input->post_get('unzip')) ? TRUE : FALSE;
 				$posted['remove_subfolder'] = $this->input->post_get('remove_subfolder', TRUE);
 				$posted['upscale'] = $this->input->post_get('upscale', TRUE);
 				

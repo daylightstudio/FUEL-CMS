@@ -117,7 +117,7 @@ class Fuel_assets extends Fuel_base_library {
 						'overwrite' => FALSE,
 						'xss_clean' => FALSE,
 						'encrypt_name' => FALSE,
-						'unzip' => FALSE,
+						//'unzip' => FALSE,
 						'override_post_params' => FALSE,
 						'remove_spaces' => TRUE,
 						'posted' => $_POST,
@@ -410,14 +410,14 @@ class Fuel_assets extends Fuel_base_library {
 				}
 			}
 			// unzip any zip files
-			else if (is_true_val($params['unzip']) AND $file['file_ext'] == '.zip')
-			{
-				// unzip the contents
-				$this->unzip($file['full_path']);
+			// else if (is_true_val($params['unzip']) AND $file['file_ext'] == '.zip')
+			// {
+			// 	// unzip the contents
+			// 	$this->unzip($file['full_path']);
 				
-				// then delete the zip file
-				$this->delete($file['full_path']);
-			}
+			// 	// then delete the zip file
+			// 	$this->delete($file['full_path']);
+			// }
 		}
 		
 		if ($this->has_errors())

@@ -143,7 +143,7 @@ if (!function_exists('smart_ucwords'))
 		$i = 0;
 		foreach (explode(" ", $str) as $word)
 		{
-			$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word{0}) . substr($word, 1) . " " : $word . " ";
+			$out .= (!in_array($word, $exceptions) OR $i == 0) ? strtoupper($word[0]) . substr($word, 1) . " " : $word . " ";
 			$i++;
 		}
 		return rtrim($out);
@@ -184,7 +184,12 @@ if (!function_exists('strip_javascript'))
 	 */
 	function strip_javascript($str)
 	{
-		$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
+		if (!is_numeric($str))
+		{
+			$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
+			$str = preg_replace('#(<[^>]*)onerror=|onload=(.+>)#Uis', '$1$2', $str);
+		}
+
 		return $str;
 	}
 }
@@ -198,9 +203,10 @@ if (!function_exists('safe_htmlentities'))
 	 *
 	 * @param	string	string to evaluate
 	 * @param	boolean	determines whether to encode the ampersand or not
+	 * @param	boolean	determines whether to sanitize the string
 	 * @return	string
 	 */
-	function safe_htmlentities($str, $protect_amp = TRUE)
+	function safe_htmlentities($str, $protect_amp = TRUE, $sanitize = TRUE)
 	{
 		// convert all hex single quotes to numeric ... 
 		// this was due to an issue we saw with htmlentities still encoding it's ampersand again'... 
@@ -238,6 +244,13 @@ if (!function_exists('safe_htmlentities'))
 		{
 			$str = str_replace('__TEMP_AMP__', '&', $str);
 		}
+
+		// sanitize
+		if ($sanitize)
+		{
+			$str = strip_javascript($str);
+		}
+
 		return $str;
 	}
 }
