@@ -1769,9 +1769,11 @@ class MY_Model extends CI_Model {
 	</code>
 	 *
 	 * @access public
+	 * @param array $related_field
 	 * @param array $values
 	 * @param string $related_model
 	 * @param string $mode, has_many or belongs_to (optional)
+	 * @param string $rel_config which provides information on the relationship table but will use built in fuel_relationships by default (optional)
 	 * @return array
 	 */
 	public function get_related_keys($related_field, $values, $related_model, $mode = 'has_many', $rel_config = '')
