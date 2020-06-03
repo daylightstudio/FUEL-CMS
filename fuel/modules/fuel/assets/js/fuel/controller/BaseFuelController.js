@@ -753,6 +753,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 		});
 		
+		// select all
+		_this.selectAll();
+		
 		// setup rearranging precedence
 		_this._toggleRearrangeBtn();
 
@@ -844,5 +847,30 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		return false;
 	}
 	
+	selectAll : function(){
+		// select all
+		if ($('.multi_delete').length){
+			$('a.ico_select_all').toggle(
+			function(e){
+				e.preventDefault();
+				if (!$('#toggle_list').parent().hasClass('active')){
+					$('#toggle_list').click();
+				}
+				$('a.ico_select_all').html(fuel.lang('btn_deselect_all'));
+				$('#multi_delete').parent().show();
+				$('.multi_delete', '#fuel_main_content').attr('checked', true);
+			},
+			function(){
+				if (!$('#toggle_list').parent().hasClass('active')){
+					$('#toggle_list').click();
+				}
+				$('a.ico_select_all').html(fuel.lang('btn_select_all'));
+				$('#multi_delete').parent().hide();
+				$('.multi_delete', '#fuel_main_content').attr('checked', false);
+			});
+		} else {
+			$('a.ico_select_all').parent().remove();
+		}
+	}
 	
 });
