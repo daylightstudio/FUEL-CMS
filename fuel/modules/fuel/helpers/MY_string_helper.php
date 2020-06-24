@@ -187,7 +187,7 @@ if (!function_exists('strip_javascript'))
 		if (!is_numeric($str))
 		{
 			$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
-			$str = preg_replace('#(<[^>]*)onerror=|onload=(.+>)#Uis', '$1$2', $str);
+			$str = preg_replace('#(<[^>]*)onerror=|onload=|ontoggle=(.+>)#Uis', '$1$2', $str);
 		}
 
 		return $str;
