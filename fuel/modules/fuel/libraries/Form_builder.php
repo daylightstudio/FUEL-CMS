@@ -2891,6 +2891,7 @@ class Form_builder {
 		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
 		$class = isset($params['class']) ? ' class="'.$params['class'].'"' : '';
 		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
+		$section = $this->create_tooltip($params);
 		return '<'.$tag.$id.$class.'>'.$section.'</'.$tag.'>';
 	}
 
