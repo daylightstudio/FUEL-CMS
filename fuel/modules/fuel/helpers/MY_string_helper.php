@@ -248,7 +248,9 @@ if (!function_exists('safe_htmlentities'))
 		// sanitize
 		if ($sanitize)
 		{
-			$str = strip_javascript($str);
+			//$str = strip_javascript($str);
+			// Better method
+			$str = html_purify($str);
 		}
 
 		return $str;
