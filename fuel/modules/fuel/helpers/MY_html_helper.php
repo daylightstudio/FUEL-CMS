@@ -164,12 +164,19 @@ if (!function_exists('html_attrs'))
  * @access  public
  * @param   string or array  $dirty_html  A string (or array of strings) to be cleaned.
  * @param   string           $config      The name of the configuration (switch case) to use.
+ * @param   boolean          $replace     Determines whether to replace the main config or append to it.
+ * @param   boolean          $remove_allowed_funcs     Determines whether search for allowed functions to remove.
  * @return  string or array               The cleaned string (or array of strings).
  */
 if (!function_exists('html_purify'))
 {
-	function html_purify($dirty_html, $config = [], $replace = false)
+	function html_purify($dirty_html, $config = [], $replace = false, $remove_allowed_funcs = false)
 	{
+		if (!is_string($dirty_html) OR is_numeric($dirty_html))
+		{
+			return $dirty_html;
+		}
+
 		// Modified to include the library if it doesn't exist
 		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTMLPurifier.standalone.php');
 
@@ -222,6 +229,20 @@ if (!function_exists('html_purify'))
 
 			$purifier_config = \HTMLPurifier_Config::createDefault();
 			$purifier_config->set('Core.Encoding', $CI->config->item('charset'));
+
+			if (!$remove_allowed_funcs)
+			{
+				$allowed_funcs = $CI->fuel->config('parser_allowed_functions');
+				$parse_delimiters = $CI->fuel->config('parser_delimiters');
+				$tag_delimiters = $parse_delimiters['tag_variable'];
+				$keep_replace = array('__TEMP_LEFT_CURLY_BRACE__', '__TEMP_RIGHT_CURLY_BRACE__');
+		
+				// Escape functions that are allowed with delimiters
+				$funcs = implode('|', $allowed_funcs);
+				$regex = '#'.preg_quote($tag_delimiters[0]).'.*(('.$funcs.')\(.*\).*)'.preg_quote($tag_delimiters[1]).'#U';
+				$dirty_html = preg_replace($regex, $keep_replace[0].'$1'.$keep_replace[1], $dirty_html);
+			}
+			
 			foreach ($config as $key => $val)
 			{
 				$purifier_config->set($key, $val);
@@ -234,6 +255,11 @@ if (!function_exists('html_purify'))
 			if ($encodeAmpersands)
 			{
 				$clean_html = str_replace('__TEMP_AMP__', '&', $clean_html);
+			}
+
+			if (!$remove_allowed_funcs)
+			{
+				$clean_html = str_replace($keep_replace, $tag_delimiters, $clean_html);
 			}
 		}
 

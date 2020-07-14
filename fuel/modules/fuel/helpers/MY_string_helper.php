@@ -250,7 +250,13 @@ if (!function_exists('safe_htmlentities'))
 		{
 			//$str = strip_javascript($str);
 			// Better method
+			// $CI =& get_instance();
+			// $allowed_funcs = $CI->fuel->config('parser_allowed_functions');
+			// $keep_search = array('{', '}');
+			// $keep_replace = array('__TEMP_LEFT_CURLY_BRACE__', '__TEMP_RIGHT_CURLY_BRACE__');
+			// $str = str_replace($keep_search, $keep_replace, $str);
 			$str = html_purify($str);
+			// $str = str_replace($keep_replace, $keep_search, $str);
 		}
 
 		return $str;
