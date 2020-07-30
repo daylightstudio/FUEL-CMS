@@ -530,10 +530,10 @@ class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$first = $this->_find_first_renderable_field();;
+		$first = $this->_find_first_renderable_field();
 
 		$is_fieldset_first = FALSE;
-		if ($first['type'] != 'fieldset')
+		if (!empty($first) AND $first['type'] != 'fieldset')
 		{
 			$str .= $this->_open_div();
 		}
