@@ -2344,7 +2344,7 @@ class MY_Model extends CI_Model {
 	public function field_type($field)
 	{
 		$field_info = $this->field_info($field);
-		$switch = (!empty($field_info['type'])) ? $field_info['type'] : 'default';
+		$switch = (!empty($field_info['type'])) ? $field_info['type'] : '';
 		
 		switch($switch)
 		{
@@ -2365,7 +2365,7 @@ class MY_Model extends CI_Model {
 			case 'enum':
 				return 'enum';
 			default:
-				return $field_info['type'];
+				return $switch;
 		}
 	}
 	
