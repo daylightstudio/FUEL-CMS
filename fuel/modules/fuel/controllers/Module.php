@@ -1141,7 +1141,7 @@ class Module extends Fuel_base_controller {
 	{
 		$this->model->on_before_post($this->input->post());
 
-		$posted = $this->_process();
+		$posted = $this->_process($id);
 
 		// run before_edit hook
 		$this->_run_hook('before_edit', $posted);
@@ -1453,7 +1453,7 @@ class Module extends Fuel_base_controller {
 		return $vars;
 	}
 
-	protected function _process()
+	protected function _process($id = NULL)
 	{
 		$this->load->helper('security');
 		$this->load->library('form_builder');
@@ -1514,7 +1514,7 @@ class Module extends Fuel_base_controller {
 		// set key_field if it is not id
 		if ( ! empty($_POST['id']) AND $this->model->key_field() != 'id')
 		{
-			$_POST[$this->model->key_field()] = $_POST['id'];
+			$_POST[$this->model->key_field()] = !empty($id) ? $id : $_POST['id'];
 		}
 
 		// run any form field post processing hooks

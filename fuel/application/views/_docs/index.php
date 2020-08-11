@@ -85,8 +85,10 @@ At its core, FUEL is a PHP/MySQL, modular-based development platform built on to
 					$form_fields = $sub_model->form_fields();
 					foreach($sub_model->form_fields() as $field => $field_params) : ?>
 					<?php if ($field != 'id') : 
-					$label = (!empty($field_params['label'])) ? $field_params['label'] : $CI->form_builder->create_label($field_params);
-					$label = ucfirst(str_replace('_', ' ', $field));
+					$label = (!empty($field_params['label'])) ? $field_params['label'] : $CI->form_builder->create_label($field_params, FALSE);
+					if (empty($label)) :
+						$label = ucfirst(str_replace(array('_id', '_'), array(' ID', ' '), $field));
+					endif;
 					?>
 					<li><strong><?=$label?></strong><?php if (!empty($field_params['comment'])) : ?> - <?=$field_params['comment']?><?php endif; ?></li>
 					<?php endif; ?>

@@ -111,7 +111,7 @@ class Fuel_custom_fields {
 			$params['data']['link_pdfs'] = 1;
 		}
 
-		// set the image folder for inserting assets
+		// set the link filter when selecting page links
 		if (isset($params['link_filter']))
 		{
 			$params['data']['link_filter'] = $params['link_filter'];

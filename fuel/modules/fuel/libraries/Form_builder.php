@@ -530,10 +530,10 @@ class Form_builder {
 
 		$colspan = ($this->label_layout == 'top') ? '1' : '2';
 		
-		$first = $this->_find_first_renderable_field();;
+		$first = $this->_find_first_renderable_field();
 
 		$is_fieldset_first = FALSE;
-		if ($first['type'] != 'fieldset')
+		if (!empty($first) AND $first['type'] != 'fieldset')
 		{
 			$str .= $this->_open_div();
 		}
@@ -2891,6 +2891,7 @@ class Form_builder {
 		$id = isset($params['id']) ? ' id="'.$params['id'].'"' : '';
 		$class = isset($params['class']) ? ' class="'.$params['class'].'"' : '';
 		$tag = (empty($params['tag'])) ? $this->section_tag : $params['tag'];
+		$section = $this->create_tooltip($params);
 		return '<'.$tag.$id.$class.'>'.$section.'</'.$tag.'>';
 	}
 

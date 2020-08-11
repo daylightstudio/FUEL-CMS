@@ -295,7 +295,7 @@ class Inspection {
 						$next_string_is_func = FALSE;
 						if (!$include_underscore_funcs AND substr($token[1], 0, 1) == '_')
 						{
-							continue;
+							continue 2;
 						}
 						$functions[] = $token[1];
 					}

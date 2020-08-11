@@ -187,7 +187,7 @@ if (!function_exists('strip_javascript'))
 		if (!is_numeric($str))
 		{
 			$str = preg_replace('#<script[^>]*>.*?</script>#is', '', $str);
-			$str = preg_replace('#(<[^>]*)onerror=|onload=(.+>)#Uis', '$1$2', $str);
+			$str = preg_replace('#(<[^>]*)onerror=|onload=|ontoggle=(.+>)#Uis', '$1$2', $str);
 		}
 
 		return $str;
@@ -248,7 +248,15 @@ if (!function_exists('safe_htmlentities'))
 		// sanitize
 		if ($sanitize)
 		{
-			$str = strip_javascript($str);
+			//$str = strip_javascript($str);
+			// Better method
+			// $CI =& get_instance();
+			// $allowed_funcs = $CI->fuel->config('parser_allowed_functions');
+			// $keep_search = array('{', '}');
+			// $keep_replace = array('__TEMP_LEFT_CURLY_BRACE__', '__TEMP_RIGHT_CURLY_BRACE__');
+			// $str = str_replace($keep_search, $keep_replace, $str);
+			$str = html_purify($str);
+			// $str = str_replace($keep_replace, $keep_search, $str);
 		}
 
 		return $str;

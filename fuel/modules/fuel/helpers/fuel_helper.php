@@ -75,7 +75,7 @@ if ( ! function_exists('fuel_block'))
 	 * <li><strong>offset</strong> - the find results returned offset value</li>
 	 * <li><strong>return_method</strong>: the return method the find query should use</li>
 	 * <li><strong>assoc_key</strong>: the column name to be used as the associative key in the find method</li>
-	 * <li><strong>data</strong>: the data values to be passed to the block. This variable get's automatically set if you specify the model and find method</li>
+	 * <li><strong>data</strong>: the data values to be passed to the block. This variable gets automatically set if you specify the model and find method</li>
 	 * <li><strong>editable</strong>: css class styles to apply to menu items... can be a nested array</li>
 	 * <li><strong>parse</strong>: determines whether to parse the contents of the block. The default is set to 'auto'</li>
 	 * <li><strong>cache</strong>: determines whether to cache the block. Default is false</li>
@@ -359,7 +359,7 @@ if ( ! function_exists('fuel_var'))
 	 * The <dfn>edit_module</dfn> parameter specifies the module to include for inline editing.
 	 * The <dfn>evaluate</dfn> parameter specifies whether to evaluate any php in the variables.
 	 *
-	 * <p class="important">You should not use this function inside of another function because you may get unexepected results. This is
+	 * <p class="important">You should not use this function inside of another function because you may get unexpected results. This is
 	 * because it returns inline editing markers that later get parsed out by FUEL. For example:</p>
 	 *
 	 * <code>
