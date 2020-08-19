@@ -444,7 +444,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			
 			$modal.find('iframe#replace_iframe').bind('load', function(){
 				var iframeContext = this.contentDocument;
-				var replacedId = $('#new_fuel_replace_id', iframeContext).val();
+				var replacedId = parseInt($('#new_fuel_replace_id', iframeContext).val());
 				
 				$('#form', iframeContext).submit(function(){
 					if (confirm(fuel.lang('replace_warning'))){

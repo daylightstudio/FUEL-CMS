@@ -1803,7 +1803,7 @@ class Module extends Fuel_base_controller {
 		{
 			if ( ! empty($_POST['fuel_replace_id']))
 			{
-				$replace_id = $this->input->post('fuel_replace_id');
+				$replace_id = (int) $this->input->post('fuel_replace_id', true);
 				//$delete = is_true_val($this->input->post('fuel_delete_replacement'));
 				$delete = TRUE;
 				if (!$this->model->replace($replace_id, $id, $delete))
@@ -1833,7 +1833,7 @@ class Module extends Fuel_base_controller {
 
 		if ($success)
 		{
-			$fields['new_fuel_replace_id'] = array('type' => 'hidden', 'value' => $replace_id);
+			$fields['new_fuel_replace_id'] = array('type' => 'hidden', 'value' => (int) $replace_id);
 		}
 
 		//$this->form_builder->use_form_tag = FALSE;
