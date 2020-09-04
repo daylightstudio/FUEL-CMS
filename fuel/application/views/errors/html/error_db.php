@@ -58,7 +58,9 @@ p {
 <body>
 	<div id="container">
 		<h1><?php echo $heading; ?></h1>
+		<?php if (is_dev_mode()) : ?>
 		<?php echo $message; ?>
+		<?php endif; ?>
 	</div>
 </body>
 </html>
