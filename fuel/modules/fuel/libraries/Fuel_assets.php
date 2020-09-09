@@ -112,6 +112,11 @@ class Fuel_assets extends Fuel_base_library {
 		$this->CI->load->library('image_lib');
 		$this->CI->load->library('encryption');
 
+		if (!config_item('encryption_key'))
+		{
+			$this->_add_error(lang('assets_encryption_key_missing'));
+		}
+
 		$valid = array( 'upload_path' => '',
 						'file_name' => '',
 						'overwrite' => FALSE,

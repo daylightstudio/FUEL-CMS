@@ -358,6 +358,7 @@ $lang['assets_comment_width'] = 'Will change the width of an image to the desire
 $lang['assets_comment_height'] = 'Will change the height of an image to the desired amount. If "Create thumbnail" is selected, it will only effect the size of the thumbnail.';
 $lang['assets_comment_master_dim'] = 'Specifies the master dimension to use for resizing. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller then wider, or vice versa.';
 $lang['assets_comment_unzip'] = 'Unzips a zip file';
+$lang['assets_encryption_key_missing'] = 'Missing $config[\'encryption_key\'] value to your CI config file.';
 
 /*
 |--------------------------------------------------------------------------
