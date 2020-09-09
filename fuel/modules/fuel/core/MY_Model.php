@@ -2348,7 +2348,7 @@ class MY_Model extends CI_Model {
 		
 		switch($switch)
 		{
-			case 'var' : case 'varchar': case 'string': case 'tinytext': case 'text':  case 'longtext':
+			case 'var': case 'char': case 'varchar': case 'string': case 'tinytext': case 'text': case 'longtext': case 'mediumtext':
 				return 'string';
 			case 'int': case 'tinyint': case 'smallint': case 'mediumint': case 'float':  case 'double':  case 'decimal':
 				return 'number';
