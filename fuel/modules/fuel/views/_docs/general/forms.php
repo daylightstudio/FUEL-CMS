@@ -906,8 +906,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="inline_edit" class="toggle">inline_edit</h3>
 <div class="toggle_block_off">
-	<p>This field type is used for associating a separate module's data with your own.
-	The following additional parameters can be passed to this field type:</p>
+	<p>This field type is used for associating a separate module's data with your own. It also works with the field type <a href="#select2">select2</a>.</p>
+	<p>The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>module</strong>: the module to inline edit</li>
 		<li><strong>module_uri</strong>: the URI path to the module if it's different then the module name (e.g. my_module/inline_create/field1:field2)</li>
@@ -1194,7 +1194,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="select2" class="toggle">select2</h3>
 <div class="toggle_block_off">
-	<p>This field type can be used with any select field and transforms it into a searchable list using the <a href="https://select2.github.io/" target="_blank">Select2 plugin</a>.</p>
+	<p>This field type can be used with any select field, including the field type <a href="#inline_edit">inline_edit</a>, and transforms it into a searchable list using the <a href="https://select2.github.io/" target="_blank">Select2 plugin</a>.</p>
 	<ul>
 		<li><strong>width</strong>: the width of the field. The default is 225px</li>
 	</ul>
