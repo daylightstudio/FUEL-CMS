@@ -584,12 +584,14 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			// Group
 			$fieldsets = $('fieldset.tab', context).not('fieldset.tab fieldset', context);
 
+			// addBack() is available since jquery 1.8
+			if(!$.fn.addBack){
+				$.fn.addBack = $.fn.andSelf;
+			}
+			
 			$fieldsets.each(function() {
 				if ( ! $(this).closest('.fieldset-grouped').length){
-					// addBack is available since jquery 1.8
-					if(!$.fn.addBack){
-						$.fn.addBack = $.fn.andSelf;
-					}
+
 					$(this).nextUntil('fieldset:not([class])').addBack().wrapAll("<div class='fieldset-grouped' />");
 				}
 			});
