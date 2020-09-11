@@ -579,41 +579,60 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			var tabId = 'tabs_' + jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
 			var tabCookieSettings = {group: this.uiCookie, name: tabId, params: {path: jqx.config.cookieDefaultPath}}
 
-			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
-			
-			// prevent nested fieldsets from showing up with not()
-			$legends = $('fieldset.tab legend', context).not('fieldset.tab fieldset legend', context);
-			$legends.each(function(i){
-				if ($(this).parent().attr('id') != '') {
-					$(this).parent().attr('id', 'fieldset' + i).attr('data-index', i);
+			var tabs = '';
+
+			// Group
+			$fieldsets = $('fieldset.tab', context).not('fieldset.tab fieldset', context);
+
+			$fieldsets.each(function() {
+				if ( ! $(this).closest('.fieldset-grouped').length){
+					// addBack is available since jquery 1.8
+					if(!$.fn.addBack){
+						$.fn.addBack = $.fn.andSelf;
+					}
+					$(this).nextUntil('fieldset:not([class])').addBack().wrapAll("<div class='fieldset-grouped' />");
 				}
-				var id = ($(this).parent().attr('id'));
-				var text = $(this).text();
-				tabs += '<li id="fueltab' + i + '"><a href="#' + id + '">' + text + '</a></li>';
 			});
-			$legends.hide();
-			tabs += '</ul><div class="clear"></div></div>';
 
-			var startIndex = parseInt($.supercookie(tabCookieSettings.group, tabCookieSettings.name));
-			if (!startIndex) startIndex = 0;
-			tabs += '<input type="hidden" name="__fuel_selected_tab__" id="__fuel_selected_tab__" value="' + startIndex + '" />';
-			$legends.filter(':first').parent().before(tabs);
+			$('.fieldset-grouped').each(function(idx,context){
 
-			$('#form').trigger('fuel_form_tabs_loaded', [$('#fuel_form_tabs')] );
+				tabs = '<div id="fuel_form_tabs_' + idx + '" class="form_tabs"><ul>'
 
-			$tabs = $('#fuel_form_tabs ul', context);
-			$tabs.simpleTab({cookie: tabCookieSettings});
-			
-			var tabCallback = function(e, index, selected, content, settings){
-				$('#__fuel_selected_tab__').val(index);
-			}
-			$tabs.bind('tabClicked', tabCallback);
+				// prevent nested fieldsets from showing up with not()
+				$legends = $('fieldset.tab legend', context).not('fieldset.tab fieldset legend', context);
+				$legends.each(function(i){
+					if ($(this).parent().attr('id') != '') {
+						$(this).parent().attr('id', 'fieldset' + i + '_' + idx).attr('data-index', i + '_' + idx);
+					}
+					var id = ($(this).parent().attr('id'));
+					var text = $(this).text();
+					tabs += '<li id="fueltab' + i + '_' + idx + '"><a href="#' + id + '">' + text + '</a></li>';
+				});
+				$legends.hide();
+				tabs += '</ul><div class="clear"></div></div>';
 
-			// check if there are any errors and highlight them
-			$legends.parent().find('.error_highlight').each(function(i){
-				var fieldsetIndex = $(this).closest('fieldset').data('index');
-				$('#fueltab' + fieldsetIndex).addClass('taberror');
-			})
+				var startIndex = parseInt($.supercookie(tabCookieSettings.group, tabCookieSettings.name));
+				if (!startIndex) startIndex = 0;
+				tabs += '<input type="hidden" name="__fuel_selected_tab__" id="__fuel_selected_tab__" value="' + startIndex + '" />';
+				$legends.filter(':first').parent().before(tabs);
+
+				$('#form').trigger('fuel_form_tabs_loaded', [$('#fuel_form_tabs_' + idx)] );
+
+				$tabs = $('.form_tabs ul', context);
+				$tabs.simpleTab({cookie: tabCookieSettings});
+
+				var tabCallback = function(e, index, selected, content, settings){
+					$('#__fuel_selected_tab__').val(index);
+				}
+				$tabs.bind('tabClicked', tabCallback);
+
+				// check if there are any errors and highlight them
+				$legends.parent().find('.error_highlight').each(function(i){
+					var fieldsetIndex = $(this).closest('fieldset').data('index');
+					$('#fueltab' + fieldsetIndex).addClass('taberror');
+				})
+
+			});
 		}
 	},
 	
