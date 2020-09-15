@@ -461,7 +461,7 @@ class Asset {
 
 	 * @access	public
 	 * @param	string	asset file name including extension
-	 * @param	string	subfolder to asset file (e.g. images, js, css... etc)
+	 * @param	string	subfolder to asset file (e.g. images, js, css... etc). Subfolder must be defined as key in `$config['assets_folders']` application/config/assets.php
 	 * @param	string	module folder if any
 	 * @param	boolean	whether to include http://... at beginning
 	 * @return	string
