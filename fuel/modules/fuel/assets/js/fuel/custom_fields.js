@@ -1281,10 +1281,10 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			// 	context = contextArr.pop();
 			// }
 			
+			$layout_fields = $this.next('.block_layout_fields');
+
 			if (url.length){
 				url += '?context=' + context + '&name=' + name + '&t=' + new Date().getTime();
-
-				$layout_fields = $this.next('.block_layout_fields');
 
 				// show loader
 				$this.parent().find('.loader').show();
