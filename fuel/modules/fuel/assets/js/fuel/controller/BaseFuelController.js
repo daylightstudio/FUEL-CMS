@@ -574,10 +574,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	},
 	
 	_initFormTabs : function(context){
-		if (!$('#fuel_form_tabs', context).length){
+		if (!$('#fuel_form_tabs', context).length) {
 
 			var tabId = 'tabs_' + jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
-			var tabCookieSettings = {group: this.uiCookie, name: tabId, params: {path: jqx.config.cookieDefaultPath}}
+			var tabCookieSettings;
+			var uiCookie = this.uiCookie;
 
 			var tabs = '';
 
@@ -588,7 +589,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			if(!$.fn.addBack){
 				$.fn.addBack = $.fn.andSelf;
 			}
-			
+
 			$fieldsets.each(function() {
 				if ( ! $(this).closest('.fieldset-grouped').length){
 
@@ -597,6 +598,10 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			});
 
 			$('.fieldset-grouped').each(function(idx,context){
+
+				tabId += '_' + idx;
+
+				tabCookieSettings = {group: uiCookie, name: tabId, params: {path: jqx.config.cookieDefaultPath}}
 
 				tabs = '<div id="fuel_form_tabs_' + idx + '" class="form_tabs"><ul>'
 
@@ -614,17 +619,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				tabs += '</ul><div class="clear"></div></div>';
 
 				var startIndex = parseInt($.supercookie(tabCookieSettings.group, tabCookieSettings.name));
+
+				var __fuel_selected_tab__ = "__fuel_selected_tab__"+idx;
+
 				if (!startIndex) startIndex = 0;
-				tabs += '<input type="hidden" name="__fuel_selected_tab__" id="__fuel_selected_tab__" value="' + startIndex + '" />';
+				tabs += '<input type="hidden" name="' + __fuel_selected_tab__ + '" id="' + __fuel_selected_tab__ + '" value="' + startIndex + '" />';
 				$legends.filter(':first').parent().before(tabs);
 
 				$('#form').trigger('fuel_form_tabs_loaded', [$('#fuel_form_tabs_' + idx)] );
 
-				$tabs = $('.form_tabs ul', context);
+				$tabs = $('#fuel_form_tabs_' + idx + ' ul', context);
 				$tabs.simpleTab({cookie: tabCookieSettings});
 
 				var tabCallback = function(e, index, selected, content, settings){
-					$('#__fuel_selected_tab__').val(index);
+					$('#'+__fuel_selected_tab__).val(index);
 				}
 				$tabs.bind('tabClicked', tabCallback);
 
