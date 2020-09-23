@@ -180,7 +180,7 @@ class Fuel_permissions_model extends Base_module_model {
 		if (!empty($values['name']))
 		{
 			$name = current(explode('/', $values['name']));
-			$this->db->where('(name LIKE "'.$name.'/%" OR name ="'.$name.'") AND name != "'.$values['name'].'"');
+			$this->db->where('(name LIKE "'.$this->db->escape($name).'/%" OR name ="'.$this->db->escape($name).'") AND name != "'.$this->db->escape($values['name']).'"');
 			$related_items = $this->find_all_array_assoc('id');
 			if (!empty($related_items))
 			{
