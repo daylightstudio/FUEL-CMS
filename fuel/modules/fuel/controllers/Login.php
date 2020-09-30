@@ -214,6 +214,10 @@ class Login extends CI_Controller {
 						}
 						else
 						{
+							// Reset the key back to empty if not successful send
+							$user['reset_key'] = '';
+							$this->fuel_users_model->save($user);
+							$user['reset_key'] = $token;
 							$this->session->set_flashdata('error', lang('error_pwd_reset'));
 							$this->fuel->logs->write($this->fuel->notification->last_error(), 'debug');
 						}

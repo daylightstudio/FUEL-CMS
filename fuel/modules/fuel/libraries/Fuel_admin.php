@@ -306,8 +306,8 @@ class Fuel_admin extends Fuel_base_library {
 				$output = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
 				$output .= "top.window.location = '".site_url($login)."'\n";
 				$output .= "</script>\n";
-				$this->CI->output->set_output($output);
-				return;
+				echo $output;
+				exit();
 			}
 		}
 	}
@@ -960,7 +960,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			$this->set_panel_display('top', FALSE);
 			$this->set_panel_display('nav', FALSE);
-			$this->set_panel_display('actions', FALSE);
+			$this->set_panel_display('actions', (isset($this->CI->allow_inline_actions) ? $this->CI->allow_inline_actions : $this->CI->fuel->config('allow_inline_actions')));
 		}
 		else
 		{

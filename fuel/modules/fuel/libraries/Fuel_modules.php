@@ -664,6 +664,7 @@ class Fuel_module extends Fuel_base_library {
 				'instructions' => lang('module_instructions_default', strtolower(humanize($this->module))),
 				'filters' => array(),
 				'archivable' => TRUE,
+				'allow_inline_actions' => $this->fuel->config('allow_inline_actions'),
 				'table_headers' => array(),
 				'table_actions' => array('EDIT', 'VIEW', 'DELETE'),
 				'item_actions' => array('save', 'view', 'publish', 'activate', 'delete', 'duplicate', 'replace', 'create'),
@@ -707,7 +708,7 @@ class Fuel_module extends Fuel_base_library {
 					$info[$key] = $val;
 				}
 			}
-			
+
 			// icon class for module
 			if (empty($info['icon_class']))
 			{
