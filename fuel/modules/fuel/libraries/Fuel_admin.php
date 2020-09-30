@@ -306,8 +306,8 @@ class Fuel_admin extends Fuel_base_library {
 				$output = "<script type=\"text/javascript\" charset=\"utf-8\">\n";
 				$output .= "top.window.location = '".site_url($login)."'\n";
 				$output .= "</script>\n";
-				$this->CI->output->set_output($output);
-				return;
+				echo $output;
+				exit();
 			}
 		}
 	}
