@@ -960,7 +960,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			$this->set_panel_display('top', FALSE);
 			$this->set_panel_display('nav', FALSE);
-			$this->set_panel_display('actions', FALSE);
+			$this->set_panel_display('actions', (isset($this->CI->allow_inline_actions) ? $this->CI->allow_inline_actions : $this->CI->fuel->config('allow_inline_actions')));
 		}
 		else
 		{

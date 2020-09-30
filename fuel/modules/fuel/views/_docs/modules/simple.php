@@ -149,6 +149,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>Saves to the archive table for later retrieval if you need to revert back</td>
 		</tr>
 		<tr>
+			<td><strong>allow_inline_actions</strong></td>
+			<td>TRUE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>Determines wether to display the action buttons when using inline modal window for creating/editing a module's data.</td>
+		</tr>
+		<tr>
 			<td><strong>table_actions</strong></td>
 			<td>EDIT, VIEW, DELETE</td>
 			<td>None</td>

@@ -330,6 +330,8 @@ $config['nav']['manage'] = array(
 // Will auto arrange the navigation into the normal order
 $config['nav_auto_arrange'] = TRUE;
 
+// Determines wether to display the action buttons when using inline modal window
+$config['allow_inline_actions'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
