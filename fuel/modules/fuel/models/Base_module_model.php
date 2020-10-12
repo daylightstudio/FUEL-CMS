@@ -1227,9 +1227,9 @@ class Base_module_model extends MY_Model {
 
 		$limit = (isset($params['limit'])) ? $params['limit'] : NULL;
 		$offset = (isset($params['offset'])) ? $params['offset'] : 0;
-		$col = (isset($params['col'])) ? $params['col'] : NULL;
-		$order = (isset($params['order'])) ? $params['order'] : NULL;
-		
+		$col = (isset($params['col'])) ? $params['col'] : $module->info('default_col');
+		$order = (isset($params['order'])) ? $params['order'] : $module->info('default_order');
+				
 		$list_items = $this->list_items($limit, $offset, $col, $order);
 		
 		if (empty($list_items))
