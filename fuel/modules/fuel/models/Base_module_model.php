@@ -1224,8 +1224,14 @@ class Base_module_model extends MY_Model {
 
 			$this->db->group_end();
 		}
+
+		$limit = (isset($params['limit'])) ? $params['limit'] : NULL;
+		$offset = (isset($params['offset'])) ? $params['offset'] : 0;
+		$col = (isset($params['col'])) ? $params['col'] : NULL;
+		$order = (isset($params['order'])) ? $params['order'] : NULL;
 		
-		$list_items = $this->list_items();
+		$list_items = $this->list_items($limit, $offset, $col, $order);
+		
 		if (empty($list_items))
 		{
 			return '';
