@@ -1621,9 +1621,16 @@ class Module extends Fuel_base_controller {
 
 		$inline = $this->fuel->admin->is_inline();
 
-		if ( ! empty($_POST['id']))
+		if (! empty($_POST['id']))
 		{
-			$posted = explode('|', $this->input->post('id', TRUE));
+			if (!empty($id))
+			{
+				$posted = array($id);
+			}
+			else
+			{
+				$posted = explode('|', $this->input->post('id', TRUE));
+			}
 
 			// run before_delete hook
 			$this->_run_hook('before_delete', $posted);
