@@ -56,6 +56,7 @@ class Base_module_model extends MY_Model {
 	
 	public $limit_to_user_field = ''; // a user ID field in your model that can be used to limit records based on the logged in user
 	public static $tables = array(); // cached array of table names that can be accessed statically
+	protected $dsn = FUEL_DSN;
 	protected $CI = NULL; // reference to the main CI object
 	protected $fuel = NULL; // reference to the FUEL object
 	protected $_formatters = array(

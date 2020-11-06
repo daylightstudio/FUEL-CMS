@@ -82,5 +82,10 @@ if ( ! defined('BASE_URL'))
 	}
 }
 
+if ( ! defined('FUEL_DSN'))
+{
+	define('FUEL_DSN', 'default');
+}
+
 /* End of file fuel_constants.php */
 /* Location: ./modules/fuel/config/fuel_constants.php */
