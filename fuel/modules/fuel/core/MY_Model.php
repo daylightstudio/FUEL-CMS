@@ -147,7 +147,7 @@ class MY_Model extends CI_Model {
 		}
 		
 		// if a DSN property is set,then we will load that database in
-		if (!empty($this->dsn))
+		if (!empty($this->dsn) AND ($this->dsn != FUEL_DSN))
 		{
 			$this->set_db($this->load->database($this->dsn, TRUE, TRUE));
 		}
@@ -172,6 +172,7 @@ class MY_Model extends CI_Model {
 				show_error(lang('db_unable_to_connect'));
 			}
 		}
+
 		$this->validator = new Validator();
 		$this->validator->register_to_global_errors = FALSE;
 
