@@ -242,13 +242,12 @@ if (!function_exists('html_purify'))
 				$regex = '#'.preg_quote($tag_delimiters[0]).'.*(('.$funcs.')\(.*\).*)'.preg_quote($tag_delimiters[1]).'#U';
 				$dirty_html = preg_replace($regex, $keep_replace[0].'$1'.$keep_replace[1], $dirty_html);
 			}
-			
+
 			foreach ($config as $key => $val)
 			{
 				$purifier_config->set($key, $val);
 			}
-			
-			$purifier_config = \HTMLPurifier_Config::createDefault();
+
 			$purifier = new \HTMLPurifier($purifier_config);
 			$clean_html = $purifier->purify($dirty_html);
 	
