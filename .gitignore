@@ -3,3 +3,6 @@
 fuel/application/cache/
 !fuel/application/cache/.htaccess
 !fuel/application/cache/index.html
+fuel/modules/fuel/libraries/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache/Serializer/HTML/*
+fuel/modules/fuel/libraries/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache/Serializer/CSS/*
+fuel/modules/fuel/libraries/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache/Serializer/URI/*
