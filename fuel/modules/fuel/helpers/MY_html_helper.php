@@ -229,6 +229,7 @@ if (!function_exists('html_purify'))
 
 			$purifier_config = \HTMLPurifier_Config::createDefault();
 			$purifier_config->set('Core.Encoding', $CI->config->item('charset'));
+			$purifier_config->set('Cache.SerializerPath', APPPATH.'/cache');
 
 			if (!$remove_allowed_funcs)
 			{
