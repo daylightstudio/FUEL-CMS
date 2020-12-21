@@ -179,6 +179,8 @@ if (!function_exists('html_purify'))
 
 		// Modified to include the library if it doesn't exist
 		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTMLPurifier.standalone.php');
+		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTML5Purifier/HTML5Config.php');
+	
 
 		$CI = &get_instance();
 		$CI->load->config('purifier', TRUE);
@@ -227,7 +229,8 @@ if (!function_exists('html_purify'))
 				show_error('No HTML purifier configuration found');
 			}
 
-			$purifier_config = \HTMLPurifier_Config::createDefault();
+			$config_class = $CI->config->item('config_class', 'purifier');
+			$purifier_config = $config_class::createDefault();
 			$purifier_config->set('Core.Encoding', $CI->config->item('charset'));
 			$purifier_config->set('Cache.SerializerPath', APPPATH.'/cache');
 

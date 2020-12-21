@@ -1,4 +1,6 @@
 <?php 
+//$config['config_class'] = 'HTMLPurifier_HTML5Config'; // For HTML 5 compatibility issues, try installing https://github.com/xemlock/htmlpurifier-html5 (requires composer install)
+$config['config_class'] = 'HTMLPurifier_Config';
 $config['settings'] = array(
 	'default' => array(
 		//'HTML.Trusted'             => TRUE, // For Javascript... must also add 'script' to HTML.Allowed
