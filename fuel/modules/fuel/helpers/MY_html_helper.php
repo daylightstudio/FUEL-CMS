@@ -178,10 +178,8 @@ if (!function_exists('html_purify'))
 		}
 
 		// Modified to include the library if it doesn't exist
-		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTMLPurifier.standalone.php');
-		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTML5Purifier/HTML5Config.php');
+		require_once(FUEL_PATH.'libraries/HTML5Purifier/vendor/autoload.php');
 	
-
 		$CI = &get_instance();
 		$CI->load->config('purifier', TRUE);
 		
