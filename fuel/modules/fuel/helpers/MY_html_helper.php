@@ -230,8 +230,21 @@ if (!function_exists('html_purify'))
 			$config_class = $CI->config->item('config_class', 'purifier');
 			$purifier_config = $config_class::createDefault();
 			$purifier_config->set('Core.Encoding', $CI->config->item('charset'));
-			$purifier_config->set('Cache.SerializerPath', APPPATH.'/cache');
 
+			// Caching
+			$cache_path = $CI->config->item('cache_path', 'purifier');
+			if ($cache_path === FALSE)
+			{
+				$purifier_config->set('Cache.DefinitionImpl', NULL);
+			}
+			else
+			{
+				$purifier_config->set('Cache.SerializerPath', $CI->config->item('cache_path', 'purifier'));
+			}
+			
+			
+
+			// Remove template parser allowed functions for Dwoo or Twig
 			if (!$remove_allowed_funcs)
 			{
 				$allowed_funcs = $CI->fuel->config('parser_allowed_functions');
@@ -251,6 +264,23 @@ if (!function_exists('html_purify'))
 			}
 
 			$purifier = new \HTMLPurifier($purifier_config);
+			// Custom attributes
+			$custom_attributes = (array) $CI->config->item('custom_attributes', 'purifier');
+			if ($custom_attributes)
+			{
+				$def = $purifier_config->maybeGetRawHTMLDefinition();
+				if ($def)
+				{
+					foreach ($custom_attributes as $attribute_args)
+					{
+						if (is_string($attribute_args))
+						{
+							$attribute_args = explode('|', $attribute_args);
+						}
+						call_user_func_array(array($def, 'addAttribute'), $attribute_args);
+					}
+				}
+			}
 			$clean_html = $purifier->purify($dirty_html);
 	
 			if ($encodeAmpersands)
