@@ -2067,7 +2067,8 @@ class Module extends Fuel_base_controller {
 	// reduce code by creating this shortcut function for the unpublish/publish
 	function _toggle($id, $field, $toggle)
 	{
-		if ( ! $this->fuel->auth->module_has_action('save') OR ($field == 'published' AND !$this->fuel->auth->has_permission($this->permission, 'publish')))
+		if ( ! $this->fuel->auth->module_has_action('save') OR 
+			(($field == 'publish' AND !$this->fuel->auth->has_permission($this->permission, 'publish')) OR ($field == 'active' AND !$this->fuel->auth->has_permission($this->permission, 'activate'))))
 		{
 			return FALSE;
 		}
