@@ -49,6 +49,7 @@ CKEDITOR.plugins.add( 'fuelimage', {
 						height = element.getAttribute('height');
 						alt = element.getAttribute('alt');
 						align = element.getAttribute('align');
+						className = element.getAttribute('class');
 					}
 				}
 				imgFolder = editor.element.getAttribute('data-img_folder');
