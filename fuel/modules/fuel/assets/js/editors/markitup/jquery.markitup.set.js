@@ -448,7 +448,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 	}
 	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
 	linkFilter = jQuery(markItUp.textarea).attr('data-link_filter');
-	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs, linkFilter: linkFilter}, function(replace){
+	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs, linkFilter: linkFilter}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
