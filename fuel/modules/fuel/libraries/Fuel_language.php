@@ -613,7 +613,7 @@ class Fuel_language extends Fuel_base_library {
 	function cleaned_uri($uri = NULL, $routed = FALSE)
 	{
 		$segs = $this->cleaned_uri_segments($uri, $routed);
-		return implode($segs, '/');
+		return implode('/', $segs);
 	}
 
 	// --------------------------------------------------------------------
@@ -624,7 +624,7 @@ class Fuel_language extends Fuel_base_library {
 	 * @access	public
 	 * @param	string The URI string to check. If none provided, will use the rsegment_array or rsegment_array on the URI object (optional)
 	 * @param	boolean Determines whether to use a routed (TRUE), non-routed (FALSE) when looking at the URI segment if one is not provided in first argument (optional)
-	 * @return	string
+	 * @return	array
 	 */
 	function cleaned_uri_segments($uri = NULL, $routed = FALSE)
 	{

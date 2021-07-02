@@ -1621,9 +1621,22 @@ class Module extends Fuel_base_controller {
 
 		$inline = $this->fuel->admin->is_inline();
 
-		if ( ! empty($_POST['id']))
+		if (! empty($_POST['id']))
 		{
-			$posted = explode('|', $this->input->post('id', TRUE));
+
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('data_not_deleted'));
+			}
+
+			if (!empty($id))
+			{
+				$posted = array($id);
+			}
+			else
+			{
+				$posted = explode('|', $this->input->post('id', TRUE));
+			}
 
 			// run before_delete hook
 			$this->_run_hook('before_delete', $posted);
@@ -1743,7 +1756,7 @@ class Module extends Fuel_base_controller {
 
 			$action_uri = 'delete/'.$id;
 			$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
-
+			$this->_prep_csrf();
 			$this->fuel->admin->render($this->views['delete'], $vars, '', FUEL_FOLDER);
 		}
 	}
@@ -2060,7 +2073,8 @@ class Module extends Fuel_base_controller {
 	// reduce code by creating this shortcut function for the unpublish/publish
 	function _toggle($id, $field, $toggle)
 	{
-		if ( ! $this->fuel->auth->module_has_action('save') OR ($field == 'publish' AND !$this->fuel->auth->has_permission($this->permission, 'publish')))
+		if ( ! $this->fuel->auth->module_has_action('save') OR 
+			(($field == 'publish' AND !$this->fuel->auth->has_permission($this->permission, 'publish')) OR ($field == 'active' AND !$this->fuel->auth->has_permission($this->permission, 'activate'))))
 		{
 			return FALSE;
 		}

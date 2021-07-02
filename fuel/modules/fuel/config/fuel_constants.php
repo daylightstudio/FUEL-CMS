@@ -1,6 +1,6 @@
 <?php 
 // INSTALL_ROOT is defined in the index.php bootstrap file
-define('FUEL_VERSION', '1.4.13');
+define('FUEL_VERSION', '1.5.0');
 if (!defined('MODULES_FOLDER'))
 {
 	define('MODULES_FOLDER', '../../fuel/modules');
@@ -80,6 +80,11 @@ if ( ! defined('BASE_URL'))
 	{
 		define('BASE_URL', "http://".$_base_path);
 	}
+}
+
+if ( ! defined('FUEL_DSN'))
+{
+	define('FUEL_DSN', 'default');
 }
 
 /* End of file fuel_constants.php */

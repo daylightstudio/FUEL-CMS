@@ -178,8 +178,8 @@ if (!function_exists('html_purify'))
 		}
 
 		// Modified to include the library if it doesn't exist
-		require_once(FUEL_PATH.'libraries/HTMLPurifier/HTMLPurifier.standalone.php');
-
+		require_once(FUEL_PATH.'libraries/HTML5Purifier/vendor/autoload.php');
+	
 		$CI = &get_instance();
 		$CI->load->config('purifier', TRUE);
 		
@@ -227,9 +227,24 @@ if (!function_exists('html_purify'))
 				show_error('No HTML purifier configuration found');
 			}
 
-			$purifier_config = \HTMLPurifier_Config::createDefault();
+			$config_class = $CI->config->item('config_class', 'purifier');
+			$purifier_config = $config_class::createDefault();
 			$purifier_config->set('Core.Encoding', $CI->config->item('charset'));
 
+			// Caching
+			$cache_path = $CI->config->item('cache_path', 'purifier');
+			if ($cache_path === FALSE)
+			{
+				$purifier_config->set('Cache.DefinitionImpl', NULL);
+			}
+			else
+			{
+				$purifier_config->set('Cache.SerializerPath', $CI->config->item('cache_path', 'purifier'));
+			}
+			
+			
+
+			// Remove template parser allowed functions for Dwoo or Twig
 			if (!$remove_allowed_funcs)
 			{
 				$allowed_funcs = $CI->fuel->config('parser_allowed_functions');
@@ -242,14 +257,30 @@ if (!function_exists('html_purify'))
 				$regex = '#'.preg_quote($tag_delimiters[0]).'.*(('.$funcs.')\(.*\).*)'.preg_quote($tag_delimiters[1]).'#U';
 				$dirty_html = preg_replace($regex, $keep_replace[0].'$1'.$keep_replace[1], $dirty_html);
 			}
-			
+
 			foreach ($config as $key => $val)
 			{
 				$purifier_config->set($key, $val);
 			}
-			
-			$purifier_config = \HTMLPurifier_Config::createDefault();
+
 			$purifier = new \HTMLPurifier($purifier_config);
+			// Custom attributes
+			$custom_attributes = (array) $CI->config->item('custom_attributes', 'purifier');
+			if ($custom_attributes)
+			{
+				$def = $purifier_config->maybeGetRawHTMLDefinition();
+				if ($def)
+				{
+					foreach ($custom_attributes as $attribute_args)
+					{
+						if (is_string($attribute_args))
+						{
+							$attribute_args = explode('|', $attribute_args);
+						}
+						call_user_func_array(array($def, 'addAttribute'), $attribute_args);
+					}
+				}
+			}
 			$clean_html = $purifier->purify($dirty_html);
 	
 			if ($encodeAmpersands)

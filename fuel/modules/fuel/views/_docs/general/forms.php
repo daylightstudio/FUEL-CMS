@@ -1173,7 +1173,17 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>edit_url_params</strong>: similar to <dfn>create_url_params</dfn> but for editing a record.</li>
 		<li><strong>display_fields</strong>: an array of fields to display when editing or creating.</li>
 		<li><strong>method</strong>: the method on the model that returns the data table. The default is the built-in get_embedded_list_items method</li>
-		<li><strong>method_params</strong>: a key value array of parameters to pass to the model method. If a key of <dfn>where</dfn> is passed, it will automatically apply the where condition to the list view</li>
+		<li><strong>method_params</strong>: a key value array of parameters to pass to the <dfn>get_embedded_list_items</dfn> model method. 
+			The following parameters can be passed:
+			<ul>
+				<li><dfn>where</dfn>: The where conditions to be applied to the data query. Values can be a string, key/value array or if the value is an array, it will apply a <dfn>wherein</dfn> query condition</li>
+				<li><dfn>like</dfn>: a string or an array of strings to be used as in a like query condition (uses %string%)</li>
+				<li><dfn>limit</dfn>: The limit value of the data to display</li>
+				<li><dfn>offset</dfn>: an offset value for displaying the data</li>
+				<li><dfn>col</dfn>: the column to sort the data</li>
+				<li><dfn>order</dfn>: the <dfn>asc</dfn> or <dfn>desc</dfn></li>
+			</ul>
+		</li>
 		<li><strong>cols</strong>: An array of columns to display. The default will be the main display_field column. Additionally, you can overwrite the model's <dfn>get_embedded_list_items()</dfn> method and pass in the columns you want displayed.</li>
 		<li><strong>actions</strong>: An array of actions to include. Options are "edit", "view", "delete" and "custom" with custom being an array of URI and link text. Default value is the "EDIT" action.</li>
 		<li><strong>tooltip_char_limit</strong>: A key value array with the key being the field name and the value being the character limit of a field in which to display a tooltip. Default is 0 which won't show the tooltip</li>
