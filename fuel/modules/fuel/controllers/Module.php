@@ -1623,6 +1623,12 @@ class Module extends Fuel_base_controller {
 
 		if (! empty($_POST['id']))
 		{
+
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('data_not_deleted'));
+			}
+
 			if (!empty($id))
 			{
 				$posted = array($id);
@@ -1750,7 +1756,7 @@ class Module extends Fuel_base_controller {
 
 			$action_uri = 'delete/'.$id;
 			$vars['form_action'] = ($inline) ? $this->module_uri.'/inline_'.$action_uri : $this->module_uri.'/'.$action_uri;
-
+			$this->_prep_csrf();
 			$this->fuel->admin->render($this->views['delete'], $vars, '', FUEL_FOLDER);
 		}
 	}
