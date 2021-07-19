@@ -178,7 +178,7 @@ class Login extends CI_Controller {
 		$vars['display_forgotten_pwd'] = $this->fuel->config('allow_forgotten_password');
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
+		$this->load_view('login', $vars);
 	}
 
 	// THIS IS A PASSWORD RESET TOKEN CREATION EMAIL SENDING 
@@ -256,7 +256,8 @@ class Login extends CI_Controller {
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'pwd_reset', $vars);
+		$this->load_view('pwd_reset', $vars);
+
 	}
 
 	// THIS HANDLES A POST REQUEST FOR USER SETTING A NEW PASSWORD
@@ -331,7 +332,7 @@ class Login extends CI_Controller {
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'reset', $vars);
+		$this->load_view('reset', $vars);
 	}
 
 	public function dev()
@@ -372,6 +373,18 @@ class Login extends CI_Controller {
 		$vars['instructions'] = lang('dev_pwd_instructions');
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
+		$this->load_view('login', $vars);
+	}
+
+	protected function load_view($view, $vars = array())
+	{
+		if (file_exists(APPPATH.'views/_admin/'.$view.'.php'))
+		{
+			$this->load->module_view('app', '_admin/'.$view, $vars);
+		}
+		else
+		{
+			$this->load->module_view(FUEL_FOLDER, $view, $vars);
+		}
 	}
 }
