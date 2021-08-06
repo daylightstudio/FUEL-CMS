@@ -158,6 +158,7 @@ function svg_icon($id, $width, $height, $viewbox = "0 0 126.962 115.395")
 						<div class="content_block">
 							<h4>Make configuration changes</h4>
 							<ul class="writable">
+								<li>In the <strong>fuel/application/config/config.php</strong> file, change the <code>$config['base_url']</code> configuration property from the <code>BASE_URL</code> constant to your site's base URL with trailing slash (e.g. https://mysite.test/).</li>
 								<?php if ($this->config->item('encryption_key') == '') : ?>
 								<li>In the <strong>fuel/application/config/config.php</strong>, change the <code>$config['encryption_key']</code> to your own unique key.</li>
 								<?php endif; ?>
