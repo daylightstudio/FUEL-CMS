@@ -501,7 +501,7 @@ class Asset {
 		if ($absolute)
 		{
 			$protocol = ($_SERVER["SERVER_PORT"] == 443) ? "https://" : "http://";
-			$path = $protocol.$_SERVER['HTTP_HOST'].$path;
+			$path = $protocol.$_SERVER['SERVER_NAME'].$path;
 		}
 		return $path;
 	}
