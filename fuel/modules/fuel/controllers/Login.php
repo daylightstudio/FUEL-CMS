@@ -111,32 +111,8 @@ class Login extends CI_Controller {
 					}
 					else
 					{
-						// check if they are no longer in the locked out state and reset variables
-						if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->fuel->config('seconds_to_unlock'))
-						{
-							$user_data['failed_login_attempts'] = 0;
-							$this->session->unset_userdata('failed_login_timer');
-							unset($user_data['failed_login_timer']);
-						}
-						else
-						{
-							// add to the number of attempts if it's an invalid login'
-							$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
-							$user_data['failed_login_attempts'] = $num_attempts;
-						}
+						$this->check_login_attempts($user_data, 'username');
 
-						// check if they should be locked out
-						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
-						{
-							$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
-							$user_data['failed_login_timer'] = time();
-							$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post('user_name', TRUE), $this->input->ip_address()), 'debug');
-						}
-						else
-						{
-							$this->fuel_users_model->add_error(lang('error_invalid_login'));
-							$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
-						}
 					}
 				}
 				else
@@ -188,14 +164,26 @@ class Login extends CI_Controller {
 
 		$this->js_controller_params['method'] = 'add_edit';
 
+		$session_key = $this->fuel->auth->get_session_namespace();
+
+		$user_data = $this->session->userdata($session_key);
+
 		if ( ! empty($_POST))
 		{
-			if ($this->input->post('email'))
+			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
+			{
+ 				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+				$user_data['failed_login_timer'] = time();
+			}
+			elseif ($this->input->post('email'))
 			{
 				$user = $this->fuel_users_model->find_one_array(array('email' => $this->input->post('email')));
 
 				if ( ! empty($user['email']))
 				{
+					// reset failed login attempts
+					$user_data['failed_login_timer'] = 0;
+
 					// This generates and saves a token to the user model, returns the token string.
 					$token = $this->fuel_users_model->get_reset_password_token($user['email']);
 
@@ -231,8 +219,10 @@ class Login extends CI_Controller {
 				}
 				else
 				{
-					$this->fuel_users_model->add_error(lang('error_invalid_email'));
+					$this->check_login_attempts($user_data, 'email');
 				}
+
+				$this->session->set_userdata($session_key, $user_data);
 			}
 			else
 			{
@@ -258,6 +248,43 @@ class Login extends CI_Controller {
 
 		$this->load_view('pwd_reset', $vars);
 
+	}
+
+	protected function check_login_attempts(&$user_data, $field)
+	{
+		if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->fuel->config('seconds_to_unlock'))
+		{
+			$user_data['failed_login_attempts'] = 0;
+			$this->session->unset_userdata('failed_login_timer');
+			unset($user_data['failed_login_timer']);
+		}
+		else
+		{
+			// add to the number of attempts if it's an invalid login'
+			$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
+			$user_data['failed_login_attempts'] = $num_attempts;
+		}
+
+		// check if they should be locked out
+		if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
+		{
+			$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+			$user_data['failed_login_timer'] = time();
+			$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post($field, TRUE), $this->input->ip_address()), 'debug');
+		}
+		else
+		{
+			if ($field == 'email')
+			{
+				$this->fuel_users_model->add_error(lang('error_invalid_email'));
+				$this->fuel->logs->write(lang('error_invalid_email', $this->input->post('email', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
+			}
+			else
+			{
+				$this->fuel_users_model->add_error(lang('error_invalid_login'));
+				$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
+			}
+		}
 	}
 
 	// THIS HANDLES A POST REQUEST FOR USER SETTING A NEW PASSWORD
