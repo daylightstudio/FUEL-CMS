@@ -1,9 +1,10 @@
 <?php
-class Login extends CI_Controller {
+require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
+class Login extends Fuel_base_controller {
 
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(false);
 
 		// for flash data
 		$this->load->library('session');
@@ -68,8 +69,14 @@ class Login extends CI_Controller {
 
 		if ( ! empty($_POST))
 		{
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+
 			// check if they are locked out out or not
-			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
+			elseif (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
  				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
@@ -134,6 +141,8 @@ class Login extends CI_Controller {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->remove_js();
 		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+		$this->_prep_csrf();
+
 		$vars['form'] = $this->form_builder->render();
 		
 		// set any errors that 
@@ -170,7 +179,12 @@ class Login extends CI_Controller {
 
 		if ( ! empty($_POST))
 		{
-			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
  				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
@@ -238,6 +252,7 @@ class Login extends CI_Controller {
 
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		
@@ -308,7 +323,12 @@ class Login extends CI_Controller {
 		
 		if ( ! empty($_POST))
 		{
-			if ($this->input->post('email') && $this->input->post('password') && $this->input->post('password_confirm') && $this->input->post('_token'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif ($this->input->post('email') && $this->input->post('password') && $this->input->post('password_confirm') && $this->input->post('_token'))
 			{
 				$this->load->library('user_agent');
 			
@@ -351,6 +371,7 @@ class Login extends CI_Controller {
 
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		
@@ -368,7 +389,12 @@ class Login extends CI_Controller {
 
 		if ( ! empty($_POST))
 		{
-			if ( ! $this->fuel->config('dev_password'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif ( ! $this->fuel->config('dev_password'))
 			{
 				redirect('');
 			}
@@ -391,8 +417,8 @@ class Login extends CI_Controller {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
 		$this->form_builder->set_fields($fields);
-
 		if ( ! empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
