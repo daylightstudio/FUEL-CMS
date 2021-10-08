@@ -287,7 +287,8 @@ $config['module_sanitize_funcs'] = array(
 	'xss' => 'xss_clean', 
 	'php' => 'encode_php_tags', 
 	'template' => 'php_to_template_syntax', 
-	'entities' => 'htmlentities'
+	'entities' => 'htmlentities',
+	'purify' => 'html_purifier',
 );
 
 
