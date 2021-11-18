@@ -7,6 +7,7 @@
 	
 	<p class="instructions"><?=lang('delete_item_message')?><br/> <span class="delete"><?=$title?></span></p>
 	<?=$this->form->hidden('id', $id)?>
+	<?=$this->form->hidden($_csrf_name, $_csrf)?>
 
 	<div class="buttonbar clearfix">
 		<ul>

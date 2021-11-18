@@ -165,6 +165,8 @@ class Fuel_base_controller extends CI_Controller {
 
 		$this->form_builder->key_check_name = $this->_get_csrf_token_name();
 		$this->form_builder->key_check = $hash;
+
+		$this->load->vars(array('_csrf' => $this->form_builder->key_check, '_csrf_name' => $this->form_builder->key_check_name));
 	}
 
 	// --------------------------------------------------------------------
