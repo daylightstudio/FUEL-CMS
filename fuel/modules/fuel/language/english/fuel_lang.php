@@ -23,6 +23,7 @@ $lang['error_invalid_login'] = 'Invalid login.';
 $lang['error_max_attempts'] = 'Sorry, but your login information was incorrect and you are temporarily locked out. Please try again in %s seconds.';
 $lang['error_empty_user_pwd'] = 'Please enter in a user name and password.';
 $lang['error_pwd_reset'] = 'There was an error in resetting your password.';
+$lang['error_csrf'] = 'Invalid submission.';
 
 $lang['error_pwd_too_short'] = 'Password entered does not meet the %1s character min length requirement.';
 $lang['error_pwd_too_long'] = 'Password entered exceeds the %1s character max length requirement.';

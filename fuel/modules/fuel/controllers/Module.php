@@ -1626,7 +1626,10 @@ class Module extends Fuel_base_controller {
 
 			if (!$this->_is_valid_csrf())
 			{
-				add_error(lang('data_not_deleted'));
+				//add_error(lang('data_not_deleted'));
+				$this->fuel->admin->set_notification(lang('data_not_deleted'), Fuel_admin::NOTIFICATION_ERROR);
+				$url = fuel_uri($this->module_uri);
+				redirect($url);
 			}
 
 			if (!empty($id))

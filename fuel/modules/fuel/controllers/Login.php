@@ -1,9 +1,10 @@
 <?php
-class Login extends CI_Controller {
+require_once(FUEL_PATH.'/libraries/Fuel_base_controller.php');
+class Login extends Fuel_base_controller {
 
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(false);
 
 		// for flash data
 		$this->load->library('session');
@@ -68,8 +69,14 @@ class Login extends CI_Controller {
 
 		if ( ! empty($_POST))
 		{
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+
 			// check if they are locked out out or not
-			if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
+			elseif (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
 			{
  				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 				$user_data['failed_login_timer'] = time();
@@ -111,32 +118,8 @@ class Login extends CI_Controller {
 					}
 					else
 					{
-						// check if they are no longer in the locked out state and reset variables
-						if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->fuel->config('seconds_to_unlock'))
-						{
-							$user_data['failed_login_attempts'] = 0;
-							$this->session->unset_userdata('failed_login_timer');
-							unset($user_data['failed_login_timer']);
-						}
-						else
-						{
-							// add to the number of attempts if it's an invalid login'
-							$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
-							$user_data['failed_login_attempts'] = $num_attempts;
-						}
+						$this->check_login_attempts($user_data, 'username');
 
-						// check if they should be locked out
-						if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
-						{
-							$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
-							$user_data['failed_login_timer'] = time();
-							$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post('user_name', TRUE), $this->input->ip_address()), 'debug');
-						}
-						else
-						{
-							$this->fuel_users_model->add_error(lang('error_invalid_login'));
-							$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
-						}
 					}
 				}
 				else
@@ -158,6 +141,8 @@ class Login extends CI_Controller {
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->remove_js();
 		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+		$this->_prep_csrf();
+
 		$vars['form'] = $this->form_builder->render();
 		
 		// set any errors that 
@@ -178,7 +163,7 @@ class Login extends CI_Controller {
 		$vars['display_forgotten_pwd'] = $this->fuel->config('allow_forgotten_password');
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
+		$this->load_view('login', $vars);
 	}
 
 	// THIS IS A PASSWORD RESET TOKEN CREATION EMAIL SENDING 
@@ -188,14 +173,31 @@ class Login extends CI_Controller {
 
 		$this->js_controller_params['method'] = 'add_edit';
 
+		$session_key = $this->fuel->auth->get_session_namespace();
+
+		$user_data = $this->session->userdata($session_key);
+
 		if ( ! empty($_POST))
 		{
-			if ($this->input->post('email'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) < (int)$this->fuel->config('seconds_to_unlock'))
+			{
+ 				$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+				$user_data['failed_login_timer'] = time();
+			}
+			elseif ($this->input->post('email'))
 			{
 				$user = $this->fuel_users_model->find_one_array(array('email' => $this->input->post('email')));
 
 				if ( ! empty($user['email']))
 				{
+					// reset failed login attempts
+					$user_data['failed_login_timer'] = 0;
+
 					// This generates and saves a token to the user model, returns the token string.
 					$token = $this->fuel_users_model->get_reset_password_token($user['email']);
 
@@ -231,8 +233,10 @@ class Login extends CI_Controller {
 				}
 				else
 				{
-					$this->fuel_users_model->add_error(lang('error_invalid_email'));
+					$this->check_login_attempts($user_data, 'email');
 				}
+
+				$this->session->set_userdata($session_key, $user_data);
 			}
 			else
 			{
@@ -248,6 +252,7 @@ class Login extends CI_Controller {
 
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		
@@ -256,7 +261,45 @@ class Login extends CI_Controller {
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'pwd_reset', $vars);
+		$this->load_view('pwd_reset', $vars);
+
+	}
+
+	protected function check_login_attempts(&$user_data, $field)
+	{
+		if (isset($user_data['failed_login_timer']) AND (time() - $user_data['failed_login_timer']) > (int)$this->fuel->config('seconds_to_unlock'))
+		{
+			$user_data['failed_login_attempts'] = 0;
+			$this->session->unset_userdata('failed_login_timer');
+			unset($user_data['failed_login_timer']);
+		}
+		else
+		{
+			// add to the number of attempts if it's an invalid login'
+			$num_attempts = (!isset($user_data['failed_login_attempts'])) ? 0 : $user_data['failed_login_attempts'] + 1;
+			$user_data['failed_login_attempts'] = $num_attempts;
+		}
+
+		// check if they should be locked out
+		if (isset($user_data['failed_login_attempts']) AND $user_data['failed_login_attempts'] >= (int)$this->fuel->config('num_logins_before_lock') -1)
+		{
+			$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
+			$user_data['failed_login_timer'] = time();
+			$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post($field, TRUE), $this->input->ip_address()), 'debug');
+		}
+		else
+		{
+			if ($field == 'email')
+			{
+				$this->fuel_users_model->add_error(lang('error_invalid_email'));
+				$this->fuel->logs->write(lang('error_invalid_email', $this->input->post('email', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
+			}
+			else
+			{
+				$this->fuel_users_model->add_error(lang('error_invalid_login'));
+				$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
+			}
+		}
 	}
 
 	// THIS HANDLES A POST REQUEST FOR USER SETTING A NEW PASSWORD
@@ -280,7 +323,12 @@ class Login extends CI_Controller {
 		
 		if ( ! empty($_POST))
 		{
-			if ($this->input->post('email') && $this->input->post('password') && $this->input->post('password_confirm') && $this->input->post('_token'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif ($this->input->post('email') && $this->input->post('password') && $this->input->post('password_confirm') && $this->input->post('_token'))
 			{
 				$this->load->library('user_agent');
 			
@@ -323,6 +371,7 @@ class Login extends CI_Controller {
 
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		
@@ -331,7 +380,7 @@ class Login extends CI_Controller {
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'reset', $vars);
+		$this->load_view('reset', $vars);
 	}
 
 	public function dev()
@@ -340,7 +389,12 @@ class Login extends CI_Controller {
 
 		if ( ! empty($_POST))
 		{
-			if ( ! $this->fuel->config('dev_password'))
+			// XSS key check
+			if (!$this->_is_valid_csrf())
+			{
+				add_error(lang('error_csrf'));
+			}
+			elseif ( ! $this->fuel->config('dev_password'))
 			{
 				redirect('');
 			}
@@ -363,8 +417,8 @@ class Login extends CI_Controller {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
 		$this->form_builder->set_fields($fields);
-
 		if ( ! empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
+		$this->_prep_csrf();
 
 		$vars['form'] = $this->form_builder->render();
 		$vars['notifications'] = $this->load->module_view(FUEL_FOLDER, '_blocks/notifications', $vars, TRUE);
@@ -372,6 +426,18 @@ class Login extends CI_Controller {
 		$vars['instructions'] = lang('dev_pwd_instructions');
 		$vars['page_title'] = lang('fuel_page_title');
 
-		$this->load->module_view(FUEL_FOLDER, 'login', $vars);
+		$this->load_view('login', $vars);
+	}
+
+	protected function load_view($view, $vars = array())
+	{
+		if (file_exists(APPPATH.'views/_admin/'.$view.'.php'))
+		{
+			$this->load->module_view('app', '_admin/'.$view, $vars);
+		}
+		else
+		{
+			$this->load->module_view(FUEL_FOLDER, $view, $vars);
+		}
 	}
 }

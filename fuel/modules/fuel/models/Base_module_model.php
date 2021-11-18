@@ -335,6 +335,12 @@ class Base_module_model extends MY_Model {
 		}
 
 		$escape_order_by = (property_exists($this, 'escape_order_by')) ? $this->escape_order_by : TRUE;
+		
+		// Additional cleaning
+		if ($escape_order_by && strpos($col, ')') !== FALSE)
+		{
+			$col = '';
+		}
 		if (!empty($col)) $this->db->order_by($col, $order, $escape_order_by);
 		if (!empty($limit)) $this->db->limit((int) $limit);
 		$this->db->offset((int)$offset);

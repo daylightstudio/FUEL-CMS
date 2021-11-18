@@ -1,4 +1,8 @@
 <?php 
+
+// Determines whether to use purifier by default when saving data.
+$config['enabled'] = TRUE;
+
 // Purifier settings
 // http://htmlpurifier.org/live/configdoc/plain.html
 $config['settings'] = array(
@@ -11,6 +15,7 @@ $config['settings'] = array(
 		'Attr.EnableID'            => TRUE,
 		'Attr.AllowedFrameTargets' => array('_blank'),
 		//'HTML.Allowed'             => 'h1,h2,h3,h4,h5,h6,div[id],b,strong,i,em,a[href|title|target|download|hreflang|type],ul[class],ol,li[class],p[style],br,span[style],img[width|height|alt|src|srcset|sizes]',
+		//'CSS.Trusted'              => TRUE,
 		//'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align,float,margin',
 		'AutoFormat.AutoParagraph' => FALSE, // This will cause errors if you globally apply this to input being saved to the database so we set it to false.
 		'AutoFormat.RemoveEmpty'   => TRUE,
@@ -22,6 +27,7 @@ $config['settings'] = array(
 		'HTML.Doctype'             => 'XHTML 1.0 Strict',
 		'HTML.Allowed'             => 'p,a[href|title|target],abbr[title],acronym[title],b,strong,blockquote[cite],code,em,i,strike',
 		'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align,float,margin',
+		'CSS.Trusted'              => TRUE,
 		'AutoFormat.AutoParagraph' => TRUE, 
 		'AutoFormat.Linkify'       => TRUE,
 		'AutoFormat.RemoveEmpty'   => TRUE,
