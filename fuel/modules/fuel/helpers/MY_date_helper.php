@@ -33,7 +33,7 @@ if (!function_exists('date_formatter'))
 	/**
 	 * Returns the date into a specified format. Will look at the configuration
 	 *
-	 * @access	public'
+	 * @access	public
 	 * @param	string
 	 * @param	mixed
 	 * @return	string
