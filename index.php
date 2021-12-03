@@ -28,6 +28,7 @@ if (PHP_SAPI === 'cli' OR defined('STDIN'))
 	$_SERVER['SERVER_PORT'] = 80;
 	$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	$_SERVER['HTTP_HOST'] = 'localhost';
+	$_SERVER['SERVER_NAME'] = 'localhost';
 }
 
 /**
