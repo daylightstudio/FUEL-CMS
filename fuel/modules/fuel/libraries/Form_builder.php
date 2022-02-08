@@ -2575,6 +2575,9 @@ class Form_builder {
 		{
 			$params['ampm'] = TRUE;
 		}
+
+		$params = $this->normalize_params($params);
+
 		$time_params = $params;
 		if (isset($params['tabindex']) AND is_array($params['tabindex']))
 		{
