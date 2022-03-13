@@ -1338,7 +1338,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 			var val = $elem.val();
 			if (val) {
-				val = val.replace(/ /g, '-');	
+				val = val.replace(/[\s$&+,:;=?[\]@#|{}'<>.^*()%!-/]/g, '-');
 			}
 			
 			$(".toggle." + prefix + val, context).closest(selector).show();
