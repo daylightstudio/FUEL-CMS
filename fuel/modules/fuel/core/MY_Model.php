@@ -3023,8 +3023,8 @@ class MY_Model extends CI_Model {
 			// check if it is a query object first
 			if (is_object($data) AND method_exists($data, 'list_fields'))
 			{
-				$headers = $query->list_fields();
-				$data = $query->result_array();
+				$headers = $data->list_fields();
+				$data = $data->result_array();
 			}
 
 			// then check to see if it is just a data array
