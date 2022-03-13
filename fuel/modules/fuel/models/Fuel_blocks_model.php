@@ -77,6 +77,8 @@ class Fuel_blocks_model extends Base_module_model {
 		{
 			foreach($data as $key => $val)
 			{
+				$data[$key]['name'] = htmlentities($val['name'], ENT_QUOTES, 'UTF-8');
+				$data[$key]['description'] = htmlentities($val['description'], ENT_QUOTES, 'UTF-8');
 				$data[$key]['view'] = htmlentities($val['view'], ENT_QUOTES, 'UTF-8');
 			}
 		}

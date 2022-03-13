@@ -70,6 +70,7 @@ class Fuel_sitevariables_model extends Base_module_model {
 		{
 			foreach($data as $key => $val)
 			{
+				$data[$key]['name'] = htmlentities($val['name'], ENT_QUOTES, 'UTF-8');
 				$data[$key]['value'] = htmlentities($val['value'], ENT_QUOTES, 'UTF-8');
 			}
 		}
