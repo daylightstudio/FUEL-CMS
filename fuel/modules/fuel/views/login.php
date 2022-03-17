@@ -32,7 +32,9 @@
 		<?php if (!empty($instructions)) : ?>
 		<p><?=$instructions?></p>
 		<?php endif; ?>
+		<form method="post" action="">
 		<?=$form?>
+		<?=$this->form->close()?>
 		<?php if ($display_forgotten_pwd) : ?>
 			<a href="<?=fuel_url('login/pwd_reset')?>" id="forgotten_pwd"><?=lang('login_forgot_pwd')?></a>
 		<?php endif; ?>
