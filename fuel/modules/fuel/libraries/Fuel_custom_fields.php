@@ -219,6 +219,12 @@ class Fuel_custom_fields {
 		{
 			$file_params['class'] = 'multifile '.$params['class'];
 		}
+
+		if (empty($params['accept']))
+		{
+			$file_params['accept'] = str_replace('|', ', .', $this->CI->fuel->config('editable_asset_filetypes')['assets']);
+		}
+
 		$file_params['name'] = str_replace(array('[', ']', '__'), array('_', '', '_'), $params['name']);
 		$file_params['id'] = $file_params['name'].'_upload';
 

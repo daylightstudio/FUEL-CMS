@@ -2268,7 +2268,7 @@ class Form_builder {
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
-			'accept' => str_replace('|', ',', $params['accept']),
+			'accept' => !is_array($params['accept']) ? str_replace('|', ', .', str_replace('|.', '|', $params['accept'])) : $params['accept'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 		);
