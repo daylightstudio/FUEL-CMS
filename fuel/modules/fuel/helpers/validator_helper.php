@@ -74,7 +74,7 @@ if (!function_exists('regex'))
 	 * @param	string	regular expression (delimiters excluded)
 	 * @return	boolean
 	 */
-	function regex($var = null, $regex)
+	function regex($var, $regex)
 	{
 		return preg_match('#'.$regex.'#', $var);
 	} 

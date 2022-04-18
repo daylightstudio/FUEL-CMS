@@ -2800,7 +2800,7 @@ class Simplepie
 	 */
 	public function sort_items($a, $b)
 	{
-		return $a->get_date('U') <= $b->get_date('U');
+		return $a->get_date('U') <= $b->get_date('U') ? 1 : 0;
 	}
 
 	/**
@@ -13680,7 +13680,7 @@ class SimplePie_Locator
 		$this->content_type_sniffer_class = $content_type_sniffer_class;
 	}
 
-	public function find($type = SIMPLEPIE_LOCATOR_ALL, &$working)
+	public function find($type = SIMPLEPIE_LOCATOR_ALL, &$working = null)
 	{
 		if ($this->is_feed($this->file))
 		{
