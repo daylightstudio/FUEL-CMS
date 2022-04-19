@@ -222,7 +222,7 @@ class Fuel_custom_fields {
 
 		if (empty($params['accept']))
 		{
-			$file_params['accept'] = str_replace('|', ', .', $this->CI->fuel->config('editable_asset_filetypes')['assets']);
+			$file_params['accept'] = '.'.str_replace('|', ', .', rtrim($this->CI->fuel->config('editable_asset_filetypes')['assets'], '.'));
 		}
 
 		$file_params['name'] = str_replace(array('[', ']', '__'), array('_', '', '_'), $params['name']);
