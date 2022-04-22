@@ -1287,7 +1287,7 @@ class Form_builder {
 			'name' => '', // the name attribute of the field
 			'type' => '', // the type attribute of the field (e.g. text, select, password, etc.)
 			'default' => '', // the default value of the field
-			'max_length' => 0, // the maxlength parameter to associate with the field
+			'max_length' => NULL, // the maxlength parameter to associate with the field
 			'comment' => '', // a comment to associate with the field's label
 			'label' => '', // the label to associate with the field
 			'before_label' => '', // for HTML before the label
