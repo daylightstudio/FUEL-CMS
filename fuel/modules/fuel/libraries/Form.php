@@ -113,7 +113,7 @@ class Form {
 	 * @param object validator object
 	 * @return string
 	 */
-	public function open($attrs = null, $validator = null)
+	public function open($attrs = '', $validator = NULL)
 	{
 		if (!empty($attrs)) $this->attrs = $attrs;
 		if (!empty($validator)) $this->validator =& $validator;
@@ -136,7 +136,7 @@ class Form {
 	 * @param object validator object
 	 * @return string
 	 */
-	public function open_multipart($attrs = null, $validator = null)
+	public function open_multipart($attrs = '', $validator = NULL)
 	{
 		$attrs['enctype'] = 'multipart/form-data';
 		return $this->open($attrs, $validator);
@@ -188,7 +188,7 @@ class Form {
 	 * @param mixed attrs if array then create string
 	 * @return string
 	 */
-	public function fieldset_open($legend, $attrs = NULL, $fieldset_id = NULL)
+	public function fieldset_open($legend, $attrs = '', $fieldset_id = NULL)
 	{
 		if (!empty($fieldset_id))
 		{
@@ -749,6 +749,8 @@ class Form {
 		{
 			return ' '.$attrs;
 		}
+
+		return '';
 	}
 	
 	// --------------------------------------------------------------------

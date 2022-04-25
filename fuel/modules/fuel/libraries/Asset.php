@@ -1558,7 +1558,7 @@ class Asset {
 	 */	
 	protected function _is_local_path($path)
 	{
-		if (strncmp($path, 'http', 4) === 0)
+		if ($path AND strncmp((string)$path, 'http', 4) === 0)
 		{
 			return FALSE;
 		}

@@ -162,7 +162,7 @@ if (!function_exists('english_date'))
 		if (!empty($date))
 		{
 			$date_ts = (!is_numeric($date)) ? strtotime($date) : $date;
-			if (strtolower($timezone) == 'auto')
+			if ($timezone AND strtolower($timezone) == 'auto')
 			{
 				$timezone = date('e');
 			}
