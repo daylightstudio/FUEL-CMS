@@ -26,10 +26,10 @@
 				<li><a href="<?=fuel_url($this->module_uri.'/delete/'.$id, TRUE)?>" class="ico ico_delete delete_action"><?=lang('btn_delete')?></a></li>
 			<?php endif; ?>
 			
-			<?php if ($this->fuel->auth->module_has_action('delete') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
-				<li><a href="<?=fuel_url($this->module_uri.'/delete/'.$id, TRUE)?>" class="ico ico_delete delete_action"><?=lang('btn_delete')?></a></li>
+			<?php if ($this->fuel->auth->module_has_action('duplicate') AND $this->fuel->auth->has_permission($this->permission, 'create')) : ?>
+				<li><a href="<?=fuel_url($this->module_uri.'/duplicate', TRUE)?>" class="ico ico_duplicate duplicate_action"><?=lang('btn_duplicate')?></a></li>
 			<?php endif; ?>
-						
+			
 			<?php if ($this->fuel->auth->module_has_action('replace') AND !empty($others) AND $this->fuel->auth->has_permission($this->permission, 'edit') AND $this->fuel->auth->has_permission($this->permission, 'delete')) : ?>
 				<li><a href="<?=fuel_url($this->module_uri.'/replace/'.$id, TRUE)?>" class="ico ico_replace replace_action"><?=lang('btn_replace')?></a></li>
 			<?php endif; ?>
