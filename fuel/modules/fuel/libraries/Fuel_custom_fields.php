@@ -288,29 +288,36 @@ class Fuel_custom_fields {
 
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
-				$preview .= ' ';
-				$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
-
-				if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
+				if (is_callable($params['preview_label']))
 				{
-					$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
+					$preview = call_user_func($params['preview_label'], $asset_path, $params);
 				}
 				else
 				{
-					$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
-				}
-
-				if (!empty($params['replace_values']))
-				{
-					foreach($params['replace_values'] as $key => $val)
+					$preview .= ' ';
+					$preview .= '<div class="asset_upload_preview deletable noclone"><a href="#'.$params['key'].'" class="asset_delete"></a><a href="'.$asset_path.'" target="_blank">';
+	
+					if (isset($params['is_image']) OR (!isset($params['is_image']) AND is_image_file($asset_path)))
 					{
-						if (is_string($val))
+						$preview .= '<br><img src="'.$asset_path.'" style="'.$params['img_styles'].'" class="img_bg">';
+					}
+					else
+					{
+						$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
+					}
+					
+					if (!empty($params['replace_values']))
+					{
+						foreach($params['replace_values'] as $key => $val)
 						{
-							$preview = str_replace('{'.$key.'}', $val, $preview);
+							if (is_string($val))
+							{
+								$preview = str_replace('{'.$key.'}', $val, $preview);
+							}
 						}
 					}
+					$preview .= '</a></div>';
 				}
-				$preview .= '</a></div>';
 			}
 
 		}
