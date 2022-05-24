@@ -299,6 +299,17 @@ class Fuel_custom_fields {
 				{
 					$preview .= (isset($params['preview_label'])) ? $params['preview_label'] : $asset_path;
 				}
+
+				if (!empty($params['replace_values']))
+				{
+					foreach($params['replace_values'] as $key => $val)
+					{
+						if (is_string($val))
+						{
+							$preview = str_replace('{'.$key.'}', $val, $preview);
+						}
+					}
+				}
 				$preview .= '</a></div>';
 			}
 
