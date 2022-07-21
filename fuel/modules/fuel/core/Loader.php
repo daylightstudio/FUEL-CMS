@@ -464,13 +464,15 @@ class Fuel_Loader extends CI_Loader
 
 
 	/** Load the database drivers **/
-	public function database($params = '', $return = FALSE, $active_record = NULL) {
-		if (class_exists('CI_DB', FALSE) AND $return == FALSE AND $active_record == NULL) 
-			return;
+	public function database($params = '', $return = FALSE, $query_builder = NULL) {
+		if ($return === FALSE && $query_builder === NULL && isset($CI->db) && is_object($CI->db) && ! empty($CI->db->conn_id))
+		{
+			return FALSE;
+		}
 
 		require_once BASEPATH.'database/DB'.EXT;
 		
-		$db = DB($params, $active_record);
+		$db = DB($params, $query_builder);
 		
 		// <!-- FUEL
 		$my_driver = config_item('subclass_prefix').'DB_'.$db->dbdriver.'_driver';
@@ -488,7 +490,6 @@ class Fuel_Loader extends CI_Loader
 		}
 		//	return DB($params, $active_record);
 		// FUEL -->
-		CI::$APP->db = '';
 		//CI::$APP->db = DB($params, $active_record);
 		CI::$APP->db = $db;
 		//$this->_ci_assign_to_models();
