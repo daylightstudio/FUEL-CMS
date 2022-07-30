@@ -1287,7 +1287,7 @@ class Form_builder {
 			'name' => '', // the name attribute of the field
 			'type' => '', // the type attribute of the field (e.g. text, select, password, etc.)
 			'default' => '', // the default value of the field
-			'max_length' => 0, // the maxlength parameter to associate with the field
+			'max_length' => NULL, // the maxlength parameter to associate with the field
 			'comment' => '', // a comment to associate with the field's label
 			'label' => '', // the label to associate with the field
 			'before_label' => '', // for HTML before the label
@@ -2268,7 +2268,7 @@ class Form_builder {
 			'readonly' => $params['readonly'], 
 			'disabled' => $params['disabled'],
 			'required' => (!empty($params['required']) ? TRUE : NULL),
-			'accept' => str_replace('|', ',', $params['accept']),
+			'accept' => !is_array($params['accept']) ? str_replace('|', ', .', str_replace('|.', '|', $params['accept'])) : $params['accept'],
 			'tabindex' => $params['tabindex'],
 			'attributes' => $params['attributes'],
 		);
@@ -2575,6 +2575,9 @@ class Form_builder {
 		{
 			$params['ampm'] = TRUE;
 		}
+
+		$params = $this->normalize_params($params);
+
 		$time_params = $params;
 		if (isset($params['tabindex']) AND is_array($params['tabindex']))
 		{

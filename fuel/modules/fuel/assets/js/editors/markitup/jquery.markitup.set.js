@@ -489,7 +489,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				var replace = '<a href="';
 
 				if (selectedUrl.substr(0, 1) != '{') {
-					if (selectedUrl.match(/\.pdf$/)){
+					if (selectedUrl.match(/\.pdf$/) && !isHTTP){
 						replace += self.parserLeftDelimiter() + 'pdf_path(\'' + selectedUrl + '\')' + self.parserRightDelimiter();
 					} else {
 						if (!isHTTP) replace += self.parserLeftDelimiter() + 'site_url(\'';

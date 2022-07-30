@@ -32,8 +32,9 @@
 	<?php if (!empty($instructions)) : ?>
 	<p><?=$instructions?></p>
 	<?php endif; ?>
+	<form method="post" action="">
 	<?=$form?>
-	
+	<?=$this->form->close()?>
 	
 </div>
 </body>

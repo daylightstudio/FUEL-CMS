@@ -428,6 +428,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @access	public
 	 * @return ArrayIterator
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new ArrayIterator($this->fields);
@@ -441,6 +442,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @access	public
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return count($this->fields);
@@ -455,6 +457,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @param  mixed  $key
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($key)
 	{
 		return array_key_exists($key, $this->fields);
@@ -469,6 +472,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @param  mixed  $key
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($key)
 	{
 		$ref =& $this->fields[$key];
@@ -485,6 +489,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @param  mixed  $value
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($key, $value)
 	{
 		if (is_null($key))
@@ -506,6 +511,7 @@ class Base_model_fields extends Abstract_base_model_helper implements ArrayAcces
 	 * @param  string  $key
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($key)
 	{
 		unset($this->fields[$key]);

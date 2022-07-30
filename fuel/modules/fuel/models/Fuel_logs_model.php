@@ -32,6 +32,7 @@ require_once('Base_module_model.php');
 class Fuel_logs_model extends Base_module_model {
 
 	private $_logs_table;
+	//public $filter_join = 'and'; // how to combine the filters in the query (and or or)
 
 	// --------------------------------------------------------------------
 	
@@ -46,6 +47,13 @@ class Fuel_logs_model extends Base_module_model {
 		parent::__construct($logs_table);
 		$this->_logs_table = ($logs_table == 'fuel_logs') ? $this->_tables[$logs_table] : $logs_table;
 		$this->filters = array('entry_date', $this->_tables['fuel_users'].'.first_name', $this->_tables['fuel_users'].'.last_name', 'message');
+		$this->add_filter_join($this->_tables['fuel_users'].'.first_name', 'or');
+		$this->add_filter_join($this->_tables['fuel_users'].'.last_name', 'or');
+		$this->add_filter_join('message', 'or');
+		$this->add_filter_join('type', 'and');
+		$this->add_filter_join('entry_date_fromequal', 'and');
+		$this->add_filter_join('entry_date_toequal', 'and');
+
 	}
 	
 	// --------------------------------------------------------------------

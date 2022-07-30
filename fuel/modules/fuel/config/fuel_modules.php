@@ -351,15 +351,23 @@ $config['modules']['logs'] = array(
 	'rows_selectable' => FALSE,
 	'clear_cache_on_save' => FALSE,
 	'filters' => array(
+		'entry_date_fromequal' => array(
+			'type' => 'date',
+			'label' => 'From',
+		),
+		'entry_date_toequal' => array(
+			'type' => 'date',
+			'label' => 'To',
+		),
 		'type' => array(
 			'type' => 'select',
-			'label' => 'Type:',
+			'label' => 'Type',
 			'options' => array(
 				'info' => 'info',
 				'debug' => 'debug'
 			),
 			'first_option' => lang('label_select_one')
-		)
+		),
 	)
 );
 

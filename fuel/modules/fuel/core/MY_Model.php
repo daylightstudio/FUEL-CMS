@@ -1329,10 +1329,9 @@ class MY_Model extends CI_Model {
 			{
 				$values[$key] = ($field['type'] == 'date') ? $date_func('Y-m-d') : $date_func('Y-m-d H:i:s');
 			}
-			
+
 			if (is_array($values) AND array_key_exists($key, $values))
 			{
-				
 				// format dates
 				if (!in_array($key, $this->auto_date_add))
 				{	
@@ -1342,11 +1341,11 @@ class MY_Model extends CI_Model {
 						{
 							if ($field['type'] == 'date')
 							{
-								$values[$key] = ($values[$key] != 'invalid') ? $date_func('Y-m-d', strtotime($values[$key])) : $this->default_date;
+								$values[$key] = ($values[$key] != 'invalid' AND $values[$key] != $this->default_date) ? $date_func('Y-m-d', strtotime($values[$key])) : $this->default_date;
 							}
 							else
 							{
-								$values[$key] = ($values[$key] != 'invalid') ? $date_func('Y-m-d H:i:s', strtotime($values[$key])) : $this->default_date;
+								$values[$key] = ($values[$key] != 'invalid' AND $values[$key] != $this->default_date) ? $date_func('Y-m-d H:i:s', strtotime($values[$key])) : $this->default_date;
 							}
 						}
 
@@ -1370,11 +1369,10 @@ class MY_Model extends CI_Model {
 					array_walk_recursive($values[$key], array($this, 'encode_and_clean'), $key);
 				}
 
-				
 				$clean[$key] = $values[$key];
 			}
 		}
-		$this->cleaned_data = $clean;
+
 		return $clean;
 	}
 

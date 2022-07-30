@@ -5,7 +5,7 @@
 	<h3><?=lang('dashboard_hdr_latest_activity')?></h3>
 	<ul class="nobullets">
 		<?php foreach($latest_activity as $val) : ?>
-		<li><strong><?=english_date($val['entry_date'], true)?>:</strong> <?=xss_clean($val['message'])?> - <?=$val['name']?></li>
+		<li><strong><?=english_date($val['entry_date'], true)?>:</strong> <?=xss_clean(strip_tags($val['message']))?> - <?=$val['name']?></li>
 		<?php endforeach; ?>
 	</ul>
 	<a href="<?=fuel_url('logs')?>"><?=lang('dashboard_view_all_activity')?></a>

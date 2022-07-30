@@ -459,7 +459,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			$multiFile.MultiFile({ namePattern: '$name___$i'});
 		}, 500);
 
-		$('.asset_delete', context).on('click', function(e){
+		$(context).on('click', '.asset_delete', function(e){
 			e.preventDefault();
 			if (confirm(fuel.lang('confirm_asset_remove'))){
 				var deleteId = $(this).attr('href');
@@ -468,7 +468,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 		});
 
-		$('.deletable a', context).on('mouseover', function(e){
+		$(context).on('mouseover', '.deletable a', function(e){
 			$(this).parent().find('.asset_delete').show();
 		}).on('mouseout', function(e){
 			$(this).parent().find('.asset_delete').hide();
@@ -1338,7 +1338,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 			}
 			var val = $elem.val();
 			if (val) {
-				val = val.replace(/ /g, '-');	
+				val = val.replace(/[\s$&+,:;=?[\]@#|{}'<>.^*()%!-/]/g, '-');
 			}
 			
 			$(".toggle." + prefix + val, context).closest(selector).show();

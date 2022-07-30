@@ -794,6 +794,7 @@ class Data_table {
 				}
 				// add the actions
 				if (empty($action)) $action = $this->default_field_action;
+
 				if (!empty($action))
 				{
 					$callback = function($match) use ($columns) {
@@ -806,11 +807,11 @@ class Data_table {
 					};
 
 					$action = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $action);
-					$fields[] = new Data_table_field($key, xss_clean($val), array(), $action);
+					$fields[] = new Data_table_field($key, xss_clean((string)$val), array(), $action);
 				}
 				else
 				{
-					$fields[] = new Data_table_field($key, xss_clean($val), $col_attrs);
+					$fields[] = new Data_table_field($key, xss_clean((string)$val), $col_attrs);
 				}
 
 				$i++;

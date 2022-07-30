@@ -35,7 +35,7 @@ fuel.controller.UserController = jqx.createController(fuel.controller.BaseFuelCo
 		// toggle on off
 		var toggleHTML = ' &nbsp; <input id="toggle_perms" name="toggle_perms" type="checkbox" value="1" class="float_right"/>';
 		$('td.section h3').append(toggleHTML);
-		var $perms = $('input:checkbox').not('#send_email, #toggle_perms');
+		var $perms = $('input:checkbox').not('#is_invite, #toggle_perms');
 
 		$('#toggle_perms').click(function() { 
 		    $perms.attr('checked',$(this).is(':checked')); 

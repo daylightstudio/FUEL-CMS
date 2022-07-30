@@ -547,7 +547,7 @@ In addition, you can specify <dfn>filters()</dfn> method on your model that can 
 class Articles_model extends Base_module_model {
   
   public $filters = array('content');
-  public $filters_join = 'or';
+  public $filter_join = 'or';
   public $required = array('title');
   public $unique_fields = array('slug');
   public $parsed_fields = array('content');

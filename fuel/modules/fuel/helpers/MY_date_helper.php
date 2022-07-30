@@ -33,7 +33,7 @@ if (!function_exists('date_formatter'))
 	/**
 	 * Returns the date into a specified format. Will look at the configuration
 	 *
-	 * @access	public'
+	 * @access	public
 	 * @param	string
 	 * @param	mixed
 	 * @return	string
@@ -162,7 +162,7 @@ if (!function_exists('english_date'))
 		if (!empty($date))
 		{
 			$date_ts = (!is_numeric($date)) ? strtotime($date) : $date;
-			if (strtolower($timezone) == 'auto')
+			if ($timezone AND strtolower($timezone) == 'auto')
 			{
 				$timezone = date('e');
 			}

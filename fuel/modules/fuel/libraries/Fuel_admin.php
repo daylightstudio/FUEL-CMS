@@ -876,7 +876,7 @@ class Fuel_admin extends Fuel_base_library {
 	 */	
 	public function ui_cookie($key = NULL)
 	{
-		$cookie_val = json_decode(urldecode($this->CI->input->cookie('fuel_ui')), TRUE);
+		$cookie_val = json_decode(urldecode((string) $this->CI->input->cookie('fuel_ui')), TRUE);
 		if (!empty($key))
 		{
 			if (isset($cookie_val[$key]))

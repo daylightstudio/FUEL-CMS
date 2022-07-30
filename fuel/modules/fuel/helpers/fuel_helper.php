@@ -381,6 +381,8 @@ if ( ! function_exists('fuel_var'))
 		$CI =& get_instance();
 		$CI->load->helper('inflector');
 
+		$evaluate = ($evaluate === TRUE AND $CI->fuel->config('allow_eval_php_code')) ? TRUE : FALSE;
+
 		$key_arr = explode('|', $key);
 		$key = $key_arr[0];
 

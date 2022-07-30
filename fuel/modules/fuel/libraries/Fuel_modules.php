@@ -202,7 +202,8 @@ class Fuel_modules extends Fuel_base_library {
 			if (file_exists($file_path))
 			{
 				// class must extend the fuel_module class to be legit
-				if (strtolower(get_parent_class($class_name)) == 'fuel_module')
+				//if (strtolower(get_parent_class($class_name)) == 'fuel_module')
+				if (is_subclass_of($class_name, 'Fuel_module'))
 				{
 					$this->CI->load->module_library($init['folder'], strtolower($class_name));
 					$fuel_module =& $this->CI->$class_name;
@@ -243,7 +244,7 @@ class Fuel_modules extends Fuel_base_library {
 		}
 
 		// allows you to get a module based on the model name
-		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module) OR $has_uri = (strpos($module, '/') !== FALSE))
+		if (!empty($module) AND is_string($module) AND preg_match('#\w+_model$#', $module) OR $has_uri = (!empty($module) AND strpos($module, '/') !== FALSE))
 		{
 			$modules = $this->get(NULL, FALSE);
 			foreach($modules as $key => $mod)

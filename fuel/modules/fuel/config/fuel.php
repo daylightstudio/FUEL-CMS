@@ -291,6 +291,8 @@ $config['module_sanitize_funcs'] = array(
 	'purify' => 'html_purifier',
 );
 
+// Allow the evaluation of PHP code
+$config['allow_eval_php_code'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------

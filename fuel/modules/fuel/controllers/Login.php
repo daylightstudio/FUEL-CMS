@@ -138,6 +138,7 @@ class Login extends Fuel_base_controller {
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = lang('login_btn');
+		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->remove_js();
 		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
@@ -251,6 +252,7 @@ class Login extends Fuel_base_controller {
 		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
 
 		$this->form_builder->show_required = FALSE;
+		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->_prep_csrf();
 
@@ -370,6 +372,7 @@ class Login extends Fuel_base_controller {
 		$fields['_token'] = array('type' => 'hidden', 'value' => $token);
 
 		$this->form_builder->show_required = FALSE;
+		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		$this->_prep_csrf();
 
@@ -416,6 +419,7 @@ class Login extends Fuel_base_controller {
 
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
+		$this->form_builder->use_form_tag = FALSE;
 		$this->form_builder->set_fields($fields);
 		if ( ! empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
 		$this->_prep_csrf();
