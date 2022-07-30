@@ -89,16 +89,9 @@ class Login extends Fuel_base_controller {
 					{
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
-						// set the cookie for viewing the live site with added FUEL capabilities
-						$config = array(
-							'name' => $this->fuel->auth->get_fuel_trigger_cookie_name(), 
-							'value' => serialize(array('id' => $this->fuel->auth->user_data('id'), 'language' => $this->fuel->auth->user_data('language'))),
-							'expire' => 0,
-							//'path' => WEB_PATH
-							'path' => $this->fuel->config('fuel_cookie_path')
-						);
 
-						set_cookie($config);
+						// Problems using CI set_cookie helper in CI 3.1.13 so resorted to native PHP.
+						setcookie($this->fuel->auth->get_fuel_trigger_cookie_name(), serialize(array('id' => $this->fuel->auth->user_data('id'), 'language' => $this->fuel->auth->user_data('language'))), 0, $this->fuel->config('fuel_cookie_path'));
 
 						$forward = $this->input->post('forward');
 						$forward_uri = uri_safe_decode($forward);
