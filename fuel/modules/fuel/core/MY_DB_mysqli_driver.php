@@ -186,7 +186,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 					$max_length = current($max_length);
 				}
 
-				if (strpos($max_length, ',') !== FALSE)
+				if (strpos((string) $max_length, ',') !== FALSE)
 				{
 					$maxes = explode(',', $max_length);
 					$max_length = 0;
