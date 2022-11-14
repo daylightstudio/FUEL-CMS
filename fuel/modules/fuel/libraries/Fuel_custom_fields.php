@@ -288,7 +288,7 @@ class Fuel_custom_fields {
 
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
-				if (is_callable($params['preview_label']))
+				if (isset($params['preview_label']) && is_callable($params['preview_label']))
 				{
 					$preview = call_user_func($params['preview_label'], $asset_path, $params);
 				}
