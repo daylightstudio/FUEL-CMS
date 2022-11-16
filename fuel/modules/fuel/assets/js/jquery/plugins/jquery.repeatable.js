@@ -381,7 +381,7 @@ dave@thedaylightstudio.com
 					$toDisplay.hide();	
 				}
 			}
-			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
+			if ($parent.find('.' + options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}
 			// add sorting
