@@ -1100,6 +1100,7 @@ if (typeof(window.fuel.fields) == 'undefined'){
 				options.addButtonText = fuel.lang('btn_add_another');
 				options.removeButtonText = fuel.lang('btn_remove');
 				options.warnBeforeDeleteMessage = fuel.lang('warn_before_delete_msg');
+				options.prepend = $attrElem.attr('data-prepend') == 1;
 				$(this).repeatable(options);
 			})
 		}

@@ -30,7 +30,8 @@ dave@thedaylightstudio.com
 			min : null,
 			depth : 1,
 			allowCollapsingContent : true,
-			removeable : true
+			removeable : true,
+			prepend: false
 		}, o || {});
 
 		// used for issue when renaming checkboxes
@@ -304,8 +305,13 @@ dave@thedaylightstudio.com
 			var index = $children.length;
 			parseTemplate($clonecopy, index);
 			createRemoveButton($clonecopy);
-			$this.append($clonecopy);
 
+			if (options.prepend) {
+				$this.before().find(options.repeatableSelector + ':first').before($clonecopy);
+			} else {
+				$this.append($clonecopy);
+			}
+			
 			// remove values from any form fields
 			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"], .noclear').val('');
 			$clonecopy.find('input[type="checkbox"]').not('.noclear').prop('checked', false);

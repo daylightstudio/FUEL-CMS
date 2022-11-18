@@ -865,6 +865,12 @@ class Fuel_custom_fields {
 			$params['min'] = NULL;
 		}
 
+		// set minimum limit
+		if (!isset($params['prepend']))
+		{
+			$params['prepend'] = NULL;
+		}
+
 		if (!is_array($params['value']))
 		{
 			$params['value'] = array();
@@ -1111,7 +1117,7 @@ class Fuel_custom_fields {
 				$dblclick = (!empty($params['dblclick'])) ? $params['dblclick'] : 0;
 				$init_display = (!empty($params['init_display'])) ? $params['init_display'] : '';
 				$title_field = (!empty($params['title_field'])) ? $params['title_field'] : '';
-				$str .= '<div class="'.implode(' ', $container_class).'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'" data-removeable="'.$params['removeable'].'">';
+				$str .= '<div class="'.implode(' ', $container_class).'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-prepend="'.$params['prepend'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'" data-removeable="'.$params['removeable'].'">';
 				$i = 0;
 
 
