@@ -1047,9 +1047,13 @@ class Base_module_model extends MY_Model {
 		{
 			foreach($val as $k => $v)
 			{
-				if (is_string($v))
+				if (is_string($v) || is_numeric($v) || is_null($v))
 				{
-					$data[$key][$k] = strip_tags($v);
+					$data[$key][$k] = strip_tags((string) $v);
+				}
+				else
+				{
+					$data[$key][$k] = '';
 				}
 				
 			}
