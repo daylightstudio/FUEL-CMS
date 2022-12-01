@@ -95,7 +95,7 @@ if (!function_exists('is_true_val'))
 	 */
 	function is_true_val($val)
 	{
-		$val = strtolower($val);
+		$val = strtolower((string)$val);
 		return ($val == 'y' || $val == 'yes' || $val === 1  || $val == '1' || $val== 'true' || $val == 't');
 	}
 }
