@@ -184,7 +184,7 @@ class Fuel_dwoo_parser extends Fuel_abstract_parser {
 		// translate HTML comments NOT! Javascript
 		
 		// close ending php
-		$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', $str);
+		$str = preg_replace('#([:|;])?\s*\?>#U', $r_delim.'$3', (string) $str);
 
 		$str = str_replace($find, $replace, $str);
 		
