@@ -1,20 +1,27 @@
 # FUEL CMS
+
 FUEL CMS is a [CodeIgniter](https://codeigniter.com) based content management system. To learn more about its features visit: http://www.getfuelcms.com
 
 ### Installation
-To install FUEL CMS, copy the contents of this folder to a web accessible folder and browse to the index.php file. Next, follow the directions on the screen. 
+
+To install FUEL CMS, copy the contents of this folder to a web accessible folder and browse to the index.php file. Next, follow the directions on the screen. For more details, read [Server Requirements](https://docs.getfuelcms.com/installation/requirements), [Database setup](https://docs.getfuelcms.com/installation/db-setup) and [Installation guide](https://docs.getfuelcms.com/installation/installing).
 
 ### Upgrade
+
 If you have a current installation and are wanting to upgrade, there are a few things to be aware of. FUEL 1.4 uses CodeIgniter 3.x which includes a number of changes, the most prominent being the capitalization of controller and model names. Additionally it is more strict on reporting errors. FUEL 1.4 includes a script to help automate most (and maybe all) of the updates that may be required in your own fuel/application and installed advanced module code. It is recommended you run the following command using a different branch to test if you are running on Mac OSX or a Unix flavor operating system and using Git:
-``php index.php fuel/installer/update``
+
+`php index.php fuel/installer/update`
 
 ### Documentation
+
 To access the documentation, you can visit it [here](http://docs.getfuelcms.com).
 
 ### Bugs
+
 To file a bug report, go to the [issues](http://github.com/daylightstudio/FUEL-CMS/issues) page.
 
 ### License
+
 FUEL CMS is licensed under [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html). The full text of the license can be found in the fuel/licenses/fuel_license.txt file.
 
 ___
