@@ -1828,6 +1828,7 @@ class Fuel_custom_fields {
 
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
 		$func = function($value) use ($process_key, $params, $row_delimiter, $split_delimiter) {
+
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
@@ -1844,11 +1845,12 @@ class Fuel_custom_fields {
 							$z = $val[$process_key][$params['name']];
 						}
 
+
 						$json = array();
-						$rows = preg_split("#'.$row_delimiter.'#", $z);
+						$rows = preg_split("#".$row_delimiter."#", $z);
 						foreach($rows as $r)
 						{
-							$vals = preg_split("#'.$split_delimiter.'#", $r, 2);
+							$vals = preg_split("#".$split_delimiter."#", $r, 2);
 							if (isset($vals[1]))
 							{
 								$v = $vals[1];
@@ -1860,6 +1862,7 @@ class Fuel_custom_fields {
 								$json[] = trim($vals[0]);
 							}
 						}
+
 						$first_item = current($json);
 						if (is_string($val[$process_key]))
 						{
@@ -1869,6 +1872,7 @@ class Fuel_custom_fields {
 						{
 							$value[$key][$process_key][$params['name']] = (!empty($first_item)) ? json_encode($json) : "";
 						}
+
 					}
 				}
 
