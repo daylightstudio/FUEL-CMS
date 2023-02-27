@@ -26,7 +26,7 @@ return array(
 	'oda'	=>	'application/oda',
 	'pdf'	=>	array('application/pdf', 'application/force-download', 'application/x-download', 'binary/octet-stream'),
 	'ai'	=>	array('application/pdf', 'application/postscript'),
-	'eps'	=>	'application/postscript',
+	'eps'	=>	array('application/postscript', 'image/x-eps'),
 	'ps'	=>	'application/postscript',
 	'smi'	=>	'application/smil',
 	'smil'	=>	'application/smil',
