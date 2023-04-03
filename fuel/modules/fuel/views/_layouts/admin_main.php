@@ -31,7 +31,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 		<?php $this->load->module_view(FUEL_FOLDER, '_blocks/titlebar')?>
 		<?php endif; ?>
 		
-		<?=$this->form->open('action="'.$form_action.'" method="'.((!empty($form_method)) ? $form_method : 'post').'" id="form" enctype="multipart/form-data"'.((!empty($form_target)) ? ' target="'.$form_target.'"' : ''))?>
+		<?=$this->form->open('action="'.$form_action.'" method="'.((!empty($form_method)) ? $form_method : 'post').'" id="form" data-uri="'.fuel_uri_string().'" enctype="multipart/form-data"'.((!empty($form_target)) ? ' target="'.$form_target.'"' : ''))?>
 		
 		<?php if ($this->fuel->admin->has_panel('actions') AND !empty($actions)) : ?>
 		<!-- ACTION PANEL -->
