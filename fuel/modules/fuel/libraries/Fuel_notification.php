@@ -119,7 +119,11 @@ class Fuel_notification extends Fuel_base_library {
 			$this->CI->email->to($this->to);
 		}
 
-		if ($this->cc)
+		if ($this->is_dev_mode())
+		{
+			$this->CI->email->cc($this->CI->config->item('dev_email'));
+		}
+		else
 		{
 			$this->CI->email->cc($this->cc);
 		}
