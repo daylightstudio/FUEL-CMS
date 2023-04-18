@@ -276,7 +276,7 @@ if (!function_exists('valid_phone'))
 	function valid_phone($str)
 	{
 		$num = $str;
-		$num = preg_replace("#[^0-9]#", null, $str);
+		$num = preg_replace("#[^0-9]#", '', $str);
 
 		if(!is_numeric($num))
 		{

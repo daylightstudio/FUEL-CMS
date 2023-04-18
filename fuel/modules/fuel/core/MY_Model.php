@@ -5460,15 +5460,18 @@ class Data_record {
 				}
 
 				// check the current record object for a method, and if exists, use that instead
-				if (method_exists($this, $f))
+				if ($f)
 				{
-					$f = array($this, $f);
-				}
-				// apply function if it exists to the value
-				if (is_callable($f))
-				{
-					$func_args = array_merge(array($value), $args);
-					$value = call_user_func_array($f, $func_args);
+					if (method_exists($this, $f))
+					{
+						$f = array($this, $f);
+					}
+					// apply function if it exists to the value
+					if (is_callable($f))
+					{
+						$func_args = array_merge(array($value), $args);
+						$value = call_user_func_array($f, $func_args);
+					}
 				}
 			}
 		}
