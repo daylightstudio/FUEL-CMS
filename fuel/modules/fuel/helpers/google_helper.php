@@ -184,6 +184,52 @@ if (!function_exists('google_analytics'))
 	}
 }
 
+if (!function_exists('google_tagmanager'))
+{
+	/**
+	* Google Analytics 4
+	*
+	* Inserts google Google Analytics 4 tracking code into view
+	* If a tracking code is passed in, then it will use that uacct info
+	* Otherwise, it will use the value defined in the google.php config file
+	* If both values do not exist, nothing will be inserted.
+	*
+	* @access	public
+	* @param	string	The google account number (optional)
+	* @param	mixed	An array or string of extra parameters to pass to GA. An array will use the key/value to add _gaq.push (optional)
+	* @param	boolean	Whether to check dev mode before adding it in (optional)
+	* @return	string
+	*/
+	function google_tagmanager($uacct = '', $other_params = array(), $check_devmode = TRUE) {
+		if ($check_devmode AND (function_exists('is_dev_mode') AND is_dev_mode()))
+		{
+			return FALSE;
+		}
+
+		$CI =& get_instance();
+		$CI->load->config('google');
+
+		if (empty($uacct)) $uacct = $CI->config->item('google_ga4');
+		if (!empty($uacct))
+		{
+			$google_analytics_code = "
+         <!-- Google tag (gtag.js) -->
+         <script async src='https://www.googletagmanager.com/gtag/js?id={$uacct}'></script>
+         <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', '{$uacct}');
+         </script>";
+			return $google_analytics_code;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+}
+
 // ------------------------------------------------------------------------
 
 if (!function_exists('google_map'))
