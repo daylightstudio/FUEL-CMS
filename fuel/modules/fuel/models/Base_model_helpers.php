@@ -823,14 +823,14 @@ class Base_model_related_items extends Abstract_base_model_helper  {
 	 */	
 	public function vars($vars = array())
 	{
-		$vars['values'] = $this->get_values();
-		$vars['rec'] = $this->record();
-		$vars['model'] = $this->get_parent_model();
-		$vars['CI'] =& $this->CI;
-		$vars['fuel'] =& $this->fuel;
-		$vars['class'] = get_class($this->get_parent_model());
-		$vars['ref'] =& $this;
-		return $vars;
+		$defaults['values'] = $this->get_values();
+		$defaults['rec'] = $this->record();
+		$defaults['model'] = $this->get_parent_model();
+		$defaults['CI'] =& $this->CI;
+		$defaults['fuel'] =& $this->fuel;
+		$defaults['class'] = get_class($this->get_parent_model());
+		$defaults['ref'] =& $this;
+		return array_merge($defaults, $vars);
 	}
 
 	// --------------------------------------------------------------------
