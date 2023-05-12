@@ -304,7 +304,7 @@ class Fuel_blocks extends Fuel_module {
 		$model = $this->model();
 		if (!is_numeric($block))
 		{
-			$block_data = $model->find_by_name($block, 'array');
+			$block_data = $model->find_one_array(array('name' => $block));
 		}
 		else
 		{
