@@ -612,11 +612,9 @@ class Menu {
 			}
 			
 			
-			if (!empty($this->item_tag))
-			{
-				$str .= "\t<".$this->item_tag.">";
-			}
-			$str .= $home_anchor;
+			$li = (!empty($this->item_tag)) ? $this->_create_open_li($home_anchor, 0, 0, FALSE) : $home_anchor;
+			$str .= $li;
+
 			if ($num >= 0) $str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
 			if (!empty($this->item_tag))
 			{
@@ -626,19 +624,18 @@ class Menu {
 		for ($i = $num; $i >= 0; $i--)
 		{
 			$val = $this->_active_items[$i];
-			$label = $this->_get_label($this->_items[$val]);
-			if (!empty($this->item_tag))
-			{
-				$str .= "\t<".$this->item_tag.">";
-			}
+			$label = $this->_get_label($this->_items[$val]).($num - $i);
 			if ($i != 0)
 			{
-				$str .= anchor($this->_items[$val]['location'], $label);
-				$str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
+				$li = anchor($this->_items[$val]['location'], $label);
+				$li .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
+
+				$str .= $this->_create_open_li($li, 0, $num - $i + 1, FALSE);
 			}
 			else if ($this->display_current) 
 			{
-				$str .= $label;
+				$li = '<span aria-current="page">'.$label.'</span>';
+				$str .= $this->_create_open_li($li, 0, $num - $i + 1, TRUE);
 			}
 			if (!empty($this->item_tag))
 			{
