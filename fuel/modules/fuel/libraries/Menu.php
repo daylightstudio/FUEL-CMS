@@ -624,7 +624,7 @@ class Menu {
 		for ($i = $num; $i >= 0; $i--)
 		{
 			$val = $this->_active_items[$i];
-			$label = $this->_get_label($this->_items[$val]).($num - $i);
+			$label = $this->_get_label($this->_items[$val]);
 			if ($i != 0)
 			{
 				$li = anchor($this->_items[$val]['location'], $label);
@@ -892,7 +892,8 @@ class Menu {
 			$str .= $this->_get_li_classes($val, $level, $i, $is_last);
 			$str .= '>';
 		}
-		$str .= $this->_create_link($val);
+		$active = (is_array($val)) ? $val['id'] : $val;
+		$str .= $this->_create_link($val, $active);
 		return $str;
 	}
 	
@@ -934,7 +935,7 @@ class Menu {
 			
 			if (!empty($active) AND $this->active == $active)
 			{
-				$attrs .= ' class="'.$this->active_class.'"';
+				$attrs .= ' class="'.$this->active_class.'" aria-current="page"';
 			}
 
 			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : url_to($val['location']);
@@ -944,7 +945,7 @@ class Menu {
 		{
 			if (!empty($active) AND $this->active == $active)
 			{
-				$str .= '<span class="'.$this->active_class.'">';
+				$str .= '<span class="'.$this->active_class.'" aria-current="page">';
 				$has_active = TRUE;
 			}
 			$str .= $label;
