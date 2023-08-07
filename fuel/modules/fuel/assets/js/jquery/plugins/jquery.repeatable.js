@@ -30,8 +30,7 @@ dave@thedaylightstudio.com
 			min : null,
 			depth : 1,
 			allowCollapsingContent : true,
-			removeable : true,
-			prepend: false
+			removeable : true
 		}, o || {});
 
 		// used for issue when renaming checkboxes
@@ -305,13 +304,8 @@ dave@thedaylightstudio.com
 			var index = $children.length;
 			parseTemplate($clonecopy, index);
 			createRemoveButton($clonecopy);
+			$this.append($clonecopy);
 
-			if (options.prepend) {
-				$this.before().find(options.repeatableSelector + ':first').before($clonecopy);
-			} else {
-				$this.append($clonecopy);
-			}
-			
 			// remove values from any form fields
 			$clonecopy.find('input,select,textarea').not('input[type="radio"], input[type="checkbox"], input[type="button"], .noclear').val('');
 			$clonecopy.find('input[type="checkbox"]').not('.noclear').prop('checked', false);
@@ -387,7 +381,7 @@ dave@thedaylightstudio.com
 					$toDisplay.hide();	
 				}
 			}
-			if ($parent.find('.' + options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
+			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}
 			// add sorting

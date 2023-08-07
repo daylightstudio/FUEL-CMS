@@ -39,7 +39,6 @@ class Fuel_notification extends Fuel_base_library {
 	public $attachments = array(); // attachments
 	public $use_dev_mode = TRUE; // whether to use dev mode or not which means it will send to the dev_email address in the config
 	public $mailtype = 'text';
-	public $wrapchars = 76;
 
 	// --------------------------------------------------------------------
 	
@@ -86,13 +85,11 @@ class Fuel_notification extends Fuel_base_library {
 		// load email and set notification properties
 		$this->CI->load->library('email');
 		$this->CI->email->clear(TRUE);
-		$this->CI->email->wrapchars = $this->wrapchars;
 		$this->CI->email->set_wordwrap(TRUE);
 		$this->CI->email->from($this->from, $this->from_name);
 		$this->CI->email->subject($this->subject);
 		$this->CI->email->message($this->message);
 		$this->CI->email->set_mailtype($this->mailtype);
-
 		
 		if (!empty($this->attachments))
 		{
@@ -119,11 +116,7 @@ class Fuel_notification extends Fuel_base_library {
 			$this->CI->email->to($this->to);
 		}
 
-		if ($this->is_dev_mode())
-		{
-			$this->CI->email->cc($this->CI->config->item('dev_email'));
-		}
-		else
+		if ($this->cc)
 		{
 			$this->CI->email->cc($this->cc);
 		}

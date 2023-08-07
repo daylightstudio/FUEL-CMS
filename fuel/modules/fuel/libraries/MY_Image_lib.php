@@ -50,10 +50,6 @@ class MY_Image_lib extends CI_Image_lib {
 	 */	
 	public function initialize($props = array())
 	{
-		// Need to be reset back to empty so repeated calls don't use the same width/height values.
-		$this->width = '';
-		$this->height = '';
-		
 		foreach($this->_save_props as $sp)
 		{
 			$p = '_'.$sp;

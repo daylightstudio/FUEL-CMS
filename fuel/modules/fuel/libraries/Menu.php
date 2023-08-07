@@ -612,9 +612,11 @@ class Menu {
 			}
 			
 			
-			$li = (!empty($this->item_tag)) ? $this->_create_open_li($home_anchor, 0, 0, FALSE) : $home_anchor;
-			$str .= $li;
-
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
+			$str .= $home_anchor;
 			if ($num >= 0) $str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
 			if (!empty($this->item_tag))
 			{
@@ -625,17 +627,18 @@ class Menu {
 		{
 			$val = $this->_active_items[$i];
 			$label = $this->_get_label($this->_items[$val]);
+			if (!empty($this->item_tag))
+			{
+				$str .= "\t<".$this->item_tag.">";
+			}
 			if ($i != 0)
 			{
-				$li = anchor($this->_items[$val]['location'], $label);
-				$li .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
-
-				$str .= $this->_create_open_li($li, 0, $num - $i + 1, FALSE);
+				$str .= anchor($this->_items[$val]['location'], $label);
+				$str .= ' <span class="'.$this->arrow_class.'">'.$this->delimiter.'</span> ';
 			}
 			else if ($this->display_current) 
 			{
-				$li = '<span aria-current="page">'.$label.'</span>';
-				$str .= $this->_create_open_li($li, 0, $num - $i + 1, TRUE);
+				$str .= $label;
 			}
 			if (!empty($this->item_tag))
 			{
@@ -892,8 +895,7 @@ class Menu {
 			$str .= $this->_get_li_classes($val, $level, $i, $is_last);
 			$str .= '>';
 		}
-		$active = (is_array($val)) ? $val['id'] : $val;
-		$str .= $this->_create_link($val, $active);
+		$str .= $this->_create_link($val);
 		return $str;
 	}
 	
@@ -935,7 +937,7 @@ class Menu {
 			
 			if (!empty($active) AND $this->active == $active)
 			{
-				$attrs .= ' class="'.$this->active_class.'" aria-current="page"';
+				$attrs .= ' class="'.$this->active_class.'"';
 			}
 
 			$location = (preg_match('/^#/', $val['location'])) ? $val['location'] : url_to($val['location']);
@@ -945,7 +947,7 @@ class Menu {
 		{
 			if (!empty($active) AND $this->active == $active)
 			{
-				$str .= '<span class="'.$this->active_class.'" aria-current="page">';
+				$str .= '<span class="'.$this->active_class.'">';
 				$has_active = TRUE;
 			}
 			$str .= $label;

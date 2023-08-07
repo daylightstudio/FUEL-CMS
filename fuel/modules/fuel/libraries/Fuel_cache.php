@@ -35,7 +35,7 @@ class Fuel_cache extends Fuel_base_library {
 	
 	public $ignore = '#^(\..+)|(index\.html)#'; // Regular expression of files to exclude from clearing like .gitignore and .htaccess
 	public $cache_path = ''; // The cache path. If no path is provided it will use the cache path value found in the main CI config file.
-	
+	var $compiled_path;
 	protected $_cache; // the Cache object used for saving, retrieving and deleting cached files
 	protected $_types = array(
 								'compiled',
@@ -59,6 +59,7 @@ class Fuel_cache extends Fuel_base_library {
 		parent::__construct();
 		$this->CI->load->library('cache');
 		$this->_cache = & $this->CI->cache;
+		$this->compiled_path = ''; 
 		$this->initialize($params);
 	}
 	
@@ -112,7 +113,8 @@ class Fuel_cache extends Fuel_base_library {
 	 * @access	public
 	 * @param	string	The path to the compiled templates folder
 	 * @return	void
-	 */	
+	 */
+
 	public function set_compiled_path($path)
 	{
 		$this->compiled_path = $path;
