@@ -202,7 +202,7 @@ class Fuel_assets extends Fuel_base_library {
 									$posted['upload_path'] = $this->CI->encryption->decrypt($params['posted'][$input_key]);
 									foreach($params['posted'] as $k => $p)
 									{
-										if (!is_array($p))
+										if (!is_array($p) AND !empty($p))
 										{
 											$posted['upload_path'] = str_replace('{'.$k.'}', $p, $posted['upload_path']);
 										}
