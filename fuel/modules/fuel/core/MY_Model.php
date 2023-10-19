@@ -155,11 +155,12 @@ class MY_Model extends CI_Model {
 		else
 		{
 			// else we use the database set on the CI object
-			if (empty($this->db))
+			$CI =& get_instance();
+			if (empty($CI->db))
 			{
 				$this->load->database($this->dsn);
 			}
-			$CI =& get_instance();
+			
 			if (isset($CI->db))
 			{
 				// create a copy of the DB object to prevent cross model interference
