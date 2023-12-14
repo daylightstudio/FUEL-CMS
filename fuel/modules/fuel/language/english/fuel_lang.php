@@ -195,8 +195,8 @@ $lang['section_recently_viewed'] = 'Recently Viewed';
 */
 $lang['module_created']= "%1s item <em>%2s</em> created";
 $lang['module_edited'] = "%1s item <em>%2s</em> edited";
-$lang['module_deleted'] = "%1s item for <em>%2s</em> deleted";
-$lang['module_multiple_deleted'] = "Multiple <em>%1s</em> deleted";
+$lang['module_deleted'] = "%1s item for <em>%2s</em> deleted with key of <em>%3s</em>";
+$lang['module_multiple_deleted'] = "Multiple <em>%1s</em> deleted with keys of <em>%3s</em>";
 $lang['module_restored'] = "%1s item restored from archive";
 $lang['module_instructions_default'] = "Here you can manage the %1s for your site.";
 $lang['module_restored_success'] = 'Previous version successfully restored.';

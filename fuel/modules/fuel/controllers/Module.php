@@ -1666,11 +1666,11 @@ class Module extends Fuel_base_controller {
 
 			if (count($posted) > 1)
 			{
-				$this->fuel->logs->write(lang('module_multiple_deleted', $this->module));
+				$this->fuel->logs->write(lang('module_multiple_deleted', $this->module, implode(',', $posted)));
 			}
 			else
 			{
-				$this->fuel->logs->write(lang('module_deleted', count($posted), $this->module));
+				$this->fuel->logs->write(lang('module_deleted', count($posted), $this->module, implode(',', $posted)));
 			}
 			
 			if ($inline)
