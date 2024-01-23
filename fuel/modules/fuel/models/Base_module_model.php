@@ -295,7 +295,7 @@ class Base_module_model extends MY_Model {
 	{
 		if (!empty($this->list_items))
 		{
-			$filter_params = array('limit', 'offset', 'col', 'order');
+			$filter_params = array('limit', 'offset', 'col', 'order', 'just_count');
 			foreach ($filter_params as $param)
 			{
 				$this->list_items->$param = $$param;

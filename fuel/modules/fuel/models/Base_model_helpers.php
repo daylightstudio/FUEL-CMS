@@ -925,6 +925,7 @@ class Base_model_list_items extends Abstract_base_model_helper  {
 	public $offset = 0;
 	public $col = 'id';
 	public $order = 'asc';
+	public $just_count = FALSE;
 
 	protected $display_type = '';
 	protected $filters = NULL;
