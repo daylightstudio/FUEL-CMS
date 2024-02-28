@@ -292,7 +292,7 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	protected function _clean_segment($seg)
 	{
-		return trim($seg, '/');
+		return trim((string) $seg, '/');
 	}
 	
 	// --------------------------------------------------------------------
@@ -374,7 +374,7 @@ class Fuel_posts extends Fuel_base_library {
 	 */
 	public function is_home()
 	{
-		if (uri_path(FALSE) == trim($this->module_config('base_uri'), '/'))
+		if (uri_path(FALSE) == trim((string) $this->module_config('base_uri'), '/'))
 		{
 			return TRUE;
 		}
@@ -1070,7 +1070,7 @@ class Fuel_posts extends Fuel_base_library {
 		$offset = $this->CI->input->get('per_page');
 		$order_by = $this->get_order_by_field().' '.$this->get_order_by_direction();
 
-		if (method_exists($this->model(), $this->vars_method()))
+		if (method_exists($this->model(), (string) $this->vars_method()))
 		{
 			$method = $this->vars_method();
 			$vars = $this->vars_custom($method, $limit, $offset);

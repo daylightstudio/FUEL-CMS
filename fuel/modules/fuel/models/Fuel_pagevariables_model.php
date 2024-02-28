@@ -212,7 +212,7 @@ class Fuel_pagevariables_model extends Base_module_model {
 	 */	
 	protected function _process_casting($data)
 	{
-		if (is_array(current($data)))
+		if (is_array($data) AND is_array(current($data)))
 		{
 			$return = array();
 			foreach ($data as $val)
