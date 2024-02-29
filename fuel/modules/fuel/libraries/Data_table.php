@@ -55,7 +55,7 @@ class Data_table {
 	public $no_data_str = 'No data to display.'; //The default string to display when no data exists
 	public $lang_prefix = 'table_header_'; // the language prefix to associate with table headers
 	public $field_styles = array(); // styles to apply to the data columns. Index is the column and the value is the style
-
+	var $row_data;
 	protected $_ordering = TRUE; // sorting order
 	protected $_field = NULL; // sorted column
 	protected $_field_formatters = array(); // an array of function to format columns

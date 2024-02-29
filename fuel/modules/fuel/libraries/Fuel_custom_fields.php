@@ -288,7 +288,7 @@ class Fuel_custom_fields {
 
 			if (!empty($asset_path) AND !empty($params['value']))
 			{
-				if (isset($params['preview_label']) && is_callable($params['preview_label']))
+				if (is_callable($params['preview_label']))
 				{
 					$preview = call_user_func($params['preview_label'], $asset_path, $params);
 				}
@@ -865,12 +865,6 @@ class Fuel_custom_fields {
 			$params['min'] = NULL;
 		}
 
-		// set minimum limit
-		if (!isset($params['prepend']))
-		{
-			$params['prepend'] = NULL;
-		}
-
 		if (!is_array($params['value']))
 		{
 			$params['value'] = array();
@@ -1117,7 +1111,7 @@ class Fuel_custom_fields {
 				$dblclick = (!empty($params['dblclick'])) ? $params['dblclick'] : 0;
 				$init_display = (!empty($params['init_display'])) ? $params['init_display'] : '';
 				$title_field = (!empty($params['title_field'])) ? $params['title_field'] : '';
-				$str .= '<div class="'.implode(' ', $container_class).'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-prepend="'.$params['prepend'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'" data-removeable="'.$params['removeable'].'">';
+				$str .= '<div class="'.implode(' ', $container_class).'" data-depth="'.$params['depth'].'" data-max="'.$params['max'].'" data-min="'.$params['min'].'" data-dblclick="'.$dblclick.'" data-init_display="'.$init_display.'" data-title_field="'.$title_field.'" data-removeable="'.$params['removeable'].'">';
 				$i = 0;
 
 
@@ -1828,7 +1822,6 @@ class Fuel_custom_fields {
 
 		// create an array with the key being the image name and the value being the caption (if it exists... otherwise the image name is used again)
 		$func = function($value) use ($process_key, $params, $row_delimiter, $split_delimiter) {
-
 			if (is_array($value))
 			{
 				foreach($value as $key => $val)
@@ -1845,12 +1838,11 @@ class Fuel_custom_fields {
 							$z = $val[$process_key][$params['name']];
 						}
 
-
 						$json = array();
-						$rows = preg_split("#".$row_delimiter."#", $z);
+						$rows = preg_split("#'.$row_delimiter.'#", $z);
 						foreach($rows as $r)
 						{
-							$vals = preg_split("#".$split_delimiter."#", $r, 2);
+							$vals = preg_split("#'.$split_delimiter.'#", $r, 2);
 							if (isset($vals[1]))
 							{
 								$v = $vals[1];
@@ -1862,7 +1854,6 @@ class Fuel_custom_fields {
 								$json[] = trim($vals[0]);
 							}
 						}
-
 						$first_item = current($json);
 						if (is_string($val[$process_key]))
 						{
@@ -1872,7 +1863,6 @@ class Fuel_custom_fields {
 						{
 							$value[$key][$process_key][$params['name']] = (!empty($first_item)) ? json_encode($json) : "";
 						}
-
 					}
 				}
 

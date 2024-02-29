@@ -1047,15 +1047,7 @@ class Base_module_model extends MY_Model {
 		{
 			foreach($val as $k => $v)
 			{
-				if (is_string($v) || is_numeric($v) || is_null($v))
-				{
-					$data[$key][$k] = strip_tags((string) $v);
-				}
-				else
-				{
-					$data[$key][$k] = '';
-				}
-				
+				$data[$key][$k] = strip_tags($v);
 			}
 		}
 		$data = $this->csv($data);
@@ -1262,10 +1254,8 @@ class Base_module_model extends MY_Model {
 			{
 				$limit = (int) $limit;
 				$tooltip_func = function($values) use ($field, $limit) {
-					if (is_string($values[$field]))
-					{
-						$value = strip_tags($values[$field]);
-						if (strlen($value) > $limit)
+					$value = strip_tags($values[$field]);
+ 						if (strlen($value) > $limit)
 						{
 							// display tooltip for long notes
 							$trimmed = character_limiter($value, $limit);
@@ -1276,7 +1266,6 @@ class Base_module_model extends MY_Model {
 							$data = $value;
 						}
 						return $data;
-					}
 				};
 				$data_table->add_field_formatter($field, $tooltip_func);
 			}

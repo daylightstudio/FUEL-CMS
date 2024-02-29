@@ -37,7 +37,7 @@
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+#[AllowDynamicProperties]
 /**
  * Application Controller Class
  *

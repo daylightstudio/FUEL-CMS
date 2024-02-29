@@ -1,4 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * FUEL CMS
  * http://www.getfuelcms.com
@@ -67,7 +68,7 @@ class MY_Model extends CI_Model {
 	public $representatives = array(); // an array of fields that have arrays or regular expression values to match against different field types (e.g. 'number'=>'bigint|smallint|tinyint|int')
 	public $custom_fields = array(); // an array of field names/types that map to a specific class
 	public $formatters = array(); // an array of helper formatter functions related to a specific field type (e.g. string, datetime, number), or name (e.g. title, content) that can augment field results
-
+	public $last_data_set = array();
 	/**
 	 * @var CI_DB_query_builder CI database query builder
 	 */
@@ -124,7 +125,8 @@ class MY_Model extends CI_Model {
 	 * @param	string	the table name
 	 * @param	array	config preferences
 	 * @return	void
-	 */	
+	 */
+
 	public function initialize($table = NULL, $params = array())
 	{
 		if (!empty($table))
@@ -5461,18 +5463,15 @@ class Data_record {
 				}
 
 				// check the current record object for a method, and if exists, use that instead
-				if ($f)
+				if (method_exists($this, $f))
 				{
-					if (method_exists($this, $f))
-					{
-						$f = array($this, $f);
-					}
-					// apply function if it exists to the value
-					if (is_callable($f))
-					{
-						$func_args = array_merge(array($value), $args);
-						$value = call_user_func_array($f, $func_args);
-					}
+					$f = array($this, $f);
+				}
+				// apply function if it exists to the value
+				if (is_callable($f))
+				{
+					$func_args = array_merge(array($value), $args);
+					$value = call_user_func_array($f, $func_args);
 				}
 			}
 		}

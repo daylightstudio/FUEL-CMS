@@ -4,8 +4,8 @@ first want to look at the following places:</p>
 
 <h2 id="codeignter">CodeIgniter</h2>
 <ul>
-	<li><a href="https://www.codeigniter.com/userguide3/installation/troubleshooting.html" target="_blank">CodeIgniter Troubleshooting page</a></li>
-	<li><a href="https://www.codeigniter.com/userguide3/" target="_blank">CodeIgniter User Guide</a></li>
+	<li><a href="https://www.codeigniter.com/user_guide/installation/troubleshooting.html" target="_blank">CodeIgniter Troubleshooting page</a></li>
+	<li><a href="https://www.codeigniter.com/user_guide/" target="_blank">CodeIgniter User Guide</a></li>
 	<li><a href="https://forum.codeigniter.com/" target="_blank">CodeIgniter Forums</a></li>
 </ul>
 

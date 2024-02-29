@@ -1229,7 +1229,7 @@ class Module extends Fuel_base_controller {
 						{
 							$func = (isset($valid_funcs[$func])) ? $valid_funcs[$func] : FALSE;
 
-							if ($func && isset($posted[$key]))
+							if ($func)
 							{
 								$posted[$key] = $func($posted[$key]);
 							}
