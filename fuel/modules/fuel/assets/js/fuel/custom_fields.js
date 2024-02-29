@@ -1298,8 +1298,6 @@ if (typeof(window.fuel.fields) == 'undefined'){
 					$(document).trigger('blockLoaded', [$this, context]);
 					$('#form').data('disabled', false);
 				});
-			} else {
-				$layout_fields.empty();
 			}
 		})
 
