@@ -1,3 +1,6 @@
+⚠️ **WARNING:**
+This project is no longer in active development and is not recommended for production websites anymore.
+
 # FUEL CMS
 FUEL CMS is a [CodeIgniter](https://codeigniter.com) based content management system. To learn more about its features visit: http://www.getfuelcms.com
 
